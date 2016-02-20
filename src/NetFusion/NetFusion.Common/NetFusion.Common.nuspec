@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>NetFusion Core Common</title>
+    <authors>$authors$</authors>
+    <licenseUrl>$licenseUrl$</licenseUrl>
+    <projectUrl>$projectUrl$</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Core NetFusion assembly containing resuable classes and extensions.</description>
+    <copyright>Copyright 2016</copyright>
+    <tags>$tags$</tags>
+  </metadata>
+</package>
