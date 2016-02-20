@@ -1,0 +1,94 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Common", "src\NetFusion\NetFusion.Common\NetFusion.Common.csproj", "{4BCB335E-3F83-481D-B206-FFA9266BF780}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{6DED84CC-46D8-4583-8E80-8B0FD78BD7CA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{038D655E-0A2E-4652-9570-23F470022EDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Bootstrap", "src\NetFusion\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj", "{A71630D5-940F-4DE6-A5B9-F229074AA86D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Eventing", "src\NetFusion\NetFusion.Eventing\NetFusion.Eventing.csproj", "{3227A952-6F7F-4773-B468-298A3F4D8BC0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{3B39701A-2BAF-4682-9675-5C6EE56AA1F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.RabbitMQ", "src\NetFusion\NetFusion.RabbitMQ\NetFusion.RabbitMQ.csproj", "{1036C88E-B42C-465C-ADF8-04192DE9D723}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.MongoDB", "src\NetFusion\NetFusion.MongoDB\NetFusion.MongoDB.csproj", "{3B4800A1-4138-4E33-A92C-BF195BB37EA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.EntityFramework", "src\NetFusion\NetFusion.EntityFramework\NetFusion.EntityFramework.csproj", "{C3F8E433-49BB-47A2-92A2-24AFAF28ED3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.WebApi", "src\NetFusion\NetFusion.WebApi\NetFusion.WebApi.csproj", "{5D9D7490-8589-4E33-BD14-2379501E3239}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Integration", "src\NetFusion\NetFusion.Integration\NetFusion.Integration.csproj", "{F2886036-DA02-4A5D-A7A2-7342EA5DA634}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Logging.Serilog", "src\NetFusion\NetFusion.Logging.Serilog\NetFusion.Logging.Serilog.csproj", "{D3CCB7D3-3B6D-4ABC-A784-2080668943A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Settings.MongoDB", "src\NetFusion\NetFusion.Settings.MongoDB\NetFusion.Settings.MongoDB.csproj", "{77BE4932-CBFC-49FE-A5B1-DCF5B5F30B75}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4BCB335E-3F83-481D-B206-FFA9266BF780}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BCB335E-3F83-481D-B206-FFA9266BF780}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BCB335E-3F83-481D-B206-FFA9266BF780}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BCB335E-3F83-481D-B206-FFA9266BF780}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A71630D5-940F-4DE6-A5B9-F229074AA86D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A71630D5-940F-4DE6-A5B9-F229074AA86D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A71630D5-940F-4DE6-A5B9-F229074AA86D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A71630D5-940F-4DE6-A5B9-F229074AA86D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3227A952-6F7F-4773-B468-298A3F4D8BC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3227A952-6F7F-4773-B468-298A3F4D8BC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3227A952-6F7F-4773-B468-298A3F4D8BC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3227A952-6F7F-4773-B468-298A3F4D8BC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1036C88E-B42C-465C-ADF8-04192DE9D723}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1036C88E-B42C-465C-ADF8-04192DE9D723}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1036C88E-B42C-465C-ADF8-04192DE9D723}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1036C88E-B42C-465C-ADF8-04192DE9D723}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B4800A1-4138-4E33-A92C-BF195BB37EA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B4800A1-4138-4E33-A92C-BF195BB37EA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B4800A1-4138-4E33-A92C-BF195BB37EA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B4800A1-4138-4E33-A92C-BF195BB37EA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3F8E433-49BB-47A2-92A2-24AFAF28ED3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3F8E433-49BB-47A2-92A2-24AFAF28ED3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3F8E433-49BB-47A2-92A2-24AFAF28ED3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3F8E433-49BB-47A2-92A2-24AFAF28ED3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D9D7490-8589-4E33-BD14-2379501E3239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D9D7490-8589-4E33-BD14-2379501E3239}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D9D7490-8589-4E33-BD14-2379501E3239}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D9D7490-8589-4E33-BD14-2379501E3239}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2886036-DA02-4A5D-A7A2-7342EA5DA634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2886036-DA02-4A5D-A7A2-7342EA5DA634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2886036-DA02-4A5D-A7A2-7342EA5DA634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2886036-DA02-4A5D-A7A2-7342EA5DA634}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3CCB7D3-3B6D-4ABC-A784-2080668943A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3CCB7D3-3B6D-4ABC-A784-2080668943A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3CCB7D3-3B6D-4ABC-A784-2080668943A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3CCB7D3-3B6D-4ABC-A784-2080668943A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77BE4932-CBFC-49FE-A5B1-DCF5B5F30B75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77BE4932-CBFC-49FE-A5B1-DCF5B5F30B75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77BE4932-CBFC-49FE-A5B1-DCF5B5F30B75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77BE4932-CBFC-49FE-A5B1-DCF5B5F30B75}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4BCB335E-3F83-481D-B206-FFA9266BF780} = {6DED84CC-46D8-4583-8E80-8B0FD78BD7CA}
+		{A71630D5-940F-4DE6-A5B9-F229074AA86D} = {6DED84CC-46D8-4583-8E80-8B0FD78BD7CA}
+		{3227A952-6F7F-4773-B468-298A3F4D8BC0} = {6DED84CC-46D8-4583-8E80-8B0FD78BD7CA}
+		{1036C88E-B42C-465C-ADF8-04192DE9D723} = {038D655E-0A2E-4652-9570-23F470022EDE}
+		{3B4800A1-4138-4E33-A92C-BF195BB37EA2} = {038D655E-0A2E-4652-9570-23F470022EDE}
+		{C3F8E433-49BB-47A2-92A2-24AFAF28ED3A} = {038D655E-0A2E-4652-9570-23F470022EDE}
+		{5D9D7490-8589-4E33-BD14-2379501E3239} = {038D655E-0A2E-4652-9570-23F470022EDE}
+		{F2886036-DA02-4A5D-A7A2-7342EA5DA634} = {3B39701A-2BAF-4682-9675-5C6EE56AA1F3}
+		{D3CCB7D3-3B6D-4ABC-A784-2080668943A9} = {3B39701A-2BAF-4682-9675-5C6EE56AA1F3}
+		{77BE4932-CBFC-49FE-A5B1-DCF5B5F30B75} = {3B39701A-2BAF-4682-9675-5C6EE56AA1F3}
+	EndGlobalSection
+EndGlobal
