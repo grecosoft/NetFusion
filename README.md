@@ -35,6 +35,6 @@ Built on top of the bootstrap process are plug-ins for the following open-source
 
 **[MongoDB](./src/NetFusion/NetFusion.MongoDB/README.md)**
 
-**[RabbitMQ]./src/NetFusion/NetFusion.RabbitMQ/README.md)**
+**[RabbitMQ](./src/NetFusion/NetFusion.RabbitMQ/README.md)**
 
 **[WebApi](./src/NetFusion/NetFusion.WebApi/README.md)**

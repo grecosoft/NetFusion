@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F0B65875-DEC4-4B25-A13A-1E027D9A6F62}</ProjectGuid>
+    <ProjectGuid>{C654C2C8-3F8B-4524-A40D-EAE06368E850}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NetFusion.Settings</RootNamespace>
-    <AssemblyName>NetFusion.Settings</AssemblyName>
+    <RootNamespace>NetFusion.Integration.Tests</RootNamespace>
+    <AssemblyName>NetFusion.Integration.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,7 +43,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NetFusion.Settings.nuspec" />
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Integration\NetFusion.Integration.csproj">
+      <Project>{f2886036-da02-4a5d-a7a2-7342ea5da634}</Project>
+      <Name>NetFusion.Integration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Logging.Serilog\NetFusion.Logging.Serilog.csproj">
+      <Project>{d3ccb7d3-3b6d-4abc-a784-2080668943a9}</Project>
+      <Name>NetFusion.Logging.Serilog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Settings.MongoDB\NetFusion.Settings.MongoDB.csproj">
+      <Project>{77be4932-cbfc-49fe-a5b1-dcf5b5f30b75}</Project>
+      <Name>NetFusion.Settings.MongoDB</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

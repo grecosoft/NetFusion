@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F0B65875-DEC4-4B25-A13A-1E027D9A6F62}</ProjectGuid>
+    <ProjectGuid>{16DF0BEE-D5CC-4157-8165-66E9F809E660}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NetFusion.Settings</RootNamespace>
-    <AssemblyName>NetFusion.Settings</AssemblyName>
+    <RootNamespace>NetFusion.Infrastructure.Tests</RootNamespace>
+    <AssemblyName>NetFusion.Infrastructure.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,7 +43,22 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NetFusion.Settings.nuspec" />
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.EntityFramework\NetFusion.EntityFramework.csproj">
+      <Project>{c3f8e433-49bb-47a2-92a2-24afaf28ed3a}</Project>
+      <Name>NetFusion.EntityFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.MongoDB\NetFusion.MongoDB.csproj">
+      <Project>{3b4800a1-4138-4e33-a92c-bf195bb37ea2}</Project>
+      <Name>NetFusion.MongoDB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.RabbitMQ\NetFusion.RabbitMQ.csproj">
+      <Project>{1036c88e-b42c-465c-adf8-04192de9d723}</Project>
+      <Name>NetFusion.RabbitMQ</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.WebApi\NetFusion.WebApi.csproj">
+      <Project>{5d9d7490-8589-4e33-bd14-2379501e3239}</Project>
+      <Name>NetFusion.WebApi</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

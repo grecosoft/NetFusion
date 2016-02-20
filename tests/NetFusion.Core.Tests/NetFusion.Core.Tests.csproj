@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F0B65875-DEC4-4B25-A13A-1E027D9A6F62}</ProjectGuid>
+    <ProjectGuid>{F09EAAB7-BC19-438C-A8D3-A43CD2F23C4C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NetFusion.Settings</RootNamespace>
-    <AssemblyName>NetFusion.Settings</AssemblyName>
+    <RootNamespace>NetFusion.Core.Tests</RootNamespace>
+    <AssemblyName>NetFusion.Core.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,7 +43,22 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NetFusion.Settings.nuspec" />
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj">
+      <Project>{a71630d5-940f-4de6-a5b9-f229074aa86d}</Project>
+      <Name>NetFusion.Bootstrap</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Common\NetFusion.Common.csproj">
+      <Project>{4bcb335e-3f83-481d-b206-ffa9266bf780}</Project>
+      <Name>NetFusion.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Eventing\NetFusion.Eventing.csproj">
+      <Project>{3227a952-6f7f-4773-b468-298a3f4d8bc0}</Project>
+      <Name>NetFusion.Eventing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Settings\NetFusion.Settings.csproj">
+      <Project>{f0b65875-dec4-4b25-a13a-1e027d9a6f62}</Project>
+      <Name>NetFusion.Settings</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
