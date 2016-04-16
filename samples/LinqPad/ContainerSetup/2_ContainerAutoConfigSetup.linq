@@ -1,0 +1,100 @@
+<Query Kind="Program">
+  <Reference Relative="..\libs\Autofac.dll">C:\_dev\git\Research\LinqPad\NetFusion\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\MongoDB.Bson.dll">C:\_dev\git\Research\LinqPad\NetFusion\libs\MongoDB.Bson.dll</Reference>
+  <Reference Relative="..\libs\MongoDB.Driver.Core.dll">C:\_dev\git\Research\LinqPad\NetFusion\libs\MongoDB.Driver.Core.dll</Reference>
+  <Reference Relative="..\libs\MongoDB.Driver.dll">C:\_dev\git\Research\LinqPad\NetFusion\libs\MongoDB.Driver.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\_dev\git\Research\LinqPad\NetFusion\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">C:\_dev\git\Research\LinqPad\NetFusion\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Eventing.dll">C:\_dev\git\Research\LinqPad\NetFusion\libs\NetFusion.Eventing.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.MongoDB.dll">C:\_dev\git\Research\LinqPad\NetFusion\libs\NetFusion.MongoDB.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">C:\_dev\git\Research\LinqPad\NetFusion\libs\NetFusion.RabbitMQ.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\_dev\git\Research\LinqPad\NetFusion\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.Mongo.dll">C:\_dev\git\Research\LinqPad\NetFusion\libs\NetFusion.Settings.Mongo.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\_dev\git\Research\LinqPad\NetFusion\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\RabbitMQ.Client.dll">C:\_dev\git\Research\LinqPad\NetFusion\libs\RabbitMQ.Client.dll</Reference>
+  <Reference Relative="..\libs\Samples.Domain.dll">C:\_dev\git\Research\LinqPad\NetFusion\libs\Samples.Domain.dll</Reference>
+  <Namespace>Autofac</Namespace>
+  <Namespace>NetFusion.Bootstrap.Container</Namespace>
+  <Namespace>NetFusion.Bootstrap.Extensions</Namespace>
+  <Namespace>NetFusion.Bootstrap.Logging</Namespace>
+  <Namespace>NetFusion.Bootstrap.Manifests</Namespace>
+  <Namespace>NetFusion.Bootstrap.Plugins</Namespace>
+  <Namespace>NetFusion.Bootstrap.Testing</Namespace>
+  <Namespace>NetFusion.Common.Extensions</Namespace>
+  <Namespace>NetFusion.Common.Extensions</Namespace>
+  <Namespace>NetFusion.Eventing</Namespace>
+  <Namespace>NetFusion.Eventing.Config</Namespace>
+  <Namespace>NetFusion.MongoDB</Namespace>
+  <Namespace>NetFusion.MongoDB.Configs</Namespace>
+  <Namespace>NetFusion.MongoDB.Testing</Namespace>
+  <Namespace>NetFusion.RabbitMQ</Namespace>
+  <Namespace>NetFusion.RabbitMQ.Configs</Namespace>
+  <Namespace>NetFusion.RabbitMQ.Consumers</Namespace>
+  <Namespace>NetFusion.Settings</Namespace>
+  <Namespace>NetFusion.Settings.Configs</Namespace>
+  <Namespace>NetFusion.Settings.Strategies</Namespace>
+  <Namespace>NetFusion.Settings.Testing</Namespace>
+  <Namespace>Samples.Domain.RabbitMQ.Events</Namespace>
+  <Namespace>MongoDB.Driver</Namespace>
+</Query>
+
+// ******************************************************************************************
+// The following creates a container within LinqPad that will automatically scan a specified 
+// directory for assemblies containing plug-ins.  This is also how a container is used within
+// an actual host outside of LinqPad  such as WebApi.  In addition, all types defined within
+// the LinqPad query window will be automatically assocated with the defined application host
+// plug-in (LinqPadHostPlugin in this example).
+// ******************************************************************************************
+
+// -------------------------------------------------------------------------------------
+// Mock host plug-in that will represent LinqPad.
+// -------------------------------------------------------------------------------------
+public class LinqPadHostPlugin : MockPlugin,
+	IAppHostPluginManifest
+{
+
+}
+
+void Main()
+{
+	// Create an instance of the resolver specifying the sub directory containing
+	// assemblies with plug-ins.  The type resolver will look for all assemblies
+	// matching the specified search pattern containing plug-ins.
+	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
+
+	var typeResolver = new HostTypeResolver(pluginDirectory, 
+		"NetFusion.Settings.dll")
+	{
+		// This indicates that LinqPad, representing the application host, should
+		// be scanned for plug-ins.
+		LoadAppHostFromAssembly = true
+	};
+
+	// Bootstrap the container:
+	ContainerSetup.Bootstrap(typeResolver, config =>
+	{
+		// Since LinqPad is the host, add an application host to the
+		// container.
+		config.AddPlugin<LinqPadHostPlugin>();
+	})
+	.Build()
+	.Start();
+
+	// Use plug-in configured services.  This would normally be 
+	// dependency injected into a dependent component such as a
+	// WebApi controller.
+	var testSettings = AppContainer.Instance.Services.Resolve<TestSettings>();
+	testSettings.Dump();
+}
+
+// 3_NetFusionSettingsExamples.linq: contains examples for application settings.
+public class TestSettings : AppSettings
+{
+	public TestSettings()
+	{
+		this.IsInitializationRequired = false;
+	}
+
+	public int Value1 { get; set; } = 100;
+	public int Value2 { get; set; } = 200;
+}
