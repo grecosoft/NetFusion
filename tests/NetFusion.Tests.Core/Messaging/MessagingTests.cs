@@ -386,7 +386,7 @@ namespace NetFusion.Core.Test.Messaging
         /// asynchronous.  This test publishes an event that will be
         /// handled by two asynchronous handlers and one synchronous.
         /// </summary>
-       // [Fact]
+        [Fact]
         public void AsyncHandlersCanBeInvoked()
         {
             DefaultAsyncDomainEventPlugin
