@@ -30,21 +30,69 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Container\AppContainer.cs" />
+    <Compile Include="Container\AutofacRegistrationConfig.cs" />
+    <Compile Include="Container\CompositeApplication.cs" />
+    <Compile Include="Container\IAppContainer.cs" />
+    <Compile Include="Container\IContainerConfig.cs" />
+    <Compile Include="Container\ILoadedContainer.cs" />
+    <Compile Include="Container\ITypeResolver.cs" />
+    <Compile Include="Container\ManifestRegistry.cs" />
+    <Compile Include="Container\TypeResolver.cs" />
+    <Compile Include="Exceptions\ContainerException.cs" />
+    <Compile Include="Extensions\AutofacRegistrationExtensions.cs" />
+    <Compile Include="Extensions\ContainerExtensions.cs" />
+    <Compile Include="Extensions\ModuleExtensions.cs" />
+    <Compile Include="Logging\AppContainerLog.cs" />
+    <Compile Include="Logging\IContainerLogger.cs" />
+    <Compile Include="Logging\LoggerConfig.cs" />
+    <Compile Include="Logging\LoggerExtensions.cs" />
+    <Compile Include="Logging\NullLogger.cs" />
+    <Compile Include="Manifests\IAppComponentPluginManifest.cs" />
+    <Compile Include="Manifests\IAppHostPluginManifest.cs" />
+    <Compile Include="Manifests\ICorePluginManifest.cs" />
+    <Compile Include="Manifests\IPluginManifest.cs" />
+    <Compile Include="Manifests\PluginManifestBase.cs" />
+    <Compile Include="Plugins\IComponentActivated.cs" />
+    <Compile Include="Plugins\IKnownPluginType.cs" />
+    <Compile Include="Plugins\IPluginModule.cs" />
+    <Compile Include="Plugins\IPluginModuleService.cs" />
+    <Compile Include="Plugins\ModuleContext.cs" />
+    <Compile Include="Plugins\Plugin.cs" />
+    <Compile Include="Plugins\PluginModule.cs" />
+    <Compile Include="Plugins\PluginType.cs" />
+    <Compile Include="Plugins\PluginTypes.cs" />
+    <Compile Include="Plugins\TypeRegistration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Testing\ContainerAct.cs" />
+    <Compile Include="Testing\ContainerAssert.cs" />
+    <Compile Include="Testing\ContainerSetup.cs" />
+    <Compile Include="Testing\HostTypeResolver.cs" />
+    <Compile Include="Testing\MockAppComponentPlugin.cs" />
+    <Compile Include="Testing\MockCorePlugin.cs" />
+    <Compile Include="Testing\MockPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NetFusion.Bootstrap.nuspec" />
+    <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetFusion.Common\NetFusion.Common.csproj">
+      <Project>{4bcb335e-3f83-481d-b206-ffa9266bf780}</Project>
+      <Name>NetFusion.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

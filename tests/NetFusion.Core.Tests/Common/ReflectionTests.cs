@@ -5,7 +5,7 @@ using Xunit;
 
 namespace NetFusion.Core.Tests.Common
 {
-    public class ReflectionUnitTests
+    public class ReflectionTests
     {
         [Fact]
         public void HasAttribute()

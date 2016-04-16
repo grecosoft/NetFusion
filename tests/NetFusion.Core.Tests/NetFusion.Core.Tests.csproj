@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FluentAssertions, Version=4.2.2.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\FluentAssertions.4.2.2\lib\net45\FluentAssertions.dll</HintPath>
       <Private>True</Private>
@@ -63,12 +67,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bootstrap\AppContainerTests.cs" />
+    <Compile Include="Bootstrap\BootstrapTestExtensions.cs" />
+    <Compile Include="Bootstrap\CompositionTests.cs" />
+    <Compile Include="Bootstrap\ConfigurationTests.cs" />
+    <Compile Include="Bootstrap\ContainerTests.cs" />
+    <Compile Include="Bootstrap\LoggingTests.cs" />
+    <Compile Include="Bootstrap\Mocks\MockActivatedType.cs" />
+    <Compile Include="Bootstrap\Mocks\MockAppHostPlugin.cs" />
+    <Compile Include="Bootstrap\Mocks\MockHostType.cs" />
+    <Compile Include="Bootstrap\Mocks\MockKnownType.cs" />
+    <Compile Include="Bootstrap\Mocks\MockLogger.cs" />
+    <Compile Include="Bootstrap\Mocks\MockOneType.cs" />
+    <Compile Include="Bootstrap\Mocks\MockPluginConfig.cs" />
+    <Compile Include="Bootstrap\Mocks\MockPluginModule.cs" />
+    <Compile Include="Bootstrap\Mocks\MockTwoType.cs" />
+    <Compile Include="Bootstrap\RegistrationTests.cs" />
     <Compile Include="Common\AssemblyExtensionTests.cs" />
     <Compile Include="Common\DictionaryExtensionTests.cs" />
     <Compile Include="Common\EnumerableExtensionTests.cs" />
     <Compile Include="Common\ObjectExtensionTests.cs" />
-    <Compile Include="Common\ReflectionUnitTests.cs" />
+    <Compile Include="Common\ReflectionTests.cs" />
     <Compile Include="Common\SetExtensionTests.cs" />
     <Compile Include="Common\TypeExtensionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
