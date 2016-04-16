@@ -30,20 +30,58 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MongoDB.Bson, Version=2.2.3.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\MongoDB.Bson.2.2.3\lib\net45\MongoDB.Bson.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=2.2.3.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\MongoDB.Driver.2.2.3\lib\net45\MongoDB.Driver.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MongoDB.Driver.Core, Version=2.2.3.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\MongoDB.Driver.Core.2.2.3\lib\net45\MongoDB.Driver.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configs\MongoSettings.cs" />
+    <Compile Include="Core\IEntityClassMap.cs" />
+    <Compile Include="Core\MongoDbClient.cs" />
+    <Compile Include="EntityClassMap.cs" />
+    <Compile Include="IMongoDbClient.cs" />
+    <Compile Include="Modules\IMongoMappingModule.cs" />
+    <Compile Include="Modules\MappingModule.cs" />
+    <Compile Include="Modules\MongoModule.cs" />
+    <Compile Include="MongoCheck.cs" />
+    <Compile Include="MonogExtensions.cs" />
+    <Compile Include="PluginManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Testing\HostTypeResolverExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NetFusion.MongoDB.nuspec" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj">
+      <Project>{a71630d5-940f-4de6-a5b9-f229074aa86d}</Project>
+      <Name>NetFusion.Bootstrap</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetFusion.Common\NetFusion.Common.csproj">
+      <Project>{4bcb335e-3f83-481d-b206-ffa9266bf780}</Project>
+      <Name>NetFusion.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetFusion.Settings\NetFusion.Settings.csproj">
+      <Project>{f0b65875-dec4-4b25-a13a-1e027d9a6f62}</Project>
+      <Name>NetFusion.Settings</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
