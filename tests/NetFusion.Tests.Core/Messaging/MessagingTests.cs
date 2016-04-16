@@ -390,12 +390,31 @@ namespace NetFusion.Core.Test.Messaging
         [Fact]
         public void AsyncHandlersCanBeInvoked()
         {
-            var t = Task.Run(() =>
-            {
+            ContainerSetup
+                   .Arrange((HostTypeResolver config) =>
+                   {
+                       // Use the application host to simulate a plug-in with domain-event related 
+                       // types that will be discovered by the Domain Event Plug-in.
+                       config.AddPlugin<MockAppHostPlugin>()
+                            .AddPluginType<MockDomainEvent>()
+                            .AddPluginType<MockAsyncMessageConsumer>();
 
-            });
+                       config.AddPlugin<MockCorePlugin>()
+                            .AddPluginType<MessagingConfig>()
+                            .AddPluginType<MessagingModule>();
+                   });
 
-            t.Wait();
+
+            AppContainer.Instance.Build().Start();
+
+
+            var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
+            var evt = new MockDomainEvent();
+            var futureResults = domainEventSrv.PublishAsync(evt);
+
+            futureResults.Wait();
+
+            AppContainer.Instance.Dispose();
 
             //DefaultAsyncDomainEventPlugin
             //    .Act(c =>
