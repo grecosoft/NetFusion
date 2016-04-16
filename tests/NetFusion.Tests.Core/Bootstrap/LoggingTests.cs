@@ -3,13 +3,13 @@ using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Bootstrap.Testing;
-using NetFusion.Core.Tests.Bootstrap.Mocks;
+using NetFusion.Tests.Core.Bootstrap.Mocks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Xunit;
 
-namespace NetFusion.Tests.Bootstrap
+namespace NetFusion.Tests.Core.Bootstrap
 {
     /// <summary>
     /// Unit tests for container logging configuration and for testing 
@@ -133,7 +133,7 @@ namespace NetFusion.Tests.Bootstrap
                     var moduleLogs = (appHostLog as IDictionary<string, object>)["Plugin-Modules"];
                     moduleLogs.Should().NotBeNull();
 
-                    dynamic moduleLog = (moduleLogs as IDictionary)["NetFusion.Core.Tests.Bootstrap.Mocks.MockLoggingModule"];
+                    dynamic moduleLog = (moduleLogs as IDictionary)["NetFusion.Tests.Core.Bootstrap.Mocks.MockLoggingModule"];
 
                     ((object)moduleLog).Should().NotBeNull();
 

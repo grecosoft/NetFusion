@@ -2,7 +2,7 @@
 using NetFusion.Bootstrap.Plugins;
 using System.Collections.Generic;
 
-namespace NetFusion.Core.Tests.Bootstrap.Mocks
+namespace NetFusion.Tests.Core.Bootstrap.Mocks
 {
     public abstract class MockPluginModule : PluginModule
     {

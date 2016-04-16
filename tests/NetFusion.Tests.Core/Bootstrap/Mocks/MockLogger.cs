@@ -1,6 +1,6 @@
 ﻿using NetFusion.Bootstrap.Logging;
 
-namespace NetFusion.Core.Tests.Bootstrap.Mocks
+namespace NetFusion.Tests.Core.Bootstrap.Mocks
 {
     public class MockLogger : NullLogger
     {

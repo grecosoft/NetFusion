@@ -1,4 +1,4 @@
-﻿namespace NetFusion.Core.Tests.Bootstrap.Mocks
+﻿namespace NetFusion.Tests.Core.Bootstrap.Mocks
 {
     public interface IMockHostType
     {

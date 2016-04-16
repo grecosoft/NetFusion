@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C654C2C8-3F8B-4524-A40D-EAE06368E850}</ProjectGuid>
+    <ProjectGuid>{16DF0BEE-D5CC-4157-8165-66E9F809E660}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NetFusion.Integration.Tests</RootNamespace>
-    <AssemblyName>NetFusion.Integration.Tests</AssemblyName>
+    <RootNamespace>NetFusion.Tests.Infrastructure</RootNamespace>
+    <AssemblyName>NetFusion.Tests.Infrastructure</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -70,17 +70,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Integration\NetFusion.Integration.csproj">
-      <Project>{f2886036-da02-4a5d-a7a2-7342ea5da634}</Project>
-      <Name>NetFusion.Integration</Name>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.EntityFramework\NetFusion.EntityFramework.csproj">
+      <Project>{c3f8e433-49bb-47a2-92a2-24afaf28ed3a}</Project>
+      <Name>NetFusion.EntityFramework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Logging.Serilog\NetFusion.Logging.Serilog.csproj">
-      <Project>{d3ccb7d3-3b6d-4abc-a784-2080668943a9}</Project>
-      <Name>NetFusion.Logging.Serilog</Name>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.MongoDB\NetFusion.MongoDB.csproj">
+      <Project>{3b4800a1-4138-4e33-a92c-bf195bb37ea2}</Project>
+      <Name>NetFusion.MongoDB</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Settings.MongoDB\NetFusion.Settings.MongoDB.csproj">
-      <Project>{77be4932-cbfc-49fe-a5b1-dcf5b5f30b75}</Project>
-      <Name>NetFusion.Settings.MongoDB</Name>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.RabbitMQ\NetFusion.RabbitMQ.csproj">
+      <Project>{1036c88e-b42c-465c-adf8-04192de9d723}</Project>
+      <Name>NetFusion.RabbitMQ</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.WebApi\NetFusion.WebApi.csproj">
+      <Project>{5d9d7490-8589-4e33-bd14-2379501e3239}</Project>
+      <Name>NetFusion.WebApi</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

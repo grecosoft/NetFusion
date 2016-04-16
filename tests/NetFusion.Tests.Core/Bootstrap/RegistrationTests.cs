@@ -3,10 +3,10 @@ using FluentAssertions;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Extensions;
 using NetFusion.Bootstrap.Testing;
-using NetFusion.Core.Tests.Bootstrap.Mocks;
+using NetFusion.Tests.Core.Bootstrap.Mocks;
 using Xunit;
 
-namespace NetFusion.Tests.Bootstrap
+namespace NetFusion.Tests.Core.Bootstrap
 {
     public class RegistrationUnitTests
     {

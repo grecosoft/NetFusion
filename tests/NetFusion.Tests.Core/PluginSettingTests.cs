@@ -7,7 +7,7 @@ using NetFusion.Bootstrap.Testing;
 using NetFusion.Core.Tests.Settings.Mocks;
 using NetFusion.Settings;
 using NetFusion.Settings.Configs;
-using NetFusion.Tests.Bootstrap;
+using NetFusion.Tests.Core.Bootstrap;
 using System;
 using Xunit;
 

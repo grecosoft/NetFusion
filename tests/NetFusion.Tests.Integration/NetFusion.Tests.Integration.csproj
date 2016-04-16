@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F09EAAB7-BC19-438C-A8D3-A43CD2F23C4C}</ProjectGuid>
+    <ProjectGuid>{C654C2C8-3F8B-4524-A40D-EAE06368E850}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NetFusion.Core.Tests</RootNamespace>
-    <AssemblyName>NetFusion.Core.Tests</AssemblyName>
+    <RootNamespace>NetFusion.Tests.Integration</RootNamespace>
+    <AssemblyName>NetFusion.Tests.Integration</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -33,10 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="FluentAssertions, Version=4.2.2.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\FluentAssertions.4.2.2\lib\net45\FluentAssertions.dll</HintPath>
       <Private>True</Private>
@@ -46,10 +42,13 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
       <Private>True</Private>
@@ -68,75 +67,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bootstrap\BootstrapTestExtensions.cs" />
-    <Compile Include="Bootstrap\CompositionTests.cs" />
-    <Compile Include="Bootstrap\ConfigurationTests.cs" />
-    <Compile Include="Bootstrap\ContainerTests.cs" />
-    <Compile Include="Bootstrap\LoggingTests.cs" />
-    <Compile Include="Bootstrap\Mocks\MockActivatedType.cs" />
-    <Compile Include="Bootstrap\Mocks\MockAppHostPlugin.cs" />
-    <Compile Include="Bootstrap\Mocks\MockHostType.cs" />
-    <Compile Include="Bootstrap\Mocks\MockKnownType.cs" />
-    <Compile Include="Bootstrap\Mocks\MockLogger.cs" />
-    <Compile Include="Bootstrap\Mocks\MockOneType.cs" />
-    <Compile Include="Bootstrap\Mocks\MockPluginConfig.cs" />
-    <Compile Include="Bootstrap\Mocks\MockPluginModule.cs" />
-    <Compile Include="Bootstrap\Mocks\MockTwoType.cs" />
-    <Compile Include="Bootstrap\RegistrationTests.cs" />
-    <Compile Include="Common\AssemblyExtensionTests.cs" />
-    <Compile Include="Common\DictionaryExtensionTests.cs" />
-    <Compile Include="Common\EnumerableExtensionTests.cs" />
-    <Compile Include="Common\ObjectExtensionTests.cs" />
-    <Compile Include="Common\ReflectionTests.cs" />
-    <Compile Include="Common\SetExtensionTests.cs" />
-    <Compile Include="Common\TypeExtensionTests.cs" />
-    <Compile Include="Messaging\MessagingTests.cs" />
-    <Compile Include="Messaging\Mocks\MockAsyncDomainEventConsumer.cs" />
-    <Compile Include="Messaging\Mocks\MockBaseMessageConsumer.cs" />
-    <Compile Include="Messaging\Mocks\MockCommand.cs" />
-    <Compile Include="Messaging\Mocks\MockCommandConsumer.cs" />
-    <Compile Include="Messaging\Mocks\MockCommandResult.cs" />
-    <Compile Include="Messaging\Mocks\MockConsumer.cs" />
-    <Compile Include="Messaging\Mocks\MockDerivedDomainEvent.cs" />
-    <Compile Include="Messaging\Mocks\MockDomainEvent.cs" />
-    <Compile Include="Messaging\Mocks\MockDomainEventConsumer.cs" />
-    <Compile Include="Messaging\Mocks\MockErrorMessageConsumer.cs" />
-    <Compile Include="Messaging\Mocks\MockPrefixedMessageConsumer.cs" />
-    <Compile Include="PluginSettingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingsTestExtensions.cs" />
-    <Compile Include="Settings\Mocks\MockGenericIntOne.cs" />
-    <Compile Include="Settings\Mocks\MockGenericIntTwo.cs" />
-    <Compile Include="Settings\Mocks\MockOptionalSettings.cs" />
-    <Compile Include="Settings\Mocks\MockSettingInitOne.cs" />
-    <Compile Include="Settings\Mocks\MockSettingInitTwo.cs" />
-    <Compile Include="Settings\Mocks\MockSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj">
-      <Project>{a71630d5-940f-4de6-a5b9-f229074aa86d}</Project>
-      <Name>NetFusion.Bootstrap</Name>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Integration\NetFusion.Integration.csproj">
+      <Project>{f2886036-da02-4a5d-a7a2-7342ea5da634}</Project>
+      <Name>NetFusion.Integration</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Common\NetFusion.Common.csproj">
-      <Project>{4bcb335e-3f83-481d-b206-ffa9266bf780}</Project>
-      <Name>NetFusion.Common</Name>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Logging.Serilog\NetFusion.Logging.Serilog.csproj">
+      <Project>{d3ccb7d3-3b6d-4abc-a784-2080668943a9}</Project>
+      <Name>NetFusion.Logging.Serilog</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Messaging\NetFusion.Messaging.csproj">
-      <Project>{3227a952-6f7f-4773-b468-298a3f4d8bc0}</Project>
-      <Name>NetFusion.Messaging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Settings\NetFusion.Settings.csproj">
-      <Project>{f0b65875-dec4-4b25-a13a-1e027d9a6f62}</Project>
-      <Name>NetFusion.Settings</Name>
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Settings.MongoDB\NetFusion.Settings.MongoDB.csproj">
+      <Project>{77be4932-cbfc-49fe-a5b1-dcf5b5f30b75}</Project>
+      <Name>NetFusion.Settings.MongoDB</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
