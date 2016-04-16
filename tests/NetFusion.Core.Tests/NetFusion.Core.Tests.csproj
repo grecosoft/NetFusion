@@ -100,9 +100,9 @@
       <Project>{4bcb335e-3f83-481d-b206-ffa9266bf780}</Project>
       <Name>NetFusion.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Eventing\NetFusion.Eventing.csproj">
+    <ProjectReference Include="..\..\src\NetFusion\NetFusion.Messaging\NetFusion.Messaging.csproj">
       <Project>{3227a952-6f7f-4773-b468-298a3f4d8bc0}</Project>
-      <Name>NetFusion.Eventing</Name>
+      <Name>NetFusion.Messaging</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\NetFusion\NetFusion.Settings\NetFusion.Settings.csproj">
       <Project>{f0b65875-dec4-4b25-a13a-1e027d9a6f62}</Project>
@@ -114,6 +114,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Messaging\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -7,8 +7,8 @@
     <ProjectGuid>{3227A952-6F7F-4773-B468-298A3F4D8BC0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NetFusion.Eventing</RootNamespace>
-    <AssemblyName>NetFusion.Eventing</AssemblyName>
+    <RootNamespace>NetFusion.Messaging</RootNamespace>
+    <AssemblyName>NetFusion.Messaging</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,7 +43,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NetFusion.Eventing.nuspec" />
+    <None Include="NetFusion.Messaging.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
