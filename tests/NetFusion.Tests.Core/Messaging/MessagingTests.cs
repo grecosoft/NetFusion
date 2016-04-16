@@ -181,7 +181,7 @@ namespace NetFusion.Core.Test.Messaging
         /// By default, consumer event handlers with a base domain event type
         /// will not be invoked for derived events.
         /// </summary>
-        //[Fact]
+        [Fact]
         public void ConsumerEventHandlerForBaseTypeNotInvokedByDefault()
         {
             DefaultDerivedDomainEventPlugin
@@ -215,7 +215,7 @@ namespace NetFusion.Core.Test.Messaging
         /// with the IncludeDerivedEvents attribute to indicate it should be 
         /// called for any derived domain events.
         /// </summary>
-       // [Fact]
+        [Fact]
         public void ConsumerEventHandlerForBaseTypeInvokedIfAppliedAttribute()
         {
             DefaultDerivedDomainEventPlugin

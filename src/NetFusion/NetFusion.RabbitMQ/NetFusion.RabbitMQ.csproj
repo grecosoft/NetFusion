@@ -52,20 +52,66 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configs\BrokerConnection.cs" />
+    <Compile Include="Configs\BrokerSettings.cs" />
+    <Compile Include="Configs\QueueProperties.cs" />
+    <Compile Include="Consumers\AddFanoutQueueAttribute.cs" />
+    <Compile Include="Consumers\AddQueueAttribute.cs" />
+    <Compile Include="Consumers\BrokerAttribute.cs" />
+    <Compile Include="Consumers\JoinQueueAttribute.cs" />
+    <Compile Include="Consumers\QueueBindingTypes.cs" />
+    <Compile Include="Consumers\QueueConsumerAttribute.cs" />
+    <Compile Include="Core\ChannelExtensions.cs" />
+    <Compile Include="Core\ExchangeDefinition.cs" />
+    <Compile Include="Core\ExchangeQueue.cs" />
+    <Compile Include="Core\IMessageBroker.cs" />
+    <Compile Include="Core\IMessageExchange.cs" />
+    <Compile Include="Core\MessageBroker.cs" />
+    <Compile Include="Core\MessageBrokerLog.cs" />
+    <Compile Include="Core\MessageConsumer.cs" />
+    <Compile Include="Core\MessageExchange.cs" />
+    <Compile Include="Core\RabbitMqMessagePublisher.cs" />
+    <Compile Include="Core\ReplyConsumer.cs" />
+    <Compile Include="Exchanges\DirectExchange.cs" />
+    <Compile Include="Exchanges\ExchangeSettings.cs" />
+    <Compile Include="Exchanges\FanoutExchange.cs" />
+    <Compile Include="Exchanges\QueueSettings.cs" />
+    <Compile Include="Exchanges\TopicExchange.cs" />
+    <Compile Include="Exchanges\WorkQueueExchange.cs" />
+    <Compile Include="Integration\ExchangeConfig.cs" />
+    <Compile Include="Integration\IExchangeRepository.cs" />
+    <Compile Include="Integration\QueueConfig.cs" />
+    <Compile Include="MessageExtensions.cs" />
+    <Compile Include="Modules\IMessageBrokerModule.cs" />
+    <Compile Include="Modules\MessageBrokerModule.cs" />
+    <Compile Include="PluginManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\BinaryMessageSerializer.cs" />
+    <Compile Include="Serialization\IMessageSerializer.cs" />
+    <Compile Include="Serialization\IMessageSerializerRegistry.cs" />
+    <Compile Include="Serialization\JsonMessageSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NetFusion.RabbitMQ.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Configs\" />
-    <Folder Include="Consumers\" />
-    <Folder Include="Core\" />
-    <Folder Include="Exchanges\" />
-    <Folder Include="Integration\" />
-    <Folder Include="Modules\" />
-    <Folder Include="Serialization\" />
+    <ProjectReference Include="..\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj">
+      <Project>{a71630d5-940f-4de6-a5b9-f229074aa86d}</Project>
+      <Name>NetFusion.Bootstrap</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetFusion.Common\NetFusion.Common.csproj">
+      <Project>{4bcb335e-3f83-481d-b206-ffa9266bf780}</Project>
+      <Name>NetFusion.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetFusion.Messaging\NetFusion.Messaging.csproj">
+      <Project>{3227a952-6f7f-4773-b468-298a3f4d8bc0}</Project>
+      <Name>NetFusion.Messaging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetFusion.Settings\NetFusion.Settings.csproj">
+      <Project>{f0b65875-dec4-4b25-a13a-1e027d9a6f62}</Project>
+      <Name>NetFusion.Settings</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
