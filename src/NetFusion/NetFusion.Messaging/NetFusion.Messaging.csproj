@@ -39,17 +39,53 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command.cs" />
+    <Compile Include="Config\MessagingConfig.cs" />
+    <Compile Include="Core\DispatchTask.cs" />
+    <Compile Include="Core\IMessagePublisher.cs" />
+    <Compile Include="Core\InProcessMessagePublisher.cs" />
+    <Compile Include="Core\MessageDispatchInfo.cs" />
+    <Compile Include="Core\MessagePublisher.cs" />
+    <Compile Include="Core\MessagePublisherTask.cs" />
+    <Compile Include="Core\MessagingExtensions.cs" />
+    <Compile Include="Core\MessagingService.cs" />
+    <Compile Include="DispatchException.cs" />
+    <Compile Include="DomainEvent.cs" />
+    <Compile Include="ICommand.cs" />
+    <Compile Include="IDomainEvent.cs" />
+    <Compile Include="IEventSource.cs" />
+    <Compile Include="IMessage.cs" />
+    <Compile Include="IMessageConsumer.cs" />
+    <Compile Include="IMessagingService.cs" />
+    <Compile Include="IncludeDerivedMessagesAttribute.cs" />
+    <Compile Include="Modules\IMessagingModule.cs" />
+    <Compile Include="Modules\MessagingModule.cs" />
+    <Compile Include="PluginManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublisherException.cs" />
+    <Compile Include="Rules\ApplyDispatchRuleAttribute.cs" />
+    <Compile Include="Rules\IMessageDispatchRule.cs" />
+    <Compile Include="Rules\MessageDispatchRule.cs" />
+    <Compile Include="Rules\RuleApplyTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NetFusion.Messaging.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Config\" />
-    <Folder Include="Core\" />
-    <Folder Include="Modules\" />
-    <Folder Include="Rules\" />
+    <ProjectReference Include="..\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj">
+      <Project>{a71630d5-940f-4de6-a5b9-f229074aa86d}</Project>
+      <Name>NetFusion.Bootstrap</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetFusion.Common\NetFusion.Common.csproj">
+      <Project>{4bcb335e-3f83-481d-b206-ffa9266bf780}</Project>
+      <Name>NetFusion.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetFusion.Settings\NetFusion.Settings.csproj">
+      <Project>{f0b65875-dec4-4b25-a13a-1e027d9a6f62}</Project>
+      <Name>NetFusion.Settings</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
