@@ -126,7 +126,7 @@ namespace NetFusion.Core.Test.Messaging
         /// When a domain event is published using the service, the corresponding discovered
         /// consumer event handler methods will be invoked.
         /// </summary>
-        //[Fact]
+        [Fact]
         public void DomainEventConsumerHandlerInvoked()
         {
             DefaultDomainEventPlugin
