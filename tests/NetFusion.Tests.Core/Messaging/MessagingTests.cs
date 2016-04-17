@@ -11,10 +11,9 @@ using NetFusion.Messaging.Modules;
 using NetFusion.Tests.Core.Bootstrap.Mocks;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace NetFusion.Core.Test.Messaging
+namespace NetFusion.Tests.Eventing
 {
     /// <summary>
     /// Domain events provide a way of modeling events that exist within the problem
@@ -92,7 +91,7 @@ namespace NetFusion.Core.Test.Messaging
         }
 
         /// <summary>
-        /// The plug-in registers a service that can be used to publish events.
+        /// The plug-n registers a service that can be used to publish events.
         /// </summary>
         [Fact]
         public void RegistersServiceForPublishingEvents()
@@ -297,7 +296,7 @@ namespace NetFusion.Core.Test.Messaging
                 });
         }
 
-        //[Fact]
+        [Fact]
         public void ExceptionsRecordedForEachEventHandler()
         {
             ContainerSetup
@@ -355,7 +354,7 @@ namespace NetFusion.Core.Test.Messaging
         /// <summary>
         /// Command domain events can have a return result. 
         /// </summary>
-        //[Fact]
+        [Fact]
         public void CommandEventsCanHaveResult()
         {
             MockCommandResult result = null;
@@ -390,55 +389,27 @@ namespace NetFusion.Core.Test.Messaging
         [Fact]
         public void AsyncHandlersCanBeInvoked()
         {
-            ContainerSetup
-                   .Arrange((HostTypeResolver config) =>
-                   {
-                       // Use the application host to simulate a plug-in with domain-event related 
-                       // types that will be discovered by the Domain Event Plug-in.
-                       config.AddPlugin<MockAppHostPlugin>()
-                            .AddPluginType<MockDomainEvent>()
-                            .AddPluginType<MockAsyncMessageConsumer>();
+            DefaultAsyncDomainEventPlugin
+                .Act(c =>
+                {
+                    c.WithConfig<MessagingConfig>();
+                    c.Build();
 
-                       config.AddPlugin<MockCorePlugin>()
-                            .AddPluginType<MessagingConfig>()
-                            .AddPluginType<MessagingModule>();
-                   });
+                    var domainEventSrv = c.Services.Resolve<IMessagingService>();
+                    var evt = new MockDomainEvent();
+                    var futureResults = domainEventSrv.PublishAsync(evt);
 
+                    futureResults.Wait();
 
-            AppContainer.Instance.Build().Start();
-
-
-            var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
-            var evt = new MockDomainEvent();
-            var futureResults = domainEventSrv.PublishAsync(evt);
-
-            futureResults.Wait();
-
-            AppContainer.Instance.Dispose();
-
-            //DefaultAsyncDomainEventPlugin
-            //    .Act(c =>
-            //    {
-            //        c.WithConfig<MessagingConfig>();
-            //        c.Build();
-
-            //        var domainEventSrv = c.Services.Resolve<IMessagingService>();
-            //        var evt = new MockDomainEvent();
-            //        var futureResults = domainEventSrv.PublishAsync(evt);
-
-
-
-            //        //futureResults.Wait();
-
-            //    })
-            //    .Assert((AppContainer c) =>
-            //    {
-            //        var consumer = c.Services.Resolve<MockAsyncMessageConsumer>();
-            //        consumer.ExecutedHandlers.Should().HaveCount(3);
-            //        consumer.ExecutedHandlers.Should().Contain("OnEvent1");
-            //        consumer.ExecutedHandlers.Should().Contain("OnEvent2");
-            //        consumer.ExecutedHandlers.Should().Contain("OnEvent3");
-            //    });
+                })
+                .Assert((AppContainer c) =>
+                {
+                    var consumer = c.Services.Resolve<MockAsyncMessageConsumer>();
+                    consumer.ExecutedHandlers.Should().HaveCount(3);
+                    consumer.ExecutedHandlers.Should().Contain("OnEvent1");
+                    consumer.ExecutedHandlers.Should().Contain("OnEvent2");
+                    consumer.ExecutedHandlers.Should().Contain("OnEvent3");
+                });
         }
 
         private ContainerAct DefaultDomainEventPlugin
