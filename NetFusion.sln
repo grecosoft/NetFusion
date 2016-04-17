@@ -30,6 +30,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Settings", "src\NetFusion\NetFusion.Settings\NetFusion.Settings.csproj", "{F0B65875-DEC4-4B25-A13A-1E027D9A6F62}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9E72F15A-2F96-4958-9ED1-9B8782F31532}"
+	ProjectSection(SolutionItems) = preProject
+		tests\RunTests.bat = tests\RunTests.bat
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Messaging", "src\NetFusion\NetFusion.Messaging\NetFusion.Messaging.csproj", "{3227A952-6F7F-4773-B468-298A3F4D8BC0}"
 EndProject
