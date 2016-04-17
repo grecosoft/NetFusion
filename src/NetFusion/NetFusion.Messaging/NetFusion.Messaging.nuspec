@@ -8,7 +8,7 @@
     <licenseUrl>$licenseUrl$</licenseUrl>
     <projectUrl>$projectUrl$</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Core NetFusion assembly providing common publishing and Subscribing to domain events.</description>
+    <description>Core NetFusion assembly providing common publishing and Subscribing to messages.</description>
     <copyright>Copyright 2016</copyright>
     <tags>$tags$</tags>
   </metadata>
