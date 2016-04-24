@@ -101,7 +101,8 @@ There can be two types of setting initialization strategies:
 		
 			return settings;
 		}
-	}```
+	}
+```
 
 * ___Generic Initializer___
 : This type of settings initializer is implemented as an open-generic type and can be used to load any type of application setting.  Such examples are as follows:
@@ -117,21 +118,20 @@ Generic initializers are configured as follows:
 
 ``` csharp
 	
-        // Configuration Application Container:
-        AppContainer.Create(new[] { "Samples.*.dll" })
-    		.WithConfigSection("netFusion")
+	// Configuration Application Container:
+    AppContainer.Create(new[] { "Samples.*.dll" })
+    	.WithConfigSection("netFusion")
     		
-    		.WithConfig<NetFusionConfig>(config =>
-			{
-				// Configure the MongoDB settings initializer.
-				config.AddSettingsInitializer(
-					typeof(FileSettingsInitializer<>
-					typeof(MongoSettingsInitializer<>));
-			})
-            .Load()
-            .Start();
-        }
-    }
+    	.WithConfig<NetFusionConfig>(config =>
+		{
+			// Configure the MongoDB settings initializer.
+			config.AddSettingsInitializer(
+				typeof(FileSettingsInitializer<>
+				typeof(MongoSettingsInitializer<>));
+		})
+        .Load()
+        .Start();
+
 ```
 
 The setting initializers are processed as follows:

@@ -35,7 +35,7 @@ This assembly contains the implementation of application-settings and their init
 
 ![image](./img/Nuget-NetFusion.Settings.png)
 
-**[NetFusion.Messaging](./src/NetFusion/NetFusion.Eventing/README.md)**
+**[NetFusion.Messaging](./src/NetFusion/NetFusion.Messaging/README.md)**
 
 Provides an implementation for publishing and subscribing to messages.  The default implementation supports the publishing and subscribing of in-process messages.  As the other core assemblies, the implementation is not dependent on any open-source libraries but contains extension points that can be used to publish and subscribe to messages (for example, publishing and subscribing to messages using RabbitMQ). 
 
