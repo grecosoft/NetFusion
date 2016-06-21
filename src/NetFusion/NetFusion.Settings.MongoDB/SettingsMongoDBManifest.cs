@@ -1,8 +1,8 @@
 ﻿using NetFusion.Bootstrap.Manifests;
 
-namespace NetFusion.Settings.Mongo
+namespace NetFusion.Settings.MongoDB
 {
-    public class PluginManifest : PluginManifestBase,
+    public class SettingsMongoDBManifest : PluginManifestBase,
         ICorePluginManifest
     {
         public string PluginId => "55b93f3e0a947288d997f238";

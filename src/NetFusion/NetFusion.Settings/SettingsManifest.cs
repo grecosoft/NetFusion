@@ -2,7 +2,7 @@
 
 namespace NetFusion.Settings
 {
-    public class PluginManifest : PluginManifestBase,
+    public class SettingsManifest : PluginManifestBase,
         ICorePluginManifest
     {
         public string PluginId => "55b93f3e0a947288d20ff238";

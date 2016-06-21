@@ -48,6 +48,7 @@ namespace NetFusion.Messaging.Modules
             this.MessageTypeDispatchers = allPluginTypes
                 .WhereEventConsumer()
                 .SelectMessageHandlers(this.MessagingConfig.ConsumerMethodPrefix)
+                .MarkedWith<InProcessHandlerAttribute>()
                 .SelectDispatchInfo()
                 .ToLookup(k => k.MessageType);
 

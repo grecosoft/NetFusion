@@ -2,7 +2,7 @@
 
 namespace NetFusion.MongoDB
 {
-    public class PluginManifest : PluginManifestBase,
+    public class EntityFrameworkManifest : PluginManifestBase,
         ICorePluginManifest
     {
         public string PluginId => "55b944a00a947288d20ff237"; 

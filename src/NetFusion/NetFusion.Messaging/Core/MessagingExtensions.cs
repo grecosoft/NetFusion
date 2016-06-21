@@ -43,6 +43,12 @@ namespace NetFusion.Messaging.Core
                 .Where(m => IsMessageHandlerMethod(m, methodPrefix)));
         }
 
+        public static IEnumerable<MethodInfo> MarkedWith<T>(this IEnumerable<MethodInfo> handlerMethods)
+            where T : Attribute
+        {
+            return handlerMethods.Where(h => h.HasAttribute<T>());
+        }
+
         private static bool IsMessageHandlerMethod(MethodInfo methodInfo, string methodPrefix)
         {
             var isCorrectMethodType = !methodInfo.IsStatic

@@ -2,7 +2,7 @@
 
 namespace NetFusion.Integration
 {
-    public class PluginManifest : PluginManifestBase,
+    public class IntegrationManifest : PluginManifestBase,
         ICorePluginManifest
     {
         public string PluginId

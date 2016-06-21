@@ -89,7 +89,7 @@
     <Compile Include="Modules\JtwModule.cs" />
     <Compile Include="Modules\MetadataModule.cs" />
     <Compile Include="Modules\WebApiModule.cs" />
-    <Compile Include="PluginManifest.cs" />
+    <Compile Include="WebApiManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

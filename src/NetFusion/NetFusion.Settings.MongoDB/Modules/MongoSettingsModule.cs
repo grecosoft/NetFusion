@@ -1,9 +1,9 @@
 ﻿using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions;
 using NetFusion.MongoDB.Modules;
-using NetFusion.Settings.Mongo.Configs;
+using NetFusion.Settings.MongoDB.Configs;
 
-namespace NetFusion.Settings.Mongo.Modules
+namespace NetFusion.Settings.MongoDB.Modules
 {
     /// <summary>
     /// Determines the settings that should be used to load application settings from MongoDB.  

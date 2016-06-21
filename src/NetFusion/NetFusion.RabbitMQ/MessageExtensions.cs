@@ -7,7 +7,7 @@ namespace NetFusion.RabbitMQ
 {
     public static class MessageExtensions
     {
-        private static readonly Type Context = typeof(PluginManifest);
+        private static readonly Type Context = typeof(RabbitMQManifest);
         public static string DefaultContentType = "application/json; charset=utf-8";
         public static string DefaultEncodingType = Encoding.UTF8.BodyName;
 

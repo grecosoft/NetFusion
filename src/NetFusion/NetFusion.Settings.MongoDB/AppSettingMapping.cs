@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetFusion.Settings.Mongo
+namespace NetFusion.Settings.MongoDB
 {
     /// <summary>
     /// The MongoDB entity mapping used to store and retrieve derived AppSettings

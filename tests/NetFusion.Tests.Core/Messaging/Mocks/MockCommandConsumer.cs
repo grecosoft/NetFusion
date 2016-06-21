@@ -6,22 +6,29 @@ namespace NetFusion.Core.Tests.Messaging.Mocks
     public class MockCommandConsumer : MockConsumer,
         IMessageConsumer
     {
-        public async Task OnCommand(MockCommand evt)
+        [InProcessHandler]
+        public async Task<MockCommandResult> OnCommand(MockCommand evt)
         {
             AddCalledHandler(nameof(OnCommand));
 
+            var mockResponse = new MockCommandResult();
+
             await Task.Run(()=> {
 
-                evt.Result = new MockCommandResult();
+                mockResponse.Value = "MOCK_VALUE";
 
             });
+
+            return mockResponse;
         }
 
+        [InProcessHandler]
         public void InvalidHandler1(MockCommand evt)
         {
 
         }
 
+        [InProcessHandler]
         public void InvalidHandler2(MockCommand evt)
         {
 

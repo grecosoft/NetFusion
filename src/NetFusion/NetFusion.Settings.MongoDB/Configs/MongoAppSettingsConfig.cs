@@ -1,6 +1,6 @@
 ﻿    using NetFusion.Bootstrap.Container;
 
-namespace NetFusion.Settings.Mongo.Configs
+namespace NetFusion.Settings.MongoDB.Configs
 {
     /// <summary>
     /// Class containing the settings used to load applications settings

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Common", "src\NetFusion\NetFusion.Common\NetFusion.Common.csproj", "{4BCB335E-3F83-481D-B206-FFA9266BF780}"
 EndProject
@@ -41,6 +41,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Tests.Infrastructure", "tests\NetFusion.Tests.Infrastructure\NetFusion.Tests.Infrastructure.csproj", "{16DF0BEE-D5CC-4157-8165-66E9F809E660}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Tests.Integration", "tests\NetFusion.Tests.Integration\NetFusion.Tests.Integration.csproj", "{C654C2C8-3F8B-4524-A40D-EAE06368E850}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReferenceArchitecture", "ReferenceArchitecture", "{E676BA4D-463C-4928-A734-4B920AA1C08A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RefArch.Host", "src\NetFusion\RefArch.Host\RefArch.Host.csproj", "{B733DEB2-9EB3-497E-8F40-087F6B38CDBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -104,6 +108,10 @@ Global
 		{C654C2C8-3F8B-4524-A40D-EAE06368E850}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C654C2C8-3F8B-4524-A40D-EAE06368E850}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C654C2C8-3F8B-4524-A40D-EAE06368E850}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B733DEB2-9EB3-497E-8F40-087F6B38CDBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B733DEB2-9EB3-497E-8F40-087F6B38CDBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B733DEB2-9EB3-497E-8F40-087F6B38CDBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B733DEB2-9EB3-497E-8F40-087F6B38CDBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,5 +131,6 @@ Global
 		{F09EAAB7-BC19-438C-A8D3-A43CD2F23C4C} = {9E72F15A-2F96-4958-9ED1-9B8782F31532}
 		{16DF0BEE-D5CC-4157-8165-66E9F809E660} = {9E72F15A-2F96-4958-9ED1-9B8782F31532}
 		{C654C2C8-3F8B-4524-A40D-EAE06368E850} = {9E72F15A-2F96-4958-9ED1-9B8782F31532}
+		{B733DEB2-9EB3-497E-8F40-087F6B38CDBF} = {E676BA4D-463C-4928-A734-4B920AA1C08A}
 	EndGlobalSection
 EndGlobal

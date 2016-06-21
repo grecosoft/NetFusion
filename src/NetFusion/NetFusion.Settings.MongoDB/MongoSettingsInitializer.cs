@@ -1,13 +1,13 @@
 ﻿using MongoDB.Driver;
 using NetFusion.Common.Extensions;
 using NetFusion.MongoDB.Modules;
-using NetFusion.Settings.Mongo.Configs;
-using NetFusion.Settings.Mongo.Modules;
+using NetFusion.Settings.MongoDB.Configs;
+using NetFusion.Settings.MongoDB.Modules;
 using NetFusion.Settings.Strategies;
 using System;
 using System.Linq;
 
-namespace NetFusion.Settings.Mongo
+namespace NetFusion.Settings.MongoDB
 {
     /// <summary>
     /// Generic implementation of an application settings initializer that loads
@@ -37,7 +37,7 @@ namespace NetFusion.Settings.Mongo
                 return null;
             }
 
-            var settingsColl = GetSettingsCollection(_mongoSettingModule.MongoAppSettingsConfig);
+            var settingsColl = GetSettingsCollection((MongoAppSettingsConfig)_mongoSettingModule.MongoAppSettingsConfig);
             var filter = BuildAppSettingsFilter(settings, typeDiscriminator, Environment.MachineName);
            
             // Check if there is a machine specific settings configured.

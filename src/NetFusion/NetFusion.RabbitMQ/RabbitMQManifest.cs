@@ -2,7 +2,7 @@
 
 namespace NetFusion.RabbitMQ
 {
-    public class PluginManifest : PluginManifestBase,
+    public class RabbitMQManifest : PluginManifestBase,
         ICorePluginManifest
     {
         public string PluginId

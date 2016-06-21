@@ -6,6 +6,7 @@ namespace NetFusion.Core.Tests.Messaging.Mocks
 {
     public class MockErrorMessageConsumer : IMessageConsumer
     {
+        [InProcessHandler]
         public async Task OnEvent1(MockDomainEvent evt)
         {
             await Task.Run(() =>
@@ -14,6 +15,7 @@ namespace NetFusion.Core.Tests.Messaging.Mocks
             });
         }
 
+        [InProcessHandler]
         public async Task OnEvent2(MockDomainEvent evt)
         {
             await Task.Run(() =>

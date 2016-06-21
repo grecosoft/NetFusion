@@ -149,13 +149,16 @@ namespace NetFusion.Messaging.Core
             }
             catch (Exception ex)
             {
-                var publisherErrors = GetPublisherErrors(futureResults);
-                if (publisherErrors.Any())
+                if (futureResults != null)
                 {
-                    throw new PublisherException(
-                        "exception when invoking message publisher", 
-                        message, 
-                        publisherErrors);
+                    var publisherErrors = GetPublisherErrors(futureResults);
+                    if (publisherErrors.Any())
+                    {
+                        throw new PublisherException(
+                            "exception when invoking message publisher",
+                            message,
+                            publisherErrors);
+                    }
                 }
 
                 throw new PublisherException(

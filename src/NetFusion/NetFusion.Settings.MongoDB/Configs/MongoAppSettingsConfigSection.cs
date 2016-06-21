@@ -1,7 +1,7 @@
 ﻿using NetFusion.Bootstrap.Container;
 using System.Configuration;
 
-namespace NetFusion.Settings.Mongo.Configs
+namespace NetFusion.Settings.MongoDB.Configs
 {
     /// <summary>
     /// Settings that can be specified within the host application's configuration file

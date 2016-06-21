@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace NetFusion.Settings.Mongo.Configs
+namespace NetFusion.Settings.MongoDB.Configs
 {
     /// <summary>
     /// Configuration for specifying the source for application configurations 

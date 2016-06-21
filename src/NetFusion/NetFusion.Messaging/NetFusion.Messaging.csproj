@@ -58,9 +58,10 @@
     <Compile Include="IMessageConsumer.cs" />
     <Compile Include="IMessagingService.cs" />
     <Compile Include="IncludeDerivedMessagesAttribute.cs" />
+    <Compile Include="InProcessHandlerAttribute.cs" />
     <Compile Include="Modules\IMessagingModule.cs" />
     <Compile Include="Modules\MessagingModule.cs" />
-    <Compile Include="PluginManifest.cs" />
+    <Compile Include="MessagingManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublisherException.cs" />
     <Compile Include="Rules\ApplyDispatchRuleAttribute.cs" />

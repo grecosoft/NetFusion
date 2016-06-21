@@ -49,7 +49,7 @@
     <Compile Include="IAppSettings.cs" />
     <Compile Include="Modules\AppSettingsModule.cs" />
     <Compile Include="Modules\IAppSettingsModule.cs" />
-    <Compile Include="PluginManifest.cs" />
+    <Compile Include="SettingsManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Strategies\AppSettingsInitializer.cs" />
     <Compile Include="Strategies\FileSettingsInitializer.cs" />

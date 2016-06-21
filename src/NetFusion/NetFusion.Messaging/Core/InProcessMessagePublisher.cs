@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using NetFusion.Common.Extensions;
 using NetFusion.Messaging.Modules;
 using System;
 using System.Collections.Generic;
@@ -84,18 +85,33 @@ namespace NetFusion.Messaging.Core
             {
                 futureResults = InvokeMessageDispatchers(message, dispatchers);
                 await Task.WhenAll(futureResults.Select(fr => fr.Task));
+
+                var command = message as ICommand;
+                if (command != null && futureResults.Count() == 1)
+                {
+                    dynamic resultTask = futureResults.First().Task;
+                    object result = resultTask.Result;
+
+                    if (result != null && result.GetType().IsDerivedFrom(command.ResultType))
+                    {
+                        command.SetResult(resultTask.Result);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                var dispatchErrors = GetDispatcherErrors(futureResults);
-                if (dispatchErrors.Any())
+                if (futureResults != null)
                 {
-                    throw new MessageDispatchException(
-                        "an exception was received when dispatching a message to " +
-                        "one or more asynchronous handlers", 
-                        message,
-                        dispatchErrors);
-                } 
+                    var dispatchErrors = GetDispatcherErrors(futureResults);
+                    if (dispatchErrors.Any())
+                    {
+                        throw new MessageDispatchException(
+                            "an exception was received when dispatching a message to " +
+                            "one or more asynchronous handlers",
+                            message,
+                            dispatchErrors);
+                    }
+                }
 
                 throw new MessageDispatchException(
                     "an exception was received when dispatching a message", 

@@ -84,7 +84,7 @@
     <Compile Include="MessageExtensions.cs" />
     <Compile Include="Modules\IMessageBrokerModule.cs" />
     <Compile Include="Modules\MessageBrokerModule.cs" />
-    <Compile Include="PluginManifest.cs" />
+    <Compile Include="RabbitMQManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\BinaryMessageSerializer.cs" />
     <Compile Include="Serialization\IMessageSerializer.cs" />

@@ -367,9 +367,9 @@ namespace NetFusion.Tests.Eventing
 
                     var domainEventSrv = c.Services.Resolve<IMessagingService>();
                     var evt = new MockCommand();
-                    var futureResults = domainEventSrv.PublishAsync(evt);
+                    var futureResult = domainEventSrv.PublishAsync(evt);
 
-                    result = futureResults.Result;
+                    result = futureResult.Result;
 
                 })
                 .Assert((AppContainer c) =>

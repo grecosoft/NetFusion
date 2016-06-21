@@ -6,11 +6,13 @@ namespace NetFusion.Core.Tests.Messaging.Mocks
         IMessageConsumer
     {
       
+        [InProcessHandler]
         public void OnBaseEventHandler(MockBaseDomainEvent domainEvent)
         {
             AddCalledHandler("OnBaseEventHandler");
         }
 
+        [InProcessHandler]
         public void OnIncludeBaseEventHandler([IncludeDerivedMessages]MockBaseDomainEvent domainEvent)
         {
             AddCalledHandler("OnIncludeBaseEventHandler");

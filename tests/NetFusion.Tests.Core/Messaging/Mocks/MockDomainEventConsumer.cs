@@ -5,6 +5,7 @@ namespace NetFusion.Core.Tests.Messaging.Mocks
     public class MockDomainEventConsumer : MockConsumer,
         IMessageConsumer
     {
+        [InProcessHandler]
         public void OnEventHandlerOne(MockDomainEvent domainEvent)
         {
             AddCalledHandler("OnEventHandlerOne");

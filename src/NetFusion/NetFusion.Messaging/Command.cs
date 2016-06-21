@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NetFusion.Messaging
 {
@@ -11,6 +12,8 @@ namespace NetFusion.Messaging
     {
         private IDictionary<string, object> _attributes;
         public object Result { get; set; }
+
+        public Type ResultType => null;
 
         void ICommand.SetResult(object result)
         {
@@ -37,6 +40,8 @@ namespace NetFusion.Messaging
     {
         private IDictionary<string, object> _attributes;
         public TResult Result { get; set; }
+
+        Type ICommand.ResultType => typeof(TResult);
 
         void ICommand.SetResult(object result)
         {

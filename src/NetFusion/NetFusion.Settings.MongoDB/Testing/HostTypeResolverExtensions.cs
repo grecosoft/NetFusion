@@ -1,10 +1,10 @@
 ﻿using NetFusion.Bootstrap.Testing;
 using NetFusion.Common;
 using NetFusion.MongoDB.Testing;
-using NetFusion.Settings.Mongo.Configs;
-using NetFusion.Settings.Mongo.Modules;
+using NetFusion.Settings.MongoDB.Configs;
+using NetFusion.Settings.MongoDB.Modules;
 
-namespace NetFusion.Settings.Mongo.Testing
+namespace NetFusion.Settings.MongoDB.Testing
 {
     public static class HostTypeResolverExtensions
     {

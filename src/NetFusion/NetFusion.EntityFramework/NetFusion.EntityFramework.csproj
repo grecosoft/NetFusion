@@ -63,7 +63,7 @@
     <Compile Include="IEntityDbContext.cs" />
     <Compile Include="IEntityTypeMapping.cs" />
     <Compile Include="Modules\EntityContextModule.cs" />
-    <Compile Include="PluginManifest.cs" />
+    <Compile Include="EntityFrameworkManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

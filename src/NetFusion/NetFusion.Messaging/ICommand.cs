@@ -1,4 +1,6 @@
-﻿namespace NetFusion.Messaging
+﻿using System;
+
+namespace NetFusion.Messaging
 {
     /// <summary>
     /// Represents a message that can have one and only one consumer 
@@ -8,6 +10,11 @@
     /// </summary>
     public interface ICommand : IMessage
     {
+        /// <summary>
+        /// The type of the result associated with the command.
+        /// </summary>
+        Type ResultType { get; }
+
         /// <summary>
         /// Sets the optional result associated with the message.
         /// </summary>

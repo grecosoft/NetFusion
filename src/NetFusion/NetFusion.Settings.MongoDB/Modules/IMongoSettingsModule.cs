@@ -1,7 +1,7 @@
 ﻿using NetFusion.Bootstrap.Plugins;
-using NetFusion.Settings.Mongo.Configs;
+using NetFusion.Settings.MongoDB.Configs;
 
-namespace NetFusion.Settings.Mongo.Modules
+namespace NetFusion.Settings.MongoDB.Modules
 {
     /// <summary>
     /// Module interface providing access to the configuration

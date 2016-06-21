@@ -2,7 +2,7 @@
 
 namespace NetFusion.WebApi
 {
-    public class PluginManifest : PluginManifestBase,
+    public class WebApiManifest : PluginManifestBase,
         ICorePluginManifest
     {
         public string PluginId
