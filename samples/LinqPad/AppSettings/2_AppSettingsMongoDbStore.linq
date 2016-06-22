@@ -1,14 +1,14 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\MongoDB.Bson.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\MongoDB.Bson.dll</Reference>
-  <Reference Relative="..\libs\MongoDB.Driver.Core.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\MongoDB.Driver.Core.dll</Reference>
-  <Reference Relative="..\libs\MongoDB.Driver.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\MongoDB.Driver.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.MongoDB.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.MongoDB.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.MongoDB.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.MongoDB.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\MongoDB.Bson.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\MongoDB.Bson.dll</Reference>
+  <Reference Relative="..\libs\MongoDB.Driver.Core.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\MongoDB.Driver.Core.dll</Reference>
+  <Reference Relative="..\libs\MongoDB.Driver.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\MongoDB.Driver.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.MongoDB.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.MongoDB.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.MongoDB.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.MongoDB.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
   <Reference>&lt;RuntimeDirectory&gt;\System.Configuration.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>MongoDB.Driver</Namespace>
@@ -24,9 +24,10 @@
   <Namespace>NetFusion.MongoDB.Testing</Namespace>
   <Namespace>NetFusion.Settings</Namespace>
   <Namespace>NetFusion.Settings.Configs</Namespace>
-  <Namespace>NetFusion.Settings.Mongo</Namespace>
-  <Namespace>NetFusion.Settings.Mongo.Configs</Namespace>
-  <Namespace>NetFusion.Settings.Strategies</Namespace>
+  <Namespace>NetFusion.Settings.MongoDB</Namespace>
+  <Namespace>NetFusion.Settings.MongoDB.Configs</Namespace>
+  <Namespace>NetFusion.Settings.MongoDB.Modules</Namespace>
+  <Namespace>NetFusion.Settings.MongoDB.Testing</Namespace>
   <Namespace>NetFusion.Settings.Testing</Namespace>
 </Query>
 
