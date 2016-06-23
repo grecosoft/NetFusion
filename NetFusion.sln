@@ -56,6 +56,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RefArch.Services", "src\Net
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosts", "Hosts", "{62D8BE91-B1C7-4289-AFF8-73088429A484}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RefArch.Subscriber", "src\NetFusion\RefArch\RefArch.Subscriber\RefArch.Subscriber.csproj", "{3CF342AC-2378-4DBD-90F6-DF11E513C374}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -138,6 +140,10 @@ Global
 		{FF6DB510-00D4-4CA5-B464-2EEB890638C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF6DB510-00D4-4CA5-B464-2EEB890638C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF6DB510-00D4-4CA5-B464-2EEB890638C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CF342AC-2378-4DBD-90F6-DF11E513C374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CF342AC-2378-4DBD-90F6-DF11E513C374}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CF342AC-2378-4DBD-90F6-DF11E513C374}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CF342AC-2378-4DBD-90F6-DF11E513C374}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,5 +169,6 @@ Global
 		{B3D9654E-DDAB-48E6-8E5B-C74C94B668FF} = {E676BA4D-463C-4928-A734-4B920AA1C08A}
 		{FF6DB510-00D4-4CA5-B464-2EEB890638C2} = {E676BA4D-463C-4928-A734-4B920AA1C08A}
 		{62D8BE91-B1C7-4289-AFF8-73088429A484} = {E676BA4D-463C-4928-A734-4B920AA1C08A}
+		{3CF342AC-2378-4DBD-90F6-DF11E513C374} = {62D8BE91-B1C7-4289-AFF8-73088429A484}
 	EndGlobalSection
 EndGlobal

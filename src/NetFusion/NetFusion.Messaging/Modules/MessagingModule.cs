@@ -26,16 +26,14 @@ namespace NetFusion.Messaging.Modules
 
         // IMessagingModule:
         public MessagingConfig MessagingConfig { get; private set; }
-        public ILookup<Type, MessageDispatchInfo> MessageTypeDispatchers { get; private set; }
-
+        public ILookup<Type, MessageDispatchInfo> AllMessageTypeDispatchers { get; private set; }
+        public ILookup<Type, MessageDispatchInfo> InProcessMessageTypeDispatchers { get; private set; }
+       
         // All command specific message types.
-        private Type[] CommandTypes => MessageTypeDispatchers
+        private Type[] CommandTypes => InProcessMessageTypeDispatchers
                 .Where(ed => ed.Key.IsDerivedFrom<ICommand>())
                 .Select(ed => ed.Key).ToArray();
-       
-        // All message dispatchers.
-        private MessageDispatchInfo[] AllMessageDispatchers => MessageTypeDispatchers
-            .SelectMany(ed => ed).ToArray();
+      
 
         // Stores type meta-data for the message consumers that should be notified when
         // a given message is published. 
@@ -44,16 +42,24 @@ namespace NetFusion.Messaging.Modules
             this.MessagingConfig = this.Context.Plugin.GetConfig<MessagingConfig>();
 
             var allPluginTypes = this.Context.GetPluginTypesFrom();
-
-            this.MessageTypeDispatchers = allPluginTypes
+            var allMessageHandlers = allPluginTypes
                 .WhereEventConsumer()
-                .SelectMessageHandlers(this.MessagingConfig.ConsumerMethodPrefix)
+                .SelectMessageHandlers(this.MessagingConfig.ConsumerMethodPrefix);
+
+            this.AllMessageTypeDispatchers = allMessageHandlers
+                .SelectDispatchInfo()
+                .ToLookup(k => k.MessageType);
+
+            this.InProcessMessageTypeDispatchers = allMessageHandlers
                 .MarkedWith<InProcessHandlerAttribute>()
                 .SelectDispatchInfo()
                 .ToLookup(k => k.MessageType);
 
-            SetDispatchRules(this.MessageTypeDispatchers);
-            AssertDispatchRules();
+            MessageDispatchInfo[] allDispatchers = this.AllMessageTypeDispatchers
+                .SelectMany(ed => ed).ToArray();
+
+            SetDispatchRules(allDispatchers);
+            AssertDispatchRules(allDispatchers);
             AssertCommandMessages();
         }
 
@@ -76,9 +82,9 @@ namespace NetFusion.Messaging.Modules
                 .InstancePerLifetimeScope();
         }
 
-        private void SetDispatchRules(ILookup<Type, MessageDispatchInfo> messageTypeDispatchers)
+        private void SetDispatchRules(MessageDispatchInfo[] allDispatchers)
         {
-            this.AllMessageDispatchers.ForEach(SetDispatchRule);
+            allDispatchers.ForEach(SetDispatchRule);
         }
 
         private void SetDispatchRule(MessageDispatchInfo dispatchInfo)
@@ -93,7 +99,7 @@ namespace NetFusion.Messaging.Modules
         private void AssertCommandMessages()
         {
             var invalidMessageDispatches = this.CommandTypes
-                .Select(MessageTypeDispatchers.WhereHandlerForMessage)
+                .Select(InProcessMessageTypeDispatchers.WhereHandlerForMessage)
                 .Where(di => di.Count() > 1)
                 .SelectMany(di => di)
                 .Select(di => new
@@ -113,9 +119,9 @@ namespace NetFusion.Messaging.Modules
 
         // Assert that the dispatch rules are based on a type compatible with the 
         // message.  This applies to dispatch rules that are applied via attributes.
-        private void AssertDispatchRules()
+        private void AssertDispatchRules(MessageDispatchInfo[] allDispatchers)
         {
-            var invalidEvtHanlders = this.AllMessageDispatchers
+            var invalidEvtHanlders = allDispatchers
                 .Where(ed => ed.DispatchRules.Any(
                     dr => !ed.MessageType.IsDerivedFrom(dr.EventType)))
                 .Select(ed => new {
@@ -147,10 +153,10 @@ namespace NetFusion.Messaging.Modules
             var messagingDispatchLog = new Dictionary<string, object>();
             moduleLog["Messaging - In Process Dispatchers"] = messagingDispatchLog;
 
-            foreach (var messageTypeDispatcher in this.MessageTypeDispatchers)
+            foreach (var messageTypeDispatcher in this.InProcessMessageTypeDispatchers)
             {
                 var messageType = messageTypeDispatcher.Key;
-                var messageDispatchers = MessageTypeDispatchers.WhereHandlerForMessage(messageType);
+                var messageDispatchers = InProcessMessageTypeDispatchers.WhereHandlerForMessage(messageType);
 
                 messagingDispatchLog[messageType.FullName] = messageDispatchers.Select(
                     ed => new

@@ -4,16 +4,18 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{517E7937-373E-48FA-A60A-E6FFF9568996}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{3CF342AC-2378-4DBD-90F6-DF11E513C374}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RefArch.Api</RootNamespace>
-    <AssemblyName>RefArch.Api</AssemblyName>
+    <RootNamespace>RefArch.Subscriber</RootNamespace>
+    <AssemblyName>RefArch.Subscriber</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +25,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -45,12 +48,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Events\ExampleDirectEvent.cs" />
     <Compile Include="Manifest.cs" />
-    <Compile Include="Models\Car.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ExampleDirectExchangeService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+    <Content Include="Configs\Dev\BrokerSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -70,9 +77,17 @@
       <Project>{1036c88e-b42c-465c-adf8-04192de9d723}</Project>
       <Name>NetFusion.RabbitMQ</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\NetFusion.Settings.MongoDB\NetFusion.Settings.MongoDB.csproj">
+      <Project>{77be4932-cbfc-49fe-a5b1-dcf5b5f30b75}</Project>
+      <Name>NetFusion.Settings.MongoDB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NetFusion.Settings\NetFusion.Settings.csproj">
       <Project>{f0b65875-dec4-4b25-a13a-1e027d9a6f62}</Project>
       <Name>NetFusion.Settings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RefArch.Api\RefArch.Api.csproj">
+      <Project>{517e7937-373e-48fa-a60a-e6fff9568996}</Project>
+      <Name>RefArch.Api</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

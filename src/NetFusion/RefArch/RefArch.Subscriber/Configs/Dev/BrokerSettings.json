@@ -1,0 +1,14 @@
+﻿{ 
+    "Connections" : [
+        {
+            "BrokerName" : "TestBroker",
+            "HostName": "LocalHost",
+            "QueueProperties": [
+              {
+                "QueueName": "Ford",
+                "RouteKeys": [ "Mercury.*.*", "Mazda.Tribute.*" ]
+              }
+            ]
+        }
+    ]
+}

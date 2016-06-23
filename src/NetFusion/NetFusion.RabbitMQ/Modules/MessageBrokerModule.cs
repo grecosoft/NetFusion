@@ -128,7 +128,7 @@ namespace NetFusion.RabbitMQ.Modules
 
             // All message handlers that are consumers of a queue that should be
             // called when an event is received based on the exchange distribution rules.
-            var qBindings = messagingServices.MessageTypeDispatchers
+            var qBindings = messagingServices.AllMessageTypeDispatchers
                 .Where(evtDispatcher => evtDispatcher.Any(
                     dispatcher => IsQueueConsumer(dispatcher)))
                 .SelectMany(v => v)

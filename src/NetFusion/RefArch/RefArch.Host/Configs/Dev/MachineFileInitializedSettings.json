@@ -1,0 +1,5 @@
+﻿{
+  "MinValue": 5,
+  "MaxValue": 12,
+  "ValidValues": [ 10, 20, 30 ]
+}

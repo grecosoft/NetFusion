@@ -100,7 +100,7 @@ namespace NetFusion.Messaging.Core
 
         private void PublishMessageLocal(IMessage message)
         {
-            var dispatchers = _messagingModule.MessageTypeDispatchers
+            var dispatchers = _messagingModule.InProcessMessageTypeDispatchers
                 .WhereHandlerForMessage(message.GetType());
 
             AssertAllSynchronousDispatchers(message, dispatchers);
