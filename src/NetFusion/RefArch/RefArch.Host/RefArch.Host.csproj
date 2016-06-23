@@ -269,6 +269,22 @@
       <Project>{5d9d7490-8589-4e33-bd14-2379501e3239}</Project>
       <Name>NetFusion.WebApi</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RefArch.Api\RefArch.Api.csproj">
+      <Project>{517e7937-373e-48fa-a60a-e6fff9568996}</Project>
+      <Name>RefArch.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RefArch.Domain\RefArch.Domain.csproj">
+      <Project>{bf55a3bc-17ff-40a4-98bf-7a6993c2bc0a}</Project>
+      <Name>RefArch.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RefArch.Infrastructure\RefArch.Infrastructure.csproj">
+      <Project>{b3d9654e-ddab-48e6-8e5b-c74c94b668ff}</Project>
+      <Name>RefArch.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RefArch.Services\RefArch.Services.csproj">
+      <Project>{ff6db510-00d4-4ca5-b464-2eeb890638c2}</Project>
+      <Name>RefArch.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

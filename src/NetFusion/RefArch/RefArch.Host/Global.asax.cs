@@ -14,7 +14,7 @@ namespace RefArch.Host
     {
         protected void Application_Start()
         {
-            AppContainer.Create(new[] { "Samples.*.dll" })
+            AppContainer.Create(new[] { "RefArch.*.dll" })
                 .WithConfigSection("netFusion", "mongoAppSettings")
 
                 // Eventing Plug-in Configuration.
