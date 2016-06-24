@@ -51,7 +51,12 @@
     <Compile Include="Manifest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ExampleDirectExchangeService.cs" />
+    <Compile Include="Services\ExampleDirectService.cs" />
+    <Compile Include="Services\ExampleFanoutService.cs" />
+    <Compile Include="Services\ExampleRpcService.cs" />
+    <Compile Include="Services\ExampleTopicService.cs" />
+    <Compile Include="Services\ExampleWorkQueueService.cs" />
+    <Compile Include="Services\ShortMakeRole.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,5 +1,5 @@
 ﻿using NetFusion.RabbitMQ.Exchanges;
-using RefArch.Api.Events;
+using RefArch.Api.Messages;
 
 namespace RefArch.Infrastructure.Samples.RabbitMQ
 {

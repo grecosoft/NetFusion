@@ -45,7 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Events\ExampleDirectEvent.cs" />
+    <Compile Include="Messages\ExampleDirectEvent.cs" />
+    <Compile Include="Messages\ExampleFanoutEvent.cs" />
+    <Compile Include="Messages\ExampleRpcCommand.cs" />
+    <Compile Include="Messages\ExampleRpcResponse.cs" />
+    <Compile Include="Messages\ExampleTopicEvent.cs" />
+    <Compile Include="Messages\ExampleWorkQueueEvent.cs" />
     <Compile Include="Manifest.cs" />
     <Compile Include="Models\Car.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

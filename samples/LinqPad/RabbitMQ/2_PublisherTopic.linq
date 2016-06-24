@@ -1,12 +1,12 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Messaging.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
-  <Reference Relative="..\libs\RabbitMQ.Client.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Messaging.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\RabbitMQ.Client.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Extensions</Namespace>
@@ -29,9 +29,9 @@
 </Query>
 
 /// <summary>
-/// ********************************************************************************************
-/// Topic Exchange
-/// ********************************************************************************************
+/// ---------------------------------------------------------------------------------------------------------
+/// TOPIC EXCHANGE PATTERN
+/// ---------------------------------------------------------------------------------------------------------
 /// - The same as a direct exchange.However, the route key value is a filter and not 
 ///   just a value.
 ///   
@@ -85,21 +85,14 @@ public class BrokerSettingsInitializer: AppSettingsInitializer<BrokerSettings>
 public void RunPublishToTopicExchange(string make, string model, int year) 
 {
 	var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
-	var topicEvt = new TopicEvent 
-	{ 
-		CurrentDateTime = DateTime.Now, 
-		Vin=Guid.NewGuid().ToString(), 
-		Make = make,
-		Model = model,
-		Year = year
-	};
-
-	topicEvt.SetRouteKey(make, model, year);
-	domainEventSrv.PublishAsync(topicEvt).Wait();
+	var domainModel = new Car { Vin = Guid.NewGuid().ToString(), Make = make, Model = model, Year = year };
+	var domainEvent = new ExampleTopicEvent(domainModel);
+	
+	domainEventSrv.PublishAsync(domainEvent).Wait();
 }
 
 // -------------------------------------------------------------------------------------
-// Mock host plug-in that will be configured within the container.
+// Mock host plug-in that will be configured within the container:
 // -------------------------------------------------------------------------------------
 public class LinqPadHostPlugin : MockPlugin,
 	IAppHostPluginManifest
@@ -107,17 +100,44 @@ public class LinqPadHostPlugin : MockPlugin,
 
 }
 
-[Serializable]
-public class TopicEvent : DomainEvent
+// -------------------------------------------------------------------------------------
+// Model and event message:
+// -------------------------------------------------------------------------------------
+public class Car
 {
-    public DateTime CurrentDateTime { get; set; }
-    public string Vin { get; set; }
+	public string Vin { get; set; }
 	public string Make { get; set; }
 	public string Model { get; set; }
 	public int Year { get; set; }
 }
 
-public class SampleTopicExchange : TopicExchange<TopicEvent>
+public class ExampleTopicEvent : DomainEvent
+{
+	public string Vin { get; set; }
+	public string Make { get; set; }
+	public string Model { get; set; }
+	public int Year { get; set; }
+
+	public ExampleTopicEvent() { }
+
+	public ExampleTopicEvent(Car car)
+	{
+		this.CurrentDateTime = DateTime.UtcNow;
+		this.Vin = car.Vin;
+		this.Make = car.Make;
+		this.Model = car.Model;
+		this.Year = car.Year;
+
+		this.SetRouteKey(car.Make, car.Year, car.Year);
+	}
+
+	public DateTime CurrentDateTime { get; private set; }
+}
+
+// -------------------------------------------------------------------------------------
+// Message exchange:
+// -------------------------------------------------------------------------------------
+public class ExampleTopicExchange : TopicExchange<ExampleTopicEvent>
 {
 	protected override void OnDeclareExchange()
 	{

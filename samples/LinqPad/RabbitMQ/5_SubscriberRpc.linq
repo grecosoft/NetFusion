@@ -1,12 +1,12 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Messaging.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
-  <Reference Relative="..\libs\RabbitMQ.Client.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Messaging.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\RabbitMQ.Client.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Extensions</Namespace>
@@ -82,35 +82,36 @@ public class LinqPadHostPlugin : MockPlugin,
 
 }
 
-[Serializable]
-public class RpcEvent : Command<RpcEvent>
+public class ExampleRpcCommand : Command<ExampleRpcResponse>
 {
 	public DateTime CurrentDateTime { get; set; }
 	public string InputValue { get; set; }
 }
-// -----------------------------------------------------------------------------------------
-// Like a normal event consumer, the service implements the IDomainEventConsumer marker
-// interface.  In addition, the class needs to be marked with the Broker attribute 
-// specifying the broker subscribe.
-// -----------------------------------------------------------------------------------------
+
+public class ExampleRpcResponse : DomainEvent
+{
+	public string Comment { get; set; }
+}
+
+
 [Broker("TestBroker")]
-public class RpcExchangeService : IMessageConsumer
+public class ExampleRpcService : IMessageConsumer
 {
 	[JoinQueue("QueueWithConsumerResponse", "SampleRpcExchange")]
-	public async Task<RpcEvent> OnRpcMessage(RpcEvent rpcEvent)
+	public async Task<ExampleRpcResponse> OnRpcMessage(ExampleRpcCommand rpcCommand)
 	{
-		Console.WriteLine($"Handler: OnRpcMessage: { rpcEvent.ToIndentedJson()}");
+		Console.WriteLine($"Handler: OnRpcMessage: { rpcCommand.ToIndentedJson()}");
 
-		rpcEvent.SetAcknowledged();
+		rpcCommand.SetAcknowledged();
 
 		await Task.Run(() =>
 		{
 			Thread.Sleep(500);
 		});
 
-		return new RpcEvent
+		return new ExampleRpcResponse
 		{
-			InputValue = "World"
+			Comment = "World"
 		};
 	}
 }

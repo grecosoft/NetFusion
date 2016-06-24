@@ -1,12 +1,12 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Messaging.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
-  <Reference Relative="..\libs\RabbitMQ.Client.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Messaging.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\RabbitMQ.Client.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Extensions</Namespace>
@@ -82,8 +82,7 @@ public class LinqPadHostPlugin : MockPlugin,
 
 }
 
-[Serializable]
-public class TopicEvent : DomainEvent
+public class ExampleTopicEvent : DomainEvent
 {
 	public DateTime CurrentDateTime { get; set; }
 	public string Vin { get; set; }
@@ -92,11 +91,11 @@ public class TopicEvent : DomainEvent
 	public int Year { get; set; }
 }
 
-public class ShortMakeRule : MessageDispatchRule<TopicEvent>
+public class ShortMakeRule : MessageDispatchRule<ExampleTopicEvent>
 {
-	protected override bool IsMatch(TopicEvent domainEvent)
+	protected override bool IsMatch(ExampleTopicEvent message)
 	{
-		return domainEvent.Make.Length == 3;
+		return message.Make.Length == 3;
 	}
 }
 
@@ -106,63 +105,63 @@ public class ShortMakeRule : MessageDispatchRule<TopicEvent>
 // specifying the broker subscribe.
 // -----------------------------------------------------------------------------------------
 [Broker("TestBroker")]
-public class TopicExchangeService : IMessageConsumer
+public class ExampleTopicService : IMessageConsumer
 {
     // This method will join the Chevy queue defined on the SampleTopicExchange
     // exchange.  Since it is joining an existing queue, it will join any other
     // enlisted subscribers and be called round-robin.  
     [JoinQueue("Chevy", "SampleTopicExchange")]
-    public void OnChevy(TopicEvent topicEvt)
+    public void OnChevy(ExampleTopicEvent topicEvt)
     {
         Console.WriteLine($"Handler: OnChevy: {topicEvt.ToIndentedJson()}");
 
         topicEvt.SetAcknowledged();
     }
 
-	// This event handler will join the Chevy-Vette queue defined on the
-	// SampleTopicExchange.  This handler is like the prior one, but the
-	// associated queue has a more specific route-key pattern.  Both this
-	// handler and the prior one will both be called since this handler 
-	// has a more specific pattern to include the model of the car.
-	[JoinQueue("Chevy-Vette", "SampleTopicExchange")]
-	public void OnChevyVette(TopicEvent topicEvt)
-	{
-		Console.WriteLine($"Handler: OnChevyVette: {topicEvt.ToIndentedJson()}");
+    // This event handler will join the Chevy-Vette queue defined on the
+    // SampleTopicExchange.  This handler is like the prior one, but the
+    // associated queue has a more specific route-key pattern.  Both this
+    // handler and the prior one will both be called since this handler 
+    // has a more specific pattern to include the model of the car.
+    [JoinQueue("Chevy-Vette", "SampleTopicExchange")]
+    public void OnChevyVette(ExampleTopicEvent topicEvt)
+    {
+        Console.WriteLine($"Handler: OnChevyVette: {topicEvt.ToIndentedJson()}");
 
-		topicEvt.SetAcknowledged();
-	}
+        topicEvt.SetAcknowledged();
+    }
 
-	// This event handler joins the Ford queue defined on the same
-	// exchange as the prior two event handlers.
-	[JoinQueue("Ford", "SampleTopicExchange")]
-	public void OnFord(TopicEvent topicEvt)
-	{
-		Console.WriteLine($"Handler: OnFord: {topicEvt.ToIndentedJson()}");
+    // This event handler joins the Ford queue defined on the same
+    // exchange as the prior two event handlers.
+    [JoinQueue("Ford", "SampleTopicExchange")]
+    public void OnFord(ExampleTopicEvent topicEvt)
+    {
+        Console.WriteLine($"Handler: OnFord: {topicEvt.ToIndentedJson()}");
 
-		topicEvt.SetAcknowledged();
-	}
+        topicEvt.SetAcknowledged();
+    }
 
-	// This event handler creates a new queue on SampleTopicExchange 
-	// matching any route key.  However, this event handler has a 
-	// dispatch-role specified to only be called if the Make of the
-	// car is <= three characters.  The event is still delivered but
-	// just not passed to this handler.  If there are a large number
-	// of events, it is best to create a dedicated queue on the 
-	// exchange.
-	[ApplyDispatchRule(typeof(ShortMakeRule))]
-	[AddQueue("SampleTopicExchange", RouteKey = "#",
-		IsAutoDelete = true, IsExclusive = true, IsNoAck = true)]
-	public void OnSortMakeName(TopicEvent topicEvt)
-	{
-		Console.WriteLine($"Handler: OnSortMakeNam: {topicEvt.ToIndentedJson()}");
-	}
+    // This event handler creates a new queue on SampleTopicExchange 
+    // matching any route key.  However, this event handler has a 
+    // dispatch-role specified to only be called if the Make of the
+    // car is <= three characters.  The event is still delivered but
+    // just not passed to this handler.  If there are a large number
+    // of events, it is best to create a dedicated queue on the 
+    // exchange.
+    [ApplyDispatchRule(typeof(ShortMakeRule))]
+    [AddQueue("SampleTopicExchange", RouteKey = "#",
+        IsAutoDelete = true, IsExclusive = true, IsNoAck = true)]
+    public void OnSortMakeName(ExampleTopicEvent topicEvt)
+    {
+        Console.WriteLine($"Handler: OnSortMakeNam: {topicEvt.ToIndentedJson()}");
+    }
 
 	// This adds a queue with a more specific pattern.  Since it 
 	// creating a new queue, it will be called in addition to the
 	// event handler that is specified for the Ford queue.
 	[AddQueue("SampleTopicExchange", RouteKey = "Ford.Mustang.*",
 		IsAutoDelete = true, IsNoAck = true, IsExclusive = true)]
-	public void OnFordMustang(TopicEvent topicEvt)
+	public void OnFordMustang(ExampleTopicEvent topicEvt)
 	{
 		Console.WriteLine($"Handler: OnFordMustang: {topicEvt.ToIndentedJson()}");
 	}

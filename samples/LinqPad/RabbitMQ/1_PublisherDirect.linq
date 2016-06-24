@@ -1,12 +1,12 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Messaging.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
-  <Reference Relative="..\libs\RabbitMQ.Client.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Messaging.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\RabbitMQ.Client.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Extensions</Namespace>
@@ -28,9 +28,10 @@
   <Namespace>NetFusion.Messaging</Namespace>
 </Query>
 
-/// ********************************************************************************************
-/// Direct Exchange
-/// ********************************************************************************************
+/// <summary>
+/// ---------------------------------------------------------------------------------------------------------
+/// DIRECT EXCHANGE PATTERN
+/// ---------------------------------------------------------------------------------------------------------
 /// - The direct exchange uses the route key to determine which queues should receive the 
 ///   message.  When a queue is bound to an exchange, it can specify a route key value.
 ///     
@@ -44,7 +45,7 @@
 /// 
 /// - It is perfectly legal to bind multiple queues with the same binding key.  In that case, the 
 ///   direct exchange will behave like fanout and will broadcast the message to all the matching
-///   queues.
+///   queues. 
 /// </summary>
 void Main()
 {
@@ -90,27 +91,14 @@ public class BrokerSettingsInitializer: AppSettingsInitializer<BrokerSettings>
 public void RunPublishToDirectExchange(string make, string model, int year) 
 {
 	var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
-	var directEvt = new DirectEvent 
-	{ 
-		CurrentDateTime = DateTime.Now, 
-		Vin=Guid.NewGuid().ToString(), 
-		Make = make,
-		Model = model,
-		Year = year
-	};
-
-	directEvt.SetRouteKey(year);
-
-	if (year < 2015)
-	{
-		directEvt.SetRouteKey("UsedModel");
-	}
-
-	domainEventSrv.PublishAsync(directEvt).Wait();
+	var domainModel = new Car { Vin = Guid.NewGuid().ToString(), Make = make, Model = model, Year = year };
+	var domainEvent = new ExampleDirectEvent(domainModel);
+	
+	domainEventSrv.PublishAsync(domainEvent).Wait();
 }
 
 // -------------------------------------------------------------------------------------
-// Mock host plug-in that will be configured within the container.
+// Mock host plug-in that will be configured within the container:
 // -------------------------------------------------------------------------------------
 public class LinqPadHostPlugin : MockPlugin,
 	IAppHostPluginManifest
@@ -118,17 +106,50 @@ public class LinqPadHostPlugin : MockPlugin,
 
 }
 
-[Serializable]
-public class DirectEvent : DomainEvent
+// -------------------------------------------------------------------------------------
+// Model and event message:
+// -------------------------------------------------------------------------------------
+public class Car
 {
-	public DateTime CurrentDateTime { get; set; }
 	public string Vin { get; set; }
 	public string Make { get; set; }
 	public string Model { get; set; }
 	public int Year { get; set; }
 }
 
-public class DirectExchange : DirectExchange<DirectEvent>
+public class ExampleDirectEvent : DomainEvent
+{
+	public string Vin { get; set; }
+	public string Make { get; set; }
+	public string Model { get; set; }
+	public int Year { get; set; }
+
+	public ExampleDirectEvent() { }
+
+	public ExampleDirectEvent(Car car): this()
+	{
+		this.CurrentDateTime = DateTime.UtcNow;
+		this.Vin = car.Vin;
+		this.Make = car.Make;
+		this.Model = car.Model;
+		this.Year = car.Year;
+
+		this.SetRouteKey(car.Year); 
+
+		if (car.Year < 2015)
+		{
+			this.SetRouteKey("UsedModel");
+		}
+
+	}
+
+	public DateTime CurrentDateTime { get; private set; }
+}
+
+// -------------------------------------------------------------------------------------
+// Message exchange:
+// -------------------------------------------------------------------------------------
+public class ExampleDirectExchange : DirectExchange<ExampleDirectEvent>
 {
 	protected override void OnDeclareExchange()
 	{

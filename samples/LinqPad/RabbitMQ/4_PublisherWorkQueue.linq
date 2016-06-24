@@ -1,12 +1,12 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Messaging.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
-  <Reference Relative="..\libs\RabbitMQ.Client.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Messaging.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\RabbitMQ.Client.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Extensions</Namespace>
@@ -28,20 +28,20 @@
   <Namespace>NetFusion.Messaging</Namespace>
 </Query>
 
-// <summary>
-/// **********************************************
-/// Workflow Queue
-/// **********************************************
+/// <summary>
+/// ---------------------------------------------------------------------------------------------------------
+/// WORK-QUEUE EXCHANGE PATTERN
+/// ---------------------------------------------------------------------------------------------------------
 /// - Used to distribute tasks published to the queue to multiple consumers in a round-robin fashion.
 /// - Publisher message RouteKey == Queue Name.
-/// - When configuring a workflow queue, it is defined using the default exchange.
-/// - Consumers bind to a workflow queue by using the name assigned to the queue.
+/// - When configuring a work-flow queue, it is defined using the default exchange.
+/// - Consumers bind to a work flow queue by using the name assigned to the queue.
 /// - Publishers publish messages by specifying the name of queue as the RouteKey.
 /// 
 /// - The message will be delivered to the queue having the same name as the route key and delivered
 ///     to bound consumers in a round robin sequence.
 /// 
-/// - This typeof queue is used to distribute time intensive tasks to multiple consumers bound to the queue.
+/// - This type of queue is used to distribute time intensive tasks to multiple consumers bound to the queue.
 /// - The tasks may take several seconds to complete.  When the consumer is processing the task and fails,
 ///     another bound consumer should be given the task.  This is achieved by having the client acknowledge
 ///     the task once its processing has completed.
@@ -58,7 +58,7 @@
 /// 
 /// - If all the workers are busy, your queue can fill up.  You will want to keep an eye on that, and maybe add
 ///   more workers, or have some other strategy.
-/// </summary> 
+/// </summary>
 void Main()
 {
 	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
@@ -103,21 +103,14 @@ public class BrokerSettingsInitializer: AppSettingsInitializer<BrokerSettings>
 public void RunPublishToWorkQueueExchange(string make, string model, int year) 
 {
 	var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
-	var workFlowEvt = new WorkQueueEvent
-	{ 
-		CurrentDateTime = DateTime.Now, 
-		Vin=Guid.NewGuid().ToString(), 
-		Make = make,
-		Model = model,
-		Year = year
-	};
-
-	workFlowEvt.SetRouteKey(make.InSet("VW", "BMW") ? "ProcessSale" : "ProcessService");
-	domainEventSrv.PublishAsync(workFlowEvt);
+	var domainModel = new Car { Vin = Guid.NewGuid().ToString(), Make = make, Model = model, Year = year };
+	var domainEvent = new ExampleWorkQueueEvent(domainModel);
+	
+	domainEventSrv.PublishAsync(domainEvent);
 }
 
 // -------------------------------------------------------------------------------------
-// Mock host plug-in that will be configured within the container.
+// Mock host plug-in that will be configured within the container:
 // -------------------------------------------------------------------------------------
 public class LinqPadHostPlugin : MockPlugin,
 	IAppHostPluginManifest
@@ -125,18 +118,44 @@ public class LinqPadHostPlugin : MockPlugin,
 
 }
 
-[Serializable]
-public class WorkQueueEvent : DomainEvent
+// -------------------------------------------------------------------------------------
+// Model and event message:
+// -------------------------------------------------------------------------------------
+public class Car
 {
-	public DateTime CurrentDateTime { get; set; }
-	public string TaskName { get; set; }
 	public string Vin { get; set; }
 	public string Make { get; set; }
 	public string Model { get; set; }
 	public int Year { get; set; }
 }
 
-public class SampleWorkQueueExchange : WorkQueueExchange<WorkQueueEvent>
+public class ExampleWorkQueueEvent : DomainEvent
+{
+	public string Vin { get; set; }
+	public string Make { get; set; }
+	public string Model { get; set; }
+	public int Year { get; set; }
+
+	public ExampleWorkQueueEvent() { }
+
+	public ExampleWorkQueueEvent(Car car)
+	{
+		this.CurrentDateTime = DateTime.UtcNow;
+		this.Make = car.Make;
+		this.Model = car.Model;
+		this.Year = car.Year;
+
+		this.SetRouteKey(car.Make.InSet("VW", "BMW") ? "ProcessSale" : "ProcessService");
+	}
+
+	public DateTime CurrentDateTime { get; private set; }
+}
+
+
+// -------------------------------------------------------------------------------------
+// Message exchange:
+// -------------------------------------------------------------------------------------
+public class ExampleWorkQueueExchange : WorkQueueExchange<ExampleWorkQueueEvent>
 {
 	protected override void OnDeclareExchange()
 	{

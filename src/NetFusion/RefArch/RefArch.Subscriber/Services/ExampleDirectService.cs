@@ -2,13 +2,13 @@
 using NetFusion.Messaging;
 using NetFusion.RabbitMQ;
 using NetFusion.RabbitMQ.Consumers;
-using RefArch.Api.Events;
+using RefArch.Api.Messages;
 using System;
 
 namespace RefArch.Subscriber.Services
 {
     [Broker("TestBroker")]
-    public class ExampleDirectExchangeService : IMessageConsumer
+    public class ExampleDirectService : IMessageConsumer
     {
         // This method will join to the 2015-2016-Cars queue defined on the
         // ExampleDirectExchange.  Since this handler is joining the queue,

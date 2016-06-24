@@ -3,7 +3,7 @@ using NetFusion.RabbitMQ;
 using RefArch.Api.Models;
 using System;
 
-namespace RefArch.Api.Events
+namespace RefArch.Api.Messages
 {
     public class ExampleDirectEvent : DomainEvent
     {
@@ -12,13 +12,11 @@ namespace RefArch.Api.Events
         public string Model { get; set; }
         public int Year { get; set; }
 
-        public ExampleDirectEvent()
-        {
-            this.CurrentDateTime = DateTime.UtcNow;
-        }
+        public ExampleDirectEvent() { }
 
         public ExampleDirectEvent(Car car)
         {
+            this.CurrentDateTime = DateTime.UtcNow;
             this.Vin = car.Vin;
             this.Make = car.Make;
             this.Model = car.Model;
@@ -34,6 +32,5 @@ namespace RefArch.Api.Events
         }
 
         public DateTime CurrentDateTime { get; private set; }
-
     }
 }
