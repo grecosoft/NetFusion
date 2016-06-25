@@ -6,16 +6,16 @@ namespace NetFusion.Messaging.Rules
     /// Base class for specifying a rule to determine if a consumer's
     /// handler should be invoked for a given message.
     /// </summary>
-    /// <typeparam name="TEvent">The type or base type of the
+    /// <typeparam name="TMessage">The type or base type of the
     /// message associated with the rule.</typeparam>
-    public abstract class MessageDispatchRule<TEvent> : IMessageDispatchRule
-        where TEvent : IMessage
+    public abstract class MessageDispatchRule<TMessage> : IMessageDispatchRule
+        where TMessage : IMessage
     {
-        Type IMessageDispatchRule.EventType => typeof(TEvent);
+        Type IMessageDispatchRule.EventType => typeof(TMessage);
 
         bool IMessageDispatchRule.IsMatch(IMessage message)
         {
-            return IsMatch((TEvent)message);
+            return IsMatch((TMessage)message);
         }
 
         /// <summary>
@@ -24,6 +24,6 @@ namespace NetFusion.Messaging.Rules
         /// </summary>
         /// <param name="message">The published message.</param>
         /// <returns>True if the hander should be invoked.  Otherwise, False.</returns>
-        protected abstract bool IsMatch(TEvent message);
+        protected abstract bool IsMatch(TMessage message);
     }
 }

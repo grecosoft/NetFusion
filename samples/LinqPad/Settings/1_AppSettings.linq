@@ -1,9 +1,9 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Extensions</Namespace>
@@ -18,13 +18,15 @@
   <Namespace>NetFusion.Settings.Testing</Namespace>
 </Query>
 
-// *************************************************************************
-// This query shows examples of using the Settings Plug-in for loading 
-// application specific settings.  These examples assume that the settings 
-// are being configured directly in memory by the application host.  The 
-// example queries in 4_NetFusionMongoSettingsExamples.linq shows how to 
-// load the settings from a MongoDb collection.
-// *************************************************************************
+/// <summary>
+/// A plug-in defines application settings by deriving a POCO from the base AppSetings class.  
+/// This class contains properties with settings specific to the host application or plug-in
+/// defining the settings class.  Multiple application-settings classes can be defined by a 
+/// plug-in.  IAppSettingsInitializer implementations determine how the application settings
+/// classes are populated.  The settings classes are initialized when injected into a dependent
+/// component for the first time.  The setting classes are registered within the container as 
+/// singletons. 
+/// </summary>
 void Main()
 {
 	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
@@ -71,8 +73,8 @@ public class LinqPadHostPlugin : MockPlugin,
 // If the host application doesn't have to define a settings initializer class, the 
 // settings class must set the IsInitializationRequired property to False.  This property 
 // defaults to True to prevent the accidental use of non-initilized settings.  If this 
-// property has a value of True, an exception will be thrown when the settings instance 
-// is injected into a dependent component and there is not associated settings initializer.
+// property has a value of True, an exception will be thrown when the settings instance is
+// injected into a dependent component and there is not a associated settings initializer.
 // *****************************************************************************************
 public void RunNonInitializedSettingsExample()
 {

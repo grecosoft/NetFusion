@@ -1,8 +1,8 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll"></Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll"></Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll"></Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll"></Reference>
+  <Reference Relative="..\libs\Autofac.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Manifests</Namespace>
@@ -66,7 +66,6 @@ void Main()
 	testSettings.Dump();
 }
 
-// 3_NetFusionSettingsExamples.linq: contains examples for application settings.
 public class TestSettings : AppSettings
 {
 	public TestSettings()

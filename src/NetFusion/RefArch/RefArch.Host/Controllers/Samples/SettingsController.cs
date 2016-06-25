@@ -6,8 +6,12 @@ namespace RefArch.Host.Controllers.Samples
 {
     /// <summary>
     /// A plug-in defines application settings by deriving a POCO from the base AppSetings class.  
-    /// This class contains properties with settings specific to the plug-in defining the settings 
-    /// class.  Multiple application-settings classes can be defined by a plug-in.  
+    /// This class contains properties with settings specific to the host application or plug-in
+    /// defining the settings class.  Multiple application-settings classes can be defined by a 
+    /// plug-in.  IAppSettingsInitializer implementations determine how the application settings
+    /// classes are populated.  The settings classes are initialized when injected into a dependent
+    /// component for the first time.  The setting classes are registered within the container as 
+    /// singletons. 
     /// </summary>
     [EndpointMetadata(EndpointName = "NetFusion.Settings", IncluedAllRoutes = true)]
     [RoutePrefix("api/netfusion/samples/settings")]
@@ -41,9 +45,9 @@ namespace RefArch.Host.Controllers.Samples
         /// 
         /// 1.  Create application settings class: <see cref="UninitializedSettings"/>
         /// 2.  Set IsInitializationRequired = false in the setting's class constructor.
-        /// 3.  Dependency-Inject it into depending class. 
+        /// 3.  Dependency-Inject it into the dependent class.  
         /// </summary>
-        /// <returns>Configuration</returns>
+        /// <returns>Settings</returns>
         [HttpGet, Route("uninitialized", Name = "GetUninitializedSettings")]
         [RouteMetadata(IncludeRoute = true)]
         public UninitializedSettings GetUninitializedSettings()
@@ -62,16 +66,16 @@ namespace RefArch.Host.Controllers.Samples
         /// application settings class.  Initializers can be for a specific application settings
         /// class (closed-generic) or applicable to any application setting (open-generic).  If a
         /// settings specific initializer is found and is able to initialize the setting, it is used.
-        /// If there is no defined specific initializer or one is defined and it can't satisfy the
+        /// If there is no defined specific initializer or one is defined and but can't satisfy the
         /// request, all open-generic initializers are processed.  The first found open-generic 
         /// initializer (in configuration order) that can satisfy the request will be used.
         ///
         /// 1.  Create application settings class: <see cref="InitializedSettings"/>
         /// 2.  Set IsInitializationRequired = true in the setting's class constructor.
         /// 3.  Create an IAppSettingsInitializer based on the setting's type.
-        /// 4.  Dependency-Inject it into depending class. 
+        /// 4.  Dependency-Inject settings into depending class. 
         /// </summary>
-        /// <returns>Configuration</returns>
+        /// <returns>Settings</returns>
         [HttpGet, Route("initialized", Name = "GetInitializedSettings")]
         [RouteMetadata(IncludeRoute = true)]
         public InitializedSettings GetInitializedSettings()
@@ -80,9 +84,30 @@ namespace RefArch.Host.Controllers.Samples
         }
 
         /// <summary>
+        /// The NetFusion.Settings plug-in contains an initializer named FileSettingsInitializer.  
+        /// This implementation will load a settings class from a JSON file contained on disk.  It
+        /// is suggested to register the FileSettings initializer first.  This allows local defined
+        /// settings to override externally stored setting values.  This can be used when developing
+        /// a plugin. 
         /// 
+        /// http://localhost:54164/api/netfusion/samples/settings/file-initialized
+        /// 
+        /// 1.  Create application settings class: <see cref="FileInitializedSettings"/>
+        /// 2.  Register the FileSettingsInitializer
+        /// <code>
+        /// .WithConfig((NetFusionConfig config) => {
+        ///
+        ///            config.AddSettingsInitializer(
+        ///                typeof(FileSettingsInitializer<>),
+        ///                typeof(MongoSettingsInitializer<>));
+        ///        })
+        /// </code>
+        /// 3.  Add settings values to JSON file in the following solution directory:  
+        ///     Configs\Dev\FileInitializedSettings.json  Settings can be specified by
+        ///     environment.  The name of the file matches the setting's class name.
+        /// 4.  Dependency-Inject settings into depending class.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Settings</returns>
         [HttpGet, Route("file-initialized", Name = "GetFileInitializedSettings")]
         [RouteMetadata(IncludeRoute = true)]
         public FileInitializedSettings GetFileInitializedSettings()
@@ -91,9 +116,16 @@ namespace RefArch.Host.Controllers.Samples
         }
 
         /// <summary>
+        /// The FileSettingsInitializer will first check if there is a settings
+        /// file for the specific computer on which the application is running.
+        /// This allows developers to override settings specifically for their
+        /// development.  For the development environment, the directory would 
+        /// be:  Configs\COMP-NAME\Dev\FileInitializedSettings.json
+        /// 
+        /// http://localhost:54164/api/netfusion/samples/settings/machine-file-initialized
         /// 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Settings</returns>
         [HttpGet, Route("machine-file-initialized", Name = "GetMachineFileInitializedSettings")]
         [RouteMetadata(IncludeRoute = true)]
         public MachineFileInitializedSettings GetMachineFileInitializedSettings()
@@ -102,9 +134,14 @@ namespace RefArch.Host.Controllers.Samples
         }
 
         /// <summary>
-        /// 
+        /// The NetFusion.Settings.MongoDB plug-in provides a file settings initializer
+        /// that will load values stored in a Mongo document.  Each settings class has
+        /// its values stored in a document.  The document must have the ApplicationId
+        /// set the values specified within the manifest of type IAppHostPluginManifest.
+        /// The document's Environment property needs to specify the environment and the
+        /// MachineName can be optionally set.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Settings</returns>
         [HttpGet, Route("mongo-initialized", Name = "GetMongoInitializedSettings")]
         [RouteMetadata(IncludeRoute = true)]
         public MongoInitializedSettings GetMongoInitializedSettings()

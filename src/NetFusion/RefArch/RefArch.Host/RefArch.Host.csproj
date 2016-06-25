@@ -204,9 +204,12 @@
     <Compile Include="App_Start\MvcRouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AppController.cs" />
+    <Compile Include="Controllers\Samples\EntityFrameworkController.cs" />
     <Compile Include="Controllers\Samples\MessagingController.cs" />
+    <Compile Include="Controllers\Samples\MongoDBController.cs" />
     <Compile Include="Controllers\Samples\RabbitMQController.cs" />
     <Compile Include="Controllers\Samples\SettingsController.cs" />
+    <Compile Include="Controllers\Samples\WebApiController.cs" />
     <Compile Include="Controllers\WebApiSampleController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
