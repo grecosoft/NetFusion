@@ -1,6 +1,7 @@
 ﻿using NetFusion.Messaging;
 using NetFusion.WebApi.Metadata;
 using RefArch.Api.Messages;
+using RefArch.Api.Messages.RabbitMQ;
 using RefArch.Api.Models;
 using System.Threading.Tasks;
 using System.Web.Http;

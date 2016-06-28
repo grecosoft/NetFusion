@@ -2,7 +2,7 @@
 using NetFusion.Messaging;
 using NetFusion.RabbitMQ;
 using NetFusion.RabbitMQ.Consumers;
-using RefArch.Api.Messages;
+using RefArch.Api.Messages.RabbitMQ;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

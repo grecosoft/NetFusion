@@ -45,14 +45,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Messages\ExampleDirectEvent.cs" />
-    <Compile Include="Messages\ExampleFanoutEvent.cs" />
-    <Compile Include="Messages\ExampleRpcCommand.cs" />
-    <Compile Include="Messages\ExampleRpcResponse.cs" />
-    <Compile Include="Messages\ExampleTopicEvent.cs" />
-    <Compile Include="Messages\ExampleWorkQueueEvent.cs" />
+    <Compile Include="Messages\ExampleAsyncCommand.cs" />
+    <Compile Include="Messages\ExampleAsyncDomainEventException.cs" />
+    <Compile Include="Messages\ExampleAsyncDomainEvent.cs" />
+    <Compile Include="Messages\ExampleBaseDomainEvent.cs" />
+    <Compile Include="Messages\ExampleDerivedDomainEvent.cs" />
+    <Compile Include="Messages\ExampleRuleDomainEvent.cs" />
+    <Compile Include="Messages\RabbitMQ\ExampleDirectEvent.cs" />
+    <Compile Include="Messages\RabbitMQ\ExampleFanoutEvent.cs" />
+    <Compile Include="Messages\RabbitMQ\ExampleRpcCommand.cs" />
+    <Compile Include="Messages\RabbitMQ\ExampleRpcResponse.cs" />
+    <Compile Include="Messages\RabbitMQ\ExampleTopicEvent.cs" />
+    <Compile Include="Messages\RabbitMQ\ExampleWorkQueueEvent.cs" />
     <Compile Include="Manifest.cs" />
+    <Compile Include="Messages\ExampleSyncDomainEvent.cs" />
     <Compile Include="Models\Car.cs" />
+    <Compile Include="Models\CommandInfo.cs" />
+    <Compile Include="Models\HandlerResponse.cs" />
+    <Compile Include="Models\MessageExInfo.cs" />
+    <Compile Include="Models\MessageInfo.cs" />
+    <Compile Include="Models\MessageResponse.cs" />
+    <Compile Include="Models\MessageRuleInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

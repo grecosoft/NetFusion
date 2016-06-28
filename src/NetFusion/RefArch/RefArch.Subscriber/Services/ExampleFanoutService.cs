@@ -1,7 +1,7 @@
 ﻿using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
 using NetFusion.RabbitMQ.Consumers;
-using RefArch.Api.Messages;
+using RefArch.Api.Messages.RabbitMQ;
 using System;
 
 namespace RefArch.Subscriber.Services

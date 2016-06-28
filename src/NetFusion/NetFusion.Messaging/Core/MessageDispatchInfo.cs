@@ -49,6 +49,13 @@ namespace NetFusion.Messaging.Core
         public bool IsAsync { get; set; }
 
         /// <summary>
+        /// Indicates that the handler is marked with the InProcessHandler attribute.
+        /// This indicates that the handler will be used by the InProcessMessagePublisher
+        /// and will not be published to another process using a messaging technology.
+        /// </summary>
+        public bool IsInProcessHandler { get; set; }
+
+        /// <summary>
         /// The type of the dispatch rules associated with the message handler.
         /// These are simple predicates based on the properties of the message
         /// that determines if the message handler should be invoked.

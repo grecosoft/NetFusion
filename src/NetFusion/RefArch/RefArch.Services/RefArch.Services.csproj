@@ -46,6 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Manifest.cs" />
+    <Compile Include="Messaging\ExampleAsyncHandlers.cs" />
+    <Compile Include="Messaging\ExampleHierarchyHandler.cs" />
+    <Compile Include="Messaging\ExampleRuleHandler.cs" />
+    <Compile Include="Messaging\ExampleSyncHandlers.cs" />
+    <Compile Include="Messaging\Rules\IsHighImportance.cs" />
+    <Compile Include="Messaging\Rules\IsLowImportance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,7 @@ using NetFusion.Messaging.Rules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace NetFusion.Messaging.Modules
@@ -41,25 +42,23 @@ namespace NetFusion.Messaging.Modules
         {
             this.MessagingConfig = this.Context.Plugin.GetConfig<MessagingConfig>();
 
-            var allPluginTypes = this.Context.GetPluginTypesFrom();
-            var allMessageHandlers = allPluginTypes
+            IEnumerable<Type> allPluginTypes = this.Context.GetPluginTypesFrom();
+            MessageDispatchInfo[] allDispatchers = allPluginTypes
                 .WhereEventConsumer()
-                .SelectMessageHandlers(this.MessagingConfig.ConsumerMethodPrefix);
-
-            this.AllMessageTypeDispatchers = allMessageHandlers
+                .SelectMessageHandlers(this.MessagingConfig.ConsumerMethodPrefix)
                 .SelectDispatchInfo()
-                .ToLookup(k => k.MessageType);
-
-            this.InProcessMessageTypeDispatchers = allMessageHandlers
-                .MarkedWith<InProcessHandlerAttribute>()
-                .SelectDispatchInfo()
-                .ToLookup(k => k.MessageType);
-
-            MessageDispatchInfo[] allDispatchers = this.AllMessageTypeDispatchers
-                .SelectMany(ed => ed).ToArray();
+                .ToArray();
 
             SetDispatchRules(allDispatchers);
             AssertDispatchRules(allDispatchers);
+
+            this.AllMessageTypeDispatchers = allDispatchers
+                .ToLookup(k => k.MessageType);
+
+            this.InProcessMessageTypeDispatchers = allDispatchers
+                .Where(h => h.IsInProcessHandler)
+                .ToLookup(k => k.MessageType);
+
             AssertCommandMessages();
         }
 

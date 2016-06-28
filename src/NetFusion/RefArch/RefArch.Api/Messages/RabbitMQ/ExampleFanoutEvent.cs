@@ -3,12 +3,12 @@ using NetFusion.RabbitMQ;
 using RefArch.Api.Models;
 using System;
 
-namespace RefArch.Api.Messages
+namespace RefArch.Api.Messages.RabbitMQ
 {
     public class ExampleFanoutEvent : DomainEvent
     {
-        public string Make { get; set; }
-        public string Model { get; set; }
+        public string Make { get; private set; }
+        public string Model { get; private set; }
 
         public ExampleFanoutEvent() { }
 

@@ -3,12 +3,12 @@ using NetFusion.RabbitMQ;
 using RefArch.Api.Models;
 using System;
 
-namespace RefArch.Api.Messages
+namespace RefArch.Api.Messages.RabbitMQ
 {
     public class ExampleRpcCommand : Command<ExampleRpcResponse>
     {
-        public DateTime CurrentDateTime { get; set; }
-        public string InputValue { get; set; }
+        public DateTime CurrentDateTime { get; private set; }
+        public string InputValue { get; private set; }
 
         public ExampleRpcCommand()
         {

@@ -3,7 +3,7 @@ using NetFusion.Messaging;
 using NetFusion.Messaging.Rules;
 using NetFusion.RabbitMQ;
 using NetFusion.RabbitMQ.Consumers;
-using RefArch.Api.Messages;
+using RefArch.Api.Messages.RabbitMQ;
 using System;
 
 namespace RefArch.Subscriber.Services

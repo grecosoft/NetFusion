@@ -1,5 +1,5 @@
 ﻿using NetFusion.Messaging.Rules;
-using RefArch.Api.Messages;
+using RefArch.Api.Messages.RabbitMQ;
 
 namespace RefArch.Subscriber.Services
 {

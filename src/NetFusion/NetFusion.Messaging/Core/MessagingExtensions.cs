@@ -54,7 +54,7 @@ namespace NetFusion.Messaging.Core
             var isCorrectMethodType = !methodInfo.IsStatic
                 && methodInfo.IsPublic
                 && methodInfo.GetParameters().Length == 1
-                && methodInfo.Name.StartsWith(methodPrefix ?? ""); 
+                && methodInfo.Name.StartsWith(methodPrefix ?? "", StringComparison.Ordinal); 
 
             if (!isCorrectMethodType) return false;
             
@@ -81,6 +81,7 @@ namespace NetFusion.Messaging.Core
                 DispatchRuleTypes = GetOptionalRuleTypes(mi),
                 RuleApplyType = GetOptionalRuleApplyType(mi),
                 MessageHandlerMethod = mi,
+                IsInProcessHandler = IsInProcessHandler(mi),
                 IsAsync = IsAsyncDispatch(mi)
             });
         }
@@ -113,6 +114,11 @@ namespace NetFusion.Messaging.Core
         private static Type[] GetOptionalRuleTypes(MethodInfo methodInfo)
         {
             return methodInfo.GetCustomAttribute<ApplyDispatchRuleAttribute>()?.RuleTypes ?? new Type[] { };
+        }
+
+        private static bool IsInProcessHandler(MethodInfo methodInfo)
+        {
+            return methodInfo.GetCustomAttribute<InProcessHandlerAttribute>() != null;
         }
 
         private static RuleApplyTypes GetOptionalRuleApplyType(MethodInfo methodInfo)
