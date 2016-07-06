@@ -88,7 +88,7 @@ namespace RefArch.Host.Controllers.Samples
         /// This implementation will load a settings class from a JSON file contained on disk.  It
         /// is suggested to register the FileSettings initializer first.  This allows local defined
         /// settings to override externally stored setting values.  This can be used when developing
-        /// a plugin. 
+        /// a plug-in. 
         /// 
         /// http://localhost:54164/api/netfusion/samples/settings/file-initialized
         /// 
@@ -135,7 +135,7 @@ namespace RefArch.Host.Controllers.Samples
 
         /// <summary>
         /// The NetFusion.Settings.MongoDB plug-in provides a file settings initializer
-        /// that will load values stored in a Mongo document.  Each settings class has
+        /// that will load values stored in a MongoDB document.  Each settings class has
         /// its values stored in a document.  The document must have the ApplicationId
         /// set the values specified within the manifest of type IAppHostPluginManifest.
         /// The document's Environment property needs to specify the environment and the

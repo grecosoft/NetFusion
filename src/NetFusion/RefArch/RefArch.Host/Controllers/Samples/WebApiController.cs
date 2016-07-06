@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using NetFusion.WebApi.Metadata;
+using System.Web.Http;
 
 namespace RefArch.Host.Controllers.Samples
 {
-    public class WebApiController
+    [EndpointMetadata(EndpointName = "NetFusion.webapi", IncluedAllRoutes = true)]
+    [RoutePrefix("api/netfusion/samples/webapi")]
+    public class WebApiController : ApiController
     {
+
     }
 }

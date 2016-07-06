@@ -1,0 +1,6 @@
+﻿{
+  "AppliesToAddress": "http://localhost",
+  "JwtKey": "",
+  "TokenIssuerName": "http://localhost",
+  "TokenTimeoutMinutes": 120
+}

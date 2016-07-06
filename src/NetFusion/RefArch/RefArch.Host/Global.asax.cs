@@ -5,6 +5,7 @@ using NetFusion.RabbitMQ.Core;
 using NetFusion.Settings.Configs;
 using NetFusion.Settings.MongoDB;
 using NetFusion.Settings.Strategies;
+using NetFusion.WebApi.Configs;
 using Samples.WebHost.App_Start;
 using System.Web.Routing;
 
@@ -30,6 +31,14 @@ namespace RefArch.Host
                     config.AddSettingsInitializer(
                         typeof(FileSettingsInitializer<>),
                         typeof(MongoSettingsInitializer<>));
+                })
+
+                .WithConfig((GeneralWebApiConfig config) => {
+
+                    config.UseHttpAttributeRoutes = true;
+                    config.UseCamalCaseJson = true;
+                    config.UseAutofacFilters = true;
+                    config.UseJwtSecurityToken = true;
                 })
 
                 .Build()

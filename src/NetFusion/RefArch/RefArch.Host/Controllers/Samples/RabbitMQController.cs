@@ -1,6 +1,5 @@
 ﻿using NetFusion.Messaging;
 using NetFusion.WebApi.Metadata;
-using RefArch.Api.Messages;
 using RefArch.Api.Messages.RabbitMQ;
 using RefArch.Api.Models;
 using System.Threading.Tasks;
@@ -13,12 +12,11 @@ namespace RefArch.Host.Controllers.Samples
     /// registering RabbitMqMessagePublisher.  The following is the
     /// needed configuration:
     /// 
-    /// <code>
+    /// 
     /// .WithConfig((MessagingConfig config) =>
     /// {
-    ///     config.AddMessagePublisherType[RabbitMqMessagePublisher]();
+    ///     config.AddMessagePublisherType<RabbitMqMessagePublisher>();
     /// })
-    /// </code>
     /// 
     /// One of the registered settings initializers need to be able to
     /// provide the needed broker settings.  This example is using the
@@ -220,26 +218,3 @@ namespace RefArch.Host.Controllers.Samples
     }
 }
 
-
-/* EXAMPLE HTTP REQUESTS:
- * 
- * DIRECT:
- * (post) http://localhost:54164/api/netfusion/samples/rabbitmq/direct
- * (body)
- * {
-    "vin": "34345NDGJK345LL435",
-    "make": "Volvo",
-    "model": "S8",
-    "year": 2016
-}
- * TOPIC:
- * 
- * 
- * FANOUT:
- * 
- * 
- * WORK-QUEUE:
- * 
- * 
- * RPC:
-*/

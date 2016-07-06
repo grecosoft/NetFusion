@@ -52,6 +52,7 @@
     <Compile Include="Samples\Settings\MachineFileInitializedSettings.cs" />
     <Compile Include="Samples\Settings\MongoInitializedSettings.cs" />
     <Compile Include="Samples\Settings\UninitializedSettings.cs" />
+    <Compile Include="Samples\WebApi\ExampleClaimsPrincipal.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj">
