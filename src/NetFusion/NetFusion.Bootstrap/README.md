@@ -4,8 +4,8 @@ The bootstrap process configures the application-container from plug-ins identif
 ## Container Log
 The following is an example of the log showing how the application is composed.  Allows a developer to have a visual look at the application.
 
-![image](../../../img/NetFusionLog-1.png)
-![image](../../../imgNetFusionLog-2.png)
+![image](../../../img/NetFusionLog-1.PNG)
+![image](../../../img/NetFusionLog-2.PNG)
     
 The design is based on the following:
 
