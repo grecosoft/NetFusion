@@ -3,6 +3,8 @@ NetFusion is a design for composing an application from components that remains 
 
 [![Build status](https://ci.appveyor.com/api/projects/status/8k6l6lvmuulk2y94?svg=true)](https://ci.appveyor.com/project/grecosoft/netfusion)
 
+![image](./img/NetFusionLog-0.png)
+
 ## Goals
 * Allow an application to be easily composed from loosely coupled reusable components.
 

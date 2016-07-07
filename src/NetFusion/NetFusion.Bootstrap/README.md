@@ -1,6 +1,12 @@
 # Bootstrap Overview
 The bootstrap process configures the application-container from plug-ins identified by a plug-in manifest.  A plug-is is nothing more than an assembly containing classes based on a given set of conventions.  These convention based classes are instantiated during the bootstrap process and used to initialize the application container.  The end result of the bootstrap process is a constructed Autofac dependency-injection container that can be used by the host application.
 
+## Container Log
+The following is an example of the log showing how the application is composed.  Allows a developer to have a visual look at the application.
+
+![image](../../../img/NetFusionLog-1.png)
+![image](../../../imgNetFusionLog-2.png)
+    
 The design is based on the following:
 
 ## Plugin Manifest Types

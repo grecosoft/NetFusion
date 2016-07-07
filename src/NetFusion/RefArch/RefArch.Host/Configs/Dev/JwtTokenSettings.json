@@ -1,6 +1,6 @@
 ﻿{
   "AppliesToAddress": "http://localhost",
-  "JwtKey": "",
+  "JwtKey": "gLACHCIIettUPuFZt4sJCEZ3uRzY3mOjvilT7iw1/r99fMEXg2bmdLFdUQA8XWJTMKvuoPTJBo0ArjDzj85ECw==",
   "TokenIssuerName": "http://localhost",
   "TokenTimeoutMinutes": 120
 }
