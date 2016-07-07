@@ -187,7 +187,9 @@
     <Content Include="Configs\Dev\MachineFileInitializedSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Configs\Dev\JwtTokenSettings.json" />
+    <Content Include="Configs\Dev\JwtTokenSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="scripts\jquery-3.0.0.intellisense.js" />
     <Content Include="scripts\app-composite.js" />
     <Content Include="scripts\app.js" />
