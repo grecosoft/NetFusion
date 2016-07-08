@@ -113,8 +113,8 @@ namespace NetFusion.RabbitMQ.Modules
             if (duplicateBrokerNames.Any())
             {
                 throw new InvalidOperationException(
-                    $"the following broker names are specified more than " + 
-                    $"once: {String.Join(", ", duplicateBrokerNames)}");
+                    $"The following broker names are specified more than " + 
+                    $"once: {String.Join(", ", duplicateBrokerNames)}.");
             }
 
             return settings.Connections.ToDictionary(c => c.BrokerName);
@@ -128,24 +128,16 @@ namespace NetFusion.RabbitMQ.Modules
 
             // All message handlers that are consumers of a queue that should be
             // called when an event is received based on the exchange distribution rules.
-            var qBindings = messagingServices.AllMessageTypeDispatchers
-                .Where(evtDispatcher => evtDispatcher.Any(
-                    dispatcher => IsQueueConsumer(dispatcher)))
-                .SelectMany(v => v)
+            return messagingServices.AllMessageTypeDispatchers
+                .Values().Where(IsQueueConsumer)
+                .Select(d => new
+                {
+                    ConsumerBroker = d.ConsumerType.GetCustomAttribute<BrokerAttribute>(),
+                    ConsumerQueue = d.MessageHandlerMethod.GetCustomAttribute<QueueConsumerAttribute>(),
+                    DispatchInfo = d,
+                })
+                .Select(d => new MessageConsumer(d.ConsumerBroker, d.ConsumerQueue, d.DispatchInfo))
                 .ToList();
-
-            // Associate the queue bindings with the method that should be dispatched
-            // when a corresponding message with the event data is received on the queue.
-            return qBindings.Select(dispatch => new
-            {
-                ConsumerBroker = dispatch.ConsumerType.GetCustomAttribute<BrokerAttribute>(),
-                ConsumerQueue = dispatch.MessageHandlerMethod.GetCustomAttribute<QueueConsumerAttribute>(),
-                Dispatch = dispatch
-
-            }).Select(binding => new MessageConsumer(
-                binding.ConsumerBroker,
-                binding.ConsumerQueue,
-                binding.Dispatch)).ToList();
         }
 
         // The criteria that determines if a given consumer event handler method
@@ -173,7 +165,7 @@ namespace NetFusion.RabbitMQ.Modules
             }
 
             throw new ContainerException(
-                $"the application host and its corresponding application plug-ins can only " + 
+                $"The application host and its corresponding application plug-ins can only " + 
                 $"define one class implementing the: {typeof(IMessageSerializerRegistry)} interface-" +  
                 $"{registries.Count()} implementations were found.",
 

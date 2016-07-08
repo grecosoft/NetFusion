@@ -4,6 +4,6 @@ namespace RefArch.Domain.Samples.WebApi
 {
     public interface IAuthenticationService
     {
-        UserInfo IsValidLogin(string userName, string password);
+        UserLoginInfo ValidCredentials(string userName, string password);
     }
 }

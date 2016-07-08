@@ -84,3 +84,6 @@ Contains a database settings type that application components can derive from to
 
 This plug-in also automatically registers all Entity Framework data entity mappings and provides a client interface that can be injected into dependent components.
 ![image](./img/Nuget-NetFusion.EntityFramework.png)
+
+## Same Reference Architecture
+![image](./img/RefArch.png)

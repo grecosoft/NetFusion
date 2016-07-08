@@ -69,7 +69,7 @@ namespace NetFusion.Messaging.Core
 
             if (publisherErrors.Any())
             {
-                throw new PublisherException("exception dispatching event source",
+                throw new PublisherException("Exception dispatching event source.",
                     eventSource, publisherErrors);
             }
         }
@@ -78,14 +78,14 @@ namespace NetFusion.Messaging.Core
         {
             Check.NotNull(domainEvent, nameof(domainEvent), "domain event not specified");
 
-            PublishLocal(domainEvent);
+            PublishMessageLocal(domainEvent);
         }
 
         public void PublishLocal(ICommand command)
         {
             Check.NotNull(command, nameof(command), "command not specified");
 
-            PublishLocal(command);
+            PublishMessageLocal(command);
         }
 
 
@@ -155,14 +155,14 @@ namespace NetFusion.Messaging.Core
                     if (publisherErrors.Any())
                     {
                         throw new PublisherException(
-                            "exception when invoking message publisher",
+                            "Exception when invoking message publisher.",
                             message,
                             publisherErrors);
                     }
                 }
 
                 throw new PublisherException(
-                    "exception when invoking message publisher.",
+                    "Exception when invoking message publisher.",
                     message, ex);
             }
         }

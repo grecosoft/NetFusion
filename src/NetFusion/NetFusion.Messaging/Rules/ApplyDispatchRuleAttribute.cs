@@ -26,7 +26,7 @@ namespace NetFusion.Messaging.Rules
         /// <summary>
         /// Constructor used to specify the dispatch rule types.
         /// </summary>
-        /// <param name="dispatchRuleType">Determines how the rules are applied.</param>
+        /// <param name="dispatchRuleTypes">Determines how the rules are applied.</param>
         public ApplyDispatchRuleAttribute(params Type[] dispatchRuleTypes)
         {
             Check.NotNull(dispatchRuleTypes, nameof(dispatchRuleTypes));
@@ -38,7 +38,7 @@ namespace NetFusion.Messaging.Rules
             if (invalidRules.Any())
             {
                 throw new InvalidOperationException(
-                    $"the following are not dispatch rule types: {String.Join(", ", invalidRules)}" + 
+                    $"The following are not dispatch rule types: {String.Join(", ", invalidRules)}" + 
                     $"-dispatch rules must derive from: {typeof(IMessageDispatchRule)}.");
             } 
       

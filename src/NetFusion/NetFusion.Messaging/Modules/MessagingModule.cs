@@ -111,7 +111,7 @@ namespace NetFusion.Messaging.Modules
             if (invalidMessageDispatches.Any())
             {
                 throw new ContainerException(
-                   $"a message that is of type: {typeof(ICommand)} cannot have more than one " +
+                   $"A message that is of type: {typeof(ICommand)} cannot have more than one " +
                    $"consumer message handler.", invalidMessageDispatches);
             }
         }
@@ -133,8 +133,8 @@ namespace NetFusion.Messaging.Modules
             {
                 var messages = invalidEvtHanlders.Select(h => h.ToJson());
                 throw new ContainerException(
-                    $"the following message consumers have invalid attributes applied " +
-                    $"dispatch rules: {String.Join(", ", messages)}");
+                    $"The following message consumers have invalid attributes applied " +
+                    $"dispatch rules: {String.Join(", ", messages)}.");
             }
         }
 
@@ -200,8 +200,8 @@ namespace NetFusion.Messaging.Modules
             if (!message.GetType().IsDerivedFrom(dispatchInfo.MessageType))
             {
                 throw new ContainerException(
-                    $"the message event type: {message.GetType()} being dispatched does not match or " + 
-                    $"derived from the dispatch information type of: {dispatchInfo.MessageType}");
+                    $"The message event type: {message.GetType()} being dispatched does not match or " + 
+                    $"derived from the dispatch information type of: {dispatchInfo.MessageType}.");
             }
 
             if (!dispatchInfo.IsMatch(message)) return null;

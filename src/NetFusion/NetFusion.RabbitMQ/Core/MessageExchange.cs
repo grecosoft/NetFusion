@@ -91,7 +91,7 @@ namespace NetFusion.RabbitMQ.Exchanges
             if (Settings.BrokerName.IsNullOrWhiteSpace())
             {
                 throw new InvalidOperationException(
-                    "broker Name must be set for all exchange types");
+                    "Broker Name must be set for all exchange types.");
             }
         }
 
@@ -100,8 +100,8 @@ namespace NetFusion.RabbitMQ.Exchanges
             if (this.Queues.Any(q => q.RouteKeys == null || q.RouteKeys.Empty()))
             {
                 throw new InvalidOperationException(
-                    $"for this type of exchange, all queues must have a route specified-" +
-                    $"Exchange Type: {this.GetType()}");
+                    $"For this type of exchange, all queues must have a route specified-" +
+                    $"Exchange Type: {this.GetType()}.");
             }
         }
 
@@ -135,7 +135,7 @@ namespace NetFusion.RabbitMQ.Exchanges
             if (this.ExchangeName.IsNullOrWhiteSpace())
             {
                 throw new InvalidOperationException(
-                    "exchange name must be specified for non-default exchange type");
+                    "Exchange name must be specified for non-default exchange type.");
             }
 
             channel.ExchangeDeclare(settings);

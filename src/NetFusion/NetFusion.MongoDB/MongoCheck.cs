@@ -18,7 +18,7 @@ namespace NetFusion.MongoDB
             if (!ObjectId.TryParse(value, out objId))
             {
                 throw new InvalidOperationException(
-                    $"the value of {value} is not a valid string representation of an ObjectId");
+                    $"The value of {value} is not a valid string representation of an ObjectId.");
             }
         }
     }

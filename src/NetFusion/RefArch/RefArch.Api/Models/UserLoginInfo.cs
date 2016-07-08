@@ -1,25 +1,26 @@
 ﻿namespace RefArch.Api.Models
 {
-    public class UserInfo
+    public class UserLoginInfo
     {
-        public string UserId { get; set; }
-        public string Email { get; set; }
+        public static UserLoginInfo InvalidUser => new UserLoginInfo();
+
+        public string UserId { get; }
+        public string Email { get; }
         public string FirstName { get; }
         public string LastName { get; }
-        public string Unit { get; set; }
 
-        public UserInfo(
+        public UserLoginInfo() { }
+
+        public UserLoginInfo(
             string userId,
             string email,
             string firstName,
-            string lastName,
-            string unit)
+            string lastName)
         {
             this.UserId = userId;
             this.Email = email;
             this.FirstName = firstName;
             this.LastName = lastName;
-            this.Unit = unit;
         }
     }
 }

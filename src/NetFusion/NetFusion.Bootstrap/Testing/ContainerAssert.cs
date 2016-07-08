@@ -72,7 +72,7 @@ namespace NetFusion.Bootstrap.Testing
                 _container.Dispose();
 
                 throw new InvalidOperationException
-                    ($"plug-in module of type: {typeof(T)} was not found to assert");
+                    ($"Plug-in module of type: {typeof(T)} was not found to assert.");
             }
 
             AssertAction(() => assert(module));
@@ -93,7 +93,7 @@ namespace NetFusion.Bootstrap.Testing
             if (_container.CompositeApplication.Plugins == null)
             {
                 throw new InvalidOperationException
-                    ("container has not been built");
+                    ("Container has not been built.");
             }
 
             var config = _container.CompositeApplication
@@ -105,7 +105,7 @@ namespace NetFusion.Bootstrap.Testing
                 _container.Dispose();
 
                 throw new InvalidOperationException(
-                    $"plug-in configuration of type: {typeof(T)} was not found to assert");
+                    $"Plug-in configuration of type: {typeof(T)} was not found to assert.");
             }
 
             AssertAction(() => assert(config));

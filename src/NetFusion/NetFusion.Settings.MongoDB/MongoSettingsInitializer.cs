@@ -53,7 +53,7 @@ namespace NetFusion.Settings.MongoDB
             {
                 throw new InvalidOperationException(
                     $"More one setting configuration was found for the setting type: {typeof(TSettings)} " +
-                    $"for the environment: {settings.Environment}");
+                    $"for the environment: {settings.Environment}.");
             }
 
             return foundSettings.FirstOrDefault();

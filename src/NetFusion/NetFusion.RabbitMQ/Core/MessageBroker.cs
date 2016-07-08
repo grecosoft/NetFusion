@@ -175,7 +175,7 @@ namespace NetFusion.RabbitMQ.Core
             if (brokerConn == null)
             {
                 throw new InvalidOperationException(
-                   $"an existing broker with the name of: {brokerConn} does not exist");
+                   $"An existing broker with the name of: {brokerConn} does not exist.");
             }
             ConnectToBroker(brokerConn);
         }
@@ -186,7 +186,7 @@ namespace NetFusion.RabbitMQ.Core
             if (brokerConn == null)
             {
                 throw new InvalidOperationException(
-                    $"channel could not be created.  A broker with the name of: {brokerName} does not exist");
+                    $"Channel could not be created.  A broker with the name of: {brokerName} does not exist.");
             }
 
             return brokerConn.Connection.CreateModel();
@@ -340,7 +340,7 @@ namespace NetFusion.RabbitMQ.Core
             if (exchangeDefs == null)
             {
                 throw new InvalidOperationException(
-                    $"the message of type: {message.GetType().FullName} is not associated with an exchange");
+                    $"The message of type: {message.GetType().FullName} is not associated with an exchange.");
             }
 
             exchangeDefs.ForEach(exchangeDef => Publish(exchangeDef, message));

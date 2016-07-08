@@ -56,7 +56,7 @@ namespace NetFusion.Bootstrap.Plugins
             if (pluginType == null)
             {
                 throw new ContainerException(
-                    $"A plug-in type could not be found for the corresponding .NET type: {type}");
+                    $"A plug-in type could not be found for the corresponding .NET type: {type}.");
             }
             return pluginType;
 
@@ -96,12 +96,12 @@ namespace NetFusion.Bootstrap.Plugins
             var foundModules = this.AllPluginModules.OfType<T>();
             if (!foundModules.Any())
             {
-                throw new InvalidOperationException($"plug-in module of type: {typeof(T)} not found");
+                throw new InvalidOperationException($"Plug-in module of type: {typeof(T)} not found.");
             }
 
             if (foundModules.Count() > 1)
             {
-                throw new InvalidOperationException($"multiple plug-in modules implementing: {typeof(T)} found");
+                throw new InvalidOperationException($"Multiple plug-in modules implementing: {typeof(T)} found.");
             }
 
             return foundModules.First();

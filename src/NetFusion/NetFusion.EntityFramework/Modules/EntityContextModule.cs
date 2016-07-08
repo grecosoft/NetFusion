@@ -65,7 +65,7 @@ namespace NetFusion.EntityFramework.Modules
             if (connection == null)
             {
                 throw new InvalidOperationException(
-                    $"context connection could not be found for the following entity context type: {contextType}");
+                    $"Context connection could not be found for the following entity context type: {contextType}.");
             }
             return connection;
         }

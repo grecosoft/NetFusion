@@ -106,7 +106,7 @@ namespace NetFusion.Bootstrap.Container
 
             if (_instance != null)
             {
-                throw new ContainerException("container has already been created");
+                throw new ContainerException("Container has already been created.");
             }
 
             searchPatterns = AddDefaultSearchPatterns(searchPatterns);
@@ -127,7 +127,7 @@ namespace NetFusion.Bootstrap.Container
 
             if (_instance != null)
             {
-                throw new ContainerException("container has already been created");
+                throw new ContainerException("Container has already been created.");
             }
 
             return new AppContainer(new string[] { }, typeResolver);
@@ -139,14 +139,14 @@ namespace NetFusion.Bootstrap.Container
 
             if (this.Registry.AllManifests != null)
             {
-                throw new ContainerException("container has already been built.");
+                throw new ContainerException("Container has already been built.");
             }
 
             var configType = config.GetType();
             if (_configs.ContainsKey(configType))
             {
                 throw new ContainerException(
-                    $"existing configuration of type: {config.GetType()} is already configured");
+                    $"Existing configuration of type: {config.GetType()} is already configured.");
             }
 
             _configs[configType] = config;
@@ -288,7 +288,7 @@ namespace NetFusion.Bootstrap.Container
             if (container._disposed)
             {
                 throw new ContainerException(
-                    "the application container has been disposed and can no longer be accessed");
+                    "The application container has been disposed and can no longer be accessed.");
             }
         }
 

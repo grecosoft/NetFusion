@@ -94,7 +94,7 @@ namespace NetFusion.WebApi
             if (duplicateClaims.Any())
             {
                 throw new InvalidOperationException(
-                    $"The following claim types are duplicated: {String.Join(", ", duplicateClaims) }");
+                    $"The following claim types are duplicated: {String.Join(", ", duplicateClaims) }.");
             }
         }
 

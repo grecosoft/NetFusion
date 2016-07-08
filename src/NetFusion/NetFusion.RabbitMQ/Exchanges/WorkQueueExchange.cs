@@ -29,7 +29,7 @@ namespace NetFusion.RabbitMQ.Exchanges
             if (!Settings.ExchangeName.IsNullOrEmpty())
             {
                 throw new InvalidOperationException(
-                    $"Exchange Name cannot be set for a WorkQueue.  Exchange Type: {GetType()}");
+                    $"Exchange Name cannot be set for a WorkQueue.  Exchange Type: {GetType()}.");
             }
         }
 

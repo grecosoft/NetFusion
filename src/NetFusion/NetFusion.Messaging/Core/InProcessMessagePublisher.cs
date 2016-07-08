@@ -70,8 +70,8 @@ namespace NetFusion.Messaging.Core
             if (dispatchErrors.Any())
             {
                 throw new MessageDispatchException(
-                    "an exception was received when dispatching a message to " +
-                    "one or more synchronous event consumers",
+                    "An exception was received when dispatching a message to " +
+                    "one or more synchronous event consumers.",
                     dispatchErrors);
             }
         }
@@ -106,15 +106,15 @@ namespace NetFusion.Messaging.Core
                     if (dispatchErrors.Any())
                     {
                         throw new MessageDispatchException(
-                            "an exception was received when dispatching a message to " +
-                            "one or more asynchronous handlers",
+                            "An exception was received when dispatching a message to " +
+                            "one or more asynchronous handlers.",
                             message,
                             dispatchErrors);
                     }
                 }
 
                 throw new MessageDispatchException(
-                    "an exception was received when dispatching a message", 
+                    "An exception was received when dispatching a message.", 
                     message, ex);
             }
         }

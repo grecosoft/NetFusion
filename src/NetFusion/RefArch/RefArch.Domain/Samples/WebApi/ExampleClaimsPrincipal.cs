@@ -8,7 +8,13 @@ namespace RefArch.Domain.Samples.WebApi
         public ExampleClaimsPrincipal(IPrincipal principal)
             : base(principal)
         {
-
+           
         }
+
+        public string UserId => FindFirst("UserId").Value;
+        public string Email => FindFirst("Email").Value;
+        public string FirstName => FindFirst("FirstName").Value;
+        public string LastName => FindFirst("LastName").Value;
+        public string Unit => FindFirst("Unit").Value;
     }
 }

@@ -61,7 +61,7 @@ namespace NetFusion.Bootstrap.Container
             if (plugin.PluginTypes == null)
             {
                 throw new InvalidOperationException(
-                    "plug-in types must loaded before modules can be discovered");
+                    "Plug-in types must loaded before modules can be discovered.");
             }
             plugin.PluginModules = plugin.PluginTypes.CreateMatchingInstances<IPluginModule>().ToArray();
         }

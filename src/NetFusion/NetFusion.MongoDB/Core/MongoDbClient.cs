@@ -88,7 +88,7 @@ namespace NetFusion.MongoDB.Core
                 if (this.DbSettings.MongoUrl.IsNullOrWhiteSpace())
                 {
                     throw new InvalidOperationException(
-                        "either the MongoDB URL or client settings must specified");
+                        "Either the MongoDB URL or client settings must specified.");
                 }
 
                 var url = MongoUrl.Create(this.DbSettings.MongoUrl);

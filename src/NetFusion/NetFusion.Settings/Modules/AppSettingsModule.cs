@@ -118,7 +118,7 @@ namespace NetFusion.Settings.Modules
             {
                 throw new ContainerException(
                     $"There were duplicate setting initializers for the following setting types: " +
-                    $"{String.Join(", ", duplicates.Select(st => st.FullName))}");
+                    $"{String.Join(", ", duplicates.Select(st => st.FullName))}.");
             }
         }
 
@@ -158,7 +158,7 @@ namespace NetFusion.Settings.Modules
                 if (settings.IsInitializationRequired)
                 {
                     throw new ContainerException(
-                    $"the setting type: {settings} could not be initialized by any of the available setting initializers");
+                    $"The setting type: {settings} could not be initialized by any of the available setting initializers.");
                 }
 
                 initializedSettings = settings;

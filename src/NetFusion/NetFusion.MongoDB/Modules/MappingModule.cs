@@ -42,7 +42,7 @@ namespace NetFusion.MongoDB.Modules
             if (entityMapping == null)
             {
                 throw new InvalidOperationException(
-                    $"mapping is not registered for the class type: {mappedEntityType}");
+                    $"Mapping is not registered for the class type: {mappedEntityType}.");
             }
 
             var derivedEntityMapping = entityMapping.ClassMap.KnownTypes
