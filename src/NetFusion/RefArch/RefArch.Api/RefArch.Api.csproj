@@ -62,6 +62,7 @@
     <Compile Include="Messages\ExampleSyncDomainEvent.cs" />
     <Compile Include="Models\Car.cs" />
     <Compile Include="Models\CommandInfo.cs" />
+    <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\HandlerResponse.cs" />
     <Compile Include="Models\MessageExInfo.cs" />
     <Compile Include="Models\MessageInfo.cs" />

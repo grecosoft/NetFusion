@@ -1,5 +1,7 @@
 ﻿using NetFusion.WebApi.Metadata;
+using RefArch.Domain.Samples.MongoDb;
 using RefArch.Domain.Samples.Settings;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace RefArch.Host.Controllers.Samples
@@ -17,6 +19,7 @@ namespace RefArch.Host.Controllers.Samples
     [RoutePrefix("api/netfusion/samples/settings")]
     public class SettingsController : ApiController
     {
+        private readonly ISettingsInitService _settingsInitSrv;
         private readonly UninitializedSettings _unitializedSettings;
         private readonly InitializedSettings _initializedSettings;
         private readonly FileInitializedSettings _fileInitializedSettings;
@@ -24,17 +27,25 @@ namespace RefArch.Host.Controllers.Samples
         private readonly MongoInitializedSettings _mongoInitializedSettings;
 
         public SettingsController(
+            ISettingsInitService settingsInitsrv,
             UninitializedSettings unitializedSettings,
             InitializedSettings initializedSettings,
             FileInitializedSettings fileInitializedSettings,
             MachineFileInitializedSettings machineFileInitializedSettings,
             MongoInitializedSettings mongoInitializedSettings)
         {
+            _settingsInitSrv = settingsInitsrv;
             _unitializedSettings = unitializedSettings;
             _initializedSettings = initializedSettings;
             _fileInitializedSettings = fileInitializedSettings;
             _machineFileInitializedSettings = machineFileInitializedSettings;
             _mongoInitializedSettings = mongoInitializedSettings;
+        }
+
+        [HttpPost, Route("init-mongo", Name = "InitMongoSettings")]
+        public async Task<MongoInitializedSettings> InitMongoSettings()
+        {
+            return await _settingsInitSrv.InitMongoDbStoredSettings();
         }
 
         /// <summary>

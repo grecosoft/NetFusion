@@ -8,6 +8,7 @@ namespace RefArch.Domain.Samples.Settings
         {
             this.ApplicationId = "576b2a97000a7ed1176f1771";
             this.Environment = EnvironmentTypes.Development;
+            this.IsInitializationRequired = false;
         }
 
         public int Value1 { get; set; } = 100;
