@@ -53,7 +53,13 @@ namespace NetFusion.Messaging.Core
                 try
                 {
                     var consumer = _lifetimeScope.Resolve(dispatcher.ConsumerType);
-                    dispatcher.Invoker.DynamicInvoke(consumer, message);
+                    var result = dispatcher.Invoker.DynamicInvoke(consumer, message);
+
+                    var command = message as ICommand;
+                    if (command != null && result != null && result.GetType().IsDerivedFrom(command.ResultType))
+                    {
+                        command.SetResult(result);
+                    }
                 }
                 catch (TargetInvocationException ex)
                 {

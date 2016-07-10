@@ -3,6 +3,7 @@ using NetFusion.WebApi;
 using NetFusion.WebApi.Metadata;
 using RefArch.Api.Commands;
 using RefArch.Api.Models;
+using RefArch.Domain.Samples.WebApi;
 using RefArch.Host.Extensions;
 using System.Net;
 using System.Net.Http;
@@ -31,7 +32,6 @@ namespace RefArch.Host.Controllers.Samples
         public async Task<HttpResponseMessage> LoginUser(AuthorizeUserCommand authorize)
         {
             UserLoginInfo result = await _messagingSrv.PublishAsync(authorize);
-
             if (result == UserLoginInfo.InvalidUser)
             {
                 return this.Request.CreateResponse(HttpStatusCode.BadRequest, "Invalid Login");
@@ -39,15 +39,6 @@ namespace RefArch.Host.Controllers.Samples
 
             var token = _jwtTokenService.CreateSecurityToken(result);
             return this.Request.Authenticated(result, token);
-        }
-
-        [HttpGet, Route("auth-data", Name = "GetAuthorizedData")]
-        public object GetAuthorizedData()
-        {
-            return new
-            {
-                Message = "Some authorized data."
-            };
         }
     }
 }

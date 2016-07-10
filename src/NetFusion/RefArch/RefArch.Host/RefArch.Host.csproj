@@ -207,6 +207,7 @@
     <Compile Include="App_Start\MvcRouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AppController.cs" />
+    <Compile Include="Controllers\Samples\ContextDependentController.cs" />
     <Compile Include="Controllers\Samples\EntityFrameworkController.cs" />
     <Compile Include="Controllers\Samples\MessagingController.cs" />
     <Compile Include="Controllers\Samples\MongoDBController.cs" />
@@ -219,6 +220,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Manifest.cs" />
+    <Compile Include="Modules\ContextModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

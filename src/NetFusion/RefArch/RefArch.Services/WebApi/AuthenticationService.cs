@@ -42,8 +42,7 @@ namespace RefArch.Services.WebApi
         [InProcessHandler]
         public UserLoginInfo OnValidCredentials(AuthorizeUserCommand command)
         {
-            command.Result = ValidCredentials(command.UserName, command.Password);
-            return command.Result;
+            return ValidCredentials(command.UserName, command.Password);
         }
     }
 }
