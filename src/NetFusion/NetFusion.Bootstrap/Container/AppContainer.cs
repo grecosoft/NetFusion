@@ -61,7 +61,7 @@ namespace NetFusion.Bootstrap.Container
             get
             {
                 ThrowIfDisposed(this);
-                return _containerLog?.GetLog();
+                return _containerLog?.GetLog() ?? new Dictionary<string, object>();
             }
         }
 
@@ -213,7 +213,7 @@ namespace NetFusion.Bootstrap.Container
             catch (Exception ex)
             {
                 throw LogException(new ContainerException(
-                    "unexpected container error", ex));
+                    "Unexpected container error.", ex));
             }
 
             return this;
@@ -226,7 +226,7 @@ namespace NetFusion.Bootstrap.Container
             if (_application.IsStarted)
             {
                 throw LogException(new ContainerException(
-                    "the application container plug-in modules have already been started"));
+                    "The application container plug-in modules have already been started."));
             }
 
             try
@@ -242,7 +242,7 @@ namespace NetFusion.Bootstrap.Container
             catch (Exception ex)
             {
                 throw LogException(new ContainerException(
-                    "error starting container", ex));
+                    "Error starting container.", ex));
             }
         }
 
@@ -427,7 +427,7 @@ namespace NetFusion.Bootstrap.Container
             ComposeAppPlugins();
         }
 
-        // Core plug-in modules discover search for known-types contained within all plug-ins.
+        // Core plug-in modules discover known-types contained within all plug-ins.
         private void ComposeCorePlugins()
         {
             var allPluginTypes = _application.GetPluginTypesFrom();
@@ -458,7 +458,7 @@ namespace NetFusion.Bootstrap.Container
                 discoveredTypes.ForEach(dt => pluginDiscoveredTypes.Add(dt));
             }
 
-            plugin.SearchedForKnowTypes = pluginDiscoveredTypes.ToArray();
+            plugin.DiscoveredTypes = pluginDiscoveredTypes.ToArray();
         }
 
         private void SetKnownTypeDiscoveries()
@@ -473,7 +473,7 @@ namespace NetFusion.Bootstrap.Container
             foreach (PluginType pluginType in plugin.PluginTypes.Where(pt => pt.IsKnownType))
             {
                 pluginType.DiscoveredByPlugins = _application.Plugins
-                    .Where(p => p.SearchedForKnowTypes.Any(st => pluginType.Type.IsDerivedFrom(st)))
+                    .Where(p => p.DiscoveredTypes.Any(st => pluginType.Type.IsDerivedFrom(st)))
                     .ToArray();
             }
         }

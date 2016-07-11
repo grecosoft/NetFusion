@@ -5,8 +5,10 @@ using System.Collections.Generic;
 namespace NetFusion.Bootstrap.Plugins
 {
     /// <summary>
-    /// Base implementation of the IPluginModule interface that allows derived classes
-    /// import and/or register components.
+    /// Derived from by one or more plug-in classes allowing the plug-in to be configured.  
+    /// This includes the registering of types within the dependency-injection container, 
+    /// the discovering of known-type implementations, and the execution of any needed
+    /// logic upon startup.
     /// </summary>
     public abstract class PluginModule : IPluginModule,
         IDisposable
@@ -32,22 +34,21 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Indicates that the module should not be loaded.  This can
-        /// be used when developing plug-in modules that are not ready
-        /// to be included.
+        /// Indicates that the module should not be loaded.  This can be used when
+        /// developing plug-in modules that are not ready to be included.
         /// </summary>
         public bool IsExcluded { get; set; }
 
         /// <summary>
-        /// Contains plug-in type information that can be used by
-        /// the plug-in module during bootstrapping.
+        /// Contains plug-in context information that can be used by the plug-in
+        /// module during bootstrapping.
         /// </summary>
         /// <returns>Contains information that can be used by the module
         /// when it is being configured.</returns>
         public ModuleContext Context { get; set; }
 
         /// <summary>
-        /// Called before type scanning and type registration.
+        /// Called before container type registration.
         /// </summary>
         public virtual void Initialize()
         {
@@ -56,7 +57,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// Called after all plug-in modules have been initialized but 
-        /// before type scanning and type registration.
+        /// before container type registration.
         /// </summary>
         public virtual void Configure()
         {

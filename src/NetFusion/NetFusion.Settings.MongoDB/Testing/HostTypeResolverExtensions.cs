@@ -8,7 +8,7 @@ namespace NetFusion.Settings.MongoDB.Testing
 {
     public static class HostTypeResolverExtensions
     {
-        public static void AddMongoSettingsPlugin(this HostTypeResolver resolver)
+        public static void AddMongoSettingsPlugin(this TestTypeResolver resolver)
         {
             Check.NotNull(resolver, nameof(resolver), "resolver not specified");
 

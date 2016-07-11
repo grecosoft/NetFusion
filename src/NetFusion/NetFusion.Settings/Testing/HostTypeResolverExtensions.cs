@@ -6,7 +6,7 @@ namespace NetFusion.Settings.Testing
 {
     public static class HostTypeResolverExtensions
     {
-        public static void AddSettingsPlugin(this HostTypeResolver resolver)
+        public static void AddSettingsPlugin(this TestTypeResolver resolver)
         {
             resolver.AddPlugin<MockCorePlugin>()
                 .AddPluginType<AppSettingsModule>()

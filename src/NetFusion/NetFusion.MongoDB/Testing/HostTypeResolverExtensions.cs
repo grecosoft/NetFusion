@@ -5,7 +5,7 @@ namespace NetFusion.MongoDB.Testing
 {
     public static class HostTypeResolverExtensions
     {
-        public static void AddMongoDbPlugin(this HostTypeResolver resolver)
+        public static void AddMongoDbPlugin(this TestTypeResolver resolver)
         {
             resolver.AddPlugin<MockCorePlugin>()
                 .AddPluginType<MappingModule>()

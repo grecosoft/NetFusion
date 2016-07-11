@@ -9,7 +9,8 @@ using System.Reflection;
 namespace NetFusion.Bootstrap.Extensions
 {
     /// <summary>
-    /// Extension methods for filtering a container's plug-in types.
+    /// Extension methods for filtering a container's plug-in types and for
+    /// creating instances.
     /// </summary>
     public static class ContainerExtensions
     {
@@ -85,7 +86,7 @@ namespace NetFusion.Bootstrap.Extensions
         /// provided base type and then creates an instance of each type.
         /// </summary>
         /// <typeparam name="T">The type or base used to filter the list of plug-in types.</typeparam>
-        /// <param name="pluginTypes">The list of plug-in types to filter.</param>
+        /// <param name="types">The list of types to filter.</param>
         /// <returns>Object instances of all types that are assignable to the
         /// <returns>Object instances of all plug-in types that are assignable to the specified matching type.</returns>
         public static IEnumerable<T> CreateMatchingInstances<T>(this IEnumerable<Type> types)

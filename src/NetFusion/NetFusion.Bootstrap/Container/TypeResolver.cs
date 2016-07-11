@@ -19,7 +19,7 @@ namespace NetFusion.Bootstrap.Container
     /// plug-ins types and modules.  
     /// 
     /// Having this component load the plug-in types decouples the AppContainer 
-    /// from .NET assemblies and makes the design easy to unit-test.
+    /// from .NET assemblies and makes the design loosely coupled and easy to unit-test.
     /// </summary>
     public class TypeResolver : ITypeResolver
     {
@@ -67,7 +67,7 @@ namespace NetFusion.Bootstrap.Container
         }
 
         // Automatically populates all properties on a plug-in module that are an enumeration of
-        // a derived IPluginKnownType.  The plug-in known types specific by the module are returned
+        // a derived IPluginKnownType.  The plug-in known types specific to the module are returned
         // for use by the consumer. 
         public IEnumerable<Type> DiscoverKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes)
         {

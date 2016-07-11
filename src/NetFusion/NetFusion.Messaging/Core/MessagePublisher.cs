@@ -4,7 +4,7 @@ namespace NetFusion.Messaging.Core
 {
     /// <summary>
     /// Base implementation for a message publisher that can be added to 
-    /// the pipeline and called with a message is published.
+    /// the pipeline and called with a message is published. 
     /// </summary>
     public abstract class MessagePublisher : IMessagePublisher
     {

@@ -26,7 +26,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void IfLogConfigNotSpecified_NullLoggerUsed()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>();
                 })
@@ -45,7 +45,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void IfLoggerNotSpecified_ExceptionRaised()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>();
                 })
@@ -71,7 +71,7 @@ namespace NetFusion.Tests.Core.Bootstrap
             var logger = new MockLogger();
 
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>();
                 })
@@ -96,7 +96,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void AppContainerLogIsCreated()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>();
                 })
@@ -119,7 +119,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void EachModuleCanAddToAppContainerLog()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockLoggingModule>();

@@ -136,18 +136,18 @@ namespace NetFusion.Messaging.Core
         /// invoked for the message.</returns>
         public static IEnumerable<MessageDispatchInfo> WhereHandlerForMessage(
             this ILookup<Type, MessageDispatchInfo> messageTypeHandlers, 
-            Type messageEventType)
+            Type messageType)
         {
             Check.NotNull(messageTypeHandlers, nameof(messageTypeHandlers));
-            Check.NotNull(messageEventType, nameof(messageEventType));
+            Check.NotNull(messageType, nameof(messageType));
 
             // A handler method defined for the message type will be invoked.
             // Message handlers for base message types will be included is specified. 
             return messageTypeHandlers
-                .Where(di => di.Key.IsAssignableFrom(messageEventType))
+                .Where(di => di.Key.IsAssignableFrom(messageType))
                 .SelectMany(di => di)
                 .Where(di =>  
-                    (di.IncludeDerivedTypes || di.MessageType == messageEventType));
+                    (di.IncludeDerivedTypes || di.MessageType == messageType));
         }
     }
 }

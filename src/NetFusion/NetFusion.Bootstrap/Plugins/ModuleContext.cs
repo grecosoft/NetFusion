@@ -70,7 +70,8 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Returns all the object instances belonging to a specified plug in.
+        /// Returns all the object instances created from types belonging
+        /// to a specified plug-in.
         /// </summary>
         /// <typeparam name="T">The type of the source.</typeparam>
         /// <param name="instances">List of object references.</param>
@@ -90,7 +91,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         /// <typeparam name="T">The interface of the module to locate.</typeparam>
         /// <returns>The module implementing the specified interface.  If one and
-        /// only one module is found, an exception is thrown.</returns>
+        /// only one module is not found, an exception is thrown.</returns>
         public T GetPluginModule<T>() where T : IPluginModuleService
         {
             var foundModules = this.AllPluginModules.OfType<T>();

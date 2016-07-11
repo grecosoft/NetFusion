@@ -23,7 +23,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void WhenConfigSpecified_AssociatedWithPlugin()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginConfig>();
@@ -47,7 +47,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void WhenConfigFactoryUsed_ConfigAssociatedWithPlugin()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginConfig>();

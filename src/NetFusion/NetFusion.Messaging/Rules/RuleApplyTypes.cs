@@ -3,7 +3,7 @@
     /// <summary>
     /// Determines how dispatch rules should be evaluated when
     /// there are more than one dispatch rule.
-    /// </summary>
+    /// </summary> 
     public enum RuleApplyTypes
     {
         All = 0,

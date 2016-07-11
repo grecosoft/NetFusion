@@ -6,7 +6,7 @@ namespace NetFusion.Messaging.Core
     /// <summary>
     /// Called when an message is published to allow plug-ins 
     /// to customize the publishing of messages.
-    /// </summary>
+    /// </summary> 
     public interface IMessagePublisher : IKnownPluginType
     {
         /// <summary>

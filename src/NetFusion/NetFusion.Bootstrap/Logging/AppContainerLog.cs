@@ -9,7 +9,7 @@ namespace NetFusion.Bootstrap.Logging
 {
     /// <summary>
     /// Takes an instance of the composite application and the built container registry
-    /// and creates a nested dictionary structure representing the application that can
+    /// and produces a nested dictionary structure representing the application that can
     /// be logged during host application initialization as JSON.
     /// </summary>
     internal class AppContainerLog
@@ -75,7 +75,7 @@ namespace NetFusion.Bootstrap.Logging
                 var pluginLog = new Dictionary<string, object>();
                 LogPlugin(plugin, pluginLog);
                 return pluginLog;
-            });
+            }).ToDictionary(p => p["Plugin-Name"]);
         }
 
         private void LogCorePlugins(IDictionary<string, object> log)
@@ -85,19 +85,19 @@ namespace NetFusion.Bootstrap.Logging
                 var pluginLog = new Dictionary<string, object>();
                 LogPlugin(plugin, pluginLog);
                 return pluginLog;
-            });
+            }).ToDictionary(p => p["Plugin-Name"]);
         }
 
         private void LogPlugin(Plugin plugin, IDictionary<string, object> log)
         {
-            log["PlugIn-Name"] = plugin.Manifest.Name;
-            log["PlugIn-Id"] = plugin.Manifest.PluginId;
+            log["Plugin-Name"] = plugin.Manifest.Name;
+            log["Plugin-Id"] = plugin.Manifest.PluginId;
             log["Plugin-Assembly"] = plugin.Manifest.AssemblyName;
             log["Plugin-Description"] = plugin.Manifest.Description;
 
             LogPluginModules(plugin, log);
             LogPluginKnownTypes(plugin, log);
-            LogPuginSearchedForKnowTypes(plugin, log);
+            LogPuginDiscoveredTypes(plugin, log);
             LogPluginRegistrations(plugin, log);
         }
 
@@ -122,9 +122,9 @@ namespace NetFusion.Bootstrap.Logging
                     v => v.DiscoveredByPlugins.Select(dp => dp.Manifest.Name)); 
         }
 
-        private void LogPuginSearchedForKnowTypes(Plugin plugin, IDictionary<string, object> log)
+        private void LogPuginDiscoveredTypes(Plugin plugin, IDictionary<string, object> log)
         {
-            log["Searched-Known-Types"] = plugin.SearchedForKnowTypes.Select(kt => kt.Name).ToArray();
+            log["Discovered-Types"] = plugin.DiscoveredTypes.Select(kt => kt.Name).ToArray();
         }
 
         private void LogPluginRegistrations(Plugin plugin, IDictionary<string, object> log)

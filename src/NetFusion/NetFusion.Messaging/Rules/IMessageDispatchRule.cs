@@ -19,6 +19,6 @@ namespace NetFusion.Messaging.Rules
         /// </summary>
         /// <param name="message">The message to test.</param>
         /// <returns>True of the handler should be called.  Otherwise, false.</returns>
-        bool IsMatch(IMessage message);
+        bool IsMatch(IMessage message);  
     }
 }

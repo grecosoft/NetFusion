@@ -4,7 +4,7 @@ namespace NetFusion.Messaging.Core
 {
     /// <summary>
     /// The task used to call a corresponding message publisher.
-    /// </summary>
+    /// </summary> 
     public class MessagePublisherTask
     {
         public Task Task { get; }

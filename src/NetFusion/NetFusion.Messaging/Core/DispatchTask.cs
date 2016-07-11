@@ -5,7 +5,7 @@ namespace NetFusion.Messaging.Core
 {
     /// <summary>
     /// The task used to call a corresponding message dispatcher.
-    /// </summary>
+    /// </summary> 
     public class DispatchTask
     {
         public Task Task { get; }

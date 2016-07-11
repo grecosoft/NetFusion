@@ -14,7 +14,7 @@ namespace NetFusion.Messaging.Core
         /// <summary>
         /// The type of the message.
         /// </summary>
-        /// <returns>Runtime type of the event.</returns>
+        /// <returns>Runtime type of the message.</returns>
         public Type MessageType { get; set; }
 
         /// <summary>

@@ -7,7 +7,7 @@ namespace NetFusion.Tests.MongoDB
 {
     public static class MogoDbTestExtensions
     {
-        public static void SetupMogoDbPlugIn(this HostTypeResolver resolver)
+        public static void SetupMogoDbPlugIn(this TestTypeResolver resolver)
         {
             // Configure dependent modules:
             resolver.AddSettingsPlugin();
@@ -17,7 +17,7 @@ namespace NetFusion.Tests.MongoDB
                 .AddPluginType<MockMongoModule>();
         }
 
-        public static void SetupValidMongoConsumingPlugin(this HostTypeResolver resolver)
+        public static void SetupValidMongoConsumingPlugin(this TestTypeResolver resolver)
         {
             resolver.AddPlugin<MockAppComponentPlugin>()    
                 .AddPluginType<MockMongoDb>()   // Database settings

@@ -15,7 +15,7 @@ namespace NetFusion.Messaging.Rules
         /// <summary>
         /// Determines how the rules are evaluated.
         /// </summary>
-        public Type[] RuleTypes { get; private set; }
+        public Type[] RuleTypes { get; private set; } 
 
         /// <summary>
         /// The type of the role that should be called to determine if 

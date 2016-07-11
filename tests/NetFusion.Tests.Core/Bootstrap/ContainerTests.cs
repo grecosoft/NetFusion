@@ -24,7 +24,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void CreatedAppContainerCanBeReferenced()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>();
                 })
@@ -56,7 +56,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void WhenAppContainerDisposed_PluginModulesDisposed()
         {
             ContainerSetup
-               .Arrange((HostTypeResolver config) =>
+               .Arrange((TestTypeResolver config) =>
                {
                    config.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginOneModule>();
@@ -77,7 +77,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void AfterContainerBuilt_ServicesAvailable()
         {
             ContainerSetup
-               .Arrange((HostTypeResolver config) =>
+               .Arrange((TestTypeResolver config) =>
                {
                    config.AddPlugin<MockAppHostPlugin>();
                })
@@ -96,7 +96,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void AppContainerDisposed_CannotAccessServices()
         {
             ContainerSetup
-               .Arrange((HostTypeResolver config) =>
+               .Arrange((TestTypeResolver config) =>
                {
                    config.AddPlugin<MockAppHostPlugin>();
                })
@@ -124,7 +124,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void EachPluginModuleStarted()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginOneModule>();
@@ -152,7 +152,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void PluginDiscoveredKnownTypesIdentified()
         {
             ContainerSetup
-               .Arrange((HostTypeResolver config) =>
+               .Arrange((TestTypeResolver config) =>
                {
                    // Plug-in type based on the type in the core plug-in.
                    config.AddPlugin<MockAppHostPlugin>()
@@ -182,7 +182,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void DiscoveredPluginsIdentified()
         {
             ContainerSetup
-              .Arrange((HostTypeResolver config) =>
+              .Arrange((TestTypeResolver config) =>
               {
                   // Plug-in type based on the type in the core plug-in.
                   config.AddPlugin<MockAppHostPlugin>()
@@ -214,7 +214,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void ModuleKnownTypePropertiesPopulated()
         {
             ContainerSetup
-              .Arrange((HostTypeResolver config) =>
+              .Arrange((TestTypeResolver config) =>
               {
                   // Plug-in type based on the type in the core plug-in.
                   config.AddPlugin<MockAppHostPlugin>()
@@ -243,7 +243,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void PluginIdMustBeUnique()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     var appHostPlugin = new MockAppHostPlugin { PluginId = "1" };
                     var corePlugin = new MockCorePlugin { PluginId = "1" };
@@ -266,7 +266,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void PluginNameMustBeSpecified()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     var appHostPlugin = new MockAppHostPlugin { Name = "" };
                     config.AddPlugin(appHostPlugin);
@@ -289,7 +289,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void PluginAssemblyNameMustBeSpecified()
         {
             ContainerSetup
-               .Arrange((HostTypeResolver config) =>
+               .Arrange((TestTypeResolver config) =>
                {
                    var appHostPlugin = new MockAppHostPlugin { AssemblyName = "" };
                    config.AddPlugin(appHostPlugin);

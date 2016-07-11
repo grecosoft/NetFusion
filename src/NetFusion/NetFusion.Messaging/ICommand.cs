@@ -14,7 +14,7 @@ namespace NetFusion.Messaging
         /// The type of the result associated with the command.
         /// </summary>
         Type ResultType { get; }
-
+         
         /// <summary>
         /// Sets the optional result associated with the message.
         /// </summary>

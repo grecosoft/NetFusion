@@ -11,7 +11,7 @@ namespace NetFusion.Messaging.Config
     public class MessagingConfig : IContainerConfig
     {
         // The list message publishers that can handle message delivery.  
-        // The default publisher dispatches messages to local event handlers.
+        // The default publisher dispatches messages to in-process event handlers.
         private List<Type> _messagePublisherTypes = new List<Type> { typeof(InProcessMessagePublisher) };
 
         /// <summary>

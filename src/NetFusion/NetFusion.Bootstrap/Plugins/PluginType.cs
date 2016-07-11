@@ -28,18 +28,17 @@ namespace NetFusion.Bootstrap.Plugins
         public Type Type { get; }
 
         /// <summary>
-        /// Indicates that the type implements the IKnownPluginType
-        /// interface.
+        /// Indicates that the type implements the IKnownPluginType interface.
         /// </summary>
         public bool IsKnownType { get; }
 
         /// <summary>
-        /// The name of the .NET assembly where the type was found.
+        /// The name of the .NET assembly containing the type.
         /// </summary>
         public string AssemblyName { get; }
 
         /// <summary>
-        /// The plug-ins that discovered the type.
+        /// If a known type, the plug-ins that discovered the type.
         /// </summary>
         public IEnumerable<Plugin> DiscoveredByPlugins { get; set; }
     }

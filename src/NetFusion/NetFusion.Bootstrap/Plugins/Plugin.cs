@@ -20,7 +20,7 @@ namespace NetFusion.Bootstrap.Plugins
         static public IContainerLogger Log { get; internal set; }
 
         /// <summary>
-        /// Enumerated plug-in type value.
+        /// Enumerated plug-in type category.
         /// </summary>
         public PluginTypes PluginType { get; internal set; }
 
@@ -65,9 +65,10 @@ namespace NetFusion.Bootstrap.Plugins
         public IPluginModule[] PluginModules { get; internal set; }
 
         /// <summary>
-        /// The known types that were discovered by all of the plug-in modules.
+        /// The known types that were discovered by all of the plug-in modules
+        /// contained within the plug-in.
         /// </summary>
-        public Type[] SearchedForKnowTypes { get; internal set; }
+        public Type[] DiscoveredTypes { get; internal set; }
 
         /// <summary>
         /// Filters the list of instances to only those created from types belonging to the plug-in.
@@ -143,7 +144,7 @@ namespace NetFusion.Bootstrap.Plugins
             return this.Types.Contains(type);
         }
 
-        private IEnumerable<Type> Types { get { return this.PluginTypes.Select(pt => pt.Type); } }
+        private IEnumerable<Type> Types => this.PluginTypes.Select(pt => pt.Type); 
 
         private void SetPluginType(IPluginManifest manifest)
         {

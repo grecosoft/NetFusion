@@ -6,9 +6,10 @@ using System.Collections.Generic;
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Container that bootstraps the application by scanning source 
-    /// assemblies for plug-ins, based on a set of conventions, used 
-    /// to create an Autofac container.
+    /// Container that bootstraps the application using plug-in types
+    /// determined by the specified TypeResolver.  The plug-in types 
+    /// are scanned based on a set of conventions and used to create 
+    /// an Autofac container.
     /// </summary>
     public interface IAppContainer: IDisposable
     {
@@ -57,15 +58,14 @@ namespace NetFusion.Bootstrap.Container
         /// Loads and initializes all of the plug-ins but does not start
         /// their execution.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Reference to the loaded container.</returns>
         ILoadedContainer Build();
 
         /// <summary>
         /// Dependency injection container from which lifetime scopes can 
         /// be created to resolve plug-in services.
         /// </summary>
-        /// <returns>Configured DI container that can be used to
-        /// resolve services.
+        /// <returns>Configured DI container that can be used to resolve services.
         /// </returns>
         IContainer Services { get; }
 

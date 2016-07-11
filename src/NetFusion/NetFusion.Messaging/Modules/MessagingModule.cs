@@ -10,7 +10,6 @@ using NetFusion.Messaging.Rules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace NetFusion.Messaging.Modules
@@ -22,7 +21,7 @@ namespace NetFusion.Messaging.Modules
     public class MessagingModule : PluginModule, 
         IMessagingModule
     {
-        // Imported Instances:
+        // Discovered Instances:
         public IEnumerable<IMessageDispatchRule> DispatchRules { get; private set; }
 
         // IMessagingModule:
@@ -64,10 +63,13 @@ namespace NetFusion.Messaging.Modules
 
         public override void RegisterComponents(ContainerBuilder builder)
         {
+            // Register the common messaging service used to publish messages.
             builder.RegisterType<MessagingService>()
                 .As<IMessagingService>()
                 .InstancePerLifetimeScope();
 
+            // Register all of the message publishers that determine how a given
+            // message is delivered.
             builder.RegisterTypes(this.MessagingConfig.PublisherTypes)
                 .As<IMessagePublisher>()
                 .InstancePerLifetimeScope();
@@ -166,7 +168,7 @@ namespace NetFusion.Messaging.Modules
                         IsAsync = ed.IsAsync,
                         IncludedDerivedTypes = ed.IncludeDerivedTypes,
                         DispatchRules = ed.DispatchRuleTypes.Select(dr => dr.FullName).ToArray(),
-                        RuleApplyType = ed.RuleApplyType.ToString()
+                        RuleApplyType = ed.DispatchRules.Any() ? ed.RuleApplyType.ToString() : null
                     });
             }
         }

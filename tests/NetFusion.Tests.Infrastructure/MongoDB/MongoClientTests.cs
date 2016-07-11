@@ -20,7 +20,7 @@ namespace NetFusion.Tests.MongoDB
         public void CanResolveEntityContextForDatabaseSettings()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.SetupHostApp();
                     config.SetupMogoDbPlugIn();
@@ -50,7 +50,7 @@ namespace NetFusion.Tests.MongoDB
         public void MongoClientIsActivated()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.SetupHostApp();
                     config.SetupMogoDbPlugIn();

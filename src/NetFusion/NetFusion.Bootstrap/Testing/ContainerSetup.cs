@@ -35,7 +35,7 @@ namespace NetFusion.Bootstrap.Testing
 
         /// <summary>
         /// Arranges application container by adding plug-in types to the
-        /// provided type resolver.  This method uses the HostTypeResolver
+        /// provided type resolver.  This method uses the TestypeResolver
         /// by default.
         /// </summary>
         /// <param name="config">Configuration delegate that is passed
@@ -43,11 +43,11 @@ namespace NetFusion.Bootstrap.Testing
         /// types can be added.</param>
         /// <returns>Reference to object that can be used to act on the 
         /// configured application container.</returns>
-        public static ContainerAct Arrange(Action<HostTypeResolver> config)
+        public static ContainerAct Arrange(Action<TestTypeResolver> config)
         {
             Check.NotNull(config, nameof(config), "configuration delegate not specified");
 
-            var typeResolver = new HostTypeResolver();
+            var typeResolver = new TestTypeResolver();
             config(typeResolver);
             return new ContainerAct(new AppContainer(new string[] { }, typeResolver));
         }

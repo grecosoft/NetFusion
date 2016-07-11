@@ -74,7 +74,7 @@ namespace NetFusion.Messaging.Core
             }
         }
 
-        public void PublishLocal(IDomainEvent domainEvent)
+        public void PublishInProcess(IDomainEvent domainEvent)
         {
             Check.NotNull(domainEvent, nameof(domainEvent), "domain event not specified");
 

@@ -77,7 +77,7 @@
     <Compile Include="Testing\ContainerAct.cs" />
     <Compile Include="Testing\ContainerAssert.cs" />
     <Compile Include="Testing\ContainerSetup.cs" />
-    <Compile Include="Testing\HostTypeResolver.cs" />
+    <Compile Include="Testing\TestTypeResolver.cs" />
     <Compile Include="Testing\MockAppComponentPlugin.cs" />
     <Compile Include="Testing\MockCorePlugin.cs" />
     <Compile Include="Testing\MockPlugin.cs" />

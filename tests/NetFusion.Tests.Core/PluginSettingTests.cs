@@ -28,7 +28,7 @@ namespace NetFusion.Tests.Core.Settings
         public void HostSpecifiedConfigOverridesAppConfiguration()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.SetupHostApp();
                     config.SetupSettingsPlugin();
@@ -56,7 +56,7 @@ namespace NetFusion.Tests.Core.Settings
         public void HostAppConfigUsedIfSpecifiedAndNotManuallySet()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.SetupHostApp();
                     config.SetupSettingsPlugin();
@@ -83,7 +83,7 @@ namespace NetFusion.Tests.Core.Settings
         public void OnlyOpenGenericInitializersCanBeConfigured()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.SetupHostApp();
                     config.SetupSettingsPlugin();
@@ -109,7 +109,7 @@ namespace NetFusion.Tests.Core.Settings
         public void CannotHaveDuplicateSettingSpecificInitializers()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.SetupHostApp();
                     config.SetupSettingsPlugin();
@@ -139,7 +139,7 @@ namespace NetFusion.Tests.Core.Settings
         public void SettingSpecificInitializerUsedIfPresent()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.SetupHostApp();
                     config.SetupSettingsPlugin();
@@ -170,7 +170,7 @@ namespace NetFusion.Tests.Core.Settings
         public void HostRegistedGenericInitialzerUsedIfSpecificNotFound()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.SetupHostApp();
                     config.SetupSettingsPlugin();
@@ -201,7 +201,7 @@ namespace NetFusion.Tests.Core.Settings
         public void PluginSettingInitializerCanBeOptional()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.SetupHostApp();
                     config.SetupSettingsPlugin();
@@ -229,7 +229,7 @@ namespace NetFusion.Tests.Core.Settings
         public void PluginSettingCanBeSpecfiedToRequireInitializer()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.SetupHostApp();
                     config.SetupSettingsPlugin();

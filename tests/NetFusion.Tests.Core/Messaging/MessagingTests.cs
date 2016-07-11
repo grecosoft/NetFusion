@@ -249,7 +249,7 @@ namespace NetFusion.Tests.Eventing
         public void InProcessEventDispatcherConfiguredByDefault()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>();
                     config.AddPlugin<MockCorePlugin>()
@@ -277,7 +277,7 @@ namespace NetFusion.Tests.Eventing
         public void DefaultDispatcherCanBeCleared()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>();
                     config.AddPlugin<MockCorePlugin>()
@@ -300,7 +300,7 @@ namespace NetFusion.Tests.Eventing
         public void ExceptionsRecordedForEachEventHandler()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockDomainEvent>()
@@ -417,7 +417,7 @@ namespace NetFusion.Tests.Eventing
             get
             {
                 return ContainerSetup
-                   .Arrange((HostTypeResolver config) =>
+                   .Arrange((TestTypeResolver config) =>
                    {
                        // Use the application host to simulate a plug-in with domain-event related 
                        // types that will be discovered by the Domain Event Plug-in.
@@ -437,7 +437,7 @@ namespace NetFusion.Tests.Eventing
             get
             {
                 return ContainerSetup
-                   .Arrange((HostTypeResolver config) =>
+                   .Arrange((TestTypeResolver config) =>
                    {
                        // Use the application host to simulate a plug-in with domain-event related 
                        // types that will be discovered by the Domain Event Plug-in.
@@ -457,7 +457,7 @@ namespace NetFusion.Tests.Eventing
             get
             {
                 return ContainerSetup
-                   .Arrange((HostTypeResolver config) =>
+                   .Arrange((TestTypeResolver config) =>
                    {
                        // Use the application host to simulate a plug-in with domain-event related 
                        // types that will be discovered by the Domain Event Plug-in.
@@ -477,7 +477,7 @@ namespace NetFusion.Tests.Eventing
             get
             {
                 return ContainerSetup
-                   .Arrange((HostTypeResolver config) =>
+                   .Arrange((TestTypeResolver config) =>
                    {
                        // Use the application host to simulate a plug-in with domain-event related 
                        // types that will be discovered by the Domain Event Plug-in.
@@ -497,7 +497,7 @@ namespace NetFusion.Tests.Eventing
             get
             {
                 return ContainerSetup
-                   .Arrange((HostTypeResolver config) =>
+                   .Arrange((TestTypeResolver config) =>
                    {
                        // Use the application host to simulate a plug-in with domain-event related 
                        // types that will be discovered by the Domain Event Plug-in.

@@ -3,9 +3,10 @@
 namespace NetFusion.Bootstrap.Plugins
 {
     /// <summary>
-    /// Implemented by one or more plug-in classes allowing the
-    /// plug-in to discover types based on known conventions. Also,
-    /// allows concrete module to scan and register for plug-in types.
+    /// Implemented by one or more plug-in classes allowing the plug-in to be configured.  
+    /// This includes the registering of types within the dependency-injection container, 
+    /// the discovering of known-type implementations, and the execution of any needed
+    /// logic upon startup.
     /// </summary>
     public interface IPluginModule 
     {
@@ -25,13 +26,13 @@ namespace NetFusion.Bootstrap.Plugins
         ModuleContext Context { get; set; }
 
         /// <summary>
-        /// Called before type scanning and type registration.
+        /// Called before container type registration.
         /// </summary>
         void Initialize();
 
         /// <summary>
         /// Called after all plug-in modules have been initialized but 
-        /// before type scanning and type registration.
+        /// before container type registration.
         /// </summary>
         void Configure();
 
@@ -58,7 +59,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// Allows the plug-in module to scan for types within all other plug-ins.
         /// This registration is limited to all other plug-in types when called on 
         /// a core plug in.  For an application plug-in, the types are limited to 
-        /// just other application plug ins.
+        /// only other application plug ins.
         /// </summary>
         /// <param name="registration">Reference to instance used to
         /// filter types to be registered.</param>

@@ -2,12 +2,12 @@
 using NetFusion.Common;
 using System;
 
-/// <summary>
-/// Allows client to act on an instance of a container.  This class
-/// implements the common TDD style of arrange, act, and assert.
-/// </summary>
 namespace NetFusion.Bootstrap.Testing
 {
+    /// <summary>
+    /// Allows client to act on an instance of a container.  This class
+    /// implements the common TDD style of arrange, act, and assert.
+    /// </summary>
     public class ContainerAct
     {
         private readonly AppContainer _container;

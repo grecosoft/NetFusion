@@ -7,7 +7,7 @@ namespace NetFusion.Bootstrap.Testing
 {
     /// <summary>
     /// Represents a mock plug-in that can be manually added by the host.
-    /// Types can also be added to the plugin to simulate plug-in types
+    /// Types can also be added to the plug-in to simulate plug-in types
     /// that would normally be loaded from the assembly at runtime.
     /// </summary>
     public abstract class MockPlugin : IPluginManifest
@@ -18,14 +18,14 @@ namespace NetFusion.Bootstrap.Testing
         public MockPlugin()
         {
             this.PluginId = Guid.NewGuid().ToString();
-            this.AssemblyName = $"Mock Assembly for Plugin: {this.Name}";
+            this.AssemblyName = $"Mock Assembly for Plug-in: {this.Name}";
             this.Name = this.GetType().Name;
         }
 
         public string PluginId { get; set; }
         public string AssemblyName { get; set; }
         public string Name { get; set; }
-        public string Description => "Mock Plugin";
+        public string Description => "Mock Plug-in";
 
         /// <summary>
         /// Adds one or more types to the plug-in.

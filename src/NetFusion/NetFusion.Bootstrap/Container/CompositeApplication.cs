@@ -19,7 +19,7 @@ namespace NetFusion.Bootstrap.Container
 
         public CompositeApplication(string[] searchPatterns)
         {
-            Check.Equals(searchPatterns, nameof(searchPatterns));
+            Check.NotNull(searchPatterns, nameof(searchPatterns));
             this.SearchPatterns = searchPatterns;
         }
 

@@ -8,7 +8,7 @@ namespace NetFusion.Messaging
     /// publisher and consumer.
     /// </summary>
     public interface IMessage : IKnownPluginType,
-        IObjectAttributes
+        IObjectAttributes 
     {
     }
 }

@@ -18,7 +18,7 @@ namespace NetFusion.Messaging
         /// <summary>
         /// Publishes a command to all associated consumer message handlers
         /// and returns the consumer's response.</summary>
-        /// <param name="domainEvent">The event to be published.</param>
+        /// <param name="command">The event to be published.</param>
         /// <returns>Future result.</returns>
         Task<TResult> PublishAsync<TResult>(ICommand<TResult> command);
 
@@ -34,9 +34,8 @@ namespace NetFusion.Messaging
         /// If any of the message handlers are asynchronous, an exception is thrown.
         /// </summary>
         /// <param name="domainEvent">The domain event to publish.</param>
-        void PublishLocal(IDomainEvent domainEvent);
+        void PublishInProcess(IDomainEvent domainEvent);
 
-        
         /// <summary>
         /// Publishes domain-events associated with an event source.  
         /// </summary>

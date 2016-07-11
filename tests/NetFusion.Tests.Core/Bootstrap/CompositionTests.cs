@@ -27,7 +27,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void CannotHaveMultipleAppPlugins()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>();
                     config.AddPlugin<MockAppHostPlugin>();
@@ -46,7 +46,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void MustHaveOneAppPlugin()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) => { })
+                .Arrange((TestTypeResolver config) => { })
                 .Act(c => c.Build())
                 .Assert((c, e) =>
                 {
@@ -62,7 +62,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void CompositeApplicationHasAppHostPlugin()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>();
                 })
@@ -79,7 +79,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void CompositeApplicationCanHaveSeveralAppComponentPlugins()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>();
                     config.AddPlugin<MockAppComponentPlugin>();
@@ -98,7 +98,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void CompositeApplicationCanHaveSeveralCorePlugins()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>();
                     config.AddPlugin<MockCorePlugin>();
@@ -115,7 +115,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void TypesLoadedForAppPlugin()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockOneType>();
@@ -141,7 +141,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void TypesLoadedForAppComponentPlugin()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>();
 
@@ -171,7 +171,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void TypesLoadedForCorePlugin()
         {
             ContainerSetup
-               .Arrange((HostTypeResolver config) =>
+               .Arrange((TestTypeResolver config) =>
                {
                    config.AddPlugin<MockAppHostPlugin>();
 
@@ -204,7 +204,7 @@ namespace NetFusion.Tests.Core.Bootstrap
                 .And.Subject.First().Should().BeOfType(type);
 
             ContainerSetup
-               .Arrange((HostTypeResolver config) =>
+               .Arrange((TestTypeResolver config) =>
                {
                    config.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginOneModule>();
@@ -232,7 +232,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void PluginCanHaveMultipleModules()
         {
             ContainerSetup
-               .Arrange((HostTypeResolver config) =>
+               .Arrange((TestTypeResolver config) =>
                {
                    config.AddPlugin<MockAppHostPlugin>();
 
@@ -259,7 +259,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void PluginTypesAssociatedWithPlugin()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockOneType>();
@@ -284,7 +284,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void CorePluginsComposedFromAllOtherPluginTypes()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockTypeOneBasedOnKnownType>();
@@ -319,7 +319,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void AppPluginsComposedFromOnlyOtherAppPluginTypes()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockTypeOneBasedOnKnownType>();

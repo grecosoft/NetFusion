@@ -18,7 +18,7 @@ namespace NetFusion.Messaging.Modules
         MessagingConfig MessagingConfig { get; }
 
         /// <summary>
-        /// A lookup by message types used to find the dispatch information for all
+        /// A lookup by message type used to find the dispatch information for all
         /// consumer message handlers that should  be invoked for a given type of message.
         /// </summary>
         ILookup<Type, MessageDispatchInfo> AllMessageTypeDispatchers { get; }

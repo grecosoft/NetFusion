@@ -12,7 +12,7 @@ namespace NetFusion.Bootstrap.Testing
     /// Implementation of ITypeResolver that delegates to the default
     /// implementation but provides custom logic for Mock Plug-ins.
     /// </summary>
-    public class HostTypeResolver : TypeResolver
+    public class TestTypeResolver : TypeResolver
     {
         private readonly string _assemblyPath;
         private readonly string[] _searchPatterns;
@@ -27,7 +27,7 @@ namespace NetFusion.Bootstrap.Testing
         /// </summary>
         public bool LoadAppHostFromAssembly { get; set; } = false;
 
-        public HostTypeResolver()
+        public TestTypeResolver()
         {
             _plugins = new List<MockPlugin>();
         }
@@ -37,7 +37,7 @@ namespace NetFusion.Bootstrap.Testing
         /// </summary>
         /// <param name="assemblyPath">The path to search for plug-in assemblies.</param>
         /// <param name="searchPatterns">The pattern used to filter assemblies.</param>
-        public HostTypeResolver(string assemblyPath, params string[] searchPatterns)
+        public TestTypeResolver(string assemblyPath, params string[] searchPatterns)
         {
             Check.NotNull(assemblyPath, nameof(assemblyPath), "assembly path not specified");
             Check.NotNull(assemblyPath, nameof(searchPatterns), "search patterns not specified");
@@ -73,7 +73,7 @@ namespace NetFusion.Bootstrap.Testing
         {
             var mockPlugin = plugin.Manifest as MockPlugin;
 
-            if (this.LoadAppHostFromAssembly && mockPlugin is IAppHostPluginManifest)
+            if (this.LoadAppHostFromAssembly && plugin is IAppHostPluginManifest)
             {
                 base.LoadPluginTypes(plugin);
                 return;
@@ -88,14 +88,14 @@ namespace NetFusion.Bootstrap.Testing
                 return;
             }
 
-            // Delegate to the base implementation to discover types from the plugin's assembly.
+            // Delegate to the base implementation to discover types from the plug-in's assembly.
             base.LoadPluginTypes(plugin);
         }
 
         /// <summary>
         /// Adds one or more mock plug-ins to the type-resolver
         /// </summary>
-        /// <param name="plugins">The plugins to be added.</param>
+        /// <param name="plugins">The plug-ins to be added.</param>
         public void AddPlugin(params MockPlugin[] plugins)
         {
             Check.NotNull(plugins, nameof(plugins), "plug-ins not specified");

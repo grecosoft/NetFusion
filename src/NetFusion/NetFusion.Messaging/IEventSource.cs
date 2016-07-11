@@ -11,4 +11,4 @@ namespace NetFusion.Messaging
     {
        IEnumerable<IDomainEvent> DomainEvents { get; }
     }
-}
+} 

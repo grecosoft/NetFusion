@@ -8,6 +8,6 @@ namespace NetFusion.Messaging
     /// during the bootstrapping of the plug-in.
     /// </summary>
     public interface IMessageConsumer : IKnownPluginType
-    {
+    { 
     }
 }

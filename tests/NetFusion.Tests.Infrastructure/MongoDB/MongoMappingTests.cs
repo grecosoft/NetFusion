@@ -18,7 +18,7 @@ namespace NetFusion.Tests.MongoDB
         public void AllEntityClassMapsDiscovered()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.SetupHostApp();
                     config.SetupMogoDbPlugIn();
@@ -42,7 +42,7 @@ namespace NetFusion.Tests.MongoDB
         public void DiscoveredEntityClassMapsAddedToMongo()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.SetupHostApp();
                     config.SetupMogoDbPlugIn();
@@ -67,7 +67,7 @@ namespace NetFusion.Tests.MongoDB
         public void CanLookupClassMapping()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.SetupHostApp();
                     config.SetupMogoDbPlugIn();

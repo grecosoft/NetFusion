@@ -18,7 +18,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void AppContainerRegisteredAsSingletonService()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>();
                 })
@@ -39,7 +39,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void ModuleRegisteredAsService_IfImplementsMarkerInterface()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginOneModule>();
@@ -62,7 +62,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void HostSpecifiedServicesRegistered()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>();
                 })
@@ -95,7 +95,7 @@ namespace NetFusion.Tests.Core.Bootstrap
         public void ComponentCanBeActivedOnCreation()
         {
             ContainerSetup
-                .Arrange((HostTypeResolver config) =>
+                .Arrange((TestTypeResolver config) =>
                 {
                     config.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockActivatedType>();
