@@ -34,7 +34,7 @@ namespace NetFusion.MongoDB.Modules
         IEntityClassMap GetEntityMap<T>() where T : class;
 
         /// <summary>
-        /// Given a mapped typed, returns the name associated used
+        /// Given a mapped typed, returns the associated name used
         /// to identify the derived type in MongoDB.  This corresponds
         /// to the _t MongoDB property.
         /// </summary>

@@ -43,12 +43,6 @@ namespace NetFusion.Messaging.Core
                 .Where(m => IsMessageHandlerMethod(m, methodPrefix)));
         }
 
-        public static IEnumerable<MethodInfo> MarkedWith<T>(this IEnumerable<MethodInfo> handlerMethods)
-            where T : Attribute
-        {
-            return handlerMethods.Where(h => h.HasAttribute<T>());
-        }
-
         private static bool IsMessageHandlerMethod(MethodInfo methodInfo, string methodPrefix)
         {
             var isCorrectMethodType = !methodInfo.IsStatic
@@ -66,13 +60,13 @@ namespace NetFusion.Messaging.Core
         /// For a list of methods, returns an object with properties that can be used to 
         /// dispatch the method at runtime.
         /// </summary>
-        /// <param name="eventHandlers">List of message handler methods.</param>
+        /// <param name="messageHandlers">List of message handler methods.</param>
         /// <returns>List of objects with information used to dispatch the method at runtime.</returns>
-        public static IEnumerable<MessageDispatchInfo> SelectDispatchInfo(this IEnumerable<MethodInfo> eventHandlers)
+        public static IEnumerable<MessageDispatchInfo> SelectDispatchInfo(this IEnumerable<MethodInfo> messageHandlers)
         {
-            Check.NotNull(eventHandlers, nameof(eventHandlers));
+            Check.NotNull(messageHandlers, nameof(messageHandlers));
 
-            return eventHandlers.Select(mi => new MessageDispatchInfo
+            return messageHandlers.Select(mi => new MessageDispatchInfo
             {
                 MessageType = mi.GetParameters().First().ParameterType,
                 ConsumerType = mi.DeclaringType,
@@ -142,12 +136,24 @@ namespace NetFusion.Messaging.Core
             Check.NotNull(messageType, nameof(messageType));
 
             // A handler method defined for the message type will be invoked.
-            // Message handlers for base message types will be included is specified. 
+            // Message handlers for base message types will be included if specified. 
             return messageTypeHandlers
                 .Where(di => di.Key.IsAssignableFrom(messageType))
                 .SelectMany(di => di)
                 .Where(di =>  
                     (di.IncludeDerivedTypes || di.MessageType == messageType));
+        }
+
+        /// <summary>
+        /// Returns all MethodInfo instances that are decorated with a specific attribute.
+        /// </summary>
+        /// <typeparam name="T">The attribute type.</typeparam>
+        /// <param name="handlerMethods">The list of method reflection information.</param>
+        /// <returns>Filtered list of methods.</returns>
+        public static IEnumerable<MethodInfo> MarkedWith<T>(this IEnumerable<MethodInfo> handlerMethods)
+            where T : Attribute
+        {
+            return handlerMethods.Where(h => h.HasAttribute<T>());
         }
     }
 }

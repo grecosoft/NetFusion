@@ -74,42 +74,12 @@ namespace NetFusion.Messaging.Core
             }
         }
 
-        public void PublishInProcess(IDomainEvent domainEvent)
-        {
-            Check.NotNull(domainEvent, nameof(domainEvent), "domain event not specified");
-
-            PublishMessageLocal(domainEvent);
-        }
-
-        public void PublishLocal(ICommand command)
-        {
-            Check.NotNull(command, nameof(command), "command not specified");
-
-            PublishMessageLocal(command);
-        }
-
-
-
         // Invoke all synchronous event-publishers and if there are no exceptions, execute all
         // asynchronous publishers and return the future result to the caller to await.
         private async Task PublishMessageAsync(IMessage message)
         {
             InvokeMessagePublishersSync(message);
             await InvokeMessagePublishersAsync(message);
-        }
-
-        private void PublishMessageLocal(IMessage message)
-        {
-            var dispatchers = _messagingModule.InProcessMessageTypeDispatchers
-                .WhereHandlerForMessage(message.GetType());
-
-            AssertAllSynchronousDispatchers(message, dispatchers);
-
-            foreach (MessageDispatchInfo dispatcher in dispatchers)
-            {
-                var consumer = _lifetimeScope.Resolve(dispatcher.ConsumerType);
-                dispatcher.Invoker.DynamicInvoke(consumer, message);
-            }
         }
 
         private void InvokeMessagePublishersSync(IMessage message)
@@ -124,7 +94,7 @@ namespace NetFusion.Messaging.Core
                 }
                 catch (Exception ex)
                 {
-                    var publishEx = new PublisherException("error calling event publisher", publisher, ex);
+                    var publishEx = new PublisherException("Error calling event publisher.", publisher, ex);
                     publisherErrors.Add(publishEx);
                 }
             }
@@ -144,7 +114,7 @@ namespace NetFusion.Messaging.Core
 
             try
             {
-                futureResults = InvokePublishersAsync(message);
+                futureResults = InvokeMessagePublishers(message);
                 await Task.WhenAll(futureResults.Select(fr => fr.Task));
             }
             catch (Exception ex)
@@ -167,7 +137,7 @@ namespace NetFusion.Messaging.Core
             }
         }
 
-        private IEnumerable<MessagePublisherTask> InvokePublishersAsync(IMessage message)
+        private IEnumerable<MessagePublisherTask> InvokeMessagePublishers(IMessage message)
         {
             var futureResults = new List<MessagePublisherTask>();
             foreach (var publisher in _messagePublishers)
@@ -183,16 +153,6 @@ namespace NetFusion.Messaging.Core
             foreach (var publisherTask in publisherTasks.Where(pt => pt.Task.Exception != null))
             {
                 yield return new PublisherException(publisherTask);
-            }
-        }
-
-        private void AssertAllSynchronousDispatchers(IMessage message, IEnumerable<MessageDispatchInfo> handlers)
-        {
-            if (handlers.Any(h => h.IsAsync))
-            {
-                throw new InvalidOperationException(
-                    $"The message of type: {message.GetType()} has one or more asynchronous handlers " + 
-                    $"and cannot be published synchronously.");
             }
         }
 

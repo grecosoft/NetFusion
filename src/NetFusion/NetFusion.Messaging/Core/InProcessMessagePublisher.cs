@@ -63,12 +63,12 @@ namespace NetFusion.Messaging.Core
                 }
                 catch (TargetInvocationException ex)
                 {
-                    dispatchErrors.Add(new MessageDispatchException("error calling message consumer", 
+                    dispatchErrors.Add(new MessageDispatchException("Error calling message consumer.", 
                         dispatcher, ex.InnerException));
                 }
                 catch (Exception ex)
                 {
-                    dispatchErrors.Add(new MessageDispatchException("error calling message consumer", 
+                    dispatchErrors.Add(new MessageDispatchException("Error calling message consumer.", 
                         dispatcher, ex));
                 }
             }
@@ -154,12 +154,12 @@ namespace NetFusion.Messaging.Core
                 if (invokeEx != null)
                 {
                     dispatchErrors.Add(new MessageDispatchException(
-                        "error calling event consumer", dispatchedTask.Dispatch, invokeEx.InnerException));
+                        "Error calling message consumer.", dispatchedTask.Dispatch, invokeEx.InnerException));
                 }
                 else
                 {
                     dispatchErrors.Add(new MessageDispatchException(
-                        "error calling event consumer", dispatchedTask.Dispatch, sourceEx));
+                        "Error calling message consumer", dispatchedTask.Dispatch, sourceEx));
                 }
             }
 

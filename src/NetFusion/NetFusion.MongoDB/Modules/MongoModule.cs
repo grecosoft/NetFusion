@@ -29,14 +29,9 @@ namespace NetFusion.MongoDB.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Clients"] = Context.GetPluginTypesFrom()
-                .Where(t => t.IsDerivedFrom(typeof(IMongoDbClient<>)))
-                .Select(t => t.AssemblyQualifiedName);
-
             moduleLog["Settings"] = Context.GetPluginTypesFrom()
                 .Where(t => t.IsDerivedFrom<MongoSettings>())
-                .Select(t => t.AssemblyQualifiedName);
-               
+                .Select(t => t.AssemblyQualifiedName);        
         }
     }
 }

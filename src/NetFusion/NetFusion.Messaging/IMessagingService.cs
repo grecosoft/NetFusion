@@ -30,13 +30,6 @@ namespace NetFusion.Messaging
         Task PublishAsync(IDomainEvent domainEvent);
 
         /// <summary>
-        /// Publishes a domain-event to all local in-process consumer message handlers.  
-        /// If any of the message handlers are asynchronous, an exception is thrown.
-        /// </summary>
-        /// <param name="domainEvent">The domain event to publish.</param>
-        void PublishInProcess(IDomainEvent domainEvent);
-
-        /// <summary>
         /// Publishes domain-events associated with an event source.  
         /// </summary>
         /// <param name="eventSource">The event source having associated events.</param>

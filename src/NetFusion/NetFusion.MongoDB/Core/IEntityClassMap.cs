@@ -32,10 +32,9 @@ namespace NetFusion.MongoDB.Core
         BsonClassMap ClassMap { get; }
 
         /// <summary>
-        /// Adds a known type derived from the type associated with the 
-        /// mappings.
+        /// Allows the class mapping to add known mappings types.
         /// </summary>
-        /// <param name="pluginTypes">List of derived types.</param>
+        /// <param name="pluginTypes">List of all plugin-types.</param>
         void AddKnownPluginTypes(IEnumerable<Type> pluginTypes);
     }
 }
