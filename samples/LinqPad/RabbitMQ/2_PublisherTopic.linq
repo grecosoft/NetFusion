@@ -28,24 +28,24 @@
   <Namespace>NetFusion.Messaging</Namespace>
 </Query>
 
-/// <summary>
-/// ---------------------------------------------------------------------------------------------------------
-/// TOPIC EXCHANGE PATTERN
-/// ---------------------------------------------------------------------------------------------------------
-/// - The same as a direct exchange.However, the route key value is a filter and not 
-///   just a value.
-///   
-/// - The route key used to specify a queue to exchange binding consists of a filter with 
-///   '.' delimited values:  A.B.*
-/// 
-/// - When a message is posted, the message will only be delivered to the queue if one its 
-///   binding filter values match the posted route key value.
-/// </summary>
+// ********************************************************************************************
+// ---------------------------------------------------------------------------------------------------------
+// TOPIC EXCHANGE PATTERN
+// ---------------------------------------------------------------------------------------------------------
+// -The same as a direct exchange.However, the route key value is a filter and not
+//  just a value.
+//   
+// - The route key used to specify a queue to exchange binding consists of a filter with 
+//   '.' delimited values:  A.B.*
+// 
+// - When a message is posted, the message will only be delivered to the queue if one its
+//   binding filter values match the posted route key value.
+// ********************************************************************************************
 void Main()
 {
 	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
 
-	var typeResolver = new HostTypeResolver(pluginDirectory,
+	var typeResolver = new TestTypeResolver(pluginDirectory,
 		"NetFusion.Settings.dll",
 		"NetFusion.Messaging.dll",
 		"NetFusion.RabbitMQ.dll")
@@ -66,29 +66,7 @@ void Main()
 	.Build()
 	.Start();
 
-	RunPublishToTopicExchange("Chevy", "Cruze", 2015);
-}
-
-// These settings would normally be stored in a central location.
-public class BrokerSettingsInitializer: AppSettingsInitializer<BrokerSettings>
-{
-	protected override IAppSettings OnConfigure(BrokerSettings settings)
-	{
-		settings.Connections = new BrokerConnection[] {
-			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
-		};
-		
-		return settings;
-	}
-}
-
-public void RunPublishToTopicExchange(string make, string model, int year) 
-{
-	var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
-	var domainModel = new Car { Vin = Guid.NewGuid().ToString(), Make = make, Model = model, Year = year };
-	var domainEvent = new ExampleTopicEvent(domainModel);
-	
-	domainEventSrv.PublishAsync(domainEvent).Wait();
+	PublishTopicEvent(new Car { Make = "Ford", Model = "Mustang", Year = 2016 });
 }
 
 // -------------------------------------------------------------------------------------
@@ -101,8 +79,27 @@ public class LinqPadHostPlugin : MockPlugin,
 }
 
 // -------------------------------------------------------------------------------------
-// Model and event message:
+// Boker Configuration Settings:
 // -------------------------------------------------------------------------------------
+public class BrokerSettingsInitializer: AppSettingsInitializer<BrokerSettings>
+{
+	protected override IAppSettings OnConfigure(BrokerSettings settings)
+	{
+		settings.Connections = new BrokerConnection[] {
+			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
+		};
+		
+		return settings;
+	}
+}
+
+public void PublishTopicEvent(Car car)
+{
+	var messagingSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
+	var evt = new ExampleTopicEvent(car);
+	messagingSrv.PublishAsync(evt).Wait();
+}
+
 public class Car
 {
 	public string Vin { get; set; }
@@ -113,10 +110,10 @@ public class Car
 
 public class ExampleTopicEvent : DomainEvent
 {
-	public string Vin { get; set; }
-	public string Make { get; set; }
-	public string Model { get; set; }
-	public int Year { get; set; }
+	public string Vin { get; private set; }
+	public string Make { get; private set; }
+	public string Model { get; private set; }
+	public int Year { get; private set; }
 
 	public ExampleTopicEvent() { }
 
@@ -134,9 +131,6 @@ public class ExampleTopicEvent : DomainEvent
 	public DateTime CurrentDateTime { get; private set; }
 }
 
-// -------------------------------------------------------------------------------------
-// Message exchange:
-// -------------------------------------------------------------------------------------
 public class ExampleTopicExchange : TopicExchange<ExampleTopicEvent>
 {
 	protected override void OnDeclareExchange()

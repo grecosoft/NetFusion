@@ -52,8 +52,6 @@ namespace RefArch.Host.Controllers.Samples
         /// If a setting specifies IsInitializationRequired to be false, the settings
         /// can be used without having an IAppSettingsInitializer defined.
         /// 
-        /// http://localhost:54164/api/netfusion/samples/settings/uninitialized
-        /// 
         /// 1.  Create application settings class: <see cref="UninitializedSettings"/>
         /// 2.  Set IsInitializationRequired = false in the setting's class constructor.
         /// 3.  Dependency-Inject it into the dependent class.  
@@ -70,8 +68,6 @@ namespace RefArch.Host.Controllers.Samples
         /// If a setting specifies IsInitializationRequired to be true (the default value),
         /// the settings must have a corresponding IAppSettingsInitializer.  If a settings
         /// initializer is not found, an exception is raised.
-        /// 
-        /// http://localhost:54164/api/netfusion/samples/settings/initialized
         /// 
         /// The host or application centric plug-in can define an initializer for a defined 
         /// application settings class.  Initializers can be for a specific application settings
@@ -100,8 +96,6 @@ namespace RefArch.Host.Controllers.Samples
         /// is suggested to register the FileSettings initializer first.  This allows local defined
         /// settings to override externally stored setting values.  This can be used when developing
         /// a plug-in. 
-        /// 
-        /// http://localhost:54164/api/netfusion/samples/settings/file-initialized
         /// 
         /// 1.  Create application settings class: <see cref="FileInitializedSettings"/>
         /// 2.  Register the FileSettingsInitializer
@@ -132,9 +126,6 @@ namespace RefArch.Host.Controllers.Samples
         /// This allows developers to override settings specifically for their
         /// development.  For the development environment, the directory would 
         /// be:  Configs\COMP-NAME\Dev\FileInitializedSettings.json
-        /// 
-        /// http://localhost:54164/api/netfusion/samples/settings/machine-file-initialized
-        /// 
         /// </summary>
         /// <returns>Settings</returns>
         [HttpGet, Route("machine-file-initialized", Name = "GetMachineFileInitializedSettings")]

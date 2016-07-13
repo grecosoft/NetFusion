@@ -28,35 +28,36 @@
   <Namespace>NetFusion.Messaging</Namespace>
 </Query>
 
-/// <summary>
-/// ---------------------------------------------------------------------------------------------------------
-/// FANOUT EXCHANGE PATTERN
-/// --------------------------------------------------------------------------------------------------------- 
-/// - This scenario uses exchange which is responsible for determining and delivering messages to queues.
-/// - An exchange of type Fan-out will broadcast a message to all queues defined on the exchange.
-/// - This type of configuration is often used when the message needs to be sent to many receivers.
-/// - This configuration usually does not require the message to be acknowledged by the consumers.
-/// - This setup is achieved by having each receiver define an queue that is bound to by the consumer and
-///   automatically deleted once the consumer disconnects.
-///
-/// - Route keys are not used by this type of exchange.
-///
-/// - Giving a queue a name is important when you want to share the queue between producers and consumers.
-///     But in this case, the publisher usually does not know about the consumers.  In this case a temporary
-///     named queue is best.  Also, the consumer is usually not interested in old messages, just current ones.
-///
-/// - Firstly, whenever we connect to Rabbit we need a fresh, empty queue. To do this we could create a queue
-///   with a random name, or, even better - let the server choose a random queue name for us.  Secondly, once 
-///   we disconnect the consumer the queue should be automatically deleted.
-///
-/// - The messages will be lost if no queue is bound to the exchange yet.  For most publish/subscribe scenarios
-///   this is what we would want. 
-/// </summary>  
+// *******************************************************************************************************
+// ---------------------------------------------------------------------------------------------------------
+// FANOUT EXCHANGE PATTERN
+// -------------------------------------------------------------------------------------------------------- -
+// - This scenario uses exchange which is responsible for determining and delivering messages to queues.
+// - An exchange of type Fan -out will broadcast a message to all queues defined on the exchange.
+// - This type of configuration is often used when the message needs to be sent to many receivers.
+// - This configuration usually does not require the message to be acknowledged by the consumers.
+// - This setup is achieved by having each receiver define an queue that is bound to by the consumer and
+//   automatically deleted once the consumer disconnects.
+// 
+// - Route keys are not used by this type of exchange.
+// 
+// - Giving a queue a name is important when you want to share the queue between producers and consumers.
+//   But in this case, the publisher usually does not know about the consumers.In this case a temporary
+//     named queue is best.Also, the consumer is usually not interested in old messages, just current ones.
+// 
+// - Firstly, whenever we connect to Rabbit we need a fresh, empty queue.To do this we could create a queue
+//   with a random name, or, even better - let the server choose a random queue name for us.Secondly, once
+//   we disconnect the consumer the queue should be automatically deleted.
+// 
+// - The messages will be lost if no queue is bound to the exchange yet.For most publish/subscribe scenarios
+//   this is what we would want. 
+// 
+// *******************************************************************************************************
 void Main()
 {
 	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
 
-	var typeResolver = new HostTypeResolver(pluginDirectory,
+	var typeResolver = new TestTypeResolver(pluginDirectory,
 		"NetFusion.Settings.dll",
 		"NetFusion.Messaging.dll",
 		"NetFusion.RabbitMQ.dll")
@@ -77,29 +78,7 @@ void Main()
 	.Build()
 	.Start();
 
-	RunPublishToDirectExchange("BMW", "330i", 2015);
-}
-
-// These settings would normally be stored in a central location.
-public class BrokerSettingsInitializer: AppSettingsInitializer<BrokerSettings>
-{
-	protected override IAppSettings OnConfigure(BrokerSettings settings)
-	{
-		settings.Connections = new BrokerConnection[] {
-			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
-		};
-		
-		return settings;
-	}
-}
-
-public void RunPublishToDirectExchange(string make, string model, int year) 
-{
-	var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
-	var domainModel = new Car { Vin = Guid.NewGuid().ToString(), Make = make, Model = model, Year = year };
-	var domainEvent = new ExampleFanoutEvent(domainModel);
-	
-	domainEventSrv.PublishAsync(domainEvent).Wait();
+	PublishFanoutEvent(new Car { Make = "BMW", Model = "M3", Year = 2016 });
 }
 
 // -------------------------------------------------------------------------------------
@@ -111,10 +90,28 @@ public class LinqPadHostPlugin : MockPlugin,
 
 }
 
+// -------------------------------------------------------------------------------------
+// Boker Configuration Settings:
+// -------------------------------------------------------------------------------------
+public class BrokerSettingsInitializer : AppSettingsInitializer<BrokerSettings>
+{
+	protected override IAppSettings OnConfigure(BrokerSettings settings)
+	{
+		settings.Connections = new BrokerConnection[] {
+			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
+		};
 
-// -------------------------------------------------------------------------------------
-// Model and event message:
-// -------------------------------------------------------------------------------------
+		return settings;
+	}
+}
+
+public void PublishFanoutEvent(Car car)
+{
+	var messagingSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
+	var evt = new ExampleFanoutEvent(car);
+	messagingSrv.PublishAsync(evt).Wait();
+}
+
 public class Car
 {
 	public string Vin { get; set; }
@@ -125,8 +122,8 @@ public class Car
 
 public class ExampleFanoutEvent : DomainEvent
 {
-	public string Make { get; set; }
-	public string Model { get; set; }
+	public string Make { get; private set; }
+	public string Model { get; private set; }
 
 	public ExampleFanoutEvent() { }
 
@@ -140,19 +137,6 @@ public class ExampleFanoutEvent : DomainEvent
 	}
 
 	public DateTime CurrentDateTime { get; private set; }
-}
-// -------------------------------------------------------------------------------------
-// Message exchange:
-// -------------------------------------------------------------------------------------
-
-[Serializable]
-public class FanoutEvent : DomainEvent
-{
-	public DateTime CurrentDateTime { get; set; }
-	public string Vin { get; set; }
-	public string Make { get; set; }
-	public string Model { get; set; }
-	public int Year { get; set; }
 }
 
 public class AmericanCarExchange : FanoutExchange<ExampleFanoutEvent>

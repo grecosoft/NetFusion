@@ -40,7 +40,7 @@ void Main()
 {
 	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
 
-	var typeResolver = new HostTypeResolver(pluginDirectory,
+	var typeResolver = new TestTypeResolver(pluginDirectory,
 		"NetFusion.Settings.dll", 
 		"NetFusion.MongoDB.dll", 
 		"NetFusion.Settings.MongoDB.dll")

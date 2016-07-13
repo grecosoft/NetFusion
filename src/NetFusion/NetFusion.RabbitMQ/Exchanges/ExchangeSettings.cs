@@ -7,9 +7,12 @@ namespace NetFusion.RabbitMQ.Exchanges
     /// </summary>
     public class ExchangeSettings
     {
+        public static string DefaultContentType = "application/json; charset=utf-8";
+
         public ExchangeSettings()
         {
             this.Arguments = new Dictionary<string, object>();
+            this.ContentType = DefaultContentType;
         }
 
         /// <summary>
@@ -27,6 +30,11 @@ namespace NetFusion.RabbitMQ.Exchanges
         /// The name of the exchange.
         /// </summary>
         public string ExchangeName { get; set; }
+
+        /// <summary>
+        /// The content type of the serialized message body.
+        /// </summary>
+        public string ContentType { get; set; }
 
         /// <summary>
         /// Indicates that the exchange should survive a server restart.

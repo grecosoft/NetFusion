@@ -6,7 +6,7 @@ using System.Web.Http;
 
 namespace RefArch.Services
 {
-    [EndpointMetadata(EndpointName = "RefArch.Api", IncluedAllRoutes = true)]
+    [EndpointMetadata(EndpointName = "RefArch.UserInfo.Api", IncluedAllRoutes = true)]
     [RoutePrefix("api/user/info")]
     public class UserInfoController : ApiController
     {

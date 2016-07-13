@@ -4,6 +4,6 @@ namespace RefArch.Api.Models
 {
     public class MessageInfo : DomainEvent
     {
-        public int DelayInSeconds = 5;
+        public int DelayInSeconds { get; set; }
     }
 }

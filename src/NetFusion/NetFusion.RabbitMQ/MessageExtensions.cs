@@ -8,8 +8,6 @@ namespace NetFusion.RabbitMQ
     public static class MessageExtensions
     {
         private static readonly Type Context = typeof(RabbitMQManifest);
-        public static string DefaultContentType = "application/json; charset=utf-8";
-        public static string DefaultEncodingType = Encoding.UTF8.BodyName;
 
         public static void SetAcknowledged(this IMessage message, bool value = true)
         {
@@ -55,16 +53,6 @@ namespace NetFusion.RabbitMQ
         public static string GetRouteKey(this IMessage message)
         {
             return message.GetObjectAttribute<string>(null, Context);
-        }
-
-        public static void SetContentType(this IMessage message, string value)
-        {
-            message.SetObjectAttribute(value, Context);
-        }
-
-        public static string GetContentType(this IMessage message)
-        {
-            return message.GetObjectAttribute(DefaultContentType, Context);
         }
 
         public static void SetInvokeLocalConsumers(this IMessage message, bool value = true)

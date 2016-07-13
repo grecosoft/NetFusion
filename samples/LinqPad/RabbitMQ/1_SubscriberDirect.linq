@@ -37,7 +37,7 @@ void Main()
 {
 	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
 
-	var typeResolver = new HostTypeResolver(pluginDirectory,
+	var typeResolver = new TestTypeResolver(pluginDirectory,
 		"NetFusion.Settings.dll",
 		"NetFusion.Messaging.dll",
 		"NetFusion.RabbitMQ.dll")
@@ -59,19 +59,6 @@ void Main()
 	.Start();
 }
 
-// These settings would normally be stored in a central location.
-public class BrokerSettingsInitializer: AppSettingsInitializer<BrokerSettings>
-{
-	protected override IAppSettings OnConfigure(BrokerSettings settings)
-	{
-		settings.Connections = new BrokerConnection[] {
-			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
-		};
-		
-		return settings;
-	}
-}
-
 // -------------------------------------------------------------------------------------
 // Mock host plug-in that will be configured within the container:
 // -------------------------------------------------------------------------------------
@@ -81,29 +68,44 @@ public class LinqPadHostPlugin : MockPlugin,
 
 }
 
+// -------------------------------------------------------------------------------------
+// Boker Configuration Settings:
+// -------------------------------------------------------------------------------------
+public class BrokerSettingsInitializer : AppSettingsInitializer<BrokerSettings>
+{
+	protected override IAppSettings OnConfigure(BrokerSettings settings)
+	{
+		settings.Connections = new BrokerConnection[] {
+			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
+		};
+
+		return settings;
+	}
+}
+
 public class ExampleDirectEvent : DomainEvent
 {
-	public DateTime CurrentDateTime { get; set; }
-	public string Vin { get; set; }
-	public string Make { get; set; }
-	public string Model { get; set; }
-	public int Year { get; set; }
+	public string Vin { get; private set; }
+	public string Make { get; private set; }
+	public string Model { get; private set; }
+	public int Year { get; private set; }
+	public DateTime CurrentDateTime { get; private set; }
 }
 
 [Broker("TestBroker")]
 public class ExampleDirectService : IMessageConsumer
 {
-    // This method will join to the 2015-2016-Cars queue defined on the
-    // ExampleDirectExchange.  Since this handler is joining the queue,
-    // it will be called round-robin with other subscribed clients.
-    [JoinQueue("2015-2016-Cars", "SampleDirectExchange")]
-    public void OnModelYear(ExampleDirectEvent directEvt)
-    {
-        Console.WriteLine("Handler: OnModelYear[2015-2016-Cars]");
-        Console.WriteLine(directEvt.ToIndentedJson());
+	// This method will join to the 2015-2016-Cars queue defined on the
+	// ExampleDirectExchange.  Since this handler is joining the queue,
+	// it will be called round-robin with other subscribed clients.
+	[JoinQueue("2015-2016-Cars", "SampleDirectExchange")]
+	public void OnModelYear(ExampleDirectEvent directEvt)
+	{
+		Console.WriteLine("Handler: OnModelYear[2015-2016-Cars]");
+		Console.WriteLine(directEvt.ToIndentedJson());
 
-        directEvt.SetAcknowledged();
-    }
+		directEvt.SetAcknowledged();
+	}
 
 	// This method will join to the UsedCars queue defined on the
 	// ExampleDirectExchange.  Since this handler is joining the queue,
@@ -117,3 +119,4 @@ public class ExampleDirectService : IMessageConsumer
 		directEvt.SetAcknowledged();
 	}
 }
+

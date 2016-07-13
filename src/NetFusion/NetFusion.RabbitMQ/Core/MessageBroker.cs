@@ -287,8 +287,9 @@ namespace NetFusion.RabbitMQ.Core
         {
             if (deliveryEvent.BasicProperties.ReplyTo != null)
             {
-                byte[] messageBody = SerializeEvent(message);
-                var basicProps = GetRpcResponseBasicProperties(eventConsumer, message);
+                var contentType = deliveryEvent.BasicProperties.ContentType;
+                byte[] messageBody = SerializeEvent(message, contentType);
+                var basicProps = GetRpcResponseBasicProperties(eventConsumer, contentType);
 
                 eventConsumer.Channel.BasicPublish(exchange: "",
                     routingKey: deliveryEvent.BasicProperties.ReplyTo,
@@ -297,11 +298,11 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
-        private static IBasicProperties GetRpcResponseBasicProperties(MessageConsumer messageConsumer, IMessage message)
+        private static IBasicProperties GetRpcResponseBasicProperties(MessageConsumer messageConsumer, string contentType)
         {
             var basicProps = messageConsumer.Channel.CreateBasicProperties();
-
-            basicProps.ContentType = message.GetContentType();
+        
+            basicProps.ContentType = contentType;
             return basicProps;
         }
  
@@ -353,7 +354,8 @@ namespace NetFusion.RabbitMQ.Core
             // published to the exchange.
             if (!exchangeDef.Exchange.Matches(message)) return;
 
-            var messageBody = SerializeEvent(message);
+            var contentType = exchangeDef.Exchange.Settings.ContentType;
+            var messageBody = SerializeEvent(message, contentType);
             ReplyConsumer returnQueueConsumer = null;
 
             using (var channel = CreateBrokerChannel(exchangeDef.Exchange.BrokerName))
@@ -399,9 +401,9 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
-        private byte[] SerializeEvent(IMessage message)
+        private byte[] SerializeEvent(IMessage message, string contentType)
         {
-            var serializer = GetMessageSerializer(message);
+            var serializer = GetMessageSerializer(contentType);
             return serializer.Serialize(message);
         }
 
@@ -421,18 +423,13 @@ namespace NetFusion.RabbitMQ.Core
             return serializer.Deserialize(deliveryEvent.Body, messageType);
         }
 
-        private IMessageSerializer GetMessageSerializer(IMessage message)
-        {
-            return GetMessageSerializer(message.GetContentType());
-        }
-
         private IMessageSerializer GetMessageSerializer(string contentType)
         {
             IMessageSerializer serializer = null;
 
             if (!_serializers.TryGetValue(contentType, out serializer))
             {
-                Plugin.Log.Error($"serializer for Content Type: {contentType} has not been configured");
+                Plugin.Log.Error($"Serializer for Content Type: {contentType} has not been configured.");
             }
 
             return serializer;

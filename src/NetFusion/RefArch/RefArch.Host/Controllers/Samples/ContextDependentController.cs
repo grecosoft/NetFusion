@@ -5,7 +5,7 @@ using System.Web.Http;
 
 namespace RefArch.Host.Controllers.Samples
 {
-    [EndpointMetadata(EndpointName = "NetFusion.webapi", IncluedAllRoutes = true)]
+    [EndpointMetadata(EndpointName = "NetFusion.webapi.context", IncluedAllRoutes = true)]
     [RoutePrefix("api/netfusion/samples/webapi/authorized")]
     [Authorize]
     public class ContextDependentController : ApiController

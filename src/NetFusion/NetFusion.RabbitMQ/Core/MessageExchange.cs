@@ -212,7 +212,7 @@ namespace NetFusion.RabbitMQ.Exchanges
             Check.NotNull(message, nameof(message));
 
             var basicProps = channel.CreateBasicProperties();
-            basicProps.ContentType = message.GetContentType();
+            basicProps.ContentType = this.Settings.ContentType;
             return basicProps;
         }
     }

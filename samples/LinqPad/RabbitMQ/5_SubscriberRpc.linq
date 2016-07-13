@@ -29,16 +29,11 @@
   <Namespace>NetFusion.Messaging</Namespace>
 </Query>
 
-// **********************************************************************************************
-// This is an example of a consumer that subscribes to a direct queue.  Handeling events that
-// arrive on a queue is very simular to handeling in-process domain events.  
-// **********************************************************************************************
-
 void Main()
 {
 	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
 
-	var typeResolver = new HostTypeResolver(pluginDirectory,
+	var typeResolver = new TestTypeResolver(pluginDirectory,
 		"NetFusion.Settings.dll",
 		"NetFusion.Messaging.dll",
 		"NetFusion.RabbitMQ.dll")
@@ -60,21 +55,8 @@ void Main()
 	.Start();
 }
 
-// These settings would normally be stored in a central location.
-public class BrokerSettingsInitializer: AppSettingsInitializer<BrokerSettings>
-{
-	protected override IAppSettings OnConfigure(BrokerSettings settings)
-	{
-		settings.Connections = new BrokerConnection[] {
-			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
-		};
-		
-		return settings;
-	}
-}
-
 // -------------------------------------------------------------------------------------
-// Mock host plug-in that will be configured within the container.
+// Mock host plug-in that will be configured within the container:
 // -------------------------------------------------------------------------------------
 public class LinqPadHostPlugin : MockPlugin,
 	IAppHostPluginManifest
@@ -82,17 +64,20 @@ public class LinqPadHostPlugin : MockPlugin,
 
 }
 
-public class ExampleRpcCommand : Command<ExampleRpcResponse>
+// -------------------------------------------------------------------------------------
+// Boker Configuration Settings:
+// -------------------------------------------------------------------------------------
+public class BrokerSettingsInitializer : AppSettingsInitializer<BrokerSettings>
 {
-	public DateTime CurrentDateTime { get; set; }
-	public string InputValue { get; set; }
-}
+	protected override IAppSettings OnConfigure(BrokerSettings settings)
+	{
+		settings.Connections = new BrokerConnection[] {
+			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
+		};
 
-public class ExampleRpcResponse : DomainEvent
-{
-	public string Comment { get; set; }
+		return settings;
+	}
 }
-
 
 [Broker("TestBroker")]
 public class ExampleRpcService : IMessageConsumer
@@ -114,4 +99,15 @@ public class ExampleRpcService : IMessageConsumer
 			Comment = "World"
 		};
 	}
+}
+
+public class ExampleRpcCommand : Command<ExampleRpcResponse>
+{
+	public DateTime CurrentDateTime { get; private set; }
+	public string InputValue { get; private set; }
+}
+
+public class ExampleRpcResponse : DomainEvent
+{
+	public string Comment { get; set; }
 }

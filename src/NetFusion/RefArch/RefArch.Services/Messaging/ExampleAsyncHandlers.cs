@@ -30,7 +30,8 @@ namespace RefArch.Services.Messaging
         [InProcessHandler]
         public async Task OnEvent(ExampleAsyncDomainEventException evt)
         {
-            await Task.Run(() => {
+            await Task.Run(() =>
+            {
                 Thread.Sleep(evt.Seconds * 1000);
             });
 
@@ -46,7 +47,8 @@ namespace RefArch.Services.Messaging
         [InProcessHandler]
         public async Task OnEvent(ExampleAsyncDomainEventException evt)
         {
-            await Task.Run(() => {
+            await Task.Run(() =>
+            {
                 Thread.Sleep(evt.Seconds * 1000);
             });
 
@@ -55,11 +57,15 @@ namespace RefArch.Services.Messaging
                 throw new InvalidOperationException($"Example exception: {Guid.NewGuid()}");
             }
         }
+    }
 
+    public class ExampleAsyncHandler5 : IMessageConsumer
+    {
         [InProcessHandler]
         public async Task<HandlerResponse> OnCommand(ExampleAsyncCommand command)
         {
-            await Task.Run(() => {
+            await Task.Run(() =>
+            {
                 Thread.Sleep(command.Seconds * 1000);
             });
 

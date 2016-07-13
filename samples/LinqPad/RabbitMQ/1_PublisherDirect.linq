@@ -28,30 +28,30 @@
   <Namespace>NetFusion.Messaging</Namespace>
 </Query>
 
-/// <summary>
-/// ---------------------------------------------------------------------------------------------------------
-/// DIRECT EXCHANGE PATTERN
-/// ---------------------------------------------------------------------------------------------------------
-/// - The direct exchange uses the route key to determine which queues should receive the 
-///   message.  When a queue is bound to an exchange, it can specify a route key value.
-///     
-/// - When messages are published to a direct exchange, the publisher specifies a route key 
-///   value.  The exchange will deliver the message to all queues that have a binding with 
-///   the specified route key value.
-///     
-/// - A given queue to be bound more than once to an exchange - each binding using a different 
-///   route key.  If a message's routing key does not match any of the queue bindings, the message
-///   is discarded.
-/// 
-/// - It is perfectly legal to bind multiple queues with the same binding key.  In that case, the 
-///   direct exchange will behave like fanout and will broadcast the message to all the matching
-///   queues. 
-/// </summary>
+// *************************************************************************************
+// ---------------------------------------------------------------------------------------------------------
+// DIRECT EXCHANGE PATTERN
+// -------------------------------------------------------------------------------------------------------- -
+// -The direct exchange uses the route key to determine which queues should receive the
+//  message.When a queue is bound to an exchange, it can specify a route key value.
+//     
+// - When messages are published to a direct exchange, the publisher specifies a route key
+//   value.The exchange will deliver the message to all queues that have a binding with
+//   the specified route key value.
+//     
+// - A given queue to be bound more than once to an exchange - each binding using a different
+//   route key.If a message's routing key does not match any of the queue bindings, the message
+//   is discarded.
+// 
+// - It is perfectly legal to bind multiple queues with the same binding key.In that case, the
+//   direct exchange will behave like fanout and will broadcast the message to all the matching
+//   queues.
+// *************************************************************************************
 void Main()
 {
 	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
 
-	var typeResolver = new HostTypeResolver(pluginDirectory,
+	var typeResolver = new TestTypeResolver(pluginDirectory,
 		"NetFusion.Settings.dll",
 		"NetFusion.Messaging.dll",
 		"NetFusion.RabbitMQ.dll")
@@ -72,29 +72,12 @@ void Main()
 	.Build()
 	.Start();
 
-	RunPublishToDirectExchange("BMW", "330i", 2015);
-}
-
-// These settings would normally be stored in a central location.
-public class BrokerSettingsInitializer: AppSettingsInitializer<BrokerSettings>
-{
-	protected override IAppSettings OnConfigure(BrokerSettings settings)
-	{
-		settings.Connections = new BrokerConnection[] {
-			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
-		};
-		
-		return settings;
-	}
-}
-
-public void RunPublishToDirectExchange(string make, string model, int year) 
-{
-	var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
-	var domainModel = new Car { Vin = Guid.NewGuid().ToString(), Make = make, Model = model, Year = year };
-	var domainEvent = new ExampleDirectEvent(domainModel);
-	
-	domainEventSrv.PublishAsync(domainEvent).Wait();
+	PublishDirectEvent(new Car {
+		Vin = "34345NDGJK345LL435",
+		Make = "Volvo",
+		Model = "S8",
+		Year = 2016
+	});
 }
 
 // -------------------------------------------------------------------------------------
@@ -107,8 +90,27 @@ public class LinqPadHostPlugin : MockPlugin,
 }
 
 // -------------------------------------------------------------------------------------
-// Model and event message:
+// Boker Configuration Settings:
 // -------------------------------------------------------------------------------------
+public class BrokerSettingsInitializer: AppSettingsInitializer<BrokerSettings>
+{
+	protected override IAppSettings OnConfigure(BrokerSettings settings)
+	{
+		settings.Connections = new BrokerConnection[] {
+			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
+		};
+		
+		return settings;
+	}
+}
+
+public void PublishDirectEvent(Car car)
+{
+	var messagingSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
+	var evt = new ExampleDirectEvent(car);
+	messagingSrv.PublishAsync(evt).Wait();
+}
+
 public class Car
 {
 	public string Vin { get; set; }
@@ -119,14 +121,14 @@ public class Car
 
 public class ExampleDirectEvent : DomainEvent
 {
-	public string Vin { get; set; }
-	public string Make { get; set; }
-	public string Model { get; set; }
-	public int Year { get; set; }
+	public string Vin { get; private set; }
+	public string Make { get; private set; }
+	public string Model { get; private set; }
+	public int Year { get; private set; }
 
 	public ExampleDirectEvent() { }
 
-	public ExampleDirectEvent(Car car): this()
+	public ExampleDirectEvent(Car car)
 	{
 		this.CurrentDateTime = DateTime.UtcNow;
 		this.Vin = car.Vin;
@@ -134,7 +136,7 @@ public class ExampleDirectEvent : DomainEvent
 		this.Model = car.Model;
 		this.Year = car.Year;
 
-		this.SetRouteKey(car.Year); 
+		this.SetRouteKey(car.Year); // TODO:  move this out of the RabbitMQ project??? So client don't need ref?
 
 		if (car.Year < 2015)
 		{
@@ -146,9 +148,6 @@ public class ExampleDirectEvent : DomainEvent
 	public DateTime CurrentDateTime { get; private set; }
 }
 
-// -------------------------------------------------------------------------------------
-// Message exchange:
-// -------------------------------------------------------------------------------------
 public class ExampleDirectExchange : DirectExchange<ExampleDirectEvent>
 {
 	protected override void OnDeclareExchange()
@@ -167,3 +166,4 @@ public class ExampleDirectExchange : DirectExchange<ExampleDirectEvent>
 		});
 	}
 }
+

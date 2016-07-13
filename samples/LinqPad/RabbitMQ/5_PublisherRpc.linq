@@ -28,19 +28,18 @@
   <Namespace>NetFusion.Messaging</Namespace>
 </Query>
 
-/// <summary>
-/// ---------------------------------------------------------------------------------------------------------
-/// RPC EXCHANGE PATTERN
-/// ---------------------------------------------------------------------------------------------------------
-/// </summary>
-/// The message that is published for this exchange pattern must be a command.  With this pattern, the 
-/// publisher publishes the command and the subscriber returns a response.
-/// </summary>
+// **************************************************************************************
+// --------------------------------------------------------------------------------------
+// RPC EXCHANGE PATTERN
+// --------------------------------------------------------------------------------------
+// The message that is published for this exchange pattern must be a command.With this 
+// pattern, the publisher publishes the command and the subscriber returns a response.
+// ***************************************************************************************
 void Main()
 {
 	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
 
-	var typeResolver = new HostTypeResolver(pluginDirectory,
+	var typeResolver = new TestTypeResolver(pluginDirectory,
 		"NetFusion.Settings.dll",
 		"NetFusion.Messaging.dll",
 		"NetFusion.RabbitMQ.dll")
@@ -61,30 +60,7 @@ void Main()
 	.Build()
 	.Start();
 
-	RunRpcExchange("BMW", "330i", 2015);
-}
-
-// These settings would normally be stored in a central location.
-public class BrokerSettingsInitializer: AppSettingsInitializer<BrokerSettings>
-{
-	protected override IAppSettings OnConfigure(BrokerSettings settings)
-	{
-		settings.Connections = new BrokerConnection[] {
-			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
-		};
-		
-		return settings;
-	}
-}
-
-public void RunRpcExchange(string make, string model, int year) 
-{
-	var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
-	var domainModel = new Car { Vin = Guid.NewGuid().ToString(), Make = make, Model = model, Year = year };
-	var domainCommand = new ExampleRpcCommand(domainModel);
-	
-    var result = domainEventSrv.PublishAsync(domainCommand).Result;
-	result.Dump();
+	PublishRPCEvent(new Car { Make = "Audi", Model = "A6", Year = 2016}).Dump();
 }
 
 // -------------------------------------------------------------------------------------
@@ -97,8 +73,27 @@ public class LinqPadHostPlugin : MockPlugin,
 }
 
 // -------------------------------------------------------------------------------------
-// Model and command message:
+// Boker Configuration Settings:
 // -------------------------------------------------------------------------------------
+public class BrokerSettingsInitializer : AppSettingsInitializer<BrokerSettings>
+{
+	protected override IAppSettings OnConfigure(BrokerSettings settings)
+	{
+		settings.Connections = new BrokerConnection[] {
+			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
+		};
+
+		return settings;
+	}
+}
+
+public ExampleRpcResponse PublishRPCEvent(Car car)
+{
+	var messagingSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
+	var evt = new ExampleRpcCommand(car);
+	return messagingSrv.PublishAsync(evt).Result;
+}
+
 public class Car
 {
 	public string Vin { get; set; }
@@ -109,8 +104,8 @@ public class Car
 
 public class ExampleRpcCommand : Command<ExampleRpcResponse>
 {
-	public DateTime CurrentDateTime { get; set; }
-	public string InputValue { get; set; }
+	public DateTime CurrentDateTime { get; private set; }
+	public string InputValue { get; private set; }
 
 	public ExampleRpcCommand()
 	{
@@ -129,9 +124,6 @@ public class ExampleRpcResponse : DomainEvent
 	public string Comment { get; set; }
 }
 
-// -------------------------------------------------------------------------------------
-// Message exchange:
-// -------------------------------------------------------------------------------------
 public class ExampleRpcExchange : DirectExchange<ExampleRpcCommand>
 {
 	protected override void OnDeclareExchange()

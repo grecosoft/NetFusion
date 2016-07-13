@@ -37,7 +37,7 @@ void Main()
 {
 	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
 
-	var typeResolver = new HostTypeResolver(pluginDirectory,
+	var typeResolver = new TestTypeResolver(pluginDirectory,
 		"NetFusion.Settings.dll",
 		"NetFusion.Messaging.dll",
 		"NetFusion.RabbitMQ.dll")
@@ -59,21 +59,8 @@ void Main()
 	.Start();
 }
 
-// These settings would normally be stored in a central location.
-public class BrokerSettingsInitializer: AppSettingsInitializer<BrokerSettings>
-{
-	protected override IAppSettings OnConfigure(BrokerSettings settings)
-	{
-		settings.Connections = new BrokerConnection[] {
-			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
-		};
-		
-		return settings;
-	}
-}
-
 // -------------------------------------------------------------------------------------
-// Mock host plug-in that will be configured within the container.
+// Mock host plug-in that will be configured within the container:
 // -------------------------------------------------------------------------------------
 public class LinqPadHostPlugin : MockPlugin,
 	IAppHostPluginManifest
@@ -81,11 +68,26 @@ public class LinqPadHostPlugin : MockPlugin,
 
 }
 
+// -------------------------------------------------------------------------------------
+// Boker Configuration Settings:
+// -------------------------------------------------------------------------------------
+public class BrokerSettingsInitializer : AppSettingsInitializer<BrokerSettings>
+{
+	protected override IAppSettings OnConfigure(BrokerSettings settings)
+	{
+		settings.Connections = new BrokerConnection[] {
+			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
+		};
+
+		return settings;
+	}
+}
+
 public class ExampleFanoutEvent : DomainEvent
 {
-	public DateTime CurrentDateTime { get; set; }
-	public string Make { get; set; }
-	public string Model { get; set; }
+	public string Make { get; private set; }
+	public string Model { get; private set; }
+	public DateTime CurrentDateTime { get; private set; }
 }
 
 [Broker("TestBroker")]

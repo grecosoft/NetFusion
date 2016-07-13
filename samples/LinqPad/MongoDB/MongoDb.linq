@@ -1,13 +1,13 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\MongoDB.Bson.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\MongoDB.Bson.dll</Reference>
-  <Reference Relative="..\libs\MongoDB.Driver.Core.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\MongoDB.Driver.Core.dll</Reference>
-  <Reference Relative="..\libs\MongoDB.Driver.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\MongoDB.Driver.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.MongoDB.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.MongoDB.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\MongoDB.Bson.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\MongoDB.Bson.dll</Reference>
+  <Reference Relative="..\libs\MongoDB.Driver.Core.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\MongoDB.Driver.Core.dll</Reference>
+  <Reference Relative="..\libs\MongoDB.Driver.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\MongoDB.Driver.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.MongoDB.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.MongoDB.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>MongoDB.Driver</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
@@ -24,74 +24,136 @@
   <Namespace>NetFusion.Settings.Configs</Namespace>
   <Namespace>NetFusion.Settings.Strategies</Namespace>
   <Namespace>NetFusion.Settings.Testing</Namespace>
+  <Namespace>System.Threading.Tasks</Namespace>
 </Query>
 
-// *************************************************************************************
-// 								NetFusion.MongoDb Plug-in
-// *************************************************************************************
-public void SetupMongoDbExamples(MockPlugin hostPlugin)
+void Main()
 {
-	hostPlugin
-		.AddPluginType<LinqPadTestDb>()
-		.AddPluginType<TestDocumentMap>();
-}
+	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
 
-public void RunMongoDbExamples()
-{
-	nameof(RunMongoDbExamples).Dump();
-
-	InsertAndQueryDocument();
-}
-
-// Example of using the MongoDB plug-in to insert and query a document.
-// -------------------------------------------------------------------------------------
-public void InsertAndQueryDocument()
-{
-	nameof(InsertAndQueryDocument).Dump();
-
-	var context = AppContainer.Instance.Services.Resolve<IMongoDbClient<LinqPadTestDb>>();
-	var testDocColl = context.GetCollection<TestDocument>();
-
-	var testDoc = new TestDocument
+	var typeResolver = new TestTypeResolver(pluginDirectory,
+		"NetFusion.Settings.dll",
+		"NetFusion.MongoDB.dll")
 	{
-		ValueOne = "test value one",
-		ValueTwo = "test value two"
+		LoadAppHostFromAssembly = true
 	};
 
-	testDocColl.InsertOneAsync(testDoc).Wait();
-	testDoc.TestDocId.Dump();
+	// Bootstrap the container:
+	ContainerSetup.Bootstrap(typeResolver, config =>
+	{
+		config.AddPlugin<LinqPadHostPlugin>();
+	})
+	.Build()
+	.Start();
 
-	var builder = Builders<TestDocument>.Filter;
-	var filter = builder.Eq(d => d.TestDocId, testDoc.TestDocId);
-
-	var result = testDocColl.Find(filter).ToListAsync().Result;
-	result.Dump();
+	// Execute the examples:
+	var customer = new Customer
+	{
+		FirstName = "Sam",
+		LastName = "Smith",
+		City = "Cheshire",
+		State = "CT"
+	};
+	
+	CreateCustomer(customer).Dump();
+	GetCustomers().Dump();
+	
 }
 
-public class LinqPadTestDb : MongoSettings
+// -------------------------------------------------------------------------------------
+// Mock host plug-in that will be configured within the container.
+// -------------------------------------------------------------------------------------
+public class LinqPadHostPlugin : MockPlugin,
+	IAppHostPluginManifest
 {
-	public LinqPadTestDb()
+	
+}
+
+// -------------------------------------------------------------------------------------
+// In-Memory database configuration.
+// -------------------------------------------------------------------------------------
+public class NetFusionDB : MongoSettings
+{
+}
+
+public class DatabaseInitializer : AppSettingsInitializer<NetFusionDB>
+{
+	protected override IAppSettings OnConfigure(NetFusionDB settings)
 	{
-		this.IsInitializationRequired = false;
-		this.DatabaseName = "LinkPadTestDb";
-		this.MongoUrl = "mongodb://localhost:27017";
+		settings.MongoUrl = "mongodb://localhost:27017";
+  		settings.DatabaseName = "NetFusion";
+
+		return settings;
 	}
 }
 
-public class TestDocument
+public Customer CreateCustomer(Customer customer)
 {
-	public string TestDocId { get; set; }
-	public string ValueOne { get; set; }
-	public string ValueTwo { get; set; }
+	var repository = AppContainer.Instance.Services.Resolve<IExampleRepository>();
+	repository.AddCustomerAsync(customer).Wait();
+	return customer;
 }
 
-public class TestDocumentMap : EntityClassMap<TestDocument>
+public IEnumerable<Customer> GetCustomers()
 {
-	public TestDocumentMap()
-	{
-		this.CollectionName = "LinqPad.TestDoc";
+	var repository = AppContainer.Instance.Services.Resolve<IExampleRepository>();
+	return repository.ListCustomersAsync().Result;
+}
 
+public class Customer
+{
+	public string CustomerId { get; set; }
+	public string FirstName { get; set; }
+	public string LastName { get; set; }
+	public string City { get; set; }
+	public string State { get; set; }
+}
+
+public interface IExampleRepository
+{
+	Task AddCustomerAsync(Customer custoer);
+	Task<IEnumerable<Customer>> ListCustomersAsync();
+}
+
+public class ExampleRepository : IExampleRepository
+{
+	private readonly IMongoDbClient<NetFusionDB> _refArchDb;
+	private readonly IMongoCollection<Customer> _customerColl;
+
+	public ExampleRepository(IMongoDbClient<NetFusionDB> refArchDb)
+	{
+		_refArchDb = refArchDb;
+		_customerColl = _refArchDb.GetCollection<Customer>();
+	}
+
+	public async Task AddCustomerAsync(Customer customer)
+	{
+		await _customerColl.InsertOneAsync(customer);
+	}
+
+	public async Task<IEnumerable<Customer>> ListCustomersAsync()
+	{
+		return await _customerColl.Find(_ => true).ToListAsync();
+	}
+}
+
+public class CustomerMapping : EntityClassMap<Customer>
+{
+	public CustomerMapping()
+	{
+		this.CollectionName = "RefArch.Customers";
 		this.AutoMap();
-		MapStringObjectIdProperty(p => p.TestDocId);
+
+		MapStringObjectIdProperty(c => c.CustomerId);
+	}
+}
+
+public class RepositoryModule : PluginModule
+{
+	public override void RegisterComponents(ContainerBuilder builder)
+	{
+		builder.RegisterType<ExampleRepository>()
+			.As<IExampleRepository>()
+			.InstancePerLifetimeScope();
 	}
 }

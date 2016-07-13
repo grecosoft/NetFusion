@@ -1,10 +1,10 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Messaging.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\Users\greco\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Messaging.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Extensions</Namespace>
@@ -23,18 +23,25 @@
 </Query>
 
 // *****************************************************************************************
-// This query shows examples of using the Eventing Plug-in for publishing local domain
-// events and commands.  By default, the InProcessEventDispatcher is configured which
+
+// These examples show using the Messaging Plug-in for publishing local domain
+// events and commands.By default, the InProcessEventDispatcher is configured which
 // implements the dispatching of messages to handlers defined within the local process.
-// The eventing plug-in defines an extension point where other publisher implementations
-// can be called to handle the dispatching of messages.  For publishing messages to 
-// RabbitMQ, see example query:  6_NetFusionRabbitMqExamples.
+// The messaging plug -in defines an extension point where other publisher implementations
+// can be called to handle the dispatching of messages(i.e.RabbitMQ).
+// 
+// A message can be published to one or more event handlers.Message handlers can be
+// synchronous or asynchronous.The message handler definition determines if the handler
+// is invoked synchronously or asynchronously and not the domain -event or command.
+// The domain-event or command is just a simple POCO.  Since message handlers can be 
+// either synchronous or asynchronous, the method to publish messages is asynchronous.
+
 // *****************************************************************************************
 void Main()
 {
 	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
 
-	var typeResolver = new HostTypeResolver(pluginDirectory,
+	var typeResolver = new TestTypeResolver(pluginDirectory,
 		"NetFusion.Settings.dll",
 		"NetFusion.Messaging.dll")
 	{
@@ -50,11 +57,13 @@ void Main()
 	.Start();
 
 	// Execute the examples:
-	RunPublishDomainEventSyncExample();
-	RunPublishDomainEventAsyncExample();
-	RunPublishCommandEventAsyncExample();
-	RunDispatchRuleExample();
-	RunBaseEventHandlerExample();
+	RunDomainEventSync(new MessageInfo { DelayInSeconds = 5 }).Dump();
+	RunDomainEventAsync(new MessageInfo { DelayInSeconds = 5 }).Dump();
+	RunAsyncCommand(new CommandInfo { InputMessage = "test", Seconds = 1 }).Dump();
+	RunEventWithRule(new MessageRuleInfo { Value = 500 }).Dump();
+	RunSyncDerivedEvent().Dump();
+	// RunAsyncEventException(new MessageExInfo {}).Dump();
+
 }
 
 // -------------------------------------------------------------------------------------
@@ -66,293 +75,312 @@ public class LinqPadHostPlugin : MockPlugin,
 
 }
 
-// *****************************************************************************************
-// A domain-event can be published to one or more event handlers.  Event handlers can be
-// synchronous or asynchronous.  This example shows publishing a domain event to two
-// synchronous handlers.  Note:  The event handler definition determines if the handler
-// is invoked synchronously or asychronously and not the domain event.  The domain event
-// is just a simple POCO.  Since event handlers can be either synchronous or asynchronous,
-// the method to invoke this is an asynchronous method.
-// *****************************************************************************************
-public void RunPublishDomainEventSyncExample()
+// -------------------------------------------------------------------------------------
+// This example shows publishing a domain event to two synchronous handlers.
+// Each handler method puts the current thread to sleep for the specified
+// number of seconds.There are two handlers for this event so the time
+// to execute will be 2 x specified-seconds.
+// -------------------------------------------------------------------------------------
+public string RunDomainEventSync(MessageInfo info)
 {
-	nameof(RunPublishDomainEventSyncExample).Dump();
-
-	// Events are published by using the IDomainEventService:
-	var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
-
-	var evt = new TestDomainEvent1("Value One", "Value Two");
-	domainEventSrv.PublishAsync(evt).Wait();
+	var messageSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
+	Stopwatch stopwatch = new Stopwatch();
 	
-	var evt2 = new TestDomainEvent2(100, 200);
-	domainEventSrv.PublishAsync(evt2).Wait();
+	stopwatch.Start();
+
+	var evt = new ExampleSyncDomainEvent(info);
+	messageSrv.PublishAsync(evt).Wait();
+
+	stopwatch.Stop();
+	return new { Elapsed = stopwatch.Elapsed }.ToIndentedJson();
 }
 
-// -------------------------------------------------------------------------------------
-// Example of a domain-event.
-// -------------------------------------------------------------------------------------
-public class TestDomainEvent1 : DomainEvent
+public class MessageInfo : DomainEvent
 {
-	public TestDomainEvent1(string value1, string value2)
+	public int DelayInSeconds { get; set; }
+}
+
+public class ExampleSyncDomainEvent : DomainEvent
+{
+	public int Seconds { get; set; }
+
+	public ExampleSyncDomainEvent(MessageInfo info)
 	{
-		this.Value1 = value1;
-		this.Value2 = value2;
+		this.Seconds = info.DelayInSeconds;
 	}
-
-	public string Value1 { get; }
-	public string Value2 { get; }
 }
 
-public class TestDomainEvent2 : DomainEvent
+public class ExampleSyncHandler1 : IMessageConsumer
 {
-	public int Value1 { get; }
-	public int Value2 { get; }
+	[InProcessHandler]
+	public void OnEvent(ExampleSyncDomainEvent evt)
+	{
+		Thread.Sleep(evt.Seconds * 1000);
+	}
+}
+
+public class ExampleSyncHandler2 : IMessageConsumer
+{
+	[InProcessHandler]
+	public void OnEvent(ExampleSyncDomainEvent evt)
+	{
+		Thread.Sleep(evt.Seconds * 1000);
+	}
+}
+
+// ------------------------------------------------------------------------------------------------
+// This example shows publishing a domain event to two asynchronous handlers.Each handler
+// creates a new task that puts the current thread to sleep for the specified number of seconds.  
+// There are two handlers for this event that are asynchronously executed so the time should be
+// ------------------------------------------------------------------------------------------------
+public string RunDomainEventAsync(MessageInfo info)
+{
+	var messageSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
+	Stopwatch stopwatch = new Stopwatch();
 	
-	public TestDomainEvent2(int value1, int value2)
+	stopwatch.Start();
+
+	var evt = new ExampleAsyncDomainEvent(info);
+	messageSrv.PublishAsync(evt).Wait();
+
+	stopwatch.Stop();
+	return new { Elapsed = stopwatch.Elapsed }.ToIndentedJson();
+}
+
+public class ExampleAsyncDomainEvent : DomainEvent
+{
+	public int Seconds { get; set; }
+
+	public ExampleAsyncDomainEvent(MessageInfo info)
 	{
-		this.Value1 = value1;
-		this.Value2 = value2;
+		this.Seconds = info.DelayInSeconds;
 	}
 }
 
-// ---------------------------------------------------------------------------------------
-// Components that handle events are identified by implementing the IDomainEventConsumer
-// marker interface and defining a method taking the event type to handle.  A given 
-// component can handle one or more events.
-// --------------------------------------------------------------------------------------
-public class TestHandlerSync1 : IMessageConsumer
+public class ExampleAsyncHandler1 : IMessageConsumer
 {
-	public void OnEvent(TestDomainEvent1 evt)
-	{
-		nameof(TestHandlerSync1).Dump();
-		evt.Dump();
-	}
-
-	public void OnEvent(TestDomainEvent2 evt)
-	{
-		nameof(TestHandlerSync1).Dump();
-		evt.Dump();
-	}
-}
-
-public class TestHandlerSync2 : IMessageConsumer
-{
-	public void OnEvent(TestDomainEvent1 evt)
-	{
-		nameof(TestHandlerSync2).Dump();
-		evt.Dump();
-	}
-
-	public void OnEvent(TestDomainEvent3 evt)
-	{
-		nameof(TestHandlerSync2).Dump();
-		evt.Dump();
-	}
-}
-
-
-// *****************************************************************************************
-// Domain event handlers can also be asynchronous or a combination of both synchronous and
-// asynchronous.  A domain-event handler is asynchronous if it returns a Task.
-// *****************************************************************************************
-public void RunPublishDomainEventAsyncExample()
-{
-	nameof(RunPublishDomainEventAsyncExample).Dump();
-
-	var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
-	var evt = new TestDomainEvent3(5);
-	
-	domainEventSrv.PublishAsync(evt).Wait();
-
-}
-
-// -------------------------------------------------------------------------------------
-// Example of a domain-event.
-// -------------------------------------------------------------------------------------
-public class TestDomainEvent3 : DomainEvent
-{
-	public TestDomainEvent3(int seconds)
-	{
-		this.Seconds = seconds;
-	}
-
-	public int Seconds {get;}
-}
-
-public class TestHandlerAsync1 : IMessageConsumer
-{
-	public async Task OnEvent(TestDomainEvent3 evt)
+	[InProcessHandler]
+	public async Task OnEvent(ExampleAsyncDomainEvent evt)
 	{
 		await Task.Run(() => { Thread.Sleep(evt.Seconds * 1000); });
-		
-		nameof(TestHandlerAsync1).Dump();
-		evt.Dump();
 	}
 }
 
-public class TestHandlerAsync2 : IMessageConsumer
+public class ExampleAsyncHandler2 : IMessageConsumer
 {
-	public async Task OnEvent(TestDomainEvent3 evt)
+	[InProcessHandler]
+	public async Task OnEvent(ExampleAsyncDomainEvent evt)
 	{
 		await Task.Run(() => { Thread.Sleep(evt.Seconds * 1000); });
-
-		nameof(TestHandlerAsync2).Dump();
-		evt.Dump();
 	}
 }
 
-// *********************************************************************************************
-// A DomainCommand event is simular to a DomainEvent but it can have only one associated event
-// handler.  If more than one event handler is found, an exception is thrown when AppContainer
-// be built.  A DomainCommand can also have an optional return value.  Where a DomainEvent is
-// published to notify consumers of something happening, a DomainCommand is used to notify a
-// consumer that a certain action is to be taken.  Simular to DomainEvent handlers, a Domain-
-// Command handler can be synchronous or asynchronous
-// *********************************************************************************************
-public void RunPublishCommandEventAsyncExample()
+// -------------------------------------------------------------------------------------
+// This example publishes an event that is handled by two asynchronous handlers
+// that each throw an exception.The details of the PublisherException are
+// returned to the calling client.
+// -------------------------------------------------------------------------------------
+public string RunAsyncEventException(MessageExInfo info)
 {
-	nameof(RunPublishCommandEventAsyncExample).Dump();
+	var messageSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
+	var evt = new ExampleAsyncDomainEventException(info);
 
-	var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
-	var cmd = new TestDomainCommand(3, 5);
-
-	domainEventSrv.PublishAsync(cmd).Wait();
-	cmd.Result.Dump();
-}
-
-public class TestCommandResult
-{
-	public int Sum { get; }
-
-	public TestCommandResult(int sum)
+	try
 	{
-		this.Sum = sum;
+		messageSrv.PublishAsync(evt).Wait();
 	}
-}
-
-public class TestDomainCommand : Command<TestCommandResult>
-{
-	public int Value1 { get; }
-	public int Value2 { get; }
-	
-	public TestDomainCommand(int value1, int value2)
+	catch (PublisherException ex)
 	{
-		this.Value1 = value1;
-		this.Value2 = value2;
+		return ex.PublishDetails.ToIndentedJson();
 	}
+
+	return "Expected Exception not Raised.";
 }
 
-public class TestCommandHandler : IMessageConsumer
+public class MessageExInfo : DomainEvent
 {
-	public async Task OnEvent(TestDomainCommand cmd)
+	public int DelayInSeconds = 5;
+	public bool ThrowEx = true;
+}
+
+public class ExampleAsyncDomainEventException : DomainEvent
+{
+	public int Seconds { get; set; }
+	public bool ThrowEx { get; set; }
+
+	public ExampleAsyncDomainEventException(MessageExInfo info)
 	{
-		await Task.Run(() => { Thread.Sleep(cmd.Value1 * 1000); });
-		
-		cmd.Result = new TestCommandResult(cmd.Value1 + cmd.Value2);
-
-		nameof(TestCommandHandler).Dump();
-		cmd.Dump();
+		this.Seconds = info.DelayInSeconds;
+		this.ThrowEx = info.ThrowEx;
 	}
 }
 
-// *********************************************************************************************
-// The following shows how a dispatch rule can be assigned to an event handler to determine
-// if it should handle the event.  Dispatch rules should be simple and based on the state of
-// the domain-event.  For this reason, the dispatch rules are not registered within Autofac.
-// *********************************************************************************************
-public void RunDispatchRuleExample()
+public class ExampleAsyncHandler4 : IMessageConsumer
 {
-	nameof(RunDispatchRuleExample).Dump();
-
-	var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
-	var evt = new TestDomainEvent4(3000, 8);
-
-	domainEventSrv.PublishAsync(evt).Wait();
-}
-
-public abstract class VersionedEvent : DomainEvent
-{
-	public int Version { get; }
-
-	public VersionedEvent(int version)
+	[InProcessHandler]
+	public async Task OnEvent(ExampleAsyncDomainEventException evt)
 	{
-		this.Version = version;
+		await Task.Run(() =>
+		{
+			Thread.Sleep(evt.Seconds * 1000);
+		});
+
+		if (evt.ThrowEx)
+		{
+			throw new InvalidOperationException($"Example exception: {Guid.NewGuid()}");
+		}
 	}
 }
 
-public class TestDomainEvent4 : VersionedEvent
+// ----------------------------------------------------------------------------------------------
+// This example publishes a command with a typed result.A command message type can have one and 
+// only one handler.If more than one handler is found, an exception will be thrown during the 
+// bootstrap process.
+// ----------------------------------------------------------------------------------------------
+public HandlerResponse RunAsyncCommand(CommandInfo info)
+{
+	var messageSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
+	var cmd = new ExampleAsyncCommand(info);
+	return messageSrv.PublishAsync(cmd).Result;
+}
+
+public class CommandInfo
+{
+	public string InputMessage { get; set; }
+	public int Seconds { get; set; }
+}
+
+public class HandlerResponse
+{
+	public string ResponseMessage { get; set; }
+}
+
+public class ExampleAsyncCommand : Command<HandlerResponse>
+{
+	public string Message { get; set; }
+	public int Seconds { get; set; }
+
+	public ExampleAsyncCommand(CommandInfo info)
+	{
+		this.Message = info.InputMessage;
+		this.Seconds = info.Seconds;
+	}
+}
+
+public class ExampleAsyncHandler5 : IMessageConsumer
+{
+	[InProcessHandler]
+	public async Task<HandlerResponse> OnCommand(ExampleAsyncCommand command)
+	{
+		await Task.Run(() =>
+		{
+			Thread.Sleep(command.Seconds * 1000);
+		});
+
+		return new HandlerResponse
+		{
+			ResponseMessage = command.Message + " - with handler response. "
+		};
+	}
+}
+
+// ------------------------------------------------------------------------------------------
+// This example shows have derived MessageDispatchRule types can be added to a message
+// handler to determine if it should be invoked based on the state of the message.
+// ------------------------------------------------------------------------------------------
+public IDictionary<string, object> RunEventWithRule(MessageRuleInfo info)
+{
+	var messageSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
+	var evt = new ExampleRuleDomainEvent(info);
+	messageSrv.PublishAsync(evt).Wait();
+	return evt.Attributes;
+}
+
+public class MessageRuleInfo
+{
+	public int Value { get; set; }
+}
+
+public class ExampleRuleDomainEvent : DomainEvent
 {
 	public int Value { get; }
 
-	public TestDomainEvent4(int value, int version) : base(version)
+	public ExampleRuleDomainEvent(MessageRuleInfo info)
 	{
-		this.Value = value;
+		this.Value = info.Value;
+
+		if (this.Value == 50)
+		{
+			this.Attributes["__low__"] = "";
+		}
 	}
 }
 
-public class TestDomainEventDispatchRuleHandler : IMessageConsumer
+public class IsLowImportance : MessageDispatchRule<DomainEvent>
 {
-	[ApplyDispatchRule(typeof(NewVersionDispatchRule))]
-	public void OnEventVer1(TestDomainEvent4 evt)
+	protected override bool IsMatch(DomainEvent message)
 	{
-		nameof(OnEventVer1).Dump();
-		evt.Dump();
-	}
-
-	[ApplyDispatchRule(typeof(NewVersionDispatchRule), typeof(OverMaxDispatchRule))]
-	public void OnEventVer2(TestDomainEvent4 evt)
-	{
-		nameof(OnEventVer2).Dump();
-		evt.Dump();
+		return message.Attributes.Keys.Contains("__low__");
 	}
 }
 
-public class NewVersionDispatchRule : MessageDispatchRule<VersionedEvent>
+public class IsHighImportance : MessageDispatchRule<ExampleRuleDomainEvent>
 {
-	protected override bool IsMatch(VersionedEvent evt)
+	protected override bool IsMatch(ExampleRuleDomainEvent message)
 	{
-		return evt.Version > 5;
+		return message.Value > 100;
 	}
 }
 
-public class OverMaxDispatchRule : MessageDispatchRule<TestDomainEvent4>
+public class ExampleRuleHandler : IMessageConsumer
 {
-	protected override bool IsMatch(TestDomainEvent4 evt)
+	[InProcessHandler, ApplyDispatchRule(typeof(IsLowImportance))]
+	public void OnEvent([IncludeDerivedMessages]DomainEvent evt)
 	{
-		return evt.Value >= 1000;
+		evt.Attributes["IsLowImportance"] = "Event is of low importance.";
+	}
+
+	[InProcessHandler, ApplyDispatchRule(typeof(IsHighImportance))]
+	public void OnEvent(ExampleRuleDomainEvent evt)
+	{
+		evt.Attributes["IsHighImportance"] = "Event is of high importance.";
 	}
 }
 
-// *********************************************************************************************
-// An event handler can be declared to be a base event type.  If the event parameter has the
-// IncludeDerivedEvents attribute specified, the handler will also be invoked for all types
-// deriving from the parameter type.
-// *********************************************************************************************
-public void RunBaseEventHandlerExample()
+// --------------------------------------------------------------------------
+// This example shows how to declare a message handler that will be called
+// for any message types derived from the handler's declared parameter type.
+// The parameter is marked with the IncludeDerivedMessages attribute.
+// --------------------------------------------------------------------------
+public IDictionary<string, object> RunSyncDerivedEvent()
 {
-	nameof(RunDispatchRuleExample).Dump();
-
-	var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
-	var evt = new TestDomainEvent5(20, 8);
-
-	domainEventSrv.PublishAsync(evt).Wait();
+	var messageSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
+	var evt = new ExampleDerivedDomainEvent();
+	messageSrv.PublishAsync(evt).Wait();
+	return evt.Attributes;
 }
 
-public class TestDomainEvent5 : VersionedEvent
+public class ExampleBaseDomainEvent : DomainEvent
 {
-	public int Value { get; }
 
-	public TestDomainEvent5(int value, int version) : base(version)
+}
+
+public class ExampleDerivedDomainEvent : ExampleBaseDomainEvent
+{
+
+}
+
+public class ExampleHierarchyHandler : IMessageConsumer
+{
+	[InProcessHandler]
+	public void OnEvent([IncludeDerivedMessages]ExampleBaseDomainEvent evt)
 	{
-		this.Value = value;
+		evt.Attributes["Message1"] = "Base Handler Called";
 	}
-}
 
-public class TestDomainEventBaseHandler : IMessageConsumer
-{
-	public void OnEvent([IncludeDerivedMessages]VersionedEvent evt)
+	[InProcessHandler]
+	public void OnEvent(ExampleDerivedDomainEvent evt)
 	{
-		nameof(TestDomainEventBaseHandler).Dump();
-		evt.Dump();
+		evt.Attributes["Message"] = "Derived Handler Called";
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using NetFusion.Bootstrap.Container;
 using NetFusion.WebApi.Metadata;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Web.Http;
 
@@ -29,9 +30,10 @@ namespace Samples.WebHost.Controllers
         }
 
         [HttpGet Route("composite/log")]
-        public IDictionary<string, object> GetCompositeConfig()
+        public IHttpActionResult GetCompositeConfig()
         {
-            return AppContainer.Instance.Log;
+            var settings = new JsonSerializerSettings { };
+            return Json(AppContainer.Instance.Log, settings);
         }
     }
 }

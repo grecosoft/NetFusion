@@ -28,42 +28,42 @@
   <Namespace>NetFusion.Messaging</Namespace>
 </Query>
 
-/// <summary>
-/// ---------------------------------------------------------------------------------------------------------
-/// WORK-QUEUE EXCHANGE PATTERN
-/// ---------------------------------------------------------------------------------------------------------
-/// - Used to distribute tasks published to the queue to multiple consumers in a round-robin fashion.
-/// - Publisher message RouteKey == Queue Name.
-/// - When configuring a work-flow queue, it is defined using the default exchange.
-/// - Consumers bind to a work flow queue by using the name assigned to the queue.
-/// - Publishers publish messages by specifying the name of queue as the RouteKey.
-/// 
-/// - The message will be delivered to the queue having the same name as the route key and delivered
-///     to bound consumers in a round robin sequence.
-/// 
-/// - This type of queue is used to distribute time intensive tasks to multiple consumers bound to the queue.
-/// - The tasks may take several seconds to complete.  When the consumer is processing the task and fails,
-///     another bound consumer should be given the task.  This is achieved by having the client acknowledge
-///     the task once its processing has completed.
-/// 
-/// - There aren't any message timeouts; RabbitMQ will redeliver the message only when the worker connection dies.
-///   It's fine even if processing a message takes a very, very long time.
-/// 
-/// - For this type of queue, it is usually desirable to not loose the task messages if the RabbitMQ server is
-///     restarted or would crash.  Two things are required to make sure that messages aren't lost: we need to 
-///     mark both the queue and messages as durable.
-/// 
-/// - If fair dispatch is enabled, RabbitMQ will not dispatch a message to a consumer if there is a pending
-///   acknowlegement.This keeps a busy consumer from getting a backlog of messages to process.
-/// 
-/// - If all the workers are busy, your queue can fill up.  You will want to keep an eye on that, and maybe add
-///   more workers, or have some other strategy.
-/// </summary>
+// **********************************************************************************************
+// ---------------------------------------------------------------------------------------------------------
+// WORK - QUEUE EXCHANGE PATTERN
+// ---------------------------------------------------------------------------------------------------------
+// - Used to distribute tasks published to the queue to multiple consumers in a round-robin fashion.
+// - Publisher message RouteKey == Queue Name.
+// - When configuring a work - flow queue, it is defined using the default exchange.
+// - Consumers bind to a work flow queue by using the name assigned to the queue.
+// - Publishers publish messages by specifying the name of queue as the RouteKey.
+//  
+//  - The message will be delivered to the queue having the same name as the route key and delivered
+//    to bound consumers in a round robin sequence.
+// 
+// - This type of queue is used to distribute time intensive tasks to multiple consumers bound to the queue.
+// - The tasks may take several seconds to complete.  When the consumer is processing the task and fails,
+// 	 another bound consumer should be given the task.  This is achieved by having the client acknowledge
+//   the task once its processing has completed.
+// 
+// - There aren't any message timeouts; RabbitMQ will redeliver the message only when the worker connection dies.
+//   It's fine even if processing a message takes a very, very long time.
+// 
+// - For this type of queue, it is usually desirable to not loose the task messages if the RabbitMQ server is
+//   restarted or would crash.  Two things are required to make sure that messages aren't lost: we need to 
+//   mark both the queue and messages as durable.
+// 
+// - If fair dispatch is enabled, RabbitMQ will not dispatch a message to a consumer if there is a pending
+//   acknowlegement.This keeps a busy consumer from getting a backlog of messages to process.
+// 
+// - If all the workers are busy, your queue can fill up.You will want to keep an eye on that, and maybe add
+//   more workers, or have some other strategy.
+// **********************************************************************************************
 void Main()
 {
 	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
 
-	var typeResolver = new HostTypeResolver(pluginDirectory,
+	var typeResolver = new TestTypeResolver(pluginDirectory,
 		"NetFusion.Settings.dll",
 		"NetFusion.Messaging.dll",
 		"NetFusion.RabbitMQ.dll")
@@ -84,29 +84,7 @@ void Main()
 	.Build()
 	.Start();
 
-	RunPublishToWorkQueueExchange("BMW", "330i", 2015);
-}
-
-// These settings would normally be stored in a central location.
-public class BrokerSettingsInitializer: AppSettingsInitializer<BrokerSettings>
-{
-	protected override IAppSettings OnConfigure(BrokerSettings settings)
-	{
-		settings.Connections = new BrokerConnection[] {
-			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
-		};
-		
-		return settings;
-	}
-}
-
-public void RunPublishToWorkQueueExchange(string make, string model, int year) 
-{
-	var domainEventSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
-	var domainModel = new Car { Vin = Guid.NewGuid().ToString(), Make = make, Model = model, Year = year };
-	var domainEvent = new ExampleWorkQueueEvent(domainModel);
-	
-	domainEventSrv.PublishAsync(domainEvent);
+	PublishWorkQueueEvent(new Car { Make = "Audi", Model = "A4", Year = 2016 });
 }
 
 // -------------------------------------------------------------------------------------
@@ -119,8 +97,27 @@ public class LinqPadHostPlugin : MockPlugin,
 }
 
 // -------------------------------------------------------------------------------------
-// Model and event message:
+// Boker Configuration Settings:
 // -------------------------------------------------------------------------------------
+public class BrokerSettingsInitializer : AppSettingsInitializer<BrokerSettings>
+{
+	protected override IAppSettings OnConfigure(BrokerSettings settings)
+	{
+		settings.Connections = new BrokerConnection[] {
+			new BrokerConnection { BrokerName = "TestBroker", HostName="LocalHost"}
+		};
+
+		return settings;
+	}
+}
+
+public void PublishWorkQueueEvent(Car car)
+{
+	var messagingSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
+	var evt = new ExampleWorkQueueEvent(car);
+	messagingSrv.PublishAsync(evt).Wait();
+}
+
 public class Car
 {
 	public string Vin { get; set; }
@@ -131,10 +128,10 @@ public class Car
 
 public class ExampleWorkQueueEvent : DomainEvent
 {
-	public string Vin { get; set; }
-	public string Make { get; set; }
-	public string Model { get; set; }
-	public int Year { get; set; }
+	public string Vin { get; private set; }
+	public string Make { get; private set; }
+	public string Model { get; private set; }
+	public int Year { get; private set; }
 
 	public ExampleWorkQueueEvent() { }
 
@@ -151,10 +148,6 @@ public class ExampleWorkQueueEvent : DomainEvent
 	public DateTime CurrentDateTime { get; private set; }
 }
 
-
-// -------------------------------------------------------------------------------------
-// Message exchange:
-// -------------------------------------------------------------------------------------
 public class ExampleWorkQueueExchange : WorkQueueExchange<ExampleWorkQueueEvent>
 {
 	protected override void OnDeclareExchange()
