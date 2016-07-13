@@ -111,6 +111,26 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
+        public void StopPluginModules(IContainer container)
+        {
+            foreach (var module in this.AppHostPlugin.IncludedModules())
+            {
+                module.StopModule(container);
+            }
+
+            foreach (var module in this.AppComponentPlugins.SelectMany(p => p.IncludedModules()))
+            {
+                module.StopModule(container);
+            }
+
+            foreach (var module in this.CorePlugins.SelectMany(p => p.IncludedModules()))
+            {
+                module.StopModule(container);
+            }
+
+            this.IsStarted = false;
+        }
+
         private void InitializePluginModules()
         {
             InitializePluginModules(this.CorePlugins);

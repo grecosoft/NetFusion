@@ -42,7 +42,7 @@ namespace NetFusion.Settings.Configs
                 Check.IsTrue(
                     settingInitType.IsOpenGenericType(),
                     nameof(settingInitTypes),
-                    $"specified settings initializer must be an open-generic type");
+                    $"Specified settings initializer must be an open-generic type.");
             }
             
             _initializers.AddRange(settingInitTypes);

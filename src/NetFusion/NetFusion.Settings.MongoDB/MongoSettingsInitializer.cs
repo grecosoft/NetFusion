@@ -37,7 +37,7 @@ namespace NetFusion.Settings.MongoDB
                 return null;
             }
 
-            var settingsColl = GetSettingsCollection((MongoAppSettingsConfig)_mongoSettingModule.MongoAppSettingsConfig);
+            var settingsColl = GetSettingsCollection(_mongoSettingModule.MongoAppSettingsConfig);
             var filter = BuildAppSettingsFilter(settings, typeDiscriminator, Environment.MachineName);
            
             // Check if there is a machine specific settings configured.
@@ -59,9 +59,8 @@ namespace NetFusion.Settings.MongoDB
             return foundSettings.FirstOrDefault();
         }
 
-        private IMongoCollection<AppSettings> GetSettingsCollection(MongoAppSettingsConfig settingsConfig)
+        private IMongoCollection<AppSettings> GetSettingsCollection(MongoAppSettingsConfig appSettingsConfig)
         {
-            var appSettingsConfig = _mongoSettingModule.MongoAppSettingsConfig;
             var client = new MongoClient(appSettingsConfig.MongoUrl);
             var settingDb = client.GetDatabase(appSettingsConfig.DatabaseName);
             return settingDb.GetCollection<AppSettings>(appSettingsConfig.CollectionName);

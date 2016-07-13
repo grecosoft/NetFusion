@@ -74,5 +74,10 @@ namespace NetFusion.Bootstrap.Container
         /// </summary>
         /// <returns>Dictionary of key value pairs that can be serialized to JSON.</returns>
         IDictionary<string, object> Log { get; }
+
+        /// <summary>
+        /// Allows each module to safely stop.
+        /// </summary>
+        void Stop();
     }
 }

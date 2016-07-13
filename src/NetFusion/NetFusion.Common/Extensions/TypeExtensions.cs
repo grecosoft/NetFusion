@@ -45,7 +45,7 @@ namespace NetFusion.Common.Extensions
         {
             Check.NotNull(childType, nameof(childType));
 
-            return typeof (T).IsAssignableFrom(childType);
+            return typeof(T).IsAssignableFrom(childType);
         }
 
         /// <summary>

@@ -4,9 +4,9 @@ namespace NetFusion.RabbitMQ.Consumers
 {
     /// <summary>
     /// Attached to message consumer to specify the broker
-    /// to which the message event handlers are associated.
+    /// to which the message handlers are associated.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class BrokerAttribute : Attribute
     {
         /// <summary>

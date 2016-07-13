@@ -57,30 +57,46 @@ namespace NetFusion.MongoDB.Core
         public IMongoCollection<TEntity> GetCollection<TEntity>(MongoCollectionSettings settings = null)
             where TEntity : class
         {
-            var entityType = typeof(TEntity);
-            var mapping = _mappingModule.GetEntityMap(typeof(TEntity));
+            var mapping = GetEntityMapping(typeof(TEntity));
+            var collectionName = GetEntityCollectionName(mapping);
 
-            return _database.GetCollection<TEntity>(mapping?.CollectionName ?? entityType.Name, settings);
+            return _database.GetCollection<TEntity>(collectionName, settings);
         }
 
         public Task DropCollectionAsync<TEntity>()
             where TEntity : class
         {
-            var entityType = typeof(TEntity);
+            var mapping = GetEntityMapping(typeof(TEntity));
+            var collectionName = GetEntityCollectionName(mapping);
 
+            return _database.DropCollectionAsync(collectionName);
+        }
+
+        private IEntityClassMap GetEntityMapping(Type entityType)
+        {
             var mapping = _mappingModule.GetEntityMap(entityType);
-            return _database.DropCollectionAsync(mapping?.CollectionName ?? entityType.Name);
+            if (mapping == null)
+            {
+                throw new InvalidOperationException(
+                    $"A MongoDB mapping could not be found for entity type: {entityType}.");
+            }
+            return mapping;
+        }
+
+        private string GetEntityCollectionName(IEntityClassMap mapping)
+        {
+            return mapping.CollectionName ?? mapping.EntityType.FullName;
         }
 
         private MongoClient CreateClient()
         {
-            var clientSettings = CreateClientSettings(this.DbSettings);
+            var clientSettings = CreateClientSettings();
 
-            SetClientCredentials(clientSettings, this.DbSettings);
+            SetClientCredentials(clientSettings);
             return new MongoClient(clientSettings);
         }
 
-        private MongoClientSettings CreateClientSettings(MongoSettings settings)
+        private MongoClientSettings CreateClientSettings()
         {
             var clientSettings = this.DbSettings.ClientSettings;
             if (clientSettings == null)
@@ -98,7 +114,7 @@ namespace NetFusion.MongoDB.Core
             return clientSettings;
         }
 
-        private void SetClientCredentials(MongoClientSettings clientSettings, MongoSettings settings)
+        private void SetClientCredentials(MongoClientSettings clientSettings)
         {
             MongoCredential credentials = null;
             if (this.DbSettings.IsPasswordSet)

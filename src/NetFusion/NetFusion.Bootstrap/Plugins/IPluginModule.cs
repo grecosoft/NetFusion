@@ -82,6 +82,13 @@ namespace NetFusion.Bootstrap.Plugins
         void StartModule(Autofac.IContainer container);
 
         /// <summary>
+        /// Called when the container is stopped.  Allows the module to
+        /// complete any processing before the container is stopped.
+        /// </summary>
+        /// <param name="container">The created container.</param>
+        void StopModule(Autofac.IContainer container);
+
+        /// <summary>
         /// Called after the module is initialized and configured so
         /// that it can add module specific logs to the application
         /// composite log.

@@ -164,7 +164,12 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\json-formatter.min.css" />
     <Content Include="Content\Site.css" />
-    <Content Include="Controllers\Samples\ExampleRabbitMQRequests.txt" />
+    <Content Include="Controllers\Requests\ExampleEntityFrameworkRequests.txt" />
+    <Content Include="Controllers\Requests\ExampleMessagingRequests.txt" />
+    <Content Include="Controllers\Requests\ExampleMongoDBRequests.txt" />
+    <Content Include="Controllers\Requests\ExampleRabbitMQRequests.txt" />
+    <Content Include="Controllers\Requests\ExampleSettingsRequests.txt" />
+    <Content Include="Controllers\Requests\ExampleWebApiRequests.txt" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="scripts\ai.0.22.9-build00167.js" />

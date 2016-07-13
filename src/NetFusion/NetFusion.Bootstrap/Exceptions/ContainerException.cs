@@ -28,6 +28,12 @@ namespace NetFusion.Bootstrap.Exceptions
 
         }
 
+        public ContainerException(string message, object details, Exception innerException)
+            : base(message, details, innerException)
+        {
+
+        }
+
         public ContainerException(Plugin plugin, string message)
             : base(FormatPluginMsg(plugin) + message)
         {

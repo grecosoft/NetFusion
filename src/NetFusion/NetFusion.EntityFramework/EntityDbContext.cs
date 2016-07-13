@@ -2,6 +2,7 @@
 using NetFusion.Common.Extensions;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 
 namespace NetFusion.EntityFramework
 {
@@ -26,7 +27,14 @@ namespace NetFusion.EntityFramework
         {
             base.OnModelCreating(modelBuilder);
 
-            _mappings.ForEach(m => m.AddMapping(modelBuilder));
+            _mappings.Where(IsWithinContextNamespace).
+                ForEach(m => m.AddMapping(modelBuilder));
+        }
+
+        private bool IsWithinContextNamespace(IEntityTypeMapping mapping)
+        {
+            return mapping.GetType().Namespace.StartsWith(
+                this.GetType().Namespace, System.StringComparison.Ordinal);
         }
     }
 }

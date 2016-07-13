@@ -42,6 +42,7 @@ namespace NetFusion.RabbitMQ.Core
         /// <summary>
         /// Initializes new broker.
         /// </summary>
+        /// <param name="brokerSettings">Broker specific settings.</param>
         /// <param name="brokerConnections">Connection settings for the required
         /// broker connections.</param>
         /// <param name="exchanges">Information for the exchanges and optional queues
@@ -93,7 +94,7 @@ namespace NetFusion.RabbitMQ.Core
         }
 
         /// <summary>
-        /// Add serializer used to serialize and deserialize messages.  
+        /// Add serialize used to serialize and deserialize messages.  
         /// If there is already a registered content type, it will be replaced.
         /// </summary>
         /// <param name="serializer">The custom serialize to use for messages
@@ -106,7 +107,7 @@ namespace NetFusion.RabbitMQ.Core
         }
 
         /// <summary>
-        /// Used to specify a delegate that should be called to load cached exchange metadata.
+        /// Used to specify a delegate that should be called to load cached exchange meta-data.
         /// </summary>
         /// <param name="reader">Delegate that is called with the broker name.</param>
         public void SetExchangeMetadataReader(Func<string, Task<IEnumerable<ExchangeConfig>>> reader)
@@ -132,7 +133,7 @@ namespace NetFusion.RabbitMQ.Core
         /// <summary>
         /// Creates all of the exchanges to which messages can be published
         /// as serialized messages.  Any default queue configurations specified
-        /// by the exchange will be created.
+        /// by the exchange will also be created.
         /// </summary>
         public void DefineExchanges()
         {
@@ -366,7 +367,7 @@ namespace NetFusion.RabbitMQ.Core
 
                 if (returnQueueConsumer != null)
                 {
-                    HandelOptionalResponse(message, returnQueueConsumer);
+                    HandleOptionalResponse(message, returnQueueConsumer);
                 }
             }
         }
@@ -386,7 +387,7 @@ namespace NetFusion.RabbitMQ.Core
                 Consumer = queueConsumer };
         }
 
-        private void HandelOptionalResponse(IMessage publishedMessage, ReplyConsumer returnQueueConsumer)
+        private void HandleOptionalResponse(IMessage publishedMessage, ReplyConsumer returnQueueConsumer)
         {
             var replyEvent = returnQueueConsumer.Consumer.Queue.Dequeue() as BasicDeliverEventArgs;
             if (replyEvent != null)

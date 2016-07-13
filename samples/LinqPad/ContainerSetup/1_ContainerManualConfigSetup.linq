@@ -1,8 +1,8 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Manifests</Namespace>
@@ -33,10 +33,11 @@ public class LinqPadHostPlugin : MockPlugin,
 
 void Main()
 {
-	// Create instance of the HostTypeResolver that is used when configuring a container
+	// Create instance of the TestTypeResolver that is used when configuring a container
 	// for unit-testing or for use in LinqPad.  Since a path is not specified, the needed
-	// plug-ins must be added manually to the container.
-	var typeResolver = new HostTypeResolver();
+	// plug-ins must be added manually to the container.  Each plug-in has an extension 
+	// method that will add a manifest and its corresponding types.
+	var typeResolver = new TestTypeResolver();
 
 	MockPlugin hostPlugin = null;
 

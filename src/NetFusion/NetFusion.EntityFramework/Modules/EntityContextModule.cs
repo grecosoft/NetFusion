@@ -49,7 +49,7 @@ namespace NetFusion.EntityFramework.Modules
         private IEntityDbContext CreateDbContext(IComponentContext componentContext, Type contextType)
         {
             var contextSettings = LookupContextConnection(componentContext, contextType);
-            var contextMappings = LookupContextMappings(contextType);
+            var contextMappings = this.Config.AutoRegisterTypeMappings ? this.EntityMappings : new List<IEntityTypeMapping>();
 
             var dbContext = Activator.CreateInstance(contextType, 
                 contextSettings.ConnectionString, contextMappings);
@@ -68,18 +68,6 @@ namespace NetFusion.EntityFramework.Modules
                     $"Context connection could not be found for the following entity context type: {contextType}.");
             }
             return connection;
-        }
-
-        // TODO:  Check if there is away to see if mappings have been loaded yet...
-        // There there is an OnActivating event...
-        private IEnumerable<IEntityTypeMapping> LookupContextMappings(Type contextType)
-        {
-            if (Config.AutoRegisterTypeMappings)
-            {
-                return this.EntityMappings.Where(m => m.GetType().Namespace.StartsWith(contextType.Namespace));
-            }
-
-            return Enumerable.Empty<IEntityTypeMapping>();
         }
 
         public override void Log(IDictionary<string, object> moduleLog)

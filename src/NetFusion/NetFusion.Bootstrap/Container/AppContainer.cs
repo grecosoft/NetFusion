@@ -246,6 +246,30 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
+        public void Stop()
+        {
+            if (!_application.IsStarted)
+            {
+                throw LogException(new ContainerException(
+                    "The application container plug-in modules have not been started."));
+            }
+
+            try
+            {
+                _application.StopPluginModules(_container);
+            }
+            catch (ContainerException ex)
+            {
+                LogException(ex);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw LogException(new ContainerException(
+                    "Error stopping container.", ex));
+            }
+        }
+
         public void Dispose()
         {
             Dispose(true);
@@ -505,9 +529,20 @@ namespace NetFusion.Bootstrap.Container
         {
             var modulesWithServices = _application.AllPluginModules.OfType<IPluginModuleService>();
 
-            modulesWithServices.ForEach(m =>
-                builder.RegisterInstance(m).AsImplementedInterfaces()
-                .SingleInstance());
+            foreach (IPluginModuleService moduleService in modulesWithServices)
+            {
+                var moduleServiceInterfaces = moduleService.GetType()
+                    .GetInterfaces()
+                    .Where(mi => mi.IsDerivedFrom<IPluginModuleService>())
+                    .ToArray();
+
+                foreach (Type moduleInterface in moduleServiceInterfaces)
+                {
+                    builder.RegisterInstance(moduleService)
+                        .As(moduleServiceInterfaces)
+                        .SingleInstance();
+                }
+            }
         }
 
         // Allow the host application to register any service types or instances created during 

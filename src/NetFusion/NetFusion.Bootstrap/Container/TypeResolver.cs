@@ -96,8 +96,17 @@ namespace NetFusion.Bootstrap.Container
             var filteredAssemblyNames = ProbeForMatchingAssemblyNames(probeDirectory, searchPatterns);
 
             var assemblies = GetAssemblies(filteredAssemblyNames);
-            return assemblies.Where(a => a.GetTypes()
+
+            try
+            {
+                return assemblies.Where(a => a.GetTypes()
                 .Any(t => t.IsDerivedFrom<IPluginManifest>())).ToArray();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                var loadErrors = ex.LoaderExceptions.Select(le => le.Message).Distinct().ToList();
+                throw new ContainerException("Error loading assembly.", loadErrors, ex);
+            }
         }
 
         private DirectoryInfo GetAssemblyProbeDirectory()
@@ -119,34 +128,44 @@ namespace NetFusion.Bootstrap.Container
             var nonLoadedAssemblyNames = filteredAssemblyNames.Where(fa => !loadedCodeBases.Contains(
                 fa.CodeBase, StringComparer.OrdinalIgnoreCase));
 
-            return loadedAssemblies.Concat(LoadAssemblies(nonLoadedAssemblyNames))
+            var filteredAssemblies = LoadAssemblies(nonLoadedAssemblyNames);
+
+            return loadedAssemblies.Concat(filteredAssemblies)
                 .ToArray();
         }
 
         protected IEnumerable<Assembly> LoadAssemblies(IEnumerable<AssemblyName> assemblyNames)
         {
+            var loadedAssemblies = new List<Assembly>();
+
             foreach(var assemblyName in assemblyNames)
             {
-                // TODO:  Add details for load exceptions.
                 Assembly assembly = null;
                 try
                 {
-                    assembly = Assembly.Load(assemblyName); 
+                    assembly = Assembly.Load(assemblyName);
+
+                    // Excluding this assembly since it contains classes deriving from IPluginManifest
+                    // that are mocks used for testing and should never identify this assembly as being
+                    // a plug-in assembly.
+                    if (assembly != this.GetType().Assembly)
+                    {
+                        loadedAssemblies.Add(assembly);
+                    }
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    var loadErrors = ex.LoaderExceptions.Select(le => le.Message).Distinct().ToList();
+                    throw new ContainerException("Error loading assembly.", loadErrors, ex);
                 }
                 catch (Exception ex)
                 {
                     throw new ContainerException(
                         $"Error loading assembly: {assemblyName.CodeBase}", 
                         ex);
-                }
-
-                // Excluding this assembly since it contains classes deriving from IPluginManifest
-                // that are mocks used for testing and should never identify this assembly as being
-                // a plug-in assembly.
-                if (assembly == this.GetType().Assembly) continue;
-
-                yield return assembly;
+                } 
             }
+            return loadedAssemblies;
         }
 
         protected void SetManifestTypes(ManifestRegistry manifestTypes, Assembly[] pluginAssemblies)

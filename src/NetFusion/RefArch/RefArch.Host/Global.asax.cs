@@ -1,5 +1,4 @@
 ﻿using NetFusion.Bootstrap.Container;
-using NetFusion.Common.Extensions;
 using NetFusion.Messaging.Config;
 using NetFusion.RabbitMQ.Core;
 using NetFusion.Settings.Configs;
@@ -45,12 +44,11 @@ namespace RefArch.Host
                 .Start();
 
             MvcRouteConfig.RegisterRoutes(RouteTable.Routes);
-
-            var log = AppContainer.Instance.Log.ToJson();
         }
 
         public void Application_End()
         {
+            AppContainer.Instance.Stop();
             AppContainer.Instance.Dispose();
         }
     }

@@ -97,15 +97,19 @@ namespace NetFusion.Settings.Modules
         {
             var duplicates = new List<Type>();
 
+            // List of all possible closed setting initializers.
             var settingInitTypes = this.Context.GetPluginTypesFrom()
                 .Where(t => t.IsDerivedFrom<IAppSettings>() && t.IsClass)
                 .Select(st => typeof(IAppSettingsInitializer<>).MakeGenericType(st))
                 .ToList();
 
+            // All initializers.
             var allInitializers = this.Context.GetPluginTypesFrom()
                 .Where(t => t.IsDerivedFrom<IAppSettingsInitializer>() && t.IsClass && !t.IsAbstract)
                 .ToList();
 
+            // If more than one setting initializer is derived from one of the setting
+            // specific closed generic types, then there is duplicate.
             foreach (Type settingInitType in settingInitTypes)
             {
                 if (allInitializers.Count(it => it.IsDerivedFrom(settingInitType)) > 1)
@@ -170,7 +174,7 @@ namespace NetFusion.Settings.Modules
                 settingLoadEvent.ReplaceInstance(initializedSettings);
             }
 
-            // The settings class my be decorated with .NET validation attributes.
+            // The settings class may be decorated with .NET validation attributes.
             initializedSettings.Validate().ThrowIfNotValid();
         }
 
@@ -195,10 +199,10 @@ namespace NetFusion.Settings.Modules
         // for any type of application setting.
         private IAppSettingsInitializer GetSettingGenericInitializer(
             IAppSettings settings, 
-            Type genericSIntitializerType,
+            Type genericIntitializerType,
             IComponentContext context)
         {
-            var closedSettingType = genericSIntitializerType.MakeGenericType(settings.GetType());
+            var closedSettingType = genericIntitializerType.MakeGenericType(settings.GetType());
             return (IAppSettingsInitializer)context.Resolve(closedSettingType);
         }
 

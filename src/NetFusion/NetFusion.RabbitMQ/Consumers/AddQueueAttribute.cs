@@ -61,7 +61,7 @@ namespace NetFusion.RabbitMQ.Consumers
         /// </summary>
         public bool IsDurable
         {
-            get { return this.QueueSettings.IsDurable; ; }
+            get { return this.QueueSettings.IsDurable; }
             set { this.QueueSettings.IsDurable = value; }
         }
 

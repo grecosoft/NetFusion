@@ -25,7 +25,7 @@ namespace NetFusion.EntityFramework
         {
             Check.NotNull(context, nameof(context), "inner context not specified");
 
-            _dbContext = context as TEntityDbContext;
+            _dbContext = (TEntityDbContext)context;
         }
 
         public DbChangeTracker ChangeTracker
@@ -65,12 +65,12 @@ namespace NetFusion.EntityFramework
 
         public Task<int> SaveChangesAsync()
         {
-            return this.SaveChangesAsync();
+            return _dbContext.SaveChangesAsync();
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            return this.SaveChangesAsync(cancellationToken);
+            return _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public DbSet Set(Type entityType)

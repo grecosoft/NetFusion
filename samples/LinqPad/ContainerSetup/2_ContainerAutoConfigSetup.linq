@@ -1,8 +1,8 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll"></Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll"></Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll"></Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll"></Reference>
+  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Manifests</Namespace>
@@ -13,7 +13,6 @@
   <Namespace>NetFusion.Settings.Configs</Namespace>
   <Namespace>NetFusion.Settings.Testing</Namespace>
 </Query>
-
 
 // ******************************************************************************************
 // The following creates a container within LinqPad that will automatically scan a specified 
@@ -39,7 +38,7 @@ void Main()
 	// matching the specified search pattern containing plug-ins.
 	var pluginDirectory = Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "../libs");
 
-	var typeResolver = new HostTypeResolver(pluginDirectory, 
+	var typeResolver = new TestTypeResolver(pluginDirectory, 
 		"NetFusion.Settings.dll")
 	{
 		// This indicates that LinqPad, representing the application host, should

@@ -55,17 +55,17 @@ namespace NetFusion.Settings.MongoDB.Modules
                 // configuration file.
                 if (!mongoAppConfig.MongoUrl.IsNullOrWhiteSpace())
                 {
-                    this.MongoAppSettingsConfig.MongoUrl = mongoAppConfig.MongoUrl;
+                    settingsConfig.MongoUrl = mongoAppConfig.MongoUrl;
                 }
 
                 if (!mongoAppConfig.DatabaseName.IsNullOrWhiteSpace())
                 {
-                    this.MongoAppSettingsConfig.DatabaseName = mongoAppConfig.DatabaseName;
+                    settingsConfig.DatabaseName = mongoAppConfig.DatabaseName;
                 }
 
                 if (!mongoAppConfig.CollectionName.IsNullOrWhiteSpace())
                 {
-                    this.MongoAppSettingsConfig.CollectionName = mongoAppConfig.CollectionName;
+                    settingsConfig.CollectionName = mongoAppConfig.CollectionName;
                 }
             }
         }

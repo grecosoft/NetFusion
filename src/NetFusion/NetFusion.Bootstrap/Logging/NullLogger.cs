@@ -27,12 +27,12 @@ namespace NetFusion.Bootstrap.Logging
 
         public void Verbose(string message)
         {
-
+            _messages.Add($"VERBOSE: {message}");
         }
 
         public void Debug(string message)
         {
-           
+            _messages.Add($"DEBUG: {message}");
         }
 
         public void Warning(string message)

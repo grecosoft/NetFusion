@@ -125,6 +125,16 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
+        /// Allows the module to complete any processing before the container
+        /// is stopped.
+        /// </summary>
+        /// <param name="container">The created container. </param>
+        public virtual void StopModule(IContainer container)
+        {
+
+        }
+
+        /// <summary>
         /// Called after the module is initialized and configured so
         /// that it can add module specific logs to the application
         /// composite log.

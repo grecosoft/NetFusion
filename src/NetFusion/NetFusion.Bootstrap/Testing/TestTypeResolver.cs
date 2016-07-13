@@ -73,7 +73,7 @@ namespace NetFusion.Bootstrap.Testing
         {
             var mockPlugin = plugin.Manifest as MockPlugin;
 
-            if (this.LoadAppHostFromAssembly && plugin is IAppHostPluginManifest)
+            if (this.LoadAppHostFromAssembly && mockPlugin is IAppHostPluginManifest)
             {
                 base.LoadPluginTypes(plugin);
                 return;
