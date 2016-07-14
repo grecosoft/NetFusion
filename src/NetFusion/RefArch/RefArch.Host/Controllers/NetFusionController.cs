@@ -1,6 +1,8 @@
-﻿using NetFusion.Bootstrap.Container;
+﻿using Microsoft.AspNet.SignalR;
+using NetFusion.Bootstrap.Container;
 using NetFusion.WebApi.Metadata;
 using Newtonsoft.Json;
+using RefArch.Host.Hubs;
 using System.Collections.Generic;
 using System.Web.Http;
 
@@ -39,7 +41,8 @@ namespace Samples.WebHost.Controllers
         [HttpPost Route("composite/log")]
         public void LogCompositConfig(Dictionary<string, object> log) 
         {
-
+            var logHub = GlobalHost.ConnectionManager.GetHubContext<CompositeLogHub>();
+            logHub.Clients.All.Log(log);
         }
     }
 }

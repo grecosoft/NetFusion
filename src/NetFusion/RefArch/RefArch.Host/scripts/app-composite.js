@@ -11,7 +11,20 @@
 
 	    compositeLogService.getCompositeLog().then(function (log) {
 	        $scope.log = log;
-	    })
+	    });
+
+	    var listenForLogUpdate = function () {
+	        var logHub = $.connection.compositeLogHub;
+	        // Create a function that the hub can call to broadcast messages.
+	        logHub.client.log = function (log) {
+	            $scope.log = log;
+	            $scope.$apply();
+	        };
+
+	        $.connection.hub.start();
+	    }
+
+	    listenForLogUpdate();
 	}];
 
 	module.controller('compositeViewerController',
@@ -26,8 +39,8 @@
 	            url: 'api/config/composite/log'
 	        }).then(function (response) {
 	            return response.data;
-	        });;
-		}
+	        });
+	    };
 
 	}];
 
