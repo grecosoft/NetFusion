@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>NetFusion Logging Plug-in</title>
+    <authors>$authors$</authors>
+    <licenseUrl>$licenseUrl$</licenseUrl>
+    <projectUrl>$projectUrl$</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>NetFusion plug-in assembly providing logging.</description>
+    <copyright>Copyright 2016</copyright>
+    <tags>$tags$</tags>
+  </metadata>
+</package>

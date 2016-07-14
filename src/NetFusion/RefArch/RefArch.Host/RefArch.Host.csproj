@@ -220,7 +220,7 @@
     <Compile Include="Controllers\Samples\RabbitMQController.cs" />
     <Compile Include="Controllers\Samples\SettingsController.cs" />
     <Compile Include="Controllers\Samples\WebApiController.cs" />
-    <Compile Include="Controllers\WebApiSampleController.cs" />
+    <Compile Include="Controllers\NetFusionController.cs" />
     <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

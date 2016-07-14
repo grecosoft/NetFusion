@@ -6,8 +6,8 @@ using System.Web.Http;
 
 namespace Samples.WebHost.Controllers
 {
-    [EndpointMetadata(EndpointName = "WebApiSamples", IncluedAllRoutes = true)]
-    [RoutePrefix("api/samples/web")]
+    [EndpointMetadata(EndpointName = "NetFusion", IncluedAllRoutes = true)]
+    [RoutePrefix("api/config")]
     public class WebApiSampleController : ApiController
     {
         private readonly IRouteMetadataService _routeMetadataSrv;
@@ -19,7 +19,7 @@ namespace Samples.WebHost.Controllers
 
         /// <summary>
         /// Exposes all the controller endpoints as meta-data to the client.  A client side JS proxy
-        /// can be written to use this metadata tomake requests without having hard-coded URLs.  In
+        /// can be written to use this meta-data to make requests without having hard-coded URLs.  In
         /// this case, all of the routes for the examples are exposed.
         /// </summary>
         [AllowAnonymous, HttpGet, Route("routes")]
@@ -34,6 +34,12 @@ namespace Samples.WebHost.Controllers
         {
             var settings = new JsonSerializerSettings { };
             return Json(AppContainer.Instance.Log, settings);
+        }
+
+        [HttpPost Route("composite/log")]
+        public void LogCompositConfig(Dictionary<string, object> log) 
+        {
+
         }
     }
 }

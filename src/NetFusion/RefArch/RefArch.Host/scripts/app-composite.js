@@ -23,7 +23,7 @@
 	    this.getCompositeLog = function() {
 	        return $http({
 	            method: 'GET',
-	            url: 'api/samples/web/composite/log'
+	            url: 'api/config/composite/log'
 	        }).then(function (response) {
 	            return response.data;
 	        });;
