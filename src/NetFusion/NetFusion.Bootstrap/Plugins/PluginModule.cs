@@ -118,18 +118,27 @@ namespace NetFusion.Bootstrap.Plugins
         /// Called after all types have been registered and the container
         /// has been created.
         /// </summary>
-        /// <param name="container">The created container.</param>
-        public virtual void StartModule(IContainer container)
+        /// <param name="scope">Child scope of the created container.</param>
+        public virtual void StartModule(ILifetimeScope scope)
         {
             
+        }
+
+        /// <summary>
+        /// Called after all modules have been started.
+        /// </summary>
+        /// <param name="scope">Child scope of the created container.</param>
+        public virtual void RunModule(Autofac.ILifetimeScope scope)
+        {
+
         }
 
         /// <summary>
         /// Allows the module to complete any processing before the container
         /// is stopped.
         /// </summary>
-        /// <param name="container">The created container. </param>
-        public virtual void StopModule(IContainer container)
+        /// <param name="scope">Child scope of the created container. </param>
+        public virtual void StopModule(ILifetimeScope scope)
         {
 
         }

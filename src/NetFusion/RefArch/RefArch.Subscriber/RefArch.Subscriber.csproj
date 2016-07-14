@@ -63,6 +63,9 @@
     <Content Include="Configs\Dev\BrokerSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Configs\Dev\CompositeLogSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +76,10 @@
     <ProjectReference Include="..\..\NetFusion.Common\NetFusion.Common.csproj">
       <Project>{4bcb335e-3f83-481d-b206-ffa9266bf780}</Project>
       <Name>NetFusion.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NetFusion.Logging\NetFusion.Logging.csproj">
+      <Project>{246f1de0-8e15-4136-949c-a43f4e67677b}</Project>
+      <Name>NetFusion.Logging</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\NetFusion.Messaging\NetFusion.Messaging.csproj">
       <Project>{3227a952-6f7f-4773-b468-298a3f4d8bc0}</Project>
@@ -94,6 +101,9 @@
       <Project>{517e7937-373e-48fa-a60a-e6fff9568996}</Project>
       <Name>RefArch.Api</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

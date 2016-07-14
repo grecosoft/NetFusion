@@ -195,6 +195,9 @@
     <Content Include="Configs\Dev\JwtTokenSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Configs\Dev\CompositeLogSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="scripts\jquery-3.0.0.intellisense.js" />
     <Content Include="scripts\app-composite.js" />
     <Content Include="scripts\app.js" />
@@ -269,6 +272,10 @@
     <ProjectReference Include="..\..\NetFusion.Logging.Serilog\NetFusion.Logging.Serilog.csproj">
       <Project>{d3ccb7d3-3b6d-4abc-a784-2080668943a9}</Project>
       <Name>NetFusion.Logging.Serilog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NetFusion.Logging\NetFusion.Logging.csproj">
+      <Project>{246f1de0-8e15-4136-949c-a43f4e67677b}</Project>
+      <Name>NetFusion.Logging</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\NetFusion.Messaging\NetFusion.Messaging.csproj">
       <Project>{3227a952-6f7f-4773-b468-298a3f4d8bc0}</Project>

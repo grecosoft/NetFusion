@@ -7,6 +7,7 @@ using NetFusion.WebApi.Configs;
 using System.Web.Http;
 using Autofac;
 using Newtonsoft.Json.Serialization;
+using NetFusion.Bootstrap.Container;
 
 namespace NetFusion.WebApi.Modules
 {
@@ -19,19 +20,19 @@ namespace NetFusion.WebApi.Modules
             GeneralConfig = Context.Plugin.GetConfig<GeneralWebApiConfig>();
         }
 
-        public override void StartModule(IContainer container)
+        public override void StartModule(ILifetimeScope scope)
         {
             GlobalConfiguration.Configure(config =>
-                OnConfigureWebApiReady(config, container));
+                OnConfigureWebApiReady(config, scope));
         }
 
         // When the WebApi runtime is ready for configuration, configure the
         // needed options based on the provided host configuration.
-        private void OnConfigureWebApiReady(HttpConfiguration config, IContainer container)
+        private void OnConfigureWebApiReady(HttpConfiguration config, ILifetimeScope scope)
         {
             ConfigureSerializerOptions(config);
             ConfigureRoutingOptions(config);
-            NotifyAllModulesOfWebApiReady(config, container);
+            NotifyAllModulesOfWebApiReady(config, AppContainer.Instance.Services);
         }
 
         private void ConfigureRoutingOptions(HttpConfiguration config)

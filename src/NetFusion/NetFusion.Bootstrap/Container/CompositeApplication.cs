@@ -95,37 +95,49 @@ namespace NetFusion.Bootstrap.Container
             // Start the plug-in modules in dependent order starting with the core plug-in
             // modules and ending with the app-host modules.
             this.IsStarted = true;
-            foreach (var module in this.CorePlugins.SelectMany(p => p.IncludedModules()))
-            {
-                module.StartModule(container);
-            }
 
-            foreach (var module in this.AppComponentPlugins.SelectMany(p => p.IncludedModules()))
+            using (var scope = container.BeginLifetimeScope())
             {
-                module.StartModule(container);
-            }
+                foreach (var module in this.CorePlugins.SelectMany(p => p.IncludedModules()))
+                {
+                    module.StartModule(scope);
+                }
 
-            foreach (var module in this.AppHostPlugin.IncludedModules())
-            {
-                module.StartModule(container);
+                foreach (var module in this.AppComponentPlugins.SelectMany(p => p.IncludedModules()))
+                {
+                    module.StartModule(scope);
+                }
+
+                foreach (var module in this.AppHostPlugin.IncludedModules())
+                {
+                    module.StartModule(scope);
+                }
+
+                foreach (var module in this.Plugins.SelectMany(p => p.IncludedModules()))
+                {
+                    module.RunModule(scope);
+                }
             }
         }
 
         public void StopPluginModules(IContainer container)
         {
-            foreach (var module in this.AppHostPlugin.IncludedModules())
+            using (var scope = container.BeginLifetimeScope())
             {
-                module.StopModule(container);
-            }
+                foreach (var module in this.AppHostPlugin.IncludedModules())
+                {
+                    module.StopModule(scope);
+                }
 
-            foreach (var module in this.AppComponentPlugins.SelectMany(p => p.IncludedModules()))
-            {
-                module.StopModule(container);
-            }
+                foreach (var module in this.AppComponentPlugins.SelectMany(p => p.IncludedModules()))
+                {
+                    module.StopModule(scope);
+                }
 
-            foreach (var module in this.CorePlugins.SelectMany(p => p.IncludedModules()))
-            {
-                module.StopModule(container);
+                foreach (var module in this.CorePlugins.SelectMany(p => p.IncludedModules()))
+                {
+                    module.StopModule(scope);
+                }
             }
 
             this.IsStarted = false;

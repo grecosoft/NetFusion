@@ -77,16 +77,21 @@ namespace NetFusion.Bootstrap.Plugins
         /// The last method called on the module by the bootstrap process.  
         /// Called after all types have been registered and the container
         /// has been created.
+        /// <param name="scope">Child scope of the created container.</param>
+        void StartModule(Autofac.ILifetimeScope scope);
+
+        /// <summary>
+        /// Called after all modules have been started.
         /// </summary>
-        /// <param name="container">The created container.</param>
-        void StartModule(Autofac.IContainer container);
+        /// <param name="scope">Child scope of the created container.</param>
+        void RunModule(Autofac.ILifetimeScope scope);
 
         /// <summary>
         /// Called when the container is stopped.  Allows the module to
         /// complete any processing before the container is stopped.
         /// </summary>
-        /// <param name="container">The created container.</param>
-        void StopModule(Autofac.IContainer container);
+        /// <param name="scope">Child scope of the created container.</param>
+        void StopModule(Autofac.ILifetimeScope scope);
 
         /// <summary>
         /// Called after the module is initialized and configured so

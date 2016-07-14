@@ -15,7 +15,7 @@ namespace NetFusion.Tests.Core.Bootstrap.Mocks
             this.IsDisposed = true;
         }
 
-        public override void StartModule(IContainer container)
+        public override void StartModule(ILifetimeScope scope)
         {
             this.IsStarted = true;
         }

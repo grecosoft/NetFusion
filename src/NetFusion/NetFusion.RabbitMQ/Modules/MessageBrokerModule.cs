@@ -66,17 +66,17 @@ namespace NetFusion.RabbitMQ.Modules
 
         // Creates the message broker that initializes the exchanges and
         // determines the queues that should be created.
-        public override void StartModule(IContainer container)
+        public override void StartModule(ILifetimeScope scope)
         {
-            var brokerSettings = GetBrokerSettings(container);
+            var brokerSettings = GetBrokerSettings(scope);
             var connections = GetConnections(brokerSettings);
 
-            _messageConsumers = GetQueueConsumers(container);
+            _messageConsumers = GetQueueConsumers(scope);
 
             _messageBroker = new MessageBroker(brokerSettings, connections, this.Exchanges);
             _messageBroker.DefineExchanges();
             _messageBroker.BindConsumers(_messageConsumers);
-            _messageBroker.SetExchangeMetadataReader(host => ReadExchangeMetadataAsync(host, container));
+            _messageBroker.SetExchangeMetadataReader(host => ReadExchangeMetadataAsync(host, scope));
 
             // Add any discovered message encoders from the host.
             var serializers = GetCustomSerializers();
@@ -94,7 +94,7 @@ namespace NetFusion.RabbitMQ.Modules
             brokerLog.LogMessageConsumers(moduleLog);
         }
 
-        private BrokerSettings GetBrokerSettings(IContainer container)
+        private BrokerSettings GetBrokerSettings(ILifetimeScope container)
         {
             return container.Resolve<BrokerSettings>();   
         }
@@ -122,7 +122,7 @@ namespace NetFusion.RabbitMQ.Modules
 
         // Finds all consumers message handler methods that are associated with a queue 
         // and associates the queue meta-data with the message dispatch meta-data.
-        private IEnumerable<MessageConsumer> GetQueueConsumers(IContainer container)
+        private IEnumerable<MessageConsumer> GetQueueConsumers(ILifetimeScope container)
         {
             var messagingServices = container.Resolve<IMessagingModule>();
 
@@ -207,7 +207,7 @@ namespace NetFusion.RabbitMQ.Modules
             });
         }
 
-        private async static Task<IEnumerable<ExchangeConfig>> ReadExchangeMetadataAsync(string hostName, IContainer container)
+        private async static Task<IEnumerable<ExchangeConfig>> ReadExchangeMetadataAsync(string hostName, ILifetimeScope container)
         {
             using (var scope = container.BeginLifetimeScope())
             {

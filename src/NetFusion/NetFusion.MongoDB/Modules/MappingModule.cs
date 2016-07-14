@@ -20,7 +20,7 @@ namespace NetFusion.MongoDB.Modules
         public IEnumerable<IEntityClassMap> Mappings { get; private set; }
 
         // Configures MongoDB driver with mappings.
-        public override void StartModule(IContainer container)
+        public override void StartModule(ILifetimeScope scope)
         {
             var allPluginTypes = Context.GetPluginTypesFrom();
 

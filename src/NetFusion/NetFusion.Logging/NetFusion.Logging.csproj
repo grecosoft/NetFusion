@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
       <Private>True</Private>
@@ -44,12 +48,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configs\CompositeLogSettings.cs" />
+    <Compile Include="Core\CompositeLogger.cs" />
+    <Compile Include="ICompositeLogger.cs" />
+    <Compile Include="LoggingManifest.cs" />
+    <Compile Include="Modules\CompositeLogModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NetFusion.Logging.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj">
+      <Project>{a71630d5-940f-4de6-a5b9-f229074aa86d}</Project>
+      <Name>NetFusion.Bootstrap</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetFusion.Common\NetFusion.Common.csproj">
+      <Project>{4bcb335e-3f83-481d-b206-ffa9266bf780}</Project>
+      <Name>NetFusion.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetFusion.Settings\NetFusion.Settings.csproj">
+      <Project>{f0b65875-dec4-4b25-a13a-1e027d9a6f62}</Project>
+      <Name>NetFusion.Settings</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
