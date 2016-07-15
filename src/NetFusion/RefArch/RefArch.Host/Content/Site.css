@@ -1,18 +1,14 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+    background-color: #fff;
 }
 
-/* Set padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+.json-formatter-dark.json-formatter-row, .json-formatter-row {
+    font-size: 16px;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+md-toolbar.md-menu-toolbar h2.md-toolbar-tools.nb-portal-title {
+    padding: 20px;
+    color: #517da9;
+    font-weight: bolder;
+    background-color: lightsteelblue;
 }
-

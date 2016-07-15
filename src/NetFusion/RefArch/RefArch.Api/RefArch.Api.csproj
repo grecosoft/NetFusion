@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\HostLog.cs" />
     <Compile Include="Commands\AuthorizeUserCommand.cs" />
     <Compile Include="Messages\ExampleAsyncCommand.cs" />
     <Compile Include="Messages\ExampleAsyncDomainEventException.cs" />

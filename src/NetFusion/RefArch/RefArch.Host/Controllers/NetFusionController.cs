@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.SignalR;
 using NetFusion.Bootstrap.Container;
+using NetFusion.Logging;
 using NetFusion.WebApi.Metadata;
 using Newtonsoft.Json;
 using RefArch.Host.Hubs;
@@ -35,14 +36,17 @@ namespace Samples.WebHost.Controllers
         public IHttpActionResult GetCompositeConfig()
         {
             var settings = new JsonSerializerSettings { };
-            return Json(AppContainer.Instance.Log, settings);
+            var manifest = new Manifest();
+            var hostLog = new HostLog(manifest.Name, AppContainer.Instance.Log);
+
+            return Json(hostLog, settings);
         }
 
         [HttpPost Route("composite/log")]
-        public void LogCompositConfig(Dictionary<string, object> log) 
+        public void LogCompositConfig(HostLog hostLog) 
         {
             var logHub = GlobalHost.ConnectionManager.GetHubContext<CompositeLogHub>();
-            logHub.Clients.All.Log(log);
+            logHub.Clients.All.Log(hostLog);
         }
     }
 }

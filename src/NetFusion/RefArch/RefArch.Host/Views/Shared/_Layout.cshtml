@@ -3,45 +3,38 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - NetFusion Reference Architecture</title>
-    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <title>NetFusion</title>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
     <link href="~/Content/json-formatter.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div ng-app="netfusion.portal">
+        @RenderBody()
+    </div>
 
-    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+    <!-- JQuery and SignalR -->
     <script src="~/scripts/jquery.min.js"></script>
     <script src="~/scripts/jquery.signalR-2.2.0.min.js"></script>
     <script src="~/signalr/hubs"></script>
-</head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <span class="navbar-brand">NetFusion Configuration</span>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                </ul>
-            </div>
-        </div>
-    </div>
 
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p></p>
-        </footer>
-    </div>
-        <script src="~/scripts/angular.min.js"></script>
-        <script src="~/scripts/json-formatter.min.js"></script>
+    <!-- Angular -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-messages.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
+    <script src="~/scripts/json-formatter.min.js"></script>
+    
+    <!-- Application Modules -->
+    <script src="~/scripts/app/modules/structure/area-module.js"></script>
+    <script src="~/scripts/app/modules/plugins/area-module.js"></script>
+    <script src="~/scripts/app/modules/portal/area-module.js"></script>
 
-        <script src="~/scripts/app-composite.js"></script>
-        <script src="~/scripts/app.js"></script>
+    <!-- Application Areas -->
+    <script src="~/scripts/app/modules/structure/LogController.js"></script>
+    <script src="~/scripts/app/modules/structure/LogService.js"></script>
+
 </body>
 </html>

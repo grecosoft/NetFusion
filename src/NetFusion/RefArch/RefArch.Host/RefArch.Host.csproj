@@ -186,6 +186,9 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="favicon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\json-formatter.min.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Controllers\Requests\ExampleEntityFrameworkRequests.txt" />
@@ -223,8 +226,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="scripts\jquery-3.0.0.intellisense.js" />
-    <Content Include="scripts\app-composite.js" />
-    <Content Include="scripts\app.js" />
+    <Content Include="scripts\app\modules\plugins\area-module.js" />
+    <Content Include="scripts\app\modules\portal\area-module.js" />
+    <Content Include="scripts\app\modules\structure\area-module.js" />
+    <Content Include="scripts\app\modules\structure\LogController.js" />
+    <Content Include="scripts\app\modules\structure\LogService.js" />
     <Content Include="scripts\bootstrap.js" />
     <Content Include="scripts\bootstrap.min.js" />
     <Content Include="scripts\jquery-3.0.0.js" />
@@ -280,6 +286,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="scripts\app\modules\common\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj">

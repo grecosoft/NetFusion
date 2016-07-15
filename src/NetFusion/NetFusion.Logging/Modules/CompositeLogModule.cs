@@ -20,7 +20,12 @@ namespace NetFusion.Logging.Modules
             try
             {
                 var logger = scope.Resolve<ICompositeLogger>();
-                logger.Log(AppContainer.Instance.Log);
+
+                var hostLog = new HostLog(
+                    Context.AppHost.Manifest.Name, 
+                    AppContainer.Instance.Log);
+
+                logger.Log(hostLog);
             }
             catch (Exception ex)
             {

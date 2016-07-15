@@ -1,15 +1,55 @@
-﻿<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>CompositeLogViewer</title>
-</head>
-<body>
-    <div ng-app="netfusion.app"> 
-        <div ng-controller="compositeViewerController">
-            <json-formatter open="1" json="log"></json-formatter>
+﻿<div row flex ng-controller="CompositeViewerController as ctrl" ng-cloak>
+    <md-toolbar flex class="md-menu-toolbar">
+        <div flex layout="row">
+            <div flex>
+                <h2 flex class="md-toolbar-tools nb-portal-title">{{ctrl.viewModel.title}}</h2>
+                <md-menu-bar>
+                    <md-menu>
+                        <button ng-click="$mdOpenMenu()">
+                            Clients
+                        </button>
+                        <md-menu-content>
+                            <md-menu-item ng-repeat="client in ctrl.viewModel.hostLogs">
+                                <md-button ng-click="ctrl.sampleAction('share', $event)">
+                                    {{client.Name}}
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                    <md-menu>
+                        <button ng-click="$mdOpenMenu()">
+                            Plug-ins
+                        </button>
+                        <md-menu-content>
+                            <md-menu-item>
+                                <md-button ng-click="ctrl.sampleAction('share', $event)">
+                                    Share...
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                    <md-menu>
+                        <button ng-click="$mdOpenMenu()">
+                            RabbitMQ
+                        </button>
+                        <md-menu-content>
+                            <md-menu-item>
+                                <md-button ng-click="ctrl.sampleAction('share', $event)">
+                                    Exchanges
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                    <md-button class="md-raised md-primary">{{ctrl.viewModel.serverLog.Name}}</md-button>
+                </md-menu-bar>
+            </div>
         </div>
-    </div>
-</body>
-</html>
+    </md-toolbar>
+    <md-divider></md-divider>
+
+    <md-content layout="row" flex layout-padding>
+        <json-formatter flex open="1" json="ctrl.viewModel.serverLog"></json-formatter>
+    </md-content>
+</div>
+    
+

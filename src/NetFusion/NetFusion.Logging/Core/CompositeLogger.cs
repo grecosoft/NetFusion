@@ -1,6 +1,8 @@
 ﻿using NetFusion.Logging.Configs;
-using RestSharp;
-using System.Collections.Generic;
+using Newtonsoft.Json;
+using System;
+using System.Net.Http;
+using System.Text;
 
 namespace NetFusion.Logging.Core
 {
@@ -13,15 +15,18 @@ namespace NetFusion.Logging.Core
             _logSettings = logSettings;
         }
 
-        public void Log(IDictionary<string, object> log)
+        public void Log(HostLog hostLog)
         {
             if (!_logSettings.SendLog) return;
 
-            var client = new RestClient(_logSettings.Endpoint);
-            var request = new RestRequest(_logSettings.LogRoute, Method.POST);
+            // Note RestSharp is not being used so the exact same serialization
+            // is being used as the server.  This keeps the JSON serialization
+            // structure the exact same for when viewing.
+            var jsonLog = JsonConvert.SerializeObject(hostLog);
+            var client = new HttpClient { BaseAddress = new Uri(_logSettings.Endpoint) };
+            var content = new StringContent(jsonLog, Encoding.UTF8, "application/json");
 
-            request.AddJsonBody(log);
-            client.Execute(request);
+            var result = client.PostAsync(_logSettings.LogRoute, content).Result;
         }
     }
 }
