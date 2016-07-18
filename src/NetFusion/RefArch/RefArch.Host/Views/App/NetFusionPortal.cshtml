@@ -1,0 +1,29 @@
+﻿<div row flex ng-controller="PortalController as ctrl" ng-cloak>
+    <md-toolbar flex class="md-menu-toolbar">
+        <div flex layout="row">
+            <div flex>
+                <h2 flex class="md-toolbar-tools nb-portal-title">{{ctrl.viewModel.title}}</h2>
+                <md-menu-bar>
+                    <md-menu>
+                        <button ng-click="$mdOpenMenu()">
+                            Hosts
+                        </button>
+                        <md-menu-content>
+                            <md-menu-item ng-repeat="host in ctrl.viewModel.hostLogMenuItems">
+                                <md-button ng-click="ctrl.sampleAction('share', $event)">
+                                    {{host.title}}
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </md-menu-bar>
+            </div>
+        </div>
+    </md-toolbar>
+    <md-divider></md-divider>
+
+    <md-content layout="row" flex layout-padding>
+        <json-formatter flex open="1" json="ctrl.viewModel.serverLog"></json-formatter>
+    </md-content>
+</div>
+

@@ -4,7 +4,7 @@ namespace Samples.WebHost.Controllers
 {
     public class AppController : Controller
     {
-        public ActionResult CompositeLogViewer()
+        public ActionResult NetFusionPortal()
         {
             return View();
         }

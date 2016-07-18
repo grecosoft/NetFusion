@@ -229,7 +229,7 @@
     <Content Include="scripts\app\modules\plugins\area-module.js" />
     <Content Include="scripts\app\modules\portal\area-module.js" />
     <Content Include="scripts\app\modules\structure\area-module.js" />
-    <Content Include="scripts\app\modules\structure\LogController.js" />
+    <Content Include="scripts\app\modules\portal\PortalController.js" />
     <Content Include="scripts\app\modules\structure\LogService.js" />
     <Content Include="scripts\bootstrap.js" />
     <Content Include="scripts\bootstrap.min.js" />
@@ -272,7 +272,7 @@
     <Content Include="scripts\angular.min.js.map" />
     <Content Include="scripts\jquery-3.0.0.slim.min.map" />
     <Content Include="scripts\jquery-3.0.0.min.map" />
-    <Content Include="Views\App\CompositeLogViewer.cshtml" />
+    <Content Include="Views\App\NetFusionPortal.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />

@@ -12,7 +12,7 @@ namespace Samples.WebHost.App_Start
             routes.MapRoute(
                 name: "Default",
                 url: "",
-                defaults: new { controller = "App", action = "CompositeLogViewer" }
+                defaults: new { controller = "App", action = "NetFusionPortal" }
             );
         }
     }
