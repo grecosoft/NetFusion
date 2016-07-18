@@ -12,7 +12,7 @@ namespace NetFusion.Bootstrap.Container
     /// Represents an application that is composed of plug-ins that are used
     /// to create a run-time environment and dependency injection container.
     /// </summary>
-    internal class CompositeApplication 
+    public class CompositeApplication 
     {
         public bool IsStarted { get; private set; }
         public string[] SearchPatterns { get; }

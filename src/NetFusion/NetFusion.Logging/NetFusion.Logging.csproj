@@ -48,12 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompositeInfo.cs" />
     <Compile Include="Configs\CompositeLogSettings.cs" />
     <Compile Include="Core\CompositeLogger.cs" />
     <Compile Include="HostLog.cs" />
     <Compile Include="ICompositeLogger.cs" />
     <Compile Include="LoggingManifest.cs" />
     <Compile Include="Modules\CompositeLogModule.cs" />
+    <Compile Include="PluginInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

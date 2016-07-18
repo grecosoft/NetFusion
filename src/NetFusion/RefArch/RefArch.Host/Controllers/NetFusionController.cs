@@ -3,6 +3,7 @@ using NetFusion.Bootstrap.Container;
 using NetFusion.Logging;
 using NetFusion.WebApi.Metadata;
 using Newtonsoft.Json;
+using System.Linq;
 using RefArch.Host.Hubs;
 using System.Collections.Generic;
 using System.Web.Http;
@@ -36,12 +37,24 @@ namespace Samples.WebHost.Controllers
         public IHttpActionResult GetCompositeConfig()
         {
             var settings = new JsonSerializerSettings { };
-            var manifest = new Manifest();
-            var hostLog = new HostLog(manifest.Name, AppContainer.Instance.Log);
+            var composite = (IComposite)AppContainer.Instance;
+
+            var plugins = composite.Application.Plugins
+                .Select(p => new PluginInfo(p))
+                .OrderBy(pi => pi.Name);
+
+            var hostLog = new HostLog(
+                new CompositeInfo(plugins),
+                AppContainer.Instance.Log);
 
             return Json(hostLog, settings);
         }
 
+        /// <summary>
+        /// Called by another Host client to broadcast the configuration to all connected
+        /// clients.
+        /// </summary>
+        /// <param name="hostLog">The host configuration,</param>
         [HttpPost Route("composite/log")]
         public void LogCompositConfig(HostLog hostLog) 
         {

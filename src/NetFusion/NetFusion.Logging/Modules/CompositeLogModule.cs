@@ -20,9 +20,11 @@ namespace NetFusion.Logging.Modules
             try
             {
                 var logger = scope.Resolve<ICompositeLogger>();
+                var manifest = Context.AppHost.Manifest;
 
                 var hostLog = new HostLog(
-                    Context.AppHost.Manifest.Name, 
+                    manifest.Name,
+                    manifest.PluginId,
                     AppContainer.Instance.Log);
 
                 logger.Log(hostLog);

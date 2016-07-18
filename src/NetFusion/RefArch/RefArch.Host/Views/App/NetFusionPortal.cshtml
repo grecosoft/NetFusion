@@ -2,7 +2,9 @@
     <md-toolbar flex class="md-menu-toolbar">
         <div flex layout="row">
             <div flex>
-                <h2 flex class="md-toolbar-tools nb-portal-title">{{ctrl.viewModel.title}}</h2>
+                <h2 flex class="md-toolbar-tools nb-portal-title">
+                    NetFusion Composite App: 
+                    {{ctrl.viewModel.title}}</h2>
                 <md-menu-bar>
                     <md-menu>
                         <button ng-click="$mdOpenMenu()">
@@ -10,10 +12,42 @@
                         </button>
                         <md-menu-content>
                             <md-menu-item ng-repeat="host in ctrl.viewModel.hostLogMenuItems">
-                                <md-button ng-click="ctrl.sampleAction('share', $event)">
-                                    {{host.title}}
+                                <md-button ng-click="ctrl.hostSelected(host, $event)">
+                                    {{host.hostName}}
                                 </md-button>
                             </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+
+                    <md-menu>
+                        <button ng-click="$mdOpenMenu()">
+                            Plug-Ins
+                        </button>
+                        <md-menu-content>
+                            <md-menu>
+                                <md-button ng-click="$mdOpenMenu()">
+                                    Application Host
+                                </md-button>
+                                <md-menu-content>
+                                    <md-menu-item><md-button ng-click="ctrl.sampleAction('New Document', $event)">Document</md-button></md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                            <md-menu>
+                                <md-button ng-click="$mdOpenMenu()">
+                                    Application Components
+                                </md-button>
+                                <md-menu-content>
+                                    <md-menu-item><md-button ng-click="ctrl.sampleAction('New Document', $event)">Document</md-button></md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                            <md-menu>
+                                <md-button ng-click="$mdOpenMenu()">
+                                    Core Plug-ins
+                                </md-button>
+                                <md-menu-content>
+                                    <md-menu-item><md-button ng-click="ctrl.sampleAction('New Document', $event)">Document</md-button></md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
                         </md-menu-content>
                     </md-menu>
                 </md-menu-bar>

@@ -18,6 +18,7 @@ namespace NetFusion.Bootstrap.Container
     /// modules, can be accessed using the configured Autofac dependency injection container. 
     /// </summary>
     public class AppContainer : IAppContainer,
+        IComposite,
         ILoadedContainer
     {
         // Singleton instance of created container.
@@ -50,7 +51,7 @@ namespace NetFusion.Bootstrap.Container
             this.Registry = new ManifestRegistry(); 
         }
 
-        internal CompositeApplication CompositeApplication
+        CompositeApplication IComposite.Application
         {
             get { return _application; }
         }

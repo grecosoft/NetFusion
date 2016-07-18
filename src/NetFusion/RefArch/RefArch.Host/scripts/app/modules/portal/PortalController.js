@@ -6,14 +6,13 @@
 
     var module = angular.module('netfusion.structure');
 
-    var portalController = ['$scope', '$mdMenu', 'CompositeLogService',
-        function ($scope, $mdMenu, compositeLogService) {
+    var portalController = ['$scope', 'CompositeLogService',
+        function ($scope, compositeLogService) {
 
         var self = this;
 
-        var _hostLogs = [];
+        var _hostLogs = {};
 
-        initMenuItems();
         initViewModel();
         listenForLogUpdate();
        
@@ -22,23 +21,24 @@
                 title: 'NetFusion-Composite Application',
                 serverLog: null,
                 hostLogMenuItems: [],
+                hostPluginMenuItems: []
             };
 
-            compositeLogService.getCompositeLog().then(function (log) {
-                self.viewModel.hostLogMenuItems.push(new MenuItem(log.Name, null));
+            compositeLogService.getCompositeLog().then(function (hostLog) {
+
+                var log = hostLog.Log;
+
+                self.viewModel.hostLogMenuItems.push(new HostLogMenuItem(
+                    hostLog.HostName,
+                    hostLog.HostPluginId));
+
                 self.viewModel.serverLog = log;
+                self.viewModel.title = hostLog.HostName;
 
-                _hostLogs.push(log);
+                _hostLogs[hostLog.HostPluginId] = log;
+
+                console.log(hostLog.CompositeApp);
             });
-        }
-
-        function initMenuItems() {
-            self.menu = [
-                new MenuItem("Clients", null),
-                new MenuItem("Plug-Ins", null),
-                new MenuItem("API", null),
-                new MenuItem("Logs", null)
-            ];
         }
 
         function listenForLogUpdate() {
@@ -46,23 +46,28 @@
 
             logHub.client.log = function (hostLog) {
 
-                _hostLogs.push(hostLog);
-                self.viewModel.hostLogMenuItems.push(new MenuItem(hostLog.Name, null));
+                if (!_hostLogs[hostLog.HostPluginId]) {
+                    self.viewModel.hostLogMenuItems.push(
+                        new HostLogMenuItem(hostLog.HostName, hostLog.HostPluginId));
+                }
+
+                _hostLogs[hostLog.HostPluginId] = hostLog;
+
                 $scope.$apply();
             };
 
             $.connection.hub.start();
         }
+
+        self.hostSelected = function(hostItem, ev) {
+            self.viewModel.serverLog = _hostLogs[hostItem.hostPluginId];
+            self.viewModel.title = hostItem.hostName;
+        }
     }];
 
-    var MenuItem = function (title, factory) {
-        this.title = title;
-        this.factory = factory;
-        this.items = [];
-
-        if (factory && angular.isFunction(factory)) {
-            factory.call(this)
-        }
+    var HostLogMenuItem = function (name, pluginId) {
+        this.hostName = name;
+        this.hostPluginId = pluginId;
     }
 
     module.controller('PortalController', portalController);
