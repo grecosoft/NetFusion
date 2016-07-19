@@ -1,4 +1,4 @@
-﻿<div row flex ng-controller="PortalController as ctrl" ng-cloak>
+﻿<div row flex ng-controller="PortalController as ctrl" ng-cloak="">
     <md-toolbar flex class="md-menu-toolbar">
         <div flex layout="row">
             <div flex>
@@ -11,9 +11,9 @@
                             Hosts
                         </button>
                         <md-menu-content>
-                            <md-menu-item ng-repeat="host in ctrl.viewModel.hostLogMenuItems">
-                                <md-button ng-click="ctrl.hostSelected(host, $event)">
-                                    {{host.hostName}}
+                            <md-menu-item ng-repeat="item in ctrl.viewModel.hostLogMenuItems">
+                                <md-button ng-click="ctrl.hostSelected(item, $event)">
+                                    {{item.pluginName}}
                                 </md-button>
                             </md-menu-item>
                         </md-menu-content>
@@ -29,7 +29,11 @@
                                     Application Host
                                 </md-button>
                                 <md-menu-content>
-                                    <md-menu-item><md-button ng-click="ctrl.sampleAction('New Document', $event)">Document</md-button></md-menu-item>
+                                    <md-menu-item ng-repeat="item in ctrl.viewModel.hostPluginMenuItems">
+                                        <md-button ng-click="ctrl.sampleAction('New Document', $event)">
+                                            {{item.pluginName}}
+                                        </md-button>
+                                    </md-menu-item>
                                 </md-menu-content>
                             </md-menu>
                             <md-menu>
@@ -37,7 +41,11 @@
                                     Application Components
                                 </md-button>
                                 <md-menu-content>
-                                    <md-menu-item><md-button ng-click="ctrl.sampleAction('New Document', $event)">Document</md-button></md-menu-item>
+                                    <md-menu-item ng-repeat="item in ctrl.viewModel.appComponentPluginMenuItems">
+                                        <md-button ng-click="ctrl.sampleAction('New Document', $event)">
+                                            {{item.pluginName}}
+                                        </md-button>
+                                    </md-menu-item>
                                 </md-menu-content>
                             </md-menu>
                             <md-menu>
@@ -45,7 +53,11 @@
                                     Core Plug-ins
                                 </md-button>
                                 <md-menu-content>
-                                    <md-menu-item><md-button ng-click="ctrl.sampleAction('New Document', $event)">Document</md-button></md-menu-item>
+                                    <md-menu-item ng-repeat="item in ctrl.viewModel.corePLuginMenuItems">
+                                        <md-button ng-click="ctrl.sampleAction('New Document', $event)">
+                                            {{item.pluginName}}
+                                        </md-button>
+                                    </md-menu-item>
                                 </md-menu-content>
                             </md-menu>
                         </md-menu-content>

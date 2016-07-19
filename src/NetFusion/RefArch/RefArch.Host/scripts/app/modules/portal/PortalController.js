@@ -21,12 +21,15 @@
                 title: 'NetFusion-Composite Application',
                 serverLog: null,
                 hostLogMenuItems: [],
-                hostPluginMenuItems: []
+                hostPluginMenuItems: [],
+                appComponentPluginMenuItems: [],
+                corePLuginMenuItems: []
             };
 
             compositeLogService.getCompositeLog().then(function (hostLog) {
 
                 var log = hostLog.Log;
+                var compositeApp = hostLog.CompositeApp;
 
                 self.viewModel.hostLogMenuItems.push(new HostLogMenuItem(
                     hostLog.HostName,
@@ -37,7 +40,19 @@
 
                 _hostLogs[hostLog.HostPluginId] = log;
 
-                console.log(hostLog.CompositeApp);
+                self.viewModel.hostPluginMenuItems = [new HostLogMenuItem(compositeApp.AppHostPlugin.Name, compositeApp.AppHostPlugin.PluginId)];
+                self.viewModel.appComponentPluginMenuItems = createPluginList(compositeApp.AppComponentPlugins);
+                self.viewModel.corePLuginMenuItems = createPluginList(compositeApp.CorePlugins);
+                
+                console.log(compositeApp);
+            });
+        }
+
+        function createPluginList(plugins) {
+            console.log(plugins);
+
+            return _.map(plugins, function (p) {
+                return new HostLogMenuItem(p.Name, p.PluginId)
             });
         }
 
@@ -51,7 +66,7 @@
                         new HostLogMenuItem(hostLog.HostName, hostLog.HostPluginId));
                 }
 
-                _hostLogs[hostLog.HostPluginId] = hostLog;
+                _hostLogs[hostLog.HostPluginId] = hostLog.Log;
 
                 $scope.$apply();
             };
@@ -60,14 +75,14 @@
         }
 
         self.hostSelected = function(hostItem, ev) {
-            self.viewModel.serverLog = _hostLogs[hostItem.hostPluginId];
-            self.viewModel.title = hostItem.hostName;
+            self.viewModel.serverLog = _hostLogs[hostItem.pluginId];
+            self.viewModel.title = hostItem.pluginName;
         }
     }];
 
     var HostLogMenuItem = function (name, pluginId) {
-        this.hostName = name;
-        this.hostPluginId = pluginId;
+        this.pluginName = name;
+        this.pluginId = pluginId;
     }
 
     module.controller('PortalController', portalController);
