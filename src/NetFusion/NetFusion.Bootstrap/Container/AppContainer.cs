@@ -51,7 +51,7 @@ namespace NetFusion.Bootstrap.Container
             this.Registry = new ManifestRegistry(); 
         }
 
-        CompositeApplication IComposite.Application
+        internal CompositeApplication CompositeApplication
         {
             get { return _application; }
         }
@@ -199,12 +199,16 @@ namespace NetFusion.Bootstrap.Container
             {
                 ConfigureLogging();
 
+                _logger.Debug("Container Build Started");
+
                 LoadContainer();
                 ComposeLoadedPlugins();
                 SetKnownTypeDiscoveries();
 
                 CreateAutofacContainer();
                 CreateCompositeLogger();
+
+                _logger.Debug("Container Build Completed");
             }
             catch (ContainerException ex)
             {
@@ -353,6 +357,12 @@ namespace NetFusion.Bootstrap.Container
         // Search all assemblies representing plug-ins.
         private void LoadManifestRegistry()
         {
+            var searchPatterns = _typeResover.SearchPatterns;
+            if (searchPatterns != null)
+            {
+                _logger.Debug("Plug-in Search Patterns", new { searchPatterns });
+            }
+
             _typeResover.DiscoverManifests(this.Registry);
 
             AssertManifestProperties();
@@ -561,6 +571,14 @@ namespace NetFusion.Bootstrap.Container
         private void CreateCompositeLogger()
         {
             _containerLog = new AppContainerLog(_logger, _application, _container.ComponentRegistry);
+        }
+
+        // IComposite Methods:
+        IEnumerable<Plugin> IComposite.Plugins => _application.Plugins;
+
+        public Plugin GetPluginForType(Type type)
+        {
+            return _application.Plugins.FirstOrDefault(p => p.Manifest.GetType().Assembly == type.Assembly);
         }
     }   
 }

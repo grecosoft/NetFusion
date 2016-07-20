@@ -1,7 +1,12 @@
-﻿namespace NetFusion.Bootstrap.Container
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace NetFusion.Bootstrap.Container
 {
-    public interface IComposite
+    public interface ICompositeApplication
     {
-        CompositeApplication Application { get; }
     }
 }

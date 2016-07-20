@@ -64,9 +64,7 @@ namespace NetFusion.Bootstrap.Testing
         {
             Check.NotNull(assert, nameof(assert), "assert delegate not specified");
 
-            var composite = (IComposite)_container;
-
-            var module = composite.Application.AllPluginModules
+            var module = _container.CompositeApplication.AllPluginModules
                 .OfType<T>().FirstOrDefault();
 
             if (module == null)
@@ -92,14 +90,13 @@ namespace NetFusion.Bootstrap.Testing
         {
             Check.NotNull(assert, nameof(assert), "assert delegate not specified");
 
-            var composite = (IComposite)_container;
-            if (composite.Application.Plugins == null)
+            if (_container.CompositeApplication.Plugins == null)
             {
                 throw new InvalidOperationException
                     ("Container has not been built.");
             }
 
-            var config = composite.Application
+            var config = _container.CompositeApplication
                 .Plugins.SelectMany(p => p.PluginConfigs)
                 .OfType<T>().FirstOrDefault();
 
@@ -131,8 +128,7 @@ namespace NetFusion.Bootstrap.Testing
         {
             Check.NotNull(assert, nameof(assert), "assert delegate not specified");
 
-            var composite = (IComposite)_container;
-            AssertAction(() => assert(composite.Application));
+            AssertAction(() => assert(_container.CompositeApplication));
         }
 
         private void AssertAction(Action assert)

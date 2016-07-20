@@ -36,6 +36,11 @@ namespace NetFusion.Bootstrap.Container
             _searchPatterns = searchPatterns;
         }
 
+        public string[] SearchPatterns
+        {
+            get { return _searchPatterns; }
+        }
+
         public virtual void DiscoverManifests(ManifestRegistry registry)
         {
             Check.NotNull(registry, nameof(registry), "registry not specified");

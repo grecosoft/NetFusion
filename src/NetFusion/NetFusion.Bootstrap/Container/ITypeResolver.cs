@@ -11,6 +11,12 @@ namespace NetFusion.Bootstrap.Container
     public interface ITypeResolver
     {
         /// <summary>
+        /// The optional location where the type resolver will probe for assemblies
+        /// when discovering plug-ins.
+        /// </summary>
+        string[] SearchPatterns { get; }
+
+        /// <summary>
         /// Locates all assemblies containing plug-in manifests and populates
         /// the registry with manifest instances.
         /// </summary>

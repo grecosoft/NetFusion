@@ -30,7 +30,7 @@ namespace NetFusion.Bootstrap.Logging
             _messages.Add($"VERBOSE: {message}");
         }
 
-        public void Debug(string message)
+        public void Debug(string message, object data = null)
         {
             _messages.Add($"DEBUG: {message}");
         }
@@ -43,6 +43,11 @@ namespace NetFusion.Bootstrap.Logging
         public void Error(string message)
         {
             _messages.Add($"ERROR: {message}");
+        }
+
+        public IContainerLogger ForContext<TContext>()
+        {
+            return this;
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Samples.WebHost.Controllers
             var settings = new JsonSerializerSettings { };
             var composite = (IComposite)AppContainer.Instance;
 
-            var plugins = composite.Application.Plugins
+            var plugins = composite.Plugins
                 .Select(p => new PluginInfo(p))
                 .OrderBy(pi => pi.Name);
 

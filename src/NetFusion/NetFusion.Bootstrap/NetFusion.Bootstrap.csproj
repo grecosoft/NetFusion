@@ -44,6 +44,7 @@
     <Compile Include="Container\AutofacRegistrationConfig.cs" />
     <Compile Include="Container\CompositeApplication.cs" />
     <Compile Include="Container\IAppContainer.cs" />
+    <Compile Include="Container\IComposite.cs" />
     <Compile Include="Container\ICompositeApplication.cs" />
     <Compile Include="Container\IContainerConfig.cs" />
     <Compile Include="Container\ILoadedContainer.cs" />

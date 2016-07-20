@@ -1,4 +1,7 @@
-﻿using NetFusion.Bootstrap.Container;
+﻿using AutofacSerilogIntegration;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Plugins;
+using NetFusion.Logging.Serilog.Core;
 using NetFusion.Messaging.Config;
 using NetFusion.RabbitMQ.Core;
 using NetFusion.Settings.Configs;
@@ -6,6 +9,7 @@ using NetFusion.Settings.MongoDB;
 using NetFusion.Settings.Strategies;
 using NetFusion.WebApi.Configs;
 using Samples.WebHost.App_Start;
+using Serilog;
 using System.Web.Routing;
 
 namespace RefArch.Host
@@ -14,6 +18,9 @@ namespace RefArch.Host
     {
         protected void Application_Start()
         {
+            // Create logger:
+            ILogger logger = CreateLogger();
+
             AppContainer.Create(new[] { "RefArch.*.dll" })
                 .WithConfigSection("netFusion", "mongoAppSettings")
 
@@ -40,10 +47,42 @@ namespace RefArch.Host
                     config.UseJwtSecurityToken = true;
                 })
 
+                .WithConfig((LoggerConfig config) =>
+                {
+                    config.LogExceptions = true;
+                    config.SetLogger(new SerilogPluginLogger(logger));
+                })
+
+                .WithConfig((AutofacRegistrationConfig config) =>
+                {
+                    config.Build = builder =>
+                    {
+                        // Add any components created during startup.
+                        builder.RegisterLogger(logger);
+                    };
+                })
+
                 .Build()
                 .Start();
 
             MvcRouteConfig.RegisterRoutes(RouteTable.Routes);
+        }
+
+        private ILogger CreateLogger()
+        {
+            var logConfig = new LoggerConfiguration()
+                .WriteTo.Seq("http://localhost:5341");
+
+            logConfig
+                .Enrich.With<PluginEnricher>()
+                .Enrich.WithProcessId()
+                .Enrich.WithThreadId()
+                .Enrich.WithMachineName()
+                .Enrich.WithEnvironmentUserName()
+                .Enrich.WithThreadId();
+
+            logConfig.MinimumLevel.Verbose();
+            return logConfig.CreateLogger();
         }
 
         public void Application_End()
