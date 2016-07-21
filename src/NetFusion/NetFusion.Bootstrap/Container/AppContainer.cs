@@ -195,20 +195,19 @@ namespace NetFusion.Bootstrap.Container
         // but does not start their execution.
         public ILoadedContainer Build()
         {
+            ConfigureLogging();
+
             try
             {
-                ConfigureLogging();
+                using (var logger = _logger.ForDuration("Building Container"))
+                {
+                    LoadContainer();
+                    ComposeLoadedPlugins();
+                    SetKnownTypeDiscoveries();
 
-                _logger.Debug("Container Build Started");
-
-                LoadContainer();
-                ComposeLoadedPlugins();
-                SetKnownTypeDiscoveries();
-
-                CreateAutofacContainer();
-                CreateCompositeLogger();
-
-                _logger.Debug("Container Build Completed");
+                    CreateAutofacContainer();
+                    CreateCompositeLogger();
+                }
             }
             catch (ContainerException ex)
             {
@@ -236,8 +235,11 @@ namespace NetFusion.Bootstrap.Container
 
             try
             {
-                _application.StartPluginModules(_container);
-                _logger.Verbose(() => Log.ToIndentedJson());
+                using (var logger = _logger.ForDuration("Starting Container"))
+                {
+                    _application.StartPluginModules(_container);
+                    _logger.Verbose(() => Log.ToIndentedJson());
+                }
             }
             catch (ContainerException ex)
             {
@@ -261,7 +263,10 @@ namespace NetFusion.Bootstrap.Container
 
             try
             {
-                _application.StopPluginModules(_container);
+                using (var logger = _logger.ForDuration("Stopping Container"))
+                {
+                    _application.StopPluginModules(_container);
+                }
             }
             catch (ContainerException ex)
             {
@@ -284,8 +289,6 @@ namespace NetFusion.Bootstrap.Container
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing || _disposed) return;
-
-            _logger?.Debug("container disposed");
 
             DisposePluginModules();
             this.Services?.Dispose();
@@ -525,8 +528,11 @@ namespace NetFusion.Bootstrap.Container
             RegisterAppContainerAsService(builder);
             RegisterPluginModuleServices(builder);
             RegisterHostProvidedServices(builder);
-
+            
             _container = builder.Build();
+
+            var regCount = _container.ComponentRegistry.Registrations.Count();
+            _logger.Debug("Container Registrations", new { Count = regCount });
         }
 
         private void RegisterAppContainerAsService(Autofac.ContainerBuilder builder)

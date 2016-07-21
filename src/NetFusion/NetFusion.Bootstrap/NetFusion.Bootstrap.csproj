@@ -56,6 +56,7 @@
     <Compile Include="Extensions\ContainerExtensions.cs" />
     <Compile Include="Extensions\ModuleExtensions.cs" />
     <Compile Include="Logging\AppContainerLog.cs" />
+    <Compile Include="Logging\DurationLogger.cs" />
     <Compile Include="Logging\IContainerLogger.cs" />
     <Compile Include="Logging\LoggerConfig.cs" />
     <Compile Include="Logging\LoggerExtensions.cs" />

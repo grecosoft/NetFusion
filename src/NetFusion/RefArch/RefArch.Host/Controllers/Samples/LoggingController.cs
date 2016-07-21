@@ -1,4 +1,5 @@
 ﻿using NetFusion.Bootstrap.Logging;
+using NetFusion.Logging.Serilog;
 using NetFusion.WebApi.Metadata;
 using Serilog;
 using System.Web.Http;
@@ -27,16 +28,6 @@ namespace RefArch.Host.Controllers.Samples
             var logger2 = _logger.ForContextType<LoggingController>();
             logger2.Debug("SDFSDFSDF");
 
-
-        }
-    }
-
-    public static class SerlogLoggerExtensions
-    {
-        public static ILogger ForContextType<T>(this ILogger logger)
-        {
-           
-            return logger.ForContext("NetFusion-ContextClrType", typeof(T).AssemblyQualifiedName);
 
         }
     }

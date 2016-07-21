@@ -16,7 +16,7 @@ namespace NetFusion.Logging.Serilog.Core
         {
             LogEventPropertyValue pv = null;
 
-            if (!logEvent.Properties.TryGetValue("NetFusion-ContextClrType", out pv)) return;
+            if (!logEvent.Properties.TryGetValue(SerilogManifest.ContextPropName, out pv)) return;
 
             ScalarValue sv = pv as ScalarValue;
             string sourceContextType = sv?.Value as string;
@@ -30,7 +30,7 @@ namespace NetFusion.Logging.Serilog.Core
                 }
             }
 
-            logEvent.RemovePropertyIfPresent("NetFusion-ContextClrType");
+            logEvent.RemovePropertyIfPresent(SerilogManifest.ContextPropName);
         }
 
         private Plugin GetTypesPlugin(Type contextType)
