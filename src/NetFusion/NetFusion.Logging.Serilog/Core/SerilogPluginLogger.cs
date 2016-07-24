@@ -3,6 +3,7 @@ using NetFusion.Common;
 using NetFusion.Common.Extensions;
 using Serilog;
 using Serilog.Events;
+using System;
 
 namespace NetFusion.Logging.Serilog.Core
 {
@@ -40,35 +41,66 @@ namespace NetFusion.Logging.Serilog.Core
 
         private void WriteLogMessage(LogEventLevel level, string message, object details)
         {
-            if (_logger.IsEnabled(level))
+            if (!_logger.IsEnabled(level))
+            {
+                return;
+            }
+
+            if (details != null)
             {
                 _logger.Write(level, message + "{@details}", details.ToIndentedJson());
             }
+            else
+            {
+                _logger.Write(level, message);
+            }
         }
 
-        public void Verbose(string message, object details = null)
+        private void WriteLogMessage(LogEventLevel level, string message, Exception ex, object details)
+        {
+            if (!_logger.IsEnabled(level))
+            {
+                return;
+            }
+
+            if (details != null)
+            {
+                _logger.Write(level, ex, message + "{@details}", details.ToIndentedJson());
+            }
+            else
+            {
+                _logger.Write(level, ex, message);
+            }
+        }
+
+        public void Verbose(string message, object details)
         {
             WriteLogMessage(LogEventLevel.Verbose, message, details);
         }
 
-        public void Debug(string message, object details = null)
+        public void Debug(string message, object details)
         {
             WriteLogMessage(LogEventLevel.Debug, message, details);
         }
 
-        public void Info(string message, object details = null)
+        public void Info(string message, object details)
         {
             WriteLogMessage(LogEventLevel.Information, message, details);
         }
 
-        public void Warning(string message, object details = null)
+        public void Warning(string message, object details)
         {
             WriteLogMessage(LogEventLevel.Warning, message, details);
         }
 
-        public void Error(string message, object details = null)
+        public void Error(string message, object details)
         {
             WriteLogMessage(LogEventLevel.Error, message, details);
+        }
+
+        public void Error(string message, Exception ex, object details)
+        {
+            WriteLogMessage(LogEventLevel.Error, message, ex, details);
         }
     }
 }

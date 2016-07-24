@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NetFusion.Bootstrap.Logging
 {
@@ -67,6 +68,14 @@ namespace NetFusion.Bootstrap.Logging
         /// <param name="message">The message to log.</param>
         /// <param name="details">Anonymous object containing details.</param>
         void Error(string message, object details = null);
+
+        /// <summary>
+        /// Writes an error message containing an exception to the lob.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
+        /// <param name="ex">The exception to log.</param>
+        /// <param name="details">Anonymous object containing details.</param>
+        void Error(string message, Exception ex, object details = null);
 
         /// <summary>
         /// Writes a warning message to the log.
