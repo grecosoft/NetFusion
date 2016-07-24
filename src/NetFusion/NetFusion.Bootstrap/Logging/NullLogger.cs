@@ -15,39 +15,40 @@ namespace NetFusion.Bootstrap.Logging
             get { return _messages; }
         }
 
-        public bool IsDebugLevel
-        {
-            get { return false; }
-        }
-
-        public bool IsVerboseLevel
-        {
-            get { return false; }
-        }
-
-        public void Verbose(string message)
-        {
-            _messages.Add($"VERBOSE: {message}");
-        }
-
-        public void Debug(string message, object data = null)
-        {
-            _messages.Add($"DEBUG: {message}");
-        }
-
-        public void Warning(string message)
-        {
-            _messages.Add($"WARNING: {message}");
-        }
-
-        public void Error(string message)
-        {
-            _messages.Add($"ERROR: {message}");
-        }
-
+        public bool IsVerboseLevel => false;
+        public bool IsInfoLevel => false;
+        public bool IsDebugLevel => false;
+        public bool IsWarningLevel => false;
+        public bool IsErrorLevel => false;
+    
         public IContainerLogger ForContext<TContext>()
         {
             return this;
         }
+
+        public void Verbose(string message, object details = null)
+        {
+            _messages.Add($"VERBOSE: {message}");
+        }
+
+        public void Info(string message, object details = null)
+        {
+            _messages.Add($"INFO: {message}");
+        }
+
+        public void Debug(string message, object details = null)
+        {
+            _messages.Add($"DEBUG: {message}");
+        }
+
+        public void Warning(string message, object details = null)
+        {
+            _messages.Add($"WARNING: {message}");
+        }
+
+        public void Error(string message, object details = null)
+        {
+            _messages.Add($"ERROR: {message}");
+        }   
     }
 }

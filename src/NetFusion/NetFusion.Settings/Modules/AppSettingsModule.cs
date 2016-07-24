@@ -140,8 +140,8 @@ namespace NetFusion.Settings.Modules
             IAppSettings initializedSettings = null;
 
             // First see if there is a settings initializer specific to the settings type.
-            var settingSpecificInitializer = GetSettingSpecificInitializer(settings, settingLoadEvent.Context);
-            initializedSettings = settingSpecificInitializer?.Configure(settings);
+            var settingInitializer = GetSettingSpecificInitializer(settings, settingLoadEvent.Context);
+            initializedSettings = settingInitializer?.Configure(settings);
            
             if (initializedSettings == null)
             {
@@ -150,7 +150,7 @@ namespace NetFusion.Settings.Modules
                 //application.  Stop after finding the initializer that is able to initialize the settings.
                 foreach (Type settingInitType in this.AppConfig.SettingInitializerTypes)
                 {
-                    var settingInitializer = GetSettingGenericInitializer(settings, settingInitType, settingLoadEvent.Context);
+                    settingInitializer = GetSettingGenericInitializer(settings, settingInitType, settingLoadEvent.Context);
 
                     initializedSettings = settingInitializer.Configure(settings);
                     if (initializedSettings != null) break;
@@ -173,6 +173,8 @@ namespace NetFusion.Settings.Modules
                 // to be used as the new singleton instance.
                 settingLoadEvent.ReplaceInstance(initializedSettings);
             }
+
+            LogSettings(settings, settingInitializer);
 
             // The settings class may be decorated with .NET validation attributes.
             initializedSettings.Validate().ThrowIfNotValid();
@@ -234,6 +236,14 @@ namespace NetFusion.Settings.Modules
             moduleLog["Application-Settings"] = Context.GetPluginTypesFrom()
                 .Where(t => t.IsDerivedFrom<IAppSettings>() && t.IsClass && !t.IsAbstract)
                 .Select(t => t.AssemblyQualifiedName);
+        }
+
+        private void LogSettings(IAppSettings settings, IAppSettingsInitializer initializer)
+        {
+            Plugin.Log.Debug("Settings Initialized", new {
+                Settings = settings,
+                Initilizer = initializer?.GetType().Name ?? "Code specified values used."
+            });
         }
     }
 }

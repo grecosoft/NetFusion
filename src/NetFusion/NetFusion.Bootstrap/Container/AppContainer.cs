@@ -39,7 +39,7 @@ namespace NetFusion.Bootstrap.Container
 
         private readonly CompositeApplication _application;
         private Autofac.IContainer _container;
-       
+
         internal AppContainer(string[] searchPatterns, ITypeResolver typeResolver)
         {
             _application = new CompositeApplication(searchPatterns);
@@ -48,7 +48,7 @@ namespace NetFusion.Bootstrap.Container
             _typeResover = typeResolver;
             _instance = this;
 
-            this.Registry = new ManifestRegistry(); 
+            this.Registry = new ManifestRegistry();
         }
 
         internal CompositeApplication CompositeApplication
@@ -196,6 +196,7 @@ namespace NetFusion.Bootstrap.Container
         public ILoadedContainer Build()
         {
             ConfigureLogging();
+            LogContainerInitialization();
 
             try
             {
@@ -204,6 +205,7 @@ namespace NetFusion.Bootstrap.Container
                     LoadContainer();
                     ComposeLoadedPlugins();
                     SetKnownTypeDiscoveries();
+                    LogPlugins(_application.Plugins);
 
                     CreateAutofacContainer();
                     CreateCompositeLogger();
@@ -290,6 +292,11 @@ namespace NetFusion.Bootstrap.Container
         {
             if (!disposing || _disposed) return;
 
+            if (_application.IsStarted)
+            {
+                Stop();
+            }
+
             DisposePluginModules();
             this.Services?.Dispose();
 
@@ -360,17 +367,13 @@ namespace NetFusion.Bootstrap.Container
         // Search all assemblies representing plug-ins.
         private void LoadManifestRegistry()
         {
-            var searchPatterns = _typeResover.SearchPatterns;
-            if (searchPatterns != null)
-            {
-                _logger.Debug("Plug-in Search Patterns", new { searchPatterns });
-            }
-
             _typeResover.DiscoverManifests(this.Registry);
 
             AssertManifestProperties();
             AssertUniqueManifestIds();
             AssertLoadedManifests();
+
+            LogManifests(this.Registry);
         }
 
         private void AssertManifestProperties()
@@ -448,7 +451,7 @@ namespace NetFusion.Bootstrap.Container
 
             _application.Plugins.ForEach(LoadPlugin);
         }
-        
+
         private void LoadPlugin(Plugin plugin)
         {
             _typeResover.LoadPluginTypes(plugin);
@@ -528,7 +531,7 @@ namespace NetFusion.Bootstrap.Container
             RegisterAppContainerAsService(builder);
             RegisterPluginModuleServices(builder);
             RegisterHostProvidedServices(builder);
-            
+
             _container = builder.Build();
 
             var regCount = _container.ComponentRegistry.Registrations.Count();
@@ -586,5 +589,41 @@ namespace NetFusion.Bootstrap.Container
         {
             return _application.Plugins.FirstOrDefault(p => p.Manifest.GetType().Assembly == type.Assembly);
         }
-    }   
+
+        private void LogContainerInitialization()
+        {
+            this.Logger.Debug("Container Setup", new
+            {
+                TypeResolver = _typeResover.GetType(),
+                Searching = _typeResover.SearchPatterns,
+                Configs = _configs.Values.Select(c => c.GetType().Name)
+            });
+        }
+
+        private void LogManifests(ManifestRegistry registry)
+        {
+            this.Logger.Debug("Manifests", new
+            {
+                Host = registry.AppHostPluginManifests.First().GetType(),
+                Application = registry.AppComponentPluginManifests.Select(m => m.GetType()),
+                Core = registry.CorePluginManifests.Select(c => c.GetType())
+            });
+        }
+
+        private void LogPlugins(Plugin[] plugins)
+        {
+            foreach (var plugin in plugins)
+            {
+                this.Logger.Debug("Plugin", new
+                {
+                    plugin.Manifest.Name,
+                    plugin.Manifest.PluginId,
+                    plugin.AssemblyName,
+                    Configs = plugin.PluginConfigs.Select(c => c.GetType().Name),
+                    Modules = plugin.PluginModules.Select(m => m.GetType().Name),
+                    Discovers = plugin.DiscoveredTypes.Select(t => t.Name)
+                });
+            }
+        }
+    }
 }

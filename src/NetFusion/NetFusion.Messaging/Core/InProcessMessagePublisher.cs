@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions;
 using NetFusion.Messaging.Modules;
 using System;
@@ -36,6 +37,8 @@ namespace NetFusion.Messaging.Core
             var dispatchers = _messagingModule.InProcessMessageTypeDispatchers
                 .WhereHandlerForMessage(message.GetType())
                 .ToList();
+
+            LogMessageDespatchInfo(message, dispatchers);
 
             // Invoke all synchronous handlers and if there are no exceptions, execute all
             // asynchronous handler and return the future result to the caller to await.
@@ -164,6 +167,23 @@ namespace NetFusion.Messaging.Core
             }
 
             return dispatchErrors;
+        }
+
+        private void LogMessageDespatchInfo(IMessage message, IList<MessageDispatchInfo> dispatchers)
+        {
+            var dispatcherDetails = dispatchers.Select(d => new {
+                Consumer = d.ConsumerType.Name,
+                Method = d.MessageHandlerMethod.Name,
+                IsAsync = d.IsAsync
+            })
+            .ToList();
+
+            Plugin.Log.Debug($"Message Published: {message.GetType()}",
+                new
+                {
+                    Message = message,
+                    Dispatchers = dispatcherDetails
+                });
         }
     }
 }

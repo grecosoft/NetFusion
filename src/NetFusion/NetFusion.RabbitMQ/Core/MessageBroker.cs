@@ -342,9 +342,10 @@ namespace NetFusion.RabbitMQ.Core
             if (exchangeDefs == null)
             {
                 throw new InvalidOperationException(
-                    $"The message of type: {message.GetType().FullName} is not associated with an exchange.");
+                    $"The message of type: {messageType.FullName} is not associated with an exchange.");
             }
 
+            LogExchangeMessage(message, exchangeDefs);
             exchangeDefs.ForEach(exchangeDef => Publish(exchangeDef, message));
         }
 
@@ -478,6 +479,18 @@ namespace NetFusion.RabbitMQ.Core
             {
                 channel.QueueDeclare(queue.QueueName, queue.Settings);
             }
+        }
+
+        private void LogExchangeMessage(IMessage message, IEnumerable<ExchangeDefinition> exchanges)
+        {
+            Plugin.Log.Debug("Published to Exchange", 
+                new
+                {
+                    Message = message,
+                    Exchanges = exchanges.Select(e => new {
+                        BrokerName = e.Exchange.BrokerName,
+                        Exchange = e.Exchange.ExchangeName
+                    }) });
         }
     }
 }

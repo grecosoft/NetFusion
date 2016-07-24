@@ -1,4 +1,5 @@
 ﻿using NetFusion.Common;
+using NetFusion.Common.Extensions;
 using System;
 
 namespace NetFusion.Bootstrap.Logging
@@ -46,6 +47,11 @@ namespace NetFusion.Bootstrap.Logging
         public static DurationLogger ForDuration(this IContainerLogger logger, string processName)
         {
             return new DurationLogger(logger, processName);
+        }
+
+        public static void Debug(this IContainerLogger logger, string message, object details)
+        {
+            logger.Debug(message, details.ToDictionary());
         }
     }
 

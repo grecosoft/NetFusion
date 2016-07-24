@@ -1,5 +1,6 @@
 ﻿using NetFusion.Bootstrap.Logging;
 using NetFusion.Common;
+using NetFusion.Common.Extensions;
 using Serilog;
 using Serilog.Events;
 
@@ -20,78 +21,54 @@ namespace NetFusion.Logging.Serilog.Core
             _logger = logger;
         }
 
-        public bool IsVerboseLevel
-        {
-            get { return _logger.IsEnabled(LogEventLevel.Verbose); }
-        }
+        // Delegate to Serilog for the current level configuration.
+        public bool IsVerboseLevel => _logger.IsEnabled(LogEventLevel.Verbose);
+        public bool IsDebugLevel => _logger.IsEnabled(LogEventLevel.Debug);
+        public bool IsInfoLevel => _logger.IsEnabled(LogEventLevel.Information);
+        public bool IsWarningLevel => _logger.IsEnabled(LogEventLevel.Warning);
+        public bool IsErrorLevel => _logger.IsEnabled(LogEventLevel.Error);
 
-        public bool IsDebugLevel
-        {
-            get { return _logger.IsEnabled(LogEventLevel.Debug); }
-        }
-
-        public bool IsInformationLevel
-        {
-            get { return _logger.IsEnabled(LogEventLevel.Information); }
-        }
-
-        public bool IsWarningLevel
-        {
-            get { return _logger.IsEnabled(LogEventLevel.Warning); }
-        }
-
+        // Returns new instance associated with the specified context.
         public IContainerLogger ForContext<TContext>()
         {
-            var logger = _logger.ForContext("NetFusion-ContextClrType", typeof(TContext).AssemblyQualifiedName);
+            var logger = _logger.ForContext(
+                SerilogManifest.ContextPropName, 
+                typeof(TContext).AssemblyQualifiedName);
+
             return new SerilogPluginLogger(logger);
         }
 
-        public void Verbose(string message)
+        private void WriteLogMessage(LogEventLevel level, string message, object details)
         {
-            if (this.IsVerboseLevel)
+            if (_logger.IsEnabled(level))
             {
-                _logger.Verbose("Container Log: {plugInLog}", message);
+                _logger.Write(level, message + "{@details}", details.ToIndentedJson());
             }
+        }
+
+        public void Verbose(string message, object details = null)
+        {
+            WriteLogMessage(LogEventLevel.Verbose, message, details);
         }
 
         public void Debug(string message, object details = null)
         {
-            if (this.IsDebugLevel)
-            {
-                var messageTemp = GetMessageTemplate(message);
-                _logger.Debug(messageTemp, details);
-            }
+            WriteLogMessage(LogEventLevel.Debug, message, details);
         }
 
-        private string GetMessageTemplate(string message)
+        public void Info(string message, object details = null)
         {
-            return message + ":{@data}";
+            WriteLogMessage(LogEventLevel.Information, message, details);
         }
 
-        public void Information(string message)
+        public void Warning(string message, object details = null)
         {
-            if (this.IsInformationLevel)
-            {
-                _logger.Information("Container Log: {plugInLog}", message);
-            }
+            WriteLogMessage(LogEventLevel.Warning, message, details);
         }
 
-        public void Warning(string message)
+        public void Error(string message, object details = null)
         {
-            if (_logger.IsEnabled(LogEventLevel.Warning))
-            {
-                _logger.Warning("Container Log: {plugInLog}", message);
-            }
-        }
-
-        public void Error(string message)
-        {
-            _logger.Error("{message}", message);
-        }
-
-        public void Fatal(string message)
-        {
-            _logger.Fatal("{message}", message);
+            WriteLogMessage(LogEventLevel.Error, message, details);
         }
     }
 }
