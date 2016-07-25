@@ -16,14 +16,16 @@ namespace NetFusion.Bootstrap.Logging
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="message">The message delegate.</param>
-        public static void Verbose(this IContainerLogger logger, Func<string> message)
+        /// <param name="details">Details associated with the log message.</param>
+        public static void Verbose(this IContainerLogger logger, string message, Func<object> details)
         {
             Check.NotNull(logger, nameof(logger));
             Check.NotNull(message, nameof(message));
+            Check.NotNull(details, nameof(details));
 
             if (logger.IsVerboseLevel)
             {
-                logger.Verbose(message());
+                logger.Verbose(message, details());
             }
         }
 
@@ -33,14 +35,15 @@ namespace NetFusion.Bootstrap.Logging
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="message">The message delegate.</param>
-        public static void Debug(this IContainerLogger logger, Func<string> message)
+        /// /// <param name="details">Details associated with the log message.</param>
+        public static void Debug(this IContainerLogger logger, string message, Func<object> details)
         {
             Check.NotNull(logger, nameof(logger));
             Check.NotNull(message, nameof(message));
 
             if (logger.IsDebugLevel)
             {
-                logger.Debug(message());
+                logger.Debug(message, details());
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NetFusion.Bootstrap.Logging
 {
@@ -49,6 +50,11 @@ namespace NetFusion.Bootstrap.Logging
         public void Error(string message, object details = null)
         {
             _messages.Add($"ERROR: {message}");
-        }   
+        }
+
+        public void Error(string message, Exception ex, object details = null)
+        {
+          
+        }
     }
 }

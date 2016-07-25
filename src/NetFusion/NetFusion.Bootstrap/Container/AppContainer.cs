@@ -240,8 +240,8 @@ namespace NetFusion.Bootstrap.Container
                 using (var logger = _logger.ForDuration("Starting Container"))
                 {
                     _application.StartPluginModules(_container);
-                    _logger.Verbose(() => Log.ToIndentedJson());
                 }
+                _logger.Verbose("Composite Log", () => Log);
             }
             catch (ContainerException ex)
             {
@@ -317,7 +317,7 @@ namespace NetFusion.Bootstrap.Container
         {
             if (_loggerConfig.LogExceptions)
             {
-                _logger.Error($"{ex}");
+                _logger.Error("Bootstrap Exception", ex);
             }
             return ex;
         }
@@ -533,9 +533,6 @@ namespace NetFusion.Bootstrap.Container
             RegisterHostProvidedServices(builder);
 
             _container = builder.Build();
-
-            var regCount = _container.ComponentRegistry.Registrations.Count();
-            _logger.Debug("Container Registrations", new { Count = regCount });
         }
 
         private void RegisterAppContainerAsService(Autofac.ContainerBuilder builder)

@@ -2,6 +2,9 @@
 
 namespace NetFusion.Logging
 {
+    /// <summary>
+    /// Model 
+    /// </summary>
     public class PluginInfo
     {
         public PluginInfo(Plugin plugin)

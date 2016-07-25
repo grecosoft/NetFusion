@@ -4,13 +4,20 @@ namespace NetFusion.Logging
 {
     public class HostLog
     {
-        // For De-Serialization.
+        /// <summary>
+        /// For De-Serialization.
+        /// </summary>
         public HostLog()
         {
 
         }
 
-        // Used by an external client that is posting its composite log to the server.
+        /// <summary>
+        /// Used by an external client that is posting its composite log to the server.
+        /// </summary>
+        /// <param name="hostName">The name of the application host submitting the log.</param>
+        /// <param name="hostPluginId">The identity value of the host submitting the log.</param>
+        /// <param name="log">The host log information to submit.</param>
         public HostLog(string hostName, string hostPluginId, IDictionary<string, object> log)
         {
             this.HostName = hostName;
@@ -18,7 +25,13 @@ namespace NetFusion.Logging
             this.Log = log;
         }
 
-        // Used by the web server hosting a composite application.
+        /// <summary>
+        /// Used by the web server hosting a composite application and the endpoint to which
+        /// other client hosts can publish.  This constructor creates the instance that is
+        /// returned to the user-interface for rendering.
+        /// </summary>
+        /// <param name="compositeApp"></param>
+        /// <param name="log"></param>
         public HostLog(CompositeInfo compositeApp, IDictionary<string, object> log)
         {
             this.CompositeApp = compositeApp;

@@ -178,7 +178,8 @@ namespace NetFusion.Messaging.Core
             })
             .ToList();
 
-            Plugin.Log.Debug($"Message Published: {message.GetType()}",
+            Plugin.Log.ForContext<InProcessMessagePublisher>()
+                .Debug($"Message Published: {message.GetType()}",
                 new
                 {
                     Message = message,

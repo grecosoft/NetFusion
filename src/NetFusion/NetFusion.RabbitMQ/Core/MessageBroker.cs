@@ -260,6 +260,8 @@ namespace NetFusion.RabbitMQ.Core
             var message = DeserializeMessage(messageConsumer.DispatchInfo.MessageType, deliveryEvent);
             message.SetAcknowledged(false);
 
+            LogReceivedExchangeMessage(message, messageConsumer);
+
             // Delegate to the Messaging Module to dispatch the message to all consumers.
             var futureResult = MessagingModule.DispatchConsumer(
                 message, 
@@ -345,7 +347,7 @@ namespace NetFusion.RabbitMQ.Core
                     $"The message of type: {messageType.FullName} is not associated with an exchange.");
             }
 
-            LogExchangeMessage(message, exchangeDefs);
+            LogPublishingExchangeMessage(message, exchangeDefs);
             exchangeDefs.ForEach(exchangeDef => Publish(exchangeDef, message));
         }
 
@@ -481,16 +483,35 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
-        private void LogExchangeMessage(IMessage message, IEnumerable<ExchangeDefinition> exchanges)
+        private void LogPublishingExchangeMessage(IMessage message, IEnumerable<ExchangeDefinition> exchanges)
         {
-            Plugin.Log.Debug("Published to Exchange", 
+            Plugin.Log.ForContext<MessageBroker>().Debug("Published to Exchange", 
                 new
                 {
                     Message = message,
                     Exchanges = exchanges.Select(e => new {
                         BrokerName = e.Exchange.BrokerName,
                         Exchange = e.Exchange.ExchangeName
-                    }) });
+                    })
+                });
+        }
+
+        private void LogReceivedExchangeMessage(IMessage message, MessageConsumer messageConsumer)
+        {
+            var contextLogger = Plugin.Log.ForContext<MessageBroker>();
+
+            Plugin.Log.ForContext<MessageBroker>().Debug("Exchanged Message Received",
+                new
+                {
+                    messageConsumer.BrokerName,
+                    messageConsumer.ExchangeName,
+                    messageConsumer.RouteKeys,
+                    messageConsumer.DispatchInfo.ConsumerType,
+                    messageConsumer.DispatchInfo.MessageType,
+
+                    MethodName = messageConsumer.DispatchInfo.MessageHandlerMethod.Name,
+                    Message = message,
+                });
         }
     }
 }

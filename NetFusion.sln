@@ -60,6 +60,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RefArch.Subscriber", "src\N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Logging", "src\NetFusion\NetFusion.Logging\NetFusion.Logging.csproj", "{246F1DE0-8E15-4136-949C-A43F4E67677B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Domain", "src\NetFusion\NetFusion.Domain\NetFusion.Domain.csproj", "{18BC0D8B-3B47-4228-B11F-3C581BBAF39F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Domain.Roslyn", "src\NetFusion\NetFusion.Domain.Roslyn\NetFusion.Domain.Roslyn.csproj", "{6D4850CF-6DEF-4AE7-A894-495BDA007740}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -150,6 +154,14 @@ Global
 		{246F1DE0-8E15-4136-949C-A43F4E67677B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{246F1DE0-8E15-4136-949C-A43F4E67677B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{246F1DE0-8E15-4136-949C-A43F4E67677B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18BC0D8B-3B47-4228-B11F-3C581BBAF39F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18BC0D8B-3B47-4228-B11F-3C581BBAF39F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18BC0D8B-3B47-4228-B11F-3C581BBAF39F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18BC0D8B-3B47-4228-B11F-3C581BBAF39F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D4850CF-6DEF-4AE7-A894-495BDA007740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D4850CF-6DEF-4AE7-A894-495BDA007740}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D4850CF-6DEF-4AE7-A894-495BDA007740}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D4850CF-6DEF-4AE7-A894-495BDA007740}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,5 +189,7 @@ Global
 		{62D8BE91-B1C7-4289-AFF8-73088429A484} = {E676BA4D-463C-4928-A734-4B920AA1C08A}
 		{3CF342AC-2378-4DBD-90F6-DF11E513C374} = {62D8BE91-B1C7-4289-AFF8-73088429A484}
 		{246F1DE0-8E15-4136-949C-A43F4E67677B} = {6DED84CC-46D8-4583-8E80-8B0FD78BD7CA}
+		{18BC0D8B-3B47-4228-B11F-3C581BBAF39F} = {6DED84CC-46D8-4583-8E80-8B0FD78BD7CA}
+		{6D4850CF-6DEF-4AE7-A894-495BDA007740} = {3B39701A-2BAF-4682-9675-5C6EE56AA1F3}
 	EndGlobalSection
 EndGlobal

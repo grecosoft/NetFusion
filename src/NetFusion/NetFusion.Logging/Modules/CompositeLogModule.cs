@@ -6,6 +6,11 @@ using System;
 
 namespace NetFusion.Logging.Modules
 {
+    /// <summary>
+    /// Module that will run during the application bootstrap process
+    /// that will submit the composite application log to a specified
+    /// endpoint.
+    /// </summary>
     public class CompositeLogModule : PluginModule
     {
         public override void RegisterComponents(ContainerBuilder builder)
@@ -22,6 +27,7 @@ namespace NetFusion.Logging.Modules
                 var logger = scope.Resolve<ICompositeLogger>();
                 var manifest = Context.AppHost.Manifest;
 
+                // Create request matching the expected api:
                 var hostLog = new HostLog(
                     manifest.Name,
                     manifest.PluginId,
@@ -31,7 +37,10 @@ namespace NetFusion.Logging.Modules
             }
             catch (Exception ex)
             {
-                Plugin.Log.Error("Composite Application could not be logged.");
+                // This exception will not be re-thrown since it don't impact
+                // the execution of the application.
+                Plugin.Log.ForContext<CompositeLogModule>()
+                    .Error("Composite Application could not be logged.", ex);
             }
         }
     }

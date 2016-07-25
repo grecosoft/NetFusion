@@ -6,6 +6,12 @@ using System.Text;
 
 namespace NetFusion.Logging.Core
 {
+    /// <summary>
+    /// Logger component that will publish an application's log to a configured
+    /// endpoint and route.  The endpoint will usually be a WebApi application
+    /// with a user-interface that can be used to view the logs associated with
+    /// hosts that not having a user-interface (i.e. Windows Service).
+    /// </summary>
     public class CompositeLogger : ICompositeLogger
     {
         private readonly CompositeLogSettings _logSettings;
