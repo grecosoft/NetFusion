@@ -12,6 +12,8 @@ namespace NetFusion.Tests.Core.Domain.Mocks
             _attributes = new AttributedEntity();
         }
 
+        public bool IsActive { get; set; }
+
         public IEnumerable<EntityAttributeValue> AttributeValues
         {
             get { return _attributes.GetPropertyValues(); }

@@ -4,9 +4,15 @@ using System.Threading.Tasks;
 
 namespace NetFusion.Domain.Services
 {
-    public interface IExpressionMetadataService
+    public interface IExpressionMetadataRepository
     {
         // Returns all of the expressions for a given entity type.
+
+        /// <summary>
+        /// Returns a list of all the configured entity expressions
+        /// that are to be evaluated at runtime. 
+        /// </summary>
+        /// <returns>List of domain entity expressions.</returns>
         Task<IEnumerable<EntityPropertyExpression>> ReadAll();
 
         // Save a list of entity property expressions.
