@@ -70,6 +70,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\src\NetFusion\NetFusion.Integration\NetFusion.Integration.csproj">
       <Project>{f2886036-da02-4a5d-a7a2-7342ea5da634}</Project>
       <Name>NetFusion.Integration</Name>
@@ -82,10 +86,6 @@
       <Project>{77be4932-cbfc-49fe-a5b1-dcf5b5f30b75}</Project>
       <Name>NetFusion.Settings.MongoDB</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
