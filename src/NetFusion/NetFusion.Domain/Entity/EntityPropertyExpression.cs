@@ -12,11 +12,13 @@ namespace NetFusion.Domain.Entity
         public EntityPropertyExpression(
             Type entityType,
             string propName,
-            string expression)
+            string expression,
+            string id = null)
         {
             this.EntityType = entityType.AssemblyQualifiedName;
             this.PropertyName = propName;
             this.Expression = expression;
+            this.Id = id;
         }
 
         public EntityPropertyExpression(

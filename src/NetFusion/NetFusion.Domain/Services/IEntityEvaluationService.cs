@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NetFusion.Bootstrap.Plugins;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NetFusion.Domain.Entity.Services

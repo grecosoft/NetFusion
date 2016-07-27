@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CSharp.RuntimeBinder;
+using NetFusion.Common.Extensions;
 using NetFusion.Domain.Entity;
 using NetFusion.Domain.Entity.Services;
 using System;
@@ -67,10 +68,11 @@ namespace NetFusion.Domain.Roslyn.Core
                 Assembly.GetAssembly(typeof(DynamicObject)),
                 Assembly.GetAssembly(typeof(CSharpArgumentInfo)),
                 Assembly.GetAssembly(typeof(ExpandoObject)),
-                Assembly.GetAssembly(entityType));
-
-            options.AddImports("System.Dynamic");
-
+                Assembly.GetAssembly(typeof(ObjectExtensions)),
+                Assembly.GetAssembly(entityType))
+                    .AddImports(
+                        "System.Dynamic", 
+                        "NetFusion.Common.Extensions");
             return options;
         }
     }

@@ -21,7 +21,7 @@ namespace NetFusion.Tests.Core.Domain
         /// to the set of entity attribute values.
         /// </summary>
         [Fact]
-        public void CanAddCalculatedAttribute()
+        public void CanAddCalculatedDynamicAttribute()
         {
             var expressions = new List<EntityPropertyExpression>();
             var entity = CreateDefaultEntity();
@@ -40,7 +40,7 @@ namespace NetFusion.Tests.Core.Domain
         /// proceeding expression.
         /// </summary>
         [Fact]
-        public void CanUpdateCalculatedAttribute()
+        public void CanUpdateCalculatedDynamicAttribute()
         {
             var expressions = new List<EntityPropertyExpression>();
             var entity = CreateDefaultEntity();
@@ -59,7 +59,7 @@ namespace NetFusion.Tests.Core.Domain
         /// an entity static property.
         /// </summary>
         [Fact]
-        public void ExpressonCanContainEntityStaticProperty()
+        public void ExpressionCanContainEntityStaticProperty()
         {
             var expressions = new List<EntityPropertyExpression>();
             var entity = CreateDefaultEntity();
@@ -73,21 +73,31 @@ namespace NetFusion.Tests.Core.Domain
         }
 
         [Fact]
-        public void ExpressionCanCombineEntityPropertyAndAttribute()
+        public void ExpressionCanCombineEntityPropertyAndDynamicAttribute()
         {
+            var expressions = new List<EntityPropertyExpression>();
+            var entity = CreateDefaultEntity();
 
+            entity.MaxValue = 1000;
+            entity.Attributes.Value6 = 200;
+            this.EvalSrv.Evaluate(entity).Wait();
+
+            entity.ContainsAttribute("Value7").Should().BeTrue();
+            var result = (int)entity.Attributes.Value7;
+            result.Should().Be(1200);
         }
 
         [Fact]
-        public void ExpressionCanDependOnPriorCalculatedProperty()
+        public void ExpressionCanDependOnPriorCalculatedValues()
         {
+            var expressions = new List<EntityPropertyExpression>();
+            var entity = CreateDefaultEntity();
 
-        }
+            entity.MaxValue = 1000;
+            entity.Attributes.Value1 = 200;
+            this.EvalSrv.Evaluate(entity).Wait();
 
-        [Fact]
-        public void ExpressionCanDependOnPriorCalculatedAttribute()
-        {
-
+            entity.MinValue.Should().Be(300);
         }
 
         // Creates an initial default domain entity with dynamic entity
@@ -99,23 +109,38 @@ namespace NetFusion.Tests.Core.Domain
             entity.Attributes.Value2 = 0;
             entity.Attributes.Value3 = 0;
             entity.Attributes.Value4 = 0;
+            entity.Attributes.Value5 = 0;
+            entity.Attributes.Value6 = 0;
+            entity.Attributes.Value7 = 0;
+            entity.Attributes.Value8 = "";
 
             return entity;
         }
 
         private IEntityEvaluationService CreateEvaluationService()
         {
-            // CanAddCalculatedAttribute
+            // CanAddCalculatedDynamicAttribute
             var expressions = new List<EntityPropertyExpression>();
             expressions.AddExpression<DynamicEntity>("Value2", "_.Value1 + 100");
 
-           // CanUpdateCalculatedAttribute
+           // CanUpdateCalculatedDynamicAttribute
            expressions.AddExpression<DynamicEntity>("Value4", "_.Value3 + 100");
            expressions.AddExpression<DynamicEntity>("Value4", "_.Value4 > 200 ? 5 : 10");
 
-            // ExpressonCanContainEntityStaticProperty
+            // ExpressionCanContainEntityStaticProperty
             expressions.AddExpression<DynamicEntity>("Value5", "Entity.IsActive ? 2000 : 1000");
+
+            // ExpressionCanCombineEntityPropertyAndAttribute
+            expressions.AddExpression<DynamicEntity>("Value7", "Entity.MaxValue + _.Value6");
+
+            // ExpressionCanDependOnPriorCalculatedValues
+            expressions.AddExpression<DynamicEntity>("Entity.MaxValue = ++Entity.MaxValue");
+            expressions.AddExpression<DynamicEntity>("Entity.MinValue = System.Math.Min(_.Value2, Entity.MaxValue)");
+
+            expressions.AddExpression<DynamicEntity>("_Value8", "ObjectExtensions.ToIndentedJson(Entity.MaxValue)");
+
             return expressions.CreateService();
+           
         }
     }
 

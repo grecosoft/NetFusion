@@ -1,20 +1,16 @@
 ﻿using NetFusion.Domain.Entity;
 using System.Collections.Generic;
 
-namespace NetFusion.Tests.Core.Domain.Mocks
+namespace RefArch.Api.Models
 {
-    public class DynamicEntity : IAttributedEntity
+    public class DynamicDomainEntity : IAttributedEntity
     {
         private AttributedEntity _attributes;
 
-        public DynamicEntity()
+        public DynamicDomainEntity()
         {
             _attributes = new AttributedEntity();
         }
-
-        public bool IsActive { get; set; }
-        public int MaxValue { get; set; }
-        public int MinValue { get; set; }
 
         public IEnumerable<EntityAttributeValue> AttributeValues
         {
@@ -23,6 +19,13 @@ namespace NetFusion.Tests.Core.Domain.Mocks
         }
 
         public dynamic Attributes { get { return _attributes.Attributes; } }
+
+
+        public bool IsActive { get; set; }
+        public int MinValue { get; set; }
+        public int MaxValue { get; set; }
+        public string ItemName { get; set; }
+
 
         public void SetAttributeValue(string name, object value)
         {

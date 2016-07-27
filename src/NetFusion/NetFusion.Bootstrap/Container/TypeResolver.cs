@@ -125,17 +125,26 @@ namespace NetFusion.Bootstrap.Container
             return fileNames.Select(AssemblyName.GetAssemblyName).ToArray();
         }
 
-        private Assembly[] GetAssemblies(AssemblyName[] filteredAssemblyNames)
+        private Assembly[] GetAssemblies(AssemblyName[] matchingAssemblyNames)
         {
-            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var loadedAssemblies = GetLoadedMatchingAssemblies(matchingAssemblyNames);
             var loadedCodeBases = loadedAssemblies.Select(a => a.CodeBase);
 
-            var nonLoadedAssemblyNames = filteredAssemblyNames.Where(fa => !loadedCodeBases.Contains(
-                fa.CodeBase, StringComparer.OrdinalIgnoreCase));
+            var nonLoadedAssemblyNames = matchingAssemblyNames.Where(fa => !loadedCodeBases.Contains(
+                fa.CodeBase, StringComparer.Ordinal));
 
-            var filteredAssemblies = LoadAssemblies(nonLoadedAssemblyNames);
+            var nonLoadedAssemblies = LoadAssemblies(nonLoadedAssemblyNames);
 
-            return loadedAssemblies.Concat(filteredAssemblies)
+            return loadedAssemblies.Union(nonLoadedAssemblies)
+                .ToArray();
+        }
+
+        private Assembly[] GetLoadedMatchingAssemblies(AssemblyName[] matchingAssemblyNames)
+        {
+            var matchingAssemblyCodeBases = matchingAssemblyNames.Select(an => an.CodeBase);
+
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => matchingAssemblyCodeBases.Contains(a.CodeBase, StringComparer.Ordinal))
                 .ToArray();
         }
 

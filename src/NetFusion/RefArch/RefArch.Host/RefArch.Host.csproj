@@ -16,7 +16,7 @@
     <RootNamespace>RefArch.Host</RootNamespace>
     <AssemblyName>RefArch.Host</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -261,6 +261,7 @@
     <Content Include="Configs\Dev\CompositeLogSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Configs\Dev\NetFusionExpressionDb.json" />
     <None Include="scripts\jquery-3.0.0.intellisense.js" />
     <Content Include="scripts\app\modules\plugins\area-module.js" />
     <Content Include="scripts\app\modules\portal\area-module.js" />
@@ -287,6 +288,7 @@
     <None Include="Configs\Dev\NetfusionDB.json" />
     <Compile Include="Controllers\AppController.cs" />
     <Compile Include="Controllers\Samples\ContextDependentController.cs" />
+    <Compile Include="Controllers\Samples\DomainEvaluationController.cs" />
     <Compile Include="Controllers\Samples\EntityFrameworkController.cs" />
     <Compile Include="Controllers\Samples\LoggingController.cs" />
     <Compile Include="Controllers\Samples\MessagingController.cs" />
@@ -302,6 +304,7 @@
     <Compile Include="Hubs\CompositeLogHub.cs" />
     <Compile Include="Manifest.cs" />
     <Compile Include="Modules\ContextModule.cs" />
+    <Compile Include="Modules\ServiceModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -322,7 +325,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
     <Folder Include="scripts\app\modules\common\" />
   </ItemGroup>
   <ItemGroup>
@@ -333,6 +335,14 @@
     <ProjectReference Include="..\..\NetFusion.Common\NetFusion.Common.csproj">
       <Project>{4bcb335e-3f83-481d-b206-ffa9266bf780}</Project>
       <Name>NetFusion.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NetFusion.Domain.Roslyn\NetFusion.Domain.Roslyn.csproj">
+      <Project>{6d4850cf-6def-4ae7-a894-495bda007740}</Project>
+      <Name>NetFusion.Domain.Roslyn</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NetFusion.Domain\NetFusion.Domain.csproj">
+      <Project>{18bc0d8b-3b47-4228-b11f-3c581bbaf39f}</Project>
+      <Name>NetFusion.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\NetFusion.EntityFramework\NetFusion.EntityFramework.csproj">
       <Project>{c3f8e433-49bb-47a2-92a2-24afaf28ed3a}</Project>
@@ -402,7 +412,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>54164</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

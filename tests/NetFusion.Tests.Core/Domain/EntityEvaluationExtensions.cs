@@ -15,6 +15,13 @@ namespace NetFusion.Tests.Core.Domain
             return expressions;
         }
 
+        public static IList<EntityPropertyExpression> AddExpression<T>(this IList<EntityPropertyExpression> expressions,
+            string expression) where T : IAttributedEntity
+        {
+            expressions.Add(new EntityPropertyExpression(typeof(T), expression));
+            return expressions;
+        }
+
         public static IEntityEvaluationService CreateService(this IList<EntityPropertyExpression> expressions)
         {
             var evalSrv = new EntityEvaluationService();
