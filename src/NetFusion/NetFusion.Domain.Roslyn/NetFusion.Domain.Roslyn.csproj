@@ -50,10 +50,6 @@
       <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.Scripting.Common.1.3.2\lib\dotnet\Microsoft.CodeAnalysis.Scripting.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NetFusion.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Research\Azure\libs\NetFusion.Common.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\System.AppContext.4.1.0\lib\net46\System.AppContext.dll</HintPath>
@@ -153,6 +149,10 @@
     <ProjectReference Include="..\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj">
       <Project>{a71630d5-940f-4de6-a5b9-f229074aa86d}</Project>
       <Name>NetFusion.Bootstrap</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NetFusion.Common\NetFusion.Common.csproj">
+      <Project>{4bcb335e-3f83-481d-b206-ffa9266bf780}</Project>
+      <Name>NetFusion.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetFusion.Domain\NetFusion.Domain.csproj">
       <Project>{18bc0d8b-3b47-4228-b11f-3c581bbaf39f}</Project>
