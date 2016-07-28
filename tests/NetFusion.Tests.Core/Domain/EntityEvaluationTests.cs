@@ -23,7 +23,7 @@ namespace NetFusion.Tests.Core.Domain
         [Fact]
         public void CanAddCalculatedDynamicAttribute()
         {
-            var expressions = new List<EntityPropertyExpression>();
+            var expressions = new List<EntityExpression>();
             var entity = CreateDefaultEntity();
 
             entity.DeleteAttribute("Value2");
@@ -42,7 +42,7 @@ namespace NetFusion.Tests.Core.Domain
         [Fact]
         public void CanUpdateCalculatedDynamicAttribute()
         {
-            var expressions = new List<EntityPropertyExpression>();
+            var expressions = new List<EntityExpression>();
             var entity = CreateDefaultEntity();
 
             entity.Attributes.Value1 = 0;
@@ -61,7 +61,7 @@ namespace NetFusion.Tests.Core.Domain
         [Fact]
         public void ExpressionCanContainEntityStaticProperty()
         {
-            var expressions = new List<EntityPropertyExpression>();
+            var expressions = new List<EntityExpression>();
             var entity = CreateDefaultEntity();
 
             entity.IsActive = true;
@@ -75,7 +75,7 @@ namespace NetFusion.Tests.Core.Domain
         [Fact]
         public void ExpressionCanCombineEntityPropertyAndDynamicAttribute()
         {
-            var expressions = new List<EntityPropertyExpression>();
+            var expressions = new List<EntityExpression>();
             var entity = CreateDefaultEntity();
 
             entity.MaxValue = 1000;
@@ -90,7 +90,7 @@ namespace NetFusion.Tests.Core.Domain
         [Fact]
         public void ExpressionCanDependOnPriorCalculatedValues()
         {
-            var expressions = new List<EntityPropertyExpression>();
+            var expressions = new List<EntityExpression>();
             var entity = CreateDefaultEntity();
 
             entity.MaxValue = 1000;
@@ -120,7 +120,7 @@ namespace NetFusion.Tests.Core.Domain
         private IEntityEvaluationService CreateEvaluationService()
         {
             // CanAddCalculatedDynamicAttribute
-            var expressions = new List<EntityPropertyExpression>();
+            var expressions = new List<EntityExpression>();
             expressions.AddExpression<DynamicEntity>("Value2", "_.Value1 + 100");
 
            // CanUpdateCalculatedDynamicAttribute

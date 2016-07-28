@@ -41,7 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entity\AttributedEntity.cs" />
-    <Compile Include="Entity\EntityPropertyExpression.cs" />
+    <Compile Include="Entity\EntityExpression.cs" />
+    <Compile Include="Entity\EntityExpressionSet.cs" />
     <Compile Include="Entity\EntityPropertyValue.cs" />
     <Compile Include="Entity\IAttributedEntity.cs" />
     <Compile Include="Services\IEntityEvaluationService.cs" />

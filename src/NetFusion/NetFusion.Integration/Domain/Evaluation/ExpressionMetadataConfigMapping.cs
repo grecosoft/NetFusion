@@ -1,13 +1,13 @@
 ﻿using NetFusion.MongoDB;
 
-namespace NetFusion.Integration.Domain
+namespace NetFusion.Integration.Domain.Evaluation
 {
     public class ExpressionMetadataConfigMapping : EntityClassMap<ExpressionMetadataConfig>
     {
         public ExpressionMetadataConfigMapping()
         {
             AutoMap();
-            MapStringObjectIdProperty(p => p.Id);
+            //MapStringObjectIdProperty(p => p.Id);
         }
     }
 }

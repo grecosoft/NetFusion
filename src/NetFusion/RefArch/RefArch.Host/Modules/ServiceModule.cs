@@ -2,6 +2,7 @@
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Domain.Services;
 using NetFusion.Integration.Domain;
+using NetFusion.Integration.Domain.Evaluation;
 
 namespace RefArch.Host.Modules
 {

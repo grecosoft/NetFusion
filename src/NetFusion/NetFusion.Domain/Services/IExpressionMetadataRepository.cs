@@ -13,11 +13,11 @@ namespace NetFusion.Domain.Services
         /// that are to be evaluated at runtime. 
         /// </summary>
         /// <returns>List of domain entity expressions.</returns>
-        Task<IEnumerable<EntityPropertyExpression>> ReadAll();
+        Task<IEnumerable<EntityExpressionSet>> ReadAll();
 
         // Save a list of entity property expressions.
-        Task SaveExpressions(IEnumerable<EntityPropertyExpression> expressions);
+        Task SaveExpressions(IEnumerable<EntityExpression> expressions);
 
-        Task SaveExpression(EntityPropertyExpression expression);
+        Task SaveExpression(EntityExpression expression);
     }
 }

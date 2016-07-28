@@ -12,7 +12,7 @@ namespace NetFusion.Domain.Roslyn.Modules
 {
     public class DomainExpressionModule : PluginModule
     {
-        private IEnumerable<EntityPropertyExpression> _expressions;
+        private IEnumerable<EntityExpressionSet> _expressions;
 
         public override void RegisterComponents(ContainerBuilder builder)
         {
@@ -39,18 +39,18 @@ namespace NetFusion.Domain.Roslyn.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Expressions"] = _expressions.GroupBy(
-                e => e.EntityType,
-                (et, es) => new
-                {
-                    EntityType = et,
-                    Expressions = es.Select(e => new
-                    {
-                        e.Id,
-                        e.PropertyName,
-                        e.Expression
-                    })
-                }).ToDictionary(e => e.EntityType);
+            //moduleLog["Expressions"] = _expressions.GroupBy(
+            //    e => e.EntityType,
+            //    (et, es) => new
+            //    {
+            //        EntityType = et,
+            //        Expressions = es.Select(e => new
+            //        {
+            //            e.Id,
+            //            e.PropertyName,
+            //            e.Expression
+            //        })
+            //    }).ToDictionary(e => e.EntityType);
         }
     }
 }

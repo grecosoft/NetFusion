@@ -12,7 +12,7 @@ namespace NetFusion.Domain.Roslyn.Core
     public class EntityExpressionScript
     {
         public Type EntityType { get; set; }
-        public EntityPropertyExpression Expression { get; set; }
+        public EntityExpression Expression { get; set; }
         public ScriptRunner<object> Evaluator { get; set; }
     }
 }

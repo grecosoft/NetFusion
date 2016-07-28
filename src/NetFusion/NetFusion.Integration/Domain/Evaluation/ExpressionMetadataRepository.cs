@@ -7,31 +7,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NetFusion.Integration.Domain
+namespace NetFusion.Integration.Domain.Evaluation
 {
     public class ExpressionMetadataRepository : IExpressionMetadataRepository
     {
         private readonly IMongoDbClient<NetFusionExpressionDb> _mongoClient;
-        private readonly IMongoCollection<ExpressionMetadataConfig> _expressionColl;
+        private readonly IMongoCollection<EntityMetadataConfig> _expressionColl;
 
         public ExpressionMetadataRepository(NetFusionExpressionDb settings, IMongoDbClient<NetFusionExpressionDb> mongoClient)
         {
             _mongoClient = mongoClient;
-            _expressionColl = mongoClient.GetCollection<ExpressionMetadataConfig>(settings.CollectionName);
+            _expressionColl = mongoClient.GetCollection<EntityMetadataConfig>(settings.CollectionName);
         }
 
-        public async Task<IEnumerable<EntityPropertyExpression>> ReadAll()
+        public async Task<IEnumerable<EntityExpressionSet>> ReadAll()
         {
             var expressionConfigs = await _expressionColl.Find(_ => true).ToListAsync();
             return expressionConfigs.Select(ec => ec.ToEntity());
         }
 
-        public Task SaveExpression(EntityPropertyExpression expression)
+        public Task SaveExpression(EntityExpression expression)
         {
             throw new NotImplementedException();
         }
 
-        public Task SaveExpressions(IEnumerable<EntityPropertyExpression> expressions)
+        public Task SaveExpressions(IEnumerable<EntityExpression> expressions)
         {
             throw new NotImplementedException();
         }

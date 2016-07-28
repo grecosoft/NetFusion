@@ -15,7 +15,7 @@ namespace NetFusion.Domain.Entity.Services
         /// expressions.
         /// </summary>
         /// <param name="expressions">List of entity related expressions.</param>
-        void Load(IEnumerable<EntityPropertyExpression> expressions);
+        void Load(IEnumerable<EntityExpressionSet> expressions);
 
         /// <summary>
         /// Loads a set of expressions associated with the specified entity's type

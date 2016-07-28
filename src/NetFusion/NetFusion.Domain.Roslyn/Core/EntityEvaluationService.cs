@@ -19,14 +19,14 @@ namespace NetFusion.Domain.Roslyn.Core
         // dynamic expressions.
         private ILookup<Type, EntityExpressionScript> _entityScripts;
 
-        public void Load(IEnumerable<EntityPropertyExpression> expressions)
+        public void Load(IEnumerable<EntityExpressionSet> expressions)
         {
-            var scripts = expressions.Select(e =>
+            var scripts = expressions.SelectMany(es => es.Expressions, (es, e) =>
                 new EntityExpressionScript
                 {
-                    EntityType = Type.GetType(e.EntityType),
+                    EntityType = es.EntityType,
                     Expression = e,
-                    Evaluator = this.CreateScriptRunner(Type.GetType(e.EntityType), e.Expression)
+                    Evaluator = this.CreateScriptRunner(es.EntityType, e.Expression)
                 }).ToList();
 
             _entityScripts = scripts.ToLookup(e => e.EntityType);
