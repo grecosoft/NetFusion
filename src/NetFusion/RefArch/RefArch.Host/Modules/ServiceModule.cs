@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Domain.Services;
-using NetFusion.Integration.Domain;
+using NetFusion.Domain.Scripting;
 using NetFusion.Integration.Domain.Evaluation;
 
 namespace RefArch.Host.Modules
@@ -10,8 +9,8 @@ namespace RefArch.Host.Modules
     {
         public override void RegisterComponents(ContainerBuilder builder)
         {
-            builder.RegisterType<ExpressionMetadataRepository>()
-                .As<IExpressionMetadataRepository>()
+            builder.RegisterType<EntityExpresionSetRepository>()
+                .As<IEntityScriptRepository>()
                 .InstancePerLifetimeScope();
         }
     }

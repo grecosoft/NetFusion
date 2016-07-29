@@ -1,4 +1,4 @@
-﻿using NetFusion.Domain.Entity.Services;
+﻿using NetFusion.Domain.Scripting;
 using NetFusion.Messaging;
 using RefArch.Api.Commands;
 using RefArch.Api.Models;
@@ -8,9 +8,9 @@ namespace RefArch.Services.Domain
 {
     public class EvalDomainService : IMessageConsumer
     {
-        private readonly IEntityEvaluationService _evaluationSrv;
+        private readonly IEntityScriptingService _evaluationSrv;
 
-        public EvalDomainService(IEntityEvaluationService evaluationSrv)
+        public EvalDomainService(IEntityScriptingService evaluationSrv)
         {
             _evaluationSrv = evaluationSrv;
         }
@@ -27,7 +27,7 @@ namespace RefArch.Services.Domain
                 entity.SetAttributeValue(attrib.Key, attrib.Value);
             }
 
-            await _evaluationSrv.Evaluate(entity);
+            await _evaluationSrv.Execute(entity);
             return new EvaluatedDomainModel(entity);
         }
     }

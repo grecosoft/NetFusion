@@ -37,8 +37,5 @@ namespace NetFusion.Domain.Entity
         /// List of all associated dynamic properties.
         /// </summary>
         IEnumerable<EntityAttributeValue> AttributeValues { get; }
-
-
-
     }
 }

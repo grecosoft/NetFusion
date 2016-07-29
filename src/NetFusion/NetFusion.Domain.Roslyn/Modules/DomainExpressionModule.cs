@@ -1,38 +1,35 @@
 ﻿using Autofac;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Domain.Entity;
-using NetFusion.Domain.Entity.Services;
+using NetFusion.Domain.Scripting;
 using NetFusion.Domain.Roslyn.Core;
-using NetFusion.Domain.Services;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace NetFusion.Domain.Roslyn.Modules
 {
     public class DomainExpressionModule : PluginModule
     {
-        private IEnumerable<EntityExpressionSet> _expressions;
+        private IEnumerable<EntityScript> _expressions;
 
         public override void RegisterComponents(ContainerBuilder builder)
         {
-            builder.RegisterType<EntityEvaluationService>()
-                .As<IEntityEvaluationService>()
+            builder.RegisterType<EntityScriptingService>()
+                .As<IEntityScriptingService>()
                 .SingleInstance();
         }
 
         public override void RunModule(ILifetimeScope scope)
         {
-            IExpressionMetadataRepository expressionRep = null;
+            IEntityScriptRepository expressionRep = null;
             if (!scope.TryResolve(out expressionRep))
             {
                 throw new ContainerException(
-                    $"An component implementing the interface: {typeof(IExpressionMetadataRepository)} " +
+                    $"An component implementing the interface: {typeof(IEntityScriptRepository)} " +
                     $"is not registered.");
             }
 
             _expressions = expressionRep.ReadAll().Result;
-            var evaluationSrv = scope.Resolve<IEntityEvaluationService>();
+            var evaluationSrv = scope.Resolve<IEntityScriptingService>();
 
             evaluationSrv.Load(_expressions);
         }

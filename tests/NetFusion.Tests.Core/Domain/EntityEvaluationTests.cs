@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
-using NetFusion.Domain.Entity;
-using NetFusion.Domain.Entity.Services;
+using NetFusion.Domain.Scripting;
 using NetFusion.Tests.Core.Domain.Mocks;
 using System.Collections.Generic;
 using Xunit;
@@ -9,7 +8,7 @@ namespace NetFusion.Tests.Core.Domain
 {
     public class EntityEvaluationTests
     {
-        private readonly IEntityEvaluationService EvalSrv;
+        private readonly IEntityScriptingService EvalSrv;
 
         public EntityEvaluationTests()
         {
@@ -28,7 +27,7 @@ namespace NetFusion.Tests.Core.Domain
 
             entity.DeleteAttribute("Value2");
             entity.Attributes.Value1 = 10;
-            this.EvalSrv.Evaluate(entity).Wait();
+            this.EvalSrv.Execute(entity).Wait();
 
             entity.ContainsAttribute("Value2").Should().BeTrue();
             var result = (int)entity.Attributes.Value2;
@@ -47,7 +46,7 @@ namespace NetFusion.Tests.Core.Domain
 
             entity.Attributes.Value1 = 0;
             entity.Attributes.Value3 = 105;
-            this.EvalSrv.Evaluate(entity).Wait();
+            this.EvalSrv.Execute(entity).Wait();
 
             entity.ContainsAttribute("Value4").Should().BeTrue();
             var result = (int)entity.Attributes.Value4;
@@ -65,7 +64,7 @@ namespace NetFusion.Tests.Core.Domain
             var entity = CreateDefaultEntity();
 
             entity.IsActive = true;
-            this.EvalSrv.Evaluate(entity).Wait();
+            this.EvalSrv.Execute(entity).Wait();
 
             entity.ContainsAttribute("Value5").Should().BeTrue();
             var result = (int)entity.Attributes.Value5;
@@ -80,7 +79,7 @@ namespace NetFusion.Tests.Core.Domain
 
             entity.MaxValue = 1000;
             entity.Attributes.Value6 = 200;
-            this.EvalSrv.Evaluate(entity).Wait();
+            this.EvalSrv.Execute(entity).Wait();
 
             entity.ContainsAttribute("Value7").Should().BeTrue();
             var result = (int)entity.Attributes.Value7;
@@ -95,7 +94,7 @@ namespace NetFusion.Tests.Core.Domain
 
             entity.MaxValue = 1000;
             entity.Attributes.Value1 = 200;
-            this.EvalSrv.Evaluate(entity).Wait();
+            this.EvalSrv.Execute(entity).Wait();
 
             entity.MinValue.Should().Be(300);
         }
@@ -117,7 +116,7 @@ namespace NetFusion.Tests.Core.Domain
             return entity;
         }
 
-        private IEntityEvaluationService CreateEvaluationService()
+        private IEntityScriptingService CreateEvaluationService()
         {
             // CanAddCalculatedDynamicAttribute
             var expressions = new List<EntityExpression>();

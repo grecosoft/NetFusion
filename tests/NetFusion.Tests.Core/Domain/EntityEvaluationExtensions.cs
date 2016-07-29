@@ -1,5 +1,5 @@
 ﻿using NetFusion.Domain.Entity;
-using NetFusion.Domain.Entity.Services;
+using NetFusion.Domain.Scripting;
 using NetFusion.Domain.Roslyn.Core;
 using NetFusion.Tests.Core.Domain.Mocks;
 using System.Collections.Generic;
@@ -13,23 +13,27 @@ namespace NetFusion.Tests.Core.Domain
             string propertyName,
             string expression) where T: IAttributedEntity
         {
-            expressions.Add(new EntityExpression(expression, 0, true, propertyName));
+            expressions.Add(new EntityExpression(expression, 0, propertyName));
             return expressions;
         }
 
         public static IList<EntityExpression> AddExpression<T>(this IList<EntityExpression> expressions,
             string expression) where T : IAttributedEntity
         {
-            expressions.Add(new EntityExpression(expression, 0, true));
+            expressions.Add(new EntityExpression(expression, 0));
             return expressions;
         }
 
-        public static IEntityEvaluationService CreateService(this IList<EntityExpression> expressions)
+        public static IEntityScriptingService CreateService(this IList<EntityExpression> expressions)
         {
-            var es = new EntityExpressionSet("", typeof(DynamicEntity).AssemblyQualifiedName, "", new ReadOnlyCollection<EntityExpression>(expressions));
+            var es = new EntityScript(
+                "",
+                "default", 
+                typeof(DynamicEntity).AssemblyQualifiedName,
+                new ReadOnlyCollection<EntityExpression>(expressions));
                 
-            var evalSrv = new EntityEvaluationService();
-            evalSrv.Load(new EntityExpressionSet[] { es });
+            var evalSrv = new EntityScriptingService();
+            evalSrv.Load(new EntityScript[] { es });
             return evalSrv;
         }
 

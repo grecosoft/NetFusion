@@ -130,8 +130,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\EntityEvaluationService.cs" />
-    <Compile Include="Core\EntityExpressionScript.cs" />
+    <Compile Include="Core\EntityScriptingService.cs" />
+    <Compile Include="Core\ExpressionEvaluator.cs" />
+    <Compile Include="Core\ScriptEvaluator.cs" />
     <Compile Include="DomainRoslynManifest.cs" />
     <Compile Include="Modules\DomainExpressionModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
