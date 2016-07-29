@@ -1,6 +1,6 @@
 ﻿using NetFusion.Domain.Entity;
-using NetFusion.Domain.Scripting;
 using NetFusion.Domain.Roslyn.Core;
+using NetFusion.Domain.Scripting;
 using NetFusion.Tests.Core.Domain.Mocks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,6 +31,9 @@ namespace NetFusion.Tests.Core.Domain
                 "default", 
                 typeof(DynamicEntity).AssemblyQualifiedName,
                 new ReadOnlyCollection<EntityExpression>(expressions));
+
+            es.ImportedAssemblies = new[] { typeof(Common.Extensions.ObjectExtensions).Assembly.FullName };
+            es.ImportedNamespaces = new[] { typeof(Common.Extensions.ObjectExtensions).Namespace };
                 
             var evalSrv = new EntityScriptingService();
             evalSrv.Load(new EntityScript[] { es });

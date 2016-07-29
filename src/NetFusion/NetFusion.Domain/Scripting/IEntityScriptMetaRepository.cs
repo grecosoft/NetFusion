@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace NetFusion.Domain.Scripting
 {
-    public interface IEntityScriptRepository
+    public interface IEntityScriptMetaRepository
     {
         /// <summary>
         /// Returns a list of all the configured entity scripts. 

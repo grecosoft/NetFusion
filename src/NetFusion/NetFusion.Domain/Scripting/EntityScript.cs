@@ -29,7 +29,12 @@ namespace NetFusion.Domain.Scripting
             this.Id = Id;
             this.Name = name;
             this.EntityType = Type.GetType(entityType);
+
+            this.Attributes = new Dictionary<string, object>();
             this.Expressions = expressions;
+                        
+            this.ImportedAssemblies = new List<string>();
+            this.ImportedNamespaces = new List<string>();
         }
 
         /// <summary>
@@ -41,5 +46,11 @@ namespace NetFusion.Domain.Scripting
         /// Explanation of the script within the current application domain.
         /// </summary>
         public string Description { get; set; }
+
+        public IDictionary<string, object> Attributes { get; set; }
+
+        public ICollection<string> ImportedAssemblies { get; set; }
+
+        public ICollection<string> ImportedNamespaces { get; set; }
     }
 }

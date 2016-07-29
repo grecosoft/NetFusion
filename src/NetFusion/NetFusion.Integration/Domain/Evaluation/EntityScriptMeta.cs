@@ -5,13 +5,16 @@ using System.Linq;
 
 namespace NetFusion.Integration.Domain.Evaluation
 {
-    public class EntityScriptConfig
+    public class EntityScriptMeta
     {
         public string Id { get; private set; }
         public string EntityType { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public ICollection<EntityExpressionConfig> Expressions { get; set; }
+        public IDictionary<string, object> Attributes { get; set; }
+        public ICollection<EntityExpressionMeta> Expressions { get; set; }
+        public ICollection<string> ImportedAssemblies { get; set; }
+        public ICollection<string> ImportedNamespaces { get; set; }
 
         public EntityScript ToEntity()
         {
@@ -24,6 +27,9 @@ namespace NetFusion.Integration.Domain.Evaluation
                 new ReadOnlyCollection<EntityExpression>(expressions));
 
             expressionSet.Description = this.Description;
+            expressionSet.Attributes = this.Attributes;
+            expressionSet.ImportedAssemblies = this.ImportedAssemblies;
+            expressionSet.ImportedNamespaces = this.ImportedNamespaces;
             return expressionSet;
         }
 

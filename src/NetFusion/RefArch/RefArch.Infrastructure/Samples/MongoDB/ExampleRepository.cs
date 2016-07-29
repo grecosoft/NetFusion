@@ -21,6 +21,10 @@ namespace RefArch.Infrastructure.Samples.MongoDB
 
         public async Task AddCustomerAsync(Customer customer)
         {
+            customer.NameValues = new Dictionary<string, object>
+            {
+                { "A", 100 }
+            };
             await _customerColl.InsertOneAsync(customer);
         }
 

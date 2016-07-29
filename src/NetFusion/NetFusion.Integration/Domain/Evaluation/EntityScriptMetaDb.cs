@@ -2,7 +2,7 @@
 
 namespace NetFusion.Integration.Domain.Evaluation
 {
-    public class NetFusionEvaluationDb : MongoSettings
+    public class EntityScriptMetaDb : MongoSettings
     {
         public string CollectionName { get; set; }
     }

@@ -24,10 +24,13 @@ namespace NetFusion.Domain.Roslyn.Core
     {
         // Map between a domain entity and its related set of scripts.
         private ILookup<Type, ScriptEvaluator> _scriptEvaluators;
+        private bool _compiledOnLoad;
 
-        public void Load(IEnumerable<EntityScript> scripts)
+        public void Load(IEnumerable<EntityScript> scripts, bool compiledOnLoad = false)
         {
             Check.NotNull(scripts, nameof(scripts));
+
+            _compiledOnLoad = compiledOnLoad;
 
             _scriptEvaluators = scripts.Select(CreateScriptEvaluator)
                 .ToLookup(se => se.Script.EntityType);
@@ -35,15 +38,21 @@ namespace NetFusion.Domain.Roslyn.Core
 
         private ScriptEvaluator CreateScriptEvaluator(EntityScript script)
         {
-            var evaluators = CreateExpressionEvaluators(script);
-            return new ScriptEvaluator(script, evaluators);
+            var scriptEval = new ScriptEvaluator(script);
+
+            if (_compiledOnLoad)
+            {
+                var evaluators = CreateExpressionEvaluators(script);
+                scriptEval.SetExpressionEvaluators(evaluators);
+            }
+            return scriptEval;
         }
 
         private ExpressionEvaluator[] CreateExpressionEvaluators(EntityScript script)
         {
             return script.Expressions.Select(exp =>
             {
-                var scriptRunner = CreateScriptRunner(script.EntityType, exp.Expression);
+                var scriptRunner = CreateScriptRunner(script, exp.Expression);
                 return new ExpressionEvaluator(exp, scriptRunner);
 
             }).ToArray();
@@ -64,45 +73,112 @@ namespace NetFusion.Domain.Roslyn.Core
             }
 
             // Execute the default script if specified.
-            var defaultScript = scripts.FirstOrDefault(se => se.IsDefault);
-            await defaultScript?.Execute(entity);
-
+            var defaultEvalScript = scripts.FirstOrDefault(se => se.IsDefault);
+            
+            if (defaultEvalScript != null)
+            {
+                CompileScript(defaultEvalScript);
+                SetDefaultAttributeValues(defaultEvalScript.Script, entity);
+                await defaultEvalScript?.Execute(entity);
+            }
+            
             // Execute the specified script.
             if (scriptName != ScriptEvaluator.DefaultScriptName)
             {
-                var namedScript = scripts.FirstOrDefault(se => se.Script.Name == scriptName);
-                if (namedScript == null)
+                var namedEvalScript = scripts.FirstOrDefault(se => se.Script.Name == scriptName);
+                if (namedEvalScript == null)
                 {
                     throw new InvalidOperationException(
                         $"A script named: {scriptName} for the entity type of: {entityType} could not be found.");
                 }
-                await namedScript.Execute(entity);
+
+                CompileScript(namedEvalScript);
+                SetDefaultAttributeValues(namedEvalScript.Script, entity);
+                await namedEvalScript.Execute(entity);
+            }
+        }
+
+        private void SetDefaultAttributeValues(EntityScript script, IAttributedEntity entity)
+        {
+            foreach (var attribute in script.Attributes)
+            {
+                if (!entity.ContainsAttribute(attribute.Key))
+                {
+                    entity.SetAttributeValue(attribute.Key, attribute.Value);
+                }
             }
         }
 
         // Used to create a cached delegate that can be used to execute a script
         // against a domain model and a set of dynamic properties.  
-        private ScriptRunner<object> CreateScriptRunner(Type entityType, string expression)
+        private ScriptRunner<object> CreateScriptRunner(EntityScript script, string expression)
         {
-            var scopeType = typeof(EntityScriptScope<>).MakeGenericType(entityType);
-            var options = GetScriptOptions(entityType);
+            var scopeType = typeof(EntityScriptScope<>).MakeGenericType(script.EntityType);
+            var options = GetScriptOptions(script);
 
-            var script = CSharpScript.Create<object>(expression, options, scopeType);
-            return script.CreateDelegate();
+            var scriptRunner = CSharpScript.Create<object>(expression, options, scopeType);
+            return scriptRunner.CreateDelegate();
         }
 
-        private ScriptOptions GetScriptOptions(Type entityType)
+        // Can be called to compile all scripts that have not yet been compiled.
+        public void CompileAllScripts()
         {
-            var options = ScriptOptions.Default.AddReferences(
-                Assembly.GetAssembly(typeof(DynamicObject)),
-                Assembly.GetAssembly(typeof(CSharpArgumentInfo)),
-                Assembly.GetAssembly(typeof(ExpandoObject)),
-                Assembly.GetAssembly(typeof(ObjectExtensions)),
-                Assembly.GetAssembly(entityType))
-                    .AddImports(
-                        "System.Dynamic", 
-                        "NetFusion.Common.Extensions");
+            foreach (var scriptEval in _scriptEvaluators.Values())
+            {
+                CompileScript(scriptEval);
+            }
+        }
+
+        private void CompileScript(ScriptEvaluator scriptEval)
+        {
+            if (_compiledOnLoad)
+            {
+                return;
+            }
+
+            if (scriptEval.Evaluators == null)
+            {
+                lock(scriptEval)
+                {
+                    if (scriptEval.Evaluators == null)
+                    {
+                        var evaluators = CreateExpressionEvaluators(scriptEval.Script);
+                        scriptEval.SetExpressionEvaluators(evaluators);
+                    }
+                }
+            }
+        }
+
+        private ScriptOptions GetScriptOptions(EntityScript script)
+        {
+            var defaultTypes = new Type[]
+            {
+                typeof(DynamicObject),
+                typeof(CSharpArgumentInfo),
+                typeof(ExpandoObject),
+                typeof(ObjectExtensions),
+                script.EntityType
+            };
+
+            var importedAssemblies = GetImportedAssemblies(script, defaultTypes);
+            var options = ScriptOptions.Default.AddReferences(importedAssemblies)
+                .AddImports(script.ImportedNamespaces);
+
             return options;
+        }
+
+        private IList<Assembly> GetImportedAssemblies(EntityScript script, IEnumerable<Type> assembliesContainingTypes)
+        {
+            var assemblies = new List<Assembly>();
+            foreach (string assemblyName in script.ImportedAssemblies)
+            {
+                assemblies.Add(Assembly.Load(assemblyName));
+            }
+
+            var defaultAssemblies = assembliesContainingTypes.Select(Assembly.GetAssembly);
+            assemblies.AddRange(defaultAssemblies);
+
+            return assemblies.Distinct().ToList();
         }
     }
 }

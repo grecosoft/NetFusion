@@ -9,8 +9,8 @@ namespace RefArch.Host.Modules
     {
         public override void RegisterComponents(ContainerBuilder builder)
         {
-            builder.RegisterType<EntityExpresionSetRepository>()
-                .As<IEntityScriptRepository>()
+            builder.RegisterType<EntityScriptMetaRepository>()
+                .As<IEntityScriptMetaRepository>()
                 .InstancePerLifetimeScope();
         }
     }

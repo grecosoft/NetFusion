@@ -15,7 +15,15 @@ namespace NetFusion.Domain.Scripting
         /// The implementation should pre-compile that expressions.
         /// </summary>
         /// <param name="scripts">List of entity associated scripts.</param>
-        void Load(IEnumerable<EntityScript> scripts);
+        /// <param name="compiledOnLoad">Determines if all the script expressions should be
+        /// compiled when loaded.  If this value is false, the expression will be compiled
+        /// the first time it is used.</param>
+        void Load(IEnumerable<EntityScript> scripts, bool compiledOnLoad = false);
+
+        /// <summary>
+        /// Compiles all script expressions that have not yet been compiled.
+        /// </summary>
+        void CompileAllScripts();
 
         /// <summary>
         /// Evaluates a script against an entity.

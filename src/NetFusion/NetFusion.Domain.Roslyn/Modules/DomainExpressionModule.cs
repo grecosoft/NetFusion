@@ -20,11 +20,11 @@ namespace NetFusion.Domain.Roslyn.Modules
 
         public override void RunModule(ILifetimeScope scope)
         {
-            IEntityScriptRepository expressionRep = null;
+            IEntityScriptMetaRepository expressionRep = null;
             if (!scope.TryResolve(out expressionRep))
             {
                 throw new ContainerException(
-                    $"An component implementing the interface: {typeof(IEntityScriptRepository)} " +
+                    $"An component implementing the interface: {typeof(IEntityScriptMetaRepository)} " +
                     $"is not registered.");
             }
 

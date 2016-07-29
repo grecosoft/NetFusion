@@ -10,13 +10,15 @@ namespace NetFusion.Domain.Roslyn.Core
     {
         public const string DefaultScriptName = "default";
         public EntityScript Script { get; }
-        public IEnumerable<ExpressionEvaluator> Evaluators { get; }
+        public IEnumerable<ExpressionEvaluator> Evaluators { get; private set; }
 
-        public ScriptEvaluator(
-            EntityScript script,
-            IEnumerable<ExpressionEvaluator> evaluators)
+        public ScriptEvaluator(EntityScript script)
         {
             this.Script = script;
+        }
+
+        public void SetExpressionEvaluators(IEnumerable<ExpressionEvaluator> evaluators)
+        {
             this.Evaluators = evaluators;
         }
 
