@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Common", "src\NetFusion\NetFusion.Common\NetFusion.Common.csproj", "{4BCB335E-3F83-481D-B206-FFA9266BF780}"
 EndProject
@@ -63,6 +63,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Domain", "src\NetFusion\NetFusion.Domain\NetFusion.Domain.csproj", "{18BC0D8B-3B47-4228-B11F-3C581BBAF39F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Domain.Roslyn", "src\NetFusion\NetFusion.Domain.Roslyn\NetFusion.Domain.Roslyn.csproj", "{6D4850CF-6DEF-4AE7-A894-495BDA007740}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{515817F2-C5AD-4FAA-8467-D7709F2AB461}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Scripting.Api", "src\NetFusion\Api\NetFusion.Scripting.Api\NetFusion.Scripting.Api.csproj", "{48FD3A8B-89E7-4871-8A52-51A61825EC43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -162,6 +166,10 @@ Global
 		{6D4850CF-6DEF-4AE7-A894-495BDA007740}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D4850CF-6DEF-4AE7-A894-495BDA007740}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D4850CF-6DEF-4AE7-A894-495BDA007740}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48FD3A8B-89E7-4871-8A52-51A61825EC43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48FD3A8B-89E7-4871-8A52-51A61825EC43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48FD3A8B-89E7-4871-8A52-51A61825EC43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48FD3A8B-89E7-4871-8A52-51A61825EC43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -191,5 +199,6 @@ Global
 		{246F1DE0-8E15-4136-949C-A43F4E67677B} = {6DED84CC-46D8-4583-8E80-8B0FD78BD7CA}
 		{18BC0D8B-3B47-4228-B11F-3C581BBAF39F} = {6DED84CC-46D8-4583-8E80-8B0FD78BD7CA}
 		{6D4850CF-6DEF-4AE7-A894-495BDA007740} = {3B39701A-2BAF-4682-9675-5C6EE56AA1F3}
+		{48FD3A8B-89E7-4871-8A52-51A61825EC43} = {515817F2-C5AD-4FAA-8467-D7709F2AB461}
 	EndGlobalSection
 EndGlobal

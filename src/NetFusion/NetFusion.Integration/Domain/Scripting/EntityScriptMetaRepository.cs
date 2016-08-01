@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NetFusion.Integration.Domain.Evaluation
+namespace NetFusion.Integration.Domain.Scripting
 {
     public class EntityScriptMetaRepository : IEntityScriptMetaRepository
     {

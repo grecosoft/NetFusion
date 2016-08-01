@@ -139,11 +139,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Evaluation\EntityScriptMeta.cs" />
-    <Compile Include="Domain\Evaluation\EntityExpressionMeta.cs" />
-    <Compile Include="Domain\Evaluation\MetadataMappings.cs" />
-    <Compile Include="Domain\Evaluation\EntityScriptMetaRepository.cs" />
-    <Compile Include="Domain\Evaluation\EntityScriptMetaDb.cs" />
+    <Compile Include="Domain\Scripting\EntityScriptMeta.cs" />
+    <Compile Include="Domain\Scripting\EntityExpressionMeta.cs" />
+    <Compile Include="Domain\Scripting\MetadataMappings.cs" />
+    <Compile Include="Domain\Scripting\EntityScriptMetaRepository.cs" />
+    <Compile Include="Domain\Scripting\EntityScriptMetaDb.cs" />
     <Compile Include="NetFusionDb.cs" />
     <Compile Include="IntegrationManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

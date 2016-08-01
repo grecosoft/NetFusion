@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace NetFusion.Integration.Domain.Evaluation
+namespace NetFusion.Integration.Domain.Scripting
 {
     public class EntityScriptMeta
     {

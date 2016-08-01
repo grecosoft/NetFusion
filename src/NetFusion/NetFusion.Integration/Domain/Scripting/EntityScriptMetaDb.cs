@@ -1,6 +1,6 @@
 ﻿using NetFusion.MongoDB.Configs;
 
-namespace NetFusion.Integration.Domain.Evaluation
+namespace NetFusion.Integration.Domain.Scripting
 {
     public class EntityScriptMetaDb : MongoSettings
     {

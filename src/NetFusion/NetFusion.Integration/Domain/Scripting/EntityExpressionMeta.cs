@@ -1,4 +1,4 @@
-﻿namespace NetFusion.Integration.Domain.Evaluation
+﻿namespace NetFusion.Integration.Domain.Scripting
 {
     /// <summary>
     /// Data model used to store a set of related domain entity expression.

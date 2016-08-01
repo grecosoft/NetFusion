@@ -16,7 +16,7 @@
     <RootNamespace>RefArch.Host</RootNamespace>
     <AssemblyName>RefArch.Host</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -330,6 +330,10 @@
     <Folder Include="scripts\app\modules\common\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Api\NetFusion.Scripting.Api\NetFusion.Scripting.Api.csproj">
+      <Project>{48fd3a8b-89e7-4871-8a52-51a61825ec43}</Project>
+      <Name>NetFusion.Scripting.Api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj">
       <Project>{a71630d5-940f-4de6-a5b9-f229074aa86d}</Project>
       <Name>NetFusion.Bootstrap</Name>

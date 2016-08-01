@@ -1,6 +1,6 @@
 ﻿using NetFusion.MongoDB;
 
-namespace NetFusion.Integration.Domain.Evaluation
+namespace NetFusion.Integration.Domain.Scripting
 {
     public class EntityScriptMetaMap : EntityClassMap<EntityScriptMeta>
     {
