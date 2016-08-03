@@ -1,5 +1,6 @@
 ﻿using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common;
+using NetFusion.Domain.Entity;
 
 namespace NetFusion.Messaging
 {
@@ -8,7 +9,7 @@ namespace NetFusion.Messaging
     /// publisher and consumer.
     /// </summary>
     public interface IMessage : IKnownPluginType,
-        IObjectAttributes 
+        IAttributedEntity
     {
     }
 }

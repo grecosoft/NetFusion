@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetFusion.Domain.Entity;
+using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Messaging
@@ -9,13 +10,31 @@ namespace NetFusion.Messaging
     [Serializable]
     public abstract class DomainEvent : IDomainEvent
     {
-        private IDictionary<string, object> _attributes;
+ 
+        private IEntityAttributes _attributes;
 
-        public IDictionary<string, object> Attributes
+        public DomainEvent()
+        {
+            _attributes = new EntityAttributes();
+        }
+
+        public IEntityAttributes Attributes => _attributes;
+
+        public IDictionary<string, object> AttributeValues
+        {
+            get { return _attributes.GetValues(); }
+            set { _attributes.SetValues(value); }
+        }
+
+
+
+
+        private IDictionary<string, object> _attributesOld;
+        public IDictionary<string, object> AttributesOld
         {
             get
             {
-                return _attributes ?? (_attributes = new Dictionary<string, object>());
+                return _attributesOld ?? (_attributesOld = new Dictionary<string, object>());
             }
         }
     }

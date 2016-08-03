@@ -10,7 +10,7 @@ namespace RefArch.Api.Models
             this.MinValue = domainEntity.MinValue;
             this.MaxValue = domainEntity.MaxValue;
             this.ItemName = domainEntity.ItemName;
-            this.Attributes = domainEntity.Attributes; ;
+            this.Attributes = domainEntity.AttributeValues;
         }
 
         public bool IsActive { get; }

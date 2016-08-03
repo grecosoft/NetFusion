@@ -3,6 +3,10 @@ using System.Threading.Tasks;
 
 namespace NetFusion.Domain.Scripting
 {
+    /// <summary>
+    /// Responsible for maintaining a set of entity related scripts that can
+    /// be executed at runtime against the entity.
+    /// </summary>
     public interface IEntityScriptMetaRepository
     {
         /// <summary>

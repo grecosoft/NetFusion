@@ -4,12 +4,17 @@ using NetFusion.Bootstrap.Plugins;
 using NetFusion.Domain.Scripting;
 using NetFusion.Domain.Roslyn.Core;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NetFusion.Domain.Roslyn.Modules
 {
+    /// <summary>
+    /// Module that loads meta data containing expressions that can be evaluated
+    /// against and entity and it set of related dynamic properties.
+    /// </summary>
     public class DomainExpressionModule : PluginModule
     {
-        private IEnumerable<EntityScript> _expressions;
+        private IEnumerable<EntityScript> _scripts;
 
         public override void RegisterComponents(ContainerBuilder builder)
         {
@@ -28,26 +33,26 @@ namespace NetFusion.Domain.Roslyn.Modules
                     $"is not registered.");
             }
 
-            _expressions = expressionRep.ReadAll().Result;
-            var evaluationSrv = scope.Resolve<IEntityScriptingService>();
+            // Read all of the scripts and load them into the scripting service.
+            _scripts = expressionRep.ReadAll().Result;
+            var scriptingSrv = scope.Resolve<IEntityScriptingService>();
 
-            evaluationSrv.Load(_expressions);
+            scriptingSrv.Load(_scripts);
         }
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            //moduleLog["Expressions"] = _expressions.GroupBy(
-            //    e => e.EntityType,
-            //    (et, es) => new
-            //    {
-            //        EntityType = et,
-            //        Expressions = es.Select(e => new
-            //        {
-            //            e.Id,
-            //            e.PropertyName,
-            //            e.Expression
-            //        })
-            //    }).ToDictionary(e => e.EntityType);
+           moduleLog["EntityScripts"] = _scripts.ToDictionary(s => s.EntityType, s =>
+           {
+               return _scripts.Where(e => e.EntityType == s.EntityType)
+                .ToDictionary(e => e.Name, es => new {
+                    es.InitialAttributes,
+                    es.ImportedAssemblies,
+                    es.ImportedNamespaces,
+                    Expressions = es.Expressions.OrderBy(e => e.Sequence)
+                        .Select(e => new { e.AttributeName, e.Expression })
+                });
+           });
         }
     }
 }

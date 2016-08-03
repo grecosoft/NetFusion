@@ -101,7 +101,7 @@ namespace NetFusion.Bootstrap.Container
         /// <param name="searchPatterns">The search patterns used to specify the 
         /// assemblies that should be searched for plug-ins.</param>
         /// <returns>Configured application container.</returns>
-        public static IAppContainer Create(string[] searchPatterns)
+        public static IAppContainer Create(params string[] searchPatterns)
         {
             Check.NotNull(searchPatterns, nameof(searchPatterns), "search patterns must be specified");
 
@@ -200,7 +200,7 @@ namespace NetFusion.Bootstrap.Container
 
             try
             {
-                using (var logger = _logger.ForDuration("Building Container"))
+                using (var logger = _logger.DebugDuration("Building Container"))
                 {
                     LoadContainer();
                     ComposeLoadedPlugins();
@@ -237,7 +237,7 @@ namespace NetFusion.Bootstrap.Container
 
             try
             {
-                using (var logger = _logger.ForDuration("Starting Container"))
+                using (var logger = _logger.DebugDuration("Starting Container"))
                 {
                     _application.StartPluginModules(_container);
                 }
@@ -265,7 +265,7 @@ namespace NetFusion.Bootstrap.Container
 
             try
             {
-                using (var logger = _logger.ForDuration("Stopping Container"))
+                using (var logger = _logger.DebugDuration("Stopping Container"))
                 {
                     _application.StopPluginModules(_container);
                 }

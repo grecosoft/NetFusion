@@ -75,6 +75,7 @@ namespace RefArch.Host.Controllers.Samples
         public async Task PublishDirectEvent(Car car)
         {
             var evt = new ExampleDirectEvent(car);
+            evt.Attributes.Values.Test = "AAAABBBBB";
             await _messagingSrv.PublishAsync(evt);
         }
 

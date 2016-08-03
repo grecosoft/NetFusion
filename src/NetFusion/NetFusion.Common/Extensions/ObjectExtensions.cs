@@ -50,30 +50,5 @@ namespace NetFusion.Common.Extensions
         {
             return name.Replace("Get", "").Replace("Set", ""); 
         }
-
-        public static void SetObjectAttribute<T>(this IObjectAttributes obj,
-            T value, Type context = null,
-            [CallerMemberName] string name = null)
-        {
-            string prefix = context != null ? context.FullName + "-" : "";
-            name = GetBasePropertyName(name);
-            obj.Attributes[prefix + name] = value; 
-        }
-
-        public static T GetObjectAttribute<T>(this IObjectAttributes obj, 
-            T defaultValue, Type context = null,
-            [CallerMemberName] string name = null)
-        {
-            string prefix = context != null ? context.FullName + "-" : "";
-            object value = null;
-
-            name = GetBasePropertyName(name);
-            if (!obj.Attributes.TryGetValue(prefix + name, out value))
-            {
-                return defaultValue;
-            }
-
-            return (T)value;
-        }
     }
 }

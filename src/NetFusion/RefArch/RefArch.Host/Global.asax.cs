@@ -21,7 +21,7 @@ namespace RefArch.Host
             // Create logger:
             ILogger logger = CreateLogger();
 
-            AppContainer.Create(new[] { "RefArch.*.dll" })
+            AppContainer.Create("RefArch.*.dll")
                 .WithConfigSection("netFusion", "mongoAppSettings")
 
                 // Eventing Plug-in Configuration.

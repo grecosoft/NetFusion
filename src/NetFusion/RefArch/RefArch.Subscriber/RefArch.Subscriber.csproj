@@ -113,6 +113,10 @@
       <Project>{4bcb335e-3f83-481d-b206-ffa9266bf780}</Project>
       <Name>NetFusion.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\NetFusion.Domain\NetFusion.Domain.csproj">
+      <Project>{18bc0d8b-3b47-4228-b11f-3c581bbaf39f}</Project>
+      <Name>NetFusion.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NetFusion.Logging.Serilog\NetFusion.Logging.Serilog.csproj">
       <Project>{d3ccb7d3-3b6d-4abc-a784-2080668943a9}</Project>
       <Name>NetFusion.Logging.Serilog</Name>

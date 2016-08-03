@@ -7,30 +7,55 @@ namespace NetFusion.Bootstrap.Logging
     {
         private readonly IContainerLogger _logger;
         private readonly string _processName;
+
         private readonly Stopwatch _stopWatch;
+        private readonly Action<string, object> _logMessage;
+        private object _completionDetails = new object();
         
         public IContainerLogger Log { get; }
 
-     
-        public DurationLogger(IContainerLogger logger, string processName)
+        private DurationLogger(IContainerLogger logger,
+            Action<string, object> logMessage)
         {
             this.Log = logger;
+            _logMessage = logMessage;
 
             _logger = logger;
-            _processName = processName;
             _stopWatch = new Stopwatch();
-
-            _logger.Debug("Start Process", new { Named = _processName });
             _stopWatch.Start();
         }
+
+        public DurationLogger(IContainerLogger logger, 
+            string processName,
+            Action<string, object> logMessage) : this(logger, logMessage)
+        {
+            _processName = processName;
+            _logMessage($"Start Process: {processName}", new { });
+        }
+
+        public DurationLogger(IContainerLogger logger,
+            string processName,
+            Action<string, object> logMessage,
+            object details) : this(logger, logMessage)
+        {
+            _processName = processName;
+            _logMessage($"Start Process: {processName}", details);
+        }
+
+        public void SetCompletionDetails(object details)
+        {
+            _completionDetails = details;
+        }
+
 
         public void Dispose()
         {
             _stopWatch.Stop();
-            _logger.Debug("End Process", new
+            _logMessage("End Process", new
             {
                 Named = _processName,
-                ElapsedMs = _stopWatch.ElapsedMilliseconds
+                ElapsedMs = _stopWatch.ElapsedMilliseconds,
+                Details = _completionDetails
             });
         }
     }

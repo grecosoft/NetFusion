@@ -47,9 +47,19 @@ namespace NetFusion.Bootstrap.Logging
             }
         }
 
-        public static DurationLogger ForDuration(this IContainerLogger logger, string processName)
+        public static DurationLogger DebugDuration(this IContainerLogger logger, string processName)
         {
-            return new DurationLogger(logger, processName);
+            return new DurationLogger(logger, processName, logger.Debug);
+        }
+
+        public static DurationLogger VerboseDuration(this IContainerLogger logger, string processName, object details = null)
+        {
+            if (details != null)
+            {
+                return new DurationLogger(logger, processName, logger.Verbose, details);
+            }
+
+            return new DurationLogger(logger, processName, logger.Verbose);
         }
 
         public static void Debug(this IContainerLogger logger, string message, object details)

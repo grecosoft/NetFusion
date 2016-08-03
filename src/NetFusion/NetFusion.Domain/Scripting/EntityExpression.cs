@@ -1,30 +1,35 @@
-﻿namespace NetFusion.Domain.Scripting
+﻿using NetFusion.Common;
+
+namespace NetFusion.Domain.Scripting
 {
     /// <summary>
     /// Represents a expression that can be executed at runtime against
-    /// a given domain entity and/or its set of dynamic properties.
+    /// a given domain entity and/or its set of dynamic attributes.
     /// </summary>
     public class EntityExpression
     {
         public EntityExpression(
             string expression,
             int sequence,
-            string propertyName = null)
+            string attributeName = null)
         {
+            Check.NotNull(expression, nameof(expression));
+            Check.IsTrue(sequence >= 0, nameof(sequence),  "expression sequence must be greater or equal to 0");
+
             this.Expression = expression;
             this.Sequence = sequence;
-            this.PropertyName = propertyName;
+            this.AttributeName = attributeName;
         }
 
         /// <summary>
-        /// The name of the defined property.
+        /// The name a dynamic entity attribute that is determined at runtime.
         /// </summary>
-        public string PropertyName { get; }
+        public string AttributeName { get; }
 
         /// <summary>
         /// The expression script containing a short C# expression having
         /// full access to the static domain entity and its set of dynamic
-        /// runtime property values.
+        /// runtime attribute values.
         /// </summary>
         public string Expression { get; }
 

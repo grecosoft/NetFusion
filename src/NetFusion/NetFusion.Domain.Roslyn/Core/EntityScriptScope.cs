@@ -1,29 +1,36 @@
-﻿using NetFusion.Domain.Entity;
+﻿using NetFusion.Common;
+using NetFusion.Domain.Entity;
 
 namespace NetFusion.Domain.Roslyn.Core
 {
     /// <summary>
-    /// When evaluating dynamic expression against a given domain model and its set 
-    /// of optional dynamic properties, the EntityEvaluationSerivce uses this as the 
-    /// execution scope.</summary>
+    /// When evaluating expressions against a given domain model and its set 
+    /// of optional dynamic properties, the EntityEvaluationSerivce uses this 
+    /// as the execution scope.</summary>
     /// <typeparam name="TEntity"></typeparam>
     public class EntityScriptScope<TEntity>
-        where TEntity : IAttributedEntity
+        where TEntity : class
     {
         /// <summary>
-        /// The static domain entity type.
+        /// The static domain entity type.  The expression specifies Entity.PropName to access
+        /// a static property associated with an entity.
         /// </summary>
         public TEntity Entity { get; }
 
         /// <summary>
-        /// The set of dynamic properties.
+        /// The set of dynamic properties.  The expression specifies _.AttributeName to access
+        /// a dynamic attribute associated with an entity.
         /// </summary>
         public dynamic _ { get; }
 
         public EntityScriptScope(TEntity entity)
         {
+            Check.NotNull(entity, nameof(entity));
+
             this.Entity = entity;
-            this._ = entity.Attributes;
+
+            var attributedEntity = entity as IAttributedEntity;
+            this._ = attributedEntity?.Attributes.Values;
         }
     }
 }

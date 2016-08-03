@@ -10,9 +10,9 @@ namespace NetFusion.Tests.Core.Domain
         public void CanSetAndRetrieveEntityAttribute()
         {
             var entity = new DynamicEntity();
-            entity.SetAttributeValue("Value1", 1000);
+            entity.Attributes.SetValue("Value1", 1000);
 
-            var value = entity.Attributes.Value1 as object;
+            var value = entity.Attributes.Values.Value1 as object;
             value.Should().NotBeNull();
             value.Should().BeOfType<int>();
 
@@ -24,12 +24,12 @@ namespace NetFusion.Tests.Core.Domain
         public void CanDeleteEntityAttribute()
         {
             var entity = new DynamicEntity();
-            entity.SetAttributeValue("Value1", 1000);
+            entity.Attributes.SetValue("Value1", 1000);
 
-            var isDeleted = entity.DeleteAttribute("Value1");
+            var isDeleted = entity.Attributes.Delete("Value1");
             isDeleted.Should().BeTrue();
 
-            isDeleted = entity.DeleteAttribute("Value1");
+            isDeleted = entity.Attributes.Delete("Value1");
             isDeleted.Should().BeFalse();
         }
 
@@ -37,19 +37,19 @@ namespace NetFusion.Tests.Core.Domain
         public void CanCheckIfEntityAttributeExits()
         {
             var entity = new DynamicEntity();
-            entity.SetAttributeValue("Value1", 1000);
+            entity.Attributes.SetValue("Value1", 1000);
 
-            entity.ContainsAttribute("Value1").Should().BeTrue();
-            entity.ContainsAttribute("Value2").Should().BeFalse();
+            entity.Attributes.Contains("Value1").Should().BeTrue();
+            entity.Attributes.Contains("Value2").Should().BeFalse();
         }
 
         [Fact]
         public void CanGetTypedEntityAttributeValue()
         {
             var entity = new DynamicEntity();
-            entity.SetAttributeValue("Value1", 1000);
+            entity.Attributes.SetValue("Value1", 1000);
 
-            var value = entity.GetAttributeValue<int>("Value1");
+            var value = entity.Attributes.GetValue<int>("Value1");
             value.Should().Be(1000);
         }
 
@@ -57,7 +57,7 @@ namespace NetFusion.Tests.Core.Domain
         public void CanRequestDefaultValueIfEntityAttributeNotPresent()
         {
             var entity = new DynamicEntity();
-            var value = entity.GetAttributeValueOrDefault<int>("Value1");
+            var value = entity.Attributes.GetValueOrDefault<int>("Value1");
             value.Should().Be(0);
         }
 
@@ -65,7 +65,7 @@ namespace NetFusion.Tests.Core.Domain
         public void CanRequestSpecificDefaultValueIfEntityAttributeNotPresent()
         {
             var entity = new DynamicEntity();
-            var value = entity.GetAttributeValueOrDefault<int>("Value1", 1000);
+            var value = entity.Attributes.GetValueOrDefault<int>("Value1", 1000);
             value.Should().Be(1000);
         }
 
@@ -73,8 +73,8 @@ namespace NetFusion.Tests.Core.Domain
         public void IfEntityAttributePresentDefaultValueNotReturned()
         {
             var entity = new DynamicEntity();
-            entity.Attributes.Value1 = 1000;
-            var value = entity.GetAttributeValueOrDefault<int>("Value1", 2000);
+            entity.Attributes.Values.Value1 = 1000;
+            var value = entity.Attributes.GetValueOrDefault<int>("Value1", 2000);
             value.Should().Be(1000);
         }
     }

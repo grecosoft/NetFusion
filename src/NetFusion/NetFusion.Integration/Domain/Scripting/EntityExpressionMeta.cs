@@ -5,7 +5,7 @@
     /// </summary>
     public class EntityExpressionMeta
     {
-        public string PropertyName { get; set; }
+        public string AttributeName { get; set; }
         public string Expression { get; set; }
         public int Sequence { get; set; }
         public string Description { get; set; }

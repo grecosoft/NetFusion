@@ -23,8 +23,8 @@ namespace RefArch.Services.Domain
             entity.MinValue = command.MinValue;
             entity.MaxValue = command.MaxValue;
  
-            foreach (var attrib in command.Attributes) {
-                entity.SetAttributeValue(attrib.Key, attrib.Value);
+            foreach (var attrib in command.AttributeValues) {
+                entity.Attributes.SetValue(attrib.Key, attrib.Value);
             }
 
             await _evaluationSrv.Execute(entity, scriptName: "Test-Script");

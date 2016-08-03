@@ -10,13 +10,13 @@ namespace RefArch.Services.Messaging
         [InProcessHandler, ApplyDispatchRule(typeof(IsLowImportance))]
         public void OnEvent([IncludeDerivedMessages]DomainEvent evt)
         {
-            evt.Attributes["IsLowImportance"] = "Event is of low importance.";
+            evt.AttributesOld["IsLowImportance"] = "Event is of low importance.";
         }
 
         [InProcessHandler, ApplyDispatchRule(typeof(IsHighImportance))]
         public void OnEvent(ExampleRuleDomainEvent evt)
         {
-            evt.Attributes["IsHighImportance"] = "Event is of high importance.";
+            evt.AttributesOld["IsHighImportance"] = "Event is of high importance.";
         }
     }
 }

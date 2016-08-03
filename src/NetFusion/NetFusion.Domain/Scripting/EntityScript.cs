@@ -1,11 +1,12 @@
-﻿using System;
+﻿using NetFusion.Common;
+using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Domain.Scripting
 {
     /// <summary>
-    /// Represents a set of ordered expressions that are 
-    /// executed against a domain entity.
+    /// Represents a set of ordered expressions that executed at runtime
+    /// against a domain entity.
     /// </summary>
     public class EntityScript
     {
@@ -18,19 +19,27 @@ namespace NetFusion.Domain.Scripting
         /// The type of the entity to which the script is associated.
         /// </summary>
         public Type EntityType { get; }
+
+        /// <summary>
+        /// The expressions associated with the script.
+        /// </summary>
         public IReadOnlyCollection<EntityExpression> Expressions { get; }
 
         public EntityScript(
-            string Id,
+            string id,
             string name,
             string entityType,
             IReadOnlyCollection<EntityExpression> expressions) 
         {
-            this.Id = Id;
+            Check.NotNullOrWhiteSpace(id, nameof(id));
+            Check.NotNullOrWhiteSpace(name, nameof(name));
+            Check.NotNullOrWhiteSpace(entityType, nameof(entityType));
+
+            this.Id = id;
             this.Name = name;
             this.EntityType = Type.GetType(entityType);
 
-            this.Attributes = new Dictionary<string, object>();
+            this.InitialAttributes = new Dictionary<string, object>();
             this.Expressions = expressions;
                         
             this.ImportedAssemblies = new List<string>();
@@ -43,14 +52,24 @@ namespace NetFusion.Domain.Scripting
         public string Name { get; }
 
         /// <summary>
-        /// Explanation of the script within the current application domain.
+        /// Description of the script within the current application domain.
         /// </summary>
         public string Description { get; set; }
 
-        public IDictionary<string, object> Attributes { get; set; }
+        /// <summary>
+        /// The dynamic entity attributes and their initial values that should be used
+        /// if not set before the script is executed.
+        /// </summary>
+        public IDictionary<string, object> InitialAttributes { get; set; }
 
+        /// <summary>
+        /// The assembles that can be access by the script.
+        /// </summary>
         public ICollection<string> ImportedAssemblies { get; set; }
 
+        /// <summary>
+        /// The name spaces that can be referenced by the script.
+        /// </summary>
         public ICollection<string> ImportedNamespaces { get; set; }
     }
 }

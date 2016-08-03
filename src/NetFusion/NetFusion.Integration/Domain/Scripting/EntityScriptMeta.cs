@@ -27,7 +27,7 @@ namespace NetFusion.Integration.Domain.Scripting
                 new ReadOnlyCollection<EntityExpression>(expressions));
 
             expressionSet.Description = this.Description;
-            expressionSet.Attributes = this.Attributes;
+            expressionSet.InitialAttributes = this.Attributes;
             expressionSet.ImportedAssemblies = this.ImportedAssemblies;
             expressionSet.ImportedNamespaces = this.ImportedNamespaces;
             return expressionSet;
@@ -38,7 +38,7 @@ namespace NetFusion.Integration.Domain.Scripting
             return this.Expressions.Select(e => new EntityExpression(
                 e.Expression,
                 e.Sequence,
-                e.PropertyName) {
+                e.AttributeName) {
                     Description = e.Description
 
                 }).ToList();

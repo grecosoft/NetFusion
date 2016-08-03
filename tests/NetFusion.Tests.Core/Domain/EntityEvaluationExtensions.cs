@@ -1,7 +1,9 @@
-﻿using NetFusion.Domain.Entity;
+﻿using NetFusion.Bootstrap.Logging;
+using NetFusion.Domain.Entity;
 using NetFusion.Domain.Roslyn.Core;
 using NetFusion.Domain.Scripting;
 using NetFusion.Tests.Core.Domain.Mocks;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -27,7 +29,7 @@ namespace NetFusion.Tests.Core.Domain
         public static IEntityScriptingService CreateService(this IList<EntityExpression> expressions)
         {
             var es = new EntityScript(
-                "",
+                Guid.NewGuid().ToString(),
                 "default", 
                 typeof(DynamicEntity).AssemblyQualifiedName,
                 new ReadOnlyCollection<EntityExpression>(expressions));
@@ -35,7 +37,7 @@ namespace NetFusion.Tests.Core.Domain
             es.ImportedAssemblies = new[] { typeof(Common.Extensions.ObjectExtensions).Assembly.FullName };
             es.ImportedNamespaces = new[] { typeof(Common.Extensions.ObjectExtensions).Namespace };
                 
-            var evalSrv = new EntityScriptingService();
+            var evalSrv = new EntityScriptingService(new NullLogger());
             evalSrv.Load(new EntityScript[] { es });
             return evalSrv;
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetFusion.Domain.Entity;
+using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Messaging
@@ -10,8 +11,21 @@ namespace NetFusion.Messaging
     /// </summary>
     public abstract class Command : ICommand
     {
-        private IDictionary<string, object> _attributes;
+        private IEntityAttributes _attributes;
         public object Result { get; set; }
+
+        public Command()
+        {
+            _attributes = new EntityAttributes();
+        }
+
+        public IEntityAttributes Attributes => _attributes;
+
+        public IDictionary<string, object> AttributeValues
+        {
+            get { return _attributes.GetValues(); }
+            set { _attributes.SetValues(value); }
+        }
 
         public Type ResultType => null;
 
@@ -20,11 +34,17 @@ namespace NetFusion.Messaging
             this.Result = result;
         }
 
-        public IDictionary<string, object> Attributes
+
+
+
+
+
+        private IDictionary<string, object> _attributesOld;
+        public IDictionary<string, object> AttributesOld
         {
             get
             {
-                return _attributes ?? (_attributes = new Dictionary<string, object>());
+                return _attributesOld ?? (_attributesOld = new Dictionary<string, object>());
             }
         }
     }
@@ -38,8 +58,21 @@ namespace NetFusion.Messaging
     /// the message.</typeparam>
     public abstract class Command<TResult> : ICommand<TResult>
     {
-        private IDictionary<string, object> _attributes;
+        private IEntityAttributes _attributes;
         public TResult Result { get; set; }
+
+        public Command()
+        {
+            _attributes = new EntityAttributes();
+        }
+
+        public IEntityAttributes Attributes => _attributes;
+
+        public IDictionary<string, object> AttributeValues
+        {
+            get { return _attributes.GetValues(); }
+            set { _attributes.SetValues(value); }
+        }
 
         Type ICommand.ResultType => typeof(TResult);
 
@@ -48,11 +81,16 @@ namespace NetFusion.Messaging
             this.Result = (TResult)result;
         }
 
-        public IDictionary<string, object> Attributes
+
+
+
+
+        private IDictionary<string, object> _attributesOld;
+        public IDictionary<string, object> AttributesOld
         {
             get
             {
-                return _attributes ?? (_attributes = new Dictionary<string, object>());
+                return _attributesOld ?? (_attributesOld = new Dictionary<string, object>());
             }
         }
     }

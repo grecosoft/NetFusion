@@ -32,7 +32,7 @@ namespace NetFusion.Logging.Core
             var client = new HttpClient { BaseAddress = new Uri(_logSettings.Endpoint) };
             var content = new StringContent(jsonLog, Encoding.UTF8, "application/json");
 
-            var result = client.PostAsync(_logSettings.LogRoute, content).Result;
+           // var result = client.PostAsync(_logSettings.LogRoute, content).Result;
         }
     }
 }

@@ -121,7 +121,7 @@ namespace NetFusion.Bootstrap.Container
 
         protected AssemblyName[] ProbeForMatchingAssemblyNames(DirectoryInfo probeDirectory, string[] searchPatterns)
         {
-            var fileNames = probeDirectory.GetFileNames(searchPatterns);
+            var fileNames = probeDirectory.GetMatchingFileNames(searchPatterns);
             return fileNames.Select(AssemblyName.GetAssemblyName).ToArray();
         }
 

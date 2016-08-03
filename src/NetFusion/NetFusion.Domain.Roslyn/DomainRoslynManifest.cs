@@ -9,6 +9,7 @@ namespace NetFusion.MongoDB
         public string Name => "NetFusion Domain Roslyn Plug-in";
 
         public string Description =>
-            "Plug-in that provides domain entity Roslyn based implementations.";
+            "Plug-in that provides domain entity Roslyn based implementations.  This includes the runtime execution " +
+            "of expressions against domain entities and it set of optional dynamic attributes.";
     }
 }

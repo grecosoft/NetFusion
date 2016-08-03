@@ -301,6 +301,122 @@ namespace NetFusion.Tests.Core.Bootstrap
                    e.Should().BeOfType<ContainerException>();
                });
         }
+
+       
+        public void DefaultSearchPatternsAreAdded()
+        {
+          
+        }
+
+        public void SpecifiedSearchPatternsAreAddedToDefaults()
+        {
+
+        }
+
+        [Fact]
+        public void ConfigurationCanNotBeAddedAfterContinerBuild()
+        {
+            ContainerSetup
+               .Arrange((TestTypeResolver config) =>
+               {
+                   var appHostPlugin = new MockAppHostPlugin { };
+                   config.AddPlugin(appHostPlugin);
+               })
+               .Act(c =>
+               {
+                   c.Build();
+                   c.WithConfig<MockPluginConfig>();
+               })
+               .Assert((c, e) =>
+               {
+                   e.Should().NotBeNull();
+                   e.Should().BeOfType<ContainerException>();
+               });
+        }
+
+        [Fact]
+        public void ContainerCannotBeStartedTwice()
+        {
+            ContainerSetup
+               .Arrange((TestTypeResolver config) =>
+               {
+                   var appHostPlugin = new MockAppHostPlugin { };
+                   config.AddPlugin(appHostPlugin);
+               })
+               .Act(c =>
+               {
+                   c.Build();
+                   c.Start();
+                   c.Start();
+               })
+               .Assert((c, e) =>
+               {
+                   e.Should().NotBeNull();
+                   e.Should().BeOfType<ContainerException>();
+               });
+        }
+
+        [Fact]
+        public void ContainerCannotBeStoppedIfNotStarted()
+        {
+            ContainerSetup
+               .Arrange((TestTypeResolver config) =>
+               {
+                   var appHostPlugin = new MockAppHostPlugin { };
+                   config.AddPlugin(appHostPlugin);
+               })
+               .Act(c =>
+               {
+                   c.Build();
+                   c.Stop();
+               })
+               .Assert((c, e) =>
+               {
+                   e.Should().NotBeNull();
+                   e.Should().BeOfType<ContainerException>();
+               });
+        }
+
+        [Fact]
+        public void AllPluginManifestsMustHaveIdentityValue()
+        {
+            ContainerSetup
+               .Arrange((TestTypeResolver config) =>
+               {
+                   var appHostPlugin = new MockAppHostPlugin { PluginId = null };
+                   config.AddPlugin(appHostPlugin);
+               })
+               .Act(c =>
+               {
+                   c.Build();
+               })
+               .Assert((c, e) =>
+               {
+                   e.Should().NotBeNull();
+                   e.Should().BeOfType<ContainerException>();
+               });
+        }
+
+        [Fact]
+        public void ThePluginContainingTypeCanBeQueried()
+        {
+            ContainerSetup
+               .Arrange((TestTypeResolver config) =>
+               {
+                   var appHostPlugin = new MockAppHostPlugin { PluginId = "__101" };
+                   appHostPlugin.AddPluginType<MockTypeOneBasedOnKnownType>();
+                   config.AddPlugin(appHostPlugin);
+               })
+               .Act(c =>
+               {
+                   c.Build();
+               })
+               .Assert(c =>
+               {
+                   var plugIn = c.GetPluginForType(typeof(MockTypeOneBasedOnKnownType));
+                   plugIn.Manifest.PluginId.Should().Be("__101");
+               });
+        }
     }
 
 }

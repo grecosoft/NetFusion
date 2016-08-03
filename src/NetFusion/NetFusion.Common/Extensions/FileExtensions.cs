@@ -6,11 +6,17 @@ namespace NetFusion.Common.Extensions
 {
     public static class FileExtensions
     {
-        public static IEnumerable<string> GetFileNames(this DirectoryInfo dirInfo, params string[] extensions)
+        public static IEnumerable<string> GetMatchingFileNames(this DirectoryInfo dirInfo, params string[] patterns)
         {
-            return extensions.SelectMany(dirInfo.GetFiles)
-                .Select(f => f.FullName)
-                .Distinct();
+            var matchingFilesNames = new List<string>();
+            
+            foreach (string pattern in patterns)
+            {
+                var matchingFiles = dirInfo.GetFiles(pattern);
+                matchingFilesNames.AddRange(matchingFiles.Select(f => f.FullName));
+            }
+
+            return matchingFilesNames.Distinct();
         }
     }
 }

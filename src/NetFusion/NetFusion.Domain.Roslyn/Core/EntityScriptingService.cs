@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CSharp.RuntimeBinder;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Common;
 using NetFusion.Common.Extensions;
 using NetFusion.Domain.Entity;
@@ -22,44 +23,29 @@ namespace NetFusion.Domain.Roslyn.Core
     /// </summary>
     public class EntityScriptingService : IEntityScriptingService
     {
-        // Map between a domain entity and its related set of scripts.
-        private ILookup<Type, ScriptEvaluator> _scriptEvaluators;
-        private bool _compiledOnLoad;
+        private readonly IContainerLogger _logger;
 
-        public void Load(IEnumerable<EntityScript> scripts, bool compiledOnLoad = false)
+        // Map between a domain entity and its related set of named scripts.
+        private ILookup<Type, ScriptEvaluator> _scriptEvaluators;
+
+        public EntityScriptingService(IContainerLogger logger)
+        {
+            Check.NotNull(logger, nameof(logger));
+            _logger = logger.ForContext<EntityScriptingService>();
+        }
+
+        // Initialize the script evaluators that should be invoked for a
+        // given entity.  The expressions will be compiled upon first use.
+        public void Load(IEnumerable<EntityScript> scripts)
         {
             Check.NotNull(scripts, nameof(scripts));
 
-            _compiledOnLoad = compiledOnLoad;
-
-            _scriptEvaluators = scripts.Select(CreateScriptEvaluator)
+            _scriptEvaluators = scripts.Select(s => new ScriptEvaluator(s))
                 .ToLookup(se => se.Script.EntityType);
         }
 
-        private ScriptEvaluator CreateScriptEvaluator(EntityScript script)
-        {
-            var scriptEval = new ScriptEvaluator(script);
-
-            if (_compiledOnLoad)
-            {
-                var evaluators = CreateExpressionEvaluators(script);
-                scriptEval.SetExpressionEvaluators(evaluators);
-            }
-            return scriptEval;
-        }
-
-        private ExpressionEvaluator[] CreateExpressionEvaluators(EntityScript script)
-        {
-            return script.Expressions.Select(exp =>
-            {
-                var scriptRunner = CreateScriptRunner(script, exp.Expression);
-                return new ExpressionEvaluator(exp, scriptRunner);
-
-            }).ToArray();
-        }
-
         public async Task Execute<TEntity>(TEntity entity, string scriptName = "default")
-            where TEntity : class, IAttributedEntity
+            where TEntity : class
         {
             Check.NotNull(entity, nameof(entity));
             Check.NotNull(scriptName, nameof(scriptName));
@@ -74,15 +60,13 @@ namespace NetFusion.Domain.Roslyn.Core
 
             // Execute the default script if specified.
             var defaultEvalScript = scripts.FirstOrDefault(se => se.IsDefault);
-            
+
             if (defaultEvalScript != null)
             {
-                CompileScript(defaultEvalScript);
-                SetDefaultAttributeValues(defaultEvalScript.Script, entity);
-                await defaultEvalScript?.Execute(entity);
+                await ExecuteScript(entity, defaultEvalScript);
             }
-            
-            // Execute the specified script.
+
+            // Execute script with a specified name.
             if (scriptName != ScriptEvaluator.DefaultScriptName)
             {
                 var namedEvalScript = scripts.FirstOrDefault(se => se.Script.Name == scriptName);
@@ -92,25 +76,78 @@ namespace NetFusion.Domain.Roslyn.Core
                         $"A script named: {scriptName} for the entity type of: {entityType} could not be found.");
                 }
 
-                CompileScript(namedEvalScript);
-                SetDefaultAttributeValues(namedEvalScript.Script, entity);
-                await namedEvalScript.Execute(entity);
+                await ExecuteScript(entity, namedEvalScript);
             }
         }
 
-        private void SetDefaultAttributeValues(EntityScript script, IAttributedEntity entity)
+        private async Task ExecuteScript<TEntity>(TEntity entity, ScriptEvaluator evaluator)
+            where TEntity : class
         {
-            foreach (var attribute in script.Attributes)
+            var preEvalDetails = new
             {
-                if (!entity.ContainsAttribute(attribute.Key))
+                PreEvalValues = entity,
+                Script = evaluator.Script.Expressions
+                    .OrderBy(e => e.Sequence)
+                    .Select(e => new { e.AttributeName, e.Expression })
+            };
+
+            using (var log = _logger.VerboseDuration("Script Evaluation", preEvalDetails))
+            {
+                CompileScript(evaluator);
+                SetDefaultAttributeValues(evaluator.Script, entity);
+                await evaluator.Execute(entity);
+
+                log.SetCompletionDetails(new { PostEvalValues = entity });
+            }
+        }
+
+        private void CompileScript(ScriptEvaluator scriptEval)
+        {
+            if (scriptEval.Evaluators == null)
+            {
+                lock (scriptEval)
                 {
-                    entity.SetAttributeValue(attribute.Key, attribute.Value);
+                    if (scriptEval.Evaluators == null)
+                    {
+                        var evaluators = CreateExpressionEvaluators(scriptEval.Script);
+                        scriptEval.SetExpressionEvaluators(evaluators);
+                    }
+                }
+            }
+        }
+
+        private ExpressionEvaluator[] CreateExpressionEvaluators(EntityScript script)
+        {
+            return script.Expressions.Select(exp =>
+            {
+                var scriptRunner = CreateScriptRunner(script, exp.Expression);
+                return new ExpressionEvaluator(exp, scriptRunner);
+
+            }).ToArray();
+        }
+
+        // A script can specify the default values that should be used for an entity's 
+        // dynamic attributes.  These are only set if the entity doesn't already have
+        // the attribute from a prior evaluation.
+        private void SetDefaultAttributeValues(EntityScript script, object entity)
+        {
+            var attributedEntity = entity as IAttributedEntity;
+            if (attributedEntity == null)
+            {
+                return;
+            }
+
+            foreach (var attribute in script.InitialAttributes)
+            {
+                if (!attributedEntity.Attributes.Contains(attribute.Key))
+                {
+                    attributedEntity.Attributes.SetValue(attribute.Key, attribute.Value);
                 }
             }
         }
 
         // Used to create a cached delegate that can be used to execute a script
-        // against a domain model and a set of dynamic properties.  
+        // against a domain model and a set of dynamic attributes.  
         private ScriptRunner<object> CreateScriptRunner(EntityScript script, string expression)
         {
             var scopeType = typeof(EntityScriptScope<>).MakeGenericType(script.EntityType);
@@ -120,32 +157,13 @@ namespace NetFusion.Domain.Roslyn.Core
             return scriptRunner.CreateDelegate();
         }
 
-        // Can be called to compile all scripts that have not yet been compiled.
+        // Can be called to compile all scripts that have not yet been compiled.  This can 
+        // be used to verify all script expression during development.
         public void CompileAllScripts()
         {
             foreach (var scriptEval in _scriptEvaluators.Values())
             {
                 CompileScript(scriptEval);
-            }
-        }
-
-        private void CompileScript(ScriptEvaluator scriptEval)
-        {
-            if (_compiledOnLoad)
-            {
-                return;
-            }
-
-            if (scriptEval.Evaluators == null)
-            {
-                lock(scriptEval)
-                {
-                    if (scriptEval.Evaluators == null)
-                    {
-                        var evaluators = CreateExpressionEvaluators(scriptEval.Script);
-                        scriptEval.SetExpressionEvaluators(evaluators);
-                    }
-                }
             }
         }
 
@@ -167,6 +185,8 @@ namespace NetFusion.Domain.Roslyn.Core
             return options;
         }
 
+        // A script can specify assemblies and name spaces that should be imported for types used
+        // by the expressions.
         private IList<Assembly> GetImportedAssemblies(EntityScript script, IEnumerable<Type> assembliesContainingTypes)
         {
             var assemblies = new List<Assembly>();

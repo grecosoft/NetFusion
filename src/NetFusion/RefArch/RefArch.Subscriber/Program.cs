@@ -25,7 +25,7 @@ namespace RefArch.Subscriber
             // Create logger:
             ILogger logger = CreateLogger();
 
-            AppContainer.Create(new[] { "RefArch.*.exe, RefArch.*.dll" })
+            AppContainer.Create("RefArch.*.exe", "RefArch.*.dll" )
                 .WithConfigSection("netFusion", "mongoAppSettings")
 
                 .WithConfig((NetFusionConfig config) => {
