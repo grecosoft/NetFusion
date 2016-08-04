@@ -67,8 +67,17 @@ namespace NetFusion.Domain.Entity
         /// <param name="defaultValue">The default value to use if the attribute is not present.</param>
         /// <param name="context">The type representing the scope associated with the value.</param>
         /// <param name="name">The name of the attribute.  If null, the name is the calling member's name.</param>
-        /// <returns></returns>
+        /// <returns>The value cast as the specified type.</returns>
         T GetValue<T>(T defaultValue, Type context = null, [CallerMemberName]string name = null);
+
+        /// <summary>
+        /// Returns a named attributed tagged with a given scope.
+        /// </summary>
+        /// <typeparam name="T">The type of the attribute.</typeparam>
+        /// <param name="context">The type representing the scope associated with the value.</param>
+        /// <param name="name">The name of the attribute.  If null, the name is the calling member's name.</param>
+        /// <returns>The value cast as the specified type.</returns>
+        T GetValue<T>(Type context = null, [CallerMemberName]string name = null);
 
         /// <summary>
         /// Deletes an existing entity attribute.

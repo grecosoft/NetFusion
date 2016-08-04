@@ -111,5 +111,13 @@ namespace NetFusion.Domain.Entity
             name = GetBasePropertyName(name);
             return this.GetValueOrDefault<T>(prefix + name, defaultValue);
         }
+
+        public T GetValue<T>(Type context = null, [CallerMemberName] string name = null)
+        {
+            string prefix = context != null ? context.FullName + "-" : "";
+
+            name = GetBasePropertyName(name);
+            return this.GetValue<T>(prefix + name);
+        }
     }
 }

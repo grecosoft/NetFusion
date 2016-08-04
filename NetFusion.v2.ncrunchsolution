@@ -10,5 +10,14 @@
   <FrameworkUtilisationTypeForXUnit2>UseDynamicAnalysis</FrameworkUtilisationTypeForXUnit2>
   <NCrunchCacheStoragePath />
   <MetricsExclusionList>
+src\NetFusion\RefArch\RefArch.Api\RefArch.Api.csproj
+src\NetFusion\RefArch\RefArch.Domain\RefArch.Domain.csproj
+src\NetFusion\RefArch\RefArch.Host\RefArch.Host.csproj
+src\NetFusion\RefArch\RefArch.Infrastructure\RefArch.Infrastructure.csproj
+src\NetFusion\RefArch\RefArch.Services\RefArch.Services.csproj
+src\NetFusion\RefArch\RefArch.Subscriber\RefArch.Subscriber.csproj
+tests\NetFusion.Tests.Core\NetFusion.Tests.Core.csproj
+tests\NetFusion.Tests.Infrastructure\NetFusion.Tests.Infrastructure.csproj
+tests\NetFusion.Tests.Integration\NetFusion.Tests.Integration.csproj
 </MetricsExclusionList>
 </SolutionConfiguration>

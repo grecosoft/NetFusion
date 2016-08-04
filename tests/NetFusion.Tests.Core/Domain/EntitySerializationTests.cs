@@ -1,10 +1,8 @@
-﻿using NetFusion.Common.Serialization;
+﻿using FluentAssertions;
+using NetFusion.Common.Serialization;
 using NetFusion.Tests.Core.Domain.Mocks;
-using Xunit;
-using FluentAssertions;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Dynamic;
+using Xunit;
 
 namespace NetFusion.Tests.Core.Domain
 {

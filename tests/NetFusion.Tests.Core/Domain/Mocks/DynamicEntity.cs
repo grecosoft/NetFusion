@@ -25,6 +25,5 @@ namespace NetFusion.Tests.Core.Domain.Mocks
             get { return _attributes.GetValues(); }
             set { _attributes.SetValues(value); }
         }
-
     }
 }
