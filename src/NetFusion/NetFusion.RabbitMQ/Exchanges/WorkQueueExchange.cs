@@ -18,9 +18,12 @@ namespace NetFusion.RabbitMQ.Exchanges
         public WorkQueueExchange()
         {
             Settings.ExchangeType = null;      // Default Exchange
-            Settings.ExchangeName = "";      
+            Settings.ExchangeName = "";     
+             
             QueueSettings.IsDurable = true;
             QueueSettings.IsNoAck = false;   // Require consumer to acknowledge message.
+            QueueSettings.IsAutoDelete = false;
+            QueueSettings.IsExclusive = false;
         }
 
         internal override void ValidateConfiguration()

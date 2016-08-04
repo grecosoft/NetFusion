@@ -96,11 +96,18 @@
     <Compile Include="MongoDB\MongoClientTests.cs" />
     <Compile Include="MongoDB\MongoMappingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RabbitMQ\Exchanges\FanoutExchangeTests.cs" />
+    <Compile Include="RabbitMQ\Exchanges\TopicExchangeTests.cs" />
+    <Compile Include="RabbitMQ\Exchanges\WorkQueueTests.cs" />
     <Compile Include="RabbitMQ\ExchangeTestExtensions.cs" />
-    <Compile Include="RabbitMQ\Mocks\CommonExchangeTests.cs" />
-    <Compile Include="RabbitMQ\Mocks\DefaultExchangeTests.cs" />
+    <Compile Include="RabbitMQ\Exchanges\CommonExchangeTests.cs" />
+    <Compile Include="RabbitMQ\Exchanges\DirectExchangeTests.cs" />
+    <Compile Include="RabbitMQ\MessageBrokerModuleTests.cs" />
     <Compile Include="RabbitMQ\Mocks\MockDirectExchange.cs" />
     <Compile Include="RabbitMQ\Mocks\MockDomainEvent.cs" />
+    <Compile Include="RabbitMQ\Mocks\MockFanoutExchange.cs" />
+    <Compile Include="RabbitMQ\Mocks\MockTopicExchange.cs" />
+    <Compile Include="RabbitMQ\Mocks\MockWorkQueueExchange.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\NetFusion\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj">

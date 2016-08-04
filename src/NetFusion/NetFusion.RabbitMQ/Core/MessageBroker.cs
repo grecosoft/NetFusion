@@ -31,10 +31,10 @@ namespace NetFusion.RabbitMQ.Core
     {
         private bool _disposed;
 
-        private readonly BrokerSettings _brokerSettings;
-        private readonly IDictionary<string, BrokerConnection> _brokerConnections;
-        private readonly ILookup<Type, ExchangeDefinition> _messageExchanges;
-        private readonly IDictionary<string, IMessageSerializer> _serializers;
+        private BrokerSettings _brokerSettings;
+        private IDictionary<string, BrokerConnection> _brokerConnections;
+        private ILookup<Type, ExchangeDefinition> _messageExchanges;
+        private IDictionary<string, IMessageSerializer> _serializers;
 
         private IEnumerable<MessageConsumer> _messageConsumers;
         private Func<string, Task<IEnumerable<ExchangeConfig>>> _exchangeMetadataReader;
@@ -47,7 +47,7 @@ namespace NetFusion.RabbitMQ.Core
         /// broker connections.</param>
         /// <param name="exchanges">Information for the exchanges and optional queues
         /// to be declared on brokers.</param>
-        public MessageBroker(
+        public void  Initialize(
             BrokerSettings brokerSettings,
             IDictionary<string, BrokerConnection> brokerConnections,
             IEnumerable<IMessageExchange> exchanges)
@@ -103,6 +103,7 @@ namespace NetFusion.RabbitMQ.Core
         {
             Check.NotNull(serializer, nameof(serializer));
 
+            // TODO: only add if content type not already registered.
             _serializers[serializer.ContentType] = serializer;
         }
 

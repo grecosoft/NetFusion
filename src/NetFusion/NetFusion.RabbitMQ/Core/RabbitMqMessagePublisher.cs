@@ -1,6 +1,5 @@
 ﻿using NetFusion.Messaging;
 using NetFusion.Messaging.Core;
-using NetFusion.RabbitMQ.Modules;
 
 namespace NetFusion.RabbitMQ.Core
 {
@@ -10,18 +9,18 @@ namespace NetFusion.RabbitMQ.Core
     /// </summary>
     public class RabbitMqMessagePublisher : MessagePublisher
     {
-        private readonly IMessageBrokerModule _eventBrokerModule;
+        private readonly IMessageBroker _messageBroker;
 
-        public RabbitMqMessagePublisher(IMessageBrokerModule messageBrokerModule)
+        public RabbitMqMessagePublisher(IMessageBroker messageBroker)
         {
-            _eventBrokerModule = messageBrokerModule;
+            _messageBroker = messageBroker;
         }
 
         public override void PublishMessage(IMessage message)
         {
-            if (_eventBrokerModule.MessageBroker.IsExchangeMessage(message))
+            if (_messageBroker.IsExchangeMessage(message))
             {
-                _eventBrokerModule.MessageBroker.PublishToExchange(message);
+                _messageBroker.PublishToExchange(message);
             }
         }
     }

@@ -1,13 +1,15 @@
 ﻿using FluentAssertions;
+using Moq;
+using NetFusion.Tests.Infrastructure.RabbitMQ.Mocks;
 using System;
 using System.Linq;
 using Xunit;
 
-namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks
+namespace NetFusion.Tests.Infrastructure.RabbitMQ.Exchanges
 {
-    public class DefaultExchangeTests
+    public class DirectExchangeTests
     {
-        [Fact]
+        [Fact] // Should be recreated if the server is restarted.
         public void DirectExchangeIsDurableByDefault()
         {
             var exchange = new MockDirectExchange();
@@ -15,7 +17,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks
             exchange.Settings.IsDurable.Should().BeTrue();
         }
 
-        [Fact]
+        [Fact] // When the exchange no longer has connected clients, it should not be deleted.
         public void DirectExchangeIsNotAutoDeleteByDefault()
         {
             var exchange = new MockDirectExchange();
@@ -23,7 +25,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks
             exchange.Settings.IsAutoDelete.Should().BeFalse();
         }
 
-        [Fact]
+        [Fact] // Clients much acknowledge the completed processing of message.
         public void DirectExchangeQueuesRequresAckByDefault()
         {
             var exchange = new MockDirectExchange { FirstQueueName = "FirstMockTestQueue" };
@@ -32,7 +34,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks
             exchange.Queues.First().Settings.IsNoAck.Should().BeFalse();
         }
 
-        [Fact]
+        [Fact] // Should be recreated if server is restarted.
         public void DirectExchangeQueuesShouldBeDurrableByDefault()
         {
             var exchange = new MockDirectExchange { FirstQueueName = "FirstMockTestQueue" };
@@ -41,13 +43,22 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks
             exchange.Queues.First().Settings.IsDurable.Should().BeTrue();
         }
 
-        [Fact]
+        [Fact] // Exchange will deliver message to all queues that have a route key matching key of message.
         public void DirectExchangeQueueMustHaveAtLeastOneRouteKey()
         {
             var exchange = new MockDirectExchange { FirstQueueName = "FirstMockTestQueue", FirstQueueRouteKeys = new string[] { } };
 
             Assert.Throws<InvalidOperationException>(() => exchange.Setup()).Message
                 .Should().Contain("queues must have a route specified-Exchange");
+        }
+
+        [Fact] // Multiple clients can connect to and monitor queue.
+        public void DirectExchangeQueueIsNotExclusiveByDefault()
+        {
+            var exchange = new MockDirectExchange { FirstQueueName = "FirstMockTestQueue" };
+            exchange.Setup();
+
+            exchange.Queues.First().Settings.IsExclusive.Should().BeFalse();
         }
     }
 }

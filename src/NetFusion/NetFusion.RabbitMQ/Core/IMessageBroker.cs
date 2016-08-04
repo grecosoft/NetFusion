@@ -1,4 +1,11 @@
 ﻿using NetFusion.Messaging;
+using NetFusion.RabbitMQ.Configs;
+using NetFusion.RabbitMQ.Exchanges;
+using NetFusion.RabbitMQ.Integration;
+using NetFusion.RabbitMQ.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NetFusion.RabbitMQ.Core
 {
@@ -8,6 +15,29 @@ namespace NetFusion.RabbitMQ.Core
     /// </summary>
     public interface IMessageBroker
     {
+        /// <summary>
+        /// Initializes the message broker with the information needed to create 
+        /// exchanges and queues.
+        /// </summary>
+        /// <param name="brokerSettings">Broker configuration settings.</param>
+        /// <param name="brokerConnections">Connections to RabbitMq.</param>
+        /// <param name="exchanges">Exchange configurations to be created.</param>
+        void Initialize(BrokerSettings brokerSettings, 
+            IDictionary<string, BrokerConnection> brokerConnections,
+            IEnumerable<IMessageExchange> exchanges);
+
+        /// <summary>
+        /// Creates the needed RabbitMq exchanges based on the configurations.
+        /// </summary>
+        void DefineExchanges();
+
+        /// <summary>
+        /// Based on consumers having handlers for messages associated with an 
+        /// exchange, invoke the corresponding handler when an message is delivered.
+        /// </summary>
+        /// <param name="messageConsumers">List of discovered exchange message consumers.</param>
+        void BindConsumers(IEnumerable<MessageConsumer> messageConsumers);
+
         /// <summary>
         /// Determines if a message has an associated exchange.
         /// </summary>
@@ -21,5 +51,9 @@ namespace NetFusion.RabbitMQ.Core
         /// </summary>
         /// <param name="message">The message to publish.</param>
         void PublishToExchange(IMessage message);
+
+        void AddSerializer(IMessageSerializer serializer);
+
+        void SetExchangeMetadataReader(Func<string, Task<IEnumerable<ExchangeConfig>>> reader);
     }
 }

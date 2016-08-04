@@ -1,8 +1,9 @@
 ﻿using FluentAssertions;
+using NetFusion.Tests.Infrastructure.RabbitMQ.Mocks;
 using System.Linq;
 using Xunit;
 
-namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks
+namespace NetFusion.Tests.Infrastructure.RabbitMQ.Exchanges
 {
     public class CommonExchangeTests
     {

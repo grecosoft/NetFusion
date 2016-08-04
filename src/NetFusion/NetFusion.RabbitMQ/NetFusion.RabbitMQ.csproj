@@ -82,7 +82,6 @@
     <Compile Include="Integration\IExchangeRepository.cs" />
     <Compile Include="Integration\QueueConfig.cs" />
     <Compile Include="MessageExtensions.cs" />
-    <Compile Include="Modules\IMessageBrokerModule.cs" />
     <Compile Include="Modules\MessageBrokerModule.cs" />
     <Compile Include="RabbitMQManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

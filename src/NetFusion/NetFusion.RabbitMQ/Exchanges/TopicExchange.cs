@@ -17,8 +17,12 @@ namespace NetFusion.RabbitMQ.Exchanges
         {
             Settings.ExchangeType = ExchangeType.Topic;
             Settings.IsDurable = true;
+            Settings.IsAutoDelete = false;
+
             QueueSettings.IsDurable = true;
             QueueSettings.IsNoAck = false;   // Require consumer to acknowledge message.
+            QueueSettings.IsExclusive = false;  // Multiple clients can monitor queue.
+            QueueSettings.IsAutoDelete = false;
         }
 
         internal override void ValidateConfiguration()

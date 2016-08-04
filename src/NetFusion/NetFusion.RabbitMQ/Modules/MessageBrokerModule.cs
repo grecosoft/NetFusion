@@ -25,14 +25,14 @@ namespace NetFusion.RabbitMQ.Modules
     /// of messages to exchanges.  Consumers are bound to Queues by marking message 
     /// handlers with a Queue Consumer derived attribute.  
     /// </summary>
-    internal class MessageBrokerModule : PluginModule,
-        IMessageBrokerModule
+    internal class MessageBrokerModule : PluginModule
     {
-        private MessageBroker _messageBroker;
+        private IMessageBroker _messageBroker;
         private bool _disposed;
 
         public IMessageBroker MessageBroker { get { return _messageBroker; } }
 
+        // Discovered Properties:
         public IEnumerable<IMessageExchange> Exchanges { get; private set; }
         public IEnumerable<IMessageSerializerRegistry> Registries { get; private set; }
 
@@ -42,11 +42,18 @@ namespace NetFusion.RabbitMQ.Modules
         {
             if (dispose && !_disposed)
             {
-                _messageBroker.Dispose();
+                (_messageBroker as IDisposable)?.Dispose();
                 _disposed = true;
             }
 
             base.Dispose(dispose);
+        }
+
+        public override void RegisterComponents(ContainerBuilder builder)
+        {
+            builder.RegisterType<MessageBroker>()
+                .As<IMessageBroker>()
+                .SingleInstance();
         }
 
         public override void Configure()
@@ -73,7 +80,8 @@ namespace NetFusion.RabbitMQ.Modules
 
             _messageConsumers = GetQueueConsumers(scope);
 
-            _messageBroker = new MessageBroker(brokerSettings, connections, this.Exchanges);
+            _messageBroker = scope.Resolve<IMessageBroker>();
+            _messageBroker.Initialize(brokerSettings, connections, this.Exchanges);
             _messageBroker.DefineExchanges();
             _messageBroker.BindConsumers(_messageConsumers);
             _messageBroker.SetExchangeMetadataReader(host => ReadExchangeMetadataAsync(host, scope));
