@@ -68,6 +68,7 @@
     <Compile Include="Core\IMessageExchange.cs" />
     <Compile Include="Core\MessageBroker.cs" />
     <Compile Include="Core\MessageBrokerLog.cs" />
+    <Compile Include="Core\MessageBrokerMetadata.cs" />
     <Compile Include="Core\MessageConsumer.cs" />
     <Compile Include="Core\MessageExchange.cs" />
     <Compile Include="Core\RabbitMqMessagePublisher.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Serialization\IMessageSerializer.cs" />
     <Compile Include="Serialization\IMessageSerializerRegistry.cs" />
     <Compile Include="Serialization\JsonMessageSerializer.cs" />
+    <Compile Include="Testing\HostTypeResolverExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NetFusion.RabbitMQ.nuspec" />
@@ -116,6 +118,7 @@
       <Name>NetFusion.Settings</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

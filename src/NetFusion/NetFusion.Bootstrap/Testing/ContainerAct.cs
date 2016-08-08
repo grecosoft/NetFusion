@@ -12,7 +12,7 @@ namespace NetFusion.Bootstrap.Testing
     {
         private readonly AppContainer _container;
 
-        internal ContainerAct(AppContainer container)
+        public ContainerAct(AppContainer container)
         {
             _container = container;
         }

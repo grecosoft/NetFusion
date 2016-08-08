@@ -80,8 +80,16 @@ namespace NetFusion.RabbitMQ.Modules
 
             _messageConsumers = GetQueueConsumers(scope);
 
+            InitializeExchanges(brokerSettings);
+
             _messageBroker = scope.Resolve<IMessageBroker>();
-            _messageBroker.Initialize(brokerSettings, connections, this.Exchanges);
+            _messageBroker.Initialize(new MessageBrokerMetadata
+            {
+                Settings = brokerSettings,
+                Connections = connections,
+                Exchanges = this.Exchanges
+            });
+
             _messageBroker.DefineExchanges();
             _messageBroker.BindConsumers(_messageConsumers);
             _messageBroker.SetExchangeMetadataReader(host => ReadExchangeMetadataAsync(host, scope));
@@ -92,6 +100,16 @@ namespace NetFusion.RabbitMQ.Modules
 
             // Exchange meta-data will be read when recovering from a failed RabbitMQ node.
             // SaveExchangeMetadata(container);
+        }
+
+        private void InitializeExchanges(BrokerSettings brokerSettings)
+        {
+            foreach(var exchange in this.Exchanges)
+            {
+                exchange.InitializeSettings();
+                brokerSettings.ApplyQueueSettings(exchange);
+                
+            }
         }
 
         public override void Log(IDictionary<string, object> moduleLog)

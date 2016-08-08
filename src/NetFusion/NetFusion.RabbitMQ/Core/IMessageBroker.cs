@@ -1,6 +1,4 @@
 ﻿using NetFusion.Messaging;
-using NetFusion.RabbitMQ.Configs;
-using NetFusion.RabbitMQ.Exchanges;
 using NetFusion.RabbitMQ.Integration;
 using NetFusion.RabbitMQ.Serialization;
 using System;
@@ -19,12 +17,8 @@ namespace NetFusion.RabbitMQ.Core
         /// Initializes the message broker with the information needed to create 
         /// exchanges and queues.
         /// </summary>
-        /// <param name="brokerSettings">Broker configuration settings.</param>
-        /// <param name="brokerConnections">Connections to RabbitMq.</param>
-        /// <param name="exchanges">Exchange configurations to be created.</param>
-        void Initialize(BrokerSettings brokerSettings, 
-            IDictionary<string, BrokerConnection> brokerConnections,
-            IEnumerable<IMessageExchange> exchanges);
+        /// <param name="metadata">The exchange and queue meta-data.</param>
+        void Initialize(MessageBrokerMetadata metadata);
 
         /// <summary>
         /// Creates the needed RabbitMq exchanges based on the configurations.

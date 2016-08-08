@@ -103,9 +103,12 @@
     <Compile Include="RabbitMQ\Exchanges\CommonExchangeTests.cs" />
     <Compile Include="RabbitMQ\Exchanges\DirectExchangeTests.cs" />
     <Compile Include="RabbitMQ\MessageBrokerModuleTests.cs" />
+    <Compile Include="RabbitMQ\MessageBrokerTests.cs" />
     <Compile Include="RabbitMQ\Mocks\MockDirectExchange.cs" />
     <Compile Include="RabbitMQ\Mocks\MockDomainEvent.cs" />
+    <Compile Include="RabbitMQ\Mocks\MockExchange.cs" />
     <Compile Include="RabbitMQ\Mocks\MockFanoutExchange.cs" />
+    <Compile Include="RabbitMQ\Mocks\MockMessageConsumer.cs" />
     <Compile Include="RabbitMQ\Mocks\MockTopicExchange.cs" />
     <Compile Include="RabbitMQ\Mocks\MockWorkQueueExchange.cs" />
   </ItemGroup>

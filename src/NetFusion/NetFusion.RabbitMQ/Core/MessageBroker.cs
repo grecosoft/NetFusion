@@ -5,7 +5,6 @@ using NetFusion.Messaging;
 using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Consumers;
-using NetFusion.RabbitMQ.Exchanges;
 using NetFusion.RabbitMQ.Integration;
 using NetFusion.RabbitMQ.Serialization;
 using RabbitMQ.Client;
@@ -47,20 +46,17 @@ namespace NetFusion.RabbitMQ.Core
         /// broker connections.</param>
         /// <param name="exchanges">Information for the exchanges and optional queues
         /// to be declared on brokers.</param>
-        public void  Initialize(
-            BrokerSettings brokerSettings,
-            IDictionary<string, BrokerConnection> brokerConnections,
-            IEnumerable<IMessageExchange> exchanges)
+        public void  Initialize(MessageBrokerMetadata metadata)
         {
-            Check.NotNull(brokerConnections, nameof(brokerConnections));
-            Check.NotNull(exchanges, nameof(exchanges));
+            Check.NotNull(metadata.Connections, nameof(metadata.Connections));
+            Check.NotNull(metadata.Exchanges, nameof(metadata.Exchanges));
 
-            _brokerSettings = brokerSettings;
-            _brokerConnections = brokerConnections;
+            _brokerSettings = metadata.Settings;
+            _brokerConnections = metadata.Connections;
             _serializers = new Dictionary<string, IMessageSerializer>();
 
             // Messages can have one or more associated exchanges.
-            _messageExchanges = exchanges.ToLookup(
+            _messageExchanges = metadata.Exchanges.ToLookup(
                 k => k.MessageType,
                 e => new ExchangeDefinition(e.MessageType, e));
 
@@ -142,9 +138,6 @@ namespace NetFusion.RabbitMQ.Core
 
             _messageExchanges.ForEachValue(exDef => {
 
-                exDef.Exchange.InitializeSettings();
-                _brokerSettings.ApplyQueueSettings(exDef.Exchange);
-                
                 using (var channel = CreateBrokerChannel(exDef.Exchange.BrokerName))
                 {
                     exDef.Exchange.Declare(channel);

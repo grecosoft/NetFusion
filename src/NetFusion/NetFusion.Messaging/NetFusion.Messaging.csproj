@@ -68,6 +68,7 @@
     <Compile Include="Rules\IMessageDispatchRule.cs" />
     <Compile Include="Rules\MessageDispatchRule.cs" />
     <Compile Include="Rules\RuleApplyTypes.cs" />
+    <Compile Include="Testing\HostTypeResolverExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NetFusion.Messaging.nuspec" />
