@@ -1,4 +1,5 @@
 ﻿using Moq;
+using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Core;
 using RabbitMQ.Client;
@@ -9,7 +10,8 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks
     {
         private readonly Mock<IConnection> _mockConnection;
     
-        public MockMessageBroker(Mock<IConnection> mockConnection)
+        public MockMessageBroker(Mock<IMessagingModule> mockMsgModule, Mock<IConnection> mockConnection) :
+            base(mockMsgModule.Object)
         {
             _mockConnection = mockConnection;
         }

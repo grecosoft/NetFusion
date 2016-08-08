@@ -194,7 +194,7 @@ namespace NetFusion.Messaging.Modules
         /// </summary>
         /// <param name="message">The message to dispatch.</param>
         /// <param name="dispatchInfo">The message dispatch information.</param>
-        public static async Task<IMessage> DispatchConsumer(IMessage message, MessageDispatchInfo dispatchInfo)
+        public async Task<IMessage> DispatchConsumer(IMessage message, MessageDispatchInfo dispatchInfo)
         {
             Check.NotNull(message, nameof(message));
             Check.NotNull(dispatchInfo, nameof(dispatchInfo));

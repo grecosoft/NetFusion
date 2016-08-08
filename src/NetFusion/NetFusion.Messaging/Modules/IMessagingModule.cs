@@ -3,6 +3,7 @@ using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Core;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NetFusion.Messaging.Modules
 {
@@ -29,5 +30,7 @@ namespace NetFusion.Messaging.Modules
         /// marked with the InProcessHandler attribute.
         /// </summary>
         ILookup<Type, MessageDispatchInfo> InProcessMessageTypeDispatchers { get; }
+
+        Task<IMessage> DispatchConsumer(IMessage message, MessageDispatchInfo dispatchInfo);
     }
 }

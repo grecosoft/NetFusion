@@ -28,6 +28,7 @@ namespace NetFusion.RabbitMQ.Core
     public class MessageBroker: IDisposable,
         IMessageBroker
     {
+        private readonly IMessagingModule _messagingModule;
         private bool _disposed;
 
         private BrokerSettings _brokerSettings;
@@ -38,14 +39,15 @@ namespace NetFusion.RabbitMQ.Core
         private IEnumerable<MessageConsumer> _messageConsumers;
         private Func<string, Task<IEnumerable<ExchangeConfig>>> _exchangeMetadataReader;
 
+        public MessageBroker(IMessagingModule messagingModule)
+        {
+            _messagingModule = messagingModule;
+        }
+
         /// <summary>
         /// Initializes new broker.
         /// </summary>
-        /// <param name="brokerSettings">Broker specific settings.</param>
-        /// <param name="brokerConnections">Connection settings for the required
-        /// broker connections.</param>
-        /// <param name="exchanges">Information for the exchanges and optional queues
-        /// to be declared on brokers.</param>
+        /// <param name="metadata">Initialization properties specified by owning module.</param>
         public void  Initialize(MessageBrokerMetadata metadata)
         {
             Check.NotNull(metadata.Connections, nameof(metadata.Connections));
@@ -257,7 +259,7 @@ namespace NetFusion.RabbitMQ.Core
             LogReceivedExchangeMessage(message, messageConsumer);
 
             // Delegate to the Messaging Module to dispatch the message to all consumers.
-            var futureResult = MessagingModule.DispatchConsumer(
+            var futureResult = _messagingModule.DispatchConsumer(
                 message, 
                 messageConsumer.DispatchInfo);
 

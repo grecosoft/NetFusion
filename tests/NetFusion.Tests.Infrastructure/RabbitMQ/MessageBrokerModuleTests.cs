@@ -213,6 +213,24 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             addConsumer.QueueName.Should().BeEmpty(); // The server will assign name.
         }
 
+        [Fact]
+        public void ThereCanBeOneOneSerializerRegisteryRegisteredByHost()
+        {
+
+        }
+
+        [Fact]
+        public void IfExhangeSpecifiedSerializerNotFoundThenException()
+        {
+
+        }
+
+        [Fact]
+        public void DefaultJsonAndBinarySerializersAddedIfNotSpecifiedByHost()
+        {
+
+        }
+
         // Creates an initialized container with the needed dependent plug-ins;
         private ContainerAct Arrange(Action<TestTypeResolver> config)
         {
