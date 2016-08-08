@@ -108,6 +108,7 @@
     <Compile Include="RabbitMQ\Mocks\MockDomainEvent.cs" />
     <Compile Include="RabbitMQ\Mocks\MockExchange.cs" />
     <Compile Include="RabbitMQ\Mocks\MockFanoutExchange.cs" />
+    <Compile Include="RabbitMQ\Mocks\MockMessageBroker.cs" />
     <Compile Include="RabbitMQ\Mocks\MockMessageConsumer.cs" />
     <Compile Include="RabbitMQ\Mocks\MockTopicExchange.cs" />
     <Compile Include="RabbitMQ\Mocks\MockWorkQueueExchange.cs" />

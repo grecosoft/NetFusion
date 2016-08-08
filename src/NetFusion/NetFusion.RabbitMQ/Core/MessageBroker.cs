@@ -25,7 +25,7 @@ namespace NetFusion.RabbitMQ.Core
     /// process for joining consumers to existing queues and for creating new queues
     /// specific to consumers.
     /// </summary>
-    internal class MessageBroker: IDisposable,
+    public class MessageBroker: IDisposable,
         IMessageBroker
     {
         private bool _disposed;
@@ -153,7 +153,7 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
-        private static void ConnectToBroker(BrokerConnection brokerConn)
+        protected virtual void ConnectToBroker(BrokerConnection brokerConn)
         {
             var connFactory = new ConnectionFactory
             {
