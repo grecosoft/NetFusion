@@ -27,15 +27,12 @@ namespace NetFusion.RabbitMQ.Modules
     /// </summary>
     internal class MessageBrokerModule : PluginModule
     {
-        private IMessageBroker _messageBroker;
         private bool _disposed;
-
-        public IMessageBroker MessageBroker { get { return _messageBroker; } }
-
+        private IMessageBroker _messageBroker;
+       
         // Discovered Properties:
         public IEnumerable<IMessageExchange> Exchanges { get; private set; }
         public IEnumerable<IMessageSerializerRegistry> Registries { get; private set; }
-
         private IEnumerable<MessageConsumer> _messageConsumers;
 
         protected override void Dispose(bool dispose)
@@ -75,75 +72,22 @@ namespace NetFusion.RabbitMQ.Modules
         // determines the queues that should be created.
         public override void StartModule(ILifetimeScope scope)
         {
-            var brokerSettings = GetBrokerSettings(scope);
-            var connections = GetConnections(brokerSettings);
-
+            _messageBroker = scope.Resolve<IMessageBroker>();
             _messageConsumers = GetQueueConsumers(scope);
 
+            var brokerSettings = GetBrokerSettings(scope);
             InitializeExchanges(brokerSettings);
 
-            _messageBroker = scope.Resolve<IMessageBroker>();
-            _messageBroker.Initialize(new MessageBrokerMetadata
+            _messageBroker.Initialize(new MessageBrokerConfig
             {
                 Settings = brokerSettings,
-                Connections = connections,
+                Connections = GetConnections(brokerSettings),
+                Serializers = GetMessageSerializers(),
                 Exchanges = this.Exchanges
             });
 
             _messageBroker.DefineExchanges();
             _messageBroker.BindConsumers(_messageConsumers);
-            _messageBroker.SetExchangeMetadataReader(host => ReadExchangeMetadataAsync(host, scope));
-
-            // Add any discovered message encoders from the host.
-            var serializers = GetCustomSerializers();
-            serializers.ForEach(_messageBroker.AddSerializer);
-
-            // Exchange meta-data will be read when recovering from a failed RabbitMQ node.
-            // SaveExchangeMetadata(container);
-        }
-
-        private void InitializeExchanges(BrokerSettings brokerSettings)
-        {
-            foreach(var exchange in this.Exchanges)
-            {
-                exchange.InitializeSettings();
-                brokerSettings.ApplyQueueSettings(exchange);
-                
-            }
-        }
-
-        public override void Log(IDictionary<string, object> moduleLog)
-        {
-            var brokerLog = new MessageBrokerLog(this.Exchanges, _messageConsumers);
-
-            brokerLog.LogMessageExchanges(moduleLog);
-            brokerLog.LogMessageConsumers(moduleLog);
-        }
-
-        private BrokerSettings GetBrokerSettings(ILifetimeScope container)
-        {
-            return container.Resolve<BrokerSettings>();   
-        }
-
-        private IDictionary<string, BrokerConnection> GetConnections(BrokerSettings settings)
-        {
-            if (settings.Connections == null)
-            {
-                return new Dictionary<string, BrokerConnection>();
-            }
-
-            var duplicateBrokerNames = settings.Connections.GroupBy(c => c.BrokerName)
-                .Where(g => g.Count() > 1)
-                .Select(g => g.Key);
-
-            if (duplicateBrokerNames.Any())
-            {
-                throw new InvalidOperationException(
-                    $"The following broker names are specified more than " + 
-                    $"once: {String.Join(", ", duplicateBrokerNames)}.");
-            }
-
-            return settings.Connections.ToDictionary(c => c.BrokerName);
         }
 
         // Finds all consumers message handler methods that are associated with a queue 
@@ -174,7 +118,51 @@ namespace NetFusion.RabbitMQ.Modules
                 && dispatchInfo.MessageHandlerMethod.HasAttribute<QueueConsumerAttribute>();
         }
 
-        private IEnumerable<IMessageSerializer> GetCustomSerializers()
+        private BrokerSettings GetBrokerSettings(ILifetimeScope container)
+        {
+            return container.Resolve<BrokerSettings>();
+        }
+
+        private void InitializeExchanges(BrokerSettings brokerSettings)
+        {
+            foreach(var exchange in this.Exchanges)
+            {
+                exchange.InitializeSettings();
+                brokerSettings.ApplyQueueSettings(exchange);
+            }
+        }
+
+        private IDictionary<string, BrokerConnection> GetConnections(BrokerSettings settings)
+        {
+            if (settings.Connections == null)
+            {
+                return new Dictionary<string, BrokerConnection>();
+            }
+
+            var duplicateBrokerNames = settings.Connections.GroupBy(c => c.BrokerName)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key);
+
+            if (duplicateBrokerNames.Any())
+            {
+                throw new InvalidOperationException(
+                    $"The following broker names are specified more than " +
+                    $"once: {String.Join(", ", duplicateBrokerNames)}.");
+            }
+
+            return settings.Connections.ToDictionary(c => c.BrokerName);
+        }
+
+        private IDictionary<string, IMessageSerializer> GetMessageSerializers()
+        {
+            var serializers = GetConfiguredSerializers();
+            AddSerializer(serializers, new JsonEventMessageSerializer());
+            AddSerializer(serializers, new BinaryMessageSerializer());
+
+            return serializers;
+        }
+
+        private IDictionary<string, IMessageSerializer> GetConfiguredSerializers()
         {
             var allAppPluginTypes = this.Context.GetPluginTypesFrom(
                 PluginTypes.AppHostPlugin, PluginTypes.AppComponentPlugin);
@@ -182,21 +170,42 @@ namespace NetFusion.RabbitMQ.Modules
             var registries = this.Registries.CreatedFrom(allAppPluginTypes);
             if (registries.Empty())
             {
-                return Enumerable.Empty<IMessageSerializer>();
+                return new Dictionary<string, IMessageSerializer>();
             }
 
             if (registries.IsSingletonSet())
             {
-                return registries.First().GetSerializers();
+                var serializers = registries.First().GetSerializers();
+                return serializers.ToDictionary(s => s.ContentType);
             }
 
             throw new ContainerException(
-                $"The application host and its corresponding application plug-ins can only " + 
-                $"define one class implementing the: {typeof(IMessageSerializerRegistry)} interface-" +  
+                $"The application host and its corresponding application plug-ins can only " +
+                $"define one class implementing the: {typeof(IMessageSerializerRegistry)} interface-" +
                 $"{registries.Count()} implementations were found.",
 
                 registries.Select(e => new { Registry = e.GetType().AssemblyQualifiedName }));
         }
+
+        private void AddSerializer(
+            IDictionary<string, IMessageSerializer> serializers,
+            IMessageSerializer serializer)
+        {
+            if (!serializers.Keys.Contains(serializer.ContentType))
+            {
+                serializers[serializer.ContentType] = serializer;
+            }
+        }
+
+        public override void Log(IDictionary<string, object> moduleLog)
+        {
+            var brokerLog = new MessageBrokerLog(this.Exchanges, _messageConsumers);
+
+            brokerLog.LogMessageExchanges(moduleLog);
+            brokerLog.LogMessageConsumers(moduleLog);
+        }
+
+       
 
         // TODO:  Review the following:
 

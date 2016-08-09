@@ -5,14 +5,12 @@ using NetFusion.Messaging;
 using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Consumers;
-using NetFusion.RabbitMQ.Integration;
 using NetFusion.RabbitMQ.Serialization;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace NetFusion.RabbitMQ.Core
 {
@@ -28,16 +26,12 @@ namespace NetFusion.RabbitMQ.Core
     public class MessageBroker: IDisposable,
         IMessageBroker
     {
-        private readonly IMessagingModule _messagingModule;
         private bool _disposed;
+        private readonly IMessagingModule _messagingModule;
 
-        private BrokerSettings _brokerSettings;
-        private IDictionary<string, BrokerConnection> _brokerConnections;
+        private MessageBrokerConfig _brokerConfig;
         private ILookup<Type, ExchangeDefinition> _messageExchanges;
-        private IDictionary<string, IMessageSerializer> _serializers;
-
         private IEnumerable<MessageConsumer> _messageConsumers;
-        private Func<string, Task<IEnumerable<ExchangeConfig>>> _exchangeMetadataReader;
 
         public MessageBroker(IMessagingModule messagingModule)
         {
@@ -47,22 +41,19 @@ namespace NetFusion.RabbitMQ.Core
         /// <summary>
         /// Initializes new broker.
         /// </summary>
-        /// <param name="metadata">Initialization properties specified by owning module.</param>
-        public void  Initialize(MessageBrokerMetadata metadata)
+        /// <param name="brokerConfig">Initialization properties specified by owning module.</param>
+        public void  Initialize(MessageBrokerConfig brokerConfig)
         {
-            Check.NotNull(metadata.Connections, nameof(metadata.Connections));
-            Check.NotNull(metadata.Exchanges, nameof(metadata.Exchanges));
+            Check.NotNull(brokerConfig.Connections, nameof(brokerConfig.Connections));
+            Check.NotNull(brokerConfig.Exchanges, nameof(brokerConfig.Exchanges));
+            Check.NotNull(brokerConfig.Serializers, nameof(brokerConfig.Serializers));
 
-            _brokerSettings = metadata.Settings;
-            _brokerConnections = metadata.Connections;
-            _serializers = new Dictionary<string, IMessageSerializer>();
+            _brokerConfig = brokerConfig;
 
             // Messages can have one or more associated exchanges.
-            _messageExchanges = metadata.Exchanges.ToLookup(
+            _messageExchanges = brokerConfig.Exchanges.ToLookup(
                 k => k.MessageType,
                 e => new ExchangeDefinition(e.MessageType, e));
-
-            AddDefaultSerializers();
         }
 
         public void Dispose()
@@ -82,38 +73,7 @@ namespace NetFusion.RabbitMQ.Core
         private void DisposeConnections()
         {
             _messageConsumers.ForEach(c => c.Channel?.Dispose());
-            _brokerConnections.ForEachValue(bc => bc.Connection.Dispose());
-        }
-
-        private void AddDefaultSerializers()
-        {
-            AddSerializer(new JsonEventMessageSerializer());
-            AddSerializer(new BinaryMessageSerializer());
-        }
-
-        /// <summary>
-        /// Add serialize used to serialize and deserialize messages.  
-        /// If there is already a registered content type, it will be replaced.
-        /// </summary>
-        /// <param name="serializer">The custom serialize to use for messages
-        /// with the same specified content-type.</param>
-        public void AddSerializer(IMessageSerializer serializer)
-        {
-            Check.NotNull(serializer, nameof(serializer));
-
-            // TODO: only add if content type not already registered.
-            _serializers[serializer.ContentType] = serializer;
-        }
-
-        /// <summary>
-        /// Used to specify a delegate that should be called to load cached exchange meta-data.
-        /// </summary>
-        /// <param name="reader">Delegate that is called with the broker name.</param>
-        public void SetExchangeMetadataReader(Func<string, Task<IEnumerable<ExchangeConfig>>> reader)
-        {
-            Check.NotNull(reader, nameof(reader));
-
-            _exchangeMetadataReader = reader;
+            _brokerConfig.Connections.ForEachValue(bc => bc.Connection.Dispose());
         }
 
         /// <summary>
@@ -149,7 +109,7 @@ namespace NetFusion.RabbitMQ.Core
 
         private void EstablishBrockerConnections()
         {
-            foreach(var brokerConn in _brokerConnections.Values)
+            foreach(var brokerConn in _brokerConfig.Connections.Values)
             {
                 ConnectToBroker(brokerConn);
             }
@@ -166,20 +126,9 @@ namespace NetFusion.RabbitMQ.Core
             brokerConn.Connection = connFactory.CreateConnection();
         }
 
-        private void ReconnectToBroker(string brokerName)
-        {
-            var brokerConn = _brokerConnections.GetOptionalValue(brokerName);
-            if (brokerConn == null)
-            {
-                throw new InvalidOperationException(
-                   $"An existing broker with the name of: {brokerConn} does not exist.");
-            }
-            ConnectToBroker(brokerConn);
-        }
-
         private IModel CreateBrokerChannel(string brokerName)
         {
-            BrokerConnection brokerConn = _brokerConnections.GetOptionalValue(brokerName);
+            BrokerConnection brokerConn = _brokerConfig.Connections.GetOptionalValue(brokerName);
             if (brokerConn == null)
             {
                 throw new InvalidOperationException(
@@ -189,11 +138,6 @@ namespace NetFusion.RabbitMQ.Core
             return brokerConn.Connection.CreateModel();
         }
 
-        /// <summary>
-        /// Binds consumers to an existing queue on an exchange or creates a new
-        /// queue that is bound to the exchange.
-        /// </summary>
-        /// <param name="messageConsumers">List configured message consumers.</param>
         public void BindConsumers(IEnumerable<MessageConsumer> messageConsumers)
         {
             Check.NotNull(messageConsumers, nameof(messageConsumers));
@@ -218,7 +162,7 @@ namespace NetFusion.RabbitMQ.Core
                 // if the default exchange is not specified.
                 if (!messageConsumer.ExchangeName.IsNullOrWhiteSpace())
                 {
-                    _brokerSettings.ApplyQueueSettings(messageConsumer);
+                    _brokerConfig.Settings.ApplyQueueSettings(messageConsumer);
                     consumerChannel.QueueBind(messageConsumer);
                 }
 
@@ -260,7 +204,7 @@ namespace NetFusion.RabbitMQ.Core
 
             // Delegate to the Messaging Module to dispatch the message to all consumers.
             var futureResult = _messagingModule.DispatchConsumer(
-                message, 
+                message,
                 messageConsumer.DispatchInfo);
 
             futureResult.Wait();
@@ -299,12 +243,12 @@ namespace NetFusion.RabbitMQ.Core
         private static IBasicProperties GetRpcResponseBasicProperties(MessageConsumer messageConsumer, string contentType)
         {
             var basicProps = messageConsumer.Channel.CreateBasicProperties();
-        
+
             basicProps.ContentType = contentType;
             return basicProps;
         }
- 
-        private static void HandleAcknowledgeMessage(IMessage message, MessageConsumer messageConsumer,
+
+        private void HandleAcknowledgeMessage(IMessage message, MessageConsumer messageConsumer,
             BasicDeliverEventArgs deliveryEvent)
         {
             if (message.GetAcknowledged())
@@ -313,7 +257,7 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
-        private static void HandleRejectedMessage(IMessage message, MessageConsumer messageConsumer,
+        private void HandleRejectedMessage(IMessage message, MessageConsumer messageConsumer,
             BasicDeliverEventArgs deliveryEvent)
         {
             if (message.GetRejected())
@@ -323,13 +267,6 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
-        /// <summary>
-        /// Publishes a message to all associated exchanges
-        /// </summary>
-        /// <exception cref="InvalidOperationException">Raised if the message
-        /// is not associated with one or more exchanges.</exception>
-        /// <param name="message">The message to publish to one or more
-        /// exchanges.</param>
         public void PublishToExchange(IMessage message)
         {
             Check.NotNull(message, nameof(message));
@@ -344,7 +281,11 @@ namespace NetFusion.RabbitMQ.Core
             }
 
             LogPublishingExchangeMessage(message, exchangeDefs);
-            exchangeDefs.ForEach(exchangeDef => Publish(exchangeDef, message));
+
+            foreach(ExchangeDefinition exchangeDef in exchangeDefs)
+            {
+                Publish(exchangeDef, message);
+            }
         }
 
         private void Publish(ExchangeDefinition exchangeDef, IMessage message)
@@ -371,6 +312,24 @@ namespace NetFusion.RabbitMQ.Core
                     HandleOptionalResponse(message, returnQueueConsumer);
                 }
             }
+        }
+
+        private byte[] SerializeEvent(IMessage message, string contentType)
+        {
+            var serializer = GetMessageSerializer(contentType);
+            return serializer.Serialize(message);
+        }
+
+        private IMessageSerializer GetMessageSerializer(string contentType)
+        {
+            IMessageSerializer serializer = null;
+
+            if (!_brokerConfig.Serializers.TryGetValue(contentType, out serializer))
+            {
+                Plugin.Log.Error($"Serializer for Content Type: {contentType} has not been configured.");
+            }
+
+            return serializer;
         }
 
         private static ReplyConsumer CreateReturnQueueConsumer(IModel channel, ExchangeDefinition exchangeDef)
@@ -400,12 +359,6 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
-        private byte[] SerializeEvent(IMessage message, string contentType)
-        {
-            var serializer = GetMessageSerializer(contentType);
-            return serializer.Serialize(message);
-        }
-
         private IMessage DeserializeMessage(Type messageType,
             BasicDeliverEventArgs deliveryEvent)
         {
@@ -422,29 +375,19 @@ namespace NetFusion.RabbitMQ.Core
             return serializer.Deserialize(deliveryEvent.Body, messageType);
         }
 
-        private IMessageSerializer GetMessageSerializer(string contentType)
-        {
-            IMessageSerializer serializer = null;
-
-            if (!_serializers.TryGetValue(contentType, out serializer))
-            {
-                Plugin.Log.Error($"Serializer for Content Type: {contentType} has not been configured.");
-            }
-
-            return serializer;
-        }
+        // TODO:  Review the following:
 
         private void RestablishConnection(object sender, MessageConsumer messageConsumer,
             ShutdownEventArgs shutdownEvent)
         {
-            var brokerConn = _brokerConnections[messageConsumer.BrokerName];
+            var brokerConn = _brokerConfig.Connections[messageConsumer.BrokerName];
 
             if (brokerConn.Connection.IsOpen) return;
 
             if (IsUnexpectedShutdown(shutdownEvent))
             {
                 ReconnectToBroker(messageConsumer.BrokerName);
-                ReCreateExchanges(messageConsumer.BrokerName);
+                //ReCreateExchanges(messageConsumer.BrokerName);
                 BindConsumersToQueues(messageConsumer.BrokerName);
             }
         }
@@ -454,29 +397,15 @@ namespace NetFusion.RabbitMQ.Core
             return shutdownEvent.Initiator == ShutdownInitiator.Library || shutdownEvent.Initiator == ShutdownInitiator.Peer;
         }
 
-        private void ReCreateExchanges(string brokerName)
+        private void ReconnectToBroker(string brokerName)
         {
-            var cachedExchanges = _exchangeMetadataReader(brokerName).Result;
-            using (var channel = CreateBrokerChannel(brokerName))
+            var brokerConn = _brokerConfig.Connections.GetOptionalValue(brokerName);
+            if (brokerConn == null)
             {
-                foreach (var exchange in cachedExchanges)
-                {
-                    ReCreateExchange(channel, exchange);
-                }
+                throw new InvalidOperationException(
+                   $"An existing broker with the name of: {brokerConn} does not exist.");
             }
-        }
-
-        private static void ReCreateExchange(IModel channel, ExchangeConfig exchange)
-        {
-            if (exchange.Settings.ExchangeType != null)
-            {
-                channel.ExchangeDeclare(exchange.Settings);
-            }
-
-            foreach (var queue in exchange.QueueConfigs)
-            {
-                channel.QueueDeclare(queue.QueueName, queue.Settings);
-            }
+            ConnectToBroker(brokerConn);
         }
 
         private void LogPublishingExchangeMessage(IMessage message, IEnumerable<ExchangeDefinition> exchanges)

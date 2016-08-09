@@ -30,7 +30,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         [Fact]
         public void ExceptionIfExchangeBrokerNameNoConfigured()
         {
-            var metadata = GetBrokerMetadata();
+            var metadata = GetBrokerConfig();
             var mockMsgModule = new Mock<IMessagingModule>();
             var mockConn = new Mock<IConnection>();
             var exchange = new MockExchange();
@@ -54,7 +54,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         [Fact]
         public void CanDetermineIfEventAssociatedWithExchange()
         {
-            var metadata = GetBrokerMetadata();
+            var metadata = GetBrokerConfig();
             var mockMsgModule = new Mock<IMessagingModule>();
             var mockConn = new Mock<IConnection>();
             var exchange = new MockExchange();
@@ -76,7 +76,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         [Fact]
         public void DiscoveredExchangeIsCreatedOnRabbitServer()
         {
-            var metadata = GetBrokerMetadata();
+            var metadata = GetBrokerConfig();
             var mockMsgModule = new Mock<IMessagingModule>();
             var mockConn = new Mock<IConnection>();
             var mockModule = new Mock<IModel>();
@@ -112,7 +112,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         [Fact]
         public void DiscoveredQueueIsCreatedOnRabbitServer()
         {
-            var metadata = GetBrokerMetadata();
+            var metadata = GetBrokerConfig();
             var mockMsgModule = new Mock<IMessagingModule>();
             var mockConn = new Mock<IConnection>();
             var mockModule = new Mock<IModel>();
@@ -150,7 +150,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         [Fact]
         public void IfConsumerJoinsNonFanoutQueueNewBindingCreatedForConsumer()
         {
-            var metadata = GetBrokerMetadata();
+            var metadata = GetBrokerConfig();
             var mockMsgModule = new Mock<IMessagingModule>();
             var mockConn = new Mock<IConnection>();
             var mockModule = new Mock<IModel>();
@@ -192,7 +192,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         [Fact]
         public void IfConsumerAddsQueueNewQueueIsCreatedExclusivelyForConsumer()
         {
-            var metadata = GetBrokerMetadata();
+            var metadata = GetBrokerConfig();
             var mockMsgModule = new Mock<IMessagingModule>();
             var mockConn = new Mock<IConnection>();
             var mockModule = new Mock<IModel>();
@@ -241,7 +241,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         [Fact]
         public void IfMessageDeliveryRequiresAck_RabbitToldStatusIfAck()
         {
-            var metadata = GetBrokerMetadata();
+            var metadata = GetBrokerConfig();
             var mockMsgModule = new Mock<IMessagingModule>();
             var mockConn = new Mock<IConnection>();
             var mockModule = new Mock<IModel>();
@@ -287,7 +287,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         [Fact]
         public void IfMessageDeliveryRequiresAck_RabbitToldStatusIfNotAck()
         {
-            var metadata = GetBrokerMetadata();
+            var metadata = GetBrokerConfig();
             var mockMsgModule = new Mock<IMessagingModule>();
             var mockConn = new Mock<IConnection>();
             var mockModule = new Mock<IModel>();
@@ -332,9 +332,10 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
 
         }
 
-        private MessageBrokerMetadata GetBrokerMetadata()
+        private MessageBrokerConfig GetBrokerConfig()
         {
-            var metadata = new MessageBrokerMetadata
+            var serializer = new JsonEventMessageSerializer();
+            var metadata = new MessageBrokerConfig
             {
                 Settings = new BrokerSettings
                 {
@@ -346,6 +347,10 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             };
 
             metadata.Connections = metadata.Settings.Connections.ToDictionary(c => c.BrokerName);
+            metadata.Serializers = new Dictionary<string, IMessageSerializer>
+            {
+                { serializer.ContentType, serializer }
+            };
             return metadata;
         }
 

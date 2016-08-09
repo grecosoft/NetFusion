@@ -18,7 +18,7 @@ namespace NetFusion.RabbitMQ.Core
         /// exchanges and queues.
         /// </summary>
         /// <param name="metadata">The exchange and queue meta-data.</param>
-        void Initialize(MessageBrokerMetadata metadata);
+        void Initialize(MessageBrokerConfig metadata);
 
         /// <summary>
         /// Creates the needed RabbitMq exchanges based on the configurations.
@@ -45,9 +45,5 @@ namespace NetFusion.RabbitMQ.Core
         /// </summary>
         /// <param name="message">The message to publish.</param>
         void PublishToExchange(IMessage message);
-
-        void AddSerializer(IMessageSerializer serializer);
-
-        void SetExchangeMetadataReader(Func<string, Task<IEnumerable<ExchangeConfig>>> reader);
     }
 }

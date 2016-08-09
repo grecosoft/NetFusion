@@ -68,7 +68,7 @@
     <Compile Include="Core\IMessageExchange.cs" />
     <Compile Include="Core\MessageBroker.cs" />
     <Compile Include="Core\MessageBrokerLog.cs" />
-    <Compile Include="Core\MessageBrokerMetadata.cs" />
+    <Compile Include="Core\MessageBrokerConfig.cs" />
     <Compile Include="Core\MessageConsumer.cs" />
     <Compile Include="Core\MessageExchange.cs" />
     <Compile Include="Core\RabbitMqMessagePublisher.cs" />

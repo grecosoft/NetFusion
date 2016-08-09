@@ -103,10 +103,10 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         {
             var settings = new BrokerSettings();
             var mockExchange = new Mock<IMessageBroker>();
-            MessageBrokerMetadata metadata = null;
+            MessageBrokerConfig metadata = null;
 
-            mockExchange.Setup(b => b.Initialize(It.IsAny<MessageBrokerMetadata>()))
-                .Callback<MessageBrokerMetadata>(s => metadata = s);
+            mockExchange.Setup(b => b.Initialize(It.IsAny<MessageBrokerConfig>()))
+                .Callback<MessageBrokerConfig>(s => metadata = s);
 
             // Define the broker connection and an externally defined queue route key.
             settings.Connections = new List<BrokerConnection>
