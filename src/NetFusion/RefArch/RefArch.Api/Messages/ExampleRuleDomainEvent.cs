@@ -12,7 +12,7 @@ namespace RefArch.Api.Messages
 
             if (this.Value == 50)
             {
-                this.AttributesOld["__low__"] = "";
+                this.Attributes.SetValue("__low__", "");
             }
         }
     }

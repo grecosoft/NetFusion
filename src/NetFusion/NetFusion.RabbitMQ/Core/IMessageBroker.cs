@@ -44,6 +44,6 @@ namespace NetFusion.RabbitMQ.Core
         /// Publishes a message to an exchange.
         /// </summary>
         /// <param name="message">The message to publish.</param>
-        void PublishToExchange(IMessage message);
+        Task PublishToExchange(IMessage message);
     }
 }

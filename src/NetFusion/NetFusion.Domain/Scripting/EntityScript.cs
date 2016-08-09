@@ -25,11 +25,18 @@ namespace NetFusion.Domain.Scripting
         /// </summary>
         public IReadOnlyCollection<EntityExpression> Expressions { get; }
 
+        public EntityScript()
+        {
+            this.ImportedAssemblies = new List<string>();
+            this.ImportedNamespaces = new List<string>();
+            this.InitialAttributes = new Dictionary<string, object>();
+        }
+
         public EntityScript(
             string id,
             string name,
             string entityType,
-            IReadOnlyCollection<EntityExpression> expressions) 
+            IReadOnlyCollection<EntityExpression> expressions) : this()
         {
             Check.NotNullOrWhiteSpace(id, nameof(id));
             Check.NotNullOrWhiteSpace(name, nameof(name));
@@ -39,11 +46,8 @@ namespace NetFusion.Domain.Scripting
             this.Name = name;
             this.EntityType = Type.GetType(entityType);
 
-            this.InitialAttributes = new Dictionary<string, object>();
             this.Expressions = expressions;
-                        
-            this.ImportedAssemblies = new List<string>();
-            this.ImportedNamespaces = new List<string>();
+ 
         }
 
         /// <summary>

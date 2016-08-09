@@ -7,7 +7,7 @@ namespace RefArch.Services.Messaging.Rules
     {
         protected override bool IsMatch(DomainEvent message)
         {
-            return message.AttributesOld.Keys.Contains("__low__");
+            return message.Attributes.Contains("__low__");
         }
     }
 }

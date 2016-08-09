@@ -32,7 +32,17 @@ namespace NetFusion.Domain.Scripting
         /// the script with the name 'default' is applied.  If a script name is specified, the
         /// default named script followed by the named script is applied.</param>
         /// <returns>Future result that is completed after evaluation.</returns>
-        Task Execute<TEntity>(TEntity entity, string scriptName = "default")
-            where TEntity : class;
+        Task Execute(object entity, string scriptName = "default");
+
+        /// <summary>
+        /// Executes a specified script specified by the script-predicate against an entity
+        /// to determine if the entity satisfies the predicate.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="entity">Reference to the entity to evaluate.</param>
+        /// <param name="predicate">Specifies the script and the property corresponding to 
+        /// the predicate value.</param>
+        /// <returns>True if the entity satisfies the predicated.  Otherwise, False</returns>
+        Task<bool> SatifiesPredicate(object entity, ScriptPredicate predicate);
     }
 }

@@ -1,6 +1,7 @@
-﻿using NetFusion.Bootstrap.Plugins;
+﻿using NetFusion.Bootstrap.Logging;
 using NetFusion.Common;
 using NetFusion.Common.Extensions;
+using NetFusion.Domain.Scripting;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Configs;
@@ -11,6 +12,7 @@ using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NetFusion.RabbitMQ.Core
 {
@@ -27,15 +29,21 @@ namespace NetFusion.RabbitMQ.Core
         IMessageBroker
     {
         private bool _disposed;
+        private readonly IContainerLogger _logger;
         private readonly IMessagingModule _messagingModule;
+        private readonly IEntityScriptingService _scriptingSrv;
 
         private MessageBrokerConfig _brokerConfig;
         private ILookup<Type, ExchangeDefinition> _messageExchanges;
         private IEnumerable<MessageConsumer> _messageConsumers;
 
-        public MessageBroker(IMessagingModule messagingModule)
+        public MessageBroker(IContainerLogger logger, 
+            IMessagingModule messagingModule,
+            IEntityScriptingService scriptingSrv)
         {
+            _logger = logger.ForContext<MessageBroker>();
             _messagingModule = messagingModule;
+            _scriptingSrv = scriptingSrv;
         }
 
         /// <summary>
@@ -267,7 +275,7 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
-        public void PublishToExchange(IMessage message)
+        public async Task PublishToExchange(IMessage message)
         {
             Check.NotNull(message, nameof(message));
 
@@ -284,18 +292,18 @@ namespace NetFusion.RabbitMQ.Core
 
             foreach(ExchangeDefinition exchangeDef in exchangeDefs)
             {
-                Publish(exchangeDef, message);
+                await Publish(exchangeDef, message);
             }
         }
 
-        private void Publish(ExchangeDefinition exchangeDef, IMessage message)
+        private async Task Publish(ExchangeDefinition exchangeDef, IMessage message)
         {
             // Check to see if the message passes the criteria required to be
             // published to the exchange.
-            if (!exchangeDef.Exchange.Matches(message)) return;
+            if (! await MatchesExchangeCriteria(exchangeDef, message)) return;
 
-            var contentType = exchangeDef.Exchange.Settings.ContentType;
-            var messageBody = SerializeEvent(message, contentType);
+            string contentType = exchangeDef.Exchange.Settings.ContentType;
+            byte[] messageBody = SerializeEvent(message, contentType);
             ReplyConsumer returnQueueConsumer = null;
 
             using (var channel = CreateBrokerChannel(exchangeDef.Exchange.BrokerName))
@@ -314,6 +322,18 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
+        private async Task<bool> MatchesExchangeCriteria(ExchangeDefinition exchangeDef, IMessage message)
+        {
+            ScriptPredicate predicate = exchangeDef.Exchange.Settings.Predicate;
+            
+            if (predicate != null)
+            {
+                return await _scriptingSrv.SatifiesPredicate(message, predicate);
+            }
+
+            return exchangeDef.Exchange.Matches(message);
+        }
+
         private byte[] SerializeEvent(IMessage message, string contentType)
         {
             var serializer = GetMessageSerializer(contentType);
@@ -326,7 +346,7 @@ namespace NetFusion.RabbitMQ.Core
 
             if (!_brokerConfig.Serializers.TryGetValue(contentType, out serializer))
             {
-                Plugin.Log.Error($"Serializer for Content Type: {contentType} has not been configured.");
+                _logger.Error($"Serializer for Content Type: {contentType} has not been configured.");
             }
 
             return serializer;
@@ -366,7 +386,7 @@ namespace NetFusion.RabbitMQ.Core
 
             if (contentType.IsNullOrWhiteSpace())
             {
-                Plugin.Log.Error(
+                _logger.Error(
                     $"the content type of a message corresponding to the message " +
                     $"of type: {messageType} was not specified as a basic property");
             }
@@ -410,7 +430,7 @@ namespace NetFusion.RabbitMQ.Core
 
         private void LogPublishingExchangeMessage(IMessage message, IEnumerable<ExchangeDefinition> exchanges)
         {
-            Plugin.Log.ForContext<MessageBroker>().Debug("Published to Exchange", 
+            _logger.Debug("Published to Exchange", 
                 new
                 {
                     Message = message,
@@ -423,9 +443,7 @@ namespace NetFusion.RabbitMQ.Core
 
         private void LogReceivedExchangeMessage(IMessage message, MessageConsumer messageConsumer)
         {
-            var contextLogger = Plugin.Log.ForContext<MessageBroker>();
-
-            Plugin.Log.ForContext<MessageBroker>().Debug("Exchanged Message Received",
+            _logger.Debug("Exchanged Message Received",
                 new
                 {
                     messageConsumer.BrokerName,

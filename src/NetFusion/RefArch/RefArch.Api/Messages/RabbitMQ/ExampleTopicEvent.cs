@@ -22,7 +22,7 @@ namespace RefArch.Api.Messages.RabbitMQ
             this.Model = car.Model;
             this.Year = car.Year;
 
-            this.SetRouteKey(car.Make, car.Year, car.Year);
+            this.SetRouteKey(car.Make, car.Model, car.Year);
         }
 
         public DateTime CurrentDateTime { get; private set; }

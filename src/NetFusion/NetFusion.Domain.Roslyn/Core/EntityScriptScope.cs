@@ -7,9 +7,8 @@ namespace NetFusion.Domain.Roslyn.Core
     /// When evaluating expressions against a given domain model and its set 
     /// of optional dynamic properties, the EntityEvaluationSerivce uses this 
     /// as the execution scope.</summary>
-    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TEntity">The type of the entity that will be evaluated by the script.</typeparam>
     public class EntityScriptScope<TEntity>
-        where TEntity : class
     {
         /// <summary>
         /// The static domain entity type.  The expression specifies Entity.PropName to access
@@ -23,11 +22,11 @@ namespace NetFusion.Domain.Roslyn.Core
         /// </summary>
         public dynamic _ { get; }
 
-        public EntityScriptScope(TEntity entity)
+        public EntityScriptScope(object entity)
         {
             Check.NotNull(entity, nameof(entity));
 
-            this.Entity = entity;
+            this.Entity = (TEntity)entity;
 
             var attributedEntity = entity as IAttributedEntity;
             this._ = attributedEntity?.Attributes.Values;

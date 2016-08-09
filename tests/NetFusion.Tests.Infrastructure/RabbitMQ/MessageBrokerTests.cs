@@ -357,6 +357,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         private MessageConsumer _messageConsumer;
         private IMessageSerializer _messageSerializer;
 
+        public NullLogger Logger { get; }
         public Mock<IMessagingModule> MockMsgModule { get; }
         public Mock<IConnection> MockConn { get; }
         public Mock<IModel> MockModule { get; }
@@ -366,6 +367,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         {
             _messageSerializer = new JsonEventMessageSerializer();
 
+            this.Logger = new NullLogger();
             this.MockMsgModule = new Mock<IMessagingModule>();
             this.MockConn = new Mock<IConnection>();
             this.MockModule = new Mock<IModel>();
@@ -373,7 +375,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             this.MockConn.Setup(c => c.CreateModel())
                 .Returns(MockModule.Object);
 
-            this.Instance = new MockMessageBroker(this.MockMsgModule, this.MockConn);
+            this.Instance = new MockMessageBroker(this.Logger, this.MockMsgModule, this.MockConn);
         }
 
         public void SimulateMessageReceived(IMessage message)

@@ -44,13 +44,12 @@ namespace NetFusion.Domain.Roslyn.Core
                 .ToLookup(se => se.Script.EntityType);
         }
 
-        public async Task Execute<TEntity>(TEntity entity, string scriptName = "default")
-            where TEntity : class
+        public async Task Execute(object entity, string scriptName = "default")
         {
             Check.NotNull(entity, nameof(entity));
             Check.NotNull(scriptName, nameof(scriptName));
 
-            var entityType = typeof(TEntity);
+            var entityType = entity.GetType();
 
             var scripts = _scriptEvaluators[entityType];
             if (scripts == null)
@@ -80,8 +79,7 @@ namespace NetFusion.Domain.Roslyn.Core
             }
         }
 
-        private async Task ExecuteScript<TEntity>(TEntity entity, ScriptEvaluator evaluator)
-            where TEntity : class
+        private async Task ExecuteScript(object entity, ScriptEvaluator evaluator)
         {
             var preEvalDetails = new
             {
@@ -180,7 +178,7 @@ namespace NetFusion.Domain.Roslyn.Core
 
             var importedAssemblies = GetImportedAssemblies(script, defaultTypes);
             var options = ScriptOptions.Default.AddReferences(importedAssemblies)
-                .AddImports(script.ImportedNamespaces);
+                .AddImports(script.ImportedNamespaces ?? new string[] { });
 
             return options;
         }
@@ -190,7 +188,7 @@ namespace NetFusion.Domain.Roslyn.Core
         private IList<Assembly> GetImportedAssemblies(EntityScript script, IEnumerable<Type> assembliesContainingTypes)
         {
             var assemblies = new List<Assembly>();
-            foreach (string assemblyName in script.ImportedAssemblies)
+            foreach (string assemblyName in script.ImportedAssemblies ?? new string[] { })
             {
                 assemblies.Add(Assembly.Load(assemblyName));
             }
@@ -199,6 +197,19 @@ namespace NetFusion.Domain.Roslyn.Core
             assemblies.AddRange(defaultAssemblies);
 
             return assemblies.Distinct().ToList();
+        }
+
+        public async Task<bool> SatifiesPredicate(object entity, ScriptPredicate predicate)
+        {
+            await this.Execute(entity, predicate.ScriptName);
+
+            var attributedEntity = entity as IAttributedEntity;
+
+            if (predicate.PredicateAttributeName != null && attributedEntity != null)
+            {
+                return attributedEntity.Attributes.GetValue<bool>(predicate.PredicateAttributeName);
+            }
+            return false;
         }
     }
 }
