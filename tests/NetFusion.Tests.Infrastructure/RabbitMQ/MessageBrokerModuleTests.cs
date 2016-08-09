@@ -214,21 +214,31 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         }
 
         [Fact]
-        public void ThereCanBeOneOneSerializerRegisteryRegisteredByHost()
-        {
-
-        }
-
-        [Fact]
-        public void IfExhangeSpecifiedSerializerNotFoundThenException()
-        {
-
-        }
-
-        [Fact]
         public void DefaultJsonAndBinarySerializersAddedIfNotSpecifiedByHost()
         {
+            var settings = new BrokerSettings();
+            var mockExchange = new Mock<IMessageBroker>();
+            MessageBrokerConfig brokerConfig = null;
 
+            mockExchange.Setup(b => b.Initialize(It.IsAny<MessageBrokerConfig>()))
+                .Callback<MessageBrokerConfig>(cfg => brokerConfig = cfg);
+
+            this.Arrange(config =>
+            {
+                config.AddPlugin<MockAppHostPlugin>();
+                    
+            })
+            .Act(c =>
+            {
+                AddTestMocks(c, settings, mockExchange.Object);
+                c.Build();
+                c.Start();
+            });
+
+            brokerConfig.Serializers.Should().HaveCount(2);
+            brokerConfig.Serializers.Should().ContainKeys(
+                "application/octet-stream", 
+                "application/json; charset=utf-8");
         }
 
         // Creates an initialized container with the needed dependent plug-ins;

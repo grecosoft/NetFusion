@@ -30,19 +30,15 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         [Fact]
         public void ExceptionIfExchangeBrokerNameNoConfigured()
         {
-            var metadata = GetBrokerConfig();
-            var mockMsgModule = new Mock<IMessagingModule>();
-            var mockConn = new Mock<IConnection>();
+            var broker = new MessageBrokerSetup();
             var exchange = new MockExchange();
+            var brokerConfig = SetupBrockerConfig();
 
             exchange.InitializeSettings();
-            metadata.Exchanges = new[] { exchange };
-            metadata.Connections.Clear();
+            brokerConfig.Exchanges = new[] { exchange };
+            brokerConfig.Connections.Clear();
 
-            var messageBroker = new MockMessageBroker(mockMsgModule, mockConn);
-            messageBroker.Initialize(metadata);
-
-            Assert.Throws<InvalidOperationException>(() => messageBroker.DefineExchanges());
+            Assert.Throws<InvalidOperationException>(() => broker.Initialize(brokerConfig));
         }
 
         /// <summary>
@@ -54,46 +50,37 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         [Fact]
         public void CanDetermineIfEventAssociatedWithExchange()
         {
-            var metadata = GetBrokerConfig();
-            var mockMsgModule = new Mock<IMessagingModule>();
-            var mockConn = new Mock<IConnection>();
+            var broker = new MessageBrokerSetup();
             var exchange = new MockExchange();
+            var brokerConfig = SetupBrockerConfig();
 
+            // Setup of test DirectExchange instance that can be asserted.
             exchange.InitializeSettings();
-            metadata.Exchanges = new[] { exchange };
+            brokerConfig.Exchanges = new[] { exchange };
 
-            var messageBroker = new MockMessageBroker(mockMsgModule, mockConn);
-            messageBroker.Initialize(metadata);
+            broker.Initialize(brokerConfig);
 
             var msg = new MockDomainEvent();
-            messageBroker.IsExchangeMessage(msg).Should().BeTrue();
+            broker.Instance.IsExchangeMessage(msg).Should().BeTrue();
         }
 
         /// <summary>
-        /// For each defined exchange contained withing the meta-data a call should
+        /// For each defined exchange contained within the meta-data a call should
         /// be made to the RabbitMq server to define the exchange.
         /// </summary>
         [Fact]
         public void DiscoveredExchangeIsCreatedOnRabbitServer()
         {
-            var metadata = GetBrokerConfig();
-            var mockMsgModule = new Mock<IMessagingModule>();
-            var mockConn = new Mock<IConnection>();
-            var mockModule = new Mock<IModel>();
+            var broker = new MessageBrokerSetup();
             var exchange = new MockExchange { IsDurable = true, IsAutoDelete = true };
-
-            mockConn.Setup(c => c.CreateModel()).Returns(mockModule.Object);
-
+            var brokerConfig = SetupBrockerConfig();
+            
             // Setup of test DirectExchange instance that can be asserted.
             exchange.InitializeSettings();
-            metadata.Exchanges = new[] { exchange };
-
-            // Initialize the broker with the meta-data.
-            var messageBroker = new MockMessageBroker(mockMsgModule, mockConn);
-            messageBroker.Initialize(metadata);
+            brokerConfig.Exchanges = new[] { exchange };
 
             // Assert that the RabbitMq client was called with the correct values:
-            AssertDeclaredExchange(mockModule, v => {
+            AssertDeclaredExchange(broker.MockModule, v => {
 
                 v.ExchangeName.Should().Be("MockDirectExchangeName");
                 v.AutoDelete.Should().BeTrue();
@@ -101,34 +88,25 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
                 v.Type.Should().Be("direct");
             });
 
-            messageBroker.DefineExchanges();
-
+            broker.Initialize(brokerConfig);
         }
 
         /// <summary>
-        /// For each exchange defined queue contained withing the meta-data a call should
+        /// For each exchange defined queue contained within the meta-data a call should
         /// be made to the RabbitMq server to define the queue.
         /// </summary>
         [Fact]
         public void DiscoveredQueueIsCreatedOnRabbitServer()
         {
-            var metadata = GetBrokerConfig();
-            var mockMsgModule = new Mock<IMessagingModule>();
-            var mockConn = new Mock<IConnection>();
-            var mockModule = new Mock<IModel>();
+            var broker = new MessageBrokerSetup();
             var exchange = new MockExchange();
-
-            mockConn.Setup(c => c.CreateModel()).Returns(mockModule.Object);
+            var brokerConfig = SetupBrockerConfig();
 
             // Setup of test DirectExchange instance that can be asserted.
             exchange.InitializeSettings();
-            metadata.Exchanges = new[] { exchange };
+            brokerConfig.Exchanges = new[] { exchange };
 
-            // Initialize the broker with the meta-data.
-            var messageBroker = new MockMessageBroker(mockMsgModule, mockConn);
-            messageBroker.Initialize(metadata);
-
-            AssertDeclaredQueue(mockModule, v =>
+            AssertDeclaredQueue(broker.MockModule, v =>
             {
                 v.QueueName.Should().Be("MockTestQueueName");
                 v.AutoDelete.Should().BeFalse();
@@ -136,7 +114,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
                 v.Durable.Should().BeTrue();
             });
 
-            messageBroker.DefineExchanges();
+            broker.Initialize(brokerConfig);
         }
 
         /// <summary>
@@ -150,33 +128,20 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         [Fact]
         public void IfConsumerJoinsNonFanoutQueueNewBindingCreatedForConsumer()
         {
-            var metadata = GetBrokerConfig();
-            var mockMsgModule = new Mock<IMessagingModule>();
-            var mockConn = new Mock<IConnection>();
-            var mockModule = new Mock<IModel>();
+            var broker = new MessageBrokerSetup();
             var exchange = new MockExchange();
-
-            mockConn.Setup(c => c.CreateModel()).Returns(mockModule.Object);
+            var brokerConfig = SetupBrockerConfig();
+            var msgConsumer = SetupJoiningConsumer();
 
             // Setup of test DirectExchange instance that can be asserted.
             exchange.InitializeSettings();
-            metadata.Exchanges = new[] { exchange };
+            brokerConfig.Exchanges = new[] { exchange };
 
-            // Initialize the broker with the meta-data and specify
-            // a joining consumer.
-            var consumer = new MessageConsumer(
-                new BrokerAttribute("MockTestBrokerName"), 
-                new JoinQueueAttribute("MockTestQueueName", "MockDirectExchangeName"), 
-                new MessageDispatchInfo());
-
-            // This simulates the calls made by the module during bootstrapping:
-            var messageBroker = new MockMessageBroker(mockMsgModule, mockConn);
-            messageBroker.Initialize(metadata);
-            messageBroker.DefineExchanges();
-            messageBroker.BindConsumers(new[] { consumer });
+            // Initialize the broker.
+            broker.Initialize(brokerConfig, msgConsumer);
 
             // Assert call made to the RabbitMq client:
-            mockModule.Verify(m => m.QueueBind(
+            broker.MockModule.Verify(m => m.QueueBind(
                 It.Is<string>(v => v == "MockTestQueueName"), 
                 It.Is<string>(v => v == "MockDirectExchangeName"), 
                 It.Is<string>(v => v == "")), Times.Once());
@@ -192,32 +157,24 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         [Fact]
         public void IfConsumerAddsQueueNewQueueIsCreatedExclusivelyForConsumer()
         {
-            var metadata = GetBrokerConfig();
-            var mockMsgModule = new Mock<IMessagingModule>();
-            var mockConn = new Mock<IConnection>();
-            var mockModule = new Mock<IModel>();
+            var broker = new MessageBrokerSetup();
             var exchange = new MockExchange();
-
-            mockConn.Setup(c => c.CreateModel()).Returns(mockModule.Object);
+            var brokerConfig = SetupBrockerConfig();
+            var msgConsumer = SetupExclusiveConsumer();
 
             // Setup of test DirectExchange instance that can be asserted.
             exchange.InitializeSettings();
-            metadata.Exchanges = new[] { exchange };
-
-            var consumer = SetupMessageConsumer();
+            brokerConfig.Exchanges = new[] { exchange };
 
             // Records all calls made to the RabbitMq client:
             var clientCalls = new List<DeclarationValues>();
-            AssertDeclaredQueue(mockModule, v =>
+            AssertDeclaredQueue(broker.MockModule, v =>
             {
                 clientCalls.Add(v);
             });
 
-            // This simulates the calls made by the module during bootstrapping:
-            var messageBroker = new MockMessageBroker(mockMsgModule, mockConn);
-            messageBroker.Initialize(metadata);
-            messageBroker.DefineExchanges();
-            messageBroker.BindConsumers(new[] { consumer });
+            // Initialize the broker.
+            broker.Initialize(brokerConfig, msgConsumer);
 
             // Assert call made to the RabbitMq client:
             // An exclusive queue is created for the consumer:
@@ -228,7 +185,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             addedQueueValuses.QueueName.Should().Be("MockTestQueueName");
 
             // After creating exclusive queue, the consumer is bound:
-            mockModule.Verify(m => m.QueueBind(
+            broker.MockModule.Verify(m => m.QueueBind(
                 It.Is<string>(v => v == "MockTestQueueName"),
                 It.Is<string>(v => v == "MockDirectExchangeName"),
                 It.Is<string>(v => v == "MockKey")), Times.Once());
@@ -241,43 +198,31 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         [Fact]
         public void IfMessageDeliveryRequiresAck_RabbitToldStatusIfAck()
         {
-            var metadata = GetBrokerConfig();
-            var mockMsgModule = new Mock<IMessagingModule>();
-            var mockConn = new Mock<IConnection>();
-            var mockModule = new Mock<IModel>();
+            var broker = new MessageBrokerSetup();
             var exchange = new MockExchange();
+            var brokerConfig = SetupBrockerConfig();
+            var msgConsumer = SetupExclusiveConsumer();
+            var domainEvt = new MockDomainEvent();
 
-            mockConn.Setup(c => c.CreateModel()).Returns(mockModule.Object);
-            
             // Setup of test DirectExchange instance that can be asserted.
             exchange.InitializeSettings();
-            metadata.Exchanges = new[] { exchange };
+            brokerConfig.Exchanges = new[] { exchange };
             Plugin.Log = new NullLogger();
 
-            var consumer = SetupMessageConsumer();
+            // Initialize the broker.
+            broker.Initialize(brokerConfig, msgConsumer);
 
-            // This simulates the calls made by the module during bootstrapping:
-            var messageBroker = new MockMessageBroker(mockMsgModule, mockConn);
-            messageBroker.Initialize(metadata);
-            messageBroker.DefineExchanges();
-            messageBroker.BindConsumers(new[] { consumer });
-
-            var domainEvt = new MockDomainEvent();
-            var serializer = new JsonEventMessageSerializer();
-            var body = serializer.Serialize(domainEvt);
-
-            // Simulate the receiving of a message:
-            var mockProps = new Mock<IBasicProperties>();
-            mockProps.Setup(p => p.ContentType).Returns(serializer.ContentType);
-
-            mockMsgModule.Setup(m => m.DispatchConsumer(It.IsAny<IMessage>(), It.IsAny<MessageDispatchInfo>()))
+            // Provide a mock consumer that acknowledges the received message,
+            broker.MockMsgModule.Setup(m => m.DispatchConsumer(It.IsAny<IMessage>(), It.IsAny<MessageDispatchInfo>()))
                 .Returns((IMessage m, MessageDispatchInfo di) => {
                     m.SetAcknowledged();
                     return Task.FromResult((IMessage)m);
                 });
 
-            consumer.Consumer.HandleBasicDeliver("", 0, false, "", "", mockProps.Object, body);
-            mockModule.Verify(m => m.BasicAck(It.IsAny<ulong>(), It.IsAny<bool>()), Times.Once());
+            // Simulate receiving of a message and verify that the RabbitMq
+            // client was called correctly.
+            broker.SimulateMessageReceived(domainEvt);
+            broker.MockModule.Verify(m => m.BasicAck(It.IsAny<ulong>(), It.IsAny<bool>()), Times.Once());
         }
 
         // If the queue requires it's delivered messages to be acknowledged the message header
@@ -287,43 +232,31 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         [Fact]
         public void IfMessageDeliveryRequiresAck_RabbitToldStatusIfNotAck()
         {
-            var metadata = GetBrokerConfig();
-            var mockMsgModule = new Mock<IMessagingModule>();
-            var mockConn = new Mock<IConnection>();
-            var mockModule = new Mock<IModel>();
+            var broker = new MessageBrokerSetup();
             var exchange = new MockExchange();
-
-            mockConn.Setup(c => c.CreateModel()).Returns(mockModule.Object);
+            var brokerConfig = SetupBrockerConfig();
+            var msgConsumer = SetupExclusiveConsumer();
+            var domainEvt = new MockDomainEvent();
 
             // Setup of test DirectExchange instance that can be asserted.
             exchange.InitializeSettings();
-            metadata.Exchanges = new[] { exchange };
+            brokerConfig.Exchanges = new[] { exchange };
             Plugin.Log = new NullLogger();
 
-            var consumer = SetupMessageConsumer();
-
-            // This simulates the calls made by the module during bootstrapping:
-            var messageBroker = new MockMessageBroker(mockMsgModule, mockConn);
-            messageBroker.Initialize(metadata);
-            messageBroker.DefineExchanges();
-            messageBroker.BindConsumers(new[] { consumer });
-
-            var domainEvt = new MockDomainEvent();
-            var serializer = new JsonEventMessageSerializer();
-            var body = serializer.Serialize(domainEvt);
-
-            // Simulate the receiving of a message:
-            var mockProps = new Mock<IBasicProperties>();
-            mockProps.Setup(p => p.ContentType).Returns(serializer.ContentType);
-
-            mockMsgModule.Setup(m => m.DispatchConsumer(It.IsAny<IMessage>(), It.IsAny<MessageDispatchInfo>()))
+            // Initialize the broker.
+            broker.Initialize(brokerConfig, msgConsumer);
+         
+            // Provide a mock consumer that rejects the received message,
+            broker.MockMsgModule.Setup(m => m.DispatchConsumer(It.IsAny<IMessage>(), It.IsAny<MessageDispatchInfo>()))
                 .Returns((IMessage m, MessageDispatchInfo di) => {
                     m.SetRejected();
                     return Task.FromResult((IMessage)m);
                 });
 
-            consumer.Consumer.HandleBasicDeliver("", 0, false, "", "", mockProps.Object, body);
-            mockModule.Verify(m => m.BasicReject(It.IsAny<ulong>(), It.IsAny<bool>()), Times.Once());
+            // Simulate receiving of a message and verify that the RabbitMq
+            // client was called correctly.
+            broker.SimulateMessageReceived(domainEvt);
+            broker.MockModule.Verify(m => m.BasicReject(It.IsAny<ulong>(), It.IsAny<bool>()), Times.Once());
         }
 
         [Fact]
@@ -332,7 +265,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
 
         }
 
-        private MessageBrokerConfig GetBrokerConfig()
+        private MessageBrokerConfig SetupBrockerConfig()
         {
             var serializer = new JsonEventMessageSerializer();
             var metadata = new MessageBrokerConfig
@@ -399,7 +332,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
                 });
         }
 
-        private MessageConsumer SetupMessageConsumer()
+        private MessageConsumer SetupExclusiveConsumer()
         {
             return new MessageConsumer(
                 new BrokerAttribute("MockTestBrokerName"),
@@ -409,6 +342,62 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
                     MessageHandlerMethod = typeof(MockMessageConsumer).GetMethod("OnJoin"),
                     DispatchRuleTypes = new Type[] { } });
         }
+
+        private MessageConsumer SetupJoiningConsumer()
+        {
+            return new MessageConsumer(
+                new BrokerAttribute("MockTestBrokerName"),
+                new JoinQueueAttribute("MockTestQueueName", "MockDirectExchangeName"),
+                new MessageDispatchInfo());
+        }
+    }
+
+    public class MessageBrokerSetup
+    {
+        private MessageConsumer _messageConsumer;
+        private IMessageSerializer _messageSerializer;
+
+        public Mock<IMessagingModule> MockMsgModule { get; }
+        public Mock<IConnection> MockConn { get; }
+        public Mock<IModel> MockModule { get; }
+        public IMessageBroker Instance { get; }
+
+        public MessageBrokerSetup()
+        {
+            _messageSerializer = new JsonEventMessageSerializer();
+
+            this.MockMsgModule = new Mock<IMessagingModule>();
+            this.MockConn = new Mock<IConnection>();
+            this.MockModule = new Mock<IModel>();
+
+            this.MockConn.Setup(c => c.CreateModel())
+                .Returns(MockModule.Object);
+
+            this.Instance = new MockMessageBroker(this.MockMsgModule, this.MockConn);
+        }
+
+        public void SimulateMessageReceived(IMessage message)
+        {
+            var mockProps = new Mock<IBasicProperties>();
+            mockProps.Setup(p => p.ContentType).Returns(_messageSerializer.ContentType);
+
+            var body = _messageSerializer.Serialize(message);
+            _messageConsumer.Consumer.HandleBasicDeliver("", 0, false, "", "", mockProps.Object, body);
+        }
+
+        public void Initialize(MessageBrokerConfig brokerConfig, MessageConsumer consumer = null)
+        {
+            _messageConsumer = consumer;
+
+            this.Instance.Initialize(brokerConfig);
+            this.Instance.DefineExchanges();
+
+            if (_messageConsumer != null)
+            {
+                this.Instance.BindConsumers(new[] { _messageConsumer });
+            } 
+        }
+
     }
 
     public class DeclarationValues
