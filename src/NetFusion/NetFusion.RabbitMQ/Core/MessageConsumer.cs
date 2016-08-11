@@ -72,6 +72,7 @@ namespace NetFusion.RabbitMQ.Core
         // Properties set when the consumer is being bound to the queue
         // by the Message Broker class.
         public IModel Channel { get; set; }
+
         public EventingBasicConsumer Consumer { get; set; }
     }
 }

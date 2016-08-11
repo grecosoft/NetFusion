@@ -22,17 +22,6 @@ namespace NetFusion.Domain.Entity
             _attributes = new Dictionary<string, object>();
         }
 
-        public void SetValues(IDictionary<string, object> values)
-        {
-            Check.NotNull(values, nameof(values));
-            this._attributes = values;
-        }
-
-        public IDictionary<string, object> GetValues()
-        {
-            return _attributes;
-        }
-
         public dynamic Values => this;
 
         // DynamicObject Overrides:
@@ -45,6 +34,19 @@ namespace NetFusion.Domain.Entity
         {
             _attributes[binder.Name] = value;
             return true;
+        }
+
+        // ---
+
+        public void SetValues(IDictionary<string, object> values)
+        {
+            Check.NotNull(values, nameof(values));
+            this._attributes = values;
+        }
+
+        public IDictionary<string, object> GetValues()
+        {
+            return _attributes;
         }
 
         public void SetValue(string name, object value)

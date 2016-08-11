@@ -43,13 +43,21 @@ namespace NetFusion.Bootstrap.Testing
         /// types can be added.</param>
         /// <returns>Reference to object that can be used to act on the 
         /// configured application container.</returns>
-        public static ContainerAct Arrange(Action<TestTypeResolver> config)
+        public static ContainerAct Arrange(Action<TestTypeResolver> config, Action<IAppContainer> configContainer = null)
         {
             Check.NotNull(config, nameof(config), "configuration delegate not specified");
 
             var typeResolver = new TestTypeResolver();
+            var container = new AppContainer(new string[] { }, typeResolver);
+
             config(typeResolver);
-            return new ContainerAct(new AppContainer(new string[] { }, typeResolver));
+
+            if (configContainer != null)
+            {
+                configContainer(container);
+            }
+
+            return new ContainerAct(container);
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using NetFusion.Messaging.Rules;
+﻿using NetFusion.Domain.Scripting;
+using NetFusion.Messaging.Rules;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -73,6 +74,13 @@ namespace NetFusion.Messaging.Core
         /// message handler to be called.
         /// </summary>
         public RuleApplyTypes RuleApplyType { get; set; }
+
+        /// <summary>
+        /// Identifies an externally stored script that is executed against the
+        /// associated message handler to determine if the message matches the
+        /// criteria.  If the message has matching criteria, the handler is called.
+        /// </summary>
+        public ScriptPredicate Predicate { get; set; }
 
         /// <summary>
         /// Delegate used to invoke the message handler.  This is created from the

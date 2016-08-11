@@ -43,10 +43,8 @@ namespace NetFusion.Bootstrap.Container
         /// <summary>
         /// Returns types associated with a specific category of plug-in.
         /// </summary>
-        /// <param name="pluginTypes">The category of plug-ins to limit the
-        /// return types.</param>
-        /// <returns>List of limited plug in types or all plug-in types if no
-        /// category is specified.</returns>
+        /// <param name="pluginTypes">The category of plug-ins to limit the return types.</param>
+        /// <returns>List of limited plug in types or all plug-in types if no category is specified.</returns>
         public IEnumerable<PluginType> GetPluginTypesFrom(params PluginTypes[] pluginTypes)
         {
             Check.NotNull(pluginTypes, nameof(pluginTypes));
@@ -74,73 +72,13 @@ namespace NetFusion.Bootstrap.Container
         {
             Check.NotNull(builder, nameof(builder));
 
+            InitializePluginModules();
+
             // Note that the order is important.  In Autofac, if a service type 
             // is registered more than once, the last registered component is
             // used.  This is the default configuration.
-            InitializePluginModules();
             RegisterCorePluginComponents(builder);
             RegisterAppPluginComponents(builder);
-        }
-
-        /// <summary>
-        /// This is the last step of the bootstrap process.  Each module
-        /// is passed the instance of the created container so that it
-        /// can enable any runtime services requiring the container.
-        /// </summary>
-        /// <param name="container">The built container.</param>
-        public void StartPluginModules(IContainer container)
-        {
-            Check.NotNull(container, nameof(container));
-
-            // Start the plug-in modules in dependent order starting with the core plug-in
-            // modules and ending with the app-host modules.
-            this.IsStarted = true;
-
-            using (var scope = container.BeginLifetimeScope())
-            {
-                foreach (var module in this.CorePlugins.SelectMany(p => p.IncludedModules()))
-                {
-                    module.StartModule(scope);
-                }
-
-                foreach (var module in this.AppComponentPlugins.SelectMany(p => p.IncludedModules()))
-                {
-                    module.StartModule(scope);
-                }
-
-                foreach (var module in this.AppHostPlugin.IncludedModules())
-                {
-                    module.StartModule(scope);
-                }
-
-                foreach (var module in this.Plugins.SelectMany(p => p.IncludedModules()))
-                {
-                    module.RunModule(scope);
-                }
-            }
-        }
-
-        public void StopPluginModules(IContainer container)
-        {
-            using (var scope = container.BeginLifetimeScope())
-            {
-                foreach (var module in this.AppHostPlugin.IncludedModules())
-                {
-                    module.StopModule(scope);
-                }
-
-                foreach (var module in this.AppComponentPlugins.SelectMany(p => p.IncludedModules()))
-                {
-                    module.StopModule(scope);
-                }
-
-                foreach (var module in this.CorePlugins.SelectMany(p => p.IncludedModules()))
-                {
-                    module.StopModule(scope);
-                }
-            }
-
-            this.IsStarted = false;
         }
 
         private void InitializePluginModules()
@@ -152,15 +90,15 @@ namespace NetFusion.Bootstrap.Container
 
         private void InitializePluginModules(IEnumerable<Plugin> plugins)
         {
-            foreach (var plugin in plugins)
+            foreach (Plugin plugin in plugins)
             {
-                foreach (var module in plugin.IncludedModules())
+                foreach (IPluginModule module in plugin.IncludedModules())
                 {
                     module.Context = new ModuleContext(this, plugin);
                     module.Initialize();
                 }
 
-                foreach (var module in plugin.IncludedModules())
+                foreach (IPluginModule module in plugin.IncludedModules())
                 {
                     module.Configure();
                 }
@@ -169,13 +107,16 @@ namespace NetFusion.Bootstrap.Container
 
         private void RegisterCorePluginComponents(Autofac.ContainerBuilder builder)
         {
-            var allPluginTypes = GetPluginTypesFrom();
-            foreach (var plugin in this.CorePlugins)
+            IEnumerable<PluginType> allPluginTypes = GetPluginTypesFrom();
+            foreach (Plugin plugin in this.CorePlugins)
             {
                 ScanPluginTypes(plugin, builder);
                 RegisterComponents(plugin, builder);
-                ScanOtherPluginTypes(plugin, builder, allPluginTypes);
-                ScanApplicationPluginTypes(plugin, builder);
+
+                // Core modules may override one of the following depending 
+                // on the scope of the search.
+                ScanAllOtherPluginTypes(plugin, builder, allPluginTypes);
+                ScanOnlyApplicationPluginTypes(plugin, builder);
             }
         }
 
@@ -184,7 +125,7 @@ namespace NetFusion.Bootstrap.Container
         private void ScanPluginTypes(Plugin plugin, Autofac.ContainerBuilder builder)
         {
             var typeRegistration = new TypeRegistration(builder, plugin.PluginTypes);
-            foreach (var module in plugin.IncludedModules())
+            foreach (IPluginModule module in plugin.IncludedModules())
             {
                 module.ScanPlugin(typeRegistration);
             }
@@ -194,7 +135,7 @@ namespace NetFusion.Bootstrap.Container
         // any needed service components with the Autofac Container.
         private void RegisterComponents(Plugin plugin, Autofac.ContainerBuilder builder)
         {
-            foreach (var module in plugin.IncludedModules())
+            foreach (IPluginModule module in plugin.IncludedModules())
             {
                 module.RegisterComponents(builder);
             }
@@ -203,7 +144,7 @@ namespace NetFusion.Bootstrap.Container
         // Allows a plug-in to scan all specified plug-in types, excluding types
         // defined within it's plug-in, for components to be registered in the
         // Autofac container.
-        private void ScanOtherPluginTypes(Plugin plugin,
+        private void ScanAllOtherPluginTypes(Plugin plugin,
             Autofac.ContainerBuilder builder,
             IEnumerable<PluginType> sourceTypes)
         {
@@ -211,16 +152,16 @@ namespace NetFusion.Bootstrap.Container
                 builder,
                 sourceTypes.Except(plugin.PluginTypes));
 
-            foreach (var module in plugin.IncludedModules())
+            foreach (IPluginModule module in plugin.IncludedModules())
             {
                 module.ScanAllOtherPlugins(typeRegistration);
             }
         }
 
-        private void ScanApplicationPluginTypes(Plugin plugin,
+        private void ScanOnlyApplicationPluginTypes(Plugin plugin,
             Autofac.ContainerBuilder builder)
         {
-            var appPluginTypes = GetPluginTypesFrom(PluginTypes.AppHostPlugin, PluginTypes.AppComponentPlugin);
+            IEnumerable<PluginType> appPluginTypes = GetPluginTypesFrom(PluginTypes.AppComponentPlugin, PluginTypes.AppHostPlugin);
 
             var typeRegistration = new TypeRegistration(
                 builder,
@@ -234,20 +175,79 @@ namespace NetFusion.Bootstrap.Container
 
         private void RegisterAppPluginComponents(Autofac.ContainerBuilder builder)
         {
-            var allAppPluginTypes = GetPluginTypesFrom(PluginTypes.AppComponentPlugin, PluginTypes.AppHostPlugin);
+            IEnumerable<PluginType> allAppPluginTypes = GetPluginTypesFrom(PluginTypes.AppComponentPlugin, PluginTypes.AppHostPlugin);
 
             // Application Components:
-            foreach (var plugin in this.AppComponentPlugins)
+            foreach (Plugin plugin in this.AppComponentPlugins)
             {
                 ScanPluginTypes(plugin, builder);
                 RegisterComponents(plugin, builder);
-                ScanOtherPluginTypes(plugin, builder, allAppPluginTypes);
+                ScanAllOtherPluginTypes(plugin, builder, allAppPluginTypes);
             }
 
             // Application Host:
             ScanPluginTypes(this.AppHostPlugin, builder);
             RegisterComponents(this.AppHostPlugin, builder);
-            ScanOtherPluginTypes(this.AppHostPlugin, builder, allAppPluginTypes);
+            ScanAllOtherPluginTypes(this.AppHostPlugin, builder, allAppPluginTypes);
         }
+
+        /// <summary>
+        /// This is the last step of the bootstrap process.  Each module
+        /// is passed the instance of the created container so that it
+        /// can enable any runtime services requiring the container.
+        /// </summary>
+        /// <param name="container">The built container.</param>
+        public void StartPluginModules(IContainer container)
+        {
+            Check.NotNull(container, nameof(container));
+
+            // Start the plug-in modules in dependent order starting with core modules 
+            // and ending with the application host modules.
+            this.IsStarted = true;
+
+            using (ILifetimeScope scope = container.BeginLifetimeScope())
+            {
+                StartPluginModules(scope, this.CorePlugins);
+                StartPluginModules(scope, this.AppComponentPlugins);
+                StartPluginModules(scope, new[] { this.AppHostPlugin });
+               
+                foreach (IPluginModule module in this.Plugins.SelectMany(p => p.IncludedModules()))
+                {
+                    module.RunModule(scope);
+                }
+            }
+        }
+
+        private void StartPluginModules(ILifetimeScope scope, IEnumerable<Plugin> plugins)
+        {
+            foreach (IPluginModule module in plugins.SelectMany(p => p.IncludedModules()))
+            {
+                module.StartModule(scope);
+            }
+        }
+
+        /// <summary>
+        /// Stops all plug-in modules in the reverse order in which they were started.
+        /// </summary>
+        /// <param name="container">The build container.</param>
+        public void StopPluginModules(IContainer container)
+        {
+            using (ILifetimeScope scope = container.BeginLifetimeScope())
+            {
+                StopPluginModules(scope, new[] { this.AppHostPlugin });
+                StopPluginModules(scope, this.AppComponentPlugins);
+                StopPluginModules(scope, this.CorePlugins);
+            }
+
+            this.IsStarted = false;
+        }
+
+        private void StopPluginModules(ILifetimeScope scope, IEnumerable<Plugin> plugins)
+        {
+            foreach (var module in plugins.SelectMany(p => p.IncludedModules()))
+            {
+                module.StopModule(scope);
+            }
+        }  
     }
 }

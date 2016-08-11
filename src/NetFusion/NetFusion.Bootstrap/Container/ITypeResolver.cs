@@ -30,8 +30,8 @@ namespace NetFusion.Bootstrap.Container
         void LoadPluginTypes(Plugin plugin);
 
         /// <summary>
-        /// Populates the plug-in's modules from its contained types
-        /// that implement the IPluginModule interface.
+        /// Populates the plug-in's modules from its contained types that implement the 
+        /// IPluginModule interface.
         /// </summary>
         /// <param name="plugin"></param>
         void DiscoverModules(Plugin plugin);

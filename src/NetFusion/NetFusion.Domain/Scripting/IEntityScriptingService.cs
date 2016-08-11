@@ -29,8 +29,8 @@ namespace NetFusion.Domain.Scripting
         /// <typeparam name="TEntity">The type of the entity being evaluated.</typeparam>
         /// <param name="entity">The entity to have its state updated by applying the script.</param>
         /// <param name="scriptName">The optional script name to be executed.  If not specified,
-        /// the script with the name 'default' is applied.  If a script name is specified, the
-        /// default named script followed by the named script is applied.</param>
+        /// the script with the name 'default' is executed.  If a script name is specified, the
+        /// default named script followed by the named script is executed.</param>
         /// <returns>Future result that is completed after evaluation.</returns>
         Task Execute(object entity, string scriptName = "default");
 

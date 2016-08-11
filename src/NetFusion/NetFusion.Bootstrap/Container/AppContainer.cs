@@ -31,7 +31,7 @@ namespace NetFusion.Bootstrap.Container
         // Logging:
         private LoggerConfig _loggerConfig;
         private IContainerLogger _logger;
-        private AppContainerLog _containerLog;
+        private CompositeLog _compositeLog;
 
         // Contains references to all the discovered plug-in manifests
         // used to bootstrap the container.
@@ -62,7 +62,7 @@ namespace NetFusion.Bootstrap.Container
             get
             {
                 ThrowIfDisposed(this);
-                return _containerLog?.GetLog() ?? new Dictionary<string, object>();
+                return _compositeLog?.GetLog() ?? new Dictionary<string, object>();
             }
         }
 
@@ -378,7 +378,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void AssertManifestProperties()
         {
-            var invalidManifestTypes = this.Registry.AllManifests
+            IEnumerable<Type> invalidManifestTypes = this.Registry.AllManifests
                 .Where(m => m.PluginId.IsNullOrWhiteSpace())
                 .Select(m => m.GetType());
 
@@ -403,7 +403,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void AssertUniqueManifestIds()
         {
-            var invalidManifestTypes = this.Registry.AllManifests
+            IEnumerable<string> invalidManifestTypes = this.Registry.AllManifests
                 .GroupBy(m => m.PluginId)
                 .Where(g => g.Count() > 1)
                 .Select(g => g.Key);
@@ -425,7 +425,7 @@ namespace NetFusion.Bootstrap.Container
                     $"derived from: {typeof(IAppHostPluginManifest)}"));
             }
 
-            if (!this.Registry.AppHostPluginManifests.IsSingletonSet())
+            if (! this.Registry.AppHostPluginManifests.IsSingletonSet())
             {
                 var ex = new ContainerException(
                     "More than one application plug-in manifest was found.",
@@ -457,18 +457,21 @@ namespace NetFusion.Bootstrap.Container
             _typeResover.LoadPluginTypes(plugin);
             _typeResover.DiscoverModules(plugin);
 
+            // Assign all configurations that are instances of types defined within plug-in.
             plugin.PluginConfigs = plugin.CreatedFrom(_configs.Values).ToList();
         }
 
         // This allows the plug-in to find concrete types deriving from IKnownPluginType.
-        // This is how plug-in modules are composed.
+        // This is how plug-in modules are composed.  All public plug-in properties that
+        // are of type: IEnumerable<T> where T is a derived IKnownPluginType will be set
+        // to instances of types deriving from T.
         private void ComposeLoadedPlugins()
         {
             ComposeCorePlugins();
             ComposeAppPlugins();
         }
 
-        // Core plug-in modules discover known-types contained within all plug-ins.
+        // Core plug-in modules discover known-types contained within *all* plug-ins.
         private void ComposeCorePlugins()
         {
             var allPluginTypes = _application.GetPluginTypesFrom();
@@ -477,7 +480,7 @@ namespace NetFusion.Bootstrap.Container
                 ComposePluginModules(p, allPluginTypes));
         }
 
-        // Application plug-in modules search for known-types contained only within other 
+        // Application plug-in modules search for known-types contained *only* within other 
         // application plug-ins.  Core plug in types are not included since application plug-ins
         // never provide functionality to lower level plug-ins.
         private void ComposeAppPlugins()
@@ -493,9 +496,9 @@ namespace NetFusion.Bootstrap.Container
         private void ComposePluginModules(Plugin plugin, IEnumerable<PluginType> fromPluginTypes)
         {
             var pluginDiscoveredTypes = new HashSet<Type>();
-            foreach (var module in plugin.PluginModules)
+            foreach (IPluginModule module in plugin.PluginModules)
             {
-                var discoveredTypes = _typeResover.DiscoverKnownTypes(module, fromPluginTypes);
+                IEnumerable<Type> discoveredTypes = _typeResover.DiscoverKnownTypes(module, fromPluginTypes);
                 discoveredTypes.ForEach(dt => pluginDiscoveredTypes.Add(dt));
             }
 
@@ -508,13 +511,13 @@ namespace NetFusion.Bootstrap.Container
         }
 
         // For plug-in derived known-type, find the plug-in(s) that discovered the type.  
-        // This information is used for logging how the application was bootstrapped.
+        // This information is used for logging how the application was composed.
         private void SetDiscoveredKnowTypes(Plugin plugin)
         {
             foreach (PluginType pluginType in plugin.PluginTypes.Where(pt => pt.IsKnownType))
             {
                 pluginType.DiscoveredByPlugins = _application.Plugins
-                    .Where(p => p.DiscoveredTypes.Any(st => pluginType.Type.IsDerivedFrom(st)))
+                    .Where(p => p.DiscoveredTypes.Any(dt => pluginType.Type.IsDerivedFrom(dt)))
                     .ToArray();
             }
         }
@@ -548,7 +551,7 @@ namespace NetFusion.Bootstrap.Container
 
             foreach (IPluginModuleService moduleService in modulesWithServices)
             {
-                var moduleServiceInterfaces = moduleService.GetType()
+                Type[] moduleServiceInterfaces = moduleService.GetType()
                     .GetInterfaces()
                     .Where(mi => mi.IsDerivedFrom<IPluginModuleService>())
                     .ToArray();
@@ -576,7 +579,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void CreateCompositeLogger()
         {
-            _containerLog = new AppContainerLog(_logger, _application, _container.ComponentRegistry);
+            _compositeLog = new CompositeLog(_logger, _application, _container.ComponentRegistry);
         }
 
         // IComposite Methods:
@@ -584,8 +587,11 @@ namespace NetFusion.Bootstrap.Container
 
         public Plugin GetPluginForType(Type type)
         {
+            Check.NotNull(type, nameof(type));
             return _application.Plugins.FirstOrDefault(p => p.Manifest.GetType().Assembly == type.Assembly);
         }
+
+        // ---
 
         private void LogContainerInitialization()
         {

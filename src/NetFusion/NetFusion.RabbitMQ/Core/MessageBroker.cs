@@ -117,7 +117,7 @@ namespace NetFusion.RabbitMQ.Core
 
         private void EstablishBrockerConnections()
         {
-            foreach(var brokerConn in _brokerConfig.Connections.Values)
+            foreach(BrokerConnection brokerConn in _brokerConfig.Connections.Values)
             {
                 ConnectToBroker(brokerConn);
             }
@@ -159,7 +159,7 @@ namespace NetFusion.RabbitMQ.Core
             var messageConsumers = brokerName == null ? _messageConsumers :
                 _messageConsumers.Where(c => c.BrokerName == brokerName);
 
-            foreach (var messageConsumer in messageConsumers)
+            foreach (MessageConsumer messageConsumer in messageConsumers)
             {
                 CreateConsumerQueue(messageConsumer);
 
@@ -183,7 +183,7 @@ namespace NetFusion.RabbitMQ.Core
         {
             if (eventConsumer.BindingType == QueueBindingTypes.Create)
             {
-                using (var channel = CreateBrokerChannel(eventConsumer.BrokerName))
+                using (IModel channel = CreateBrokerChannel(eventConsumer.BrokerName))
                 {
                     channel.QueueDeclare(eventConsumer);
                 }
@@ -205,13 +205,15 @@ namespace NetFusion.RabbitMQ.Core
 
         private void MessageReceived(MessageConsumer messageConsumer, BasicDeliverEventArgs deliveryEvent)
         {
+            Console.WriteLine("Message received");
+
             var message = DeserializeMessage(messageConsumer.DispatchInfo.MessageType, deliveryEvent);
             message.SetAcknowledged(false);
 
             LogReceivedExchangeMessage(message, messageConsumer);
 
             // Delegate to the Messaging Module to dispatch the message to all consumers.
-            var futureResult = _messagingModule.DispatchConsumer(
+            Task<IMessage> futureResult = _messagingModule.DispatchConsumer(
                 message,
                 messageConsumer.DispatchInfo);
 
@@ -237,9 +239,9 @@ namespace NetFusion.RabbitMQ.Core
         {
             if (deliveryEvent.BasicProperties.ReplyTo != null)
             {
-                var contentType = deliveryEvent.BasicProperties.ContentType;
+                string contentType = deliveryEvent.BasicProperties.ContentType;
                 byte[] messageBody = SerializeEvent(message, contentType);
-                var basicProps = GetRpcResponseBasicProperties(eventConsumer, contentType);
+                IBasicProperties basicProps = GetRpcResponseBasicProperties(eventConsumer, contentType);
 
                 eventConsumer.Channel.BasicPublish(exchange: "",
                     routingKey: deliveryEvent.BasicProperties.ReplyTo,
@@ -279,8 +281,8 @@ namespace NetFusion.RabbitMQ.Core
         {
             Check.NotNull(message, nameof(message));
 
-            var messageType = message.GetType();
-            var exchangeDefs = _messageExchanges[messageType];
+            Type messageType = message.GetType();
+            IEnumerable<ExchangeDefinition> exchangeDefs = _messageExchanges[messageType];
 
             if (exchangeDefs == null)
             {
@@ -298,8 +300,6 @@ namespace NetFusion.RabbitMQ.Core
 
         private async Task Publish(ExchangeDefinition exchangeDef, IMessage message)
         {
-            // Check to see if the message passes the criteria required to be
-            // published to the exchange.
             if (! await MatchesExchangeCriteria(exchangeDef, message)) return;
 
             string contentType = exchangeDef.Exchange.Settings.ContentType;
@@ -309,7 +309,7 @@ namespace NetFusion.RabbitMQ.Core
             using (var channel = CreateBrokerChannel(exchangeDef.Exchange.BrokerName))
             {
                 returnQueueConsumer = CreateReturnQueueConsumer(channel, exchangeDef);
-                var replyQueueName = returnQueueConsumer?.ReplyQueueName;
+                string replyQueueName = returnQueueConsumer?.ReplyQueueName;
 
                 exchangeDef.Exchange.Publish(channel, message,
                     messageBody,
@@ -322,6 +322,10 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
+        // Determines if the message should be delivered to the queue.  If the exchange is marked
+        // with a predicate attribute, the corresponding externally named script is executed to 
+        // determine if the message has matching criteria.  If no external script is specified,
+        // the exchange's matches method is called.
         private async Task<bool> MatchesExchangeCriteria(ExchangeDefinition exchangeDef, IMessage message)
         {
             ScriptPredicate predicate = exchangeDef.Exchange.Settings.Predicate;
@@ -344,7 +348,7 @@ namespace NetFusion.RabbitMQ.Core
         {
             IMessageSerializer serializer = null;
 
-            if (!_brokerConfig.Serializers.TryGetValue(contentType, out serializer))
+            if (! _brokerConfig.Serializers.TryGetValue(contentType, out serializer))
             {
                 _logger.Error($"Serializer for Content Type: {contentType} has not been configured.");
             }
@@ -356,7 +360,7 @@ namespace NetFusion.RabbitMQ.Core
         {
             if (exchangeDef.Exchange.ReturnType == null) return null;
 
-            var replyQueueName = channel.QueueDeclare().QueueName;
+            string replyQueueName = channel.QueueDeclare().QueueName;
             var queueConsumer = new QueueingBasicConsumer(channel);
 
             channel.BasicConsume(replyQueueName, true, queueConsumer);
@@ -372,7 +376,7 @@ namespace NetFusion.RabbitMQ.Core
             var replyEvent = returnQueueConsumer.Consumer.Queue.Dequeue() as BasicDeliverEventArgs;
             if (replyEvent != null)
             {
-                var responseEvent = DeserializeMessage(returnQueueConsumer.ReturnType, replyEvent);
+                IMessage responseEvent = DeserializeMessage(returnQueueConsumer.ReturnType, replyEvent);
                 responseEvent.SetAcknowledged(true);
 
                 (publishedMessage as ICommand)?.SetResult(responseEvent);
@@ -382,7 +386,7 @@ namespace NetFusion.RabbitMQ.Core
         private IMessage DeserializeMessage(Type messageType,
             BasicDeliverEventArgs deliveryEvent)
         {
-            var contentType = deliveryEvent.BasicProperties.ContentType;
+            string contentType = deliveryEvent.BasicProperties.ContentType;
 
             if (contentType.IsNullOrWhiteSpace())
             {

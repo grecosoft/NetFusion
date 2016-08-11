@@ -5,7 +5,7 @@ namespace NetFusion.Domain.Scripting
 {
     /// <summary>
     /// If a host uses a plug-in that is dependent on the NetFusion.Domain plug-in's
-    /// IEntityScriptingSerivce, but don't need to utilize it provided functionality,
+    /// IEntityScriptingSerivce, but doesn't need to utilize it provided functionality,
     /// an singleton instance of this NULL implementation can be registered.
     /// </summary>
     public class NullEntityScriptingService : IEntityScriptingService

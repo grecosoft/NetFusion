@@ -48,20 +48,20 @@ namespace NetFusion.Bootstrap.Extensions
 
         /// <summary>
         /// Provided a list of object instances, reduces the list to only instances
-        /// created from a list of types.
+        /// created from a list of provided plug-ins.
         /// </summary>
         /// <typeparam name="T">The type of the object instances.</typeparam>
         /// <param name="instances">The list of object instances to filter.</param>
         /// <param name="pluginTypes">The list of plug-in types used to filter
         /// the list of object instances.</param>
-        /// <returns>Filter list of instances based on a set of provided types.</returns>
+        /// <returns>Filter list of instances based on a set of provided plug-ins.</returns>
         public static IEnumerable<T> CreatedFrom<T>(this IEnumerable<T> instances,
             IEnumerable<PluginType> pluginTypes)
         {
             Check.NotNull(instances, nameof(instances));
             Check.NotNull(pluginTypes, nameof(pluginTypes));
 
-            var types = pluginTypes.Select(pt => pt.Type);
+            IEnumerable<Type> types = pluginTypes.Select(pt => pt.Type);
             return instances.CreatedFrom(types);
         }
 
@@ -74,8 +74,8 @@ namespace NetFusion.Bootstrap.Extensions
         /// <returns>Object instances of all plug-in types that are assignable to the specified matching type.</returns>
         public static IEnumerable<object> CreateMatchingInstances(this IEnumerable<PluginType> pluginTypes, Type matchingType)
         {
-            var types = pluginTypes.Select(pt => pt.Type);
-            foreach (var type in types.Where(t => t.IsCreatableType() && t.IsDerivedFrom(matchingType)))
+            IEnumerable<Type> types = pluginTypes.Select(pt => pt.Type);
+            foreach (Type type in types.Where(t => t.IsCreatableType() && t.IsDerivedFrom(matchingType)))
             {
                 yield return type.CreateInstance();
             }
@@ -91,7 +91,7 @@ namespace NetFusion.Bootstrap.Extensions
         /// <returns>Object instances of all plug-in types that are assignable to the specified matching type.</returns>
         public static IEnumerable<T> CreateMatchingInstances<T>(this IEnumerable<Type> types)
         {
-            foreach(var type in types.Where(t => t.IsCreatableType() && t.IsDerivedFrom<T>()))
+            foreach(Type type in types.Where(t => t.IsCreatableType() && t.IsDerivedFrom<T>()))
             {
                 yield return (T)type.CreateInstance();
             }

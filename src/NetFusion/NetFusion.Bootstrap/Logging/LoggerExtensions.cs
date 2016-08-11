@@ -1,5 +1,4 @@
 ﻿using NetFusion.Common;
-using NetFusion.Common.Extensions;
 using System;
 
 namespace NetFusion.Bootstrap.Logging
@@ -11,8 +10,9 @@ namespace NetFusion.Bootstrap.Logging
     public static class LoggerExtensions
     {
         /// <summary>
-        /// Logs a verbose message by calling the message delegate if the verbose
-        /// level is enabled.  
+        /// Logs a verbose message by calling the details delegate if the verbose
+        /// level is enabled.  This should be used if there is time associated
+        /// with building the details to be logged.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="message">The message delegate.</param>
@@ -30,8 +30,9 @@ namespace NetFusion.Bootstrap.Logging
         }
 
         /// <summary>
-        /// Logs a debug message by calling the message delegate if the debug
-        /// level is enabled.  
+        /// Logs a debug message by calling the details delegate if the debug
+        /// level is enabled.  This should be used if there is time associated
+        /// with building the details to be logged.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="message">The message delegate.</param>
@@ -40,6 +41,7 @@ namespace NetFusion.Bootstrap.Logging
         {
             Check.NotNull(logger, nameof(logger));
             Check.NotNull(message, nameof(message));
+            Check.NotNull(details, nameof(details));
 
             if (logger.IsDebugLevel)
             {
@@ -47,24 +49,34 @@ namespace NetFusion.Bootstrap.Logging
             }
         }
 
+        /// <summary>
+        /// Returns a logger that can be used to write a debug log for the time required
+        /// to execute a block of code.
+        /// </summary>
+        /// <param name="logger">The associated logger.</param>
+        /// <param name="processName">Name used to described the block of code being executed.</param>
+        /// <returns>Logger used to log a duration.</returns>
         public static DurationLogger DebugDuration(this IContainerLogger logger, string processName)
         {
+            Check.NotNull(logger, nameof(logger));
+            Check.NotNullOrWhiteSpace(processName, nameof(processName));
+
             return new DurationLogger(logger, processName, logger.Debug);
         }
 
+        /// <summary>
+        /// Returns a logger that can be used to write a verbose log for the time required
+        /// to execute a block of code.
+        /// </summary>
+        /// <param name="logger">The associated logger.</param>
+        /// <param name="processName">Name used to described the block of code being executed.</param>
+        /// <returns>Logger used to log a duration.</returns>
         public static DurationLogger VerboseDuration(this IContainerLogger logger, string processName, object details = null)
         {
-            if (details != null)
-            {
-                return new DurationLogger(logger, processName, logger.Verbose, details);
-            }
+            Check.NotNull(logger, nameof(logger));
+            Check.NotNullOrWhiteSpace(processName, nameof(processName));
 
-            return new DurationLogger(logger, processName, logger.Verbose);
-        }
-
-        public static void Debug(this IContainerLogger logger, string message, object details)
-        {
-            logger.Debug(message, details.ToDictionary());
+            return new DurationLogger(logger, processName, logger.Verbose, details);
         }
     }
 

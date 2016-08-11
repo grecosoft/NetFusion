@@ -1,5 +1,4 @@
-﻿using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Exceptions;
+﻿using NetFusion.Common.Exceptions;
 using System;
 
 namespace NetFusion.Bootstrap.Exceptions
@@ -32,19 +31,6 @@ namespace NetFusion.Bootstrap.Exceptions
             : base(message, details, innerException)
         {
 
-        }
-
-        public ContainerException(Plugin plugin, string message)
-            : base(FormatPluginMsg(plugin) + message)
-        {
-
-        }
-
-        private static string FormatPluginMsg(Plugin plugin)
-        {
-            return 
-                $"Container Plug-in Exception.  Name: {plugin.Manifest.Name}/n" +
-                $"Assembly: {plugin.AssemblyName} Id: {plugin.Manifest.PluginId}/n";
         }
     }
 }

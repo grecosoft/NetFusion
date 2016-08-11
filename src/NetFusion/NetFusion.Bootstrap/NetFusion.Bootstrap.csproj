@@ -45,7 +45,6 @@
     <Compile Include="Container\CompositeApplication.cs" />
     <Compile Include="Container\IAppContainer.cs" />
     <Compile Include="Container\IComposite.cs" />
-    <Compile Include="Container\ICompositeApplication.cs" />
     <Compile Include="Container\IContainerConfig.cs" />
     <Compile Include="Container\ILoadedContainer.cs" />
     <Compile Include="Container\ITypeResolver.cs" />
@@ -55,7 +54,7 @@
     <Compile Include="Extensions\AutofacRegistrationExtensions.cs" />
     <Compile Include="Extensions\ContainerExtensions.cs" />
     <Compile Include="Extensions\ModuleExtensions.cs" />
-    <Compile Include="Logging\AppContainerLog.cs" />
+    <Compile Include="Logging\CompositeLog.cs" />
     <Compile Include="Logging\DurationLogger.cs" />
     <Compile Include="Logging\IContainerLogger.cs" />
     <Compile Include="Logging\LoggerConfig.cs" />

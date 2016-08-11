@@ -201,11 +201,19 @@ namespace NetFusion.Domain.Roslyn.Core
 
         public async Task<bool> SatifiesPredicate(object entity, ScriptPredicate predicate)
         {
-            await this.Execute(entity, predicate.ScriptName);
+            predicate.Validate();
 
             var attributedEntity = entity as IAttributedEntity;
+            if (!predicate.PredicateAttributeName.IsNullOrWhiteSpace() && attributedEntity == null)
+            {
+                throw new InvalidOperationException(
+                    $"If the {nameof(predicate.PredicateAttributeName)} is specified, the entity " + 
+                    $"being evaluated must implement: {typeof(IAttributedEntity)}");
+            }
 
-            if (predicate.PredicateAttributeName != null && attributedEntity != null)
+            await this.Execute(entity, predicate.ScriptName);
+
+            if (! predicate.PredicateAttributeName.IsNullOrWhiteSpace())
             {
                 return attributedEntity.Attributes.GetValue<bool>(predicate.PredicateAttributeName);
             }

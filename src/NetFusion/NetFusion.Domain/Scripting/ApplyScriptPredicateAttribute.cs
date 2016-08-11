@@ -3,7 +3,7 @@
 namespace NetFusion.Domain.Scripting
 {
     /// <summary>
-    /// Attribute that can be attached to classes for specifying an associated script
+    /// Attribute that can be attached to classes or methods for specifying an associated script
     /// representing a predicate.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
@@ -13,6 +13,15 @@ namespace NetFusion.Domain.Scripting
         /// The name of the script stored external to the application.
         /// </summary>
         public string ScriptName { get; }
+
+        /// <summary>
+        /// Attribute Constructor
+        /// </summary>
+        /// <param name="scriptName">The name of the script stored external to the application.</param>
+        public ApplyScriptPredicateAttribute(string scriptName)
+        {
+            this.ScriptName = scriptName;
+        }
 
         /// <summary>
         /// If the entity being evaluated is of type IAttributedEntity used
@@ -27,13 +36,15 @@ namespace NetFusion.Domain.Scripting
         /// </summary>
         public string PredicatePropertyName { get; set; }
 
-        /// <summary>
-        /// Attribute Constructor
-        /// </summary>
-        /// <param name="scriptName">The name of the script stored external to the application.</param>
-        public ApplyScriptPredicateAttribute(string scriptName)
+        public ScriptPredicate ToPredicate()
         {
-            this.ScriptName = scriptName;
+            return new ScriptPredicate
+            {
+                ScriptName = this.ScriptName,
+                PredicateAttributeName = this.PredicateAttributeName,
+                PredicatePropertyName = this.PredicatePropertyName
+            };
         }
+        
     }
 }

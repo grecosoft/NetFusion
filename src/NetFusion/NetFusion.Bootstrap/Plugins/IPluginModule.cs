@@ -6,7 +6,7 @@ namespace NetFusion.Bootstrap.Plugins
     /// Implemented by one or more plug-in classes allowing the plug-in to be configured.  
     /// This includes the registering of types within the dependency-injection container, 
     /// the discovering of known-type implementations, and the execution of any needed
-    /// logic upon startup.
+    /// logic upon startup and shutdown.
     /// </summary>
     public interface IPluginModule 
     {

@@ -93,12 +93,7 @@ namespace NetFusion.RabbitMQ.Exchanges
             var scriptAttrib = this.GetAttribute<ApplyScriptPredicateAttribute>();
             if (scriptAttrib != null)
             {
-                this.Settings.Predicate = new ScriptPredicate
-                {
-                    ScriptName = scriptAttrib.ScriptName,
-                    PredicateAttributeName = scriptAttrib.PredicateAttributeName,
-                    PredicatePropertyName = scriptAttrib.PredicatePropertyName
-                };
+                this.Settings.Predicate = scriptAttrib.ToPredicate();
             }
         }
 
