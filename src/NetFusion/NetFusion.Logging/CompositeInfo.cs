@@ -1,4 +1,5 @@
 ﻿using NetFusion.Bootstrap.Plugins;
+using NetFusion.Common;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,6 +18,8 @@ namespace NetFusion.Logging
         /// within the compose application.</param>
         public CompositeInfo(IEnumerable<PluginInfo> plugins)
         {
+            Check.NotNull(plugins, nameof(plugins));
+
             this.AppHostPlugin = plugins.First(pi => pi.Plugin.PluginType == PluginTypes.AppHostPlugin);
             this.AppComponentPlugins = plugins.Where(pi => pi.Plugin.PluginType == PluginTypes.AppComponentPlugin);
             this.CorePlugins = plugins.Where(pi => pi.Plugin.PluginType == PluginTypes.CorePlugin);

@@ -31,6 +31,13 @@ namespace NetFusion.Messaging.Modules
         /// </summary>
         ILookup<Type, MessageDispatchInfo> InProcessMessageTypeDispatchers { get; }
 
+        /// <summary>
+        /// Dispatches a message using the specified dispatch information.
+        /// </summary>
+        /// <param name="message">The message to dispatch.</param>
+        /// <param name="dispatchInfo">Contains information about the consumer that should
+        /// receives the message.</param>
+        /// <returns>The future result of the dispatch returned by the consumer.</returns>
         Task<IMessage> DispatchConsumer(IMessage message, MessageDispatchInfo dispatchInfo);
     }
 }

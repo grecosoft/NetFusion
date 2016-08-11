@@ -1,5 +1,6 @@
 ﻿using NetFusion.Common;
 using NetFusion.Common.Extensions;
+using NetFusion.Domain.Scripting;
 using NetFusion.Messaging;
 using NetFusion.RabbitMQ.Core;
 using RabbitMQ.Client;
@@ -66,6 +67,7 @@ namespace NetFusion.RabbitMQ.Exchanges
         // specific declared application exchange to specific its settings.
         public void InitializeSettings()
         {
+            SetOptionalScriptSettings();
             OnDeclareExchange();
             ValidateConfiguration();
         }
@@ -85,6 +87,15 @@ namespace NetFusion.RabbitMQ.Exchanges
         /// and optionally the queues that should be created on the exchange.
         /// </summary>
         protected abstract void OnDeclareExchange();
+
+        private void SetOptionalScriptSettings()
+        {
+            var scriptAttrib = this.GetAttribute<ApplyScriptPredicateAttribute>();
+            if (scriptAttrib != null)
+            {
+                this.Settings.Predicate = scriptAttrib.ToPredicate();
+            }
+        }
 
         internal virtual void ValidateConfiguration()
         {

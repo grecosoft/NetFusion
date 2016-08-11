@@ -29,12 +29,12 @@ namespace NetFusion.RabbitMQ.Modules
     {
         private bool _disposed;
         private IMessageBroker _messageBroker;
-       
+        private IEnumerable<MessageConsumer> _messageConsumers;
+
         // Discovered Properties:
         public IEnumerable<IMessageExchange> Exchanges { get; private set; }
         public IEnumerable<IMessageSerializerRegistry> Registries { get; private set; }
-        private IEnumerable<MessageConsumer> _messageConsumers;
-
+        
         protected override void Dispose(bool dispose)
         {
             if (dispose && !_disposed)
@@ -57,7 +57,7 @@ namespace NetFusion.RabbitMQ.Modules
         {
             var messageModule = this.Context.GetPluginModule<IMessagingModule>();
 
-            var publisher = messageModule.MessagingConfig.PublisherTypes
+            Type publisher = messageModule.MessagingConfig.PublisherTypes
                 .FirstOrDefault(pt => pt == typeof(RabbitMqMessagePublisher));
 
             if (publisher == null && this.Exchanges.Any())
@@ -75,7 +75,7 @@ namespace NetFusion.RabbitMQ.Modules
             _messageBroker = scope.Resolve<IMessageBroker>();
             _messageConsumers = GetQueueConsumers(scope);
 
-            var brokerSettings = GetBrokerSettings(scope);
+            BrokerSettings brokerSettings = GetBrokerSettings(scope);
             InitializeExchanges(brokerSettings);
 
             _messageBroker.Initialize(new MessageBrokerConfig
@@ -164,10 +164,10 @@ namespace NetFusion.RabbitMQ.Modules
 
         private IDictionary<string, IMessageSerializer> GetConfiguredSerializers()
         {
-            var allAppPluginTypes = this.Context.GetPluginTypesFrom(
+            IEnumerable<Type> allAppPluginTypes = this.Context.GetPluginTypesFrom(
                 PluginTypes.AppHostPlugin, PluginTypes.AppComponentPlugin);
 
-            var registries = this.Registries.CreatedFrom(allAppPluginTypes);
+            IEnumerable<IMessageSerializerRegistry> registries = this.Registries.CreatedFrom(allAppPluginTypes);
             if (registries.Empty())
             {
                 return new Dictionary<string, IMessageSerializer>();
@@ -175,7 +175,7 @@ namespace NetFusion.RabbitMQ.Modules
 
             if (registries.IsSingletonSet())
             {
-                var serializers = registries.First().GetSerializers();
+                IEnumerable<IMessageSerializer> serializers = registries.First().GetSerializers();
                 return serializers.ToDictionary(s => s.ContentType);
             }
 

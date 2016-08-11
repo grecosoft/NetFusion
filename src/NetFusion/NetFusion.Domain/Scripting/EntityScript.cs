@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace NetFusion.Domain.Scripting
 {
     /// <summary>
-    /// Represents a set of ordered expressions that executed at runtime
+    /// Represents a set of ordered expressions executed at runtime
     /// against a domain entity.
     /// </summary>
     public class EntityScript
@@ -14,6 +14,11 @@ namespace NetFusion.Domain.Scripting
         /// Identity value for the script.
         /// </summary>
         public string Id { get; }
+
+        /// <summary>
+        /// The name identifying the script.
+        /// </summary>
+        public string Name { get; }
 
         /// <summary>
         /// The type of the entity to which the script is associated.
@@ -25,31 +30,41 @@ namespace NetFusion.Domain.Scripting
         /// </summary>
         public IReadOnlyCollection<EntityExpression> Expressions { get; }
 
-        public EntityScript(
-            string id,
-            string name,
-            string entityType,
-            IReadOnlyCollection<EntityExpression> expressions) 
+        public EntityScript()
         {
-            Check.NotNullOrWhiteSpace(id, nameof(id));
-            Check.NotNullOrWhiteSpace(name, nameof(name));
-            Check.NotNullOrWhiteSpace(entityType, nameof(entityType));
-
-            this.Id = id;
-            this.Name = name;
-            this.EntityType = Type.GetType(entityType);
-
-            this.InitialAttributes = new Dictionary<string, object>();
-            this.Expressions = expressions;
-                        
             this.ImportedAssemblies = new List<string>();
             this.ImportedNamespaces = new List<string>();
+            this.InitialAttributes = new Dictionary<string, object>();
         }
 
         /// <summary>
-        /// The name identifying the script.
+        /// Creates new script.
         /// </summary>
-        public string Name { get; }
+        /// <param name="id">Identity value for the script.</param>
+        /// <param name="name">The name identifying the script.</param>
+        /// <param name="entityTypeName">The type of the entity to which the script is associated.</param>
+        /// <param name="expressions">The expressions associated with the script.</param>
+        public EntityScript(
+            string id,
+            string name,
+            string entityTypeName,
+            IReadOnlyCollection<EntityExpression> expressions) : this()
+        {
+            Check.NotNullOrWhiteSpace(id, nameof(id));
+            Check.NotNullOrWhiteSpace(name, nameof(name));
+            Check.NotNullOrWhiteSpace(entityTypeName, nameof(entityTypeName));
+
+            this.Id = id;
+            this.Name = name;
+            this.Expressions = expressions;
+
+            this.EntityType = Type.GetType(entityTypeName, false);
+            if (this.EntityType == null)
+            {
+                throw new InvalidOperationException(
+                    $"The type of: {entityTypeName} associated with script named {name} could not be loaded.");
+            }
+        }
 
         /// <summary>
         /// Description of the script within the current application domain.

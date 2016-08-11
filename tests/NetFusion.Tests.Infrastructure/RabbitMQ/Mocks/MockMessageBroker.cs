@@ -1,4 +1,6 @@
 ﻿using Moq;
+using NetFusion.Bootstrap.Logging;
+using NetFusion.Domain.Scripting;
 using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Core;
@@ -10,8 +12,12 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks
     {
         private readonly Mock<IConnection> _mockConnection;
     
-        public MockMessageBroker(Mock<IMessagingModule> mockMsgModule, Mock<IConnection> mockConnection) :
-            base(mockMsgModule.Object)
+        public MockMessageBroker(
+            NullLogger logger, 
+            Mock<IMessagingModule> mockMsgModule, 
+            Mock<IConnection> mockConnection) :
+
+            base(logger, mockMsgModule.Object, new Mock<IEntityScriptingService>().Object)
         {
             _mockConnection = mockConnection;
         }

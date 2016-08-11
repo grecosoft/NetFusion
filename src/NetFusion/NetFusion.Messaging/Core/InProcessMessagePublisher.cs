@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions;
+using NetFusion.Domain.Scripting;
 using NetFusion.Messaging.Modules;
 using System;
 using System.Collections.Generic;
@@ -22,16 +23,19 @@ namespace NetFusion.Messaging.Core
     {
         private readonly ILifetimeScope _lifetimeScope;
         private readonly IMessagingModule _messagingModule;
+        private readonly IEntityScriptingService _scriptingSrv;
 
         public InProcessMessagePublisher(
             ILifetimeScope liftimeScope,
-            IMessagingModule eventingModule)
+            IMessagingModule eventingModule,
+            IEntityScriptingService scriptingSrv)
         {
             _lifetimeScope = liftimeScope;
             _messagingModule = eventingModule;
+            _scriptingSrv = scriptingSrv;
         }
 
-        public override Task PublishMessageAsync(IMessage message)
+        public async override Task PublishMessageAsync(IMessage message)
         {
             // Determine the dispatchers associated with the message.
             var dispatchers = _messagingModule.InProcessMessageTypeDispatchers
@@ -42,19 +46,24 @@ namespace NetFusion.Messaging.Core
 
             // Invoke all synchronous handlers and if there are no exceptions, execute all
             // asynchronous handler and return the future result to the caller to await.
-            InvokeMessageDispatchersSync(message, dispatchers);
-            return InvokeMessageDispatchersAsync(message, dispatchers);
+            await InvokeMessageDispatchersSync(message, dispatchers);
+            await InvokeMessageDispatchersAsync(message, dispatchers);
         }
 
-        private void InvokeMessageDispatchersSync(IMessage message,
+        private async Task  InvokeMessageDispatchersSync(IMessage message,
             IEnumerable<MessageDispatchInfo> dispatchers)
         {
             var dispatchErrors = new List<MessageDispatchException>();
 
-            foreach (var dispatcher in dispatchers.Where(d => !d.IsAsync && d.IsMatch(message)))
+            foreach (var dispatcher in dispatchers.Where(d => !d.IsAsync))
             {
                 try
                 {
+                    if (! await MatchesDispatchCriteria(dispatcher, message))
+                    {
+                        continue;
+                    }
+
                     var consumer = _lifetimeScope.Resolve(dispatcher.ConsumerType);
                     var result = dispatcher.Invoker.DynamicInvoke(consumer, message);
 
@@ -85,14 +94,35 @@ namespace NetFusion.Messaging.Core
             }
         }
 
+        private async Task<bool> MatchesDispatchCriteria(MessageDispatchInfo dispatchInfo, IMessage message)
+        {
+            ScriptPredicate predicate = dispatchInfo.Predicate;
+
+            if (predicate != null)
+            {
+                return await _scriptingSrv.SatifiesPredicate(message, predicate);
+            }
+
+            return dispatchInfo.IsMatch(message);
+        }
+
         private async Task InvokeMessageDispatchersAsync(IMessage message,
             IEnumerable<MessageDispatchInfo> dispatchers)
         {
             IEnumerable<DispatchTask> futureResults = null;
+            List<MessageDispatchInfo> matchingDispatchers = new List<MessageDispatchInfo>();
 
             try
             {
-                futureResults = InvokeMessageDispatchers(message, dispatchers);
+                foreach(MessageDispatchInfo dispatchInfo in dispatchers.Where(d => d.IsAsync))
+                {
+                    if (await MatchesDispatchCriteria(dispatchInfo, message))
+                    {
+                        matchingDispatchers.Add(dispatchInfo);
+                    }
+                } 
+
+                futureResults = InvokeMessageDispatchers(message, matchingDispatchers);
                 await Task.WhenAll(futureResults.Select(fr => fr.Task));
 
                 var command = message as ICommand;
@@ -133,7 +163,7 @@ namespace NetFusion.Messaging.Core
         {
             var futureResults = new List<DispatchTask>();
 
-            foreach (var dispatcher in dispatchers.Where(d => d.IsAsync && d.IsMatch(message)))
+            foreach (MessageDispatchInfo dispatcher in dispatchers)
             {
                 var consumer = _lifetimeScope.Resolve(dispatcher.ConsumerType);
                 var futureResult = (Task)dispatcher.Invoker.DynamicInvoke(consumer, message);

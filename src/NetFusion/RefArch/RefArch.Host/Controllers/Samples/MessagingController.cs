@@ -116,7 +116,7 @@ namespace RefArch.Host.Controllers.Samples
         {
             var evt = new ExampleDerivedDomainEvent();
             await _messagingService.PublishAsync(evt);
-            return evt.AttributesOld;
+            return evt.AttributeValues;
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace RefArch.Host.Controllers.Samples
         {
             var evt = new ExampleRuleDomainEvent(info);
             await _messagingService.PublishAsync(evt);
-            return evt.AttributesOld;
+            return evt.AttributeValues;
         }
     }
 }

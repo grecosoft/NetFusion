@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NetFusion.Domain.Scripting;
+using System.Collections.Generic;
 
 namespace NetFusion.RabbitMQ.Exchanges
 {
@@ -51,5 +52,11 @@ namespace NetFusion.RabbitMQ.Exchanges
         /// Other properties (construction arguments) for the exchange.
         /// </summary>
         public IDictionary<string, object> Arguments { get; }
+
+        /// <summary>
+        /// Optionally defines the script that should be invoked on the message
+        /// to determine if the message should be published to the exchange.
+        /// </summary>
+        public ScriptPredicate Predicate { get; set; }
     }
 }

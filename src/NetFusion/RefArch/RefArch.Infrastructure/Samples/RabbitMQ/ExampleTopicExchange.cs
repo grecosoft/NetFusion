@@ -1,8 +1,10 @@
-﻿using NetFusion.RabbitMQ.Exchanges;
+﻿using NetFusion.Domain.Scripting;
+using NetFusion.RabbitMQ.Exchanges;
 using RefArch.Api.Messages.RabbitMQ;
 
 namespace RefArch.Infrastructure.Samples.RabbitMQ
 {
+    [ApplyScriptPredicate("ClassicCarCriteria", PredicateAttributeName = "IsClassic")]
     public class ExampleTopicExchange : TopicExchange<ExampleTopicEvent>
     {
         protected override void OnDeclareExchange()

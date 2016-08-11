@@ -1,4 +1,5 @@
-﻿using NetFusion.Messaging;
+﻿using System.Threading.Tasks;
+using NetFusion.Messaging;
 using NetFusion.Messaging.Core;
 
 namespace NetFusion.RabbitMQ.Core
@@ -16,11 +17,11 @@ namespace NetFusion.RabbitMQ.Core
             _messageBroker = messageBroker;
         }
 
-        public override void PublishMessage(IMessage message)
+        public async override Task PublishMessageAsync(IMessage message)
         {
             if (_messageBroker.IsExchangeMessage(message))
             {
-                _messageBroker.PublishToExchange(message);
+                await _messageBroker.PublishToExchange(message);
             }
         }
     }

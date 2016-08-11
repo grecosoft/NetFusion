@@ -4,6 +4,7 @@ using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Testing;
 using NetFusion.Core.Tests.Messaging.Mocks;
+using NetFusion.Domain.Scripting;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Core;
@@ -327,7 +328,7 @@ namespace NetFusion.Tests.Eventing
                 {
                     c.WithConfig<MessagingConfig>();
                     c.Build();
-
+                   
                     var domainEventSrv = c.Services.Resolve<IMessagingService>();
                     var evt = new MockDomainEvent();
                     var futureResults = domainEventSrv.PublishAsync(evt);
@@ -356,7 +357,16 @@ namespace NetFusion.Tests.Eventing
                             .AddPluginType<MockDomainEvent>()
                             .AddPluginType<MockDomainEventConsumer>();
 
-                       config.AddMessagingPlugin();
+                       config.AddPlugin<MockCorePlugin>()
+                            .AddPluginType<MessagingConfig>()
+                            .AddPluginType<MessagingModule>();
+                   }, c =>
+                   {
+                       c.WithConfig<AutofacRegistrationConfig>(regConfig =>
+                       {
+                           regConfig.Build = builder => builder.RegisterType<NullEntityScriptingService>()
+                             .As<IEntityScriptingService>().SingleInstance();
+                       });
                    });
             }
         }
@@ -372,6 +382,16 @@ namespace NetFusion.Tests.Eventing
                             .AddPluginType<MockDomainEvent>()
                             .AddPluginType<MockAsyncMessageConsumer>();
 
+                       config.AddPlugin<MockCorePlugin>()
+                            .AddPluginType<MessagingConfig>()
+                            .AddPluginType<MessagingModule>();
+                   }, c =>
+                   {
+                       c.WithConfig<AutofacRegistrationConfig>(regConfig =>
+                       {
+                          regConfig.Build = builder => builder.RegisterType<NullEntityScriptingService>()
+                            .As<IEntityScriptingService>().SingleInstance();
+                       });
                        config.AddMessagingPlugin();
                    });
             }
@@ -388,6 +408,17 @@ namespace NetFusion.Tests.Eventing
                             .AddPluginType<MockCommand>()
                             .AddPluginType<MockCommandConsumer>();
 
+                       config.AddPlugin<MockCorePlugin>()
+                            .AddPluginType<MessagingConfig>()
+                            .AddPluginType<MessagingModule>();
+                   }, c =>
+                   {
+                       c.WithConfig<AutofacRegistrationConfig>(regConfig =>
+                       {
+                           regConfig.Build = builder => builder.RegisterType<NullEntityScriptingService>()
+                             .As<IEntityScriptingService>().SingleInstance();
+                       });
+                   });
                        config.AddMessagingPlugin();
                    });
             }
@@ -420,6 +451,18 @@ namespace NetFusion.Tests.Eventing
                             .AddPluginType<MockDerivedDomainEvent>()
                             .AddPluginType<MockBaseMessageConsumer>();
 
+                       config.AddPlugin<MockCorePlugin>()
+                            .AddPluginType<MessagingConfig>()
+                            .AddPluginType<MessagingModule>();
+
+                       var corePlugin = new MockCorePlugin();
+                   }, c =>
+                   {
+                       c.WithConfig<AutofacRegistrationConfig>(regConfig =>
+                       {
+                           regConfig.Build = builder => builder.RegisterType<NullEntityScriptingService>()
+                             .As<IEntityScriptingService>().SingleInstance();
+                       });
                        config.AddMessagingPlugin();
                    });
             }

@@ -1,8 +1,12 @@
-﻿using System;
+﻿using NetFusion.Common;
+using System;
 using System.Diagnostics;
 
 namespace NetFusion.Bootstrap.Logging
 {
+    /// <summary>
+    /// Logs the time required to execute a block of code.
+    /// </summary>
     public class DurationLogger : IDisposable
     {
         private readonly IContainerLogger _logger;
@@ -12,12 +16,11 @@ namespace NetFusion.Bootstrap.Logging
         private readonly Action<string, object> _logMessage;
         private object _completionDetails = new object();
         
-        public IContainerLogger Log { get; }
+        public IContainerLogger Log { get { return _logger; } }
 
         private DurationLogger(IContainerLogger logger,
             Action<string, object> logMessage)
         {
-            this.Log = logger;
             _logMessage = logMessage;
 
             _logger = logger;
@@ -25,28 +28,34 @@ namespace NetFusion.Bootstrap.Logging
             _stopWatch.Start();
         }
 
-        public DurationLogger(IContainerLogger logger, 
-            string processName,
-            Action<string, object> logMessage) : this(logger, logMessage)
-        {
-            _processName = processName;
-            _logMessage($"Start Process: {processName}", new { });
-        }
-
+        /// <summary>
+        /// Creates a new duration logger.
+        /// </summary>
+        /// <param name="logger">The associated logger.</param>
+        /// <param name="processName">The name to identify the executed code being logged.</param>
+        /// <param name="logMessage">Delegate called to log the message.</param>
+        /// <param name="details">Details to be logged with message.</param>
         public DurationLogger(IContainerLogger logger,
             string processName,
             Action<string, object> logMessage,
-            object details) : this(logger, logMessage)
+            object details = null) : this(logger, logMessage)
         {
+            Check.NotNullOrWhiteSpace(processName, nameof(processName));
+            Check.NotNull(logMessage, nameof(logMessage));
+
             _processName = processName;
-            _logMessage($"Start Process: {processName}", details);
+            _logMessage($"Start Process: {processName}", details ?? new { });
         }
 
+        /// <summary>
+        /// Details to be logged when the executed code has completed.
+        /// </summary>
+        /// <param name="details">Details to log with the end process message.</param>
         public void SetCompletionDetails(object details)
         {
+            Check.NotNull(details, nameof(details));
             _completionDetails = details;
         }
-
 
         public void Dispose()
         {

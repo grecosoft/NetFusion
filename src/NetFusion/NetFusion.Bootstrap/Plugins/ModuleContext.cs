@@ -14,8 +14,19 @@ namespace NetFusion.Bootstrap.Plugins
     {
         private readonly CompositeApplication _compositeApp;
 
+        /// <summary>
+        /// The plug-in representing the application host.
+        /// </summary>
         public Plugin AppHost { get; }
+
+        /// <summary>
+        /// The plug-in where the module is defined.
+        /// </summary>
         public Plugin Plugin { get; }
+
+        /// <summary>
+        /// All plug-in modules.
+        /// </summary>
         public IEnumerable<IPluginModule> AllPluginModules { get; }
 
         internal ModuleContext(CompositeApplication compositeApp, Plugin plugin)

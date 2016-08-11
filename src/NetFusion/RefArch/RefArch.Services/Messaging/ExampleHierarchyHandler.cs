@@ -8,13 +8,13 @@ namespace RefArch.Services.Messaging
         [InProcessHandler]
         public void OnEvent([IncludeDerivedMessages]ExampleBaseDomainEvent evt)
         {
-            evt.AttributesOld["Message1"] = "Base Handler Called";
+            evt.Attributes.Values.Message1 = "Base Handler Called";
         }
 
         [InProcessHandler]
         public void OnEvent(ExampleDerivedDomainEvent evt)
         {
-            evt.AttributesOld["Message"] = "Derived Handler Called";
+            evt.Attributes.Values.Message2 = "Derived Handler Called";
         }
     }
 }

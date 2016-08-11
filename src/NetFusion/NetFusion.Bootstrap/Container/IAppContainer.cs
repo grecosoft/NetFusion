@@ -6,10 +6,8 @@ using System.Collections.Generic;
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Container that bootstraps the application using plug-in types
-    /// determined by the specified TypeResolver.  The plug-in types 
-    /// are scanned based on a set of conventions and used to create 
-    /// an Autofac container.
+    /// Container that bootstraps the application using plug-in types determined by the specified TypeResolver.  
+    /// The plug-in types are scanned based on a set of conventions and used to create an Autofac container.
     /// </summary>
     public interface IAppContainer: IDisposable
     {

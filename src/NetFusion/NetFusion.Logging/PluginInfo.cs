@@ -1,14 +1,17 @@
 ﻿using NetFusion.Bootstrap.Plugins;
+using NetFusion.Common;
 
 namespace NetFusion.Logging
 {
     /// <summary>
-    /// Model 
+    /// Plug-in summary model. 
     /// </summary>
     public class PluginInfo
     {
         public PluginInfo(Plugin plugin)
         {
+            Check.NotNull(plugin, nameof(plugin));
+
             this.Plugin = plugin;
 
             this.Name = plugin.Manifest.Name;

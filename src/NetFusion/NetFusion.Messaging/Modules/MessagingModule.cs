@@ -4,6 +4,7 @@ using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common;
 using NetFusion.Common.Extensions;
+using NetFusion.Domain.Scripting;
 using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Rules;
@@ -21,7 +22,7 @@ namespace NetFusion.Messaging.Modules
     public class MessagingModule : PluginModule, 
         IMessagingModule
     {
-        // Discovered Instances:
+        // Discovered Properties:
         public IEnumerable<IMessageDispatchRule> DispatchRules { get; private set; }
 
         // IMessagingModule:
@@ -49,6 +50,7 @@ namespace NetFusion.Messaging.Modules
                 .ToArray();
 
             SetDispatchRules(allDispatchers);
+            SetDispatchPredicateScripts(allDispatchers);
             AssertDispatchRules(allDispatchers);
 
             this.AllMessageTypeDispatchers = allDispatchers
@@ -95,6 +97,15 @@ namespace NetFusion.Messaging.Modules
                 .ToArray(); 
         }
 
+        private void SetDispatchPredicateScripts(MessageDispatchInfo[] allDispatchers)
+        {
+            foreach (var dispatcher in allDispatchers)
+            {
+                var scriptAttrib = dispatcher.MessageHandlerMethod.GetAttribute<ApplyScriptPredicateAttribute>();
+                dispatcher.Predicate = scriptAttrib?.ToPredicate();
+            }
+        }
+
         // Assert that all command messages have one and only one event
         // dispatch handler. 
         private void AssertCommandMessages()
@@ -122,7 +133,7 @@ namespace NetFusion.Messaging.Modules
         // message.  This applies to dispatch rules that are applied via attributes.
         private void AssertDispatchRules(MessageDispatchInfo[] allDispatchers)
         {
-            var invalidEvtHanlders = allDispatchers
+            var invalidEvtHandlers = allDispatchers
                 .Where(ed => ed.DispatchRules.Any(
                     dr => !ed.MessageType.IsDerivedFrom(dr.EventType)))
                 .Select(ed => new {
@@ -131,12 +142,11 @@ namespace NetFusion.Messaging.Modules
                     ed.MessageHandlerMethod.Name
                 });
                 
-            if (invalidEvtHanlders.Any())
+            if (invalidEvtHandlers.Any())
             {
-                var messages = invalidEvtHanlders.Select(h => h.ToJson());
                 throw new ContainerException(
                     $"The following message consumers have invalid attributes applied " +
-                    $"dispatch rules: {String.Join(", ", messages)}.");
+                    $"dispatch rules", invalidEvtHandlers);
             }
         }
 
@@ -199,14 +209,12 @@ namespace NetFusion.Messaging.Modules
             Check.NotNull(message, nameof(message));
             Check.NotNull(dispatchInfo, nameof(dispatchInfo));
 
-            if (!message.GetType().IsDerivedFrom(dispatchInfo.MessageType))
+            if (! message.GetType().IsDerivedFrom(dispatchInfo.MessageType))
             {
                 throw new ContainerException(
                     $"The message event type: {message.GetType()} being dispatched does not match or " + 
                     $"derived from the dispatch information type of: {dispatchInfo.MessageType}.");
             }
-
-            if (!dispatchInfo.IsMatch(message)) return null;
             
             using (var scope = AppContainer.Instance.Services.BeginLifetimeScope())
             {

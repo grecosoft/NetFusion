@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using NetFusion.Common;
+using NetFusion.Common.Extensions;
 
 namespace NetFusion.Domain.Roslyn.Core
 {
@@ -34,15 +35,15 @@ namespace NetFusion.Domain.Roslyn.Core
 
         public bool IsDefault => this.Script.Name == DefaultScriptName;
 
-        public async Task Execute<TEntity>(TEntity entity)
-            where TEntity : class
+        public async Task Execute(object entity)
         {
             Check.NotNull(entity, nameof(entity));
 
             // The scope that will be used to resolve references made within
             // expressions.  This includes the entity and its set of optional
             // dynamic attributes.
-            var entityScope = new EntityScriptScope<TEntity>(entity);
+            var entityScopeType = typeof(EntityScriptScope<>).MakeGenericType(this.Script.EntityType);
+            var entityScope = entityScopeType.CreateInstance(entity);
 
             foreach (ExpressionEvaluator evaluator in this.Evaluators
                 .OrderBy(ev => ev.Expression.Sequence))
