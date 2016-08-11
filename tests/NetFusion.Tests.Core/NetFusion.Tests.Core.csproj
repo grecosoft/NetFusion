@@ -197,6 +197,8 @@
     <Compile Include="Messaging\Mocks\MockDomainEvent.cs" />
     <Compile Include="Messaging\Mocks\MockDomainEventConsumer.cs" />
     <Compile Include="Messaging\Mocks\MockErrorMessageConsumer.cs" />
+    <Compile Include="Messaging\Mocks\MockInvalidCommand.cs" />
+    <Compile Include="Messaging\Mocks\MockInvalidCommandConsumer.cs" />
     <Compile Include="Messaging\Mocks\MockPrefixedMessageConsumer.cs" />
     <Compile Include="PluginSettingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

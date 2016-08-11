@@ -34,21 +34,19 @@ namespace NetFusion.Messaging.Core
         /// <param name="types">Event consumer types to filter.</param>
         /// <param name="methodPrefix">The optional prefix that the method must begin with.</param>
         /// <returns>List of methods that can handle messages.</returns>
-        public static IEnumerable<MethodInfo> SelectMessageHandlers(this IEnumerable<Type> types, 
-            string methodPrefix)
+        public static IEnumerable<MethodInfo> SelectMessageHandlers(this IEnumerable<Type> types)
         {
             Check.NotNull(types, nameof(types));
 
             return types.SelectMany(ec => ec.GetMethods()
-                .Where(m => IsMessageHandlerMethod(m, methodPrefix)));
+                .Where(IsMessageHandlerMethod));
         }
 
-        private static bool IsMessageHandlerMethod(MethodInfo methodInfo, string methodPrefix)
+        private static bool IsMessageHandlerMethod(MethodInfo methodInfo)
         {
             var isCorrectMethodType = !methodInfo.IsStatic
                 && methodInfo.IsPublic
-                && methodInfo.GetParameters().Length == 1
-                && methodInfo.Name.StartsWith(methodPrefix ?? "", StringComparison.Ordinal); 
+                && methodInfo.GetParameters().Length == 1;
 
             if (!isCorrectMethodType) return false;
             

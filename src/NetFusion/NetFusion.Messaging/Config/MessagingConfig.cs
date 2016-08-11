@@ -15,12 +15,6 @@ namespace NetFusion.Messaging.Config
         private List<Type> _messagePublisherTypes = new List<Type> { typeof(InProcessMessagePublisher) };
 
         /// <summary>
-        /// The optional prefix used to identify message handler methods.
-        /// </summary>
-        /// <returns>The method name prefix.</returns>
-        public string ConsumerMethodPrefix { get; set; }
-
-        /// <summary>
         /// The publishers that will be called to deliver published messages.
         /// </summary>
         public Type[] PublisherTypes { get { return _messagePublisherTypes.ToArray(); } }

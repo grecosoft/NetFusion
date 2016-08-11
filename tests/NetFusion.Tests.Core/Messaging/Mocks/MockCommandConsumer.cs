@@ -21,17 +21,5 @@ namespace NetFusion.Core.Tests.Messaging.Mocks
 
             return mockResponse;
         }
-
-        [InProcessHandler]
-        public void InvalidHandler1(MockCommand evt)
-        {
-
-        }
-
-        [InProcessHandler]
-        public void InvalidHandler2(MockCommand evt)
-        {
-
-        }
     }
 }

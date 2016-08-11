@@ -8,6 +8,7 @@ using NetFusion.Messaging;
 using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Modules;
+using NetFusion.Messaging.Testing;
 using NetFusion.Tests.Core.Bootstrap.Mocks;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,17 +34,16 @@ namespace NetFusion.Tests.Eventing
         [Fact]
         public void DiscoversMessagingConfiguration()
         {
-            DefaultDomainEventPlugin
+            SetupDefaultEventConsumer
                 .Act(c =>
                 {
-                    c.WithConfig<MessagingConfig>(config => config.ConsumerMethodPrefix = "WhenEvent");
+                    c.WithConfig<MessagingConfig>();
                     c.Build();
                 })
                 .Assert((MessagingModule m) =>
                 {
                     var moduleConfig = m.Context.Plugin.GetConfig<MessagingConfig>();
                     moduleConfig.Should().NotBeNull();
-                    moduleConfig.ConsumerMethodPrefix.Should().Be("WhenEvent");
                 });
         }
 
@@ -56,7 +56,7 @@ namespace NetFusion.Tests.Eventing
         [Fact]
         public void DiscoversAllDomainEvents()
         {
-            DefaultDomainEventPlugin
+            SetupDefaultEventConsumer
                 .Act(c => c.Build())
                 .Assert((MessagingModule m) =>
                 {
@@ -75,7 +75,7 @@ namespace NetFusion.Tests.Eventing
         [Fact]
         public void DiscoversDomainEventConsumerHandler()
         {
-            DefaultDomainEventPlugin
+            SetupDefaultEventConsumer
                 .Act(c => c.Build())
                 .Assert((MessagingModule m) =>
                 {
@@ -96,7 +96,7 @@ namespace NetFusion.Tests.Eventing
         [Fact]
         public void RegistersServiceForPublishingEvents()
         {
-            DefaultDomainEventPlugin
+            SetupDefaultEventConsumer
                 .Act(c => c.Build())
                 .Assert((AppContainer c) =>
                 {
@@ -113,7 +113,7 @@ namespace NetFusion.Tests.Eventing
         [Fact]
         public void AllDomainEventConsumersRegistered()
         {
-            DefaultDomainEventPlugin
+            SetupDefaultEventConsumer
                .Act(c => c.Build())
                .Assert((AppContainer c) =>
                {
@@ -129,7 +129,7 @@ namespace NetFusion.Tests.Eventing
         [Fact]
         public void DomainEventConsumerHandlerInvoked()
         {
-            DefaultDomainEventPlugin
+            SetupDefaultEventConsumer
                 .Act(c =>
                 {
                     c.Build();
@@ -152,65 +152,6 @@ namespace NetFusion.Tests.Eventing
         }
 
         /// <summary>
-        /// The hosting application can specify a prefix to indicate domain event handler methods.  
-        /// If this is specified, only methods starting with the prefix and have the corresponding 
-        /// domain event type as a parameter will be invoked.
-        /// </summary>
-        [Fact]
-        public void AppHostCanSpecifyMessageHandlerMethodNamePrefix()
-        {
-            DefaultPrefixedDomainEventPlugin
-                 .Act(c =>
-                 {
-                     c.WithConfig<MessagingConfig>(config => config.ConsumerMethodPrefix = "WhenEvent");
-                     c.Build();
-                 })
-                .Assert((MessagingModule m) =>
-                {
-                    var eventDispatchers = m.InProcessMessageTypeDispatchers[typeof(MockDomainEvent)];
-                    eventDispatchers.Should().HaveCount(1);
-
-                    var dispatchInfo = eventDispatchers.First();
-                    dispatchInfo.MessageType.Should().Equals(typeof(MockDomainEvent));
-                    dispatchInfo.ConsumerType.Should().Equals(typeof(MockDomainEventConsumer));
-                    dispatchInfo.MessageHandlerMethod.Should().Equals(typeof(MockDomainEventConsumer).GetMethod("WhenEventHandlerTwo"));
-                });
-        }
-
-        /// <summary>
-        /// By default, consumer event handlers with a base domain event type
-        /// will not be invoked for derived events.
-        /// </summary>
-        [Fact]
-        public void ConsumerEventHandlerForBaseTypeNotInvokedByDefault()
-        {
-            DefaultDerivedDomainEventPlugin
-                .Act(c =>
-                {
-                    var mockEvt = new MockDerivedDomainEvent();
-
-                    // Note:  specifying the prefix so the event handler that is 
-                    // specified to include base event types will not be called.
-                    c.WithConfig<MessagingConfig>(config => config.ConsumerMethodPrefix = "OnBaseEvent");
-                    c.Build();
-
-                    var futureResponse = c.Services.Resolve<IMessagingService>()
-                        .PublishAsync(mockEvt);
-
-                    futureResponse.Wait();
-
-                })
-                .Assert((AppContainer c) =>
-                {
-                    var consumer = c.Services.Resolve<IEnumerable<IMessageConsumer>>()
-                        .OfType<MockBaseMessageConsumer>()
-                        .First();
-
-                    consumer.ExecutedHandlers.Should().BeEmpty();
-                });
-        }
-
-        /// <summary>
         /// A consumer event handler for a base domain event type can be marked
         /// with the IncludeDerivedEvents attribute to indicate it should be 
         /// called for any derived domain events.
@@ -218,7 +159,7 @@ namespace NetFusion.Tests.Eventing
         [Fact]
         public void ConsumerEventHandlerForBaseTypeInvokedIfAppliedAttribute()
         {
-            DefaultDerivedDomainEventPlugin
+            SetupConsumerWithBaseEventHandler
                 .Act(c =>
                 {
 
@@ -325,12 +266,6 @@ namespace NetFusion.Tests.Eventing
                 });
         }
 
-        [Fact]
-        public void DispatchRuleDeterminesIfHandlerIsCalledForEvent()
-        {
-
-        }
-
         /// <summary>
         /// A command domain event can have only one event consumer handler.
         /// If there are more than one event handler, an exception is raised.
@@ -338,10 +273,9 @@ namespace NetFusion.Tests.Eventing
         [Fact]
         public void CommandEventsCanOnlyHaveOneEventHandler()
         {
-            DefaultCommandDomainEventPlugin
+            SetupInvalidCommandConsumer
                 .Act(c =>
                 {
-                    c.WithConfig<MessagingConfig>(config => config.ConsumerMethodPrefix = "Invalid");
                     c.Build();
                 })
                 .Assert((c, e) =>
@@ -359,10 +293,9 @@ namespace NetFusion.Tests.Eventing
         {
             MockCommandResult result = null;
 
-            DefaultCommandDomainEventPlugin
+            SetupValidCommandConsumer
                 .Act(c =>
                 {
-                    c.WithConfig<MessagingConfig>(config => config.ConsumerMethodPrefix = "On");
                     c.Build();
 
                     var domainEventSrv = c.Services.Resolve<IMessagingService>();
@@ -389,7 +322,7 @@ namespace NetFusion.Tests.Eventing
         [Fact]
         public void AsyncHandlersCanBeInvoked()
         {
-            DefaultAsyncDomainEventPlugin
+            SetupAsyncMessageConsumer
                 .Act(c =>
                 {
                     c.WithConfig<MessagingConfig>();
@@ -412,104 +345,82 @@ namespace NetFusion.Tests.Eventing
                 });
         }
 
-        private ContainerAct DefaultDomainEventPlugin
+        private ContainerAct SetupDefaultEventConsumer
         {
             get
             {
                 return ContainerSetup
                    .Arrange((TestTypeResolver config) =>
                    {
-                       // Use the application host to simulate a plug-in with domain-event related 
-                       // types that will be discovered by the Domain Event Plug-in.
                        config.AddPlugin<MockAppHostPlugin>()
                             .AddPluginType<MockDomainEvent>()
                             .AddPluginType<MockDomainEventConsumer>();
 
-                       config.AddPlugin<MockCorePlugin>()
-                            .AddPluginType<MessagingConfig>()
-                            .AddPluginType<MessagingModule>();
+                       config.AddMessagingPlugin();
                    });
             }
         }
 
-        private ContainerAct DefaultAsyncDomainEventPlugin
+        private ContainerAct SetupAsyncMessageConsumer
         {
             get
             {
                 return ContainerSetup
                    .Arrange((TestTypeResolver config) =>
                    {
-                       // Use the application host to simulate a plug-in with domain-event related 
-                       // types that will be discovered by the Domain Event Plug-in.
                        config.AddPlugin<MockAppHostPlugin>()
                             .AddPluginType<MockDomainEvent>()
                             .AddPluginType<MockAsyncMessageConsumer>();
 
-                       config.AddPlugin<MockCorePlugin>()
-                            .AddPluginType<MessagingConfig>()
-                            .AddPluginType<MessagingModule>();
+                       config.AddMessagingPlugin();
                    });
             }
         }
 
-        private ContainerAct DefaultCommandDomainEventPlugin
+        private ContainerAct SetupValidCommandConsumer
         {
             get
             {
                 return ContainerSetup
                    .Arrange((TestTypeResolver config) =>
                    {
-                       // Use the application host to simulate a plug-in with domain-event related 
-                       // types that will be discovered by the Domain Event Plug-in.
                        config.AddPlugin<MockAppHostPlugin>()
                             .AddPluginType<MockCommand>()
                             .AddPluginType<MockCommandConsumer>();
 
-                       config.AddPlugin<MockCorePlugin>()
-                            .AddPluginType<MessagingConfig>()
-                            .AddPluginType<MessagingModule>();
+                       config.AddMessagingPlugin();
                    });
             }
         }
 
-        private ContainerAct DefaultPrefixedDomainEventPlugin
+        private ContainerAct SetupInvalidCommandConsumer
         {
             get
             {
                 return ContainerSetup
                    .Arrange((TestTypeResolver config) =>
                    {
-                       // Use the application host to simulate a plug-in with domain-event related 
-                       // types that will be discovered by the Domain Event Plug-in.
                        config.AddPlugin<MockAppHostPlugin>()
-                            .AddPluginType<MockDomainEvent>()
-                            .AddPluginType<MockPrefixedMessageConsumer>();
+                            .AddPluginType<MockInvalidCommand>()
+                            .AddPluginType<MockInvalidCommandConsumer>();
 
-                       config.AddPlugin<MockCorePlugin>()
-                            .AddPluginType<MessagingConfig>() // TODO: See why test fails if this is removed..
-                            .AddPluginType<MessagingModule>();
+                       config.AddMessagingPlugin();
                    });
             }
         }
 
-        private ContainerAct DefaultDerivedDomainEventPlugin
+        private ContainerAct SetupConsumerWithBaseEventHandler
         {
             get
             {
                 return ContainerSetup
                    .Arrange((TestTypeResolver config) =>
                    {
-                       // Use the application host to simulate a plug-in with domain-event related 
-                       // types that will be discovered by the Domain Event Plug-in.
                        config.AddPlugin<MockAppHostPlugin>()
                             .AddPluginType<MockDerivedDomainEvent>()
                             .AddPluginType<MockBaseMessageConsumer>();
 
-                       config.AddPlugin<MockCorePlugin>()
-                            .AddPluginType<MessagingConfig>()
-                            .AddPluginType<MessagingModule>();
-
-                       var corePlugin = new MockCorePlugin();
+                       config.AddMessagingPlugin();
                    });
             }
         }

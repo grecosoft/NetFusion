@@ -44,7 +44,7 @@ namespace NetFusion.Messaging.Modules
             IEnumerable<Type> allPluginTypes = this.Context.GetPluginTypesFrom();
             MessageDispatchInfo[] allDispatchers = allPluginTypes
                 .WhereEventConsumer()
-                .SelectMessageHandlers(this.MessagingConfig.ConsumerMethodPrefix)
+                .SelectMessageHandlers()
                 .SelectDispatchInfo()
                 .ToArray();
 
