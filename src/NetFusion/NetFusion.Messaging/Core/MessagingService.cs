@@ -78,34 +78,7 @@ namespace NetFusion.Messaging.Core
         // asynchronous publishers and return the future result to the caller to await.
         private async Task PublishMessageAsync(IMessage message)
         {
-            InvokeMessagePublishersSync(message);
             await InvokeMessagePublishersAsync(message);
-        }
-
-        private void InvokeMessagePublishersSync(IMessage message)
-        {
-            var publisherErrors = new List<PublisherException>();
-
-            foreach (var publisher in _messagePublishers)
-            {
-                try
-                {
-                    publisher.PublishMessage(message);
-                }
-                catch (Exception ex)
-                {
-                    var publishEx = new PublisherException("Error calling event publisher.", publisher, ex);
-                    publisherErrors.Add(publishEx);
-                }
-            }
-
-            if (publisherErrors.Any())
-            {
-                throw new PublisherException(
-                    "An exception was received when calling one or more message publishers.",
-                    message,
-                    publisherErrors);
-            }
         }
 
         private async Task InvokeMessagePublishersAsync(IMessage message)

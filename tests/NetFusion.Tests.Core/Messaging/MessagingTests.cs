@@ -382,9 +382,7 @@ namespace NetFusion.Tests.Eventing
                             .AddPluginType<MockDomainEvent>()
                             .AddPluginType<MockAsyncMessageConsumer>();
 
-                       config.AddPlugin<MockCorePlugin>()
-                            .AddPluginType<MessagingConfig>()
-                            .AddPluginType<MessagingModule>();
+                       config.AddMessagingPlugin();
                    }, c =>
                    {
                        c.WithConfig<AutofacRegistrationConfig>(regConfig =>
@@ -392,7 +390,7 @@ namespace NetFusion.Tests.Eventing
                           regConfig.Build = builder => builder.RegisterType<NullEntityScriptingService>()
                             .As<IEntityScriptingService>().SingleInstance();
                        });
-                       config.AddMessagingPlugin();
+                       
                    });
             }
         }
@@ -408,9 +406,7 @@ namespace NetFusion.Tests.Eventing
                             .AddPluginType<MockCommand>()
                             .AddPluginType<MockCommandConsumer>();
 
-                       config.AddPlugin<MockCorePlugin>()
-                            .AddPluginType<MessagingConfig>()
-                            .AddPluginType<MessagingModule>();
+                       config.AddMessagingPlugin();
                    }, c =>
                    {
                        c.WithConfig<AutofacRegistrationConfig>(regConfig =>
@@ -419,8 +415,7 @@ namespace NetFusion.Tests.Eventing
                              .As<IEntityScriptingService>().SingleInstance();
                        });
                    });
-                       config.AddMessagingPlugin();
-                   });
+
             }
         }
 
@@ -436,6 +431,14 @@ namespace NetFusion.Tests.Eventing
                             .AddPluginType<MockInvalidCommandConsumer>();
 
                        config.AddMessagingPlugin();
+                   }, c =>
+                   {
+                       c.WithConfig<AutofacRegistrationConfig>(regConfig =>
+                       {
+                           regConfig.Build = builder => builder.RegisterType<NullEntityScriptingService>()
+                             .As<IEntityScriptingService>().SingleInstance();
+                       });
+
                    });
             }
         }
@@ -451,11 +454,7 @@ namespace NetFusion.Tests.Eventing
                             .AddPluginType<MockDerivedDomainEvent>()
                             .AddPluginType<MockBaseMessageConsumer>();
 
-                       config.AddPlugin<MockCorePlugin>()
-                            .AddPluginType<MessagingConfig>()
-                            .AddPluginType<MessagingModule>();
-
-                       var corePlugin = new MockCorePlugin();
+                       config.AddMessagingPlugin();
                    }, c =>
                    {
                        c.WithConfig<AutofacRegistrationConfig>(regConfig =>
@@ -463,7 +462,7 @@ namespace NetFusion.Tests.Eventing
                            regConfig.Build = builder => builder.RegisterType<NullEntityScriptingService>()
                              .As<IEntityScriptingService>().SingleInstance();
                        });
-                       config.AddMessagingPlugin();
+                       
                    });
             }
         }

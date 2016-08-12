@@ -10,12 +10,6 @@ namespace NetFusion.Messaging.Core
     public interface IMessagePublisher : IKnownPluginType
     {
         /// <summary>
-        /// Publishes a message synchronously.  
-        /// </summary>
-        /// <param name="message">The message to be delivered.</param>
-        void PublishMessage(IMessage message);
-
-        /// <summary>
         /// Publishes a message asynchronously. 
         /// </summary>
         /// <param name="message">The message to be delivered.</param>

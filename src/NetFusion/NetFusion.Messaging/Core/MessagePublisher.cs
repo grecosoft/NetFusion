@@ -8,16 +8,6 @@ namespace NetFusion.Messaging.Core
     /// </summary>
     public abstract class MessagePublisher : IMessagePublisher
     {
-
-        /// <summary>
-        /// Override to publish message synchronously.  
-        /// </summary>
-        /// <param name="message">The message to be delivered.</param>
-        public virtual void PublishMessage(IMessage message)
-        {
-
-        }
-
         /// <summary>
         /// Override to publish message asynchronously. 
         /// </summary>
