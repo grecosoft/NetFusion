@@ -39,8 +39,7 @@ namespace NetFusion.Logging.Modules
             {
                 // This exception will not be re-thrown since it don't impact
                 // the execution of the application.
-                Plugin.Log.ForContext<CompositeLogModule>()
-                    .Error("Composite Application could not be logged.", ex);
+                this.Context.Logger.Error("Composite Application could not be logged.", ex);
             }
         }
     }

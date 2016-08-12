@@ -15,11 +15,6 @@ namespace NetFusion.Bootstrap.Plugins
     public class Plugin
     {
         /// <summary>
-        /// Reference to the configured logger.
-        /// </summary>
-        static public IContainerLogger Log { get; internal set; }
-
-        /// <summary>
         /// Enumerated plug-in type category.
         /// </summary>
         public PluginTypes PluginType { get; internal set; }

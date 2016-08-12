@@ -355,7 +355,7 @@ namespace NetFusion.Bootstrap.Container
                 _loggerConfig.LogExceptions = true;
             }
 
-            Plugin.Log = _logger;
+            _application.Logger = _logger;
         }
 
         private void LoadContainer()

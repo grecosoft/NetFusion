@@ -32,9 +32,14 @@ namespace NetFusion.Logging.Serilog.Core
         // Returns new instance associated with the specified context.
         public IContainerLogger ForContext<TContext>()
         {
+            return ForContext(typeof(TContext));
+        }
+
+        public IContainerLogger ForContext(Type contextType)
+        {
             var logger = _logger.ForContext(
-                SerilogManifest.ContextPropName, 
-                typeof(TContext).AssemblyQualifiedName);
+                SerilogManifest.ContextPropName,
+                contextType.AssemblyQualifiedName);
 
             return new SerilogPluginLogger(logger);
         }

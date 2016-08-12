@@ -62,7 +62,7 @@ namespace NetFusion.RabbitMQ.Modules
 
             if (publisher == null && this.Exchanges.Any())
             {
-                Plugin.Log.Warning(
+                this.Context.Logger.Warning(
                     $"exchanges have been declared but the publisher of type: {typeof(RabbitMqMessagePublisher)} " + 
                     $"has not been registered-for messages to be published, this class must be registered." );
             }

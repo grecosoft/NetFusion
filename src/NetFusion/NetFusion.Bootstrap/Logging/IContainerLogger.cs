@@ -42,6 +42,13 @@ namespace NetFusion.Bootstrap.Logging
         IContainerLogger ForContext<TContext>();
 
         /// <summary>
+        /// Associates a context with the log message.
+        /// </summary>
+        /// <param name="contextType">The context type.</param>
+        /// <returns>New instance of the logger with the configured context.</returns>
+        IContainerLogger ForContext(Type contextType);
+
+        /// <summary>
         /// Writes a verbose message to the log.
         /// </summary>
         /// <param name="message">The message to log.</param>

@@ -1,5 +1,6 @@
 ﻿using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Common;
 using System;
 using System.Collections.Generic;
@@ -25,11 +26,19 @@ namespace NetFusion.Bootstrap.Plugins
         public Plugin Plugin { get; }
 
         /// <summary>
+        /// Logger with plug-in context.
+        /// </summary>
+        public IContainerLogger Logger { get; }
+
+        /// <summary>
         /// All plug-in modules.
         /// </summary>
         public IEnumerable<IPluginModule> AllPluginModules { get; }
 
-        internal ModuleContext(CompositeApplication compositeApp, Plugin plugin)
+        internal ModuleContext(
+            IContainerLogger logger,
+            CompositeApplication compositeApp, 
+            Plugin plugin)
         {
             Check.NotNull(compositeApp, nameof(compositeApp));
             Check.NotNull(plugin, nameof(plugin));
@@ -39,6 +48,7 @@ namespace NetFusion.Bootstrap.Plugins
             this.AppHost = compositeApp.AppHostPlugin;
             this.AllPluginModules = compositeApp.AllPluginModules;
             this.Plugin = plugin;
+            this.Logger = logger.ForContext(plugin.GetType());
         }
 
         /// <summary>

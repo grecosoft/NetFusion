@@ -240,7 +240,7 @@ namespace NetFusion.Settings.Modules
 
         private void LogSettings(IAppSettings settings, IAppSettingsInitializer initializer)
         {
-            Plugin.Log.ForContext<AppSettingsModule>().Debug("Settings Initialized", new {
+            this.Context.Logger.Debug("Settings Initialized", new {
                 Settings = settings,
                 Initilizer = initializer?.GetType().Name ?? "Code specified values used."
             });

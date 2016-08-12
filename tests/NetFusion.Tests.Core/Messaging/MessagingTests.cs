@@ -2,6 +2,7 @@
 using FluentAssertions;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Testing;
 using NetFusion.Core.Tests.Messaging.Mocks;
 using NetFusion.Domain.Scripting;
@@ -364,8 +365,16 @@ namespace NetFusion.Tests.Eventing
                    {
                        c.WithConfig<AutofacRegistrationConfig>(regConfig =>
                        {
-                           regConfig.Build = builder => builder.RegisterType<NullEntityScriptingService>()
-                             .As<IEntityScriptingService>().SingleInstance();
+                           regConfig.Build = builder =>
+                           {
+                               builder.RegisterType<NullEntityScriptingService>()
+                                 .As<IEntityScriptingService>()
+                                 .SingleInstance();
+
+                               builder.RegisterType<NullLogger>()
+                                 .As<IContainerLogger>()
+                                 .SingleInstance();
+                           };
                        });
                    });
             }
@@ -387,8 +396,16 @@ namespace NetFusion.Tests.Eventing
                    {
                        c.WithConfig<AutofacRegistrationConfig>(regConfig =>
                        {
-                          regConfig.Build = builder => builder.RegisterType<NullEntityScriptingService>()
-                            .As<IEntityScriptingService>().SingleInstance();
+                           regConfig.Build = builder =>
+                           {
+                               builder.RegisterType<NullEntityScriptingService>()
+                                 .As<IEntityScriptingService>()
+                                 .SingleInstance();
+
+                               builder.RegisterType<NullLogger>()
+                                 .As<IContainerLogger>()
+                                 .SingleInstance();
+                           };
                        });
                        
                    });
@@ -411,8 +428,16 @@ namespace NetFusion.Tests.Eventing
                    {
                        c.WithConfig<AutofacRegistrationConfig>(regConfig =>
                        {
-                           regConfig.Build = builder => builder.RegisterType<NullEntityScriptingService>()
-                             .As<IEntityScriptingService>().SingleInstance();
+                           regConfig.Build = builder =>
+                           {
+                               builder.RegisterType<NullEntityScriptingService>()
+                                 .As<IEntityScriptingService>()
+                                 .SingleInstance();
+
+                               builder.RegisterType<NullLogger>()
+                                 .As<IContainerLogger>()
+                                 .SingleInstance();
+                           };
                        });
                    });
 
@@ -435,8 +460,16 @@ namespace NetFusion.Tests.Eventing
                    {
                        c.WithConfig<AutofacRegistrationConfig>(regConfig =>
                        {
-                           regConfig.Build = builder => builder.RegisterType<NullEntityScriptingService>()
-                             .As<IEntityScriptingService>().SingleInstance();
+                           regConfig.Build = builder =>
+                           {
+                               builder.RegisterType<NullEntityScriptingService>()
+                                 .As<IEntityScriptingService>()
+                                 .SingleInstance();
+
+                               builder.RegisterType<NullLogger>()
+                                 .As<IContainerLogger>()
+                                 .SingleInstance();
+                           };
                        });
 
                    });
@@ -459,10 +492,18 @@ namespace NetFusion.Tests.Eventing
                    {
                        c.WithConfig<AutofacRegistrationConfig>(regConfig =>
                        {
-                           regConfig.Build = builder => builder.RegisterType<NullEntityScriptingService>()
-                             .As<IEntityScriptingService>().SingleInstance();
+                           regConfig.Build = builder =>
+                           {
+                               builder.RegisterType<NullEntityScriptingService>()
+                                 .As<IEntityScriptingService>()
+                                 .SingleInstance();
+
+                               builder.RegisterType<NullLogger>()
+                                 .As<IContainerLogger>()
+                                 .SingleInstance();
+                           };
                        });
-                       
+
                    });
             }
         }

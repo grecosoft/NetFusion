@@ -27,6 +27,11 @@ namespace NetFusion.Bootstrap.Logging
             return this;
         }
 
+        public IContainerLogger ForContext(Type contextType)
+        {
+            return this;
+        }
+
         public void Verbose(string message, object details = null)
         {
             _messages.Add($"VERBOSE: {message}");

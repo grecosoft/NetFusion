@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions;
 using NetFusion.Domain.Scripting;
@@ -22,15 +23,18 @@ namespace NetFusion.Messaging.Core
     public class InProcessMessagePublisher : MessagePublisher
     {
         private readonly ILifetimeScope _lifetimeScope;
+        private readonly IContainerLogger _logger;
         private readonly IMessagingModule _messagingModule;
         private readonly IEntityScriptingService _scriptingSrv;
 
         public InProcessMessagePublisher(
             ILifetimeScope liftimeScope,
+            IContainerLogger logger,
             IMessagingModule eventingModule,
             IEntityScriptingService scriptingSrv)
         {
             _lifetimeScope = liftimeScope;
+            _logger = logger.ForContext<InProcessMessagePublisher>();
             _messagingModule = eventingModule;
             _scriptingSrv = scriptingSrv;
         }
@@ -208,8 +212,7 @@ namespace NetFusion.Messaging.Core
             })
             .ToList();
 
-            Plugin.Log.ForContext<InProcessMessagePublisher>()
-                .Debug($"Message Published: {message.GetType()}",
+            _logger.Debug($"Message Published: {message.GetType()}",
                 new
                 {
                     Message = message,

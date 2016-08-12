@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using NetFusion.Bootstrap.Extensions;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common;
@@ -17,9 +18,12 @@ namespace NetFusion.Bootstrap.Container
         public bool IsStarted { get; private set; }
         public string[] SearchPatterns { get; }
 
+        internal IContainerLogger Logger { get; set; } 
+
         public CompositeApplication(string[] searchPatterns)
         {
             Check.NotNull(searchPatterns, nameof(searchPatterns));
+
             this.SearchPatterns = searchPatterns;
         }
 
@@ -94,7 +98,7 @@ namespace NetFusion.Bootstrap.Container
             {
                 foreach (IPluginModule module in plugin.IncludedModules())
                 {
-                    module.Context = new ModuleContext(this, plugin);
+                    module.Context = new ModuleContext(this.Logger, this, plugin);
                     module.Initialize();
                 }
 

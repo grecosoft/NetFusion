@@ -207,7 +207,6 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             // Setup of test DirectExchange instance that can be asserted.
             exchange.InitializeSettings();
             brokerConfig.Exchanges = new[] { exchange };
-            Plugin.Log = new NullLogger();
 
             // Initialize the broker.
             broker.Initialize(brokerConfig, msgConsumer);
@@ -241,7 +240,6 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             // Setup of test DirectExchange instance that can be asserted.
             exchange.InitializeSettings();
             brokerConfig.Exchanges = new[] { exchange };
-            Plugin.Log = new NullLogger();
 
             // Initialize the broker.
             broker.Initialize(brokerConfig, msgConsumer);
