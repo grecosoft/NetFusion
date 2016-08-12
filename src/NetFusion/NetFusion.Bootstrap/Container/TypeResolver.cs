@@ -180,8 +180,13 @@ namespace NetFusion.Bootstrap.Container
 
         private IEnumerable<PropertyInfo> GetKnownTypeProperties(IPluginModule module)
         {
-            return module.GetType().GetProperties()
-                .Where(p => p.PropertyType.IsClosedGenericTypeOf(typeof(IEnumerable<>), typeof(IKnownPluginType)));
+
+            BindingFlags bindings = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+             
+            return module.GetType().GetProperties(bindings)
+                .Where(p => 
+                    p.PropertyType.IsClosedGenericTypeOf(typeof(IEnumerable<>), typeof(IKnownPluginType))
+                    && p.CanWrite);
         }
 
         private void SetKnownPropertyInstances(IPluginModule module, PropertyInfo KnownTypeProperty,

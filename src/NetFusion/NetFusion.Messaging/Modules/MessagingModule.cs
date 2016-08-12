@@ -23,7 +23,7 @@ namespace NetFusion.Messaging.Modules
         IMessagingModule
     {
         // Discovered Properties:
-        public IEnumerable<IMessageDispatchRule> DispatchRules { get; private set; }
+        private IEnumerable<IMessageDispatchRule> DispatchRules { get; set; }
 
         // IMessagingModule:
         public MessagingConfig MessagingConfig { get; private set; }

@@ -18,7 +18,8 @@ namespace NetFusion.EntityFramework.Modules
     /// </summary>
     public class EntityContextModule : PluginModule
     {
-        public IEnumerable<IEntityTypeMapping> EntityMappings { get; private set; }
+        // Discovered Properties:
+        private IEnumerable<IEntityTypeMapping> EntityMappings { get; set; }
 
         private EntityFrameworkConfig Config { get; set; }
 

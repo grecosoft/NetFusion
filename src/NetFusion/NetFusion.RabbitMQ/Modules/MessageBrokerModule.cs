@@ -32,8 +32,8 @@ namespace NetFusion.RabbitMQ.Modules
         private IEnumerable<MessageConsumer> _messageConsumers;
 
         // Discovered Properties:
-        public IEnumerable<IMessageExchange> Exchanges { get; private set; }
-        public IEnumerable<IMessageSerializerRegistry> Registries { get; private set; }
+        private IEnumerable<IMessageExchange> Exchanges { get; set; }
+        private IEnumerable<IMessageSerializerRegistry> Registries { get; set; }
         
         protected override void Dispose(bool dispose)
         {
