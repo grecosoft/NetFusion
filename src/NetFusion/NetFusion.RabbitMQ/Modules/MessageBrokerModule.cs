@@ -15,19 +15,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace NetFusion.RabbitMQ.Modules
 {
     /// <summary>
     /// Plug-in module that discovers all defined RabbitMQ exchanges and consumer bindings.
-    /// This plug-in builds on top of the messaging pattern allowing for the publishing
-    /// of messages to exchanges.  Consumers are bound to Queues by marking message 
-    /// handlers with a Queue Consumer derived attribute.  
+    /// This plug-in delegates to the messaging plug-in allowing for the publishing of
+    /// messages to exchanges.  The messaging plug-in is also delegated to when a message
+    /// is received from a queue and needs to be dispatched to is consumers.  
     /// </summary>
     internal class MessageBrokerModule : PluginModule
     {
         private bool _disposed;
+        private BrokerSettings _brokerSettings;
         private IMessageBroker _messageBroker;
         private IEnumerable<MessageConsumer> _messageConsumers;
 
@@ -63,7 +63,7 @@ namespace NetFusion.RabbitMQ.Modules
             if (publisher == null && this.Exchanges.Any())
             {
                 this.Context.Logger.Warning(
-                    $"exchanges have been declared but the publisher of type: {typeof(RabbitMqMessagePublisher)} " + 
+                    $"Exchanges have been declared but the publisher of type: {typeof(RabbitMqMessagePublisher)} " + 
                     $"has not been registered-for messages to be published, this class must be registered." );
             }
         }
@@ -73,21 +73,28 @@ namespace NetFusion.RabbitMQ.Modules
         public override void StartModule(ILifetimeScope scope)
         {
             _messageBroker = scope.Resolve<IMessageBroker>();
+            _brokerSettings = GetBrokerSettings(scope);
             _messageConsumers = GetQueueConsumers(scope);
-
-            BrokerSettings brokerSettings = GetBrokerSettings(scope);
-            InitializeExchanges(brokerSettings);
+            
+            InitializeExchanges(_brokerSettings);
 
             _messageBroker.Initialize(new MessageBrokerConfig
             {
-                Settings = brokerSettings,
-                Connections = GetConnections(brokerSettings),
+                Settings = _brokerSettings,
+                Connections = GetConnections(_brokerSettings),
                 Serializers = GetMessageSerializers(),
                 Exchanges = this.Exchanges
             });
 
             _messageBroker.DefineExchanges();
             _messageBroker.BindConsumers(_messageConsumers);
+
+            SaveExchangeMetadata(scope);
+        }
+
+        private BrokerSettings GetBrokerSettings(ILifetimeScope container)
+        {
+            return container.Resolve<BrokerSettings>();
         }
 
         // Finds all consumers message handler methods that are associated with a queue 
@@ -118,14 +125,9 @@ namespace NetFusion.RabbitMQ.Modules
                 && dispatchInfo.MessageHandlerMethod.HasAttribute<QueueConsumerAttribute>();
         }
 
-        private BrokerSettings GetBrokerSettings(ILifetimeScope container)
-        {
-            return container.Resolve<BrokerSettings>();
-        }
-
         private void InitializeExchanges(BrokerSettings brokerSettings)
         {
-            foreach(var exchange in this.Exchanges)
+            foreach(IMessageExchange exchange in this.Exchanges)
             {
                 exchange.InitializeSettings();
                 brokerSettings.ApplyQueueSettings(exchange);
@@ -139,7 +141,7 @@ namespace NetFusion.RabbitMQ.Modules
                 return new Dictionary<string, BrokerConnection>();
             }
 
-            var duplicateBrokerNames = settings.Connections.GroupBy(c => c.BrokerName)
+            IEnumerable<string> duplicateBrokerNames = settings.Connections.GroupBy(c => c.BrokerName)
                 .Where(g => g.Count() > 1)
                 .Select(g => g.Key);
 
@@ -156,6 +158,8 @@ namespace NetFusion.RabbitMQ.Modules
         private IDictionary<string, IMessageSerializer> GetMessageSerializers()
         {
             var serializers = GetConfiguredSerializers();
+
+            // Add the default serializers if not overridden by the application host.
             AddSerializer(serializers, new JsonEventMessageSerializer());
             AddSerializer(serializers, new BinaryMessageSerializer());
 
@@ -164,6 +168,9 @@ namespace NetFusion.RabbitMQ.Modules
 
         private IDictionary<string, IMessageSerializer> GetConfiguredSerializers()
         {
+            // Find all serializer registries which specify any custom serializers or
+            // overrides for a given content type.  Only look in application specific
+            // plug-ins.
             IEnumerable<Type> allAppPluginTypes = this.Context.GetPluginTypesFrom(
                 PluginTypes.AppHostPlugin, PluginTypes.AppComponentPlugin);
 
@@ -197,6 +204,17 @@ namespace NetFusion.RabbitMQ.Modules
             }
         }
 
+        public override void StopModule(ILifetimeScope scope)
+        {
+            if (_brokerSettings.Connections != null)
+            {
+                foreach (BrokerConnection broker in _brokerSettings.Connections)
+                {
+                     broker.Connection?.Close();
+                }
+            }
+        }
+
         public override void Log(IDictionary<string, object> moduleLog)
         {
             var brokerLog = new MessageBrokerLog(this.Exchanges, _messageConsumers);
@@ -205,35 +223,45 @@ namespace NetFusion.RabbitMQ.Modules
             brokerLog.LogMessageConsumers(moduleLog);
         }
 
-       
-
-        // TODO:  Review the following:
-
-        // Save the exchanges and the associated queues.  This will be needed
-        // when running in a cluster when a RabbitMQ node goes down.  The
-        // producer/consumer recovering from the exception will need to create
-        // the exchanges and queues on the new node.
-        private void SaveExchangeMetadata(IContainer container)
+        // Save the exchanges and the associated queues.  This will be needed when running
+        // in a cluster when a RabbitMQ node goes down.  The producer/consumer recovering 
+        // from the exception will needs to create the exchanges and queues on the new node.
+        private void SaveExchangeMetadata(ILifetimeScope scope)
         {
-            if (this.Exchanges.Empty()) return;
+            var exchangeRep = scope.Resolve<IBrokerMetaRepository>();
+            IEnumerable<BrokerMeta> brokerMeta = GetExchangeConfig();
 
-            using (var scope = container.BeginLifetimeScope())
-            {
-                var repository = container.Resolve<IExchangeRepository>();
-                var exchanges = GetExchangeMetadata();
-                repository.Save(exchanges);
-            }
+            exchangeRep.SaveAsync(brokerMeta).Wait();
         }
 
-        private IEnumerable<ExchangeConfig> GetExchangeMetadata()
+        // Only save the queues that are not exclusive or marked for auto deletion.  
+        // Since these queues will be removed when connected consumers disconnect,
+        // the queue contains messages for which black-holed ones are desirable
+        // (they will be re-created when the consumer's broker reconnects).
+        private IEnumerable<BrokerMeta> GetExchangeConfig()
         {
-            return this.Exchanges.Select(e => new ExchangeConfig
+            var publisherExchanges = this.GetPublisherMetadata();
+            var consumerExchanges = this.GetConsumerMetadata();
+
+            return publisherExchanges.Concat(consumerExchanges)
+                .GroupBy(e => e.BrokerName)
+                .Select(g => new BrokerMeta
+                {
+                    ApplicationId = Context.AppHost.Manifest.PluginId,
+                    BrokerName = g.Key,
+                    ExchangeMeta = g.ToList()
+                });
+        }
+
+        private IEnumerable<ExchangeMeta> GetPublisherMetadata()
+        {
+            return this.Exchanges.Select(e => new ExchangeMeta
             {
                 BrokerName = e.BrokerName,
                 ExchangeName = e.ExchangeName,
                 Settings = e.Settings,
 
-                QueueConfigs = e.Queues.Select(q => new QueueConfig
+                QueueMeta = e.Queues.Select(q => new QueueMeta
                 {
                     QueueName = q.QueueName,
                     RouteKeys = q.RouteKeys,
@@ -242,13 +270,28 @@ namespace NetFusion.RabbitMQ.Modules
             });
         }
 
-        private async static Task<IEnumerable<ExchangeConfig>> ReadExchangeMetadataAsync(string hostName, ILifetimeScope container)
+        private IEnumerable<ExchangeMeta> GetConsumerMetadata()
         {
-            using (var scope = container.BeginLifetimeScope())
+            var namedConsumerQueues = _messageConsumers.Where(IsConsumerConfiguredQueue);
+
+            return namedConsumerQueues.Select(c => new ExchangeMeta
             {
-                var repository = container.Resolve<IExchangeRepository>();
-                return await repository.LoadAsync(hostName);
-            }
+                BrokerName = c.BrokerName,
+                ExchangeName = c.ExchangeName,
+                QueueMeta = new[] { new QueueMeta {
+                    QueueName = c.QueueName,
+                    RouteKeys = c.RouteKeys,
+                    Settings = c.QueueSettings
+                }}
+            });
+        }
+
+        private bool IsConsumerConfiguredQueue(MessageConsumer consumer)
+        {
+            return !consumer.QueueSettings.IsBrokerAssignedName 
+                && !consumer.QueueSettings.IsAutoDelete 
+                && !consumer.QueueSettings.IsExclusive
+                && consumer.BindingType == QueueBindingTypes.Create;
         }
     }
 }

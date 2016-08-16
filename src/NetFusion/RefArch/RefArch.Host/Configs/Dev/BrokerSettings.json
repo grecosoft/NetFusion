@@ -1,14 +1,17 @@
 ﻿{ 
     "Connections" : [
-        {
-            "BrokerName" : "TestBroker",
-            "HostName": "LocalHost",
-            "QueueProperties": [
-              {
-                "QueueName": "Ford",
-                "RouteKeys": [ "Mercury.*.*", "Mazda.Tribute.*" ]
-              }
-            ]
-        }
+      {
+        "BrokerName": "TestBroker",
+        "HostName": "192.168.220.128",
+        "UserName": "pappion",
+        "Password": "bestdog",
+
+        "QueueProperties": [
+          {
+            "QueueName": "Ford",
+            "RouteKeys": [ "Mercury.*.*", "Mazda.Tribute.*" ]
+          }
+        ]
+      }
     ]
 }

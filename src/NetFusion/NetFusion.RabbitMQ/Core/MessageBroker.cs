@@ -6,9 +6,12 @@ using NetFusion.Messaging;
 using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Consumers;
+using NetFusion.RabbitMQ.Exchanges;
+using NetFusion.RabbitMQ.Integration;
 using NetFusion.RabbitMQ.Serialization;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using RabbitMQ.Client.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +26,8 @@ namespace NetFusion.RabbitMQ.Core
     /// exchange will allow any published messages to be delivered to the queue and
     /// then processed when consumers are connected.  This class also implements the
     /// process for joining consumers to existing queues and for creating new queues
-    /// specific to consumers.
+    /// specific to a consumer.  When messages are received, the Messaging Module is
+    /// delegated to for dispatching the message to the associated message handlers.
     /// </summary>
     public class MessageBroker: IDisposable,
         IMessageBroker
@@ -31,6 +35,7 @@ namespace NetFusion.RabbitMQ.Core
         private bool _disposed;
         private readonly IContainerLogger _logger;
         private readonly IMessagingModule _messagingModule;
+        private readonly IBrokerMetaRepository _exchangeRep;
         private readonly IEntityScriptingService _scriptingSrv;
 
         private MessageBrokerConfig _brokerConfig;
@@ -39,10 +44,17 @@ namespace NetFusion.RabbitMQ.Core
 
         public MessageBroker(IContainerLogger logger, 
             IMessagingModule messagingModule,
+            IBrokerMetaRepository exchangeRep,
             IEntityScriptingService scriptingSrv)
         {
+            Check.NotNull(logger, nameof(logger));
+            Check.NotNull(messagingModule, nameof(messagingModule));
+            Check.NotNull(exchangeRep, nameof(exchangeRep));
+            Check.NotNull(scriptingSrv, nameof(scriptingSrv));
+
             _logger = logger.ForContext<MessageBroker>();
             _messagingModule = messagingModule;
+            _exchangeRep = exchangeRep;
             _scriptingSrv = scriptingSrv;
         }
 
@@ -98,9 +110,8 @@ namespace NetFusion.RabbitMQ.Core
         }
 
         /// <summary>
-        /// Creates all of the exchanges to which messages can be published
-        /// as serialized messages.  Any default queue configurations specified
-        /// by the exchange will also be created.
+        /// Creates all of the exchanges to which messages can be published.  Any default queue
+        /// configurations specified by the exchange will also be created.
         /// </summary>
         public void DefineExchanges()
         {
@@ -108,7 +119,7 @@ namespace NetFusion.RabbitMQ.Core
 
             _messageExchanges.ForEachValue(exDef => {
 
-                using (var channel = CreateBrokerChannel(exDef.Exchange.BrokerName))
+                using (IModel channel = CreateBrokerChannel(exDef.Exchange.BrokerName))
                 {
                     exDef.Exchange.Declare(channel);
                 }
@@ -128,12 +139,25 @@ namespace NetFusion.RabbitMQ.Core
             var connFactory = new ConnectionFactory
             {
                 HostName = brokerConn.HostName,
+                UserName = brokerConn.UserName,
+                Password = brokerConn.Password,
                 VirtualHost = brokerConn.VHostName
             };
 
-            brokerConn.Connection = connFactory.CreateConnection();
-        }
+            try
+            {
+                brokerConn.Connection = connFactory.CreateConnection();
+            }
+            catch(BrokerUnreachableException)
+            {
+                MethodInvoker.TryCallFor<BrokerUnreachableException>(
+                    _brokerConfig.Settings.ConnectionRetryDelayMs,
+                    _brokerConfig.Settings.NumConnectionRetries,
 
+                    () => brokerConn.Connection = connFactory.CreateConnection());
+            }
+        }
+        
         private IModel CreateBrokerChannel(string brokerName)
         {
             BrokerConnection brokerConn = _brokerConfig.Connections.GetOptionalValue(brokerName);
@@ -143,7 +167,23 @@ namespace NetFusion.RabbitMQ.Core
                     $"Channel could not be created.  A broker with the name of: {brokerName} does not exist.");
             }
 
-            return brokerConn.Connection.CreateModel();
+            IModel channel = null;
+            try
+            {
+                channel = brokerConn.Connection.CreateModel();
+            }
+            catch (BrokerUnreachableException)
+            {
+                ConnectToBroker(brokerConn);
+                channel = brokerConn.Connection.CreateModel();
+            }
+            catch (AlreadyClosedException)
+            {
+                ConnectToBroker(brokerConn);
+                channel = brokerConn.Connection.CreateModel();
+            }
+
+            return channel;
         }
 
         public void BindConsumers(IEnumerable<MessageConsumer> messageConsumers)
@@ -152,18 +192,19 @@ namespace NetFusion.RabbitMQ.Core
 
             _messageConsumers = messageConsumers;
             BindConsumersToQueues();
+            AttachBokerMonitoringHandlers();
         }
 
         private void BindConsumersToQueues(string brokerName = null)
         {
-            var messageConsumers = brokerName == null ? _messageConsumers :
+            IEnumerable<MessageConsumer> messageConsumers = brokerName == null ? _messageConsumers :
                 _messageConsumers.Where(c => c.BrokerName == brokerName);
 
             foreach (MessageConsumer messageConsumer in messageConsumers)
             {
                 CreateConsumerQueue(messageConsumer);
 
-                var consumerChannel = CreateBrokerChannel(messageConsumer.BrokerName);
+                IModel consumerChannel = CreateBrokerChannel(messageConsumer.BrokerName);
                 messageConsumer.Channel = consumerChannel;
 
                 // Bind to the existing or newly created queue to the exchange
@@ -179,6 +220,8 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
+        // Consuming applications can create queues specifically for them based on the
+        // application needs.  
         private void CreateConsumerQueue(MessageConsumer eventConsumer)
         {
             if (eventConsumer.BindingType == QueueBindingTypes.Create)
@@ -190,35 +233,49 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
+        // Process queue messages when they are received.
         private void AttachConsumerHandlers(MessageConsumer messageConsumer)
         {
             messageConsumer.Consumer.Received += (sender, deliveryEvent) => {
 
                 MessageReceived(messageConsumer, deliveryEvent);
             };
-
-            messageConsumer.Consumer.Shutdown += (sender, shutdownEvent) => {
-
-                RestablishConnection(sender, messageConsumer, shutdownEvent);
-            };
         }
 
+        // Determine a consumer for each of the connected brokers and attach an event
+        // handler to monitor the connection.
+        private void AttachBokerMonitoringHandlers()
+        {
+            IEnumerable<MessageConsumer> monitoringConsumers = _messageConsumers.GroupBy(c => c.BrokerName)
+                .Select(g => g.First())
+                .ToList();
+
+            foreach (MessageConsumer consumer in monitoringConsumers)
+            {
+                consumer.Consumer.Shutdown += (sender, shutdownEvent) => {
+
+                    RestablishConnection(consumer, shutdownEvent);
+                };
+            }
+        }
+
+        // Deserialize the message into the type associated with the message dispatch
+        // metadata and delegate to the messaging module to dispatch the message to
+        // consumer handlers.
         private void MessageReceived(MessageConsumer messageConsumer, BasicDeliverEventArgs deliveryEvent)
         {
-            Console.WriteLine("Message received");
-
-            var message = DeserializeMessage(messageConsumer.DispatchInfo.MessageType, deliveryEvent);
+            IMessage message = DeserializeMessage(messageConsumer.DispatchInfo.MessageType, deliveryEvent);
             message.SetAcknowledged(false);
 
             LogReceivedExchangeMessage(message, messageConsumer);
 
             // Delegate to the Messaging Module to dispatch the message to all consumers.
-            Task<IMessage> futureResult = _messagingModule.DispatchConsumer(
+            Task<IMessage> futureResult = _messagingModule.DispatchConsumer<IMessage>(
                 message,
                 messageConsumer.DispatchInfo);
 
             futureResult.Wait();
-            var response = futureResult.Result;
+            IMessage response = futureResult.Result;
 
             if (response != null)
             {
@@ -340,7 +397,7 @@ namespace NetFusion.RabbitMQ.Core
 
         private byte[] SerializeEvent(IMessage message, string contentType)
         {
-            var serializer = GetMessageSerializer(contentType);
+            IMessageSerializer serializer = GetMessageSerializer(contentType);
             return serializer.Serialize(message);
         }
 
@@ -395,24 +452,36 @@ namespace NetFusion.RabbitMQ.Core
                     $"of type: {messageType} was not specified as a basic property");
             }
 
-            var serializer = GetMessageSerializer(contentType);
+            IMessageSerializer serializer = GetMessageSerializer(contentType);
             return serializer.Deserialize(deliveryEvent.Body, messageType);
         }
 
-        // TODO:  Review the following:
-
-        private void RestablishConnection(object sender, MessageConsumer messageConsumer,
-            ShutdownEventArgs shutdownEvent)
+        // Called when a channel is notified of an connection issue.  Once the connection is
+        // reestablished, the centrally saved exchanges and queues need to be recreated on the
+        // new connection.  This is important when using a broker failover behind a load-balancer
+        // since the backup broker my not have the exchanges.
+        private void RestablishConnection(MessageConsumer messageConsumer, ShutdownEventArgs shutdownEvent)
         {
-            var brokerConn = _brokerConfig.Connections[messageConsumer.BrokerName];
-
+            BrokerConnection brokerConn = _brokerConfig.Connections[messageConsumer.BrokerName];
             if (brokerConn.Connection.IsOpen) return;
 
             if (IsUnexpectedShutdown(shutdownEvent))
             {
-                ReconnectToBroker(messageConsumer.BrokerName);
-                //ReCreateExchanges(messageConsumer.BrokerName);
-                BindConsumersToQueues(messageConsumer.BrokerName);
+                string brokerName = messageConsumer.BrokerName;
+                IEnumerable<BrokerMeta> brokerMeta = _exchangeRep.LoadAsync(brokerName).Result;
+
+                ReconnectToBroker(brokerName);
+
+                // Restore the exchanges and queues on what might be a new broker.
+                using (IModel channel = CreateBrokerChannel(brokerName))
+                {
+                    ReCreatePublisherExchanges(channel, brokerMeta);
+                    ReCreateConsumerQueues(channel, brokerMeta);
+                    BindConsumersToQueues(messageConsumer.BrokerName);
+                }
+
+                // Watch for future issues.
+                AttachBokerMonitoringHandlers();
             }
         }
 
@@ -423,13 +492,49 @@ namespace NetFusion.RabbitMQ.Core
 
         private void ReconnectToBroker(string brokerName)
         {
-            var brokerConn = _brokerConfig.Connections.GetOptionalValue(brokerName);
+            BrokerConnection brokerConn = _brokerConfig.Connections.GetOptionalValue(brokerName);
             if (brokerConn == null)
             {
                 throw new InvalidOperationException(
                    $"An existing broker with the name of: {brokerConn} does not exist.");
             }
+
             ConnectToBroker(brokerConn);
+        }
+
+        private void ReCreatePublisherExchanges(IModel channel, IEnumerable<BrokerMeta> brokerMeta)
+        {
+            IEnumerable<ExchangeMeta> exchanges = brokerMeta.SelectMany(b => b.ExchangeMeta)
+                .Where(e => e.Settings != null)
+                .ToList();
+
+            ReCreateExchanges(channel, exchanges);
+        }
+
+        private void ReCreateConsumerQueues(IModel channel, IEnumerable<BrokerMeta> brokerMeta)
+        {
+            IEnumerable<ExchangeMeta> exchanges = brokerMeta.SelectMany(b => b.ExchangeMeta)
+                .Where(e => e.Settings == null)
+                .ToList();
+
+            ReCreateExchanges(channel, exchanges);
+        }
+
+        private void ReCreateExchanges(IModel channel, IEnumerable<ExchangeMeta> exchanges)
+        {
+            foreach (ExchangeMeta exchange in exchanges)
+            {
+                // If not the default exchange and not consumer reference to exchange:
+                if (exchange.Settings != null && exchange.Settings.ExchangeType != null && exchange.Settings != null)
+                {
+                    channel.ExchangeDeclare(exchange.Settings);
+                }
+
+                foreach (var queue in exchange.QueueMeta)
+                {
+                    channel.QueueDeclare(queue.QueueName, queue.Settings);
+                }
+            }
         }
 
         private void LogPublishingExchangeMessage(IMessage message, IEnumerable<ExchangeDefinition> exchanges)

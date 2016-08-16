@@ -63,8 +63,8 @@ namespace RefArch.Subscriber.Services
         // This adds a queue with a more specific pattern.  Since it 
         // creating a new queue, it will be called in addition to the
         // event handler that is specified for the Ford queue.
-        [AddQueue("SampleTopicExchange", RouteKey = "Ford.Mustang.*",
-            IsAutoDelete = true, IsNoAck = true, IsExclusive = true)]
+        [AddQueue("Ford-Mustangs", "SampleTopicExchange", RouteKey = "Ford.Mustang.*",
+            IsAutoDelete = false, IsNoAck = true, IsExclusive = false)]
         public void OnFordMustang(ExampleTopicEvent topicEvt)
         {
             Console.WriteLine($"Handler: OnFordMustang: {topicEvt.ToIndentedJson()}");

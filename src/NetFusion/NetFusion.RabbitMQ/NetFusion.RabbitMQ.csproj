@@ -79,9 +79,10 @@
     <Compile Include="Exchanges\QueueSettings.cs" />
     <Compile Include="Exchanges\TopicExchange.cs" />
     <Compile Include="Exchanges\WorkQueueExchange.cs" />
-    <Compile Include="Integration\ExchangeConfig.cs" />
-    <Compile Include="Integration\IExchangeRepository.cs" />
-    <Compile Include="Integration\QueueConfig.cs" />
+    <Compile Include="Integration\BrokerMeta.cs" />
+    <Compile Include="Integration\ExchangeMeta.cs" />
+    <Compile Include="Integration\IBrokerMetaRepository.cs" />
+    <Compile Include="Integration\QueueMeta.cs" />
     <Compile Include="MessageExtensions.cs" />
     <Compile Include="Modules\MessageBrokerModule.cs" />
     <Compile Include="RabbitMQManifest.cs" />

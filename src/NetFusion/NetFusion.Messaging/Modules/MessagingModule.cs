@@ -193,8 +193,8 @@ namespace NetFusion.Messaging.Modules
                     IsConfigured = this.MessagingConfig.PublisherTypes.Contains(t)
                 }).ToArray();
         }
-               
-        
+
+
 
         /// <summary>
         /// Lower level methods used to dispatch a method to a specified  consumer.  The consumer will 
@@ -204,7 +204,8 @@ namespace NetFusion.Messaging.Modules
         /// </summary>
         /// <param name="message">The message to dispatch.</param>
         /// <param name="dispatchInfo">The message dispatch information.</param>
-        public async Task<IMessage> DispatchConsumer(IMessage message, MessageDispatchInfo dispatchInfo)
+        public async Task<T> DispatchConsumer<T>(IMessage message, MessageDispatchInfo dispatchInfo)
+            where T : class
         {
             Check.NotNull(message, nameof(message));
             Check.NotNull(dispatchInfo, nameof(dispatchInfo));
@@ -237,25 +238,26 @@ namespace NetFusion.Messaging.Modules
                 // or the message directly if the method was called synchronous. 
                 if (response != null)
                 {
-                    return GetMessageResult(response);
+                    return GetMessageResult<T>(response);
                 }
                 return null;
             }
         }
 
-        private static IMessage GetMessageResult(object response)
+        private static T GetMessageResult<T>(object response)
+            where T : class
         {
             var responseType = response.GetType();
 
-            if (response is IMessage)
+            if (response is T)
             {
-                return response as IMessage;
+                return response as T;
             }
 
-            if (responseType.IsClosedGenericTypeOf(typeof(Task<>), typeof(IMessage)))
+            if (responseType.IsClosedGenericTypeOf(typeof(Task<>), typeof(T)))
             {
                 dynamic messageTask = response;
-                return (IMessage)messageTask.Result;
+                return (T)messageTask.Result;
             }
 
             return null;

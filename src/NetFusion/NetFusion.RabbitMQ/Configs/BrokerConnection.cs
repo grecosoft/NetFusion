@@ -11,6 +11,8 @@ namespace NetFusion.RabbitMQ.Configs
         public string BrokerName { get; set; }
         public string HostName { get; set; }
         public string VHostName { get; set; } = "/";
+        public string UserName { get; set; } = "guest";
+        public string Password { get; set; } = "guest";
    
         /// <summary>
         /// Additional properties that can be specified for a queue. 

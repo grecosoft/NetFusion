@@ -53,6 +53,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="FusionPrincipal.cs" />
+    <Compile Include="MethodInvoker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\BinaryFormatterUtility.cs" />
     <Compile Include="Serialization\JsonUtility.cs" />

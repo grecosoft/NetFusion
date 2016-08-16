@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using NetFusion.RabbitMQ.Exchanges;
 
 namespace NetFusion.RabbitMQ.Integration
 {
@@ -12,12 +11,11 @@ namespace NetFusion.RabbitMQ.Integration
     /// not be defined within the same application, this meta-data is
     /// stored.
     /// </summary>
-    public class ExchangeConfig
+    public class BrokerMeta
     {
-        public string ExchangeConfigId { get; set; }
+        public string BrockerConfigId { get; set; }
+        public string ApplicationId { get; set; }
         public string BrokerName { get; set; }
-        public string ExchangeName { get; set; }
-        public ExchangeSettings Settings { get; set; }
-        public ICollection<QueueConfig> QueueConfigs { get; set; }
+        public ICollection<ExchangeMeta> ExchangeMeta { get; set; }
     }
 }

@@ -38,6 +38,7 @@ namespace NetFusion.Messaging.Modules
         /// <param name="dispatchInfo">Contains information about the consumer that should
         /// receives the message.</param>
         /// <returns>The future result of the dispatch returned by the consumer.</returns>
-        Task<IMessage> DispatchConsumer(IMessage message, MessageDispatchInfo dispatchInfo);
+        Task<T> DispatchConsumer<T>(IMessage message, MessageDispatchInfo dispatchInfo)
+            where T : class;
     }
 }

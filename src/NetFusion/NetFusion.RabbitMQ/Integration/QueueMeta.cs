@@ -5,7 +5,7 @@ namespace NetFusion.RabbitMQ.Integration
     /// <summary>
     /// Meta-data for a saved exchange's queue.
     /// </summary>
-    public class QueueConfig
+    public class QueueMeta
     {
         public string QueueName { get; set; }
         public string[] RouteKeys { get; set; }

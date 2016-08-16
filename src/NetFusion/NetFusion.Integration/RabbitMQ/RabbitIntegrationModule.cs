@@ -8,8 +8,8 @@ namespace NetFusion.Integration.RabbitMQ
     {
         public override void RegisterComponents(ContainerBuilder builder)
         {
-            builder.RegisterType<ExchangeMetadataRepository>()
-                .As<IExchangeRepository>()
+            builder.RegisterType<BrokerMetaRepository>()
+                .As<IBrokerMetaRepository>()
                 .SingleInstance();
         }
     }

@@ -103,6 +103,9 @@
     <None Include="Configs\Dev\CompositeLogSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Configs\Dev\NetfusionDB.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +120,10 @@
     <ProjectReference Include="..\..\NetFusion.Domain\NetFusion.Domain.csproj">
       <Project>{18bc0d8b-3b47-4228-b11f-3c581bbaf39f}</Project>
       <Name>NetFusion.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NetFusion.Integration\NetFusion.Integration.csproj">
+      <Project>{f2886036-da02-4a5d-a7a2-7342ea5da634}</Project>
+      <Name>NetFusion.Integration</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\NetFusion.Logging.Serilog\NetFusion.Logging.Serilog.csproj">
       <Project>{d3ccb7d3-3b6d-4abc-a784-2080668943a9}</Project>

@@ -4,6 +4,7 @@ using NetFusion.Domain.Scripting;
 using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Core;
+using NetFusion.RabbitMQ.Exchanges;
 using RabbitMQ.Client;
 
 namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks
@@ -17,7 +18,9 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks
             Mock<IMessagingModule> mockMsgModule, 
             Mock<IConnection> mockConnection) :
 
-            base(logger, mockMsgModule.Object, new Mock<IEntityScriptingService>().Object)
+            base(logger, mockMsgModule.Object,
+                new Mock<IBrokerMetaRepository>().Object,
+                new Mock<IEntityScriptingService>().Object)
         {
             _mockConnection = mockConnection;
         }
