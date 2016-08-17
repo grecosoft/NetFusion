@@ -1,0 +1,17 @@
+﻿{ 
+    "Connections" : [
+      {
+        "BrokerName": "TestBroker",
+        "HostName": "cheshire",
+        "UserName": "papillon",
+        "Password": "bestdog",
+
+        "QueueProperties": [
+          {
+            "QueueName": "Ford",
+            "RouteKeys": [ "Mercury.*.*", "Mazda.Tribute.*" ]
+          }
+        ]
+      }
+    ]
+}

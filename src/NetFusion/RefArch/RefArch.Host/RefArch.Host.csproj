@@ -16,7 +16,7 @@
     <RootNamespace>RefArch.Host</RootNamespace>
     <AssemblyName>RefArch.Host</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -264,9 +264,15 @@
     <Content Include="Configs\Dev\EntityScriptMetaDb.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Configs\DESKTOP-4U6RP8B\Dev\BrokerSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="scripts\jquery-3.0.0.intellisense.js" />
     <Content Include="scripts\app\modules\plugins\area-module.js" />
+    <Content Include="scripts\app\modules\portal\AboutController.js" />
     <Content Include="scripts\app\modules\portal\area-module.js" />
+    <Content Include="scripts\app\views\portal\about2.html" />
+    <Content Include="scripts\app\views\portal\about.html" />
     <Content Include="scripts\app\modules\structure\area-module.js" />
     <Content Include="scripts\app\modules\portal\PortalController.js" />
     <Content Include="scripts\app\modules\structure\LogService.js" />

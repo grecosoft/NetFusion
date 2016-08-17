@@ -4,7 +4,7 @@
 
 (function () {
 
-    var module = angular.module('netfusion.structure');
+    var module = angular.module('netfusion.portal');
 
     var portalController = ['$scope', 'CompositeLogService',
         function ($scope, compositeLogService) {
