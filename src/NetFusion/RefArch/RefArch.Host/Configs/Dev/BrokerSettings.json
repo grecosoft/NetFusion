@@ -2,8 +2,8 @@
     "Connections" : [
       {
         "BrokerName": "TestBroker",
-        "HostName": "192.168.220.128",
-        "UserName": "pappion",
+        "HostName": "localhost",
+        "UserName": "papillon",
         "Password": "bestdog",
 
         "QueueProperties": [
