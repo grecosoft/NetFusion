@@ -73,6 +73,7 @@
     <Compile Include="Core\MessageBrokerLog.cs" />
     <Compile Include="Core\MessageBrokerConfig.cs" />
     <Compile Include="Core\MessageConsumer.cs" />
+    <Compile Include="Core\BrokerExchange.cs" />
     <Compile Include="Core\MessageExchange.cs" />
     <Compile Include="Core\RabbitMqMessagePublisher.cs" />
     <Compile Include="Core\ReplyConsumer.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Exchanges\ExchangeSettings.cs" />
     <Compile Include="Exchanges\FanoutExchange.cs" />
     <Compile Include="Exchanges\QueueSettings.cs" />
+    <Compile Include="Exchanges\RpcExchange.cs" />
     <Compile Include="Exchanges\TopicExchange.cs" />
     <Compile Include="Exchanges\WorkQueueExchange.cs" />
     <Compile Include="Integration\BrokerMeta.cs" />

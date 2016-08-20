@@ -1,5 +1,5 @@
 ﻿using Moq;
-using NetFusion.RabbitMQ.Exchanges;
+using NetFusion.RabbitMQ.Core;
 using RabbitMQ.Client;
 
 namespace NetFusion.Tests.Infrastructure.RabbitMQ

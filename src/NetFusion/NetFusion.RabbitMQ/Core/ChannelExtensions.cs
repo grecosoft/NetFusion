@@ -1,6 +1,6 @@
 ﻿using NetFusion.Common;
 using NetFusion.Common.Extensions;
-using NetFusion.RabbitMQ.Exchanges;
+using NetFusion.RabbitMQ.Core;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -74,13 +74,25 @@ namespace NetFusion.RabbitMQ.Core
             });
         }
 
-        public static void SetBasicConsumer(this IModel channel, MessageConsumer eventConsumer)
+        public static void SetBasicConsumer(this IModel channel,
+            MessageConsumer eventConsumer)
         {
             Check.NotNull(channel, nameof(channel));
             Check.NotNull(eventConsumer, nameof(eventConsumer));
 
             eventConsumer.Consumer = new EventingBasicConsumer(channel);
             channel.BasicConsume(eventConsumer.QueueName, eventConsumer.QueueSettings, eventConsumer.Consumer);
+        }
+
+        public static EventingBasicConsumer SetBasicConsumer(this IModel channel, 
+            ExchangeQueue queue)
+        {
+            Check.NotNull(channel, nameof(channel));
+            Check.NotNull(queue, nameof(queue));
+
+            var consumer = new EventingBasicConsumer(channel);
+            channel.BasicConsume(queue.QueueName, queue.Settings, consumer);
+            return consumer;
         }
 
         public static void BasicConsume(this IModel channel,

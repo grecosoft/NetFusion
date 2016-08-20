@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NetFusion.RabbitMQ.Exchanges;
+using NetFusion.RabbitMQ.Core;
 
 namespace NetFusion.RabbitMQ.Integration
 {

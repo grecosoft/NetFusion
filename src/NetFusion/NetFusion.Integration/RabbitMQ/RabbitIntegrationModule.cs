@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.RabbitMQ.Exchanges;
+using NetFusion.RabbitMQ.Core;
 
 namespace NetFusion.Integration.RabbitMQ
 {

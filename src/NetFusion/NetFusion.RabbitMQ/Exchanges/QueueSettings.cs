@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NetFusion.RabbitMQ.Exchanges
+namespace NetFusion.RabbitMQ.Core
 {
     /// <summary>
     /// Settings to be used when declaring the queue on an exchange.

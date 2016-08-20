@@ -1,4 +1,4 @@
-﻿using NetFusion.RabbitMQ.Exchanges;
+﻿using NetFusion.RabbitMQ.Core;
 
 namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks
 {

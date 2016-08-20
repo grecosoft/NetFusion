@@ -4,7 +4,7 @@ using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 
-namespace NetFusion.RabbitMQ.Exchanges
+namespace NetFusion.RabbitMQ.Core
 {
     /// <summary>
     /// Components that implement this interface are responsible for creating
@@ -36,12 +36,6 @@ namespace NetFusion.RabbitMQ.Exchanges
         /// The message type associated with the exchange.
         /// </summary>
         Type MessageType { get; }
-
-        /// <summary>
-        /// The optional return type expected from the client that
-        /// receives and processes the message.
-        /// </summary>
-        Type ReturnType { get; }
 
         /// <summary>
         /// Called the Message Broker when defining exchanges and allows a 

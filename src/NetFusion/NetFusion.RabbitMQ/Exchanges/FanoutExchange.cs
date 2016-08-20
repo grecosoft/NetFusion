@@ -1,7 +1,7 @@
 ﻿using NetFusion.Messaging;
 using RabbitMQ.Client;
 
-namespace NetFusion.RabbitMQ.Exchanges
+namespace NetFusion.RabbitMQ.Core
 {
     /// <summary>
     /// Defines the common default settings for a fanout exchange.  For this type

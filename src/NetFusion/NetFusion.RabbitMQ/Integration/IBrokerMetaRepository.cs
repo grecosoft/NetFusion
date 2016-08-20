@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace NetFusion.RabbitMQ.Exchanges
+namespace NetFusion.RabbitMQ.Core
 {
     /// <summary>
     /// Saves the broker exchange metadata that will be used to recreate the 

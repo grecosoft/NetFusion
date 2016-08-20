@@ -77,7 +77,6 @@
     <Compile Include="Samples\MongoDB\NetFusionDB.cs" />
     <Compile Include="Samples\RabbitMQ\AmericanCarExchange.cs" />
     <Compile Include="Samples\RabbitMQ\ExampleDirectExchange.cs" />
-    <Compile Include="Samples\RabbitMQ\ExampleRpcExchange.cs" />
     <Compile Include="Samples\RabbitMQ\ExampleTopicExchange.cs" />
     <Compile Include="Samples\RabbitMQ\ExampleWorkQueueExchange.cs" />
     <Compile Include="Samples\RabbitMQ\GermanCarExchange.cs" />

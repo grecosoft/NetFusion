@@ -45,6 +45,6 @@ namespace NetFusion.RabbitMQ.Core
         /// <param name="message">The message to publish.</param>
         Task PublishToExchange(IMessage message);
 
-        Task PublishToConsumer(IMessage message);
+        Task PublishToRpcConsumer(IMessage message);
     }
 }

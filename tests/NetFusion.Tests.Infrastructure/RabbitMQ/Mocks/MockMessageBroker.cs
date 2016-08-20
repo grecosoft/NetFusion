@@ -4,7 +4,7 @@ using NetFusion.Domain.Scripting;
 using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Core;
-using NetFusion.RabbitMQ.Exchanges;
+using NetFusion.RabbitMQ.Core;
 using RabbitMQ.Client;
 
 namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks

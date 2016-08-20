@@ -1,6 +1,6 @@
 ﻿using System;
 using NetFusion.Common;
-using NetFusion.RabbitMQ.Exchanges;
+using NetFusion.RabbitMQ.Core;
 
 namespace NetFusion.RabbitMQ.Core
 {
@@ -23,12 +23,11 @@ namespace NetFusion.RabbitMQ.Core
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="messageType"> The message type associated with the exchange.</param>
         /// <param name="exchange">Details on how the exchange should be declared and information
         /// for the queues that should be created.</param>
-        public ExchangeDefinition(Type messageType, IMessageExchange exchange)
+        /// <param name="messageType"> The message type associated with the exchange.</param>
+        public ExchangeDefinition(IMessageExchange exchange, Type messageType = null)
         {
-            Check.NotNull(messageType, nameof(messageType));
             Check.NotNull(exchange, nameof(exchange));
 
             this.MessageType = messageType;

@@ -3,7 +3,7 @@ using NetFusion.Messaging;
 using RabbitMQ.Client;
 using System;
 
-namespace NetFusion.RabbitMQ.Exchanges
+namespace NetFusion.RabbitMQ.Core
 {
     /// <summary>
     /// Represents a work queue.  This delivery pattern is based on the default exchange.

@@ -1,6 +1,6 @@
 ﻿using NetFusion.Common;
 using NetFusion.RabbitMQ.Core;
-using NetFusion.RabbitMQ.Exchanges;
+using NetFusion.RabbitMQ.Core;
 using NetFusion.Settings;
 using System.Collections.Generic;
 using System.Linq;

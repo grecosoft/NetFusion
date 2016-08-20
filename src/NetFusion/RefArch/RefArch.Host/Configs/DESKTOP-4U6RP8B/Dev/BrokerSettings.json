@@ -6,6 +6,13 @@
         "UserName": "papillon",
         "Password": "bestdog",
 
+        "RpcConsumers": [
+          {
+            "RequestQueueKey": "ExampleRpcConsumer",
+            "RequestQueueName": "RpcMessageQueue"
+          }
+        ],
+
         "QueueProperties": [
           {
             "QueueName": "Ford",

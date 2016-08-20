@@ -1,5 +1,4 @@
 ﻿using NetFusion.Common;
-using NetFusion.RabbitMQ.Exchanges;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Framing.Impl;
 using System.Collections.Generic;

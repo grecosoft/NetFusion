@@ -1,4 +1,4 @@
-﻿using NetFusion.RabbitMQ.Exchanges;
+﻿using NetFusion.RabbitMQ.Core;
 using System;
 
 namespace NetFusion.RabbitMQ.Consumers

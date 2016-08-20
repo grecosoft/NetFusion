@@ -6,7 +6,6 @@ using NetFusion.Messaging;
 using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Consumers;
-using NetFusion.RabbitMQ.Exchanges;
 using NetFusion.RabbitMQ.Integration;
 using NetFusion.RabbitMQ.Serialization;
 using RabbitMQ.Client;
@@ -75,7 +74,7 @@ namespace NetFusion.RabbitMQ.Core
             // Messages can have one or more associated exchanges.
             _messageExchanges = brokerConfig.Exchanges.ToLookup(
                 k => k.MessageType,
-                e => new ExchangeDefinition(e.MessageType, e));
+                e => new ExchangeDefinition(e, e.MessageType));
         }
 
         public void Dispose()
@@ -108,7 +107,7 @@ namespace NetFusion.RabbitMQ.Core
         {
             Check.NotNull(message, nameof(message));
 
-            return _messageExchanges[message.GetType()] != null;
+            return _messageExchanges.Contains(message.GetType());
         }
 
         /// <summary>
@@ -119,40 +118,13 @@ namespace NetFusion.RabbitMQ.Core
         {
             EstablishBrockerConnections();
 
-            DeclareMessageExchanges();
+            DeclareExchanges();
             CreateRpcMessageConsumers();
-        }
-
-        private void DeclareMessageExchanges()
-        {
-            _messageExchanges.ForEachValue(exDef => {
-
-                using (IModel channel = CreateBrokerChannel(exDef.Exchange.BrokerName))
-                {
-                    exDef.Exchange.Declare(channel);
-                }
-            });
-        }
-
-        private void CreateRpcMessageConsumers()
-        {
-            foreach (BrokerConnection brokerConn in _brokerConfig.Settings.Connections)
-            {
-                foreach (RpcConsumerSettings consumer in brokerConn.RpcConsumers)
-                {
-                    IModel channel = CreateBrokerChannel(brokerConn.BrokerName);
-
-                    var rpcClient = new RpcClient(channel, consumer.RequestQueueName);
-                    var messageConsumer = new RpcMessageConsumer(brokerConn.BrokerName, consumer, rpcClient);
-
-                    _rpcMessageConsumers.Add(messageConsumer);
-                }
-            }
         }
 
         private void EstablishBrockerConnections()
         {
-            foreach(BrokerConnection brokerConn in _brokerConfig.Connections.Values)
+            foreach (BrokerConnection brokerConn in _brokerConfig.Connections.Values)
             {
                 ConnectToBroker(brokerConn);
             }
@@ -160,29 +132,21 @@ namespace NetFusion.RabbitMQ.Core
 
         protected virtual void ConnectToBroker(BrokerConnection brokerConn)
         {
-            IDictionary<string, object> clientProps = AppendConnectionProperties(
-                _brokerConfig.ClientProperties, brokerConn);
-
-            var connFactory = new ConnectionFactory
-            {
-                HostName = brokerConn.HostName,
-                UserName = brokerConn.UserName,
-                Password = brokerConn.Password,
-                VirtualHost = brokerConn.VHostName,
-                ClientProperties = clientProps
-            };
+            IConnectionFactory connFactory = CreateConnFactory(brokerConn);
 
             try
             {
                 brokerConn.Connection = connFactory.CreateConnection();
             }
-            catch(BrokerUnreachableException ex)
+            catch (BrokerUnreachableException ex)
             {
-                _logger.Error("Error connecting to broker.", ex, 
-                    new {
-                        connFactory.HostName,
-                        connFactory.UserName,
-                        connFactory.VirtualHost });
+                _logger.Error("Error connecting to broker.", ex,
+                    new
+                    {
+                        brokerConn.BrokerName,
+                        brokerConn.HostName,
+                        brokerConn.UserName
+                    });
 
                 MethodInvoker.TryCallFor<BrokerUnreachableException>(
                     _brokerConfig.Settings.ConnectionRetryDelayMs,
@@ -192,8 +156,23 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
+        private IConnectionFactory CreateConnFactory(BrokerConnection brokerConn)
+        {
+            IDictionary<string, object> clientProps = AppendConnectionProperties(
+                _brokerConfig.ClientProperties, brokerConn);
+
+            return new ConnectionFactory
+            {
+                HostName = brokerConn.HostName,
+                UserName = brokerConn.UserName,
+                Password = brokerConn.Password,
+                VirtualHost = brokerConn.VHostName,
+                ClientProperties = clientProps
+            };
+        }
+
         private IDictionary<string, object> AppendConnectionProperties(
-            IDictionary<string, object> clientProperties, 
+            IDictionary<string, object> clientProperties,
             BrokerConnection brokerConn)
         {
             var props = new Dictionary<string, object>(clientProperties);
@@ -203,7 +182,7 @@ namespace NetFusion.RabbitMQ.Core
 
             return props;
         }
-        
+
         private IModel CreateBrokerChannel(string brokerName)
         {
             BrokerConnection brokerConn = _brokerConfig.Connections.GetOptionalValue(brokerName);
@@ -232,12 +211,54 @@ namespace NetFusion.RabbitMQ.Core
             return channel;
         }
 
+        // These are the message exchanges and associated queues defined
+        // in the running application to which it will publish messages.
+        private void DeclareExchanges()
+        {
+            ExchangeDefinition[] exchangeDefs = GetExchangeDefinitions();
+            foreach (ExchangeDefinition exDef in exchangeDefs)
+            {
+                using (IModel channel = CreateBrokerChannel(exDef.Exchange.BrokerName))
+                {
+                    exDef.Exchange.Declare(channel);
+                }
+            }
+        }
+
+        private ExchangeDefinition[] GetExchangeDefinitions()
+        {
+            return _messageExchanges.Values().ToArray();
+        }
+
+        // These are the application's defined consumer queues defined
+        // by other application servers to which it can publish commands
+        // that will return a near immediate replay.
+        private void CreateRpcMessageConsumers()
+        {
+            foreach (BrokerConnection brokerConn in _brokerConfig.Settings.Connections)
+            {
+                foreach (RpcConsumerSettings consumer in brokerConn.RpcConsumers)
+                {
+                    IModel replyChannel = CreateBrokerChannel(brokerConn.BrokerName);
+
+                    var rpcClient = new RpcClient(consumer.RequestQueueName, replyChannel);
+                    var messageConsumer = new RpcMessageConsumer(brokerConn.BrokerName, consumer, rpcClient);
+
+                    _rpcMessageConsumers.Add(messageConsumer);
+                }
+            }
+        }
+
+        // Uses the dispatch metadata of the core messaging plugin-in and
+        // subscribes and dispatches to the event handler(s) that should 
+        // process the message when received.
         public void BindConsumers(IEnumerable<MessageConsumer> messageConsumers)
         {
             Check.NotNull(messageConsumers, nameof(messageConsumers));
 
             _messageConsumers = messageConsumers;
             BindConsumersToQueues();
+            BindConsumersToRpcQueues();
             AttachBokerMonitoringHandlers();
         }
 
@@ -255,7 +276,7 @@ namespace NetFusion.RabbitMQ.Core
 
                 // Bind to the existing or newly created queue to the exchange
                 // if the default exchange is not specified.
-                if (!messageConsumer.ExchangeName.IsNullOrWhiteSpace())
+                if (! messageConsumer.ExchangeName.IsNullOrWhiteSpace())
                 {
                     _brokerConfig.Settings.ApplyQueueSettings(messageConsumer);
                     consumerChannel.QueueBind(messageConsumer);
@@ -288,8 +309,43 @@ namespace NetFusion.RabbitMQ.Core
             };
         }
 
+        IModel consumerChannel = null;
+
+        // Binds the consumer to its RPC queues on which they wait for RPC
+        // style messages from publishers.  
+        private void BindConsumersToRpcQueues()
+        {
+            var rpcConsumers = GetExchangeDefinitions()
+                .Where(ed => ed.Exchange.Settings.IsConsumerExchange)
+                .SelectMany(ed => ed.Exchange.Queues, 
+                    (ed, q) => new {
+                        BrokerName = ed.Exchange.BrokerName,
+                        RpcQueue = q
+                    }).ToList();
+
+            foreach (var rpcConsumer in rpcConsumers)
+            {
+                IModel consumerChannel = CreateBrokerChannel(rpcConsumer.BrokerName);
+                EventingBasicConsumer consumer = consumerChannel.SetBasicConsumer(rpcConsumer.RpcQueue);
+                AttachRpcConsumerHandler(consumer);
+            }
+        }
+
+        private void AttachRpcConsumerHandler(EventingBasicConsumer consumer)
+        {
+            consumer.Received += (sender, deliveryEvent) => {
+
+                RpcMessageReceived(deliveryEvent);
+            };
+        }
+
+        private void RpcMessageReceived(BasicDeliverEventArgs deleveryEvent)
+        {
+
+        }
+
         // Determine a consumer for each of the connected brokers and attach an event
-        // handler to monitor the connection.
+        // handler to monitor the connection for any failures.
         private void AttachBokerMonitoringHandlers()
         {
             IEnumerable<MessageConsumer> monitoringConsumers = _messageConsumers.GroupBy(c => c.BrokerName)
@@ -306,7 +362,7 @@ namespace NetFusion.RabbitMQ.Core
         }
 
         // Deserialize the message into the type associated with the message dispatch
-        // metadata and delegate to the messaging module to dispatch the message to
+        // metadata and delegates to the messaging module to dispatch the message to
         // consumer handlers.
         private void MessageReceived(MessageConsumer messageConsumer, BasicDeliverEventArgs deliveryEvent)
         {
@@ -321,12 +377,6 @@ namespace NetFusion.RabbitMQ.Core
                 messageConsumer.DispatchInfo);
 
             futureResult.Wait();
-            IMessage response = futureResult.Result;
-
-            if (response != null)
-            {
-                SendOptionalResponse(messageConsumer, deliveryEvent, response);
-            }
 
             if (!messageConsumer.QueueSettings.IsNoAck)
             {
@@ -334,31 +384,6 @@ namespace NetFusion.RabbitMQ.Core
             }
 
             HandleRejectedMessage(message, messageConsumer, deliveryEvent);
-        }
-
-        // Determine if the message received is configured as a RPC, and if so, publish a message
-        // with the results returned from the handling of the message.
-        private void SendOptionalResponse(MessageConsumer eventConsumer, BasicDeliverEventArgs deliveryEvent, IMessage message)
-        {
-            if (deliveryEvent.BasicProperties.ReplyTo != null)
-            {
-                string contentType = deliveryEvent.BasicProperties.ContentType;
-                byte[] messageBody = SerializeMessage(message, contentType);
-                IBasicProperties basicProps = GetRpcResponseBasicProperties(eventConsumer, contentType);
-
-                eventConsumer.Channel.BasicPublish(exchange: "",
-                    routingKey: deliveryEvent.BasicProperties.ReplyTo,
-                    basicProperties: basicProps,
-                    body: messageBody);
-            }
-        }
-
-        private static IBasicProperties GetRpcResponseBasicProperties(MessageConsumer messageConsumer, string contentType)
-        {
-            var basicProps = messageConsumer.Channel.CreateBasicProperties();
-
-            basicProps.ContentType = contentType;
-            return basicProps;
         }
 
         private void HandleAcknowledgeMessage(IMessage message, MessageConsumer messageConsumer,
@@ -380,6 +405,8 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
+        // Allows the running application to publish messages to the defined
+        // exchanges to which other consumer processes can receive.
         public async Task PublishToExchange(IMessage message)
         {
             Check.NotNull(message, nameof(message));
@@ -401,19 +428,28 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
-        public async Task PublishToConsumer(IMessage message)
+        // Publishes a message to a consumer defined queue used for receiving
+        // RPC style messages.  The running application awaits the response.
+        public async Task PublishToRpcConsumer(IMessage message)
         {
             if (! IsRpcCommand(message))
             {
-
+                throw new InvalidOperationException(
+                    $"The message of type: {message.GetType()} is not a command " +
+                    $"or is not decorated with: {typeof(RpcConsumerAttribute)}.");
             }
 
             var consumerAtrib = message.GetAttribute<RpcConsumerAttribute>();
             var command = message as ICommand;
-            RpcMessageConsumer consumer = GetRpcConsumer(consumerAtrib);
 
+            RpcMessageConsumer consumer = GetRpcConsumer(consumerAtrib);
             byte[] messageBody = SerializeMessage(command, consumer.DefaultContentType);
-            var replyBody = await consumer.Client.Invoke(command, messageBody);
+
+            byte[] replyBody;
+            using (IModel publishChannel = CreateBrokerChannel(consumer.BrokerName))
+            {
+                replyBody = await consumer.Client.Invoke(command, messageBody, publishChannel);
+            }
 
             object reply = DeserializeReply(consumer.DefaultContentType, command.ResultType, replyBody);
             command.SetResult(reply);
@@ -446,21 +482,10 @@ namespace NetFusion.RabbitMQ.Core
 
             string contentType = exchangeDef.Exchange.Settings.ContentType;
             byte[] messageBody = SerializeMessage(message, contentType);
-            ReplyConsumer returnQueueConsumer = null;
 
             using (var channel = CreateBrokerChannel(exchangeDef.Exchange.BrokerName))
             {
-                returnQueueConsumer = CreateReturnQueueConsumer(channel, exchangeDef);
-                string replyQueueName = returnQueueConsumer?.ReplyQueueName;
-
-                exchangeDef.Exchange.Publish(channel, message,
-                    messageBody,
-                    replyQueueName);
-
-                if (returnQueueConsumer != null)
-                {
-                    HandleOptionalResponse(message, returnQueueConsumer);
-                }
+                exchangeDef.Exchange.Publish(channel, message, messageBody); 
             }
         }
 
@@ -496,33 +521,6 @@ namespace NetFusion.RabbitMQ.Core
             }
 
             return serializer;
-        }
-
-        private static ReplyConsumer CreateReturnQueueConsumer(IModel channel, ExchangeDefinition exchangeDef)
-        {
-            if (exchangeDef.Exchange.ReturnType == null) return null;
-
-            string replyQueueName = channel.QueueDeclare().QueueName;
-            var queueConsumer = new QueueingBasicConsumer(channel);
-
-            channel.BasicConsume(replyQueueName, true, queueConsumer);
-
-            return new ReplyConsumer {
-                ReplyQueueName = replyQueueName,
-                ReturnType = exchangeDef.Exchange.ReturnType,
-                Consumer = queueConsumer };
-        }
-
-        private void HandleOptionalResponse(IMessage publishedMessage, ReplyConsumer returnQueueConsumer)
-        {
-            var replyEvent = returnQueueConsumer.Consumer.Queue.Dequeue() as BasicDeliverEventArgs;
-            if (replyEvent != null)
-            {
-                IMessage responseEvent = DeserializeMessage(returnQueueConsumer.ReturnType, replyEvent);
-                responseEvent.SetAcknowledged(true);
-
-                (publishedMessage as ICommand)?.SetResult(responseEvent);
-            }
         }
 
         private IMessage DeserializeMessage(Type messageType,
@@ -583,7 +581,8 @@ namespace NetFusion.RabbitMQ.Core
 
         private static bool IsUnexpectedShutdown(ShutdownEventArgs shutdownEvent)
         {
-            return shutdownEvent.Initiator == ShutdownInitiator.Library || shutdownEvent.Initiator == ShutdownInitiator.Peer;
+            return shutdownEvent.Initiator == ShutdownInitiator.Library 
+                || shutdownEvent.Initiator == ShutdownInitiator.Peer;
         }
 
         private void ReconnectToBroker(string brokerName)

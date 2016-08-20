@@ -19,7 +19,7 @@ namespace NetFusion.RabbitMQ.Core
         private readonly ConcurrentDictionary<string, TaskCompletionSource<byte[]>> _futureResults;
         private readonly EventingBasicConsumer _consumer;
 
-        public RpcClient(IModel channel, string rpcRequestQueueName)
+        public RpcClient(string rpcRequestQueueName, IModel channel)
         {
             Check.NotNull(channel, nameof(channel));
 
@@ -32,7 +32,8 @@ namespace NetFusion.RabbitMQ.Core
             _consumer.Received += HandleReplyResponse;
         }
 
-        public async Task<byte[]> Invoke(ICommand command, byte[] messageBody)
+        public async Task<byte[]> Invoke(ICommand command, byte[] messageBody,
+            IModel publishChannel)
         {
             Check.NotNull(command, nameof(command));
             Check.NotNull(messageBody, nameof(messageBody));
@@ -48,7 +49,7 @@ namespace NetFusion.RabbitMQ.Core
 
             IBasicProperties basicProps = GetBasicProperties(command);
 
-            _channel.BasicPublish(DEFAULT_EXCHANGE,
+            publishChannel.BasicPublish(DEFAULT_EXCHANGE,
                              _rpcRequestQueueName,
                              basicProps,
                              messageBody);

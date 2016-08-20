@@ -1,7 +1,6 @@
 ﻿using NetFusion.Common;
 using NetFusion.Messaging.Core;
 using NetFusion.RabbitMQ.Consumers;
-using NetFusion.RabbitMQ.Exchanges;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 

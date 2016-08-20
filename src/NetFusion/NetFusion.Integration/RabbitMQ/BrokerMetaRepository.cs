@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
 using NetFusion.Common;
 using NetFusion.MongoDB;
-using NetFusion.RabbitMQ.Exchanges;
+using NetFusion.RabbitMQ.Core;
 using NetFusion.RabbitMQ.Integration;
 using System.Collections.Generic;
 using System.Linq;

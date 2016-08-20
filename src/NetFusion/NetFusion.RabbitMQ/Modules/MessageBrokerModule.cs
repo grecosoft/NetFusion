@@ -9,7 +9,6 @@ using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Consumers;
 using NetFusion.RabbitMQ.Core;
-using NetFusion.RabbitMQ.Exchanges;
 using NetFusion.RabbitMQ.Integration;
 using NetFusion.RabbitMQ.Serialization;
 using System;

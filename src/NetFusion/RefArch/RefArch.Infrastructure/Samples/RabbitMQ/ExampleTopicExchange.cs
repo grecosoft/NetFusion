@@ -1,5 +1,5 @@
 ﻿using NetFusion.Domain.Scripting;
-using NetFusion.RabbitMQ.Exchanges;
+using NetFusion.RabbitMQ.Core;
 using RefArch.Api.Messages.RabbitMQ;
 
 namespace RefArch.Infrastructure.Samples.RabbitMQ

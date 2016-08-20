@@ -25,7 +25,7 @@ namespace NetFusion.RabbitMQ.Core
             } 
             else if(_messageBroker.IsRpcCommand(message))
             {
-                await _messageBroker.PublishToConsumer(message);
+                await _messageBroker.PublishToRpcConsumer(message);
             }
         }
     }

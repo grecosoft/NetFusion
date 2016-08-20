@@ -1,7 +1,7 @@
 ﻿using NetFusion.Domain.Scripting;
 using System.Collections.Generic;
 
-namespace NetFusion.RabbitMQ.Exchanges
+namespace NetFusion.RabbitMQ.Core
 {
     /// <summary>
     /// Settings to be used when declaring the exchange.
@@ -47,6 +47,8 @@ namespace NetFusion.RabbitMQ.Exchanges
         /// longer in use.
         /// </summary>
         public bool IsAutoDelete { get; set; }
+
+        public bool IsConsumerExchange { get; set; }
 
         /// <summary>
         /// Other properties (construction arguments) for the exchange.

@@ -1,5 +1,4 @@
 ﻿using NetFusion.RabbitMQ.Configs;
-using NetFusion.RabbitMQ.Exchanges;
 using NetFusion.RabbitMQ.Serialization;
 using System.Collections.Generic;
 
