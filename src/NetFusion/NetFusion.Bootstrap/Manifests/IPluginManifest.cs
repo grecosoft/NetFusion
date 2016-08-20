@@ -24,6 +24,16 @@
         string AssemblyName { get; set; }
 
         /// <summary>
+        /// The version of the assembly.
+        /// </summary>
+        string AssemblyVersion { get; set; }
+
+        /// <summary>
+        /// The name of the computer running the manifest.
+        /// </summary>
+        string MachineName { get; set; }
+
+        /// <summary>
         /// Description of the functionality implemented by
         /// the assembly containing the manifest.
         /// </summary>

@@ -390,7 +390,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             _messageConsumer = consumer;
 
             this.Instance.Initialize(brokerConfig);
-            this.Instance.DefineExchanges();
+            this.Instance.ConfigureBroker();
 
             if (_messageConsumer != null)
             {

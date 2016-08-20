@@ -15,5 +15,6 @@ namespace NetFusion.RabbitMQ.Core
         public IDictionary<string, BrokerConnection> Connections { get; set; }
         public IEnumerable<IMessageExchange> Exchanges { get; set; }
         public IDictionary<string, IMessageSerializer> Serializers { get; set; }
+        public IDictionary<string, object> ClientProperties { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Extensions;
+using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions;
 using NetFusion.Messaging.Core;
@@ -81,12 +82,13 @@ namespace NetFusion.RabbitMQ.Modules
             _messageBroker.Initialize(new MessageBrokerConfig
             {
                 Settings = _brokerSettings,
+                Exchanges = this.Exchanges,
                 Connections = GetConnections(_brokerSettings),
                 Serializers = GetMessageSerializers(),
-                Exchanges = this.Exchanges
+                ClientProperties = GetClientProperties()
             });
 
-            _messageBroker.DefineExchanges();
+            _messageBroker.ConfigureBroker();
             _messageBroker.BindConsumers(_messageConsumers);
 
             SaveExchangeMetadata(scope);
@@ -164,6 +166,22 @@ namespace NetFusion.RabbitMQ.Modules
             AddSerializer(serializers, new BinaryMessageSerializer());
 
             return serializers;
+        }
+
+        public IDictionary<string, object> GetClientProperties()
+        {
+            IPluginManifest brokerManifest = Context.Plugin.Manifest;
+            IPluginManifest appManifest = Context.AppHost.Manifest;
+
+            return new Dictionary<string, object>
+            {
+                { "Client Assembly", brokerManifest.AssemblyName },
+                { "Client Version", brokerManifest.AssemblyVersion },
+                { "AppHost Assembly", appManifest.AssemblyName },
+                { "AppHost Version", appManifest.AssemblyVersion },
+                { "AppHost Description", appManifest.Description },
+                { "Machine Name", appManifest.MachineName }
+            };
         }
 
         private IDictionary<string, IMessageSerializer> GetConfiguredSerializers()

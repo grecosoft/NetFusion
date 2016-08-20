@@ -24,6 +24,8 @@ namespace NetFusion.Bootstrap.Testing
 
         public string PluginId { get; set; }
         public string AssemblyName { get; set; }
+        public string AssemblyVersion { get; set; }
+        public string MachineName { get; set; }
         public string Name { get; set; }
         public string Description => "Mock Plug-in";
 

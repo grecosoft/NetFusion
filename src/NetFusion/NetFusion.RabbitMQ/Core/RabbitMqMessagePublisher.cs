@@ -22,6 +22,10 @@ namespace NetFusion.RabbitMQ.Core
             if (_messageBroker.IsExchangeMessage(message))
             {
                 await _messageBroker.PublishToExchange(message);
+            } 
+            else if(_messageBroker.IsRpcCommand(message))
+            {
+                await _messageBroker.PublishToConsumer(message);
             }
         }
     }

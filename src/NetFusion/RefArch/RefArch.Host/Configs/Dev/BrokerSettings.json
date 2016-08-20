@@ -2,9 +2,14 @@
     "Connections" : [
       {
         "BrokerName": "TestBroker",
+
         "HostName": "localhost",
         "UserName": "papillon",
         "Password": "bestdog",
+
+        "RpcConsumers": [
+          { "RequestQueueKey" :  "ExampleRpcConsumer", "RequestQueueName" : "RpcMessageQueue" }
+        ],
 
         "QueueProperties": [
           {

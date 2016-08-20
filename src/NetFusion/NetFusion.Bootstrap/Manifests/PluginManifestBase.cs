@@ -7,5 +7,7 @@
     public class PluginManifestBase
     {
         public string AssemblyName { get; set; }
+        public string AssemblyVersion { get; set; }
+        public string MachineName { get; set; }
     }
 }

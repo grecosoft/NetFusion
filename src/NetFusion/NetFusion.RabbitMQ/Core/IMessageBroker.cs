@@ -1,7 +1,4 @@
 ﻿using NetFusion.Messaging;
-using NetFusion.RabbitMQ.Integration;
-using NetFusion.RabbitMQ.Serialization;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -23,7 +20,7 @@ namespace NetFusion.RabbitMQ.Core
         /// <summary>
         /// Creates the needed RabbitMq exchanges based on the configurations.
         /// </summary>
-        void DefineExchanges();
+        void ConfigureBroker();
 
         /// <summary>
         /// Based on consumers having handlers for messages associated with an 
@@ -40,10 +37,14 @@ namespace NetFusion.RabbitMQ.Core
         /// message.  Otherwise, False.</returns>
         bool IsExchangeMessage(IMessage message);
 
+        bool IsRpcCommand(IMessage message);
+
         /// <summary>
         /// Publishes a message to an exchange.
         /// </summary>
         /// <param name="message">The message to publish.</param>
         Task PublishToExchange(IMessage message);
+
+        Task PublishToConsumer(IMessage message);
     }
 }

@@ -70,9 +70,16 @@ namespace NetFusion.Bootstrap.Container
 
         protected void SetManifestTypes(ManifestRegistry manifestTypes, Assembly[] pluginAssemblies)
         {
-            var pluginTypes = pluginAssemblies.SelectMany(pa => pa.GetTypes());
+            IEnumerable<Type> pluginTypes = pluginAssemblies.SelectMany(pa => pa.GetTypes());
             manifestTypes.AllManifests = pluginTypes.CreateMatchingInstances<IPluginManifest>().ToList();
-            manifestTypes.AllManifests.ForEach(m => m.AssemblyName = m.GetType().Assembly.FullName);
+
+            foreach (IPluginManifest manifest in manifestTypes.AllManifests)
+            {
+                Assembly assembly = manifest.GetType().Assembly;
+                manifest.AssemblyName = assembly.FullName;
+                manifest.AssemblyVersion = assembly.GetName().Version.ToString();
+                manifest.MachineName = Environment.MachineName;
+            }
         }
 
         private DirectoryInfo GetAssemblyProbeDirectory()

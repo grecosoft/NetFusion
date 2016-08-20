@@ -14,9 +14,17 @@ namespace NetFusion.RabbitMQ.Configs
     public class BrokerSettings : AppSettings
     {
         /// <summary>
-        /// The number of milliseconds between attempts to reconnect to the
-        /// broker after a connection failure is detected.
+        /// List of broker connections populated by host application.
         /// </summary>
+        public IEnumerable<BrokerConnection> Connections { get; set; }
+
+        public BrokerSettings()
+        {
+            this.Connections = new List<BrokerConnection>();
+        }
+
+        /// <summary>
+        /// The number of milliseconds between attempts to reconnect to the
         public int ConnectionRetryDelayMs { get; set; } = 3000;
 
         /// <summary>
@@ -25,11 +33,6 @@ namespace NetFusion.RabbitMQ.Configs
         /// </summary>
         public int NumConnectionRetries { get; set; } = 10;
 
-        /// <summary>
-        /// List of broker connections populated by host application.
-        /// </summary>
-        public IEnumerable<BrokerConnection> Connections { get; set; }
-        
         /// <summary>
         /// Applies all externally defined queue properties to all defined
         /// exchange queues.
