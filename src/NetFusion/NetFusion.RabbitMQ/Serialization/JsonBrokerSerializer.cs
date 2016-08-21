@@ -1,19 +1,21 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Linq;
-using System.Text;
+﻿using NetFusion.Common;
 using NetFusion.Messaging;
-using NetFusion.Common;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace NetFusion.RabbitMQ.Serialization
 {
     /// <summary>
-    /// Serializes a message to JSON representation.
+    /// Serializes a value to JSON representation.  Called by the
+    /// MessageBroker when serializing and deserializing messages
+    /// to queues.
     /// </summary>
-    public class JsonEventMessageSerializer : IMessageSerializer
+    public class JsonBrokerSerializer : IBrokerSerializer
     {
         private IContractResolver _contractResolver = new CustomContractResolver();
 
@@ -22,9 +24,9 @@ namespace NetFusion.RabbitMQ.Serialization
             get { return "application/json; charset=utf-8"; }
         }
 
-        public byte[] Serialize(IMessage message)
+        public byte[] Serialize(object value)
         {
-            Check.NotNull(message, nameof(message));
+            Check.NotNull(value, nameof(value));
 
             var settings = new JsonSerializerSettings {
                 Formatting = Formatting.None,
@@ -32,22 +34,27 @@ namespace NetFusion.RabbitMQ.Serialization
                 ContractResolver = _contractResolver
             };
 
-            var json = JsonConvert.SerializeObject(message, settings);
+            var json = JsonConvert.SerializeObject(value, settings);
             return Encoding.UTF8.GetBytes(json);
         }
 
-        public IMessage Deserialize(byte[] message, Type messageType)
+        public object Deserialize(byte[] value, Type vaueType)
         {
-            Check.NotNull(message, nameof(message));
-            Check.NotNull(messageType, nameof(messageType));
+            Check.NotNull(value, nameof(value));
+            Check.NotNull(vaueType, nameof(vaueType));
 
             var settings = new JsonSerializerSettings
             {
                 ContractResolver = _contractResolver
             };
 
-            var json = Encoding.UTF8.GetString(message);
-            return (IMessage)JsonConvert.DeserializeObject(json, messageType, settings);
+            var json = Encoding.UTF8.GetString(value);
+            return (IMessage)JsonConvert.DeserializeObject(json, vaueType, settings);
+        }
+
+        public T Deserialize<T>(byte[] value, Type valueType)
+        {
+            return (T)Deserialize(value, valueType);
         }
 
         private class CustomContractResolver : DefaultContractResolver
@@ -78,9 +85,7 @@ namespace NetFusion.RabbitMQ.Serialization
                 }
 
                 return prop;
-            }
-
-          
+            }   
         }
     }
 }

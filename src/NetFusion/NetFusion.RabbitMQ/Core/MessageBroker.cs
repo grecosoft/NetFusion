@@ -309,8 +309,6 @@ namespace NetFusion.RabbitMQ.Core
             };
         }
 
-        IModel consumerChannel = null;
-
         // Binds the consumer to its RPC queues on which they wait for RPC
         // style messages from publishers.  
         private void BindConsumersToRpcQueues()
@@ -327,20 +325,41 @@ namespace NetFusion.RabbitMQ.Core
             {
                 IModel consumerChannel = CreateBrokerChannel(rpcConsumer.BrokerName);
                 EventingBasicConsumer consumer = consumerChannel.SetBasicConsumer(rpcConsumer.RpcQueue);
-                AttachRpcConsumerHandler(consumer);
+                AttachRpcConsumerHandler(consumerChannel, consumer);
             }
         }
 
-        private void AttachRpcConsumerHandler(EventingBasicConsumer consumer)
+        private void AttachRpcConsumerHandler(IModel channel, EventingBasicConsumer consumer)
         {
             consumer.Received += (sender, deliveryEvent) => {
 
-                RpcMessageReceived(deliveryEvent);
+                RpcMessageReceived(channel, deliveryEvent);
             };
         }
 
-        private void RpcMessageReceived(BasicDeliverEventArgs deleveryEvent)
+        private void RpcMessageReceived(IModel channel, BasicDeliverEventArgs deleveryEvent)
         {
+            string typeName = deleveryEvent.BasicProperties.Type;
+            Type messageType = _brokerConfig.RpcTypes[typeName];
+            IMessage message = DeserializeMessage(messageType, deleveryEvent);
+
+            // TODO:  Dispatch message and get response.
+            var response = new { Value1 = 4333, Value2 = 344444 };
+            PublishReply(response, channel, deleveryEvent.BasicProperties);
+        }
+
+        private void PublishReply(object response, IModel channel, IBasicProperties requestProps)
+        {
+            byte[] replyBody = SerializeMessage(response, requestProps.ContentType);
+            IBasicProperties replyProps = channel.CreateBasicProperties();
+
+            replyProps.ContentType = requestProps.ContentType;
+            replyProps.CorrelationId = requestProps.CorrelationId;
+
+            channel.BasicPublish(exchange: "",
+                    routingKey: requestProps.ReplyTo,
+                    basicProperties: replyProps,
+                    body: replyBody);
 
         }
 
@@ -436,10 +455,10 @@ namespace NetFusion.RabbitMQ.Core
             {
                 throw new InvalidOperationException(
                     $"The message of type: {message.GetType()} is not a command " +
-                    $"or is not decorated with: {typeof(RpcConsumerAttribute)}.");
+                    $"or is not decorated with: {typeof(RpcCommandAttribute)}.");
             }
 
-            var consumerAtrib = message.GetAttribute<RpcConsumerAttribute>();
+            var consumerAtrib = message.GetAttribute<RpcCommandAttribute>();
             var command = message as ICommand;
 
             RpcMessageConsumer consumer = GetRpcConsumer(consumerAtrib);
@@ -460,10 +479,10 @@ namespace NetFusion.RabbitMQ.Core
             Type messageType = message.GetType();
 
             return messageType.IsDerivedFrom<ICommand>() 
-                && messageType.HasAttribute<RpcConsumerAttribute>();
+                && messageType.HasAttribute<RpcCommandAttribute>();
         }
 
-        private RpcMessageConsumer GetRpcConsumer(RpcConsumerAttribute consumerAttrib)
+        private RpcMessageConsumer GetRpcConsumer(RpcCommandAttribute consumerAttrib)
         {
             RpcMessageConsumer consumer = _rpcMessageConsumers.FirstOrDefault(c => 
                 c.BrokerName == consumerAttrib.BrokerName 
@@ -505,15 +524,15 @@ namespace NetFusion.RabbitMQ.Core
             return exchangeDef.Exchange.Matches(message);
         }
 
-        private byte[] SerializeMessage(IMessage message, string contentType)
+        private byte[] SerializeMessage(object message, string contentType)
         {
-            IMessageSerializer serializer = GetMessageSerializer(contentType);
+            IBrokerSerializer serializer = GetMessageSerializer(contentType);
             return serializer.Serialize(message);
         }
 
-        private IMessageSerializer GetMessageSerializer(string contentType)
+        private IBrokerSerializer GetMessageSerializer(string contentType)
         {
-            IMessageSerializer serializer = null;
+            IBrokerSerializer serializer = null;
 
             if (! _brokerConfig.Serializers.TryGetValue(contentType, out serializer))
             {
@@ -535,14 +554,14 @@ namespace NetFusion.RabbitMQ.Core
                     $"of type: {messageType} was not specified as a basic property");
             }
 
-            IMessageSerializer serializer = GetMessageSerializer(contentType);
-            return serializer.Deserialize(deliveryEvent.Body, messageType);
+            IBrokerSerializer serializer = GetMessageSerializer(contentType);
+            return serializer.Deserialize<IMessage>(deliveryEvent.Body, messageType);
         }
 
         // get from returned basic props
         private object DeserializeReply(string contentType, Type replyType, byte[] replyBody)
         {
-            IMessageSerializer serializer = GetMessageSerializer(contentType);
+            IBrokerSerializer serializer = GetMessageSerializer(contentType);
             return serializer.Deserialize(replyBody, replyType);
         }
 

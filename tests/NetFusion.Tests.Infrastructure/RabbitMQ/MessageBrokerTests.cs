@@ -265,7 +265,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
 
         private MessageBrokerConfig SetupBrockerConfig()
         {
-            var serializer = new JsonEventMessageSerializer();
+            var serializer = new JsonBrokerSerializer();
             var metadata = new MessageBrokerConfig
             {
                 Settings = new BrokerSettings
@@ -278,7 +278,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             };
 
             metadata.Connections = metadata.Settings.Connections.ToDictionary(c => c.BrokerName);
-            metadata.Serializers = new Dictionary<string, IMessageSerializer>
+            metadata.Serializers = new Dictionary<string, IBrokerSerializer>
             {
                 { serializer.ContentType, serializer }
             };
@@ -353,7 +353,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
     public class MessageBrokerSetup
     {
         private MessageConsumer _messageConsumer;
-        private IMessageSerializer _messageSerializer;
+        private IBrokerSerializer _messageSerializer;
 
         public NullLogger Logger { get; }
         public Mock<IMessagingModule> MockMsgModule { get; }
@@ -363,7 +363,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
 
         public MessageBrokerSetup()
         {
-            _messageSerializer = new JsonEventMessageSerializer();
+            _messageSerializer = new JsonBrokerSerializer();
 
             this.Logger = new NullLogger();
             this.MockMsgModule = new Mock<IMessagingModule>();

@@ -6,7 +6,7 @@ using System;
 
 namespace RefArch.Api.Messages.RabbitMQ
 {
-    [RpcConsumer("TestBroker", "ExampleRpcConsumer", 
+    [RpcCommand("TestBroker", "ExampleRpcConsumer", 
         ExternalTypeName = "Example_Command")]
     public class ExampleRpcCommand : Command<ExampleRpcResponse>
     {

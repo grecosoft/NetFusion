@@ -29,7 +29,7 @@ namespace NetFusion.Messaging.Modules
         /// consumer message handlers that should  be invoked for a given type of message
         /// marked with the InProcessHandler attribute.
         /// </summary>
-        ILookup<Type, MessageDispatchInfo> InProcessMessageTypeDispatchers { get; }
+        ILookup<Type, MessageDispatchInfo> InProcessDispatchers { get; }
 
         /// <summary>
         /// Dispatches a message using the specified dispatch information.

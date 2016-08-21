@@ -9,12 +9,12 @@ namespace NetFusion.RabbitMQ.Serialization
     /// During the plug-in bootstrap process, the host plug-in and all 
     /// application-component plug-ins are scanned for an implementation. 
     /// </summary>
-    public interface IMessageSerializerRegistry : IKnownPluginType
+    public interface IBrokerSerializerRegistry : IKnownPluginType
     {
         /// <summary>
         /// List of event message serializers.
         /// </summary>
         /// <returns>List of serializers.</returns>
-        IEnumerable<IMessageSerializer> GetSerializers();
+        IEnumerable<IBrokerSerializer> GetSerializers();
     }
 }

@@ -42,7 +42,7 @@ namespace NetFusion.Messaging.Core
         public async override Task PublishMessageAsync(IMessage message)
         {
             // Determine the dispatchers associated with the message.
-            var dispatchers = _messagingModule.InProcessMessageTypeDispatchers
+            var dispatchers = _messagingModule.InProcessDispatchers
                 .WhereHandlerForMessage(message.GetType())
                 .ToList();
 

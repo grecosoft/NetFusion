@@ -62,7 +62,7 @@ namespace NetFusion.Tests.Eventing
                 .Act(c => c.Build())
                 .Assert((MessagingModule m) =>
                 {
-                    m.InProcessMessageTypeDispatchers
+                    m.InProcessDispatchers
                         .Count(et => et.Key == typeof(MockDomainEvent))
                         .Should().Be(1);
                 });
@@ -81,7 +81,7 @@ namespace NetFusion.Tests.Eventing
                 .Act(c => c.Build())
                 .Assert((MessagingModule m) =>
                 {
-                    var eventDispatchers = m.InProcessMessageTypeDispatchers[typeof(MockDomainEvent)];
+                    var eventDispatchers = m.InProcessDispatchers[typeof(MockDomainEvent)];
                     eventDispatchers.Should().HaveCount(1);
 
                     var dispatchInfo = eventDispatchers.First();

@@ -28,10 +28,10 @@ namespace NetFusion.Messaging.Modules
         // IMessagingModule:
         public MessagingConfig MessagingConfig { get; private set; }
         public ILookup<Type, MessageDispatchInfo> AllMessageTypeDispatchers { get; private set; }
-        public ILookup<Type, MessageDispatchInfo> InProcessMessageTypeDispatchers { get; private set; }
+        public ILookup<Type, MessageDispatchInfo> InProcessDispatchers { get; private set; }
        
         // All command specific message types.
-        private Type[] CommandTypes => InProcessMessageTypeDispatchers
+        private Type[] CommandTypes => InProcessDispatchers
                 .Where(ed => ed.Key.IsDerivedFrom<ICommand>())
                 .Select(ed => ed.Key).ToArray();
       
@@ -56,7 +56,7 @@ namespace NetFusion.Messaging.Modules
             this.AllMessageTypeDispatchers = allDispatchers
                 .ToLookup(k => k.MessageType);
 
-            this.InProcessMessageTypeDispatchers = allDispatchers
+            this.InProcessDispatchers = allDispatchers
                 .Where(h => h.IsInProcessHandler)
                 .ToLookup(k => k.MessageType);
 
@@ -111,7 +111,7 @@ namespace NetFusion.Messaging.Modules
         private void AssertCommandMessages()
         {
             var invalidMessageDispatches = this.CommandTypes
-                .Select(InProcessMessageTypeDispatchers.WhereHandlerForMessage)
+                .Select(InProcessDispatchers.WhereHandlerForMessage)
                 .Where(di => di.Count() > 1)
                 .SelectMany(di => di)
                 .Select(di => new
@@ -164,10 +164,10 @@ namespace NetFusion.Messaging.Modules
             var messagingDispatchLog = new Dictionary<string, object>();
             moduleLog["Messaging - In Process Dispatchers"] = messagingDispatchLog;
 
-            foreach (var messageTypeDispatcher in this.InProcessMessageTypeDispatchers)
+            foreach (var messageTypeDispatcher in this.InProcessDispatchers)
             {
                 var messageType = messageTypeDispatcher.Key;
-                var messageDispatchers = InProcessMessageTypeDispatchers.WhereHandlerForMessage(messageType);
+                var messageDispatchers = InProcessDispatchers.WhereHandlerForMessage(messageType);
 
                 messagingDispatchLog[messageType.FullName] = messageDispatchers.Select(
                     ed => new

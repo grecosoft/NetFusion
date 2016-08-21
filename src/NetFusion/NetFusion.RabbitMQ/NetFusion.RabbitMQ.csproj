@@ -62,7 +62,7 @@
     <Compile Include="Consumers\JoinQueueAttribute.cs" />
     <Compile Include="Consumers\QueueBindingTypes.cs" />
     <Compile Include="Consumers\QueueConsumerAttribute.cs" />
-    <Compile Include="Consumers\RpcConsumerAttribute.cs" />
+    <Compile Include="Consumers\RpcCommandAttribute.cs" />
     <Compile Include="Core\ChannelExtensions.cs" />
     <Compile Include="Core\ExchangeDefinition.cs" />
     <Compile Include="Core\ExchangeQueue.cs" />
@@ -94,10 +94,10 @@
     <Compile Include="Modules\MessageBrokerModule.cs" />
     <Compile Include="RabbitMQManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serialization\BinaryMessageSerializer.cs" />
-    <Compile Include="Serialization\IMessageSerializer.cs" />
-    <Compile Include="Serialization\IMessageSerializerRegistry.cs" />
-    <Compile Include="Serialization\JsonMessageSerializer.cs" />
+    <Compile Include="Serialization\BinaryBrokerSerializer.cs" />
+    <Compile Include="Serialization\IBrokerSerializer.cs" />
+    <Compile Include="Serialization\IBrokerSerializerRegistry.cs" />
+    <Compile Include="Serialization\JsonBrokerSerializer.cs" />
     <Compile Include="Testing\HostTypeResolverExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

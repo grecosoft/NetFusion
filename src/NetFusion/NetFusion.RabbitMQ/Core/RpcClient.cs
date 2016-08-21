@@ -1,5 +1,7 @@
 ﻿using NetFusion.Common;
+using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
+using NetFusion.RabbitMQ.Consumers;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -21,14 +23,16 @@ namespace NetFusion.RabbitMQ.Core
 
         public RpcClient(string rpcRequestQueueName, IModel channel)
         {
+            Check.NotNull(rpcRequestQueueName, nameof(rpcRequestQueueName));
             Check.NotNull(channel, nameof(channel));
 
             _channel = channel;
             _rpcRequestQueueName = rpcRequestQueueName;
-            _replyQueueName = _channel. QueueDeclare().QueueName;
+            _replyQueueName = _channel.QueueDeclare().QueueName;
             _futureResults = new ConcurrentDictionary<string, TaskCompletionSource<byte[]>>();
             _consumer = new EventingBasicConsumer(channel);
 
+            _channel.BasicConsume(_replyQueueName, true, _consumer);
             _consumer.Received += HandleReplyResponse;
         }
 
@@ -59,9 +63,13 @@ namespace NetFusion.RabbitMQ.Core
 
         private IBasicProperties GetBasicProperties(ICommand command)
         {
+            var rptAttrib = command.GetAttribute<RpcCommandAttribute>();
+
             IBasicProperties props = _channel.CreateBasicProperties();
             props.ReplyTo = _replyQueueName;
+            props.ContentType = "application/json; charset=utf-8";
             props.CorrelationId = command.GetCorrelationId();
+            props.Type = rptAttrib.ExternalTypeName;
             return props;
         }
 
@@ -76,8 +84,6 @@ namespace NetFusion.RabbitMQ.Core
             {
                 futureResult.SetResult(evt.Body);
             }
-
-            _channel.BasicAck(evt.DeliveryTag, multiple: false);
         }
     }
 }

@@ -30,10 +30,10 @@ namespace NetFusion.RabbitMQ.Modules
         private BrokerSettings _brokerSettings;
         private IMessageBroker _messageBroker;
         private IEnumerable<MessageConsumer> _messageConsumers;
-
+  
         // Discovered Properties:
         private IEnumerable<IMessageExchange> Exchanges { get; set; }
-        private IEnumerable<IMessageSerializerRegistry> Registries { get; set; }
+        private IEnumerable<IBrokerSerializerRegistry> Registries { get; set; }
         
         protected override void Dispose(bool dispose)
         {
@@ -84,6 +84,7 @@ namespace NetFusion.RabbitMQ.Modules
                 Exchanges = this.Exchanges,
                 Connections = GetConnections(_brokerSettings),
                 Serializers = GetMessageSerializers(),
+                RpcTypes = GetRpcCommandTypes(),
                 ClientProperties = GetClientProperties()
             });
 
@@ -156,15 +157,30 @@ namespace NetFusion.RabbitMQ.Modules
             return settings.Connections.ToDictionary(c => c.BrokerName);
         }
 
-        private IDictionary<string, IMessageSerializer> GetMessageSerializers()
+        private IDictionary<string, IBrokerSerializer> GetMessageSerializers()
         {
             var serializers = GetConfiguredSerializers();
 
             // Add the default serializers if not overridden by the application host.
-            AddSerializer(serializers, new JsonEventMessageSerializer());
-            AddSerializer(serializers, new BinaryMessageSerializer());
+            AddSerializer(serializers, new JsonBrokerSerializer());
+            AddSerializer(serializers, new BinaryBrokerSerializer());
 
             return serializers;
+        }
+
+        public IDictionary<string, Type> GetRpcCommandTypes()
+        {
+            IEnumerable<Type> rpcMessageTypes = Context.GetPluginTypesFrom()
+                 .Where(pt => pt.HasAttribute<RpcCommandAttribute>());
+
+            var rpcCommandTypes = new Dictionary<string, Type>();
+            foreach (Type rpcType in rpcMessageTypes)
+            {
+                var attrib = rpcType.GetAttribute<RpcCommandAttribute>();
+                rpcCommandTypes[attrib.ExternalTypeName] = rpcType;
+            }
+
+            return rpcCommandTypes;
         }
 
         public IDictionary<string, object> GetClientProperties()
@@ -183,7 +199,7 @@ namespace NetFusion.RabbitMQ.Modules
             };
         }
 
-        private IDictionary<string, IMessageSerializer> GetConfiguredSerializers()
+        private IDictionary<string, IBrokerSerializer> GetConfiguredSerializers()
         {
             // Find all serializer registries which specify any custom serializers or
             // overrides for a given content type.  Only look in application specific
@@ -191,29 +207,29 @@ namespace NetFusion.RabbitMQ.Modules
             IEnumerable<Type> allAppPluginTypes = this.Context.GetPluginTypesFrom(
                 PluginTypes.AppHostPlugin, PluginTypes.AppComponentPlugin);
 
-            IEnumerable<IMessageSerializerRegistry> registries = this.Registries.CreatedFrom(allAppPluginTypes);
+            IEnumerable<IBrokerSerializerRegistry> registries = this.Registries.CreatedFrom(allAppPluginTypes);
             if (registries.Empty())
             {
-                return new Dictionary<string, IMessageSerializer>();
+                return new Dictionary<string, IBrokerSerializer>();
             }
 
             if (registries.IsSingletonSet())
             {
-                IEnumerable<IMessageSerializer> serializers = registries.First().GetSerializers();
+                IEnumerable<IBrokerSerializer> serializers = registries.First().GetSerializers();
                 return serializers.ToDictionary(s => s.ContentType);
             }
 
             throw new ContainerException(
                 $"The application host and its corresponding application plug-ins can only " +
-                $"define one class implementing the: {typeof(IMessageSerializerRegistry)} interface-" +
+                $"define one class implementing the: {typeof(IBrokerSerializerRegistry)} interface-" +
                 $"{registries.Count()} implementations were found.",
 
                 registries.Select(e => new { Registry = e.GetType().AssemblyQualifiedName }));
         }
 
         private void AddSerializer(
-            IDictionary<string, IMessageSerializer> serializers,
-            IMessageSerializer serializer)
+            IDictionary<string, IBrokerSerializer> serializers,
+            IBrokerSerializer serializer)
         {
             if (!serializers.Keys.Contains(serializer.ContentType))
             {
