@@ -3,6 +3,7 @@ using NetFusion.Common;
 using NetFusion.Common.Extensions;
 using NetFusion.Domain.Scripting;
 using NetFusion.Messaging;
+using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Consumers;
@@ -337,17 +338,39 @@ namespace NetFusion.RabbitMQ.Core
             };
         }
 
+        // Called when a RPC style message is received on a queue defined by a 
+        // derived RpcExchange class that receives RPC style requests.
         private void RpcMessageReceived(IModel channel, BasicDeliverEventArgs deleveryEvent)
         {
-            string typeName = deleveryEvent.BasicProperties.Type;
-            Type messageType = _brokerConfig.RpcTypes[typeName];
-            IMessage message = DeserializeMessage(messageType, deleveryEvent);
+            ValidateRpcRequest(deleveryEvent);
 
-            // TODO:  Dispatch message and get response.
-            var response = new { Value1 = 4333, Value2 = 344444 };
-            PublishReply(response, channel, deleveryEvent.BasicProperties);
+            string typeName = deleveryEvent.BasicProperties.Type;
+            Type commandType = _brokerConfig.RpcTypes[typeName];
+            MessageDispatchInfo dispatcher = _messagingModule.GetInProcessCommandDispatcher(commandType);
+            IMessage message = DeserializeMessage(commandType, deleveryEvent);
+
+            object result =_messagingModule.InvokeDispatcher(dispatcher, message).Result;
+            PublishReply(result, channel, deleveryEvent.BasicProperties);
         }
 
+        private void ValidateRpcRequest(BasicDeliverEventArgs deleveryEvent)
+        {
+            string messageType = deleveryEvent.BasicProperties.Type;
+
+            if (messageType.IsNullOrWhiteSpace())
+            {
+                throw new InvalidOperationException(
+                    "The basic properties of the received RPC request does not specify the message type.");
+            }
+
+            if (! _brokerConfig.RpcTypes.ContainsKey(messageType))
+            {
+                throw new InvalidOperationException(
+                    $"The type associated with the message type name: {messageType} could not be resolved.");
+            }
+        }
+
+        // Publish the reply back to the publisher that made the request.
         private void PublishReply(object response, IModel channel, IBasicProperties requestProps)
         {
             byte[] replyBody = SerializeMessage(response, requestProps.ContentType);
@@ -464,12 +487,9 @@ namespace NetFusion.RabbitMQ.Core
             RpcMessageConsumer consumer = GetRpcConsumer(consumerAtrib);
             byte[] messageBody = SerializeMessage(command, consumer.DefaultContentType);
 
-            byte[] replyBody;
-            using (IModel publishChannel = CreateBrokerChannel(consumer.BrokerName))
-            {
-                replyBody = await consumer.Client.Invoke(command, messageBody, publishChannel);
-            }
-
+            // Publish the RPC request the consumer's queue and await a response.
+            byte[] replyBody = await consumer.Client.Invoke(command, messageBody);
+   
             object reply = DeserializeReply(consumer.DefaultContentType, command.ResultType, replyBody);
             command.SetResult(reply);
         }
@@ -490,7 +510,9 @@ namespace NetFusion.RabbitMQ.Core
 
             if (consumer == null)
             {
-
+                throw new InvalidOperationException(
+                    $"RPC Consumer Client could not configured for Broker: {consumerAttrib.BrokerName} " +
+                    $"RequestQuoteKey: {consumerAttrib.RequestQueueKey}.");
             }
             return consumer;
         }

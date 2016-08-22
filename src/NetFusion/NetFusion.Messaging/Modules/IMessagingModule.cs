@@ -32,12 +32,30 @@ namespace NetFusion.Messaging.Modules
         ILookup<Type, MessageDispatchInfo> InProcessDispatchers { get; }
 
         /// <summary>
-        /// Dispatches a message using the specified dispatch information.
+        /// Returns the in-process dispatcher associated with the specified command type.
         /// </summary>
-        /// <param name="message">The message to dispatch.</param>
-        /// <param name="dispatchInfo">Contains information about the consumer that should
-        /// receives the message.</param>
-        /// <returns>The future result of the dispatch returned by the consumer.</returns>
+        /// <param name="commandType">The type of the command to find associated dispatcher.</param>
+        /// <returns>Command message dispatcher metadata information.</returns>
+        /// <exception cref="InvalidOperationException">Exception if one and only one dispatcher
+        /// can't be found the specified command.</exception>
+        MessageDispatchInfo GetInProcessCommandDispatcher(Type commandType);
+
+        /// <summary>
+        /// Invokes the consumer with the message defined by the dispatcher instance.
+        /// </summary>
+        /// <param name="dispatcher">The dispatcher containing information on how the message
+        /// is to be dispatched.</param>
+        /// <param name="message">The message to dispatch to the consumer.</param>
+        /// <returns>The result from the consumer.  If the message is a command and the response
+        /// is assignable to it response type, it is automatically set on the command.</returns>
+        /// <exception cref="InvalidOperationException">Exception if the type of message is not
+        /// is not the same type associated with the dispatcher.
+        /// </exception>
+        Task<object> InvokeDispatcher(MessageDispatchInfo dispatcher, IMessage message);
+
+
+
+
         Task<T> DispatchConsumer<T>(IMessage message, MessageDispatchInfo dispatchInfo)
             where T : class;
     }

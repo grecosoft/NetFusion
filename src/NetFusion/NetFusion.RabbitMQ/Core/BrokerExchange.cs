@@ -14,8 +14,6 @@ namespace NetFusion.RabbitMQ.Core
     /// class from which specific type of exchanges derive.  Also responsible
     /// for creating queues and binding them to the exchange.
     /// </summary>
-    /// <typeparam name="TMessage">The type of the message associated
-    /// with the exchange.</typeparam>
     public abstract class BrokerExchange : IMessageExchange
     {
         private readonly List<ExchangeQueue> _queues;

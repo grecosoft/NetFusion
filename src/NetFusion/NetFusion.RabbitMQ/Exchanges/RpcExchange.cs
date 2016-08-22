@@ -1,4 +1,6 @@
-﻿namespace NetFusion.RabbitMQ.Core
+﻿using System;
+
+namespace NetFusion.RabbitMQ.Core
 {
     public abstract class RpcExchange : BrokerExchange
     {
@@ -10,6 +12,15 @@
             QueueSettings.IsNoAck = true;   
             QueueSettings.IsExclusive = false; 
             QueueSettings.IsAutoDelete = true;
+        }
+
+        internal override void ValidateConfiguration()
+        {
+            if(! QueueSettings.IsNoAck)
+            {
+                throw new InvalidOperationException(
+                    "IsNoAch must be true for a RPC exchange.");
+            }
         }
     }
 }

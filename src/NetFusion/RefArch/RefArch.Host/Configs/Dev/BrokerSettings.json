@@ -8,7 +8,9 @@
         "Password": "bestdog",
 
         "RpcConsumers": [
-          { "RequestQueueKey" :  "ExampleRpcConsumer", "RequestQueueName" : "RpcMessageQueue" }
+          {
+            "RequestQueueKey": "ExampleRpcConsumer", "RequestQueueName": "RpcMessageQueue"
+          }
         ],
 
         "QueueProperties": [

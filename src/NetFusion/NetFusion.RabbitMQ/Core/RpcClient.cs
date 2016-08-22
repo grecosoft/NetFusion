@@ -10,6 +10,11 @@ using System.Threading.Tasks;
 
 namespace NetFusion.RabbitMQ.Core
 {
+    /// <summary>
+    /// Responsible for making RPC requests and returning the response when
+    /// received on the reply queue.  The response is correlated with the
+    /// made request.
+    /// </summary>
     public class RpcClient : IRpcClient
     {
         private const string DEFAULT_EXCHANGE = "";
@@ -18,8 +23,9 @@ namespace NetFusion.RabbitMQ.Core
         private readonly string _rpcRequestQueueName;
         private readonly string _replyQueueName;
 
+        // Correlation Value to Task Completion Mapping:
         private readonly ConcurrentDictionary<string, TaskCompletionSource<byte[]>> _futureResults;
-        private readonly EventingBasicConsumer _consumer;
+        private readonly EventingBasicConsumer _replyConsumer;
 
         public RpcClient(string rpcRequestQueueName, IModel channel)
         {
@@ -29,15 +35,20 @@ namespace NetFusion.RabbitMQ.Core
             _channel = channel;
             _rpcRequestQueueName = rpcRequestQueueName;
             _replyQueueName = _channel.QueueDeclare().QueueName;
-            _futureResults = new ConcurrentDictionary<string, TaskCompletionSource<byte[]>>();
-            _consumer = new EventingBasicConsumer(channel);
 
-            _channel.BasicConsume(_replyQueueName, true, _consumer);
-            _consumer.Received += HandleReplyResponse;
+            _futureResults = new ConcurrentDictionary<string, TaskCompletionSource<byte[]>>();
+            _replyConsumer = new EventingBasicConsumer(channel);
+
+            ConsumeReplyQueue();
         }
 
-        public async Task<byte[]> Invoke(ICommand command, byte[] messageBody,
-            IModel publishChannel)
+        private void ConsumeReplyQueue()
+        {
+            _channel.BasicConsume(_replyQueueName, true, _replyConsumer);
+            _replyConsumer.Received += HandleReplyResponse;
+        }
+
+        public async Task<byte[]> Invoke(ICommand command, byte[] messageBody)
         {
             Check.NotNull(command, nameof(command));
             Check.NotNull(messageBody, nameof(messageBody));
@@ -53,7 +64,7 @@ namespace NetFusion.RabbitMQ.Core
 
             IBasicProperties basicProps = GetBasicProperties(command);
 
-            publishChannel.BasicPublish(DEFAULT_EXCHANGE,
+            _channel.BasicPublish(DEFAULT_EXCHANGE,
                              _rpcRequestQueueName,
                              basicProps,
                              messageBody);
@@ -67,13 +78,13 @@ namespace NetFusion.RabbitMQ.Core
 
             IBasicProperties props = _channel.CreateBasicProperties();
             props.ReplyTo = _replyQueueName;
-            props.ContentType = "application/json; charset=utf-8";
+            props.ContentType = "application/json; charset=utf-8"; // TODO: correct this.
             props.CorrelationId = command.GetCorrelationId();
             props.Type = rptAttrib.ExternalTypeName;
             return props;
         }
 
-        // When a response is received within the queue for a prior request,
+        // When a response is received within the reply queue for a prior request,
         // find the corresponding future-result for the received correlation
         // value and satisfy the result.
         private void HandleReplyResponse(object sender, BasicDeliverEventArgs evt)

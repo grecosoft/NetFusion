@@ -1,8 +1,11 @@
-﻿using NetFusion.Domain.Scripting;
+﻿using NetFusion.Common;
+using NetFusion.Common.Extensions;
+using NetFusion.Domain.Scripting;
 using NetFusion.Messaging.Rules;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace NetFusion.Messaging.Core
 {
@@ -88,6 +91,41 @@ namespace NetFusion.Messaging.Core
         /// performance.
         /// </summary>
         public MulticastDelegate Invoker { get; set; }
+
+        /// <summary>
+        /// Dispatches a message to the specified consumer.
+        /// </summary>
+        /// <param name="message">The message to be dispatched.</param>
+        /// <param name="consumer">Instance of the consumer to have message dispatched.</param>
+        /// <returns>The response as a future result.</returns>
+        public async Task<object> Dispatch(IMessage message, IMessageConsumer consumer)
+        {
+            Check.NotNull(message, nameof(message));
+            Check.NotNull(consumer, nameof(consumer));
+
+            object result = null;
+            if (this.IsAsync)
+            {
+                var futureResult = (Task)this.Invoker.DynamicInvoke(consumer, message);
+                await futureResult;
+
+                dynamic resultTask = futureResult;
+                result = resultTask.Result;
+            }
+            else
+            {
+                result = this.Invoker.DynamicInvoke(consumer, message);
+                await Task.FromResult(result);
+            }
+
+            var command = message as ICommand;
+            if (result != null && result.GetType().IsDerivedFrom(command.ResultType))
+            {
+                command.SetResult(result);
+            }
+
+            return result;
+        }
 
         /// <summary>
         /// Determines if the message handler applies based on the assigned dispatcher

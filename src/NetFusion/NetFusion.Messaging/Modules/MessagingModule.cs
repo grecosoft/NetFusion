@@ -150,6 +150,43 @@ namespace NetFusion.Messaging.Modules
             }
         }
 
+        public MessageDispatchInfo GetInProcessCommandDispatcher(Type commandType)
+        {
+            Check.NotNull(commandType, nameof(commandType));
+            Check.IsTrue(commandType.IsDerivedFrom<ICommand>(), nameof(commandType), "must be command type");
+
+            IEnumerable<MessageDispatchInfo> dispatchers = this.InProcessDispatchers.WhereHandlerForMessage(commandType);
+            if (dispatchers.Empty())
+            {
+                throw new InvalidOperationException(
+                    $"Message dispatcher could not be found for command type: {commandType}");
+            }
+
+            if (dispatchers.Count() > 1) {
+                throw new InvalidOperationException(
+                    $"Command type: {commandType} can't have more than one dispatcher.");
+            }
+
+            return dispatchers.First();
+        }
+
+        public async Task<object> InvokeDispatcher(MessageDispatchInfo dispatcher, IMessage message)
+        {
+            if (!message.GetType().IsDerivedFrom(dispatcher.MessageType))
+            {
+                throw new ContainerException(
+                    $"The message event type: {message.GetType()} being dispatched does not match or " +
+                    $"derived from the dispatch information type of: {dispatcher.MessageType}.");
+            }
+
+            using (var scope = AppContainer.Instance.Services.BeginLifetimeScope())
+            {
+                // Resolve the component and call the message handler.
+                var consumer = (IMessageConsumer)scope.Resolve(dispatcher.ConsumerType);
+                return await dispatcher.Dispatch(message, consumer);
+            }
+        }
+
         // For each discovered message event type, execute the same code that 
         // is used at runtime to determine the consumer methods that handle
         // the message.  Then log this information.
@@ -195,6 +232,12 @@ namespace NetFusion.Messaging.Modules
         }
 
 
+
+
+
+
+        // -- TODO:  this code will be refactored to use the code that has been moved down
+        // -- into the MessageDispatchInfo class.
 
         /// <summary>
         /// Lower level methods used to dispatch a method to a specified  consumer.  The consumer will 
