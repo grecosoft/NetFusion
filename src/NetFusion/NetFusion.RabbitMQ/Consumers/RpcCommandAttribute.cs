@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetFusion.RabbitMQ.Core;
+using System;
 
 namespace NetFusion.RabbitMQ.Consumers
 {
@@ -15,5 +16,15 @@ namespace NetFusion.RabbitMQ.Consumers
         }
 
         public string ExternalTypeName { get; set; }
+        public string ContentType { get; set; }
+
+        public RpcProperties ToRpcProps()
+        {
+            return new RpcProperties
+            {
+                ContentType = this.ContentType,
+                ExternalTypeName = this.ExternalTypeName
+            };
+        }
     }
 }

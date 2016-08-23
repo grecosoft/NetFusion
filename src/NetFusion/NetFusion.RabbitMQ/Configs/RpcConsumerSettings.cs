@@ -1,4 +1,4 @@
-﻿using NetFusion.RabbitMQ.Core;
+﻿using NetFusion.RabbitMQ.Serialization;
 
 namespace NetFusion.RabbitMQ.Configs
 {
@@ -6,6 +6,6 @@ namespace NetFusion.RabbitMQ.Configs
     {
         public string RequestQueueKey { get; set; }
         public string RequestQueueName { get; set; }
-        public string ContentType { get; set; } = ExchangeSettings.DefaultContentType;
+        public string ContentType { get; set; } = SerializerTypes.Json;
     }
 }

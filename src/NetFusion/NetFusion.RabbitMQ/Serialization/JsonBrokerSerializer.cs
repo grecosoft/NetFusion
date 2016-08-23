@@ -21,7 +21,7 @@ namespace NetFusion.RabbitMQ.Serialization
 
         public string ContentType
         {
-            get { return "application/json; charset=utf-8"; }
+            get { return SerializerTypes.Json; }
         }
 
         public byte[] Serialize(object value)

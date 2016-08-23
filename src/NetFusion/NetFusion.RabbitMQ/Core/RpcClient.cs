@@ -48,9 +48,10 @@ namespace NetFusion.RabbitMQ.Core
             _replyConsumer.Received += HandleReplyResponse;
         }
 
-        public async Task<byte[]> Invoke(ICommand command, byte[] messageBody)
+        public async Task<byte[]> Invoke(ICommand command, RpcProperties rpcProps, byte[] messageBody)
         {
             Check.NotNull(command, nameof(command));
+            Check.NotNull(rpcProps, nameof(rpcProps));
             Check.NotNull(messageBody, nameof(messageBody));
 
             // Associate a correlation value with the outgoing message.
@@ -62,7 +63,7 @@ namespace NetFusion.RabbitMQ.Core
             var futureResult = new TaskCompletionSource<byte[]>();
             _futureResults[correlationId] = futureResult;
 
-            IBasicProperties basicProps = GetBasicProperties(command);
+            IBasicProperties basicProps = GetBasicProperties(command, rpcProps);
 
             _channel.BasicPublish(DEFAULT_EXCHANGE,
                              _rpcRequestQueueName,
@@ -72,15 +73,14 @@ namespace NetFusion.RabbitMQ.Core
             return await futureResult.Task;
         }
 
-        private IBasicProperties GetBasicProperties(ICommand command)
+        private IBasicProperties GetBasicProperties(ICommand command, RpcProperties rpcProps)
         {
-            var rptAttrib = command.GetAttribute<RpcCommandAttribute>();
-
             IBasicProperties props = _channel.CreateBasicProperties();
+
             props.ReplyTo = _replyQueueName;
-            props.ContentType = "application/json; charset=utf-8"; // TODO: correct this.
             props.CorrelationId = command.GetCorrelationId();
-            props.Type = rptAttrib.ExternalTypeName;
+            props.ContentType = rpcProps.ContentType;
+            props.Type = rpcProps.ExternalTypeName;
             return props;
         }
 

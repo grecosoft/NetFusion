@@ -53,6 +53,16 @@ namespace NetFusion.RabbitMQ
             return message.Attributes.GetValue<string>(null, Context);
         }
 
+        public static void SetContentType(this IMessage message, string value)
+        {
+            message.Attributes.SetValue(value, Context);
+        }
+
+        public static string GetContentType(this IMessage message)
+        {
+            return message.Attributes.GetValue<string>(null, Context);
+        }
+
         public static void SetCorrelationId(this IMessage message, string value)
         {
             message.Attributes.SetValue(value, Context);

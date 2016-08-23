@@ -79,6 +79,7 @@
     <Compile Include="Core\ReplyConsumer.cs" />
     <Compile Include="Core\RpcClient.cs" />
     <Compile Include="Core\RpcMessageConsumer.cs" />
+    <Compile Include="Core\RpcProperties.cs" />
     <Compile Include="Exchanges\DirectExchange.cs" />
     <Compile Include="Exchanges\ExchangeSettings.cs" />
     <Compile Include="Exchanges\FanoutExchange.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Serialization\IBrokerSerializer.cs" />
     <Compile Include="Serialization\IBrokerSerializerRegistry.cs" />
     <Compile Include="Serialization\JsonBrokerSerializer.cs" />
+    <Compile Include="Serialization\SerializerTypes.cs" />
     <Compile Include="Testing\HostTypeResolverExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,7 @@ using NetFusion.Domain.Scripting;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Modules;
+using NetFusion.RabbitMQ;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Consumers;
 using NetFusion.RabbitMQ.Integration;
@@ -474,38 +475,51 @@ namespace NetFusion.RabbitMQ.Core
         // RPC style messages.  The running application awaits the response.
         public async Task PublishToRpcConsumer(IMessage message)
         {
-            if (! IsRpcCommand(message))
+            Check.NotNull(message, nameof(message));
+
+            AssertRpcCommand(message);
+
+            var consumerAtrib = message.GetAttribute<RpcCommandAttribute>();
+            var command = message as ICommand;
+
+            RpcProperties rpcProps = consumerAtrib.ToRpcProps();
+            RpcMessageConsumer consumer = GetRpcConsumer(consumerAtrib);
+
+            rpcProps.ContentType = GetFistContentType(
+                consumer.ContentType,
+                rpcProps.ContentType, 
+                message.GetContentType());
+
+            // Publish the RPC request the consumer's queue and await a response.
+            byte[] messageBody = SerializeMessage(command, rpcProps.ContentType);
+            byte[] replyBody = await consumer.Client.Invoke(command, rpcProps, messageBody);
+   
+            object reply = DeserializeReply(rpcProps.ContentType, command.ResultType, replyBody);
+            command.SetResult(reply);
+        }
+
+        private void AssertRpcCommand(IMessage message)
+        {
+            if (!IsRpcCommand(message))
             {
                 throw new InvalidOperationException(
                     $"The message of type: {message.GetType()} is not a command " +
                     $"or is not decorated with: {typeof(RpcCommandAttribute)}.");
             }
-
-            var consumerAtrib = message.GetAttribute<RpcCommandAttribute>();
-            var command = message as ICommand;
-
-            RpcMessageConsumer consumer = GetRpcConsumer(consumerAtrib);
-            byte[] messageBody = SerializeMessage(command, consumer.DefaultContentType);
-
-            // Publish the RPC request the consumer's queue and await a response.
-            byte[] replyBody = await consumer.Client.Invoke(command, messageBody);
-   
-            object reply = DeserializeReply(consumer.DefaultContentType, command.ResultType, replyBody);
-            command.SetResult(reply);
         }
 
         public bool IsRpcCommand(IMessage message)
         {
             Type messageType = message.GetType();
 
-            return messageType.IsDerivedFrom<ICommand>() 
+            return messageType.IsDerivedFrom<ICommand>()
                 && messageType.HasAttribute<RpcCommandAttribute>();
         }
 
         private RpcMessageConsumer GetRpcConsumer(RpcCommandAttribute consumerAttrib)
         {
-            RpcMessageConsumer consumer = _rpcMessageConsumers.FirstOrDefault(c => 
-                c.BrokerName == consumerAttrib.BrokerName 
+            RpcMessageConsumer consumer = _rpcMessageConsumers.FirstOrDefault(c =>
+                c.BrokerName == consumerAttrib.BrokerName
                 && c.RequestQueueKey == consumerAttrib.RequestQueueKey);
 
             if (consumer == null)
@@ -517,14 +531,30 @@ namespace NetFusion.RabbitMQ.Core
             return consumer;
         }
 
+        private string GetFistContentType(params string[] contentTypes)
+        {
+            string contentType = contentTypes.FirstOrDefault(ct => ct != null);
+            if (contentType == null)
+            {
+                throw new InvalidOperationException(
+                    "Serialization type not specified.");
+            }
+            return contentType;
+        }
+
         private async Task Publish(ExchangeDefinition exchangeDef, IMessage message)
         {
             if (! await MatchesExchangeCriteria(exchangeDef, message)) return;
 
-            string contentType = exchangeDef.Exchange.Settings.ContentType;
+            IMessageExchange exchange = exchangeDef.Exchange;
+
+            string contentType = GetFistContentType(
+                exchange.Settings.ContentType,
+                message.GetContentType());
+
             byte[] messageBody = SerializeMessage(message, contentType);
 
-            using (var channel = CreateBrokerChannel(exchangeDef.Exchange.BrokerName))
+            using (var channel = CreateBrokerChannel(exchange.BrokerName))
             {
                 exchangeDef.Exchange.Publish(channel, message, messageBody); 
             }

@@ -1,4 +1,5 @@
 ﻿using NetFusion.Domain.Scripting;
+using NetFusion.RabbitMQ.Serialization;
 using System.Collections.Generic;
 
 namespace NetFusion.RabbitMQ.Core
@@ -8,12 +9,10 @@ namespace NetFusion.RabbitMQ.Core
     /// </summary>
     public class ExchangeSettings
     {
-        public static string DefaultContentType = "application/json; charset=utf-8";
-
         public ExchangeSettings()
         {
             this.Arguments = new Dictionary<string, object>();
-            this.ContentType = DefaultContentType;
+            this.ContentType = SerializerTypes.Json;
         }
 
         /// <summary>

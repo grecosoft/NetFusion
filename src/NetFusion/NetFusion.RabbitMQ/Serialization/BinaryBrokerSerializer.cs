@@ -14,7 +14,7 @@ namespace NetFusion.RabbitMQ.Serialization
     {
         public string ContentType
         {
-            get { return "application/octet-stream"; }
+            get { return SerializerTypes.Binary; }
         }
 
         public byte[] Serialize(object value)

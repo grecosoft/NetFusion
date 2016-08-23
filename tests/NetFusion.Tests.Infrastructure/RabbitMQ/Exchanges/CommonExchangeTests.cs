@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using NetFusion.RabbitMQ.Serialization;
 using NetFusion.Tests.Infrastructure.RabbitMQ.Mocks;
 using System.Linq;
 using Xunit;
@@ -12,7 +13,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ.Exchanges
         {
             var exchange = new MockDirectExchange();
             exchange.Setup();
-            exchange.Settings.ContentType.Should().Be("application/json; charset=utf-8");
+            exchange.Settings.ContentType.Should().Be(SerializerTypes.Json);
         }
 
         [Fact]

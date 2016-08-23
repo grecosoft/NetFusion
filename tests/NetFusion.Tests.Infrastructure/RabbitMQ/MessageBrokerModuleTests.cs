@@ -10,6 +10,7 @@ using NetFusion.Messaging.Testing;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Consumers;
 using NetFusion.RabbitMQ.Core;
+using NetFusion.RabbitMQ.Serialization;
 using NetFusion.Settings.Testing;
 using NetFusion.Tests.Core.Bootstrap.Mocks;
 using NetFusion.Tests.Infrastructure.RabbitMQ.Mocks;
@@ -237,8 +238,8 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
 
             brokerConfig.Serializers.Should().HaveCount(2);
             brokerConfig.Serializers.Should().ContainKeys(
-                "application/octet-stream", 
-                "application/json; charset=utf-8");
+                SerializerTypes.Binary, 
+                SerializerTypes.Json);
         }
 
         // Creates an initialized container with the needed dependent plug-ins;
