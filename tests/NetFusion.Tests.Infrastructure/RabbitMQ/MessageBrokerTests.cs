@@ -212,10 +212,10 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             broker.Initialize(brokerConfig, msgConsumer);
 
             // Provide a mock consumer that acknowledges the received message,
-            broker.MockMsgModule.Setup(m => m.DispatchConsumer<IMessage>(It.IsAny<IMessage>(), It.IsAny<MessageDispatchInfo>()))
-                .Returns((IMessage m, MessageDispatchInfo di) => {
+            broker.MockMsgModule.Setup(m => m.InvokeDispatcher(It.IsAny<MessageDispatchInfo>(), It.IsAny<IMessage>()))
+                .Returns((MessageDispatchInfo di, IMessage m) => {
                     m.SetAcknowledged();
-                    return Task.FromResult((IMessage)m);
+                    return Task.FromResult<object>(null);
                 });
 
             // Simulate receiving of a message and verify that the RabbitMq
@@ -243,13 +243,14 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
 
             // Initialize the broker.
             broker.Initialize(brokerConfig, msgConsumer);
-         
+
             // Provide a mock consumer that rejects the received message,
-            broker.MockMsgModule.Setup(m => m.DispatchConsumer<IMessage>(It.IsAny<IMessage>(), It.IsAny<MessageDispatchInfo>()))
-                .Returns((IMessage m, MessageDispatchInfo di) => {
+            broker.MockMsgModule.Setup(m => m.InvokeDispatcher(It.IsAny<MessageDispatchInfo>(), It.IsAny<IMessage>()))
+                .Returns((MessageDispatchInfo di, IMessage m) => {
                     m.SetRejected();
-                    return Task.FromResult((IMessage)m);
+                    return Task.FromResult<object>(null);
                 });
+
 
             // Simulate receiving of a message and verify that the RabbitMq
             // client was called correctly.

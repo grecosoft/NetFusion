@@ -187,6 +187,12 @@ namespace NetFusion.Messaging.Modules
             }
         }
 
+        public async Task<T> InvokeDispatcher<T>(MessageDispatchInfo dispatcher, IMessage message)
+           where T : class
+        {
+            return (T)(await InvokeDispatcher(dispatcher, message));
+        }
+
         // For each discovered message event type, execute the same code that 
         // is used at runtime to determine the consumer methods that handle
         // the message.  Then log this information.

@@ -103,28 +103,43 @@ namespace NetFusion.Messaging.Core
             Check.NotNull(message, nameof(message));
             Check.NotNull(consumer, nameof(consumer));
 
-            object result = null;
+            var futureResult = new TaskCompletionSource<object>();
+
             if (this.IsAsync)
             {
-                var futureResult = (Task)this.Invoker.DynamicInvoke(consumer, message);
-                await futureResult;
+                var asyncResult = (Task)this.Invoker.DynamicInvoke(consumer, message);
+                await asyncResult;
 
-                dynamic resultTask = futureResult;
-                result = resultTask.Result;
+                object result = ProcessResult(message, asyncResult);
+                futureResult.SetResult(result);
             }
             else
             {
-                result = this.Invoker.DynamicInvoke(consumer, message);
-                await Task.FromResult(result);
+                object syncResult = this.Invoker.DynamicInvoke(consumer, message);
+                object result = ProcessResult(message, syncResult);
+                futureResult.SetResult(result);
             }
 
+            return await futureResult.Task;
+        }
+
+        private object ProcessResult(IMessage message, object result)
+        {
+            object resultValue = result;
             var command = message as ICommand;
-            if (result != null && result.GetType().IsDerivedFrom(command.ResultType))
+
+            if (command != null && result != null && this.IsAsync)
             {
-                command.SetResult(result);
+                dynamic resultTask = result;
+                resultValue = resultTask.Result;
             }
 
-            return result;
+            if (command != null)
+            {
+                command.SetResult(resultValue);
+            }
+
+            return resultValue; 
         }
 
         /// <summary>

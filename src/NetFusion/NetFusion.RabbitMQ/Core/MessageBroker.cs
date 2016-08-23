@@ -5,7 +5,6 @@ using NetFusion.Domain.Scripting;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Modules;
-using NetFusion.RabbitMQ;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Consumers;
 using NetFusion.RabbitMQ.Integration;
@@ -414,10 +413,9 @@ namespace NetFusion.RabbitMQ.Core
 
             LogReceivedExchangeMessage(message, messageConsumer);
 
-            // Delegate to the Messaging Module to dispatch the message to all consumers.
-            Task<IMessage> futureResult = _messagingModule.DispatchConsumer<IMessage>(
-                message,
-                messageConsumer.DispatchInfo);
+            // Delegate to the Messaging Module to dispatch the message to queue consumer.
+            Task<object> futureResult = _messagingModule.InvokeDispatcher(
+               messageConsumer.DispatchInfo, message);
 
             futureResult.Wait();
 

@@ -1,7 +1,5 @@
 ﻿using Autofac;
 using NetFusion.Bootstrap.Logging;
-using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions;
 using NetFusion.Domain.Scripting;
 using NetFusion.Messaging.Modules;
 using System;
@@ -50,52 +48,8 @@ namespace NetFusion.Messaging.Core
 
             // Invoke all synchronous handlers and if there are no exceptions, execute all
             // asynchronous handler and return the future result to the caller to await.
-            await InvokeMessageDispatchersSync(message, dispatchers);
+           // await InvokeMessageDispatchersSync(message, dispatchers);
             await InvokeMessageDispatchersAsync(message, dispatchers);
-        }
-
-        private async Task  InvokeMessageDispatchersSync(IMessage message,
-            IEnumerable<MessageDispatchInfo> dispatchers)
-        {
-            var dispatchErrors = new List<MessageDispatchException>();
-
-            foreach (var dispatcher in dispatchers.Where(d => !d.IsAsync))
-            {
-                try
-                {
-                    if (! await MatchesDispatchCriteria(dispatcher, message))
-                    {
-                        continue;
-                    }
-
-                    var consumer = _lifetimeScope.Resolve(dispatcher.ConsumerType);
-                    var result = dispatcher.Invoker.DynamicInvoke(consumer, message);
-
-                    var command = message as ICommand;
-                    if (command != null && result != null && result.GetType().IsDerivedFrom(command.ResultType))
-                    {
-                        command.SetResult(result);
-                    }
-                }
-                catch (TargetInvocationException ex)
-                {
-                    dispatchErrors.Add(new MessageDispatchException("Error calling message consumer.", 
-                        dispatcher, ex.InnerException));
-                }
-                catch (Exception ex)
-                {
-                    dispatchErrors.Add(new MessageDispatchException("Error calling message consumer.", 
-                        dispatcher, ex));
-                }
-            }
-
-            if (dispatchErrors.Any())
-            {
-                throw new MessageDispatchException(
-                    "An exception was received when dispatching a message to " +
-                    "one or more synchronous event consumers.",
-                    dispatchErrors);
-            }
         }
 
         private async Task<bool> MatchesDispatchCriteria(MessageDispatchInfo dispatchInfo, IMessage message)
@@ -118,7 +72,7 @@ namespace NetFusion.Messaging.Core
 
             try
             {
-                foreach(MessageDispatchInfo dispatchInfo in dispatchers.Where(d => d.IsAsync))
+                foreach(MessageDispatchInfo dispatchInfo in dispatchers)
                 {
                     if (await MatchesDispatchCriteria(dispatchInfo, message))
                     {
@@ -128,18 +82,6 @@ namespace NetFusion.Messaging.Core
 
                 futureResults = InvokeMessageDispatchers(message, matchingDispatchers);
                 await Task.WhenAll(futureResults.Select(fr => fr.Task));
-
-                var command = message as ICommand;
-                if (command != null && futureResults.Count() == 1)
-                {
-                    dynamic resultTask = futureResults.First().Task;
-                    object result = resultTask.Result;
-
-                    if (result != null && result.GetType().IsDerivedFrom(command.ResultType))
-                    {
-                        command.SetResult(resultTask.Result);
-                    }
-                }
             }
             catch (Exception ex)
             {
@@ -169,8 +111,8 @@ namespace NetFusion.Messaging.Core
 
             foreach (MessageDispatchInfo dispatcher in dispatchers)
             {
-                var consumer = _lifetimeScope.Resolve(dispatcher.ConsumerType);
-                var futureResult = (Task)dispatcher.Invoker.DynamicInvoke(consumer, message);
+                var consumer = (IMessageConsumer)_lifetimeScope.Resolve(dispatcher.ConsumerType);
+                var futureResult = dispatcher.Dispatch(message, consumer);
 
                 futureResults.Add(new DispatchTask(futureResult, dispatcher));
             }

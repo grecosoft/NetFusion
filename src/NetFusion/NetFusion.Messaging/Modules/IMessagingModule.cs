@@ -54,7 +54,8 @@ namespace NetFusion.Messaging.Modules
         Task<object> InvokeDispatcher(MessageDispatchInfo dispatcher, IMessage message);
 
 
-
+        Task<T> InvokeDispatcher<T>(MessageDispatchInfo dispatcher, IMessage message)
+           where T : class;
 
         Task<T> DispatchConsumer<T>(IMessage message, MessageDispatchInfo dispatchInfo)
             where T : class;
