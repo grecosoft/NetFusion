@@ -1,7 +1,13 @@
-﻿using NetFusion.RabbitMQ.Configs;
+﻿using NetFusion.Common;
+using NetFusion.RabbitMQ.Configs;
 
 namespace NetFusion.RabbitMQ.Core
 {
+    /// <summary>
+    /// Aggregates a configured RPC broker client and the queue that should be
+    /// used to make RPC style requests.  Also contains an instance of the client
+    /// that makes the actual request to the consumer. 
+    /// </summary>
     public class RpcMessageConsumer
     {
         public IRpcClient Client { get; }
@@ -14,6 +20,10 @@ namespace NetFusion.RabbitMQ.Core
             RpcConsumerSettings settings, 
             IRpcClient client)
         {
+            Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
+            Check.NotNull(settings, nameof(settings));
+            Check.NotNull(client, nameof(client));
+
             this.BrokerName = brokerName;
             this.RequestQueueKey = settings.RequestQueueKey;
             this.ContentType = settings.ContentType;

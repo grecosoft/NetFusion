@@ -6,7 +6,7 @@ namespace NetFusion.RabbitMQ.Core
     /// <summary>
     /// Implements message based RPC calls that are published to a consumer's
     /// queue.  The consumer responds by publishing the response on a queue
-    /// specified by the initiation publisher.
+    /// specified by the initiating publisher.
     /// </summary>
     public interface IRpcClient
     {

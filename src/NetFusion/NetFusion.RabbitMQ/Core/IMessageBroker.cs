@@ -14,11 +14,11 @@ namespace NetFusion.RabbitMQ.Core
         /// Initializes the message broker with the information needed to create 
         /// exchanges and queues.
         /// </summary>
-        /// <param name="metadata">The exchange and queue meta-data.</param>
-        void Initialize(MessageBrokerConfig metadata);
+        /// <param name="brokerConfig">Setting used to configure the broker.</param>
+        void Initialize(MessageBrokerConfig brokerConfig);
 
         /// <summary>
-        /// Creates the needed RabbitMq exchanges based on the configurations.
+        /// Creates the needed RabbitMq exchanges and queues based on the configurations.
         /// </summary>
         void ConfigureBroker();
 
@@ -37,6 +37,11 @@ namespace NetFusion.RabbitMQ.Core
         /// message.  Otherwise, False.</returns>
         bool IsExchangeMessage(IMessage message);
 
+        /// <summary>
+        /// Determines if the message is an RPC style message.
+        /// </summary>
+        /// <param name="message">The message to check.</param>
+        /// <returns>True if a RPC style message. Otherwise, false.</returns>
         bool IsRpcCommand(IMessage message);
 
         /// <summary>
@@ -45,6 +50,12 @@ namespace NetFusion.RabbitMQ.Core
         /// <param name="message">The message to publish.</param>
         Task PublishToExchange(IMessage message);
 
+        /// <summary>
+        /// Publishes a RPC style command message to a consumer and awaits the reply.
+        /// </summary>
+        /// <param name="message">The command message to publish.</param>
+        /// <returns>Task that is resolved when the reply is received for the
+        /// request.</returns>
         Task PublishToRpcConsumer(IMessage message);
     }
 }

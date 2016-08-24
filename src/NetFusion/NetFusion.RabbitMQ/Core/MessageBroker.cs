@@ -24,10 +24,12 @@ namespace NetFusion.RabbitMQ.Core
     /// definition.  A given exchange definition can also specify any queues to be
     /// created along with the exchange.  Having these queues created along with the
     /// exchange will allow any published messages to be delivered to the queue and
-    /// then processed when consumers are connected.  This class also implements the
-    /// process for joining consumers to existing queues and for creating new queues
-    /// specific to a consumer.  When messages are received, the Messaging Module is
-    /// delegated to for dispatching the message to the associated message handlers.
+    /// then processed when consumers are connected. 
+    /// 
+    /// This class also implements the process for joining consumers to existing queues 
+    /// and for creating new queues specific to a consumer.  When messages are received,
+    /// the Messaging Module is delegated to for dispatching the message to the associated
+    /// message handler.
     /// </summary>
     public class MessageBroker: IDisposable,
         IMessageBroker
@@ -112,8 +114,8 @@ namespace NetFusion.RabbitMQ.Core
         }
 
         /// <summary>
-        /// Creates all of the exchanges to which messages can be published.  Any default queue
-        /// configurations specified by the exchange will also be created.
+        /// Creates all of the exchanges to which messages can be published.
+        /// Any default queue configurations specified by the exchange are also created.
         /// </summary>
         public void ConfigureBroker()
         {
@@ -189,7 +191,7 @@ namespace NetFusion.RabbitMQ.Core
             BrokerConnection brokerConn = _brokerConfig.Connections.GetOptionalValue(brokerName);
             if (brokerConn == null)
             {
-                throw new InvalidOperationException(
+                throw new BrokerException(
                     $"Channel could not be created.  A broker with the name of: {brokerName} does not exist.");
             }
 
@@ -242,7 +244,7 @@ namespace NetFusion.RabbitMQ.Core
                 {
                     IModel replyChannel = CreateBrokerChannel(brokerConn.BrokerName);
 
-                    var rpcClient = new RpcClient(consumer.RequestQueueName, replyChannel);
+                    var rpcClient = new RpcClient(consumer, replyChannel);
                     var messageConsumer = new RpcMessageConsumer(brokerConn.BrokerName, consumer, rpcClient);
 
                     _rpcMessageConsumers.Add(messageConsumer);
@@ -250,7 +252,7 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
-        // Uses the dispatch metadata of the core messaging plugin-in and
+        // Uses the dispatch metadata of the core messaging plug-in and
         // subscribes and dispatches to the event handler(s) that should 
         // process the message when received.
         public void BindConsumers(IEnumerable<MessageConsumer> messageConsumers)
@@ -359,13 +361,13 @@ namespace NetFusion.RabbitMQ.Core
 
             if (messageType.IsNullOrWhiteSpace())
             {
-                throw new InvalidOperationException(
+                throw new BrokerException(
                     "The basic properties of the received RPC request does not specify the message type.");
             }
 
             if (! _brokerConfig.RpcTypes.ContainsKey(messageType))
             {
-                throw new InvalidOperationException(
+                throw new BrokerException(
                     $"The type associated with the message type name: {messageType} could not be resolved.");
             }
         }
@@ -457,7 +459,7 @@ namespace NetFusion.RabbitMQ.Core
 
             if (exchangeDefs == null)
             {
-                throw new InvalidOperationException(
+                throw new BrokerException(
                     $"The message of type: {messageType.FullName} is not associated with an exchange.");
             }
 
@@ -522,7 +524,7 @@ namespace NetFusion.RabbitMQ.Core
 
             if (consumer == null)
             {
-                throw new InvalidOperationException(
+                throw new BrokerException(
                     $"RPC Consumer Client could not configured for Broker: {consumerAttrib.BrokerName} " +
                     $"RequestQuoteKey: {consumerAttrib.RequestQueueKey}.");
             }
@@ -534,8 +536,7 @@ namespace NetFusion.RabbitMQ.Core
             string contentType = contentTypes.FirstOrDefault(ct => ct != null);
             if (contentType == null)
             {
-                throw new InvalidOperationException(
-                    "Serialization type not specified.");
+                throw new BrokerException("Serialization type not specified.");
             }
             return contentType;
         }
@@ -560,7 +561,7 @@ namespace NetFusion.RabbitMQ.Core
 
         // Determines if the message should be delivered to the queue.  If the exchange is marked
         // with a predicate attribute, the corresponding externally named script is executed to 
-        // determine if the message has matching criteria.  If no external script is specified,
+        // determine if the message has passing criteria.  If no external script is specified,
         // the exchange's matches method is called.
         private async Task<bool> MatchesExchangeCriteria(ExchangeDefinition exchangeDef, IMessage message)
         {
@@ -608,7 +609,6 @@ namespace NetFusion.RabbitMQ.Core
             return serializer.Deserialize<IMessage>(deliveryEvent.Body, messageType);
         }
 
-        // get from returned basic props
         private object DeserializeReply(string contentType, Type replyType, byte[] replyBody)
         {
             IBrokerSerializer serializer = GetMessageSerializer(contentType);
@@ -659,7 +659,7 @@ namespace NetFusion.RabbitMQ.Core
             BrokerConnection brokerConn = _brokerConfig.Connections.GetOptionalValue(brokerName);
             if (brokerConn == null)
             {
-                throw new InvalidOperationException(
+                throw new BrokerException(
                    $"An existing broker with the name of: {brokerConn} does not exist.");
             }
 

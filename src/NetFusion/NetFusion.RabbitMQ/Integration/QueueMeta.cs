@@ -3,7 +3,7 @@
 namespace NetFusion.RabbitMQ.Integration
 {
     /// <summary>
-    /// Meta-data for a saved exchange's queue.
+    /// The queue metadata needed to recreate the queue.
     /// </summary>
     public class QueueMeta
     {

@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BrokerException.cs" />
     <Compile Include="Configs\BrokerConnection.cs" />
     <Compile Include="Configs\BrokerSettings.cs" />
     <Compile Include="Configs\QueueProperties.cs" />
@@ -76,9 +77,9 @@
     <Compile Include="Core\BrokerExchange.cs" />
     <Compile Include="Core\MessageExchange.cs" />
     <Compile Include="Core\RabbitMqMessagePublisher.cs" />
-    <Compile Include="Core\ReplyConsumer.cs" />
     <Compile Include="Core\RpcClient.cs" />
     <Compile Include="Core\RpcMessageConsumer.cs" />
+    <Compile Include="Core\RpcPendingRequest.cs" />
     <Compile Include="Core\RpcProperties.cs" />
     <Compile Include="Exchanges\DirectExchange.cs" />
     <Compile Include="Exchanges\ExchangeSettings.cs" />

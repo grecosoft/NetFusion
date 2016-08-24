@@ -5,8 +5,8 @@ namespace NetFusion.RabbitMQ.Consumers
 {
     /// <summary>
     /// Used to consume messages delivered to a queue on an exchange.  This attribute
-    /// is applied to consumer methods to indicate that the method should
-    /// be called when the corresponding method is received on the queue.
+    /// is applied to consumer methods to indicate that the method should be called 
+    /// when the corresponding message is received on the queue.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public abstract class QueueConsumerAttribute : Attribute

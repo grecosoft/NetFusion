@@ -7,10 +7,10 @@ using RabbitMQ.Client.Events;
 namespace NetFusion.RabbitMQ.Core
 {
     /// <summary>
-    /// Contains meta-data used when creating and binding
-    /// the queue to an exchange.  This meta-data extends
-    /// the eventing dispatch meta-data defined by the
-    /// messaging plug-in.
+    /// Contains meta-data used when registering a consumer with a queue.  
+    /// This meta-data extends the messaging dispatch meta-data defined by 
+    /// the messaging plug-in.  The dispatch information is used to determine 
+    /// the consumer to dispatch when a message arrives in the queue.
     /// </summary>
     public class MessageConsumer
     {
@@ -72,6 +72,7 @@ namespace NetFusion.RabbitMQ.Core
         // by the Message Broker class.
         public IModel Channel { get; set; }
 
+        // Reference to the consumer of the queue.
         public EventingBasicConsumer Consumer { get; set; }
     }
 }

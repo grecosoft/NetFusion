@@ -4,8 +4,7 @@ using NetFusion.Messaging;
 namespace NetFusion.RabbitMQ.Core
 {
     /// <summary>
-    /// Message exchange for which specific message types
-    /// can be published.
+    /// Message exchange for which specific message types can be published.
     /// </summary>
     /// <typeparam name="TMessage"></typeparam>
     public abstract class MessageExchange<TMessage> : BrokerExchange

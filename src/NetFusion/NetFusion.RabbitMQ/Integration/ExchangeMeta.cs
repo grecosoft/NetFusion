@@ -3,7 +3,9 @@ using NetFusion.RabbitMQ.Core;
 
 namespace NetFusion.RabbitMQ.Integration
 {
-    
+    /// <summary>
+    /// The exchange metadata needed to recreate the exchange.
+    /// </summary>
     public class ExchangeMeta
     {
         public string BrokerName { get; set; }

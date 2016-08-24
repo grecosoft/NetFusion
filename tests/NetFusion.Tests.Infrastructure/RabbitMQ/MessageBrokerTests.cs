@@ -38,7 +38,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             brokerConfig.Exchanges = new[] { exchange };
             brokerConfig.Connections.Clear();
 
-            Assert.Throws<InvalidOperationException>(() => broker.Initialize(brokerConfig));
+            Assert.Throws<BrokerException>(() => broker.Initialize(brokerConfig));
         }
 
         /// <summary>

@@ -1,6 +1,5 @@
-﻿using System;
-using NetFusion.Common;
-using NetFusion.RabbitMQ.Core;
+﻿using NetFusion.Common;
+using System;
 
 namespace NetFusion.RabbitMQ.Core
 {
