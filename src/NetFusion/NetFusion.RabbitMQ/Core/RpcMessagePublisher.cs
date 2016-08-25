@@ -8,14 +8,14 @@ namespace NetFusion.RabbitMQ.Core
     /// used to make RPC style requests.  Also contains an instance of the client
     /// that makes the actual request to the consumer. 
     /// </summary>
-    public class RpcMessageConsumer
+    public class RpcMessagePublisher
     {
         public IRpcClient Client { get; }
         public string BrokerName { get; }
         public string RequestQueueKey { get; }
         public string ContentType { get; }
 
-        public RpcMessageConsumer(
+        public RpcMessagePublisher(
             string brokerName, 
             RpcConsumerSettings settings, 
             IRpcClient client)

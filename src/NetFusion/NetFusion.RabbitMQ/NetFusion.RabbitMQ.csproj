@@ -78,7 +78,7 @@
     <Compile Include="Core\MessageExchange.cs" />
     <Compile Include="Core\RabbitMqMessagePublisher.cs" />
     <Compile Include="Core\RpcClient.cs" />
-    <Compile Include="Core\RpcMessageConsumer.cs" />
+    <Compile Include="Core\RpcMessagePublisher.cs" />
     <Compile Include="Core\RpcPendingRequest.cs" />
     <Compile Include="Core\RpcProperties.cs" />
     <Compile Include="Exchanges\DirectExchange.cs" />

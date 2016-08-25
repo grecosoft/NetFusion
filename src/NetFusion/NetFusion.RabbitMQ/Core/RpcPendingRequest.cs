@@ -36,6 +36,12 @@ namespace NetFusion.RabbitMQ.Core
             _futureResult.SetResult(result);
         }
 
+        public void Cancel()
+        {
+            _cancelToken.Cancel();
+            _cancelTokenReg.Dispose();
+        }
+
         public void UnRegister()
         {
             _cancelTokenReg.Dispose();

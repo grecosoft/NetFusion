@@ -1,4 +1,5 @@
 ﻿using NetFusion.Messaging;
+using RabbitMQ.Client.Events;
 using System.Threading.Tasks;
 
 namespace NetFusion.RabbitMQ.Core
@@ -10,6 +11,11 @@ namespace NetFusion.RabbitMQ.Core
     /// </summary>
     public interface IRpcClient
     {
+        /// <summary>
+        /// The underlying broker consumer.
+        /// </summary>
+        EventingBasicConsumer Consumer { get; }
+
         /// <summary>
         /// Publishes a command to a remote consumer's RPC defined queue.
         /// </summary>

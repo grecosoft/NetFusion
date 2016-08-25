@@ -249,9 +249,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Configs\COMP-NAME\Dev\MachineFileInitializedSettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Configs\Dev\MachineFileInitializedSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -264,7 +261,7 @@
     <Content Include="Configs\Dev\EntityScriptMetaDb.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Configs\DESKTOP-4U6RP8B\Dev\BrokerSettings.json">
+    <Content Include="Configs\DESKTOP-BLG\Dev\BrokerSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="scripts\jquery-3.0.0.intellisense.js" />

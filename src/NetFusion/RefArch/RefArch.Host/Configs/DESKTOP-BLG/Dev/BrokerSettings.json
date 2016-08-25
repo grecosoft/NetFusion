@@ -1,0 +1,25 @@
+﻿{
+  "Connections": [
+    {
+      "BrokerName": "TestBroker",
+      "HostName": "192.168.220.128",
+      "UserName": "papillon",
+      "Password": "bestdog",
+
+      "RpcConsumers": [
+        {
+          "RequestQueueKey": "ExampleRpcConsumer",
+          "RequestQueueName": "RpcMessageQueue",
+          "CancelRequestAfterMs": 10000
+        }
+      ],
+
+      "QueueProperties": [
+        {
+          "QueueName": "Ford",
+          "RouteKeys": [ "Mercury.*.*", "Mazda.Tribute.*" ]
+        }
+      ]
+    }
+  ]
+} //DESKTOP-4U6RP8B

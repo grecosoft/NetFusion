@@ -15,7 +15,7 @@ namespace NetFusion.RabbitMQ.Core
     /// made request.  If the response is not received within a specific 
     /// amount of time, the pending request is canceled.
     /// </summary>
-    public class RpcClient : IRpcClient
+    public class RpcClient : IRpcClient, IDisposable
     {
         private const string DEFAULT_EXCHANGE = "";
 
@@ -47,6 +47,11 @@ namespace NetFusion.RabbitMQ.Core
         {
             _channel.BasicConsume(_replyQueueName, true, _replyConsumer);
             _replyConsumer.Received += HandleReplyResponse;
+        }
+
+        public EventingBasicConsumer Consumer
+        {
+            get { return _replyConsumer;  }
         }
 
         public async Task<byte[]> Invoke(ICommand command, RpcProperties rpcProps, 
@@ -117,6 +122,14 @@ namespace NetFusion.RabbitMQ.Core
             {
                 pendingRequest.UnRegister();
                 pendingRequest.SetResult(evt.Body);
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (RpcPendingRequest pendingRequest in _pendingRpcRequests.Values)
+            {
+                pendingRequest.Cancel();
             }
         }
     }
