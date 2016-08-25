@@ -2,7 +2,7 @@
     "Connections" : [
       {
         "BrokerName": "TestBroker",
-        "HostName": "192.168.220.128",
+        "HostName": "cheshire",
         "UserName": "papillon",
         "Password": "bestdog",
 

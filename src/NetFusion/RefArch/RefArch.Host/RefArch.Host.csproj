@@ -261,7 +261,7 @@
     <Content Include="Configs\Dev\EntityScriptMetaDb.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Configs\DESKTOP-BLG\Dev\BrokerSettings.json">
+    <Content Include="Configs\DESKTOP-4U6RP8B\Dev\BrokerSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="scripts\jquery-3.0.0.intellisense.js" />
