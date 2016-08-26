@@ -462,9 +462,9 @@ namespace NetFusion.Bootstrap.Container
         }
 
         // This allows the plug-in to find concrete types deriving from IKnownPluginType.
-        // This is how plug-in modules are composed.  All public plug-in properties that
-        // are of type: IEnumerable<T> where T is a derived IKnownPluginType will be set
-        // to instances of types deriving from T.
+        // This is how plug-in modules are composed.  All plug-in properties that are of 
+        // type: IEnumerable<T> where T is a derived IKnownPluginType will be set to 
+        // instances of types deriving from T.
         private void ComposeLoadedPlugins()
         {
             ComposeCorePlugins();

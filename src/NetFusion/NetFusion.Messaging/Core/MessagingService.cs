@@ -74,14 +74,7 @@ namespace NetFusion.Messaging.Core
             }
         }
 
-        // Invoke all synchronous event-publishers and if there are no exceptions, execute all
-        // asynchronous publishers and return the future result to the caller to await.
         private async Task PublishMessageAsync(IMessage message)
-        {
-            await InvokeMessagePublishersAsync(message);
-        }
-
-        private async Task InvokeMessagePublishersAsync(IMessage message)
         {
             IEnumerable<MessagePublisherTask> futureResults = null;
 

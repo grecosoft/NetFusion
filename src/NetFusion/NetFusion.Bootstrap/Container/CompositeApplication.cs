@@ -248,7 +248,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void StopPluginModules(ILifetimeScope scope, IEnumerable<Plugin> plugins)
         {
-            foreach (var module in plugins.SelectMany(p => p.IncludedModules()))
+            foreach (IPluginModule module in plugins.SelectMany(p => p.IncludedModules()))
             {
                 module.StopModule(scope);
             }

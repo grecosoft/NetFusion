@@ -32,7 +32,6 @@ namespace NetFusion.Messaging.Core
         /// For a list of consumer types, returns the methods corresponding handlers.  
         /// </summary>
         /// <param name="types">Event consumer types to filter.</param>
-        /// <param name="methodPrefix">The optional prefix that the method must begin with.</param>
         /// <returns>List of methods that can handle messages.</returns>
         public static IEnumerable<MethodInfo> SelectMessageHandlers(this IEnumerable<Type> types)
         {
@@ -110,7 +109,7 @@ namespace NetFusion.Messaging.Core
 
         private static bool IsInProcessHandler(MethodInfo methodInfo)
         {
-            return methodInfo.GetCustomAttribute<InProcessHandlerAttribute>() != null;
+            return methodInfo.HasAttribute<InProcessHandlerAttribute>();
         }
 
         private static RuleApplyTypes GetOptionalRuleApplyType(MethodInfo methodInfo)
@@ -140,18 +139,6 @@ namespace NetFusion.Messaging.Core
                 .SelectMany(di => di)
                 .Where(di =>  
                     (di.IncludeDerivedTypes || di.MessageType == messageType));
-        }
-
-        /// <summary>
-        /// Returns all MethodInfo instances that are decorated with a specific attribute.
-        /// </summary>
-        /// <typeparam name="T">The attribute type.</typeparam>
-        /// <param name="handlerMethods">The list of method reflection information.</param>
-        /// <returns>Filtered list of methods.</returns>
-        public static IEnumerable<MethodInfo> MarkedWith<T>(this IEnumerable<MethodInfo> handlerMethods)
-            where T : Attribute
-        {
-            return handlerMethods.Where(h => h.HasAttribute<T>());
         }
     }
 }

@@ -40,6 +40,7 @@ namespace NetFusion.Bootstrap.Plugins
             CompositeApplication compositeApp, 
             Plugin plugin)
         {
+            Check.NotNull(logger, nameof(logger));
             Check.NotNull(compositeApp, nameof(compositeApp));
             Check.NotNull(plugin, nameof(plugin));
 

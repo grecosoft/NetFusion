@@ -187,7 +187,6 @@ namespace NetFusion.Bootstrap.Container
 
         private IEnumerable<PropertyInfo> GetKnownTypeProperties(IPluginModule module)
         {
-
             BindingFlags bindings = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
              
             return module.GetType().GetProperties(bindings)

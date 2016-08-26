@@ -54,10 +54,20 @@ namespace NetFusion.Messaging.Modules
         Task<object> InvokeDispatcher(MessageDispatchInfo dispatcher, IMessage message);
 
 
+        /// <summary>
+        /// Invokes the consumer with the message defined by the dispatcher instance.
+        /// </summary>
+        /// <typeparam name="T">The type of the command's response.</typeparam>
+        /// <param name="dispatcher">The dispatcher containing information on how the
+        /// message is to be dispatched.</param>
+        /// <param name="message">The message to dispatch to the consumer.</param>
+        /// <returns>The result from the consumer.  If the message is a command and the response
+        /// is assignable to it response type, it is automatically set on the command.</returns>
+        /// <exception cref="InvalidOperationException">Exception if the type of message is not
+        /// is not the same type associated with the dispatcher.
+        /// </exception>
         Task<T> InvokeDispatcher<T>(MessageDispatchInfo dispatcher, IMessage message)
            where T : class;
 
-        Task<T> DispatchConsumer<T>(IMessage message, MessageDispatchInfo dispatchInfo)
-            where T : class;
     }
 }

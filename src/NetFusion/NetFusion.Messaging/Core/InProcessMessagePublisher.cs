@@ -46,22 +46,8 @@ namespace NetFusion.Messaging.Core
 
             LogMessageDespatchInfo(message, dispatchers);
 
-            // Invoke all synchronous handlers and if there are no exceptions, execute all
-            // asynchronous handler and return the future result to the caller to await.
-           // await InvokeMessageDispatchersSync(message, dispatchers);
+            // Execute all handlers and return the future result to the caller to await.
             await InvokeMessageDispatchersAsync(message, dispatchers);
-        }
-
-        private async Task<bool> MatchesDispatchCriteria(MessageDispatchInfo dispatchInfo, IMessage message)
-        {
-            ScriptPredicate predicate = dispatchInfo.Predicate;
-
-            if (predicate != null)
-            {
-                return await _scriptingSrv.SatifiesPredicate(message, predicate);
-            }
-
-            return dispatchInfo.IsMatch(message);
         }
 
         private async Task InvokeMessageDispatchersAsync(IMessage message,
@@ -102,6 +88,18 @@ namespace NetFusion.Messaging.Core
                     "An exception was received when dispatching a message.", 
                     message, ex);
             }
+        }
+
+        private async Task<bool> MatchesDispatchCriteria(MessageDispatchInfo dispatchInfo, IMessage message)
+        {
+            ScriptPredicate predicate = dispatchInfo.Predicate;
+
+            if (predicate != null)
+            {
+                return await _scriptingSrv.SatifiesPredicate(message, predicate);
+            }
+
+            return dispatchInfo.IsMatch(message);
         }
 
         private IEnumerable<DispatchTask> InvokeMessageDispatchers(IMessage message,
@@ -148,9 +146,9 @@ namespace NetFusion.Messaging.Core
         private void LogMessageDespatchInfo(IMessage message, IList<MessageDispatchInfo> dispatchers)
         {
             var dispatcherDetails = dispatchers.Select(d => new {
+                d.MessageType,
                 Consumer = d.ConsumerType.Name,
-                Method = d.MessageHandlerMethod.Name,
-                IsAsync = d.IsAsync
+                Method = d.MessageHandlerMethod.Name    
             })
             .ToList();
 

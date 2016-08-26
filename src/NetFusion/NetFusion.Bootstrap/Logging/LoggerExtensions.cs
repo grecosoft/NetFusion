@@ -56,12 +56,12 @@ namespace NetFusion.Bootstrap.Logging
         /// <param name="logger">The associated logger.</param>
         /// <param name="processName">Name used to described the block of code being executed.</param>
         /// <returns>Logger used to log a duration.</returns>
-        public static DurationLogger DebugDuration(this IContainerLogger logger, string processName)
+        public static DurationLogger DebugDuration(this IContainerLogger logger, string processName, object details = null)
         {
             Check.NotNull(logger, nameof(logger));
             Check.NotNullOrWhiteSpace(processName, nameof(processName));
 
-            return new DurationLogger(logger, processName, logger.Debug);
+            return new DurationLogger(logger, processName, logger.Debug, details);
         }
 
         /// <summary>

@@ -214,6 +214,12 @@ namespace RefArch.Host.Controllers.Samples
         public async Task<ExampleRpcResponse> PublishRPCEvent(Car car)
         {
             var evt = new ExampleRpcCommand(car);
+
+            for (int i = 0; i < 20; i++)
+            {
+                await _messagingSrv.PublishAsync(evt);
+            }
+
             return await _messagingSrv.PublishAsync(evt);
         }
     }

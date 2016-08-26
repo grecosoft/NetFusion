@@ -17,9 +17,10 @@ namespace RefArch.Subscriber.Services
 
             rpcCommand.SetAcknowledged();
 
+            Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
             await Task.Run(() =>
             {
-                Thread.Sleep(500);
+                Thread.Sleep(0);
             });
 
             return new ExampleRpcResponse
