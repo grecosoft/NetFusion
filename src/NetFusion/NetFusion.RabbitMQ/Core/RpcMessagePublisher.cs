@@ -13,6 +13,7 @@ namespace NetFusion.RabbitMQ.Core
         public IRpcClient Client { get; }
         public string BrokerName { get; }
         public string RequestQueueKey { get; }
+        public string RequestQueueName { get; }
         public string ContentType { get; }
 
         public RpcMessagePublisher(
@@ -26,6 +27,7 @@ namespace NetFusion.RabbitMQ.Core
 
             this.BrokerName = brokerName;
             this.RequestQueueKey = settings.RequestQueueKey;
+            this.RequestQueueName = settings.RequestQueueName;
             this.ContentType = settings.ContentType;
             this.Client = client;
         }

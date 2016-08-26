@@ -62,6 +62,22 @@ namespace NetFusion.RabbitMQ.Core
             _rpcMessagePublishers = new List<RpcMessagePublisher>();
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected void Dispose(bool dispose)
+        {
+            if (!dispose || _disposed) return;
+
+            DisposeConnections();
+            _disposed = true;
+        }
+
+        #region Broker Initialization
+
         /// <summary>
         /// Initializes new broker.
         /// </summary>
@@ -80,39 +96,6 @@ namespace NetFusion.RabbitMQ.Core
                 e => new ExchangeDefinition(e, e.MessageType));
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected void Dispose(bool dispose)
-        {
-            if (!dispose || _disposed) return;
-
-            DisposeConnections();
-            _disposed = true;
-        }
-
-        private void DisposeConnections()
-        {
-            _messageConsumers.ForEach(c => c.Channel?.Dispose());
-            _brokerConfig.Connections.ForEachValue(bc => bc.Connection.Dispose());
-        }
-
-        /// <summary>
-        /// Determines if the message is associated with an exchange.
-        /// </summary>
-        /// <param name="message">The message to lookup.</param>
-        /// <returns>True if the message has one or more corresponding exchanges.
-        /// Otherwise, False is returned.</returns>
-        public bool IsExchangeMessage(IMessage message)
-        {
-            Check.NotNull(message, nameof(message));
-
-            return _messageExchanges.Contains(message.GetType());
-        }
-
         /// <summary>
         /// Creates all of the exchanges to which messages can be published.
         /// Any default queue configurations specified by the exchange are also created.
@@ -122,8 +105,161 @@ namespace NetFusion.RabbitMQ.Core
             EstablishBrockerConnections();
 
             DeclareExchanges();
-            CreateRpcMessageConsumers();
+            CreateRpcMessagePublishers();
         }
+
+        // These are the message exchanges and associated queues defined
+        // in the running application to which it will publish messages.
+        private void DeclareExchanges()
+        {
+            ExchangeDefinition[] exchangeDefs = GetExchangeDefinitions();
+            foreach (ExchangeDefinition exDef in exchangeDefs)
+            {
+                using (IModel channel = CreateBrokerChannel(exDef.Exchange.BrokerName))
+                {
+                    exDef.Exchange.Declare(channel);
+                }
+            }
+        }
+
+        private ExchangeDefinition[] GetExchangeDefinitions()
+        {
+            return _messageExchanges.Values().ToArray();
+        }
+
+        // These are the application's defined consumer queues defined
+        // by other application servers to which it can publish commands
+        // that will return a near immediate replay.
+        private void CreateRpcMessagePublishers(string brokerName = null)
+        {
+            IEnumerable<BrokerConnection> brokerConnections = _brokerConfig.Settings.Connections;
+
+            if (brokerName != null)
+            {
+                brokerConnections = brokerConnections.Where(c => c.BrokerName == brokerName);
+            }
+
+            foreach (BrokerConnection brokerConn in brokerConnections)
+            {
+                foreach (RpcConsumerSettings consumer in brokerConn.RpcConsumers)
+                {
+                    IModel replyChannel = CreateBrokerChannel(brokerConn.BrokerName);
+              
+                    var rpcClient = new RpcClient(consumer, replyChannel);
+                    var rpcPublisher = new RpcMessagePublisher(brokerConn.BrokerName, consumer, rpcClient);
+
+                    AttachRpcBrokerMonitoringHandlers(rpcPublisher);
+                    _rpcMessagePublishers.Add(rpcPublisher);
+                }
+            }
+        }
+
+        private void AttachRpcBrokerMonitoringHandlers(RpcMessagePublisher rpcPublisher)
+        {
+            rpcPublisher.Client.Consumer.Shutdown += (sender, shutdownEvent) => {
+
+                if (IsUnexpectedShutdown(shutdownEvent))
+                {
+                    ReconnectToBroker(rpcPublisher.BrokerName);
+                    RemoveRpcBrokerConsumers(rpcPublisher.BrokerName);
+                    CreateRpcMessagePublishers(rpcPublisher.BrokerName);
+                }
+            };
+        }
+
+        private void RemoveRpcBrokerConsumers(string brokerName)
+        {
+            IEnumerable<RpcMessagePublisher> rpcPublishers = _rpcMessagePublishers
+                .Where(c => c.BrokerName == brokerName).ToList();
+
+            foreach (RpcMessagePublisher rpcPublisher in rpcPublishers)
+            {
+                (rpcPublisher.Client as IDisposable).Dispose();
+                _rpcMessagePublishers.Remove(rpcPublisher);
+            }
+        }
+
+        // Uses the dispatch metadata of the core messaging plug-in and
+        // subscribes and dispatches to the event handler(s) that should 
+        // process the message when received.
+        public void BindConsumers(IEnumerable<MessageConsumer> messageConsumers)
+        {
+            Check.NotNull(messageConsumers, nameof(messageConsumers));
+
+            _messageConsumers = messageConsumers;
+
+            BindConsumersToQueues();
+            BindConsumersToRpcQueues();
+            AttachBokerMonitoringHandlers();
+        }
+
+        private void BindConsumersToQueues(string brokerName = null)
+        {
+            IEnumerable<MessageConsumer> messageConsumers = brokerName == null ? _messageConsumers :
+                _messageConsumers.Where(c => c.BrokerName == brokerName);
+
+            foreach (MessageConsumer messageConsumer in messageConsumers)
+            {
+                CreateConsumerQueue(messageConsumer);
+
+                IModel consumerChannel = CreateBrokerChannel(messageConsumer.BrokerName);
+                messageConsumer.Channel = consumerChannel;
+
+                // Bind to the existing or newly created queue to the exchange
+                // if the default exchange is not specified.
+                if (!messageConsumer.ExchangeName.IsNullOrWhiteSpace())
+                {
+                    _brokerConfig.Settings.ApplyQueueSettings(messageConsumer);
+                    consumerChannel.QueueBind(messageConsumer);
+                }
+
+                consumerChannel.SetBasicConsumer(messageConsumer);
+                AttachConsumerHandlers(messageConsumer);
+            }
+        }
+
+        // Consuming applications can create queues specifically for them based on the
+        // application needs.  
+        private void CreateConsumerQueue(MessageConsumer eventConsumer)
+        {
+            if (eventConsumer.BindingType == QueueBindingTypes.Create)
+            {
+                using (IModel channel = CreateBrokerChannel(eventConsumer.BrokerName))
+                {
+                    channel.QueueDeclare(eventConsumer);
+                }
+            }
+        }
+
+        // Process queue messages when they are received.
+        private void AttachConsumerHandlers(MessageConsumer messageConsumer)
+        {
+            messageConsumer.Consumer.Received += (sender, deliveryEvent) => {
+
+                MessageReceived(messageConsumer, deliveryEvent);
+            };
+        }
+
+        // Determine a consumer for each of the connected brokers and attach an event
+        // handler to monitor the connection for any failures.
+        private void AttachBokerMonitoringHandlers()
+        {
+            IEnumerable<MessageConsumer> monitoringConsumers = _messageConsumers.GroupBy(c => c.BrokerName)
+                .Select(g => g.First())
+                .ToList();
+
+            foreach (MessageConsumer consumer in monitoringConsumers)
+            {
+                consumer.Consumer.Shutdown += (sender, shutdownEvent) => {
+
+                    RestablishConnection(consumer, shutdownEvent);
+                };
+            }
+        }
+
+        #endregion
+
+        #region Connection Management
 
         private void EstablishBrockerConnections()
         {
@@ -214,229 +350,84 @@ namespace NetFusion.RabbitMQ.Core
             return channel;
         }
 
-        // These are the message exchanges and associated queues defined
-        // in the running application to which it will publish messages.
-        private void DeclareExchanges()
+        private void DisposeConnections()
         {
-            ExchangeDefinition[] exchangeDefs = GetExchangeDefinitions();
-            foreach (ExchangeDefinition exDef in exchangeDefs)
-            {
-                using (IModel channel = CreateBrokerChannel(exDef.Exchange.BrokerName))
-                {
-                    exDef.Exchange.Declare(channel);
-                }
-            }
+            _messageConsumers.ForEach(c => c.Channel?.Dispose());
+            _brokerConfig.Connections.ForEachValue(bc => bc.Connection.Dispose());
         }
 
-        private ExchangeDefinition[] GetExchangeDefinitions()
+        #endregion  
+
+        #region Exchange Publishing
+
+        /// <summary>
+        /// Determines if the message is associated with an exchange.
+        /// </summary>
+        /// <param name="message">The message to lookup.</param>
+        /// <returns>True if the message has one or more corresponding exchanges.
+        /// Otherwise, False is returned.</returns>
+        public bool IsExchangeMessage(IMessage message)
         {
-            return _messageExchanges.Values().ToArray();
+            Check.NotNull(message, nameof(message));
+
+            return _messageExchanges.Contains(message.GetType());
         }
 
-        // These are the application's defined consumer queues defined
-        // by other application servers to which it can publish commands
-        // that will return a near immediate replay.
-        private void CreateRpcMessageConsumers(string brokerName = null)
+        // Allows the running application to publish messages to the defined
+        // exchanges to which other consumer processes can receive.
+        public async Task PublishToExchange(IMessage message)
         {
-            IEnumerable<BrokerConnection> brokerConnections = _brokerConfig.Settings.Connections;
+            Check.NotNull(message, nameof(message));
 
-            if (brokerName != null)
-            {
-                brokerConnections = brokerConnections.Where(c => c.BrokerName == brokerName);
-            }
+            Type messageType = message.GetType();
+            IEnumerable<ExchangeDefinition> exchangeDefs = _messageExchanges[messageType];
 
-            foreach (BrokerConnection brokerConn in brokerConnections)
-            {
-                foreach (RpcConsumerSettings consumer in brokerConn.RpcConsumers)
-                {
-                    IModel replyChannel = CreateBrokerChannel(brokerConn.BrokerName);
-              
-                    var rpcClient = new RpcClient(consumer, replyChannel);
-                    var rpcPublisher = new RpcMessagePublisher(brokerConn.BrokerName, consumer, rpcClient);
-
-                    AttachRpcBrokerMonitoringHandlers(rpcPublisher);
-                    _rpcMessagePublishers.Add(rpcPublisher);
-                }
-            }
-        }
-
-        private void AttachRpcBrokerMonitoringHandlers(RpcMessagePublisher rpcPublisher)
-        {
-            rpcPublisher.Client.Consumer.Shutdown += (sender, shutdownEvent) => {
-
-                if (IsUnexpectedShutdown(shutdownEvent))
-                {
-                    ReconnectToBroker(rpcPublisher.BrokerName);
-                    RemoveRpcBrokerConsumers(rpcPublisher.BrokerName);
-                    CreateRpcMessageConsumers(rpcPublisher.BrokerName);
-                }
-            };
-        }
-
-        private void RemoveRpcBrokerConsumers(string brokerName)
-        {
-            IEnumerable<RpcMessagePublisher> rpcPublishers = _rpcMessagePublishers
-                .Where(c => c.BrokerName == brokerName).ToList();
-
-            foreach(RpcMessagePublisher rpcPublisher in rpcPublishers)
-            {
-                (rpcPublisher.Client as IDisposable).Dispose();
-                _rpcMessagePublishers.Remove(rpcPublisher);
-            }
-        }
-
-        // Uses the dispatch metadata of the core messaging plug-in and
-        // subscribes and dispatches to the event handler(s) that should 
-        // process the message when received.
-        public void BindConsumers(IEnumerable<MessageConsumer> messageConsumers)
-        {
-            Check.NotNull(messageConsumers, nameof(messageConsumers));
-
-            _messageConsumers = messageConsumers;
-
-            BindConsumersToQueues();
-            BindConsumersToRpcQueues();
-            AttachBokerMonitoringHandlers();
-        }
-
-        private void BindConsumersToQueues(string brokerName = null)
-        {
-            IEnumerable<MessageConsumer> messageConsumers = brokerName == null ? _messageConsumers :
-                _messageConsumers.Where(c => c.BrokerName == brokerName);
-
-            foreach (MessageConsumer messageConsumer in messageConsumers)
-            {
-                CreateConsumerQueue(messageConsumer);
-
-                IModel consumerChannel = CreateBrokerChannel(messageConsumer.BrokerName);
-                messageConsumer.Channel = consumerChannel;
-
-                // Bind to the existing or newly created queue to the exchange
-                // if the default exchange is not specified.
-                if (! messageConsumer.ExchangeName.IsNullOrWhiteSpace())
-                {
-                    _brokerConfig.Settings.ApplyQueueSettings(messageConsumer);
-                    consumerChannel.QueueBind(messageConsumer);
-                }
-
-                consumerChannel.SetBasicConsumer(messageConsumer);
-                AttachConsumerHandlers(messageConsumer);
-            }
-        }
-
-        // Consuming applications can create queues specifically for them based on the
-        // application needs.  
-        private void CreateConsumerQueue(MessageConsumer eventConsumer)
-        {
-            if (eventConsumer.BindingType == QueueBindingTypes.Create)
-            {
-                using (IModel channel = CreateBrokerChannel(eventConsumer.BrokerName))
-                {
-                    channel.QueueDeclare(eventConsumer);
-                }
-            }
-        }
-
-        // Process queue messages when they are received.
-        private void AttachConsumerHandlers(MessageConsumer messageConsumer)
-        {
-            messageConsumer.Consumer.Received += (sender, deliveryEvent) => {
-
-                MessageReceived(messageConsumer, deliveryEvent);
-            };
-        }
-
-        // Binds the consumer to its RPC queues on which they wait for RPC
-        // style messages from publishers.  
-        private void BindConsumersToRpcQueues()
-        {
-            var rpcConsumers = GetExchangeDefinitions()
-                .Where(ed => ed.Exchange.Settings.IsConsumerExchange)
-                .SelectMany(ed => ed.Exchange.Queues, 
-                    (ed, q) => new {
-                        BrokerName = ed.Exchange.BrokerName,
-                        RpcQueue = q
-                    }).ToList();
-
-            foreach (var rpcConsumer in rpcConsumers)
-            {
-                IModel consumerChannel = CreateBrokerChannel(rpcConsumer.BrokerName);
-                EventingBasicConsumer consumer = consumerChannel.SetBasicConsumer(rpcConsumer.RpcQueue);
-                AttachRpcConsumerHandler(consumerChannel, consumer);
-            }
-        }
-
-        private void AttachRpcConsumerHandler(IModel channel, EventingBasicConsumer consumer)
-        {
-            consumer.Received += (sender, deliveryEvent) => {
-
-                RpcMessageReceived(channel, deliveryEvent);
-            };
-        }
-
-        // Called when a RPC style message is received on a queue defined by a 
-        // derived RpcExchange class that receives RPC style requests.
-        private void RpcMessageReceived(IModel channel, BasicDeliverEventArgs deleveryEvent)
-        {
-            ValidateRpcRequest(deleveryEvent);
-
-            string typeName = deleveryEvent.BasicProperties.Type;
-            Type commandType = _brokerConfig.RpcTypes[typeName];
-            MessageDispatchInfo dispatcher = _messagingModule.GetInProcessCommandDispatcher(commandType);
-            IMessage message = DeserializeMessage(commandType, deleveryEvent);
-
-            object result =_messagingModule.InvokeDispatcher(dispatcher, message).Result;
-            PublishReply(result, channel, deleveryEvent.BasicProperties);
-        }
-
-        private void ValidateRpcRequest(BasicDeliverEventArgs deleveryEvent)
-        {
-            string messageType = deleveryEvent.BasicProperties.Type;
-
-            if (messageType.IsNullOrWhiteSpace())
+            if (exchangeDefs == null)
             {
                 throw new BrokerException(
-                    "The basic properties of the received RPC request does not specify the message type.");
+                    $"The message of type: {messageType.FullName} is not associated with an exchange.");
             }
 
-            if (! _brokerConfig.RpcTypes.ContainsKey(messageType))
+            foreach (ExchangeDefinition exchangeDef in exchangeDefs)
             {
-                throw new BrokerException(
-                    $"The type associated with the message type name: {messageType} could not be resolved.");
+                await Publish(exchangeDef, message);
             }
         }
 
-        // Publish the reply back to the publisher that made the request.
-        private void PublishReply(object response, IModel channel, IBasicProperties requestProps)
+        private async Task Publish(ExchangeDefinition exchangeDef, IMessage message)
         {
-            byte[] replyBody = SerializeMessage(response, requestProps.ContentType);
-            IBasicProperties replyProps = channel.CreateBasicProperties();
+            if (!await MatchesExchangeCriteria(exchangeDef, message)) return;
 
-            replyProps.ContentType = requestProps.ContentType;
-            replyProps.CorrelationId = requestProps.CorrelationId;
+            IMessageExchange exchange = exchangeDef.Exchange;
 
-            channel.BasicPublish(exchange: "",
-                    routingKey: requestProps.ReplyTo,
-                    basicProperties: replyProps,
-                    body: replyBody);
+            string contentType = GetFistContentType(
+                exchange.Settings.ContentType,
+                message.GetContentType());
 
+            LogPublishingExchangeMessage(message, contentType, exchangeDef);
+
+            byte[] messageBody = SerializeMessage(message, contentType);
+
+            using (var channel = CreateBrokerChannel(exchange.BrokerName))
+            {
+                exchangeDef.Exchange.Publish(channel, message, messageBody);
+            }
         }
 
-        // Determine a consumer for each of the connected brokers and attach an event
-        // handler to monitor the connection for any failures.
-        private void AttachBokerMonitoringHandlers()
+        // Determines if the message should be delivered to the queue.  If the exchange is marked
+        // with a predicate attribute, the corresponding externally named script is executed to 
+        // determine if the message has passing criteria.  If no external script is specified,
+        // the exchange's matches method is called.
+        private async Task<bool> MatchesExchangeCriteria(ExchangeDefinition exchangeDef, IMessage message)
         {
-            IEnumerable<MessageConsumer> monitoringConsumers = _messageConsumers.GroupBy(c => c.BrokerName)
-                .Select(g => g.First())
-                .ToList();
+            ScriptPredicate predicate = exchangeDef.Exchange.Settings.Predicate;
 
-            foreach (MessageConsumer consumer in monitoringConsumers)
+            if (predicate != null)
             {
-                consumer.Consumer.Shutdown += (sender, shutdownEvent) => {
-
-                    RestablishConnection(consumer, shutdownEvent);
-                };
+                return await _scriptingSrv.SatifiesPredicate(message, predicate);
             }
+
+            return exchangeDef.Exchange.Matches(message);
         }
 
         // Deserialize the message into the type associated with the message dispatch
@@ -482,31 +473,45 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
-        // Allows the running application to publish messages to the defined
-        // exchanges to which other consumer processes can receive.
-        public async Task PublishToExchange(IMessage message)
+        #endregion
+
+        #region RPC Publishing
+
+        public bool IsRpcCommand(IMessage message)
         {
-            Check.NotNull(message, nameof(message));
-
             Type messageType = message.GetType();
-            IEnumerable<ExchangeDefinition> exchangeDefs = _messageExchanges[messageType];
 
-            if (exchangeDefs == null)
+            return messageType.IsDerivedFrom<ICommand>()
+                && messageType.HasAttribute<RpcCommandAttribute>();
+        }
+
+        private void AssertRpcCommand(IMessage message)
+        {
+            if (!IsRpcCommand(message))
             {
-                throw new BrokerException(
-                    $"The message of type: {messageType.FullName} is not associated with an exchange.");
-            }
-
-            LogPublishingExchangeMessage(message, exchangeDefs);
-
-            foreach(ExchangeDefinition exchangeDef in exchangeDefs)
-            {
-                await Publish(exchangeDef, message);
+                throw new InvalidOperationException(
+                    $"The message of type: {message.GetType()} is not a command " +
+                    $"or is not decorated with: {typeof(RpcCommandAttribute)}.");
             }
         }
 
+        private RpcMessagePublisher GetRpcPublisher(RpcCommandAttribute consumerAttrib)
+        {
+            RpcMessagePublisher rpcPublisher = _rpcMessagePublishers.FirstOrDefault(c =>
+                c.BrokerName == consumerAttrib.BrokerName
+                && c.RequestQueueKey == consumerAttrib.RequestQueueKey);
+
+            if (rpcPublisher == null)
+            {
+                throw new BrokerException(
+                    $"RPC Publisher Client could not configured for Broker: {consumerAttrib.BrokerName} " +
+                    $"RequestQuoteKey: {consumerAttrib.RequestQueueKey}.");
+            }
+            return rpcPublisher;
+        }
+
         // Publishes a message to a consumer defined queue used for receiving
-        // RPC style messages.  The running application awaits the response.
+        // RPC style messages.  The caller awaits the response.
         public async Task PublishToRpcConsumer(IMessage message)
         {
             Check.NotNull(message, nameof(message));
@@ -521,49 +526,100 @@ namespace NetFusion.RabbitMQ.Core
 
             rpcProps.ContentType = GetFistContentType(
                 rpcPublisher.ContentType,
-                rpcProps.ContentType, 
+                rpcProps.ContentType,
                 message.GetContentType());
+
+            LogPublishedRpcMessage(message, rpcPublisher, rpcProps);
 
             // Publish the RPC request the consumer's queue and await a response.
             byte[] messageBody = SerializeMessage(command, rpcProps.ContentType);
             byte[] replyBody = await rpcPublisher.Client.Invoke(command, rpcProps, messageBody);
-   
+
             object reply = DeserializeReply(rpcProps.ContentType, command.ResultType, replyBody);
             command.SetResult(reply);
+
+            LogReceivedRpcResponse(message, rpcPublisher);
         }
 
-        private void AssertRpcCommand(IMessage message)
+        // Binds the consumer to its RPC queues on which they wait for RPC
+        // style messages from publishers.  
+        private void BindConsumersToRpcQueues()
         {
-            if (!IsRpcCommand(message))
+            var rpcConsumers = GetExchangeDefinitions()
+                .Where(ed => ed.Exchange.Settings.IsConsumerExchange)
+                .SelectMany(ed => ed.Exchange.Queues,
+                    (ed, q) => new {
+                        BrokerName = ed.Exchange.BrokerName,
+                        RpcQueue = q
+                    }).ToList();
+
+            foreach (var rpcConsumer in rpcConsumers)
             {
-                throw new InvalidOperationException(
-                    $"The message of type: {message.GetType()} is not a command " +
-                    $"or is not decorated with: {typeof(RpcCommandAttribute)}.");
+                IModel consumerChannel = CreateBrokerChannel(rpcConsumer.BrokerName);
+                EventingBasicConsumer consumer = consumerChannel.SetBasicConsumer(rpcConsumer.RpcQueue);
+                AttachRpcConsumerHandler(consumerChannel, consumer);
             }
         }
 
-        public bool IsRpcCommand(IMessage message)
+        private void AttachRpcConsumerHandler(IModel channel, EventingBasicConsumer consumer)
         {
-            Type messageType = message.GetType();
+            consumer.Received += (sender, deliveryEvent) => {
 
-            return messageType.IsDerivedFrom<ICommand>()
-                && messageType.HasAttribute<RpcCommandAttribute>();
+                RpcConsumerReplyReceived(channel, deliveryEvent);
+            };
         }
 
-        private RpcMessagePublisher GetRpcPublisher(RpcCommandAttribute consumerAttrib)
+        // Publish the reply back to the publisher that made the request.
+        private void PublishConsumerReply(object response, IModel channel, IBasicProperties requestProps)
         {
-            RpcMessagePublisher rpcPublisher = _rpcMessagePublishers.FirstOrDefault(c =>
-                c.BrokerName == consumerAttrib.BrokerName
-                && c.RequestQueueKey == consumerAttrib.RequestQueueKey);
+            byte[] replyBody = SerializeMessage(response, requestProps.ContentType);
+            IBasicProperties replyProps = channel.CreateBasicProperties();
 
-            if (rpcPublisher == null)
+            replyProps.ContentType = requestProps.ContentType;
+            replyProps.CorrelationId = requestProps.CorrelationId;
+
+            channel.BasicPublish(exchange: "",
+                    routingKey: requestProps.ReplyTo,
+                    basicProperties: replyProps,
+                    body: replyBody);
+
+        }
+
+        // Called when a RPC style message is received on a queue defined by a 
+        // derived RpcExchange class that receives RPC style requests.
+        private void RpcConsumerReplyReceived(IModel channel, BasicDeliverEventArgs deleveryEvent)
+        {
+            ValidateRpcReply(deleveryEvent);
+
+            string typeName = deleveryEvent.BasicProperties.Type;
+            Type commandType = _brokerConfig.RpcTypes[typeName];
+            MessageDispatchInfo dispatcher = _messagingModule.GetInProcessCommandDispatcher(commandType);
+            IMessage message = DeserializeMessage(commandType, deleveryEvent);
+
+            object result = _messagingModule.InvokeDispatcher(dispatcher, message).Result;
+            PublishConsumerReply(result, channel, deleveryEvent.BasicProperties);
+        }
+
+        private void ValidateRpcReply(BasicDeliverEventArgs deleveryEvent)
+        {
+            string messageType = deleveryEvent.BasicProperties.Type;
+
+            if (messageType.IsNullOrWhiteSpace())
             {
                 throw new BrokerException(
-                    $"RPC Consumer Client could not configured for Broker: {consumerAttrib.BrokerName} " +
-                    $"RequestQuoteKey: {consumerAttrib.RequestQueueKey}.");
+                    "The basic properties of the received RPC request does not specify the message type.");
             }
-            return rpcPublisher;
+
+            if (!_brokerConfig.RpcTypes.ContainsKey(messageType))
+            {
+                throw new BrokerException(
+                    $"The type associated with the message type name: {messageType} could not be resolved.");
+            }
         }
+
+        #endregion
+
+        #region Serialization
 
         private string GetFistContentType(params string[] contentTypes)
         {
@@ -573,40 +629,6 @@ namespace NetFusion.RabbitMQ.Core
                 throw new BrokerException("Serialization type not specified.");
             }
             return contentType;
-        }
-
-        private async Task Publish(ExchangeDefinition exchangeDef, IMessage message)
-        {
-            if (! await MatchesExchangeCriteria(exchangeDef, message)) return;
-
-            IMessageExchange exchange = exchangeDef.Exchange;
-
-            string contentType = GetFistContentType(
-                exchange.Settings.ContentType,
-                message.GetContentType());
-
-            byte[] messageBody = SerializeMessage(message, contentType);
-
-            using (var channel = CreateBrokerChannel(exchange.BrokerName))
-            {
-                exchangeDef.Exchange.Publish(channel, message, messageBody); 
-            }
-        }
-
-        // Determines if the message should be delivered to the queue.  If the exchange is marked
-        // with a predicate attribute, the corresponding externally named script is executed to 
-        // determine if the message has passing criteria.  If no external script is specified,
-        // the exchange's matches method is called.
-        private async Task<bool> MatchesExchangeCriteria(ExchangeDefinition exchangeDef, IMessage message)
-        {
-            ScriptPredicate predicate = exchangeDef.Exchange.Settings.Predicate;
-            
-            if (predicate != null)
-            {
-                return await _scriptingSrv.SatifiesPredicate(message, predicate);
-            }
-
-            return exchangeDef.Exchange.Matches(message);
         }
 
         private byte[] SerializeMessage(object message, string contentType)
@@ -621,7 +643,7 @@ namespace NetFusion.RabbitMQ.Core
 
             if (! _brokerConfig.Serializers.TryGetValue(contentType, out serializer))
             {
-                _logger.Error($"Serializer for Content Type: {contentType} has not been configured.");
+                _logger.Error($"Serializer for Content Type: {contentType} not registered.");
             }
 
             return serializer;
@@ -635,8 +657,8 @@ namespace NetFusion.RabbitMQ.Core
             if (contentType.IsNullOrWhiteSpace())
             {
                 _logger.Error(
-                    $"the content type of a message corresponding to the message " +
-                    $"of type: {messageType} was not specified as a basic property");
+                    $"The content type for a message of type: {messageType} was not " + 
+                    $"specified as a basic property.");
             }
 
             IBrokerSerializer serializer = GetMessageSerializer(contentType);
@@ -648,6 +670,10 @@ namespace NetFusion.RabbitMQ.Core
             IBrokerSerializer serializer = GetMessageSerializer(contentType);
             return serializer.Deserialize(replyBody, replyType);
         }
+
+        #endregion
+
+        #region Broker Reconnection
 
         // Called when a channel is notified of an connection issue.  Once the connection is
         // reestablished, the centrally saved exchanges and queues need to be recreated on the
@@ -730,8 +756,8 @@ namespace NetFusion.RabbitMQ.Core
         {
             foreach (ExchangeMeta exchange in exchanges)
             {
-                // If not the default exchange and not consumer reference to exchange:
-                if (exchange.Settings != null && exchange.Settings.ExchangeType != null && exchange.Settings != null)
+                // Recreate the exchange if not a default exchange.
+                if (exchange.Settings != null && exchange.Settings.ExchangeType != null)
                 {
                     channel.ExchangeDeclare(exchange.Settings);
                 }
@@ -743,33 +769,73 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
-        private void LogPublishingExchangeMessage(IMessage message, IEnumerable<ExchangeDefinition> exchanges)
+        #endregion
+
+        #region Logging
+
+        private void LogPublishingExchangeMessage(IMessage message, 
+            string contentType,
+            ExchangeDefinition exchangeDef)
         {
-            _logger.Verbose("Published to Exchange", 
-                new
-                {
+            _logger.Verbose("Publishing to Exchange", () =>
+            {
+                return new {
                     Message = message,
-                    Exchanges = exchanges.Select(e => new {
-                        BrokerName = e.Exchange.BrokerName,
-                        Exchange = e.Exchange.ExchangeName
-                    })
-                });
+                    ContentType = contentType,
+                    exchangeDef.Exchange.BrokerName,
+                    exchangeDef.Exchange.ExchangeName
+                };
+            });
         }
 
-        private void LogReceivedExchangeMessage(IMessage message, MessageConsumer messageConsumer)
+        private void LogReceivedExchangeMessage(IMessage message, 
+            MessageConsumer messageConsumer)
         {
-            _logger.Verbose("Exchanged Message Received",
-                new
-                {
+            MessageDispatchInfo dispatchInfo = messageConsumer.DispatchInfo;
+
+            _logger.Verbose("Exchange Message Received", () =>
+            {
+                return new {
                     messageConsumer.BrokerName,
                     messageConsumer.ExchangeName,
                     messageConsumer.RouteKeys,
-                    messageConsumer.DispatchInfo.ConsumerType,
-                    messageConsumer.DispatchInfo.MessageType,
+                    dispatchInfo.ConsumerType,
+                    dispatchInfo.MessageType,
 
-                    MethodName = messageConsumer.DispatchInfo.MessageHandlerMethod.Name,
-                    Message = message,
-                });
+                    MethodName = dispatchInfo.MessageHandlerMethod.Name,
+                    Message = message
+                };
+            });      
         }
+
+        private void LogPublishedRpcMessage(IMessage message, 
+            RpcMessagePublisher rpcPublisher, 
+            RpcProperties rpcProps)
+        {
+            _logger.Verbose("Publishing to RPC Consumer", () => {
+                return new {
+                    Message = message,
+                    rpcPublisher.BrokerName,
+                    rpcPublisher.RequestQueueKey,
+                    rpcPublisher.RequestQueueName,
+                    rpcPublisher.Client.ReplyQueueName,
+                    rpcProps.ContentType,
+                    rpcProps.ExternalTypeName
+                };
+            });
+        }
+
+        private void LogReceivedRpcResponse(IMessage message, 
+            RpcMessagePublisher rpcPublisher)
+        {
+            _logger.Verbose("RPC Reply Message Received", () => {
+                return new {
+                    Message = message,
+                    rpcPublisher.Client.ReplyQueueName
+                };
+            });
+        }
+
+        #endregion
     }
 }

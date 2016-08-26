@@ -30,18 +30,24 @@ namespace NetFusion.RabbitMQ.Core
             _cancelTokenReg =_cancelToken.Token.Register(_futureResult.SetCanceled);
         }
 
+        // Satisfies the future result of the awaiting consumer with
+        // the received response.
         public void SetResult(byte[] result)
         {
             Check.NotNull(result, nameof(result));
+
+            UnRegister();
             _futureResult.SetResult(result);
         }
 
+        // Cancels the task and unregisters from cancelation token.
         public void Cancel()
         {
             _cancelToken.Cancel();
             _cancelTokenReg.Dispose();
         }
 
+        // Unregisters the task from cancelation token.
         public void UnRegister()
         {
             _cancelTokenReg.Dispose();

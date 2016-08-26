@@ -12,6 +12,12 @@ namespace NetFusion.RabbitMQ.Core
     public interface IRpcClient
     {
         /// <summary>
+        /// The name of the queue on which replies to responses 
+        /// will be published.
+        /// </summary>
+        string ReplyQueueName { get; }
+
+        /// <summary>
         /// The underlying broker consumer.
         /// </summary>
         EventingBasicConsumer Consumer { get; }

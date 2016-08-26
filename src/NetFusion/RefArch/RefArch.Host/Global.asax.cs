@@ -24,7 +24,7 @@ namespace RefArch.Host
             AppContainer.Create("RefArch.*.dll")
                 .WithConfigSection("netFusion", "mongoAppSettings")
 
-                // Eventing Plug-in Configuration.
+                // Messaging Plug-in Configuration.
                 .WithConfig((MessagingConfig config) =>
                 {
                     config.AddMessagePublisherType<RabbitMqMessagePublisher>();

@@ -54,6 +54,11 @@ namespace NetFusion.RabbitMQ.Core
             get { return _replyConsumer;  }
         }
 
+        public string ReplyQueueName
+        {
+            get { return _replyQueueName; }
+        }
+
         public async Task<byte[]> Invoke(ICommand command, RpcProperties rpcProps, 
             byte[] messageBody)
         {
@@ -120,7 +125,6 @@ namespace NetFusion.RabbitMQ.Core
 
             if (_pendingRpcRequests.TryRemove(correlationId, out pendingRequest))
             {
-                pendingRequest.UnRegister();
                 pendingRequest.SetResult(evt.Body);
             }
         }
