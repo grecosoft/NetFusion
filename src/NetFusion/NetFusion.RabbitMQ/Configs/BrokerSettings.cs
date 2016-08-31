@@ -1,8 +1,10 @@
 ﻿using NetFusion.Common;
+using NetFusion.Common.Validation;
 using NetFusion.RabbitMQ.Core;
 using NetFusion.Settings;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace NetFusion.RabbitMQ.Configs
 {
@@ -10,7 +12,8 @@ namespace NetFusion.RabbitMQ.Configs
     /// Application settings specifying the connections for each broker 
     /// used by the host application.
     /// </summary>
-    public class BrokerSettings : AppSettings
+    public class BrokerSettings : AppSettings,
+        IObjectValidation
     {
         /// <summary>
         /// List of broker connections populated by host application.
@@ -77,6 +80,23 @@ namespace NetFusion.RabbitMQ.Configs
         {
             var brokerConn = this.Connections.FirstOrDefault(c => c.BrokerName == brokerName);
             return brokerConn?.QueueProperties ?? new QueueProperties[] { };
+        }
+
+        public override ObjectValidator ValidateObject()
+        {
+            var valResult = base.ValidateObject();
+
+            valResult.Guard(this.ConnectionRetryDelayMs > 0, 
+                "Connection Retry Delay must be Greater than 0.", 
+                ValidationLevelTypes.Error);
+
+            if (valResult.IsValid)
+            {
+                IEnumerable<ObjectValidator> connValResults = this.Connections.Select(c => c.ValidateObject());
+                valResult.AddChildValidations(connValResults);
+            }
+
+            return valResult;
         }
     }
 }

@@ -57,11 +57,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\BinaryFormatterUtility.cs" />
     <Compile Include="Serialization\JsonUtility.cs" />
+    <Compile Include="Validation\IObjectValidation.cs" />
     <Compile Include="Validation\ValidationException.cs" />
-    <Compile Include="Validation\ValidationExtensions.cs" />
     <Compile Include="Validation\ValidationLevelTypes.cs" />
     <Compile Include="Validation\ValidationMessage.cs" />
-    <Compile Include="Validation\ValidationResult.cs" />
+    <Compile Include="Validation\ObjectValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NetFusion.Common.nuspec" />

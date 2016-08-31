@@ -78,19 +78,10 @@ namespace RefArch.Host.Controllers.Samples
         /// returned to the calling client.
         /// </summary>
         [HttpPost Route("async-exception", Name = "PostAsyncEventException")]
-        public async Task<object> PostAsyncEventException(MessageExInfo info)
+        public async Task PostAsyncEventException(MessageExInfo info)
         {
-            try
-            {
-                var evt = new ExampleAsyncDomainEventException(info);
-                await _messagingService.PublishAsync(evt);
-            }
-            catch (PublisherException ex)
-            {
-                return ex.PublishDetails;
-            }
-
-            return "Expected Exception not Raised.";
+            var evt = new ExampleAsyncDomainEventException(info);
+            await _messagingService.PublishAsync(evt);
         }
 
         /// <summary>

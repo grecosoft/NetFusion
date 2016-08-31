@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetFusion.Common.Exceptions;
+using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Common.Validation
@@ -7,7 +8,7 @@ namespace NetFusion.Common.Validation
     /// Exception that is thrown when an entity is determined to be
     /// invalid.
     /// </summary>
-    public class ValidationException : Exception
+    public class ValidationException : NetFusionException
     {
         /// <summary>
         /// Reference to the entity that failed validation.
@@ -27,25 +28,34 @@ namespace NetFusion.Common.Validation
         /// The associated validation messages.
         /// </summary>
         /// <returns>List of messages.</returns>
-        public IEnumerable<ValidationMessage> ValidationMessages { get; private set; }
+        public ObjectValidator Result { get; private set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="invalidEntity">The entity that failed validation.</param>
         /// <param name="notifyClient">Indicates if client should be notified.</param>
-        /// <param name="validationMessages">Validation messages.</param>
+        /// <param name="result"></param>
         public ValidationException(
             object invalidEntity,
             bool notifyClient,
-            IEnumerable<ValidationMessage> validationMessages)
+            ObjectValidator result): base("Validation Exceptions", GetValidationDetails(invalidEntity, result))
         {
-            Check.NotNull(invalidEntity, "invalidEntity");
-            Check.NotNull(validationMessages, "validationMessages");
+            Check.NotNull(invalidEntity, nameof(invalidEntity));
+            Check.NotNull(result, nameof(result));
 
             this.InvalidEntity = invalidEntity;
             this.NotifyClient = notifyClient;
-            this.ValidationMessages = validationMessages;
+            this.Result = result;
+        }
+
+        private static object GetValidationDetails(object invalidEntity, ObjectValidator result)
+        {
+            return new
+            {
+                Entity = invalidEntity,
+                Result = result
+            };
         }
     }
 }

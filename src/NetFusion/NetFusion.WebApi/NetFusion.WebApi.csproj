@@ -43,6 +43,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.20622.1351, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -73,6 +74,7 @@
     <Compile Include="Configs\GeneralWebApiConfig.cs" />
     <Compile Include="Configs\JwtTokenSettings.cs" />
     <Compile Include="Core\RouteMetadataService.cs" />
+    <Compile Include="Filters\NetFusionExceptionFilter.cs" />
     <Compile Include="Handlers\JwtTokenTokenValidationHandler.cs" />
     <Compile Include="IJwtTokenService.cs" />
     <Compile Include="IWebApiConfiguration.cs" />

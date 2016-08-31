@@ -176,8 +176,9 @@ namespace NetFusion.Settings.Modules
 
             LogSettings(settings, settingInitializer);
 
-            // The settings class may be decorated with .NET validation attributes.
-            initializedSettings.Validate().ThrowIfNotValid();
+            // Determine if the settings object can be validated.
+            var validatedObject = initializedSettings as IObjectValidation;
+            validatedObject?.ValidateObject().ThrowIfNotValid();
         }
 
         private IAppSettingsInitializer GetSettingSpecificInitializer(

@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http.Controllers;
+﻿using Autofac;
+using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions;
 using NetFusion.WebApi.Configs;
-using System.Web.Http;
-using Autofac;
+using NetFusion.WebApi.Filters;
 using Newtonsoft.Json.Serialization;
-using NetFusion.Bootstrap.Container;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Http;
+using System.Web.Http.Controllers;
 
 namespace NetFusion.WebApi.Modules
 {
@@ -32,6 +33,7 @@ namespace NetFusion.WebApi.Modules
         {
             ConfigureSerializerOptions(config);
             ConfigureRoutingOptions(config);
+            ConfigureExceptionFilter(config);
             NotifyAllModulesOfWebApiReady(config, AppContainer.Instance.Services);
         }
 
@@ -53,6 +55,11 @@ namespace NetFusion.WebApi.Modules
                     jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 }
             }
+        }
+
+        private void ConfigureExceptionFilter(HttpConfiguration config)
+        {
+            config.Filters.Add(new NetFusionExceptionFilter());
         }
 
         // For all other plug-in modules implementing the IWebApiConfiguration interface

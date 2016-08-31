@@ -1,6 +1,8 @@
 ﻿using MongoDB.Driver;
 using NetFusion.Common.Extensions;
+using NetFusion.Common.Validation;
 using NetFusion.Settings;
+using System.ComponentModel.DataAnnotations;
 
 namespace NetFusion.MongoDB.Configs
 {
@@ -8,12 +10,14 @@ namespace NetFusion.MongoDB.Configs
     /// Setting uses by the MongoDB client when connecting
     /// to the database.
     /// </summary>
-    public abstract class MongoSettings : AppSettings
+    public abstract class MongoSettings : AppSettings,
+        IObjectValidation
     {
         /// <summary>
         /// The URL used by the client when connecting to
         /// the database.
         /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = "MongoDB URL Required.")]
         public string MongoUrl { get; set; }
 
         /// <summary>

@@ -1,10 +1,14 @@
-﻿namespace NetFusion.Settings
+﻿using System;
+using NetFusion.Common.Validation;
+
+namespace NetFusion.Settings
 {
     /// <summary>
     /// Base class containing a default implementation of the 
     /// IAppSettings interface.
     /// </summary>
-    public abstract class AppSettings : IAppSettings
+    public abstract class AppSettings : IAppSettings,
+        IObjectValidation
     {
         /// <summary>
         /// The identity value of the application setting.
@@ -32,5 +36,11 @@
         /// can be used if no corresponding initialization strategy is found.
         /// </summary>
         public bool IsInitializationRequired { get; set; } = true;
+
+        public virtual ObjectValidator ValidateObject()
+        {
+            var valResults = new ObjectValidator(this);
+            return valResults;
+        }
     }
 }

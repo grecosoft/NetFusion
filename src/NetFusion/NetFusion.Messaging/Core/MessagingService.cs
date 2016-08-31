@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using NetFusion.Common;
+using NetFusion.Common.Exceptions;
 using NetFusion.Messaging.Modules;
 using System;
 using System.Collections.Generic;
@@ -33,21 +34,43 @@ namespace NetFusion.Messaging.Core
         {
             Check.NotNull(domainEvent, nameof(domainEvent), "domain event not specified");
 
-            await PublishMessageAsync(domainEvent);
+            try
+            {
+                await PublishMessageAsync(domainEvent);
+            } 
+            catch(PublisherException ex)
+            {
+                throw new NetFusionException("Error Publishing Message", ex.PublishDetails, ex);
+            }
         }
 
         public async Task PublishAsync(ICommand command)
         {
             Check.NotNull(command, nameof(command), "command not specified");
-            await PublishMessageAsync(command);
+
+            try
+            {
+                await PublishMessageAsync(command);
+            }
+            catch (PublisherException ex)
+            {
+                throw new NetFusionException("Error Publishing Message", ex.PublishDetails, ex);
+            }
         }
 
         public async Task<TResult> PublishAsync<TResult>(ICommand<TResult> command)
         {
             Check.NotNull(command, nameof(command), "command not specified");
 
-            await PublishMessageAsync(command);
-            return command.Result;
+            try
+            {
+                await PublishMessageAsync(command);
+                return command.Result;
+            }
+            catch(PublisherException ex)
+            {
+                throw new NetFusionException("Error Publishing Message", ex.PublishDetails, ex);
+            }
         }
 
         public async Task PublishAsync(IEventSource eventSource)

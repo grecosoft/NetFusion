@@ -8,6 +8,7 @@ namespace NetFusion.Tests.MongoDB.Mocks
         {
             this.IsInitializationRequired = false;
             this.MongoUrl = "TestMongoUrl";
+            this.UserName = "TestUserName";
         }
     }
 }
