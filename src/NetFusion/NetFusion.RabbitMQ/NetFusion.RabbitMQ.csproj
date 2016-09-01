@@ -92,6 +92,7 @@
     <Compile Include="Integration\BrokerMeta.cs" />
     <Compile Include="Integration\ExchangeMeta.cs" />
     <Compile Include="Integration\IBrokerMetaRepository.cs" />
+    <Compile Include="Integration\NullBrokerMetaRepository.cs" />
     <Compile Include="Integration\QueueMeta.cs" />
     <Compile Include="MessageExtensions.cs" />
     <Compile Include="Modules\MessageBrokerModule.cs" />

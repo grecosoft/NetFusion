@@ -46,8 +46,12 @@ namespace NetFusion.RabbitMQ.Modules
             base.Dispose(dispose);
         }
 
-        public override void RegisterComponents(ContainerBuilder builder)
+        public override void RegisterDefaultComponents(ContainerBuilder builder)
         {
+            builder.RegisterType<NullBrokerMetaRepository>()
+                .As<IBrokerMetaRepository>()
+                .SingleInstance();
+
             builder.RegisterType<MessageBroker>()
                 .As<IMessageBroker>()
                 .SingleInstance();

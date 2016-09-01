@@ -532,6 +532,7 @@ namespace NetFusion.Bootstrap.Container
 
             // Register additional services,
             RegisterAppContainerAsService(builder);
+            RegisterContainerLogger(builder);
             RegisterPluginModuleServices(builder);
             RegisterHostProvidedServices(builder);
 
@@ -543,6 +544,13 @@ namespace NetFusion.Bootstrap.Container
             builder.RegisterInstance(this)
                 .As<IAppContainer>()
                 .SingleInstance();
+        }
+
+        private void RegisterContainerLogger(Autofac.ContainerBuilder builder)
+        {
+            builder.RegisterInstance(this.Logger)
+                .As<IContainerLogger>()
+                .ExternallyOwned();
         }
 
         private void RegisterPluginModuleServices(Autofac.ContainerBuilder builder)

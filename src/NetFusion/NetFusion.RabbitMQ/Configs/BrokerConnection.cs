@@ -31,6 +31,7 @@ namespace NetFusion.RabbitMQ.Configs
         public BrokerConnection()
         {
             this.RpcConsumers = new List<RpcConsumerSettings>();
+            this.QueueProperties = new List<QueueProperties>();
         }
 
         /// <summary>

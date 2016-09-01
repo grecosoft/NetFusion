@@ -31,7 +31,7 @@ namespace NetFusion.WebApi.Modules
             }
         }
 
-        public override void RegisterComponents(ContainerBuilder builder)
+        public override void RegisterDefaultComponents(ContainerBuilder builder)
         {
             builder.RegisterType<JwtTokenService>()
                 .As<IJwtTokenService>()

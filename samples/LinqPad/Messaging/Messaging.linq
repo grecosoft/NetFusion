@@ -2,6 +2,7 @@
   <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
   <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
   <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Domain.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Domain.dll</Reference>
   <Reference Relative="..\libs\NetFusion.Messaging.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
   <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
   <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
@@ -13,13 +14,15 @@
   <Namespace>NetFusion.Bootstrap.Plugins</Namespace>
   <Namespace>NetFusion.Bootstrap.Testing</Namespace>
   <Namespace>NetFusion.Common.Extensions</Namespace>
+  <Namespace>NetFusion.Domain.Entity</Namespace>
+  <Namespace>NetFusion.Domain.Scripting</Namespace>
+  <Namespace>NetFusion.Messaging</Namespace>
+  <Namespace>NetFusion.Messaging.Rules</Namespace>
   <Namespace>NetFusion.Settings</Namespace>
   <Namespace>NetFusion.Settings.Configs</Namespace>
   <Namespace>NetFusion.Settings.Strategies</Namespace>
   <Namespace>NetFusion.Settings.Testing</Namespace>
   <Namespace>System.Threading.Tasks</Namespace>
-  <Namespace>NetFusion.Messaging</Namespace>
-  <Namespace>NetFusion.Messaging.Rules</Namespace>
 </Query>
 
 // *****************************************************************************************
@@ -43,6 +46,7 @@ void Main()
 
 	var typeResolver = new TestTypeResolver(pluginDirectory,
 		"NetFusion.Settings.dll",
+		"NetFusion.Domain.dll",
 		"NetFusion.Messaging.dll")
 	{
 		LoadAppHostFromAssembly = true
@@ -293,7 +297,7 @@ public IDictionary<string, object> RunEventWithRule(MessageRuleInfo info)
 	var messageSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
 	var evt = new ExampleRuleDomainEvent(info);
 	messageSrv.PublishAsync(evt).Wait();
-	return evt.Attributes;
+	return evt.AttributeValues;
 }
 
 public class MessageRuleInfo
@@ -311,7 +315,7 @@ public class ExampleRuleDomainEvent : DomainEvent
 
 		if (this.Value == 50)
 		{
-			this.Attributes["__low__"] = "";
+			this.Attributes.SetValue("__low__", "");
 		}
 	}
 }
@@ -320,7 +324,7 @@ public class IsLowImportance : MessageDispatchRule<DomainEvent>
 {
 	protected override bool IsMatch(DomainEvent message)
 	{
-		return message.Attributes.Keys.Contains("__low__");
+		return message.Attributes.Contains("__low__");
 	}
 }
 
@@ -337,13 +341,13 @@ public class ExampleRuleHandler : IMessageConsumer
 	[InProcessHandler, ApplyDispatchRule(typeof(IsLowImportance))]
 	public void OnEvent([IncludeDerivedMessages]DomainEvent evt)
 	{
-		evt.Attributes["IsLowImportance"] = "Event is of low importance.";
+		evt.Attributes.SetValue("IsLowImportance", "Event is of low importance.");
 	}
 
 	[InProcessHandler, ApplyDispatchRule(typeof(IsHighImportance))]
 	public void OnEvent(ExampleRuleDomainEvent evt)
 	{
-		evt.Attributes["IsHighImportance"] = "Event is of high importance.";
+		evt.Attributes.SetValue("IsHighImportance", "Event is of high importance.");
 	}
 }
 
@@ -357,7 +361,7 @@ public IDictionary<string, object> RunSyncDerivedEvent()
 	var messageSrv = AppContainer.Instance.Services.Resolve<IMessagingService>();
 	var evt = new ExampleDerivedDomainEvent();
 	messageSrv.PublishAsync(evt).Wait();
-	return evt.Attributes;
+	return evt.AttributeValues;
 }
 
 public class ExampleBaseDomainEvent : DomainEvent
@@ -375,12 +379,12 @@ public class ExampleHierarchyHandler : IMessageConsumer
 	[InProcessHandler]
 	public void OnEvent([IncludeDerivedMessages]ExampleBaseDomainEvent evt)
 	{
-		evt.Attributes["Message1"] = "Base Handler Called";
+		evt.Attributes.SetValue("Message1", "Base Handler Called");
 	}
 
 	[InProcessHandler]
 	public void OnEvent(ExampleDerivedDomainEvent evt)
 	{
-		evt.Attributes["Message"] = "Derived Handler Called";
+		evt.Attributes.SetValue("Message", "Derived Handler Called");
 	}
 }

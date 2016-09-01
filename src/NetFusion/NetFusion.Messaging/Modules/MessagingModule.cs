@@ -63,13 +63,16 @@ namespace NetFusion.Messaging.Modules
             AssertCommandMessages();
         }
 
-        public override void RegisterComponents(ContainerBuilder builder)
+        public override void RegisterDefaultComponents(ContainerBuilder builder)
         {
             // Register the common messaging service used to publish messages.
             builder.RegisterType<MessagingService>()
                 .As<IMessagingService>()
                 .InstancePerLifetimeScope();
+        }
 
+        public override void RegisterComponents(ContainerBuilder builder)
+        {
             // Register all of the message publishers that determine how a given
             // message is delivered.
             builder.RegisterTypes(this.MessagingConfig.PublisherTypes)

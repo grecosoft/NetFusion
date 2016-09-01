@@ -31,7 +31,7 @@ namespace NetFusion.EntityFramework.Modules
         // Factory delegate that sets the database context for the created
         // EntityContext<> closed type.  This allows the EntityContext<> to
         // delegate to the inner database context without inheritance.
-        public override void RegisterComponents(ContainerBuilder builder)
+        public override void RegisterDefaultComponents(ContainerBuilder builder)
         {
             builder.RegisterGeneric(typeof(EntityContext<>))
                 .InstancePerLifetimeScope()

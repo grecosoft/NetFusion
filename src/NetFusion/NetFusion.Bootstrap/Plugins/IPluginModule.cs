@@ -37,6 +37,16 @@ namespace NetFusion.Bootstrap.Plugins
         void Configure();
 
         /// <summary>
+        /// Called first for all plug-in modules to allow for default instances
+        /// of services to be registered that will be used if no overridden by
+        /// another plug-in module.
+        /// </summary>
+        /// <param name="builder">The Autofac builder used to 
+        /// register components that can be dependency injected.
+        /// </param>
+        void RegisterDefaultComponents(Autofac.ContainerBuilder builder);
+
+        /// <summary>
         /// Allows the plug-in to scan for types it defines that are 
         /// to be registered with the dependency injection container.
         /// </summary>

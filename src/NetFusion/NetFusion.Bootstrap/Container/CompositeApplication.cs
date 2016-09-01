@@ -81,6 +81,7 @@ namespace NetFusion.Bootstrap.Container
             // Note that the order is important.  In Autofac, if a service type 
             // is registered more than once, the last registered component is
             // used.  This is the default configuration.
+            RegisterDefaultPluginComponents(builder);
             RegisterCorePluginComponents(builder);
             RegisterAppPluginComponents(builder);
         }
@@ -106,6 +107,17 @@ namespace NetFusion.Bootstrap.Container
                 {
                     module.Configure();
                 }
+            }
+        }
+
+        // First allow all plug-ins to register any default component implementations
+        // that can be optionally overridden by other plug-ins.  This will be the
+        // component instances that will be used if no overridden.
+        private void RegisterDefaultPluginComponents(Autofac.ContainerBuilder builder)
+        {
+            foreach (IPluginModule module in this.AllPluginModules)
+            {
+                module.RegisterDefaultComponents(builder);
             }
         }
 

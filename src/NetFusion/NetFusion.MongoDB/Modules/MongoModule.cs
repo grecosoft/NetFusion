@@ -16,7 +16,7 @@ namespace NetFusion.MongoDB.Modules
     /// </summary>
     public class MongoModule : PluginModule
     {
-        public override void RegisterComponents(ContainerBuilder builder)
+        public override void RegisterDefaultComponents(ContainerBuilder builder)
         {
             // NOTE:  Documentation states that the class from which MongoDBClient
             // is thread-safe and is best to register a single instance within

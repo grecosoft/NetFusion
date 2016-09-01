@@ -107,6 +107,7 @@ public class Customer
 	public string LastName { get; set; }
 	public string City { get; set; }
 	public string State { get; set; }
+	public IDictionary<string, object> NameValues { get; set; }
 }
 
 public interface IExampleRepository

@@ -2,6 +2,7 @@
   <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
   <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
   <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Domain.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Domain.dll</Reference>
   <Reference Relative="..\libs\NetFusion.Messaging.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
   <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
   <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
@@ -15,18 +16,17 @@
   <Namespace>NetFusion.Bootstrap.Plugins</Namespace>
   <Namespace>NetFusion.Bootstrap.Testing</Namespace>
   <Namespace>NetFusion.Common.Extensions</Namespace>
+  <Namespace>NetFusion.Messaging</Namespace>
+  <Namespace>NetFusion.Messaging.Config</Namespace>
+  <Namespace>NetFusion.Messaging.Rules</Namespace>
   <Namespace>NetFusion.RabbitMQ</Namespace>
   <Namespace>NetFusion.RabbitMQ.Configs</Namespace>
   <Namespace>NetFusion.RabbitMQ.Consumers</Namespace>
   <Namespace>NetFusion.RabbitMQ.Core</Namespace>
-  <Namespace>NetFusion.RabbitMQ.Exchanges</Namespace>
   <Namespace>NetFusion.Settings</Namespace>
   <Namespace>NetFusion.Settings.Configs</Namespace>
   <Namespace>NetFusion.Settings.Strategies</Namespace>
   <Namespace>NetFusion.Settings.Testing</Namespace>
-  <Namespace>NetFusion.Messaging.Config</Namespace>
-  <Namespace>NetFusion.Messaging</Namespace>
-  <Namespace>NetFusion.Messaging.Rules</Namespace>
 </Query>
 
 // **********************************************************************************************
@@ -40,6 +40,7 @@ void Main()
 
 	var typeResolver = new TestTypeResolver(pluginDirectory,
 		"NetFusion.Settings.dll",
+		"NetFusion.Domain.dll",
 		"NetFusion.Messaging.dll",
 		"NetFusion.RabbitMQ.dll")
 	{

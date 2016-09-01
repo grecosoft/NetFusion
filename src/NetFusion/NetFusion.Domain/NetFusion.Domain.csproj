@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,6 +46,8 @@
   <ItemGroup>
     <Compile Include="Entity\EntityAttributes.cs" />
     <Compile Include="Entity\IAttributedEntity.cs" />
+    <Compile Include="DomainManifest.cs" />
+    <Compile Include="Modules\DomainScriptingModule.cs" />
     <Compile Include="Scripting\ApplyScriptPredicateAttribute.cs" />
     <Compile Include="Scripting\EntityExpression.cs" />
     <Compile Include="Scripting\EntityScript.cs" />
@@ -61,6 +67,9 @@
       <Project>{4bcb335e-3f83-481d-b206-ffa9266bf780}</Project>
       <Name>NetFusion.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

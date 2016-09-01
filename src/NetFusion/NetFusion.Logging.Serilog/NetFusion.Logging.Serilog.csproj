@@ -46,7 +46,6 @@
     <Compile Include="Core\PluginEnricher.cs" />
     <Compile Include="Core\SerilogPluginLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Modules\SerilogModule.cs" />
     <Compile Include="SerilogExtensions.cs" />
     <Compile Include="SerilogManifest.cs" />
   </ItemGroup>
