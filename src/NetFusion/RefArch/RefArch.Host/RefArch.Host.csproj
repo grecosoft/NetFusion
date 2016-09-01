@@ -290,7 +290,9 @@
     <Compile Include="App_Start\MvcRouteConfig.cs" />
     <Compile Include="App_Start\SignalRConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <None Include="Configs\Dev\NetfusionDB.json" />
+    <None Include="Configs\Dev\NetfusionDB.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Compile Include="Controllers\AppController.cs" />
     <Compile Include="Controllers\Samples\ContextDependentController.cs" />
     <Compile Include="Controllers\Samples\DomainEvaluationController.cs" />

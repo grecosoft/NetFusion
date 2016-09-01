@@ -4,6 +4,7 @@ using NetFusion.Settings.Modules;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 namespace NetFusion.Settings.Strategies
 {
@@ -54,11 +55,20 @@ namespace NetFusion.Settings.Strategies
 
         private string GetSettingsConfigFilePath(NetFusionConfig appConfig, string machineName = "")
         {
-            string appBaseDir = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, "Configs");
+            string appBaseDir = Path.Combine(this.ExecutionDirectory, "Configs");
             string envName = _envDirMappings[appConfig.Environment];
             var fileName = Path.ChangeExtension(this.SettingsType.Name, "json");
 
             return Path.Combine(appBaseDir, machineName, envName, fileName);
+        }
+
+        private string ExecutionDirectory
+        {
+            get
+            {
+                var uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
+                return  Path.GetDirectoryName(uri.LocalPath);
+            }
         }
     }
 }

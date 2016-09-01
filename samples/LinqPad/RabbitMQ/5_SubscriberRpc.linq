@@ -1,12 +1,13 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Messaging.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
-  <Reference Relative="..\libs\RabbitMQ.Client.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Domain.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Domain.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Messaging.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\RabbitMQ.Client.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Extensions</Namespace>
@@ -15,18 +16,18 @@
   <Namespace>NetFusion.Bootstrap.Plugins</Namespace>
   <Namespace>NetFusion.Bootstrap.Testing</Namespace>
   <Namespace>NetFusion.Common.Extensions</Namespace>
+  <Namespace>NetFusion.Messaging</Namespace>
+  <Namespace>NetFusion.Messaging.Config</Namespace>
   <Namespace>NetFusion.RabbitMQ</Namespace>
   <Namespace>NetFusion.RabbitMQ.Configs</Namespace>
   <Namespace>NetFusion.RabbitMQ.Consumers</Namespace>
   <Namespace>NetFusion.RabbitMQ.Core</Namespace>
-  <Namespace>NetFusion.RabbitMQ.Exchanges</Namespace>
   <Namespace>NetFusion.Settings</Namespace>
   <Namespace>NetFusion.Settings.Configs</Namespace>
   <Namespace>NetFusion.Settings.Strategies</Namespace>
   <Namespace>NetFusion.Settings.Testing</Namespace>
   <Namespace>System.Threading.Tasks</Namespace>
-  <Namespace>NetFusion.Messaging.Config</Namespace>
-  <Namespace>NetFusion.Messaging</Namespace>
+  <Namespace>NetFusion.RabbitMQ.Serialization</Namespace>
 </Query>
 
 void Main()
@@ -35,6 +36,7 @@ void Main()
 
 	var typeResolver = new TestTypeResolver(pluginDirectory,
 		"NetFusion.Settings.dll",
+		"NetFusion.Domain.dll",
 		"NetFusion.Messaging.dll",
 		"NetFusion.RabbitMQ.dll")
 	{
@@ -79,19 +81,64 @@ public class BrokerSettingsInitializer : AppSettingsInitializer<BrokerSettings>
 	}
 }
 
-[Broker("TestBroker")]
+public class ExampleRpcExchange : RpcExchange
+{
+	protected override void OnDeclareExchange()
+	{
+		Settings.BrokerName = "TestBroker";
+
+		QueueDeclare("RpcMessageQueue", config =>
+		{
+
+		});
+	}
+}
+
+public class Car
+{
+	public string Vin { get; set; }
+	public string Make { get; set; }
+	public string Model { get; set; }
+	public int Year { get; set; }
+}
+
+[RpcCommand("TestBroker", "ExampleRpcConsumer",
+	ExternalTypeName = "Example_Command", ContentType = SerializerTypes.Binary)]
+public class ExampleRpcCommand : Command<ExampleRpcResponse>
+{
+	public DateTime CurrentDateTime { get; private set; }
+	public string InputValue { get; private set; }
+
+	public ExampleRpcCommand()
+	{
+		this.SetRouteKey("Hello");
+	}
+
+	public ExampleRpcCommand(Car car)
+	{
+		this.CurrentDateTime = DateTime.UtcNow;
+		this.InputValue = $"{car.Make + car.Model}";
+	}
+}
+
+public class ExampleRpcResponse : DomainEvent
+{
+	public string Comment { get; set; }
+}
+
 public class ExampleRpcService : IMessageConsumer
 {
-	[JoinQueue("QueueWithConsumerResponse", "SampleRpcExchange")]
+	[InProcessHandler]
 	public async Task<ExampleRpcResponse> OnRpcMessage(ExampleRpcCommand rpcCommand)
 	{
 		Console.WriteLine($"Handler: OnRpcMessage: { rpcCommand.ToIndentedJson()}");
 
 		rpcCommand.SetAcknowledged();
 
+		Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
 		await Task.Run(() =>
 		{
-			Thread.Sleep(500);
+			Thread.Sleep(0);
 		});
 
 		return new ExampleRpcResponse
@@ -101,13 +148,3 @@ public class ExampleRpcService : IMessageConsumer
 	}
 }
 
-public class ExampleRpcCommand : Command<ExampleRpcResponse>
-{
-	public DateTime CurrentDateTime { get; private set; }
-	public string InputValue { get; private set; }
-}
-
-public class ExampleRpcResponse : DomainEvent
-{
-	public string Comment { get; set; }
-}
