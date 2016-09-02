@@ -2,7 +2,7 @@
 using NetFusion.RabbitMQ.Serialization;
 using System.Collections.Generic;
 
-namespace NetFusion.RabbitMQ.Core
+namespace NetFusion.RabbitMQ.Exchanges
 {
     /// <summary>
     /// Settings to be used when declaring the exchange.

@@ -55,7 +55,7 @@ namespace NetFusion.MongoDB.Configs
         public bool IsPasswordSet
         {
             get {
-                return !this.AuthDatabaseName.IsNullOrWhiteSpace()
+                return (!this.AuthDatabaseName.IsNullOrWhiteSpace() || !this.DatabaseName.IsNullOrWhiteSpace())
                     && !this.UserName.IsNullOrWhiteSpace() 
                     && !this.Password.IsNullOrWhiteSpace(); }
         }

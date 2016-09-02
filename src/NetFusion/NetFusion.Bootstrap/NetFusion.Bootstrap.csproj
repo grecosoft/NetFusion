@@ -46,7 +46,7 @@
     <Compile Include="Container\IAppContainer.cs" />
     <Compile Include="Container\IComposite.cs" />
     <Compile Include="Container\IContainerConfig.cs" />
-    <Compile Include="Container\ILoadedContainer.cs" />
+    <Compile Include="Container\IBuiltContainer.cs" />
     <Compile Include="Container\ITypeResolver.cs" />
     <Compile Include="Container\ManifestRegistry.cs" />
     <Compile Include="Container\TypeResolver.cs" />

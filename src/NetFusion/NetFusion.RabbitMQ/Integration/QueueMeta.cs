@@ -1,4 +1,4 @@
-﻿using NetFusion.RabbitMQ.Core;
+﻿using NetFusion.RabbitMQ.Exchanges;
 
 namespace NetFusion.RabbitMQ.Integration
 {

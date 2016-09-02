@@ -19,7 +19,7 @@ namespace NetFusion.Bootstrap.Testing
         {
             this.PluginId = Guid.NewGuid().ToString();
             this.AssemblyName = $"Mock Assembly for Plug-in: {this.Name}";
-            this.Name = this.GetType().Name;
+            this.Name = this.GetType().Name + Guid.NewGuid();
         }
 
         public string PluginId { get; set; }

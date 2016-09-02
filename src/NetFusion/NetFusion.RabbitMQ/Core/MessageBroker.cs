@@ -205,6 +205,8 @@ namespace NetFusion.RabbitMQ.Core
                 IModel consumerChannel = CreateBrokerChannel(messageConsumer.BrokerName);
                 messageConsumer.Channel = consumerChannel;
 
+                SetBasicQosProperties(messageConsumer, consumerChannel);
+
                 // Bind to the existing or newly created queue to the exchange
                 // if the default exchange is not specified.
                 if (!messageConsumer.ExchangeName.IsNullOrWhiteSpace())
@@ -215,6 +217,14 @@ namespace NetFusion.RabbitMQ.Core
 
                 consumerChannel.SetBasicConsumer(messageConsumer);
                 AttachConsumerHandlers(messageConsumer);
+            }
+        }
+
+        private void SetBasicQosProperties(MessageConsumer consumer, IModel channel)
+        {
+            if (consumer.PrefetchSize != null || consumer.PrefetchCount != null)
+            {
+                channel.BasicQos(consumer.PrefetchSize ?? 0, consumer.PrefetchCount ?? 0, false);
             }
         }
 

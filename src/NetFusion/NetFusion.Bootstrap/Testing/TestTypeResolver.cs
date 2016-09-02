@@ -48,7 +48,7 @@ namespace NetFusion.Bootstrap.Testing
             _searchPatterns = searchPatterns;
         }
 
-        public override void DiscoverManifests(ManifestRegistry registry)
+        public override void SetManifests(ManifestRegistry registry)
         {
             // This is the case for unit-tests.  All unit-tests should setup 
             // the container for test and never reference any runtime assemblies.
@@ -69,13 +69,13 @@ namespace NetFusion.Bootstrap.Testing
             registry.AllManifests.AddRange(_plugins);
         }
 
-        public override void LoadPluginTypes(Plugin plugin)
+        public override void SetPluginTypes(Plugin plugin)
         {
             var mockPlugin = plugin.Manifest as MockPlugin;
 
             if (this.LoadAppHostFromAssembly && mockPlugin is IAppHostPluginManifest)
             {
-                base.LoadPluginTypes(plugin);
+                base.SetPluginTypes(plugin);
                 return;
             }
             
@@ -89,7 +89,7 @@ namespace NetFusion.Bootstrap.Testing
             }
 
             // Delegate to the base implementation to discover types from the plug-in's assembly.
-            base.LoadPluginTypes(plugin);
+            base.SetPluginTypes(plugin);
         }
 
         /// <summary>

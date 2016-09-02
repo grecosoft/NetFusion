@@ -1,9 +1,9 @@
 ﻿namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Methods that can be invoked on a loaded container.
+    /// Methods that can be invoked on a built container.
     /// </summary>
-    public interface ILoadedContainer
+    public interface IBuiltContainer
     {
         /// <summary>
         /// Starts all created application plug-ins.  This is the last step of the

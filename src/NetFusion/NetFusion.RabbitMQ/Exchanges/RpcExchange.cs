@@ -1,6 +1,7 @@
-﻿using System;
+﻿using NetFusion.RabbitMQ.Core;
+using System;
 
-namespace NetFusion.RabbitMQ.Core
+namespace NetFusion.RabbitMQ.Exchanges
 {
     public abstract class RpcExchange : BrokerExchange
     {

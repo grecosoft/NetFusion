@@ -1,4 +1,4 @@
-﻿using NetFusion.RabbitMQ.Core;
+﻿using NetFusion.RabbitMQ.Exchanges;
 
 namespace RefArch.Subscriber.Exchanges
 {

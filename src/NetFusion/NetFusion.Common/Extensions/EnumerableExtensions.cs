@@ -73,5 +73,15 @@ namespace NetFusion.Common.Extensions
             Check.NotNull(source, "source");
             return source.Count() == 1;
         } 
+
+        public static IEnumerable<TKey> WhereDuplicated<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> propertySelector)
+        {
+            Check.NotNull(source, "source");
+            Check.NotNull(propertySelector, "propertySelector");
+
+            return source.GroupBy(propertySelector)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key);
+        }
     }
 }

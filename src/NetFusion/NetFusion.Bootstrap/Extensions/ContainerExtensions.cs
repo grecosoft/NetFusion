@@ -48,7 +48,7 @@ namespace NetFusion.Bootstrap.Extensions
 
         /// <summary>
         /// Provided a list of object instances, reduces the list to only instances
-        /// created from a list of provided plug-ins.
+        /// created from a list of specific plug-in types.
         /// </summary>
         /// <typeparam name="T">The type of the object instances.</typeparam>
         /// <param name="instances">The list of object instances to filter.</param>
@@ -74,6 +74,9 @@ namespace NetFusion.Bootstrap.Extensions
         /// <returns>Object instances of all plug-in types that are assignable to the specified matching type.</returns>
         public static IEnumerable<object> CreateMatchingInstances(this IEnumerable<PluginType> pluginTypes, Type matchingType)
         {
+            Check.NotNull(pluginTypes, nameof(pluginTypes));
+            Check.NotNull(matchingType, nameof(matchingType));
+
             IEnumerable<Type> types = pluginTypes.Select(pt => pt.Type);
             foreach (Type type in types.Where(t => t.IsCreatableType() && t.IsDerivedFrom(matchingType)))
             {

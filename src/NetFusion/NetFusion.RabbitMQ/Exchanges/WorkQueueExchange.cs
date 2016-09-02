@@ -1,9 +1,10 @@
 ﻿using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
+using NetFusion.RabbitMQ.Core;
 using RabbitMQ.Client;
 using System;
 
-namespace NetFusion.RabbitMQ.Core
+namespace NetFusion.RabbitMQ.Exchanges
 {
     /// <summary>
     /// Represents a work queue.  This delivery pattern is based on the default exchange.

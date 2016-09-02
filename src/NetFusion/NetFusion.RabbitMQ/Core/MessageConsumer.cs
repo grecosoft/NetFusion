@@ -1,6 +1,7 @@
 ﻿using NetFusion.Common;
 using NetFusion.Messaging.Core;
 using NetFusion.RabbitMQ.Consumers;
+using NetFusion.RabbitMQ.Exchanges;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -61,6 +62,8 @@ namespace NetFusion.RabbitMQ.Core
 
         public QueueSettings QueueSettings { get { return _queueAttrib.QueueSettings; } }
         public QueueBindingTypes BindingType { get { return _queueAttrib.BindingType; } }
+        public uint? PrefetchSize { get { return _queueAttrib.PrefetchSize; } }
+        public ushort? PrefetchCount { get { return _queueAttrib.PrefetchCount; } }
 
         public string[] RouteKeys
         {

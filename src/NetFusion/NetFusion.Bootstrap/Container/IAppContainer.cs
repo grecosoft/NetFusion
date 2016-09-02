@@ -57,7 +57,7 @@ namespace NetFusion.Bootstrap.Container
         /// their execution.
         /// </summary>
         /// <returns>Reference to the loaded container.</returns>
-        ILoadedContainer Build();
+        IBuiltContainer Build();
 
         /// <summary>
         /// Dependency injection container from which lifetime scopes can 

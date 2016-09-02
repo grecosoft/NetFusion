@@ -119,7 +119,8 @@ namespace NetFusion.MongoDB.Core
             MongoCredential credentials = null;
             if (this.DbSettings.IsPasswordSet)
             {
-                credentials = MongoCredential.CreateMongoCRCredential(this.DbSettings.AuthDatabaseName,
+                credentials = MongoCredential.CreateCredential(
+                    this.DbSettings.AuthDatabaseName ?? this.DbSettings.DatabaseName,
                     this.DbSettings.UserName,
                     this.DbSettings.Password);
 

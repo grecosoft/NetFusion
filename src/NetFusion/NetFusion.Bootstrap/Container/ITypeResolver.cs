@@ -21,20 +21,20 @@ namespace NetFusion.Bootstrap.Container
         /// the registry with manifest instances.
         /// </summary>
         /// <param name="registry">The registry to have its manifest property populated.</param>
-        void DiscoverManifests(ManifestRegistry registry);
+        void SetManifests(ManifestRegistry registry);
 
         /// <summary>
         /// Loads all types found within the corresponding plug-in.
         /// </summary>
         /// <param name="plugin">The plug-in to load.</param>
-        void LoadPluginTypes(Plugin plugin);
+        void SetPluginTypes(Plugin plugin);
 
         /// <summary>
         /// Populates the plug-in's modules from its contained types that implement the 
         /// IPluginModule interface.
         /// </summary>
         /// <param name="plugin"></param>
-        void DiscoverModules(Plugin plugin);
+        void SetPluginModules(Plugin plugin);
 
         /// <summary>
         /// Populates all properties on the specified module that are an enumeration of
@@ -44,6 +44,6 @@ namespace NetFusion.Bootstrap.Container
         /// <param name="forModule">The module to have known type properties populated.</param>
         /// <param name="fromPluginTypes">The list of types from which instances should be created.</param>
         /// <returns>The know types defined by the module.</returns>
-        IEnumerable<Type> DiscoverKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes);
+        IEnumerable<Type> SetDiscoverTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace NetFusion.RabbitMQ.Core
+﻿using NetFusion.RabbitMQ.Exchanges;
+
+namespace NetFusion.RabbitMQ.Core
 {
     /// <summary>
     /// Contains information about a queue to be created

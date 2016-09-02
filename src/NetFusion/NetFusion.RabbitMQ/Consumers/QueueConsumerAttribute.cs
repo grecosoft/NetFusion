@@ -1,4 +1,4 @@
-﻿using NetFusion.RabbitMQ.Core;
+﻿using NetFusion.RabbitMQ.Exchanges;
 using System;
 
 namespace NetFusion.RabbitMQ.Consumers
@@ -27,5 +27,7 @@ namespace NetFusion.RabbitMQ.Consumers
 
         public QueueSettings QueueSettings { get; }
         public string[] RouteKeyValues { get; protected set; }
+        public uint? PrefetchSize { get; set; }
+        public ushort? PrefetchCount { get; set; }
     }
 }

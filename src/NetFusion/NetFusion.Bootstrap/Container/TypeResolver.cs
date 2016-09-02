@@ -41,7 +41,7 @@ namespace NetFusion.Bootstrap.Container
             get { return _searchPatterns; }
         }
 
-        public virtual void DiscoverManifests(ManifestRegistry registry)
+        public virtual void SetManifests(ManifestRegistry registry)
         {
             Check.NotNull(registry, nameof(registry), "registry not specified");
 
@@ -68,12 +68,12 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        protected void SetManifestTypes(ManifestRegistry manifestTypes, Assembly[] pluginAssemblies)
+        protected void SetManifestTypes(ManifestRegistry registry, Assembly[] pluginAssemblies)
         {
             IEnumerable<Type> pluginTypes = pluginAssemblies.SelectMany(pa => pa.GetTypes());
-            manifestTypes.AllManifests = pluginTypes.CreateMatchingInstances<IPluginManifest>().ToList();
+            registry.AllManifests = pluginTypes.CreateMatchingInstances<IPluginManifest>().ToList();
 
-            foreach (IPluginManifest manifest in manifestTypes.AllManifests)
+            foreach (IPluginManifest manifest in registry.AllManifests)
             {
                 Assembly assembly = manifest.GetType().Assembly;
                 manifest.AssemblyName = assembly.FullName;
@@ -150,7 +150,7 @@ namespace NetFusion.Bootstrap.Container
             return loadedAssemblies;
         }
 
-        public virtual void LoadPluginTypes(Plugin plugin)
+        public virtual void SetPluginTypes(Plugin plugin)
         {
             Check.NotNull(plugin, nameof(plugin), "plug-in not specified");
 
@@ -160,7 +160,7 @@ namespace NetFusion.Bootstrap.Container
                 .ToArray();
         }
 
-        public void DiscoverModules(Plugin plugin)
+        public void SetPluginModules(Plugin plugin)
         {
             Check.NotNull(plugin, nameof(plugin), "plug-in not specified");
 
@@ -175,7 +175,7 @@ namespace NetFusion.Bootstrap.Container
         // Automatically populates all properties on a plug-in module that are an enumeration of
         // a derived IPluginKnownType.  The plug-in known types specific to the module are returned
         // for use by the consumer. 
-        public IEnumerable<Type> DiscoverKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes)
+        public IEnumerable<Type> SetDiscoverTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes)
         {
             Check.NotNull(forModule, nameof(forModule), "module to discover known types not specified");
             Check.NotNull(fromPluginTypes, nameof(fromPluginTypes), "list of plug-in types not specified");

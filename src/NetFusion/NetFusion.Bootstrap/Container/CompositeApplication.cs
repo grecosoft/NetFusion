@@ -112,7 +112,8 @@ namespace NetFusion.Bootstrap.Container
 
         // First allow all plug-ins to register any default component implementations
         // that can be optionally overridden by other plug-ins.  This will be the
-        // component instances that will be used if no overridden.
+        // component instances that will be used if not overridden.  
+        // Null implementations can also be specified.
         private void RegisterDefaultPluginComponents(Autofac.ContainerBuilder builder)
         {
             foreach (IPluginModule module in this.AllPluginModules)
@@ -129,7 +130,7 @@ namespace NetFusion.Bootstrap.Container
                 ScanPluginTypes(plugin, builder);
                 RegisterComponents(plugin, builder);
 
-                // Core modules may override one of the following depending 
+                // Core modules may override one or both of the following depending 
                 // on the scope of the search.
                 ScanAllOtherPluginTypes(plugin, builder, allPluginTypes);
                 ScanOnlyApplicationPluginTypes(plugin, builder);
@@ -227,6 +228,8 @@ namespace NetFusion.Bootstrap.Container
                 StartPluginModules(scope, this.AppComponentPlugins);
                 StartPluginModules(scope, new[] { this.AppHostPlugin });
                
+                // Last phase to allow any modules to execute an processing that
+                // might be dependent on another module being started.
                 foreach (IPluginModule module in this.Plugins.SelectMany(p => p.IncludedModules()))
                 {
                     module.RunModule(scope);

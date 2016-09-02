@@ -2,6 +2,7 @@
 using NetFusion.Common.Extensions;
 using NetFusion.Domain.Scripting;
 using NetFusion.Messaging;
+using NetFusion.RabbitMQ.Exchanges;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
