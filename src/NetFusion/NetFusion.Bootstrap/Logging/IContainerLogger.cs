@@ -4,7 +4,9 @@ namespace NetFusion.Bootstrap.Logging
 {
     /// <summary>
     /// Interface that can be implemented by the host application
-    /// to log to a specific logger implementation.
+    /// to log to a specific logger implementation. This interface
+    /// is used by all plug-ins so a dependency is not on a specific
+    /// logger is not required.
     /// </summary>
     public interface IContainerLogger
     {
@@ -76,7 +78,7 @@ namespace NetFusion.Bootstrap.Logging
         void Error(string message, object details = null);
 
         /// <summary>
-        /// Writes an error message containing an exception to the lob.
+        /// Writes an error message containing an exception to the log.
         /// </summary>
         /// <param name="message">The message to log.</param>
         /// <param name="ex">The exception to log.</param>

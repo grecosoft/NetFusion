@@ -10,10 +10,9 @@ namespace NetFusion.Bootstrap.Logging
     public class DurationLogger : IDisposable
     {
         private readonly IContainerLogger _logger;
-        private readonly string _processName;
-
-        private readonly Stopwatch _stopWatch;
         private readonly Action<string, object> _logMessage;
+        private readonly Stopwatch _stopWatch;
+        private readonly string _processName;
         private object _completionDetails = new object();
         
         public IContainerLogger Log { get { return _logger; } }
@@ -21,9 +20,12 @@ namespace NetFusion.Bootstrap.Logging
         private DurationLogger(IContainerLogger logger,
             Action<string, object> logMessage)
         {
-            _logMessage = logMessage;
+            Check.NotNull(logger, nameof(logger));
+            Check.NotNull(logMessage, nameof(logMessage));
 
             _logger = logger;
+            _logMessage = logMessage;
+
             _stopWatch = new Stopwatch();
             _stopWatch.Start();
         }
@@ -41,7 +43,6 @@ namespace NetFusion.Bootstrap.Logging
             object details = null) : this(logger, logMessage)
         {
             Check.NotNullOrWhiteSpace(processName, nameof(processName));
-            Check.NotNull(logMessage, nameof(logMessage));
 
             _processName = processName;
             _logMessage($"Start Process: {processName}", details ?? new { });

@@ -26,7 +26,8 @@ namespace NetFusion.Bootstrap.Plugins
         ModuleContext Context { get; set; }
 
         /// <summary>
-        /// Called before container type registration.
+        /// The first method called on the module.  This method is called on 
+        /// all modules before the configuration method is called.
         /// </summary>
         void Initialize();
 
@@ -38,7 +39,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// Called first for all plug-in modules to allow for default instances
-        /// of services to be registered that will be used if no overridden by
+        /// of services to be registered that will be used if not overridden by
         /// another plug-in module.
         /// </summary>
         /// <param name="builder">The Autofac builder used to 
@@ -67,8 +68,8 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// Allows the plug-in module to scan for types within all other plug-ins.
-        /// This registration is limited to all other plug-in types when called on 
-        /// a core plug in.  For an application plug-in, the types are limited to 
+        /// This registration contains all other plug-in types when called on a
+        /// core plug in.  For an application plug-in, the types are limited to 
         /// only other application plug ins.
         /// </summary>
         /// <param name="registration">Reference to instance used to

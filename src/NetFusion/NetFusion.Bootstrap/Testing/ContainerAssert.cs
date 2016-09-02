@@ -9,8 +9,7 @@ namespace NetFusion.Bootstrap.Testing
     /// <summary>
     /// Returned after an action is taken on the application container.  
     /// Used to assert the state of the container after an action is
-    /// taken.  This class implements the common TDD style of arrange, 
-    /// act, and assert.
+    /// taken. 
     /// </summary>
     public class ContainerAssert
     {

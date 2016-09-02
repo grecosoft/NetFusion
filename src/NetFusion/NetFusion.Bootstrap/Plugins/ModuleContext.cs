@@ -119,12 +119,14 @@ namespace NetFusion.Bootstrap.Plugins
             var foundModules = this.AllPluginModules.OfType<T>();
             if (!foundModules.Any())
             {
-                throw new InvalidOperationException($"Plug-in module of type: {typeof(T)} not found.");
+                throw new InvalidOperationException(
+                    $"Plug-in module of type: {typeof(T)} not found.");
             }
 
             if (foundModules.Count() > 1)
             {
-                throw new InvalidOperationException($"Multiple plug-in modules implementing: {typeof(T)} found.");
+                throw new InvalidOperationException(
+                    $"Multiple plug-in modules implementing: {typeof(T)} found.");
             }
 
             return foundModules.First();

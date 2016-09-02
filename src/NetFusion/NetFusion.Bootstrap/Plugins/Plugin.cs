@@ -1,5 +1,4 @@
 ﻿using NetFusion.Bootstrap.Container;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Common;
 using System;
@@ -9,8 +8,8 @@ using System.Linq;
 namespace NetFusion.Bootstrap.Plugins
 {
     /// <summary>
-    /// Used to store information about a plug-in that is used to compose the 
-    /// application's functionality.
+    /// Used to store information about a plug-in that is used 
+    /// to compose the application's functionality.
     /// </summary>
     public class Plugin
     {
@@ -66,7 +65,8 @@ namespace NetFusion.Bootstrap.Plugins
         public Type[] DiscoveredTypes { get; internal set; }
 
         /// <summary>
-        /// Filters the list of instances to only those created from types belonging to the plug-in.
+        /// Filters the list of instances to only those created from types 
+        /// belonging to the plug-in.
         /// </summary>
         /// <typeparam name="T">The type of object instances.</typeparam>
         /// <param name="instances">List of object instances to filter.</param>
@@ -79,7 +79,8 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Returns a configuration associated with the plug-in for a given configuration type. 
+        /// Returns a configuration associated with the plug-in for a given
+        /// configuration type. 
         /// </summary>
         /// <typeparam name="T">The configuration type.</typeparam>
         /// <returns>The registered configuration if found. Otherwise,
@@ -110,7 +111,8 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Returns a configuration associated with the plug-in for a given configuration type. 
+        /// Returns a configuration associated with the plug-in for a 
+        /// given configuration type. 
         /// </summary>
         /// <typeparam name="T">The configuration type.</typeparam>
         /// <returns>The registered configuration if found. Otherwise,
