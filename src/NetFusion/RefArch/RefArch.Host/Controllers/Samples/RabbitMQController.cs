@@ -4,6 +4,8 @@ using RefArch.Api.Messages.RabbitMQ;
 using RefArch.Api.Models;
 using System.Threading.Tasks;
 using System.Web.Http;
+using NetFusion.RabbitMQ;
+using NetFusion.RabbitMQ.Serialization;
 
 namespace RefArch.Host.Controllers.Samples
 {
@@ -104,6 +106,7 @@ namespace RefArch.Host.Controllers.Samples
         public async Task PublishTopicEvent(Car car)
         {
             var evt = new ExampleTopicEvent(car);
+            evt.SetContentType(SerializerTypes.Binary);
             await _messagingSrv.PublishAsync(evt);
         }
 

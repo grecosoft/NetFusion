@@ -411,10 +411,12 @@ namespace NetFusion.RabbitMQ.Core
             IMessageExchange exchange = exchangeDef.Exchange;
 
             string contentType = GetFistContentType(
-                exchange.Settings.ContentType,
-                message.GetContentType());
+                message.GetContentType(),
+                exchange.Settings.ContentType);
 
-            LogPublishingExchangeMessage(message, contentType, exchangeDef);
+            message.SetContentType(contentType);
+
+            LogPublishingExchangeMessage(message, exchangeDef);
 
             byte[] messageBody = SerializeMessage(message, contentType);
 
@@ -535,9 +537,11 @@ namespace NetFusion.RabbitMQ.Core
             RpcMessagePublisher rpcPublisher = GetRpcPublisher(rpcCommandAttrib);
 
             rpcProps.ContentType = GetFistContentType(
-                rpcPublisher.ContentType,
+                message.GetContentType(),
                 rpcProps.ContentType,
-                message.GetContentType());
+                rpcPublisher.ContentType);
+
+            command.SetContentType(rpcProps.ContentType);
 
             LogPublishedRpcMessage(message, rpcPublisher, rpcProps);
 
@@ -784,14 +788,13 @@ namespace NetFusion.RabbitMQ.Core
         #region Logging
 
         private void LogPublishingExchangeMessage(IMessage message, 
-            string contentType,
             ExchangeDefinition exchangeDef)
         {
             _logger.Verbose("Publishing to Exchange", () =>
             {
                 return new {
                     Message = message,
-                    ContentType = contentType,
+                    ContentType = message.GetContentType(),
                     exchangeDef.Exchange.BrokerName,
                     exchangeDef.Exchange.ExchangeName
                 };

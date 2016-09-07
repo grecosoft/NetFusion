@@ -5,6 +5,7 @@ using System;
 
 namespace RefArch.Api.Messages.RabbitMQ
 {
+    [Serializable]
     public class ExampleTopicEvent : DomainEvent
     {
         public string Vin { get; private set; }

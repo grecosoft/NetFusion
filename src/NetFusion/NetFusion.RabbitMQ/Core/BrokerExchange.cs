@@ -185,8 +185,15 @@ namespace NetFusion.RabbitMQ.Core
             Check.NotNull(channel, nameof(channel));
             Check.NotNull(message, nameof(message));
 
+            string contentType = message.GetContentType();
+            if (contentType == null)
+            {
+                throw new InvalidOperationException(
+                    $"Content-Type not specified for message of type {message.GetType()}.");
+            }
+
             var basicProps = channel.CreateBasicProperties();
-            basicProps.ContentType = this.Settings.ContentType;
+            basicProps.ContentType = contentType;
             return basicProps;
         }
 
