@@ -66,7 +66,7 @@ namespace NetFusion.Settings.Modules
                 .OnActivating(InitializeSettings);
         }
 
-        public override void ScanApplicationPluginTypes(TypeRegistration registration)
+        public override void ScanApplicationPlugins(TypeRegistration registration)
         {
             // Register all setting initializer classes defined for a specific
             // application settings class.

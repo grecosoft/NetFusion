@@ -186,7 +186,7 @@ namespace NetFusion.Bootstrap.Container
 
             foreach (var module in plugin.IncludedModules())
             {
-                module.ScanApplicationPluginTypes(typeRegistration);
+                module.ScanApplicationPlugins(typeRegistration);
             }
         }
 

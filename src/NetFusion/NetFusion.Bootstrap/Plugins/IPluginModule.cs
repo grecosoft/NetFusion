@@ -82,7 +82,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         /// <param name="registration">Reference to instance used to
         /// filter types to be registered.</param>
-        void ScanApplicationPluginTypes(TypeRegistration registration);
+        void ScanApplicationPlugins(TypeRegistration registration);
 
         /// <summary>
         /// The last method called on the module by the bootstrap process.  

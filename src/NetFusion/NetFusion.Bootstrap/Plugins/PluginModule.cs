@@ -121,7 +121,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         /// <param name="registration">Reference to instance used to
         /// filter types to be registered.</param>
-        public virtual void ScanApplicationPluginTypes(TypeRegistration registration)
+        public virtual void ScanApplicationPlugins(TypeRegistration registration)
         {
 
         }
