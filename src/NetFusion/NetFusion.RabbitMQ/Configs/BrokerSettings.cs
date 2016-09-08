@@ -44,15 +44,12 @@ namespace NetFusion.RabbitMQ.Configs
         {
             Check.NotNull(exchange, nameof(exchange));
 
-            var properties = GetBrokerQueueProperties(exchange.BrokerName);
-
-            foreach (ExchangeQueue queue in exchange.Queues)
+            foreach (QueueProperties queueProps in GetBrokerQueueProperties(exchange.BrokerName))
             {
-                var queueProps = properties.FirstOrDefault(qp => qp.QueueName == queue.QueueName);
-                if (queueProps != null)
+                ExchangeQueue queue = exchange.Queues.FirstOrDefault(q => q.QueueName == queueProps.QueueName);
+                if (queue != null)
                 {
-                    queue.RouteKeys = queue.RouteKeys.Concat(queueProps.RouteKeys)
-                        .Distinct().ToArray();
+                    queue.RouteKeys = queueProps.RouteKeys.ToArray();
                 }
             }
         }
@@ -70,16 +67,14 @@ namespace NetFusion.RabbitMQ.Configs
 
             if (queueProps != null)
             {
-                consumer.RouteKeys = consumer.RouteKeys.Concat(queueProps.RouteKeys)
-                    .Distinct()
-                    .ToArray();
+                consumer.RouteKeys = queueProps.RouteKeys.ToArray();
             }
         }
 
         private IEnumerable<QueueProperties> GetBrokerQueueProperties(string brokerName)
         {
             var brokerConn = this.Connections.FirstOrDefault(c => c.BrokerName == brokerName);
-            return brokerConn?.QueueProperties ?? new QueueProperties[] { };
+            return brokerConn?.QueueProperties.Distinct() ?? new QueueProperties[] { };
         }
 
         public override ObjectValidator ValidateObject()

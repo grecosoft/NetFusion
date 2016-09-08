@@ -246,7 +246,15 @@ namespace NetFusion.RabbitMQ.Core
         {
             messageConsumer.Consumer.Received += (sender, deliveryEvent) => {
 
-                MessageReceived(messageConsumer, deliveryEvent);
+                try
+                {
+                    MessageReceived(messageConsumer, deliveryEvent);
+                }
+                catch (Exception ex)
+                {
+                    this.RejectAndRequeueMessage(messageConsumer, deliveryEvent);
+                    _logger.Error("Error Consuming Message", ex);
+                }
             };
         }
 
@@ -483,6 +491,11 @@ namespace NetFusion.RabbitMQ.Core
                 messageConsumer.Channel.BasicReject(deliveryEvent.DeliveryTag,
                     message.GetRequeueOnRejection());
             }
+        }
+
+        private void RejectAndRequeueMessage(MessageConsumer messageConsumer, BasicDeliverEventArgs deliveryEvent)
+        {
+            messageConsumer.Channel.BasicReject(deliveryEvent.DeliveryTag, true);
         }
 
         #endregion

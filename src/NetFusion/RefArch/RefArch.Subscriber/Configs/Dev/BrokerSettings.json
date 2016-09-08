@@ -4,14 +4,7 @@
         "BrokerName": "TestBroker",
         "HostName": "localhost",
         "UserName": "papillon",
-        "Password": "bestdog",
-
-        "QueueProperties": [
-          {
-            "QueueName": "Ford",
-            "RouteKeys": [ "Mercury.*.*", "Mazda.Tribute.*" ]
-          }
-        ]
+        "Password": "bestdog"
       }
     ]
 }

@@ -1,4 +1,5 @@
 ﻿using NetFusion.Common;
+using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -38,10 +39,17 @@ namespace NetFusion.RabbitMQ.Serialization
             return Encoding.UTF8.GetBytes(json);
         }
 
-        public object Deserialize(byte[] value, Type vaueType)
+        public object Deserialize(byte[] value, Type valueType)
         {
             Check.NotNull(value, nameof(value));
-            Check.NotNull(vaueType, nameof(vaueType));
+            Check.NotNull(valueType, nameof(valueType));
+
+            if (!valueType.HasDefaultConstructor())
+            {
+                throw new InvalidOperationException(
+                    $"The message type of: {valueType} does not have a default constructor." +
+                    $"Required for serialization content-type: {this.ContentType}.");
+            }
 
             var settings = new JsonSerializerSettings
             {
@@ -49,7 +57,7 @@ namespace NetFusion.RabbitMQ.Serialization
             };
 
             var json = Encoding.UTF8.GetString(value);
-            return (IMessage)JsonConvert.DeserializeObject(json, vaueType, settings);
+            return (IMessage)JsonConvert.DeserializeObject(json, valueType, settings);
         }
 
         public T Deserialize<T>(byte[] value, Type valueType)

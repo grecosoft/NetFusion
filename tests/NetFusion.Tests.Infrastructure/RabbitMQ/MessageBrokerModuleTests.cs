@@ -154,7 +154,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             var queue = directExchange.Queues.FirstOrDefault();
 
             queue.Should().NotBeNull();
-            queue.RouteKeys.Should().HaveCount(2);
+            queue.RouteKeys.Should().HaveCount(1);
             queue.RouteKeys.Should().Contain(k => k == "RouteKeyTwo");
         }
 

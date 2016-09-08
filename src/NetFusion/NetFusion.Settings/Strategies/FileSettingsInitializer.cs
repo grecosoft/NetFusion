@@ -55,20 +55,17 @@ namespace NetFusion.Settings.Strategies
 
         private string GetSettingsConfigFilePath(NetFusionConfig appConfig, string machineName = "")
         {
-            string appBaseDir = Path.Combine(this.ExecutionDirectory, "Configs");
+            string appBaseDir = Path.Combine(this.AssemblyProbeDirectory, "Configs");
             string envName = _envDirMappings[appConfig.Environment];
             var fileName = Path.ChangeExtension(this.SettingsType.Name, "json");
 
             return Path.Combine(appBaseDir, machineName, envName, fileName);
         }
 
-        private string ExecutionDirectory
+        private string AssemblyProbeDirectory
         {
-            get
-            {
-                var uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-                return  Path.GetDirectoryName(uri.LocalPath);
-            }
+            get { return AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory; }
         }
+
     }
 }

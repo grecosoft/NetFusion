@@ -29,8 +29,6 @@ namespace NetFusion.Logging.Serilog.Core
                     AddPluginLogProperties(logEvent, propertyFactory, plugin);
                 }
             }
-
-            logEvent.RemovePropertyIfPresent(SerilogManifest.ContextPropName);
         }
 
         private Plugin GetTypesPlugin(Type contextType)

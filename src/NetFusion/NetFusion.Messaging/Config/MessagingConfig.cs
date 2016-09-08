@@ -1,4 +1,5 @@
 ﻿using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Messaging.Core;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,14 @@ namespace NetFusion.Messaging.Config
         /// <typeparam name="TPublisher"></typeparam>
         public void AddMessagePublisherType<TPublisher>() where TPublisher: IMessagePublisher
         {
-            _messagePublisherTypes.Add(typeof(TPublisher));
+            Type publisherType = typeof(TPublisher);
+            if (_messagePublisherTypes.Contains(publisherType))
+            {
+                throw new ContainerException(
+                    $"The message publisher of type: {publisherType} is already registered.");
+            }
+
+            _messagePublisherTypes.Add(publisherType);
         }
     }
 }
