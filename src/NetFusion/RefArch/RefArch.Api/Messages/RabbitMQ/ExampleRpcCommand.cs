@@ -8,7 +8,7 @@ using System;
 namespace RefArch.Api.Messages.RabbitMQ
 {
     [RpcCommand("TestBroker", "ExampleRpcConsumer", 
-        ExternalTypeName = "Example_Command", ContentType = SerializerTypes.Binary)]
+        ExternalTypeName = "Example_Command", ContentType = SerializerTypes.Json)]
     public class ExampleRpcCommand : Command<ExampleRpcResponse>
     {
         public DateTime CurrentDateTime { get; private set; }
