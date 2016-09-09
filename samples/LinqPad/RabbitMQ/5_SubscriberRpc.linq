@@ -28,6 +28,7 @@
   <Namespace>NetFusion.Settings.Testing</Namespace>
   <Namespace>System.Threading.Tasks</Namespace>
   <Namespace>NetFusion.RabbitMQ.Serialization</Namespace>
+  <Namespace>NetFusion.RabbitMQ.Exchanges</Namespace>
 </Query>
 
 void Main()
@@ -147,4 +148,3 @@ public class ExampleRpcService : IMessageConsumer
 		};
 	}
 }
-

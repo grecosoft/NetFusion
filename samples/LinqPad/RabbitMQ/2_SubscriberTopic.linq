@@ -1,13 +1,13 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Domain.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Domain.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Messaging.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
-  <Reference Relative="..\libs\RabbitMQ.Client.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Domain.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Domain.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Messaging.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\RabbitMQ.Client.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Extensions</Namespace>
@@ -138,7 +138,6 @@ public class ExampleTopicService : IMessageConsumer
 	// just not passed to this handler.  If there are a large number
 	// of events, it is best to create a dedicated queue on the 
 	// exchange.
-	[ApplyDispatchRule(typeof(ShortMakeRule))]
 	[AddQueue("SampleTopicExchange", RouteKey = "#",
 		IsAutoDelete = true, IsExclusive = true, IsNoAck = true)]
 	public void OnSortMakeName(ExampleTopicEvent topicEvt)
@@ -154,13 +153,5 @@ public class ExampleTopicService : IMessageConsumer
 	public void OnFordMustang(ExampleTopicEvent topicEvt)
 	{
 		Console.WriteLine($"Handler: OnFordMustang: {topicEvt.ToIndentedJson()}");
-	}
-}
-
-public class ShortMakeRule : MessageDispatchRule<ExampleTopicEvent>
-{
-	protected override bool IsMatch(ExampleTopicEvent message)
-	{
-		return message.Make.Length == 3;
 	}
 }
