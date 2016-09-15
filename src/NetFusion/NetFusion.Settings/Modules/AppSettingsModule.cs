@@ -97,32 +97,32 @@ namespace NetFusion.Settings.Modules
         {
             var duplicates = new List<Type>();
 
-            // List of all possible closed setting initializers.
-            var settingInitTypes = this.Context.GetPluginTypesFrom()
+            // List of all possible closed setting initializers types:
+            IEnumerable<Type> allPossibleInitTypes = this.Context.AllPluginTypes
                 .Where(t => t.IsDerivedFrom<IAppSettings>() && t.IsClass)
                 .Select(st => typeof(IAppSettingsInitializer<>).MakeGenericType(st))
                 .ToList();
 
-            // All initializers.
-            var allInitializers = this.Context.GetPluginTypesFrom()
+            // All declared initializer types:
+            IEnumerable<Type> allDeclaredInitTypes = this.Context.AllPluginTypes
                 .Where(t => t.IsDerivedFrom<IAppSettingsInitializer>() && t.IsClass && !t.IsAbstract)
                 .ToList();
 
-            // If more than one setting initializer is derived from one of the setting
+            // If more than one declared setting initializer is derived from one of the setting
             // specific closed generic types, then there is duplicate.
-            foreach (Type settingInitType in settingInitTypes)
+            foreach (Type possibleInitType in allPossibleInitTypes)
             {
-                if (allInitializers.Count(it => it.IsDerivedFrom(settingInitType)) > 1)
+                if (allDeclaredInitTypes.Count(it => it.IsDerivedFrom(possibleInitType)) > 1)
                 {
-                    duplicates.Add(settingInitType);
+                    duplicates.Add(possibleInitType);
                 }
             }
          
             if (duplicates.Any())
             {
                 throw new ContainerException(
-                    $"There were duplicate setting initializers for the following setting types: " +
-                    $"{String.Join(", ", duplicates.Select(st => st.FullName))}.");
+                    $"There were duplicate setting initializers for a given settings type.   " +
+                    $"See details.", duplicates.Select(st => st.FullName));
             }
         }
 
@@ -136,18 +136,19 @@ namespace NetFusion.Settings.Modules
             // Set properties that can be used by the initializer to load the settings.
             settings.ApplicationId = this.Context.AppHost.Manifest.PluginId;
             settings.Environment = this.AppConfig.Environment;
+            settings.MachineName = Environment.MachineName.ToLower();
 
             IAppSettings initializedSettings = null;
 
             // First see if there is a settings initializer specific to the settings type.
-            var settingInitializer = GetSettingSpecificInitializer(settings, settingLoadEvent.Context);
+            IAppSettingsInitializer settingInitializer = GetSettingSpecificInitializer(settings, settingLoadEvent.Context);
             initializedSettings = settingInitializer?.Configure(settings);
            
             if (initializedSettings == null)
             {
                 // If a settings specific initializer has not been found, or couldn't populate the settings,
                 // apply in order the non-type specific initializers that have been configured by the host 
-                //application.  Stop after finding the initializer that is able to initialize the settings.
+                // application.  Stop after finding the initializer that is able to initialize the settings.
                 foreach (Type settingInitType in this.AppConfig.SettingInitializerTypes)
                 {
                     settingInitializer = GetSettingGenericInitializer(settings, settingInitType, settingLoadEvent.Context);
@@ -187,12 +188,12 @@ namespace NetFusion.Settings.Modules
         {
             var settingSpecificType = typeof(IAppSettingsInitializer<>).MakeGenericType(settings.GetType());
 
-            var specificSettingInit = this.Context.GetPluginTypesFrom(PluginTypes.AppHostPlugin, PluginTypes.AppComponentPlugin)
+            Type specificSettingInitType = this.Context.AllAppPluginTypes
                 .FirstOrDefault(t => t.IsDerivedFrom(settingSpecificType));
 
-            if (specificSettingInit != null)
+            if (specificSettingInitType != null)
             {
-                return context.Resolve(specificSettingInit) as IAppSettingsInitializer;
+                return context.Resolve(specificSettingInitType) as IAppSettingsInitializer;
             }
 
             return null;
@@ -205,8 +206,8 @@ namespace NetFusion.Settings.Modules
             Type genericIntitializerType,
             IComponentContext context)
         {
-            var closedSettingType = genericIntitializerType.MakeGenericType(settings.GetType());
-            return (IAppSettingsInitializer)context.Resolve(closedSettingType);
+            Type closedSettingInitType = genericIntitializerType.MakeGenericType(settings.GetType());
+            return (IAppSettingsInitializer)context.Resolve(closedSettingInitType);
         }
 
         public override void Log(IDictionary<string, object> moduleLog)
@@ -218,23 +219,24 @@ namespace NetFusion.Settings.Modules
         private void LogSettingInits(IDictionary<string, object> moduleLog)
         {
             // All the setting initializers with the configured ones added in configuration order.
-            var settingInits = Context.GetPluginTypesFrom()
+            IEnumerable<Type> settingInits = Context.AllPluginTypes
                 .Where(t => t.IsDerivedFrom<IAppSettingsInitializer>() && t.IsClass && !t.IsAbstract)
 
                 // Exclude open generic initializers and add them back to the end.
                 .Except(this.AppConfig.SettingInitializerTypes)
                 .Concat(this.AppConfig.SettingInitializerTypes);
-            
+
             moduleLog["Setting-Initializers"] = settingInits
-                .Select(t => new {
+                .Select(t => new
+                {
                     InitializerType = t.AssemblyQualifiedName,
                     IsConfigured = this.AppConfig.SettingInitializerTypes.Contains(t)
-                });
+                }).ToList();
         }
 
         private void LogAppSettings(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Application-Settings"] = Context.GetPluginTypesFrom()
+            moduleLog["Application-Settings"] = Context.AllPluginTypes
                 .Where(t => t.IsDerivedFrom<IAppSettings>() && t.IsClass && !t.IsAbstract)
                 .Select(t => t.AssemblyQualifiedName);
         }

@@ -27,7 +27,7 @@ namespace NetFusion.Bootstrap.Container
             this.SearchPatterns = searchPatterns;
         }
 
-        public Plugin[] Plugins { get; set; }
+        public Plugin[] Plugins { get; internal set; }
 
         public Plugin AppHostPlugin
         {
@@ -246,7 +246,7 @@ namespace NetFusion.Bootstrap.Container
         }
 
         /// <summary>
-        /// Stops all plug-in modules in the reverse order in which they were started.
+        /// Stops all plug-in modules in the reverse order from which they were started.
         /// </summary>
         /// <param name="container">The build container.</param>
         public void StopPluginModules(IContainer container)

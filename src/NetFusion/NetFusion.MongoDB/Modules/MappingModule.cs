@@ -1,8 +1,6 @@
-﻿using Autofac;
-using MongoDB.Bson.Serialization;
+﻿using MongoDB.Bson.Serialization;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common;
-using NetFusion.Common.Extensions;
 using NetFusion.MongoDB.Core;
 using System;
 using System.Collections.Generic;
@@ -16,20 +14,25 @@ namespace NetFusion.MongoDB.Modules
     /// </summary>
     internal class MappingModule : PluginModule, IMongoMappingModule
     {
+        private static object _mapLock = new Object();
+
         // IMongoMappingModule:
         public IEnumerable<IEntityClassMap> Mappings { get; private set; }
 
         // Configures MongoDB driver with mappings.
-        public override void StartModule(ILifetimeScope scope)
+        public override void Configure()
         {
-            var allPluginTypes = Context.GetPluginTypesFrom();
-
-            // Allow each mapping to discover known types associated
-            // with its entity mapping.
-            this.Mappings.ForEach(m => m.AddKnownPluginTypes(allPluginTypes));
-
-            this.Mappings.Select(m => m.ClassMap)
-                .ForEach(BsonClassMap.RegisterClassMap);
+            lock(_mapLock)
+            {
+                foreach (IEntityClassMap map in this.Mappings)
+                {
+                    if (!BsonClassMap.IsClassMapRegistered(map.EntityType))
+                    {
+                        map.AddKnownPluginTypes(this.Context.AllPluginTypes);
+                        BsonClassMap.RegisterClassMap(map.ClassMap);
+                    }
+                }
+            }  
         }
 
         // IMongoMappingModule:
@@ -38,7 +41,7 @@ namespace NetFusion.MongoDB.Modules
             Check.NotNull(mappedEntityType, nameof(mappedEntityType), "mapped entity type not specified");
             Check.NotNull(knownEntityType, nameof(knownEntityType), "derived known type of mapped type not specified");
 
-            var entityMapping = this.Mappings.FirstOrDefault(m => m.EntityType == mappedEntityType);
+            IEntityClassMap entityMapping = GetEntityMap(mappedEntityType);
             if (entityMapping == null)
             {
                 throw new InvalidOperationException(
@@ -48,12 +51,7 @@ namespace NetFusion.MongoDB.Modules
             var derivedEntityMapping = entityMapping.ClassMap.KnownTypes
                 .FirstOrDefault(kt => kt.UnderlyingSystemType == knownEntityType);
 
-            if (derivedEntityMapping != null)
-            {
-                return derivedEntityMapping.Name;
-            }
-            
-            return null;
+            return derivedEntityMapping?.Name;
         }
 
         // IMongoMappingModule:

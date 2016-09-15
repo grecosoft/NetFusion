@@ -19,30 +19,6 @@ namespace NetFusion.Domain.Scripting
         /// The entity attribute's boolean property that determines if the message
         /// matches the criteria required to be published to the exchange.
         /// </summary>
-        public string PredicateAttributeName { get; set; }
-
-        /// <summary>
-        /// The entity's boolean property that determines if the message
-        /// matches the criteria required to be published to the exchange.
-        /// </summary>
-        public string PredicatePropertyName { get; set; }
-
-        /// <summary>
-        /// Validates the state of the predicate.
-        /// </summary>
-        public void Validate()
-        {
-            if (this.ScriptName.IsNullOrWhiteSpace())
-            {
-                throw new InvalidOperationException($"{nameof(ScriptName)} must be specified.");
-            }
-
-            if (this.PredicateAttributeName.IsNullOrWhiteSpace() 
-                && this.PredicatePropertyName.IsNullOrWhiteSpace())
-            {
-                throw new InvalidOperationException(
-                    $"Either the {nameof(PredicateAttributeName)} or {nameof(PredicatePropertyName)} must be specified.");
-            }
-        }
+        public string AttributeName { get; set; }
     }
 }

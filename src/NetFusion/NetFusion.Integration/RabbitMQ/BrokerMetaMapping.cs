@@ -9,7 +9,7 @@ namespace NetFusion.Integration.RabbitMQ
         {
             this.CollectionName = "NetFusion.BrokerMeta";
             this.AutoMap();
-            this.MapStringObjectIdProperty(p => p.BrockerConfigId);
+            this.MapStringPropertyToObjectId(p => p.BrockerConfigId);
             this.GetMemberMap(m => m.BrockerConfigId).SetIgnoreIfDefault(true);
         }
     }

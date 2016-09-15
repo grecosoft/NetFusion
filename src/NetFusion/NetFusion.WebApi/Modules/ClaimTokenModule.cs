@@ -42,11 +42,7 @@ namespace NetFusion.WebApi.Modules
         // so an instance can be created dynamically at runtime.
         private Type GetApplicationPrincipalType()
         {
-            var allAppHostTypes = this.Context.GetPluginTypesFrom(
-                PluginTypes.AppHostPlugin,
-                PluginTypes.AppComponentPlugin);
-
-            var appPrincipalTypes = allAppHostTypes.Where(pt => pt.IsDerivedFrom<FusionPrincipal>());
+            var appPrincipalTypes = this.Context.AllAppPluginTypes.Where(pt => pt.IsDerivedFrom<FusionPrincipal>());
 
             if (appPrincipalTypes.Empty())
             {

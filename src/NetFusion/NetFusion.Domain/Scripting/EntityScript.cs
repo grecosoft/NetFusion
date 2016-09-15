@@ -53,6 +53,7 @@ namespace NetFusion.Domain.Scripting
             Check.NotNullOrWhiteSpace(id, nameof(id));
             Check.NotNullOrWhiteSpace(name, nameof(name));
             Check.NotNullOrWhiteSpace(entityTypeName, nameof(entityTypeName));
+            Check.NotNull(expressions, nameof(expressions));
 
             this.Id = id;
             this.Name = name;

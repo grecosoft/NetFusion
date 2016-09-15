@@ -34,7 +34,7 @@ namespace NetFusion.MongoDB.Core
         /// <summary>
         /// Allows the class mapping to add known mappings types.
         /// </summary>
-        /// <param name="pluginTypes">List of all plugin-types.</param>
+        /// <param name="pluginTypes">List of all plug-in types.</param>
         void AddKnownPluginTypes(IEnumerable<Type> pluginTypes);
     }
 }

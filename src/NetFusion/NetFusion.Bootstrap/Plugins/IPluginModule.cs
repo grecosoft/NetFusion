@@ -39,8 +39,8 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// Called first for all plug-in modules to allow for default instances
-        /// of services to be registered that will be used if not overridden by
-        /// another plug-in module.
+        /// of services to be registered to be used if not overridden by another
+        /// plug-in module.
         /// </summary>
         /// <param name="builder">The Autofac builder used to 
         /// register components that can be dependency injected.

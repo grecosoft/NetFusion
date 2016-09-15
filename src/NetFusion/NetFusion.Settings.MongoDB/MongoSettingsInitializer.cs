@@ -1,10 +1,9 @@
 ﻿using MongoDB.Driver;
-using NetFusion.Common.Extensions;
+using NetFusion.Bootstrap.Exceptions;
 using NetFusion.MongoDB.Modules;
 using NetFusion.Settings.MongoDB.Configs;
 using NetFusion.Settings.MongoDB.Modules;
 using NetFusion.Settings.Strategies;
-using System;
 using System.Linq;
 
 namespace NetFusion.Settings.MongoDB
@@ -37,26 +36,30 @@ namespace NetFusion.Settings.MongoDB
                 return null;
             }
 
-            var settingsColl = GetSettingsCollection(_mongoSettingModule.MongoAppSettingsConfig);
-            var filter = BuildAppSettingsFilter(settings, typeDiscriminator, Environment.MachineName);
-           
-            // Check if there is a machine specific settings configured.
-            var foundSettings = settingsColl.Find(filter).ToListAsync().Result;
-            if (foundSettings.Empty())
-            {
-                // Check if there is a non-machine specific setting.
-                filter = BuildAppSettingsFilter(settings, typeDiscriminator);
-                foundSettings = settingsColl.Find(filter).ToListAsync().Result;
-            }
+            IMongoCollection<AppSettings> settingsColl = GetSettingsCollection(_mongoSettingModule.MongoAppSettingsConfig);
 
-            if (foundSettings.Count() > 1)
-            {
-                throw new InvalidOperationException(
-                    $"More one setting configuration was found for the setting type: {typeof(TSettings)} " +
-                    $"for the environment: {settings.Environment}.");
-            }
+            // The following are the order in which the MongoDB collection should be searched 
+            // for settings.  The first found match is used.
+            var machineEnvFilter = BuildAppSettingsFilter(typeDiscriminator,
+                settings.ApplicationId,
+                settings.MachineName,
+                settings.Environment);
 
-            return foundSettings.FirstOrDefault();
+           var machineFilter = BuildAppSettingsFilter(typeDiscriminator,
+                settings.ApplicationId,
+                settings.MachineName);
+
+            var envFilter = BuildAppSettingsFilter(typeDiscriminator,
+                settings.ApplicationId,
+                envType: settings.Environment);
+
+            var appFilter = BuildAppSettingsFilter(typeDiscriminator, 
+                settings.ApplicationId);
+
+            return SearchSettingsCollection(settingsColl, machineEnvFilter)
+                ?? SearchSettingsCollection(settingsColl, machineFilter)
+                ?? SearchSettingsCollection(settingsColl, envFilter)
+                ?? SearchSettingsCollection(settingsColl, appFilter);
         }
 
         private IMongoCollection<AppSettings> GetSettingsCollection(MongoAppSettingsConfig appSettingsConfig)
@@ -66,22 +69,39 @@ namespace NetFusion.Settings.MongoDB
             return settingDb.GetCollection<AppSettings>(appSettingsConfig.CollectionName);
         }
 
-        private FilterDefinition<AppSettings> BuildAppSettingsFilter(
-            IAppSettings settings,
-            string typeDiscriminator,
-            string machineName = null)
+        private FilterDefinition<AppSettings> BuildAppSettingsFilter(string typeDiscriminator, 
+            string applicationId,
+            string machineName = null,
+            EnvironmentTypes? envType = null)
         {
             var builder = Builders<AppSettings>.Filter;
-
-            var filter = builder.Eq(s => s.ApplicationId, settings.ApplicationId);
-            filter = filter & builder.Eq(s => s.Environment, settings.Environment);
+            var filter = builder.Eq(s => s.ApplicationId, applicationId);
 
             if (machineName != null)
             {
                 filter = filter & builder.Eq(s => s.MachineName, machineName.ToLower());
             }
 
+            if (envType != null)
+            {
+                filter = filter & builder.Eq(s => s.Environment, envType.Value);
+            }
+
             return filter & builder.Eq("_t", typeDiscriminator);
+        }
+
+        private IAppSettings SearchSettingsCollection(IMongoCollection<AppSettings> collection,
+            FilterDefinition<AppSettings> filter)
+        {
+            var foundSettings = collection.Find(filter).ToListAsync().Result;
+
+            if (foundSettings.Count() > 1)
+            {
+                throw new ContainerException(
+                    $"More one setting configuration was found for the setting type: {typeof(TSettings)}");
+            }
+
+            return foundSettings.FirstOrDefault();
         }
     }
 }

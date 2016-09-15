@@ -174,7 +174,7 @@ namespace NetFusion.RabbitMQ.Modules
 
         public IDictionary<string, Type> GetRpcCommandTypes()
         {
-            IEnumerable<Type> rpcMessageTypes = Context.GetPluginTypesFrom()
+            IEnumerable<Type> rpcMessageTypes = Context.AllPluginTypes
                  .Where(pt => pt.HasAttribute<RpcCommandAttribute>());
 
             var rpcCommandTypes = new Dictionary<string, Type>();
@@ -208,10 +208,8 @@ namespace NetFusion.RabbitMQ.Modules
             // Find all serializer registries which specify any custom serializers or
             // overrides for a given content type.  Only look in application specific
             // plug-ins.
-            IEnumerable<Type> allAppPluginTypes = this.Context.GetPluginTypesFrom(
-                PluginTypes.AppHostPlugin, PluginTypes.AppComponentPlugin);
-
-            IEnumerable<IBrokerSerializerRegistry> registries = this.Registries.CreatedFrom(allAppPluginTypes);
+          
+            IEnumerable<IBrokerSerializerRegistry> registries = this.Registries.CreatedFrom(this.Context.AllAppPluginTypes);
             if (registries.Empty())
             {
                 return new Dictionary<string, IBrokerSerializer>();

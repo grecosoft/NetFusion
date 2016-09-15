@@ -46,12 +46,12 @@ namespace NetFusion.MongoDB.Core
                 this.DbSettings.DatabaseSettings);
         }
 
-        public IMongoCollection<TDocument> GetCollection<TDocument>(string name,
+        public IMongoCollection<TDocument> GetCollection<TDocument>(string collectionName,
             MongoCollectionSettings settings = null)
         {
-            Check.NotNullOrWhiteSpace(name, nameof(name));
+            Check.NotNullOrWhiteSpace(collectionName, nameof(collectionName));
 
-            return _database.GetCollection<TDocument>(name, settings);
+            return _database.GetCollection<TDocument>(collectionName, settings);
         }
 
         public IMongoCollection<TEntity> GetCollection<TEntity>(MongoCollectionSettings settings = null)
@@ -90,7 +90,7 @@ namespace NetFusion.MongoDB.Core
 
         private MongoClient CreateClient()
         {
-            var clientSettings = CreateClientSettings();
+            MongoClientSettings clientSettings = CreateClientSettings();
 
             SetClientCredentials(clientSettings);
             return new MongoClient(clientSettings);
@@ -98,7 +98,7 @@ namespace NetFusion.MongoDB.Core
 
         private MongoClientSettings CreateClientSettings()
         {
-            var clientSettings = this.DbSettings.ClientSettings;
+            MongoClientSettings clientSettings = this.DbSettings.ClientSettings;
             if (clientSettings == null)
             {
                 if (this.DbSettings.MongoUrl.IsNullOrWhiteSpace())

@@ -18,7 +18,7 @@ namespace NetFusion.Domain.Entity
         /// <summary>
         /// Sets the entity attribute values.
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="values"></param>
         void SetValues(IDictionary<string, object> values);
 
         /// <summary>

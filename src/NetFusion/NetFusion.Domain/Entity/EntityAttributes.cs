@@ -27,7 +27,7 @@ namespace NetFusion.Domain.Entity
         // DynamicObject Overrides:
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            return (_attributes.TryGetValue(binder.Name, out result));
+            return _attributes.TryGetValue(binder.Name, out result);
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
@@ -90,7 +90,7 @@ namespace NetFusion.Domain.Entity
             return _attributes.ContainsKey(name);
         }
 
-        private static string GetBasePropertyName(string name)
+        private string GetBasePropertyName(string name)
         {
             Check.NotNullOrWhiteSpace(name, nameof(name));
 

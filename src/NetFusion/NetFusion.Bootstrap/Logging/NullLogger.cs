@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetFusion.Common.Extensions;
+using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Bootstrap.Logging
@@ -16,11 +17,11 @@ namespace NetFusion.Bootstrap.Logging
             get { return _messages; }
         }
 
-        public bool IsVerboseLevel => false;
-        public bool IsInfoLevel => false;
-        public bool IsDebugLevel => false;
-        public bool IsWarningLevel => false;
-        public bool IsErrorLevel => false;
+        public bool IsVerboseLevel => true;
+        public bool IsInfoLevel => true;
+        public bool IsDebugLevel => true;
+        public bool IsWarningLevel => true;
+        public bool IsErrorLevel => true;
     
         public IContainerLogger ForContext<TContext>()
         {
@@ -32,34 +33,44 @@ namespace NetFusion.Bootstrap.Logging
             return this;
         }
 
+        private void AddToMessageFor(string level, string message, 
+            object details, Exception ex = null)
+        {
+            details = details ?? new { };
+            string exMsg = ex?.Message ?? "";
+            _messages.Add($"{level}:{message}; Details{details.ToIndentedJson()}; Exception: {exMsg}");
+        }
+
         public void Verbose(string message, object details = null)
         {
-            _messages.Add($"VERBOSE: {message}");
+            AddToMessageFor("VERBOSE", message, details);
         }
 
         public void Info(string message, object details = null)
         {
-            _messages.Add($"INFO: {message}");
+            AddToMessageFor("INFO", message, details);
         }
 
         public void Debug(string message, object details = null)
         {
-            _messages.Add($"DEBUG: {message}");
+            AddToMessageFor("DEBUG", message, details);
         }
 
         public void Warning(string message, object details = null)
         {
-            _messages.Add($"WARNING: {message}");
+            AddToMessageFor("WARNING", message, details);
         }
 
         public void Error(string message, object details = null)
         {
-            _messages.Add($"ERROR: {message}");
+            AddToMessageFor("ERROR", message, details);
         }
 
         public void Error(string message, Exception ex, object details = null)
         {
-          
+            AddToMessageFor("VERBOSE", message, details, ex);
         }
+
+
     }
 }

@@ -20,14 +20,19 @@ namespace NetFusion.MongoDB
     {
         // Additional mapping properties:
         public string CollectionName { get; set; }
-        public Type EntityType { get { return typeof(TClass); } }
+        public Type EntityType => typeof(TClass);
 
         public BsonClassMap ClassMap
         {
             get { return this; }
         }
 
-        public BsonMemberMap MapStringObjectIdProperty(Expression<Func<TClass, string>> propertyLambda)
+        /// <summary>
+        /// Maps an entity's ID property specified as a string to an ObjectId.
+        /// </summary>
+        /// <param name="propertyLambda">The ID property to map.</param>
+        /// <returns>Reference to the created member map.</returns>
+        protected BsonMemberMap MapStringPropertyToObjectId(Expression<Func<TClass, string>> propertyLambda)
         {
             Check.NotNull(propertyLambda, nameof(propertyLambda), "property selector not specified");
 
@@ -41,10 +46,13 @@ namespace NetFusion.MongoDB
 
         }
 
-        protected void AddDrivedType<T>() where T : TClass
+        /// <summary>
+        /// Adds a known derived type of the type being mapped.
+        /// </summary>
+        /// <typeparam name="T">The derived type.</typeparam>
+        protected void AddKnownType<T>() where T : TClass
         {
             this.AddKnownType(typeof(T));
         }
-
     }
 }

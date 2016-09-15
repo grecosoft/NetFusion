@@ -64,7 +64,7 @@ namespace NetFusion.Bootstrap.Container
             catch (ReflectionTypeLoadException ex)
             {
                 var loadErrors = ex.LoaderExceptions.Select(le => le.Message).Distinct().ToList();
-                throw new ContainerException("Error loading assembly.", loadErrors, ex);
+                throw new ContainerException("Error loading plug-in assembly.", loadErrors, ex);
             }
         }
 
@@ -113,6 +113,7 @@ namespace NetFusion.Bootstrap.Container
 
             return AppDomain.CurrentDomain.GetAssemblies()
                 .Where(a => matchingAssemblyCodeBases.Contains(a.CodeBase, StringComparer.Ordinal))
+                .Where(a => a != this.GetType().Assembly) // Excluded this assembly which contains testing types.
                 .ToArray();
         }
 
@@ -126,19 +127,12 @@ namespace NetFusion.Bootstrap.Container
                 try
                 {
                     assembly = Assembly.Load(assemblyName);
-
-                    // Excluding this assembly since it contains classes deriving from IPluginManifest
-                    // that are mocks used for testing and should never identify this assembly as being
-                    // a plug-in assembly.
-                    if (assembly != this.GetType().Assembly)
-                    {
-                        loadedAssemblies.Add(assembly);
-                    }
+                    loadedAssemblies.Add(assembly);
                 }
                 catch (ReflectionTypeLoadException ex)
                 {
                     var loadErrors = ex.LoaderExceptions.Select(le => le.Message).Distinct().ToList();
-                    throw new ContainerException("Error loading assembly.", loadErrors, ex);
+                    throw new ContainerException("Error loading plug-in assembly.", loadErrors, ex);
                 }
                 catch (Exception ex)
                 {
@@ -174,7 +168,7 @@ namespace NetFusion.Bootstrap.Container
 
         // Automatically populates all properties on a plug-in module that are an enumeration of
         // a derived IPluginKnownType.  The plug-in known types specific to the module are returned
-        // for use by the consumer. 
+        // for use by the consumer for logging what types a module discovered.
         public IEnumerable<Type> SetDiscoverTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes)
         {
             Check.NotNull(forModule, nameof(forModule), "module to discover known types not specified");
@@ -195,17 +189,17 @@ namespace NetFusion.Bootstrap.Container
                     && p.CanWrite);
         }
 
-        private void SetKnownPropertyInstances(IPluginModule module, PropertyInfo KnownTypeProperty,
-           IEnumerable<PluginType> pluginTypes)
+        private void SetKnownPropertyInstances(IPluginModule forModule, PropertyInfo KnownTypeProperty,
+           IEnumerable<PluginType> fromPluginTypes)
         {
             var knownType = KnownTypeProperty.PropertyType.GetGenericArguments().First();
-            var discoveredInstances = pluginTypes.CreateMatchingInstances(knownType).ToList();
+            var discoveredInstances = fromPluginTypes.CreateMatchingInstances(knownType).ToList();
 
             // Set the module property to the collection of objects matching its derived known type.
             ArrayList list = new ArrayList(discoveredInstances.ToArray());
             Array newArray = list.ToArray(knownType);
 
-            KnownTypeProperty.SetValue(module, newArray);
+            KnownTypeProperty.SetValue(forModule, newArray);
         }
 
         public string GetResourceAsText(Plugin plugin, string resourceName)

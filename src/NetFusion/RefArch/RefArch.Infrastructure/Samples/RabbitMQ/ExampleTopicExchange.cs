@@ -4,7 +4,7 @@ using RefArch.Api.Messages.RabbitMQ;
 
 namespace RefArch.Infrastructure.Samples.RabbitMQ
 {
-    [ApplyScriptPredicate("ClassicCarCriteria", PredicateAttributeName = "IsClassic")]
+    [ApplyScriptPredicate("ClassicCarCriteria", variableName: "IsClassic")]
     public class ExampleTopicExchange : TopicExchange<ExampleTopicEvent>
     {
         protected override void OnDeclareExchange()

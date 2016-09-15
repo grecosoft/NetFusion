@@ -14,8 +14,8 @@ namespace NetFusion.Bootstrap.Logging
         private readonly Stopwatch _stopWatch;
         private readonly string _processName;
         private object _completionDetails = new object();
-        
-        public IContainerLogger Log { get { return _logger; } }
+
+        public IContainerLogger Log => _logger;
 
         private DurationLogger(IContainerLogger logger,
             Action<string, object> logMessage)

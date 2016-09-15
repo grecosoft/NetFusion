@@ -52,11 +52,7 @@ namespace NetFusion.Bootstrap.Testing
             var container = new AppContainer(new string[] { }, typeResolver);
 
             config(typeResolver);
-
-            if (configContainer != null)
-            {
-                configContainer(container);
-            }
+            configContainer?.Invoke(container);
 
             return new ContainerAct(container);
         }

@@ -2,7 +2,7 @@
 
 namespace NetFusion.MongoDB
 {
-    public static class MonogExtensions
+    public static class MongoDbExtensions
     {
         /// <summary>
         /// If valid returns the ObjectId instance corresponding
@@ -13,7 +13,7 @@ namespace NetFusion.MongoDB
         /// is thrown.  Otherwise the corresponding ObjectId instance.</returns>
         public static ObjectId AsObjectId(this string value)
         {
-            MongoCheck.ValidObjectId(value);
+            CheckMongoDB.ValidObjectId(value);
             return ObjectId.Parse(value);
         }
     }

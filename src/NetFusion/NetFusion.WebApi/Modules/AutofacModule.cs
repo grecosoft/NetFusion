@@ -43,13 +43,8 @@ namespace NetFusion.WebApi.Modules
 
         private void RegisterControllersWithAutofac(ContainerBuilder builder)
         {
-            var allCorePluginTypes = Context.GetPluginTypesFrom(PluginTypes.CorePlugin);
-
-            var allAppPluginTypes = Context.GetPluginTypesFrom(
-                PluginTypes.AppComponentPlugin, PluginTypes.AppHostPlugin);
-
-            builder.RegisterApiControllers(allCorePluginTypes.ContainingAssemblies());
-            builder.RegisterApiControllers(allAppPluginTypes.ContainingAssemblies());
+            builder.RegisterApiControllers(this.Context.AllCorePluginTypes.ContainingAssemblies());
+            builder.RegisterApiControllers(this.Context.AllAppPluginTypes.ContainingAssemblies());
         }
 
         public void OnConfigureWebApiReady(HttpConfiguration config, IContainer container)

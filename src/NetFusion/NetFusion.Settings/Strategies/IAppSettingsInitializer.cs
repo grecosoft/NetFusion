@@ -5,7 +5,8 @@ namespace NetFusion.Settings.Strategies
 {
     /// <summary>
     /// Base interface inherited from the derived generic version.
-    /// </summary>
+    /// Implemented by classes that are responsible for initializing
+    /// application specific setting classes.</summary>
     public interface IAppSettingsInitializer : IKnownPluginType
     {
         /// <summary>

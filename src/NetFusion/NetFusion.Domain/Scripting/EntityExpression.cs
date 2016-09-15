@@ -13,7 +13,7 @@ namespace NetFusion.Domain.Scripting
             int sequence,
             string attributeName = null)
         {
-            Check.NotNull(expression, nameof(expression));
+            Check.NotNullOrEmpty(expression, nameof(expression));
             Check.IsTrue(sequence >= 0, nameof(sequence),  "expression sequence must be greater or equal to 0");
 
             this.Expression = expression;

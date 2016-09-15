@@ -66,18 +66,5 @@ namespace NetFusion.Messaging
         {
             this.Result = (TResult)result;
         }
-
-
-
-
-
-        private IDictionary<string, object> _attributesOld;
-        public IDictionary<string, object> AttributesOld
-        {
-            get
-            {
-                return _attributesOld ?? (_attributesOld = new Dictionary<string, object>());
-            }
-        }
     }
 }

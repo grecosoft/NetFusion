@@ -15,7 +15,7 @@ namespace NetFusion.Settings.MongoDB
         public AppSettingMapping()
         {
             this.AutoMap();
-            this.MapStringObjectIdProperty(p => p.AppSettingsId);
+            this.MapStringPropertyToObjectId(p => p.AppSettingsId);
         }
 
         public override void AddKnownPluginTypes(IEnumerable<Type> pluginTypes)
@@ -24,7 +24,6 @@ namespace NetFusion.Settings.MongoDB
                 t.IsDerivedFrom<IAppSettings>() && !t.IsAbstract && !t.IsInterface);
 
             appSettings.ForEach(s => this.AddKnownType(s));
-
         }
     }
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>NetFusion Domain Roslyn Integration</title>
+    <authors>$authors$</authors>
+    <licenseUrl>$licenseUrl$</licenseUrl>
+    <projectUrl>$projectUrl$</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>NetFusion assembly for integrating NetFusion.Domain with Roslyn.</description>
+    <copyright>Copyright 2016</copyright>
+    <tags>$tags$</tags>
+  </metadata>
+</package>

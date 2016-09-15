@@ -42,8 +42,7 @@ namespace NetFusion.Messaging.Modules
         {
             this.MessagingConfig = this.Context.Plugin.GetConfig<MessagingConfig>();
 
-            IEnumerable<Type> allPluginTypes = this.Context.GetPluginTypesFrom();
-            MessageDispatchInfo[] allDispatchers = allPluginTypes
+            MessageDispatchInfo[] allDispatchers = this.Context.AllPluginTypes
                 .WhereEventConsumer()
                 .SelectMessageHandlers()
                 .SelectDispatchInfo()
@@ -231,7 +230,7 @@ namespace NetFusion.Messaging.Modules
 
         private void LogMessagePublishers(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Message Publishers"] = Context.GetPluginTypesFrom()
+            moduleLog["Message Publishers"] = Context.AllPluginTypes
                 .Where(pt => pt.IsDerivedFrom<IMessagePublisher>() && pt.IsClass && !pt.IsAbstract)
                 .Select(t => new
                 {

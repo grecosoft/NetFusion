@@ -25,7 +25,7 @@ namespace NetFusion.Bootstrap.Testing
         /// act on the application container.</param>
         /// <returns>Returns an instance of a class that can be used
         /// to assert that state of the application container after
-        /// a action has been taken.</returns>
+        /// the action has been taken.</returns>
         public ContainerAssert Act(Action<AppContainer> act)
         {
             Check.NotNull(act, nameof(act), "action delegate not specified");

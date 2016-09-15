@@ -91,6 +91,8 @@ namespace NetFusion.Bootstrap.Testing
 
             if (_container.CompositeApplication.Plugins == null)
             {
+                _container.Dispose();
+
                 throw new InvalidOperationException
                     ("Container has not been built.");
             }

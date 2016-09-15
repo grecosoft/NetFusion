@@ -4,7 +4,7 @@ using System;
 
 namespace NetFusion.MongoDB
 {
-    public class MongoCheck
+    public class CheckMongoDB
     {
         /// <summary>
         /// Validates a string value containing a MongoDB key value.
@@ -14,15 +14,14 @@ namespace NetFusion.MongoDB
         {
             if (value.IsNullOrWhiteSpace())
             {
-                throw new ArgumentNullException(
-                    nameof(value), "MongoDB ObjectId can't be null");
+                throw new InvalidOperationException("MongoDB ObjectId string representation can't be null.");
             }
 
             ObjectId objId;
             if (!ObjectId.TryParse(value, out objId))
             {
                 throw new InvalidOperationException(
-                    $"The value of {value} is not a valid string representation of an ObjectId.");
+                    $"The value of {value} is not a valid ObjectId string representation.");
             }
         }
     }

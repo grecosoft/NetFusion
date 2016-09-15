@@ -1,10 +1,11 @@
-﻿using NetFusion.Common.Serialization;
+﻿using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Logging;
+using NetFusion.Common.Serialization;
 using NetFusion.Settings.Configs;
 using NetFusion.Settings.Modules;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 
 namespace NetFusion.Settings.Strategies
 {
@@ -17,6 +18,9 @@ namespace NetFusion.Settings.Strategies
     public class FileSettingsInitializer<TSettings> : AppSettingsInitializer<TSettings>
         where TSettings : IAppSettings
     {
+        private const string CONFIG_ROOT_DIR = "Configs";
+        private const string CONFIG_FILE_EXT = "json";
+
         private IDictionary<EnvironmentTypes, string> _envDirMappings;
         private IAppSettingsModule _appSettingsModule;
     
@@ -34,32 +38,17 @@ namespace NetFusion.Settings.Strategies
         protected override IAppSettings OnConfigure(TSettings settings)
         {
             NetFusionConfig appConfig = _appSettingsModule.AppConfig;
-
-            // Check if a settings file specific for the machine and environment exists:
-            string machineName = Environment.MachineName.ToLower();
-            string settingsPath = GetSettingsConfigFilePath(appConfig, machineName);
-            if (File.Exists(settingsPath))
-            {
-                return JsonUtility.Deserialize<TSettings>(File.OpenText(settingsPath));
-            }
-
-            // Check if a settings file for the environment exists:
-            settingsPath = GetSettingsConfigFilePath(appConfig); 
-            if (File.Exists(settingsPath))
-            {
-                return JsonUtility.Deserialize<TSettings>(File.OpenText(settingsPath));
-            }
-
-            return null;
-        }
-
-        private string GetSettingsConfigFilePath(NetFusionConfig appConfig, string machineName = "")
-        {
-            string appBaseDir = Path.Combine(this.AssemblyProbeDirectory, "Configs");
             string envName = _envDirMappings[appConfig.Environment];
-            var fileName = Path.ChangeExtension(this.SettingsType.Name, "json");
 
-            return Path.Combine(appBaseDir, machineName, envName, fileName);
+            string machineEnvPath = GetSettingsConfigFilePath(settings.MachineName, envName);
+            string machinePath = GetSettingsConfigFilePath(settings.MachineName);
+            string envPath = GetSettingsConfigFilePath(environmentName: envName);
+            string configPath = GetSettingsConfigFilePath();
+        
+            return LoadSettingsFromPath(machineEnvPath) 
+                ?? LoadSettingsFromPath(machinePath) 
+                ?? LoadSettingsFromPath(envPath) 
+                ?? LoadSettingsFromPath(configPath);
         }
 
         private string AssemblyProbeDirectory
@@ -67,5 +56,26 @@ namespace NetFusion.Settings.Strategies
             get { return AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory; }
         }
 
+        private string GetSettingsConfigFilePath(string machineName = "", string environmentName = "")
+        {
+            string appBaseDir = Path.Combine(this.AssemblyProbeDirectory, CONFIG_ROOT_DIR);
+            var fileName = Path.ChangeExtension(this.SettingsType.Name, CONFIG_FILE_EXT);
+
+            return Path.Combine(appBaseDir, machineName, environmentName, fileName);
+        }
+
+        private IAppSettings LoadSettingsFromPath(string settingsPath)
+        {
+            IContainerLogger logger = AppContainer.Instance.Logger.ForContext(this.GetType());
+            if (File.Exists(settingsPath))
+            {
+                logger.Debug($"Settings of type: {typeof(TSettings)} loaded from the following location: {settingsPath}.");
+
+                return JsonUtility.Deserialize<TSettings>(File.OpenText(settingsPath));
+            }
+
+            logger.Debug($"Settings of type: {typeof(TSettings)} searched but not found at following location: {settingsPath}.");
+            return null;
+        }
     }
 }

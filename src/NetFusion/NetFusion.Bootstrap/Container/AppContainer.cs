@@ -42,6 +42,9 @@ namespace NetFusion.Bootstrap.Container
 
         internal AppContainer(string[] searchPatterns, ITypeResolver typeResolver)
         {
+            Check.NotNull(searchPatterns, nameof(searchPatterns), "search patterns must be specified");
+            Check.NotNull(typeResolver, nameof(ITypeResolver), "type resolver must be specified");
+
             _application = new CompositeApplication(searchPatterns);
             _configs = new Dictionary<Type, IContainerConfig>();
 
@@ -100,7 +103,7 @@ namespace NetFusion.Bootstrap.Container
         public Plugin GetPluginForType(Type type)
         {
             Check.NotNull(type, nameof(type));
-            return _application.Plugins.FirstOrDefault(p => p.Manifest.GetType().Assembly == type.Assembly);
+            return _application.Plugins.FirstOrDefault(p => p.PluginTypes.Any(pt => pt.Type == type));
         }
 
         // ---
@@ -397,7 +400,7 @@ namespace NetFusion.Bootstrap.Container
             {
                 throw LogException(new ContainerException(
                     $"All manifest instances must have a PluginId specified.  " +
-                    $"The following manifests are invalid: {String.Join(", ", invalidManifestTypes)}"));
+                    $"See details for invalid manifest types.", invalidManifestTypes));
             }
 
             IEnumerable<string> duplicateManifestIds = this.Registry.AllManifests
@@ -406,8 +409,8 @@ namespace NetFusion.Bootstrap.Container
             if (duplicateManifestIds.Any())
             {
                 throw LogException(new ContainerException(
-                    $"Plug-in identity values must be unique.  The following manifest PluginId " +
-                    $"values are duplicated: {String.Join(", ", duplicateManifestIds)}"));
+                    $"Plug-in identity values must be unique.  See details for duplicated Plug-in Ids.",
+                    duplicateManifestIds));
             }
         }
 
@@ -421,7 +424,7 @@ namespace NetFusion.Bootstrap.Container
             {
                 throw LogException(new ContainerException(
                     $"All manifest instances must have AssemblyName and Names.  " +
-                    $"The following manifests are invalid: {String.Join(", ", invalidManifestTypes)}"));
+                    $"See details for invalid manifest types.", invalidManifestTypes));
             }
 
             IEnumerable<string> duplicateNames = this.Registry.AllManifests.WhereDuplicated(m => m.Name);
@@ -429,8 +432,8 @@ namespace NetFusion.Bootstrap.Container
             if (duplicateNames.Any())
             {
                 throw LogException(new ContainerException(
-                    $"Plug-in names must be unique.  The following manifest Names " +
-                    $"values are duplicated: {String.Join(", ", duplicateNames)}"));
+                    $"Plug-in names must be unique.  See details for duplicated Plug-in names.",
+                    duplicateNames));
             }
         }
 
@@ -544,7 +547,7 @@ namespace NetFusion.Bootstrap.Container
         {
             var builder = new Autofac.ContainerBuilder();
 
-            // Allow the composite application plug-ins
+            // Allow the composite application plug-in modules
             // to register services with container.
             _application.RegisterComponents(builder);
 

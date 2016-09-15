@@ -29,7 +29,7 @@ namespace NetFusion.MongoDB.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Settings"] = Context.GetPluginTypesFrom()
+            moduleLog["Settings"] = Context.AllPluginTypes
                 .Where(t => t.IsDerivedFrom<MongoSettings>())
                 .Select(t => t.AssemblyQualifiedName);        
         }

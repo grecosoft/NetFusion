@@ -6,7 +6,7 @@ namespace NetFusion.Settings.MongoDB.Modules
     /// <summary>
     /// Module interface providing access to the configuration
     /// that should be used to load application settings from
-    /// a collection.
+    /// a MongoDB collection.
     /// </summary>
     public interface IMongoSettingsModule : IPluginModuleService
     {

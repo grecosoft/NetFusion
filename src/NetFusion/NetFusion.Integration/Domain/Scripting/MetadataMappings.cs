@@ -7,7 +7,7 @@ namespace NetFusion.Integration.Domain.Scripting
         public EntityScriptMetaMap()
         {
             AutoMap();
-            MapStringObjectIdProperty(e => e.Id);
+            MapStringPropertyToObjectId(e => e.Id);
         }
     }
 

@@ -10,7 +10,7 @@ namespace RefArch.Infrastrcture
             this.CollectionName = "RefArch.Customers";
             this.AutoMap();
 
-            MapStringObjectIdProperty(c => c.CustomerId);
+            MapStringPropertyToObjectId(c => c.CustomerId);
         }
     }
 }

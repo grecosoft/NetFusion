@@ -79,5 +79,4 @@ namespace NetFusion.Bootstrap.Logging
             return new DurationLogger(logger, processName, logger.Verbose, details);
         }
     }
-
 }

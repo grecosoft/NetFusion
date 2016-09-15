@@ -50,13 +50,13 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         /// <returns>List of plug-in types containing additional information
         /// for the associated .NET type.</returns>
-        public PluginType[] PluginTypes { get; internal set; }
+        public PluginType[] PluginTypes { get; set; }
 
         /// <summary>
         /// Modules found within the plug-in used to bootstrap the plug-in.
         /// </summary>
         /// <returns>List of plug-in modules.</returns>
-        public IPluginModule[] PluginModules { get; internal set; }
+        public IPluginModule[] PluginModules { get; set; }
 
         /// <summary>
         /// The known types that were discovered by all of the plug-in modules
@@ -111,7 +111,7 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Returns a configuration associated with the plug-in for a 
+        /// Returns a required configuration associated with the plug-in for a 
         /// given configuration type. 
         /// </summary>
         /// <typeparam name="T">The configuration type.</typeparam>
@@ -149,7 +149,9 @@ namespace NetFusion.Bootstrap.Plugins
                 this.PluginType = Plugins.PluginTypes.AppHostPlugin;
             else if (manifest is IAppComponentPluginManifest)
                 this.PluginType = Plugins.PluginTypes.AppComponentPlugin;
-            else this.PluginType = Plugins.PluginTypes.CorePlugin;
+            else if (manifest is ICorePluginManifest)
+                this.PluginType = Plugins.PluginTypes.CorePlugin;
+            else throw new InvalidOperationException($"Invalided manifest type of: {manifest.GetType()}");
         }
     }
 }

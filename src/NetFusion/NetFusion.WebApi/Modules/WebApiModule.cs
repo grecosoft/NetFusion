@@ -89,9 +89,7 @@ namespace NetFusion.WebApi.Modules
 
         private void LogControllers(Dictionary<string, object> webApiLog)
         {
-            var allPluginTypes = Context.GetPluginTypesFrom();
-
-            webApiLog["Controllers"] = allPluginTypes.Where(t => t.IsDerivedFrom<IHttpController>())
+            webApiLog["Controllers"] = this.Context.AllPluginTypes.Where(t => t.IsDerivedFrom<IHttpController>())
                 .Select(t => Context.GetPluginType(t))
                 .ToLookup(k => k.Plugin.Manifest.Name, v => v.Type.FullName)
                 .Select(g => new {
