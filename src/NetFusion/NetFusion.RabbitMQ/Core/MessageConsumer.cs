@@ -34,7 +34,7 @@ namespace NetFusion.RabbitMQ.Core
             _brokerAttrib = brokerAttrib;
             _queueAttrib = queueAttrib;
             _queueName = _queueAttrib.QueueName;
-            _routeKeys = _queueAttrib.RouteKeyValues ?? new string[] { };
+            _routeKeys = _queueAttrib.RouteKeys ?? new string[] { };
 
             this.DispatchInfo = dispatchInfo;
         }
@@ -62,8 +62,6 @@ namespace NetFusion.RabbitMQ.Core
 
         public QueueSettings QueueSettings { get { return _queueAttrib.QueueSettings; } }
         public QueueBindingTypes BindingType { get { return _queueAttrib.BindingType; } }
-        public uint? PrefetchSize { get { return _queueAttrib.PrefetchSize; } }
-        public ushort? PrefetchCount { get { return _queueAttrib.PrefetchCount; } }
 
         public string[] RouteKeys
         {

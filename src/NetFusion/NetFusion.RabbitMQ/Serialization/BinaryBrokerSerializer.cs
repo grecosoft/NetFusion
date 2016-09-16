@@ -12,11 +12,8 @@ namespace NetFusion.RabbitMQ.Serialization
     /// </summary>
     public class BinaryBrokerSerializer : IBrokerSerializer
     {
-        public string ContentType
-        {
-            get { return SerializerTypes.Binary; }
-        }
-
+        public string ContentType => SerializerTypes.Binary; 
+ 
         public byte[] Serialize(object value)
         {
             Check.NotNull(value, nameof(value));

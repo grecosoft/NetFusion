@@ -222,9 +222,9 @@ namespace NetFusion.RabbitMQ.Core
 
         private void SetBasicQosProperties(MessageConsumer consumer, IModel channel)
         {
-            if (consumer.PrefetchSize != null || consumer.PrefetchCount != null)
+            if (consumer.QueueSettings.PrefetchSize != null || consumer.QueueSettings.PrefetchCount != null)
             {
-                channel.BasicQos(consumer.PrefetchSize ?? 0, consumer.PrefetchCount ?? 0, false);
+                channel.BasicQos(consumer.QueueSettings.PrefetchSize ?? 0, consumer.QueueSettings.PrefetchCount ?? 0, false);
             }
         }
 

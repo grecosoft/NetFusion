@@ -6,8 +6,9 @@ namespace NetFusion.RabbitMQ.Core
 {
     /// <summary>
     /// Saves the broker exchange metadata that will be used to recreate the 
-    /// exchanges and queues when a connection is dropped and reconnection to
-    /// what might be a different broker behind load-balancer. 
+    /// exchanges and queues.  The reconnection what might be a different broker
+    /// behind load-balancer and therefore all exchanges and queues must be restored
+    /// that are defined by both the consumer and the publisher when the reconnect.
     /// </summary>
     public interface IBrokerMetaRepository
     {

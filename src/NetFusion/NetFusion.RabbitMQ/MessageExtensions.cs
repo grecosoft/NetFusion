@@ -3,6 +3,12 @@ using System;
 
 namespace NetFusion.RabbitMQ
 {
+    /// <summary>
+    /// Extension methods used to add dynamic attribute values to a message 
+    /// that are used during publishing and consuming the message.  These
+    /// are basically header values and the message properties are the body
+    /// of the message.
+    /// </summary>
     public static class MessageExtensions
     {
         private static readonly Type Context = typeof(RabbitMQManifest);

@@ -42,6 +42,10 @@ namespace NetFusion.RabbitMQ.Exchanges
         /// </summary>
         public bool IsNoAck { get; set; }
 
+        public uint? PrefetchSize { get; set; }
+
+        public ushort? PrefetchCount { get; set; }
+
         /// <summary>
         /// Other properties (construction arguments) for the queue.
         /// </summary>

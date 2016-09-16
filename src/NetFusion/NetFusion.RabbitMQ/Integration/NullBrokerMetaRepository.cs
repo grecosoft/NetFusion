@@ -4,7 +4,11 @@ using System.Threading.Tasks;
 
 namespace NetFusion.RabbitMQ.Integration
 {
-    class NullBrokerMetaRepository : IBrokerMetaRepository
+    /// <summary>
+    /// Null implementation that is registered by default if exchange
+    /// and queue information is not to be saved.
+    /// </summary>
+    public class NullBrokerMetaRepository : IBrokerMetaRepository
     {
         public Task<IEnumerable<BrokerMeta>> LoadAsync(string brokerName)
         {

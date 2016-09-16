@@ -47,6 +47,12 @@ namespace NetFusion.RabbitMQ.Exchanges
         /// </summary>
         public bool IsAutoDelete { get; set; }
 
+        /// <summary>
+        /// Indicates that the exchange defines queues that are exposed by
+        /// a consumer on which RPC style messages can be sent by publishers.
+        /// The publisher will specify the auto generated reply queue name on
+        /// which the consumer should publish the response.
+        /// </summary>
         public bool IsConsumerExchange { get; set; }
 
         /// <summary>

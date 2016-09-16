@@ -62,8 +62,8 @@ namespace NetFusion.RabbitMQ.Configs
         {
             Check.NotNull(consumer, nameof(consumer));
 
-            var properties = GetBrokerQueueProperties(consumer.BrokerName);
-            var queueProps = properties.FirstOrDefault(qp => qp.QueueName == consumer.QueueName);
+            IEnumerable<QueueProperties> properties = GetBrokerQueueProperties(consumer.BrokerName);
+            QueueProperties queueProps = properties.FirstOrDefault(qp => qp.QueueName == consumer.QueueName);
 
             if (queueProps != null)
             {
@@ -73,7 +73,7 @@ namespace NetFusion.RabbitMQ.Configs
 
         private IEnumerable<QueueProperties> GetBrokerQueueProperties(string brokerName)
         {
-            var brokerConn = this.Connections.FirstOrDefault(c => c.BrokerName == brokerName);
+            BrokerConnection brokerConn = this.Connections.FirstOrDefault(c => c.BrokerName == brokerName);
             return brokerConn?.QueueProperties.Distinct() ?? new QueueProperties[] { };
         }
 

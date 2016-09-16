@@ -215,7 +215,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         }
 
         [Fact]
-        public void DefaultJsonAndBinarySerializersAddedIfNotSpecifiedByHost()
+        public void DefaultSerializersAddedIfNotSpecifiedByHost()
         {
             var settings = new BrokerSettings();
             var mockExchange = new Mock<IMessageBroker>();
@@ -236,7 +236,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
                 c.Start();
             });
 
-            brokerConfig.Serializers.Should().HaveCount(2);
+            brokerConfig.Serializers.Should().HaveCount(3);
             brokerConfig.Serializers.Should().ContainKeys(
                 SerializerTypes.Binary, 
                 SerializerTypes.Json);

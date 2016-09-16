@@ -12,7 +12,9 @@ namespace NetFusion.RabbitMQ.Consumers
     public class AddQueueAttribute : QueueConsumerAttribute
     {
         /// <summary>
-        /// Creates new consumer queue on an exchange.
+        /// Creates new consumer queue on an exchange.   If there are externally defined
+        /// queue settings associated with the queue, the QueueName property can be specified
+        /// to the name used in the configuration to store the route keys externally.
         /// </summary>
         /// <param name="queueName">The name to assign to the queue.</param>
         /// <param name="exchangeName">The exchange on which the queue should be created.</param>
@@ -24,9 +26,7 @@ namespace NetFusion.RabbitMQ.Consumers
         }
 
         /// <summary>
-        /// Creates a dynamically named queue on an exchange.  The broker will assign a name
-        /// but if there are externally defined queue settings associated with the queue, the
-        /// QueueName property can be specified to the name used in the configuration.
+        /// Creates a dynamically named queue on an exchange. 
         /// </summary>
         /// <param name="exchangeName">The exchange on which the queue should be created.</param>
         public AddQueueAttribute(string exchangeName) :
@@ -42,18 +42,8 @@ namespace NetFusion.RabbitMQ.Consumers
         /// </summary>
         public string RouteKey
         {
-            get { return this.RouteKeyValues.SingletonOrDefault(); }
-            set { this.RouteKeyValues = new[] { value }; }
-        }
-
-        /// <summary>
-        /// One or more values used to determine if a messaged, published
-        /// to the exchange, should be delivered to the queue.
-        /// </summary>
-        public string[] RouteKeys
-        {
-            get { return this.RouteKeyValues; }
-            set { this.RouteKeyValues = value; }
+            get { return this.RouteKeys.SingletonOrDefault(); }
+            set { this.RouteKeys = new[] { value }; }
         }
 
         /// <summary>
@@ -94,6 +84,18 @@ namespace NetFusion.RabbitMQ.Consumers
         {
             get { return this.QueueSettings.IsNoAck; }
             set { this.QueueSettings.IsNoAck = value; }
+        }
+
+        public uint? PrefetchSize
+        {
+            get { return this.QueueSettings.PrefetchSize; }
+            set { this.QueueSettings.PrefetchSize = value; }
+        }
+
+        public ushort? PrefetchCount
+        {
+            get { return this.QueueSettings.PrefetchCount; }
+            set { this.QueueSettings.PrefetchCount = value; }
         }
     }
 }

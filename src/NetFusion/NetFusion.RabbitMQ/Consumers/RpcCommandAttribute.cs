@@ -6,7 +6,8 @@ namespace NetFusion.RabbitMQ.Consumers
 {
     /// <summary>
     /// Used to specify that a command should be published to a consumer's queue
-    /// that processes incoming RPC style messages.
+    /// that processes incoming RPC style messages.  This attribute is applied
+    /// to a class deriving from ICommand.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class RpcCommandAttribute : Attribute
@@ -37,8 +38,6 @@ namespace NetFusion.RabbitMQ.Consumers
 
         /// <summary>
         /// String property used to identity the type of the message to the consumer.
-        /// If not specified, the name of the .NET type is used (this should be avoided
-        /// if the consumer is not a .NET based client or a dynamic client like JavaScript).
         /// </summary>
         public string ExternalTypeName { get; set; }
 
@@ -50,7 +49,8 @@ namespace NetFusion.RabbitMQ.Consumers
         public string ContentType { get; set; }
 
         /// <summary>
-        /// Returns the property on the attribute than can be passed around.
+        /// Returns the property on the attributes so calling code is not coded to
+        /// and attribute.
         /// </summary>
         /// <returns></returns>
         public RpcProperties ToRpcProps()

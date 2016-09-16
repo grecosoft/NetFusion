@@ -20,10 +20,7 @@ namespace NetFusion.RabbitMQ.Serialization
     {
         private IContractResolver _contractResolver = new CustomContractResolver();
 
-        public string ContentType
-        {
-            get { return SerializerTypes.Json; }
-        }
+        public string ContentType => SerializerTypes.Json;
 
         public byte[] Serialize(object value)
         {

@@ -25,9 +25,12 @@ namespace NetFusion.RabbitMQ.Consumers
             this.QueueSettings = new QueueSettings { IsBrokerAssignedName = queueName == null };
         }
 
-        public QueueSettings QueueSettings { get; }
-        public string[] RouteKeyValues { get; protected set; }
-        public uint? PrefetchSize { get; set; }
-        public ushort? PrefetchCount { get; set; }
+        /// <summary>
+        /// One or more values used to determine if a messaged, published
+        /// to the exchange, should be delivered to the queue.
+        /// </summary>
+        public string[] RouteKeys { get; protected set; }
+
+        internal QueueSettings QueueSettings { get; }
     }
 }

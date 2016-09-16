@@ -147,9 +147,7 @@ namespace NetFusion.RabbitMQ.Modules
                 return new Dictionary<string, BrokerConnection>();
             }
 
-            IEnumerable<string> duplicateBrokerNames = settings.Connections.GroupBy(c => c.BrokerName)
-                .Where(g => g.Count() > 1)
-                .Select(g => g.Key);
+            IEnumerable<string> duplicateBrokerNames = settings.Connections.WhereDuplicated(c => c.BrokerName);
 
             if (duplicateBrokerNames.Any())
             {
@@ -168,10 +166,14 @@ namespace NetFusion.RabbitMQ.Modules
             // Add the default serializers if not overridden by the application host.
             AddSerializer(serializers, new JsonBrokerSerializer());
             AddSerializer(serializers, new BinaryBrokerSerializer());
+            AddSerializer(serializers, new MessagePackBrokerSerializer());
 
             return serializers;
         }
 
+        // This returns a dictionary mapping a command's External Defined Key to
+        // the corresponding .NET type.  This is used to find the corresponding
+        // .NET type when a RPC style message is published to the consumer.
         public IDictionary<string, Type> GetRpcCommandTypes()
         {
             IEnumerable<Type> rpcMessageTypes = Context.AllPluginTypes

@@ -5,12 +5,15 @@ using System.ComponentModel.DataAnnotations;
 namespace NetFusion.RabbitMQ.Configs
 {
     /// <summary>
-    /// Settings for a specific RPC consumer.
+    /// Settings for a specific RPC consumer.  This is the information for the queues that 
+    /// are exposed by the consumer to which the application containing this configuration
+    /// can publish RPC messages to.  
     /// </summary>
     public class RpcConsumerSettings : IObjectValidation
     {
         /// <summary>
-        /// A string constant to reference the queue in code.
+        /// A string constant to reference the queue in code.  This value is specified by
+        /// the publisher and should not be changed.
         /// </summary>
         [Required(AllowEmptyStrings = false, ErrorMessage = "Request Queue Key is Required")]
         public string RequestQueueKey { get; set; }
@@ -23,7 +26,7 @@ namespace NetFusion.RabbitMQ.Configs
         public string RequestQueueName { get; set; }
 
         /// <summary>
-        /// The default content type to which the messages should be serialized.
+        /// The default content-type to which the messages should be serialized.
         /// </summary>
         [Required(AllowEmptyStrings = false, ErrorMessage = "Content Type is Required")]
         public string ContentType { get; set; } = SerializerTypes.Json;

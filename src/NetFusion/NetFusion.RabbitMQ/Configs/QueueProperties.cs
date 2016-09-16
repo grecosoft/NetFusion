@@ -22,8 +22,7 @@ namespace NetFusion.RabbitMQ.Configs
 
         public ObjectValidator ValidateObject()
         {
-            var varResult = new ObjectValidator(this);
-            return varResult;
+            return new ObjectValidator(this);
         }
     }
 }
