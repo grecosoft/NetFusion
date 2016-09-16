@@ -12,7 +12,6 @@ namespace NetFusion.Messaging
     {
         public IDictionary<string, object> DispatchDetails { get; }
 
-     
         public MessageDispatchException(string errorMessage, MessageDispatchInfo dispatchInfo, Exception ex)
             : base(errorMessage, ex)
         {

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using NetFusion.Common;
+using System.Threading.Tasks;
 
 namespace NetFusion.Messaging.Core
 {
@@ -12,6 +13,9 @@ namespace NetFusion.Messaging.Core
 
         public MessagePublisherTask(Task task, IMessagePublisher eventDispatcher)
         {
+            Check.NotNull(task, nameof(task));
+            Check.NotNull(eventDispatcher, nameof(eventDispatcher));
+
             this.Task = task;
             this.Publisher = eventDispatcher;
         }

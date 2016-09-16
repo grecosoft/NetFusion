@@ -172,7 +172,7 @@ namespace NetFusion.Messaging.Modules
             return dispatchers.First();
         }
 
-        public async Task<object> InvokeDispatcher(MessageDispatchInfo dispatcher, IMessage message)
+        public async Task<object> InvokeDispatcherAsync(MessageDispatchInfo dispatcher, IMessage message)
         {
             if (!message.GetType().IsDerivedFrom(dispatcher.MessageType))
             {
@@ -189,10 +189,10 @@ namespace NetFusion.Messaging.Modules
             }
         }
 
-        public async Task<T> InvokeDispatcher<T>(MessageDispatchInfo dispatcher, IMessage message)
+        public async Task<T> InvokeDispatcherAsync<T>(MessageDispatchInfo dispatcher, IMessage message)
            where T : class
         {
-            return (T)(await InvokeDispatcher(dispatcher, message));
+            return (T)(await InvokeDispatcherAsync(dispatcher, message));
         }
 
         // For each discovered message event type, execute the same code that 

@@ -51,7 +51,7 @@ namespace NetFusion.Messaging.Modules
         /// <exception cref="InvalidOperationException">Exception if the type of message is not
         /// is not the same type associated with the dispatcher.
         /// </exception>
-        Task<object> InvokeDispatcher(MessageDispatchInfo dispatcher, IMessage message);
+        Task<object> InvokeDispatcherAsync(MessageDispatchInfo dispatcher, IMessage message);
 
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace NetFusion.Messaging.Modules
         /// <exception cref="InvalidOperationException">Exception if the type of message is not
         /// is not the same type associated with the dispatcher.
         /// </exception>
-        Task<T> InvokeDispatcher<T>(MessageDispatchInfo dispatcher, IMessage message)
+        Task<T> InvokeDispatcherAsync<T>(MessageDispatchInfo dispatcher, IMessage message)
            where T : class;
 
     }

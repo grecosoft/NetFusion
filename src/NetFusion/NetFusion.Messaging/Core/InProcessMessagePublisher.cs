@@ -40,7 +40,7 @@ namespace NetFusion.Messaging.Core
         public async override Task PublishMessageAsync(IMessage message)
         {
             // Determine the dispatchers associated with the message.
-            var dispatchers = _messagingModule.InProcessDispatchers
+            IEnumerable<MessageDispatchInfo> dispatchers = _messagingModule.InProcessDispatchers
                 .WhereHandlerForMessage(message.GetType())
                 .ToList();
 
@@ -110,7 +110,7 @@ namespace NetFusion.Messaging.Core
             foreach (MessageDispatchInfo dispatcher in dispatchers)
             {
                 var consumer = (IMessageConsumer)_lifetimeScope.Resolve(dispatcher.ConsumerType);
-                var futureResult = dispatcher.Dispatch(message, consumer);
+                Task<object> futureResult = dispatcher.Dispatch(message, consumer);
 
                 futureResults.Add(new DispatchTask(futureResult, dispatcher));
             }
@@ -143,8 +143,13 @@ namespace NetFusion.Messaging.Core
             return dispatchErrors;
         }
 
-        private void LogMessageDespatchInfo(IMessage message, IList<MessageDispatchInfo> dispatchers)
+        private void LogMessageDespatchInfo(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
         {
+            if (!_logger.IsDebugLevel)
+            {
+                return;
+            }
+
             var dispatcherDetails = dispatchers.Select(d => new {
                 d.MessageType,
                 Consumer = d.ConsumerType.Name,

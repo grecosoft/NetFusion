@@ -10,7 +10,6 @@ namespace NetFusion.Messaging
     [Serializable]
     public abstract class DomainEvent : IDomainEvent
     {
- 
         private IEntityAttributes _attributes;
 
         public DomainEvent()

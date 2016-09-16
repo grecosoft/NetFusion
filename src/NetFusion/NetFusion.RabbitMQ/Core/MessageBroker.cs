@@ -461,7 +461,7 @@ namespace NetFusion.RabbitMQ.Core
             LogReceivedExchangeMessage(message, messageConsumer);
 
             // Delegate to the Messaging Module to dispatch the message to queue consumer.
-            Task<object> futureResult = _messagingModule.InvokeDispatcher(
+            Task<object> futureResult = _messagingModule.InvokeDispatcherAsync(
                messageConsumer.DispatchInfo, message);
 
             futureResult.Wait();
@@ -623,7 +623,7 @@ namespace NetFusion.RabbitMQ.Core
             MessageDispatchInfo dispatcher = _messagingModule.GetInProcessCommandDispatcher(commandType);
             IMessage message = DeserializeMessage(commandType, deleveryEvent);
 
-            object result = _messagingModule.InvokeDispatcher(dispatcher, message).Result;
+            object result = _messagingModule.InvokeDispatcherAsync(dispatcher, message).Result;
             PublishConsumerReply(result, channel, deleveryEvent.BasicProperties);
         }
 

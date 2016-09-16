@@ -78,7 +78,7 @@ namespace NetFusion.Messaging.Core
             Check.NotNull(eventSource, nameof(eventSource), "event source not specified");
             var publisherErrors = new List<PublisherException>();
 
-            foreach (var domainEvent in eventSource.DomainEvents)
+            foreach (IDomainEvent domainEvent in eventSource.DomainEvents)
             {
                 try
                 {
@@ -131,7 +131,7 @@ namespace NetFusion.Messaging.Core
             var futureResults = new List<MessagePublisherTask>();
             foreach (var publisher in _messagePublishers)
             {
-                var futureResult = publisher.PublishMessageAsync(message);
+                Task futureResult = publisher.PublishMessageAsync(message);
                 futureResults.Add(new MessagePublisherTask(futureResult, publisher));
             }
             return futureResults;
