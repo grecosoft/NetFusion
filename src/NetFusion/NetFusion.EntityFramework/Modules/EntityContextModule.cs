@@ -77,7 +77,7 @@ namespace NetFusion.EntityFramework.Modules
                 .Select(m => new
                 {
                     MappingType = m.GetType().AssemblyQualifiedName
-                });
+                }).ToList();
         }
     }
 }

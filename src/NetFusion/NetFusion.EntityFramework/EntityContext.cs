@@ -19,7 +19,7 @@ namespace NetFusion.EntityFramework
     {
         private TEntityDbContext _dbContext;
 
-        public Type DbContextType { get { return typeof(TEntityDbContext); } }
+        public Type DbContextType => typeof(TEntityDbContext);
 
         public void SetDbContext(IEntityDbContext context)
         {
