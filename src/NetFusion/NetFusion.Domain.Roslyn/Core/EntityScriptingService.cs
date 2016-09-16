@@ -31,7 +31,7 @@ namespace NetFusion.Domain.Roslyn.Core
         public EntityScriptingService(IContainerLogger logger)
         {
             Check.NotNull(logger, nameof(logger));
-            _logger = logger.ForContext<EntityScriptingService>();
+            _logger = logger.ForPluginContext<EntityScriptingService>();
         }
 
         // Initialize the script evaluators that should be invoked for a
@@ -49,9 +49,9 @@ namespace NetFusion.Domain.Roslyn.Core
             Check.NotNull(entity, nameof(entity));
             Check.NotNull(scriptName, nameof(scriptName));
 
-            var entityType = entity.GetType();
+            Type entityType = entity.GetType();
 
-            var scripts = _scriptEvaluators[entityType];
+            IEnumerable<ScriptEvaluator> scripts = _scriptEvaluators[entityType];
             if (scripts == null)
             {
                 return;
@@ -66,9 +66,9 @@ namespace NetFusion.Domain.Roslyn.Core
             }
 
             // Execute script with a specified name.
-            if (scriptName != ScriptEvaluator.DefaultScriptName)
+            if (scriptName != ScriptEvaluator.DEFAULT_SCRIPT_NAME)
             {
-                var namedEvalScript = scripts.FirstOrDefault(se => se.Script.Name == scriptName);
+                ScriptEvaluator namedEvalScript = scripts.FirstOrDefault(se => se.Script.Name == scriptName);
                 if (namedEvalScript == null)
                 {
                     throw new InvalidOperationException(
@@ -81,13 +81,7 @@ namespace NetFusion.Domain.Roslyn.Core
 
         private async Task ExecuteScript(object entity, ScriptEvaluator evaluator)
         {
-            var preEvalDetails = new
-            {
-                PreEvalValues = entity,
-                Script = evaluator.Script.Expressions
-                    .OrderBy(e => e.Sequence)
-                    .Select(e => new { e.AttributeName, e.Expression })
-            };
+            var preEvalDetails = GetPreEvalDetails(entity, evaluator);
 
             using (var log = _logger.VerboseDuration("Script Evaluation", preEvalDetails))
             {
@@ -99,6 +93,21 @@ namespace NetFusion.Domain.Roslyn.Core
             }
         }
 
+        private object GetPreEvalDetails(object entity, ScriptEvaluator evaluator)
+        {
+            if (_logger.IsVerboseLevel)
+            {
+                return new
+                {
+                    PreEvalValues = entity,
+                    Script = evaluator.Script.Expressions
+                        .OrderBy(e => e.Sequence)
+                        .Select(e => new { e.AttributeName, e.Expression })
+                };
+            }
+            return new { };
+        }
+
         private void CompileScript(ScriptEvaluator scriptEval)
         {
             if (scriptEval.Evaluators == null)
@@ -107,7 +116,7 @@ namespace NetFusion.Domain.Roslyn.Core
                 {
                     if (scriptEval.Evaluators == null)
                     {
-                        var evaluators = CreateExpressionEvaluators(scriptEval.Script);
+                        ExpressionEvaluator[] evaluators = CreateExpressionEvaluators(scriptEval.Script);
                         scriptEval.SetExpressionEvaluators(evaluators);
                     }
                 }
@@ -183,9 +192,10 @@ namespace NetFusion.Domain.Roslyn.Core
             return options;
         }
 
-        // A script can specify assemblies and name spaces that should be imported for types used
-        // by the expressions.
-        private IList<Assembly> GetImportedAssemblies(EntityScript script, IEnumerable<Type> assembliesContainingTypes)
+        // A script can specify assemblies and name spaces that should be
+        // imported for types used by the expressions.
+        private IList<Assembly> GetImportedAssemblies(EntityScript script, 
+            IEnumerable<Type> assembliesContainingTypes)
         {
             var assemblies = new List<Assembly>();
             foreach (string assemblyName in script.ImportedAssemblies ?? new string[] { })
@@ -201,6 +211,9 @@ namespace NetFusion.Domain.Roslyn.Core
 
         public async Task<bool> SatifiesPredicate(object entity, ScriptPredicate predicate)
         {
+            Check.NotNull(entity, nameof(entity));
+            Check.NotNull(predicate, nameof(predicate));
+
             var attributedEntity = entity as IAttributedEntity;
             if (attributedEntity == null)
             {
@@ -210,11 +223,24 @@ namespace NetFusion.Domain.Roslyn.Core
 
             await this.Execute(entity, predicate.ScriptName);
 
-            if (!predicate.AttributeName.IsNullOrWhiteSpace())
+            if (!attributedEntity.Attributes.Contains(predicate.AttributeName))
             {
-                return attributedEntity.Attributes.GetValue<bool>(predicate.AttributeName);
+                throw new InvalidOperationException(
+                    $"After the predicate script named: {predicate.ScriptName} was executed, " + 
+                    $"the expected predicate attribute named: {predicate.AttributeName} was not" +
+                    $"calculated.");
             }
-            return false;
+
+            object value = attributedEntity.Attributes.GetValue(predicate.AttributeName);
+            if (value.GetType() != typeof(bool))
+            {
+                throw new InvalidOperationException(
+                    $"After the predicate script named: {predicate.ScriptName} was executed, " +
+                    $"the expected predicate attribute named: {predicate.AttributeName} was not" +
+                    $"a Boolean value type.  The type of the value was: {value.GetType()}.");
+            }
+
+            return (bool)value;
         }
     }
 }

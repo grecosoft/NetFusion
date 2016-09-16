@@ -61,7 +61,25 @@ namespace NetFusion.Domain.Entity
         {
             Check.NotNullOrWhiteSpace(name, nameof(name));
 
+            AssertValidKey(name);
             return (T)_attributes[name];
+        }
+
+        private void AssertValidKey(string name)
+        {
+            if (!_attributes.ContainsKey(name))
+            {
+                throw new InvalidOperationException(
+                    $"The attribute with the name: {name} does not exist");
+            }
+        }
+
+        public object GetValue(string name)
+        {
+            Check.NotNullOrWhiteSpace(name, nameof(name));
+
+            AssertValidKey(name);
+            return _attributes[name];
         }
 
         public T GetValueOrDefault<T>(string name, T defaultValue = default(T))

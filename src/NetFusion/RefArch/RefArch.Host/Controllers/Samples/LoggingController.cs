@@ -23,7 +23,7 @@ namespace RefArch.Host.Controllers.Samples
         public void CreateTestPluginLog()
         {
 
-            _containerLogger.ForContext<LoggingController>().Debug("--container logger", new { a = 10 });
+            _containerLogger.ForPluginContext<LoggingController>().Debug("--container logger", new { a = 10 });
           
             var logger2 = _logger.ForPluginContext<LoggingController>();
             logger2.Debug("SDFSDFSDF");

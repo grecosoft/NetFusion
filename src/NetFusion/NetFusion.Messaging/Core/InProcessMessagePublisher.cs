@@ -32,7 +32,7 @@ namespace NetFusion.Messaging.Core
             IEntityScriptingService scriptingSrv)
         {
             _lifetimeScope = liftimeScope;
-            _logger = logger.ForContext<InProcessMessagePublisher>();
+            _logger = logger.ForPluginContext<InProcessMessagePublisher>();
             _messagingModule = eventingModule;
             _scriptingSrv = scriptingSrv;
         }

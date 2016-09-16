@@ -54,6 +54,13 @@ namespace NetFusion.Domain.Entity
         /// <summary>
         /// Returns a named attribute value.
         /// </summary>
+        /// <param name="name">The name of the attribute.</param>
+        /// <returns>The value of the attribute.</returns>
+        object GetValue(string name);
+
+        /// <summary>
+        /// Returns a named attribute value.
+        /// </summary>
         /// <typeparam name="T">The type of the attribute.</typeparam>
         /// <param name="name">The name of the attribute</param>
         /// <param name="defaultValue">The default value to use if the attribute is not present.</param>

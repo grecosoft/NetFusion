@@ -23,7 +23,7 @@ namespace NetFusion.Bootstrap.Logging
         public bool IsWarningLevel => true;
         public bool IsErrorLevel => true;
     
-        public IContainerLogger ForContext<TContext>()
+        public IContainerLogger ForPluginContext<TContext>()
         {
             return this;
         }

@@ -55,7 +55,7 @@ namespace NetFusion.RabbitMQ.Core
             Check.NotNull(exchangeRep, nameof(exchangeRep));
             Check.NotNull(scriptingSrv, nameof(scriptingSrv));
 
-            _logger = logger.ForContext<MessageBroker>();
+            _logger = logger.ForPluginContext<MessageBroker>();
             _messagingModule = messagingModule;
             _exchangeRep = exchangeRep;
             _scriptingSrv = scriptingSrv;

@@ -36,11 +36,7 @@ namespace NetFusion.Domain.Scripting
 
         public ScriptPredicate ToPredicate()
         {
-            return new ScriptPredicate
-            {
-                ScriptName = this.ScriptName,
-                AttributeName = this.AttributeName
-            };
+            return new ScriptPredicate(this.ScriptName, this.AttributeName);
         }
     }
 }

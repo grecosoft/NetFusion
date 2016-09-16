@@ -10,13 +10,15 @@ namespace NetFusion.Domain.Roslyn.Modules
 {
     /// <summary>
     /// Module that loads meta data containing expressions that can be evaluated
-    /// against and entity and it set of related dynamic properties.
+    /// against and entity and its set of related dynamic properties.
     /// </summary>
     public class DomainExpressionModule : PluginModule
     {
+        // The list of scripts that can be applied against entities 
+        // of the same matching type.
         private IEnumerable<EntityScript> _scripts;
 
-        public override void RegisterComponents(ContainerBuilder builder)
+        public override void RegisterDefaultComponents(ContainerBuilder builder)
         {
             builder.RegisterType<EntityScriptingService>()
                 .As<IEntityScriptingService>()

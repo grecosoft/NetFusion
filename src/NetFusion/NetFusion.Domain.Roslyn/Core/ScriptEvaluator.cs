@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using NetFusion.Common;
 using NetFusion.Common.Extensions;
+using System;
 
 namespace NetFusion.Domain.Roslyn.Core
 {
@@ -17,7 +18,7 @@ namespace NetFusion.Domain.Roslyn.Core
     /// </summary>
     public class ScriptEvaluator
     {
-        public const string DefaultScriptName = "default";
+        public const string DEFAULT_SCRIPT_NAME = "default";
         public EntityScript Script { get; }
         public IEnumerable<ExpressionEvaluator> Evaluators { get; private set; }
 
@@ -33,7 +34,7 @@ namespace NetFusion.Domain.Roslyn.Core
             this.Evaluators = evaluators;
         }
 
-        public bool IsDefault => this.Script.Name == DefaultScriptName;
+        public bool IsDefault => this.Script.Name == DEFAULT_SCRIPT_NAME;
 
         public async Task Execute(object entity)
         {
@@ -41,20 +42,20 @@ namespace NetFusion.Domain.Roslyn.Core
 
             // The scope that will be used to resolve references made within
             // expressions.  This includes the entity and its set of optional
-            // dynamic attributes.
-            var entityScopeType = typeof(EntityScriptScope<>).MakeGenericType(this.Script.EntityType);
-            var entityScope = entityScopeType.CreateInstance(entity);
+            // dynamic attributes referenced as _ within scripts..
+            Type entityScopeType = typeof(EntityScriptScope<>).MakeGenericType(this.Script.EntityType);
+            object entityScope = entityScopeType.CreateInstance(entity);
 
             foreach (ExpressionEvaluator evaluator in this.Evaluators
                 .OrderBy(ev => ev.Expression.Sequence))
             {
-                var result = await evaluator.Invoker(entityScope);
+                object result = await evaluator.Invoker(entityScope);
                 var attributedEntity = entity as IAttributedEntity;
 
-                if (attributedEntity != null &&evaluator.Expression.AttributeName != null)
+                // Determines if a dynamic calculated attribute and not an assignment to
+                // static domain-entity property.  If so update or add the attribute's value.
+                if (attributedEntity != null && evaluator.Expression.AttributeName != null)
                 {
-                    // If the expression corresponds to a dynamic entity attribute, update
-                    // it value with the result of the expression.
                     attributedEntity.Attributes.SetValue(evaluator.Expression.AttributeName, result);
                 }
             }

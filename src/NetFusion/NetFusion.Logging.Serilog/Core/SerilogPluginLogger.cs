@@ -30,7 +30,7 @@ namespace NetFusion.Logging.Serilog.Core
         public bool IsErrorLevel => _logger.IsEnabled(LogEventLevel.Error);
 
         // Returns new instance associated with the specified context.
-        public IContainerLogger ForContext<TContext>()
+        public IContainerLogger ForPluginContext<TContext>()
         {
             return ForContext(typeof(TContext));
         }
