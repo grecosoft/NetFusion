@@ -144,7 +144,8 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             broker.MockModule.Verify(m => m.QueueBind(
                 It.Is<string>(v => v == "MockTestQueueName"), 
                 It.Is<string>(v => v == "MockDirectExchangeName"), 
-                It.Is<string>(v => v == "")), Times.Once());
+                It.Is<string>(v => v == ""), 
+                It.IsAny<IDictionary<string, object>>()), Times.Once());
         }
 
         /// <summary>
@@ -188,9 +189,10 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             broker.MockModule.Verify(m => m.QueueBind(
                 It.Is<string>(v => v == "MockTestQueueName"),
                 It.Is<string>(v => v == "MockDirectExchangeName"),
-                It.Is<string>(v => v == "MockKey")), Times.Once());
+                It.Is<string>(v => v == "MockKey"), 
+                It.IsAny<IDictionary<string, object>>()), Times.Once());
         }
-
+    
         // If the queue requires it's delivered messages to be acknowledged the message header
         // is checked.  The consumer event handler specifies if the message is acknowledged by 
         // calling a method that stores an indicator in the header of the message.  If message
