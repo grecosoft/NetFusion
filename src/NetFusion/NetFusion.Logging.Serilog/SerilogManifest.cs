@@ -11,6 +11,6 @@ namespace NetFusion.Logging.Serilog
         public string Name => "Serilog Plug-in";
 
         public string Description =>
-            "Registers a logger implementing IContainerLogger that delegates to Serilog.";
+            "Contains an implementation of IContainerLogger that delegates to Serilog.";
     }
 }

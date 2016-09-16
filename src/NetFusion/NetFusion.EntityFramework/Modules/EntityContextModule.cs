@@ -61,7 +61,9 @@ namespace NetFusion.EntityFramework.Modules
         private ContextConnection LookupContextConnection(IComponentContext componentContext, Type contextType)
         {
             var contextSettings = componentContext.ResolveOptional<ContextSettings>() ?? new ContextSettings();
-            var connection =  contextSettings.Connections?.FirstOrDefault(c => c.ContextName == contextType.Name);
+
+            ContextConnection connection =  contextSettings.Connections?
+                .FirstOrDefault(c => c.ContextName == contextType.Name);
 
             if (connection == null)
             {

@@ -25,7 +25,7 @@ namespace RefArch.Host.Controllers.Samples
 
             _containerLogger.ForContext<LoggingController>().Debug("--container logger", new { a = 10 });
           
-            var logger2 = _logger.ForContextType<LoggingController>();
+            var logger2 = _logger.ForPluginContext<LoggingController>();
             logger2.Debug("SDFSDFSDF");
 
 
