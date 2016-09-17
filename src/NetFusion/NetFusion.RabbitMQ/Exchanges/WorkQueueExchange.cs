@@ -43,8 +43,7 @@ namespace NetFusion.RabbitMQ.Exchanges
             channel.BasicQos(0, 1, false);
 
             // Make the message persistent.
-            var basicProps = base.GetBasicProperties(channel, message);
-            basicProps.Persistent = true;
+            properties.Persistent = true;
         }
     }
 }

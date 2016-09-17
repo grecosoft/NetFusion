@@ -33,8 +33,7 @@ namespace NetFusion.RabbitMQ.Exchanges
         protected override void OnSetBasicProperties(IModel channel, IMessage message, IBasicProperties properties)
         {
             // Make the message persistent.
-            var basicProps = base.GetBasicProperties(channel, message);
-            basicProps.Persistent = true;
+            properties.Persistent = true;
         }
     }
 }
