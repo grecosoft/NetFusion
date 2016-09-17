@@ -60,8 +60,8 @@ namespace NetFusion.RabbitMQ.Core
             get { return _queueAttrib.ExchangeName ?? ""; }
         }
 
-        public QueueSettings QueueSettings { get { return _queueAttrib.QueueSettings; } }
-        public QueueBindingTypes BindingType { get { return _queueAttrib.BindingType; } }
+        public QueueSettings QueueSettings => _queueAttrib.QueueSettings;
+        public QueueBindingTypes BindingType => _queueAttrib.BindingType; 
 
         public string[] RouteKeys
         {

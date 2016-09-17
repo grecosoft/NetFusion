@@ -6,7 +6,7 @@ namespace NetFusion.RabbitMQ.Core
     /// <summary>
     /// Information on how a message maps to an exchange.
     /// </summary>
-    internal class ExchangeDefinition
+    internal class ExchangeMessageDefinition
     {
         /// <summary>
         /// The message type associated with the exchange.
@@ -25,9 +25,10 @@ namespace NetFusion.RabbitMQ.Core
         /// <param name="exchange">Details on how the exchange should be declared and information
         /// for the queues that should be created.</param>
         /// <param name="messageType"> The message type associated with the exchange.</param>
-        public ExchangeDefinition(IMessageExchange exchange, Type messageType = null)
+        public ExchangeMessageDefinition(IMessageExchange exchange, Type messageType)
         {
             Check.NotNull(exchange, nameof(exchange));
+            Check.NotNull(messageType, nameof(messageType));
 
             this.MessageType = messageType;
             this.Exchange = exchange;

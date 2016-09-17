@@ -41,7 +41,7 @@ namespace NetFusion.RabbitMQ.Core
         private readonly IEntityScriptingService _scriptingSrv;
 
         private MessageBrokerConfig _brokerConfig;
-        private ILookup<Type, ExchangeDefinition> _messageExchanges;
+        private ILookup<Type, ExchangeMessageDefinition> _messageExchanges;
         private IList<RpcMessagePublisher> _rpcMessagePublishers;
         private IEnumerable<MessageConsumer> _messageConsumers;
 
@@ -93,7 +93,7 @@ namespace NetFusion.RabbitMQ.Core
             // Messages can have one or more associated exchanges.
             _messageExchanges = brokerConfig.Exchanges.ToLookup(
                 k => k.MessageType,
-                e => new ExchangeDefinition(e, e.MessageType));
+                e => new ExchangeMessageDefinition(e, e.MessageType));
         }
 
         /// <summary>
@@ -112,8 +112,8 @@ namespace NetFusion.RabbitMQ.Core
         // in the running application to which it will publish messages.
         private void DeclareExchanges()
         {
-            ExchangeDefinition[] exchangeDefs = GetExchangeDefinitions();
-            foreach (ExchangeDefinition exDef in exchangeDefs)
+            ExchangeMessageDefinition[] exchangeDefs = GetExchangeDefinitions();
+            foreach (ExchangeMessageDefinition exDef in exchangeDefs)
             {
                 using (IModel channel = CreateBrokerChannel(exDef.Exchange.BrokerName))
                 {
@@ -122,7 +122,7 @@ namespace NetFusion.RabbitMQ.Core
             }
         }
 
-        private ExchangeDefinition[] GetExchangeDefinitions()
+        private ExchangeMessageDefinition[] GetExchangeDefinitions()
         {
             return _messageExchanges.Values().ToArray();
         }
@@ -398,7 +398,7 @@ namespace NetFusion.RabbitMQ.Core
             Check.NotNull(message, nameof(message));
 
             Type messageType = message.GetType();
-            IEnumerable<ExchangeDefinition> exchangeDefs = _messageExchanges[messageType];
+            IEnumerable<ExchangeMessageDefinition> exchangeDefs = _messageExchanges[messageType];
 
             if (exchangeDefs == null)
             {
@@ -406,13 +406,13 @@ namespace NetFusion.RabbitMQ.Core
                     $"The message of type: {messageType.FullName} is not associated with an exchange.");
             }
 
-            foreach (ExchangeDefinition exchangeDef in exchangeDefs)
+            foreach (ExchangeMessageDefinition exchangeDef in exchangeDefs)
             {
                 await Publish(exchangeDef, message);
             }
         }
 
-        private async Task Publish(ExchangeDefinition exchangeDef, IMessage message)
+        private async Task Publish(ExchangeMessageDefinition exchangeDef, IMessage message)
         {
             if (!await MatchesExchangeCriteria(exchangeDef, message)) return;
 
@@ -438,7 +438,7 @@ namespace NetFusion.RabbitMQ.Core
         // with a predicate attribute, the corresponding externally named script is executed to 
         // determine if the message has passing criteria.  If no external script is specified,
         // the exchange's matches method is called.
-        private async Task<bool> MatchesExchangeCriteria(ExchangeDefinition exchangeDef, IMessage message)
+        private async Task<bool> MatchesExchangeCriteria(ExchangeMessageDefinition exchangeDef, IMessage message)
         {
             ScriptPredicate predicate = exchangeDef.Exchange.Settings.Predicate;
 
@@ -801,7 +801,7 @@ namespace NetFusion.RabbitMQ.Core
         #region Logging
 
         private void LogPublishingExchangeMessage(IMessage message, 
-            ExchangeDefinition exchangeDef)
+            ExchangeMessageDefinition exchangeDef)
         {
             _logger.Verbose("Publishing to Exchange", () =>
             {

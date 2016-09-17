@@ -10,7 +10,7 @@ namespace NetFusion.RabbitMQ.Exchanges
     /// marked with the RpcCommandAttribute having the specified key, it will be sent
     /// to this queue and they can await an asynchronous response on their reply queue.
     /// </summary>
-    public abstract class RpcExchange : BrokerExchange
+    public abstract class RpcExchange : MessageExchange
     {
         public RpcExchange()
         {

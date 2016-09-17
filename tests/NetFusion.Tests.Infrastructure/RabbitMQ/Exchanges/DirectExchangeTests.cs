@@ -49,7 +49,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ.Exchanges
             var exchange = new MockDirectExchange { FirstQueueName = "FirstMockTestQueue", FirstQueueRouteKeys = new string[] { } };
 
             Assert.Throws<InvalidOperationException>(() => exchange.Setup()).Message
-                .Should().Contain("queues must have a route specified-Exchange");
+                .Should().Contain("must have a route specified");
         }
 
         [Fact] // Multiple clients can connect to and monitor queue.

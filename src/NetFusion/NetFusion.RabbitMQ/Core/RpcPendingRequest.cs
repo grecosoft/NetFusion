@@ -40,14 +40,14 @@ namespace NetFusion.RabbitMQ.Core
             _futureResult.SetResult(result);
         }
 
-        // Cancels the task and unregisters from cancelation token.
+        // Cancels the task and unregisters from cancellation token.
         public void Cancel()
         {
             _cancelToken.Cancel();
             _cancelTokenReg.Dispose();
         }
 
-        // Unregisters the task from cancelation token.
+        // Unregisters the task from cancellation token.
         public void UnRegister()
         {
             _cancelTokenReg.Dispose();

@@ -27,15 +27,14 @@ namespace NetFusion.RabbitMQ.Exchanges
         internal override void ValidateConfiguration()
         {
             base.ValidateConfiguration();
-            ValidateRequireRouteKey();
+            ValidateRequiredRouteKey();
         }
 
-        public override IBasicProperties GetBasicProperties(IModel channel, IMessage message)
+        protected override void OnSetBasicProperties(IModel channel, IMessage message, IBasicProperties properties)
         {
             // Make the message persistent.
             var basicProps = base.GetBasicProperties(channel, message);
             basicProps.Persistent = true;
-            return basicProps;
         }
     }
 }

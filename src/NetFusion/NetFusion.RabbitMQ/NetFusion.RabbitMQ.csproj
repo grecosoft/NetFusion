@@ -70,7 +70,7 @@
     <Compile Include="Consumers\QueueConsumerAttribute.cs" />
     <Compile Include="Consumers\RpcCommandAttribute.cs" />
     <Compile Include="Core\ChannelExtensions.cs" />
-    <Compile Include="Core\ExchangeDefinition.cs" />
+    <Compile Include="Core\ExchangeMessageDefinition.cs" />
     <Compile Include="Core\ExchangeQueue.cs" />
     <Compile Include="Core\IMessageBroker.cs" />
     <Compile Include="Core\IMessageExchange.cs" />
@@ -79,7 +79,6 @@
     <Compile Include="Core\MessageBrokerLog.cs" />
     <Compile Include="Core\MessageBrokerConfig.cs" />
     <Compile Include="Core\MessageConsumer.cs" />
-    <Compile Include="Core\BrokerExchange.cs" />
     <Compile Include="Core\MessageExchange.cs" />
     <Compile Include="Core\RabbitMqMessagePublisher.cs" />
     <Compile Include="Core\RpcClient.cs" />

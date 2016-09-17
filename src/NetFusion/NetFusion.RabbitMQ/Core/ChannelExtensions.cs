@@ -8,7 +8,7 @@ namespace NetFusion.RabbitMQ.Core
 {
     /// <summary>
     /// Extension methods for RabbitMQ driver IModel (channel) interface based on
-    /// classes used by this plug-in.  This makes the calling code more fluent.
+    /// classes used by this plug-in.  This simplifies the calling code.
     /// </summary>
     internal static class ChannelExtensions
     {
@@ -47,7 +47,7 @@ namespace NetFusion.RabbitMQ.Core
 
             if (eventConsumer.IsBrokerAssignedName)
             {
-                eventConsumer.QueueName = channel.QueueDeclare();
+                eventConsumer.QueueName = channel.QueueDeclare().QueueName;
                 return;
             }
 
