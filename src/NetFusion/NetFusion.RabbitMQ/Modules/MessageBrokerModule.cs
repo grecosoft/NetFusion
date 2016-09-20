@@ -189,6 +189,19 @@ namespace NetFusion.RabbitMQ.Modules
             return rpcCommandTypes;
         }
 
+        private void AssertDistictExternalTypeNames(IEnumerable<Type> rpcMessageTypes)
+        {
+            IEnumerable<string> duplicates = rpcMessageTypes.WhereDuplicated(
+                    t => t.GetAttribute<RpcCommandAttribute>().ExternalTypeName)
+                .ToArray();
+
+            if (duplicates.Any())
+            {
+                throw new ContainerException(
+                    $"The following External RPC Command Names are Duplicated: {String.Join(",", duplicates)}");
+            }
+        }
+
         public IDictionary<string, object> GetClientProperties()
         {
             IPluginManifest brokerManifest = Context.Plugin.Manifest;

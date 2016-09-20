@@ -27,10 +27,11 @@ namespace NetFusion.RabbitMQ.Consumers
         /// </summary>
         /// <param name="brokerName">The broker name to which the RPC command should be published.</param>
         /// <param name="requestQueueKey">The key that identifies the consumer's queue that processes RPC message commands.</param>
-        public RpcCommandAttribute(string brokerName, string requestQueueKey)
+        public RpcCommandAttribute(string brokerName, string requestQueueKey, string externalTypeName)
         {
             Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
             Check.NotNullOrWhiteSpace(requestQueueKey, nameof(requestQueueKey));
+            Check.NotNullOrWhiteSpace(externalTypeName, nameof(externalTypeName));
 
             this.BrokerName = brokerName;
             this.RequestQueueKey = requestQueueKey;

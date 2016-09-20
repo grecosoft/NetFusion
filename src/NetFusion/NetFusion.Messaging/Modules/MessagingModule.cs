@@ -60,6 +60,7 @@ namespace NetFusion.Messaging.Modules
                 .ToLookup(k => k.MessageType);
 
             AssertCommandMessages();
+            LogInvalidConsumers();
         }
 
         public override void RegisterDefaultComponents(ContainerBuilder builder)
@@ -193,6 +194,23 @@ namespace NetFusion.Messaging.Modules
            where T : class
         {
             return (T)(await InvokeDispatcherAsync(dispatcher, message));
+        }
+
+        private void LogInvalidConsumers()
+        {
+            string[] invalidConsumerTypes = this.Context.AllPluginTypes
+               .SelectMessageHandlers()
+               .Where(h => h.HasAttribute<InProcessHandlerAttribute>() && !h.DeclaringType.IsDerivedFrom<IMessageConsumer>())
+               .Select(h => h.DeclaringType.AssemblyQualifiedName)
+               .Distinct()
+               .ToArray();
+
+            if (invalidConsumerTypes.Any())
+            {
+                this.Context.Logger.Warning(
+                    $"The following classes have in-process event handler methods but do not implement: {typeof(IMessageConsumer)}.",
+                    invalidConsumerTypes);
+            }
         }
 
         // For each discovered message event type, execute the same code that 
