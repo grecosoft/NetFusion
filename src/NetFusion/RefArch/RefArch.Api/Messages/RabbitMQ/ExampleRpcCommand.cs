@@ -23,7 +23,7 @@ namespace RefArch.Api.Messages.RabbitMQ
         public ExampleRpcCommand(Car car)
         {
             var rand = new Random();
-            this.DelayInMs = 0; // rand.Next(0, 200);
+            this.DelayInMs = rand.Next(0, 500);
             this.TestValue = car.TestValue;
 
             this.CurrentDateTime = DateTime.UtcNow;
