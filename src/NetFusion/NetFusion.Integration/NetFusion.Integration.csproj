@@ -148,6 +148,7 @@
     <Compile Include="NetFusionDb.cs" />
     <Compile Include="IntegrationManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RabbitMQ\BrokerMetaDb.cs" />
     <Compile Include="RabbitMQ\BrokerMetaMapping.cs" />
     <Compile Include="RabbitMQ\BrokerMetaRepository.cs" />
     <Compile Include="RabbitMQ\RabbitIntegrationModule.cs" />

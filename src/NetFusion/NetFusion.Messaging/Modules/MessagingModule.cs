@@ -184,9 +184,24 @@ namespace NetFusion.Messaging.Modules
 
             using (var scope = AppContainer.Instance.Services.BeginLifetimeScope())
             {
-                // Resolve the component and call the message handler.
-                var consumer = (IMessageConsumer)scope.Resolve(dispatcher.ConsumerType);
-                return await dispatcher.Dispatch(message, consumer);
+                try
+                {
+                    // Resolve the component and call the message handler.
+                    var consumer = (IMessageConsumer)scope.Resolve(dispatcher.ConsumerType);
+                    return await dispatcher.Dispatch(message, consumer);
+                }
+                catch (Exception ex)
+                {
+                    this.Context.Logger.Error(
+                        "Error Dispatching Message.", ex, 
+                        new {
+                            ConsumerType = dispatcher.ConsumerType.AssemblyQualifiedName,
+                            Handler = dispatcher.MessageHandlerMethod.Name,
+                            Message = message
+                        });
+                    throw;
+
+                }
             }
         }
 

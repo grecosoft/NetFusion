@@ -11,15 +11,15 @@ namespace NetFusion.Integration.RabbitMQ
 {
     public class BrokerMetaRepository : IBrokerMetaRepository
     {
-        private readonly IMongoDbClient<NetFusionDb> _dbClient;
+        private readonly IMongoDbClient<BrokerMetaDb> _dbClient;
         private readonly IMongoCollection<BrokerMeta> _brokerColl;
 
-        public BrokerMetaRepository(IMongoDbClient<NetFusionDb> dbClient)
+        public BrokerMetaRepository(BrokerMetaDb settings, IMongoDbClient<BrokerMetaDb> dbClient)
         {
             Check.NotNull(dbClient, nameof(dbClient));
 
             _dbClient = dbClient;
-            _brokerColl = _dbClient.GetCollection<BrokerMeta>();
+            _brokerColl = _dbClient.GetCollection<BrokerMeta>(settings.CollectionName);
         }
 
         public async Task<IEnumerable<BrokerMeta>> LoadAsync(string brokerName)
