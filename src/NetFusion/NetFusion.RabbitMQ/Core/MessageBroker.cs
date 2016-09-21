@@ -15,6 +15,8 @@ using RabbitMQ.Client.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NetFusion.RabbitMQ.Core
@@ -145,7 +147,7 @@ namespace NetFusion.RabbitMQ.Core
                 {
                     IModel replyChannel = CreateBrokerChannel(brokerConn.BrokerName);
               
-                    var rpcClient = new RpcClient(consumer, replyChannel);
+                    var rpcClient = new RpcClient(consumer, brokerConn.BrokerName, replyChannel);
                     var rpcPublisher = new RpcMessagePublisher(brokerConn.BrokerName, consumer, rpcClient);
 
                     AttachRpcBrokerMonitoringHandlers(rpcPublisher);
@@ -591,30 +593,14 @@ namespace NetFusion.RabbitMQ.Core
         private void AttachRpcConsumerHandler(IModel channel, EventingBasicConsumer consumer)
         {
             consumer.Received += (sender, deliveryEvent) => {
-
-                RpcConsumerReplyReceived(channel, deliveryEvent);
+             
+                ThreadPool.QueueUserWorkItem((stateInfo) => RpcConsumerReplyReceived(deliveryEvent));
             };
-        }
-
-        // Publish the reply back to the publisher that made the request.
-        private void PublishConsumerReply(object response, IModel channel, IBasicProperties requestProps)
-        {
-            byte[] replyBody = SerializeMessage(response, requestProps.ContentType);
-            IBasicProperties replyProps = channel.CreateBasicProperties();
-
-            replyProps.ContentType = requestProps.ContentType;
-            replyProps.CorrelationId = requestProps.CorrelationId;
-
-            channel.BasicPublish(exchange: "",
-                    routingKey: requestProps.ReplyTo,
-                    basicProperties: replyProps,
-                    body: replyBody);
-
         }
 
         // Called when a RPC style message is received on a queue defined by a 
         // derived RpcExchange class that receives RPC style requests.
-        private void RpcConsumerReplyReceived(IModel channel, BasicDeliverEventArgs deleveryEvent)
+        private void RpcConsumerReplyReceived(BasicDeliverEventArgs deleveryEvent)
         {
             ValidateRpcReply(deleveryEvent);
 
@@ -624,13 +610,45 @@ namespace NetFusion.RabbitMQ.Core
             IMessage message = DeserializeMessage(commandType, deleveryEvent);
 
             object result = _messagingModule.InvokeDispatcherAsync(dispatcher, message).Result;
-            PublishConsumerReply(result, channel, deleveryEvent.BasicProperties);
+            PublishConsumerReply(result, deleveryEvent.BasicProperties);
+        }
+
+        // Publish the reply back to the publisher that made the request.
+        private void PublishConsumerReply(object response, IBasicProperties requestProps)
+        {
+            byte[] replyBody = SerializeMessage(response, requestProps.ContentType);
+            string brokerName = GetBrokerName(requestProps);
+
+            using (var replychannel = CreateBrokerChannel(brokerName))
+            {
+                IBasicProperties replyProps = replychannel.CreateBasicProperties();
+                replyProps.ContentType = requestProps.ContentType;
+                replyProps.CorrelationId = requestProps.CorrelationId;
+
+                IBasicProperties replyprops = replychannel.CreateBasicProperties();
+                replychannel.BasicPublish(exchange: "",
+                    routingKey: requestProps.ReplyTo,
+                    basicProperties: replyProps,
+                    body: replyBody);
+            }
+        }
+
+        private string GetBrokerName(IBasicProperties requestProps)
+        {
+            IDictionary<string, object> headers = requestProps.Headers;
+            byte[] value = (byte[])headers["broker-name"];
+            return Encoding.UTF8.GetString(value);
         }
 
         private void ValidateRpcReply(BasicDeliverEventArgs deleveryEvent)
         {
-            string messageType = deleveryEvent.BasicProperties.Type;
+            var headers = deleveryEvent.BasicProperties.Headers ?? new Dictionary<string, object>();
+            if (!headers.ContainsKey("broker-name"))
+            {
+                throw new BrokerException("The broker-name header value not present.");
+            }
 
+            string messageType = deleveryEvent.BasicProperties.Type;
             if (messageType.IsNullOrWhiteSpace())
             {
                 throw new BrokerException(

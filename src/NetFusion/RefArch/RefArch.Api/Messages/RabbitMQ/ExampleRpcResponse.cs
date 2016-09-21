@@ -4,6 +4,6 @@ namespace RefArch.Api.Messages.RabbitMQ
 {
     public class ExampleRpcResponse: DomainEvent
     {
-        public string Comment { get; set; }
+        public string ResponseTestValue { get; set; }
     }
 }

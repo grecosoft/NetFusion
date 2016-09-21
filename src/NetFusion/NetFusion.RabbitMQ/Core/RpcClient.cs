@@ -5,6 +5,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NetFusion.RabbitMQ.Core
@@ -19,6 +20,7 @@ namespace NetFusion.RabbitMQ.Core
     {
         private const string DEFAULT_EXCHANGE = "";
 
+        private readonly string _brokerName;
         private readonly IModel _channel;
         private readonly RpcConsumerSettings _consumerSettings;
         private readonly string _replyQueueName;
@@ -27,11 +29,12 @@ namespace NetFusion.RabbitMQ.Core
         private readonly ConcurrentDictionary<string, RpcPendingRequest> _pendingRpcRequests;
         private readonly EventingBasicConsumer _replyConsumer;
 
-        public RpcClient(RpcConsumerSettings consumerSettings, IModel channel)
+        public RpcClient(RpcConsumerSettings consumerSettings, string brokerName, IModel channel)
         {
             Check.NotNull(consumerSettings, nameof(consumerSettings));
             Check.NotNull(channel, nameof(channel));
 
+            _brokerName = brokerName;
             _channel = channel;
             _consumerSettings = consumerSettings;
             _replyQueueName = _channel.QueueDeclare().QueueName;
@@ -107,10 +110,12 @@ namespace NetFusion.RabbitMQ.Core
         {
             IBasicProperties props = _channel.CreateBasicProperties();
 
+            props.Headers = new Dictionary<string, object> { { "broker-name", _brokerName } };
             props.ReplyTo = _replyQueueName;
             props.CorrelationId = command.GetCorrelationId();
             props.ContentType = rpcProps.ContentType;
             props.Type = rpcProps.ExternalTypeName;
+            
             return props;
         }
 

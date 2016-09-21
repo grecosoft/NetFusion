@@ -1,5 +1,4 @@
-﻿using NetFusion.Common.Extensions;
-using NetFusion.Messaging;
+﻿using NetFusion.Messaging;
 using NetFusion.RabbitMQ;
 using RefArch.Api.Messages.RabbitMQ;
 using System;
@@ -13,19 +12,18 @@ namespace RefArch.Subscriber.Services
         [InProcessHandler]
         public async Task<ExampleRpcResponse> OnRpcMessage(ExampleRpcCommand rpcCommand)
         {
-            Console.WriteLine($"Handler: OnRpcMessage: { rpcCommand.ToIndentedJson()}");
+            Console.WriteLine($"Delay: {rpcCommand.DelayInMs} TestValue: {rpcCommand.TestValue}");
 
             rpcCommand.SetAcknowledged();
 
-            Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
             await Task.Run(() =>
             {
-                Thread.Sleep(2000);
+                Thread.Sleep(rpcCommand.DelayInMs);
             });
 
             return new ExampleRpcResponse
             {
-                Comment = "World"
+                ResponseTestValue = rpcCommand.TestValue
             };
         }
     }
