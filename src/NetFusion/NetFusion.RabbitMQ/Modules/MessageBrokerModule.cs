@@ -179,6 +179,8 @@ namespace NetFusion.RabbitMQ.Modules
             IEnumerable<Type> rpcMessageTypes = Context.AllPluginTypes
                  .Where(pt => pt.HasAttribute<RpcCommandAttribute>());
 
+            AssertDistictExternalTypeNames(rpcMessageTypes);
+
             var rpcCommandTypes = new Dictionary<string, Type>();
             foreach (Type rpcType in rpcMessageTypes)
             {

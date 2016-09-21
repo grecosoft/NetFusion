@@ -35,6 +35,7 @@ namespace NetFusion.RabbitMQ.Consumers
 
             this.BrokerName = brokerName;
             this.RequestQueueKey = requestQueueKey;
+            this.ExternalTypeName = externalTypeName;
         }
 
         /// <summary>

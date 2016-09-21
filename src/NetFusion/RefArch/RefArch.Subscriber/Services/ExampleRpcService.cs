@@ -20,7 +20,7 @@ namespace RefArch.Subscriber.Services
             Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
             await Task.Run(() =>
             {
-                Thread.Sleep(0);
+                Thread.Sleep(2000);
             });
 
             return new ExampleRpcResponse
