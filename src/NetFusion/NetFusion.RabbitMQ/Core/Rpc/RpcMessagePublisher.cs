@@ -1,7 +1,7 @@
 ﻿using NetFusion.Common;
 using NetFusion.RabbitMQ.Configs;
 
-namespace NetFusion.RabbitMQ.Core
+namespace NetFusion.RabbitMQ.Core.Rpc
 {
     /// <summary>
     /// Aggregates a configured RPC broker client and the queue that should be

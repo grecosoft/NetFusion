@@ -17,7 +17,6 @@ namespace RefArch.Subscriber.Services
             await Task.Run(() =>
             {
                 Thread.Sleep(rpcCommand.DelayInMs);
-                throw new InvalidOperationException("TEST");
             });
 
             return new ExampleRpcResponse

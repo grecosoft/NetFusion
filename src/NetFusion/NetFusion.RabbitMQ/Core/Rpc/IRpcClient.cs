@@ -2,7 +2,7 @@
 using RabbitMQ.Client.Events;
 using System.Threading.Tasks;
 
-namespace NetFusion.RabbitMQ.Core
+namespace NetFusion.RabbitMQ.Core.Rpc
 {
     /// <summary>
     /// Implements message based RPC calls that are published to a consumer's

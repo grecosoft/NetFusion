@@ -1,5 +1,5 @@
 ﻿using NetFusion.RabbitMQ.Configs;
-using NetFusion.RabbitMQ.Serialization;
+using NetFusion.RabbitMQ.Core.Initialization;
 using System;
 using System.Collections.Generic;
 
@@ -11,11 +11,11 @@ namespace NetFusion.RabbitMQ.Core
     /// </summary>
     public class MessageBrokerConfig
     {
+        public IConnectionManager ConnectionMgr { get; set; }
+        public ISerializationManager SerializationMgr { get; set; }
+
         public BrokerSettings Settings { get; set; }
-        public IDictionary<string, BrokerConnection> Connections { get; set; }
         public IEnumerable<IMessageExchange> Exchanges { get; set; }
-        public IDictionary<string, IBrokerSerializer> Serializers { get; set; }
         public IDictionary<string, Type> RpcTypes { get; set; }
-        public IDictionary<string, object> ClientProperties { get; set; }
     }
 }

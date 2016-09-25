@@ -24,7 +24,7 @@ namespace NetFusion.RabbitMQ.Exchanges
         /// <summary>
         /// The type of exchange to be created.
         /// </summary>
-        internal string ExchangeType { get; set; }
+        public string ExchangeType { get; set; }
 
         /// <summary>
         /// The name of the exchange.

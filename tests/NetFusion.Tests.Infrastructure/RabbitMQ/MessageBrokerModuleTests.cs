@@ -142,7 +142,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             metadata.Should().NotBeNull();
             metadata.Settings.Should().NotBeNull();
             metadata.Exchanges.Should().NotBeNull();
-            metadata.Connections.Should().NotBeNull();
+           // metadata.Connections.Should().NotBeNull();
 
             // Verify that the correct exchanges were determined.
             metadata.Exchanges.Should().HaveCount(2);
@@ -236,9 +236,10 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
                 c.Start();
             });
 
-            brokerConfig.Serializers.Should().HaveCount(3);
-            brokerConfig.Serializers.Should().ContainKeys(
+            brokerConfig.SerializationMgr.Serializers.Should().HaveCount(3);
+            brokerConfig.SerializationMgr.Serializers.Select(s => s.ContentType).Should().Contain(
                 SerializerTypes.Binary, 
+                SerializerTypes.MessagePack,
                 SerializerTypes.Json);
         }
 

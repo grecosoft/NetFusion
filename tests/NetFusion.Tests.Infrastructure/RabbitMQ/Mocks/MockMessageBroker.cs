@@ -4,7 +4,6 @@ using NetFusion.Domain.Scripting;
 using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Core;
-using NetFusion.RabbitMQ.Core;
 using RabbitMQ.Client;
 
 namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks
@@ -25,9 +24,9 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks
             _mockConnection = mockConnection;
         }
 
-        protected override void ConnectToBroker(BrokerConnection brokerConn)
-        {
-            brokerConn.Connection = _mockConnection.Object;
-        }
+        //protected override void ConnectToBroker(BrokerConnection brokerConn)
+        //{
+        //    brokerConn.Connection = _mockConnection.Object;
+        //}
     }
 }

@@ -8,7 +8,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace NetFusion.RabbitMQ.Core
+namespace NetFusion.RabbitMQ.Core.Rpc
 {
     /// <summary>
     /// Responsible for making RPC requests and returning the response when

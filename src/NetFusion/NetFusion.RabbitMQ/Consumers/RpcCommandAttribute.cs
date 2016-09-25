@@ -1,5 +1,5 @@
 ﻿using NetFusion.Common;
-using NetFusion.RabbitMQ.Core;
+using NetFusion.RabbitMQ.Core.Rpc;
 using System;
 
 namespace NetFusion.RabbitMQ.Consumers

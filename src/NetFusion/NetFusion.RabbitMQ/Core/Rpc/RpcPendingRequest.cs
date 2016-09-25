@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NetFusion.RabbitMQ.Core
+namespace NetFusion.RabbitMQ.Core.Rpc
 {
     /// <summary>
     /// Represents a pending RPC style message that is awaiting a response

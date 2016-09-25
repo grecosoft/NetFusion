@@ -105,6 +105,7 @@
     <Compile Include="RabbitMQ\Exchanges\DirectExchangeTests.cs" />
     <Compile Include="RabbitMQ\MessageBrokerModuleTests.cs" />
     <Compile Include="RabbitMQ\MessageBrokerTests.cs" />
+    <Compile Include="RabbitMQ\Mocks\MockConnectionManager.cs" />
     <Compile Include="RabbitMQ\Mocks\MockDirectExchange.cs" />
     <Compile Include="RabbitMQ\Mocks\MockDomainEvent.cs" />
     <Compile Include="RabbitMQ\Mocks\MockExchange.cs" />

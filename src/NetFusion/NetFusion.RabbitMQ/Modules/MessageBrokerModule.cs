@@ -9,6 +9,7 @@ using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Consumers;
 using NetFusion.RabbitMQ.Core;
+using NetFusion.RabbitMQ.Core.Initialization;
 using NetFusion.RabbitMQ.Integration;
 using NetFusion.RabbitMQ.Serialization;
 using System;
@@ -84,12 +85,12 @@ namespace NetFusion.RabbitMQ.Modules
 
             _messageBroker.Initialize(new MessageBrokerConfig
             {
+                ConnectionMgr = CreateConnectionManager(),
+                SerializationMgr = CreateSerializationManager(),
+
                 Settings = _brokerSettings,
                 Exchanges = this.Exchanges,
-                Connections = GetConnections(_brokerSettings),
-                Serializers = GetMessageSerializers(),
-                RpcTypes = GetRpcCommandTypes(),
-                ClientProperties = GetClientProperties()
+                RpcTypes = GetRpcCommandTypes()
             });
 
             _messageBroker.ConfigureBroker();
@@ -140,35 +141,58 @@ namespace NetFusion.RabbitMQ.Modules
             }
         }
 
-        private IDictionary<string, BrokerConnection> GetConnections(BrokerSettings settings)
+        private IConnectionManager CreateConnectionManager()
         {
-            if (settings.Connections == null)
-            {
-                return new Dictionary<string, BrokerConnection>();
-            }
-
-            IEnumerable<string> duplicateBrokerNames = settings.Connections.WhereDuplicated(c => c.BrokerName);
-
-            if (duplicateBrokerNames.Any())
-            {
-                throw new InvalidOperationException(
-                    $"The following broker names are specified more than " +
-                    $"once: {String.Join(", ", duplicateBrokerNames)}.");
-            }
-
-            return settings.Connections.ToDictionary(c => c.BrokerName);
+            var clientProperties = GetClientProperties();
+            return new ConnectionManager(Context.Logger, _brokerSettings, clientProperties);
         }
 
-        private IDictionary<string, IBrokerSerializer> GetMessageSerializers()
+        private IDictionary<string, object> GetClientProperties()
+        {
+            IPluginManifest brokerManifest = Context.Plugin.Manifest;
+            IPluginManifest appManifest = Context.AppHost.Manifest;
+
+            return new Dictionary<string, object>
+            {
+                { "Client Assembly", brokerManifest.AssemblyName },
+                { "Client Version", brokerManifest.AssemblyVersion },
+                { "AppHost Assembly", appManifest.AssemblyName },
+                { "AppHost Version", appManifest.AssemblyVersion },
+                { "AppHost Description", appManifest.Description },
+                { "Machine Name", appManifest.MachineName }
+            };
+        }
+
+        private ISerializationManager CreateSerializationManager()
         {
             var serializers = GetConfiguredSerializers();
+            return new SerializationManager(serializers);
+        }
 
-            // Add the default serializers if not overridden by the application host.
-            AddSerializer(serializers, new JsonBrokerSerializer());
-            AddSerializer(serializers, new BinaryBrokerSerializer());
-            AddSerializer(serializers, new MessagePackBrokerSerializer());
+        private IDictionary<string, IBrokerSerializer> GetConfiguredSerializers()
+        {
+            // Find all serializer registries which specify any custom serializers or
+            // overrides for a given content type.  Only look in application specific
+            // plug-ins.
 
-            return serializers;
+            IEnumerable<IBrokerSerializerRegistry> registries = this.Registries.CreatedFrom(this.Context.AllAppPluginTypes);
+            if (registries.Empty())
+            {
+                return new Dictionary<string, IBrokerSerializer>();
+            }
+
+            if (registries.IsSingletonSet())
+            {
+                IEnumerable<IBrokerSerializer> serializers = registries.First().GetSerializers();
+                return serializers.ToDictionary(s => s.ContentType);
+            }
+
+            throw new ContainerException(
+                $"The application host and its corresponding application plug-ins can only " +
+                $"define one class implementing the: {typeof(IBrokerSerializerRegistry)} interface-" +
+                $"{registries.Count()} implementations were found.",
+
+                registries.Select(e => new { Registry = e.GetType().AssemblyQualifiedName }));
         }
 
         // This returns a dictionary mapping a command's External Defined Key to
@@ -201,58 +225,6 @@ namespace NetFusion.RabbitMQ.Modules
             {
                 throw new ContainerException(
                     $"The following External RPC Command Names are Duplicated: {String.Join(",", duplicates)}");
-            }
-        }
-
-        public IDictionary<string, object> GetClientProperties()
-        {
-            IPluginManifest brokerManifest = Context.Plugin.Manifest;
-            IPluginManifest appManifest = Context.AppHost.Manifest;
-
-            return new Dictionary<string, object>
-            {
-                { "Client Assembly", brokerManifest.AssemblyName },
-                { "Client Version", brokerManifest.AssemblyVersion },
-                { "AppHost Assembly", appManifest.AssemblyName },
-                { "AppHost Version", appManifest.AssemblyVersion },
-                { "AppHost Description", appManifest.Description },
-                { "Machine Name", appManifest.MachineName }
-            };
-        }
-
-        private IDictionary<string, IBrokerSerializer> GetConfiguredSerializers()
-        {
-            // Find all serializer registries which specify any custom serializers or
-            // overrides for a given content type.  Only look in application specific
-            // plug-ins.
-          
-            IEnumerable<IBrokerSerializerRegistry> registries = this.Registries.CreatedFrom(this.Context.AllAppPluginTypes);
-            if (registries.Empty())
-            {
-                return new Dictionary<string, IBrokerSerializer>();
-            }
-
-            if (registries.IsSingletonSet())
-            {
-                IEnumerable<IBrokerSerializer> serializers = registries.First().GetSerializers();
-                return serializers.ToDictionary(s => s.ContentType);
-            }
-
-            throw new ContainerException(
-                $"The application host and its corresponding application plug-ins can only " +
-                $"define one class implementing the: {typeof(IBrokerSerializerRegistry)} interface-" +
-                $"{registries.Count()} implementations were found.",
-
-                registries.Select(e => new { Registry = e.GetType().AssemblyQualifiedName }));
-        }
-
-        private void AddSerializer(
-            IDictionary<string, IBrokerSerializer> serializers,
-            IBrokerSerializer serializer)
-        {
-            if (!serializers.Keys.Contains(serializer.ContentType))
-            {
-                serializers[serializer.ContentType] = serializer;
             }
         }
 

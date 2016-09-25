@@ -1,4 +1,4 @@
-﻿namespace NetFusion.RabbitMQ.Core
+﻿namespace NetFusion.RabbitMQ.Core.Rpc
 {
     /// <summary>
     /// Properties associated with a RPC style request.
