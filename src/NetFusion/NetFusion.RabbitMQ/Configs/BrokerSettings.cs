@@ -35,6 +35,17 @@ namespace NetFusion.RabbitMQ.Configs
         /// </summary>
         public int NumConnectionRetries { get; set; } = 10;
 
+        public BrokerConnection GetConnection(string brokerName)
+        {
+            BrokerConnection conn = this.Connections.FirstOrDefault(c => c.BrokerName == brokerName);
+            
+            if (conn == null)
+            {
+                throw new BrokerException($"Connection with broker name: {brokerName} not configured.");
+            }
+            return conn;
+        }
+
         /// <summary>
         /// Applies all externally defined queue properties to all defined
         /// exchange queues.

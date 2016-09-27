@@ -3,13 +3,17 @@ using System;
 
 namespace NetFusion.RabbitMQ.Serialization
 {
+    /// <summary>
+    /// Serializer for message pack serialization compact binary format.
+    /// http://msgpack.org/index.html
+    /// </summary>
     public class MessagePackBrokerSerializer : IBrokerSerializer
     {
         public string ContentType => SerializerTypes.MessagePack;
 
         public object Deserialize(byte[] value, Type valueType)
         {
-            throw new NotImplementedException();
+            return Deserialize<object>(value, valueType);
         }
 
         public byte[] Serialize(object value)

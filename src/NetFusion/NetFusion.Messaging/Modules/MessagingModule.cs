@@ -138,7 +138,7 @@ namespace NetFusion.Messaging.Modules
         {
             var invalidEvtHandlers = allDispatchers
                 .Where(ed => ed.DispatchRules.Any(
-                    dr => !ed.MessageType.IsDerivedFrom(dr.EventType)))
+                    dr => !ed.MessageType.IsDerivedFrom(dr.MessageType)))
                 .Select(ed => new {
                     ed.MessageType,
                     ed.ConsumerType,

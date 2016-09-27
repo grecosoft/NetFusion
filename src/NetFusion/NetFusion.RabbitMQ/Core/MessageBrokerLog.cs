@@ -53,7 +53,7 @@ namespace NetFusion.RabbitMQ.Core
                 select new
                 {
                     BindingType = c.BindingType.ToString(),
-                    ChannelInfo = LogChannel(c.Channel),
+                    ChannelInfo = LogChannel(c.MessageHandlers.First().Channel),
                     c.ExchangeName,
                     c.QueueName,
                     c.QueueSettings,

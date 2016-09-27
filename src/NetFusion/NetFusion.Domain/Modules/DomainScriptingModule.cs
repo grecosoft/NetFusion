@@ -13,7 +13,7 @@ namespace NetFusion.Domain.Modules
         {
             builder.RegisterType<NullEntityScriptingService>()
                 .As<IEntityScriptingService>()
-                .InstancePerLifetimeScope();
+                .SingleInstance();
         }
     }
 }

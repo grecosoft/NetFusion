@@ -4,9 +4,8 @@ using NetFusion.Domain.Entity;
 namespace NetFusion.Domain.Roslyn.Core
 {
     /// <summary>
-    /// When evaluating expressions against a given domain model and its set 
-    /// of optional dynamic properties, the EntityEvaluationSerivce uses this 
-    /// as the execution scope.</summary>
+    /// When evaluating expressions against a given domain model and its set of optional 
+    /// dynamic properties, the EntityEvaluationSerivce uses this as the execution scope.</summary>
     /// <typeparam name="TEntity">The type of the entity that will be evaluated by the script.</typeparam>
     public class EntityScriptScope<TEntity>
     {

@@ -29,7 +29,7 @@ namespace NetFusion.Messaging.Core
         }
 
         /// <summary>
-        /// For a list of consumer types, returns the methods corresponding handlers.  
+        /// For a list of consumer types, returns the methods corresponding to handlers.  
         /// </summary>
         /// <param name="types">Event consumer types to filter.</param>
         /// <returns>List of methods that can handle messages.</returns>

@@ -1,6 +1,5 @@
 ﻿using NetFusion.Common;
 using NetFusion.Common.Extensions;
-using NetFusion.Messaging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -32,7 +31,7 @@ namespace NetFusion.RabbitMQ.Serialization
                 ContractResolver = _contractResolver
             };
 
-            var json = JsonConvert.SerializeObject(value, settings);
+            string json = JsonConvert.SerializeObject(value, settings);
             return Encoding.UTF8.GetBytes(json);
         }
 
@@ -53,8 +52,8 @@ namespace NetFusion.RabbitMQ.Serialization
                 ContractResolver = _contractResolver
             };
 
-            var json = Encoding.UTF8.GetString(value);
-            return (IMessage)JsonConvert.DeserializeObject(json, valueType, settings);
+            string json = Encoding.UTF8.GetString(value);
+            return JsonConvert.DeserializeObject(json, valueType, settings);
         }
 
         public T Deserialize<T>(byte[] value, Type valueType)

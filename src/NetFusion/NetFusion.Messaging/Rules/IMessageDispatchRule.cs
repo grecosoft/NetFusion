@@ -12,7 +12,7 @@ namespace NetFusion.Messaging.Rules
         /// <summary>
         /// The type of the message associated with the rule.
         /// </summary>
-        Type EventType { get; }
+        Type MessageType { get; }
 
         /// <summary>
         /// Determine if the message meets the criteria needed to call the event handler.

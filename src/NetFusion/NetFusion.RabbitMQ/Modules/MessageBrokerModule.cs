@@ -21,9 +21,9 @@ namespace NetFusion.RabbitMQ.Modules
 {
     /// <summary>
     /// Plug-in module that discovers all defined RabbitMQ exchanges and consumer bindings.
-    /// This plug-in delegates to the messaging plug-in allowing for the publishing of
-    /// messages to exchanges.  The messaging plug-in is also delegated to when a message
-    /// is received from a queue and needs to be dispatched to is consumers.  
+    /// Consumer queue bindings are normal message handlers as defined by the messaging plug-in 
+    /// but decorated with a QueueConsumerAttribute derived attribute.  This is how a message 
+    /// handler is subscribed to a given queue. 
     /// </summary>
     internal class MessageBrokerModule : PluginModule
     {
@@ -83,12 +83,12 @@ namespace NetFusion.RabbitMQ.Modules
             
             InitializeExchanges(_brokerSettings);
 
-            _messageBroker.Initialize(new MessageBrokerConfig
+            _messageBroker.Initialize(new MessageBrokerSetup
             {
                 ConnectionMgr = CreateConnectionManager(),
                 SerializationMgr = CreateSerializationManager(),
 
-                Settings = _brokerSettings,
+                BrokerSettings = _brokerSettings,
                 Exchanges = this.Exchanges,
                 RpcTypes = GetRpcCommandTypes()
             });
@@ -124,7 +124,7 @@ namespace NetFusion.RabbitMQ.Modules
                 .ToList();
         }
 
-        // The criteria that determines if a given consumer event handler method
+        // The criteria that determines if a given consumer message handler method
         // is bound to a queue.
         private bool IsQueueConsumer(MessageDispatchInfo dispatchInfo)
         {
@@ -187,7 +187,7 @@ namespace NetFusion.RabbitMQ.Modules
                 return serializers.ToDictionary(s => s.ContentType);
             }
 
-            throw new ContainerException(
+            throw new BrokerException(
                 $"The application host and its corresponding application plug-ins can only " +
                 $"define one class implementing the: {typeof(IBrokerSerializerRegistry)} interface-" +
                 $"{registries.Count()} implementations were found.",
@@ -195,9 +195,10 @@ namespace NetFusion.RabbitMQ.Modules
                 registries.Select(e => new { Registry = e.GetType().AssemblyQualifiedName }));
         }
 
-        // This returns a dictionary mapping a command's External Defined Key to
-        // the corresponding .NET type.  This is used to find the corresponding
-        // .NET type when a RPC style message is published to the consumer.
+        // This returns a dictionary mapping a command's External Defined Key to the corresponding 
+        // .NET type.  This is used to find the corresponding  .NET type when a RPC style message is
+        // published to the consumer and the consumer is a .NET host including a common assembly with
+        // the message types.
         public IDictionary<string, Type> GetRpcCommandTypes()
         {
             IEnumerable<Type> rpcMessageTypes = Context.AllPluginTypes
@@ -223,7 +224,7 @@ namespace NetFusion.RabbitMQ.Modules
 
             if (duplicates.Any())
             {
-                throw new ContainerException(
+                throw new BrokerException(
                     $"The following External RPC Command Names are Duplicated: {String.Join(",", duplicates)}");
             }
         }

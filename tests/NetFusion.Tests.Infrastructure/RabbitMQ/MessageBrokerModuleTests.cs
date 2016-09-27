@@ -104,10 +104,10 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         {
             var settings = new BrokerSettings();
             var mockExchange = new Mock<IMessageBroker>();
-            MessageBrokerConfig metadata = null;
+            NetFusion.RabbitMQ.Core.MessageBrokerSetup metadata = null;
 
-            mockExchange.Setup(b => b.Initialize(It.IsAny<MessageBrokerConfig>()))
-                .Callback<MessageBrokerConfig>(s => metadata = s);
+            mockExchange.Setup(b => b.Initialize(It.IsAny<NetFusion.RabbitMQ.Core.MessageBrokerSetup>()))
+                .Callback<NetFusion.RabbitMQ.Core.MessageBrokerSetup>(s => metadata = s);
 
             // Define the broker connection and an externally defined queue route key.
             settings.Connections = new List<BrokerConnection>
@@ -140,7 +140,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
 
             // Verify that module initialized the message broker with the exchanges:
             metadata.Should().NotBeNull();
-            metadata.Settings.Should().NotBeNull();
+            metadata.BrokerSettings.Should().NotBeNull();
             metadata.Exchanges.Should().NotBeNull();
            // metadata.Connections.Should().NotBeNull();
 
@@ -219,10 +219,10 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
         {
             var settings = new BrokerSettings();
             var mockExchange = new Mock<IMessageBroker>();
-            MessageBrokerConfig brokerConfig = null;
+            NetFusion.RabbitMQ.Core.MessageBrokerSetup brokerConfig = null;
 
-            mockExchange.Setup(b => b.Initialize(It.IsAny<MessageBrokerConfig>()))
-                .Callback<MessageBrokerConfig>(cfg => brokerConfig = cfg);
+            mockExchange.Setup(b => b.Initialize(It.IsAny<NetFusion.RabbitMQ.Core.MessageBrokerSetup>()))
+                .Callback<NetFusion.RabbitMQ.Core.MessageBrokerSetup>(cfg => brokerConfig = cfg);
 
             this.Arrange(config =>
             {

@@ -4,7 +4,14 @@
         "BrokerName": "TestBroker",
         "HostName": "localhost",
         "UserName": "papillon",
-        "Password": "bestdog"
+        "Password": "bestdog",
+
+        "QueueProperties": [
+          {
+            "QueueName": "Ford",
+            "NumberConsumers": 10
+          }
+        ]
       }
     ]
 }

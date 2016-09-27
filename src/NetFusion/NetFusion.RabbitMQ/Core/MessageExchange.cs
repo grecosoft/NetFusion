@@ -38,7 +38,7 @@ namespace NetFusion.RabbitMQ.Core
         public IEnumerable<ExchangeQueue> Queues => _queues;
 
         /// <summary>
-        /// Derived well know exchange type base classes such as Topic, Direct,
+        /// Derived well-know exchange style base classes such as Topic, Direct,
         /// Fan-out, RPC, and Work-queue can specify the default settings that
         /// should be used when creating a queue on the exchange. 
         /// </summary>
@@ -75,7 +75,7 @@ namespace NetFusion.RabbitMQ.Core
         {
             if (Settings.BrokerName.IsNullOrWhiteSpace())
             {
-                throw new InvalidOperationException(
+                throw new BrokerException(
                     "Broker Name must be set for all exchange types.");
             }
         }
@@ -98,7 +98,7 @@ namespace NetFusion.RabbitMQ.Core
 
             if (this.ExchangeName.IsNullOrWhiteSpace())
             {
-                throw new InvalidOperationException(
+                throw new BrokerException(
                     "Exchange name must be specified for non-default exchange type.");
             }
 
@@ -134,7 +134,6 @@ namespace NetFusion.RabbitMQ.Core
         protected void QueueDeclare(string name, Action<ExchangeQueue> config = null)
         {
             Check.NotNullOrWhiteSpace(name, nameof(name));
-            Check.NotNull(config, nameof(config), "configuration delegate not specified");
 
             var exchangeQueue = new ExchangeQueue
             {
@@ -150,7 +149,7 @@ namespace NetFusion.RabbitMQ.Core
         {
             if (this.Queues.Any(q => q.RouteKeys == null || q.RouteKeys.Empty()))
             {
-                throw new InvalidOperationException(
+                throw new BrokerException(
                     $"For this type of exchange, all queues must have a route specified. " +
                     $"Exchange Type: {this.GetType()}.");
             }
@@ -197,7 +196,7 @@ namespace NetFusion.RabbitMQ.Core
             string contentType = message.GetContentType();
             if (contentType == null)
             {
-                throw new InvalidOperationException(
+                throw new BrokerException(
                     $"Content-Type not specified for message of type {message.GetType()}.");
             }
 

@@ -23,7 +23,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
     public class RpcExchangePublisherSetup
     {
         private IContainerLogger _logger;
-        private MessageBrokerConfig _brokerConfig;
+        private MessageBrokerSetup _brokerSetup;
         private IConnectionManager _connMgr;
         private ISerializationManager _serializationMgr;
 
@@ -31,12 +31,12 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         public RpcExchangePublisherSetup(
             IContainerLogger logger,
-            MessageBrokerConfig brokerConfig,
+            MessageBrokerSetup brokerSetup,
             IConnectionManager connectionManager,
             ISerializationManager serializationMgr)
         {
             _logger = logger.ForPluginContext<RpcExchangeConsumerSetup>();
-            _brokerConfig = brokerConfig;
+            _brokerSetup = brokerSetup;
             _connMgr = connectionManager;
             _serializationMgr = serializationMgr;
 
@@ -47,12 +47,14 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         /// <summary>
         /// Creates a RpcClient for each configured queue defined by other applications
-        /// servers to which messages can be published for which a response is expected.
+        /// servers to which messages can be published and a response is expected. The
+        /// external RPC queues exposed by other applications are specified within the
+        /// configuration file.
         /// </summary>
         /// <param name="brokerName">The optional broker name to create RPC client for.</param>
         public void DeclareRpcClients(string brokerName = null)
         {
-            IEnumerable<BrokerConnection> brokerConnections = _brokerConfig.Settings.Connections;
+            IEnumerable<BrokerConnection> brokerConnections = _brokerSetup.BrokerSettings.Connections;
 
             if (brokerName != null)
             {
@@ -104,7 +106,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         {
             if (!IsRpcCommand(message))
             {
-                throw new InvalidOperationException(
+                throw new BrokerException(
                     $"The message of type: {message.GetType()} is not a command " +
                     $"or is not decorated with: {typeof(RpcCommandAttribute)}.");
             }
@@ -128,7 +130,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             RpcProperties rpcProps = rpcCommandAttrib.ToRpcProps();
             RpcMessagePublisher rpcPublisher = GetRpcPublisher(rpcCommandAttrib);
 
-            string[] orderedContentTypes = new string[]{
+            string[] orderedContentTypes = {
                 message.GetContentType(),
                 rpcProps.ContentType,
                 rpcPublisher.ContentType};
@@ -187,6 +189,8 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                 return new
                 {
                     Message = message,
+                    rpcPublisher.BrokerName,
+                    rpcPublisher.RequestQueueName,
                     rpcPublisher.Client.ReplyQueueName
                 };
             });

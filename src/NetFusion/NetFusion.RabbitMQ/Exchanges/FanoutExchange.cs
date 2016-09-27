@@ -10,6 +10,7 @@ namespace NetFusion.RabbitMQ.Exchanges
     /// The route-key is not used to determine message routing.  Usually, the consumers
     /// define temporary queues and only care about current messages.
     /// <typeparam name="TMessage">The message associated with the exchange.</typeparam>
+    /// </summary>  
     public abstract class FanoutExchange<TMessage> : MessageExchange<TMessage>
         where TMessage : IMessage
     {

@@ -74,17 +74,18 @@ namespace NetFusion.RabbitMQ.Core
             });
         }
 
-        public static void SetBasicConsumer(this IModel channel,
+        public static EventingBasicConsumer GetBasicConsumer(this IModel channel,
             MessageConsumer eventConsumer)
         {
             Check.NotNull(channel, nameof(channel));
             Check.NotNull(eventConsumer, nameof(eventConsumer));
 
-            eventConsumer.Consumer = new EventingBasicConsumer(channel);
-            channel.BasicConsume(eventConsumer.QueueName, eventConsumer.QueueSettings, eventConsumer.Consumer);
+            var basicConsumer = new EventingBasicConsumer(channel);
+            channel.BasicConsume(eventConsumer.QueueName, eventConsumer.QueueSettings, basicConsumer);
+            return basicConsumer;
         }
 
-        public static EventingBasicConsumer SetBasicConsumer(this IModel channel, 
+        public static EventingBasicConsumer GetBasicConsumer(this IModel channel, 
             ExchangeQueue queue)
         {
             Check.NotNull(channel, nameof(channel));

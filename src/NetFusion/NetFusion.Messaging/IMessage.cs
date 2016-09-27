@@ -1,5 +1,4 @@
 ﻿using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
 using NetFusion.Domain.Entity;
 
 namespace NetFusion.Messaging

@@ -17,8 +17,8 @@
 
         "QueueProperties": [
           {
-            "QueueName": "Ford",
-            "RouteKeys": [ "Ford.*.*", "Mercury.*.*", "Mazda.Tribute.*" ]
+            "QueueName": "AUDI",
+            "RouteKeys": [ "Audi.A6.*.*", "Audi.A4.*.*", "Audi.A5.*.*" ]
           }
         ]
       }

@@ -14,8 +14,8 @@ namespace NetFusion.RabbitMQ.Core
         /// Initializes the message broker with the information needed to create 
         /// exchanges and queues.
         /// </summary>
-        /// <param name="brokerConfig">Setting used to configure the broker.</param>
-        void Initialize(MessageBrokerConfig brokerConfig);
+        /// <param name="brokerSetup">Setting used to configure the broker.</param>
+        void Initialize(MessageBrokerSetup brokerSetup);
 
         /// <summary>
         /// Creates the needed RabbitMq exchanges and queues based on the configurations.
@@ -24,7 +24,7 @@ namespace NetFusion.RabbitMQ.Core
 
         /// <summary>
         /// Based on consumers having handlers for messages associated with an 
-        /// exchange, invoke the corresponding handler when an message is delivered.
+        /// exchange, invokes the corresponding handler when an message is delivered.
         /// </summary>
         /// <param name="messageConsumers">List of discovered exchange message consumers.</param>
         void BindConsumers(IEnumerable<MessageConsumer> messageConsumers);

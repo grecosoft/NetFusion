@@ -4,7 +4,7 @@ namespace NetFusion.Domain.Scripting
 {
     /// <summary>
     /// Properties describing a script to be executed and the value of an entity
-    /// attribute or property containing the result of the Boolean expression.
+    /// attribute containing the result of the Boolean expression.
     /// </summary>
     public class ScriptPredicate
     {
@@ -15,8 +15,8 @@ namespace NetFusion.Domain.Scripting
         public string ScriptName { get; }
 
         /// <summary>
-        /// The entity attribute's Boolean property that determines if the message
-        /// matches the criteria required to be published to the exchange.
+        /// The entity's Boolean attribute that determines if the entity
+        /// matches the criteria of the script.
         /// </summary>
         public string AttributeName { get; }
 

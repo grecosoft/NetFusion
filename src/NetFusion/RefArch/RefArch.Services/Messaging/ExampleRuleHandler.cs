@@ -1,6 +1,6 @@
 ﻿using NetFusion.Messaging;
 using NetFusion.Messaging.Rules;
-using RefArch.Api.Messages;
+using RefArch.Api.Messaging.Messages;
 using RefArch.Services.Messaging.Rules;
 
 namespace RefArch.Services.Messaging

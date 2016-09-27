@@ -108,19 +108,19 @@ namespace NetFusion.Domain.Entity
             return _attributes.ContainsKey(name);
         }
 
-        private string GetBasePropertyName(string name)
+        private string GetBasePropertyName(string methodName)
         {
-            Check.NotNullOrWhiteSpace(name, nameof(name));
+            Check.NotNullOrWhiteSpace(methodName, nameof(methodName));
 
-            return name.Replace("Get", "").Replace("Set", "");
+            return methodName.Replace("Get", "").Replace("Set", "");
         }
 
         public void SetValue<T>(T value, Type context = null,
-            [CallerMemberName] string name = null)
+            [CallerMemberName] string methodName = null)
         {
             string prefix = context != null ? context.FullName + "-" : "";
-            name = GetBasePropertyName(name);
-            this.SetValue(prefix + name, value);
+            methodName = GetBasePropertyName(methodName);
+            this.SetValue(prefix + methodName, value);
         }
 
         public T GetValue<T>(T defaultValue, Type context = null,

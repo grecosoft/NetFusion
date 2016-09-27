@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
-using Moq;
+using NetFusion.RabbitMQ;
 using NetFusion.Tests.Infrastructure.RabbitMQ.Mocks;
-using System;
 using System.Linq;
 using Xunit;
 
@@ -48,7 +47,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ.Exchanges
         {
             var exchange = new MockDirectExchange { FirstQueueName = "FirstMockTestQueue", FirstQueueRouteKeys = new string[] { } };
 
-            Assert.Throws<InvalidOperationException>(() => exchange.Setup()).Message
+            Assert.Throws<BrokerException>(() => exchange.Setup()).Message
                 .Should().Contain("must have a route specified");
         }
 

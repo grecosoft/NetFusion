@@ -5,6 +5,7 @@ using NetFusion.Domain.Scripting;
 using NetFusion.Domain.Roslyn.Core;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace NetFusion.Domain.Roslyn.Modules
 {
@@ -30,7 +31,7 @@ namespace NetFusion.Domain.Roslyn.Modules
             IEntityScriptMetaRepository expressionRep = null;
             if (!scope.TryResolve(out expressionRep))
             {
-                throw new ContainerException(
+                throw new InvalidOperationException(
                     $"An component implementing the interface: {typeof(IEntityScriptMetaRepository)} " +
                     $"is not registered.");
             }

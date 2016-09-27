@@ -19,7 +19,7 @@ namespace NetFusion.Messaging
         public PublisherException(
             string errorMessage,
             IMessage message,
-            IEnumerable<PublisherException> publisherExceptions)
+            IEnumerable<PublisherException> publisherExceptions) : base(errorMessage)
         {
             this.PublishDetails = new Dictionary<string, object>
             {
@@ -32,7 +32,7 @@ namespace NetFusion.Messaging
         public PublisherException(
             string errorMessage,
             IEventSource eventSource,
-            IEnumerable<PublisherException> publisherExceptions)
+            IEnumerable<PublisherException> publisherExceptions) : base(errorMessage)
         {
             this.PublishDetails = new Dictionary<string, object>
             {
@@ -45,13 +45,13 @@ namespace NetFusion.Messaging
         public PublisherException(
             string errorMessage,
             IMessage message,
-            Exception innerException)
+            Exception innerException) : base(errorMessage)
         {
             this.PublishDetails = new Dictionary<string, object>
             {
                 { "ErrorMessage", errorMessage },
                 { "SentMessage", message },
-                { "InnerMessage", InnerException.Message }
+                { "InnerMessage", innerException.Message }
             };
         }
 

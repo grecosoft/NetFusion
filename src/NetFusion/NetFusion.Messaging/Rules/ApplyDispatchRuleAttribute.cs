@@ -18,8 +18,8 @@ namespace NetFusion.Messaging.Rules
         public Type[] RuleTypes { get; private set; } 
 
         /// <summary>
-        /// The type of the role that should be called to determine if 
-        /// the message handler method should be invoked.
+        /// Specifies how the list of roles should be evaluated to 
+        /// determine the final result.
         /// </summary>
         public RuleApplyTypes RuleApplyType { get; set; } = RuleApplyTypes.All;
 

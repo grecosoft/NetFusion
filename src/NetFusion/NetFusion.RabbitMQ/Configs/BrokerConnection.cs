@@ -42,6 +42,12 @@ namespace NetFusion.RabbitMQ.Configs
         // The established connection.
         internal IConnection Connection { get; set; }
 
+        public QueueProperties GetQueueProperties(string queueName)
+        {
+            QueueProperties props = this.QueueProperties.FirstOrDefault(qp => qp.QueueName == queueName);
+            return props ?? new QueueProperties { QueueName = queueName };
+        }
+
         public ObjectValidator ValidateObject()
         {
             var valResult = new ObjectValidator(this);

@@ -88,17 +88,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exchanges\ExampleRpcExchange.cs" />
+    <Compile Include="RabbitMQ\Exchanges\ExampleRpcExchange.cs" />
     <Compile Include="Manifest.cs" />
     <Compile Include="Modules\ServiceModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ExampleDirectService.cs" />
-    <Compile Include="Services\ExampleFanoutService.cs" />
-    <Compile Include="Services\ExampleRpcService.cs" />
-    <Compile Include="Services\ExampleTopicService.cs" />
-    <Compile Include="Services\ExampleWorkQueueService.cs" />
-    <Compile Include="Services\ShortMakeRole.cs" />
+    <Compile Include="RabbitMQ\Services\ExampleDirectService.cs" />
+    <Compile Include="RabbitMQ\Services\ExampleFanoutService.cs" />
+    <Compile Include="RabbitMQ\Services\ExampleRpcService.cs" />
+    <Compile Include="RabbitMQ\Services\ExampleTopicService.cs" />
+    <Compile Include="RabbitMQ\Services\ExampleWorkQueueService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

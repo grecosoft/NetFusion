@@ -18,7 +18,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
     public class ExchangePublisherSetup
     {
         private IContainerLogger _logger;
-        private MessageBrokerConfig _brokerConfig;
+        private MessageBrokerSetup _brokerSetup;
         private IConnectionManager _connMgr;
         private ISerializationManager _serializationMgr;
         private readonly IEntityScriptingService _scriptingSrv;
@@ -27,19 +27,19 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         public ExchangePublisherSetup(
             IContainerLogger logger,
-            MessageBrokerConfig brokerConfig,
+            MessageBrokerSetup brokerSetup,
             IConnectionManager connectionManager,
             ISerializationManager serializationManger,
             IEntityScriptingService scriptiongSrv)
         {
             _logger = logger.ForPluginContext<ExchangePublisherSetup>();
-            _brokerConfig = brokerConfig;
+            _brokerSetup = brokerSetup;
             _connMgr = connectionManager;
             _serializationMgr = serializationManger;
             _scriptingSrv = scriptiongSrv;
 
             // Messages can have one or more associated exchanges.
-            _messageExchanges = brokerConfig.Exchanges.ToLookup(
+            _messageExchanges = brokerSetup.Exchanges.ToLookup(
                 k => k.MessageType,
                 e => new ExchangeMessageDefinition(e, e.MessageType));
         }
@@ -109,7 +109,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
             IMessageExchange exchange = exchangeDef.Exchange;
 
-            string[] orderedContentTypes = new string[] {
+            string[] orderedContentTypes = {
                 message.GetContentType(),
                 exchange.Settings.ContentType};
 

@@ -4,8 +4,9 @@ using System;
 namespace NetFusion.RabbitMQ
 {
     /// <summary>
-    /// Exception that is thrown when there is an issue configuring or 
-    /// processing a published message.
+    /// Exception that is thrown when there is an issue configuring the
+    /// message broker or publishing and receiving messages from the
+    /// message broker.
     /// </summary>
     public class BrokerException : NetFusionException
     {

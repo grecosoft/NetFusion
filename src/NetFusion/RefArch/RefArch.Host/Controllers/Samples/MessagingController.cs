@@ -1,7 +1,7 @@
 ﻿using NetFusion.Messaging;
 using NetFusion.WebApi.Metadata;
-using RefArch.Api.Messages;
-using RefArch.Api.Models;
+using RefArch.Api.Messaging.Messages;
+using RefArch.Api.Messaging.Models;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;

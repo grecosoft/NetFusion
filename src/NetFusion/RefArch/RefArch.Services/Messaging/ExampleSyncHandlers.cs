@@ -1,5 +1,5 @@
 ﻿using NetFusion.Messaging;
-using RefArch.Api.Messages;
+using RefArch.Api.Messaging.Messages;
 using System.Threading;
 
 namespace RefArch.Services.Messaging

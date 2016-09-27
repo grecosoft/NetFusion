@@ -76,10 +76,11 @@
     <Compile Include="Core\IMessageExchange.cs" />
     <Compile Include="Core\Initialization\RpcExchangeConsumerSetup.cs" />
     <Compile Include="Core\Initialization\RpcExchangePublisherSetup.cs" />
+    <Compile Include="Core\MessageHandler.cs" />
     <Compile Include="Core\Rpc\IRpcClient.cs" />
     <Compile Include="Core\MessageBroker.cs" />
     <Compile Include="Core\MessageBrokerLog.cs" />
-    <Compile Include="Core\MessageBrokerConfig.cs" />
+    <Compile Include="Core\MessageBrokerSetup.cs" />
     <Compile Include="Core\MessageConsumer.cs" />
     <Compile Include="Core\MessageExchange.cs" />
     <Compile Include="Core\RabbitMqMessagePublisher.cs" />

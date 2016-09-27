@@ -40,8 +40,8 @@ namespace NetFusion.Domain.Entity
         /// <typeparam name="T">Sets a value that is tagged with a given scope.</typeparam>
         /// <param name="value">The value to set.</param>
         /// <param name="context">The type representing the scope associated with the value.</param>
-        /// <param name="name">The name of the attribute.  If null, the name is the calling member's name.</param>
-        void SetValue<T>(T value, Type context = null, [CallerMemberName] string name = null);
+        /// <param name="methodName">The name of the attribute.  If null, the name is the calling member's name.</param>
+        void SetValue<T>(T value, Type context = null, [CallerMemberName] string methodName = null);
 
         /// <summary>
         /// Returns a named attribute value.
@@ -73,18 +73,18 @@ namespace NetFusion.Domain.Entity
         /// <typeparam name="T">The type of the attribute.</typeparam>
         /// <param name="defaultValue">The default value to use if the attribute is not present.</param>
         /// <param name="context">The type representing the scope associated with the value.</param>
-        /// <param name="name">The name of the attribute.  If null, the name is the calling member's name.</param>
+        /// <param name="methodName">The name of the attribute.  If null, the name is the calling member's name.</param>
         /// <returns>The value cast as the specified type.</returns>
-        T GetValue<T>(T defaultValue, Type context = null, [CallerMemberName]string name = null);
+        T GetValue<T>(T defaultValue, Type context = null, [CallerMemberName]string methodName = null);
 
         /// <summary>
         /// Returns a named attributed tagged with a given scope.
         /// </summary>
         /// <typeparam name="T">The type of the attribute.</typeparam>
         /// <param name="context">The type representing the scope associated with the value.</param>
-        /// <param name="name">The name of the attribute.  If null, the name is the calling member's name.</param>
+        /// <param name="methodName">The name of the attribute.  If null, the name is the calling member's name.</param>
         /// <returns>The value cast as the specified type.</returns>
-        T GetValue<T>(Type context = null, [CallerMemberName]string name = null);
+        T GetValue<T>(Type context = null, [CallerMemberName]string methodName = null);
 
         /// <summary>
         /// Deletes an existing entity attribute.

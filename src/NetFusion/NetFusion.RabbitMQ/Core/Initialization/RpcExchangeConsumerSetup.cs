@@ -25,20 +25,20 @@ namespace NetFusion.RabbitMQ.Core.Initialization
     {
         private IContainerLogger _logger;
         private IMessagingModule _messagingModule;
-        private MessageBrokerConfig _brokerConfig;
+        private MessageBrokerSetup _brokerSetup;
         private IConnectionManager _connMgr;
         private ISerializationManager _serializationMgr;
 
         public RpcExchangeConsumerSetup(
            IContainerLogger logger,
            IMessagingModule messagingModule,
-           MessageBrokerConfig brokerConfig,
+           MessageBrokerSetup brokerSetup,
            IConnectionManager connectionManager,
            ISerializationManager serializationManger)
         {
             _logger = logger.ForPluginContext<ExchangePublisherSetup>();
             _messagingModule = messagingModule;
-            _brokerConfig = brokerConfig;
+            _brokerSetup = brokerSetup;
             _connMgr = connectionManager;
             _serializationMgr = serializationManger;
         }
@@ -50,7 +50,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// </summary>
         public void BindConsumersToRpcQueues()
         {
-            var rpcConsumers = _brokerConfig.Exchanges
+            var rpcConsumers = _brokerSetup.Exchanges
                 .Where(e => e.Settings.IsConsumerExchange)
                 .SelectMany(e => e.Queues,
                     (e, q) => new {
@@ -61,12 +61,12 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             foreach (var rpcConsumer in rpcConsumers)
             {
                 IModel consumerChannel = _connMgr.CreateChannel(rpcConsumer.BrokerName);
-                EventingBasicConsumer consumer = consumerChannel.SetBasicConsumer(rpcConsumer.RpcQueue);
-                AttachRpcConsumerHandler(consumerChannel, consumer);
+                EventingBasicConsumer consumer = consumerChannel.GetBasicConsumer(rpcConsumer.RpcQueue);
+                AttachRpcConsumerHandler(consumer);
             }
         }
 
-        private void AttachRpcConsumerHandler(IModel channel, EventingBasicConsumer consumer)
+        private void AttachRpcConsumerHandler(EventingBasicConsumer consumer)
         {
             consumer.Received += (sender, deliveryEvent) => {
 
@@ -82,7 +82,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
             // Determine the command type based on the type name stored in basic properties.
             string typeName = deleveryEvent.BasicProperties.Type;
-            Type commandType = _brokerConfig.RpcTypes[typeName];
+            Type commandType = _brokerSetup.RpcTypes[typeName];
 
             // Dispatch the message the handler to obtain the result.
             MessageDispatchInfo dispatcher = _messagingModule.GetInProcessCommandDispatcher(commandType);
@@ -135,7 +135,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                     "The basic properties of the received RPC request does not specify the message type.");
             }
 
-            if (!_brokerConfig.RpcTypes.ContainsKey(messageType))
+            if (!_brokerSetup.RpcTypes.ContainsKey(messageType))
             {
                 throw new BrokerException(
                     $"The type associated with the message type name: {messageType} could not be resolved.");

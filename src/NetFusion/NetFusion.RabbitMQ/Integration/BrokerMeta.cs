@@ -7,9 +7,9 @@ namespace NetFusion.RabbitMQ.Integration
     /// corresponding queues that were defined by publishers.  In the
     /// case of a node failure, in a RabbitMQ cluster, the client that
     /// handles the exception must reestablish the exchanges and queues
-    /// on the new node.  Since producers and consumers are will often
-    /// not be defined within the same application, this meta-data is
-    /// stored externally.
+    /// on the new node.  Since producers and consumers will often not 
+    /// be defined within the same application, this meta-data is stored
+    /// externally.
     /// </summary>
     public class BrokerMeta
     {

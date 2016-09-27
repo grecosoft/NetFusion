@@ -21,7 +21,7 @@ namespace NetFusion.Domain.Scripting
         public string Name { get; }
 
         /// <summary>
-        /// The type of the entity to which the script is associated.
+        /// The fully qualified type of the entity to which the script is associated.
         /// </summary>
         public Type EntityType { get; }
 

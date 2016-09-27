@@ -25,7 +25,6 @@ namespace NetFusion.Domain.Scripting
         /// <summary>
         /// Evaluates a script against an entity.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the entity being evaluated.</typeparam>
         /// <param name="entity">The entity to have its state updated by applying the script.</param>
         /// <param name="scriptName">The optional script name to be executed.  If not specified,
         /// the script with the name 'default' is executed.  If a script name is specified, the
@@ -37,7 +36,6 @@ namespace NetFusion.Domain.Scripting
         /// Executes a specified script specified by the script-predicate against an entity
         /// to determine if the entity satisfies the predicate.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">Reference to the entity to evaluate.</param>
         /// <param name="predicate">Specifies the script and the property corresponding to 
         /// the predicate value.</param>

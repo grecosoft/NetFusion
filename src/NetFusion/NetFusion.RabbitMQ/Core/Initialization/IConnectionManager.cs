@@ -2,6 +2,10 @@
 
 namespace NetFusion.RabbitMQ.Core.Initialization
 {
+    /// <summary>
+    /// Implements the logic for connecting to the message broker and
+    /// creating channels for publishing and consumed queues.
+    /// </summary>
     public interface IConnectionManager
     {
         /// <summary>

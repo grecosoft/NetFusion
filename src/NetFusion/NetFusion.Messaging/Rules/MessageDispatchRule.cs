@@ -11,7 +11,7 @@ namespace NetFusion.Messaging.Rules
     public abstract class MessageDispatchRule<TMessage> : IMessageDispatchRule
         where TMessage : IMessage
     {
-        Type IMessageDispatchRule.EventType => typeof(TMessage);
+        Type IMessageDispatchRule.MessageType => typeof(TMessage);
 
         bool IMessageDispatchRule.IsMatch(IMessage message)
         {

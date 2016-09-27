@@ -135,7 +135,7 @@ namespace NetFusion.Domain.Roslyn.Core
 
         // A script can specify the default values that should be used for an entity's 
         // dynamic attributes.  These are only set if the entity doesn't already have
-        // the attribute from a prior evaluation.
+        // the attribute from a prior evaluation or manually specified by the caller.
         private void SetDefaultAttributeValues(EntityScript script, object entity)
         {
             var attributedEntity = entity as IAttributedEntity;

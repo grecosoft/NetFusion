@@ -46,8 +46,7 @@ namespace NetFusion.Messaging.Core
         public MethodInfo MessageHandlerMethod { get; set; }
 
         /// <summary>
-        /// Indicates that the handler is an asynchronous method.  This is used
-        /// when dispatching message handlers when an message is published.
+        /// Indicates that the handler is an asynchronous method.
         /// </summary>
         public bool IsAsync { get; set; }
 
@@ -92,7 +91,10 @@ namespace NetFusion.Messaging.Core
         public MulticastDelegate Invoker { get; set; }
 
         /// <summary>
-        /// Dispatches a message to the specified consumer.
+        /// Dispatches a message to the specified consumer.  The implementation
+        /// normalizes the calling of synchronous and asynchronous message handlers.
+        /// This allows the method handler to be refactored to one or the other 
+        /// without having to change any of the calling code.
         /// </summary>
         /// <param name="message">The message to be dispatched.</param>
         /// <param name="consumer">Instance of the consumer to have message dispatched.</param>

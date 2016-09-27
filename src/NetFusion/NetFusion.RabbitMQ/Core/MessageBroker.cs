@@ -44,7 +44,7 @@ namespace NetFusion.RabbitMQ.Core
             _scriptingSrv = scriptingSrv;
         }
 
-        private MessageBrokerConfig _brokerConfig;
+        private MessageBrokerSetup _brokerSetup;
         private IEnumerable<MessageConsumer> _messageConsumers;
 
         private IConnectionManager _connMgr;
@@ -54,17 +54,17 @@ namespace NetFusion.RabbitMQ.Core
         private RpcExchangePublisherSetup _rpcExchangePublisher;
         private RpcExchangeConsumerSetup _rpcExchangeConsumer;
 
-        public void Initialize(MessageBrokerConfig brokerConfig)
+        public void Initialize(MessageBrokerSetup brokerSetup)
         {
-            Check.NotNull(brokerConfig, nameof(brokerConfig));
-            Check.NotNull(brokerConfig.ConnectionMgr, nameof(brokerConfig.ConnectionMgr));
-            Check.NotNull(brokerConfig.SerializationMgr, nameof(brokerConfig.SerializationMgr));
-            Check.NotNull(brokerConfig.Exchanges, nameof(brokerConfig.Exchanges));
+            Check.NotNull(brokerSetup, nameof(brokerSetup));
+            Check.NotNull(brokerSetup.ConnectionMgr, nameof(brokerSetup.ConnectionMgr));
+            Check.NotNull(brokerSetup.SerializationMgr, nameof(brokerSetup.SerializationMgr));
+            Check.NotNull(brokerSetup.Exchanges, nameof(brokerSetup.Exchanges));
             
-            _brokerConfig = brokerConfig;
+            _brokerSetup = brokerSetup;
 
-            _connMgr = brokerConfig.ConnectionMgr;
-            _serializationMgr = brokerConfig.SerializationMgr;
+            _connMgr = brokerSetup.ConnectionMgr;
+            _serializationMgr = brokerSetup.SerializationMgr;
 
             InitializePublishers();
             InitializeConsumers();
@@ -72,23 +72,23 @@ namespace NetFusion.RabbitMQ.Core
 
         private void InitializePublishers()
         {
-            _exchangePublisher = new ExchangePublisherSetup(_logger, _brokerConfig,
+            _exchangePublisher = new ExchangePublisherSetup(_logger, _brokerSetup,
                 _connMgr,
                 _serializationMgr,
                 _scriptingSrv);
 
-            _rpcExchangePublisher = new RpcExchangePublisherSetup(_logger, _brokerConfig,
+            _rpcExchangePublisher = new RpcExchangePublisherSetup(_logger, _brokerSetup,
                _connMgr,
                _serializationMgr);
         }
 
         private void InitializeConsumers()
         {
-            _exchangeConsumer = new ExchangeConsumerSetup(_logger, _messagingModule, _brokerConfig,
+            _exchangeConsumer = new ExchangeConsumerSetup(_logger, _messagingModule, _brokerSetup,
                 _connMgr,
                 _serializationMgr);
 
-            _rpcExchangeConsumer = new RpcExchangeConsumerSetup(_logger, _messagingModule, _brokerConfig,
+            _rpcExchangeConsumer = new RpcExchangeConsumerSetup(_logger, _messagingModule, _brokerSetup,
                 _connMgr,
                 _serializationMgr);
         }
@@ -172,17 +172,19 @@ namespace NetFusion.RabbitMQ.Core
         // handler to monitor the connection for any failures.
         private void AttachBokerMonitoringHandlers()
         {
-            IEnumerable<MessageConsumer> monitoringConsumers = _messageConsumers.GroupBy(c => c.BrokerName)
-                .Select(g => g.First())
-                .ToList();
+            //IEnumerable<MessageConsumer> monitoringConsumers = _messageConsumers.GroupBy(c => c.BrokerName)
+            //    .Select(g => g.First())
+            //    .ToList();
 
-            foreach (MessageConsumer consumer in monitoringConsumers)
-            {
-                consumer.Consumer.Shutdown += (sender, shutdownEvent) =>
-                {
-                    RestablishConnection(consumer, shutdownEvent);
-                };
-            }
+            //foreach (MessageConsumer consumer in monitoringConsumers)
+            //{
+            //    var channel = consumer.Channel
+
+            //    consumer. First().Shutdown += (sender, shutdownEvent) =>
+            //    {
+            //        RestablishConnection(consumer, shutdownEvent);
+            //    };
+            //}
         }
 
         #region Broker Reconnection

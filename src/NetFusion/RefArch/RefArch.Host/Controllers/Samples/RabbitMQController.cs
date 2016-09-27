@@ -1,12 +1,11 @@
 ﻿using NetFusion.Messaging;
-using NetFusion.WebApi.Metadata;
-using RefArch.Api.Messages.RabbitMQ;
-using RefArch.Api.Models;
-using System.Threading.Tasks;
-using System.Web.Http;
 using NetFusion.RabbitMQ;
 using NetFusion.RabbitMQ.Serialization;
-using System.Collections.Generic;
+using NetFusion.WebApi.Metadata;
+using RefArch.Api.RabbitMQ.Models;
+using RefArch.Api.RabitMQ.Messages;
+using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace RefArch.Host.Controllers.Samples
 {

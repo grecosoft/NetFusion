@@ -9,6 +9,7 @@ namespace NetFusion.RabbitMQ.Exchanges
     /// exchange, a message will be delivered to a bound queue if its route-key matches
     /// the route-key value of the published message.
     /// <typeparam name="TMessage">The message associated with the exchange.</typeparam>
+    /// </summary>
     public abstract class DirectExchange<TMessage> : MessageExchange<TMessage>
         where TMessage : IMessage
     {

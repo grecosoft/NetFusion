@@ -14,18 +14,20 @@ namespace NetFusion.RabbitMQ.Consumers
     {
         /// <summary>
         /// The broker name to which the RPC command should be published.
+        /// Corresponds to value specified in configuration.
         /// </summary>
         public string BrokerName { get; }
 
         /// <summary>
         /// The key that identifies the consumer's queue that processes RPC message commands.
+        /// Corresponds to value specified in configuration.
         /// </summary>
         public string RequestQueueKey { get; }
 
         /// <summary>
         /// Used to specify a RPC style message command's properties.
         /// </summary>
-        /// <param name="brokerName">The broker name to which the RPC command should be published.</param>
+        /// <param name="brokerName">The configuration specified broker name to which the RPC command should be published.</param>
         /// <param name="requestQueueKey">The key that identifies the consumer's queue that processes RPC message commands.</param>
         public RpcCommandAttribute(string brokerName, string requestQueueKey, string externalTypeName)
         {

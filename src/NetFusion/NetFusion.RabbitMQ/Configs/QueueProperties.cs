@@ -20,6 +20,8 @@ namespace NetFusion.RabbitMQ.Configs
 
         public IEnumerable<string> RouteKeys { get; set; }
 
+        public int NumberConsumers { get; set; } = 1;
+
         public ObjectValidator ValidateObject()
         {
             return new ObjectValidator(this);

@@ -37,11 +37,10 @@ namespace NetFusion.Messaging
 
     /// <summary>
     /// Default implementation representing a message that can have one and only one 
-    /// consumer and handler.  The handling consumer can associate a result 
-    /// after processing the message.
+    /// consumer handler.  The handling consumer can associate a result after processing 
+    /// the message.
     /// </summary>
-    /// <typeparam name="TResult">The response set by the consumer that processed
-    /// the message.</typeparam>
+    /// <typeparam name="TResult">The response type of the command.</typeparam>
     public abstract class Command<TResult> : ICommand<TResult>
     {
         private IEntityAttributes _attributes;
