@@ -24,7 +24,7 @@ namespace RefArch.Infrastructure.RabbitMQ.Exchanges
 
         protected override bool Matches(ExampleFanoutEvent message)
         {
-            return message.Make == "Toyota" && message.Year > 2014;
+            return message.Make.Equals("Toyota", System.StringComparison.OrdinalIgnoreCase) && message.Year > 2014;
         }
     }
 }

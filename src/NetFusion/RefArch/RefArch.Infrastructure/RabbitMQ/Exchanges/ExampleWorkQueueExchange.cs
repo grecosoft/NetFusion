@@ -9,8 +9,8 @@ namespace RefArch.Infrastructure.RabbitMQ.Exchanges
         {
             Settings.BrokerName = "TestBroker";
 
-            QueueDeclare("ProcessSale");
-            QueueDeclare("ProcessService");
+            QueueDeclare("PROCESS_SALE");
+            QueueDeclare("PROCESS_SERVICE");
         }
     }
 }

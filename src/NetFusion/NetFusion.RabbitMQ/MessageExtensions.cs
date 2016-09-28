@@ -1,5 +1,7 @@
-﻿using NetFusion.Messaging;
+﻿using NetFusion.Common;
+using NetFusion.Messaging;
 using System;
+using System.Linq;
 
 namespace NetFusion.RabbitMQ
 {
@@ -46,12 +48,15 @@ namespace NetFusion.RabbitMQ
 
         public static void SetRouteKey(this IMessage message, string value)
         {
-            message.Attributes.SetValue(value, Context);
+            Check.NotNullOrWhiteSpace(value, nameof(value));
+
+            message.Attributes.SetValue(value.ToUpper(), Context);
         }
 
         public static void SetRouteKey(this IMessage message, params object[] args)
         {
-            message.Attributes.SetValue(String.Join(".", args), Context);
+            string[] argValues = args.Select(a => a?.ToString()?.ToUpper()).ToArray();
+            message.Attributes.SetValue(String.Join(".", argValues), Context);
         }
 
         public static string GetRouteKey(this IMessage message)

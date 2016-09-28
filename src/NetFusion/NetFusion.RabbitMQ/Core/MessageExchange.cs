@@ -109,12 +109,26 @@ namespace NetFusion.RabbitMQ.Core
         {
             foreach (ExchangeQueue queue in this.Queues)
             {
+                AssertQueue(queue);
+
                 channel.QueueDeclare(queue.QueueName, queue.Settings);
                 if (queue.RouteKeys == null) continue;
 
                 foreach (string routeKey in queue.RouteKeys)
                 {
-                    channel.QueueBind(queue.QueueName, this.ExchangeName, routeKey);
+                    channel.QueueBind(queue.QueueName, this.ExchangeName, routeKey.ToUpper());
+                }
+            }
+        }
+
+        private void AssertQueue(ExchangeQueue queue)
+        {
+            if (queue.RouteKeys != null)
+            {
+                if (queue.RouteKeys.Any(k => k == null))
+                {
+                    throw new InvalidOperationException(
+                        $"The queue: {queue.QueueName} defined on exchange: {this.ExchangeName} has null route key values.");
                 }
             }
         }

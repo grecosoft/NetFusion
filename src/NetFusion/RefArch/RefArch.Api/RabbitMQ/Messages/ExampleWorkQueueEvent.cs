@@ -21,7 +21,7 @@ namespace RefArch.Api.RabitMQ.Messages
             this.Model = car.Model;
             this.Year = car.Year;
 
-            this.SetRouteKey(car.Make.InSet("VW", "BMW") ? "ProcessSale" : "ProcessService");
+            this.SetRouteKey(car.Make.InSet("VW", "BMW") ? "Process_Sale" : "Process_Service");
         }
 
         public DateTime CurrentDateTime { get; private set; }

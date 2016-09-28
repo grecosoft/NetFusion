@@ -3,6 +3,7 @@ using NetFusion.Common;
 using NetFusion.Domain.Scripting;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Modules;
+using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Core.Initialization;
 using NetFusion.RabbitMQ.Core.Rpc;
 using NetFusion.RabbitMQ.Integration;
@@ -103,8 +104,26 @@ namespace NetFusion.RabbitMQ.Core
         {
             if (!dispose || _disposed) return;
 
-            (_connMgr as IDisposable)?.Dispose();
+            DisposeChannels();
+            DisposeConnections();
+
             _disposed = true;
+        }
+
+        private void DisposeConnections()
+        {
+            foreach (BrokerConnection connection in _brokerSetup.BrokerSettings.Connections)
+            {
+                (connection as IDisposable)?.Dispose();
+            }
+        }
+
+        private void DisposeChannels()
+        {
+            foreach(MessageHandler handler in _messageConsumers.SelectMany(mc => mc.MessageHandlers))
+            {
+                handler.Channel?.Dispose();
+            }
         }
 
         public void ConfigureBroker()

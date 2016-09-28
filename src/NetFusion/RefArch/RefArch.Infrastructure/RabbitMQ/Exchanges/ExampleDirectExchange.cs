@@ -14,12 +14,12 @@ namespace RefArch.Infrastructure.RabbitMQ.Exchanges
 
             QueueDeclare("GENERAL-MOTORS", config =>
             {
-                config.RouteKeys = new[] { "CHEVY", "BUICK", "GMC", "CADILLAC" };
+                config.RouteKeys = new[] { "CHEVY", "Buick", "GMC", "CADILLAC" };
             });
 
             QueueDeclare("VOLKSWAGEN", config =>
             {
-                config.RouteKeys = new[] { "VW", "AUDI", "PORSCHE", "BENTLEY", "LAMBORGHINI" };
+                config.RouteKeys = new[] { "VW", "Audi", "PORSCHE", "BENTLEY", "LAMBORGHINI" };
             });
         }
     }

@@ -14,8 +14,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
     /// Encapsulates the logic for connecting to the message broker and
     /// creating channels for publishing and consumed queues.
     /// </summary>
-    public class ConnectionManager : IConnectionManager,
-        IDisposable
+    public class ConnectionManager : IConnectionManager
     {
         private readonly IContainerLogger _logger;
         private readonly BrokerSettings _brokerSettings;
@@ -178,12 +177,6 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                    $"An existing broker with the name of: {brokerConn} does not exist.");
             }
             return brokerConn;
-        }
-
-        public void Dispose()
-        {
-            //_messageConsumers.ForEach(c => c.Channel?.Dispose());
-            _connections.ForEachValue(bc => bc.Connection.Dispose());
         }
     }
 }
