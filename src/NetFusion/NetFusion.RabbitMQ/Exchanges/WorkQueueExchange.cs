@@ -27,6 +27,17 @@ namespace NetFusion.RabbitMQ.Exchanges
             QueueSettings.IsExclusive = false;
         }
 
+        // For work-queue style of exchanges, the route key on the published message
+        // is used to determine the queue to which it should be sent.  Since the route
+        // key on messages are upper-cased, the queue name will be also upper-cased.
+        protected override void OnApplyConventions()
+        {
+           foreach (ExchangeQueue queue in this.Queues)
+            {
+                queue.QueueName = queue.QueueName.ToUpper();
+            }
+        }
+
         internal override void ValidateConfiguration()
         {
             base.ValidateConfiguration();

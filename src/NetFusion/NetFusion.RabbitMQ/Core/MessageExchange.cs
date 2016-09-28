@@ -50,6 +50,7 @@ namespace NetFusion.RabbitMQ.Core
         {
             SetOptionalScriptSettings();
             OnDeclareExchange();
+            OnApplyConventions();
             ValidateConfiguration();
         }
 
@@ -70,6 +71,15 @@ namespace NetFusion.RabbitMQ.Core
         /// and optionally the queues that should be created on the exchange.
         /// </summary>
         protected abstract void OnDeclareExchange();
+
+        /// <summary>
+        /// Allows the derived specific exchange type to set any conventions
+        /// specific to its exchange type.
+        /// </summary>
+        protected virtual void OnApplyConventions()
+        {
+
+        }
 
         internal virtual void ValidateConfiguration()
         {
