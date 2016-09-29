@@ -116,10 +116,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         private void SetBasicQosProperties(MessageConsumer consumer, IModel channel)
         {
-            if (consumer.QueueSettings.PrefetchSize != null || consumer.QueueSettings.PrefetchCount != null)
-            {
-                channel.BasicQos(consumer.QueueSettings.PrefetchSize ?? 0, consumer.QueueSettings.PrefetchCount ?? 0, false);
-            }
+            channel.BasicQos(consumer.QueueSettings.PrefetchSize ?? 0, consumer.QueueSettings.PrefetchCount ?? 1, false);
         }
 
         // Process queue messages when they are received.

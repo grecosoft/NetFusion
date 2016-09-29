@@ -196,7 +196,7 @@ namespace NetFusion.RabbitMQ.Core
             Check.NotNull(messageBody, nameof(messageBody));
 
             string routeKey = message.GetRouteKey();
-            var props = GetBasicProperties(channel, message);
+            var props = GetPublisherBasicProperties(channel, message);
             if (replyToQueueName != null)
             {
                 props.ReplyTo = replyToQueueName;
@@ -212,7 +212,7 @@ namespace NetFusion.RabbitMQ.Core
         /// <param name="channel">The Channel on which the message is to be published.</param>
         /// <param name="message">The message being published.</param>
         /// <returns>Configured set of properties.</returns>
-        public IBasicProperties GetBasicProperties(IModel channel, IMessage message)
+        public IBasicProperties GetPublisherBasicProperties(IModel channel, IMessage message)
         {
             Check.NotNull(channel, nameof(channel));
             Check.NotNull(message, nameof(message));
@@ -227,12 +227,12 @@ namespace NetFusion.RabbitMQ.Core
             IBasicProperties properties = channel.CreateBasicProperties();
             properties.ContentType = contentType;
 
-            OnSetBasicProperties(channel, message, properties);
+            OnSetPublisherBasicProperties(channel, message, properties);
 
             return properties;
         }
 
-        protected virtual void OnSetBasicProperties(IModel channel, IMessage message, IBasicProperties properties)
+        protected virtual void OnSetPublisherBasicProperties(IModel channel, IMessage message, IBasicProperties properties)
         {
 
         }

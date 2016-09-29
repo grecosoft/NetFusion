@@ -31,7 +31,7 @@ namespace NetFusion.RabbitMQ.Exchanges
             ValidateRequiredRouteKey();
         }
 
-        protected override void OnSetBasicProperties(IModel channel, IMessage message, IBasicProperties properties)
+        protected override void OnSetPublisherBasicProperties(IModel channel, IMessage message, IBasicProperties properties)
         {
             // Make the message persistent.
             properties.Persistent = true;

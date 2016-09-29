@@ -48,11 +48,8 @@ namespace NetFusion.RabbitMQ.Exchanges
             }
         }
 
-        protected override void OnSetBasicProperties(IModel channel, IMessage message, IBasicProperties properties)
+        protected override void OnSetPublisherBasicProperties(IModel channel, IMessage message, IBasicProperties properties)
         {
-            // Only deliver message to consumer if no pending acknowledgments.
-            channel.BasicQos(0, 1, false);
-
             // Make the message persistent.
             properties.Persistent = true;
         }
