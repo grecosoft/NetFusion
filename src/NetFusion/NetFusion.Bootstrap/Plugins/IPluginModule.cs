@@ -88,6 +88,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// The last method called on the module by the bootstrap process.  
         /// Called after all types have been registered and the container
         /// has been created.
+        /// </summary>
         /// <param name="scope">Child scope of the created container.</param>
         void StartModule(Autofac.ILifetimeScope scope);
 

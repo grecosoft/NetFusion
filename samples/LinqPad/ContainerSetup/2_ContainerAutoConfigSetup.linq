@@ -12,6 +12,7 @@
   <Namespace>NetFusion.Settings</Namespace>
   <Namespace>NetFusion.Settings.Configs</Namespace>
   <Namespace>NetFusion.Settings.Testing</Namespace>
+  <Namespace>NetFusion.Settings.Strategies</Namespace>
 </Query>
 
 // ******************************************************************************************
@@ -73,4 +74,13 @@ public class TestSettings : AppSettings
 
 	public int Value1 { get; set; } = 100;
 	public int Value2 { get; set; } = 200;
+}
+
+public class TestSettingsInitializer : AppSettingsInitializer<TestSettings>
+{
+	protected override IAppSettings OnConfigure(TestSettings settings)
+	{
+		settings.Value1 = 300;
+		return settings;
+	}
 }

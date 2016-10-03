@@ -12,14 +12,15 @@
   <Namespace>NetFusion.Settings</Namespace>
   <Namespace>NetFusion.Settings.Configs</Namespace>
   <Namespace>NetFusion.Settings.Testing</Namespace>
+  <Namespace>NetFusion.Settings.Strategies</Namespace>
 </Query>
 
 // *****************************************************************************************
 // This example configures the container manually without automatically discovering plug-ins 
 // by searching a specified directory.  This allows for quick testing and development of new
-// plug-ins directly in LinqPad using the exact code that is executed when hosted in an actual
-// host such as WebApi.  See 2_ContainerAutoConfigSetup.linq for examples of automatically 
-// searching assemblies and LinqPad for plug-ins. 
+// plug-ins directly in LinqPad using the exact code that is executed in an actual host such 
+// as WebApi.  See 2_ContainerAutoConfigSetup.linq for examples of automatically searching
+// assemblies and LinqPad for plug-ins. 
 // *****************************************************************************************
 
 // -------------------------------------------------------------------------------------
@@ -54,6 +55,7 @@ void Main()
 	// Add plug-in specific types to the host plug-in that are
 	// defined within LinqPad.
 	hostPlugin.AddPluginType<TestSettings>();
+	hostPlugin.AddPluginType<TestSettingsInitializer>();
 	
 	// Build and start the container:
 	AppContainer.Instance
@@ -76,4 +78,13 @@ public class TestSettings : AppSettings
 
 	public int Value1 { get; set; } = 100;
 	public int Value2 { get; set; } = 200;
+}
+
+public class TestSettingsInitializer : AppSettingsInitializer<TestSettings>
+{
+	protected override IAppSettings OnConfigure(TestSettings settings)
+	{
+		settings.Value1 = 300;
+		return settings;
+	}
 }

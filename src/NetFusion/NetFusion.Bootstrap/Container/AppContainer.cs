@@ -73,7 +73,7 @@ namespace NetFusion.Bootstrap.Container
         {
             get
             {
-                ThrowIfDisposed(AppContainer._instance);
+                ThrowIfDisposed(_instance);
                 return _instance;
             }
         }
@@ -399,8 +399,8 @@ namespace NetFusion.Bootstrap.Container
             if (invalidManifestTypes.Any())
             {
                 throw LogException(new ContainerException(
-                    $"All manifest instances must have a PluginId specified.  " +
-                    $"See details for invalid manifest types.", invalidManifestTypes));
+                    "All manifest instances must have a PluginId specified.  " +
+                    "See details for invalid manifest types.", invalidManifestTypes));
             }
 
             IEnumerable<string> duplicateManifestIds = this.Registry.AllManifests
@@ -409,7 +409,7 @@ namespace NetFusion.Bootstrap.Container
             if (duplicateManifestIds.Any())
             {
                 throw LogException(new ContainerException(
-                    $"Plug-in identity values must be unique.  See details for duplicated Plug-in Ids.",
+                    "Plug-in identity values must be unique.  See details for duplicated Plug-in Ids.",
                     duplicateManifestIds));
             }
         }
@@ -423,8 +423,8 @@ namespace NetFusion.Bootstrap.Container
             if (invalidManifestTypes.Any())
             {
                 throw LogException(new ContainerException(
-                    $"All manifest instances must have AssemblyName and Names.  " +
-                    $"See details for invalid manifest types.", invalidManifestTypes));
+                    "All manifest instances must have AssemblyName and Name values.  " +
+                    "See details for invalid manifest types.", invalidManifestTypes));
             }
 
             IEnumerable<string> duplicateNames = this.Registry.AllManifests.WhereDuplicated(m => m.Name);
@@ -432,7 +432,7 @@ namespace NetFusion.Bootstrap.Container
             if (duplicateNames.Any())
             {
                 throw LogException(new ContainerException(
-                    $"Plug-in names must be unique.  See details for duplicated Plug-in names.",
+                    "Plug-in names must be unique.  See details for duplicated Plug-in names.",
                     duplicateNames));
             }
         }

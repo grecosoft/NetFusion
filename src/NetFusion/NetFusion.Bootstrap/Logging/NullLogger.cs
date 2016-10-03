@@ -70,7 +70,5 @@ namespace NetFusion.Bootstrap.Logging
         {
             AddToMessageFor("VERBOSE", message, details, ex);
         }
-
-
     }
 }

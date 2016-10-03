@@ -4,7 +4,6 @@ using NetFusion.Messaging.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace NetFusion.Messaging
 {
@@ -14,23 +13,9 @@ namespace NetFusion.Messaging
     [Serializable]
     public class MessageDispatchException : NetFusionException
     {
-        private const string DISPATCH_DETAILS_VALUE = "NetFusionDispatchDetails";
-
         public MessageDispatchException()
         {
 
-        }
-
-        public MessageDispatchException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            this.Details = (IDictionary<string, object>)info.GetValue(DISPATCH_DETAILS_VALUE, typeof(IDictionary<string, object>));
-        }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue(DISPATCH_DETAILS_VALUE, this.Details);
-            base.GetObjectData(info, context);
         }
 
         /// <summary>
