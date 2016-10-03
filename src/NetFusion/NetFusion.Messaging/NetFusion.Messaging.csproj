@@ -51,7 +51,7 @@
     <Compile Include="Core\MessagePublisherTask.cs" />
     <Compile Include="Core\MessagingExtensions.cs" />
     <Compile Include="Core\MessagingService.cs" />
-    <Compile Include="DispatchException.cs" />
+    <Compile Include="MessageDispatchException.cs" />
     <Compile Include="DomainEvent.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="IDomainEvent.cs" />

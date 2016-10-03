@@ -141,12 +141,22 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             byte[] messageBody = _serializationMgr.Serialize(command, orderedContentTypes);
 
             rpcProps.ContentType = command.GetContentType();
-            byte[] replyBody = await rpcPublisher.Client.Invoke(command, rpcProps, messageBody);
+            byte[] replyBody = null;
 
-            object reply = _serializationMgr.Deserialize(rpcProps.ContentType, command.ResultType, replyBody);
-            command.SetResult(reply);
+            try
+            {
+                replyBody = await rpcPublisher.Client.Invoke(command, rpcProps, messageBody);
 
-            LogReceivedRpcResponse(message, rpcPublisher);
+                object reply = _serializationMgr.Deserialize(rpcProps.ContentType, command.ResultType, replyBody);
+                command.SetResult(reply);
+                LogReceivedRpcResponse(message, rpcPublisher);
+            } 
+            catch (RpcReplyException ex)
+            {
+                var dispatchEx = (MessageDispatchException)_serializationMgr.Deserialize(rpcProps.ContentType, typeof(MessageDispatchException), ex.Exception);
+                _logger.Error("RPC Exception Reply.", dispatchEx);
+                throw dispatchEx;
+            }
         }
 
         private RpcMessagePublisher GetRpcPublisher(RpcCommandAttribute consumerAttrib)

@@ -5,7 +5,8 @@ using System.Collections.Generic;
 namespace NetFusion.Messaging
 {
     /// <summary>
-    /// Base domain-event that can be published.
+    /// Base domain-event that can be published to notify application
+    /// component consumers of an occurrence.
     /// </summary>
     [Serializable]
     public abstract class DomainEvent : IDomainEvent
@@ -17,8 +18,14 @@ namespace NetFusion.Messaging
             _attributes = new EntityAttributes();
         }
 
+        /// <summary>
+        /// Dynamic message attributes.
+        /// </summary>
         public IEntityAttributes Attributes => _attributes;
 
+        /// <summary>
+        /// Dynamic message attribute values.
+        /// </summary>
         public IDictionary<string, object> AttributeValues
         {
             get { return _attributes.GetValues(); }

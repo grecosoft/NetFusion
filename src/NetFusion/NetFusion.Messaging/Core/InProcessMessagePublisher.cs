@@ -5,18 +5,13 @@ using NetFusion.Messaging.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace NetFusion.Messaging.Core
 {
     /// <summary>
     /// This is the default message publisher that dispatches messages locally
-    /// to message handlers.  When following DDD concepts, messages are typically
-    /// published in-process and handled synchronously and/or asynchronously.  
-    /// 
-    /// However, this can be extended by other plug-ins publishers such as the 
-    /// RabbitMQ plug-in.
+    /// to message handlers contained within the current application process.
     /// </summary>
     public class InProcessMessagePublisher : MessagePublisher
     {
@@ -78,10 +73,14 @@ namespace NetFusion.Messaging.Core
                     {
                         throw new MessageDispatchException(
                             "An exception was received when dispatching a message to " +
-                            "one or more asynchronous handlers.",
+                            "one or more handlers.",
                             message,
                             dispatchErrors);
                     }
+
+                    throw new MessageDispatchException(
+                        "An exception was received when dispatching a message.",
+                        message, ex);
                 }
 
                 throw new MessageDispatchException(
@@ -126,17 +125,16 @@ namespace NetFusion.Messaging.Core
             foreach (DispatchTask dispatchedTask in dispatchTaskErrors)
             {
                 var sourceEx = dispatchedTask.Task.Exception.InnerException;
-                var invokeEx = sourceEx as TargetInvocationException;
+                var dispatchEx = sourceEx as MessageDispatchException;
 
-                if (invokeEx != null)
+                if (dispatchEx != null)
                 {
-                    dispatchErrors.Add(new MessageDispatchException(
-                        "Error calling message consumer.", dispatchedTask.Dispatch, invokeEx.InnerException));
+                    dispatchErrors.Add(dispatchEx);
                 }
                 else
                 {
                     dispatchErrors.Add(new MessageDispatchException(
-                        "Error calling message consumer", dispatchedTask.Dispatch, sourceEx));
+                        "Error calling message consumer.", dispatchedTask.Dispatch, sourceEx));
                 }
             }
 
@@ -145,7 +143,7 @@ namespace NetFusion.Messaging.Core
 
         private void LogMessageDespatchInfo(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
         {
-            if (!_logger.IsDebugLevel)
+            if (!_logger.IsVerboseLevel)
             {
                 return;
             }
@@ -157,7 +155,7 @@ namespace NetFusion.Messaging.Core
             })
             .ToList();
 
-            _logger.Debug($"Message Published: {message.GetType()}",
+            _logger.Verbose($"Message Published: {message.GetType()}",
                 new
                 {
                     Message = message,

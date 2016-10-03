@@ -9,8 +9,11 @@ using System.Threading.Tasks;
 namespace NetFusion.Messaging.Core
 {
     /// <summary>
-    /// Contains information used to invoke message handlers for a given message at runtime.
-    /// This information is gathered by the plug-in module during the bootstrap process.
+    /// Contains information used to invoke message handlers for a given message type at runtime.
+    /// This information is gathered by the plug-in module during the bootstrap process.  Other
+    /// plug-ins requiring the publishing of messages (i.e. NetFusion.RabbitMQ) can also access 
+    /// this information.  Other plug-ins can use metadata attributes specific to their plug-in 
+    /// to filter the consumer handlers that should be invoked.
     /// </summary>
     public class MessageDispatchInfo
     {
@@ -58,6 +61,13 @@ namespace NetFusion.Messaging.Core
         public bool IsInProcessHandler { get; set; }
 
         /// <summary>
+        /// Delegate used to invoke the message handler.  This is created from the
+        /// reflected information and provides near statically compiled execution
+        /// performance.
+        /// </summary>
+        public MulticastDelegate Invoker { get; set; }
+
+        /// <summary>
         /// The type of the dispatch rules associated with the message handler.
         /// These are simple predicates based on the properties of the message
         /// that determines if the message handler should be invoked.
@@ -84,16 +94,27 @@ namespace NetFusion.Messaging.Core
         public ScriptPredicate Predicate { get; set; }
 
         /// <summary>
-        /// Delegate used to invoke the message handler.  This is created from the
-        /// reflected information and provides near statically compiled execution
-        /// performance.
+        /// Determines if the message handler applies based on the assigned dispatcher
+        /// rules and the dispatcher rule type.  
         /// </summary>
-        public MulticastDelegate Invoker { get; set; }
+        /// <param name="message">The message</param>
+        /// <returns>Returns True if the event handler should be called.</returns>
+        public bool IsMatch(IMessage message)
+        {
+            if (!this.DispatchRuleTypes.Any()) return true;
+
+            if (this.RuleApplyType == RuleApplyTypes.All)
+            {
+                return this.DispatchRules.All(r => r.IsMatch(message));
+            }
+
+            return this.DispatchRules.Any(r => r.IsMatch(message));
+        }
 
         /// <summary>
         /// Dispatches a message to the specified consumer.  The implementation
-        /// normalizes the calling of synchronous and asynchronous message handlers.
-        /// This allows the method handler to be refactored to one or the other 
+        /// normalizes the calling for synchronous and asynchronous message handlers.
+        /// This allows the method handler to be re-factored to one or the other 
         /// without having to change any of the calling code.
         /// </summary>
         /// <param name="message">The message to be dispatched.</param>
@@ -106,19 +127,38 @@ namespace NetFusion.Messaging.Core
 
             var futureResult = new TaskCompletionSource<object>();
 
-            if (this.IsAsync)
+            try
             {
-                var asyncResult = (Task)this.Invoker.DynamicInvoke(consumer, message);
-                await asyncResult;
+                if (this.IsAsync)
+                {
+                    var asyncResult = (Task)this.Invoker.DynamicInvoke(consumer, message);
+                    await asyncResult;
 
-                object result = ProcessResult(message, asyncResult);
-                futureResult.SetResult(result);
+                    object result = ProcessResult(message, asyncResult);
+                    futureResult.SetResult(result);
+                }
+                else
+                {
+                    object syncResult = this.Invoker.DynamicInvoke(consumer, message);
+                    object result = ProcessResult(message, syncResult);
+                    futureResult.SetResult(result);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                object syncResult = this.Invoker.DynamicInvoke(consumer, message);
-                object result = ProcessResult(message, syncResult);
-                futureResult.SetResult(result);
+                var invokeEx = ex as TargetInvocationException;
+                var sourceEx = ex;
+
+                if (invokeEx != null)
+                {
+                    sourceEx = invokeEx.InnerException;
+                }
+
+                var dispatchEx = new MessageDispatchException("Exception Dispatching Message.", this, 
+                    message,
+                    sourceEx);      
+                          
+                futureResult.SetException(dispatchEx);
             }
 
             return await futureResult.Task;
@@ -141,24 +181,6 @@ namespace NetFusion.Messaging.Core
             }
 
             return resultValue; 
-        }
-
-        /// <summary>
-        /// Determines if the message handler applies based on the assigned dispatcher
-        /// rules and the dispatcher rule type.  
-        /// </summary>
-        /// <param name="message">The message</param>
-        /// <returns>Returns True if the event handler should be called.</returns>
-        public bool IsMatch(IMessage message)
-        {
-            if (!this.DispatchRuleTypes.Any()) return true;
-
-            if (this.RuleApplyType == RuleApplyTypes.All)
-            {
-                return this.DispatchRules.All(r => r.IsMatch(message));
-            }
-
-            return this.DispatchRules.Any(r => r.IsMatch(message));
         }
     }
 }

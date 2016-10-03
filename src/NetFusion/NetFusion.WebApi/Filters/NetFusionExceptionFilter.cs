@@ -1,6 +1,7 @@
 ﻿using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Exceptions;
+using NetFusion.Common.Extensions;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -25,7 +26,15 @@ namespace NetFusion.WebApi.Filters
             var netFusionEx = actionExecutedContext.Exception as NetFusionException;
             if (netFusionEx != null && logger.IsDebugLevel)
             {
-                SetResponseAndLog(actionExecutedContext, netFusionEx.Message, 
+                var errContent = new
+                {
+                    netFusionEx.Message,
+                    Details = netFusionEx.Details
+                };
+
+                var errMessage = errContent.ToIndentedJson();
+
+                SetResponseAndLog(actionExecutedContext, errMessage, 
                     HttpStatusCode.InternalServerError);
                 return;
             }

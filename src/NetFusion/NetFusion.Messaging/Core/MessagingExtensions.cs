@@ -78,18 +78,23 @@ namespace NetFusion.Messaging.Core
         }
 
         // Creates a delegate representing a reflected MethodInfo for the consumer's
-        // message handler.  This make the call almost as fast as a direct call.
+        // message handler.  This makes the call as fast as a static call.
         private static MulticastDelegate GetMethodDispatch(MethodInfo methodInfo)
         {
-            var paramTypes = new List<Type>
+            var paramTypes = new Type[]
             {
                 methodInfo.DeclaringType,                           // Consumer Type
                 methodInfo.GetParameters().First().ParameterType,   // Message Type
                 methodInfo.ReturnType                               // Optional return type
             };
 
-            var dispatchType = Expression.GetDelegateType(paramTypes.ToArray());
+            var dispatchType = Expression.GetDelegateType(paramTypes);
             return (MulticastDelegate)methodInfo.CreateDelegate(dispatchType);
+        }
+
+        private static bool IsInProcessHandler(MethodInfo methodInfo)
+        {
+            return methodInfo.HasAttribute<InProcessHandlerAttribute>();
         }
 
         private static bool IsAsyncDispatch(MethodInfo methodInfo)
@@ -107,11 +112,6 @@ namespace NetFusion.Messaging.Core
             return methodInfo.GetCustomAttribute<ApplyDispatchRuleAttribute>()?.RuleTypes ?? new Type[] { };
         }
 
-        private static bool IsInProcessHandler(MethodInfo methodInfo)
-        {
-            return methodInfo.HasAttribute<InProcessHandlerAttribute>();
-        }
-
         private static RuleApplyTypes GetOptionalRuleApplyType(MethodInfo methodInfo)
         {
             return methodInfo.GetCustomAttribute<ApplyDispatchRuleAttribute>()?.RuleApplyType ?? RuleApplyTypes.All;
@@ -119,22 +119,22 @@ namespace NetFusion.Messaging.Core
 
         /// <summary>
         /// Given a lookup of message dispatch information keyed by message type,
-        /// finds the event handlers that should be called to handle the event.
+        /// finds the message dispatchers that should be called to handle the message.
         /// </summary>
-        /// <param name="messageTypeHandlers">Lookup of message handlers.</param>
+        /// <param name="messageDispatchers">Lookup of message dispatchers.</param>
         /// <param name="messageType">The message type being published.</param>
-        /// <returns>List dispatch information for the handlers that should be
-        /// invoked for the message.</returns>
+        /// <returns>List dispatchers for the handlers that should be invoked for 
+        /// the message.</returns>
         public static IEnumerable<MessageDispatchInfo> WhereHandlerForMessage(
-            this ILookup<Type, MessageDispatchInfo> messageTypeHandlers, 
+            this ILookup<Type, MessageDispatchInfo> messageDispatchers, 
             Type messageType)
         {
-            Check.NotNull(messageTypeHandlers, nameof(messageTypeHandlers));
+            Check.NotNull(messageDispatchers, nameof(messageDispatchers));
             Check.NotNull(messageType, nameof(messageType));
 
             // A handler method defined for the message type will be invoked.
             // Message handlers for base message types will be included if specified. 
-            return messageTypeHandlers
+            return messageDispatchers
                 .Where(di => di.Key.IsAssignableFrom(messageType))
                 .SelectMany(di => di)
                 .Where(di =>  

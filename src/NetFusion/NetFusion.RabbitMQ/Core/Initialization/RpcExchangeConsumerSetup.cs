@@ -76,22 +76,35 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             };
         }
 
-        private void RpcConsumerReplyReceived(BasicDeliverEventArgs deleveryEvent)
+        private void RpcConsumerReplyReceived(BasicDeliverEventArgs deliveryEvent)
         {
-            ValidateRpcReply(deleveryEvent);
+            ValidateRpcReply(deliveryEvent);
 
             // Determine the command type based on the type name stored in basic properties.
-            string typeName = deleveryEvent.BasicProperties.Type;
+            string typeName = deliveryEvent.BasicProperties.Type;
             Type commandType = _brokerSetup.RpcTypes[typeName];
 
             // Dispatch the message the handler to obtain the result.
             MessageDispatchInfo dispatcher = _messagingModule.GetInProcessCommandDispatcher(commandType);
-            IMessage message = _serializationMgr.Deserialize(commandType, deleveryEvent);
-            object result = _messagingModule.InvokeDispatcherAsync(dispatcher, message).Result;
+            IMessage message = _serializationMgr.Deserialize(commandType, deliveryEvent);
+            object result = null;
 
-            // Publish the reply back to the publisher that made the request on the
-            // queue specified by them.
-            PublishConsumerReply(result, deleveryEvent.BasicProperties);
+            try
+            {
+                result = _messagingModule.InvokeDispatcherAsync(dispatcher, message).Result;
+
+                // Publish the reply back to the publisher that made the request on the
+                // queue specified by them.
+                PublishConsumerReply(result, deliveryEvent.BasicProperties);
+            }
+            catch(AggregateException ex)
+            {
+                PublishConsumerExceptionReply(ex.InnerException, deliveryEvent.BasicProperties);
+            }
+            catch(Exception ex)
+            {
+                PublishConsumerExceptionReply(ex, deliveryEvent.BasicProperties);
+            }  
         }
 
         private void PublishConsumerReply(object response, IBasicProperties requestProps)
@@ -106,6 +119,34 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                 replyProps.CorrelationId = requestProps.CorrelationId;
 
                 IBasicProperties replyprops = replychannel.CreateBasicProperties();
+
+                replychannel.BasicPublish(exchange: "",
+                    routingKey: requestProps.ReplyTo,
+                    basicProperties: replyProps,
+                    body: replyBody);
+            }
+        }
+
+        private void PublishConsumerExceptionReply(Exception ex, IBasicProperties requestProps)
+        {
+            var dispatchEx = ex as MessageDispatchException;
+            if (ex == null)
+            {
+                dispatchEx = new MessageDispatchException("", ex);
+            }
+
+            byte[] replyBody = _serializationMgr.Serialize(dispatchEx, requestProps.ContentType);
+            string brokerName = GetBrokerName(requestProps);
+
+            using (var replychannel = _connMgr.CreateChannel(brokerName))
+            {
+                IBasicProperties replyProps = replychannel.CreateBasicProperties();
+                replyProps.ContentType = requestProps.ContentType;
+                replyProps.CorrelationId = requestProps.CorrelationId;
+                replyProps.Headers = new Dictionary<string, object> { { "IsRpcReplyException", true } };
+             
+                IBasicProperties replyprops = replychannel.CreateBasicProperties();
+
                 replychannel.BasicPublish(exchange: "",
                     routingKey: requestProps.ReplyTo,
                     basicProperties: replyProps,

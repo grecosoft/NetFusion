@@ -40,6 +40,14 @@ namespace NetFusion.RabbitMQ.Core.Rpc
             _futureResult.SetResult(result);
         }
 
+        public void SetException(byte[] result)
+        {
+            Check.NotNull(result, nameof(result));
+
+            UnRegister();
+            _futureResult.SetException(new RpcReplyException(result));
+        }
+
         // Cancels the task and unregisters from cancellation token.
         public void Cancel()
         {

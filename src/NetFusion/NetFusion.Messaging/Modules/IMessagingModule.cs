@@ -20,13 +20,13 @@ namespace NetFusion.Messaging.Modules
 
         /// <summary>
         /// A lookup by message type used to find the dispatch information for all
-        /// consumer message handlers that should  be invoked for a given type of message.
+        /// consumer message handlers that should  be invoked for a given message.
         /// </summary>
         ILookup<Type, MessageDispatchInfo> AllMessageTypeDispatchers { get; }
 
         /// <summary>
-        /// A lookup by message types used to find the dispatch information for all
-        /// consumer message handlers that should  be invoked for a given type of message
+        /// A lookup by message type used to find the dispatch information for all
+        /// consumer message handlers that should  be invoked for a given message
         /// marked with the InProcessHandler attribute.
         /// </summary>
         ILookup<Type, MessageDispatchInfo> InProcessDispatchers { get; }
@@ -37,7 +37,7 @@ namespace NetFusion.Messaging.Modules
         /// <param name="commandType">The type of the command to find associated dispatcher.</param>
         /// <returns>Command message dispatcher metadata information.</returns>
         /// <exception cref="InvalidOperationException">Exception if one and only one dispatcher
-        /// can't be found the specified command.</exception>
+        /// can't be found for the specified command.</exception>
         MessageDispatchInfo GetInProcessCommandDispatcher(Type commandType);
 
         /// <summary>
@@ -45,29 +45,13 @@ namespace NetFusion.Messaging.Modules
         /// </summary>
         /// <param name="dispatcher">The dispatcher containing information on how the message
         /// is to be dispatched.</param>
-        /// <param name="message">The message to dispatch to the consumer.</param>
+        /// <param name="message">The command to dispatch to the consumer.</param>
         /// <returns>The result from the consumer.  If the message is a command and the response
-        /// is assignable to it response type, it is automatically set on the command.</returns>
+        /// is assignable to its response type, it is automatically set on the command.</returns>
         /// <exception cref="InvalidOperationException">Exception if the type of message is not
         /// is not the same type associated with the dispatcher.
         /// </exception>
         Task<object> InvokeDispatcherAsync(MessageDispatchInfo dispatcher, IMessage message);
-
-
-        /// <summary>
-        /// Invokes the consumer with the message defined by the dispatcher instance.
-        /// </summary>
-        /// <typeparam name="T">The type of the command's response.</typeparam>
-        /// <param name="dispatcher">The dispatcher containing information on how the
-        /// message is to be dispatched.</param>
-        /// <param name="message">The message to dispatch to the consumer.</param>
-        /// <returns>The result from the consumer.  If the message is a command and the response
-        /// is assignable to it response type, it is automatically set on the command.</returns>
-        /// <exception cref="InvalidOperationException">Exception if the type of message is not
-        /// is not the same type associated with the dispatcher.
-        /// </exception>
-        Task<T> InvokeDispatcherAsync<T>(MessageDispatchInfo dispatcher, IMessage message)
-           where T : class;
 
     }
 }

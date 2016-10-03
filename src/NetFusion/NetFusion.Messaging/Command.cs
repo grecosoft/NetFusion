@@ -6,12 +6,16 @@ namespace NetFusion.Messaging
 {
     /// <summary>
     /// Default implementation representing message that can have one and only
-    /// one consumer and handler.  The handling consumer can associate a 
-    /// result after processing the message.
+    /// one consumer handler.  The handling consumer can associate a result after
+    /// processing the message.
     /// </summary>
     public abstract class Command : ICommand
     {
         private IEntityAttributes _attributes;
+
+        /// <summary>
+        /// The optional result of executing the command.
+        /// </summary>
         public object Result { get; set; }
 
         public Command()
@@ -19,15 +23,21 @@ namespace NetFusion.Messaging
             _attributes = new EntityAttributes();
         }
 
+        /// <summary>
+        /// Dynamic message attributes.
+        /// </summary>
         public IEntityAttributes Attributes => _attributes;
 
+        /// <summary>
+        /// Dynamic message attribute values.
+        /// </summary>
         public IDictionary<string, object> AttributeValues
         {
             get { return _attributes.GetValues(); }
             set { _attributes.SetValues(value); }
         }
 
-        public Type ResultType => null;
+        Type ICommand.ResultType => null;
 
         void ICommand.SetResult(object result)
         {
@@ -44,6 +54,10 @@ namespace NetFusion.Messaging
     public abstract class Command<TResult> : ICommand<TResult>
     {
         private IEntityAttributes _attributes;
+
+        /// <summary>
+        /// The result of executing the command.
+        /// </summary>
         public TResult Result { get; set; }
 
         public Command()
@@ -51,8 +65,14 @@ namespace NetFusion.Messaging
             _attributes = new EntityAttributes();
         }
 
+        /// <summary>
+        /// Dynamic message attributes.
+        /// </summary>
         public IEntityAttributes Attributes => _attributes;
 
+        /// <summary>
+        /// Dynamic message attribute values.
+        /// </summary>
         public IDictionary<string, object> AttributeValues
         {
             get { return _attributes.GetValues(); }

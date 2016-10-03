@@ -9,6 +9,9 @@ namespace NetFusion.Messaging
     /// </summary>
     public interface IEventSource
     {
-       IEnumerable<IDomainEvent> DomainEvents { get; }
+        /// <summary>
+        /// The domain events associated with the entity.
+        /// </summary>
+        IEnumerable<IDomainEvent> DomainEvents { get; }
     }
 } 

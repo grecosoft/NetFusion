@@ -137,19 +137,20 @@ namespace NetFusion.Messaging.Modules
         private void AssertDispatchRules(MessageDispatchInfo[] allDispatchers)
         {
             var invalidEvtHandlers = allDispatchers
-                .Where(ed => ed.DispatchRules.Any(
-                    dr => !ed.MessageType.IsDerivedFrom(dr.MessageType)))
-                .Select(ed => new {
-                    ed.MessageType,
-                    ed.ConsumerType,
-                    ed.MessageHandlerMethod.Name
+                .Where(d => d.DispatchRules.Any(
+                    dr => !d.MessageType.IsDerivedFrom(dr.MessageType)))
+                .Select(d => new {
+                    d.MessageType,
+                    d.ConsumerType,
+                    d.MessageHandlerMethod.Name
                 });
                 
             if (invalidEvtHandlers.Any())
             {
                 throw new ContainerException(
-                    $"The following message consumers have invalid attributes applied " +
-                    $"dispatch rules", invalidEvtHandlers);
+                    "The following message consumers have invalid rule attributes applied.  " +
+                    "The handler message type and the rule message type must be assignable to each other.", 
+                    invalidEvtHandlers);
             }
         }
 
@@ -165,16 +166,14 @@ namespace NetFusion.Messaging.Modules
                     $"Message dispatcher could not be found for command type: {commandType}");
             }
 
-            if (dispatchers.Count() > 1) {
-                throw new InvalidOperationException(
-                    $"Command type: {commandType} can't have more than one dispatcher.");
-            }
-
             return dispatchers.First();
         }
 
         public async Task<object> InvokeDispatcherAsync(MessageDispatchInfo dispatcher, IMessage message)
         {
+            Check.NotNull(dispatcher, nameof(dispatcher));
+            Check.NotNull(message, nameof(message));
+
             if (!message.GetType().IsDerivedFrom(dispatcher.MessageType))
             {
                 throw new ContainerException(
@@ -192,23 +191,10 @@ namespace NetFusion.Messaging.Modules
                 }
                 catch (Exception ex)
                 {
-                    this.Context.Logger.Error(
-                        "Error Dispatching Message.", ex, 
-                        new {
-                            ConsumerType = dispatcher.ConsumerType.AssemblyQualifiedName,
-                            Handler = dispatcher.MessageHandlerMethod.Name,
-                            Message = message
-                        });
+                    this.Context.Logger.Error("Message Dispatch Error Details.", ex);
                     throw;
-
                 }
             }
-        }
-
-        public async Task<T> InvokeDispatcherAsync<T>(MessageDispatchInfo dispatcher, IMessage message)
-           where T : class
-        {
-            return (T)(await InvokeDispatcherAsync(dispatcher, message));
         }
 
         private void LogInvalidConsumers()

@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using NetFusion.Common;
-using NetFusion.Common.Exceptions;
 using NetFusion.Messaging.Modules;
 using System;
 using System.Collections.Generic;
@@ -33,44 +32,20 @@ namespace NetFusion.Messaging.Core
         public async Task PublishAsync(IDomainEvent domainEvent)
         {
             Check.NotNull(domainEvent, nameof(domainEvent), "domain event not specified");
-
-            try
-            {
-                await PublishMessageAsync(domainEvent);
-            } 
-            catch(PublisherException ex)
-            {
-                throw new NetFusionException("Error Publishing Message", ex.PublishDetails, ex);
-            }
+            await PublishMessageAsync(domainEvent);
         }
 
         public async Task PublishAsync(ICommand command)
         {
             Check.NotNull(command, nameof(command), "command not specified");
-
-            try
-            {
-                await PublishMessageAsync(command);
-            }
-            catch (PublisherException ex)
-            {
-                throw new NetFusionException("Error Publishing Message", ex.PublishDetails, ex);
-            }
+            await PublishMessageAsync(command);
         }
 
         public async Task<TResult> PublishAsync<TResult>(ICommand<TResult> command)
         {
             Check.NotNull(command, nameof(command), "command not specified");
-
-            try
-            {
-                await PublishMessageAsync(command);
-                return command.Result;
-            }
-            catch(PublisherException ex)
-            {
-                throw new NetFusionException("Error Publishing Message", ex.PublishDetails, ex);
-            }
+            await PublishMessageAsync(command);
+            return command.Result;
         }
 
         public async Task PublishAsync(IEventSource eventSource)
@@ -82,7 +57,7 @@ namespace NetFusion.Messaging.Core
             {
                 try
                 {
-                    await PublishAsync(domainEvent);
+                    await PublishMessageAsync(domainEvent);
                 }
                 catch (PublisherException ex)
                 {
@@ -97,6 +72,7 @@ namespace NetFusion.Messaging.Core
             }
         }
 
+        // Private method to which all other publish methods delegate.
         private async Task PublishMessageAsync(IMessage message)
         {
             IEnumerable<MessagePublisherTask> futureResults = null;
@@ -114,14 +90,18 @@ namespace NetFusion.Messaging.Core
                     if (publisherErrors.Any())
                     {
                         throw new PublisherException(
-                            "Exception when invoking message publisher.",
+                            "Exception when invoking message publishers.",
                             message,
                             publisherErrors);
                     }
+
+                    throw new PublisherException(
+                       "Exception when invoking message publishers.",
+                       message, ex);
                 }
 
                 throw new PublisherException(
-                    "Exception when invoking message publisher.",
+                    "Exception when invoking message publishers.",
                     message, ex);
             }
         }
@@ -139,10 +119,13 @@ namespace NetFusion.Messaging.Core
 
         private IEnumerable<PublisherException> GetPublisherErrors(IEnumerable<MessagePublisherTask> publisherTasks)
         {
+            var publisherExceptions = new List<PublisherException>();
+
             foreach (var publisherTask in publisherTasks.Where(pt => pt.Task.Exception != null))
             {
-                yield return new PublisherException(publisherTask);
+                publisherExceptions.Add(new PublisherException(publisherTask));
             }
+            return publisherExceptions;
         }
 
         // Orders the dispatcher instances based on a list of filter types

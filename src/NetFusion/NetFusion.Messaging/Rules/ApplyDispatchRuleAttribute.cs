@@ -7,13 +7,13 @@ namespace NetFusion.Messaging.Rules
 {
     /// <summary>
     /// Associates a rule with a message handler that determines if the 
-    /// handler should be called based on the message state.
+    /// handler should be called based on the message's state.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class ApplyDispatchRuleAttribute : Attribute
     {
         /// <summary>
-        /// Determines how the rules are evaluated.
+        /// The types of the rules to be tested.
         /// </summary>
         public Type[] RuleTypes { get; private set; } 
 
@@ -26,7 +26,7 @@ namespace NetFusion.Messaging.Rules
         /// <summary>
         /// Constructor used to specify the dispatch rule types.
         /// </summary>
-        /// <param name="dispatchRuleTypes">Determines how the rules are applied.</param>
+        /// <param name="dispatchRuleTypes">The types of the rules to be tested.</param>
         public ApplyDispatchRuleAttribute(params Type[] dispatchRuleTypes)
         {
             Check.NotNull(dispatchRuleTypes, nameof(dispatchRuleTypes));
@@ -38,8 +38,8 @@ namespace NetFusion.Messaging.Rules
             if (invalidRules.Any())
             {
                 throw new InvalidOperationException(
-                    $"The following are not dispatch rule types: {String.Join(", ", invalidRules)}" + 
-                    $"-dispatch rules must derive from: {typeof(IMessageDispatchRule)}.");
+                    $"The following are not dispatch rule types: {String.Join(", ", invalidRules)}.  " + 
+                    $"Dispatch rules must derive from: {typeof(IMessageDispatchRule)}.");
             } 
       
             this.RuleTypes = dispatchRuleTypes;

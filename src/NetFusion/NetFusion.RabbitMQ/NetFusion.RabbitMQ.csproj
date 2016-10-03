@@ -71,6 +71,7 @@
     <Compile Include="Consumers\QueueBindingTypes.cs" />
     <Compile Include="Consumers\QueueConsumerAttribute.cs" />
     <Compile Include="Consumers\RpcCommandAttribute.cs" />
+    <Compile Include="Core\BasicPropertiesExtensions.cs" />
     <Compile Include="Core\ChannelExtensions.cs" />
     <Compile Include="Core\ExchangeMessageDefinition.cs" />
     <Compile Include="Core\ExchangeQueue.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Core\Rpc\RpcMessagePublisher.cs" />
     <Compile Include="Core\Rpc\RpcPendingRequest.cs" />
     <Compile Include="Core\Rpc\RpcProperties.cs" />
+    <Compile Include="Core\Rpc\RpcReplyException.cs" />
     <Compile Include="Exchanges\DirectExchange.cs" />
     <Compile Include="Exchanges\ExchangeSettings.cs" />
     <Compile Include="Exchanges\FanoutExchange.cs" />

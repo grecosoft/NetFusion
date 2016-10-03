@@ -15,7 +15,7 @@ namespace NetFusion.Messaging.Core
         /// <returns>The task that will be completed when the dispatch has completed.</returns>
         public virtual Task PublishMessageAsync(IMessage message)
         {
-            return Task.FromResult(default(object));
+            return Task.CompletedTask;
         }
     }
 }

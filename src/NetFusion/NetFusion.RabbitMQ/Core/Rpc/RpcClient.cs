@@ -130,6 +130,12 @@ namespace NetFusion.RabbitMQ.Core.Rpc
 
             if (_pendingRpcRequests.TryRemove(correlationId, out pendingRequest))
             {
+                if (evt.BasicProperties.IsRpcReplyException())
+                {
+                    pendingRequest.SetException(evt.Body);
+                    return;
+                }
+
                 pendingRequest.SetResult(evt.Body);
             }
         }

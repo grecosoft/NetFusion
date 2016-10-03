@@ -18,7 +18,7 @@ namespace NetFusion.Messaging
         /// <summary>
         /// Publishes a command to all associated consumer message handlers
         /// and returns the consumer's response.</summary>
-        /// <param name="command">The event to be published.</param>
+        /// <param name="command">The command to be published.</param>
         /// <returns>Future result.</returns>
         Task<TResult> PublishAsync<TResult>(ICommand<TResult> command);
 

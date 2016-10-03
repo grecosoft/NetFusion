@@ -9,7 +9,7 @@ namespace NetFusion.Messaging
         public string Name => "Messaging Plug-in"; 
 
         public string Description =>
-             "Contains common implementation for publishing messages " + 
-             "that can be extended by other plug-ins."; 
+             "Contains common implementation for publishing messages in-process that " +
+             "can be extended by other plug-ins to publish messages out of process."; 
     }
 }

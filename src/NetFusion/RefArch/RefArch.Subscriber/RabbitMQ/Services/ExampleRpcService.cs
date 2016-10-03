@@ -9,14 +9,15 @@ namespace RefArch.Subscriber.RabbitMQ.Services
     public class ExampleRpcService : IMessageConsumer
     {
         [InProcessHandler]
-        public async Task<ExampleRpcResponse> OnRpcMessage(ExampleRpcCommand rpcCommand)
+        public ExampleRpcResponse OnRpcMessage(ExampleRpcCommand rpcCommand)
         {
             Console.WriteLine($"Delay: {rpcCommand.DelayInMs} TestValue: {rpcCommand.TestValue}");
 
-            await Task.Run(() =>
-            {
+            //await Task.Run(() =>
+            //{
+                throw new InvalidOperationException("TEST");
                 Thread.Sleep(rpcCommand.DelayInMs);
-            });
+            //});
 
             return new ExampleRpcResponse
             {

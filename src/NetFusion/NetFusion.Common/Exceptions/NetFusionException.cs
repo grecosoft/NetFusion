@@ -1,45 +1,48 @@
 ﻿using NetFusion.Common.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace NetFusion.Common.Exceptions
 {
+    [Serializable]
     public class NetFusionException : Exception
     {
-        public IEnumerable<object> Details { get; private set; }
+        public IDictionary<string, object> Details { get; protected set; }
+
+        public NetFusionException()
+        {
+
+        }
+
+        public NetFusionException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+           
+        }
 
         public NetFusionException(string message)
-            : base(FormatMessage(message))
+            : base(message)
         {
 
         }
 
         public NetFusionException(string message, Exception innerException)
-            : base(FormatMessage(message), innerException)
+            : base(message, innerException)
         {
 
         }
 
         public NetFusionException(string message, object details)
-            : base(FormatMessage(message, details))
+            : base(message)
         {
-            
+            this.Details = details.ToDictionary();
         }
 
         public NetFusionException(string message, object details, Exception innerException)
-            : base(FormatMessage(message, details), innerException)
+            : base(message, innerException)
         {
-
-        }
-
-        private static string FormatMessage(string message, object details = null)
-        {
-            return new
-            {
-                Message = message,
-                Details = details
-            
-            }.ToIndentedJson();
+            this.Details = details.ToDictionary();
         }
     }
 }
