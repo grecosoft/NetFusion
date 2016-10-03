@@ -40,6 +40,8 @@ namespace NetFusion.RabbitMQ.Core.Rpc
             _futureResult.SetResult(result);
         }
 
+        // Fail the future result with an RPC exception containing
+        // the serialized exception from the server.
         public void SetException(byte[] result)
         {
             Check.NotNull(result, nameof(result));

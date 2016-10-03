@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetFusion.Common;
+using System;
 
 namespace NetFusion.RabbitMQ.Consumers
 {
@@ -20,6 +21,8 @@ namespace NetFusion.RabbitMQ.Consumers
         /// <param name="brokerName">The name of the broker.</param>
         public BrokerAttribute(string brokerName)
         {
+            Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
+
             this.BrokerName = brokerName;
         }
     }

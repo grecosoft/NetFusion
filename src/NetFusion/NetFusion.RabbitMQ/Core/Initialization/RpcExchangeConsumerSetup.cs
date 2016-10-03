@@ -3,16 +3,16 @@ using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Modules;
+using NetFusion.RabbitMQ.Core.Rpc;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace NetFusion.RabbitMQ.Core.Initialization
-{ 
+{
     /// <summary>
     /// Encapsulates the logic for subscribing the queues on which the application 
     /// will monitor for RPC style messages.  When a message arrives on the queue, 
@@ -44,9 +44,8 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         }
 
         /// <summary>
-        /// Creates a consumer that will called when a message arrives on one 
-        /// of the RPC based queues.  This consumer will dispatch the message 
-        /// to the corresponding message handler.
+        /// Creates a consumer called when a message arrives on one of the RPC based queues.  
+        /// This consumer will dispatch the message to the corresponding message handler.
         /// </summary>
         public void BindConsumersToRpcQueues()
         {
@@ -110,21 +109,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         private void PublishConsumerReply(object response, IBasicProperties requestProps)
         {
             byte[] replyBody = _serializationMgr.Serialize(response, requestProps.ContentType);
-            string brokerName = GetBrokerName(requestProps);
-
-            using (var replychannel = _connMgr.CreateChannel(brokerName))
-            {
-                IBasicProperties replyProps = replychannel.CreateBasicProperties();
-                replyProps.ContentType = requestProps.ContentType;
-                replyProps.CorrelationId = requestProps.CorrelationId;
-
-                IBasicProperties replyprops = replychannel.CreateBasicProperties();
-
-                replychannel.BasicPublish(exchange: "",
-                    routingKey: requestProps.ReplyTo,
-                    basicProperties: replyProps,
-                    body: replyBody);
-            }
+            PublishResponseToConsumer(replyBody, requestProps);
         }
 
         private void PublishConsumerExceptionReply(Exception ex, IBasicProperties requestProps)
@@ -132,19 +117,30 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             var dispatchEx = ex as MessageDispatchException;
             if (ex == null)
             {
-                dispatchEx = new MessageDispatchException("", ex);
+                dispatchEx = new MessageDispatchException("Error dispatching RPC consumer", ex);
             }
 
+            // Serialize the exception and make it the body of the message.  Indicate to the
+            // publisher that the message body is the exception by setting message header.
             byte[] replyBody = _serializationMgr.Serialize(dispatchEx, requestProps.ContentType);
-            string brokerName = GetBrokerName(requestProps);
+            var headers = new Dictionary<string, object> { { RpcClient.RPC_HEADER_EXCEPTION_INDICATOR, true } };
+
+            PublishResponseToConsumer(replyBody, requestProps, headers);
+        }
+
+        private void PublishResponseToConsumer(byte[] replyBody, IBasicProperties requestProps, 
+            IDictionary<string, object> headers = null)
+        {
+            headers = headers ?? new Dictionary<string, object>();
+            string brokerName = requestProps.GetBrokerName();
 
             using (var replychannel = _connMgr.CreateChannel(brokerName))
             {
                 IBasicProperties replyProps = replychannel.CreateBasicProperties();
                 replyProps.ContentType = requestProps.ContentType;
                 replyProps.CorrelationId = requestProps.CorrelationId;
-                replyProps.Headers = new Dictionary<string, object> { { "IsRpcReplyException", true } };
-             
+                replyProps.Headers = headers;
+
                 IBasicProperties replyprops = replychannel.CreateBasicProperties();
 
                 replychannel.BasicPublish(exchange: "",
@@ -152,13 +148,6 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                     basicProperties: replyProps,
                     body: replyBody);
             }
-        }
-
-        private string GetBrokerName(IBasicProperties requestProps)
-        {
-            IDictionary<string, object> headers = requestProps.Headers;
-            byte[] value = (byte[])headers["broker-name"];
-            return Encoding.UTF8.GetString(value);
         }
 
         private void ValidateRpcReply(BasicDeliverEventArgs deleveryEvent)

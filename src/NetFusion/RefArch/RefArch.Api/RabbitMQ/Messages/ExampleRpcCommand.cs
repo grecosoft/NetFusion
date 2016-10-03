@@ -13,7 +13,6 @@ namespace RefArch.Api.RabitMQ.Messages
         public DateTime CurrentDateTime { get; private set; }
         public string InputValue { get; private set; }
         public int DelayInMs { get; private set; }
-        public string TestValue { get; private set; }
 
         public ExampleRpcCommand()
         {

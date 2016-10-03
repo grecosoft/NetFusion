@@ -55,5 +55,15 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// <param name="value">The data for the value.</param>
         /// <returns>Deserialized object of the specified type.</returns>
         object Deserialize(string contentType, Type valueType, byte[] value);
+
+        /// <summary>
+        /// Deserializes a byte array into the specified value type using the
+        /// specified content-type.
+        /// </summary>
+        /// <typeparam name="T">The type of the data should be deserialized into.</typeparam>
+        /// <param name="contentType">The content-type of the serialized data.</param>
+        /// <param name="value">The data for the value.</param>
+        /// <returns>Deserialized object of the specified type.</returns>
+        T Deserialize<T>(string contentType, byte[] value);
     }
 }

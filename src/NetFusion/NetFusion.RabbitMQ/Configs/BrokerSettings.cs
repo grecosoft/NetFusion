@@ -26,7 +26,7 @@ namespace NetFusion.RabbitMQ.Configs
         }
 
         /// <summary>
-        /// The number of milliseconds between attempts to reconnect to the
+        /// The number of milliseconds between attempts to reconnect to the broker.
         public int ConnectionRetryDelayMs { get; set; } = 3000;
 
         /// <summary>
@@ -35,8 +35,15 @@ namespace NetFusion.RabbitMQ.Configs
         /// </summary>
         public int NumConnectionRetries { get; set; } = 10;
 
+        /// <summary>
+        /// Returns a configured connection.
+        /// </summary>
+        /// <param name="brokerName">The name of the connection to search.</param>
+        /// <returns>The found connection configuration or an exception.</returns>
         public BrokerConnection GetConnection(string brokerName)
         {
+            Check.NotNull(brokerName, nameof(brokerName));
+
             BrokerConnection conn = this.Connections.FirstOrDefault(c => c.BrokerName == brokerName);
             
             if (conn == null)
@@ -85,16 +92,19 @@ namespace NetFusion.RabbitMQ.Configs
         private IEnumerable<QueueProperties> GetBrokerQueueProperties(string brokerName)
         {
             BrokerConnection brokerConn = this.Connections.FirstOrDefault(c => c.BrokerName == brokerName);
-            return brokerConn?.QueueProperties.Distinct() ?? new QueueProperties[] { };
+            return brokerConn?.QueueProperties ?? new QueueProperties[] { };
         }
 
+        /// <summary>
+        /// Validates the configuration object after it's state is loaded.
+        /// </summary>
+        /// <returns>The result of the validation.</returns>
         public override ObjectValidator ValidateObject()
         {
             var valResult = base.ValidateObject();
 
-            valResult.Guard(this.ConnectionRetryDelayMs > 0, 
-                "Connection Retry Delay must be Greater than 0.", 
-                ValidationLevelTypes.Error);
+            valResult.Guard(this.ConnectionRetryDelayMs > 0, "Connection Retry Delay must be Greater than 0.",  ValidationLevelTypes.Error);
+            valResult.Guard(this.NumConnectionRetries > 0, "Number Connection Retries must be Greater than 0.", ValidationLevelTypes.Error);
 
             if (valResult.IsValid)
             {

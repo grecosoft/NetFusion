@@ -43,6 +43,10 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             _rpcMessagePublishers = new List<RpcMessagePublisher>();
         }
 
+        /// <summary>
+        /// List of the configured RPC message publishers specifying the RpcClient
+        /// that should be used when publishing a message to a RPC consumer queue.
+        /// </summary>
         public IEnumerable<RpcMessagePublisher> RpcMessagePublishers => _rpcMessagePublishers;
 
         /// <summary>
@@ -68,7 +72,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                     // The channel to await for replays to published messages.
                     IModel replyChannel = _connMgr.CreateChannel(brokerConn.BrokerName);
 
-                    var rpcClient = new RpcClient(rpcConsumer, brokerConn.BrokerName, replyChannel);
+                    var rpcClient = new RpcClient(brokerConn.BrokerName, rpcConsumer, replyChannel);
                     var rpcPublisher = new RpcMessagePublisher(brokerConn.BrokerName, rpcConsumer, rpcClient);
 
                     _rpcMessagePublishers.Add(rpcPublisher);
@@ -78,6 +82,8 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         public void RemoveRpcBrokerPublishers(string brokerName)
         {
+            Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
+
             IEnumerable<RpcMessagePublisher> rpcPublishers = _rpcMessagePublishers
                 .Where(c => c.BrokerName == brokerName).ToList();
 
@@ -96,6 +102,8 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// <returns>True if a RPC style message, otherwise, false.</returns>
         public bool IsRpcCommand(IMessage message)
         {
+            Check.NotNull(message, nameof(message));
+
             Type messageType = message.GetType();
 
             return messageType.IsDerivedFrom<ICommand>()
@@ -135,11 +143,11 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                 rpcProps.ContentType,
                 rpcPublisher.ContentType};
 
+            byte[] messageBody = _serializationMgr.Serialize(command, orderedContentTypes);
+
             LogPublishedRpcMessage(message, rpcPublisher, rpcProps);
 
             // Publish the RPC request the consumer's queue and await a response.
-            byte[] messageBody = _serializationMgr.Serialize(command, orderedContentTypes);
-
             rpcProps.ContentType = command.GetContentType();
             byte[] replyBody = null;
 
@@ -153,7 +161,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             } 
             catch (RpcReplyException ex)
             {
-                var dispatchEx = (MessageDispatchException)_serializationMgr.Deserialize(rpcProps.ContentType, typeof(MessageDispatchException), ex.Exception);
+                var dispatchEx = _serializationMgr.Deserialize<MessageDispatchException>(rpcProps.ContentType, ex.Exception);
                 _logger.Error("RPC Exception Reply.", dispatchEx);
                 throw dispatchEx;
             }

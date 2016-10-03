@@ -19,6 +19,9 @@ namespace NetFusion.RabbitMQ.Core
         private string _queueName;
         private string[] _routeKeys;
 
+        /// <summary>
+        /// The dispatch information used to invoke to consumer's message handler.
+        /// </summary>
         public MessageDispatchInfo DispatchInfo { get; }
 
         public MessageConsumer(

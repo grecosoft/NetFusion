@@ -19,8 +19,7 @@ namespace NetFusion.RabbitMQ.Configs
         public string RequestQueueKey { get; set; }
 
         /// <summary>
-        /// The actual queue name defined by the consumer to which RPC
-        /// style messages will be published.
+        /// The actual queue name defined by the consumer to which RPC style messages will be published.
         /// </summary>
         [Required(AllowEmptyStrings = false, ErrorMessage = "Request Queue Name is Required")]
         public string RequestQueueName { get; set; }
@@ -37,6 +36,10 @@ namespace NetFusion.RabbitMQ.Configs
         /// </summary>
         public int CancelRequestAfterMs { get; set; } = 10000;
 
+        /// <summary>
+        /// Validates the configuration object after it's state is loaded.
+        /// </summary>
+        /// <returns>The result of the validation.</returns>
         public ObjectValidator ValidateObject()
         {
             var valResult = new ObjectValidator(this);

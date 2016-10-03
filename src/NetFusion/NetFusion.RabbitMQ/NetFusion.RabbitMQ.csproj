@@ -73,7 +73,7 @@
     <Compile Include="Consumers\RpcCommandAttribute.cs" />
     <Compile Include="Core\BasicPropertiesExtensions.cs" />
     <Compile Include="Core\ChannelExtensions.cs" />
-    <Compile Include="Core\ExchangeMessageDefinition.cs" />
+    <Compile Include="Core\MessageExchangeDefinition.cs" />
     <Compile Include="Core\ExchangeQueue.cs" />
     <Compile Include="Core\IMessageBroker.cs" />
     <Compile Include="Core\IMessageExchange.cs" />

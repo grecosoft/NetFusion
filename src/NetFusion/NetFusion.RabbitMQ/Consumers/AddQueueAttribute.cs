@@ -86,12 +86,18 @@ namespace NetFusion.RabbitMQ.Consumers
             set { this.QueueSettings.IsNoAck = value; }
         }
 
+        /// <summary>
+        /// The max size of messages the consumer should pre-fetch.
+        /// </summary>
         public uint? PrefetchSize
         {
             get { return this.QueueSettings.PrefetchSize; }
             set { this.QueueSettings.PrefetchSize = value; }
         }
 
+        /// <summary>
+        /// Number  of messages the consumer should pre-fetch.
+        /// </summary>
         public ushort? PrefetchCount
         {
             get { return this.QueueSettings.PrefetchCount; }

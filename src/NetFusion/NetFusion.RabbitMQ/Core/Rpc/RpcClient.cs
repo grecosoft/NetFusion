@@ -19,19 +19,22 @@ namespace NetFusion.RabbitMQ.Core.Rpc
     public class RpcClient : IRpcClient, IDisposable
     {
         private const string DEFAULT_EXCHANGE = "";
+        public const string RPC_BROKER_NAME = "broker-name";
+        public const string RPC_HEADER_EXCEPTION_INDICATOR = "IsRpcReplyException";
 
         private readonly string _brokerName;
-        private readonly IModel _channel;
         private readonly RpcConsumerSettings _consumerSettings;
+        private readonly IModel _channel;
         private readonly string _replyQueueName;
 
         // Correlation Value to Pending Request Mapping:
         private readonly ConcurrentDictionary<string, RpcPendingRequest> _pendingRpcRequests;
         private readonly EventingBasicConsumer _replyConsumer;
 
-        public RpcClient(RpcConsumerSettings consumerSettings, string brokerName, IModel channel)
+        public RpcClient(string brokerName, RpcConsumerSettings consumerSettings, IModel channel)
         {
-            Check.NotNull(consumerSettings, nameof(consumerSettings));
+            Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
+            Check.NotNull(consumerSettings, nameof(consumerSettings)); 
             Check.NotNull(channel, nameof(channel));
 
             _brokerName = brokerName;
@@ -39,6 +42,7 @@ namespace NetFusion.RabbitMQ.Core.Rpc
             _consumerSettings = consumerSettings;
             _replyQueueName = _channel.QueueDeclare().QueueName;
 
+            // Pending requests by correlation value.
             _pendingRpcRequests = new ConcurrentDictionary<string, RpcPendingRequest>();
             _replyConsumer = new EventingBasicConsumer(channel);
 
@@ -73,10 +77,11 @@ namespace NetFusion.RabbitMQ.Core.Rpc
             string correlationId = Guid.NewGuid().ToString();
             command.SetCorrelationId(correlationId);
 
-            // Create a future task that can be resolved in the future when the result
+            // Create a task that can be resolved in the future when the result
             // is received from the reply queue. 
             var futureResult = new TaskCompletionSource<byte[]>();
             var rpcPendingRequest = new RpcPendingRequest(futureResult, _consumerSettings.CancelRequestAfterMs);
+
             _pendingRpcRequests[correlationId] = rpcPendingRequest;
 
             IBasicProperties basicProps = GetRequestProperties(command, rpcProps);
@@ -110,7 +115,7 @@ namespace NetFusion.RabbitMQ.Core.Rpc
         {
             IBasicProperties props = _channel.CreateBasicProperties();
 
-            props.Headers = new Dictionary<string, object> { { "broker-name", _brokerName } };
+            props.Headers = new Dictionary<string, object> { { RPC_BROKER_NAME, _brokerName } };
             props.ReplyTo = _replyQueueName;
             props.CorrelationId = command.GetCorrelationId();
             props.ContentType = rpcProps.ContentType;

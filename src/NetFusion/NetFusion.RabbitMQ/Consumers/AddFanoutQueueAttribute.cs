@@ -6,7 +6,7 @@ namespace NetFusion.RabbitMQ.Consumers
     /// Attribute used to specify that a consumer's method should be invoked when 
     /// a message is published to a fan-out exchange.  This is for messages that
     /// represent a type of notification where only those received after the client
-    /// starts is necessary.  If any messages are sent while the client is off line,
+    /// starts is necessary.  Any messages are sent while the client is off line,
     /// will not be received.
     /// </summary>
     public class AddFanoutQueueAttribute : QueueConsumerAttribute

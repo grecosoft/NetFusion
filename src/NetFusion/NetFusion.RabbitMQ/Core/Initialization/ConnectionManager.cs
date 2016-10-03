@@ -58,6 +58,9 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             return settings.Connections.ToDictionary(c => c.BrokerName);
         }
 
+        /// <summary>
+        /// Creates connections to all configured brokers.
+        /// </summary>
         public void EstablishBrockerConnections()
         {
             foreach (BrokerConnection brokerConn in _connections.Values)
@@ -121,6 +124,11 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             return props;
         }
 
+        /// <summary>
+        /// Creates a new channel on the specified broker.
+        /// </summary>
+        /// <param name="brokerName">The broker to create channel.</param>
+        /// <returns>The created connection channel.</returns>
         public IModel CreateChannel(string brokerName)
         {
             Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
@@ -146,8 +154,14 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             return channel;
         }
 
+        /// <summary>
+        /// Reestablishes the connection to the broker if not open.
+        /// </summary>
+        /// <param name="brokerName">The name of the broker.</param>
         public void ReconnectToBroker(string brokerName)
         {
+            Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
+
             BrokerConnection brokerConn = GetBrokerConnection(brokerName);
           
             if (brokerConn.Connection == null || !brokerConn.Connection.IsOpen)
@@ -156,14 +170,28 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             }
         }
 
+        /// <summary>
+        /// Determines if there is currently an open connection to the broker.
+        /// </summary>
+        /// <param name="brokerName">The name of the broker.</param>
+        /// <returns>True if connection is open.  Otherwise, False.</returns>
         public bool IsBrokerConnected(string brokerName)
         {
+            Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
+
             BrokerConnection brokerConn = GetBrokerConnection(brokerName);
             return brokerConn.Connection != null && brokerConn.Connection.IsOpen;
         }
 
+        /// <summary>
+        /// Determines if the shutdown event represents one that was not expected.
+        /// </summary>
+        /// <param name="shutdownEvent">The event to test.</param>
+        /// <returns>True if unexpected.  Otherwise, False.</returns>
         public bool IsUnexpectedShutdown(ShutdownEventArgs shutdownEvent)
         {
+            Check.NotNull(shutdownEvent, nameof(shutdownEvent));
+
             return shutdownEvent.Initiator == ShutdownInitiator.Library
                 || shutdownEvent.Initiator == ShutdownInitiator.Peer;
         }

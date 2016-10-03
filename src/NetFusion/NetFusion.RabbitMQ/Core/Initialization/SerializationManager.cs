@@ -96,11 +96,21 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         public object Deserialize(string contentType, Type valueType, byte[] value)
         {
             Check.NotNullOrWhiteSpace(contentType, nameof(contentType));
-            Check.NotNull(contentType, nameof(contentType));
+            Check.NotNull(valueType, nameof(valueType));
             Check.NotNull(value, nameof(value));
 
             IBrokerSerializer serializer = GetSerializer(contentType);
             return serializer.Deserialize(value, valueType);
+        }
+
+        public T Deserialize<T>(string contentType, byte[] value)
+        {
+            Check.NotNullOrWhiteSpace(contentType, nameof(contentType));
+            Check.NotNull(value, nameof(value));
+
+            IBrokerSerializer serializer = GetSerializer(contentType);
+            return serializer.Deserialize<T>(value, typeof(T));
+
         }
 
         private IBrokerSerializer GetSerializer(string contentType)

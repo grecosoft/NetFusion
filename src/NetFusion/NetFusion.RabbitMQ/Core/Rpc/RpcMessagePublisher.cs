@@ -10,8 +10,9 @@ namespace NetFusion.RabbitMQ.Core.Rpc
     /// </summary>
     public class RpcMessagePublisher
     {
-        public IRpcClient Client { get; }
         public string BrokerName { get; }
+        public IRpcClient Client { get; }
+
         public string RequestQueueKey { get; }
         public string RequestQueueName { get; }
         public string ContentType { get; }

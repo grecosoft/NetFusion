@@ -11,7 +11,6 @@ using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace NetFusion.RabbitMQ.Core.Initialization

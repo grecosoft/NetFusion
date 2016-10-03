@@ -23,7 +23,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         private ISerializationManager _serializationMgr;
         private readonly IEntityScriptingService _scriptingSrv;
 
-        private ILookup<Type, ExchangeMessageDefinition> _messageExchanges;
+        private ILookup<Type, MessageExchangeDefinition> _messageExchanges;
 
         public ExchangePublisherSetup(
             IContainerLogger logger,
@@ -41,7 +41,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             // Messages can have one or more associated exchanges.
             _messageExchanges = brokerSetup.Exchanges.ToLookup(
                 k => k.MessageType,
-                e => new ExchangeMessageDefinition(e, e.MessageType));
+                e => new MessageExchangeDefinition(e, e.MessageType));
         }
 
         /// <summary>
@@ -50,8 +50,8 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// </summary>
         public void DeclareExchanges()
         {
-            ExchangeMessageDefinition[] exchangeDefs = GetExchangeDefinitions();
-            foreach (ExchangeMessageDefinition exDef in exchangeDefs)
+            MessageExchangeDefinition[] exchangeDefs = GetExchangeDefinitions();
+            foreach (MessageExchangeDefinition exDef in exchangeDefs)
             {
                 using (IModel channel = _connMgr.CreateChannel(exDef.Exchange.BrokerName))
                 {
@@ -60,7 +60,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             }
         }
 
-        private ExchangeMessageDefinition[] GetExchangeDefinitions()
+        private MessageExchangeDefinition[] GetExchangeDefinitions()
         {
             return _messageExchanges.Values().ToArray();
         }
@@ -89,7 +89,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             Check.NotNull(message, nameof(message));
 
             Type messageType = message.GetType();
-            IEnumerable<ExchangeMessageDefinition> exchangeDefs = _messageExchanges[messageType];
+            IEnumerable<MessageExchangeDefinition> exchangeDefs = _messageExchanges[messageType];
 
             if (exchangeDefs == null)
             {
@@ -97,13 +97,13 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                     $"The message of type: {messageType.FullName} is not associated with an exchange.");
             }
 
-            foreach (ExchangeMessageDefinition exchangeDef in exchangeDefs)
+            foreach (MessageExchangeDefinition exchangeDef in exchangeDefs)
             {
                 await Publish(exchangeDef, message);
             }
         }
 
-        private async Task Publish(ExchangeMessageDefinition exchangeDef, IMessage message)
+        private async Task Publish(MessageExchangeDefinition exchangeDef, IMessage message)
         {
             if (!await MatchesExchangeCriteria(exchangeDef, message)) return;
 
@@ -113,9 +113,9 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                 message.GetContentType(),
                 exchange.Settings.ContentType};
 
-            LogPublishingExchangeMessage(message, exchangeDef);
-
             byte[] messageBody = _serializationMgr.Serialize(message, orderedContentTypes);
+
+            LogPublishingExchangeMessage(message, exchangeDef);
 
             using (var channel = _connMgr.CreateChannel(exchange.BrokerName))
             {
@@ -127,7 +127,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         // with a predicate attribute, the corresponding externally named script is executed to 
         // determine if the message has passing criteria.  If no external script is specified,
         // the exchange's matches method is called.
-        private async Task<bool> MatchesExchangeCriteria(ExchangeMessageDefinition exchangeDef, IMessage message)
+        private async Task<bool> MatchesExchangeCriteria(MessageExchangeDefinition exchangeDef, IMessage message)
         {
             ScriptPredicate predicate = exchangeDef.Exchange.Settings.Predicate;
 
@@ -140,7 +140,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         }
 
         private void LogPublishingExchangeMessage(IMessage message,
-           ExchangeMessageDefinition exchangeDef)
+           MessageExchangeDefinition exchangeDef)
         {
             _logger.Verbose("Publishing to Exchange", () =>
             {

@@ -69,6 +69,7 @@ namespace NetFusion.RabbitMQ.Core
         /// <param name="message">The message to publish to the exchange.</param>
         /// <param name="messageBody">The message serialized based on the content-type and
         /// encoding-type specified by the message attributes.</param>
+        /// <param name="replyToQueueName">The optional reply queue name set on published message.</param>
         void Publish(IModel channel, IMessage message, byte[] messageBody,
             string replyToQueueName = null);
     }

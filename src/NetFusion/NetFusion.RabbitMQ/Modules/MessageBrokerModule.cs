@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Extensions;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
