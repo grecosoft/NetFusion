@@ -341,8 +341,8 @@ namespace NetFusion.Tests.Eventing
                 {
                     var consumer = c.Services.Resolve<MockAsyncMessageConsumer>();
                     consumer.ExecutedHandlers.Should().HaveCount(3);
-                    consumer.ExecutedHandlers.Should().Contain("OnEvent1");
-                    consumer.ExecutedHandlers.Should().Contain("OnEvent2");
+                    consumer.ExecutedHandlers.Should().Contain("OnEvent1Async");
+                    consumer.ExecutedHandlers.Should().Contain("OnEvent2Async");
                     consumer.ExecutedHandlers.Should().Contain("OnEvent3");
                 });
         }
