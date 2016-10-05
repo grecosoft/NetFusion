@@ -21,16 +21,18 @@ namespace NetFusion.RabbitMQ.Core
         // exchange/queue for processing by a consumer.  If the message is a
         // RPC style message, the request is made to the consumer's queue and
         // the response is awaited by the client.
-        public async override Task PublishMessageAsync(IMessage message)
+        public override Task PublishMessageAsync(IMessage message)
         {
             if (_messageBroker.IsExchangeMessage(message))
             {
-                await _messageBroker.PublishToExchange(message);
+                return _messageBroker.PublishToExchangeAsync(message);
             } 
             else if(_messageBroker.IsRpcCommand(message))
             {
-                await _messageBroker.PublishToRpcConsumer(message);
+                return _messageBroker.PublishToRpcConsumerAsync(message);
             }
+
+            return Task.CompletedTask;
         }
     }
 }

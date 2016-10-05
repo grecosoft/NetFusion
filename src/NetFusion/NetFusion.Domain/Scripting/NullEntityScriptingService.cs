@@ -15,7 +15,7 @@ namespace NetFusion.Domain.Scripting
             
         }
 
-        public Task Execute(object entity, string scriptName = "default")
+        public Task ExecuteAsync(object entity, string scriptName = "default")
         {
             return Task.FromResult(default(object));
         }

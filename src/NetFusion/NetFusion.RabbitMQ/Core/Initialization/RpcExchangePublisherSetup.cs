@@ -126,7 +126,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// </summary>
         /// <param name="message">The RPC style message to publish.</param>
         /// <returns>Future result after the reply is received.</returns>
-        public async Task PublishToRpcConsumer(IMessage message)
+        public async Task PublishToRpcConsumerAsync(IMessage message)
         {
             Check.NotNull(message, nameof(message));
 

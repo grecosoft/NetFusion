@@ -78,10 +78,10 @@ namespace RefArch.Host.Controllers.Samples
         /// returned to the calling client.
         /// </summary>
         [HttpPost Route("async-exception", Name = "PostAsyncEventException")]
-        public async Task PostAsyncEventException(MessageExInfo info)
+        public Task PostAsyncEventException(MessageExInfo info)
         {
             var evt = new ExampleAsyncDomainEventException(info);
-            await _messagingService.PublishAsync(evt);
+            return _messagingService.PublishAsync(evt);
         }
 
         /// <summary>
@@ -91,10 +91,10 @@ namespace RefArch.Host.Controllers.Samples
         /// process.
         /// </summary>
         [HttpPost Route("async-command", Name = "PostAsyncCommand")]
-        public async Task<HandlerResponse> PostAsyncCommand(CommandInfo info)
+        public Task<HandlerResponse> PostAsyncCommand(CommandInfo info)
         {
             var cmd = new ExampleAsyncCommand(info);
-            return await _messagingService.PublishAsync(cmd);
+            return _messagingService.PublishAsync(cmd);
         }
 
         /// <summary>

@@ -27,9 +27,9 @@ namespace RefArch.Host.Controllers.Samples
         }
 
         [HttpGet, Route("customer", Name = "GetCustomers")]
-        public async Task<IEnumerable<Customer>> GetCustomers()
+        public Task<List<Customer>> GetCustomers()
         {
-            return await _repository.ListCustomersAsync();
+            return _repository.ListCustomersAsync();
         }
     }
 }

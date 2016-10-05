@@ -19,18 +19,18 @@ namespace RefArch.Infrastructure.Samples.MongoDB
             _customerColl = _refArchDb.GetCollection<Customer>();
         }
 
-        public async Task AddCustomerAsync(Customer customer)
+        public Task AddCustomerAsync(Customer customer)
         {
             customer.NameValues = new Dictionary<string, object>
             {
                 { "A", 100 }
             };
-            await _customerColl.InsertOneAsync(customer);
+            return _customerColl.InsertOneAsync(customer);
         }
 
-        public async Task<IEnumerable<Customer>> ListCustomersAsync()
+        public Task<List<Customer>> ListCustomersAsync()
         {
-            return await _customerColl.Find(_ => true).ToListAsync();
+            return _customerColl.Find(_ => true).ToListAsync();
         }
     }
 }

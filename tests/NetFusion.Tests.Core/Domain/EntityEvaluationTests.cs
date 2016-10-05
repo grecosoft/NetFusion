@@ -27,7 +27,7 @@ namespace NetFusion.Tests.Core.Domain
 
             entity.Attributes.Delete("Value2");
             entity.Attributes.Values.Value1 = 10;
-            this.EvalSrv.Execute(entity).Wait();
+            this.EvalSrv.ExecuteAsync(entity).Wait();
 
             entity.Attributes.Contains("Value2").Should().BeTrue();
             var result = (int)entity.Attributes.Values.Value2;
@@ -46,7 +46,7 @@ namespace NetFusion.Tests.Core.Domain
 
             entity.Attributes.Values.Value1 = 0;
             entity.Attributes.Values.Value3 = 105;
-            this.EvalSrv.Execute(entity).Wait();
+            this.EvalSrv.ExecuteAsync(entity).Wait();
 
             entity.Attributes.Contains("Value4").Should().BeTrue();
             var result = (int)entity.Attributes.Values.Value4;
@@ -64,7 +64,7 @@ namespace NetFusion.Tests.Core.Domain
             var entity = CreateDefaultEntity();
 
             entity.IsActive = true;
-            this.EvalSrv.Execute(entity).Wait();
+            this.EvalSrv.ExecuteAsync(entity).Wait();
 
             entity.Attributes.Contains("Value5").Should().BeTrue();
             var result = (int)entity.Attributes.Values.Value5;
@@ -79,7 +79,7 @@ namespace NetFusion.Tests.Core.Domain
 
             entity.MaxValue = 1000;
             entity.Attributes.Values.Value6 = 200;
-            this.EvalSrv.Execute(entity).Wait();
+            this.EvalSrv.ExecuteAsync(entity).Wait();
 
             entity.Attributes.Contains("Value7").Should().BeTrue();
             var result = (int)entity.Attributes.Values.Value7;
@@ -94,7 +94,7 @@ namespace NetFusion.Tests.Core.Domain
 
             entity.MaxValue = 1000;
             entity.Attributes.Values.Value1 = 200;
-            this.EvalSrv.Execute(entity).Wait();
+            this.EvalSrv.ExecuteAsync(entity).Wait();
 
             entity.MinValue.Should().Be(300);
         }

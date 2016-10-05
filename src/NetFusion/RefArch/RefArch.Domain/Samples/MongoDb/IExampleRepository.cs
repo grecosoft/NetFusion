@@ -7,6 +7,6 @@ namespace RefArch.Domain.Samples.MongoDb
     public interface IExampleRepository
     {
         Task AddCustomerAsync(Customer custoer);
-        Task<IEnumerable<Customer>> ListCustomersAsync();
+        Task<List<Customer>> ListCustomersAsync();
     }
 }

@@ -44,7 +44,7 @@ namespace NetFusion.Domain.Roslyn.Core
                 .ToLookup(se => se.Script.EntityType);
         }
 
-        public async Task Execute(object entity, string scriptName = "default")
+        public async Task ExecuteAsync(object entity, string scriptName = "default")
         {
             Check.NotNull(entity, nameof(entity));
             Check.NotNull(scriptName, nameof(scriptName));
@@ -87,7 +87,7 @@ namespace NetFusion.Domain.Roslyn.Core
             {
                 CompileScript(evaluator);
                 SetDefaultAttributeValues(evaluator.Script, entity);
-                await evaluator.Execute(entity);
+                await evaluator.ExecuteAsync(entity);
 
                 log.SetCompletionDetails(new { PostEvalValues = entity });
             }
@@ -221,7 +221,7 @@ namespace NetFusion.Domain.Roslyn.Core
                     $"The entity being evaluated must implement: {typeof(IAttributedEntity)}");
             }
 
-            await this.Execute(entity, predicate.ScriptName);
+            await this.ExecuteAsync(entity, predicate.ScriptName);
 
             if (!attributedEntity.Attributes.Contains(predicate.AttributeName))
             {

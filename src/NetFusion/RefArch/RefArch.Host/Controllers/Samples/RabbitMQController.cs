@@ -23,36 +23,36 @@ namespace RefArch.Host.Controllers.Samples
 
         [HttpPost, Route("direct", Name = "PublishDirectEvent")]
         [RouteMetadata(IncludeRoute = true)]
-        public async Task PublishDirectEvent(Car car)
+        public Task PublishDirectEvent(Car car)
         {
             var evt = new ExampleDirectEvent(car);
             evt.Attributes.Values.Test = "AAAABBBBB";
-            await _messagingSrv.PublishAsync(evt);
+            return _messagingSrv.PublishAsync(evt);
         }
 
         [HttpPost, Route("topic", Name = "PublishTopicEvent")]
         [RouteMetadata(IncludeRoute = true)]
-        public async Task PublishTopicEvent(Car car)
+        public Task PublishTopicEvent(Car car)
         {
             var evt = new ExampleTopicEvent(car);
             evt.SetContentType(SerializerTypes.Binary);
-            await _messagingSrv.PublishAsync(evt);
+            return _messagingSrv.PublishAsync(evt);
         }
  
         [HttpPost, Route("fanout", Name = "PublishFanoutEvent")]
         [RouteMetadata(IncludeRoute = true)]
-        public async Task PublishFanoutEvent(Car car)
+        public Task PublishFanoutEvent(Car car)
         {
             var evt = new ExampleFanoutEvent(car);
-            await _messagingSrv.PublishAsync(evt);
+            return _messagingSrv.PublishAsync(evt);
         }
     
         [HttpPost, Route("work-queue", Name = "PublishWorkQueueEvent")]
         [RouteMetadata(IncludeRoute = true)]
-        public async Task PublishWorkQueueEvent(Car car)
+        public Task PublishWorkQueueEvent(Car car)
         {
             var evt = new ExampleWorkQueueEvent(car);
-            await _messagingSrv.PublishAsync(evt);
+            return _messagingSrv.PublishAsync(evt);
         }
 
         [HttpPost, Route("rpc", Name = "PublishRPCEvent")]

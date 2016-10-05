@@ -1,7 +1,6 @@
 ﻿using NetFusion.Messaging;
 using RefArch.Api.Messaging.Messages;
 using RefArch.Api.Messaging.Models;
-using RefArch.Api.Models;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,25 +10,25 @@ namespace RefArch.Services.Messaging
     public class ExampleAsyncHandler1 : IMessageConsumer
     {
         [InProcessHandler]
-        public async Task OnEvent(ExampleAsyncDomainEvent evt)
+        public Task OnEventAsync(ExampleAsyncDomainEvent evt)
         {
-            await Task.Run(() => { Thread.Sleep(evt.Seconds * 1000); });
+            return Task.Run(() => { Thread.Sleep(evt.Seconds * 1000); });
         }
     }
 
     public class ExampleAsyncHandler2 : IMessageConsumer
     {
         [InProcessHandler]
-        public async Task OnEvent(ExampleAsyncDomainEvent evt)
+        public Task OnEventAsync(ExampleAsyncDomainEvent evt)
         {
-            await Task.Run(() => { Thread.Sleep(evt.Seconds * 1000); });
+            return Task.Run(() => { Thread.Sleep(evt.Seconds * 1000); });
         }
     }
 
     public class ExampleAsyncHandler3 : IMessageConsumer
     {
         [InProcessHandler]
-        public async Task OnEvent(ExampleAsyncDomainEventException evt)
+        public async Task OnEventAsync(ExampleAsyncDomainEventException evt)
         {
             await Task.Run(() =>
             {
@@ -46,7 +45,7 @@ namespace RefArch.Services.Messaging
     public class ExampleAsyncHandler4 : IMessageConsumer
     {
         [InProcessHandler]
-        public async Task OnEvent(ExampleAsyncDomainEventException evt)
+        public async Task OnEventAsync(ExampleAsyncDomainEventException evt)
         {
             await Task.Run(() =>
             {

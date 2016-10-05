@@ -43,9 +43,9 @@ namespace RefArch.Host.Controllers.Samples
         }
 
         [HttpPost, Route("init-mongo", Name = "InitMongoSettings")]
-        public async Task<MongoInitializedSettings> InitMongoSettings()
+        public Task<MongoInitializedSettings> InitMongoSettings()
         {
-            return await _settingsInitSrv.InitMongoDbStoredSettings();
+            return _settingsInitSrv.InitMongoDbStoredSettings();
         }
 
         /// <summary>

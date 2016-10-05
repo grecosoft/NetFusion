@@ -29,16 +29,16 @@ namespace NetFusion.Messaging.Core
             _messagePublishers = GetOrderedPublishers(messagePublishers).ToList();
         }
 
-        public async Task PublishAsync(IDomainEvent domainEvent)
+        public Task PublishAsync(IDomainEvent domainEvent)
         {
             Check.NotNull(domainEvent, nameof(domainEvent), "domain event not specified");
-            await PublishMessageAsync(domainEvent);
+            return PublishMessageAsync(domainEvent);
         }
 
-        public async Task PublishAsync(ICommand command)
+        public Task PublishAsync(ICommand command)
         {
             Check.NotNull(command, nameof(command), "command not specified");
-            await PublishMessageAsync(command);
+            return PublishMessageAsync(command);
         }
 
         public async Task<TResult> PublishAsync<TResult>(ICommand<TResult> command)

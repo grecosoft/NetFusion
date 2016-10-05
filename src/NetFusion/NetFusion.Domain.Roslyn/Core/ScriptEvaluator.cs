@@ -36,7 +36,7 @@ namespace NetFusion.Domain.Roslyn.Core
 
         public bool IsDefault => this.Script.Name == DEFAULT_SCRIPT_NAME;
 
-        public async Task Execute(object entity)
+        public async Task ExecuteAsync(object entity)
         {
             Check.NotNull(entity, nameof(entity));
 

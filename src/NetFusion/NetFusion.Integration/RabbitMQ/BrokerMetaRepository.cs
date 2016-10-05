@@ -38,12 +38,12 @@ namespace NetFusion.Integration.RabbitMQ
             {
                 foreach(BrokerMeta broker in brokers)
                 {
-                    await UpsertApplicationBrokerMeta(broker);
+                    await UpsertApplicationBrokerMetaAsync(broker);
                 }
             }
         }
 
-        private async Task UpsertApplicationBrokerMeta(BrokerMeta brokerMeta)
+        private Task UpsertApplicationBrokerMetaAsync(BrokerMeta brokerMeta)
         {
             var filter = Builders<BrokerMeta>.Filter.Where(b => 
                 b.BrokerName == brokerMeta.BrokerName 
@@ -54,7 +54,7 @@ namespace NetFusion.Integration.RabbitMQ
                 IsUpsert = true
             };
 
-            await _brokerColl.FindOneAndReplaceAsync(
+            return _brokerColl.FindOneAndReplaceAsync(
                 filter,
                 brokerMeta, 
                 options);

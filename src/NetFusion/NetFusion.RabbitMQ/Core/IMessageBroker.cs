@@ -48,7 +48,7 @@ namespace NetFusion.RabbitMQ.Core
         /// Publishes a message to an exchange.
         /// </summary>
         /// <param name="message">The message to publish.</param>
-        Task PublishToExchange(IMessage message);
+        Task PublishToExchangeAsync(IMessage message);
 
         /// <summary>
         /// Publishes a RPC style command message to a consumer and awaits the reply.
@@ -56,6 +56,6 @@ namespace NetFusion.RabbitMQ.Core
         /// <param name="message">The command message to publish.</param>
         /// <returns>Task that is resolved when the reply is received for the
         /// request.</returns>
-        Task PublishToRpcConsumer(IMessage message);
+        Task PublishToRpcConsumerAsync(IMessage message);
     }
 }

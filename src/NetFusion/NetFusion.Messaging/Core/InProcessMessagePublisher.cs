@@ -32,7 +32,7 @@ namespace NetFusion.Messaging.Core
             _scriptingSrv = scriptingSrv;
         }
 
-        public async override Task PublishMessageAsync(IMessage message)
+        public override Task PublishMessageAsync(IMessage message)
         {
             // Determine the dispatchers associated with the message.
             IEnumerable<MessageDispatchInfo> dispatchers = _messagingModule.InProcessDispatchers
@@ -42,7 +42,7 @@ namespace NetFusion.Messaging.Core
             LogMessageDespatchInfo(message, dispatchers);
 
             // Execute all handlers and return the future result to the caller to await.
-            await InvokeMessageDispatchersAsync(message, dispatchers);
+            return InvokeMessageDispatchersAsync(message, dispatchers);
         }
 
         private async Task InvokeMessageDispatchersAsync(IMessage message,

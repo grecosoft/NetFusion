@@ -30,7 +30,7 @@ namespace NetFusion.Domain.Scripting
         /// the script with the name 'default' is executed.  If a script name is specified, the
         /// default named script followed by the named script is executed.</param>
         /// <returns>Future result that is completed after evaluation.</returns>
-        Task Execute(object entity, string scriptName = "default");
+        Task ExecuteAsync(object entity, string scriptName = "default");
 
         /// <summary>
         /// Executes a specified script specified by the script-predicate against an entity

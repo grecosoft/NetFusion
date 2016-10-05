@@ -84,7 +84,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// </summary>
         /// <param name="message">The message to publish.</param>
         /// <returns>The future result.</returns>
-        public async Task PublishToExchange(IMessage message)
+        public async Task PublishToExchangeAsync(IMessage message)
         {
             Check.NotNull(message, nameof(message));
 
@@ -99,11 +99,11 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
             foreach (MessageExchangeDefinition exchangeDef in exchangeDefs)
             {
-                await Publish(exchangeDef, message);
+                await PublishAsync(exchangeDef, message);
             }
         }
 
-        private async Task Publish(MessageExchangeDefinition exchangeDef, IMessage message)
+        private async Task PublishAsync(MessageExchangeDefinition exchangeDef, IMessage message)
         {
             if (!await MatchesExchangeCriteria(exchangeDef, message)) return;
 

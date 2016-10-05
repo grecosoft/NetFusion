@@ -8,20 +8,20 @@ namespace NetFusion.Core.Tests.Messaging.Mocks
         IMessageConsumer
     {
         [InProcessHandler]
-        public async Task OnEvent1(MockDomainEvent evt)
+        public Task OnEvent1Async(MockDomainEvent evt)
         {
-            AddCalledHandler(nameof(OnEvent1));
-            await Task.Run(() =>
+            AddCalledHandler(nameof(OnEvent1Async));
+            return Task.Run(() =>
             {
 
             });
         }
 
         [InProcessHandler]
-        public async Task OnEvent2(MockDomainEvent evt)
+        public Task OnEvent2Async(MockDomainEvent evt)
         {
-            AddCalledHandler(nameof(OnEvent2));
-            await Task.Run(() =>
+            AddCalledHandler(nameof(OnEvent2Async));
+            return Task.Run(() =>
             {
 
             });

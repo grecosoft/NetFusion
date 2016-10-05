@@ -7,20 +7,20 @@ namespace NetFusion.Core.Tests.Messaging.Mocks
     public class MockErrorMessageConsumer : IMessageConsumer
     {
         [InProcessHandler]
-        public async Task OnEvent1(MockDomainEvent evt)
+        public Task OnEvent1Async(MockDomainEvent evt)
         {
-            await Task.Run(() =>
+            return Task.Run(() =>
             {
-                throw new InvalidOperationException(nameof(OnEvent1));
+                throw new InvalidOperationException(nameof(OnEvent1Async));
             });
         }
 
         [InProcessHandler]
-        public async Task OnEvent2(MockDomainEvent evt)
+        public Task OnEvent2Async(MockDomainEvent evt)
         {
-            await Task.Run(() =>
+            return Task.Run(() =>
             {
-                throw new InvalidOperationException(nameof(OnEvent2));
+                throw new InvalidOperationException(nameof(OnEvent2Async));
             });
         }
     }

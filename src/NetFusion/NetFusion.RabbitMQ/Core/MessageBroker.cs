@@ -150,9 +150,9 @@ namespace NetFusion.RabbitMQ.Core
             return _exchangePublisher.IsExchangeMessage(message);
         }
 
-        public Task PublishToExchange(IMessage message)
+        public Task PublishToExchangeAsync(IMessage message)
         {
-            return _exchangePublisher.PublishToExchange(message);
+            return _exchangePublisher.PublishToExchangeAsync(message);
         }
 
         public bool IsRpcCommand(IMessage message)
@@ -160,9 +160,9 @@ namespace NetFusion.RabbitMQ.Core
             return _rpcExchangePublisher.IsRpcCommand(message);
         }
 
-        public Task PublishToRpcConsumer(IMessage message)
+        public Task PublishToRpcConsumerAsync(IMessage message)
         {
-            return _rpcExchangePublisher.PublishToRpcConsumer(message);
+            return _rpcExchangePublisher.PublishToRpcConsumerAsync(message);
         }
 
         private void MonitorForConnectionFailures()

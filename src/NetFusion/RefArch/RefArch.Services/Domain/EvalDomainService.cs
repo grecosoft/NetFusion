@@ -27,7 +27,7 @@ namespace RefArch.Services.Domain
                 entity.Attributes.SetValue(attrib.Key, attrib.Value);
             }
 
-            await _evaluationSrv.Execute(entity, scriptName: "Test-Script");
+            await _evaluationSrv.ExecuteAsync(entity, scriptName: "Test-Script");
             return new EvaluatedDomainModel(entity);
         }
     }
