@@ -1,7 +1,6 @@
 ﻿using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Serialization;
-using NetFusion.Settings.Configs;
 using NetFusion.Settings.Modules;
 using System;
 using System.Collections.Generic;
@@ -22,7 +21,6 @@ namespace NetFusion.Settings.Strategies
         private const string CONFIG_FILE_EXT = "json";
 
         private IDictionary<EnvironmentTypes, string> _envDirMappings;
-        private IAppSettingsModule _appSettingsModule;
     
         public FileSettingsInitializer(IAppSettingsModule appSettingsModule)
         {
@@ -31,14 +29,11 @@ namespace NetFusion.Settings.Strategies
                 { EnvironmentTypes.Test, "Test" },
                 { EnvironmentTypes.Production, "Prod" }
             };
-
-            _appSettingsModule = appSettingsModule;
         }
 
         protected override IAppSettings OnConfigure(TSettings settings)
         {
-            NetFusionConfig appConfig = _appSettingsModule.AppConfig;
-            string envName = _envDirMappings[appConfig.Environment];
+            string envName = _envDirMappings[settings.Environment];
 
             string machineEnvPath = GetSettingsConfigFilePath(settings.MachineName, envName);
             string machinePath = GetSettingsConfigFilePath(settings.MachineName);

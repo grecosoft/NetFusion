@@ -33,6 +33,6 @@ namespace NetFusion.Settings.Strategies
     public interface IAppSettingsInitializer<in TSettings> : IAppSettingsInitializer
         where TSettings : IAppSettings
     {
-
+        
     }
 }

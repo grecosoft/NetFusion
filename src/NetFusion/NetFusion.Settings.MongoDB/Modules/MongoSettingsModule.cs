@@ -7,11 +7,9 @@ namespace NetFusion.Settings.MongoDB.Modules
 {
     /// <summary>
     /// Determines the settings that should be used to load application settings from MongoDB.  
-    /// If the MongoAppSettingsConfig is specified directly in code during the bootstrap process,
-    /// its settings are used.  Otherwise, the settings specified within the application's
-    /// configuration file are used to override any default MongoAppSettingsConfig property values.
-    /// If no application configuration settings are specified, then a default instance of the
-    /// MongoAppSettingsConfig is used.
+    /// The settings specified within the application's configuration file are used to override 
+    /// any default MongoAppSettingsConfig property values.  If no application configuration 
+    /// settings are specified, then a default instance of the MongoAppSettingsConfig is used.
     /// </summary>
     public class MongoSettingsModule : PluginModule, 
         IMongoSettingsModule
@@ -21,15 +19,8 @@ namespace NetFusion.Settings.MongoDB.Modules
 
         public override void Initialize()
         {
-            bool isConfigSet = this.Context.Plugin.IsConfigSet<MongoAppSettingsConfig>();
             this.MongoAppSettingsConfig = this.Context.Plugin.GetConfig<MongoAppSettingsConfig>();
-
-            // Only apply the settings from the configuration file if the host
-            // application didn't manually specify settings during bootstrap.
-            if (!isConfigSet)
-            {
-                SetHostAppConfigFileSettings(this.MongoAppSettingsConfig);
-            }
+            SetHostAppConfigFileSettings(this.MongoAppSettingsConfig);
         }
 
         // The host can specify the MongoDb collection in which application settings are stored.

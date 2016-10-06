@@ -30,15 +30,8 @@ namespace NetFusion.Settings.Modules
 
         public override void Initialize()
         {
-            bool isConfigSet = this.Context.Plugin.IsConfigSet<NetFusionConfig>();
             this.AppConfig = this.Context.Plugin.GetConfig<NetFusionConfig>();
-
-            // Only apply the settings from the configuration file if the host
-            // application didn't manually specify settings during bootstrap.
-            if (!isConfigSet)
-            {
-                SetHostAppConfigFileSettings(this.AppConfig);
-            }
+            SetHostAppConfigFileSettings(this.AppConfig);
 
             AssertNoDuplicateSettingInitializers();
         }
@@ -95,35 +88,29 @@ namespace NetFusion.Settings.Modules
         // setting. 
         private void AssertNoDuplicateSettingInitializers()
         {
-            var duplicates = new List<Type>();
+            IEnumerable<Type> allSettingTypes = this.Context.AllPluginTypes
+                .Where(t => t.IsDerivedFrom<IAppSettings>() && t.IsClass);
 
-            // List of all possible closed setting initializers types:
-            IEnumerable<Type> allPossibleInitTypes = this.Context.AllPluginTypes
-                .Where(t => t.IsDerivedFrom<IAppSettings>() && t.IsClass)
-                .Select(st => typeof(IAppSettingsInitializer<>).MakeGenericType(st))
-                .ToList();
-
-            // All declared initializer types:
-            IEnumerable<Type> allDeclaredInitTypes = this.Context.AllPluginTypes
-                .Where(t => t.IsDerivedFrom<IAppSettingsInitializer>() && t.IsClass && !t.IsAbstract)
-                .ToList();
-
-            // If more than one declared setting initializer is derived from one of the setting
-            // specific closed generic types, then there is duplicate.
-            foreach (Type possibleInitType in allPossibleInitTypes)
+            var duplicates = allSettingTypes.Select(st => new
             {
-                if (allDeclaredInitTypes.Count(it => it.IsDerivedFrom(possibleInitType)) > 1)
-                {
-                    duplicates.Add(possibleInitType);
-                }
-            }
+                SettingType = st,
+                Initializers = GetClosedSettingInitializers(st)
+            })
+            .Where(r => r.Initializers.Count() > 1)
+            .ToList();
          
             if (duplicates.Any())
             {
                 throw new ContainerException(
-                    $"There were duplicate setting initializers for a given settings type.   " +
-                    $"See details.", duplicates.Select(st => st.FullName));
+                    $"There were duplicate setting initializers for a given settings type.  " +
+                    $"See details.", duplicates);
             }
+        }
+
+        private IEnumerable<Type> GetClosedSettingInitializers(Type settingType)
+        {
+            Type closedInitializerType = typeof(IAppSettingsInitializer<>).MakeGenericType(settingType);
+            return this.Context.AllAppPluginTypes.Where(pt => pt.IsDerivedFrom(closedInitializerType));
         }
 
         // Called when the settings class is dependency injected into a component for the first time.
@@ -186,10 +173,7 @@ namespace NetFusion.Settings.Modules
             IAppSettings settings,
             IComponentContext context)
         {
-            var settingSpecificType = typeof(IAppSettingsInitializer<>).MakeGenericType(settings.GetType());
-
-            Type specificSettingInitType = this.Context.AllAppPluginTypes
-                .FirstOrDefault(t => t.IsDerivedFrom(settingSpecificType));
+            Type specificSettingInitType = GetClosedSettingInitializers(settings.GetType()).FirstOrDefault();
 
             if (specificSettingInitType != null)
             {

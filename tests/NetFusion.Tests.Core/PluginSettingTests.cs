@@ -19,34 +19,6 @@ namespace NetFusion.Tests.Core.Settings
     /// </summary>
     public class PluginSettingTests
     {
-        /// <summary>
-        /// If the host application manually specifies a NetFusionConig during the
-        /// bootstrap process, it overrides the configurations specified within the
-        /// application's configuration file.
-        /// </summary>
-        [Fact]
-        public void HostSpecifiedConfigOverridesAppConfiguration()
-        {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
-                {
-                    config.SetupHostApp();
-                    config.SetupSettingsPlugin();
-                })
-                .Act(c =>
-                {
-                    c.WithConfig<NetFusionConfig>(cfg => cfg.Environment = EnvironmentTypes.Production);
-                    c.WithConfig<NetFusionConfigSection>(cfg =>
-                    {
-                        cfg.HostConfig = new HostConfigElement { Environment = EnvironmentTypes.Development };
-                    });
-                    c.Build();
-                })
-                .AssertConfig((NetFusionConfig cfg) =>
-                {
-                    cfg.Environment.Should().Be(EnvironmentTypes.Production);
-                });
-        }
 
         /// <summary>
         /// If a NetFusionConfig is not specified in code and a configuration is 
