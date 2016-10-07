@@ -69,7 +69,7 @@ namespace NetFusion.Bootstrap.Plugins
             this.AppHost = compositeApp.AppHostPlugin;
             this.AllPluginModules = compositeApp.AllPluginModules;
             this.Plugin = plugin;
-            this.Logger = logger.ForContext(plugin.GetType());
+            this.Logger = logger.ForPluginContext(plugin.GetType());
 
             this.AllPluginTypes = FilteredTypesByPluginType();
             this.AllAppPluginTypes = GetAppPluginTypes();

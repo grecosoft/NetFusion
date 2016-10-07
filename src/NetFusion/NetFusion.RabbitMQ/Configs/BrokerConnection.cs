@@ -85,11 +85,8 @@ namespace NetFusion.RabbitMQ.Configs
 
             if (valResult.IsValid)
             {
-                IEnumerable<ObjectValidator> rpcValResults = this.RpcConsumers.Select(c => c.ValidateObject());
-                valResult.AddChildValidations(rpcValResults);
-
-                IEnumerable<ObjectValidator> queuePropResults = this.QueueProperties.Select(c => c.ValidateObject());
-                valResult.AddChildValidations(queuePropResults);
+                valResult.AddChildValidations(this.RpcConsumers.Select(c => c.ValidateObject()));
+                valResult.AddChildValidations(this.QueueProperties.Select(c => c.ValidateObject()));
             }
         
             return valResult;

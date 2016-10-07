@@ -18,8 +18,8 @@ namespace NetFusion.RabbitMQ.Consumers
         protected QueueConsumerAttribute(string queueName, string exchangeName,
             QueueBindingTypes bindingType)
         {
-            this.ExchangeName = exchangeName;
             this.QueueName = queueName;
+            this.ExchangeName = exchangeName;
             this.BindingType = bindingType;
 
             this.QueueSettings = new QueueSettings { IsBrokerAssignedName = queueName == null };

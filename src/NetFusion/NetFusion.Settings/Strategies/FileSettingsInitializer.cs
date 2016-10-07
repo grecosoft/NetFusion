@@ -61,7 +61,7 @@ namespace NetFusion.Settings.Strategies
 
         private IAppSettings LoadSettingsFromPath(string settingsPath)
         {
-            IContainerLogger logger = AppContainer.Instance.Logger.ForContext(this.GetType());
+            IContainerLogger logger = AppContainer.Instance.Logger.ForPluginContext(this.GetType());
             if (File.Exists(settingsPath))
             {
                 logger.Debug($"Settings of type: {typeof(TSettings)} loaded from the following location: {settingsPath}.");

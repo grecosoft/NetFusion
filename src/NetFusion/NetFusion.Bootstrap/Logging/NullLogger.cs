@@ -28,7 +28,7 @@ namespace NetFusion.Bootstrap.Logging
             return this;
         }
 
-        public IContainerLogger ForContext(Type contextType)
+        public IContainerLogger ForPluginContext(Type contextType)
         {
             return this;
         }

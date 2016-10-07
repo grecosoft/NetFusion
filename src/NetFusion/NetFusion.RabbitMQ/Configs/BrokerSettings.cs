@@ -4,7 +4,6 @@ using NetFusion.RabbitMQ.Core;
 using NetFusion.Settings;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace NetFusion.RabbitMQ.Configs
 {
@@ -27,6 +26,7 @@ namespace NetFusion.RabbitMQ.Configs
 
         /// <summary>
         /// The number of milliseconds between attempts to reconnect to the broker.
+        /// </summary>
         public int ConnectionRetryDelayMs { get; set; } = 3000;
 
         /// <summary>
@@ -108,8 +108,7 @@ namespace NetFusion.RabbitMQ.Configs
 
             if (valResult.IsValid)
             {
-                IEnumerable<ObjectValidator> connValResults = this.Connections.Select(c => c.ValidateObject());
-                valResult.AddChildValidations(connValResults);
+                valResult.AddChildValidations(this.Connections.Select(c => c.ValidateObject()));
             }
 
             return valResult;

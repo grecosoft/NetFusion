@@ -47,7 +47,7 @@ namespace NetFusion.Bootstrap.Logging
         /// </summary>
         /// <param name="contextType">The context type.</param>
         /// <returns>New instance of the logger with the configured context.</returns>
-        IContainerLogger ForContext(Type contextType);
+        IContainerLogger ForPluginContext(Type contextType);
        
         /// <summary>
         /// Writes a verbose message to the log.

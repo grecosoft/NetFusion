@@ -39,8 +39,7 @@ namespace NetFusion.Settings
 
         public virtual ObjectValidator ValidateObject()
         {
-            var valResults = new ObjectValidator(this);
-            return valResults;
+            return new ObjectValidator(this); 
         }
     }
 }

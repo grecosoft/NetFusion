@@ -32,11 +32,13 @@ namespace NetFusion.Logging.Serilog.Core
         // Returns new instance associated with the specified context.
         public IContainerLogger ForPluginContext<TContext>()
         {
-            return ForContext(typeof(TContext));
+            return ForPluginContext(typeof(TContext));
         }
 
-        public IContainerLogger ForContext(Type contextType)
+        public IContainerLogger ForPluginContext(Type contextType)
         {
+            Check.NotNull(contextType, nameof(contextType));
+
             var logger = _logger.ForContext(
                 SerilogManifest.ContextPropName,
                 contextType.AssemblyQualifiedName);
@@ -46,6 +48,8 @@ namespace NetFusion.Logging.Serilog.Core
 
         private void WriteLogMessage(LogEventLevel level, string message, object details)
         {
+            Check.NotNull(message, nameof(message), "log message not specified");
+
             if (!_logger.IsEnabled(level))
             {
                 return;
@@ -63,6 +67,9 @@ namespace NetFusion.Logging.Serilog.Core
 
         private void WriteLogMessage(LogEventLevel level, string message, Exception ex, object details)
         {
+            Check.NotNull(message, nameof(message), "log message not specified");
+            Check.NotNull(ex, nameof(ex), "exception to log not specified");
+
             if (!_logger.IsEnabled(level))
             {
                 return;
