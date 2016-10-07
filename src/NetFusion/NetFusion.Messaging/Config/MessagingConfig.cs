@@ -30,7 +30,6 @@ namespace NetFusion.Messaging.Config
 
         /// <summary>
         /// Adds message publisher to be executed when a message is published.  
-        /// The order specified is the order in which they are executed.
         /// </summary>
         /// <typeparam name="TPublisher">The message publisher type.</typeparam>
         public void AddMessagePublisherType<TPublisher>() where TPublisher: IMessagePublisher

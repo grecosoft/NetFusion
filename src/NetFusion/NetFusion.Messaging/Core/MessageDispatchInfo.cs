@@ -32,8 +32,8 @@ namespace NetFusion.Messaging.Core
 
         /// <summary>
         /// Indicates if the message handler should be called for derived message types.
-        /// This is determined if a message handler method's message parameter is 
-        /// decorated with the IncludeDerivedMessages attribute.
+        /// This is determined by checking the message handler method's message parameter
+        /// for  the IncludeDerivedMessages attribute.
         /// </summary>
         /// <returns>
         /// Returns True if method should be called for derived message types.
@@ -101,6 +101,8 @@ namespace NetFusion.Messaging.Core
         /// <returns>Returns True if the event handler should be called.</returns>
         public bool IsMatch(IMessage message)
         {
+            Check.NotNull(message, nameof(message));
+
             if (!this.DispatchRuleTypes.Any()) return true;
 
             if (this.RuleApplyType == RuleApplyTypes.All)

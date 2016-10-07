@@ -104,7 +104,7 @@ namespace NetFusion.Messaging.Core
 
         private static bool IncludeDerivedTypes(ParameterInfo parameterInfo)
         {
-            return parameterInfo.GetCustomAttribute<IncludeDerivedMessagesAttribute>() != null;
+            return parameterInfo.HasAttribute<IncludeDerivedMessagesAttribute>();
         }
 
         private static Type[] GetOptionalRuleTypes(MethodInfo methodInfo)
