@@ -1,13 +1,13 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Domain.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Domain.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Messaging.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
-  <Reference Relative="..\libs\RabbitMQ.Client.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Domain.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Domain.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Messaging.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\RabbitMQ.Client.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Extensions</Namespace>
@@ -27,6 +27,7 @@
   <Namespace>NetFusion.Settings.Strategies</Namespace>
   <Namespace>NetFusion.Settings.Testing</Namespace>
   <Namespace>NetFusion.RabbitMQ.Exchanges</Namespace>
+  <Namespace>NetFusion.Domain.Scripting</Namespace>
 </Query>
 
 // *************************************************************************************
@@ -75,10 +76,10 @@ void Main()
 	.Start();
 
 	PublishDirectEvent(new Car {
-		Vin = "34345NDGJK345LL435",
-		Make = "Volvo",
+		Make = "AUDI",
 		Model = "S8",
-		Year = 2016
+		Year = 1973,
+		Color = "Red"
 	});
 }
 
@@ -115,40 +116,37 @@ public void PublishDirectEvent(Car car)
 
 public class Car
 {
-	public string Vin { get; set; }
 	public string Make { get; set; }
 	public string Model { get; set; }
 	public int Year { get; set; }
+	public string Color { get; set; }
 }
 
+[Serializable]
 public class ExampleDirectEvent : DomainEvent
 {
-	public string Vin { get; private set; }
 	public string Make { get; private set; }
 	public string Model { get; private set; }
 	public int Year { get; private set; }
+	public string Color { get; private set; }
 
 	public ExampleDirectEvent() { }
 
 	public ExampleDirectEvent(Car car)
 	{
 		this.CurrentDateTime = DateTime.UtcNow;
-		this.Vin = car.Vin;
 		this.Make = car.Make;
 		this.Model = car.Model;
 		this.Year = car.Year;
+		this.Color = car.Color;
 
-		this.SetRouteKey(car.Year); // TODO:  move this out of the RabbitMQ project??? So client don't need ref?
-
-		if (car.Year < 2015)
-		{
-			this.SetRouteKey("UsedModel");
-		}
+		this.SetRouteKey(car.Make); // TODO:  move this out of the RabbitMQ project??? So client don't need ref?
 	}
 
 	public DateTime CurrentDateTime { get; private set; }
 }
 
+[ApplyScriptPredicate("ClassicCarCriteria", variableName: "IsClassic")]
 public class ExampleDirectExchange : DirectExchange<ExampleDirectEvent>
 {
 	protected override void OnDeclareExchange()
@@ -156,14 +154,14 @@ public class ExampleDirectExchange : DirectExchange<ExampleDirectEvent>
 		Settings.BrokerName = "TestBroker";
 		Settings.ExchangeName = "SampleDirectExchange";
 
-		QueueDeclare("2015-2016-Cars", config =>
+		QueueDeclare("GENERAL-MOTORS", config =>
 		{
-			config.RouteKeys = new[] { "2015", "2016" };
+			config.RouteKeys = new[] { "CHEVY", "Buick", "GMC", "CADILLAC" };
 		});
 
-		QueueDeclare("UsedCars", config =>
+		QueueDeclare("VOLKSWAGEN", config =>
 		{
-			config.RouteKeys = new[] { "UsedModel" };
+			config.RouteKeys = new[] { "VW", "Audi", "PORSCHE", "BENTLEY", "LAMBORGHINI" };
 		});
 	}
 }

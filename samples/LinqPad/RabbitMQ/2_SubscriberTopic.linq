@@ -1,13 +1,13 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Domain.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Domain.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Messaging.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
-  <Reference Relative="..\libs\RabbitMQ.Client.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Domain.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Domain.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Messaging.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\RabbitMQ.Client.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Extensions</Namespace>
@@ -85,73 +85,77 @@ public class BrokerSettingsInitializer : AppSettingsInitializer<BrokerSettings>
 	}
 }
 
+[Serializable]
 public class ExampleTopicEvent : DomainEvent
 {
-	public string Vin { get; private set; }
 	public string Make { get; private set; }
 	public string Model { get; private set; }
 	public int Year { get; private set; }
-	public DateTime CurrentDateTime { get; private set; }
+	public string Color { get; private set; }
+
 }
 
 [Broker("TestBroker")]
 public class ExampleTopicService : IMessageConsumer
 {
-	// This method will join the Chevy queue defined on the SampleTopicExchange
+	// This method will join the VW-GTI queue defined on the SampleTopicExchange
 	// exchange.  Since it is joining an existing queue, it will join any other
 	// enlisted subscribers and be called round-robin.  
-	[JoinQueue("Chevy", "SampleTopicExchange")]
-	public void OnChevy(ExampleTopicEvent topicEvt)
+	[JoinQueue("VW-GTI", "SampleTopicExchange")]
+	public void OnVwGti(ExampleTopicEvent topicEvt)
 	{
-		Console.WriteLine($"Handler: OnChevy: {topicEvt.ToIndentedJson()}");
+		Console.WriteLine($"Handler: OnVwGti: {topicEvt.ToIndentedJson()}");
 
 		topicEvt.SetAcknowledged();
 	}
 
-	// This event handler will join the Chevy-Vette queue defined on the
+	// This event handler will join the VW-BLACK queue defined on the
 	// SampleTopicExchange.  This handler is like the prior one, but the
 	// associated queue has a more specific route-key pattern.  Both this
 	// handler and the prior one will both be called since this handler 
-	// has a more specific pattern to include the model of the car.
-	[JoinQueue("Chevy-Vette", "SampleTopicExchange")]
-	public void OnChevyVette(ExampleTopicEvent topicEvt)
+	// has a more specific pattern to include the color of the car.
+	[JoinQueue("VW-BLACK", "SampleTopicExchange")]
+	public void OnBlackVw(ExampleTopicEvent topicEvt)
 	{
-		Console.WriteLine($"Handler: OnChevyVette: {topicEvt.ToIndentedJson()}");
+		Console.WriteLine($"Handler: OnBlackVw: {topicEvt.ToIndentedJson()}");
 
 		topicEvt.SetAcknowledged();
 	}
 
-	// This event handler joins the Ford queue defined on the same
-	// exchange as the prior two event handlers.
-	[JoinQueue("Ford", "SampleTopicExchange")]
-	public void OnFord(ExampleTopicEvent topicEvt)
-	{
-		Console.WriteLine($"Handler: OnFord: {topicEvt.ToIndentedJson()}");
-
-		topicEvt.SetAcknowledged();
-	}
-
-	// This event handler creates a new queue on SampleTopicExchange 
-	// matching any route key.  However, this event handler has a 
-	// dispatch-role specified to only be called if the Make of the
-	// car is <= three characters.  The event is still delivered but
-	// just not passed to this handler.  If there are a large number
-	// of events, it is best to create a dedicated queue on the 
-	// exchange.
-	[AddQueue("SampleTopicExchange", RouteKey = "#",
+	// This event handler creates a new queue on SampleTopicExchange matching 
+	// a specific route key.  This will not join an existing queue but will 
+	// create a new queue specific for this host application.  If you start
+	// another instance of this application, both will create their own queues
+	// and therefore both be called.  This is more of a notification queue
+	// since the message does not require an acknowledgment and the queue
+	// will be deleted when the host application disconnects.
+	[AddQueue("SampleTopicExchange", RouteKey = "VW.JETTA.*.*",
 		IsAutoDelete = true, IsExclusive = true, IsNoAck = true)]
-	public void OnSortMakeName(ExampleTopicEvent topicEvt)
+	public void OnVwJetta(ExampleTopicEvent topicEvt)
 	{
-		Console.WriteLine($"Handler: OnSortMakeNam: {topicEvt.ToIndentedJson()}");
+		Console.WriteLine($"Handler: OnVwJetta: {topicEvt.ToIndentedJson()}");
 	}
 
-	// This adds a queue with a more specific pattern.  Since it 
-	// creating a new queue, it will be called in addition to the
-	// event handler that is specified for the Ford queue.
-	[AddQueue("SampleTopicExchange", RouteKey = "Ford.Mustang.*",
-		IsAutoDelete = true, IsNoAck = true, IsExclusive = true)]
-	public void OnFordMustang(ExampleTopicEvent topicEvt)
+	// This adds a queue with a more specific pattern.  This queue is configured 
+	// to require message acknowlegement.  Also auto-delete is not set so the queue
+	// will remain after the host application disconnects.  This would be the setup
+	// for important messages that are specific to a given application host.
+	[AddQueue("VW-PASSAT-SILVER", "SampleTopicExchange", RouteKey = "VW.PASSAT.*.SILVER",
+		IsAutoDelete = false, IsNoAck = false, IsExclusive = false)]
+	public void OnSilverVwPassat(ExampleTopicEvent topicEvt)
 	{
-		Console.WriteLine($"Handler: OnFordMustang: {topicEvt.ToIndentedJson()}");
+		Console.WriteLine($"Handler: OnSilverVwPassat: {topicEvt.ToIndentedJson()}");
+
+		topicEvt.SetAcknowledged();
+	}
+
+	// This example joins a queue defined by the publisher where the route-key
+	// values are stored in the configuration and not specified in code.
+	[JoinQueue("AUDI", "SampleTopicExchange")]
+	public void OnAudi(ExampleTopicEvent topicEvt)
+	{
+		Console.WriteLine($"Handler: OnAudi: {topicEvt.ToIndentedJson()}");
+
+		topicEvt.SetAcknowledged();
 	}
 }

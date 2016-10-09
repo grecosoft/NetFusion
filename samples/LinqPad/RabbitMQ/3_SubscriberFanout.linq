@@ -84,25 +84,28 @@ public class BrokerSettingsInitializer : AppSettingsInitializer<BrokerSettings>
 	}
 }
 
+[Serializable]
 public class ExampleFanoutEvent : DomainEvent
 {
 	public string Make { get; private set; }
 	public string Model { get; private set; }
-	public DateTime CurrentDateTime { get; private set; }
+	public int Year { get; private set; }
+	public string Color { get; private set; }
+
 }
 
 [Broker("TestBroker")]
 public class FanoutExchangeService : IMessageConsumer
 {
-	[AddFanoutQueue("SampleFanoutExchange->GermanCars")]
-	public void OnGermanCars(ExampleFanoutEvent fanoutEvt)
+	[AddFanoutQueue("HighImportanceExchange")]
+	public void OnHighImportance(ExampleFanoutEvent fanoutEvt)
 	{
-		Console.WriteLine($"Handler: OnGermanCars: { fanoutEvt.ToIndentedJson()}");
+		Console.WriteLine($"Handler: OnHighImportance: { fanoutEvt.ToIndentedJson()}");
 	}
 
-	[AddFanoutQueue("SampleFanoutExchange->AmericanCars")]
-	public void OnAmericanCars(ExampleFanoutEvent fanoutEvt)
+	[AddFanoutQueue("LowImportanceExchange")]
+	public void OnLowImportance(ExampleFanoutEvent fanoutEvt)
 	{
-		Console.WriteLine($"Handler: OnAmericanCars: {fanoutEvt.ToIndentedJson()}");
+		Console.WriteLine($"Handler: OnLowImportance: {fanoutEvt.ToIndentedJson()}");
 	}
 }
