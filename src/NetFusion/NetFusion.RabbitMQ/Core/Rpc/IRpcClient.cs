@@ -1,4 +1,5 @@
 ﻿using NetFusion.Messaging;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Threading.Tasks;
 
@@ -18,9 +19,14 @@ namespace NetFusion.RabbitMQ.Core.Rpc
         string ReplyQueueName { get; }
 
         /// <summary>
+        /// The channel on which the client is subscribed for replies.
+        /// </summary>
+        IModel Channel { get; }
+
+        /// <summary>
         /// The underlying broker consumer.
         /// </summary>
-        EventingBasicConsumer Consumer { get; }
+        EventingBasicConsumer ReplyConsumer { get; }
 
         /// <summary>
         /// Publishes a command to a remote consumer's RPC defined queue.

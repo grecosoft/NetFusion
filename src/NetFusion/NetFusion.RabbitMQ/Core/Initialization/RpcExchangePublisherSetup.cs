@@ -22,6 +22,9 @@ namespace NetFusion.RabbitMQ.Core.Initialization
     /// </summary>
     public class RpcExchangePublisherSetup
     {
+        private bool _disposed;
+        private object _rpcPublisherLock = new Object();
+
         private IContainerLogger _logger;
         private MessageBrokerSetup _brokerSetup;
         private IConnectionManager _connMgr;
@@ -58,14 +61,14 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// <param name="brokerName">The optional broker name to create RPC client for.</param>
         public void DeclareRpcClients(string brokerName = null)
         {
-            IEnumerable<BrokerConnection> brokerConnections = _brokerSetup.BrokerSettings.Connections;
+            IEnumerable<BrokerConnectionSettings> brokerConnections = _brokerSetup.BrokerSettings.Connections;
 
             if (brokerName != null)
             {
                 brokerConnections = brokerConnections.Where(c => c.BrokerName == brokerName);
             }
 
-            foreach (BrokerConnection brokerConn in brokerConnections)
+            foreach (BrokerConnectionSettings brokerConn in brokerConnections)
             {
                 foreach (RpcConsumerSettings rpcConsumer in brokerConn.RpcConsumers)
                 {
@@ -84,13 +87,16 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         {
             Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
 
-            IEnumerable<RpcMessagePublisher> rpcPublishers = _rpcMessagePublishers
+            lock(_rpcPublisherLock)
+            {
+                IEnumerable<RpcMessagePublisher> rpcPublishers = _rpcMessagePublishers
                 .Where(c => c.BrokerName == brokerName).ToList();
 
-            foreach (RpcMessagePublisher rpcPublisher in rpcPublishers)
-            {
-                (rpcPublisher.Client as IDisposable).Dispose();
-                _rpcMessagePublishers.Remove(rpcPublisher);
+                foreach (RpcMessagePublisher rpcPublisher in rpcPublishers)
+                {
+                    (rpcPublisher.Client as IDisposable).Dispose();
+                    _rpcMessagePublishers.Remove(rpcPublisher);
+                }
             }
         }
 
@@ -212,6 +218,25 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                     rpcPublisher.Client.ReplyQueueName
                 };
             });
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected void Dispose(bool dispose)
+        {
+            if (!dispose || _disposed) return;
+            if (_rpcMessagePublishers == null) return;
+
+            foreach (RpcMessagePublisher publisher in _rpcMessagePublishers)
+            {
+                publisher?.Client?.Channel.Dispose();
+            }
+
+            _disposed = true;
         }
     }
 }

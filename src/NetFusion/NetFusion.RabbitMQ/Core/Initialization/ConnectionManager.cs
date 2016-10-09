@@ -14,8 +14,11 @@ namespace NetFusion.RabbitMQ.Core.Initialization
     /// Encapsulates the logic for connecting to the message broker and
     /// creating channels for publishing and consumed queues.
     /// </summary>
-    public class ConnectionManager : IConnectionManager
+    public class ConnectionManager : IConnectionManager,
+        IDisposable
     {
+        private bool _disposed;
+
         private readonly IContainerLogger _logger;
         private readonly BrokerSettings _brokerSettings;
         private readonly IDictionary<string, object> _clientProperties;
@@ -55,7 +58,9 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                     $"once: {String.Join(", ", duplicateBrokerNames)}.");
             }
 
-            return settings.Connections.ToDictionary(c => c.BrokerName);
+            return settings.Connections
+                .Select(s => new BrokerConnection(s))
+                .ToDictionary(c => c.Settings.BrokerName);
         }
 
         /// <summary>
@@ -71,7 +76,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         protected virtual void ConnectToBroker(BrokerConnection brokerConn)
         {
-            IConnectionFactory connFactory = CreateConnFactory(brokerConn);
+            IConnectionFactory connFactory = CreateConnFactory(brokerConn.Settings);
 
             try
             {
@@ -82,9 +87,9 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                 _logger.Error("Error connecting to broker.", ex,
                     new
                     {
-                        brokerConn.BrokerName,
-                        brokerConn.HostName,
-                        brokerConn.UserName
+                        brokerConn.Settings.BrokerName,
+                        brokerConn.Settings.HostName,
+                        brokerConn.Settings.UserName
                     });
 
                 MethodInvoker.TryCallFor<BrokerUnreachableException>(
@@ -98,27 +103,27 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         // Creates a connection factory with an associated list of key/value pairs
         // that will be associated with the connection.  These values can be viewed
         // within the RabbitMQ Web Administration interface.
-        private IConnectionFactory CreateConnFactory(BrokerConnection brokerConn)
+        private IConnectionFactory CreateConnFactory(BrokerConnectionSettings brokerSettings)
         {
-            IDictionary<string, object> clientProps = AppendConnectionProperties(brokerConn, _clientProperties);
+            IDictionary<string, object> clientProps = AppendConnectionProperties(brokerSettings, _clientProperties);
 
             return new ConnectionFactory
             {
-                HostName = brokerConn.HostName,
-                UserName = brokerConn.UserName,
-                Password = brokerConn.Password,
-                VirtualHost = brokerConn.VHostName,
+                HostName = brokerSettings.HostName,
+                UserName = brokerSettings.UserName,
+                Password = brokerSettings.Password,
+                VirtualHost = brokerSettings.VHostName,
                 ClientProperties = clientProps
             };
         }
 
         private IDictionary<string, object> AppendConnectionProperties(
-            BrokerConnection brokerConn,
+            BrokerConnectionSettings brokerSettings,
             IDictionary<string, object> clientProperties)
         {
             var props = new Dictionary<string, object>(clientProperties);
-            props["Broker Name"] = brokerConn.BrokerName;
-            props["Broker User"] = brokerConn.UserName;
+            props["Broker Name"] = brokerSettings.BrokerName;
+            props["Broker User"] = brokerSettings.UserName;
             props["Time Connected"] = DateTime.Now.ToString();
 
             return props;
@@ -170,6 +175,14 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             }
         }
 
+        public void CloseConnections()
+        {
+            foreach (BrokerConnection brokerConn in _connections.Values)
+            {
+                brokerConn?.Connection.Close();
+            }
+        }
+
         /// <summary>
         /// Determines if there is currently an open connection to the broker.
         /// </summary>
@@ -205,6 +218,25 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                    $"An existing broker with the name of: {brokerConn} does not exist.");
             }
             return brokerConn;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected void Dispose(bool dispose)
+        {
+            if (!dispose || _disposed) return;
+            if (_connections == null) return;
+
+            foreach(BrokerConnection brokerConn in _connections.Values)
+            {
+                brokerConn?.Connection.Dispose();
+            }
+
+            _disposed = true;
         }
     }
 }

@@ -8,9 +8,9 @@ namespace NetFusion.RabbitMQ.Configs
     /// Used to specify queue properties that are stored external to
     /// the queue definition defined in code.
     /// </summary>
-    public class QueueProperties : IObjectValidation
+    public class QueuePropertiesSettings : IObjectValidation
     {
-        public QueueProperties()
+        public QueuePropertiesSettings()
         {
             this.RouteKeys = new string[] { };
         }

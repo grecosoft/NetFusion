@@ -45,5 +45,10 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// <param name="brokerName">The name of the configured broker.</param>
         /// <returns>True if connected, otherwise, false.</returns>
         bool IsBrokerConnected(string brokerName);
+
+        /// <summary>
+        /// Closes all broker connections.
+        /// </summary>
+        void CloseConnections();
     }
 }

@@ -22,15 +22,16 @@ namespace NetFusion.RabbitMQ.Core.Rpc
         public const string RPC_BROKER_NAME = "broker-name";
         public const string RPC_HEADER_EXCEPTION_INDICATOR = "IsRpcReplyException";
 
+        public IModel Channel { get; }
+        public string ReplyQueueName { get; }
+        public EventingBasicConsumer ReplyConsumer { get; }
+
         private readonly string _brokerName;
         private readonly RpcConsumerSettings _consumerSettings;
-        private readonly IModel _channel;
-        private readonly string _replyQueueName;
-
+ 
         // Correlation Value to Pending Request Mapping:
         private readonly ConcurrentDictionary<string, RpcPendingRequest> _pendingRpcRequests;
-        private readonly EventingBasicConsumer _replyConsumer;
-
+ 
         public RpcClient(string brokerName, RpcConsumerSettings consumerSettings, IModel channel)
         {
             Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
@@ -38,32 +39,23 @@ namespace NetFusion.RabbitMQ.Core.Rpc
             Check.NotNull(channel, nameof(channel));
 
             _brokerName = brokerName;
-            _channel = channel;
             _consumerSettings = consumerSettings;
-            _replyQueueName = _channel.QueueDeclare().QueueName;
+
+            this.Channel = channel;
+            this.ReplyConsumer = new EventingBasicConsumer(channel);
+            this.ReplyQueueName = this.Channel.QueueDeclare().QueueName;
 
             // Pending requests by correlation value.
             _pendingRpcRequests = new ConcurrentDictionary<string, RpcPendingRequest>();
-            _replyConsumer = new EventingBasicConsumer(channel);
-
+            
             ConsumeReplyQueue();
         }
 
         // Process the consumer's replays to submitted requests.
         private void ConsumeReplyQueue()
         {
-            _channel.BasicConsume(_replyQueueName, true, _replyConsumer);
-            _replyConsumer.Received += HandleReplyResponse;
-        }
-
-        public EventingBasicConsumer Consumer
-        {
-            get { return _replyConsumer;  }
-        }
-
-        public string ReplyQueueName
-        {
-            get { return _replyQueueName; }
+            this.Channel.BasicConsume(this.ReplyQueueName, true, this.ReplyConsumer);
+            this.ReplyConsumer.Received += HandleReplyResponse;
         }
 
         public async Task<byte[]> Invoke(ICommand command, RpcProperties rpcProps, 
@@ -86,7 +78,7 @@ namespace NetFusion.RabbitMQ.Core.Rpc
 
             IBasicProperties basicProps = GetRequestProperties(command, rpcProps);
 
-            _channel.BasicPublish(DEFAULT_EXCHANGE, _consumerSettings.RequestQueueName,
+            this.Channel.BasicPublish(DEFAULT_EXCHANGE, _consumerSettings.RequestQueueName,
                 basicProps,
                 messageBody);
 
@@ -113,10 +105,10 @@ namespace NetFusion.RabbitMQ.Core.Rpc
 
         private IBasicProperties GetRequestProperties(ICommand command, RpcProperties rpcProps)
         {
-            IBasicProperties props = _channel.CreateBasicProperties();
+            IBasicProperties props = this.Channel.CreateBasicProperties();
 
             props.Headers = new Dictionary<string, object> { { RPC_BROKER_NAME, _brokerName } };
-            props.ReplyTo = _replyQueueName;
+            props.ReplyTo = this.ReplyQueueName;
             props.CorrelationId = command.GetCorrelationId();
             props.ContentType = rpcProps.ContentType;
             props.Type = rpcProps.ExternalTypeName;

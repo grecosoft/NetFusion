@@ -70,10 +70,10 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             var settings = new BrokerSettings();
             var mockExchange = new Mock<IMessageBroker>();
 
-            settings.Connections = new List<BrokerConnection>
+            settings.Connections = new List<BrokerConnectionSettings>
             {
-                new BrokerConnection { BrokerName = "Broker1" },
-                new BrokerConnection { BrokerName = "Broker1" }
+                new BrokerConnectionSettings { BrokerName = "Broker1" },
+                new BrokerConnectionSettings { BrokerName = "Broker1" }
             };
 
             this.Arrange(config =>
@@ -110,12 +110,12 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
                 .Callback<NetFusion.RabbitMQ.Core.MessageBrokerSetup>(s => metadata = s);
 
             // Define the broker connection and an externally defined queue route key.
-            settings.Connections = new List<BrokerConnection>
+            settings.Connections = new List<BrokerConnectionSettings>
             {
-                new BrokerConnection {
+                new BrokerConnectionSettings {
                     BrokerName = "MockTestBrokerName",
-                    QueueProperties = new QueueProperties[] {
-                        new QueueProperties { QueueName = "MockTestQueueName", RouteKeys = new [] {"RouteKeyTwo"} }
+                    QueueProperties = new QueuePropertiesSettings[] {
+                        new QueuePropertiesSettings { QueueName = "MockTestQueueName", RouteKeys = new [] {"RouteKeyTwo"} }
                     }
                 }
             };
@@ -174,9 +174,9 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
                 .Callback<IEnumerable<MessageConsumer>>(mc => consumers = mc);
 
             // Define the broker connection and an externally defined queue route key.
-            settings.Connections = new List<BrokerConnection>
+            settings.Connections = new List<BrokerConnectionSettings>
             {
-                new BrokerConnection { BrokerName = "MockTestBrokerName" }
+                new BrokerConnectionSettings { BrokerName = "MockTestBrokerName" }
             };
 
             this.Arrange(config =>

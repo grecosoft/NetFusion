@@ -60,9 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BrokerException.cs" />
-    <Compile Include="Configs\BrokerConnection.cs" />
+    <Compile Include="Configs\BrokerConnectionSettings.cs" />
     <Compile Include="Configs\BrokerSettings.cs" />
-    <Compile Include="Configs\QueueProperties.cs" />
+    <Compile Include="Configs\QueuePropertiesSettings.cs" />
     <Compile Include="Configs\RpcConsumerSettings.cs" />
     <Compile Include="Consumers\AddFanoutQueueAttribute.cs" />
     <Compile Include="Consumers\AddQueueAttribute.cs" />
@@ -73,6 +73,7 @@
     <Compile Include="Consumers\RpcCommandAttribute.cs" />
     <Compile Include="Core\BasicPropertiesExtensions.cs" />
     <Compile Include="Core\ChannelExtensions.cs" />
+    <Compile Include="Core\Initialization\BrokerConnection.cs" />
     <Compile Include="Core\MessageExchangeDefinition.cs" />
     <Compile Include="Core\ExchangeQueue.cs" />
     <Compile Include="Core\IMessageBroker.cs" />

@@ -278,9 +278,9 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ
             {
                 BrokerSettings = new BrokerSettings
                 {
-                    Connections = new BrokerConnection[]
+                    Connections = new BrokerConnectionSettings[]
                         {
-                            new BrokerConnection { BrokerName = "MockTestBrokerName", HostName = "TestHost" }
+                            new BrokerConnectionSettings { BrokerName = "MockTestBrokerName", HostName = "TestHost" }
                         }
                 }
             };

@@ -17,11 +17,11 @@ namespace NetFusion.RabbitMQ.Configs
         /// <summary>
         /// List of broker connections populated by host application.
         /// </summary>
-        public IEnumerable<BrokerConnection> Connections { get; set; }
+        public IEnumerable<BrokerConnectionSettings> Connections { get; set; }
 
         public BrokerSettings()
         {
-            this.Connections = new List<BrokerConnection>();
+            this.Connections = new List<BrokerConnectionSettings>();
         }
 
         /// <summary>
@@ -40,11 +40,11 @@ namespace NetFusion.RabbitMQ.Configs
         /// </summary>
         /// <param name="brokerName">The name of the connection to search.</param>
         /// <returns>The found connection configuration or an exception.</returns>
-        public BrokerConnection GetConnection(string brokerName)
+        public BrokerConnectionSettings GetConnection(string brokerName)
         {
             Check.NotNull(brokerName, nameof(brokerName));
 
-            BrokerConnection conn = this.Connections.FirstOrDefault(c => c.BrokerName == brokerName);
+            BrokerConnectionSettings conn = this.Connections.FirstOrDefault(c => c.BrokerName == brokerName);
             
             if (conn == null)
             {
@@ -62,7 +62,7 @@ namespace NetFusion.RabbitMQ.Configs
         {
             Check.NotNull(exchange, nameof(exchange));
 
-            foreach (QueueProperties queueProps in GetBrokerQueueProperties(exchange.BrokerName))
+            foreach (QueuePropertiesSettings queueProps in GetBrokerQueueProperties(exchange.BrokerName))
             {
                 ExchangeQueue queue = exchange.Queues.FirstOrDefault(q => q.QueueName == queueProps.QueueName);
                 if (queue != null)
@@ -80,8 +80,8 @@ namespace NetFusion.RabbitMQ.Configs
         {
             Check.NotNull(consumer, nameof(consumer));
 
-            IEnumerable<QueueProperties> properties = GetBrokerQueueProperties(consumer.BrokerName);
-            QueueProperties queueProps = properties.FirstOrDefault(qp => qp.QueueName == consumer.QueueName);
+            IEnumerable<QueuePropertiesSettings> properties = GetBrokerQueueProperties(consumer.BrokerName);
+            QueuePropertiesSettings queueProps = properties.FirstOrDefault(qp => qp.QueueName == consumer.QueueName);
 
             if (queueProps != null)
             {
@@ -89,10 +89,10 @@ namespace NetFusion.RabbitMQ.Configs
             }
         }
 
-        private IEnumerable<QueueProperties> GetBrokerQueueProperties(string brokerName)
+        private IEnumerable<QueuePropertiesSettings> GetBrokerQueueProperties(string brokerName)
         {
-            BrokerConnection brokerConn = this.Connections.FirstOrDefault(c => c.BrokerName == brokerName);
-            return brokerConn?.QueueProperties ?? new QueueProperties[] { };
+            BrokerConnectionSettings brokerConn = this.Connections.FirstOrDefault(c => c.BrokerName == brokerName);
+            return brokerConn?.QueueProperties ?? new QueuePropertiesSettings[] { };
         }
 
         /// <summary>

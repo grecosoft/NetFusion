@@ -27,7 +27,9 @@ namespace NetFusion.RabbitMQ.Modules
     internal class MessageBrokerModule : PluginModule
     {
         private bool _disposed;
+
         private BrokerSettings _brokerSettings;
+        private IConnectionManager _connManager;
         private IMessageBroker _messageBroker;
         private IEnumerable<MessageConsumer> _messageConsumers;
   
@@ -40,6 +42,8 @@ namespace NetFusion.RabbitMQ.Modules
             if (dispose && !_disposed)
             {
                 (_messageBroker as IDisposable)?.Dispose();
+                (_connManager as IDisposable)?.Dispose();
+
                 _disposed = true;
             }
 
@@ -76,15 +80,16 @@ namespace NetFusion.RabbitMQ.Modules
         // determines the queues that should be created.
         public override void StartModule(ILifetimeScope scope)
         {
-            _messageBroker = scope.Resolve<IMessageBroker>();
             _brokerSettings = GetBrokerSettings(scope);
+            _connManager = CreateConnectionManager();
+            _messageBroker = scope.Resolve<IMessageBroker>();
             _messageConsumers = GetQueueConsumers(scope);
             
             InitializeExchanges(_brokerSettings);
 
             _messageBroker.Initialize(new MessageBrokerSetup
             {
-                ConnectionMgr = CreateConnectionManager(),
+                ConnectionMgr = _connManager,
                 SerializationMgr = CreateSerializationManager(),
 
                 BrokerSettings = _brokerSettings,
@@ -230,13 +235,7 @@ namespace NetFusion.RabbitMQ.Modules
 
         public override void StopModule(ILifetimeScope scope)
         {
-            if (_brokerSettings.Connections != null)
-            {
-                foreach (BrokerConnection broker in _brokerSettings.Connections)
-                {
-                     broker.Connection?.Close();
-                }
-            }
+            _connManager?.CloseConnections();
         }
 
         public override void Log(IDictionary<string, object> moduleLog)

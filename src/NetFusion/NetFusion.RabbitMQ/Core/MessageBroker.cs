@@ -104,26 +104,9 @@ namespace NetFusion.RabbitMQ.Core
         {
             if (!dispose || _disposed) return;
 
-            DisposeChannels();
-            DisposeConnections();
+            _exchangeConsumer.Dispose();
 
             _disposed = true;
-        }
-
-        private void DisposeConnections()
-        {
-            foreach (BrokerConnection connection in _brokerSetup.BrokerSettings.Connections)
-            {
-                (connection as IDisposable)?.Dispose();
-            }
-        }
-
-        private void DisposeChannels()
-        {
-            foreach(MessageHandler handler in _messageConsumers.SelectMany(mc => mc.MessageHandlers))
-            {
-                handler.Channel?.Dispose();
-            }
         }
 
         public void ConfigureBroker()
@@ -175,7 +158,7 @@ namespace NetFusion.RabbitMQ.Core
         {
             foreach(RpcMessagePublisher rpcPublisher in _rpcExchangePublisher.RpcMessagePublishers)
             {
-                rpcPublisher.Client.Consumer.Shutdown += (sender, shutdownEvent) => {
+                rpcPublisher.Client.ReplyConsumer.Shutdown += (sender, shutdownEvent) => {
 
                     if (_connMgr.IsUnexpectedShutdown(shutdownEvent))
                     {

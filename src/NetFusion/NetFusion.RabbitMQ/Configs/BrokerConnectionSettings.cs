@@ -1,6 +1,5 @@
 ﻿using NetFusion.Common;
 using NetFusion.Common.Validation;
-using RabbitMQ.Client;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,7 +9,7 @@ namespace NetFusion.RabbitMQ.Configs
     /// <summary>
     /// Contains properties for connecting to a given message broker.
     /// </summary>
-    public class BrokerConnection : IObjectValidation
+    public class BrokerConnectionSettings : IObjectValidation
     {
         /// <summary>
         /// The name key name of the broker used in code when declaring exchanges.
@@ -48,31 +47,28 @@ namespace NetFusion.RabbitMQ.Configs
         /// </summary>
         public IEnumerable<RpcConsumerSettings> RpcConsumers { get; set; } 
 
-        public BrokerConnection()
+        public BrokerConnectionSettings()
         {
             this.RpcConsumers = new List<RpcConsumerSettings>();
-            this.QueueProperties = new List<QueueProperties>();
+            this.QueueProperties = new List<QueuePropertiesSettings>();
         }
 
         /// <summary>
         /// Additional properties that can be specified for a queue. 
         /// </summary>
-        public IEnumerable<QueueProperties> QueueProperties { get; set; }
-
-        // The established connection.
-        internal IConnection Connection { get; set; }
+        public IEnumerable<QueuePropertiesSettings> QueueProperties { get; set; }
 
         /// <summary>
         /// Returns the configuration properties for a specified queue.
         /// </summary>
         /// <param name="queueName">The queue name to search.</param>
         /// <returns>The configured properties or a default instance.</returns>
-        public QueueProperties GetQueueProperties(string queueName)
+        public QueuePropertiesSettings GetQueueProperties(string queueName)
         {
             Check.NotNull(queueName, nameof(queueName));
 
-            QueueProperties props = this.QueueProperties.FirstOrDefault(qp => qp.QueueName == queueName);
-            return props ?? new QueueProperties { QueueName = queueName };
+            QueuePropertiesSettings props = this.QueueProperties.FirstOrDefault(qp => qp.QueueName == queueName);
+            return props ?? new QueuePropertiesSettings { QueueName = queueName };
         }
 
         /// <summary>

@@ -19,8 +19,10 @@ namespace NetFusion.RabbitMQ.Core.Initialization
     /// Encapsulates the logic for subscribing to message queues and 
     /// consuming the published messages.
     /// </summary>
-    public class ExchangeConsumerSetup
+    public class ExchangeConsumerSetup: IDisposable
     {
+        private bool _disposed;
+
         private readonly IContainerLogger _logger;
         private readonly IMessagingModule _messagingModule;
         private readonly MessageBrokerSetup _brokerSetup;
@@ -87,7 +89,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         private int GetNumberQueueConsumers(MessageConsumer messageConsumer)
         {
-            BrokerConnection conn = _brokerSetup.BrokerSettings.GetConnection(messageConsumer.BrokerName);
+            BrokerConnectionSettings conn = _brokerSetup.BrokerSettings.GetConnection(messageConsumer.BrokerName);
             return conn.GetQueueProperties(messageConsumer.QueueName).NumberConsumers;
         }
 
@@ -204,6 +206,25 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                     Message = message
                 };
             });
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected void Dispose(bool dispose)
+        {
+            if (!dispose || _disposed) return;
+            if (_messageConsumers == null) return;
+
+            foreach (MessageHandler handler in _messageConsumers.SelectMany(mc => mc.MessageHandlers))
+            {
+                handler.Channel?.Dispose();
+            }
+
+            _disposed = true;
         }
     }
 }
