@@ -105,6 +105,7 @@ namespace NetFusion.RabbitMQ.Core
             if (!dispose || _disposed) return;
 
             _exchangeConsumer.Dispose();
+            _rpcExchangePublisher.Dispose();
 
             _disposed = true;
         }
