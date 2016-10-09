@@ -87,7 +87,7 @@ public class BrokerSettingsInitializer : AppSettingsInitializer<BrokerSettings>
 [Broker("TestBroker")]
 public class ExampleWorkQueueService : IMessageConsumer
 {
-	[JoinQueue("ProcessSale")]
+	[JoinQueue("PROCESS_SALE")]
 	public void OnProcessSale(ExampleWorkQueueEvent workQueueEvent)
 	{
 		Console.WriteLine($"Handler: OnProcessSale: {workQueueEvent.ToIndentedJson()}");
@@ -95,7 +95,7 @@ public class ExampleWorkQueueService : IMessageConsumer
 		workQueueEvent.SetAcknowledged();
 	}
 
-	[JoinQueue("ProcessService")]
+	[JoinQueue("PROCESS_SERVICE")]
 	public void OnProcessService(ExampleWorkQueueEvent workQueueEvent)
 	{
 		Console.WriteLine($"Handler: OnProcessService: {workQueueEvent.ToIndentedJson()}");
@@ -104,11 +104,10 @@ public class ExampleWorkQueueService : IMessageConsumer
 	}
 }
 
+[Serializable]
 public class ExampleWorkQueueEvent : DomainEvent
 {
-	public string Vin { get; private set; }
 	public string Make { get; private set; }
-	public string Model { get; private set; }
+    public string Model { get; private set; }
 	public int Year { get; private set; }
-	public DateTime CurrentDateTime { get; private set; }
 }

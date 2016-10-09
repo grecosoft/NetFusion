@@ -1,13 +1,13 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Domain.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Domain.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Messaging.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
-  <Reference Relative="..\libs\RabbitMQ.Client.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Domain.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Domain.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Messaging.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\RabbitMQ.Client.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Extensions</Namespace>
@@ -27,6 +27,7 @@
   <Namespace>NetFusion.Settings.Strategies</Namespace>
   <Namespace>NetFusion.Settings.Testing</Namespace>
   <Namespace>NetFusion.RabbitMQ.Exchanges</Namespace>
+  <Namespace>NetFusion.Domain.Scripting</Namespace>
 </Query>
 
 // *******************************************************************************************************
@@ -116,16 +117,19 @@ public void PublishFanoutEvent(Car car)
 
 public class Car
 {
-	public string Vin { get; set; }
 	public string Make { get; set; }
-	public string Model { get; set; }
+    public string Model { get; set; }
 	public int Year { get; set; }
+	public string Color { get; set; }
 }
 
+[Serializable]
 public class ExampleFanoutEvent : DomainEvent
 {
 	public string Make { get; private set; }
 	public string Model { get; private set; }
+	public int Year { get; private set; }
+	public string Color { get; private set; }
 
 	public ExampleFanoutEvent() { }
 
@@ -134,41 +138,33 @@ public class ExampleFanoutEvent : DomainEvent
 		this.CurrentDateTime = DateTime.UtcNow;
 		this.Make = car.Make;
 		this.Model = car.Model;
-
-		this.SetRouteKey(car.Make);
+		this.Year = car.Year;
+		this.Color = car.Color;
 	}
 
 	public DateTime CurrentDateTime { get; private set; }
 }
 
-public class AmericanCarExchange : FanoutExchange<ExampleFanoutEvent>
+[ApplyScriptPredicate("HighImportanceCriteria", variableName: "IsHighImportance")]
+public class HighImportanceExchange : FanoutExchange<ExampleFanoutEvent>
 {
 	protected override void OnDeclareExchange()
 	{
 		Settings.BrokerName = "TestBroker";
-		Settings.ExchangeName = "SampleFanoutExchange->AmericanCars";
-	}
-
-	// This is optional and is called to determine if the exchange should be
-	// sent the message.
-	protected override bool Matches(ExampleFanoutEvent message)
-	{
-		return message.Make.InSet("Ford", "GMC", "Chevy");
+		Settings.ExchangeName = "HighImportanceExchange";
 	}
 }
 
-public class GermanCarExchange : FanoutExchange<ExampleFanoutEvent>
+public class LowImportanceExchange : FanoutExchange<ExampleFanoutEvent>
 {
 	protected override void OnDeclareExchange()
 	{
 		Settings.BrokerName = "TestBroker";
-		Settings.ExchangeName = "SampleFanoutExchange->GermanCars";
+		Settings.ExchangeName = "LowImportanceExchange";
 	}
 
-	// This is optional and is called to determine if the exchange should be
-	// sent the message.
 	protected override bool Matches(ExampleFanoutEvent message)
 	{
-		return message.Make.InSet("VW", "Audi", "BMW");
+		return message.Make.Equals("Toyota", System.StringComparison.OrdinalIgnoreCase) && message.Year > 2014;
 	}
 }

@@ -1,13 +1,13 @@
 <Query Kind="Program">
-  <Reference Relative="..\libs\Autofac.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Common.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Domain.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Domain.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Messaging.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
-  <Reference Relative="..\libs\NetFusion.Settings.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
-  <Reference Relative="..\libs\Newtonsoft.Json.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
-  <Reference Relative="..\libs\RabbitMQ.Client.dll">C:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
+  <Reference Relative="..\libs\Autofac.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Autofac.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Bootstrap.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Bootstrap.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Common.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Common.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Domain.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Domain.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Messaging.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Messaging.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.RabbitMQ.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.RabbitMQ.dll</Reference>
+  <Reference Relative="..\libs\NetFusion.Settings.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\NetFusion.Settings.dll</Reference>
+  <Reference Relative="..\libs\Newtonsoft.Json.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\Newtonsoft.Json.dll</Reference>
+  <Reference Relative="..\libs\RabbitMQ.Client.dll">E:\_dev\git\NetFusion\samples\LinqPad\libs\RabbitMQ.Client.dll</Reference>
   <Namespace>Autofac</Namespace>
   <Namespace>NetFusion.Bootstrap.Container</Namespace>
   <Namespace>NetFusion.Bootstrap.Extensions</Namespace>
@@ -68,7 +68,7 @@ void Main()
 	.Build()
 	.Start();
 
-	PublishTopicEvent(new Car { Make = "Ford", Model = "Mustang", Year = 2016 });
+	PublishTopicEvent(new Car { Make = "VW", Model = "GTI", Year = 2016 });
 }
 
 // -------------------------------------------------------------------------------------
@@ -104,30 +104,30 @@ public void PublishTopicEvent(Car car)
 
 public class Car
 {
-	public string Vin { get; set; }
 	public string Make { get; set; }
 	public string Model { get; set; }
 	public int Year { get; set; }
+	public string Color { get; set; }
 }
-
+[Serializable]
 public class ExampleTopicEvent : DomainEvent
 {
-	public string Vin { get; private set; }
 	public string Make { get; private set; }
 	public string Model { get; private set; }
 	public int Year { get; private set; }
+	public string Color { get; private set; }
 
 	public ExampleTopicEvent() { }
 
 	public ExampleTopicEvent(Car car)
 	{
 		this.CurrentDateTime = DateTime.UtcNow;
-		this.Vin = car.Vin;
 		this.Make = car.Make;
 		this.Model = car.Model;
 		this.Year = car.Year;
+		this.Color = car.Color;
 
-		this.SetRouteKey(car.Make, car.Year, car.Year);
+		this.SetRouteKey(car.Make, car.Model, car.Year, car.Color);
 	}
 
 	public DateTime CurrentDateTime { get; private set; }
@@ -140,19 +140,19 @@ public class ExampleTopicExchange : TopicExchange<ExampleTopicEvent>
 		Settings.BrokerName = "TestBroker";
 		Settings.ExchangeName = "SampleTopicExchange";
 
-		QueueDeclare("Chevy", config =>
+		QueueDeclare("VW-GTI", config =>
 		{
-			config.RouteKeys = new[] { "Chevy.*.*" };
+			config.RouteKeys = new[] { "VW.GTI.*.*" };
 		});
 
-		QueueDeclare("Chevy-Vette", config =>
+		QueueDeclare("VW-BLACK", config =>
 		{
-			config.RouteKeys = new[] { "Chevy.Vette.*" };
+			config.RouteKeys = new[] { "VW.*.*.BLACK" };
 		});
 
-		QueueDeclare("Ford", config =>
+		QueueDeclare("AUDI", config =>
 		{
-			config.RouteKeys = new[] { "Ford.*.*", "Lincoln.*.*" };
+			config.RouteKeys = new[] { "Audi.*.*.*" };
 		});
 	}
 }

@@ -84,13 +84,13 @@ public class BrokerSettingsInitializer : AppSettingsInitializer<BrokerSettings>
 	}
 }
 
+[Serializable]
 public class ExampleDirectEvent : DomainEvent
 {
-	public string Vin { get; private set; }
 	public string Make { get; private set; }
 	public string Model { get; private set; }
 	public int Year { get; private set; }
-	public DateTime CurrentDateTime { get; private set; }
+	public string Color { get; private set; }
 }
 
 [Broker("TestBroker")]
@@ -99,10 +99,10 @@ public class ExampleDirectService : IMessageConsumer
 	// This method will join to the 2015-2016-Cars queue defined on the
 	// ExampleDirectExchange.  Since this handler is joining the queue,
 	// it will be called round-robin with other subscribed clients.
-	[JoinQueue("2015-2016-Cars", "SampleDirectExchange")]
-	public void OnModelYear(ExampleDirectEvent directEvt)
+	[JoinQueue("GENERAL-MOTORS", "SampleDirectExchange")]
+	public void OnGeneralMotors(ExampleDirectEvent directEvt)
 	{
-		Console.WriteLine("Handler: OnModelYear[2015-2016-Cars]");
+		Console.WriteLine("Handler: OnGeneralMotors");
 		Console.WriteLine(directEvt.ToIndentedJson());
 
 		directEvt.SetAcknowledged();
@@ -111,10 +111,10 @@ public class ExampleDirectService : IMessageConsumer
 	// This method will join to the UsedCars queue defined on the
 	// ExampleDirectExchange.  Since this handler is joining the queue,
 	// it will be called round-robin with other subscribed clients.
-	[JoinQueue("UsedCars", "SampleDirectExchange")]
-	public void OnUsedCars(ExampleDirectEvent directEvt)
+	[JoinQueue("VOLKSWAGEN", "SampleDirectExchange")]
+	public void OnVolkswagen(ExampleDirectEvent directEvt)
 	{
-		Console.WriteLine("Handler: OnUsedCars[UsedCars]");
+		Console.WriteLine("Handler: OnVolkswagen");
 		Console.WriteLine(directEvt.ToIndentedJson());
 
 		directEvt.SetAcknowledged();

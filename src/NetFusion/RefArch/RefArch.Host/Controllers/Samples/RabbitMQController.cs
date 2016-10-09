@@ -26,7 +26,6 @@ namespace RefArch.Host.Controllers.Samples
         public Task PublishDirectEvent(Car car)
         {
             var evt = new ExampleDirectEvent(car);
-            evt.Attributes.Values.Test = "AAAABBBBB";
             return _messagingSrv.PublishAsync(evt);
         }
 

@@ -195,7 +195,7 @@ public string RunAsyncEventException(MessageExInfo info)
 	}
 	catch (PublisherException ex)
 	{
-		return ex.PublishDetails.ToIndentedJson();
+		return ex.Data.ToIndentedJson();
 	}
 
 	return "Expected Exception not Raised.";
