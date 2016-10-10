@@ -37,7 +37,10 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// is not opened.
         /// </summary>
         /// <param name="brokerName">The name of the configured broker.</param>
-        void ReconnectToBroker(string brokerName);
+        /// <returns>True if the broker connection was reestablished and False,
+        /// if the connection was already connected to the broker and didn't 
+        /// need to be reestablished.</returns>
+        bool ReconnectToBroker(string brokerName);
 
         /// <summary>
         /// Determines if the specified broker connection is established to server.

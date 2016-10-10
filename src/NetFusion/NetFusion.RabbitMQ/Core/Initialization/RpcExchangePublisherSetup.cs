@@ -83,7 +83,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             }
         }
 
-        public void RemoveRpcBrokerPublishers(string brokerName)
+        public void ClearRpcClients(string brokerName)
         {
             Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
 

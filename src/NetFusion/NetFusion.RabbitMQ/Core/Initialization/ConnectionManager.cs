@@ -163,7 +163,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// Reestablishes the connection to the broker if not open.
         /// </summary>
         /// <param name="brokerName">The name of the broker.</param>
-        public void ReconnectToBroker(string brokerName)
+        public bool ReconnectToBroker(string brokerName)
         {
             Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
 
@@ -172,7 +172,9 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             if (brokerConn.Connection == null || !brokerConn.Connection.IsOpen)
             {
                 ConnectToBroker(brokerConn);
+                return true;
             }
+            return false;
         }
 
         public void CloseConnections()

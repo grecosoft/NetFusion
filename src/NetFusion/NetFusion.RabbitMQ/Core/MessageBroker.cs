@@ -3,11 +3,11 @@ using NetFusion.Common;
 using NetFusion.Domain.Scripting;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Modules;
-using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Core.Initialization;
 using NetFusion.RabbitMQ.Core.Rpc;
 using NetFusion.RabbitMQ.Integration;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,8 +24,11 @@ namespace NetFusion.RabbitMQ.Core
     {
         private bool _disposed;
 
-        private readonly IContainerLogger _logger;
+        // The broker delegates to the base messaging module when received
+        // messages need to be dispatched to in-process consumers.
         private readonly IMessagingModule _messagingModule;
+
+        private readonly IContainerLogger _logger;
         private readonly IBrokerMetaRepository _exchangeRep;
         private readonly IEntityScriptingService _scriptingSrv;
 
@@ -45,11 +48,17 @@ namespace NetFusion.RabbitMQ.Core
             _scriptingSrv = scriptingSrv;
         }
 
+        // External settings and configuration information
+        // provided by the plug-in module.
         private MessageBrokerSetup _brokerSetup;
         private IEnumerable<MessageConsumer> _messageConsumers;
 
+        // External managers provided by the plug-in module.
         private IConnectionManager _connMgr;
         private ISerializationManager _serializationMgr;
+
+        // Individual setup classes that are delegated to and contain 
+        // implementation for specific publisher or consumer behaviors. 
         private ExchangePublisherSetup _exchangePublisher;
         private ExchangeConsumerSetup _exchangeConsumer;
         private RpcExchangePublisherSetup _rpcExchangePublisher;
@@ -71,6 +80,7 @@ namespace NetFusion.RabbitMQ.Core
             InitializeConsumers();
         }
 
+        // Initializes the classes that encapsulate the publishing of messages.
         private void InitializePublishers()
         {
             _exchangePublisher = new ExchangePublisherSetup(_logger, _brokerSetup,
@@ -83,6 +93,7 @@ namespace NetFusion.RabbitMQ.Core
                _serializationMgr);
         }
 
+        // Initializes the classes that encapsulate the consuming of messages.
         private void InitializeConsumers()
         {
             _exchangeConsumer = new ExchangeConsumerSetup(_logger, _messagingModule, _brokerSetup,
@@ -113,6 +124,7 @@ namespace NetFusion.RabbitMQ.Core
         public void ConfigureBroker()
         {
             _connMgr.EstablishBrockerConnections();
+
             _exchangePublisher.DeclareExchanges();
             _rpcExchangePublisher.DeclareRpcClients();
         }
@@ -155,39 +167,60 @@ namespace NetFusion.RabbitMQ.Core
             AttachRpcBrokerMonitoringHandlers();
         }
 
+        // For each RPC Message publisher, monitor the Reply-consumer for unexpected
+        // shutdown events and re-declare the RPC clients after a new connection has
+        // been established.
         private void AttachRpcBrokerMonitoringHandlers()
         {
-            foreach(RpcMessagePublisher rpcPublisher in _rpcExchangePublisher.RpcMessagePublishers)
+            bool handelingShutdown = false;
+
+            IEnumerable<RpcMessagePublisher> monitoringConsumers = _rpcExchangePublisher.RpcMessagePublishers
+                .GroupBy(p => p.BrokerName)
+                .Select(g => g.First())
+                .ToList();
+
+            foreach (RpcMessagePublisher rpcPublisher in monitoringConsumers)
             {
                 rpcPublisher.Client.ReplyConsumer.Shutdown += (sender, shutdownEvent) => {
 
                     if (_connMgr.IsUnexpectedShutdown(shutdownEvent))
                     {
-                        _connMgr.ReconnectToBroker(rpcPublisher.BrokerName);
-                        _rpcExchangePublisher.RemoveRpcBrokerPublishers(rpcPublisher.BrokerName);
+                        handelingShutdown = true;
+                        _rpcExchangePublisher.ClearRpcClients(rpcPublisher.BrokerName);
                         _rpcExchangePublisher.DeclareRpcClients(rpcPublisher.BrokerName);
                     }
                 };
             }
+
+            // Attach handler to ShutDown event of newly established consumers.
+            if (handelingShutdown)
+            {
+                AttachRpcBrokerMonitoringHandlers();
+            }
         }
 
-        // Determine a consumer for each of the connected brokers and attach an event
-        // handler to monitor the connection for any failures.
+        // Determine single consumer for each of the unique broker connection.
+        // For this unique per-broker consumer, monitor for unexpected shut
+        // down events.
         private void AttachBokerMonitoringHandlers()
         {
-            //IEnumerable<MessageConsumer> monitoringConsumers = _messageConsumers.GroupBy(c => c.BrokerName)
-            //    .Select(g => g.First())
-            //    .ToList();
+            IEnumerable<MessageConsumer> monitoringConsumers = _messageConsumers.GroupBy(c => c.BrokerName)
+                .Select(g => g.First())
+                .ToList();
 
-            //foreach (MessageConsumer consumer in monitoringConsumers)
-            //{
-            //    var channel = consumer.Channel
+            foreach (MessageConsumer messageConsumer in monitoringConsumers)
+            {
+                MessageHandler messageHandler = messageConsumer.MessageHandlers.FirstOrDefault();
+                EventingBasicConsumer consumer = messageHandler?.EventConsumer;
 
-            //    consumer. First().Shutdown += (sender, shutdownEvent) =>
-            //    {
-            //        RestablishConnection(consumer, shutdownEvent);
-            //    };
-            //}
+                if (consumer != null)
+                {
+                    consumer.Shutdown += (sender, shutdownEvent) =>
+                    {
+                        RestablishConnection(messageConsumer, shutdownEvent);
+                    };
+                }
+            }
         }
 
         #region Broker Reconnection
@@ -214,13 +247,13 @@ namespace NetFusion.RabbitMQ.Core
                 {
                     ReCreatePublisherExchanges(channel, brokerMeta);
                     ReCreateConsumerQueues(channel, brokerMeta);
-                    _exchangeConsumer.BindConsumersToQueues(_messageConsumers, messageConsumer.BrokerName);
 
+                    _exchangeConsumer.BindConsumersToQueues(_messageConsumers, messageConsumer.BrokerName);
                     _rpcExchangeConsumer.BindConsumersToRpcQueues();
                 }
 
                 // Watch for future issues.
-                AttachBokerMonitoringHandlers();
+                AttachBokerMonitoringHandlers(); 
 
                 _logger.Debug("Connection to broker was reestablished.");
             }
