@@ -163,8 +163,8 @@ namespace NetFusion.RabbitMQ.Core
 
         private void MonitorForConnectionFailures()
         {
-            AttachBokerMonitoringHandlers();
-            AttachRpcBrokerMonitoringHandlers();
+           AttachBokerMonitoringHandlers();
+           AttachRpcBrokerMonitoringHandlers();
         }
 
         // For each RPC Message publisher, monitor the Reply-consumer for unexpected
@@ -172,8 +172,6 @@ namespace NetFusion.RabbitMQ.Core
         // been established.
         private void AttachRpcBrokerMonitoringHandlers()
         {
-            bool handelingShutdown = false;
-
             IEnumerable<RpcMessagePublisher> monitoringConsumers = _rpcExchangePublisher.RpcMessagePublishers
                 .GroupBy(p => p.BrokerName)
                 .Select(g => g.First())
@@ -185,17 +183,13 @@ namespace NetFusion.RabbitMQ.Core
 
                     if (_connMgr.IsUnexpectedShutdown(shutdownEvent))
                     {
-                        handelingShutdown = true;
                         _rpcExchangePublisher.ClearRpcClients(rpcPublisher.BrokerName);
                         _rpcExchangePublisher.DeclareRpcClients(rpcPublisher.BrokerName);
+
+                        // Attach handler to ShutDown event of newly established consumers.
+                        AttachRpcBrokerMonitoringHandlers();
                     }
                 };
-            }
-
-            // Attach handler to ShutDown event of newly established consumers.
-            if (handelingShutdown)
-            {
-                AttachRpcBrokerMonitoringHandlers();
             }
         }
 

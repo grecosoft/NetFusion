@@ -64,6 +64,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
             foreach (MessageConsumer messageConsumer in messageConsumers)
             {
+                messageConsumer.MessageHandlers.Clear();
                 CreateConsumerQueue(messageConsumer);
 
                 int numberConsumers = GetNumberQueueConsumers(messageConsumer);
