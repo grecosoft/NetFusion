@@ -115,7 +115,7 @@ namespace NetFusion.Messaging.Modules
         {
             var invalidMessageDispatches = this.CommandTypes
                 .Select(InProcessDispatchers.WhereHandlerForMessage)
-                .Where(di => di.Count() > 1)
+                .Where(di => di.Count(i => i.DispatchRules.Length == 0) > 1)
                 .SelectMany(di => di)
                 .Select(di => new
                 {
