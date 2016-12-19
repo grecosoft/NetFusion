@@ -54,7 +54,7 @@ namespace NetFusion.Bootstrap.Container
             DirectoryInfo probeDirectory = GetAssemblyProbeDirectory();
             AssemblyName[] filteredAssemblyNames = ProbeForMatchingAssemblyNames(probeDirectory, searchPatterns);
 
-            Assembly[] assemblies = GetAssemblies(filteredAssemblyNames);
+            Assembly[] assemblies = LoadAssemblies(filteredAssemblyNames).ToArray();
 
             try
             {
@@ -91,20 +91,6 @@ namespace NetFusion.Bootstrap.Container
         {
             IEnumerable<string> fileNames = probeDirectory.GetMatchingFileNames(searchPatterns);
             return fileNames.Select(AssemblyName.GetAssemblyName).ToArray();
-        }
-
-        private Assembly[] GetAssemblies(AssemblyName[] matchingAssemblyNames)
-        {
-            Assembly[] loadedAssemblies = GetLoadedMatchingAssemblies(matchingAssemblyNames);
-            IEnumerable<string> loadedCodeBases = loadedAssemblies.Select(a => a.CodeBase);
-
-            IEnumerable<AssemblyName> nonLoadedAssemblyNames = matchingAssemblyNames.Where(fa => !loadedCodeBases.Contains(
-                fa.CodeBase, StringComparer.Ordinal));
-
-            var nonLoadedAssemblies = LoadAssemblies(nonLoadedAssemblyNames);
-
-            return loadedAssemblies.Union(nonLoadedAssemblies)
-                .ToArray();
         }
 
         private Assembly[] GetLoadedMatchingAssemblies(AssemblyName[] matchingAssemblyNames)

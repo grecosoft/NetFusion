@@ -1,0 +1,14 @@
+nuget pack src\NetFusion\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj -symbols -outputdirectory ./_packages -properties authors=dev;LicenseUrl=http://temp;ProjectUrl=http://temp
+nuget pack src\NetFusion\NetFusion.Common\NetFusion.Common.csproj -symbols -outputdirectory ./_packages -properties authors=dev;LicenseUrl=http://temp;ProjectUrl=http://temp
+nuget pack src\NetFusion\NetFusion.Domain\NetFusion.Domain.csproj -symbols -outputdirectory ./_packages -properties authors=dev;LicenseUrl=http://temp;ProjectUrl=http://temp
+nuget pack src\NetFusion\NetFusion.Domain.Roslyn\NetFusion.Domain.Roslyn.csproj -symbols -outputdirectory ./_packages -properties authors=dev;LicenseUrl=http://temp;ProjectUrl=http://temp
+nuget pack src\NetFusion\NetFusion.EntityFramework\NetFusion.EntityFramework.csproj -symbols -outputdirectory ./_packages -properties authors=dev;LicenseUrl=http://temp;ProjectUrl=http://temp
+nuget pack src\NetFusion\NetFusion.Integration\NetFusion.Integration.csproj -symbols -outputdirectory ./_packages -properties authors=dev;LicenseUrl=http://temp;ProjectUrl=http://temp
+nuget pack src\NetFusion\NetFusion.Logging\NetFusion.Logging.csproj -symbols -outputdirectory ./_packages -properties authors=dev;LicenseUrl=http://temp;ProjectUrl=http://temp
+nuget pack src\NetFusion\NetFusion.Logging.Serilog\NetFusion.Logging.Serilog.csproj -symbols -outputdirectory ./_packages -properties authors=dev;LicenseUrl=http://temp;ProjectUrl=http://temp
+nuget pack src\NetFusion\NetFusion.Messaging\NetFusion.Messaging.csproj -symbols -outputdirectory ./_packages -properties authors=dev;LicenseUrl=http://temp;ProjectUrl=http://temp
+nuget pack src\NetFusion\NetFusion.MongoDB\NetFusion.MongoDB.csproj -symbols -outputdirectory ./_packages -properties authors=dev;LicenseUrl=http://temp;ProjectUrl=http://temp
+nuget pack src\NetFusion\NetFusion.RabbitMQ\NetFusion.RabbitMQ.csproj -symbols -outputdirectory ./_packages -properties authors=dev;LicenseUrl=http://temp;ProjectUrl=http://temp
+nuget pack src\NetFusion\NetFusion.Settings\NetFusion.Settings.csproj -symbols -outputdirectory ./_packages -properties authors=dev;LicenseUrl=http://temp;ProjectUrl=http://temp
+nuget pack src\NetFusion\NetFusion.Settings.MongoDB\NetFusion.Settings.MongoDB.csproj -symbols -outputdirectory ./_packages -properties authors=dev;LicenseUrl=http://temp;ProjectUrl=http://temp
+nuget pack src\NetFusion\NetFusion.WebApi\NetFusion.WebApi.csproj -symbols -outputdirectory ./_packages -properties authors=dev;LicenseUrl=http://temp;ProjectUrl=http://temp
