@@ -40,13 +40,6 @@ namespace NetFusion.RabbitMQ.Serialization
             Check.NotNull(value, nameof(value));
             Check.NotNull(valueType, nameof(valueType));
 
-            if (!valueType.HasDefaultConstructor())
-            {
-                throw new InvalidOperationException(
-                    $"The message type of: {valueType} does not have a default constructor." +
-                    $"Required for serialization content-type: {this.ContentType}.");
-            }
-
             var settings = new JsonSerializerSettings
             {
                 ContractResolver = _contractResolver
