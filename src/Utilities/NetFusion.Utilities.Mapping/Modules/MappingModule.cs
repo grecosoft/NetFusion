@@ -1,0 +1,61 @@
+﻿using Autofac;
+using NetFusion.Bootstrap.Plugins;
+using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Reflection;
+using NetFusion.Utilities.Core;
+using NetFusion.Utilities.Mapping;
+using NetFusion.Utilities.Mapping.Configs;
+using System;
+using System.Linq;
+
+namespace NetFusion.Utilities.Modules
+{
+    public class MappingModule : PluginModule,
+        IMappingModule
+    {
+        public ILookup<Type, TargetMap> SourceTypeMappings { get; private set; }
+        public IAutoMapper AutoMapper { get; private set; }
+
+        // Find all types that are a closed type of IMappingStrategy<,> such 
+        // as IMappingStrategy<Car, CarModel> and creates a lookup keyed on
+        // the source type.  This cached information will be used at runtime
+        // by the ObjectMapper.
+        public override void Configure()
+        {
+            var mappingConfig = this.Context.Plugin.GetConfig<MappingConfig>();
+
+            // Create an instance of IAutoMapper specified by the consuming application.
+            // The implementation will most likely delegate to an open source mapping
+            // library.  This decouples the plug-in from any specific mapping library.
+            this.AutoMapper = (IAutoMapper)mappingConfig.AutoMapperType.CreateInstance();
+
+            Type openGenericMapType = typeof(IMappingStrategy<,>);
+
+            TargetMap[] targetMappings = this.Context.AllPluginTypes
+                .WhereHavingClosedInterfaceTypeOf(openGenericMapType)
+                .Select(ti => new TargetMap {
+                    StrategyType = ti.Type,
+                    SourceType = ti.GenericArguments[0],
+                    TargetType = ti.GenericArguments[1]
+                }).ToArray();
+
+             this.SourceTypeMappings = targetMappings.ToLookup(tm => tm.SourceType);
+        }
+
+        public override void RegisterComponents(ContainerBuilder builder)
+        {
+            builder.RegisterType<ObjectMapper>()
+                .As<IObjectMapper>()
+                .InstancePerLifetimeScope();
+
+            // Register the mappings with the container.  This will allow mappings to inject
+            // any services needed to complete the mapping.
+            foreach (TargetMap map in this.SourceTypeMappings.Values())
+            {
+                builder.RegisterType(map.StrategyType)
+                    .AsSelf()
+                    .InstancePerLifetimeScope();
+            }
+        }
+    }
+}

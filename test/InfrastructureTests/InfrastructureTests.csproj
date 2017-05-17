@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp1.1;net461</TargetFrameworks>
+    <VersionPrefix>1.2.0</VersionPrefix>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp1.1|AnyCPU'">
+    <LangVersion>7</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Common\NetFusion.Base\NetFusion.Base.csproj" />
+    <ProjectReference Include="..\..\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\src\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
+    <ProjectReference Include="..\..\src\Core\NetFusion.Test\NetFusion.Test.csproj" />
+    <ProjectReference Include="..\..\src\Domain\NetFusion.Domain\NetFusion.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\NetFusion.EntityFramework\NetFusion.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\NetFusion.MongoDB\NetFusion.MongoDB.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\NetFusion.RabbitMQ\NetFusion.RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\src\Integration\NetFusion.Domain.Roslyn\NetFusion.Domain.Roslyn.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="FluentAssertions" Version="4.19.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.2" />
+    <PackageReference Include="Moq" Version="4.7.10" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="2.1.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+  </ItemGroup>
+
+</Project>
+

@@ -1,0 +1,11 @@
+<Project>
+    <PropertyGroup>
+        <Product>NetFusion</Product>
+        <Authors>Brian Greco</Authors>
+        <PackageProjectUrl>https://github.com/grecosoft/NetFusion/wiki</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/grecosoft/NetFusion</RepositoryUrl>
+        <PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>Plug-In Architecture</PackageTags>
+    </PropertyGroup>
+</Project>

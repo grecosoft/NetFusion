@@ -1,0 +1,1523 @@
+2017-05-01 17:14:05.095 -04:00 [Debug] Container Setup "{
+  \"TypeResolver\": \"NetFusion.Bootstrap.Container.TypeResolver, NetFusion.Bootstrap, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [
+    \"NetFusion.Bootstrap.Configuration.EnviromentConfig, NetFusion.Bootstrap, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging.Config.MessagingConfig, NetFusion.Messaging, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap.Plugins.LoggerConfig, NetFusion.Bootstrap, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap.Container.AutofacRegistrationConfig, NetFusion.Bootstrap, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-05-01 17:14:05.122 -04:00 [Verbose] Start Process: "Building Container"
+2017-05-01 17:14:05.184 -04:00 [Debug] Type Resolver "{
+  \"SearchPatterns\": [
+    \"consumerhost\",
+    \"exampleapi\",
+    \"netfusion.*\",
+    \"netfusion.*.*\"
+  ],
+  \"MatchingAssemblies\": [
+    \"ConsumerHost, Culture=neutral, PublicKeyToken=null\",
+    \"ExampleApi, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Base, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Common, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Domain, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Domain.Messaging, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.EntityFramework, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Logging.Serilog, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ.MongoDB, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Settings, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Utilities.Validation, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-05-01 17:14:05.286 -04:00 [Debug] Manifests "{
+  \"Host\": \"NetFusion.Client.HostManifest, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Application\": [
+    \"RefArch.Api.Manifest, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\"
+  ],
+  \"Core\": [
+    \"NetFusion.Domain.Manifest, NetFusion.Domain, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB.EntityFrameworkManifest, NetFusion.EntityFramework, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging.MessagingManifest, NetFusion.Messaging, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB.MongoDBManifest, NetFusion.MongoDB, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ.RabbitMQManifest, NetFusion.RabbitMQ, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Integration.IntegrationManifest, NetFusion.RabbitMQ.MongoDB, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Settings.SettingsManifest, NetFusion.Settings, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Utilities.Validation.Manifest, NetFusion.Utilities.Validation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-05-01 17:14:05.334 -04:00 [Debug] Plugin "{
+  \"Name\": \"Example Message Consumer Host\",
+  \"PluginId\": \"55b93b110a947288d20ff2991b\",
+  \"AssemblyName\": \"ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [],
+  \"Discovers\": []
+}"
+2017-05-01 17:14:05.335 -04:00 [Debug] Plugin "{
+  \"Name\": \"Public Application Programming Interface.\",
+  \"PluginId\": \"576b2a9a000a7ed1176f1772\",
+  \"AssemblyName\": \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [],
+  \"Discovers\": []
+}"
+2017-05-01 17:14:05.335 -04:00 [Debug] Plugin "{
+  \"Name\": \"Domain Plug-in\",
+  \"PluginId\": \"55bp3b1a0a947288d20ff125\",
+  \"AssemblyName\": \"NetFusion.Domain, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"DomainScriptingModule\",
+    \"EntityBehaviorModule\",
+    \"ReferenceTypeModule\"
+  ],
+  \"Discovers\": [
+    \"IBehaviorRegistry\"
+  ]
+}"
+2017-05-01 17:14:05.335 -04:00 [Debug] Plugin "{
+  \"Name\": \"EntityFramework Plug-in\",
+  \"PluginId\": \"55b944a00a947288d20ff237\",
+  \"AssemblyName\": \"NetFusion.EntityFramework, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"EntityContextModule\"
+  ],
+  \"Discovers\": [
+    \"IEntityTypeMapping\"
+  ]
+}"
+2017-05-01 17:14:05.335 -04:00 [Debug] Plugin "{
+  \"Name\": \"Messaging Plug-in\",
+  \"PluginId\": \"55b93b1a0a947288d20ff225\",
+  \"AssemblyName\": \"NetFusion.Messaging, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [
+    \"MessagingConfig\"
+  ],
+  \"Modules\": [
+    \"MessageEnricherModule\",
+    \"MessagingModule\"
+  ],
+  \"Discovers\": [
+    \"IMessageDispatchRule\"
+  ]
+}"
+2017-05-01 17:14:05.335 -04:00 [Debug] Plugin "{
+  \"Name\": \"MongoDb Plug-in\",
+  \"PluginId\": \"55b93ea00a947288d20ff237\",
+  \"AssemblyName\": \"NetFusion.MongoDB, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"MappingModule\",
+    \"MongoModule\"
+  ],
+  \"Discovers\": [
+    \"IEntityClassMap\"
+  ]
+}"
+2017-05-01 17:14:05.335 -04:00 [Debug] Plugin "{
+  \"Name\": \"RabbitMQ Plug-in\",
+  \"PluginId\": \"55b93dae0a947288d20ff236\",
+  \"AssemblyName\": \"NetFusion.RabbitMQ, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"MessageBrokerModule\"
+  ],
+  \"Discovers\": [
+    \"IMessageExchange\",
+    \"IBrokerSerializerRegistry\"
+  ]
+}"
+2017-05-01 17:14:05.335 -04:00 [Debug] Plugin "{
+  \"Name\": \"Integration Plug-in\",
+  \"PluginId\": \"55b93dae0a947288d20ff556\",
+  \"AssemblyName\": \"NetFusion.RabbitMQ.MongoDB, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"RabbitIntegrationModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-05-01 17:14:05.335 -04:00 [Debug] Plugin "{
+  \"Name\": \"Settings Plug-in\",
+  \"PluginId\": \"55b93f3e0a947288d20ff238\",
+  \"AssemblyName\": \"NetFusion.Settings, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"AppSettingsModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-05-01 17:14:05.336 -04:00 [Debug] Plugin "{
+  \"Name\": \"Validation Utility Plug-in\",
+  \"PluginId\": \"55bp3b1a88949988d20ff995\",
+  \"AssemblyName\": \"NetFusion.Utilities.Validation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"ValidationModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-05-01 17:14:05.451 -04:00 [Verbose] End Process: "Building Container", 328
+2017-05-01 17:14:05.452 -04:00 [Verbose] Start Process: "Starting Container"
+2017-05-01 17:14:06.002 -04:00 [Verbose] End Process: "Starting Container", 550
+2017-05-01 17:14:06.072 -04:00 [Verbose] Composite Log "{
+  \"Searched-Plugin-Assemblies\": {
+    \"AppHost-Assembly\": \"ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"AppComponent-Assemblies\": [
+      \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\"
+    ],
+    \"Core-Assemblies\": [
+      \"NetFusion.Domain, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.EntityFramework, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Messaging, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.MongoDB, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.RabbitMQ, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.RabbitMQ.MongoDB, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Settings, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Utilities.Validation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\"
+    ]
+  },
+  \"Application-Host\": {
+    \"Plugin-Name\": \"Example Message Consumer Host\",
+    \"Plugin-Id\": \"55b93b110a947288d20ff2991b\",
+    \"Plugin-Assembly\": \"ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"Plugin-Description\": \"Test message consumer host.\",
+    \"Plugin-Modules\": {},
+    \"Known-Types\": {
+      \"Services.ExampleDirectService\": [],
+      \"Services.FanoutExchangeService\": [],
+      \"Services.ExampleRpcService\": [],
+      \"Services.ExampleTopicService\": [],
+      \"Services.ExampleWorkQueueService\": [],
+      \"Exchanges.ExampleRpcExchange\": [
+        \"RabbitMQ Plug-in\"
+      ]
+    },
+    \"Discovered-Types\": [],
+    \"Plugin-Services\": [
+      {
+        \"Type\": \"ExampleDirectService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleDirectService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"FanoutExchangeService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.FanoutExchangeService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleRpcService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleRpcService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleTopicService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleTopicService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleWorkQueueService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleWorkQueueService\"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  \"Component-Plugins\": {
+    \"Public Application Programming Interface.\": {
+      \"Plugin-Name\": \"Public Application Programming Interface.\",
+      \"Plugin-Id\": \"576b2a9a000a7ed1176f1772\",
+      \"Plugin-Assembly\": \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides commands and responses for business use cases.\",
+      \"Plugin-Modules\": {},
+      \"Known-Types\": {
+        \"Messages.ExampleDirectEvent\": [],
+        \"Messages.ExampleFanoutEvent\": [],
+        \"Messages.ExampleRpcCommand\": [],
+        \"Messages.ExampleRpcResponse\": [],
+        \"Messages.ExampleTopicEvent\": [],
+        \"Messages.ExampleWorkQueueEvent\": []
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": []
+    }
+  },
+  \"Core-Plugins\": {
+    \"Domain Plug-in\": {
+      \"Plugin-Name\": \"Domain Plug-in\",
+      \"Plugin-Id\": \"55bp3b1a0a947288d20ff125\",
+      \"Plugin-Assembly\": \"NetFusion.Domain, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides patterns that can be used to extend domain entities.  Also provides other domain based patterns.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Domain.Modules.DomainScriptingModule\": {
+          \"Log\": {
+            \"Attributed-Entities\": [
+              \"ExampleApi.Messages.ExampleDirectEvent\",
+              \"ExampleApi.Messages.ExampleFanoutEvent\",
+              \"ExampleApi.Messages.ExampleRpcCommand\",
+              \"ExampleApi.Messages.ExampleRpcResponse\",
+              \"ExampleApi.Messages.ExampleTopicEvent\",
+              \"ExampleApi.Messages.ExampleWorkQueueEvent\"
+            ]
+          }
+        },
+        \"NetFusion.Domain.Modules.EntityBehaviorModule\": {
+          \"Log\": {}
+        },
+        \"NetFusion.Domain.Modules.ReferenceTypeModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [
+        \"IBehaviorRegistry\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"NullEntityScriptingService\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.Scripting.IEntityScriptingService\"
+              ]
+            },
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.Scripting.IEntityScriptingService\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"NullReferenceTypeRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.ReferenceTypes.Core.IReferenceTypeRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"IDomainEntityFactory\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.Entities.IDomainEntityFactory\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"EntityFramework Plug-in\": {
+      \"Plugin-Name\": \"EntityFramework Plug-in\",
+      \"Plugin-Id\": \"55b944a00a947288d20ff237\",
+      \"Plugin-Assembly\": \"NetFusion.EntityFramework, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides initialization for DBContext and also allows for automatic registration of entity mappings.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.EntityFramework.Modules.EntityContextModule\": {
+          \"Log\": {
+            \"Entity Mappings\": []
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"EntityContext`1\": [],
+        \"Configs.ContextSettings\": [],
+        \"Configs.EntityFrameworkConfig\": []
+      },
+      \"Discovered-Types\": [
+        \"IEntityTypeMapping\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"ContextSettings\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.EntityFramework.Configs.ContextSettings\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"Messaging Plug-in\": {
+      \"Plugin-Name\": \"Messaging Plug-in\",
+      \"Plugin-Id\": \"55b93b1a0a947288d20ff225\",
+      \"Plugin-Assembly\": \"NetFusion.Messaging, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Contains common implementation for publishing messages in-process that can be extended by other plug-ins to publish messages out of process.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Messaging.Modules.MessageEnricherModule\": {
+          \"Log\": {}
+        },
+        \"NetFusion.Messaging.Modules.MessagingModule\": {
+          \"Log\": {
+            \"Messaging - In Process Dispatchers\": {
+              \"ExampleApi.Messages.ExampleRpcCommand\": [
+                {
+                  \"Consumer\": \"ConsumerHost.Services.ExampleRpcService\",
+                  \"Method\": \"OnRpcMessage\",
+                  \"EventType\": \"ExampleRpcCommand\",
+                  \"IsAsync\": true,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                }
+              ]
+            },
+            \"Message Publishers\": [
+              {
+                \"PublisherType\": \"NetFusion.Messaging.Core.InProcessMessagePublisher, NetFusion.Messaging, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"IsConfigured\": true
+              },
+              {
+                \"PublisherType\": \"NetFusion.RabbitMQ.Core.RabbitMqMessagePublisher, NetFusion.RabbitMQ, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"IsConfigured\": true
+              }
+            ]
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"Core.InProcessMessagePublisher\": [],
+        \"Config.MessagingConfig\": []
+      },
+      \"Discovered-Types\": [
+        \"IMessageDispatchRule\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"MessagingService\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.IMessagingService\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"InProcessMessagePublisher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Core.IMessagePublisher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"MessagingModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Modules.IMessagingModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"MongoDb Plug-in\": {
+      \"Plugin-Name\": \"MongoDb Plug-in\",
+      \"Plugin-Id\": \"55b93ea00a947288d20ff237\",
+      \"Plugin-Assembly\": \"NetFusion.MongoDB, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Plug-in that registers a client for connecting to a MongoDB instance.Also finds all MongoDb entity type mappings and configures then with the client.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.MongoDB.Modules.MappingModule\": {
+          \"Log\": {
+            \"Entity Mappings\": [
+              {
+                \"MappingType\": \"NetFusion.Integration.RabbitMQ.BrokerMetaMapping, NetFusion.RabbitMQ.MongoDB, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"EntityType\": \"NetFusion.RabbitMQ.Integration.BrokerMeta, NetFusion.RabbitMQ, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"CollectionName\": null,
+                \"Descriminator\": \"BrokerMeta\",
+                \"KnownTypes\": []
+              }
+            ]
+          }
+        },
+        \"NetFusion.MongoDB.Modules.MongoModule\": {
+          \"Log\": {
+            \"Data-Bases\": [
+              \"NetFusion.Integration.NetFusionDb, NetFusion.RabbitMQ.MongoDB, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+              \"NetFusion.Integration.RabbitMQ.BrokerMetaDb, NetFusion.RabbitMQ.MongoDB, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\"
+            ]
+          }
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [
+        \"IEntityClassMap\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"MappingModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.MongoDB.Modules.IMongoMappingModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"RabbitMQ Plug-in\": {
+      \"Plugin-Name\": \"RabbitMQ Plug-in\",
+      \"Plugin-Id\": \"55b93dae0a947288d20ff236\",
+      \"Plugin-Assembly\": \"NetFusion.RabbitMQ, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides support for integrating RabbitMQ as a message publisher.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.RabbitMQ.Modules.MessageBrokerModule\": {
+          \"Log\": {
+            \"Message-Exchanges\": [
+              {
+                \"MessageType\": null,
+                \"Exchanges\": [
+                  {
+                    \"ExchangeName\": null,
+                    \"Settings\": {
+                      \"BrokerName\": \"TestBroker\",
+                      \"ExchangeType\": null,
+                      \"ExchangeName\": null,
+                      \"ContentType\": \"application/json; charset=utf-8\",
+                      \"IsDurable\": false,
+                      \"IsAutoDelete\": false,
+                      \"IsConsumerExchange\": true,
+                      \"Arguments\": {},
+                      \"Predicate\": null
+                    },
+                    \"Queues\": [
+                      {
+                        \"QueueName\": \"RpcMessageQueue\",
+                        \"RouteKeys\": null,
+                        \"Settings\": {
+                          \"IsDurable\": false,
+                          \"IsAutoDelete\": true,
+                          \"IsExclusive\": false,
+                          \"IsBrokerAssignedName\": false,
+                          \"IsNoAck\": true,
+                          \"PrefetchSize\": null,
+                          \"PrefetchCount\": null,
+                          \"Arguments\": {}
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            \"Message-Consumers\": [
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 1,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleDirectExchange\",
+                \"QueueName\": \"GENERAL-MOTORS\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnGeneralMotors\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 2,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleDirectExchange\",
+                \"QueueName\": \"VOLKSWAGEN\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnVolkswagen\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 3,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"HighImportanceExchange\",
+                \"QueueName\": \"amq.gen-8_cfD5CtFzjUfeWnUuWeTA\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": true,
+                  \"IsExclusive\": true,
+                  \"IsBrokerAssignedName\": true,
+                  \"IsNoAck\": true,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnHighImportance\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 4,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"LowImportanceExchange\",
+                \"QueueName\": \"amq.gen-0uRwJdIKBNuBx2d1afkS2A\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": true,
+                  \"IsExclusive\": true,
+                  \"IsBrokerAssignedName\": true,
+                  \"IsNoAck\": true,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnLowImportance\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 5,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"VW-GTI\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnVwGti\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 6,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"VW-BLACK\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnBlackVw\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 7,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"amq.gen-v9ul89Vcav-4j5l5WZcAcg\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": true,
+                  \"IsExclusive\": true,
+                  \"IsBrokerAssignedName\": true,
+                  \"IsNoAck\": true,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [
+                  \"VW.JETTA.*.*\"
+                ],
+                \"Name\": \"OnVwJetta\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 8,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"VW-PASSAT-SILVER\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [
+                  \"VW.PASSAT.*.SILVER\"
+                ],
+                \"Name\": \"OnSilverVwPassat\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 9,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"AUDI\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnAudi\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 10,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"\",
+                \"QueueName\": \"PROCESS_SALE\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnProcessSale\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 11,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"\",
+                \"QueueName\": \"PROCESS_SERVICE\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnProcessService\"
+              }
+            ],
+            \"Broker Details\": {
+              \"RPC Messages\": {}
+            }
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"Serialization.JsonBrokerSerializer\": [],
+        \"Core.RabbitMqMessagePublisher\": [],
+        \"Configs.BrokerSettings\": []
+      },
+      \"Discovered-Types\": [
+        \"IMessageExchange\",
+        \"IBrokerSerializerRegistry\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"NullBrokerMetaRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"MessageBroker\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IMessageBroker\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"RabbitMqMessagePublisher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Core.IMessagePublisher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"BrokerSettings\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Configs.BrokerSettings\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"Integration Plug-in\": {
+      \"Plugin-Name\": \"Integration Plug-in\",
+      \"Plugin-Id\": \"55b93dae0a947288d20ff556\",
+      \"Plugin-Assembly\": \"NetFusion.RabbitMQ.MongoDB, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"TODO\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Integration.RabbitMQ.RabbitIntegrationModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {
+        \"NetFusion.Integration.NetFusionDb\": [],
+        \"NetFusion.Integration.RabbitMQ.BrokerMetaDb\": [],
+        \"NetFusion.Integration.RabbitMQ.BrokerMetaMapping\": [
+          \"MongoDb Plug-in\"
+        ]
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"BrokerMetaRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            },
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"NetFusionDb\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Integration.NetFusionDb\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"BrokerMetaDb\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Integration.RabbitMQ.BrokerMetaDb\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"Settings Plug-in\": {
+      \"Plugin-Name\": \"Settings Plug-in\",
+      \"Plugin-Id\": \"55b93f3e0a947288d20ff238\",
+      \"Plugin-Assembly\": \"NetFusion.Settings, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Plug-in that locates application settings and initializes them when injected into a dependent component for the first time.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Settings.Modules.AppSettingsModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": []
+    },
+    \"Validation Utility Plug-in\": {
+      \"Plugin-Name\": \"Validation Utility Plug-in\",
+      \"Plugin-Id\": \"55bp3b1a88949988d20ff995\",
+      \"Plugin-Assembly\": \"NetFusion.Utilities.Validation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Utility Plug-In used to validate domain entities.  This plug-in configures and coordinates the validation process and provides default validation based on Microsoft Validation Attributes.  The host application can override this default validation and use a validation library of choice.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Utilities.Modules.ValidationModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {
+        \"Configs.ValidationConfig\": []
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"ValidationModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Utilities.Validation.Core.IValidationModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}"
+2017-05-01 17:14:53.934 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:53.8204971Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"009a9d4d-fa88-413b-9e80-a99720ea1711\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:53.8260055Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:55.414 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:55.4134598Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"648b4533-1d79-4193-9369-38f4a2623cd5\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:55.4134598Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:55.819 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:55.8115751Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"6ec97579-3df5-4e96-a17f-26b560ed31b6\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:55.8115751Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:55.984 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:55.9838414Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"8275aeda-16d8-44ff-a2de-a91cbb9c157a\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:55.9838414Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:56.141 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:56.1395823Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"adfd1a81-8fc2-4087-8c1a-ce35cde81cac\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:56.1395823Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:56.444 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:56.4435521Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"fc13afb8-de05-4c22-811e-f86fba9c6555\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:56.4435521Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:56.600 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:56.5997936Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"5efb1a7e-7a05-4fa7-ae23-97022bfed9c9\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:56.5997936Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:56.735 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:56.7335004Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"4ed608ad-59ee-4ce4-b43a-939593786136\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:56.7335004Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:56.898 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:56.8977541Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"0cd73303-8e60-4fee-8a76-c205b164bb77\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:56.8977541Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:57.391 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:57.3900152Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"a26d507d-a0c9-494f-a70e-b27a914b56aa\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:57.3900152Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:57.562 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:57.56128Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"c276e9b3-1202-4fcb-831a-750e194dc90f\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:57.5617806Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:57.727 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:57.7255339Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"2f0b64ff-36e2-4146-b0f7-ccaaa7382a4a\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:57.7255339Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:57.899 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:57.8978002Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"3bc1027e-b278-4ebe-b8b9-b6196faa50ef\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:57.8978002Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:58.101 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:58.099612Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"22600135-15a6-48aa-abd0-2e24689f9eeb\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:58.099612Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:58.288 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:58.2874025Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"a36fce78-9899-4152-9a8d-e0963b151f31\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:58.2879031Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:58.476 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:58.4756933Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"dab2bda4-a3e0-4fcc-8166-11ca9d8fd642\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:58.4756933Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:58.640 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:58.6394466Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"d12c05b6-89cc-41d0-bd8f-7616492da8ef\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:58.6394466Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:58.818 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:58.8177221Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"a0a2fe46-2dc7-44c1-9970-66c6762e51af\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:58.8177221Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:59.007 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:59.0055126Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"6426592a-a783-4f71-a151-1e04c207823c\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:59.0055126Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:59.170 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:59.1697668Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"70826530-acd2-4f1b-acb3-ceeb30cfbae5\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:59.1697668Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"
+2017-05-01 17:14:59.350 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleDirectExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleDirectService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnVolkswagen\",
+  \"Message\": {
+    \"Make\": \"VW\",
+    \"Model\": \"GTI\",
+    \"Year\": 2011,
+    \"Color\": \"White\",
+    \"CurrentDateTime\": \"2017-05-01T21:14:59.3495443Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-RouteKey\": \"VW\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-CorrelationId\": \"6a3a22aa-f9a5-4f76-ae43-bfc64999522c\",
+      \"NetFusion.Messaging.Enrichers.DatePublishedEnricher-DatePublished\": \"2017-05-01T21:14:59.3495443Z\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging.MessageAttributeContext-NetFusion.Domain.Messaging.MessageAttributeContext-Acknowledged\": false
+    }
+  }
+}"

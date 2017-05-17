@@ -1,4 +1,0 @@
-﻿{
-  "Endpoint": "http://localhost:54164/api/config/",
-  "LogRoute": "composite/log"
-}

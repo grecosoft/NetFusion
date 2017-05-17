@@ -1,0 +1,39 @@
+﻿using Autofac;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Plugins;
+using NetFusion.Domain.Entities;
+using NetFusion.Domain.Entities.Core;
+using NetFusion.Domain.Entities.Registration;
+using System.Collections.Generic;
+
+namespace NetFusion.Domain.Modules
+{
+    /// <summary>
+    /// Plug-In module executed during the bootstrap process that configures
+    /// and instance of the DomainEntityFactory.
+    /// </summary>
+    public class EntityBehaviorModule : PluginModule
+    {
+        public IEnumerable<IBehaviorRegistry> Registries { get; private set; }
+
+        public override void RegisterComponents(ContainerBuilder builder)
+        {
+            builder.Register(_ => DomainEntityFactory.Instance)
+                .As<IDomainEntityFactory>()
+                .SingleInstance();
+        }
+
+        public override void StartModule(ILifetimeScope scope)
+        {
+            var resolver = new AutofacDomainServiceRosolver(AppContainer.Instance.Services);
+            var factory = new DomainEntityFactory(resolver);
+
+            foreach (var registry in Registries)
+            {
+                registry.Register(factory);
+            }
+
+            DomainEntityFactory.SetInstance(factory);
+        }
+    }
+}
