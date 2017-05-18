@@ -29,7 +29,7 @@
 
 * ___[Documentation](https://github.com/grecosoft/NetFusion/wiki/Messaging-Summary)___
 * ___[Code Documentation](https://grecosoft.github.io/docs/netfusion/source/api/NetFusion.Bootstrap.Container.html)___
-* ___[Tutorial](https://github.com/grecosoft/NetFusion/wiki/Bootstrap-Tutorial)___
+* ___[Tutorial](https://github.com/grecosoft/NetFusion/wiki/Messaging-Tutorial)___
 
 
 
