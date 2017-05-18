@@ -8,7 +8,7 @@
 ![image](../../img/Nuget-NetFusion.Bootstrap.png)
 
 * ___[Documentation](https://github.com/grecosoft/NetFusion/wiki/Bootstrap-Summary)___
-* ___[Code Documentation](https://grecosoft.github.io/docs/netfusion/source/api/NetFusion.Bootstrap.Container.html)___
+* ___[Code Documentation](https://grecosoft.github.io/docs/netfusion/api/NetFusion.Bootstrap.Container.html)___
 * ___[Tutorial](https://github.com/grecosoft/NetFusion/wiki/Bootstrap-Tutorial)___
    
 ## Logging
