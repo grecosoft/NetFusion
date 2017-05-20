@@ -23,7 +23,7 @@ void Main()
 {
 	// The following four lines simulate the execution environment
 	// of a real application host such as a WebApi application.
-	var resolver = new TestTypeResolver();
+	var resolver = new TestTypeResolver(this.GetType());
 	var hostPlugin = new MockAppHostPlugin();
 	
 	resolver.AddPlugin(hostPlugin);

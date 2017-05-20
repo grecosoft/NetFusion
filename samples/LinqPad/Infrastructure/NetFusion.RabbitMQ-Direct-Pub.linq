@@ -2,6 +2,7 @@
   <NuGetReference>NetFusion.Base</NuGetReference>
   <NuGetReference>NetFusion.Bootstrap</NuGetReference>
   <NuGetReference>NetFusion.Common</NuGetReference>
+  <NuGetReference>NetFusion.Domain</NuGetReference>
   <NuGetReference>NetFusion.Domain.Messaging</NuGetReference>
   <NuGetReference>NetFusion.Messaging</NuGetReference>
   <NuGetReference>NetFusion.RabbitMQ</NuGetReference>
@@ -21,10 +22,8 @@
   <Namespace>NetFusion.Messaging.Config</Namespace>
   <Namespace>NetFusion.RabbitMQ</Namespace>
   <Namespace>NetFusion.RabbitMQ.Configs</Namespace>
-  <Namespace>NetFusion.RabbitMQ.Consumers</Namespace>
   <Namespace>NetFusion.RabbitMQ.Core</Namespace>
   <Namespace>NetFusion.RabbitMQ.Exchanges</Namespace>
-  <Namespace>NetFusion.Settings</Namespace>
   <Namespace>NetFusion.Test.Container</Namespace>
   <Namespace>NetFusion.Test.Plugins</Namespace>
   <Namespace>NetFusion.Testing.Logging</Namespace>
