@@ -6,6 +6,7 @@ using NetFusion.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace NetFusion.Test.Plugins
 {
@@ -17,11 +18,13 @@ namespace NetFusion.Test.Plugins
     {
         private ITypeResolver _delegateResolver;
         private readonly List<MockPlugin> _plugins;
+        private readonly Assembly _scanAssembly;
 
-        public TestTypeResolver()
+        public TestTypeResolver(Type scanTypesAssembly = null)
         {
             _plugins = new List<MockPlugin>();
             _delegateResolver = new TypeResolver();
+            _scanAssembly = scanTypesAssembly?.GetTypeInfo().Assembly;
         }
 
         public void Initialize(ILoggerFactory loggerFactory)
@@ -44,9 +47,18 @@ namespace NetFusion.Test.Plugins
                     $"{nameof(TestTypeResolver)} can only operate on types of {nameof(MockPlugin)}");
             }
 
-            plugin.PluginTypes = mockPlugin.PluginTypes
-                .Select(t => new PluginType(plugin, t, mockPlugin.AssemblyName))
-                .ToArray();
+            var pluginTypes = mockPlugin.PluginTypes;
+
+            // Automatically add types contained within the assembly of the specified type.
+            // For example, when running in LINQ Pad, this will automatically add any types
+            // defined within the editor.
+            if (_scanAssembly != null && plugin.Manifest is MockAppHostPlugin)
+            {
+                pluginTypes = pluginTypes.Union(_scanAssembly.GetTypes());
+            }
+
+            plugin.PluginTypes = pluginTypes.Select(t => 
+                new PluginType(plugin, t, mockPlugin.AssemblyName)).ToArray();
         }
 
         public void SetPluginModules(Plugin plugin)
