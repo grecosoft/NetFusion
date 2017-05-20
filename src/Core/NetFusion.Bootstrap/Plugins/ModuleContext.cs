@@ -45,17 +45,10 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// The plug-in types limited to just those associated with application
-        /// centric plug-ins.  The module is within an application centric plug-in,
+        /// centric plug-ins.  If the module is within an application centric plug-in,
         /// then this list will be the same as AllPluginTypes.
         /// </summary>
         public IEnumerable<Type> AllAppPluginTypes { get; }
-
-        /// <summary>
-        /// The plug-in types limited to just those associated with a core plug-in.
-        /// If this property is called by a module contained within an application
-        /// centric plug-in an empty list will be returned.
-        /// </summary>
-        public IEnumerable<Type> AllCorePluginTypes { get; }
 
         internal ModuleContext(
             ILoggerFactory loggerFactory,
@@ -76,7 +69,6 @@ namespace NetFusion.Bootstrap.Plugins
 
             this.AllPluginTypes = FilteredTypesByPluginType();
             this.AllAppPluginTypes = GetAppPluginTypes();
-            this.AllCorePluginTypes = GetCorePluginTypes();
         }
 
         private IList<Type> FilteredTypesByPluginType()
