@@ -10,7 +10,7 @@ namespace NetFusion.Bootstrap.Configuration
     /// Configuration for the overall application environment.  Provides default initialization
     /// of the .NET configuration builder that can be overridden or modified by the host application.
     /// </summary>
-    public class EnviromentConfig : IContainerConfig
+    public class EnvironmentConfig : IContainerConfig
     {
         private const string APP_SETTINGS_FILE_NAME = "appsettings.json";
         private static string[] CommonEnviromentNameKeys = { "ASPNETCORE_ENVIRONMENT", "NETFUSION_ENVIRONMENT" };
@@ -23,7 +23,7 @@ namespace NetFusion.Bootstrap.Configuration
         /// </summary>
         public bool AddEnvironmentVariables { get; set; } = true;
 
-        public EnviromentConfig()
+        public EnvironmentConfig()
         {
             EnvironmentName = GetEnvironmentName();
             ConfigurationBuilder = new ConfigurationBuilder();

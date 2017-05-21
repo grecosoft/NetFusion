@@ -38,7 +38,7 @@ namespace NetFusion.Bootstrap.Container
         private CompositeLog _compositeLog;
 
         // Settings:
-        private EnviromentConfig _enviromentConfig;
+        private EnvironmentConfig _enviromentConfig;
         private IConfiguration _configuration;
 
         // Contains references to all the discovered plug-in manifests
@@ -344,8 +344,8 @@ namespace NetFusion.Bootstrap.Container
         // Configure overall environment settings such as .NET configuration.
         private void ConfigureEnvironment()
         {
-            _enviromentConfig = _configs.Values.OfType<EnviromentConfig>()
-                .FirstOrDefault() ?? new EnviromentConfig();
+            _enviromentConfig = _configs.Values.OfType<EnvironmentConfig>()
+                .FirstOrDefault() ?? new EnvironmentConfig();
 
             _configuration = _enviromentConfig.ConfigurationBuilder.Build();
         }

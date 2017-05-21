@@ -36,7 +36,7 @@ namespace CoreTests.Settings
                 
                 .Test(c =>
                 {
-                    c.WithConfig<EnviromentConfig>(settings => {
+                    c.WithConfig<EnvironmentConfig>(settings => {
 
                         AddInMemorySettings(settings);
                     });
@@ -87,7 +87,7 @@ namespace CoreTests.Settings
 
                 .Test(c =>
                 {
-                    c.WithConfig<EnviromentConfig>(settings => {
+                    c.WithConfig<EnvironmentConfig>(settings => {
 
                         AddInMemorySettings(settings);
                     });
@@ -115,7 +115,7 @@ namespace CoreTests.Settings
 
                 .Test(c =>
                 {
-                    c.WithConfig<EnviromentConfig>(settings => {
+                    c.WithConfig<EnvironmentConfig>(settings => {
 
                         AddInMemorySettings(settings);
                     });
@@ -172,7 +172,7 @@ namespace CoreTests.Settings
         ////        });
         ////}
 
-        private void AddInMemorySettings(EnviromentConfig config)
+        private void AddInMemorySettings(EnvironmentConfig config)
         {
             var builder = new ConfigurationBuilder();
 

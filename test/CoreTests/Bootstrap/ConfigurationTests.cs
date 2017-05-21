@@ -97,18 +97,18 @@ namespace CoreTests.Bootstrap
         public void ApplicationVariable_CanBeRead_ToDetermineEnvironment()
         {
             Environment.SetEnvironmentVariable("NETFUSION_ENVIRONMENT", EnvironmentNames.Staging);
-            var environmentConfig = new EnviromentConfig();
+            var environmentConfig = new EnvironmentConfig();
             environmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Staging);
 
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", EnvironmentNames.Production);
-            environmentConfig = new EnviromentConfig();
+            environmentConfig = new EnvironmentConfig();
             environmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Production);
         }
 
         [Fact(DisplayName = nameof(IfNoApplicationVariable_EnviromentDefaultsToDevelop))]
         public void IfNoApplicationVariable_EnviromentDefaultsToDevelop()
         {
-            var environmentConfig = new EnviromentConfig();
+            var environmentConfig = new EnvironmentConfig();
             environmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Development);
         }
 
@@ -118,7 +118,7 @@ namespace CoreTests.Bootstrap
             var expectedValue = Guid.NewGuid().ToString();
 
             Environment.SetEnvironmentVariable("TEST_ENV_VAR", expectedValue);
-            var environmentConfig = new EnviromentConfig { AddEnvironmentVariables = true };
+            var environmentConfig = new EnvironmentConfig { AddEnvironmentVariables = true };
 
             environmentConfig.UseDefaultConfiguration();
 

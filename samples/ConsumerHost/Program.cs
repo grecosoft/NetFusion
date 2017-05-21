@@ -22,7 +22,7 @@ namespace ConsumerHost
 
             AppContainer.Create(typeResolver)
 
-                .WithConfig((EnviromentConfig envConfig) => {
+                .WithConfig((EnvironmentConfig envConfig) => {
 
                     envConfig.UseDefaultConfiguration();
                 })
