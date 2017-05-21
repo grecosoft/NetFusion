@@ -3,6 +3,7 @@
 NET_STANDARD="netstandard1.6"
 NET_CORE_APP="netcoreapp1.1"
 PACKAGE_OUTPUT="../../../../_packages"
+NUGET_VERSION="2.0.0"
 
 COMMAND="$1"
 
@@ -77,7 +78,7 @@ dotnet_pack()
 
 	for var in ${files[@]}
 	do
-		dotnet pack "${var}" --no-build --include-symbols --output "$PACKAGE_OUTPUT" /p:TargetFrameworks=netstandard1.6 
+		dotnet pack "${var}" --no-build --include-symbols --output "$PACKAGE_OUTPUT" /p:TargetFrameworks=netstandard1.6 /p:VersionPrefix="$NUGET_VERSION"
 	done
 }
 
