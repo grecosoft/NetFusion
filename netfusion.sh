@@ -3,7 +3,7 @@
 NET_STANDARD="netstandard1.6"
 NET_CORE_APP="netcoreapp1.1"
 PACKAGE_OUTPUT="../../../../_packages"
-NUGET_VERSION="2.0.0"
+NUGET_VERSION="2.0.2"
 
 COMMAND="$1"
 
