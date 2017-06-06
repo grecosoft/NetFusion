@@ -7,7 +7,7 @@ namespace NetFusion.Domain.MongoDB.Scripting
         public EntityScriptMetaMap()
         {
             AutoMap();
-            MapStringPropertyToObjectId(e => e.Id);
+            MapStringPropertyToObjectId(e => e.ScriptId);
         }
     }
 

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NetFusion.Integration.RabbitMQ
+namespace NetFusion.RabbitMQ.MongoDB.Metadata
 {
     public class BrokerMetaRepository : IBrokerMetaRepository
     {

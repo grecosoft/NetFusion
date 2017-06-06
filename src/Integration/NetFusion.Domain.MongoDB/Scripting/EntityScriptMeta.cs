@@ -7,7 +7,7 @@ namespace NetFusion.Domain.MongoDB.Scripting
 {
     public class EntityScriptMeta
     {
-        public string Id { get; private set; }
+        public string ScriptId { get; set; }
         public string EntityType { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -17,12 +17,50 @@ namespace NetFusion.Domain.MongoDB.Scripting
         public ICollection<string> ImportedAssemblies { get; set; }
         public ICollection<string> ImportedNamespaces { get; set; }
 
+        public EntityScriptMeta()
+        {
+
+        }
+
+        public EntityScriptMeta(EntityScript script)
+        {
+            this.ScriptId = script.ScriptId;
+            this.EntityType = script.EntityType.AssemblyQualifiedName;
+            this.Name = script.Name;
+            this.Description = script.Description;
+
+            this.Attributes = script.InitialAttributes;
+            this.ImportedAssemblies = script.ImportedAssemblies;
+            this.ImportedNamespaces = script.ImportedNamespaces;
+
+            SetExpressions(script.Expressions);
+        }
+
+        private void SetExpressions(IEnumerable<EntityExpression> expressions)
+        {
+            var expressionMetadata = new List<EntityExpressionMeta>();
+            foreach (EntityExpression expression in expressions)
+            {
+                var expressionMeta = new EntityExpressionMeta
+                {
+                    Expression = expression.Expression,
+                    Sequence = expression.Sequence,
+                    AttributeName = expression.AttributeName,
+                    Description = expression.Description
+                };
+
+                expressionMetadata.Add(expressionMeta);
+            }
+
+            this.Expressions = expressionMetadata;
+        }
+
         public EntityScript ToEntity()
         {
             var expressions = GetEntityExpressions();
 
             var expressionSet = new EntityScript(
-                this.Id,
+                this.ScriptId,
                 this.Name,
                 this.EntityType,
                 new ReadOnlyCollection<EntityExpression>(expressions));

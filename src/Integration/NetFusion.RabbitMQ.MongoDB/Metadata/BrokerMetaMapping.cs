@@ -1,7 +1,7 @@
 ﻿using NetFusion.MongoDB;
 using NetFusion.RabbitMQ.Integration;
 
-namespace NetFusion.Integration.RabbitMQ
+namespace NetFusion.RabbitMQ.MongoDB.Metadata
 {
     public class BrokerMetaMapping : EntityClassMap<BrokerMeta>
     {

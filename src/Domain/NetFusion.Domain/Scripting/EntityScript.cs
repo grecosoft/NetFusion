@@ -12,7 +12,7 @@ namespace NetFusion.Domain.Scripting
         /// <summary>
         /// Identity value for the script.
         /// </summary>
-        public string Id { get; }
+        public string ScriptId { get; }
 
         /// <summary>
         /// The name identifying the script.
@@ -39,22 +39,21 @@ namespace NetFusion.Domain.Scripting
         /// <summary>
         /// Creates new script.
         /// </summary>
-        /// <param name="id">Identity value for the script.</param>
+        /// <param name="scriptId">Identity value for the script.</param>
         /// <param name="name">The name identifying the script.</param>
         /// <param name="entityTypeName">The type of the entity to which the script is associated.</param>
         /// <param name="expressions">The expressions associated with the script.</param>
         public EntityScript(
-            string id,
+            string scriptId,
             string name,
             string entityTypeName,
             IReadOnlyCollection<EntityExpression> expressions) : this()
         {
-            Check.NotNullOrWhiteSpace(id, nameof(id));
             Check.NotNullOrWhiteSpace(name, nameof(name));
             Check.NotNullOrWhiteSpace(entityTypeName, nameof(entityTypeName));
             Check.NotNull(expressions, nameof(expressions));
 
-            this.Id = id;
+            this.ScriptId = scriptId;
             this.Name = name;
             this.Expressions = expressions;
 

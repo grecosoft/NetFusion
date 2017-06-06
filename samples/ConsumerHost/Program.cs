@@ -4,10 +4,10 @@ using NetFusion.Bootstrap.Configuration;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Domain.Scripting;
-using NetFusion.Integration.RabbitMQ;
 using NetFusion.Logging.Serilog.Enrichers;
 using NetFusion.Messaging.Config;
 using NetFusion.RabbitMQ.Core;
+using NetFusion.RabbitMQ.MongoDB.Metadata;
 using Serilog;
 using Serilog.Events;
 

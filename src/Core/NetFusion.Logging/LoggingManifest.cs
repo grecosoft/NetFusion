@@ -5,7 +5,7 @@ namespace NetFusion.MongoDB
     public class LoggingManifest : PluginManifestBase,
         ICorePluginManifest
     {
-        public string PluginId => "5786db1359303da296481377";
+        public string PluginId => "{1CC7754B-2847-4EED-9D8B-D414F9AE03FC}";
         public string Name => "NetFusion Logging Plug-in";
 
         public string Description =>

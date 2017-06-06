@@ -2,7 +2,7 @@
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.RabbitMQ.Core;
 
-namespace NetFusion.Integration.RabbitMQ
+namespace NetFusion.RabbitMQ.MongoDB.Metadata
 {
     public class RabbitIntegrationModule : PluginModule
     {

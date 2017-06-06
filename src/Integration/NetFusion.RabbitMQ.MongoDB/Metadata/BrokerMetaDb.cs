@@ -2,7 +2,7 @@
 using NetFusion.Settings;
 using System.ComponentModel.DataAnnotations;
 
-namespace NetFusion.Integration.RabbitMQ
+namespace NetFusion.RabbitMQ.MongoDB.Metadata
 {
     [ConfigurationSection("integration:brokerMetadata")]
     public class BrokerMetaDb : MongoSettings

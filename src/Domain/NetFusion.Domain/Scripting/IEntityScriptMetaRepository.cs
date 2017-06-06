@@ -14,5 +14,12 @@ namespace NetFusion.Domain.Scripting
         /// </summary>
         /// <returns>List of domain entity associated scripts.</returns>
         Task<IEnumerable<EntityScript>> ReadAll();
+
+        /// <summary>
+        /// Saves a new script or updates an existing.
+        /// </summary>
+        /// <param name="script">The script to same.</param>
+        /// <returns>The existing identity value or the newly generated value.</returns>
+        Task<string> SaveAsync(EntityScript script);
     }
 }

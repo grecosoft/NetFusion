@@ -5,7 +5,7 @@ namespace NetFusion.Utilities.Mapping
     public class Manifest : PluginManifestBase,
         ICorePluginManifest
     {
-        public string PluginId => "55bp3b9768949988d20ff995";
+        public string PluginId => "{83C90E78-D245-4B0D-A4FC-E74B11227766}";
         public string Name => "Mapping Utility Plug-in";
 
         public string Description => 

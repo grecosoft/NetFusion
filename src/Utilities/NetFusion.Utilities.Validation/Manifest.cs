@@ -5,7 +5,7 @@ namespace NetFusion.Utilities.Validation
     public class Manifest : PluginManifestBase,
         ICorePluginManifest
     {
-        public string PluginId => "55bp3b1a88949988d20ff995";
+        public string PluginId => "{63042550-AC9F-4EF3-A047-F54E7572B79B}";
         public string Name => "Validation Utility Plug-in";
 
         public string Description =>
