@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
-    <VersionPrefix>1.2.0</VersionPrefix>
+    <VersionPrefix>1.5.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.6|AnyCPU'">
@@ -29,5 +29,12 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+  
+  <PropertyGroup>
+  	<PackageId>NetFusion.MongoDB</PackageId>
+	<Title>NetFusion MongoDB Plug-In</Title>
+    <Description>Plug-In allowing the bootstrapping and configuration of MongoDB.</Description>
+	<PackageTags>netfusion;plugin;mongodb</PackageTags>
+  </PropertyGroup>
 
 </Project>

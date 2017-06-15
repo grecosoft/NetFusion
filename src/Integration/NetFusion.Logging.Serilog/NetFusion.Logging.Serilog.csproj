@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
-    <VersionPrefix>1.2.0</VersionPrefix>
+    <VersionPrefix>1.5.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.6|AnyCPU'">
@@ -28,5 +28,12 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+  
+  <PropertyGroup>
+  	<PackageId>NetFusion.Logging.Serilog</PackageId>
+	<Title>NetFusion Logging Serilog Integration</Title>
+    <Description>Plug-In providing Serilog implementations used during logging.</Description>
+	<PackageTags>netfusion;loggng;serlog</PackageTags>
+  </PropertyGroup>
 
 </Project>

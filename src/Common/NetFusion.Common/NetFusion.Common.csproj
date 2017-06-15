@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
-    <VersionPrefix>1.2.0</VersionPrefix>
+    <VersionPrefix>1.5.0</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,12 +25,14 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <Description>Common assembly containing common classes and extensions.</Description>
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.6|AnyCPU'">
     <LangVersion>7</LangVersion>
   </PropertyGroup>
   
+  <PropertyGroup>
+  	<PackageId>NetFusion.Common</PackageId>
+	<Title>NetFusion Common</Title>
+    <Description>Common assembly containing common classes and extensions.</Description>
+	<PackageTags>netfusion;plugin</PackageTags>
+  </PropertyGroup>
 </Project>

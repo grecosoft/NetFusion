@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
-    <VersionPrefix>1.2.0</VersionPrefix>
+    <VersionPrefix>1.5.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.6|AnyCPU'">
@@ -28,5 +28,12 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+  
+  <PropertyGroup>
+  	<PackageId>NetFusion.Base</PackageId>
+	<Title>NetFusion Base</Title>
+    <Description>Assembly containing additional classes and extensions specifically for use by NetFusion.</Description>
+	<PackageTags>netfusion;plugin</PackageTags>
+  </PropertyGroup>
   
 </Project>

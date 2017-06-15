@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
+	<VersionPrefix>1.5.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.6|AnyCPU'">
@@ -23,5 +24,12 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+  
+  <PropertyGroup>
+  	<PackageId>NetFusion.Domain.Roslyn</PackageId>
+	<Title>NetFusion Domain Roslyn Integration Plug-In</Title>
+    <Description>Plug-In providing Roslyn implementations for executing expressions against domain entities.</Description>
+	<PackageTags>netfusion;plugin;domain;roslyn</PackageTags>
+  </PropertyGroup>
 
 </Project>

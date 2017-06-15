@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
-    <VersionPrefix>1.2.0</VersionPrefix>
+    <VersionPrefix>1.5.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.6|AnyCPU'">
@@ -32,5 +32,12 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+  
+  <PropertyGroup>
+  	<PackageId>NetFusion.Bootstrap</PackageId>
+	<Title>NetFusion Bootstrap</Title>
+    <Description>Contains bootstrap process for loading NetFusion based plug-in components.</Description>
+	<PackageTags>netfusion;bootstrap;composite;plugin;component</PackageTags>
+  </PropertyGroup>
 
 </Project>

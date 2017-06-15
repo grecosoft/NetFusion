@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
+	<VersionPrefix>1.5.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -24,4 +25,11 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+  
+  <PropertyGroup>
+  	<PackageId>NetFusion.Web.Mvc</PackageId>
+	<Title>NetFusion MVC Plug-In</Title>
+    <Description>Plug-In containing extensions for ASP.NET core.</Description>
+	<PackageTags>netfusion;plugin;asp.net;core</PackageTags>
+  </PropertyGroup>
 </Project>
