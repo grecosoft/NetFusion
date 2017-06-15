@@ -13,3 +13,5 @@ build:
   
 test_script:
   - ps: dotnet test .\test\CommonTests\CommonTests.csproj
+  - ps: dotnet test .\test\CoreTests\CoreTests.csproj
+  
