@@ -20,7 +20,7 @@ test_script:
   - ps: dotnet test .\test\UtilitiesTests\UtilitiesTests.csproj
   
 after_build:
-	  - ps: dotnet pack .\src\Common\NetFusion.Common\NetFusion.Common.csproj /p:VersionPrefix='{version}'
+	  - ps: dotnet pack .\src\Common\NetFusion.Common\NetFusion.Common.csproj /p:VersionPrefix='{1.4.{build}'
   
 artifacts:
   - path: src\**\*.nupkg
