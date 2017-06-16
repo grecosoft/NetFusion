@@ -7,8 +7,9 @@ pull_requests:
 before_build:
   - ps: dotnet restore 
 
-build_script:
-  - dotnet build --version-prefix %APPVEYOR_BUILD_NUMBER%
+build:
+  project: NetFusion.sln
+  verbosity: minimal
   
 test_script:
   - ps: dotnet test .\test\CommonTests\CommonTests.csproj
@@ -19,4 +20,7 @@ test_script:
   - ps: dotnet test .\test\UtilitiesTests\UtilitiesTests.csproj
   
 after_build:
-  - dotnet pack .\src\Common\NetFusion.Common\NetFusion.Common.csproj
+  - ps: dotnet pack .\src\Common\NetFusion.Common\NetFusion.Common.csproj /p:VersionPrefix=%APPVEYOR_BUILD_VERSION%
+  
+
+  
