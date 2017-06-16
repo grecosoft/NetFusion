@@ -21,7 +21,7 @@ test_script:
   
 artifacts:
   - path: artifacts\packages\**\*.nupkg
-  name: MyGet
+    name: MyGet
   
 deploy:
   - provider: NuGet
