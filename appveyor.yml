@@ -19,4 +19,4 @@ test_script:
   - ps: dotnet test .\test\UtilitiesTests\UtilitiesTests.csproj
   
 after_build:
-	  - dotnet pack .\src\Common\NetFusion.Common\NetFusion.Common.csproj
+  - dotnet pack .\src\Common\NetFusion.Common\NetFusion.Common.csproj
