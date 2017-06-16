@@ -8,7 +8,7 @@ before_build:
   - ps: dotnet restore 
 
 build_script:
-  - ps: dotnet build --version-suffix %APPVEYOR_BUILD_NUMBER%
+  - dotnet build --version-suffix %APPVEYOR_BUILD_NUMBER%
   
 test_script:
   - ps: dotnet test .\test\CommonTests\CommonTests.csproj
