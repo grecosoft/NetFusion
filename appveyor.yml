@@ -19,3 +19,13 @@ test_script:
   - ps: dotnet test .\test\IntegrationTests\IntegrationTests.csproj
   - ps: dotnet test .\test\UtilitiesTests\UtilitiesTests.csproj
   
+artifacts:
+  - path: artifacts\packages\**\*.nupkg
+  name: MyGet
+  
+deploy:
+  - provider: NuGet
+    artifact: MyGet
+	api_key:
+		secure: c/FNue2mw27B5A0B1V+pAtSl22XoSqSMu6pj8xIlKGdwAEqoCq7HRxtTqsJl/m1L
+	skip_symbols: false
