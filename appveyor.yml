@@ -20,7 +20,7 @@ test_script:
   - ps: dotnet test .\test\UtilitiesTests\UtilitiesTests.csproj
   
 after_build:
-  - ps: dotnet pack .\src\Common\NetFusion.Common\NetFusion.Common.csproj /p:VersionPrefix=%APPVEYOR_BUILD_VERSION%
+  - ps: dotnet pack .\src\Common\NetFusion.Common\NetFusion.Common.csproj /p:VersionPrefix="$env:ßßAPPVEYOR_BUILD_VERSION"
   
 
   
