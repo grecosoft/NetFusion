@@ -19,8 +19,11 @@ test_script:
   - ps: dotnet test .\test\IntegrationTests\IntegrationTests.csproj
   - ps: dotnet test .\test\UtilitiesTests\UtilitiesTests.csproj
   
+after_build:
+  - ps: dotnet pack .\src\Common\NetFusion.Common\NetFusion.Common.csproj 
+  
 artifacts:
-  - path: artifacts\packages\**\*.nupkg
+  - path: src\**\*.nupkg
     name: MyGet
   
 deploy:
