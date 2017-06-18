@@ -105,12 +105,12 @@ namespace CoreTests.Bootstrap
             environmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Production);
         }
 
-        [Fact(DisplayName = nameof(IfNoApplicationVariable_EnviromentDefaultsToDevelop))]
-        public void IfNoApplicationVariable_EnviromentDefaultsToDevelop()
-        {
-            var environmentConfig = new EnvironmentConfig();
-            environmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Development);
-        }
+        //[Fact(DisplayName = nameof(IfNoApplicationVariable_EnviromentDefaultsToDevelop))]
+        //public void IfNoApplicationVariable_EnviromentDefaultsToDevelop()
+        //{
+        //    var environmentConfig = new EnvironmentConfig();
+        //    environmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Development);
+        //}
 
         [Fact(DisplayName = nameof(EvironmentVariableProvider_AddedIfSecified))]
         public void EvironmentVariableProvider_AddedIfSecified()
