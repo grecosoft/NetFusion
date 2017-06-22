@@ -1,0 +1,3196 @@
+2017-06-19 13:43:30.448 -04:00 [Debug] Container Setup "{
+  \"TypeResolver\": \"NetFusion.Bootstrap.Container.TypeResolver, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [
+    \"NetFusion.Bootstrap.Configuration.EnvironmentConfig, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging.Config.MessagingConfig, NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap.Plugins.LoggerConfig, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap.Container.AutofacRegistrationConfig, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-06-19 13:43:30.477 -04:00 [Verbose] Start Process: "Building Container"
+2017-06-19 13:43:30.538 -04:00 [Debug] Type Resolver "{
+  \"SearchPatterns\": [
+    \"consumerhost\",
+    \"exampleapi\",
+    \"netfusion.*\",
+    \"netfusion.*.*\"
+  ],
+  \"MatchingAssemblies\": [
+    \"ConsumerHost, Culture=neutral, PublicKeyToken=null\",
+    \"ExampleApi, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Base, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Common, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Domain, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Domain.Messaging, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.EntityFramework, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Logging.Serilog, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ.MongoDB, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Settings, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Utilities.Validation, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-06-19 13:43:30.625 -04:00 [Debug] Manifests "{
+  \"Host\": \"NetFusion.Client.HostManifest, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Application\": [
+    \"RefArch.Api.Manifest, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\"
+  ],
+  \"Core\": [
+    \"NetFusion.Domain.Manifest, NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB.EntityFrameworkManifest, NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging.MessagingManifest, NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB.MongoDBManifest, NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ.RabbitMQManifest, NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Integration.RabbitMqMongoDbManifest, NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Settings.SettingsManifest, NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Utilities.Validation.Manifest, NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-06-19 13:43:30.670 -04:00 [Debug] Plugin "{
+  \"Name\": \"Example Message Consumer Host\",
+  \"PluginId\": \"{0738190E-DF28-4819-8303-1AC64279A447}\",
+  \"AssemblyName\": \"ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [],
+  \"Discovers\": []
+}"
+2017-06-19 13:43:30.671 -04:00 [Debug] Plugin "{
+  \"Name\": \"Public Application Programming Interface.\",
+  \"PluginId\": \"{E797B872-DDC9-418C-9DED-DF981BA164FC}\",
+  \"AssemblyName\": \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [],
+  \"Discovers\": []
+}"
+2017-06-19 13:43:30.671 -04:00 [Debug] Plugin "{
+  \"Name\": \"Domain Plug-in\",
+  \"PluginId\": \"{CB97D67F-8455-4866-B839-A66A062E2870}\",
+  \"AssemblyName\": \"NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"DomainScriptingModule\",
+    \"EntityBehaviorModule\",
+    \"ReferenceTypeModule\"
+  ],
+  \"Discovers\": [
+    \"IBehaviorRegistry\"
+  ]
+}"
+2017-06-19 13:43:30.671 -04:00 [Debug] Plugin "{
+  \"Name\": \"EntityFramework Plug-in\",
+  \"PluginId\": \"{F66BA457-F387-4D45-9972-31EC9DB7D4A0}\",
+  \"AssemblyName\": \"NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"EntityContextModule\"
+  ],
+  \"Discovers\": [
+    \"IEntityTypeMapping\"
+  ]
+}"
+2017-06-19 13:43:30.671 -04:00 [Debug] Plugin "{
+  \"Name\": \"Messaging Plug-in\",
+  \"PluginId\": \"{4576D809-E216-4C03-BE43-737728047BAA}\",
+  \"AssemblyName\": \"NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [
+    \"MessagingConfig\"
+  ],
+  \"Modules\": [
+    \"MessageEnricherModule\",
+    \"MessagingModule\"
+  ],
+  \"Discovers\": [
+    \"IMessageDispatchRule\"
+  ]
+}"
+2017-06-19 13:43:30.671 -04:00 [Debug] Plugin "{
+  \"Name\": \"MongoDb Plug-in\",
+  \"PluginId\": \"{4BE391F9-F687-4E49-90A3-D38300E3A751}\",
+  \"AssemblyName\": \"NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"MappingModule\",
+    \"MongoModule\"
+  ],
+  \"Discovers\": [
+    \"IEntityClassMap\"
+  ]
+}"
+2017-06-19 13:43:30.672 -04:00 [Debug] Plugin "{
+  \"Name\": \"RabbitMQ Plug-in\",
+  \"PluginId\": \"{086DBC42-CF80-4B1D-A4F2-C9DC7E3CA24C}\",
+  \"AssemblyName\": \"NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"MessageBrokerModule\"
+  ],
+  \"Discovers\": [
+    \"IMessageExchange\",
+    \"IBrokerSerializerRegistry\"
+  ]
+}"
+2017-06-19 13:43:30.672 -04:00 [Debug] Plugin "{
+  \"Name\": \"NetFusion RabbitMQ MongoDB Plug-in\",
+  \"PluginId\": \"{1E4D2D7F-75D5-486B-A3CB-1971EAD7C801}\",
+  \"AssemblyName\": \"NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"RabbitIntegrationModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-06-19 13:43:30.672 -04:00 [Debug] Plugin "{
+  \"Name\": \"Settings Plug-in\",
+  \"PluginId\": \"{1FC4C728-83E0-4407-B846-2871B3F0A1B6}\",
+  \"AssemblyName\": \"NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"AppSettingsModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-06-19 13:43:30.672 -04:00 [Debug] Plugin "{
+  \"Name\": \"Validation Utility Plug-in\",
+  \"PluginId\": \"{63042550-AC9F-4EF3-A047-F54E7572B79B}\",
+  \"AssemblyName\": \"NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"ValidationModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-06-19 13:43:30.789 -04:00 [Verbose] End Process: "Building Container", 311
+2017-06-19 13:43:30.789 -04:00 [Verbose] Start Process: "Starting Container"
+2017-06-19 13:43:31.310 -04:00 [Verbose] End Process: "Starting Container", 520
+2017-06-19 13:43:31.381 -04:00 [Verbose] Composite Log "{
+  \"Searched-Plugin-Assemblies\": {
+    \"AppHost-Assembly\": \"ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"AppComponent-Assemblies\": [
+      \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\"
+    ],
+    \"Core-Assemblies\": [
+      \"NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+    ]
+  },
+  \"Application-Host\": {
+    \"Plugin-Name\": \"Example Message Consumer Host\",
+    \"Plugin-Id\": \"{0738190E-DF28-4819-8303-1AC64279A447}\",
+    \"Plugin-Assembly\": \"ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"Plugin-Description\": \"Test message consumer host.\",
+    \"Plugin-Modules\": {},
+    \"Known-Types\": {
+      \"Services.ExampleDirectService\": [],
+      \"Services.FanoutExchangeService\": [],
+      \"Services.ExampleRpcService\": [],
+      \"Services.ExampleTopicService\": [],
+      \"Services.ExampleWorkQueueService\": [],
+      \"Exchanges.ExampleRpcExchange\": [
+        \"RabbitMQ Plug-in\"
+      ]
+    },
+    \"Discovered-Types\": [],
+    \"Plugin-Services\": [
+      {
+        \"Type\": \"ExampleDirectService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleDirectService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"FanoutExchangeService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.FanoutExchangeService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleRpcService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleRpcService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleTopicService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleTopicService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleWorkQueueService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleWorkQueueService\"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  \"Component-Plugins\": {
+    \"Public Application Programming Interface.\": {
+      \"Plugin-Name\": \"Public Application Programming Interface.\",
+      \"Plugin-Id\": \"{E797B872-DDC9-418C-9DED-DF981BA164FC}\",
+      \"Plugin-Assembly\": \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides commands and responses for business use cases.\",
+      \"Plugin-Modules\": {},
+      \"Known-Types\": {
+        \"Messages.ExampleDirectEvent\": [],
+        \"Messages.ExampleFanoutEvent\": [],
+        \"Messages.ExampleRpcCommand\": [],
+        \"Messages.ExampleRpcResponse\": [],
+        \"Messages.ExampleTopicEvent\": [],
+        \"Messages.ExampleWorkQueueEvent\": []
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": []
+    }
+  },
+  \"Core-Plugins\": {
+    \"Domain Plug-in\": {
+      \"Plugin-Name\": \"Domain Plug-in\",
+      \"Plugin-Id\": \"{CB97D67F-8455-4866-B839-A66A062E2870}\",
+      \"Plugin-Assembly\": \"NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides patterns that can be used to extend domain entities.  Also provides other domain based patterns.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Domain.Modules.DomainScriptingModule\": {
+          \"Log\": {
+            \"Attributed-Entities\": [
+              \"ExampleApi.Messages.ExampleDirectEvent\",
+              \"ExampleApi.Messages.ExampleFanoutEvent\",
+              \"ExampleApi.Messages.ExampleRpcCommand\",
+              \"ExampleApi.Messages.ExampleRpcResponse\",
+              \"ExampleApi.Messages.ExampleTopicEvent\",
+              \"ExampleApi.Messages.ExampleWorkQueueEvent\"
+            ]
+          }
+        },
+        \"NetFusion.Domain.Modules.EntityBehaviorModule\": {
+          \"Log\": {}
+        },
+        \"NetFusion.Domain.Modules.ReferenceTypeModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [
+        \"IBehaviorRegistry\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"NullEntityScriptingService\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.Scripting.IEntityScriptingService\"
+              ]
+            },
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.Scripting.IEntityScriptingService\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"NullReferenceTypeRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.ReferenceTypes.Core.IReferenceTypeRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"IDomainEntityFactory\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.Entities.IDomainEntityFactory\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"EntityFramework Plug-in\": {
+      \"Plugin-Name\": \"EntityFramework Plug-in\",
+      \"Plugin-Id\": \"{F66BA457-F387-4D45-9972-31EC9DB7D4A0}\",
+      \"Plugin-Assembly\": \"NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides initialization for DBContext and also allows for automatic registration of entity mappings.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.EntityFramework.Modules.EntityContextModule\": {
+          \"Log\": {
+            \"Entity Mappings\": []
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"EntityContext`1\": [],
+        \"Configs.ContextSettings\": [],
+        \"Configs.EntityFrameworkConfig\": []
+      },
+      \"Discovered-Types\": [
+        \"IEntityTypeMapping\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"ContextSettings\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.EntityFramework.Configs.ContextSettings\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"Messaging Plug-in\": {
+      \"Plugin-Name\": \"Messaging Plug-in\",
+      \"Plugin-Id\": \"{4576D809-E216-4C03-BE43-737728047BAA}\",
+      \"Plugin-Assembly\": \"NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Contains common implementation for publishing messages in-process that can be extended by other plug-ins to publish messages out of process.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Messaging.Modules.MessageEnricherModule\": {
+          \"Log\": {}
+        },
+        \"NetFusion.Messaging.Modules.MessagingModule\": {
+          \"Log\": {
+            \"Messaging - In Process Dispatchers\": {
+              \"ExampleApi.Messages.ExampleRpcCommand\": [
+                {
+                  \"Consumer\": \"ConsumerHost.Services.ExampleRpcService\",
+                  \"Method\": \"OnRpcMessage\",
+                  \"EventType\": \"ExampleRpcCommand\",
+                  \"IsAsync\": true,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                }
+              ]
+            },
+            \"Message Publishers\": [
+              {
+                \"PublisherType\": \"NetFusion.Messaging.Core.InProcessMessagePublisher, NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"IsConfigured\": true
+              },
+              {
+                \"PublisherType\": \"NetFusion.RabbitMQ.Core.RabbitMqMessagePublisher, NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"IsConfigured\": true
+              }
+            ]
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"Core.InProcessMessagePublisher\": [],
+        \"Config.MessagingConfig\": []
+      },
+      \"Discovered-Types\": [
+        \"IMessageDispatchRule\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"MessagingService\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.IMessagingService\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"CorrelationEnricher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Enrichers.IMessageEnricher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"DatePublishedEnricher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Enrichers.IMessageEnricher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"InProcessMessagePublisher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Core.IMessagePublisher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"MessagingModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Modules.IMessagingModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"MongoDb Plug-in\": {
+      \"Plugin-Name\": \"MongoDb Plug-in\",
+      \"Plugin-Id\": \"{4BE391F9-F687-4E49-90A3-D38300E3A751}\",
+      \"Plugin-Assembly\": \"NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Plug-in that registers a client for connecting to a MongoDB instance.Also finds all MongoDb entity type mappings and configures then with the client.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.MongoDB.Modules.MappingModule\": {
+          \"Log\": {
+            \"Entity Mappings\": [
+              {
+                \"MappingType\": \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaMapping, NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"EntityType\": \"NetFusion.RabbitMQ.Integration.BrokerMeta, NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"CollectionName\": null,
+                \"Descriminator\": \"BrokerMeta\",
+                \"KnownTypes\": []
+              }
+            ]
+          }
+        },
+        \"NetFusion.MongoDB.Modules.MongoModule\": {
+          \"Log\": {
+            \"Data-Bases\": [
+              \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaDb, NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+            ]
+          }
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [
+        \"IEntityClassMap\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"MappingModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.MongoDB.Modules.IMongoMappingModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"RabbitMQ Plug-in\": {
+      \"Plugin-Name\": \"RabbitMQ Plug-in\",
+      \"Plugin-Id\": \"{086DBC42-CF80-4B1D-A4F2-C9DC7E3CA24C}\",
+      \"Plugin-Assembly\": \"NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides support for integrating RabbitMQ as a message publisher.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.RabbitMQ.Modules.MessageBrokerModule\": {
+          \"Log\": {
+            \"Message-Exchanges\": [
+              {
+                \"MessageType\": null,
+                \"Exchanges\": [
+                  {
+                    \"ExchangeName\": null,
+                    \"Settings\": {
+                      \"BrokerName\": \"TestBroker\",
+                      \"ExchangeType\": null,
+                      \"ExchangeName\": null,
+                      \"ContentType\": \"application/json; charset=utf-8\",
+                      \"IsDurable\": false,
+                      \"IsAutoDelete\": false,
+                      \"IsConsumerExchange\": true,
+                      \"Arguments\": {},
+                      \"Predicate\": null
+                    },
+                    \"Queues\": [
+                      {
+                        \"QueueName\": \"RpcMessageQueue\",
+                        \"RouteKeys\": null,
+                        \"Settings\": {
+                          \"IsDurable\": false,
+                          \"IsAutoDelete\": true,
+                          \"IsExclusive\": false,
+                          \"IsBrokerAssignedName\": false,
+                          \"IsNoAck\": true,
+                          \"PrefetchSize\": null,
+                          \"PrefetchCount\": null,
+                          \"Arguments\": {}
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            \"Message-Consumers\": [
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 1,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleDirectExchange\",
+                \"QueueName\": \"GENERAL-MOTORS\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnGeneralMotors\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 2,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleDirectExchange\",
+                \"QueueName\": \"VOLKSWAGEN\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnVolkswagen\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 3,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"HighImportanceExchange\",
+                \"QueueName\": \"amq.gen-EgLkOPv23AEIWmXJtcMoTw\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": true,
+                  \"IsExclusive\": true,
+                  \"IsBrokerAssignedName\": true,
+                  \"IsNoAck\": true,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnHighImportance\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 4,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"LowImportanceExchange\",
+                \"QueueName\": \"amq.gen-fNuYDyUbrxQMGixR_UE49w\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": true,
+                  \"IsExclusive\": true,
+                  \"IsBrokerAssignedName\": true,
+                  \"IsNoAck\": true,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnLowImportance\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 5,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"VW-GTI\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnVwGti\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 6,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"VW-BLACK\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnBlackVw\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 7,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"amq.gen-Cpzpr2Z1Ba-qYEdcMd846w\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": true,
+                  \"IsExclusive\": true,
+                  \"IsBrokerAssignedName\": true,
+                  \"IsNoAck\": true,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [
+                  \"VW.JETTA.*.*\"
+                ],
+                \"Name\": \"OnVwJetta\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 8,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"VW-PASSAT-SILVER\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [
+                  \"VW.PASSAT.*.SILVER\"
+                ],
+                \"Name\": \"OnSilverVwPassat\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 9,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"AUDI\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnAudi\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 10,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"\",
+                \"QueueName\": \"PROCESS_SALE\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnProcessSale\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 11,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"\",
+                \"QueueName\": \"PROCESS_SERVICE\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnProcessService\"
+              }
+            ],
+            \"Broker Details\": {
+              \"RPC Messages\": {}
+            }
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"Serialization.JsonBrokerSerializer\": [],
+        \"Serialization.MessagePackBrokerSerializer\": [],
+        \"Core.RabbitMqMessagePublisher\": [],
+        \"Configs.BrokerSettings\": []
+      },
+      \"Discovered-Types\": [
+        \"IMessageExchange\",
+        \"IBrokerSerializerRegistry\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"NullBrokerMetaRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"MessageBroker\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IMessageBroker\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"RabbitMqMessagePublisher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Core.IMessagePublisher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"BrokerSettings\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Configs.BrokerSettings\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"NetFusion RabbitMQ MongoDB Plug-in\": {
+      \"Plugin-Name\": \"NetFusion RabbitMQ MongoDB Plug-in\",
+      \"Plugin-Id\": \"{1E4D2D7F-75D5-486B-A3CB-1971EAD7C801}\",
+      \"Plugin-Assembly\": \"NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Plug-in that provides RabbitMQ MongoDB based implementations.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.RabbitMQ.MongoDB.Metadata.RabbitIntegrationModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {
+        \"Metadata.BrokerMetaDb\": [],
+        \"Metadata.BrokerMetaMapping\": [
+          \"MongoDb Plug-in\"
+        ]
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"BrokerMetaRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            },
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"BrokerMetaDb\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaDb\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"Settings Plug-in\": {
+      \"Plugin-Name\": \"Settings Plug-in\",
+      \"Plugin-Id\": \"{1FC4C728-83E0-4407-B846-2871B3F0A1B6}\",
+      \"Plugin-Assembly\": \"NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Plug-in that locates application settings and initializes them when injected into a dependent component for the first time.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Settings.Modules.AppSettingsModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": []
+    },
+    \"Validation Utility Plug-in\": {
+      \"Plugin-Name\": \"Validation Utility Plug-in\",
+      \"Plugin-Id\": \"{63042550-AC9F-4EF3-A047-F54E7572B79B}\",
+      \"Plugin-Assembly\": \"NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Utility Plug-In used to validate domain entities.  This plug-in configures and coordinates the validation process and provides default validation based on Microsoft Validation Attributes.  The host application can override this default validation and use a validation library of choice.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Utilities.Modules.ValidationModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {
+        \"Configs.ValidationConfig\": []
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"ValidationModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Utilities.Validation.Core.IValidationModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}"
+2017-06-19 13:45:18.150 -04:00 [Debug] Container Setup "{
+  \"TypeResolver\": \"NetFusion.Bootstrap.Container.TypeResolver, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [
+    \"NetFusion.Bootstrap.Configuration.EnvironmentConfig, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging.Config.MessagingConfig, NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap.Plugins.LoggerConfig, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap.Container.AutofacRegistrationConfig, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-06-19 13:45:18.179 -04:00 [Verbose] Start Process: "Building Container"
+2017-06-19 13:45:18.240 -04:00 [Debug] Type Resolver "{
+  \"SearchPatterns\": [
+    \"consumerhost\",
+    \"exampleapi\",
+    \"netfusion.*\",
+    \"netfusion.*.*\"
+  ],
+  \"MatchingAssemblies\": [
+    \"ConsumerHost, Culture=neutral, PublicKeyToken=null\",
+    \"ExampleApi, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Base, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Common, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Domain, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Domain.Messaging, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.EntityFramework, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Logging.Serilog, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ.MongoDB, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Settings, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Utilities.Validation, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-06-19 13:45:18.279 -04:00 [Debug] Manifests "{
+  \"Host\": \"NetFusion.Client.HostManifest, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Application\": [
+    \"RefArch.Api.Manifest, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\"
+  ],
+  \"Core\": [
+    \"NetFusion.Domain.Manifest, NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB.EntityFrameworkManifest, NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging.MessagingManifest, NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB.MongoDBManifest, NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ.RabbitMQManifest, NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Integration.RabbitMqMongoDbManifest, NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Settings.SettingsManifest, NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Utilities.Validation.Manifest, NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-06-19 13:45:18.325 -04:00 [Debug] Plugin "{
+  \"Name\": \"Example Message Consumer Host\",
+  \"PluginId\": \"{0738190E-DF28-4819-8303-1AC64279A447}\",
+  \"AssemblyName\": \"ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [],
+  \"Discovers\": []
+}"
+2017-06-19 13:45:18.326 -04:00 [Debug] Plugin "{
+  \"Name\": \"Public Application Programming Interface.\",
+  \"PluginId\": \"{E797B872-DDC9-418C-9DED-DF981BA164FC}\",
+  \"AssemblyName\": \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [],
+  \"Discovers\": []
+}"
+2017-06-19 13:45:18.326 -04:00 [Debug] Plugin "{
+  \"Name\": \"Domain Plug-in\",
+  \"PluginId\": \"{CB97D67F-8455-4866-B839-A66A062E2870}\",
+  \"AssemblyName\": \"NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"DomainScriptingModule\",
+    \"EntityBehaviorModule\",
+    \"ReferenceTypeModule\"
+  ],
+  \"Discovers\": [
+    \"IBehaviorRegistry\"
+  ]
+}"
+2017-06-19 13:45:18.326 -04:00 [Debug] Plugin "{
+  \"Name\": \"EntityFramework Plug-in\",
+  \"PluginId\": \"{F66BA457-F387-4D45-9972-31EC9DB7D4A0}\",
+  \"AssemblyName\": \"NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"EntityContextModule\"
+  ],
+  \"Discovers\": [
+    \"IEntityTypeMapping\"
+  ]
+}"
+2017-06-19 13:45:18.326 -04:00 [Debug] Plugin "{
+  \"Name\": \"Messaging Plug-in\",
+  \"PluginId\": \"{4576D809-E216-4C03-BE43-737728047BAA}\",
+  \"AssemblyName\": \"NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [
+    \"MessagingConfig\"
+  ],
+  \"Modules\": [
+    \"MessageEnricherModule\",
+    \"MessagingModule\"
+  ],
+  \"Discovers\": [
+    \"IMessageDispatchRule\"
+  ]
+}"
+2017-06-19 13:45:18.326 -04:00 [Debug] Plugin "{
+  \"Name\": \"MongoDb Plug-in\",
+  \"PluginId\": \"{4BE391F9-F687-4E49-90A3-D38300E3A751}\",
+  \"AssemblyName\": \"NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"MappingModule\",
+    \"MongoModule\"
+  ],
+  \"Discovers\": [
+    \"IEntityClassMap\"
+  ]
+}"
+2017-06-19 13:45:18.326 -04:00 [Debug] Plugin "{
+  \"Name\": \"RabbitMQ Plug-in\",
+  \"PluginId\": \"{086DBC42-CF80-4B1D-A4F2-C9DC7E3CA24C}\",
+  \"AssemblyName\": \"NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"MessageBrokerModule\"
+  ],
+  \"Discovers\": [
+    \"IMessageExchange\",
+    \"IBrokerSerializerRegistry\"
+  ]
+}"
+2017-06-19 13:45:18.327 -04:00 [Debug] Plugin "{
+  \"Name\": \"NetFusion RabbitMQ MongoDB Plug-in\",
+  \"PluginId\": \"{1E4D2D7F-75D5-486B-A3CB-1971EAD7C801}\",
+  \"AssemblyName\": \"NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"RabbitIntegrationModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-06-19 13:45:18.327 -04:00 [Debug] Plugin "{
+  \"Name\": \"Settings Plug-in\",
+  \"PluginId\": \"{1FC4C728-83E0-4407-B846-2871B3F0A1B6}\",
+  \"AssemblyName\": \"NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"AppSettingsModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-06-19 13:45:18.327 -04:00 [Debug] Plugin "{
+  \"Name\": \"Validation Utility Plug-in\",
+  \"PluginId\": \"{63042550-AC9F-4EF3-A047-F54E7572B79B}\",
+  \"AssemblyName\": \"NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"ValidationModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-06-19 13:45:18.438 -04:00 [Verbose] End Process: "Building Container", 258
+2017-06-19 13:45:18.439 -04:00 [Verbose] Start Process: "Starting Container"
+2017-06-19 13:45:18.924 -04:00 [Verbose] End Process: "Starting Container", 485
+2017-06-19 13:45:18.991 -04:00 [Verbose] Composite Log "{
+  \"Searched-Plugin-Assemblies\": {
+    \"AppHost-Assembly\": \"ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"AppComponent-Assemblies\": [
+      \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\"
+    ],
+    \"Core-Assemblies\": [
+      \"NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+    ]
+  },
+  \"Application-Host\": {
+    \"Plugin-Name\": \"Example Message Consumer Host\",
+    \"Plugin-Id\": \"{0738190E-DF28-4819-8303-1AC64279A447}\",
+    \"Plugin-Assembly\": \"ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"Plugin-Description\": \"Test message consumer host.\",
+    \"Plugin-Modules\": {},
+    \"Known-Types\": {
+      \"Services.ExampleDirectService\": [],
+      \"Services.FanoutExchangeService\": [],
+      \"Services.ExampleRpcService\": [],
+      \"Services.ExampleTopicService\": [],
+      \"Services.ExampleWorkQueueService\": [],
+      \"Exchanges.ExampleRpcExchange\": [
+        \"RabbitMQ Plug-in\"
+      ]
+    },
+    \"Discovered-Types\": [],
+    \"Plugin-Services\": [
+      {
+        \"Type\": \"ExampleDirectService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleDirectService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"FanoutExchangeService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.FanoutExchangeService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleRpcService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleRpcService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleTopicService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleTopicService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleWorkQueueService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleWorkQueueService\"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  \"Component-Plugins\": {
+    \"Public Application Programming Interface.\": {
+      \"Plugin-Name\": \"Public Application Programming Interface.\",
+      \"Plugin-Id\": \"{E797B872-DDC9-418C-9DED-DF981BA164FC}\",
+      \"Plugin-Assembly\": \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides commands and responses for business use cases.\",
+      \"Plugin-Modules\": {},
+      \"Known-Types\": {
+        \"Messages.ExampleDirectEvent\": [],
+        \"Messages.ExampleFanoutEvent\": [],
+        \"Messages.ExampleRpcCommand\": [],
+        \"Messages.ExampleRpcResponse\": [],
+        \"Messages.ExampleTopicEvent\": [],
+        \"Messages.ExampleWorkQueueEvent\": []
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": []
+    }
+  },
+  \"Core-Plugins\": {
+    \"Domain Plug-in\": {
+      \"Plugin-Name\": \"Domain Plug-in\",
+      \"Plugin-Id\": \"{CB97D67F-8455-4866-B839-A66A062E2870}\",
+      \"Plugin-Assembly\": \"NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides patterns that can be used to extend domain entities.  Also provides other domain based patterns.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Domain.Modules.DomainScriptingModule\": {
+          \"Log\": {
+            \"Attributed-Entities\": [
+              \"ExampleApi.Messages.ExampleDirectEvent\",
+              \"ExampleApi.Messages.ExampleFanoutEvent\",
+              \"ExampleApi.Messages.ExampleRpcCommand\",
+              \"ExampleApi.Messages.ExampleRpcResponse\",
+              \"ExampleApi.Messages.ExampleTopicEvent\",
+              \"ExampleApi.Messages.ExampleWorkQueueEvent\"
+            ]
+          }
+        },
+        \"NetFusion.Domain.Modules.EntityBehaviorModule\": {
+          \"Log\": {}
+        },
+        \"NetFusion.Domain.Modules.ReferenceTypeModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [
+        \"IBehaviorRegistry\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"NullEntityScriptingService\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.Scripting.IEntityScriptingService\"
+              ]
+            },
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.Scripting.IEntityScriptingService\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"NullReferenceTypeRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.ReferenceTypes.Core.IReferenceTypeRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"IDomainEntityFactory\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.Entities.IDomainEntityFactory\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"EntityFramework Plug-in\": {
+      \"Plugin-Name\": \"EntityFramework Plug-in\",
+      \"Plugin-Id\": \"{F66BA457-F387-4D45-9972-31EC9DB7D4A0}\",
+      \"Plugin-Assembly\": \"NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides initialization for DBContext and also allows for automatic registration of entity mappings.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.EntityFramework.Modules.EntityContextModule\": {
+          \"Log\": {
+            \"Entity Mappings\": []
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"EntityContext`1\": [],
+        \"Configs.ContextSettings\": [],
+        \"Configs.EntityFrameworkConfig\": []
+      },
+      \"Discovered-Types\": [
+        \"IEntityTypeMapping\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"ContextSettings\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.EntityFramework.Configs.ContextSettings\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"Messaging Plug-in\": {
+      \"Plugin-Name\": \"Messaging Plug-in\",
+      \"Plugin-Id\": \"{4576D809-E216-4C03-BE43-737728047BAA}\",
+      \"Plugin-Assembly\": \"NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Contains common implementation for publishing messages in-process that can be extended by other plug-ins to publish messages out of process.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Messaging.Modules.MessageEnricherModule\": {
+          \"Log\": {}
+        },
+        \"NetFusion.Messaging.Modules.MessagingModule\": {
+          \"Log\": {
+            \"Messaging - In Process Dispatchers\": {
+              \"ExampleApi.Messages.ExampleRpcCommand\": [
+                {
+                  \"Consumer\": \"ConsumerHost.Services.ExampleRpcService\",
+                  \"Method\": \"OnRpcMessage\",
+                  \"EventType\": \"ExampleRpcCommand\",
+                  \"IsAsync\": true,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                }
+              ]
+            },
+            \"Message Publishers\": [
+              {
+                \"PublisherType\": \"NetFusion.Messaging.Core.InProcessMessagePublisher, NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"IsConfigured\": true
+              },
+              {
+                \"PublisherType\": \"NetFusion.RabbitMQ.Core.RabbitMqMessagePublisher, NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"IsConfigured\": true
+              }
+            ]
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"Core.InProcessMessagePublisher\": [],
+        \"Config.MessagingConfig\": []
+      },
+      \"Discovered-Types\": [
+        \"IMessageDispatchRule\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"MessagingService\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.IMessagingService\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"CorrelationEnricher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Enrichers.IMessageEnricher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"DatePublishedEnricher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Enrichers.IMessageEnricher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"InProcessMessagePublisher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Core.IMessagePublisher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"MessagingModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Modules.IMessagingModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"MongoDb Plug-in\": {
+      \"Plugin-Name\": \"MongoDb Plug-in\",
+      \"Plugin-Id\": \"{4BE391F9-F687-4E49-90A3-D38300E3A751}\",
+      \"Plugin-Assembly\": \"NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Plug-in that registers a client for connecting to a MongoDB instance.Also finds all MongoDb entity type mappings and configures then with the client.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.MongoDB.Modules.MappingModule\": {
+          \"Log\": {
+            \"Entity Mappings\": [
+              {
+                \"MappingType\": \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaMapping, NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"EntityType\": \"NetFusion.RabbitMQ.Integration.BrokerMeta, NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"CollectionName\": null,
+                \"Descriminator\": \"BrokerMeta\",
+                \"KnownTypes\": []
+              }
+            ]
+          }
+        },
+        \"NetFusion.MongoDB.Modules.MongoModule\": {
+          \"Log\": {
+            \"Data-Bases\": [
+              \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaDb, NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+            ]
+          }
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [
+        \"IEntityClassMap\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"MappingModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.MongoDB.Modules.IMongoMappingModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"RabbitMQ Plug-in\": {
+      \"Plugin-Name\": \"RabbitMQ Plug-in\",
+      \"Plugin-Id\": \"{086DBC42-CF80-4B1D-A4F2-C9DC7E3CA24C}\",
+      \"Plugin-Assembly\": \"NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides support for integrating RabbitMQ as a message publisher.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.RabbitMQ.Modules.MessageBrokerModule\": {
+          \"Log\": {
+            \"Message-Exchanges\": [
+              {
+                \"MessageType\": null,
+                \"Exchanges\": [
+                  {
+                    \"ExchangeName\": null,
+                    \"Settings\": {
+                      \"BrokerName\": \"TestBroker\",
+                      \"ExchangeType\": null,
+                      \"ExchangeName\": null,
+                      \"ContentType\": \"application/json; charset=utf-8\",
+                      \"IsDurable\": false,
+                      \"IsAutoDelete\": false,
+                      \"IsConsumerExchange\": true,
+                      \"Arguments\": {},
+                      \"Predicate\": null
+                    },
+                    \"Queues\": [
+                      {
+                        \"QueueName\": \"RpcMessageQueue\",
+                        \"RouteKeys\": null,
+                        \"Settings\": {
+                          \"IsDurable\": false,
+                          \"IsAutoDelete\": true,
+                          \"IsExclusive\": false,
+                          \"IsBrokerAssignedName\": false,
+                          \"IsNoAck\": true,
+                          \"PrefetchSize\": null,
+                          \"PrefetchCount\": null,
+                          \"Arguments\": {}
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            \"Message-Consumers\": [
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 1,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleDirectExchange\",
+                \"QueueName\": \"GENERAL-MOTORS\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnGeneralMotors\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 2,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleDirectExchange\",
+                \"QueueName\": \"VOLKSWAGEN\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnVolkswagen\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 3,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"HighImportanceExchange\",
+                \"QueueName\": \"amq.gen-NKRr3T2752B86A4nnReoNQ\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": true,
+                  \"IsExclusive\": true,
+                  \"IsBrokerAssignedName\": true,
+                  \"IsNoAck\": true,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnHighImportance\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 4,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"LowImportanceExchange\",
+                \"QueueName\": \"amq.gen-ppqqbPWXlJxdHmhJBNz1ZA\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": true,
+                  \"IsExclusive\": true,
+                  \"IsBrokerAssignedName\": true,
+                  \"IsNoAck\": true,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnLowImportance\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 5,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"VW-GTI\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnVwGti\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 6,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"VW-BLACK\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnBlackVw\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 7,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"amq.gen-XRmmjRtLnOMVRZvRmgbRPw\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": true,
+                  \"IsExclusive\": true,
+                  \"IsBrokerAssignedName\": true,
+                  \"IsNoAck\": true,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [
+                  \"VW.JETTA.*.*\"
+                ],
+                \"Name\": \"OnVwJetta\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 8,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"VW-PASSAT-SILVER\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [
+                  \"VW.PASSAT.*.SILVER\"
+                ],
+                \"Name\": \"OnSilverVwPassat\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 9,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"AUDI\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnAudi\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 10,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"\",
+                \"QueueName\": \"PROCESS_SALE\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnProcessSale\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 11,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"\",
+                \"QueueName\": \"PROCESS_SERVICE\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnProcessService\"
+              }
+            ],
+            \"Broker Details\": {
+              \"RPC Messages\": {}
+            }
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"Serialization.JsonBrokerSerializer\": [],
+        \"Serialization.MessagePackBrokerSerializer\": [],
+        \"Core.RabbitMqMessagePublisher\": [],
+        \"Configs.BrokerSettings\": []
+      },
+      \"Discovered-Types\": [
+        \"IMessageExchange\",
+        \"IBrokerSerializerRegistry\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"NullBrokerMetaRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"MessageBroker\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IMessageBroker\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"RabbitMqMessagePublisher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Core.IMessagePublisher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"BrokerSettings\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Configs.BrokerSettings\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"NetFusion RabbitMQ MongoDB Plug-in\": {
+      \"Plugin-Name\": \"NetFusion RabbitMQ MongoDB Plug-in\",
+      \"Plugin-Id\": \"{1E4D2D7F-75D5-486B-A3CB-1971EAD7C801}\",
+      \"Plugin-Assembly\": \"NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Plug-in that provides RabbitMQ MongoDB based implementations.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.RabbitMQ.MongoDB.Metadata.RabbitIntegrationModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {
+        \"Metadata.BrokerMetaDb\": [],
+        \"Metadata.BrokerMetaMapping\": [
+          \"MongoDb Plug-in\"
+        ]
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"BrokerMetaRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            },
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"BrokerMetaDb\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaDb\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"Settings Plug-in\": {
+      \"Plugin-Name\": \"Settings Plug-in\",
+      \"Plugin-Id\": \"{1FC4C728-83E0-4407-B846-2871B3F0A1B6}\",
+      \"Plugin-Assembly\": \"NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Plug-in that locates application settings and initializes them when injected into a dependent component for the first time.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Settings.Modules.AppSettingsModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": []
+    },
+    \"Validation Utility Plug-in\": {
+      \"Plugin-Name\": \"Validation Utility Plug-in\",
+      \"Plugin-Id\": \"{63042550-AC9F-4EF3-A047-F54E7572B79B}\",
+      \"Plugin-Assembly\": \"NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Utility Plug-In used to validate domain entities.  This plug-in configures and coordinates the validation process and provides default validation based on Microsoft Validation Attributes.  The host application can override this default validation and use a validation library of choice.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Utilities.Modules.ValidationModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {
+        \"Configs.ValidationConfig\": []
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"ValidationModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Utilities.Validation.Core.IValidationModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}"
+2017-06-19 14:32:41.777 -04:00 [Debug] Container Setup "{
+  \"TypeResolver\": \"NetFusion.Bootstrap.Container.TypeResolver, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [
+    \"NetFusion.Bootstrap.Configuration.EnvironmentConfig, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging.Config.MessagingConfig, NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap.Plugins.LoggerConfig, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap.Container.AutofacRegistrationConfig, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-06-19 14:32:41.807 -04:00 [Verbose] Start Process: "Building Container"
+2017-06-19 14:32:41.867 -04:00 [Debug] Type Resolver "{
+  \"SearchPatterns\": [
+    \"consumerhost\",
+    \"exampleapi\",
+    \"netfusion.*\",
+    \"netfusion.*.*\"
+  ],
+  \"MatchingAssemblies\": [
+    \"ConsumerHost, Culture=neutral, PublicKeyToken=null\",
+    \"ExampleApi, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Base, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Common, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Domain, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Domain.Messaging, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.EntityFramework, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Logging.Serilog, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ.MongoDB, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Settings, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Utilities.Validation, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-06-19 14:32:41.908 -04:00 [Debug] Manifests "{
+  \"Host\": \"NetFusion.Client.HostManifest, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Application\": [
+    \"RefArch.Api.Manifest, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\"
+  ],
+  \"Core\": [
+    \"NetFusion.Domain.Manifest, NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB.EntityFrameworkManifest, NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging.MessagingManifest, NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB.MongoDBManifest, NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ.RabbitMQManifest, NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Integration.RabbitMqMongoDbManifest, NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Settings.SettingsManifest, NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Utilities.Validation.Manifest, NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-06-19 14:32:41.952 -04:00 [Debug] Plugin "{
+  \"Name\": \"Example Message Consumer Host\",
+  \"PluginId\": \"{0738190E-DF28-4819-8303-1AC64279A447}\",
+  \"AssemblyName\": \"ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [],
+  \"Discovers\": []
+}"
+2017-06-19 14:32:41.952 -04:00 [Debug] Plugin "{
+  \"Name\": \"Public Application Programming Interface.\",
+  \"PluginId\": \"{E797B872-DDC9-418C-9DED-DF981BA164FC}\",
+  \"AssemblyName\": \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [],
+  \"Discovers\": []
+}"
+2017-06-19 14:32:41.953 -04:00 [Debug] Plugin "{
+  \"Name\": \"Domain Plug-in\",
+  \"PluginId\": \"{CB97D67F-8455-4866-B839-A66A062E2870}\",
+  \"AssemblyName\": \"NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"DomainScriptingModule\",
+    \"EntityBehaviorModule\",
+    \"ReferenceTypeModule\"
+  ],
+  \"Discovers\": [
+    \"IBehaviorRegistry\"
+  ]
+}"
+2017-06-19 14:32:41.953 -04:00 [Debug] Plugin "{
+  \"Name\": \"EntityFramework Plug-in\",
+  \"PluginId\": \"{F66BA457-F387-4D45-9972-31EC9DB7D4A0}\",
+  \"AssemblyName\": \"NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"EntityContextModule\"
+  ],
+  \"Discovers\": [
+    \"IEntityTypeMapping\"
+  ]
+}"
+2017-06-19 14:32:41.953 -04:00 [Debug] Plugin "{
+  \"Name\": \"Messaging Plug-in\",
+  \"PluginId\": \"{4576D809-E216-4C03-BE43-737728047BAA}\",
+  \"AssemblyName\": \"NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [
+    \"MessagingConfig\"
+  ],
+  \"Modules\": [
+    \"MessageEnricherModule\",
+    \"MessagingModule\"
+  ],
+  \"Discovers\": [
+    \"IMessageDispatchRule\"
+  ]
+}"
+2017-06-19 14:32:41.953 -04:00 [Debug] Plugin "{
+  \"Name\": \"MongoDb Plug-in\",
+  \"PluginId\": \"{4BE391F9-F687-4E49-90A3-D38300E3A751}\",
+  \"AssemblyName\": \"NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"MappingModule\",
+    \"MongoModule\"
+  ],
+  \"Discovers\": [
+    \"IEntityClassMap\"
+  ]
+}"
+2017-06-19 14:32:41.953 -04:00 [Debug] Plugin "{
+  \"Name\": \"RabbitMQ Plug-in\",
+  \"PluginId\": \"{086DBC42-CF80-4B1D-A4F2-C9DC7E3CA24C}\",
+  \"AssemblyName\": \"NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"MessageBrokerModule\"
+  ],
+  \"Discovers\": [
+    \"IMessageExchange\",
+    \"IBrokerSerializerRegistry\"
+  ]
+}"
+2017-06-19 14:32:41.953 -04:00 [Debug] Plugin "{
+  \"Name\": \"NetFusion RabbitMQ MongoDB Plug-in\",
+  \"PluginId\": \"{1E4D2D7F-75D5-486B-A3CB-1971EAD7C801}\",
+  \"AssemblyName\": \"NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"RabbitIntegrationModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-06-19 14:32:41.953 -04:00 [Debug] Plugin "{
+  \"Name\": \"Settings Plug-in\",
+  \"PluginId\": \"{1FC4C728-83E0-4407-B846-2871B3F0A1B6}\",
+  \"AssemblyName\": \"NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"AppSettingsModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-06-19 14:32:41.953 -04:00 [Debug] Plugin "{
+  \"Name\": \"Validation Utility Plug-in\",
+  \"PluginId\": \"{63042550-AC9F-4EF3-A047-F54E7572B79B}\",
+  \"AssemblyName\": \"NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"ValidationModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-06-19 14:32:42.065 -04:00 [Verbose] End Process: "Building Container", 257
+2017-06-19 14:32:42.065 -04:00 [Verbose] Start Process: "Starting Container"
+2017-06-19 14:32:42.562 -04:00 [Verbose] End Process: "Starting Container", 497
+2017-06-19 14:32:42.629 -04:00 [Verbose] Composite Log "{
+  \"Searched-Plugin-Assemblies\": {
+    \"AppHost-Assembly\": \"ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"AppComponent-Assemblies\": [
+      \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\"
+    ],
+    \"Core-Assemblies\": [
+      \"NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+    ]
+  },
+  \"Application-Host\": {
+    \"Plugin-Name\": \"Example Message Consumer Host\",
+    \"Plugin-Id\": \"{0738190E-DF28-4819-8303-1AC64279A447}\",
+    \"Plugin-Assembly\": \"ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"Plugin-Description\": \"Test message consumer host.\",
+    \"Plugin-Modules\": {},
+    \"Known-Types\": {
+      \"Services.ExampleDirectService\": [],
+      \"Services.FanoutExchangeService\": [],
+      \"Services.ExampleRpcService\": [],
+      \"Services.ExampleTopicService\": [],
+      \"Services.ExampleWorkQueueService\": [],
+      \"Exchanges.ExampleRpcExchange\": [
+        \"RabbitMQ Plug-in\"
+      ]
+    },
+    \"Discovered-Types\": [],
+    \"Plugin-Services\": [
+      {
+        \"Type\": \"ExampleDirectService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleDirectService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"FanoutExchangeService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.FanoutExchangeService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleRpcService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleRpcService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleTopicService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleTopicService\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleWorkQueueService\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"ConsumerHost.Services.ExampleWorkQueueService\"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  \"Component-Plugins\": {
+    \"Public Application Programming Interface.\": {
+      \"Plugin-Name\": \"Public Application Programming Interface.\",
+      \"Plugin-Id\": \"{E797B872-DDC9-418C-9DED-DF981BA164FC}\",
+      \"Plugin-Assembly\": \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides commands and responses for business use cases.\",
+      \"Plugin-Modules\": {},
+      \"Known-Types\": {
+        \"Messages.ExampleDirectEvent\": [],
+        \"Messages.ExampleFanoutEvent\": [],
+        \"Messages.ExampleRpcCommand\": [],
+        \"Messages.ExampleRpcResponse\": [],
+        \"Messages.ExampleTopicEvent\": [],
+        \"Messages.ExampleWorkQueueEvent\": []
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": []
+    }
+  },
+  \"Core-Plugins\": {
+    \"Domain Plug-in\": {
+      \"Plugin-Name\": \"Domain Plug-in\",
+      \"Plugin-Id\": \"{CB97D67F-8455-4866-B839-A66A062E2870}\",
+      \"Plugin-Assembly\": \"NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides patterns that can be used to extend domain entities.  Also provides other domain based patterns.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Domain.Modules.DomainScriptingModule\": {
+          \"Log\": {
+            \"Attributed-Entities\": [
+              \"ExampleApi.Messages.ExampleDirectEvent\",
+              \"ExampleApi.Messages.ExampleFanoutEvent\",
+              \"ExampleApi.Messages.ExampleRpcCommand\",
+              \"ExampleApi.Messages.ExampleRpcResponse\",
+              \"ExampleApi.Messages.ExampleTopicEvent\",
+              \"ExampleApi.Messages.ExampleWorkQueueEvent\"
+            ]
+          }
+        },
+        \"NetFusion.Domain.Modules.EntityBehaviorModule\": {
+          \"Log\": {}
+        },
+        \"NetFusion.Domain.Modules.ReferenceTypeModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [
+        \"IBehaviorRegistry\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"NullEntityScriptingService\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.Scripting.IEntityScriptingService\"
+              ]
+            },
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.Scripting.IEntityScriptingService\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"NullReferenceTypeRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.ReferenceTypes.Core.IReferenceTypeRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"IDomainEntityFactory\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.Entities.IDomainEntityFactory\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"EntityFramework Plug-in\": {
+      \"Plugin-Name\": \"EntityFramework Plug-in\",
+      \"Plugin-Id\": \"{F66BA457-F387-4D45-9972-31EC9DB7D4A0}\",
+      \"Plugin-Assembly\": \"NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides initialization for DBContext and also allows for automatic registration of entity mappings.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.EntityFramework.Modules.EntityContextModule\": {
+          \"Log\": {
+            \"Entity Mappings\": []
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"EntityContext`1\": [],
+        \"Configs.ContextSettings\": [],
+        \"Configs.EntityFrameworkConfig\": []
+      },
+      \"Discovered-Types\": [
+        \"IEntityTypeMapping\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"ContextSettings\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.EntityFramework.Configs.ContextSettings\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"Messaging Plug-in\": {
+      \"Plugin-Name\": \"Messaging Plug-in\",
+      \"Plugin-Id\": \"{4576D809-E216-4C03-BE43-737728047BAA}\",
+      \"Plugin-Assembly\": \"NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Contains common implementation for publishing messages in-process that can be extended by other plug-ins to publish messages out of process.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Messaging.Modules.MessageEnricherModule\": {
+          \"Log\": {}
+        },
+        \"NetFusion.Messaging.Modules.MessagingModule\": {
+          \"Log\": {
+            \"Messaging - In Process Dispatchers\": {
+              \"ExampleApi.Messages.ExampleRpcCommand\": [
+                {
+                  \"Consumer\": \"ConsumerHost.Services.ExampleRpcService\",
+                  \"Method\": \"OnRpcMessage\",
+                  \"EventType\": \"ExampleRpcCommand\",
+                  \"IsAsync\": true,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                }
+              ]
+            },
+            \"Message Publishers\": [
+              {
+                \"PublisherType\": \"NetFusion.Messaging.Core.InProcessMessagePublisher, NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"IsConfigured\": true
+              },
+              {
+                \"PublisherType\": \"NetFusion.RabbitMQ.Core.RabbitMqMessagePublisher, NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"IsConfigured\": true
+              }
+            ]
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"Core.InProcessMessagePublisher\": [],
+        \"Config.MessagingConfig\": []
+      },
+      \"Discovered-Types\": [
+        \"IMessageDispatchRule\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"MessagingService\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.IMessagingService\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"CorrelationEnricher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Enrichers.IMessageEnricher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"DatePublishedEnricher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Enrichers.IMessageEnricher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"InProcessMessagePublisher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Core.IMessagePublisher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"MessagingModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Modules.IMessagingModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"MongoDb Plug-in\": {
+      \"Plugin-Name\": \"MongoDb Plug-in\",
+      \"Plugin-Id\": \"{4BE391F9-F687-4E49-90A3-D38300E3A751}\",
+      \"Plugin-Assembly\": \"NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Plug-in that registers a client for connecting to a MongoDB instance.Also finds all MongoDb entity type mappings and configures then with the client.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.MongoDB.Modules.MappingModule\": {
+          \"Log\": {
+            \"Entity Mappings\": [
+              {
+                \"MappingType\": \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaMapping, NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"EntityType\": \"NetFusion.RabbitMQ.Integration.BrokerMeta, NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"CollectionName\": null,
+                \"Descriminator\": \"BrokerMeta\",
+                \"KnownTypes\": []
+              }
+            ]
+          }
+        },
+        \"NetFusion.MongoDB.Modules.MongoModule\": {
+          \"Log\": {
+            \"Data-Bases\": [
+              \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaDb, NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+            ]
+          }
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [
+        \"IEntityClassMap\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"MappingModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.MongoDB.Modules.IMongoMappingModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"RabbitMQ Plug-in\": {
+      \"Plugin-Name\": \"RabbitMQ Plug-in\",
+      \"Plugin-Id\": \"{086DBC42-CF80-4B1D-A4F2-C9DC7E3CA24C}\",
+      \"Plugin-Assembly\": \"NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides support for integrating RabbitMQ as a message publisher.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.RabbitMQ.Modules.MessageBrokerModule\": {
+          \"Log\": {
+            \"Message-Exchanges\": [
+              {
+                \"MessageType\": null,
+                \"Exchanges\": [
+                  {
+                    \"ExchangeName\": null,
+                    \"Settings\": {
+                      \"BrokerName\": \"TestBroker\",
+                      \"ExchangeType\": null,
+                      \"ExchangeName\": null,
+                      \"ContentType\": \"application/json; charset=utf-8\",
+                      \"IsDurable\": false,
+                      \"IsAutoDelete\": false,
+                      \"IsConsumerExchange\": true,
+                      \"Arguments\": {},
+                      \"Predicate\": null
+                    },
+                    \"Queues\": [
+                      {
+                        \"QueueName\": \"RpcMessageQueue\",
+                        \"RouteKeys\": null,
+                        \"Settings\": {
+                          \"IsDurable\": false,
+                          \"IsAutoDelete\": true,
+                          \"IsExclusive\": false,
+                          \"IsBrokerAssignedName\": false,
+                          \"IsNoAck\": true,
+                          \"PrefetchSize\": null,
+                          \"PrefetchCount\": null,
+                          \"Arguments\": {}
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            \"Message-Consumers\": [
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 1,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleDirectExchange\",
+                \"QueueName\": \"GENERAL-MOTORS\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnGeneralMotors\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 2,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleDirectExchange\",
+                \"QueueName\": \"VOLKSWAGEN\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnVolkswagen\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 3,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"HighImportanceExchange\",
+                \"QueueName\": \"amq.gen-sH5AHM8YxpoD7-NrOr8rSA\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": true,
+                  \"IsExclusive\": true,
+                  \"IsBrokerAssignedName\": true,
+                  \"IsNoAck\": true,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnHighImportance\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 4,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"LowImportanceExchange\",
+                \"QueueName\": \"amq.gen-Gx-cMWr58JdRD07h1XxYhQ\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": true,
+                  \"IsExclusive\": true,
+                  \"IsBrokerAssignedName\": true,
+                  \"IsNoAck\": true,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnLowImportance\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 5,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"VW-GTI\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnVwGti\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 6,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"VW-BLACK\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnBlackVw\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 7,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"amq.gen-Wzx9C7XKOAhxTqcTtMgQBA\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": true,
+                  \"IsExclusive\": true,
+                  \"IsBrokerAssignedName\": true,
+                  \"IsNoAck\": true,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [
+                  \"VW.JETTA.*.*\"
+                ],
+                \"Name\": \"OnVwJetta\"
+              },
+              {
+                \"BindingType\": \"Create\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 8,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"VW-PASSAT-SILVER\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [
+                  \"VW.PASSAT.*.SILVER\"
+                ],
+                \"Name\": \"OnSilverVwPassat\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 9,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"SampleTopicExchange\",
+                \"QueueName\": \"AUDI\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnAudi\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 10,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"\",
+                \"QueueName\": \"PROCESS_SALE\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnProcessSale\"
+              },
+              {
+                \"BindingType\": \"Join\",
+                \"ChannelInfo\": {
+                  \"ChannelNumber\": 11,
+                  \"NextPublishSeqNo\": 0,
+                  \"Conn\": {
+                    \"AutoClose\": false,
+                    \"ChannelMax\": 65535,
+                    \"HostName\": \"localhost\",
+                    \"Port\": 5672,
+                    \"Heartbeat\": 60
+                  }
+                },
+                \"ExchangeName\": \"\",
+                \"QueueName\": \"PROCESS_SERVICE\",
+                \"QueueSettings\": {
+                  \"IsDurable\": false,
+                  \"IsAutoDelete\": false,
+                  \"IsExclusive\": false,
+                  \"IsBrokerAssignedName\": false,
+                  \"IsNoAck\": false,
+                  \"PrefetchSize\": null,
+                  \"PrefetchCount\": null,
+                  \"Arguments\": {}
+                },
+                \"RouteKeys\": [],
+                \"Name\": \"OnProcessService\"
+              }
+            ],
+            \"Broker Details\": {
+              \"RPC Messages\": {}
+            }
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"Serialization.JsonBrokerSerializer\": [],
+        \"Serialization.MessagePackBrokerSerializer\": [],
+        \"Core.RabbitMqMessagePublisher\": [],
+        \"Configs.BrokerSettings\": []
+      },
+      \"Discovered-Types\": [
+        \"IMessageExchange\",
+        \"IBrokerSerializerRegistry\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"NullBrokerMetaRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"MessageBroker\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IMessageBroker\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"RabbitMqMessagePublisher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Core.IMessagePublisher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"BrokerSettings\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Configs.BrokerSettings\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"NetFusion RabbitMQ MongoDB Plug-in\": {
+      \"Plugin-Name\": \"NetFusion RabbitMQ MongoDB Plug-in\",
+      \"Plugin-Id\": \"{1E4D2D7F-75D5-486B-A3CB-1971EAD7C801}\",
+      \"Plugin-Assembly\": \"NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Plug-in that provides RabbitMQ MongoDB based implementations.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.RabbitMQ.MongoDB.Metadata.RabbitIntegrationModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {
+        \"Metadata.BrokerMetaDb\": [],
+        \"Metadata.BrokerMetaMapping\": [
+          \"MongoDb Plug-in\"
+        ]
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"BrokerMetaRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            },
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"BrokerMetaDb\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaDb\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"Settings Plug-in\": {
+      \"Plugin-Name\": \"Settings Plug-in\",
+      \"Plugin-Id\": \"{1FC4C728-83E0-4407-B846-2871B3F0A1B6}\",
+      \"Plugin-Assembly\": \"NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Plug-in that locates application settings and initializes them when injected into a dependent component for the first time.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Settings.Modules.AppSettingsModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": []
+    },
+    \"Validation Utility Plug-in\": {
+      \"Plugin-Name\": \"Validation Utility Plug-in\",
+      \"Plugin-Id\": \"{63042550-AC9F-4EF3-A047-F54E7572B79B}\",
+      \"Plugin-Assembly\": \"NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Utility Plug-In used to validate domain entities.  This plug-in configures and coordinates the validation process and provides default validation based on Microsoft Validation Attributes.  The host application can override this default validation and use a validation library of choice.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Utilities.Modules.ValidationModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {
+        \"Configs.ValidationConfig\": []
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"ValidationModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Utilities.Validation.Core.IValidationModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}"
+2017-06-19 14:32:58.573 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleTopicExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleTopicService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleTopicEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnAudi\",
+  \"Message\": {
+    \"Make\": \"Audi\",
+    \"Model\": \"A4\",
+    \"Year\": 1988,
+    \"Color\": \"string\",
+    \"CurrentDateTime\": \"2017-06-19T18:32:58.4577475Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging-RouteKey\": \"AUDI.A4.1988.STRING\",
+      \"NetFusion.Domain.Messaging-CorrelationId\": \"aaf5ab92-92c1-44b4-bbed-8b40d19fbc30\",
+      \"NetFusion.Messaging.Enrichers-DatePublished\": \"2017-06-19T18:32:58.4627562Z\",
+      \"NetFusion.Domain.Messaging-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging-Acknowledged\": false
+    }
+  }
+}"
+2017-06-19 14:33:24.420 -04:00 [Verbose] Exchange Message Received "{
+  \"BrokerName\": \"TestBroker\",
+  \"ExchangeName\": \"SampleTopicExchange\",
+  \"RouteKeys\": [],
+  \"ConsumerType\": \"ConsumerHost.Services.ExampleTopicService, ConsumerHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MessageType\": \"ExampleApi.Messages.ExampleTopicEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"MethodName\": \"OnAudi\",
+  \"Message\": {
+    \"Make\": \"Audi\",
+    \"Model\": \"A4\",
+    \"Year\": 0,
+    \"Color\": \"string\",
+    \"CurrentDateTime\": \"2017-06-19T18:33:24.4193547Z\",
+    \"Attributes\": {},
+    \"AttributeValues\": {
+      \"NetFusion.Domain.Messaging-RouteKey\": \"AUDI.A4.0.STRING\",
+      \"NetFusion.Domain.Messaging-CorrelationId\": \"23be3788-f0b6-4cd9-b907-731b0a5bc65f\",
+      \"NetFusion.Messaging.Enrichers-DatePublished\": \"2017-06-19T18:33:24.4193547Z\",
+      \"NetFusion.Domain.Messaging-ContentType\": \"application/json; charset=utf-8\",
+      \"NetFusion.Domain.Messaging-Acknowledged\": false
+    }
+  }
+}"

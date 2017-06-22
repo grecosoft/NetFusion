@@ -23,10 +23,11 @@ namespace NetFusion.Utilities.Mapping
         /// <summary>
         /// Maps a source type to its corresponding target type.
         /// </summary>
-        /// <param name="autoMapper"></param>
+        /// <param name="mapper">Reference to the IObjectMapper service.</param>
+        /// <param name="autoMapper">Reference to the configured IAutoMapper.</param>
         /// <param name="obj">The source object to be mapped.</param>
         /// <returns>The resulting target type instance.</returns>
-        object Map(IAutoMapper autoMapper, object obj);
+        object Map(IObjectMapper mapper, IAutoMapper autoMapper, object obj);
     }
 
     /// <summary>

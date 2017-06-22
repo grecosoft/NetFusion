@@ -30,7 +30,7 @@ namespace InfrastructureTests.RabbitMQ.Broker
             var brokerSetup = BrokerTest.SetupMessageBroker();
             var exchange = new MockExchange();
            
-            exchange.InitializeSettings();
+            exchange.InitializeSettings(emptySettings);
             stateSetup.BrokerState.Exchanges = new[] { exchange };
             stateSetup.BrokerState.BrokerSettings.Connections.Clear();
 
@@ -51,7 +51,7 @@ namespace InfrastructureTests.RabbitMQ.Broker
             var stateSetup = BrokerTest.SetupBrokerState();
 
             // Setup of test DirectExchange instance that can be asserted.
-            exchange.InitializeSettings();
+            exchange.InitializeSettings(stateSetup.BrokerState.BrokerSettings);
             stateSetup.BrokerState.Exchanges = new[] { exchange };
 
             brokerSetup.Initialize(stateSetup.BrokerState);
@@ -72,7 +72,7 @@ namespace InfrastructureTests.RabbitMQ.Broker
             var stateSetup = BrokerTest.SetupBrokerState();
 
             // Setup of test DirectExchange instance that can be asserted.
-            exchange.InitializeSettings();
+            exchange.InitializeSettings(stateSetup.BrokerState.BrokerSettings);
             stateSetup.BrokerState.Exchanges = new[] { exchange };
 
             // Assert that the RabbitMq client was called with the correct values:
@@ -99,7 +99,7 @@ namespace InfrastructureTests.RabbitMQ.Broker
             var stateSetup = BrokerTest.SetupBrokerState();
 
             // Setup of test DirectExchange instance that can be asserted.
-            exchange.InitializeSettings();
+            exchange.InitializeSettings(stateSetup.BrokerState.BrokerSettings);
             stateSetup.BrokerState.Exchanges = new[] { exchange };
 
             BrokerTest.AssertDeclaredQueue(stateSetup.MockConnMgr.MockChannel, v =>
@@ -130,7 +130,7 @@ namespace InfrastructureTests.RabbitMQ.Broker
             var msgConsumer = BrokerTest.SetupJoiningConsumer();
 
             // Setup of test DirectExchange instance that can be asserted.
-            exchange.InitializeSettings();
+            exchange.InitializeSettings(stateSetup.BrokerState.BrokerSettings);
             stateSetup.BrokerState.Exchanges = new[] { exchange };
 
             // Initialize the broker.
@@ -160,7 +160,7 @@ namespace InfrastructureTests.RabbitMQ.Broker
             var msgConsumer = BrokerTest.SetupExclusiveConsumer();
 
             // Setup of test DirectExchange instance that can be asserted.
-            exchange.InitializeSettings();
+            exchange.InitializeSettings(stateSetup.BrokerState.BrokerSettings);
             stateSetup.BrokerState.Exchanges = new[] { exchange };
 
             // Records all calls made to the RabbitMq client:
@@ -204,7 +204,7 @@ namespace InfrastructureTests.RabbitMQ.Broker
             var domainEvt = new MockDomainEvent();
 
             // Setup of test DirectExchange instance that can be asserted.
-            exchange.InitializeSettings();
+            exchange.InitializeSettings(stateSetup.BrokerState.BrokerSettings);
             stateSetup.BrokerState.Exchanges = new[] { exchange };
 
             // Initialize the broker.
@@ -242,7 +242,7 @@ namespace InfrastructureTests.RabbitMQ.Broker
             var domainEvt = new MockDomainEvent();
 
             // Setup of test DirectExchange instance that can be asserted.
-            exchange.InitializeSettings();
+            exchange.InitializeSettings(stateSetup.BrokerState.BrokerSettings);
             stateSetup.BrokerState.Exchanges = new[] { exchange };
 
             // Initialize the broker.

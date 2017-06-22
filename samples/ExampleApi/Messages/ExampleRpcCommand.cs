@@ -6,7 +6,7 @@ using System;
 namespace ExampleApi.Messages
 {
     [RpcCommand("TestBroker", "ExampleRpcConsumer", 
-        nameof(ExampleRpcCommand), ContentType = SerializerTypes.Json)]
+        nameof(ExampleRpcCommand), ContentType = SerializerTypes.MessagePack)]
     public class ExampleRpcCommand : Command<ExampleRpcResponse>
     {
         public DateTime CurrentDateTime { get; private set; }

@@ -1,4 +1,5 @@
 ﻿using Moq;
+using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Core;
 using RabbitMQ.Client;
 
@@ -18,7 +19,7 @@ namespace InfrastructureTests.RabbitMQ.Exchanges
         {
             var mockConn = new Mock<IModel>();
 
-            value.InitializeSettings();
+            value.InitializeSettings(new BrokerSettings());
             value.Declare(mockConn.Object);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using NetFusion.Base.Plugins;
 using NetFusion.Domain.Messaging;
+using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Exchanges;
 using RabbitMQ.Client;
 using System;
@@ -42,7 +43,7 @@ namespace NetFusion.RabbitMQ.Core
         /// Called the Message Broker when defining exchanges and allows a 
         /// specific declared application exchange to specific its settings.
         /// </summary>
-        void InitializeSettings();
+        void InitializeSettings(BrokerSettings brokerSettings);
 
         /// <summary>
         /// Called to declare the exchange and its associated queues on the

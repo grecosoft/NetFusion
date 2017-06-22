@@ -46,6 +46,17 @@ namespace NetFusion.Domain.Messaging
         }
 
         /// <summary>
+        /// Used to specify a RPC style message command's properties. This version of the constructor is used on
+        /// the receiving end of the RPC call by the consumer.
+        /// </summary>
+        /// <param name="externalTypeName">The name used to represent the message to external consumers.</param>
+        public RpcCommandAttribute(string externalTypeName)
+        {
+            Check.NotNullOrWhiteSpace(externalTypeName, nameof(externalTypeName));
+            this.ExternalTypeName = externalTypeName;
+        }
+
+        /// <summary>
         /// The content type used to serialize the message.  If not specified, the content
         /// type specified within the RpcConsumerSettings settings of the BrokerSettings 
         /// configuration is used (if not specified directly on the message).

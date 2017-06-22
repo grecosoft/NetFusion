@@ -26,11 +26,11 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
             // Add the default serializers if not overridden by the application host.
             AddSerializer(serializers, new JsonBrokerSerializer());
-
-            #if NET461
-            AddSerializer(serializers, new BinaryBrokerSerializer());
             AddSerializer(serializers, new MessagePackBrokerSerializer());
-            #endif 
+
+#if NET461
+            AddSerializer(serializers, new BinaryBrokerSerializer());
+#endif
         }
 
         public IEnumerable<IBrokerSerializer> Serializers => _serializers.Values;

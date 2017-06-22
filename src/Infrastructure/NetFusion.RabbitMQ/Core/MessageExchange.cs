@@ -4,6 +4,7 @@ using NetFusion.Common.Extensions.Collection;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Domain.Messaging;
 using NetFusion.Domain.Scripting;
+using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Exchanges;
 using RabbitMQ.Client;
 using System;
@@ -48,11 +49,14 @@ namespace NetFusion.RabbitMQ.Core
 
         // Called by Message Broker when defining exchanges and allows a 
         // specific declared application exchange to specific its settings.
-        public void InitializeSettings()
+        public void InitializeSettings(BrokerSettings brokerSettings)
         {
             SetOptionalScriptSettings();
             OnDeclareExchange();
             OnApplyConventions();
+
+            brokerSettings.ApplyQueueSettings(this);
+
             ValidateConfiguration();
         }
 
@@ -176,7 +180,7 @@ namespace NetFusion.RabbitMQ.Core
             if (this.Queues.Any(q => q.RouteKeys == null || q.RouteKeys.Empty()))
             {
                 throw new BrokerException(
-                    $"For this type of exchange, all queues must have a route specified. " +
+                    $"For this type of exchange, all queues must have a route-key specified. " +
                     $"Exchange Type: {this.GetType()}.");
             }
         }

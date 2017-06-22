@@ -20,10 +20,7 @@ namespace WebApiHost.RabbitMQ.Exchanges
                 config.RouteKeys = new[] { "VW.*.*.BLACK" };
             });
 
-            QueueDeclare("AUDI", config =>
-            {
-                config.RouteKeys = new[] { "Audi.*.*.*" };
-            });
+            QueueDeclare("AUDI");
         }
     }
 }

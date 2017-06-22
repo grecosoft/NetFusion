@@ -18,7 +18,7 @@ namespace NetFusion.Utilities.Mapping
             this.TargetType = targetType;
         }
 
-        public abstract object Map(IAutoMapper autoMapper, object obj);
+        public abstract object Map(IObjectMapper mapper, IAutoMapper autoMapper, object obj);
     }
 
     /// <summary>
@@ -32,9 +32,15 @@ namespace NetFusion.Utilities.Mapping
         public MappingStrategy()
             : base(typeof(TSource), typeof(TTarget)) { }
 
+        protected IObjectMapper Mapper { get; private set; }
+        protected IAutoMapper AutoMapper { get; private set; }
 
-        public override object Map(IAutoMapper autoMapper, object obj)
+        public override object Map(IObjectMapper mapper, IAutoMapper autoMapper, object obj)
         {
+            // Provides access to derived mapping strategy instances.
+            Mapper = mapper;
+            AutoMapper = autoMapper;
+
             // Determine the direction the strategy should be invoked.
             if (SourceType == obj.GetType())
             {

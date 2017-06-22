@@ -73,7 +73,8 @@ namespace NetFusion.Domain.Roslyn.Core
                 if (namedEvalScript == null)
                 {
                     throw new InvalidOperationException(
-                        $"A script named: {scriptName} for the entity type of: {entityType} could not be found.");
+                        $"A script named: {scriptName} for the entity type of: {entityType} could not be found.  " +
+                        $"Script names are case-sensitive.");
                 }
 
                 await ExecuteScript(entity, namedEvalScript);

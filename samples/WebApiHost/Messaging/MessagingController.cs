@@ -103,7 +103,7 @@ namespace WebApiHost.Messaging
             return "No Exception";
         }
 
-        // <summary>
+        /// <summary>
         /// This example publishes a command with a typed result.  A command 
         /// message type can have one and only one handler.  If more than one
         /// handler is found, an exception will be thrown during the bootstrap

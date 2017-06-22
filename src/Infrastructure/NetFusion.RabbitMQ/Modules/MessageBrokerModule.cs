@@ -144,8 +144,7 @@ namespace NetFusion.RabbitMQ.Modules
         {
             foreach(IMessageExchange exchange in this.Exchanges)
             {
-                exchange.InitializeSettings();
-                brokerSettings.ApplyQueueSettings(exchange);
+                exchange.InitializeSettings(brokerSettings);
             }
         }
 

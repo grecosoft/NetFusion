@@ -67,7 +67,7 @@ namespace InfrastructureTests.RabbitMQ.Exchanges
             var exchange = new MockDirectExchange { FirstQueueName = "FirstMockTestQueue", FirstQueueRouteKeys = new string[] { } };
 
             Assert.Throws<BrokerException>(() => exchange.Setup()).Message
-                .Should().Contain("must have a route specified");
+                .Should().Contain("must have a route-key specified");
         }
 
          /// <summary>

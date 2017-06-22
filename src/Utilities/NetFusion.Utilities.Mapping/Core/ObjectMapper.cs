@@ -48,7 +48,7 @@ namespace NetFusion.Utilities.Core
             if (targetMap != null)
             {
                 strategy = (IMappingStrategy)_lifetimeScope.Resolve(targetMap.StrategyType);
-                return (TTarget)strategy.Map(_autoMapper, source);
+                return (TTarget)strategy.Map(this, _autoMapper, source);
             }
 
             // If there is no corresponding mapping strategy delegate the registered IAutoMapper instance.

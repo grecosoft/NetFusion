@@ -131,6 +131,8 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                 _logger.LogErrorDetails(RabbitMqLogEvents.BROKER_EXCEPTION, connEx,
                     "Error connecting to broker.",
                     connInfo);
+
+                throw connEx;
             }
         }
 
