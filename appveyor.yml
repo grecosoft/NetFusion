@@ -10,33 +10,9 @@ before_build:
 build_script:
   - ps: dotnet build .\NetFusion.sln /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
   
-test_script:
-  - ps: dotnet test .\test\CommonTests\CommonTests.csproj
-  - ps: dotnet test .\test\CoreTests\CoreTests.csproj
-  - ps: dotnet test .\test\DomainTests\DomainTests.csproj
-  - ps: dotnet test .\test\InfrastructureTests\InfrastructureTests.csproj
-  - ps: dotnet test .\test\IntegrationTests\IntegrationTests.csproj
-  - ps: dotnet test .\test\UtilitiesTests\UtilitiesTests.csproj
-  
 after_build:
-  - ps: dotnet pack .\src\Common\NetFusion.Base\NetFusion.Base.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Common\NetFusion.Common\NetFusion.Common.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Core\NetFusion.Messaging\NetFusion.Messaging.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Core\NetFusion.Settings\NetFusion.Settings.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Core\NetFusion.Test\NetFusion.Test.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Domain\NetFusion.Domain\NetFusion.Domain.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Domain\NetFusion.Domain.Messaging\NetFusion.Domain.Messaging.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Infrastructure\NetFusion.EntityFramework\NetFusion.EntityFramework.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Infrastructure\NetFusion.MongoDB\NetFusion.MongoDB.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Infrastructure\NetFusion.RabbitMQ\NetFusion.RabbitMQ.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Infrastructure\NetFusion.Web.Mvc\NetFusion.Web.Mvc.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Integration\NetFusion.Domain.MongoDB\NetFusion.Domain.MongoDB.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Integration\NetFusion.Domain.Roslyn\NetFusion.Domain.Roslyn.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Integration\NetFusion.Logging.Serilog\NetFusion.Logging.Serilog.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Integration\NetFusion.RabbitMQ.MongoDB\NetFusion.RabbitMQ.MongoDB.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Utilities\NetFusion.Utilities.Mapping\NetFusion.Utilities.Mapping.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
-  - ps: dotnet pack .\src\Utilities\NetFusion.Utilities.Validation\NetFusion.Utilities.Validation.csproj /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
+  - ps: dotnet pack /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION" .\src\Common\NetFusion.Base\NetFusion.Base.csproj 
+  - ps: dotnet pack  /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"  .\src\Common\NetFusion.Common\NetFusion.Common.csproj
     
 artifacts:
   - path: src\**\*.nupkg
