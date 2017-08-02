@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Autofac;
+using System.Collections.Generic;
 
 namespace NetFusion.Bootstrap.Plugins
 {
@@ -88,8 +89,9 @@ namespace NetFusion.Bootstrap.Plugins
         /// Method called on the module by the bootstrap process.  Called after
         /// all types have been registered and the container has been created.
         /// </summary>
+        /// <param name="container">The created container.</param>
         /// <param name="scope">Child scope of the created container.</param>
-        void StartModule(Autofac.ILifetimeScope scope);
+        void StartModule(IContainer container, ILifetimeScope scope);
 
         /// <summary>
         /// Called after all modules have been started.  This method can contain
@@ -97,7 +99,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// have already been started.
         /// </summary>
         /// <param name="scope">Child scope of the created container.</param>
-        void RunModule(Autofac.ILifetimeScope scope);
+        void RunModule(ILifetimeScope scope);
 
         /// <summary>
         /// Called when the container is stopped.  Allows the module to

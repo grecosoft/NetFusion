@@ -234,9 +234,9 @@ namespace NetFusion.Bootstrap.Container
 
             using (ILifetimeScope scope = container.BeginLifetimeScope())
             {
-                StartPluginModules(scope, this.CorePlugins);
-                StartPluginModules(scope, this.AppComponentPlugins);
-                StartPluginModules(scope, new[] { this.AppHostPlugin });
+                StartPluginModules(container, scope, this.CorePlugins);
+                StartPluginModules(container, scope, this.AppComponentPlugins);
+                StartPluginModules(container, scope, new[] { this.AppHostPlugin });
                
                 // Last phase to allow any modules to execute an processing that
                 // might be dependent on another module being started.
@@ -247,11 +247,11 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        private void StartPluginModules(ILifetimeScope scope, IEnumerable<Plugin> plugins)
+        private void StartPluginModules(IContainer container, ILifetimeScope scope, IEnumerable<Plugin> plugins)
         {
             foreach (IPluginModule module in plugins.SelectMany(p => p.IncludedModules()))
             {
-                module.StartModule(scope);
+                module.StartModule(container, scope);
             }
         }
 

@@ -82,7 +82,7 @@ namespace NetFusion.RabbitMQ.Modules
 
         // Creates the message broker that initializes the exchanges and
         // determines the queues that should be created.
-        public override void StartModule(ILifetimeScope scope)
+        public override void StartModule(IContainer container, ILifetimeScope scope)
         {
             _brokerSettings = GetBrokerSettings(scope);
             _connManager = CreateConnectionManager();

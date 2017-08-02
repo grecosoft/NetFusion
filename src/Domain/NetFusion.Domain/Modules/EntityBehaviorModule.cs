@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Domain.Entities;
 using NetFusion.Domain.Entities.Core;
@@ -23,9 +22,9 @@ namespace NetFusion.Domain.Modules
                 .SingleInstance();
         }
 
-        public override void StartModule(ILifetimeScope scope)
+        public override void StartModule(IContainer container, ILifetimeScope scope)
         {
-            var resolver = new AutofacDomainServiceRosolver(AppContainer.Instance.Services);
+            var resolver = new AutofacDomainServiceRosolver(container);
             var factory = new DomainEntityFactory(resolver);
 
             foreach (var registry in Registries)

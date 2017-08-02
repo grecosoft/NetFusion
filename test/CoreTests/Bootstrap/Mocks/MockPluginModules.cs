@@ -15,7 +15,7 @@ namespace CoreTests.Bootstrap.Mocks
             this.IsDisposed = true;
         }
 
-        public override void StartModule(ILifetimeScope scope)
+        public override void StartModule(IContainer container, ILifetimeScope scope)
         {
             this.IsStarted = true;
         }

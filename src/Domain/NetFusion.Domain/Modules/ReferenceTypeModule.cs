@@ -21,7 +21,7 @@ namespace NetFusion.Domain.Modules
         // Load the meta-data configured that with enumerated types
         // and associate with base ReferenceType so it can be queried
         // at runtime.
-        public override void StartModule(ILifetimeScope scope)
+        public override void StartModule(IContainer container, ILifetimeScope scope)
         {
             var referenceTypeRep = scope.Resolve<IReferenceTypeRepository>();
             ReferenceType.SetReferenceTypes(referenceTypeRep.GetReferenceTypes());
