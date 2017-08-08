@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace NetFusion.Common.Extensions.Collection
 {
@@ -29,6 +30,20 @@ namespace NetFusion.Common.Extensions.Collection
                 return value;
             }
             return defaultValue;
+        }
+
+        /// <summary>
+        /// Converts the dictionary to read-only.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the key.</typeparam>
+        /// <typeparam name="TValue">The type of the value.</typeparam>
+        /// <param name="source">The dictionary to convert.</param>
+        /// <returns>Read-Only dictionary.</returns>
+        public static IReadOnlyDictionary<TKey, TValue> ToReadOnly<TKey, TValue>(this IDictionary<TKey, TValue> source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return new ReadOnlyDictionary<TKey, TValue>(source);
         }
     }
 }

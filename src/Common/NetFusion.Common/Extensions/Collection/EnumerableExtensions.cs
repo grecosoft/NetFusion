@@ -120,5 +120,25 @@ namespace NetFusion.Common.Extensions.Collection
                 }
             }
         }
+
+        /// <summary>
+        /// Determines if an enumeration of class instances contains
+        /// exactly one item.  
+        /// </summary>
+        /// <typeparam name="T">The type of the class instances.</typeparam>
+        /// <param name="souce">The enumeration to check.</param>
+        /// <returns>The value contained in the enumeration if there is
+        /// exactly one instance.  Otherwise, null is returned.</returns>
+        public static T OneAndOnlyOne<T>(this IEnumerable<T> source)
+            where T : class
+        {
+            Check.NotNull(source, "source");
+
+            if (source.Count() == 1)
+            {
+                return source.ElementAt(0);
+            }
+            return null;
+        }
     }
 }
