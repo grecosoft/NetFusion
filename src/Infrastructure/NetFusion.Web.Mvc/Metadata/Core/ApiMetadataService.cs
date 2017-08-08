@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using NetFusion.Common.Extensions.Reflection;
+using NetFusion.Common;
 
 namespace NetFusion.Web.Mvc.Metadata.Core
 {
@@ -25,9 +26,35 @@ namespace NetFusion.Web.Mvc.Metadata.Core
 
         public ApiGroupMeta[] GetApiGroups() => _metadata.Value;
 
-        public ApiGroupMeta[] GetApiGroup(string groupName) => _metadata.Value
-            .Where(g => g.GroupName == groupName)
-            .ToArray();
+        public ApiGroupMeta[] GetApiGroup(string groupName)
+        {
+            Check.NotNull(groupName, nameof(groupName));
+
+            return _metadata.Value.Where(g => g.GroupName == groupName)
+                .ToArray();
+        }
+
+        public ApiActionMeta GetApiAction(string groupName, string actionName)
+        {
+            Check.NotNull(actionName, nameof(actionName));
+
+            ApiGroupMeta apiGroup = GetApiGroup(groupName).FirstOrDefault();
+            if (apiGroup == null)
+            {
+                throw new InvalidOperationException(
+                    $"The controller group name of: {groupName} was not configured.");
+            }
+
+            ApiActionMeta apiAction = apiGroup.Actions.FirstOrDefault(
+               a => a.ActionName == actionName);
+               
+            if (apiAction == null)
+            {
+                throw new InvalidOperationException(
+                    $"The controller action named: {actionName} for controller group: {groupName} is not configured.");
+            }
+            return apiAction;
+        }
 
         private ApiGroupMeta[] LoadMetadata()
         {

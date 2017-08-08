@@ -19,5 +19,14 @@ namespace NetFusion.Web.Mvc.Metadata
         /// <param name="groupName">Name of the group.</param>
         /// <returns>Metadata describing API group and actions.</returns>
         ApiGroupMeta[] GetApiGroup(string groupName);
+
+        /// <summary>
+        /// Returns the route meta for a specific API group and action.
+        /// </summary>
+        /// <param name="groupName">Name of the group.</param>
+        /// <param name="actionName">Name of the action.</param>
+        /// <returns>The route metadata for the action.  If not found,
+        /// an exception is thrown.</returns>
+        ApiActionMeta GetApiAction(string groupName, string actionName);
     }
 }
