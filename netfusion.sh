@@ -103,6 +103,12 @@ LIBRARIES=(
 	./src/Infrastructure/NetFusion.EntityFramework/NetFusion.EntityFramework.csproj
 	./src/Infrastructure/NetFusion.MongoDB/NetFusion.MongoDB.csproj
 	./src/Infrastructure/NetFusion.RabbitMQ/NetFusion.RabbitMQ.csproj
+	
+	./src/Infrastructure/NetFusion.Rest.Client/NetFusion.Rest.Client.csproj
+	./src/Infrastructure/NetFusion.Rest.Common/NetFusion.Rest.Common.csproj
+	./src/Infrastructure/NetFusion.Rest.Config/NetFusion.Rest.Config.csproj
+	./src/Infrastructure/NetFusion.Rest.Resource/NetFusion.Rest.Resource.csproj
+	./src/Infrastructure/NetFusion.Rest.Server/NetFusion.Rest.Server.csproj
 
 	./src/Integration/NetFusion.Logging.Serilog/NetFusion.Logging.Serilog.csproj
 	./src/Integration/NetFusion.Domain.Roslyn/NetFusion.Domain.Roslyn.csproj

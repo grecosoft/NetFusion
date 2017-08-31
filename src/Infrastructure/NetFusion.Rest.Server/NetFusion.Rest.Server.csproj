@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <Import Project="..\..\..\build\common.props" />
+  
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>7</LangVersion>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
+    <PackageReference Include="Autofac" Version="4.6.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Generation\Core\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Base\NetFusion.Base.csproj" />
+    <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    <ProjectReference Include="..\NetFusion.Rest.Common\NetFusion.Rest.Common.csproj" />
+    <ProjectReference Include="..\NetFusion.Rest.Resources\NetFusion.Rest.Resources.csproj" />
+    <ProjectReference Include="..\NetFusion.Web.Mvc\NetFusion.Web.Mvc.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>NetFusion.Rest.Server</PackageId>
+    <Title>NetFusion REST Server-Side Extensions.</Title>
+    <Description>Plug-In allowing for the configuration of REST/HAL based resources.</Description>
+    <PackageTags>netfusion;plugin;rest;hal;http;server;</PackageTags>
+  </PropertyGroup>
+</Project>

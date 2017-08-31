@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.4
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DC3424EC-2E9B-4653-AB4C-9BB89637B0EF}"
 EndProject
@@ -60,9 +60,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiHost", "samples\WebAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Web.Mvc", "src\Infrastructure\NetFusion.Web.Mvc\NetFusion.Web.Mvc.csproj", "{8E2ADED7-B372-409E-B229-20F3F36243CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Domain.Patterns", "src\Domain\NetFusion.Domain.Patterns\NetFusion.Domain.Patterns.csproj", "{421A5B56-8379-48CB-AC3C-09B31769E9A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Domain.Patterns", "src\Domain\NetFusion.Domain.Patterns\NetFusion.Domain.Patterns.csproj", "{421A5B56-8379-48CB-AC3C-09B31769E9A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainTests", "test\DomainTests\DomainTests.csproj", "{15A685CE-B27F-437C-9D65-90F6B9D38047}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainTests", "test\DomainTests\DomainTests.csproj", "{15A685CE-B27F-437C-9D65-90F6B9D38047}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{52784779-B3B6-47E8-AD88-89E2477FB830}"
 EndProject
@@ -74,9 +74,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Utilities.Mapping
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Utilities.Validation", "src\Utilities\NetFusion.Utilities.Validation\NetFusion.Utilities.Validation.csproj", "{94398201-53EA-457C-B81B-D6A5EEAD586D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtilitiesTests", "test\UtilitiesTests\UtilitiesTests.csproj", "{B5F94BA2-C0B1-496A-8D33-377D87F554EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UtilitiesTests", "test\UtilitiesTests\UtilitiesTests.csproj", "{B5F94BA2-C0B1-496A-8D33-377D87F554EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Domain.Roslyn", "src\Integration\NetFusion.Domain.Roslyn\NetFusion.Domain.Roslyn.csproj", "{315646BC-01B5-4E73-8C7D-95673F151AA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Domain.Roslyn", "src\Integration\NetFusion.Domain.Roslyn\NetFusion.Domain.Roslyn.csproj", "{315646BC-01B5-4E73-8C7D-95673F151AA0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Common", "src\Infrastructure\NetFusion.Rest.Common\NetFusion.Rest.Common.csproj", "{6DB1C50C-CCA3-4E16-9183-5E4AADB56A27}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Resources", "src\Infrastructure\NetFusion.Rest.Resources\NetFusion.Rest.Resources.csproj", "{0AFE34CE-A289-4B0D-9D20-C9E609686BBA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Config", "src\Infrastructure\NetFusion.Rest.Config\NetFusion.Rest.Config.csproj", "{90067968-65BB-4083-86E0-6C6AE8619270}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Client", "src\Infrastructure\NetFusion.Rest.Client\NetFusion.Rest.Client.csproj", "{5957F25E-E1BE-47EF-873D-EB6BA816079E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Server", "src\Infrastructure\NetFusion.Rest.Server\NetFusion.Rest.Server.csproj", "{ACED7644-0F4E-4F3B-983D-FFA9A5E091E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -200,6 +210,26 @@ Global
 		{315646BC-01B5-4E73-8C7D-95673F151AA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{315646BC-01B5-4E73-8C7D-95673F151AA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{315646BC-01B5-4E73-8C7D-95673F151AA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DB1C50C-CCA3-4E16-9183-5E4AADB56A27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DB1C50C-CCA3-4E16-9183-5E4AADB56A27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DB1C50C-CCA3-4E16-9183-5E4AADB56A27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DB1C50C-CCA3-4E16-9183-5E4AADB56A27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AFE34CE-A289-4B0D-9D20-C9E609686BBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AFE34CE-A289-4B0D-9D20-C9E609686BBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AFE34CE-A289-4B0D-9D20-C9E609686BBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AFE34CE-A289-4B0D-9D20-C9E609686BBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90067968-65BB-4083-86E0-6C6AE8619270}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90067968-65BB-4083-86E0-6C6AE8619270}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90067968-65BB-4083-86E0-6C6AE8619270}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90067968-65BB-4083-86E0-6C6AE8619270}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5957F25E-E1BE-47EF-873D-EB6BA816079E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5957F25E-E1BE-47EF-873D-EB6BA816079E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5957F25E-E1BE-47EF-873D-EB6BA816079E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5957F25E-E1BE-47EF-873D-EB6BA816079E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACED7644-0F4E-4F3B-983D-FFA9A5E091E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACED7644-0F4E-4F3B-983D-FFA9A5E091E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACED7644-0F4E-4F3B-983D-FFA9A5E091E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACED7644-0F4E-4F3B-983D-FFA9A5E091E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -240,5 +270,10 @@ Global
 		{94398201-53EA-457C-B81B-D6A5EEAD586D} = {52784779-B3B6-47E8-AD88-89E2477FB830}
 		{B5F94BA2-C0B1-496A-8D33-377D87F554EB} = {32232913-3E63-4EE3-8DC1-2FCB6717198F}
 		{315646BC-01B5-4E73-8C7D-95673F151AA0} = {1EEBF08A-7413-403E-8A4E-EB9E8C96CD00}
+		{6DB1C50C-CCA3-4E16-9183-5E4AADB56A27} = {21805046-B58F-4B99-8997-8E2E7EC99D2F}
+		{0AFE34CE-A289-4B0D-9D20-C9E609686BBA} = {21805046-B58F-4B99-8997-8E2E7EC99D2F}
+		{90067968-65BB-4083-86E0-6C6AE8619270} = {21805046-B58F-4B99-8997-8E2E7EC99D2F}
+		{5957F25E-E1BE-47EF-873D-EB6BA816079E} = {21805046-B58F-4B99-8997-8E2E7EC99D2F}
+		{ACED7644-0F4E-4F3B-983D-FFA9A5E091E5} = {21805046-B58F-4B99-8997-8E2E7EC99D2F}
 	EndGlobalSection
 EndGlobal
