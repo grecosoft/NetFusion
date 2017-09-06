@@ -362,11 +362,11 @@ namespace NetFusion.Bootstrap.Container
         // Delegate to the type resolver to search all assemblies representing plug-ins.
         private void LoadManifestRegistry()
         {
-            var _validator = new ManifestValidation(this.Registry);
+            var validator = new ManifestValidation(this.Registry);
 
             _typeResover.Initialize(this.LoggerFactory);
             _typeResover.SetPluginManifests(this.Registry);
-            _validator.Validate();
+            validator.Validate();
 
             LogManifests(this.Registry);
         }
@@ -467,6 +467,7 @@ namespace NetFusion.Bootstrap.Container
             RegisterPluginModuleServices(builder);
             RegisterHostProvidedServices(builder);
 
+            // Register logging and configuration.
             RegisterLogging(builder);
             RegisterConfigSettings(builder);
 

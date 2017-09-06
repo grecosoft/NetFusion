@@ -7,13 +7,13 @@ namespace NetFusion.Bootstrap.Configuration
 {
     /// <summary>
     /// Configuration for the overall application environment.  Provides default initialization
-    /// of the .NET configuration builder that can be overridden or modified by the host application.
+    /// of the .NET configuration that can be overridden or modified by the host application.
     /// </summary>
     public class EnvironmentConfig : IContainerConfig
     {
         private static string[] CommonEnviromentNameKeys = { "ASPNETCORE_ENVIRONMENT", "NETFUSION_ENVIRONMENT" };
 
-        public IConfiguration _configuration { get; private set; }
+        private IConfiguration _configuration { get; set; }
 
         /// <summary>
         /// The value of the variable specifying the environment of the 
@@ -34,6 +34,26 @@ namespace NetFusion.Bootstrap.Configuration
 
             return EnvironmentNames.Development;
         }
+
+        /// <summary>
+        /// Indicates application is running in Development environment.
+        /// </summary>
+        public static bool IsDevelopment => EnvironmentName.Equals(EnvironmentNames.Development, StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Indicates application is running in Staging environment.
+        /// </summary>
+        public static bool IsStaging => EnvironmentName.Equals(EnvironmentNames.Staging, StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Indicates application is running in Test environment.
+        /// </summary>
+        public static bool IsTest => EnvironmentName.Equals(EnvironmentNames.Test, StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Indicates application is running in Production environment.
+        /// </summary>
+        public static bool IsProduction => EnvironmentName.Equals(EnvironmentNames.Production, StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// The created application configuration specified by the host application.

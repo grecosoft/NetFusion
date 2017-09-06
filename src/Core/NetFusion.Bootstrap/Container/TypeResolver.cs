@@ -26,7 +26,6 @@ namespace NetFusion.Bootstrap.Container
     /// </summary>
     public class TypeResolver : ITypeResolver
     {
-        private List<IContainerConfig> _importedConfigs = new List<IContainerConfig>();
         private string[] _searchPatterns;
         private ILogger<TypeResolver> _logger;
 
@@ -46,6 +45,8 @@ namespace NetFusion.Bootstrap.Container
 
         public void Initialize(ILoggerFactory loggerFactory)
         {
+            Check.NotNull(loggerFactory, nameof(loggerFactory), "logger-factory not specified");
+
             _logger = loggerFactory.CreateLogger<TypeResolver>();
         }
 
