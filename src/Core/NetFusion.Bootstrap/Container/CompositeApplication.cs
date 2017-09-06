@@ -1,4 +1,6 @@
-﻿using Autofac;
+﻿using System;
+
+using Autofac;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Extensions;
 using NetFusion.Bootstrap.Manifests;
@@ -13,16 +15,16 @@ namespace NetFusion.Bootstrap.Container
     /// Represents an application that is composed of plug-ins that are used
     /// to create a run-time environment and dependency injection container.
     /// </summary>
-    public class CompositeApplication 
+    public class CompositeApplication
     {
         public bool IsStarted { get; private set; }
 
-        internal ILoggerFactory LoggerFactory { get; set; } 
+        internal ILoggerFactory LoggerFactory { get; set; }
 
         /// <summary>
         /// Object instances representing each discovered plug-in.
         /// </summary>
-        public Plugin[] Plugins { get; internal set; }
+        public Plugin[] Plugins { get; internal set; } = Array.Empty<Plugin>();
 
         /// <summary>
         /// The application process hosting the application container.
@@ -237,7 +239,7 @@ namespace NetFusion.Bootstrap.Container
                 StartPluginModules(container, scope, this.CorePlugins);
                 StartPluginModules(container, scope, this.AppComponentPlugins);
                 StartPluginModules(container, scope, new[] { this.AppHostPlugin });
-               
+
                 // Last phase to allow any modules to execute any processing that
                 // might be dependent on another module being started.
                 foreach (IPluginModule module in this.Plugins.SelectMany(p => p.IncludedModules()))
@@ -279,6 +281,6 @@ namespace NetFusion.Bootstrap.Container
             {
                 module.StopModule(scope);
             }
-        }  
+        }
     }
 }
