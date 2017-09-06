@@ -1,4 +1,5 @@
 ﻿using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Configuration;
 using NetFusion.Bootstrap.Container;
@@ -22,9 +23,12 @@ namespace InfrastructureTests.Web.Rest.Setup
             var container = ContainerSetup.Bootstrap(resolver);
 
             container.WithConfig((EnvironmentConfig envConfig) =>
-             {
-                 envConfig.UseDefaultConfiguration();
-             })
+            {
+                var configBuilder = new ConfigurationBuilder();
+                configBuilder.AddDefaultAppSettings();
+
+                envConfig.UseConfiguration(configBuilder.Build());
+            })
          
             .WithConfig((AutofacRegistrationConfig config) =>
             {

@@ -134,44 +134,6 @@ namespace CoreTests.Settings
                 });
         }
 
-        ////[Fact(DisplayName = nameof(InjectedSettings_AreValidated))]
-        ////public void InjectedSettings_AreValidated()
-        ////{
-        ////    ContainerSetup
-        ////        .Arrange((TestTypeResolver resolver) =>
-        ////        {
-        ////            resolver.DefaultSettingsConfig();
-        ////            resolver.AddPlugin<MockCorePlugin>().AddPluginType<MockInvalidSettings>();
-        ////        })
-
-        ////        .Test(c =>
-        ////        {
-        ////            c.WithConfig<EnviromentConfig>(settings => {
-
-        ////                AddInMemorySettings(settings);
-        ////            });
-
-        ////            c.Build();
-        ////        },
-        ////        (IAppContainer c) =>
-        ////        {
-        ////            var ex = Assert.Throws(typeof(DependencyResolutionException), () =>
-        ////            {
-        ////                var settings = c.Services.Resolve<MockInvalidSettings>();
-        ////            });
-
-        ////            ex.InnerException.Should().NotBeNull();
-
-        ////            var valEx = ex.InnerException as ValidationResultException;
-        ////            valEx.Should().NotBeNull();
-        ////            valEx.Message.Should().Be("Validation Exceptions");
-
-        ////            var valMsg = valEx.Result.Validations.Single();
-        ////            valEx.Should().NotBeNull();
-        ////            valMsg.Validations.Should().Be("Invalid Range");
-        ////        });
-        ////}
-
         private void AddInMemorySettings(EnvironmentConfig config)
         {
             var builder = new ConfigurationBuilder();
@@ -187,7 +149,7 @@ namespace CoreTests.Settings
 
             builder.AddInMemoryCollection(dict);
 
-            config.UseConfiguration(builder);
+            config.UseConfiguration(builder.Build());
         }
     }
 }

@@ -2,7 +2,6 @@
 using NetFusion.Bootstrap.Container;
 using NetFusion.Common;
 using System;
-using System.IO;
 
 namespace NetFusion.Bootstrap.Configuration
 {
@@ -12,24 +11,17 @@ namespace NetFusion.Bootstrap.Configuration
     /// </summary>
     public class EnvironmentConfig : IContainerConfig
     {
-        private const string APP_SETTINGS_FILE_NAME = "appsettings.json";
         private static string[] CommonEnviromentNameKeys = { "ASPNETCORE_ENVIRONMENT", "NETFUSION_ENVIRONMENT" };
 
-        public string EnvironmentName { get; }
-        public IConfigurationBuilder ConfigurationBuilder { get; private set; }
+        public IConfiguration _configuration { get; private set; }
 
         /// <summary>
-        /// Indicates if the environment variable configuration provider should be added.
+        /// The value of the variable specifying the environment of the 
+        /// executing application.
         /// </summary>
-        public bool AddEnvironmentVariables { get; set; } = true;
+        public static string EnvironmentName => GetEnvironmentName();
 
-        public EnvironmentConfig()
-        {
-            EnvironmentName = GetEnvironmentName();
-            ConfigurationBuilder = new ConfigurationBuilder();
-        }
-
-        private string GetEnvironmentName()
+        private static string GetEnvironmentName()
         {
             foreach (string key in CommonEnviromentNameKeys)
             {
@@ -44,57 +36,20 @@ namespace NetFusion.Bootstrap.Configuration
         }
 
         /// <summary>
-        /// Specifies the .NET configuration builder that should be used by the application container.
+        /// The created application configuration specified by the host application.
+        /// If not specified, a default configured instance is returned.
         /// </summary>
-        /// <param name="builder">A configured builder with providers used to lookup configuration settings.</param>
-        public void UseConfiguration(IConfigurationBuilder builder)
-        {
-            Check.NotNull(builder, nameof(builder));
-
-            ConfigurationBuilder = builder;
-        }
+        public IConfiguration Configuration =>
+            _configuration ?? new ConfigurationBuilder().AddDefaultAppSettings().Build();
 
         /// <summary>
-        /// Creates a new uninitialized .NET configuration builder instance that can be 
-        /// configured by the passed delegate.
+        /// Specifies the .NET configuration that should be used by the application container.
         /// </summary>
-        /// <param name="config">Delegate used to configure the configuration builder.</param>
-        public void UseConfiguration(Action<IConfigurationBuilder> config)
+        /// <param name="builder">A built configuration with providers used to lookup configuration settings.</param>
+        public void UseConfiguration(IConfiguration configuration)
         {
-            Check.NotNull(config, nameof(config));
-
-            ConfigurationBuilder = new ConfigurationBuilder();
-            config(ConfigurationBuilder);
-        }
-
-        /// <summary>
-        /// Creates a new .NET configuration builder instance initialized with a common
-        /// set of default conventions.
-        /// </summary>
-        /// <param name="config">Delegate used to configure the configuration builder.</param>
-        public void UseDefaultConfiguration(Action<IConfigurationBuilder> config = null)
-        {
-            ConfigurationBuilder = CreateDefaultConfiguration();
-
-            config?.Invoke(ConfigurationBuilder);
-
-            // Add optional configuration providers.
-            if (AddEnvironmentVariables)
-            {
-                ConfigurationBuilder.AddEnvironmentVariables();
-            }
-        }
-
-        private IConfigurationBuilder CreateDefaultConfiguration()
-        {
-            IConfigurationBuilder configBuilder = new ConfigurationBuilder();
-    
-            configBuilder.SetBasePath(Directory.GetCurrentDirectory());
-            configBuilder.AddJsonFile(APP_SETTINGS_FILE_NAME, optional: true, reloadOnChange: true);
-            configBuilder.AddJsonFile($"{APP_SETTINGS_FILE_NAME}.{EnvironmentName}.json", reloadOnChange: true, optional: true);
-            configBuilder.AddJsonFile($"{APP_SETTINGS_FILE_NAME}.{Environment.MachineName}.json", reloadOnChange: true, optional: true);
-            
-            return configBuilder;
+            Check.NotNull(configuration, nameof(configuration));
+            _configuration = configuration;
         }
     }
 }

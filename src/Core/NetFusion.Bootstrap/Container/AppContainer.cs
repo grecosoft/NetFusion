@@ -347,7 +347,7 @@ namespace NetFusion.Bootstrap.Container
             _enviromentConfig = _configs.Values.OfType<EnvironmentConfig>()
                 .FirstOrDefault() ?? new EnvironmentConfig();
 
-            _configuration = _enviromentConfig.ConfigurationBuilder.Build();
+            _configuration = _enviromentConfig.Configuration;
         }
 
         private void LoadContainer()
@@ -464,10 +464,11 @@ namespace NetFusion.Bootstrap.Container
 
             // Register additional services,
             RegisterAppContainerAsService(builder);
-            RegisterLogging(builder);
-            RegisterConfigSettings(builder);
             RegisterPluginModuleServices(builder);
             RegisterHostProvidedServices(builder);
+
+            RegisterLogging(builder);
+            RegisterConfigSettings(builder);
 
             _container = builder.Build();
         }
@@ -542,8 +543,6 @@ namespace NetFusion.Bootstrap.Container
 
         private Exception LogException(Exception ex)
         {
-            
-
             if (_loggerConfig.LogExceptions)
             {
                 _logger.LogError(BootstrapLogEvents.BOOTSTRAP_EXCEPTION, "Bootstrap Exception", ex);

@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Configuration;
@@ -21,13 +22,15 @@ namespace WebApiHost
         public static void Bootstrap(IServiceCollection services)
         {
             var typeResolver = new TypeResolver("WebApiHost", "ExampleApi", "NetFusion.*", "NetFusion.*.*");
-            var loggerFactory = CreateLoggerFactory();
+
+            var configuration = CreateConfiguration();
+            var loggerFactory = CreateLoggerFactory(configuration);
 
             AppContainer.Create(typeResolver)
 
                 .WithConfig((EnvironmentConfig envConfig) => {
 
-                    envConfig.UseDefaultConfiguration();
+                    envConfig.UseConfiguration(configuration);
                 })
 
                 .WithConfig((MessagingConfig config) =>
@@ -70,7 +73,16 @@ namespace WebApiHost
                 .Start();
         }
 
-        private static ILoggerFactory CreateLoggerFactory()
+        private static IConfiguration CreateConfiguration()
+        {
+            var configBuilder = new ConfigurationBuilder();
+            configBuilder.AddEnvironmentVariables();
+            configBuilder.AddDefaultAppSettings();
+
+            return configBuilder.Build();
+        }
+
+        private static ILoggerFactory CreateLoggerFactory(IConfiguration configuration)
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel

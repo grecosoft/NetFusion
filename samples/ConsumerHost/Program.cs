@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Configuration;
 using NetFusion.Bootstrap.Container;
@@ -18,13 +19,15 @@ namespace ConsumerHost
         public static void Main(string[] args)
         {
             var typeResolver = new TypeResolver("ConsumerHost", "ConsumerHost", "ExampleApi");
-            var loggerFactory = CreateLoggerFactory();
+
+            var configuration = CreateConfiguration();
+            var loggerFactory = CreateLoggerFactory(configuration);
 
             AppContainer.Create(typeResolver)
 
                 .WithConfig((EnvironmentConfig envConfig) => {
 
-                    envConfig.UseDefaultConfiguration();
+                    envConfig.UseConfiguration(configuration);
                 })
 
                 .WithConfig((MessagingConfig config) =>
@@ -57,7 +60,16 @@ namespace ConsumerHost
                 .Start();
         }
 
-        private static ILoggerFactory CreateLoggerFactory()
+        private static IConfiguration CreateConfiguration()
+        {
+            var configBuilder = new ConfigurationBuilder();
+            configBuilder.AddEnvironmentVariables();
+            configBuilder.AddDefaultAppSettings();
+
+            return configBuilder.Build();
+        }
+
+        private static ILoggerFactory CreateLoggerFactory(IConfiguration configuration)
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel

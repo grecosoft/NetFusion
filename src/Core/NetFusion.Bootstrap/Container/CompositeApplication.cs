@@ -20,7 +20,7 @@ namespace NetFusion.Bootstrap.Container
         internal ILoggerFactory LoggerFactory { get; set; } 
 
         /// <summary>
-        /// Object instances represented each discovered plug-in.
+        /// Object instances representing each discovered plug-in.
         /// </summary>
         public Plugin[] Plugins { get; internal set; }
 
@@ -238,7 +238,7 @@ namespace NetFusion.Bootstrap.Container
                 StartPluginModules(container, scope, this.AppComponentPlugins);
                 StartPluginModules(container, scope, new[] { this.AppHostPlugin });
                
-                // Last phase to allow any modules to execute an processing that
+                // Last phase to allow any modules to execute any processing that
                 // might be dependent on another module being started.
                 foreach (IPluginModule module in this.Plugins.SelectMany(p => p.IncludedModules()))
                 {

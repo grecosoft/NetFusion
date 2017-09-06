@@ -93,18 +93,6 @@ namespace NetFusion.Bootstrap.Plugins
                 .ToList();
         }
 
-        private IList<Type> GetCorePluginTypes()
-        {
-            if (this.Plugin.PluginType == PluginTypes.CorePlugin)
-            {
-                return _compositeApp.GetPluginTypes(PluginTypes.CorePlugin)
-                .Select(pt => pt.Type)
-                .ToList();
-            }
-
-            return new List<Type>();
-        }
-
         /// <summary>
         /// Returns plug-in type for corresponding .NET type.
         /// </summary>

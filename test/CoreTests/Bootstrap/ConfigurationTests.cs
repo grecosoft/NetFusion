@@ -1,5 +1,6 @@
 ﻿using CoreTests.Bootstrap.Mocks;
 using FluentAssertions;
+using Microsoft.Extensions.Configuration;
 using NetFusion.Bootstrap.Configuration;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
@@ -97,20 +98,11 @@ namespace CoreTests.Bootstrap
         public void ApplicationVariable_CanBeRead_ToDetermineEnvironment()
         {
             Environment.SetEnvironmentVariable("NETFUSION_ENVIRONMENT", EnvironmentNames.Staging);
-            var environmentConfig = new EnvironmentConfig();
-            environmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Staging);
+            EnvironmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Staging);
 
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", EnvironmentNames.Production);
-            environmentConfig = new EnvironmentConfig();
-            environmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Production);
+            EnvironmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Production);
         }
-
-        //[Fact(DisplayName = nameof(IfNoApplicationVariable_EnviromentDefaultsToDevelop))]
-        //public void IfNoApplicationVariable_EnviromentDefaultsToDevelop()
-        //{
-        //    var environmentConfig = new EnvironmentConfig();
-        //    environmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Development);
-        //}
 
         [Fact(DisplayName = nameof(EvironmentVariableProvider_AddedIfSecified))]
         public void EvironmentVariableProvider_AddedIfSecified()
@@ -118,11 +110,12 @@ namespace CoreTests.Bootstrap
             var expectedValue = Guid.NewGuid().ToString();
 
             Environment.SetEnvironmentVariable("TEST_ENV_VAR", expectedValue);
-            var environmentConfig = new EnvironmentConfig { AddEnvironmentVariables = true };
 
-            environmentConfig.UseDefaultConfiguration();
+            var configBuilder = new ConfigurationBuilder();
+            configBuilder.AddEnvironmentVariables();
+            configBuilder.AddDefaultAppSettings();
 
-            var config = environmentConfig.ConfigurationBuilder.Build();
+            var config = configBuilder.Build();
             config["TEST_ENV_VAR"].Should().NotBeNull();
         }
 
