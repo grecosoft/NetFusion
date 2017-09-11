@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using Autofac;
+﻿using Autofac;
+using System.Linq;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Enrichers;
+using System.Collections.Generic;
 
 namespace NetFusion.Messaging.Modules
 {
@@ -12,21 +13,24 @@ namespace NetFusion.Messaging.Modules
 
         public override void Initialize()
         {
-            this.MessagingConfig = this.Context.Plugin.GetConfig<MessagingConfig>();
+            MessagingConfig = Context.Plugin.GetConfig<MessagingConfig>();
         }
 
         public override void RegisterComponents(ContainerBuilder builder)
         {
-            // Register all of the message publishers that determine how a given
-            // message is delivered.
-            builder.RegisterTypes(this.MessagingConfig.EnricherTypes)
+            // Register all of the message enrichers with the container.
+            builder.RegisterTypes(MessagingConfig.EnricherTypes)
                 .As<IMessageEnricher>()
                 .InstancePerLifetimeScope();
         }
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-           
+            moduleLog["Message Enrichers"] = MessagingConfig.EnricherTypes
+                .Select(t => new
+                {
+                    EnricherType = t.AssemblyQualifiedName
+                });
         }
     }
 }

@@ -4,9 +4,9 @@ namespace NetFusion.Domain.Messaging
 {
     /// <summary>
     /// Represents a message that can have one and only one consumer 
-    /// and handler.  The handling consumer can associate a result
-    /// after processing the message.  This type of message tells
-    /// the consumer to take an action.
+    /// handler.  The handling consumer can associate a result after 
+    /// processing the command.  This type of message tells the a 
+    /// consumer to complete an action.
     /// </summary>
     public interface ICommand : IMessage
     {

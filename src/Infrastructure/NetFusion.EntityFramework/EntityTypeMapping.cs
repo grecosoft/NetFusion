@@ -3,8 +3,7 @@
 namespace NetFusion.EntityFramework
 {
     /// <summary>
-    /// Derived by classes containing mapping logic for one or more
-    /// data entities.
+    /// Derived by classes containing mapping logic for one or more data entities.
     /// </summary>
     public abstract class EntityTypeMapping : IEntityTypeMapping
     {

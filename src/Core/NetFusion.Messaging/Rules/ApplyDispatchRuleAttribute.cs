@@ -43,7 +43,7 @@ namespace NetFusion.Messaging.Rules
                     $"Dispatch rules must derive from: {typeof(IMessageDispatchRule)}.");
             } 
       
-            this.RuleTypes = dispatchRuleTypes;
+            RuleTypes = dispatchRuleTypes;
         }
     }
 }

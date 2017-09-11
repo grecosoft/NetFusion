@@ -6,8 +6,9 @@ using System.ComponentModel.DataAnnotations;
 namespace NetFusion.MongoDB.Configs
 {
     /// <summary>
-    /// Setting uses by the MongoDB client when connecting
-    /// to the database.
+    /// Setting uses by the MongoDB client when connecting to the database.
+    /// Consuming applications derive from this base class to represent each
+    /// MongoDb being used.
     /// </summary>
     [ConfigurationSection("netfusion:plugins:mongoDB")]
     public abstract class MongoSettings : AppSettings

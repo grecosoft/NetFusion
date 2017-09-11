@@ -41,6 +41,13 @@ namespace NetFusion.MongoDB
                 .SetSerializer(new StringSerializer(BsonType.ObjectId));
         }
 
+        /// <summary>
+        /// Invoked when the mapping is being added to the MongoDB driver.  Allows derived
+        /// mapping class to specify any known-types associated with the type of the mapping.
+        /// </summary>
+        /// <param name="pluginTypes">List of plug-in types to be filtered and added as known-types
+        /// by calling the AddKnowType method.
+        /// </param>
         public virtual void AddKnownPluginTypes(IEnumerable<Type> pluginTypes)
         {
 

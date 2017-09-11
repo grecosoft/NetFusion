@@ -109,17 +109,19 @@ namespace NetFusion.Messaging.Core
                     var enricherErrors = futureResults.GetExceptions(fr => new EnricherException(fr));
                     if (enricherErrors.Any())
                     {
-                        throw new PublisherException(
-                       "Exception when invoking message enrichers.",
-                       message,
-                       enricherErrors);
+                        throw new PublisherException("Exception when invoking message enrichers.",
+                            message,
+                            enricherErrors);
                     }
 
-                    throw new PublisherException(
-                        "Exception when invoking message enrichers.",
+                    throw new PublisherException("Exception when invoking message enrichers.",
                         message,
                         ex);
                 }
+
+                throw new PublisherException("Exception when invoking message enrichers.",
+                    message,
+                    ex);
             }
         }
 
@@ -140,15 +142,16 @@ namespace NetFusion.Messaging.Core
                     var publisherErrors = futureResults.GetExceptions(fr => new PublisherException(fr));
                     if (publisherErrors.Any())
                     {
-                        throw new PublisherException(
-                            "Exception when invoking message publishers.",
+                        throw new PublisherException("Exception when invoking message publishers.",
                             message,
                             publisherErrors);
                     }
+
+                    throw new PublisherException("Exception when invoking message publishers.",
+                        message, ex);
                 }
 
-                throw new PublisherException(
-                    "Exception when invoking message publishers.",
+                throw new PublisherException("Exception when invoking message publishers.",
                     message, ex);
             }
         }

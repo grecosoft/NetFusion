@@ -22,7 +22,7 @@ namespace NetFusion.Messaging
             var taskException = futureResult.Task.Exception;
             var sourceException = taskException.InnerException;
 
-            this.Details = new Dictionary<string, object>
+            Details = new Dictionary<string, object>
             {
                 { "Message", sourceException?.Message },
                 { "Enricher", futureResult.Invoker.GetType().FullName }

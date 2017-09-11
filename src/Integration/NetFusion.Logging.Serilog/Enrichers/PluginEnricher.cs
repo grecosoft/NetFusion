@@ -3,7 +3,6 @@ using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
 using Serilog.Core;
 using Serilog.Events;
-using System;
 
 namespace NetFusion.Logging.Serilog.Enrichers
 {
@@ -16,14 +15,15 @@ namespace NetFusion.Logging.Serilog.Enrichers
 
         public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
         {
-            LogEventPropertyValue pv = null;
 
-            if (!logEvent.Properties.TryGetValue(SOURCE_CONTEXT_PROP, out pv)) return;
+            if (!logEvent.Properties.TryGetValue(SOURCE_CONTEXT_PROP, out LogEventPropertyValue pv))
+            {
+                return;
+            }
 
             ScalarValue sv = pv as ScalarValue;
-            string sourceContextType = sv?.Value as string;
 
-            if (sourceContextType != null)
+            if (sv?.Value is string sourceContextType)
             {
                 Plugin plugin = GetTypesPlugin(sourceContextType);
                 if (plugin != null)

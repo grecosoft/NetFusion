@@ -37,6 +37,7 @@ namespace NetFusion.Settings.Modules
 
             if (sectionName != null)
             {
+                // Lookup settings with the specified section name.
                 var configuration = handler.Context.Resolve<IConfiguration>();
                 var section = configuration.GetSection(sectionName);
 
@@ -51,6 +52,8 @@ namespace NetFusion.Settings.Modules
             validationResult.ThrowIfInvalid();
         }
 
+        // Navigates up the settings base types and looks for all ConfigurationSection attributes
+        // to build the full path of the settings location.
         private string GetSectionName(object settings)
         {
             var sectionNames = GetSectionNames(settings);
@@ -82,7 +85,6 @@ namespace NetFusion.Settings.Modules
             moduleLog["Application-Settings"] = Context.AllPluginTypes
                 .Where(t =>
                 {
-                    var typeInfo = t.GetTypeInfo();
                     return t.IsConcreteTypeDerivedFrom<IAppSettings>();
                 })
                 .Select(t => t.AssemblyQualifiedName);

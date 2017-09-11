@@ -96,7 +96,7 @@ namespace NetFusion.Messaging.Core
         }
 
         // Creates a delegate representing a reflected MethodInfo for the consumer's
-        // message handler.  This makes the call as fast as a static call.
+        // message handler.  
         private static MulticastDelegate GetMethodDispatch(MethodInfo methodInfo)
         {
             // Required Handler Parameters:

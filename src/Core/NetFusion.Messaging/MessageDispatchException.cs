@@ -67,7 +67,7 @@ namespace NetFusion.Messaging
         {
             Check.NotNull(dispatchExceptions, nameof(dispatchExceptions));
 
-            this.Details = new Dictionary<string, object>
+            Details = new Dictionary<string, object>
             {
                 { "DispatchExceptions", dispatchExceptions.Select(de => de.Details).ToArray() }
             };

@@ -50,7 +50,7 @@ namespace NetFusion.EntityFramework.Modules
         private IEntityDbContext CreateDbContext(IComponentContext componentContext, Type contextType)
         {
             var contextSettings = LookupContextConnection(componentContext, contextType);
-            var contextMappings = this.Config.AutoRegisterTypeMappings ? GetContextMappings(contextType) : new IEntityTypeMapping[] { };
+            var contextMappings = Config.AutoRegisterTypeMappings ? GetContextMappings(contextType) : new IEntityTypeMapping[] { };
 
             var dbContext = Activator.CreateInstance(contextType, 
                 contextSettings.ConnectionString, contextMappings);
@@ -73,16 +73,17 @@ namespace NetFusion.EntityFramework.Modules
             return connection;
         }
 
+        // Returns only the entity type mappings within the same or child namespace as the context.
         private IEntityTypeMapping[] GetContextMappings(Type contextType)
         {
-            return this.EntityMappings.Where(map => 
+            return EntityMappings.Where(map => 
                 map.GetType().Namespace.StartsWith(contextType.Namespace, StringComparison.Ordinal))
                 .ToArray();
         }
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Entity Mappings"] = this.EntityMappings
+            moduleLog["Entity Mappings"] = EntityMappings
                 .Select(m => new
                 {
                     MappingType = m.GetType().AssemblyQualifiedName

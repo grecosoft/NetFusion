@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 namespace NetFusion.MongoDB
 {
     /// <summary>
-    /// Interface that is registered in the container used to access
-    /// MongoDb.
+    /// Interface that is registered in the container used to access MongoDb.
     /// </summary>
     /// <typeparam name="TSettings"></typeparam>
     public interface IMongoDbClient<out TSettings>

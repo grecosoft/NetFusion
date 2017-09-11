@@ -32,7 +32,7 @@ namespace NetFusion.MongoDB.Core
             Check.NotNull(dbSettings, nameof(dbSettings), "database settings not specified");
             Check.NotNull(mappingModule, nameof(mappingModule), "database mappings not specified");
 
-            this.DbSettings = dbSettings;
+            DbSettings = dbSettings;
             _mappingModule = mappingModule;
         }
 
@@ -42,8 +42,8 @@ namespace NetFusion.MongoDB.Core
             _client = CreateClient();
 
             _database = _client.GetDatabase(
-                this.DbSettings.DatabaseName,
-                this.DbSettings.DatabaseSettings);
+                DbSettings.DatabaseName,
+                DbSettings.DatabaseSettings);
         }
 
         public IMongoCollection<TDocument> GetCollection<TDocument>(string collectionName,
@@ -98,16 +98,16 @@ namespace NetFusion.MongoDB.Core
 
         private MongoClientSettings CreateClientSettings()
         {
-            MongoClientSettings clientSettings = this.DbSettings.ClientSettings;
+            MongoClientSettings clientSettings = DbSettings.ClientSettings;
             if (clientSettings == null)
             {
-                if (this.DbSettings.MongoUrl.IsNullOrWhiteSpace())
+                if (DbSettings.MongoUrl.IsNullOrWhiteSpace())
                 {
                     throw new InvalidOperationException(
                         "Either the MongoDB URL or client settings must specified.");
                 }
 
-                var url = MongoUrl.Create(this.DbSettings.MongoUrl);
+                var url = MongoUrl.Create(DbSettings.MongoUrl);
                 clientSettings = MongoClientSettings.FromUrl(url);
 
             }
@@ -117,12 +117,12 @@ namespace NetFusion.MongoDB.Core
         private void SetClientCredentials(MongoClientSettings clientSettings)
         {
             MongoCredential credentials = null;
-            if (this.DbSettings.IsPasswordSet)
+            if (DbSettings.IsPasswordSet)
             {
                 credentials = MongoCredential.CreateCredential(
-                    this.DbSettings.AuthDatabaseName ?? this.DbSettings.DatabaseName,
-                    this.DbSettings.UserName,
-                    this.DbSettings.Password);
+                    DbSettings.AuthDatabaseName ?? DbSettings.DatabaseName,
+                    DbSettings.UserName,
+                    DbSettings.Password);
 
                 clientSettings.Credentials = new[] { credentials };
             }

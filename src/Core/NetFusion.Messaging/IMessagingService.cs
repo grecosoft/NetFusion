@@ -14,13 +14,15 @@ namespace NetFusion.Messaging
         /// Publishes a command to all associated consumer message handlers.
         /// </summary>
         /// <param name="command">The command to be published.</param>
+        /// <param name="cancellationToken">Optional cancellation token passed to message handler.</param>
         /// <returns>Future result.</returns>
         Task PublishAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Publishes a command to all associated consumer message handlers
-        /// and returns the consumer's response.</summary>
+        /// Publishes a command to all associated consumer message handlers and returns 
+        /// the consumer's response.</summary>
         /// <param name="command">The command to be published.</param>
+        /// <param name="cancellationToken">Optional cancellation token passed to message handler.</param>
         /// <returns>Future result.</returns>
         Task<TResult> PublishAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken));
 
@@ -28,6 +30,7 @@ namespace NetFusion.Messaging
         /// Publishes a domain-event to all associated consumer message handlers.
         /// </summary>
         /// <param name="domainEvent">The event to be published.</param>
+        /// <param name="cancellationToken">Optional cancellation token passed to message handler.</param>
         /// <returns>Future result.</returns>
         Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default(CancellationToken));
 
@@ -35,6 +38,7 @@ namespace NetFusion.Messaging
         /// Publishes domain-events associated with an event source.  
         /// </summary>
         /// <param name="eventSource">The event source having associated events.</param>
+        /// <param name="cancellationToken">Optional cancellation token passed to message handler.</param>
         /// <returns>Future result.</returns>
         Task PublishAsync(IEventSource eventSource, CancellationToken cancellationToken = default(CancellationToken));
     }

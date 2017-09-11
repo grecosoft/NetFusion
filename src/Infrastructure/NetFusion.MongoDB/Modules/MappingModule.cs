@@ -58,7 +58,6 @@ namespace NetFusion.MongoDB.Modules
             }
 
             var knowTypeMap = GetEntityMap(knownType);
-
             return knowTypeMap?.ClassMap.Discriminator ?? knownType.Name;
         }
 

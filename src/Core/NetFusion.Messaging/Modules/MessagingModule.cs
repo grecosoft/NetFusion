@@ -39,7 +39,7 @@ namespace NetFusion.Messaging.Modules
         // a given message is published. 
         public override void Initialize()
         {
-            this.MessagingConfig = this.Context.Plugin.GetConfig<MessagingConfig>();
+            MessagingConfig = Context.Plugin.GetConfig<MessagingConfig>();
 
             MessageDispatchInfo[] allDispatchers = this.Context.AllPluginTypes
                 .WhereEventConsumer()
@@ -51,10 +51,10 @@ namespace NetFusion.Messaging.Modules
             SetDispatchPredicateScripts(allDispatchers);
             AssertDispatchRules(allDispatchers);
 
-            this.AllMessageTypeDispatchers = allDispatchers
+            AllMessageTypeDispatchers = allDispatchers
                 .ToLookup(k => k.MessageType);
 
-            this.InProcessDispatchers = allDispatchers
+            InProcessDispatchers = allDispatchers
                 .Where(h => h.IsInProcessHandler)
                 .ToLookup(k => k.MessageType);
 
@@ -72,8 +72,9 @@ namespace NetFusion.Messaging.Modules
         public override void RegisterComponents(ContainerBuilder builder)
         {
             // Register all of the message publishers that determine how a given
-            // message is delivered.
-            builder.RegisterTypes(this.MessagingConfig.PublisherTypes)
+            // message is delivered.  This is how the message dispatch pipeline
+            // is extended.
+            builder.RegisterTypes(MessagingConfig.PublisherTypes)
                 .As<IMessagePublisher>()
                 .InstancePerLifetimeScope();
         }
@@ -91,13 +92,18 @@ namespace NetFusion.Messaging.Modules
             allDispatchers.ForEach(SetDispatchRule);
         }
 
+        // Lookup the dispatch rules specified on the message consumer handler and
+        // store a reference to the associated rule object.
         private void SetDispatchRule(MessageDispatchInfo dispatchInfo)
         {
-            dispatchInfo.DispatchRules = this.DispatchRules
+            dispatchInfo.DispatchRules = DispatchRules
                 .Where(r => dispatchInfo.DispatchRuleTypes.Contains(r.GetType()))
                 .ToArray(); 
         }
 
+        // Check all message consumer handlers having the ApplyScriptPredicate attribute and
+        // store a reference to a ScriptPredicate instance indicating the script to be executed
+        // at runtime to determine if the message handler should be invoked.
         private void SetDispatchPredicateScripts(MessageDispatchInfo[] allDispatchers)
         {
             foreach (var dispatcher in allDispatchers)
@@ -134,7 +140,7 @@ namespace NetFusion.Messaging.Modules
             Check.NotNull(commandType, nameof(commandType));
             Check.IsTrue(commandType.IsDerivedFrom<ICommand>(), nameof(commandType), "must be command type");
 
-            IEnumerable<MessageDispatchInfo> dispatchers = this.InProcessDispatchers.WhereHandlerForMessage(commandType);
+            IEnumerable<MessageDispatchInfo> dispatchers = InProcessDispatchers.WhereHandlerForMessage(commandType);
             if (dispatchers.Empty())
             {
                 throw new InvalidOperationException(
@@ -157,6 +163,9 @@ namespace NetFusion.Messaging.Modules
                     $"derived from the dispatch information type of: {dispatcher.MessageType}.");
             }
 
+            // Invoke the message consumers in a new lifetime scope.  This is for the case where a message
+            // is received outside of the normal lifetime scope such as the one associated with the current
+            // web request.
             using (var scope = AppContainer.Instance.Services.BeginLifetimeScope())
             {
                 try
@@ -167,7 +176,7 @@ namespace NetFusion.Messaging.Modules
                 }
                 catch (Exception ex)
                 {
-                    this.Context.Logger.LogError(MessagingLogEvents.MESSAGING_EXCEPTION, "Message Dispatch Error Details.", ex);
+                    Context.Logger.LogError(MessagingLogEvents.MESSAGING_EXCEPTION, "Message Dispatch Error Details.", ex);
                     throw;
                 }
             }
@@ -175,7 +184,7 @@ namespace NetFusion.Messaging.Modules
 
         private void LogInvalidConsumers()
         {
-            string[] invalidConsumerTypes = this.Context.AllPluginTypes
+            string[] invalidConsumerTypes = Context.AllPluginTypes
                .SelectMessageHandlers()
                .Where(h => h.HasAttribute<InProcessHandlerAttribute>() && !h.DeclaringType.IsDerivedFrom<IMessageConsumer>())
                .Select(h => h.DeclaringType.AssemblyQualifiedName)
@@ -184,16 +193,15 @@ namespace NetFusion.Messaging.Modules
 
             if (invalidConsumerTypes.Any())
             {
-                this.Context.Logger.LogWarning(
+                Context.Logger.LogWarning(
                     MessagingLogEvents.MESSAGING_CONFIGURATION,
                     $"The following classes have in-process event handler methods but do not implement: {typeof(IMessageConsumer)}.",
                     invalidConsumerTypes);
             }
         }
 
-        // For each discovered message event type, execute the same code that 
-        // is used at runtime to determine the consumer methods that handle
-        // the message.  Then log this information.
+        // For each discovered message event type, execute the same code that is used at runtime to determine
+        // the consumer methods that handle the message.  Then log this information.
         public override void Log(IDictionary<string, object> moduleLog)
         {
             LogMessagesAndDispatchInfo(moduleLog);
@@ -205,7 +213,7 @@ namespace NetFusion.Messaging.Modules
             var messagingDispatchLog = new Dictionary<string, object>();
             moduleLog["Messaging - In Process Dispatchers"] = messagingDispatchLog;
 
-            foreach (var messageTypeDispatcher in this.InProcessDispatchers)
+            foreach (var messageTypeDispatcher in InProcessDispatchers)
             {
                 var messageType = messageTypeDispatcher.Key;
                 var messageDispatchers = InProcessDispatchers.WhereHandlerForMessage(messageType);
@@ -228,13 +236,12 @@ namespace NetFusion.Messaging.Modules
         {
             moduleLog["Message Publishers"] = Context.AllPluginTypes
                 .Where(pt => {
-                    var typeInfo = pt.GetTypeInfo();
                     return pt.IsConcreteTypeDerivedFrom<IMessagePublisher>();
                 })
                 .Select(t => new
                 {
                     PublisherType = t.AssemblyQualifiedName,
-                    IsConfigured = this.MessagingConfig.PublisherTypes.Contains(t)
+                    IsConfigured = MessagingConfig.PublisherTypes.Contains(t)
                 }).ToArray();
         }
     }

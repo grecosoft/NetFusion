@@ -14,6 +14,7 @@ namespace NetFusion.Messaging.Core
         /// Override to publish message asynchronously. 
         /// </summary>
         /// <param name="message">The message to be delivered.</param>
+        /// <param name="cancellationToken">The optional cancellation token passed to the publisher.</param>
         /// <returns>The task that will be completed when the dispatch has completed.</returns>
         public virtual Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {

@@ -71,8 +71,7 @@ namespace NetFusion.Messaging.Core
                     if (dispatchErrors.Any())
                     {
                         throw new MessageDispatchException(
-                            "An exception was received when dispatching a message to " +
-                            "one or more handlers.",
+                            "An exception was received when dispatching a message to one or more handlers.",
                             dispatchErrors);
                     }
 
@@ -91,7 +90,7 @@ namespace NetFusion.Messaging.Core
 
             foreach (MessageDispatchInfo dispatchInfo in dispatchers)
             {
-                if (await MatchesDispatchCriteria(dispatchInfo, message))
+                if (await PassesDispatchCriteria(dispatchInfo, message))
                 {
                     matchingDispatchers.Add(dispatchInfo);
                 }
@@ -99,7 +98,7 @@ namespace NetFusion.Messaging.Core
             return matchingDispatchers.ToArray();
         }
 
-        private async Task<bool> MatchesDispatchCriteria(MessageDispatchInfo dispatchInfo, IMessage message)
+        private async Task<bool> PassesDispatchCriteria(MessageDispatchInfo dispatchInfo, IMessage message)
         {
             ScriptPredicate predicate = dispatchInfo.Predicate;
 
@@ -113,11 +112,10 @@ namespace NetFusion.Messaging.Core
 
         private void AssertMessageDispatchers(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
         {
-            var commandMessage = message as ICommand;
-            if (commandMessage != null && dispatchers.Count() > 1)
+            if (message is ICommand commandMessage && dispatchers.Count() > 1)
             {
                 throw new InvalidOperationException(
-                    $"More than one message consumer handler was found for message type: {commandMessage.GetType()}" + 
+                    $"More than one message consumer handler was found for message type: {commandMessage.GetType()}" +
                     $"A command message type can have only one in-process message consumer handler.");
             }
         }
@@ -131,9 +129,8 @@ namespace NetFusion.Messaging.Core
         private MessageDispatchException GetDispatchException(FutureResult<MessageDispatchInfo> futureResult)
         {
             var sourceEx = futureResult.Task.Exception.InnerException;
-            var dispatchEx = sourceEx as MessageDispatchException;
 
-            if (dispatchEx != null)
+            if (sourceEx is MessageDispatchException dispatchEx)
             {
                 return dispatchEx;
             }

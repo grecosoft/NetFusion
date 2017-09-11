@@ -43,7 +43,7 @@ namespace NetFusion.Messaging.Modules
         MessageDispatchInfo GetInProcessCommandDispatcher(Type commandType);
 
         /// <summary>
-        /// Invokes the consumer with the message defined by the dispatcher instance.
+        /// Invokes the consumer with the message handler defined by the dispatcher instance.
         /// </summary>
         /// <param name="dispatcher">The dispatcher containing information on how the message
         /// is to be dispatched.</param>

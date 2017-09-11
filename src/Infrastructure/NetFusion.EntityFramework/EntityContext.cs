@@ -13,7 +13,7 @@ namespace NetFusion.EntityFramework
     /// allows features to be easily added or hidden without using inheritance.
     /// </summary>
     /// <typeparam name="TEntityDbContext">The type of the data context.</typeparam>
-    public class EntityContext<TEntityDbContext>: IEntityContext<TEntityDbContext>
+    public class EntityContext<TEntityDbContext>: IEntityContext<TEntityDbContext>, IDisposable
         where TEntityDbContext : EntityDbContext
     {
         private TEntityDbContext _dbContext;
@@ -47,24 +47,34 @@ namespace NetFusion.EntityFramework
             return _dbContext.Entry(entity);
         }
 
+        public DbSet<TEntity> Set<TEntity>() where TEntity : class
+        {
+            return _dbContext.Set<TEntity>();
+        }
+
         public int SaveChanges()
         {
             return _dbContext.SaveChanges();
         }
 
-        public Task<int> SaveChangesAsync()
+        public int SaveChanges(bool acceptAllChangesOnSuccess)
         {
-            return _dbContext.SaveChangesAsync();
+            return _dbContext.SaveChanges(acceptAllChangesOnSuccess);
         }
 
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        public Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return _dbContext.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             return _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public DbSet<TEntity> Set<TEntity>() where TEntity : class
+        public void Dispose()
         {
-            return _dbContext.Set<TEntity>();
+            _dbContext?.Dispose();
         }
     }
 }

@@ -3,7 +3,6 @@ using NetFusion.Common;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Domain.Messaging;
 using NetFusion.Messaging.Core;
-using NetFusion.Messaging.Enrichers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +20,8 @@ namespace NetFusion.Messaging
         /// </summary>
         /// <param name="errorMessage">The error message raised when publishing the message.</param>
         /// <param name="message">The message being dispatched.</param>
-        /// <param name="publisherExceptions">List exceptions when publishing message to  one or more publishers.</param>
+        /// <param name="publisherExceptions">List of exceptions when publishing message to one 
+        /// or more publishers.</param>
         public PublisherException(
             string errorMessage,
             IMessage message,
@@ -30,7 +30,7 @@ namespace NetFusion.Messaging
             Check.NotNull(message, nameof(message));
             Check.NotNull(publisherExceptions, nameof(publisherExceptions));
 
-            this.Details = new Dictionary<string, object>
+            Details = new Dictionary<string, object>
             {
                 { "Message", errorMessage },
                 { "PublishedMessage", message },
@@ -38,6 +38,13 @@ namespace NetFusion.Messaging
             };
         }
 
+        /// <summary>
+        /// Publisher Exception.
+        /// </summary>
+        /// <param name="errorMessage">The enricher related error message raised when publishing the message.</param>
+        /// <param name="message">The message being dispatched.</param>
+        /// <param name="enricherExceptions">List of enricher exceptions when publishing message to one
+        /// or more publishers.</param>
         public PublisherException(
             string errorMessage,
             IMessage message,
@@ -46,7 +53,7 @@ namespace NetFusion.Messaging
             Check.NotNull(message, nameof(message));
             Check.NotNull(enricherExceptions, nameof(enricherExceptions));
 
-            this.Details = new Dictionary<string, object>
+            Details = new Dictionary<string, object>
             {
                 { "Message", errorMessage },
                 { "PublishedMessage", message },
@@ -68,7 +75,7 @@ namespace NetFusion.Messaging
             Check.NotNull(eventSource, nameof(eventSource));
             Check.NotNull(publisherExceptions, nameof(publisherExceptions));
 
-            this.Details = new Dictionary<string, object>
+            Details = new Dictionary<string, object>
             {
                 { "Message", errorMessage },
                 { "EventSource", eventSource },
@@ -105,7 +112,7 @@ namespace NetFusion.Messaging
             var taskException = futureResult.Task.Exception;
             var sourceException = taskException.InnerException;
 
-            this.Details = new Dictionary<string, object>
+            Details = new Dictionary<string, object>
             {
                 { "Message", sourceException?.Message },
                 { "Publisher", futureResult.Invoker.GetType().FullName }
@@ -114,7 +121,7 @@ namespace NetFusion.Messaging
             var dispatchException = sourceException as MessageDispatchException;
             if (dispatchException != null)
             {
-                this.Details["DispatchDetails"] = dispatchException.Details;
+                Details["DispatchDetails"] = dispatchException.Details;
             }
         }
     }

@@ -37,7 +37,7 @@ namespace NetFusion.Messaging.Core
         /// <summary>
         /// Indicates if the message handler should be called for derived message types.
         /// This is determined by checking the message handler method's message parameter
-        /// for  the IncludeDerivedMessages attribute.
+        /// for the IncludeDerivedMessages attribute.
         /// </summary>
         /// <returns>
         /// Returns True if method should be called for derived message types.
@@ -58,8 +58,7 @@ namespace NetFusion.Messaging.Core
         public bool IsAsync { get; set; }
 
         /// <summary>
-        /// Indicates that the handler is an asynchronous method 
-        /// returning a value.
+        /// Indicates that the handler is an asynchronous method returning a value.
         /// </summary>
         public bool IsAsyncWithResult { get; set; }
 
@@ -77,8 +76,7 @@ namespace NetFusion.Messaging.Core
 
         /// <summary>
         /// Delegate used to invoke the message handler.  This is created from the
-        /// reflected information and provides near statically compiled execution
-        /// performance.
+        /// reflected information.
         /// </summary>
         public MulticastDelegate Invoker { get; set; }
 
@@ -118,24 +116,27 @@ namespace NetFusion.Messaging.Core
         {
             Check.NotNull(message, nameof(message));
 
-            if (!this.DispatchRuleTypes.Any()) return true;
+            if (!DispatchRuleTypes.Any()) return true;
 
-            if (this.RuleApplyType == RuleApplyTypes.All)
+            if (RuleApplyType == RuleApplyTypes.All)
             {
-                return this.DispatchRules.All(r => r.IsMatch(message));
+                return DispatchRules.All(r => r.IsMatch(message));
             }
 
-            return this.DispatchRules.Any(r => r.IsMatch(message));
+            return DispatchRules.Any(r => r.IsMatch(message));
         }
 
         /// <summary>
         /// Dispatches a message to the specified consumer.  The implementation
         /// normalizes the calling for synchronous and asynchronous message handlers.
         /// This allows the method handler to be re-factored to one or the other 
-        /// without having to change any of the calling code.
+        /// without having to change any of the calling code.  This also decouples
+        /// the publisher from the consumer.  The publisher should not be concerned 
+        /// or determine how the message is handled.
         /// </summary>
         /// <param name="message">The message to be dispatched.</param>
         /// <param name="consumer">Instance of the consumer to have message dispatched.</param>
+        /// <param name="cancellationToken">The optional cancellation token passed to the message handler.</param>
         /// <returns>The response as a future result.</returns>
         public async Task<object> Dispatch(IMessage message, IMessageConsumer consumer, CancellationToken cancellationToken)
         {
@@ -146,17 +147,17 @@ namespace NetFusion.Messaging.Core
 
             try
             {
-                if (this.IsAsync)
+                if (IsAsync)
                 {
                     Task asyncResult = null;
 
                     var invokeParams = new List<object>{ consumer, message };
-                    if (this.IsCancellable)
+                    if (IsCancellable)
                     {
                         invokeParams.Add(cancellationToken);
                     }
 
-                    asyncResult = (Task)this.Invoker.DynamicInvoke(invokeParams.ToArray());
+                    asyncResult = (Task)Invoker.DynamicInvoke(invokeParams.ToArray());
                     await asyncResult;
 
                     object result = ProcessResult(message, asyncResult);
@@ -164,7 +165,7 @@ namespace NetFusion.Messaging.Core
                 }
                 else
                 {
-                    object syncResult = this.Invoker.DynamicInvoke(consumer, message);
+                    object syncResult = Invoker.DynamicInvoke(consumer, message);
                     object result = ProcessResult(message, syncResult);
                     futureResult.SetResult(result);
                 }
@@ -194,7 +195,7 @@ namespace NetFusion.Messaging.Core
             object resultValue = result;
             var command = message as ICommand;
 
-            if (command != null && result != null && this.IsAsyncWithResult)
+            if (command != null && result != null && IsAsyncWithResult)
             {
                 dynamic resultTask = result;
                 resultValue = resultTask.Result;
