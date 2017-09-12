@@ -1,8 +1,9 @@
 ﻿using NetFusion.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace NetFusion.Domain.Scripting
+namespace NetFusion.Base.Scripting
 {
     /// <summary>
     /// Represents a set of ordered expressions executed at runtime against a domain entity.
@@ -31,9 +32,9 @@ namespace NetFusion.Domain.Scripting
 
         public EntityScript()
         {
-            this.ImportedAssemblies = new List<string>();
-            this.ImportedNamespaces = new List<string>();
-            this.InitialAttributes = new Dictionary<string, object>();
+            ImportedAssemblies = new List<string>();
+            ImportedNamespaces = new List<string>();
+            InitialAttributes = new Dictionary<string, object>();
         }
 
         /// <summary>
@@ -53,12 +54,12 @@ namespace NetFusion.Domain.Scripting
             Check.NotNullOrWhiteSpace(entityTypeName, nameof(entityTypeName));
             Check.NotNull(expressions, nameof(expressions));
 
-            this.ScriptId = scriptId;
-            this.Name = name;
-            this.Expressions = expressions;
+            ScriptId = scriptId;
+            Name = name;
+            Expressions = expressions;
 
-            this.EntityType = Type.GetType(entityTypeName, false);
-            if (this.EntityType == null)
+            EntityType = Type.GetType(entityTypeName, false);
+            if (EntityType == null)
             {
                 throw new InvalidOperationException(
                     $"The type of: {entityTypeName} associated with script named {name} could not be loaded.");

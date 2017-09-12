@@ -1,4 +1,4 @@
-﻿using NetFusion.Domain.Entities;
+﻿using NetFusion.Base.Entity;
 using System.Collections.Generic;
 
 namespace CoreTests.Domain.Mocks

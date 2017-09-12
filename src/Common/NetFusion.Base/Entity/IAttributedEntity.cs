@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NetFusion.Domain.Entities
+namespace NetFusion.Base.Entity
 {
     /// <summary>
     /// Identifies an entity having a set of key/value attributes that

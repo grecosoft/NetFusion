@@ -1,5 +1,4 @@
 ﻿using NetFusion.Common;
-using NetFusion.Domain.Scripting;
 using NetFusion.Messaging;
 
 namespace CoreTests.Messaging.Mocks

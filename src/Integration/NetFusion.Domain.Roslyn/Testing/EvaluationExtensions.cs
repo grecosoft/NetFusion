@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using NetFusion.Domain.Entities;
+using NetFusion.Base.Entity;
+using NetFusion.Base.Scripting;
 using NetFusion.Domain.Roslyn.Core;
-using NetFusion.Domain.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

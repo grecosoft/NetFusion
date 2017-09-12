@@ -10,10 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Base\NetFusion.Base.csproj" />
     <ProjectReference Include="..\..\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
     <ProjectReference Include="..\..\Infrastructure\NetFusion.MongoDB\NetFusion.MongoDB.csproj" />
-    <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
-    <ProjectReference Include="..\..\Domain\NetFusion.Domain\NetFusion.Domain.csproj" />
     <ProjectReference Include="..\..\Infrastructure\NetFusion.MongoDB\NetFusion.MongoDB.csproj" />
   </ItemGroup>
   

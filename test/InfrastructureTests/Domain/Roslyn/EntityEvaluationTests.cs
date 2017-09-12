@@ -1,7 +1,7 @@
 ﻿using CoreTests.Domain.Mocks;
 using FluentAssertions;
+using NetFusion.Base.Scripting;
 using NetFusion.Domain.Roslyn.Testing;
-using NetFusion.Domain.Scripting;
 using System.Collections.Generic;
 using Xunit;
 

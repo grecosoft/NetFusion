@@ -1,7 +1,7 @@
-﻿using NetFusion.Common;
+﻿using NetFusion.Base.Entity;
+using NetFusion.Base.Scripting;
+using NetFusion.Common;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Domain.Entities;
-using NetFusion.Domain.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Linq;

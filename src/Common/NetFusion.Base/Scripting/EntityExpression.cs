@@ -1,6 +1,6 @@
 ﻿using NetFusion.Common;
 
-namespace NetFusion.Domain.Scripting
+namespace NetFusion.Base.Scripting
 {
     /// <summary>
     /// Represents a expression that can be executed at runtime against
@@ -16,9 +16,9 @@ namespace NetFusion.Domain.Scripting
             Check.NotNullOrEmpty(expression, nameof(expression));
             Check.IsTrue(sequence >= 0, nameof(sequence),  "expression sequence must be greater or equal to 0");
 
-            this.Expression = expression;
-            this.Sequence = sequence;
-            this.AttributeName = attributeName;
+            Expression = expression;
+            Sequence = sequence;
+            AttributeName = attributeName;
         }
 
         /// <summary>

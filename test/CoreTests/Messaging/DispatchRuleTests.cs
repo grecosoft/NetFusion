@@ -1,10 +1,10 @@
 ﻿using Autofac;
 using CoreTests.Messaging.Mocks;
 using FluentAssertions;
+using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Domain.Messaging;
 using NetFusion.Domain.Messaging.Rules;
-using NetFusion.Domain.Scripting;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Rules;
 using NetFusion.Test.Container;

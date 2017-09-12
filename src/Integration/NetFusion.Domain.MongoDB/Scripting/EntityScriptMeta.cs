@@ -1,4 +1,4 @@
-﻿using NetFusion.Domain.Scripting;
+﻿using NetFusion.Base.Scripting;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;

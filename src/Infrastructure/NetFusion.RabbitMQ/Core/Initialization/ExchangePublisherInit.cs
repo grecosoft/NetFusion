@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
+using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common;
 using NetFusion.Common.Extensions.Collection;
 using NetFusion.Domain.Messaging;
-using NetFusion.Domain.Scripting;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;

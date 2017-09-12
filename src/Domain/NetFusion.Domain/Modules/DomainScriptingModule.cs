@@ -1,8 +1,8 @@
 ﻿using Autofac;
+using NetFusion.Base.Entity;
+using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Domain.Entities;
-using NetFusion.Domain.Scripting;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using NetFusion.Base.Scripting;
 using NetFusion.Common;
 using NetFusion.Domain.Messaging;
-using NetFusion.Domain.Scripting;
 using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Core.Initialization;
 using NetFusion.RabbitMQ.Core.Rpc;

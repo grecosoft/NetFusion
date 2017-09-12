@@ -1,6 +1,4 @@
-﻿using NetFusion.Common;
-
-namespace NetFusion.Domain.Scripting
+﻿namespace NetFusion.Base.Scripting
 {
     /// <summary>
     /// Properties describing a script to be executed and the value of an entity

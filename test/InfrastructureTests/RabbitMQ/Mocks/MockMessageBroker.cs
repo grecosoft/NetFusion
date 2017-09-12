@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
-using NetFusion.Domain.Scripting;
+using NetFusion.Base.Scripting;
 using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Core;
 

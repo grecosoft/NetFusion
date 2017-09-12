@@ -10,9 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Base\NetFusion.Base.csproj" />
     <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
     <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
-    <ProjectReference Include="..\..\Domain\NetFusion.Domain\NetFusion.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

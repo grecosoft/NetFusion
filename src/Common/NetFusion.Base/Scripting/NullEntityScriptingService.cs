@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace NetFusion.Domain.Scripting
+namespace NetFusion.Base.Scripting
 {
     /// <summary>
     /// If a host uses a plug-in that is dependent on the NetFusion.Domain plug-in's

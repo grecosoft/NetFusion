@@ -1,7 +1,7 @@
-﻿using NetFusion.Common;
+﻿using NetFusion.Base.Scripting;
+using NetFusion.Common;
 using NetFusion.Domain.Messaging;
 using NetFusion.Domain.Messaging.Rules;
-using NetFusion.Domain.Scripting;
 using NetFusion.Messaging.Rules;
 using System;
 using System.Collections.Generic;

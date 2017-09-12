@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace NetFusion.Domain.Scripting
+namespace NetFusion.Base.Scripting
 {
     /// <summary>
     /// Responsible for maintaining a set of entity related scripts that can

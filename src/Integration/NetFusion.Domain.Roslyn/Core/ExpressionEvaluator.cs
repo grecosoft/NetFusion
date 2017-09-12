@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.Scripting;
+using NetFusion.Base.Scripting;
 using NetFusion.Common;
-using NetFusion.Domain.Scripting;
 
 namespace NetFusion.Domain.Roslyn.Core
 {

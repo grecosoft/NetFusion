@@ -1,5 +1,5 @@
-﻿using NetFusion.Common;
-using NetFusion.Domain.Entities;
+﻿using NetFusion.Base.Entity;
+using NetFusion.Common;
 
 namespace NetFusion.Domain.Roslyn.Core
 {

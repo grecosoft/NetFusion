@@ -1,14 +1,13 @@
 ﻿using Autofac;
 using CoreTests.Messaging.Mocks;
 using FluentAssertions;
+using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Common;
 using NetFusion.Domain.Messaging;
-using NetFusion.Domain.Scripting;
 using NetFusion.Messaging;
 using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

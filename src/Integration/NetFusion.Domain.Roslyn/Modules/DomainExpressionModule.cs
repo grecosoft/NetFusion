@@ -1,7 +1,7 @@
 ﻿using Autofac;
+using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Domain.Roslyn.Core;
-using NetFusion.Domain.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Linq;

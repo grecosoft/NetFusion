@@ -1,5 +1,5 @@
 ﻿using ExampleApi.Messages;
-using NetFusion.Domain.Scripting;
+using NetFusion.Base.Scripting;
 using NetFusion.RabbitMQ.Exchanges;
 
 namespace WebApiHost.RabbitMQ.Exchanges

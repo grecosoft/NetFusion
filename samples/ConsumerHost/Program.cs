@@ -1,10 +1,10 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Configuration;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Domain.Scripting;
 using NetFusion.Logging.Serilog.Enrichers;
 using NetFusion.Messaging.Config;
 using NetFusion.RabbitMQ.Core;

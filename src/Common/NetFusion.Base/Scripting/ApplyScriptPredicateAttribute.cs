@@ -1,7 +1,7 @@
 ﻿using NetFusion.Common;
 using System;
 
-namespace NetFusion.Domain.Scripting
+namespace NetFusion.Base.Scripting
 {
     /// <summary>
     /// Attribute that can be attached to classes or methods for specifying an
@@ -29,8 +29,8 @@ namespace NetFusion.Domain.Scripting
             Check.NotNullOrWhiteSpace(scriptName, nameof(scriptName));
             Check.NotNullOrWhiteSpace(variableName, nameof(variableName));
 
-            this.ScriptName = scriptName;
-            this.AttributeName = variableName;
+            ScriptName = scriptName;
+            AttributeName = variableName;
         }
 
         public ScriptPredicate ToPredicate()

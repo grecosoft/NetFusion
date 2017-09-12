@@ -36,7 +36,7 @@ namespace NetFusion.Base.Exceptions
         public NetFusionException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            this.Details = (IDictionary<string, object>)info.GetValue(NETFUSION_DETAILS_VALUE, typeof(IDictionary<string, object>));
+            Details = (IDictionary<string, object>)info.GetValue(NETFUSION_DETAILS_VALUE, typeof(IDictionary<string, object>));
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

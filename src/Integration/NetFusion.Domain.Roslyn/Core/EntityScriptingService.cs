@@ -2,12 +2,12 @@
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Entity;
+using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common;
 using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collection;
-using NetFusion.Domain.Entities;
-using NetFusion.Domain.Scripting;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;

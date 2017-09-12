@@ -1,5 +1,5 @@
 ﻿using NetFusion.Base;
-using NetFusion.Domain.Scripting;
+using NetFusion.Base.Scripting;
 using System.Collections.Generic;
 
 namespace NetFusion.RabbitMQ.Exchanges

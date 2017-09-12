@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 #endif
 
-namespace NetFusion.Domain.Entities
+namespace NetFusion.Base.Entity
 {
     /// <summary>
     /// Default implementation of a set of properties that can be dynamically
@@ -48,7 +48,7 @@ namespace NetFusion.Domain.Entities
         public void SetValues(IDictionary<string, object> values)
         {
             Check.NotNull(values, nameof(values));
-            this._attributes = values;
+            _attributes = values;
         }
 
         public IDictionary<string, object> GetValues()

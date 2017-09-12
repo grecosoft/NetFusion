@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace NetFusion.Domain.Entities
+namespace NetFusion.Base.Entity
 {
     /// <summary>
     /// Represents a set of dynamic key/value pairs that can be associated

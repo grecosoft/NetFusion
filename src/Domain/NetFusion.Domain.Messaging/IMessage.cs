@@ -1,5 +1,5 @@
-﻿using NetFusion.Base.Plugins;
-using NetFusion.Domain.Entities;
+﻿using NetFusion.Base.Entity;
+using NetFusion.Base.Plugins;
 
 namespace NetFusion.Domain.Messaging
 {

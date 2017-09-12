@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace NetFusion.Domain.Scripting
+namespace NetFusion.Base.Scripting
 {
     /// <summary>
     /// Implementation responsible for evaluating a script against a domain entity
@@ -18,7 +18,8 @@ namespace NetFusion.Domain.Scripting
         void Load(IEnumerable<EntityScript> scripts);
 
         /// <summary>
-        /// Compiles all script expressions that have not yet been compiled.
+        /// Compiles all script expressions that have not yet been compiled.  This can be used
+        /// to verify that all scripts compile against their associated entity type.
         /// </summary>
         void CompileAllScripts();
 

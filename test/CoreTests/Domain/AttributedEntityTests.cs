@@ -1,6 +1,6 @@
 ﻿using CoreTests.Domain.Mocks;
 using FluentAssertions;
-using NetFusion.Domain.Entities;
+using NetFusion.Base.Entity;
 using System.Linq;
 using Xunit;
 

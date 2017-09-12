@@ -1,9 +1,9 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Domain.Messaging;
-using NetFusion.Domain.Scripting;
 using NetFusion.Messaging.Modules;
 using System;
 using System.Collections.Generic;

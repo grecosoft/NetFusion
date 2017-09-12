@@ -1,9 +1,9 @@
-﻿using NetFusion.Common;
+﻿using NetFusion.Base.Scripting;
+using NetFusion.Common;
 using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collection;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Domain.Messaging;
-using NetFusion.Domain.Scripting;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Exchanges;
 using RabbitMQ.Client;
