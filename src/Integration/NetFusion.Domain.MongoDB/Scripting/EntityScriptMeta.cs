@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace NetFusion.Domain.MongoDB.Scripting
 {
+    /// <summary>
+    /// Data model storing a script consisting of a list of ordered expressions.
+    /// </summary>
     public class EntityScriptMeta
     {
         public string ScriptId { get; set; }
@@ -22,16 +25,20 @@ namespace NetFusion.Domain.MongoDB.Scripting
 
         }
 
+        /// <summary>
+        /// Constructor.  Created data-model from script entity.
+        /// </summary>
+        /// <param name="script">The script domain entity.</param>
         public EntityScriptMeta(EntityScript script)
         {
-            this.ScriptId = script.ScriptId;
-            this.EntityType = script.EntityType.AssemblyQualifiedName;
-            this.Name = script.Name;
-            this.Description = script.Description;
+            ScriptId = script.ScriptId;
+            EntityType = script.EntityType.AssemblyQualifiedName;
+            Name = script.Name;
+            Description = script.Description;
 
-            this.Attributes = script.InitialAttributes;
-            this.ImportedAssemblies = script.ImportedAssemblies;
-            this.ImportedNamespaces = script.ImportedNamespaces;
+            Attributes = script.InitialAttributes;
+            ImportedAssemblies = script.ImportedAssemblies;
+            ImportedNamespaces = script.ImportedNamespaces;
 
             SetExpressions(script.Expressions);
         }
@@ -52,29 +59,33 @@ namespace NetFusion.Domain.MongoDB.Scripting
                 expressionMetadata.Add(expressionMeta);
             }
 
-            this.Expressions = expressionMetadata;
+            Expressions = expressionMetadata;
         }
 
+        /// <summary>
+        /// Returns an entity script entity from the stored data-model.
+        /// </summary>
+        /// <returns>Script domain entity.</returns>
         public EntityScript ToEntity()
         {
             var expressions = GetEntityExpressions();
 
             var expressionSet = new EntityScript(
-                this.ScriptId,
-                this.Name,
-                this.EntityType,
+                ScriptId,
+                Name,
+                EntityType,
                 new ReadOnlyCollection<EntityExpression>(expressions));
 
-            expressionSet.Description = this.Description;
-            expressionSet.InitialAttributes = this.Attributes;
-            expressionSet.ImportedAssemblies = this.ImportedAssemblies;
-            expressionSet.ImportedNamespaces = this.ImportedNamespaces;
+            expressionSet.Description = Description;
+            expressionSet.InitialAttributes = Attributes;
+            expressionSet.ImportedAssemblies = ImportedAssemblies;
+            expressionSet.ImportedNamespaces = ImportedNamespaces;
             return expressionSet;
         }
 
         private IList<EntityExpression> GetEntityExpressions()
         {
-            return this.Expressions.Select(e => new EntityExpression(
+            return Expressions.Select(e => new EntityExpression(
                 e.Expression,
                 e.Sequence,
                 e.AttributeName) {

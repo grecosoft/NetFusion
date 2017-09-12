@@ -16,8 +16,8 @@ namespace NetFusion.Domain.Roslyn.Core
             Check.NotNull(expression, nameof(expression));
             Check.NotNull(executor, nameof(executor));
 
-            this.Expression = expression;
-            this.Invoker = executor;
+            Expression = expression;
+            Executor = executor;
         }
 
         /// <summary>
@@ -28,6 +28,6 @@ namespace NetFusion.Domain.Roslyn.Core
         /// <summary>
         /// The expression compiled to a delegate to be executed at runtime.
         /// </summary>
-        public ScriptRunner<object> Invoker { get; }
+        public ScriptRunner<object> Executor { get; }
     }
 }

@@ -25,10 +25,10 @@ namespace NetFusion.Domain.Roslyn.Core
         {
             Check.NotNull(entity, nameof(entity));
 
-            this.Entity = (TEntity)entity;
+            Entity = (TEntity)entity;
 
             var attributedEntity = entity as IAttributedEntity;
-            this._ = attributedEntity?.Attributes.Values;
+            _ = attributedEntity?.Attributes.Values;
         }
     }
 }

@@ -204,14 +204,39 @@ namespace NetFusion.Domain.Roslyn.Core
             IEnumerable<Type> assembliesContainingTypes)
         {
             var assemblies = new List<Assembly>();
-            foreach (string assemblyName in script.ImportedAssemblies ?? new string[] { })
-            {
-                assemblies.Add(Assembly.Load(new AssemblyName(assemblyName)));
-            }
 
+            // Add the assemblies containing the list of specified types.
             var defaultAssemblies = assembliesContainingTypes.Select(t => t.GetTypeInfo().Assembly);
             assemblies.AddRange(defaultAssemblies);
 
+            if (script.ImportedAssemblies == null)
+            {
+                return assemblies;
+            }
+
+            // If specified, load the additional assemblies specified by the script.
+            foreach (string assemblyName in script.ImportedAssemblies)
+            {
+                Assembly assembly = null;
+                try
+                {
+                    assembly = Assembly.Load(new AssemblyName(assemblyName));
+                    assemblies.Add(assembly);
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    var loadErrors = ex.LoaderExceptions.Select(le => le.Message).Distinct().ToList();
+                    throw new ScriptException("Error loading plug-in assembly.", loadErrors, ex);
+                }
+                catch (Exception ex)
+                {
+                    throw new ScriptException(
+                        $"Error loading assembly: {assemblyName}",
+                        ex);
+                }
+            }
+
+            // Return the distinct list of assemblies.
             return assemblies.Distinct().ToList();
         }
 
@@ -227,7 +252,7 @@ namespace NetFusion.Domain.Roslyn.Core
                     $"The entity being evaluated must implement: {typeof(IAttributedEntity)}");
             }
 
-            await this.ExecuteAsync(entity, predicate.ScriptName);
+            await ExecuteAsync(entity, predicate.ScriptName);
 
             if (!attributedEntity.Attributes.Contains(predicate.AttributeName))
             {

@@ -9,6 +9,9 @@ using System.Reflection;
 
 namespace NetFusion.Domain.Roslyn.Testing
 {
+    /// <summary>
+    /// Provides extension methods used to test expression evaluations.
+    /// </summary>
     public static class EvaluationExtensions
     {
         public static IList<EntityExpression> AddExpression(this IList<EntityExpression> expressions,

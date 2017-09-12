@@ -7,7 +7,7 @@ namespace NetFusion.Domain.MongoDB.Scripting
     [ConfigurationSection("integration:scriptMetadata")]
     public class EntityScriptMetaDb : MongoSettings
     {
-        [Required (AllowEmptyStrings = false, ErrorMessage = "Collection Name is Required.")]
-        public string CollectionName { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Collection Name is Required.")]
+        public string CollectionName { get; set; } = "ScriptMetaData";
     }
 }
