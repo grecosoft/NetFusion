@@ -37,8 +37,7 @@ namespace NetFusion.RabbitMQ.Core.Rpc
             _cancelTokenReg = combinedCancellation.Token.Register(_futureResult.SetCanceled);
         }
 
-        // Satisfies the future result of the awaiting consumer with
-        // the received response.
+        // Satisfies the future result of the awaiting consumer with the received response.
         public void SetResult(byte[] result)
         {
             Check.NotNull(result, nameof(result));

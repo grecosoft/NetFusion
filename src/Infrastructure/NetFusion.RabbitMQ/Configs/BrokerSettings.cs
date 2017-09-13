@@ -22,7 +22,7 @@ namespace NetFusion.RabbitMQ.Configs
 
         public BrokerSettings()
         {
-            this.Connections = new List<BrokerConnectionSettings>();
+            Connections = new List<BrokerConnectionSettings>();
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace NetFusion.RabbitMQ.Configs
         {
             Check.NotNull(brokerName, nameof(brokerName));
 
-            BrokerConnectionSettings conn = this.Connections.FirstOrDefault(c => c.BrokerName == brokerName);
+            BrokerConnectionSettings conn = Connections.FirstOrDefault(c => c.BrokerName == brokerName);
             
             if (conn == null)
             {
@@ -50,8 +50,7 @@ namespace NetFusion.RabbitMQ.Configs
         }
 
         /// <summary>
-        /// Applies all externally defined queue properties to all defined
-        /// exchange queues.
+        /// Applies all externally defined queue properties to all defined exchange queues.
         /// </summary>
         /// <param name="exchange">Exchange configuration.</param>
         public void ApplyQueueSettings(IMessageExchange exchange)
@@ -87,7 +86,7 @@ namespace NetFusion.RabbitMQ.Configs
 
         private IEnumerable<QueuePropertiesSettings> GetBrokerQueueProperties(string brokerName)
         {
-            BrokerConnectionSettings brokerConn = this.Connections.FirstOrDefault(c => c.BrokerName == brokerName);
+            BrokerConnectionSettings brokerConn = Connections.FirstOrDefault(c => c.BrokerName == brokerName);
             return brokerConn?.QueueProperties ?? new QueuePropertiesSettings[] { };
         }
 
@@ -98,7 +97,7 @@ namespace NetFusion.RabbitMQ.Configs
 
             if (validator.IsValid)
             {
-                this.Connections.Select(c => validator.AddChildValidator(c));
+                Connections.Select(c => validator.AddChildValidator(c));
             }
         }
     }

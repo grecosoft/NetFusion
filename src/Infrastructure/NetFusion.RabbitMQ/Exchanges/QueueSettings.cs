@@ -10,7 +10,7 @@ namespace NetFusion.RabbitMQ.Exchanges
     {
         public QueueSettings()
         {
-            this.Arguments = new Dictionary<string, object>();
+            Arguments = new Dictionary<string, object>();
         }
 
         /// <summary>

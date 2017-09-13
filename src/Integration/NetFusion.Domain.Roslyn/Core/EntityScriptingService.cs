@@ -240,7 +240,7 @@ namespace NetFusion.Domain.Roslyn.Core
             return assemblies.Distinct().ToList();
         }
 
-        public async Task<bool> SatifiesPredicate(object entity, ScriptPredicate predicate)
+        public async Task<bool> SatisfiesPredicate(object entity, ScriptPredicate predicate)
         {
             Check.NotNull(entity, nameof(entity));
             Check.NotNull(predicate, nameof(predicate));

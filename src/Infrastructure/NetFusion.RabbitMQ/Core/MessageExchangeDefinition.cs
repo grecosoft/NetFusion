@@ -29,8 +29,8 @@ namespace NetFusion.RabbitMQ.Core
         {
             Check.NotNull(exchange, nameof(exchange));
 
-            this.MessageType = messageType;
-            this.Exchange = exchange;
+            MessageType = messageType;
+            Exchange = exchange;
         }
     }
 } 

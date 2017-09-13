@@ -41,6 +41,6 @@ namespace NetFusion.Base.Scripting
         /// <param name="predicate">Specifies the script and the property corresponding to 
         /// the predicate value.</param>
         /// <returns>True if the entity satisfies the predicated.  Otherwise, False</returns>
-        Task<bool> SatifiesPredicate(object entity, ScriptPredicate predicate);
+        Task<bool> SatisfiesPredicate(object entity, ScriptPredicate predicate);
     }
 }

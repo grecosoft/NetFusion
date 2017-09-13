@@ -13,8 +13,12 @@ using System.Threading.Tasks;
 namespace NetFusion.RabbitMQ.Core.Initialization
 {
     /// <summary>
-    /// Encapsulates the logic for declaring and publishing 
-    /// messages to exchanges.
+    /// Encapsulates the logic for declaring and publishing messages to exchanges.  This initialization
+    /// class is from the publisher's perspective.  The exchange and queue definition classes found
+    /// during the bootstrap process are used to create the corresponding exchanges and queues on the
+    /// RabbitMQ broker.  There is no attempt to delete an existing exchange and the default RabbitMQ
+    /// behavior is used.  If any of the exchange or queue settings change, RabbitMQ will return and
+    /// exception.  This is the safest approach.
     /// </summary>
     public class ExchangePublisherInit : IBrokerInitializer
     {
@@ -37,7 +41,8 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             _serializationMgr = brokerState.SerializationMgr;
             _scriptingSrv = scriptiongSrv;
 
-            // Messages can have one or more associated exchanges.
+            // Messages can have one or more associated exchanges.  When a message is published, 
+            // a lookup is completed to determine if there is an exchange associated with the message.
             _messageExchanges = brokerState.Exchanges.ToLookup(
                 k => k.MessageType,
                 e => new MessageExchangeDefinition(e, e.MessageType));
@@ -70,8 +75,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         }
 
         /// <summary>
-        /// Determines if the specified message has an associated exchange
-        /// to which it can be published.
+        /// Determines if the specified message has an associated exchange to which it can be published.
         /// </summary>
         /// <param name="message">The message to check.</param>
         /// <returns>True if one or more exchanges are associated with the message.</returns>
@@ -83,8 +87,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         }
 
         /// <summary>
-        /// Publishes the message to all exchanges associated with 
-        /// the message's type.
+        /// Publishes the message to all exchanges associated with the message's type.
         /// </summary>
         /// <param name="message">The message to publish.</param>
         /// <returns>The future result.</returns>
@@ -109,7 +112,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         private async Task PublishAsync(MessageExchangeDefinition exchangeDef, IMessage message)
         {
-            if (!await MatchesExchangeCriteria(exchangeDef, message)) return;
+            if (!await SatisfiesExchangeCriteria(exchangeDef, message)) return;
 
             IMessageExchange exchange = exchangeDef.Exchange;
 
@@ -130,17 +133,17 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         // Determines if the message should be delivered to the queue.  If the exchange is marked
         // with a predicate attribute, the corresponding externally named script is executed to 
         // determine if the message has passing criteria.  If no external script is specified,
-        // the exchange's matches method is called.
-        private async Task<bool> MatchesExchangeCriteria(MessageExchangeDefinition exchangeDef, IMessage message)
+        // the exchange's Satisfies method is called.
+        private async Task<bool> SatisfiesExchangeCriteria(MessageExchangeDefinition exchangeDef, IMessage message)
         {
             ScriptPredicate predicate = exchangeDef.Exchange.Settings.Predicate;
 
             if (predicate != null)
             {
-                return await _scriptingSrv.SatifiesPredicate(message, predicate);
+                return await _scriptingSrv.SatisfiesPredicate(message, predicate);
             }
 
-            return exchangeDef.Exchange.Matches(message);
+            return exchangeDef.Exchange.Satisfies(message);
         }
 
         private void LogPublishingExchangeMessage(IMessage message,

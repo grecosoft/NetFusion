@@ -22,7 +22,7 @@ namespace NetFusion.RabbitMQ.Core.Rpc
         public RpcReplyException(byte[] exception)
         {
             Check.NotNull(exception, nameof(exception));
-            this.Exception = exception;
+            Exception = exception;
         }
     }
 }

@@ -3,8 +3,7 @@
 namespace NetFusion.RabbitMQ.Core
 {
     /// <summary>
-    /// Contains information about a queue to be created
-    /// on an exchange.
+    /// Contains information about a queue to be created on an exchange.
     /// </summary>
     public class ExchangeQueue
     {

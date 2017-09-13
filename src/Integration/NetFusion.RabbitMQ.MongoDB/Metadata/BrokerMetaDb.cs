@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetFusion.RabbitMQ.MongoDB.Metadata
 {
+    /// <summary>
+    /// The database to store the current exchange and queue meta-data.
+    /// </summary>
     [ConfigurationSection("integration:brokerMetadata")]
     public class BrokerMetaDb : MongoSettings
     {

@@ -63,6 +63,8 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         {
             IEnumerable<BrokerConnectionSettings> brokerConnections = _brokerState.BrokerSettings.Connections;
 
+            // The broker name will be null when all the RPC response queues need to be re-created after
+            // a connection exception is detected.
             if (brokerName != null)
             {
                 brokerConnections = brokerConnections.Where(c => c.BrokerName == brokerName);
@@ -90,7 +92,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             lock(_rpcPublisherLock)
             {
                 IEnumerable<RpcMessagePublisher> rpcPublishers = _rpcMessagePublishers
-                .Where(c => c.BrokerName == brokerName).ToList();
+                    .Where(c => c.BrokerName == brokerName).ToList();
 
                 foreach (RpcMessagePublisher rpcPublisher in rpcPublishers)
                 {
@@ -101,8 +103,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         }
 
         /// <summary>
-        /// Determines if the specified message meets the requirements for
-        /// an RPC style command.
+        /// Determines if the specified message meets the requirements for an RPC style command.
         /// </summary>
         /// <param name="message">The message to check.</param>
         /// <returns>True if a RPC style message, otherwise, false.</returns>
@@ -169,6 +170,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                 ExternalTypeName = rpcCommandAttrib.ExternalTypeName
             };
 
+            // Obtain the consumer queue on which the message should be published.
             RpcMessagePublisher rpcPublisher = GetRpcPublisher(rpcCommandAttrib);
 
             string[] orderedContentTypes = {

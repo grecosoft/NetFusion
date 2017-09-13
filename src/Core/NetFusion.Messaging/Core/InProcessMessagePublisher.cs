@@ -104,7 +104,7 @@ namespace NetFusion.Messaging.Core
 
             if (predicate != null)
             {
-                return await _scriptingSrv.SatifiesPredicate(message, predicate);
+                return await _scriptingSrv.SatisfiesPredicate(message, predicate);
             }
 
             return dispatchInfo.IsMatch(message);

@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace NetFusion.RabbitMQ.MongoDB.Metadata
 {
+    /// <summary>
+    /// Repository used to store exchange and queue meta-data used during a connection 
+    /// failure when reconnecting to a potentially different broker.
+    /// </summary>
     public class BrokerMetaRepository : IBrokerMetaRepository
     {
         private readonly IMongoDbClient<BrokerMetaDb> _dbClient;

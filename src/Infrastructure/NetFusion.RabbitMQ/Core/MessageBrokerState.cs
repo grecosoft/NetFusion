@@ -7,7 +7,7 @@ namespace NetFusion.RabbitMQ.Core
 {
     /// <summary>
     /// Information determined by the message-broker module used to initialize
-    /// the message broker used to configure the RabbitMq broker server.
+    /// the message broker and configure the RabbitMq broker server.
     /// </summary>
     public class MessageBrokerState
     {

@@ -18,9 +18,8 @@ namespace NetFusion.RabbitMQ.Core
         public static bool IsRpcReplyException(this IBasicProperties basicProps)
         {
             var headers = basicProps.Headers ?? new Dictionary<string, object>();
-            object value = null;
 
-            if (headers.TryGetValue(RpcClient.RPC_HEADER_EXCEPTION_INDICATOR, out value))
+            if (headers.TryGetValue(RpcClient.RPC_HEADER_EXCEPTION_INDICATOR, out object value))
             {
                 return (bool)value;
             }

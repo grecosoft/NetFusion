@@ -1,5 +1,4 @@
-﻿using NetFusion.Base;
-using NetFusion.Common;
+﻿using NetFusion.Common;
 using NetFusion.Domain.Messaging;
 using NetFusion.RabbitMQ.Configs;
 using RabbitMQ.Client;
@@ -43,9 +42,9 @@ namespace NetFusion.RabbitMQ.Core.Rpc
             _brokerName = brokerName;
             _consumerSettings = consumerSettings;
 
-            this.Channel = channel;
-            this.ReplyConsumer = new EventingBasicConsumer(channel);
-            this.ReplyQueueName = this.Channel.QueueDeclare().QueueName;
+            Channel = channel;
+            ReplyConsumer = new EventingBasicConsumer(channel);
+            ReplyQueueName = Channel.QueueDeclare().QueueName;
 
             // Pending requests by correlation value.
             _pendingRpcRequests = new ConcurrentDictionary<string, RpcPendingRequest>();
@@ -56,7 +55,7 @@ namespace NetFusion.RabbitMQ.Core.Rpc
         // Process the consumer's replays to submitted requests.
         private void ConsumeReplyQueue()
         {
-            this.Channel.BasicConsume(this.ReplyQueueName, true, this.ReplyConsumer);
+            this.Channel.BasicConsume(ReplyQueueName, true, ReplyConsumer);
             this.ReplyConsumer.Received += HandleReplyResponse;
         }
 
@@ -83,7 +82,7 @@ namespace NetFusion.RabbitMQ.Core.Rpc
 
             IBasicProperties basicProps = GetRequestProperties(command, rpcProps);
 
-            this.Channel.BasicPublish(DEFAULT_EXCHANGE, _consumerSettings.RequestQueueName,
+            Channel.BasicPublish(DEFAULT_EXCHANGE, _consumerSettings.RequestQueueName,
                 basicProps,
                 messageBody);
 
@@ -95,8 +94,7 @@ namespace NetFusion.RabbitMQ.Core.Rpc
             {
                 // If the pending request task has been canceled, remove the pending
                 // request and unregister the cancellation delegate.
-                RpcPendingRequest pendingRequest = null;
-                if (_pendingRpcRequests.TryRemove(correlationId, out pendingRequest))
+                if (_pendingRpcRequests.TryRemove(correlationId, out RpcPendingRequest pendingRequest))
                 {
                     pendingRequest.UnRegister();
                 }
@@ -113,7 +111,7 @@ namespace NetFusion.RabbitMQ.Core.Rpc
             IBasicProperties props = this.Channel.CreateBasicProperties();
 
             props.Headers = new Dictionary<string, object> { { RPC_BROKER_NAME, _brokerName } };
-            props.ReplyTo = this.ReplyQueueName;
+            props.ReplyTo = ReplyQueueName;
             props.CorrelationId = command.GetCorrelationId();
             props.ContentType = rpcProps.ContentType;
             props.Type = rpcProps.ExternalTypeName;
@@ -123,14 +121,13 @@ namespace NetFusion.RabbitMQ.Core.Rpc
 
         // When a response is received within the reply queue for a prior request,
         // find the corresponding pending request for the received correlation
-        // value and satisfy the result with the reply this will allow the caller
+        // value and satisfy the result with the reply - this will allow the caller
         // that is awaiting a reply to continue.
         private void HandleReplyResponse(object sender, BasicDeliverEventArgs evt)
         {
-            RpcPendingRequest pendingRequest = null;
             string correlationId = evt.BasicProperties.CorrelationId;
 
-            if (_pendingRpcRequests.TryRemove(correlationId, out pendingRequest))
+            if (_pendingRpcRequests.TryRemove(correlationId, out RpcPendingRequest pendingRequest))
             {
                 if (evt.BasicProperties.IsRpcReplyException())
                 {

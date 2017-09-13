@@ -15,7 +15,7 @@ namespace NetFusion.RabbitMQ.Exchanges
     {
         public RpcExchange()
         {
-            this.Settings.IsConsumerExchange = true;
+            Settings.IsConsumerExchange = true;
 
             QueueSettings.IsDurable = false;
             QueueSettings.IsNoAck = true;   

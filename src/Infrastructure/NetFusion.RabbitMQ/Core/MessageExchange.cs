@@ -30,7 +30,7 @@ namespace NetFusion.RabbitMQ.Core
             _queues = new List<ExchangeQueue>();
             _queueSettings = new QueueSettings();
 
-            this.Settings = new ExchangeSettings();
+            Settings = new ExchangeSettings();
         }
 
         public string BrokerName => Settings.BrokerName;
@@ -68,7 +68,7 @@ namespace NetFusion.RabbitMQ.Core
             var scriptAttrib = this.GetAttribute<ApplyScriptPredicateAttribute>();
             if (scriptAttrib != null)
             {
-                this.Settings.Predicate = scriptAttrib.ToPredicate();
+                Settings.Predicate = scriptAttrib.ToPredicate();
             }
         }
 
@@ -103,7 +103,7 @@ namespace NetFusion.RabbitMQ.Core
             Check.NotNull(channel, nameof(channel));
 
             // Declare the exchange and its queues.
-            CreateExchange(channel, this.Settings);
+            CreateExchange(channel, Settings);
             CreateQueues(channel);
         }
 
@@ -112,7 +112,7 @@ namespace NetFusion.RabbitMQ.Core
             // The default exchange is being used if the ExchangeType is null.
             if (settings.ExchangeType == null) return;
 
-            if (this.ExchangeName.IsNullOrWhiteSpace())
+            if (ExchangeName.IsNullOrWhiteSpace())
             {
                 throw new BrokerException(
                     "Exchange name must be specified for non-default exchange type.");
@@ -123,7 +123,7 @@ namespace NetFusion.RabbitMQ.Core
 
         private void CreateQueues(IModel channel)
         {
-            foreach (ExchangeQueue queue in this.Queues)
+            foreach (ExchangeQueue queue in Queues)
             {
                 AssertQueue(queue);
 
@@ -132,7 +132,7 @@ namespace NetFusion.RabbitMQ.Core
 
                 foreach (string routeKey in queue.RouteKeys)
                 {
-                    channel.QueueBind(queue.QueueName, this.ExchangeName, routeKey.ToUpper());
+                    channel.QueueBind(queue.QueueName, ExchangeName, routeKey.ToUpper());
                 }
             }
         }
@@ -144,12 +144,12 @@ namespace NetFusion.RabbitMQ.Core
                 if (queue.RouteKeys.Any(k => k == null))
                 {
                     throw new InvalidOperationException(
-                        $"The queue: {queue.QueueName} defined on exchange: {this.ExchangeName} has null route key values.");
+                        $"The queue: {queue.QueueName} defined on exchange: {ExchangeName} has null route key values.");
                 }
             }
         }
 
-        public virtual bool Matches(IMessage message)
+        public virtual bool Satisfies(IMessage message)
         {
             return true;
         }
@@ -177,11 +177,11 @@ namespace NetFusion.RabbitMQ.Core
 
         internal void ValidateRequiredRouteKey()
         {
-            if (this.Queues.Any(q => q.RouteKeys == null || q.RouteKeys.Empty()))
+            if (Queues.Any(q => q.RouteKeys == null || q.RouteKeys.Empty()))
             {
                 throw new BrokerException(
                     $"For this type of exchange, all queues must have a route-key specified. " +
-                    $"Exchange Type: {this.GetType()}.");
+                    $"Exchange Type: {GetType()}.");
             }
         }
 
@@ -208,7 +208,7 @@ namespace NetFusion.RabbitMQ.Core
                 props.ReplyTo = replyToQueueName;
             }
 
-            channel.BasicPublish(this.ExchangeName ?? "", routeKey ?? "", props, messageBody);
+            channel.BasicPublish(ExchangeName ?? "", routeKey ?? "", props, messageBody);
         }
 
         /// <summary>
@@ -253,10 +253,10 @@ namespace NetFusion.RabbitMQ.Core
     {
         public MessageExchange()
         {
-            this.MessageType = typeof(TMessage);
+            MessageType = typeof(TMessage);
         }
 
-        public override bool Matches(IMessage message)
+        public override bool Satisfies(IMessage message)
         {
             Check.NotNull(message, nameof(message));
             return Matches((TMessage)message);

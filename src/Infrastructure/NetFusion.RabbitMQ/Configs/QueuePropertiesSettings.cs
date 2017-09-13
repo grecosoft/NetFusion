@@ -27,7 +27,7 @@ namespace NetFusion.RabbitMQ.Configs
         public IList<string> RouteKeys { get; set; }
 
         /// <summary>
-        /// The number of consuming threads that should subscribe to the queue
+        /// The number of consumers that should subscribe to the queue
         /// and concurrently process messages.
         /// </summary>
         public int NumberConsumers { get; set; } = 1;

@@ -61,7 +61,7 @@ namespace NetFusion.RabbitMQ.Core
         /// <param name="message">The message being published.</param>
         /// <returns>Should return True if the event matches the exchange's criteria
         /// and should be posted.  Otherwise, False needs to be returned.</returns>
-        bool Matches(IMessage message);
+        bool Satisfies(IMessage message);
 
         /// <summary>
         /// Called to publish a message to the exchange.

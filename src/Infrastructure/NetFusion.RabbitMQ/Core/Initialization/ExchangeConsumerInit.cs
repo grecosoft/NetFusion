@@ -17,8 +17,10 @@ using System.Threading.Tasks;
 namespace NetFusion.RabbitMQ.Core.Initialization
 {
     /// <summary>
-    /// Encapsulates the logic for subscribing to message queues and 
-    /// consuming the published messages.
+    /// Encapsulates the logic for subscribing to message queues and consuming the published messages.
+    /// The subscriptions are determined by delegating to the messaging-module and finding all message
+    /// handlers decorated with QueueConsumerAttribute belonging to a IMessageConsumer decorated with
+    /// the BrokerAttribute.
     /// </summary>
     public class ExchangeConsumerInit: IBrokerInitializer, IDisposable
     {
@@ -58,6 +60,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                 
             _messageConsumers = consumers;
 
+            // Broker name will be null when re-creating the message consumers after a connection failure.
             IEnumerable<MessageConsumer> messageConsumers = brokerName == null ? _messageConsumers :
                 _messageConsumers.Where(c => c.BrokerName == brokerName).ToList();
 
@@ -109,6 +112,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             // if the default exchange is not specified.
             if (!messageConsumer.ExchangeName.IsNullOrWhiteSpace())
             {
+                // Apply any queue settings stored external in the application's configuration.
                 _brokerState.BrokerSettings.ApplyQueueSettings(messageConsumer);
                 consumerChannel.QueueBind(messageConsumer);
             }
@@ -138,7 +142,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                 {
                     // Since an unexpected exception occurred, reject the message and
                     // have the broker re-queue the message for another consumer.
-                    this.RejectAndRequeueMessage(messageHandler.Channel, deliveryEvent);
+                    RejectAndRequeueMessage(messageHandler.Channel, deliveryEvent);
                     _logger.LogError(RabbitMqLogEvents.MESSAGE_CONSUMER, "Error Consuming Message", ex);
                 }
             };

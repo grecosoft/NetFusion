@@ -15,12 +15,10 @@ using System.Threading;
 namespace NetFusion.RabbitMQ.Core.Initialization
 {
     /// <summary>
-    /// Encapsulates the logic for subscribing the queues on which the application 
-    /// will monitor for RPC style messages.  When a message arrives on the queue, 
-    /// it is processed by dispatching the message to it associated message handler
-    /// method.  After the message handler method is invoked, the response is sent
-    /// back to the originating caller by publishing the response on the corresponding 
-    /// reply queue specified by the caller.
+    /// Encapsulates the logic for subscribing the queues on which the application will monitor for RPC style messages.  
+    /// When a message arrives on the queue, it is processed by dispatching the message to its associated message handler
+    /// method.  After the message handler method is invoked, the response is sent back to the originating caller by 
+    /// publishing the response on the corresponding reply queue specified by the caller in the message header.
     /// </summary>
     public class RpcExchangeConsumerInit : IBrokerInitializer
     {
@@ -44,7 +42,8 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         /// <summary>
         /// Creates a consumer called when a message arrives on one of the RPC based queues.  
-        /// This consumer will dispatch the message to the corresponding message handler.
+        /// This consumer will dispatch the message to the corresponding message handler just
+        /// as if were an in-process published message.
         /// </summary>
         public void BindConsumersToRpcQueues()
         {
@@ -73,8 +72,10 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         {
             consumer.Received += (sender, deliveryEvent) => {
 
-                // Queue the message for processing so other messages can be received.
-                // This allows .NET to allocate and manage the needed threads.
+                // Queue the message for processing so other messages can be received.  This allows .NET to allocate 
+                // and manage the needed threads.  NOTE:  Since a worker thread is being used to process the message,
+                // the channel must NOT be touched.  This is not needed since the RPC message is NoAck and the response
+                // will be returned to the caller on another channel.
                 ThreadPool.QueueUserWorkItem((stateInfo) => RpcConsumerReplyReceived(deliveryEvent));
             };
         }
@@ -83,7 +84,9 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         {
             ValidateRpcReply(deliveryEvent);
 
-            // Determine the command type based on the type name stored in basic properties.
+            // Determine the command type based on the type name stored in basic properties.  NOTE: a command type name is
+            // just a value used to identify the type used to determine the C# class type on the receiving end corresponding
+            // to the type on the caller's end.  They may or may not be the same physical C# type.
             string typeName = deliveryEvent.BasicProperties.Type;
             Type commandType = _brokerState.RpcTypes[typeName];
 
@@ -97,7 +100,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                 result = _messagingModule.InvokeDispatcherAsync(dispatcher, message).Result;
 
                 // Publish the reply back to the publisher that made the request on the
-                // queue specified by them.
+                // queue specified by them in the message header on a new channel.
                 PublishConsumerReply(result, deliveryEvent.BasicProperties);
             }
             catch(AggregateException ex)
@@ -108,50 +111,6 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             {
                 PublishConsumerExceptionReply(ex, deliveryEvent.BasicProperties);
             }  
-        }
-
-        private void PublishConsumerReply(object response, IBasicProperties requestProps)
-        {
-            byte[] replyBody = _serializationMgr.Serialize(response, requestProps.ContentType);
-            PublishResponseToConsumer(replyBody, requestProps);
-        }
-
-        private void PublishConsumerExceptionReply(Exception ex, IBasicProperties requestProps)
-        {
-            var dispatchEx = ex as MessageDispatchException;
-            if (ex == null)
-            {
-                dispatchEx = new MessageDispatchException("Error dispatching RPC consumer", ex);
-            }
-
-            // Serialize the exception and make it the body of the message.  Indicate to the
-            // publisher that the message body is the exception by setting message header.
-            byte[] replyBody = _serializationMgr.Serialize(dispatchEx, requestProps.ContentType);
-            var headers = new Dictionary<string, object> { { RpcClient.RPC_HEADER_EXCEPTION_INDICATOR, true } };
-
-            PublishResponseToConsumer(replyBody, requestProps, headers);
-        }
-
-        private void PublishResponseToConsumer(byte[] replyBody, IBasicProperties requestProps, 
-            IDictionary<string, object> headers = null)
-        {
-            headers = headers ?? new Dictionary<string, object>();
-            string brokerName = requestProps.GetBrokerName();
-
-            using (var replychannel = _connMgr.CreateChannel(brokerName))
-            {
-                IBasicProperties replyProps = replychannel.CreateBasicProperties();
-                replyProps.ContentType = requestProps.ContentType;
-                replyProps.CorrelationId = requestProps.CorrelationId;
-                replyProps.Headers = headers;
-
-                IBasicProperties replyprops = replychannel.CreateBasicProperties();
-
-                replychannel.BasicPublish(exchange: "",
-                    routingKey: requestProps.ReplyTo,
-                    basicProperties: replyProps,
-                    body: replyBody);
-            }
         }
 
         private void ValidateRpcReply(BasicDeliverEventArgs deleveryEvent)
@@ -172,8 +131,54 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             if (!_brokerState.RpcTypes.ContainsKey(messageType))
             {
                 throw new BrokerException(
-                    $"The type associated with the message type name: {messageType} could not be resolved.");
+                    $"The type identified with the name: {messageType} could not be resolved to a corresponding .NET type.  " +
+                    $"Make sure there is a command deriving from: {nameof(ICommand)} decorated with the following attribute " +
+                    $"named: {nameof(RpcCommandAttribute)} specifying the type name.");
             }
+        }
+
+        private void PublishConsumerReply(object response, IBasicProperties requestProps)
+        {
+            byte[] replyBody = _serializationMgr.Serialize(response, requestProps.ContentType);
+            PublishResponseToConsumer(replyBody, requestProps);
+        }
+
+        private void PublishResponseToConsumer(byte[] replyBody, IBasicProperties requestProps,
+           IDictionary<string, object> headers = null)
+        {
+            headers = headers ?? new Dictionary<string, object>();
+            string brokerName = requestProps.GetBrokerName();
+
+            using (var replychannel = _connMgr.CreateChannel(brokerName))
+            {
+                IBasicProperties replyProps = replychannel.CreateBasicProperties();
+                replyProps.ContentType = requestProps.ContentType;
+                replyProps.CorrelationId = requestProps.CorrelationId;
+                replyProps.Headers = headers;
+
+                IBasicProperties replyprops = replychannel.CreateBasicProperties();
+
+                replychannel.BasicPublish(exchange: "",
+                    routingKey: requestProps.ReplyTo,
+                    basicProperties: replyProps,
+                    body: replyBody);
+            }
+        }
+
+        private void PublishConsumerExceptionReply(Exception ex, IBasicProperties requestProps)
+        {
+            var dispatchEx = ex as MessageDispatchException;
+            if (ex == null)
+            {
+                dispatchEx = new MessageDispatchException("Error dispatching RPC consumer", ex);
+            }
+
+            // Serialize the exception and make it the body of the message.  Indicate to the
+            // publisher that the message body is the exception by setting message header.
+            byte[] replyBody = _serializationMgr.Serialize(dispatchEx, requestProps.ContentType);
+            var headers = new Dictionary<string, object> { { RpcClient.RPC_HEADER_EXCEPTION_INDICATOR, true } };
+
+            PublishResponseToConsumer(replyBody, requestProps, headers);
         }
     }
 }

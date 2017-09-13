@@ -25,7 +25,7 @@ namespace NetFusion.Base.Scripting
            
         }
 
-        public Task<bool> SatifiesPredicate(object entity, ScriptPredicate predicate) 
+        public Task<bool> SatisfiesPredicate(object entity, ScriptPredicate predicate) 
         {
             return Task.FromResult(true);
         }

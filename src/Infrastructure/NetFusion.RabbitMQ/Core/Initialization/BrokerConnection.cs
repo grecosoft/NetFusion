@@ -20,7 +20,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// <param name="settings">The configured broker connection settings.</param>
         public BrokerConnection(BrokerConnectionSettings settings)
         {
-            this.Settings = settings;
+            Settings = settings;
         }
         
         /// <summary>

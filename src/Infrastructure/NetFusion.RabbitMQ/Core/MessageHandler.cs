@@ -10,8 +10,7 @@ namespace NetFusion.RabbitMQ.Core
     /// message consumer has a collection of these object.  By default,
     /// there will be only one consumer message-handler.  But this can
     /// be controlled via the broker configuration file for frequently
-    /// published messages so they can be handled by multiple consumer
-    /// threads.
+    /// published messages so they can be handled by multiple consumers.
     /// </summary>
     public class MessageHandler
     {
@@ -23,8 +22,8 @@ namespace NetFusion.RabbitMQ.Core
             Check.NotNull(channel, nameof(channel));
             Check.NotNull(eventConsumer, nameof(eventConsumer));
 
-            this.Channel = channel;
-            this.EventConsumer = eventConsumer;
+            Channel = channel;
+            EventConsumer = eventConsumer;
         }
     }
 }

@@ -38,9 +38,9 @@ namespace NetFusion.RabbitMQ.Core
             _queueName = _queueAttrib.QueueName;
             _routeKeys = _queueAttrib.RouteKeys ?? new string[] { };
 
-            this.MessageHandlers = new List<MessageHandler>();
+            MessageHandlers = new List<MessageHandler>();
 
-            this.DispatchInfo = dispatchInfo;
+            DispatchInfo = dispatchInfo;
         }
 
         /// <summary>

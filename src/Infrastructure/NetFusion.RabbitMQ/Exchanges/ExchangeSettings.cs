@@ -11,8 +11,8 @@ namespace NetFusion.RabbitMQ.Exchanges
     {
         public ExchangeSettings()
         {
-            this.Arguments = new Dictionary<string, object>();
-            this.ContentType = SerializerTypes.Json;
+            Arguments = new Dictionary<string, object>();
+            ContentType = SerializerTypes.Json;
         }
 
         /// <summary>

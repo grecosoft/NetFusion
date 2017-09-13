@@ -15,8 +15,7 @@ namespace NetFusion.RabbitMQ.Core.Rpc
     public interface IRpcClient
     {
         /// <summary>
-        /// The name of the queue on which replies to responses 
-        /// will be published.
+        /// The name of the queue on which replies to responses will be published.
         /// </summary>
         string ReplyQueueName { get; }
 

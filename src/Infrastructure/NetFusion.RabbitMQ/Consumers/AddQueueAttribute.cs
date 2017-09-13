@@ -1,5 +1,4 @@
 ﻿using NetFusion.Common;
-using NetFusion.Common.Extensions.Collection;
 using System.Linq;
 
 namespace NetFusion.RabbitMQ.Consumers
@@ -35,7 +34,7 @@ namespace NetFusion.RabbitMQ.Consumers
             base(null, exchangeName, QueueBindingTypes.Create)
         {
             Check.NotNullOrWhiteSpace(exchangeName, nameof(exchangeName));
-            this.QueueSettings.IsExclusive = true;
+            QueueSettings.IsExclusive = true;
         }
 
         /// <summary>
@@ -44,8 +43,8 @@ namespace NetFusion.RabbitMQ.Consumers
         /// </summary>
         public string RouteKey
         {
-            get { return this.RouteKeys.SingleOrDefault(); }
-            set { this.RouteKeys = new[] { value }; }
+            get { return RouteKeys.SingleOrDefault(); }
+            set { RouteKeys = new[] { value }; }
         }
 
         /// <summary>
@@ -53,8 +52,8 @@ namespace NetFusion.RabbitMQ.Consumers
         /// </summary>
         public bool IsDurable
         {
-            get { return this.QueueSettings.IsDurable; }
-            set { this.QueueSettings.IsDurable = value; }
+            get { return QueueSettings.IsDurable; }
+            set { QueueSettings.IsDurable = value; }
         }
 
         /// <summary>
@@ -63,8 +62,8 @@ namespace NetFusion.RabbitMQ.Consumers
         /// </summary>
         public bool IsAutoDelete
         {
-            get { return this.QueueSettings.IsAutoDelete; }
-            set { this.QueueSettings.IsAutoDelete = value; }
+            get { return QueueSettings.IsAutoDelete; }
+            set { QueueSettings.IsAutoDelete = value; }
         }
 
         /// <summary>
@@ -73,8 +72,8 @@ namespace NetFusion.RabbitMQ.Consumers
         /// </summary>
         public bool IsExclusive
         {
-            get { return this.QueueSettings.IsExclusive; }
-            set { this.QueueSettings.IsExclusive = value; }
+            get { return QueueSettings.IsExclusive; }
+            set { QueueSettings.IsExclusive = value; }
         }
 
         /// <summary>
@@ -84,8 +83,8 @@ namespace NetFusion.RabbitMQ.Consumers
         /// </summary>
         public bool IsNoAck
         {
-            get { return this.QueueSettings.IsNoAck; }
-            set { this.QueueSettings.IsNoAck = value; }
+            get { return QueueSettings.IsNoAck; }
+            set { QueueSettings.IsNoAck = value; }
         }
 
         /// <summary>
@@ -93,8 +92,8 @@ namespace NetFusion.RabbitMQ.Consumers
         /// </summary>
         public uint? PrefetchSize
         {
-            get { return this.QueueSettings.PrefetchSize; }
-            set { this.QueueSettings.PrefetchSize = value; }
+            get { return QueueSettings.PrefetchSize; }
+            set { QueueSettings.PrefetchSize = value; }
         }
 
         /// <summary>
@@ -102,8 +101,8 @@ namespace NetFusion.RabbitMQ.Consumers
         /// </summary>
         public ushort? PrefetchCount
         {
-            get { return this.QueueSettings.PrefetchCount; }
-            set { this.QueueSettings.PrefetchCount = value; }
+            get { return QueueSettings.PrefetchCount; }
+            set { QueueSettings.PrefetchCount = value; }
         }
     }
 }

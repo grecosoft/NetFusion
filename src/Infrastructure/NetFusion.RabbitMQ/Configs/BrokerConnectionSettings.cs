@@ -33,13 +33,13 @@ namespace NetFusion.RabbitMQ.Configs
         /// The user name to use when connecting to the broker.
         /// </summary>
         [Required(AllowEmptyStrings = false, ErrorMessage = "UserName Required")]
-        public string UserName { get; set; } = "guest";
+        public string UserName { get; set; } 
 
         /// <summary>
         /// The password to use when connecting to the broker.
         /// </summary>
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password Required")]
-        public string Password { get; set; } = "guest";
+        public string Password { get; set; }
         
         /// <summary>
         /// The configuration information for RPC queues defined by other applications
@@ -67,7 +67,7 @@ namespace NetFusion.RabbitMQ.Configs
         {
             Check.NotNull(queueName, nameof(queueName));
 
-            QueuePropertiesSettings props = this.QueueProperties.FirstOrDefault(qp => qp.QueueName == queueName);
+            QueuePropertiesSettings props = QueueProperties.FirstOrDefault(qp => qp.QueueName == queueName);
             return props ?? new QueuePropertiesSettings { QueueName = queueName };
         }
 

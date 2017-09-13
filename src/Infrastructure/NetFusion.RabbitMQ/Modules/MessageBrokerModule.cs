@@ -67,14 +67,14 @@ namespace NetFusion.RabbitMQ.Modules
 
         public override void Configure()
         {
-            var messageModule = this.Context.GetPluginModule<IMessagingModule>();
+            var messageModule = Context.GetPluginModule<IMessagingModule>();
 
             Type publisher = messageModule.MessagingConfig.PublisherTypes
                 .FirstOrDefault(pt => pt == typeof(RabbitMqMessagePublisher));
 
-            if (publisher == null && this.Exchanges.Any())
+            if (publisher == null && Exchanges.Any())
             {
-                this.Context.Logger.LogWarning(RabbitMqLogEvents.BROKER_CONFIGURATION,
+                Context.Logger.LogWarning(RabbitMqLogEvents.BROKER_CONFIGURATION,
                     $"Exchanges have been declared but the publisher of type: {typeof(RabbitMqMessagePublisher)} " + 
                     $"has not been registered-for messages to be published, this class must be registered." );
             }
@@ -97,7 +97,7 @@ namespace NetFusion.RabbitMQ.Modules
                 SerializationMgr = CreateSerializationManager(),
 
                 BrokerSettings = _brokerSettings,
-                Exchanges = this.Exchanges,
+                Exchanges = Exchanges,
                 RpcTypes = GetRpcCommandTypes()
             });
 
@@ -142,7 +142,7 @@ namespace NetFusion.RabbitMQ.Modules
 
         private void InitializeExchanges(BrokerSettings brokerSettings)
         {
-            foreach(IMessageExchange exchange in this.Exchanges)
+            foreach(IMessageExchange exchange in Exchanges)
             {
                 exchange.InitializeSettings(brokerSettings);
             }
@@ -182,7 +182,7 @@ namespace NetFusion.RabbitMQ.Modules
             // overrides for a given content type.  Only look in application specific
             // plug-ins.
 
-            IEnumerable<IBrokerSerializerRegistry> registries = this.Registries.CreatedFrom(this.Context.AllAppPluginTypes);
+            IEnumerable<IBrokerSerializerRegistry> registries = Registries.CreatedFrom(Context.AllAppPluginTypes);
             if (registries.Empty())
             {
                 return new Dictionary<string, IBrokerSerializer>();
@@ -271,8 +271,8 @@ namespace NetFusion.RabbitMQ.Modules
         // (they will be re-created when the consumer's broker reconnects).
         private IEnumerable<BrokerMeta> GetExchangeConfig()
         {
-            var publisherExchanges = this.GetPublisherMetadata();
-            var consumerExchanges = this.GetConsumerMetadata();
+            var publisherExchanges = GetPublisherMetadata();
+            var consumerExchanges = GetConsumerMetadata();
 
             return publisherExchanges.Concat(consumerExchanges)
                 .GroupBy(e => e.BrokerName)
@@ -286,7 +286,7 @@ namespace NetFusion.RabbitMQ.Modules
 
         private IEnumerable<ExchangeMeta> GetPublisherMetadata()
         {
-            return this.Exchanges.Select(e => new ExchangeMeta
+            return Exchanges.Select(e => new ExchangeMeta
             {
                 BrokerName = e.BrokerName,
                 ExchangeName = e.ExchangeName,
