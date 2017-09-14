@@ -16,13 +16,7 @@ namespace NetFusion.Domain.Messaging
         /// <summary>
         /// The optional result of executing the command.
         /// </summary>
-        public object Result { get; private set; }
-
-        /// <summary>
-        /// The type of the optional result.  Null if command does not have an
-        /// associated result.
-        /// </summary>
-        public Type ResultType { get; private set; }
+        public object Result { get; set; }
 
         public Command()
         {
@@ -43,14 +37,11 @@ namespace NetFusion.Domain.Messaging
             set { _attributes.SetValues(value); }
         }
 
-        /// <summary>
-        /// Sets the optional result of a command.
-        /// </summary>
-        /// <param name="result">The command's associated result.</param>
-        public void SetResult(object result)
+        Type ICommand.ResultType => null;
+
+        void ICommand.SetResult(object result)
         {
-            Result = result;
-            ResultType = result.GetType();
+            this.Result = result;
         }
     }
 
@@ -60,15 +51,39 @@ namespace NetFusion.Domain.Messaging
     /// the message.
     /// </summary>
     /// <typeparam name="TResult">The response type of the command.</typeparam>
-    public abstract class Command<TResult> : Command, ICommand<TResult>
+    public abstract class Command<TResult> : ICommand<TResult>
     {
+        private IEntityAttributes _attributes;
+
         /// <summary>
         /// The result of executing the command.
         /// </summary>
-        public new TResult Result
+        public TResult Result { get; set; }
+
+        public Command()
         {
-            get => (TResult)base.Result;
-            set => SetResult(value);
+            _attributes = new EntityAttributes();
+        }
+
+        /// <summary>
+        /// Dynamic message attributes.
+        /// </summary>
+        public IEntityAttributes Attributes => _attributes;
+
+        /// <summary>
+        /// Dynamic message attribute values.
+        /// </summary>
+        public IDictionary<string, object> AttributeValues
+        {
+            get { return _attributes.GetValues(); }
+            set { _attributes.SetValues(value); }
+        }
+
+        Type ICommand.ResultType => typeof(TResult);
+
+        void ICommand.SetResult(object result)
+        {
+            this.Result = (TResult)result;
         }
     }
 }
