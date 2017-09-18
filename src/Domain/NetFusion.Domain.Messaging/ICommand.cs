@@ -11,6 +11,11 @@ namespace NetFusion.Domain.Messaging
     public interface ICommand : IMessage
     {
         /// <summary>
+        /// The optional result of the command.
+        /// </summary>
+        object Result { get; }
+
+        /// <summary>
         /// The type of the result associated with the command.
         /// </summary>
         Type ResultType { get; }
@@ -32,6 +37,6 @@ namespace NetFusion.Domain.Messaging
     /// processed the message.</typeparam>
     public interface ICommand<TResult> : ICommand
     {
-        TResult Result { get; }
+        new TResult Result { get; }
     }
 }
