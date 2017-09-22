@@ -42,8 +42,7 @@ namespace NetFusion.Rest.Server.Hal
 
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
         {
-            var resource = context.Object as IHalResource;
-            if (resource != null)
+            if (context.Object is IHalResource resource)
             {
                 ResourceContext resourceContext = CreateContext(context.HttpContext);
                 ApplyMetadataToResource(resource, resourceContext);
@@ -69,20 +68,18 @@ namespace NetFusion.Rest.Server.Hal
             {
                 // Check if the embedded resource is a collection of resources and if so
                 // apply the metadata to each contained resource.
-                var resourceColl = embeddedResource as IEnumerable;
-                if (resourceColl != null)
+                if (embeddedResource is IEnumerable resourceColl)
                 {
                     foreach (IHalResource childResource in resourceColl.OfType<IHalResource>())
                     {
-                        ApplyMetadataToResource(childResource, resourceContext);                        
+                        ApplyMetadataToResource(childResource, resourceContext);
                     }
 
                     return;
                 }
 
                 // Add metadata to single embedded resource.
-                var halResource = embeddedResource as IHalResource;
-                if (halResource != null)
+                if (embeddedResource is IHalResource halResource)
                 {
                     ApplyMetadataToResource(halResource, resourceContext);
                 }

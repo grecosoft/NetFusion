@@ -69,7 +69,7 @@ namespace NetFusion.Rest.Server.Mappings
             var routeValues = GetModelRouteValues(context, actionLink);
             var link = new Link
             {
-                // Deleted to ASP.NET Core to get the URL corresponding to the route-values.
+                // Delegate to ASP.NET Core to get the URL corresponding to the route-values.
                 Href = context.UrlHelper.Action(actionLink.Action, controllerName, routeValues),
                 Templated = false,
                 Methods = actionLink.Methods.ToArray()
@@ -118,7 +118,7 @@ namespace NetFusion.Rest.Server.Mappings
             SetLinkOptionalDescriptors(actionLink, link);
             SetLinkBasedDescriptors(context, actionLink, link);
 
-            // Only generated links with relation-names are added to the resource.
+            // Only generate links with relation-names are added to the resource.
             if (actionLink.RelationName != null)
             {
                 var linkedResource = (ILinkedResource)context.Resource;

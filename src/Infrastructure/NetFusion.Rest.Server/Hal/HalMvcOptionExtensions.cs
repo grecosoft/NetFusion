@@ -12,6 +12,13 @@ namespace NetFusion.Rest.Server.Hal
     /// </summary>
     public static class HalMvcOptionExtensions
     {
+        /// <summary>
+        /// Adds formatter to the pipeline that checks for a resources and determines the
+        /// links that should be returned. 
+        /// </summary>
+        /// <param name="options">The MVC options passed from Web API host.</param>
+        /// <param name="settings">The optional JSON serialization settings to use.</param>
+        /// <returns></returns>
         public static MvcOptions UseHalFormatter(this MvcOptions options, JsonSerializerSettings settings = null)
         {
             if (options == null)

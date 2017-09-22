@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions;
 using NetFusion.Rest.Client;
@@ -6,36 +7,35 @@ using NetFusion.Rest.Client.Core;
 using NetFusion.Rest.Client.Resources;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
+using NetFusion.Rest.Config.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Logging;
-using NetFusion.Rest.Config.Core;
 
 namespace NetFusion.Rest.Config.Modules
 {
     /// <summary>
-    /// Plugin-Module responsible for reading request client aplication settings
-    /// and configuring the RequestClientFactory instance.  A given configuation
-    /// can specify an entry-point URL used to describe initial URL called to 
-    /// return resources managed by the service.  After this point, the client
-    /// navigates using links relations assocted with the returned resource.
+    /// Plugin-Module responsible for reading request client application settings and configuring the RequestClientFactory 
+    /// instance.  A given configuration can specify an entry-point URL used to describe initial URL called to return resources 
+    /// managed by the service.  After this point, the client navigates using links relations associated with the returned resource.
     /// </summary>
     public class ClientFactoryModule : PluginModule,
         IClientFactoryModule
     {
         private bool _disposed;
 
-        private Dictionary<string, string> _addressNameMappings;
-        private Dictionary<string, Lazy<HalEntryPointResource>> _entryPointMappings;
+        private Dictionary<string, string> _addressNameMappings;                // SimpleName ==> BaseUrl
+        private Dictionary<string, HalEntryPointResource> _entryPointMappings;  // BaseUrl ==> EntryPoint
 
         public ClientFactoryModule()
         {
-            _entryPointMappings = new Dictionary<string, Lazy<HalEntryPointResource>>();
+            _entryPointMappings = new Dictionary<string, HalEntryPointResource>();
         }
 
         public override void RegisterComponents(ContainerBuilder builder)
         {
+            // Register the component that can be injected into application components
+            // and used to make HTTP calls.
             builder.RegisterType<ClientFactoryComponent>()
                 .As<IRequestClientFactory>()
                 .SingleInstance();
@@ -46,18 +46,16 @@ namespace NetFusion.Rest.Config.Modules
             var factorySettings = scope.Resolve<ClientFactorySettings>();
             if (factorySettings == null || factorySettings.Clients == null)
             {
-                return;
+                // No registered HTTP configurations.
+                return; 
             }
 
             CreateAddressNameMapping(factorySettings);
             RegisterClientsWithFactory(factorySettings);
-            LazyLoadClientEntryPoints(factorySettings);
+            LoadClientEntryPoints(factorySettings);
         }        
 
-        // The RequestFactory can be used outside of the NetFusion.Rest.Confg plug-in.
-        // The RequestFactory tracks RequestClients by their associated base address.
-        // When using NetFusion.Rest.Config, a simple name can be assocated with the
-        // base address.
+        // Create a mapping between a simple name to identify an endpoint and the base URL.
         private void CreateAddressNameMapping(ClientFactorySettings factorySettings)
         {
             _addressNameMappings = factorySettings.Clients
@@ -77,15 +75,17 @@ namespace NetFusion.Rest.Config.Modules
             }
         }
 
+        // Creates new request settings populated from the defined configuration settings.
         private IRequestSettings BuildRequestSettings(ClientSettings settings)
         {
-            // Create new request settings instance to be populated
-            // from the defined configuration settings.
             var requestSettings = RequestSettings.Create();
 
-            if (!string.IsNullOrWhiteSpace(settings.AcceptType))
+            if (settings.AcceptTypes != null)
             {
-                requestSettings.Headers.AcceptMediaType(settings.AcceptType);
+                foreach(AcceptType acceptType in settings.AcceptTypes)
+                {
+                    requestSettings.Headers.AcceptMediaType(acceptType.Accept, acceptType.Quality);
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(settings.ContentType))
@@ -109,9 +109,12 @@ namespace NetFusion.Rest.Config.Modules
             return requestSettings;
         }
 
-        private void LazyLoadClientEntryPoints(ClientFactorySettings factorySettings)
+        // For each service API with a configured entry point, invoke the entry-point URL and cache 
+        // the entry-point resource.  The entry-point resource contains template URLs used to load 
+        // initial resources after which links returned directly on resources are used for navigation.  
+        // This is a common pattern providing an entry into an API.
+        private void LoadClientEntryPoints(ClientFactorySettings factorySettings)
         {
-            // Local method called when entry resource is lazy loaded.
             HalEntryPointResource GetEntry(ClientSettings clientSettings)
             {
                 var client = RequestClientFactory.Instance.GetClient(clientSettings.BaseAddress);
@@ -146,8 +149,7 @@ namespace NetFusion.Rest.Config.Modules
 
             foreach (ClientSettings clientSettings in clientsWithEntryPoints)
             {
-                _entryPointMappings[clientSettings.BaseAddress] = new Lazy<HalEntryPointResource>(
-                    () => GetEntry(clientSettings));
+                _entryPointMappings[clientSettings.BaseAddress] = GetEntry(clientSettings);
             }
         }
 
@@ -172,13 +174,13 @@ namespace NetFusion.Rest.Config.Modules
 
             string baseAddress = GetBaseAddressForName(clientName);
 
-            if (!_entryPointMappings.TryGetValue(baseAddress, out Lazy<HalEntryPointResource> entryResource))
+            if (!_entryPointMappings.TryGetValue(baseAddress, out HalEntryPointResource entryResource))
             {
                 throw new InvalidCastException(
                     $"Entry Point Resource not register for the client name: {clientName}");
             }
 
-            return entryResource.Value;
+            return entryResource;
         }
 
         protected override void Dispose(bool dispose)

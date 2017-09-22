@@ -127,19 +127,9 @@ namespace NetFusion.Rest.Client
             if (link == null)
                 throw new ArgumentNullException(nameof(link), "Link not specified.");
 
-            AssertLink(link);
-
-            var request = new ApiRequest
-            {
-                RequestUri = link.Href,
-                Method = new HttpMethod(link.Methods.First()),
-                IsTemplate = link.Templated
-            };
-
-            request.AssertRequest();
-            return request;
+            return CreateFromLink(link.Href, link);
         }
-
+        
         /// <summary>
         /// Creates a new request based on a provided link and route values.
         /// </summary>
@@ -154,13 +144,15 @@ namespace NetFusion.Rest.Client
             if (tokens == null)
                 throw new ArgumentNullException(nameof(tokens), "Route value dictionary not specified.");
 
+            // Note: The href of the Link must not be set to the URL after replacing tokens since
+            // template links need to be able to be reused.
+            string href = link.Href;
             if (link.Templated)
             {
-                link.Href = ReplaceTemplateTokensWithValues(link.Href, tokens);
-                link.Templated = IsTemplateUrl(link.Href);
+                href = ReplaceTemplateTokensWithValues(href, tokens);
             }
 
-            return Create(link);
+            return CreateFromLink(href, link);
         }
 
         /// <summary>
@@ -177,6 +169,27 @@ namespace NetFusion.Rest.Client
             var expando = new ExpandoObject();
             tokens(expando);
             return Create(link, expando);
+        }
+
+        private static ApiRequest CreateFromLink(string href, Link link)
+        {
+            if (IsTemplateUrl(href))
+            {
+                throw new InvalidOperationException(
+                    $"Links containing non populated template URL tokens can't be requested.");
+            }
+
+            AssertLink(link);
+
+            var request = new ApiRequest
+            {
+                RequestUri = href,
+                Method = new HttpMethod(link.Methods.First()),
+                IsTemplate = false
+            };
+
+            request.AssertRequest();
+            return request;
         }
 
         /// <summary>
@@ -215,7 +228,7 @@ namespace NetFusion.Rest.Client
         /// <param name="names">Names.</param>
         public ApiRequest Embed(params string[] names)
         {
-            this.EmbeddedNames = string.Join(",", names); ;
+            EmbeddedNames = string.Join(",", names); ;
             return this;
         }
 
@@ -234,8 +247,8 @@ namespace NetFusion.Rest.Client
             if (tokens == null)
                 throw new ArgumentNullException(nameof(tokens), "Route value dictionary not specified.");
 
-            this.RequestUri = ReplaceTemplateTokensWithValues(this.RequestUri, tokens);
-            this.IsTemplate = IsTemplateUrl(this.RequestUri);
+            RequestUri = ReplaceTemplateTokensWithValues(RequestUri, tokens);
+            IsTemplate = IsTemplateUrl(RequestUri);
             return this;
         }
 
@@ -272,12 +285,6 @@ namespace NetFusion.Rest.Client
 
 		private static void AssertLink(Link link)
 		{
-			if (link.Templated)
-			{
-				throw new InvalidOperationException(
-					$"Links containing non populated template URL tokens can't be requested.");
-			}
-
 			if (!link.Methods.Any())
 			{
 				throw new InvalidOperationException($"Link Method value not specified for Href: {link.Href}.");

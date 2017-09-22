@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 namespace NetFusion.Rest.Server.Actions
 {
     /// <summary>
-    /// Extension methods for querying a controller's action methods.
+    /// Extension methods for querying a controller's action methods.  Also used
+    /// to find action methods matching a specified set of conventions.
     /// </summary>
     public static class ActionExtensions
     {
@@ -35,7 +36,8 @@ namespace NetFusion.Rest.Server.Actions
 		}
 
         /// <summary>
-        /// Allows a controller's methods to be queried.
+        /// Allows a controller's methods to be queried.  This is used when finding controller action
+        /// based on a given convention (i.e. typical CRUD API methods for a resource type).
         /// </summary>
         /// <param name="controllerMethods">The list of controller methods.</param>
         /// <param name="resourceType">The resource type for which action methods are being queried.</param>
@@ -79,7 +81,7 @@ namespace NetFusion.Rest.Server.Actions
         {
             return actionMethod.GetParameters()
                 .Select(p => p.ParameterType)
-                .SingleOrDefault(pt => pt.IsDerivedFrom<IResource>());
+                .FirstOrDefault(pt => pt.IsDerivedFrom<IResource>());
         }
 
         /// <summary>
@@ -90,6 +92,11 @@ namespace NetFusion.Rest.Server.Actions
         /// if no resource is returned.</returns>
         public static Type GetActionResponseResourceType(MethodInfo methodInfo)
         {
+            if (methodInfo.ReturnType == null)
+            {
+                return null;
+            }
+
             if (methodInfo.ReturnType.IsDerivedFrom<IResource>())
             {
                 return methodInfo.ReturnType;
@@ -100,19 +107,24 @@ namespace NetFusion.Rest.Server.Actions
                 return methodInfo.ReturnType.GenericTypeArguments.First();
             }
 
+            // This is the case if the action method returns a ASP.NET generic response type and
+            // the action return type can't be determined by the method declaration.  The action
+            // return type in this case can be specified via an attribute.
             var responseResourceAttrib = methodInfo.GetAttribute<ResourceTypeAttribute>();
             return responseResourceAttrib?.ResourceType;
         }
 
         /// <summary>
-        /// Creates a list of ActionUrlLinks from a list of ActionMethodInfo instances describing a
-        /// a set of controller action methods.  These links can be returned to the client and used
-        /// to invoke the corresponding action method.
+        /// Creates a list of ActionUrlLinks from a list of ActionMethodInfo instances describing a set of controller 
+        /// action methods found based on conventions.  These links can be returned to the client and used to invoke 
+        /// the corresponding action method.
         /// </summary>
         /// <param name="source">The action method information used to generate action links.</param>
         /// <returns>Link metadata used to generate resource specific links.</returns>
         public static IEnumerable<ActionUrlLink> ToActionLink(this IEnumerable<ActionMethodInfo> source)
-        {            
+        {
+            var validConventionBasedHttpMethods = new[] { HttpMethod.Post.Method, HttpMethod.Delete.Method };
+
             foreach (ActionMethodInfo methodInfo in source)
             {
                 ActionUrlLink actionLink = null;
@@ -120,7 +132,7 @@ namespace NetFusion.Rest.Server.Actions
                 {
                     actionLink = new ActionUrlLink(methodInfo.IdentityParamValue);
                 }
-                else if (methodInfo.Methods.Contains(HttpMethod.Post.Method))
+                else if (methodInfo.Methods.Any(m => validConventionBasedHttpMethods.Contains(m)))
                 {
                     actionLink = new ActionUrlLink();
                 }
@@ -136,6 +148,8 @@ namespace NetFusion.Rest.Server.Actions
             }
         }
 
+        // Returns an instance of an object containing the details for a given action method that
+        // can be searched to find action methods based on know conventions.
         private static ActionMethodSearchInfo GetActionMethodCallInfo(MethodInfo actionMethod, Type resourceType)
         {
             var callInfo = new ActionMethodSearchInfo
@@ -158,6 +172,8 @@ namespace NetFusion.Rest.Server.Actions
             return resourceParams.Count() == 1;
         }
 
+        // Returns an object instance containing the property on the resource and the associated action method
+        // argument corresponding to the identity value of the resource.
         private static ActionParamValue GetActionResourceIdentityValue(MethodInfo actionMethod, Type resourceType)
         {
             var resourceProps = resourceType.GetProperties(
@@ -195,36 +211,18 @@ namespace NetFusion.Rest.Server.Actions
 
         private static string[] GetHttpMethods(MethodInfo actionMethodInfo)
         {
-            return actionMethodInfo.GetCustomAttributes<HttpMethodAttribute>(true)
+            return actionMethodInfo.GetCustomAttributes<HttpMethodAttribute>(false)
                 .SelectMany(a => a.HttpMethods)
                 .ToArray();
         }
 
         private static bool ReturnsResource(this MethodInfo source, Type resourceType)
         {
-            Type returnType = null;
-
-            var returnTypeAttrib = source.GetAttribute<ResourceTypeAttribute>();
-            if (returnTypeAttrib != null)
-            {
-                returnType = returnTypeAttrib.ResourceType;
-            }
-
-            if (returnType == null)
-            {
-                returnType = source.ReturnType;
-            }
-
-            if (returnType == null)
-            {
-                return false;
-            }
-
-            Type resourceTaskType = typeof(Task<>).MakeGenericType(resourceType);
-            return returnType == resourceType || returnType == resourceTaskType;
+            Type returnResourceType = GetActionResponseResourceType(source);
+            return returnResourceType == resourceType;           
         }
 
-        // Selects the search results into a class returned to the consumer for querying action methods.
+        // Selects the search results into a class returned to the consumer executing the search.
         private static IEnumerable<ActionMethodInfo> SelectActionInfo(
             this IEnumerable<ActionMethodSearchInfo> actionMethods)
         {
@@ -237,6 +235,8 @@ namespace NetFusion.Rest.Server.Actions
             });
         }
        
+        // Private class containing action method details searched to find
+        // action methods matching a specific set of conventions.
         private class ActionMethodSearchInfo
         {
             public Type ResourceType { get; set; }

@@ -10,8 +10,16 @@ namespace NetFusion.Rest.Server.Modules
         /// <returns>The controller suffix.</returns>
         string GetControllerSuffix();
 
-        string GetTypeScriptDirectoryName();
-
+        /// <summary>
+        /// The directory containing XML documents with controller action documentation.
+        /// </summary>
+        /// <returns></returns>
         string GetControllerDocDirectoryName();
+
+        /// <summary>
+        /// The directory containing TypeScript definitions for returned resources.
+        /// </summary>
+        /// <returns>Directory Name.</returns>
+        string GetTypeScriptDirectoryName();        
     }
 }

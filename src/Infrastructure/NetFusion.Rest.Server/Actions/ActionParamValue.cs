@@ -21,9 +21,8 @@ namespace NetFusion.Rest.Server.Actions
         public string ActionParamName { get; }
 
         /// <summary>
-        /// The property on the resource corresponding to the ActionParamName.
-        /// When generating links, the value of this property on the resource 
-        /// is used as the corresponding route-value.
+        /// The property on the resource corresponding to the ActionParamName.  When generating links,
+        /// the value of this property on the resource is used as the corresponding route-value.
         /// </summary>
         public string ResourcePropName { get; }
 

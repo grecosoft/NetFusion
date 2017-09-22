@@ -26,7 +26,10 @@ namespace NetFusion.Rest.Resources.Hal
 		/// <param name="named">Optional name used to identity the embedded resource.</param>
 		public void Embed(IHalResource embeddedResource, string named = null)
 		{
-			EmbedResource(embeddedResource, named);
+            if (embeddedResource == null)
+                throw new ArgumentNullException(nameof(embeddedResource), "Resource to embedded not specified.");
+
+            EmbedResource(embeddedResource, named);
 		}
 
 		/// <summary>
@@ -46,9 +49,6 @@ namespace NetFusion.Rest.Resources.Hal
 
 		private void EmbedResource(IResource embeddedResource, string named = null)
 		{
-            if (embeddedResource == null)
-                throw new ArgumentNullException(nameof(embeddedResource), "Resource to embedded not specified.");
-
             string embeddedName = named ?? GetResourceEmbeddedName(embeddedResource);
             if (embeddedName == null)
             {

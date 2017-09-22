@@ -1,6 +1,6 @@
 ﻿using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Rest.Resources.Doc;
-using NetFusion.Rest.Server.Resources.Core;
+using NetFusion.Rest.Server.Resources;
 using System;
 using System.Linq;
 using System.Reflection;

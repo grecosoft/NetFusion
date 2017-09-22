@@ -49,6 +49,9 @@ namespace NetFusion.Rest.Server.Actions
                 .SelectMany(a => a.HttpMethods);
         }
 
+        // Associates the action method argument to the corresponding resource property
+        // used to populate the argument.  This is used when sending the route-info to
+        // ASP.NET Core to resolve the corresponding URL.
         private void SetRouteValues(LambdaExpression expression)
         {
             // The specified controller action declared method parameters:
@@ -62,8 +65,7 @@ namespace NetFusion.Rest.Server.Actions
                 // The input argument to the action method parameter:
                 var passedArg = controllerAction.Arguments[i];
 
-                var propExpArg = passedArg as MemberExpression;
-                if (propExpArg != null)
+                if (passedArg is MemberExpression propExpArg)
                 {
                     var propInfo = (PropertyInfo)propExpArg.Member;
                     var actionParam = actionParams[i];
@@ -73,8 +75,8 @@ namespace NetFusion.Rest.Server.Actions
                     continue;
                 }
 
-                var unaryExpArg = passedArg as UnaryExpression;
-                if (unaryExpArg != null)
+                // This is the case when the action parameter specifies a default value.
+                if (passedArg is UnaryExpression unaryExpArg)
                 {
                     var operand = (MemberExpression)unaryExpArg.Operand;
                     var propInfo = (PropertyInfo)operand.Member;

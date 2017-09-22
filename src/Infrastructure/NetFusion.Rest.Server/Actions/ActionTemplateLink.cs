@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NetFusion.Rest.Server.Actions
+﻿namespace NetFusion.Rest.Server.Actions
 {
     /// <summary>
     /// Represents a link containing an URL template with tokens 

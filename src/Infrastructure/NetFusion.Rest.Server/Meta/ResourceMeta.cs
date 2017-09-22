@@ -13,7 +13,8 @@ namespace NetFusion.Rest.Server.Meta
     /// Base resource metadata associated with resource.
     /// </summary>
     /// <typeparam name="TResourceMeta">Derived metadata class containing specific metadata.  This is the type
-    /// returned from the fluent methods.  This allows method chaining to be applied based on the derived type.</typeparam>
+    /// returned from the fluent methods.  This allows method chaining to be applied based on the derived type.
+    /// </typeparam>
     /// <typeparam name="TResource">The type of resource associated with the metadata.</typeparam>
     public class ResourceMeta<TResourceMeta, TResource> : IResourceMeta
 	    where TResource : class, IResource

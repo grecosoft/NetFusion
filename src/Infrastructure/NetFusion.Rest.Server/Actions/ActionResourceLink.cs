@@ -71,17 +71,17 @@ namespace NetFusion.Rest.Web.Actions
             FormattedUrl = (string)formatUrlConstant.Value;
         }
 
-        // Obtains the PropertyInfo for all resource properties using in the format string.
+        // Obtains the PropertyInfo for all resource properties used in the format string.
         private void SetUrlFormattedValues(MethodCallExpression formatUrlCallExp)
         {
             var resourceProps = new List<PropertyInfo>();
 
             AddExpressionArgs(formatUrlCallExp.Arguments, resourceProps);
 
+            // Checks for the case where the arguments to be formatted are specified as an array.
             if (!resourceProps.Any() && formatUrlCallExp.Arguments.Count() == 2)
             {
-                var arrayExp = formatUrlCallExp.Arguments[1] as NewArrayExpression;
-                if (arrayExp != null)
+                if (formatUrlCallExp.Arguments[1] is NewArrayExpression arrayExp)
                 {
                     AddExpressionArgs(arrayExp.Expressions, resourceProps);
                 }
@@ -95,9 +95,8 @@ namespace NetFusion.Rest.Web.Actions
             for (var i = 0; i < arguments.Count(); i++)
             {
                 var memberExp = arguments[i] as MemberExpression;
-                var propInfo = memberExp?.Member as PropertyInfo;
 
-                if (propInfo != null)
+                if (memberExp?.Member is PropertyInfo propInfo)
                 {
                     resourceProps.Add(propInfo);
                     continue;
@@ -132,7 +131,7 @@ namespace NetFusion.Rest.Web.Actions
         }
 
         // The formatted string can be applied to another resource type if it has all the
-        // same properties of the same type.
+        // same properties of the same type contained in the URL format string.
         internal override bool CanBeAppliedTo(Type resourceType)
         {
             var resourceProps = resourceType.GetProperties();

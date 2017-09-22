@@ -8,7 +8,7 @@ using NetFusion.Rest.Resources.Doc;
 using NetFusion.Rest.Server.Actions;
 using NetFusion.Rest.Server.Documentation.Core;
 using NetFusion.Rest.Server.Modules;
-using NetFusion.Rest.Server.Resources.Core;
+using NetFusion.Rest.Server.Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,13 +21,13 @@ namespace NetFusion.Rest.Server.Documentation.Modules
     /// <summary>
     /// Plug-in module responsible for lazy loading the controller action method documentation.  
     /// This code is not executed until the a request is made for documentation.  The documentation 
-    /// associated for each  action method is lazy loaded upon the first request.
+    /// associated for each action method is lazy loaded upon the first request.
     /// </summary>
     public class DocModule : PluginModule, 
         IDocModule
     {
-        private Dictionary<Type, ActionRegistration[]> _actionDocs; // <Controller, Action Doc>
-        private Dictionary<Type, Lazy<DocResource>> _resourceDocs;  // <Resource, Resource Doc>
+        private Dictionary<Type, ActionRegistration[]> _actionDocs; // Controller --> Action Doc
+        private Dictionary<Type, Lazy<DocResource>> _resourceDocs;  // Resource --> Resource Doc
         private EnvironmentSettings _environmentSettings;
         private CommonDefinitions _commonDefinitions;
 
@@ -92,17 +92,25 @@ namespace NetFusion.Rest.Server.Documentation.Modules
         // overridden by action specific descriptions.
         private void LoadCommonDefinitions()
 		{
+            XElement xElement = null;
 			if (!File.Exists(CommonDefinitionPath))
 			{
 				_commonDefinitions = new CommonDefinitions();
 			}
+            else
+            {
+                xElement = XElement.Load(CommonDefinitionPath);
+                if (xElement == null)
+                {
+                    _commonDefinitions = new CommonDefinitions();
+                }
+            }
 
-			var xElement = XElement.Load(CommonDefinitionPath);
-			if (xElement == null)
-			{
-				_commonDefinitions = new CommonDefinitions();
-			}
-
+            if (xElement == null)
+            {
+                return;
+            }
+			
 			_commonDefinitions = new CommonDefinitions
 			{
 				HttpCodes = GetActionDocHttpCodes(xElement).ToArray(),
@@ -265,7 +273,7 @@ namespace NetFusion.Rest.Server.Documentation.Modules
             IEnumerable<DocHttpCode> xmlDocHttpCodes = GetActionDocHttpCodes(actionDocElem);
 
             // Determine documentation for each HTTP status code specified on the action
-            // method populated from reading the DocActionAttribute.
+            // method specified by the DocAction Attribute.
             foreach (DocHttpCode httpCode in actionDoc.HttpCodes)
             {
                 // Check if specific description is specified and use it.  If not check if a
@@ -285,6 +293,8 @@ namespace NetFusion.Rest.Server.Documentation.Modules
             IEnumerable<DocEmbeddedResource> xmlDocEmbedded = GetEmbeddedResources(actionDocElem);
             var embededResDocs = new List<DocEmbeddedResource>();
 
+            // For each embedded resource name specified by the DocEmbeddedResource Attribute on the action
+            // method lookup the resource's documentation.
             foreach (ActionEmbeddedName embeddedName in docAction.EmbeddedNames)
             {
                 // Check if the controller specific documentation contains description for embedded resource.

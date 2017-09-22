@@ -1,9 +1,10 @@
 ﻿namespace NetFusion.Rest.Resources.Hal
 {
     /// <summary>
-    /// Secondary service associated with the API entry point
-    /// resource to which consuming applications can connect
-    /// to receive the service's associated endpoint resource.
+    /// Secondary service associated with the API entry point resource to which consuming
+    /// applications can connect to receive the service's associated endpoint resource.
+    /// NOTE:  This would be the case if the client was connecting to multiple services
+    /// and not using an API Gateway.
     /// </summary>
     public class HalSecondaryService
     {

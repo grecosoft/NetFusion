@@ -6,7 +6,8 @@ using System.Collections.Generic;
 namespace NetFusion.Rest.Server.Mappings
 {
     /// <summary>
-    /// Implementation specifies how REST based attributes are mapped to a resource.
+    /// Implementation specifies how REST based attributes are mapped to a resource
+    /// for a given media type (i.e. HAL).
     /// </summary>
     public interface IResourceMap : IKnownPluginType
     {

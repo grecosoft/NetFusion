@@ -20,6 +20,12 @@ namespace NetFusion.Rest.Server.Modules
         /// <returns>The mapped resource name.</returns>
         string GetMappedResourceName(Type resourceType);
 
+        /// <summary>
+        /// Returns the resource metadata based on the media type specified in the request header.
+        /// </summary>
+        /// <param name="headers">The request headers.</param>
+        /// <param name="resourceType">The resource type.</param>
+        /// <returns></returns>
         IResourceMeta GetRequestedResourceMediaMeta(IHeaderDictionary headers, Type resourceType);
 
         /// <summary>

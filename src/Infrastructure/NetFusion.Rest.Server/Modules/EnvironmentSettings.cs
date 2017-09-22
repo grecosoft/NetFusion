@@ -3,6 +3,9 @@ using System.IO;
 
 namespace NetFusion.Rest.Server.Modules
 {
+    /// <summary>
+    /// Contains settings based on the current execution environment.
+    /// </summary>
     public class EnvironmentSettings
     {
         private readonly IHostingEnvironment _hostingEnvironment;
@@ -16,11 +19,19 @@ namespace NetFusion.Rest.Server.Modules
             _restModule = restModule;
         }
 
+        /// <summary>
+        /// The directory containing the controller XML documents.
+        /// </summary>
+        /// <returns></returns>
         public string GetControllerDocPath()
         {
             return Path.Combine(_hostingEnvironment.ContentRootPath, _restModule.GetControllerDocDirectoryName());
         }
 
+        /// <summary>
+        /// The optional directory containing type-script definitions.
+        /// </summary>
+        /// <returns></returns>
         public string GetTypeScriptPath()
         {
             return Path.Combine(_hostingEnvironment.ContentRootPath, _restModule.GetTypeScriptDirectoryName());

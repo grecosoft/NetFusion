@@ -42,6 +42,7 @@ namespace NetFusion.Rest.Server.Documentation.Core
             }
             else
             {
+                // Call the actual API method since not a documentation request.
                 await next();
             }
         }

@@ -13,8 +13,7 @@ namespace NetFusion.Rest.Client.Settings
         public string[] Value { get; }
 
 		/// <summary>
-		/// The precedence of the value compared in relation to other
-        /// values with the same header name.
+		/// The precedence of the value compared in relation to other values with the same header name.
 		/// </summary>
 		public double? Quality { get; }
 

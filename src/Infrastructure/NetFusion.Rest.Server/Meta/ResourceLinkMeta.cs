@@ -81,7 +81,7 @@ namespace NetFusion.Rest.Server.Meta
     }
 
     /// <summary>
-    ///  Contains methods creating ActionLink instances and associating metadata.
+    ///  Contains methods for creating ActionLink instances based on expressions for a given controller and resource type.
     /// </summary>
     /// <typeparam name="TController">The controller type associated with the link metadata.</typeparam>
     /// <typeparam name="TResource">The resource type associated with the link metadata.</typeparam>
@@ -127,7 +127,7 @@ namespace NetFusion.Rest.Server.Meta
 
             if (actionLink != null)
             {
-                actionLink.RelationName = RelationTypes.Self;
+                actionLink.RelationName = relName;
                 AddActionLink(actionLink);
             }
 		}

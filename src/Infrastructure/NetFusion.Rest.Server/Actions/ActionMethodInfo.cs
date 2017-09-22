@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// Contains information about a controller's action methods returned from a 
-    /// search used to find action methods based on a set of conventions.
+    /// search matching a set of conventions.
     /// </summary>
     public class ActionMethodInfo
     {

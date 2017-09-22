@@ -26,7 +26,10 @@ namespace NetFusion.Rest.Server.Modules
     {
         private IEnumerable<IResourceMap> ResourceMappings { get; set; }
 
+        // MediaTypeName --> Entry
         private Dictionary<string, MediaTypeEntry> _mediaResourceTypeMeta = new Dictionary<string, MediaTypeEntry>();
+
+        // ResourceType --> ExternalTypeName
         private Dictionary<Type, string> _namedResourceModels;
 
         // Caches the name associated with all resources decorated with the NamedResource attribute.
@@ -44,6 +47,7 @@ namespace NetFusion.Rest.Server.Modules
         {
             foreach (IResourceMap resourceMap in ResourceMappings)
             {
+                // Create an entry for the media-type name.  Each media-type will have a single entry.
                 if (!_mediaResourceTypeMeta.TryGetValue(resourceMap.MediaType, out MediaTypeEntry mediaTypeEntry))
                 {
                     IResourceProvider provider = CreateProvider(resourceMap);
@@ -69,9 +73,7 @@ namespace NetFusion.Rest.Server.Modules
 
         private (MediaTypeEntry entry, bool ok) GetMediaTypeEntry(string mediaType)
         {
-            MediaTypeEntry mediaTypeEntry;
-            bool isFound = _mediaResourceTypeMeta.TryGetValue(mediaType, out mediaTypeEntry);
-            
+            bool isFound = _mediaResourceTypeMeta.TryGetValue(mediaType, out MediaTypeEntry mediaTypeEntry);
             return (mediaTypeEntry, isFound);
         }    
 
@@ -79,8 +81,7 @@ namespace NetFusion.Rest.Server.Modules
             IHeaderDictionary headers,
             Type resourceType)
         {
-            StringValues values;
-            if (!headers.TryGetValue(HeaderNames.Accept, out values))
+            if (!headers.TryGetValue(HeaderNames.Accept, out StringValues values))
             {
                 return null;
             }

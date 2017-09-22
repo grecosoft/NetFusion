@@ -55,26 +55,23 @@ namespace NetFusion.Rest.Client.Resources
 
             // Note:  The server side Web REST/HAL implementation of the Embedded property returns a simple dictionary 
             // with the value based on a common interface.  This means that the exact type of the embedded resource is 
-            // not known when the Embedded property is being deserialized on the this end.  Since this is the case, 
+            // not known when the Embedded property is being deserialized on this side.  Since this is the case, 
             // the value for each item in the dictionary will be of type JObject.  The consuming developer will know
             // the embedded type structure and have defined a matching class.  This approach keeps the server and the
-            // client code less complex by not having to defined typed classes for the Embedded property and allows 
+            // client code less complex by not having to define typed classes for the Embedded property and allows 
             // resources to be combined to create new resource types.
 
-            // Check if the embedded resource has been deserialized from the base
-            // JObject representation and return it.
-            var embededItem = Embedded[named] as TResource;
-            if (embededItem != null)
+            // Check if the embedded resource has been deserialized from the base JObject representation and return it.
+            if (Embedded[named] is TResource embededItem)
             {
                 return embededItem;
             }
 
             // Deserialize the embedded JObject into a type object instance.
-            var embededJObj = Embedded[named] as JObject;
-            if (embededJObj != null)
+            if (Embedded[named] is JObject embededJObj)
             {
                 embededItem = embededJObj.ToObject<TResource>();
-                Embedded[named] = embededItem;
+                Embedded[named] = embededItem; // Override the JObject reference.
                 return embededItem;
             }
 
@@ -100,14 +97,12 @@ namespace NetFusion.Rest.Client.Resources
                     $"Embedded resource array named: {named} of parent resource type: {GetType().FullName} does not exist.");
             }
 
-            var embededItem = Embedded[named] as List<TResource>;
-            if (embededItem != null)
+            if (Embedded[named] is List<TResource> embededItem)
             {
                 return embededItem;
             }
 
-            var embededJArray = Embedded[named] as JArray;
-            if (embededJArray != null)
+            if (Embedded[named] is JArray embededJArray)
             {
                 embededItem = embededJArray.ToObject<List<TResource>>();
                 Embedded[named] = embededItem;

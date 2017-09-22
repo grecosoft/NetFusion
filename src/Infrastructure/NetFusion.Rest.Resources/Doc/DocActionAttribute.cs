@@ -33,7 +33,7 @@ namespace NetFusion.Rest.Resources.Doc
         /// <param name="id">Uniquely identifies the action.</param>
         /// <param name="statusCodes">The possible status codes returned from the action.</param>
         /// <param name="responseResourceType">The response resource type.  Not required if
-        /// the action method return the resource type or a task of the resource type.</param>
+        /// the action method returns the resource type or a task of the resource type.</param>
         public DocActionAttribute(string id,
             HttpStatusCode[] statusCodes = null,            
             Type responseResourceType = null) 

@@ -18,6 +18,9 @@ namespace NetFusion.Rest.Server.Hal
         bool IsResourceRequested<TResource>()
             where TResource : IResource;
 
+        /// <summary>
+        /// List of the embedded resource keys specified by the requesting client.
+        /// </summary>
         string[] RequestedEmbeddedResources { get; }
     }
 }

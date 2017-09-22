@@ -38,6 +38,9 @@ namespace NetFusion.Rest.Server.Hal
             return RequestedEmbeddedResources.Contains(mappedResourceName);
         }
 
+        // The client can specify an embed query-string parameter to indicate to the server
+        // the embedded resources they are interested in.  This is optional but can be used
+        // by the client and the server to reduce network traffic.
         private bool EmbeddedResourcesRequested => _contextAccessor.ActionContext
             .HttpContext.Request.Query.ContainsKey("embed");
 
@@ -46,9 +49,8 @@ namespace NetFusion.Rest.Server.Hal
             get
             {
                 IQueryCollection query =_contextAccessor.ActionContext.HttpContext.Request.Query;
-                StringValues queryValue;
 
-                if (query.TryGetValue("embed", out queryValue))
+                if (query.TryGetValue("embed", out StringValues queryValue))
                 {
                     return queryValue[0].Split(',');
                 }

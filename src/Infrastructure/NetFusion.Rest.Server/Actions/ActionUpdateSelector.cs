@@ -60,11 +60,10 @@ namespace NetFusion.Rest.Server.Actions
                  .Where(m => m.Methods.Count() == 1);
         }
 
-        // NOTE:  Since the delete convention is that there is a Delete action method having
-        // an argument identified as the resource identity, this could match multiple resource
-        // types.  Since the resource type is not specified for a delete, all Delete action 
-        // Methods must specify the ResourceType Attribute to specify the resource type it
-        // corresponds.
+        // NOTE:  Since the delete convention is a Delete action method having an argument 
+        // identified as the resource identity, this could match multiple action methods.  
+        // If the delete action method does not return a resource type, it must specify the
+        // associated resource by decorating the action method with the ResourceType attribute.        
         private IEnumerable<ActionMethodInfo> GetResourceDeleteActions()
         {
             return _controllerType.GetActionMethods()

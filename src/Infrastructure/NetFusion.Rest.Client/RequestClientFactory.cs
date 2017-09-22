@@ -21,8 +21,8 @@ namespace NetFusion.Rest.Client
 
         private bool _disposed;
 
-        private IDictionary<string, IRequestSettings> _baseAddressRegistrations;
-        private ConcurrentDictionary<string, IRequestClient> _resourceClients;
+        private IDictionary<string, IRequestSettings> _baseAddressRegistrations;  // BaseAddress => DefaultSettings
+        private ConcurrentDictionary<string, IRequestClient> _resourceClients;    // BaseAddress => RequestClient
         private IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
 
         static RequestClientFactory()
@@ -98,15 +98,15 @@ namespace NetFusion.Rest.Client
 
         private IRequestClient CreateResourceClient(string baseAddress)
         {
-            IRequestSettings settings;
 
-            if (!_baseAddressRegistrations.TryGetValue(baseAddress, out settings))
+            // Lookup the default setting to use for the specified base-address.
+            if (!_baseAddressRegistrations.TryGetValue(baseAddress, out IRequestSettings settings))
             {
                 throw new ArgumentException(
                     $"The base address: {baseAddress} is not registered.", nameof(baseAddress));
             }
 
-            // Create instance of the ResourceClient that will delegate to the HttpClient.
+            // Create instance of the ResourceClient that will delegate to the MS HttpClient.
             HttpClient httpClient = new HttpClient { BaseAddress = new Uri(baseAddress) };
             return new RequestClient(httpClient, _mediaTypeSerializers, settings);
         }

@@ -31,18 +31,17 @@ namespace NetFusion.Rest.Config
         /// </summary>
         public bool UseHalDefaults { get; set; }
 
-        public string AcceptType { get; set; }
+        public IList<AcceptType> AcceptTypes { get; set; }
 
+        /// <summary>
+        /// Default content-type used when submitting requests with bodies.
+        /// </summary>
         public string ContentType { get; set; }
 
         /// <summary>
         /// Default set of headers to be used for each request made by the client.
         /// </summary>
         public IDictionary<string, string> Headers { get; set; }
-
-        /// <summary>
-        /// The time in milliseconds after which the request should timeout.
-        /// </summary>
-        public int TimeoutMs { get; set; }  
+ 
     }
 }

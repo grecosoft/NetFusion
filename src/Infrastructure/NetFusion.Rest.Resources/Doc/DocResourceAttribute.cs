@@ -5,7 +5,7 @@ namespace NetFusion.Rest.Resources.Doc
     /// <summary>
     /// Used to provide a description of a resource.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class, Inherited = true)]
     public class DocResourceAttribute : Attribute
     {
         /// <summary>

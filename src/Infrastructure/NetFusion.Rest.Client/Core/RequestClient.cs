@@ -26,8 +26,10 @@ namespace NetFusion.Rest.Client.Core
         /// <param name="httpClient">Reference to a HttpClient instance.</param>
         /// <param name="contentSerializers">Dictionary of serializers keyed by media-type.</param>
         /// <param name="requestSettings">The default request settings to be used for each request.</param>
-        public RequestClient(HttpClient httpClient, IDictionary<string, IMediaTypeSerializer> contentSerializers, 
-                              IRequestSettings requestSettings)
+        public RequestClient(HttpClient httpClient, 
+            IDictionary<string, 
+            IMediaTypeSerializer> contentSerializers, 
+            IRequestSettings requestSettings)
         {
             _httpClient = httpClient 
                 ?? throw new ArgumentNullException(nameof(httpClient), "HTTP Client not set.");
@@ -56,8 +58,7 @@ namespace NetFusion.Rest.Client.Core
             return SendRequest<TContent>(request, cancellationToken);
         }
 
-        private async Task<ApiResponse> SendRequest(ApiRequest request,
-            CancellationToken cancellationToken)
+        private async Task<ApiResponse> SendRequest(ApiRequest request, CancellationToken cancellationToken)
         {
             HttpRequestMessage requestMsg = await CreateRequestMessage(request);
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
@@ -65,8 +66,7 @@ namespace NetFusion.Rest.Client.Core
             return new ApiResponse(requestMsg, responseMsg);
         }
 
-        private async Task<ApiResponse<TContent>> SendRequest<TContent>(ApiRequest request, 
-            CancellationToken cancellationToken)
+        private async Task<ApiResponse<TContent>> SendRequest<TContent>(ApiRequest request,  CancellationToken cancellationToken)
             where TContent : class
         {
             HttpRequestMessage requestMsg = await CreateRequestMessage(request);
@@ -137,9 +137,8 @@ namespace NetFusion.Rest.Client.Core
 
         private IMediaTypeSerializer GetMediaTypeSerializer(string mediaType)
         {
-            IMediaTypeSerializer contentSerializer;
 
-            if (!_mediaTypeSerializers.TryGetValue(mediaType, out contentSerializer))
+            if (!_mediaTypeSerializers.TryGetValue(mediaType, out IMediaTypeSerializer contentSerializer))
             {
                 throw new InvalidOperationException(
                     $"Content Serializer not registered for media type: {mediaType}.");
