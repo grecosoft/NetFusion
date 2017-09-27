@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using System;
+using Mapster;
 using NetFusion.Utilities.Core;
 
 namespace UtilitiesTests.Mapping.Setup
@@ -8,9 +9,14 @@ namespace UtilitiesTests.Mapping.Setup
     // the ObjectMapper to automatically map object properties if an explicit mapping strategy is not registered.
     public class DefaultAutoMapper : IAutoMapper
     {
-        public TTarget Map<TTarget>(object obj) where TTarget : class
+        public TTarget Map<TTarget>(object source) where TTarget : class
         {
-            return obj.Adapt<TTarget>();
+            return source.Adapt<TTarget>();
+        }
+
+        public object Map(object source, Type targetType)
+        {
+            return source.Adapt(source.GetType(), targetType);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace NetFusion.Utilities.Core
+﻿using System;
+
+namespace NetFusion.Utilities.Core
 {
     /// <summary>
     /// Interface implemented by the host application used to delegate to the
@@ -8,11 +10,19 @@
     public interface IAutoMapper
     {
         /// <summary>
-        /// Called to when the plug-in needs to map an object to another type.
+        /// Called when the plug-in needs to map an object to another type.
         /// </summary>
         /// <typeparam name="TTarget">The target type the passed object should be mapped into.</typeparam>
-        /// <param name="obj">The object to be mapped to the target type.</param>
+        /// <param name="source">The object to be mapped to the target type.</param>
         /// <returns>Mapped instance of the object.</returns>
-        TTarget Map<TTarget>(object obj) where TTarget : class;
+        TTarget Map<TTarget>(object source) where TTarget : class;
+
+        /// <summary>
+        /// Called when the plug-in needs to map an object to another type. 
+        /// </summary>
+        /// <param name="source">The object to be mapped to the target type.</param>
+        /// <param name="targetType">Mapped instance of the object.</param>
+        /// <returns>Mapped instance of the object.</returns>
+        object Map(object source, Type targetType);
     }
 }

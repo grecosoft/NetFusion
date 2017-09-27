@@ -34,13 +34,21 @@ namespace NetFusion.Utilities.Core
         {
             Check.NotNull(source, nameof(source));
 
+            return (TTarget)Map(source, typeof(TTarget));
+        }
+
+        public object Map(object source, Type targetType)
+        {
+            Check.NotNull(targetType, nameof(targetType));
+            Check.NotNull(source, nameof(source));
+
             IMappingStrategy strategy = null;
-            TargetMap targetMap = FindMappingStrategy(source.GetType(), typeof(TTarget));
+            TargetMap targetMap = FindMappingStrategy(source.GetType(), targetType);
 
             // Complete a reverse lookup.
             if (targetMap == null)
             {
-                targetMap = FindMappingStrategy(typeof(TTarget), source.GetType());
+                targetMap = FindMappingStrategy(targetType, source.GetType());
             }
 
             // If mapping strategy found, create an instance using the container.  This allows
@@ -48,11 +56,11 @@ namespace NetFusion.Utilities.Core
             if (targetMap != null)
             {
                 strategy = (IMappingStrategy)_lifetimeScope.Resolve(targetMap.StrategyType);
-                return (TTarget)strategy.Map(this, _autoMapper, source);
+                return strategy.Map(this, _autoMapper, source);
             }
 
             // If there is no corresponding mapping strategy delegate the registered IAutoMapper instance.
-            return _autoMapper.Map<TTarget>(source);
+            return _autoMapper.Map(source, targetType);
         }
 
         // Determines if there is a mapping strategy matching the exact target type.  

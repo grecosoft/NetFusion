@@ -26,9 +26,14 @@ namespace NetFusion.Utilities.Mapping.Configs
         // Default null instance that returns an empty object instance.
         private class DefaultAutoMapper : IAutoMapper
         {
-            public TTarget Map<TTarget>(object obj) where TTarget : class
+            public TTarget Map<TTarget>(object source) where TTarget : class
             {
                 return Activator.CreateInstance<TTarget>();
+            }
+
+            public object Map(object source, Type targetType)
+            {
+                return Activator.CreateInstance(targetType);
             }
         }
     }
