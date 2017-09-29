@@ -16,13 +16,5 @@ namespace NetFusion.Utilities.Core
         /// <param name="source">The object to be mapped to the target type.</param>
         /// <returns>Mapped instance of the object.</returns>
         TTarget Map<TTarget>(object source) where TTarget : class;
-
-        /// <summary>
-        /// Called when the plug-in needs to map an object to another type. 
-        /// </summary>
-        /// <param name="source">The object to be mapped to the target type.</param>
-        /// <param name="targetType">Mapped instance of the object.</param>
-        /// <returns>Mapped instance of the object.</returns>
-        object Map(object source, Type targetType);
     }
 }

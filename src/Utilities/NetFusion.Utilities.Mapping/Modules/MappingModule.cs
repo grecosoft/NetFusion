@@ -6,6 +6,7 @@ using NetFusion.Utilities.Core;
 using NetFusion.Utilities.Mapping;
 using NetFusion.Utilities.Mapping.Configs;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NetFusion.Utilities.Modules
@@ -13,6 +14,8 @@ namespace NetFusion.Utilities.Modules
     public class MappingModule : PluginModule,
         IMappingModule
     {
+        public IEnumerable<IMappingStrategyFactory> StrategyFactories { get; private set; }
+
         public ILookup<Type, TargetMap> SourceTypeMappings { get; private set; }
         public IAutoMapper AutoMapper { get; private set; }
 
@@ -29,19 +32,49 @@ namespace NetFusion.Utilities.Modules
             // library.  This decouples the plug-in from any specific mapping library.
             this.AutoMapper = (IAutoMapper)mappingConfig.AutoMapperType.CreateInstance();
 
+            var targetMappings = GetFactoryProvidedMappingStrategies()
+                .Concat(GetCustomMappingStrategies());
+
+            this.SourceTypeMappings = targetMappings.ToLookup(tm => tm.SourceType);             
+        }
+
+        // Finds all mappings provided by instances implementing IMappingStrategyFactory.
+        // The strategies provided by a factory are usually MappingDelegateStrategy 
+        // instances that provides non-custom mapping and delegate to an open-source
+        // library. 
+        private TargetMap[] GetFactoryProvidedMappingStrategies()
+        {
+            TargetMap[] targetMappings = StrategyFactories
+                .SelectMany(f => f.GetStrategies())
+                .Select(s => new TargetMap
+                {
+                    StrategyInstance = s,
+                    SourceType = s.SourceType,
+                    TargetType = s.TargetType
+                }).ToArray();
+
+            return targetMappings;
+        }
+
+        // Find all types that are a closed type of IMappingStrategy<,> such 
+        // as IMappingStrategy<Car, CarModel>.  These are mapping strategies
+        // containing custom mapping logic.
+        private TargetMap[] GetCustomMappingStrategies()
+        {
             Type openGenericMapType = typeof(IMappingStrategy<,>);
 
             TargetMap[] targetMappings = this.Context.AllPluginTypes
                 .WhereHavingClosedInterfaceTypeOf(openGenericMapType)
-                .Select(ti => new TargetMap {
+                .Select(ti => new TargetMap
+                {
                     StrategyType = ti.Type,
                     SourceType = ti.GenericArguments[0],
                     TargetType = ti.GenericArguments[1]
                 }).ToArray();
 
-             this.SourceTypeMappings = targetMappings.ToLookup(tm => tm.SourceType);
+            return targetMappings;
         }
-
+        
         public override void RegisterComponents(ContainerBuilder builder)
         {
             builder.RegisterType<ObjectMapper>()
@@ -52,6 +85,11 @@ namespace NetFusion.Utilities.Modules
             // any services needed to complete the mapping.
             foreach (TargetMap map in this.SourceTypeMappings.Values())
             {
+                if (map.StrategyInstance != null)
+                {
+                    continue;
+                }
+
                 builder.RegisterType(map.StrategyType)
                     .AsSelf()
                     .InstancePerLifetimeScope();

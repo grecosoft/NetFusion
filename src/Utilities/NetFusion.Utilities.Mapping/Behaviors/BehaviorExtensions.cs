@@ -16,7 +16,7 @@ namespace NetFusion.Utilities.Mapping.Behaviors
         /// <param name="domainEntity">The domain entity to be mapped.</param>
         /// <returns>Instance of the resulting mapped object.</returns>
         public static TTarget MapTo<TTarget>(this IEntityDelegator domainEntity)
-            where TTarget : class
+            where TTarget : class, new()
         {
             Check.NotNull(domainEntity, nameof(domainEntity));
 

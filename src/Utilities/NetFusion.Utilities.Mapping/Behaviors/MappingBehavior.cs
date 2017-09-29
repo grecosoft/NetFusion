@@ -20,7 +20,7 @@ namespace NetFusion.Utilities.Mapping.Behaviors
             this.Entity = entity;
         }
 
-        public TTarget MapTo<TTarget>() where TTarget : class
+        public TTarget MapTo<TTarget>() where TTarget : class, new()
         {
             return Mapper.Map<TTarget>(this.Entity);
         }

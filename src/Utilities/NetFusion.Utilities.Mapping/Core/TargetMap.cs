@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetFusion.Utilities.Mapping;
+using System;
 
 namespace NetFusion.Utilities.Core
 {
@@ -9,6 +10,7 @@ namespace NetFusion.Utilities.Core
     {
         public Type SourceType { get; set; }
         public Type TargetType { get; set; }
-        public Type StrategyType { get; set;  }
+        public Type StrategyType { get; set; }
+        public IMappingStrategy StrategyInstance { get; set; }
     }
 }

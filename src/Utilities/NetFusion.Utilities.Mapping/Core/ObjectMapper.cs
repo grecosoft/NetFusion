@@ -30,17 +30,24 @@ namespace NetFusion.Utilities.Core
 
         // Maps source object to the specified target or derived target object type.
         public TTarget Map<TTarget>(object source)
-            where TTarget : class
+            where TTarget : class, new()
         {
             Check.NotNull(source, nameof(source));
 
-            return (TTarget)Map(source, typeof(TTarget));
+            object mappedObj = Map(source, typeof(TTarget));
+            if (mappedObj != null)
+            {
+                return (TTarget)mappedObj;
+            }
+
+            // If there is no corresponding mapping strategy delegate the registered IAutoMapper instance.
+            return _autoMapper.Map<TTarget>(source);
         }
 
         public object Map(object source, Type targetType)
         {
-            Check.NotNull(targetType, nameof(targetType));
             Check.NotNull(source, nameof(source));
+            Check.NotNull(targetType, nameof(targetType));
 
             IMappingStrategy strategy = null;
             TargetMap targetMap = FindMappingStrategy(source.GetType(), targetType);
@@ -55,12 +62,11 @@ namespace NetFusion.Utilities.Core
             // the strategy to inject any required services required to complete the mappings.
             if (targetMap != null)
             {
-                strategy = (IMappingStrategy)_lifetimeScope.Resolve(targetMap.StrategyType);
+                strategy = targetMap.StrategyInstance ?? (IMappingStrategy)_lifetimeScope.Resolve(targetMap.StrategyType);
                 return strategy.Map(this, _autoMapper, source);
             }
 
-            // If there is no corresponding mapping strategy delegate the registered IAutoMapper instance.
-            return _autoMapper.Map(source, targetType);
+            return null;
         }
 
         // Determines if there is a mapping strategy matching the exact target type.  
