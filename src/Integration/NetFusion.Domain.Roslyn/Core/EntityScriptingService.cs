@@ -53,7 +53,7 @@ namespace NetFusion.Domain.Roslyn.Core
             Type entityType = entity.GetType();
 
             IEnumerable<ScriptEvaluator> scripts = _scriptEvaluators[entityType];
-            if (scripts == null)
+            if (!scripts.Any())
             {
                 return;
             }
