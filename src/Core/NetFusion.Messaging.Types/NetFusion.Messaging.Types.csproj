@@ -23,7 +23,7 @@
   </ItemGroup>
   
   <PropertyGroup>
-  	<PackageId>NetFusion.Domain.Messaging</PackageId>
+  	<PackageId>NetFusion.Messaging.Types</PackageId>
 	<Title>NetFusion Domain Messaging</Title>
     <Description>Assembly containing base types used for defining message type within the business domain.</Description>
 	<PackageTags>netfusion;messaging;ddd</PackageTags>
