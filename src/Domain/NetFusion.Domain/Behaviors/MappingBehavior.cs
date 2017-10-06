@@ -1,7 +1,8 @@
 ﻿using NetFusion.Common;
 using NetFusion.Domain.Entities.Core;
+using NetFusion.Utilities.Mapping;
 
-namespace NetFusion.Utilities.Mapping.Behaviors
+namespace NetFusion.Domain.Behaviors
 {
     /// <summary>
     /// Behavior that can be associated with a domain entity allowing

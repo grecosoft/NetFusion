@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using Moq;
-using NetFusion.Domain.Messaging;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Consumers;

@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
-    <ProjectReference Include="..\..\src\Domain\NetFusion.Domain.Messaging\NetFusion.Domain.Messaging.csproj" />
+    <ProjectReference Include="..\..\src\Core\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
   </ItemGroup>
 
 </Project>

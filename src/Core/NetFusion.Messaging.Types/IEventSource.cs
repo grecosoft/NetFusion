@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NetFusion.Domain.Messaging
+namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// Implemented by an entity that can have associated domain events.

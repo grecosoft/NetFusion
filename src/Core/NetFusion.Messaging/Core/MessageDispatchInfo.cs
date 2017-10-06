@@ -1,8 +1,8 @@
 ﻿using NetFusion.Base.Scripting;
 using NetFusion.Common;
-using NetFusion.Domain.Messaging;
-using NetFusion.Domain.Messaging.Rules;
 using NetFusion.Messaging.Rules;
+using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Rules;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,5 @@
-using System;
 using NetFusion.Common;
+using System;
 
 namespace NetFusion.Web.Mvc.Metadata
 {

@@ -1,7 +1,7 @@
 ﻿using NetFusion.Base.Entity;
 using System.Collections.Generic;
 
-namespace NetFusion.Domain.Messaging
+namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// Base domain-event that can be published to notify application

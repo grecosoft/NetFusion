@@ -1,6 +1,6 @@
 ﻿using MsgPack.Serialization;
-using System;
 using NetFusion.Base;
+using System;
 
 namespace NetFusion.RabbitMQ.Serialization
 {

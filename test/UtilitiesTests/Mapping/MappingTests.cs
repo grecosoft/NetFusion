@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
+using NetFusion.Domain.Behaviors;
 using NetFusion.Domain.Entities;
 using NetFusion.Domain.Entities.Core;
 using NetFusion.Utilities.Core;
 using NetFusion.Utilities.Mapping;
-using NetFusion.Utilities.Mapping.Behaviors;
 using UtilitiesTests.Mapping.Setup;
 using Xunit;
 

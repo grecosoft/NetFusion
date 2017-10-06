@@ -1,5 +1,5 @@
-﻿using System;
-using NetFusion.Bootstrap.Container;
+﻿using NetFusion.Bootstrap.Container;
+using System;
 
 namespace NetFusion.Rest.Server.Modules
 {

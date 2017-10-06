@@ -3,7 +3,7 @@ using NetFusion.Common;
 using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collection;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Domain.Messaging;
+using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Exchanges;
 using RabbitMQ.Client;

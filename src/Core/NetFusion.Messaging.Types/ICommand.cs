@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetFusion.Domain.Messaging
+namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// Represents a message that can have one and only one consumer 

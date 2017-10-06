@@ -1,7 +1,7 @@
 ﻿using NetFusion.Base.Entity;
 using NetFusion.Base.Plugins;
 
-namespace NetFusion.Domain.Messaging
+namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// Interface representing communication between a publisher and consumer.

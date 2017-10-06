@@ -1,7 +1,7 @@
 ﻿using NetFusion.Bootstrap.Manifests;
 
 namespace NetFusion.Messaging
-{ 
+{
     public class MessagingManifest : PluginManifestBase,
         ICorePluginManifest
     {

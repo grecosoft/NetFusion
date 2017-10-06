@@ -1,4 +1,4 @@
-﻿namespace NetFusion.Domain.Messaging
+﻿namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// Identifies a type as a message that is used to notify

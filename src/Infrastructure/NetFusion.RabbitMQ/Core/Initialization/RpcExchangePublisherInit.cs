@@ -2,8 +2,8 @@
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Domain.Messaging;
 using NetFusion.Messaging;
+using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Core.Rpc;
 using RabbitMQ.Client;

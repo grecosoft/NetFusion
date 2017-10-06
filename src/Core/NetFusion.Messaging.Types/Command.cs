@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NetFusion.Domain.Messaging
+namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// Default implementation representing message that can have one and only

@@ -1,7 +1,7 @@
 ﻿using ExampleApi.Messages;
 using NetFusion.Common.Extensions;
-using NetFusion.Domain.Messaging;
 using NetFusion.Messaging;
+using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Consumers;
 using System;
 

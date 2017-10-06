@@ -1,5 +1,5 @@
-﻿using System;
-using NetFusion.Rest.Common;
+﻿using NetFusion.Rest.Common;
+using System;
 
 namespace NetFusion.Rest.Client.Settings
 {

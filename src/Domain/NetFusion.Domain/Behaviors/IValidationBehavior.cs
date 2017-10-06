@@ -1,7 +1,7 @@
 ﻿using NetFusion.Domain.Entities;
 using NetFusion.Utilities.Validation.Results;
 
-namespace NetFusion.Utilities.Validation.Behaviors
+namespace NetFusion.Domain.Behaviors
 {
     /// <summary>
     /// Defines the contract to be implemented by a domain behavior

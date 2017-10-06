@@ -1,5 +1,5 @@
-﻿using NetFusion.Domain.Messaging;
-using NetFusion.Domain.Messaging.Rules;
+﻿using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Rules;
 
 namespace WebApiHost.Messaging.Consumers.Rules
 {

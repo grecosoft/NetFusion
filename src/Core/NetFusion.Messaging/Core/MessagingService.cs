@@ -1,9 +1,9 @@
 ﻿using NetFusion.Common;
 using NetFusion.Common.Extensions.Collection;
 using NetFusion.Common.Extensions.Tasks;
-using NetFusion.Domain.Messaging;
 using NetFusion.Messaging.Enrichers;
 using NetFusion.Messaging.Modules;
+using NetFusion.Messaging.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;

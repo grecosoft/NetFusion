@@ -1,5 +1,5 @@
 ﻿using NetFusion.Common;
-using NetFusion.Domain.Messaging;
+using NetFusion.Messaging.Types;
 using System.Threading.Tasks;
 
 namespace NetFusion.Messaging.Enrichers

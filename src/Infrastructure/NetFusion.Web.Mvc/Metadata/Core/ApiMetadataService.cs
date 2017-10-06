@@ -1,10 +1,10 @@
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using NetFusion.Common;
+using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Common;
 
 namespace NetFusion.Web.Mvc.Metadata.Core
 {

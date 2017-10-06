@@ -11,11 +11,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Common\NetFusion.Base\NetFusion.Base.csproj" />
+    <ProjectReference Include="..\..\src\Core\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Test\NetFusion.Test.csproj" />
     <ProjectReference Include="..\..\src\Domain\NetFusion.Domain\NetFusion.Domain.csproj" />
-    <ProjectReference Include="..\..\src\Integration\NetFusion.Domain.Roslyn\NetFusion.Domain.Roslyn.csproj" />
+    <ProjectReference Include="..\..\src\Integration\NetFusion.Roslyn\NetFusion.Roslyn.csproj" />
   </ItemGroup>
   
   <ItemGroup>

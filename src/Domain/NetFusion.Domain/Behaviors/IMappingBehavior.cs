@@ -1,6 +1,6 @@
 ﻿using NetFusion.Domain.Entities;
 
-namespace NetFusion.Utilities.Mapping.Behaviors
+namespace NetFusion.Domain.Behaviors
 {
     /// <summary>
     /// Behavior that can be associated with a domain entity allowing it to be mapped to a target type.

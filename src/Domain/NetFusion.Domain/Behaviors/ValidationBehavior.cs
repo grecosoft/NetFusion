@@ -1,8 +1,9 @@
 ﻿using NetFusion.Domain.Entities.Core;
+using NetFusion.Utilities.Validation;
 using NetFusion.Utilities.Validation.Core;
 using NetFusion.Utilities.Validation.Results;
 
-namespace NetFusion.Utilities.Validation.Behaviors
+namespace NetFusion.Domain.Behaviors
 {
     /// <summary>
     /// Domain Behavior responsible for validating its associated domain entity.

@@ -1,5 +1,5 @@
-﻿using NetFusion.Domain.Messaging;
-using NetFusion.Messaging.Core;
+﻿using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Types;
 using System.Threading;
 using System.Threading.Tasks;
 

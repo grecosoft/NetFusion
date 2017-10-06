@@ -1,7 +1,7 @@
-﻿using NetFusion.Domain.Entities;
+﻿using NetFusion.Domain.Behaviors;
+using NetFusion.Domain.Entities;
 using NetFusion.Domain.Entities.Registration;
 using NetFusion.Utilities.Core;
-using NetFusion.Utilities.Mapping.Behaviors;
 
 namespace UtilitiesTests.Mapping.Setup
 {

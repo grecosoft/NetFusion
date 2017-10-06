@@ -1,7 +1,7 @@
 ﻿using NetFusion.Common;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Domain.Messaging;
 using NetFusion.Messaging.Rules;
+using NetFusion.Messaging.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;

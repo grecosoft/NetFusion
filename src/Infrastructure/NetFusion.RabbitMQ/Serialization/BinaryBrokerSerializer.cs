@@ -5,7 +5,7 @@ using NetFusion.Base;
 using NetFusion.Messaging;
 using NetFusion.Common.Serialization;
 using NetFusion.Common;
-using NetFusion.Domain.Messaging;
+using NetFusion.Messaging.Types;
 
 namespace NetFusion.RabbitMQ.Serialization
 {

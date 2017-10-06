@@ -1,4 +1,4 @@
-﻿using NetFusion.Domain.Messaging;
+﻿using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Serialization;
 using RabbitMQ.Client.Events;
 using System;

@@ -1,9 +1,9 @@
 ﻿using Autofac;
-using System.Linq;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Enrichers;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NetFusion.Messaging.Modules
 {

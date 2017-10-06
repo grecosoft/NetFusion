@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Server.Generation.Core;
+using System;
 
 namespace NetFusion.Rest.Server.Generation
 {

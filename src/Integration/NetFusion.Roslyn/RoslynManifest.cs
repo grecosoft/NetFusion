@@ -6,7 +6,7 @@ namespace NetFusion.Domain.Roslyn
         ICorePluginManifest
     {
         public string PluginId => "{316A9C70-C3AE-4DC2-8DEA-097EBDB342F7}";
-        public string Name => "NetFusion Domain Roslyn Plug-in";
+        public string Name => "NetFusion Roslyn Plug-in";
 
         public string Description =>
             "Plug-in that provides domain entity Roslyn based implementations.  This includes the runtime execution " +

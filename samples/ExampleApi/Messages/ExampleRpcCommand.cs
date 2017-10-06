@@ -1,6 +1,6 @@
 ﻿using ExampleApi.Models;
 using NetFusion.Base;
-using NetFusion.Domain.Messaging;
+using NetFusion.Messaging.Types;
 using System;
 
 namespace ExampleApi.Messages

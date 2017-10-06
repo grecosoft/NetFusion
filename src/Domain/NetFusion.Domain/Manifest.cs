@@ -1,7 +1,7 @@
 ﻿using NetFusion.Bootstrap.Manifests;
 
 namespace NetFusion.Domain
-{ 
+{
     public class Manifest : PluginManifestBase,
         ICorePluginManifest
     {

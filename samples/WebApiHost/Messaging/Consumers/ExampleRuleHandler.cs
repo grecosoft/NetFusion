@@ -1,6 +1,6 @@
-﻿using NetFusion.Domain.Messaging;
-using NetFusion.Messaging;
+﻿using NetFusion.Messaging;
 using NetFusion.Messaging.Rules;
+using NetFusion.Messaging.Types;
 using WebApiHost.Messaging.Consumers.Rules;
 using WebApiHost.Messaging.Messages;
 

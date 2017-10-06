@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using NetFusion.Common.Extensions;
-using NetFusion.Domain.Messaging;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Modules;
+using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Core.Rpc;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;

@@ -1,7 +1,7 @@
 ﻿using NetFusion.Common;
 using System;
 
-namespace NetFusion.Domain.Messaging
+namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// Used to specify that a command should be published to a consumer's queue

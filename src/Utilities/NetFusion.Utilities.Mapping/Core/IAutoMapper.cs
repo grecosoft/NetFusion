@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NetFusion.Utilities.Core
+﻿namespace NetFusion.Utilities.Core
 {
     /// <summary>
     /// Interface implemented by the host application used to delegate to the

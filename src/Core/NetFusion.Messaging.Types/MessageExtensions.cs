@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace NetFusion.Domain.Messaging
+namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// Extension methods used to add dynamic attribute values to a message 

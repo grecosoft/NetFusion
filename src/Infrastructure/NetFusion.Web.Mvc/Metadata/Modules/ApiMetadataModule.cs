@@ -23,7 +23,7 @@ namespace NetFusion.Web.Mvc.Metadata.Modules
             }
         }
 
-        // Determine if the host application specifed the WebMvcConfig configuration
+        // Determine if the host application specified the WebMvcConfig configuration
         // indicating that route metadata should be discoverable by clients.
         public override void Configure()
         {

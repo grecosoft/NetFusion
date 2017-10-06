@@ -1,10 +1,9 @@
 ﻿using ExampleApi.Models;
-using NetFusion.Domain.Messaging;
+using NetFusion.Messaging.Types;
 using System;
 
 namespace ExampleApi.Messages
 {
-    // [Serializable]
     public class ExampleTopicEvent : DomainEvent
     {
         public string Make { get; private set; }

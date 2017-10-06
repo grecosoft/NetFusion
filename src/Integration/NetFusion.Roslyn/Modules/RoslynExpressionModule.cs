@@ -12,7 +12,7 @@ namespace NetFusion.Domain.Roslyn.Modules
     /// Module that loads meta data containing expressions that can be evaluated
     /// against and entity and its set of related dynamic properties.
     /// </summary>
-    public class DomainExpressionModule : PluginModule
+    public class RoslynExpressionModule : PluginModule
     {
         // The list of scripts that can be applied against entities 
         // of the same matching type.

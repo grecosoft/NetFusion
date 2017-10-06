@@ -1,5 +1,4 @@
-﻿using NetFusion.Base;
-using NetFusion.Domain.Messaging;
+﻿using NetFusion.Messaging.Types;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Threading;

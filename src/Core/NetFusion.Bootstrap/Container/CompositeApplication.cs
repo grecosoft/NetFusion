@@ -1,11 +1,10 @@
-﻿using System;
-
-using Autofac;
+﻿using Autofac;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Extensions;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 

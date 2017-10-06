@@ -1,7 +1,6 @@
 ﻿using NetFusion.Base;
 using NetFusion.Utilities.Validation;
 using System.ComponentModel.DataAnnotations;
-using System;
 
 namespace NetFusion.RabbitMQ.Configs
 {

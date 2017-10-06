@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using NetFusion.Common.Extensions.Collection;
+using NetFusion.Domain.Behaviors;
 using NetFusion.Domain.Entities;
 using NetFusion.Domain.Entities.Core;
 using NetFusion.Domain.Entities.Registration;
 using NetFusion.Utilities.Validation;
-using NetFusion.Utilities.Validation.Behaviors;
 using NetFusion.Utilities.Validation.Core;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;

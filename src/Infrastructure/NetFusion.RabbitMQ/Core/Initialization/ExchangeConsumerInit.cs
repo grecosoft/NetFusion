@@ -2,9 +2,9 @@
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common;
 using NetFusion.Common.Extensions;
-using NetFusion.Domain.Messaging;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Modules;
+using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Configs;
 using NetFusion.RabbitMQ.Consumers;
 using RabbitMQ.Client;

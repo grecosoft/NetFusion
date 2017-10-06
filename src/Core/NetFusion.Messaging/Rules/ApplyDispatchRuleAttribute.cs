@@ -1,6 +1,6 @@
 ﻿using NetFusion.Common;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Domain.Messaging.Rules;
+using NetFusion.Messaging.Types.Rules;
 using System;
 using System.Linq;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetFusion.Domain.Messaging.Rules
+namespace NetFusion.Messaging.Types.Rules
 {
     /// <summary>
     /// Base class for specifying a rule to determine if a consumer's

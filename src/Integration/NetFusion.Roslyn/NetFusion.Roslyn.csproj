@@ -26,8 +26,8 @@
   </ItemGroup>
   
   <PropertyGroup>
-  	<PackageId>NetFusion.Domain.Roslyn</PackageId>
-	<Title>NetFusion Domain Roslyn Integration Plug-In</Title>
+  	<PackageId>NetFusion.Roslyn</PackageId>
+	<Title>NetFusion Roslyn Integration Plug-In</Title>
     <Description>Plug-In providing Roslyn implementations for executing expressions against domain entities.</Description>
 	<PackageTags>netfusion;plugin;domain;roslyn</PackageTags>
   </PropertyGroup>

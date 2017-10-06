@@ -1,4 +1,4 @@
-﻿using NetFusion.Domain.Messaging.Rules;
+﻿using NetFusion.Messaging.Types.Rules;
 using WebApiHost.Messaging.Messages;
 
 namespace WebApiHost.Messaging.Consumers.Rules

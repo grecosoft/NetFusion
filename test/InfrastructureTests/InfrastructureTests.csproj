@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Common\NetFusion.Base\NetFusion.Base.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\src\Core\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Test\NetFusion.Test.csproj" />
     <ProjectReference Include="..\..\src\Domain\NetFusion.Domain\NetFusion.Domain.csproj" />
@@ -23,7 +24,7 @@
     <ProjectReference Include="..\..\src\Infrastructure\NetFusion.Rest.Config\NetFusion.Rest.Config.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure\NetFusion.Rest.Resources\NetFusion.Rest.Resources.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure\NetFusion.Rest.Server\NetFusion.Rest.Server.csproj" />
-    <ProjectReference Include="..\..\src\Integration\NetFusion.Domain.Roslyn\NetFusion.Domain.Roslyn.csproj" />
+    <ProjectReference Include="..\..\src\Integration\NetFusion.Roslyn\NetFusion.Roslyn.csproj" />
   </ItemGroup>
 
   <ItemGroup>

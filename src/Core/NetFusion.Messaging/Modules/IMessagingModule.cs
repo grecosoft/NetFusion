@@ -1,7 +1,7 @@
 ﻿using NetFusion.Bootstrap.Plugins;
-using NetFusion.Domain.Messaging;
 using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Types;
 using System;
 using System.Linq;
 using System.Threading;

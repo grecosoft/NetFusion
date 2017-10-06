@@ -2,7 +2,7 @@
 
 namespace NetFusion.Rest.Server.Modules
 {
-	public class Manifest : PluginManifestBase,
+    public class Manifest : PluginManifestBase,
 		ICorePluginManifest
 	{
 		public string PluginId => "{77491AC3-31CC-44EC-B508-30E1ED2311CE}";

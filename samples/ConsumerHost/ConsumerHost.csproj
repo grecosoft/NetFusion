@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\src\Core\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
     <ProjectReference Include="..\..\src\Domain\NetFusion.Domain\NetFusion.Domain.csproj" />

@@ -1,4 +1,4 @@
-﻿using NetFusion.Domain.Messaging;
+﻿using NetFusion.Messaging.Types;
 using WebApiHost.Messaging.Models;
 
 namespace WebApiHost.Messaging.Messages
