@@ -89,7 +89,7 @@ namespace WebApiHost
                 .Verbose()
                 .WriteTo.RollingFile("log-{Date}.txt", LogEventLevel.Verbose)
                 .WriteTo.Seq("http://localhost:5341/")
-                .Enrich.With<PluginEnricher>()
+                .Enrich.With<NetFusionLogEnricher>()
                 .CreateLogger();
 
             ILoggerFactory loggerFactory = new LoggerFactory();

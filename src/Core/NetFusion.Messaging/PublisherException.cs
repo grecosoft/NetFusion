@@ -18,6 +18,16 @@ namespace NetFusion.Messaging
         /// <summary>
         /// Publisher Exception.
         /// </summary>
+        /// <param name="message">Generic exception message.</param>
+        public PublisherException(string message):
+            base(message)
+        {
+
+        }
+
+        /// <summary>
+        /// Publisher Exception.
+        /// </summary>
         /// <param name="errorMessage">The error message raised when publishing the message.</param>
         /// <param name="message">The message being dispatched.</param>
         /// <param name="publisherExceptions">List of exceptions when publishing message to one 

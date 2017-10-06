@@ -1,6 +1,8 @@
-﻿using NetFusion.Bootstrap.Container;
+﻿using NetFusion.Base.Exceptions;
+using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Common.Extensions;
 using Serilog.Core;
 using Serilog.Events;
 
@@ -9,7 +11,7 @@ namespace NetFusion.Logging.Serilog.Enrichers
     /// <summary>
     /// Adds plug-in specific properties to the log event.
     /// </summary>
-    public class PluginEnricher : ILogEventEnricher
+    public class NetFusionLogEnricher : ILogEventEnricher
     {
         private const string SOURCE_CONTEXT_PROP = "SourceContext";
 
@@ -48,6 +50,11 @@ namespace NetFusion.Logging.Serilog.Enrichers
             logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("PluginId", manifest.PluginId));
             logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("PluginName", manifest.Name));
             logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("PluginAssembly", manifest.AssemblyName));
+
+            if (logEvent.Exception is NetFusionException ex)
+            {
+                logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("Details", ex.Details.ToIndentedJson()));
+            }
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using NetFusion.Common;
+﻿using Microsoft.Extensions.Logging;
+using NetFusion.Common;
+using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collection;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Enrichers;
@@ -19,15 +21,18 @@ namespace NetFusion.Messaging.Core
     /// </summary>
     public class MessagingService : IMessagingService
     {
+        private readonly ILogger<MessagingService> _logger;
         private readonly IMessagingModule _messagingModule;
         private readonly IEnumerable<IMessageEnricher> _messageEnrichers;
         private readonly IEnumerable<IMessagePublisher> _messagePublishers;
 
         public MessagingService(
+            ILogger<MessagingService> logger,
             IMessagingModule messagingModule,
             IEnumerable<IMessageEnricher> messageEnrichers,
             IEnumerable<IMessagePublisher> messagePublishers)
         {
+            _logger = logger;
             _messagingModule = messagingModule;
 
             // Order the enrichers and the publishers based on the order of the type
@@ -88,18 +93,28 @@ namespace NetFusion.Messaging.Core
         // the enrichers and to invoke all registered message publishers.
         private async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
-            await ApplyMessageEnrichers(message);
-            await InvokePublishers(message, cancellationToken);
+            try
+            {
+                await ApplyMessageEnrichers(message);
+                await InvokePublishers(message, cancellationToken);
+            }
+            catch (PublisherException ex)
+            {
+                // Log the details of the publish exception and throw a generic error messages.
+                _logger.LogError(MessagingLogEvents.MESSAGING_EXCEPTION, ex, "Exception publishing message.");
+                throw new PublisherException("Exception publishing message.  See log for details.");
+            }
         }
 
         private async Task ApplyMessageEnrichers(IMessage message)
         {
-            FutureResult<IMessageEnricher>[] futureResults = _messageEnrichers.Invoke(
-                message,
-                (enricher, msg) => enricher.Enrich(msg));
+            FutureResult<IMessageEnricher>[] futureResults = null;
 
             try
             {
+                futureResults = _messageEnrichers.Invoke(message,
+                    (enricher, msg) => enricher.Enrich(msg));
+
                 await futureResults.WhenAll();
             }
             catch (Exception ex)
@@ -127,12 +142,14 @@ namespace NetFusion.Messaging.Core
 
         private async Task InvokePublishers(IMessage message, CancellationToken cancellationToken)
         {
-            FutureResult<IMessagePublisher>[] futureResults = _messagePublishers.Invoke(
-                message, 
-                (pub, msg) => pub.PublishMessageAsync(msg, cancellationToken));
+
+            FutureResult<IMessagePublisher>[] futureResults = null;
 
             try
             {
+                futureResults = _messagePublishers.Invoke(message,
+                    (pub, msg) => pub.PublishMessageAsync(msg, cancellationToken));
+
                 await futureResults.WhenAll();
             }
             catch (Exception ex)
