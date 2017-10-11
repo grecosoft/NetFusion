@@ -11,6 +11,11 @@ namespace NetFusion.Messaging.Core
     public interface IMessagePublisher : IKnownPluginType
     {
         /// <summary>
+        /// Specifies the scope to which publishers send messages to subscribers.
+        /// </summary>
+        IntegrationTypes IntegrationType { get; }
+
+        /// <summary>
         /// Publishes a message asynchronously. 
         /// </summary>
         /// <param name="message">The message to be delivered.</param>

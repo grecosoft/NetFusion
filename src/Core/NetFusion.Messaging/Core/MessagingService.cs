@@ -46,26 +46,30 @@ namespace NetFusion.Messaging.Core
                 .ToList();
         }
 
-        public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default(CancellationToken))
+        public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default(CancellationToken),
+            IntegrationTypes integrationType = IntegrationTypes.All)
         {
             Check.NotNull(domainEvent, nameof(domainEvent), "domain event not specified");
-            return PublishMessageAsync(domainEvent, cancellationToken);
+            return PublishMessageAsync(domainEvent, integrationType, cancellationToken);
         }
 
-        public Task PublishAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken))
+        public Task PublishAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken),
+            IntegrationTypes integrationType = IntegrationTypes.All)
         {
             Check.NotNull(command, nameof(command), "command not specified");
-            return PublishMessageAsync(command, cancellationToken);
+            return PublishMessageAsync(command, integrationType, cancellationToken);
         }
 
-        public async Task<TResult> PublishAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<TResult> PublishAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken),
+            IntegrationTypes integrationType = IntegrationTypes.All)
         {
             Check.NotNull(command, nameof(command), "command not specified");
-            await PublishMessageAsync(command, cancellationToken);
+            await PublishMessageAsync(command, integrationType, cancellationToken);
             return command.Result;
         }
 
-        public async Task PublishAsync(IEventSource eventSource, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task PublishAsync(IEventSource eventSource, CancellationToken cancellationToken = default(CancellationToken),
+            IntegrationTypes integrationType = IntegrationTypes.All)
         {
             Check.NotNull(eventSource, nameof(eventSource), "event source not specified");
             var publisherErrors = new List<PublisherException>();
@@ -74,7 +78,7 @@ namespace NetFusion.Messaging.Core
             {
                 try
                 {
-                    await PublishMessageAsync(domainEvent, cancellationToken);
+                    await PublishMessageAsync(domainEvent, integrationType, cancellationToken);
                 }
                 catch (PublisherException ex)
                 {
@@ -91,12 +95,12 @@ namespace NetFusion.Messaging.Core
 
         // Private method to which all other publish methods delegate to asynchronously apply
         // the enrichers and to invoke all registered message publishers.
-        private async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
+        private async Task PublishMessageAsync(IMessage message, IntegrationTypes integrationType, CancellationToken cancellationToken)
         {
             try
             {
                 await ApplyMessageEnrichers(message);
-                await InvokePublishers(message, cancellationToken);
+                await InvokePublishers(message, cancellationToken, integrationType);
             }
             catch (PublisherException ex)
             {
@@ -140,14 +144,17 @@ namespace NetFusion.Messaging.Core
             }
         }
 
-        private async Task InvokePublishers(IMessage message, CancellationToken cancellationToken)
+        private async Task InvokePublishers(IMessage message, CancellationToken cancellationToken, IntegrationTypes integrationType)
         {
 
             FutureResult<IMessagePublisher>[] futureResults = null;
 
+            var publishers = integrationType == IntegrationTypes.All ? _messagePublishers.ToArray() 
+                : _messagePublishers.Where(p => p.IntegrationType == integrationType).ToArray();
+
             try
             {
-                futureResults = _messagePublishers.Invoke(message,
+                futureResults = publishers.Invoke(message,
                     (pub, msg) => pub.PublishMessageAsync(msg, cancellationToken));
 
                 await futureResults.WhenAll();

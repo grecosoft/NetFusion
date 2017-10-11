@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
+using NetFusion.Messaging.Core;
 using NetFusion.Web.Mvc.Metadata;
 using System.Collections.Generic;
 using System.Diagnostics;

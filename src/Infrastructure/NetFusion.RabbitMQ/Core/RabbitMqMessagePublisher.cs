@@ -18,6 +18,8 @@ namespace NetFusion.RabbitMQ.Core
             _messageBroker = messageBroker;
         }
 
+        public override IntegrationTypes IntegrationType => IntegrationTypes.External;
+
         // Determine if the message being published should be submitted to an 
         // exchange/queue for processing by a consumer.  If the message is a
         // RPC style message, the request is made to the consumer's queue and

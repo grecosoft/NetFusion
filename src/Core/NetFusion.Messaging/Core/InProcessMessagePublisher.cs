@@ -36,6 +36,8 @@ namespace NetFusion.Messaging.Core
             _scriptingSrv = scriptingSrv;
         }
 
+        public override IntegrationTypes IntegrationType => IntegrationTypes.Internal;
+
         public override Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
             // Determine the dispatchers associated with the message.
