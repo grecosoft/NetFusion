@@ -1,6 +1,6 @@
-﻿using NetFusion.Domain.Behaviors;
-using NetFusion.Domain.Entities;
+﻿using NetFusion.Domain.Entities;
 using NetFusion.Domain.Entities.Registration;
+using NetFusion.Domain.Patterns.Behaviors.Mapping;
 using NetFusion.Utilities.Core;
 
 namespace UtilitiesTests.Mapping.Setup
@@ -19,8 +19,7 @@ namespace UtilitiesTests.Mapping.Setup
 
         public void ResolveDomainServices(IDomainBehavior domainBehavior)
         {
-            var mappingBehavior = domainBehavior as MappingBehavior;
-            if (mappingBehavior != null)
+            if (domainBehavior is MappingBehavior mappingBehavior)
             {
                 mappingBehavior.Mapper = ObjectMapperConfig.CreateObjectMapper(_targetMaps);
             }

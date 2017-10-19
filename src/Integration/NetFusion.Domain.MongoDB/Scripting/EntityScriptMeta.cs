@@ -74,12 +74,13 @@ namespace NetFusion.Domain.MongoDB.Scripting
                 ScriptId,
                 Name,
                 EntityType,
-                new ReadOnlyCollection<EntityExpression>(expressions));
-
-            expressionSet.Description = Description;
-            expressionSet.InitialAttributes = Attributes;
-            expressionSet.ImportedAssemblies = ImportedAssemblies;
-            expressionSet.ImportedNamespaces = ImportedNamespaces;
+                new ReadOnlyCollection<EntityExpression>(expressions))
+            {
+                Description = Description,
+                InitialAttributes = Attributes,
+                ImportedAssemblies = ImportedAssemblies,
+                ImportedNamespaces = ImportedNamespaces
+            };
             return expressionSet;
         }
 

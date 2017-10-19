@@ -7,8 +7,8 @@ using System.Linq;
 namespace NetFusion.Domain.Entities.Core
 {
     /// <summary>
-    /// Factory used to create domain entity instances.  The created domain-entity will have 
-    /// any behaviors registered for the entity type associated with the created instance.
+    /// Factory used to create domain aggregates or entity instances.  The created entity will 
+    /// have any behaviors registered for the entity type associated with the created instance.
     /// </summary>
     public class DomainEntityFactory : IDomainEntityFactory,
         IFactoryRegistry
@@ -18,20 +18,28 @@ namespace NetFusion.Domain.Entities.Core
         /// </summary>
         public static IDomainEntityFactory Instance { get; private set; }
 
+        // Used to inject services into behavior instances.  Any behavior instance having public properties
+        // of types registered in the container will be injected.  
         private IDomainServiceResolver _resolver;
-        private Dictionary<Type, SupportedBehavior> _entityBehaviors = new Dictionary<Type, SupportedBehavior>();
-        private Dictionary<Type, SupportedBehavior> _factoryBehaviors = new Dictionary<Type, SupportedBehavior>();
+
+        // Behaviors registered at the factory and entity levels.
+        private readonly Dictionary<Type, SupportedBehaviors> _factoryBehaviors;  // BehaviorType => SupportedBehavior (1..1)
+        private readonly Dictionary<Type, SupportedBehaviors> _entityBehaviors;   // EntityType => SupportedBehavior (1..*)
 
         public DomainEntityFactory(IDomainServiceResolver resolver)
         {
             Check.NotNull(resolver, nameof(resolver));
+
+            _factoryBehaviors = new Dictionary<Type, SupportedBehaviors>();
+            _entityBehaviors = new Dictionary<Type, SupportedBehaviors>();
+
             _resolver = resolver;
         }
 
         /// <summary>
         /// Called during the bootstrap process to set the singleton factory instance.
         /// </summary>
-        /// <param name="factory"></param>
+        /// <param name="factory">The created singleton domain-entity factory instance.</param>
         public static void SetInstance(IDomainEntityFactory factory)
         {
             Check.NotNull(factory, nameof(factory));
@@ -39,62 +47,80 @@ namespace NetFusion.Domain.Entities.Core
         }
 
         public TDomainEntity Create<TDomainEntity>()
-            where TDomainEntity : IEntityDelegator, new()
+            where TDomainEntity : IBehaviorDelegator, new()
         {
-            var supportedBehaviors = new Lazy<IEnumerable<EntityBehavior>>( () => GetBehaviors(typeof(TDomainEntity)));
+            // When an entity's behaviors are first accessed, the supported behavior types are loaded.
+            // The behavior instances are not created until first used.
+            var supportedBehaviors = new Lazy<IEnumerable<EntityBehavior>>( () => GetSupportedBehaviors(typeof(TDomainEntity)));
 
             TDomainEntity domainEntity = new TDomainEntity();
-            IEntity entity = new Entity(domainEntity, _resolver, supportedBehaviors);
+            IBehaviorDelegatee delegatee = new BehaviorDelegatee(domainEntity, supportedBehaviors, _resolver);
 
-            domainEntity.SetEntity(entity);
+            domainEntity.SetDelegatee(delegatee);
             return domainEntity;
         }
 
-        private IEnumerable<EntityBehavior> GetBehaviors(Type domainEntityType)
+        private IEnumerable<EntityBehavior> GetSupportedBehaviors(Type domainEntityType)
         {
-            SupportedBehavior domainEntity = null;
+            _entityBehaviors.TryGetValue(domainEntityType, out SupportedBehaviors entityBehaviors);
 
-            _entityBehaviors.TryGetValue(domainEntityType, out domainEntity);
-
-            var entityBehaviors = domainEntity != null ? domainEntity.SupportedBehaviors.ToList()
+            var supportedBehaviors = entityBehaviors != null ? entityBehaviors.Behaviors.ToList()
                 : new List<Behavior>();
 
-            // Add any general factory behaviors for which there is not already
-            // an entity specific behavior.
+            // Add any general factory behaviors for which there is not already an entity specific behavior.
             foreach (var factoryBehavior in _factoryBehaviors)
             {
-                if (!entityBehaviors.Any(b => b.ContractType == factoryBehavior.Key))
+                Type behaviorType = factoryBehavior.Key;
+
+                // Factory behaviors are 1..1 since the key is the behavior type and not the entity type.
+                Behavior behavior = factoryBehavior.Value.Behaviors.First();  
+
+                if (!supportedBehaviors.Any(b => b.BehaviorType == behaviorType))
                 {
-                    entityBehaviors.AddRange(factoryBehavior.Value.SupportedBehaviors);
+                    supportedBehaviors.Add(behavior);
                 }
             }
 
-            return entityBehaviors.Select(b => new EntityBehavior(b));
+            // For each supported behavior, create an object containing the behavior type information
+            // that will be used to store the behavior instance for the entity when first accessed.
+            return supportedBehaviors.Select(b => new EntityBehavior(b));
         }
 
-        public void BehaviorsFor<TDomainEntity>(Action<ISupportedBehavior> entity) where TDomainEntity : IEntityDelegator
+        public void BehaviorsFor<TDomainEntity>(Action<ISupportedBehaviors> entity) 
+            where TDomainEntity : IBehaviorDelegator
         {
             Check.NotNull(entity, nameof(entity));
 
             var domainEntityType = typeof(TDomainEntity);
-            SupportedBehavior entityReg = null;
 
-            if (!_entityBehaviors.TryGetValue(domainEntityType, out entityReg))
+            // Lookup the behavior registrations for a given entity type.  If not present,
+            // create new instance.
+            if (!_entityBehaviors.TryGetValue(domainEntityType, out SupportedBehaviors behaviors))
             {
-                entityReg = new SupportedBehavior(domainEntityType);
-                _entityBehaviors[domainEntityType] = entityReg;
+                behaviors = new SupportedBehaviors(domainEntityType);
+                _entityBehaviors[domainEntityType] = behaviors;
             }
 
-            entity(entityReg);
+            // Allow the caller to registered entity supported behaviors.
+            entity(behaviors);
         }
 
-        public IFactoryRegistry AddBehavior<TContract, TBehavior>() where TBehavior : TContract
+        public IFactoryRegistry AddBehavior<TBehavior, TImplementation>()
+           where TBehavior : IDomainBehavior
+           where TImplementation : TBehavior
         {
-            var supportedBehavior = new SupportedBehavior();
-            supportedBehavior.Supports<TContract, TBehavior>();
+            Type behaviorType = typeof(TBehavior);
 
-            _factoryBehaviors[typeof(TContract)] = supportedBehavior;
+            if (_factoryBehaviors.ContainsKey(behaviorType))
+            {
+                throw new InvalidOperationException(
+                    $"The behavior of type {behaviorType.FullName} is already registered.");
+            }
 
+            var behaviors = new SupportedBehaviors();
+            behaviors.Add<TBehavior, TImplementation>();
+
+            _factoryBehaviors[behaviorType] = behaviors;
             return this;
         }
     }

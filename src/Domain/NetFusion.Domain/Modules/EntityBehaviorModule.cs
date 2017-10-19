@@ -27,6 +27,8 @@ namespace NetFusion.Domain.Modules
             var resolver = new AutofacDomainServiceRosolver(container);
             var factory = new DomainEntityFactory(resolver);
 
+            // Add the application's entity behavior registrations to the Domain-Entity Factory
+            // and set the factory singleton instance.
             foreach (var registry in Registries)
             {
                 registry.Register(factory);

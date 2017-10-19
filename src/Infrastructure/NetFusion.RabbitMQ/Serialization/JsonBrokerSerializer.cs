@@ -73,8 +73,7 @@ namespace NetFusion.RabbitMQ.Serialization
 
                 if (!prop.Writable)
                 {
-                    var property = member as PropertyInfo;
-                    if (property != null)
+                    if (member is PropertyInfo property)
                     {
                         var hasPrivateSetter = property.GetSetMethod(true) != null;
                         prop.Writable = hasPrivateSetter;

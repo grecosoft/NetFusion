@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using NetFusion.Common.Extensions.Collection;
-using NetFusion.Domain.Behaviors;
 using NetFusion.Domain.Entities;
 using NetFusion.Domain.Entities.Core;
 using NetFusion.Domain.Entities.Registration;
+using NetFusion.Domain.Patterns.Behaviors.Validation;
 using NetFusion.Utilities.Validation;
 using NetFusion.Utilities.Validation.Core;
 using System.ComponentModel.DataAnnotations;
@@ -14,11 +14,11 @@ namespace UtilitiesTests
 {
     public class ValidationTests
     {
-        [Fact (DisplayName = nameof(ValidationBehaviorCanBe_SupportedByDomainEntity))]
+        [Fact(DisplayName = nameof(ValidationBehaviorCanBe_SupportedByDomainEntity))]
         public void ValidationBehaviorCanBe_SupportedByDomainEntity()
         {
             var domainEntity = CreateTestEntity<MockValidatableDomainEntity>();
-            var behavior = domainEntity.Entity.GetBehavior<IValidationBehavior>();
+            var behavior = domainEntity.Behaviors.Get<IValidationBehavior>();
 
             behavior.supported.Should().BeTrue();
             behavior.instance.Should().NotBeNull();
@@ -182,20 +182,26 @@ namespace UtilitiesTests
 
         // --------------------------MOCK VALIDATION ENTITIES----------------------------
 
-        private MockValidatableDomainEntity CreateTestEntity<T>() where T : IEntityDelegator
+        private MockValidatableDomainEntity CreateTestEntity<T>() where T : IBehaviorDelegator
         {
             var factory = new DomainEntityFactory(new MockResolver());
 
             factory.BehaviorsFor<T>(
-                e => e.Supports<IValidationBehavior, MockValidationBehavior>());
+                e => e.Add<IValidationBehavior, MockValidationBehavior>());
 
             return factory.Create<MockValidatableDomainEntity>();
         }
 
-        private class MockValidatableDomainEntity : IEntityDelegator,
+        private class MockValidatableDomainEntity : IBehaviorDelegator,
             IValidatableType
         {
-            public IEntity Entity { get; private set; }
+            public IBehaviorDelegatee Behaviors { get; private set; }
+
+            void IBehaviorDelegator.SetDelegatee(IBehaviorDelegatee behaviors)
+            {
+                Behaviors = behaviors;
+            }
+
             private MockChildDomainEntity Child { get; set; }
             private MockChildDomainEntity[] Children { get; set; }
 
@@ -210,11 +216,6 @@ namespace UtilitiesTests
             public int ValueInfoOne { get; set; } = 1000;
 
             public bool EntityValidateInvoked { get; set; } = false;
-
-            public void SetEntity(IEntity entity)
-            {
-                this.Entity = entity;
-            }
 
             public void SetChild(MockChildDomainEntity child)
             {
@@ -234,7 +235,7 @@ namespace UtilitiesTests
                 if (this.Child != null)
                 {
                     validator.AddChildValidator(this.Child);
-                } 
+                }
 
                 if (this.Children != null)
                 {
@@ -255,18 +256,18 @@ namespace UtilitiesTests
 
             public void Validate(IObjectValidator validator)
             {
-                validator.Validate(ValueWarningTwo == 2000, 
+                validator.Validate(ValueWarningTwo == 2000,
                     "ValueWarningTwoMessage", ValidationTypes.Warning);
             }
         }
 
-        private class MockDomainEntity : IEntityDelegator
+        private class MockDomainEntity : IBehaviorDelegator
         {
-            public IEntity Entity { get; private set; }
+            public IBehaviorDelegatee Behaviors { get; private set; }
 
-            public void SetEntity(IEntity entity)
+            void IBehaviorDelegator.SetDelegatee(IBehaviorDelegatee behaviors)
             {
-                this.Entity = entity;
+                Behaviors = behaviors;
             }
         }
 
@@ -274,7 +275,7 @@ namespace UtilitiesTests
         {
             public void ResolveDomainServices(IDomainBehavior domainBehavior)
             {
-              
+
             }
         }
 
@@ -283,7 +284,7 @@ namespace UtilitiesTests
         // be used.  The below returns the default object-validator instance.
         private class MockValidationBehavior : ValidationBehavior
         {
-            public MockValidationBehavior(IEntityDelegator entity) : base(entity)
+            public MockValidationBehavior(IBehaviorDelegator entity) : base(entity)
             {
                 this.ValidationModule = new MockValidationModule();
             }

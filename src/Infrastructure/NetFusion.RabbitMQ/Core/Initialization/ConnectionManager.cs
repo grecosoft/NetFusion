@@ -140,10 +140,12 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             BrokerConnectionSettings brokerSettings,
             IDictionary<string, object> clientProperties)
         {
-            var props = new Dictionary<string, object>(clientProperties);
-            props["Broker Name"] = brokerSettings.BrokerName;
-            props["Broker User"] = brokerSettings.UserName;
-            props["Time Connected"] = DateTime.Now.ToString();
+            var props = new Dictionary<string, object>(clientProperties)
+            {
+                ["Broker Name"] = brokerSettings.BrokerName,
+                ["Broker User"] = brokerSettings.UserName,
+                ["Time Connected"] = DateTime.Now.ToString()
+            };
 
             return props;
         }

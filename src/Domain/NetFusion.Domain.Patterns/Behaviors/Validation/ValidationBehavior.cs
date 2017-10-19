@@ -3,7 +3,7 @@ using NetFusion.Utilities.Validation;
 using NetFusion.Utilities.Validation.Core;
 using NetFusion.Utilities.Validation.Results;
 
-namespace NetFusion.Domain.Behaviors
+namespace NetFusion.Domain.Patterns.Behaviors.Validation
 {
     /// <summary>
     /// Domain Behavior responsible for validating its associated domain entity.
@@ -13,24 +13,26 @@ namespace NetFusion.Domain.Behaviors
         // Collaborations:
         public IValidationModule ValidationModule { get; set; }
 
-        private IEntityDelegator Entity { get; set; }
+        private readonly IBehaviorDelegator _entity;
 
-        public ValidationBehavior(IEntityDelegator entity)
+        public ValidationBehavior(IBehaviorDelegator entity)
         {
-            this.Entity = entity;
+            _entity = entity;
         }
 
         public ValidationResult Validate()
         {
-            IObjectValidator validator = ValidationModule.CreateValidator(this.Entity);
-            IValidatableType validatable = this.Entity as IValidatableType;
+            IObjectValidator validator = ValidationModule.CreateValidator(_entity);
+            IValidatableType validatable = _entity as IValidatableType;
 
+            // If the base validation has passed, invoke the validation on the
+            // entity if supported.
             if (validator.IsValid && validatable != null)
             {
                 validatable.Validate(validator);
             }
 
-            return new ValidationResult(this.Entity, validator);
+            return new ValidationResult(_entity, validator);
         }
     }
 }

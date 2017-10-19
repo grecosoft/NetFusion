@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using NetFusion.Domain.Behaviors;
 using NetFusion.Domain.Entities;
 using NetFusion.Domain.Entities.Core;
+using NetFusion.Domain.Patterns.Behaviors.Mapping;
 using NetFusion.Utilities.Core;
 using NetFusion.Utilities.Mapping;
 using UtilitiesTests.Mapping.Setup;
@@ -22,7 +22,7 @@ namespace UtilitiesTests.Mapping
             var targetMaps = new TargetMap[] { };
 
             var domainEntity = CreateTestEntity<SourceDomainEntity>(targetMaps);
-            var behavior = domainEntity.Entity.GetBehavior<IMappingBehavior>();
+            var behavior = domainEntity.Behaviors.Get<IMappingBehavior>();
 
             behavior.supported.Should().BeTrue();
             behavior.instance.Should().NotBeNull();
@@ -142,27 +142,27 @@ namespace UtilitiesTests.Mapping
 
         // Creates an source domain entity for testing with the mapping behavior registered.
         private SourceDomainEntity CreateTestEntity<T>(TargetMap[] targetMaps)
-            where T : IEntityDelegator
+            where T : IBehaviorDelegator
         {
             var factory = new DomainEntityFactory(new MockResolver(targetMaps));
 
             factory.BehaviorsFor<T>(
-                e => e.Supports<IMappingBehavior, MappingBehavior>());
+                e => e.Add<IMappingBehavior, MappingBehavior>());
 
             return factory.Create<SourceDomainEntity>();
         }
 
-        public class SourceDomainEntity : IEntityDelegator
+        public class SourceDomainEntity : IBehaviorDelegator
         {
-            public IEntity Entity { get; private set; }
+            public IBehaviorDelegatee Behaviors { get; private set; }
+
+            void IBehaviorDelegator.SetDelegatee(IBehaviorDelegatee behaviors)
+            {
+                Behaviors = behaviors;
+            }
 
             public string ValueOne { get; set; }
             public string ValueTwo { get; set; }
-
-            public void SetEntity(IEntity entity)
-            {
-                this.Entity = entity;
-            }
         }
 
         public class TargetModel
@@ -184,7 +184,8 @@ namespace UtilitiesTests.Mapping
 
             protected override SourceDomainEntity TargetToSource(TargetModel target)
             {
-                return new SourceDomainEntity {
+                return new SourceDomainEntity
+                {
                     ValueOne = target.ValueOne + "-TargetToSource",
                     ValueTwo = target.ValueTwo + "-TargetToSource"
                 };

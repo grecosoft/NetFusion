@@ -4,7 +4,7 @@ using NetFusion.Domain.Entities.Core;
 namespace NetFusion.Domain.Entities.Registration
 {
     /// <summary>
-    /// Application component can specific multiple instances of this interface
+    /// Application component can specify multiple instances of this interface
     /// to indicate what behaviors are associated with a given domain-entity.
     /// Types implementing this interface are discovered during the application
     /// bootstrap process and used to configure the DomainEntityFactory.

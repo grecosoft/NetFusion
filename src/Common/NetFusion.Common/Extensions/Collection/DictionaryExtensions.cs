@@ -24,8 +24,7 @@ namespace NetFusion.Common.Extensions.Collection
         {
             Check.NotNull(source, nameof(source));
 
-            TValue value;
-            if (source.TryGetValue(key, out value))
+            if (source.TryGetValue(key, out TValue value))
             {
                 return value;
             }

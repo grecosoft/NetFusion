@@ -1,4 +1,6 @@
-﻿namespace NetFusion.Domain.Entities.Core
+﻿using NetFusion.Common;
+
+namespace NetFusion.Domain.Entities.Core
 {
     /// <summary>
     /// Represents a behavior instance associated with a specific entity.
@@ -10,7 +12,9 @@
 
         public EntityBehavior(Behavior behavior)
         {
-            this.Behavior = behavior;
+            Check.NotNull(behavior, nameof(behavior));
+
+            Behavior = behavior;
         }
     }
 }

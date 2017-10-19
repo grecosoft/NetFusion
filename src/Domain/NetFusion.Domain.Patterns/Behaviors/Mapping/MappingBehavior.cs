@@ -2,7 +2,7 @@
 using NetFusion.Domain.Entities.Core;
 using NetFusion.Utilities.Mapping;
 
-namespace NetFusion.Domain.Behaviors
+namespace NetFusion.Domain.Patterns.Behaviors.Mapping
 {
     /// <summary>
     /// Behavior that can be associated with a domain entity allowing
@@ -13,17 +13,17 @@ namespace NetFusion.Domain.Behaviors
         // Collaborations:
         public IObjectMapper Mapper { get; set; }
 
-        private IEntityDelegator Entity { get; set; }
+        private IBehaviorDelegator Entity { get; set; }
 
-        public MappingBehavior(IEntityDelegator entity)
+        public MappingBehavior(IBehaviorDelegator entity)
         {
             Check.NotNull(entity, nameof(entity));
-            this.Entity = entity;
+            Entity = entity;
         }
 
         public TTarget MapTo<TTarget>() where TTarget : class, new()
         {
-            return Mapper.Map<TTarget>(this.Entity);
+            return Mapper.Map<TTarget>(Entity);
         }
     }
 }

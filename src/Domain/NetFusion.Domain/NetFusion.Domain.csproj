@@ -31,7 +31,7 @@
   <PropertyGroup>
   	<PackageId>NetFusion.Domain</PackageId>
 	<Title>NetFusion Domain Plug-In</Title>
-    <Description>Plug-In containing implementations for base DDD patterns that are technology independent.</Description>
+    <Description>Plug-In containing implementations for base entity types.</Description>
 	<PackageTags>netfusion;plugin;ddd</PackageTags>
   </PropertyGroup>
 </Project>

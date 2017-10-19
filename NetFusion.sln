@@ -86,6 +86,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Roslyn", "src\Int
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Messaging.Types", "src\Core\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj", "{F58C6A10-A627-41D0-B1A0-972F12A8F31D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Domain.Patterns", "src\Domain\NetFusion.Domain.Patterns\NetFusion.Domain.Patterns.csproj", "{5543B14B-16DD-45D3-8F0F-46EFE22FECD1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -220,6 +222,10 @@ Global
 		{F58C6A10-A627-41D0-B1A0-972F12A8F31D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F58C6A10-A627-41D0-B1A0-972F12A8F31D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F58C6A10-A627-41D0-B1A0-972F12A8F31D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5543B14B-16DD-45D3-8F0F-46EFE22FECD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5543B14B-16DD-45D3-8F0F-46EFE22FECD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5543B14B-16DD-45D3-8F0F-46EFE22FECD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5543B14B-16DD-45D3-8F0F-46EFE22FECD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -264,6 +270,7 @@ Global
 		{4464FFBD-68C0-424A-9E3A-BCD390CD3068} = {21805046-B58F-4B99-8997-8E2E7EC99D2F}
 		{DE64334A-355E-4C75-9238-DE5C21A98CE4} = {1EEBF08A-7413-403E-8A4E-EB9E8C96CD00}
 		{F58C6A10-A627-41D0-B1A0-972F12A8F31D} = {3B81A3E8-25A7-4473-BDA9-36B6D7FED4D6}
+		{5543B14B-16DD-45D3-8F0F-46EFE22FECD1} = {D1F41609-AA70-445F-A484-B23D36D84F87}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17556D20-DBFC-4AEB-857D-74B7C1EDEA60}

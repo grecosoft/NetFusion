@@ -128,8 +128,7 @@ namespace NetFusion.Messaging
                 { "Publisher", futureResult.Invoker.GetType().FullName }
             };
 
-            var dispatchException = sourceException as MessageDispatchException;
-            if (dispatchException != null)
+            if (sourceException is MessageDispatchException dispatchException)
             {
                 Details["DispatchDetails"] = dispatchException.Details;
             }

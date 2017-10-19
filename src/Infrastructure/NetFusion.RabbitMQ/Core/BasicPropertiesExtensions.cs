@@ -29,9 +29,8 @@ namespace NetFusion.RabbitMQ.Core
         public static string GetBrokerName(this IBasicProperties basicProps)
         {
             var headers = basicProps.Headers ?? new Dictionary<string, object>();
-            object value = null;
 
-            if (headers.TryGetValue(RpcClient.RPC_BROKER_NAME, out value))
+            if (headers.TryGetValue(RpcClient.RPC_BROKER_NAME, out object value))
             {
                 byte[] byteValue = (byte[])value;
                 return Encoding.UTF8.GetString(byteValue);

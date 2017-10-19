@@ -13,6 +13,6 @@ namespace NetFusion.Domain.Entities
         /// </summary>
         /// <typeparam name="TDomainEntity">The domain entity type to be created.</typeparam>
         /// <returns>Instance of the domain entity.</returns>
-        TDomainEntity Create<TDomainEntity>() where TDomainEntity : IEntityDelegator, new();
+        TDomainEntity Create<TDomainEntity>() where TDomainEntity : IBehaviorDelegator, new();
     }
 }

@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Core\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
+    <ProjectReference Include="..\..\src\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
+    <ProjectReference Include="..\..\src\Core\NetFusion.Test\NetFusion.Test.csproj" />
+    <ProjectReference Include="..\..\src\Domain\NetFusion.Domain.Patterns\NetFusion.Domain.Patterns.csproj" />
     <ProjectReference Include="..\..\src\Domain\NetFusion.Domain\NetFusion.Domain.csproj" />
   </ItemGroup>
   

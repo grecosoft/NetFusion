@@ -224,14 +224,10 @@ namespace NetFusion.RabbitMQ.Core
             Check.NotNull(message, nameof(message));
 
             string contentType = message.GetContentType();
-            if (contentType == null)
-            {
-                throw new BrokerException(
-                    $"Content-Type not specified for message of type {message.GetType()}.");
-            }
-
             IBasicProperties properties = channel.CreateBasicProperties();
-            properties.ContentType = contentType;
+
+            properties.ContentType = contentType ?? throw new BrokerException(
+                    $"Content-Type not specified for message of type {message.GetType()}.");
 
             OnSetPublisherBasicProperties(channel, message, properties);
 

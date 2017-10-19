@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.6|AnyCPU'">
+    <LangVersion>7</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.6.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Base\NetFusion.Base.csproj" />
+    <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
+    <ProjectReference Include="..\..\Utilities\NetFusion.Utilities.Mapping\NetFusion.Utilities.Mapping.csproj" />
+    <ProjectReference Include="..\..\Utilities\NetFusion.Utilities.Validation\NetFusion.Utilities.Validation.csproj" />
+    <ProjectReference Include="..\NetFusion.Domain\NetFusion.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>NetFusion.Domain.Patterns</PackageId>
+    <Title>NetFusion Domain Patterns Plug-In</Title>
+    <Description>Plug-In containing DDD based patterns extending NetFusion.Domain.</Description>
+    <PackageTags>netfusion;plugin;ddd;patterns;cqrh;query;uow;unit of work</PackageTags>
+  </PropertyGroup>
+</Project>

@@ -75,11 +75,11 @@ namespace NetFusion.Web.Mvc.Metadata.Core
         {
             foreach(ApiDescription description in descriptions)
             {
-                var actionDescriptor = description.ActionDescriptor as ControllerActionDescriptor;
-                if (actionDescriptor != null && IsDiscoverableAction(actionDescriptor))
+                if (description.ActionDescriptor is ControllerActionDescriptor actionDescriptor 
+                    && IsDiscoverableAction(actionDescriptor))
                 {
                     yield return new ApiActionMeta(description, actionDescriptor);
-                } 
+                }
             }
         }
 

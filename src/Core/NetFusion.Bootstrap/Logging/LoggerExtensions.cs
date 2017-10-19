@@ -190,8 +190,10 @@ namespace NetFusion.Bootstrap.Logging
             object details)
         {
 
-            var values = new List<object>(args);
-            values.Add(details.ToIndentedJson());
+            var values = new List<object>(args)
+            {
+                details.ToIndentedJson()
+            };
 
             logger.Log(logLevel, eventId, new FormattedLogValues(message + " {details}", values.ToArray()), exception, _messageFormatter);
         }

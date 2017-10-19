@@ -118,9 +118,8 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         private IBrokerSerializer GetSerializer(string contentType)
         {
-            IBrokerSerializer serializer = null;
 
-            if (!_serializers.TryGetValue(contentType, out serializer))
+            if (!_serializers.TryGetValue(contentType, out IBrokerSerializer serializer))
             {
                 throw new BrokerException($"Serializer for Content Type: {contentType} not registered.");
             }
