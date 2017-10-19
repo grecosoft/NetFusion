@@ -6,7 +6,7 @@
 
 ![image](https://raw.githubusercontent.com/wiki/grecosoft/NetFusion/img/DotNetCore.png)
 
-# Better Architecture Starts with a Better Framework
+# "Great things are done by a series of small things that are brought together" - Vincent Van Gogh
 
 * Provides a well defined plug-in bootstrap process.
 * Core bootstrap process is not dependent on any open-source technologies. This allows the core implementation to remain unchanged since new technologies and open-source libraries are introduced via plug-ins.
