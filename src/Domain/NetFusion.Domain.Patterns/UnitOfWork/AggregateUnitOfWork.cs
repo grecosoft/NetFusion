@@ -6,6 +6,8 @@ using NetFusion.Domain.Patterns.Behaviors.Validation;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Types;
+using NetFusion.Utilities.Validation;
+using NetFusion.Utilities.Validation.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,17 +18,27 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
 {
     /// <summary>
     /// Saves an updated aggregate and notifies other internal and external aggregates of any changes.
+    /// If the aggregate being committed or enlisted has validation errors, the commit process stops
+    /// and an exception is thrown or the error validations returned to the caller based the specified 
+    /// CommitSettings.  Non-error aggregate validations will not throw an exception or stop the commit
+    /// process.  If any enlisted aggregates record warning or information validations, the unit-of-work
+    /// is committed and the validations returned to the caller.
     /// </summary>
     public class AggregateUnitOfWork : IAggregateUnitOfWork
     {
         private readonly IMessagingService _messagingSrv;
         private readonly List<IAggregate> _enlistedAggregates;
+        private readonly List<ValidationResult> _aggregateValidations;
 
         public AggregateUnitOfWork(IMessagingService messagingSrv)
         {
             _messagingSrv = messagingSrv;
+
             _enlistedAggregates = new List<IAggregate>();
+            _aggregateValidations = new List<ValidationResult>();
         }
+
+        private bool HasErrorValidations => _aggregateValidations.Any(vr => vr.ValidationType == ValidationTypes.Error);
 
         // All the integration events for all enlisted aggregates.
         private IEnumerable<Type> EnlistedIntegrationEventTypes => _enlistedAggregates
@@ -35,25 +47,38 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
             .SelectMany(ib => ib.DomainEvents.Select(de => de.GetType()));
 
 
-        public async Task CommitAsync(IAggregate aggregate, Func<Task> commitAction,
+        public async Task<CommitResult> CommitAsync(IAggregate aggregate, Func<Task> commitAction,
+            CommitSettings settings = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             Check.NotNull(aggregate, nameof(aggregate));
             Check.NotNull(commitAction, nameof(commitAction));
 
+            settings = settings ?? new CommitSettings();
+
             if (_enlistedAggregates.Any())
             {
                 throw new InvalidOperationException(
-                    "The unit-of-work has already been commented.  Other aggregates must be enlisted.");
+                    "The unit-of-work has already being committed.  Other aggregates must be enlisted.");
             }
 
-            AssureValidAggregate(aggregate);
+            ValidateAggregate(aggregate);
 
             _enlistedAggregates.Add(aggregate);
 
-            // Notify other application aggregates within the same micro-service
-            // then commit all changes that occurred;
+            // Notify other application aggregates within the same micro-service.
             await DoInternalIntegration(aggregate, cancellationToken);
+
+            if (HasErrorValidations)
+            {
+                if (settings.ThrowIfInvalid)
+                {
+                    var errorValResult = _aggregateValidations.First(av => av.ValidationType == ValidationTypes.Error);
+                    errorValResult.ThrowIfInvalid();
+                }
+                return CommitResult.Invalid(_aggregateValidations);
+            }
+
             await commitAction();
 
             // Next, publish all integration events used to notify external 
@@ -62,6 +87,8 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
 
             // Clear any aggregate recorded integration events and it recorded state.
             FinalizeAggregate();
+
+            return CommitResult.Sucessful(_aggregateValidations);
         }
 
         public Task EnlistAsync(IAggregate aggregate, 
@@ -75,13 +102,15 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
                     "Aggregate can be enlisted only if an aggregate has first been committed.");
             }
 
-            AssureValidAggregate(aggregate);
+            ValidateAggregate(aggregate);
             AssureNotEnlistedIntegrationEvents(aggregate);
            
             if (!_enlistedAggregates.Contains(aggregate))
             {
                 _enlistedAggregates.Add(aggregate);
             }
+
+
             return DoInternalIntegration(aggregate, cancellationToken);
         }
 
@@ -91,7 +120,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
             return _enlistedAggregates.OfType<TAggregate>().FirstOrDefault(predicate);
         }
 
-        private void AssureValidAggregate(IAggregate aggregate)
+        private void ValidateAggregate(IAggregate aggregate)
         {
             if (aggregate.Behaviors == null)
             {
@@ -101,7 +130,12 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
             }
   
             var behavior = aggregate.Behaviors.Get<IValidationBehavior>();
-            behavior.instance?.Validate().ThrowIfInvalid();
+
+            ValidationResult valResult = behavior.instance?.Validate();                     
+            if (valResult != null && valResult.ObjectValidations.Any())
+            {
+                _aggregateValidations.Add(valResult);
+            }
         }
 
         // Integration events for all enlisted aggregates should be unique.  This might not
@@ -129,7 +163,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
         protected async Task DoInternalIntegration(IAggregate aggregate, CancellationToken cancellationToken)
         {
             var behavior = aggregate.Behaviors.Get<IEventIntegrationBehavior>();
-            if (behavior.supported)
+            if (behavior.supported && !HasErrorValidations)
             {
                 await _messagingSrv.PublishAsync(behavior.instance, cancellationToken, IntegrationTypes.Internal);
                 behavior.instance.MarkInternallyIntegrated();
@@ -164,6 +198,9 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
                 enlistedAggregate.Behaviors.Get<IEventIntegrationBehavior>().instance?.Clear();
                 enlistedAggregate.Behaviors.Get<IAggregateStateBehavior>().instance?.Clear();
             }
+
+            //_enlistedAggregates.Clear();
+            _aggregateValidations.Clear();
         }
     }
 }

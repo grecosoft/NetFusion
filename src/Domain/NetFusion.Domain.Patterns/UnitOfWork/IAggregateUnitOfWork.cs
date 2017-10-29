@@ -17,9 +17,11 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
         /// </summary>
         /// <param name="aggregate">The aggregate to be committed.</param>
         /// <param name="commitAction">The action used to commit changes to the aggregate.</param>
+        /// <param name="settings">Settings used to specify of the unit-of-work is committed.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Task that is completed when the commit finishes.</returns>
-        Task CommitAsync(IAggregate aggregate, Func<Task> commitAction,
+        Task<CommitResult> CommitAsync(IAggregate aggregate, Func<Task> commitAction,
+            CommitSettings settings = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>

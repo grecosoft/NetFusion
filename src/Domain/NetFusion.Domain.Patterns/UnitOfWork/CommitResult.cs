@@ -1,0 +1,57 @@
+﻿using NetFusion.Common;
+using NetFusion.Utilities.Validation.Results;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace NetFusion.Domain.Patterns.UnitOfWork
+{
+    /// <summary>
+    /// The results of committing the unit-of-work.
+    /// </summary>
+    public class CommitResult
+    {
+        /// <summary>
+        /// Indicates if the commit was successful.
+        /// </summary>
+        public bool IsSucessful { get; private set; }
+
+        /// <summary>
+        /// Indicates that the unit-of-work was not committed because an enlisted 
+        /// aggregate had error validations.
+        /// </summary>
+        public bool HasErrors { get; private set; }
+
+        /// <summary>
+        /// Indicates the committed the unit-of-work has associated validations.
+        /// </summary>
+        public bool HasValidations => ValidationResults.Any();
+
+        /// <summary>
+        /// The validations for any of the enlisted aggregates.
+        /// </summary>
+        public IEnumerable<ValidationResult> ValidationResults { get; private set; }
+
+        public static CommitResult Sucessful(IEnumerable<ValidationResult> validationResults)
+        {
+            Check.NotNull(validationResults, nameof(validationResults));
+
+            return new CommitResult
+            {
+                IsSucessful = true,
+                HasErrors = false,
+                ValidationResults = new List<ValidationResult>(validationResults)
+            };
+        }
+
+        public static CommitResult Invalid(IEnumerable<ValidationResult> validationResults)
+        {
+            Check.NotNull(validationResults, nameof(validationResults));
+
+            return new CommitResult {
+                IsSucessful = false,
+                HasErrors = true,
+                ValidationResults = new List<ValidationResult>(validationResults)
+            };
+        }
+    }
+}

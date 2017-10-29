@@ -45,7 +45,8 @@ namespace NetFusion.Utilities.Validation.Core
         }
 
         public bool IsValid =>
-            !_items.Any(i => i.ValidationType == ValidationTypes.Error);
+            !_items.Any(i => i.ValidationType == ValidationTypes.Error) &&
+                _children.Any(cv => !cv.IsValid);
 
         public bool Validate(bool predicate, string message, 
             ValidationTypes level = ValidationTypes.Error)

@@ -216,7 +216,7 @@ namespace DomainTests.UnitOfWork
 
             await uow.CommitAsync(aggregate, () => Task.CompletedTask);
             (await Assert.ThrowsAsync<InvalidOperationException>(() => uow.CommitAsync(aggregate, () => Task.CompletedTask)))
-                .Message.Contains("The unit-of-work has already been commented");
+                .Message.Contains("The unit-of-work has already being committed.  Other aggregates must be enlisted.");
         }
 
         /// <summary>
