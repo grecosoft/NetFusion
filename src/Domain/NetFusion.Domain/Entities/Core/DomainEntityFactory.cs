@@ -14,7 +14,7 @@ namespace NetFusion.Domain.Entities.Core
         IFactoryRegistry
     {
         /// <summary>
-        /// Reference to the factory instance creating during the bootstrap process.
+        /// Reference to the factory instance created during the bootstrap process.
         /// </summary>
         public static IDomainEntityFactory Instance { get; private set; }
 
@@ -49,15 +49,37 @@ namespace NetFusion.Domain.Entities.Core
         public TDomainEntity Create<TDomainEntity>()
             where TDomainEntity : IBehaviorDelegator, new()
         {
+            TDomainEntity domainEntity = new TDomainEntity();
+            SetBehaviorDelegatee(domainEntity);
+
+            return domainEntity;
+        }
+
+        public DomainEntityConstructor<TDomainEntity> Build<TDomainEntity>() where TDomainEntity : IBehaviorDelegator
+        {
+            return new DomainEntityConstructor<TDomainEntity>(domainEntity => {
+                SetBehaviorDelegatee(domainEntity);
+            });
+        }
+
+        public void Build(IBehaviorDelegator domainEntity)
+        {
+            if (domainEntity.Behaviors != null)
+            {
+                return;
+            }
+
+            SetBehaviorDelegatee(domainEntity);
+        }
+
+        private void SetBehaviorDelegatee(IBehaviorDelegator domainEntity)
+        {
             // When an entity's behaviors are first accessed, the supported behavior types are loaded.
             // The behavior instances are not created until first used.
-            var supportedBehaviors = new Lazy<IEnumerable<EntityBehavior>>( () => GetSupportedBehaviors(typeof(TDomainEntity)));
+            var supportedBehaviors = new Lazy<IEnumerable<EntityBehavior>>(() => GetSupportedBehaviors(domainEntity.GetType()));
 
-            TDomainEntity domainEntity = new TDomainEntity();
             IBehaviorDelegatee delegatee = new BehaviorDelegatee(domainEntity, supportedBehaviors, _resolver);
-
             domainEntity.SetDelegatee(delegatee);
-            return domainEntity;
         }
 
         private IEnumerable<EntityBehavior> GetSupportedBehaviors(Type domainEntityType)
