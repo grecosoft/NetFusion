@@ -110,7 +110,6 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
                 _enlistedAggregates.Add(aggregate);
             }
 
-
             return DoInternalIntegration(aggregate, cancellationToken);
         }
 
