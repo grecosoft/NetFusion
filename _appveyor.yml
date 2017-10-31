@@ -26,5 +26,5 @@ deploy:
   - provider: NuGet
     artifact: MyGet
     api_key:
-      secure: c/FNue2mw27B5A0B1V+pAtSl22XoSqSMu6pj8xIlKGdwAEqoCq7HRxtTqsJl/m1L
+      secure: 680Pna+OADrRxf8aAe17NDNnRpJ/3acg0NpRDPqz1Po=
     skip_symbols: false
