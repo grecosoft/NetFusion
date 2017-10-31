@@ -11,13 +11,12 @@ namespace NetFusion.Bootstrap.Configuration
     /// </summary>
     public class EnvironmentConfig : IContainerConfig
     {
-        private static string[] CommonEnviromentNameKeys = { "ASPNETCORE_ENVIRONMENT", "NETFUSION_ENVIRONMENT" };
+        private static string[] CommonEnviromentNameKeys = { "NETFUSION_ENVIRONMENT", "ASPNETCORE_ENVIRONMENT" };
 
         private IConfiguration _configuration { get; set; }
 
         /// <summary>
-        /// The value of the variable specifying the environment of the 
-        /// executing application.
+        /// The value of the variable specifying the environment of the executing application.
         /// </summary>
         public static string EnvironmentName => GetEnvironmentName();
 

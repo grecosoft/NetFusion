@@ -31,10 +31,15 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
         /// be published.
         /// </summary>
         /// <param name="aggregate">The aggregate to enlist within the unit-of-work.</param>
+        /// <param name="commitAction">The action used to commit changes to the aggregate. 
+        /// Optional if the commit-action passed to the CommitAsync method saves all changes
+        /// made to all enlisted aggregates.  This is the case when using a technology such
+        /// as Entity-Framework.</param>
         /// <param name="cancellationToken">The optional cancellation token.</param>
         /// <returns>Task that will be completed after publishing the aggregate's associated
         /// integration events.</returns>
         Task EnlistAsync(IAggregate aggregate,
+            Func<Task> commitAction = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
@@ -45,5 +50,11 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
         /// <returns>The matching aggregate or null if not found.</returns>
         TAggregate GetEnlistedAggregate<TAggregate>(Func<TAggregate, bool> predicate)
            where TAggregate : IAggregate;
+
+        /// <summary>
+        /// Clears the enlisted aggregates and any unit-of-work related aggregate data.
+        /// This method is also called when the CommitResult returned instance is disposed.
+        /// </summary>
+        void Clear();
     }
 }

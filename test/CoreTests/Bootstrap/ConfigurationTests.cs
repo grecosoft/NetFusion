@@ -97,11 +97,14 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = nameof(ApplicationVariable_CanBeRead_ToDetermineEnvironment))]
         public void ApplicationVariable_CanBeRead_ToDetermineEnvironment()
         {
-            Environment.SetEnvironmentVariable("NETFUSION_ENVIRONMENT", EnvironmentNames.Staging);
-            EnvironmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Staging);
+            Environment.SetEnvironmentVariable("NETFUSION_ENVIRONMENT", null);
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", null);
 
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", EnvironmentNames.Production);
-            EnvironmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Production);
+            EnvironmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Production);          
+
+            Environment.SetEnvironmentVariable("NETFUSION_ENVIRONMENT", EnvironmentNames.Staging);
+            EnvironmentConfig.EnvironmentName.Should().Be(EnvironmentNames.Staging);
         }
 
         [Fact(DisplayName = nameof(EvironmentVariableProvider_AddedIfSecified))]

@@ -10,7 +10,7 @@ namespace NetFusion.Bootstrap.Configuration
     /// </summary>
     public static class ConfigurationExtensions
     {
-        private const string APP_SETTINGS_FILE_NAME = "appsettings.json";
+        private const string APP_SETTINGS_FILE_NAME = "appsettings";
 
         /// <summary>
         /// Configures an ordered list of application JSON files to be searched for settings.
@@ -26,7 +26,7 @@ namespace NetFusion.Bootstrap.Configuration
             Check.NotNull(configBuilder, "Configuration build not specified.");
 
             configBuilder.SetBasePath(Directory.GetCurrentDirectory());
-            configBuilder.AddJsonFile(APP_SETTINGS_FILE_NAME, optional: true, reloadOnChange: true);
+            configBuilder.AddJsonFile($"{APP_SETTINGS_FILE_NAME}.json", optional: true, reloadOnChange: true);
             configBuilder.AddJsonFile($"{APP_SETTINGS_FILE_NAME}.{EnvironmentConfig.EnvironmentName}.json", reloadOnChange: true, optional: true);
             configBuilder.AddJsonFile($"{APP_SETTINGS_FILE_NAME}.{Environment.MachineName}.json", reloadOnChange: true, optional: true);
             return configBuilder;

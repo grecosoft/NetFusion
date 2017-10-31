@@ -1,4 +1,6 @@
-﻿using NetFusion.Common;
+﻿using Microsoft.Extensions.Logging;
+using NetFusion.Bootstrap.Logging;
+using NetFusion.Common;
 using NetFusion.Domain.Entities;
 using NetFusion.Domain.Patterns.Behaviors.Integration;
 using NetFusion.Domain.Patterns.Behaviors.State;
@@ -26,28 +28,32 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
     /// </summary>
     public class AggregateUnitOfWork : IAggregateUnitOfWork
     {
+        private readonly ILogger<AggregateUnitOfWork> _logger;
         private readonly IMessagingService _messagingSrv;
-        private readonly List<IAggregate> _enlistedAggregates;
+
+        private readonly List<EnlistedAggregate> _enlistedAggregates;
         private readonly List<ValidationResult> _aggregateValidations;
 
-        public AggregateUnitOfWork(IMessagingService messagingSrv)
+        public AggregateUnitOfWork(ILoggerFactory loggerFactory, IMessagingService messagingSrv)
         {
+            _logger = loggerFactory.CreateLogger<AggregateUnitOfWork>();
             _messagingSrv = messagingSrv;
 
-            _enlistedAggregates = new List<IAggregate>();
+            _enlistedAggregates = new List<EnlistedAggregate>();
             _aggregateValidations = new List<ValidationResult>();
         }
 
         private bool HasErrorValidations => _aggregateValidations.Any(vr => vr.ValidationType == ValidationTypes.Error);
+        private IEnumerable<IAggregate> Aggregates => _enlistedAggregates.Select(ea => ea.Aggregate);
 
         // All the integration events for all enlisted aggregates.
-        private IEnumerable<Type> EnlistedIntegrationEventTypes => _enlistedAggregates
-            .Select(ea => ea.Behaviors.Get<IEventIntegrationBehavior>().instance)
+        private IEnumerable<Type> EnlistedIntegrationEventTypes => Aggregates
+            .Select(a => a.Behaviors.Get<IEventIntegrationBehavior>().instance)
             .Where(ib => ib != null)
             .SelectMany(ib => ib.DomainEvents.Select(de => de.GetType()));
 
 
-        public async Task<CommitResult> CommitAsync(IAggregate aggregate, Func<Task> commitAction,
+        public Task<CommitResult> CommitAsync(IAggregate aggregate, Func<Task> commitAction,
             CommitSettings settings = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -64,8 +70,24 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
 
             ValidateAggregate(aggregate);
 
-            _enlistedAggregates.Add(aggregate);
+            _enlistedAggregates.Add(new EnlistedAggregate
+            {
+                Aggregate = aggregate,
+                CommitAction = commitAction
+            });
 
+            using (var logger = _logger.LogTraceDuration(UnitOfWorkLogEvents.COMMIT_DETAILS, 
+                $"Committing Aggregate of type: {aggregate.GetType().FullName}"))
+            {
+                logger.Log.LogTraceDetails("Commit Settings", settings);
+                logger.Log.LogTrace("Number Enlisted Aggregates: {NumEnlistedAggregates}", _enlistedAggregates.Count());
+
+                return IntegrateAggregate(aggregate, settings, cancellationToken);
+            }
+        }
+
+        private async Task<CommitResult> IntegrateAggregate(IAggregate aggregate, CommitSettings settings, CancellationToken cancellationToken)
+        {
             // Notify other application aggregates within the same micro-service.
             await DoInternalIntegration(aggregate, cancellationToken);
 
@@ -76,22 +98,25 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
                     var errorValResult = _aggregateValidations.First(av => av.ValidationType == ValidationTypes.Error);
                     errorValResult.ThrowIfInvalid();
                 }
-                return CommitResult.Invalid(_aggregateValidations);
+                return CommitResult.Invalid(this, _aggregateValidations);
             }
 
-            await commitAction();
+            // Commit all enlisted aggregates.
+            foreach (EnlistedAggregate enlisted in _enlistedAggregates.Where(ea => ea.CommitAction != null))
+            {
+                await enlisted.CommitAction();
+            }
 
             // Next, publish all integration events used to notify external 
             // application micro-service aggregates.
             await DoExternalIntegration(cancellationToken);
 
-            // Clear any aggregate recorded integration events and it recorded state.
-            FinalizeAggregate();
-
-            return CommitResult.Sucessful(_aggregateValidations);
+            return CommitResult.Sucessful(this, _aggregateValidations);
         }
 
-        public Task EnlistAsync(IAggregate aggregate, 
+
+        public Task EnlistAsync(IAggregate aggregate,
+            Func<Task> commitAction = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             Check.NotNull(aggregate, nameof(aggregate));
@@ -105,18 +130,27 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
             ValidateAggregate(aggregate);
             AssureNotEnlistedIntegrationEvents(aggregate);
            
-            if (!_enlistedAggregates.Contains(aggregate))
-            {
-                _enlistedAggregates.Add(aggregate);
+            if (!IsEnlisted(aggregate))
+            {          
+                _enlistedAggregates.Add(new EnlistedAggregate {
+                    Aggregate = aggregate,
+                    CommitAction = commitAction });
             }
 
             return DoInternalIntegration(aggregate, cancellationToken);
         }
 
+        private bool IsEnlisted (IAggregate aggregate)
+        {
+            return Aggregates.Contains(aggregate);
+        }
+
         public TAggregate GetEnlistedAggregate<TAggregate>(Func<TAggregate, bool> predicate)
             where TAggregate : IAggregate
         {
-            return _enlistedAggregates.OfType<TAggregate>().FirstOrDefault(predicate);
+            Check.NotNull(predicate, nameof(predicate));
+
+            return Aggregates.OfType<TAggregate>().FirstOrDefault(predicate);
         }
 
         private void ValidateAggregate(IAggregate aggregate)
@@ -164,6 +198,8 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
             var behavior = aggregate.Behaviors.Get<IEventIntegrationBehavior>();
             if (behavior.supported && !HasErrorValidations)
             {
+                LogIntegrationEvents(IntegrationTypes.Internal, aggregate);
+
                 await _messagingSrv.PublishAsync(behavior.instance, cancellationToken, IntegrationTypes.Internal);
                 behavior.instance.MarkInternallyIntegrated();
             }
@@ -172,7 +208,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
         // The following will publish domain event using any publisher within the 'external' category.
         private async Task DoExternalIntegration(CancellationToken cancellationToken)
         {
-            foreach(IAggregate aggregate in _enlistedAggregates)
+            foreach(IAggregate aggregate in Aggregates)
             {
                 await DoExternalIntegration(aggregate, cancellationToken);
             }
@@ -183,23 +219,45 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
             var behavior = aggregate.Behaviors.Get<IEventIntegrationBehavior>();
             if (behavior.supported)
             {
+                LogIntegrationEvents(IntegrationTypes.External, aggregate);
                 return _messagingSrv.PublishAsync(behavior.instance, cancellationToken, IntegrationTypes.External);
             }
             return Task.CompletedTask;
         }
 
+        private void LogIntegrationEvents(IntegrationTypes integrationType, IAggregate aggregate)
+        {
+            var integrationBehavior = aggregate.Behaviors.GetRequired<IEventIntegrationBehavior>();
+
+            var eventTypeNames = integrationBehavior.DomainEvents
+                .Select(de => de.GetType().FullName)
+                .ToArray();
+
+            _logger.LogTrace(UnitOfWorkLogEvents.INTEGRATION_DETAILS,
+                "Aggregate: {Aggregate Type} Integration Type: {Integration Type} Integration Events {Events}", 
+                    aggregate.GetType().FullName, 
+                    integrationType, 
+                    string.Join(", ", eventTypeNames));
+        }
+
         // After the unit-of-work has been successfully committed, clear any information being tracked
         // by the enlisted aggregates.
-        private void FinalizeAggregate()
+        public void Clear()
         {
-            foreach(IAggregate enlistedAggregate in _enlistedAggregates)
+            foreach(IAggregate enlistedAggregate in Aggregates)
             {
                 enlistedAggregate.Behaviors.Get<IEventIntegrationBehavior>().instance?.Clear();
                 enlistedAggregate.Behaviors.Get<IAggregateStateBehavior>().instance?.Clear();
             }
 
-            //_enlistedAggregates.Clear();
             _aggregateValidations.Clear();
+            _enlistedAggregates.Clear();
+        }
+
+        private class EnlistedAggregate
+        {
+            public IAggregate Aggregate { get; set; }
+            public Func<Task> CommitAction { get; set; }
         }
     }
 }

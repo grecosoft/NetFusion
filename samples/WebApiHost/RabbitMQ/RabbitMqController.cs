@@ -52,7 +52,7 @@ namespace WebApiHost.RabbitMQ
         public async Task<string> PublishRPCEvent([FromBody]Car car)
         {
             var evt = new ExampleRpcCommand(car);
-            var response = await _messagingSrv.PublishAsync(evt);
+            var response = await _messagingSrv.SendAsync(evt);
             return response.ResponseTestValue;
         }
     }

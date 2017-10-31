@@ -33,7 +33,7 @@ namespace BootstrapTests.Messaging
 
                     var domainEventSrv = c.Services.Resolve<IMessagingService>();
                     var evt = new MockCommand();
-                    var futureResult = domainEventSrv.PublishAsync(evt);
+                    var futureResult = domainEventSrv.SendAsync(evt);
 
                     result = await futureResult;
                 }, 
@@ -57,7 +57,7 @@ namespace BootstrapTests.Messaging
 
                     var domainEventSrv = c.Services.Resolve<IMessagingService>();
                     var evt = new MockCommandNoResult();
-                    await domainEventSrv.PublishAsync(evt);
+                    await domainEventSrv.SendAsync(evt);
                 },
                 (IAppContainer c) =>
                 {
@@ -80,7 +80,7 @@ namespace BootstrapTests.Messaging
 
                     var domainEventSrv = c.Services.Resolve<IMessagingService>();
                     var evt = new MockInvalidCommand();
-                    await domainEventSrv.PublishAsync(evt);
+                    await domainEventSrv.SendAsync(evt);
                 }, 
                 (c, e) => {
                     e.Should().NotBeNull();

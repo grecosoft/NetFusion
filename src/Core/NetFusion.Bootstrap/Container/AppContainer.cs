@@ -29,7 +29,7 @@ namespace NetFusion.Bootstrap.Container
         private bool _disposed = false;
 
         private readonly ITypeResolver _typeResover;
-        private readonly Dictionary<Type, IContainerConfig> _configs;
+        private readonly Dictionary<Type, IContainerConfig> _configs;  // ConfigType => Instance
 
         // Logging:
         private LoggerConfig _loggerConfig;
@@ -50,7 +50,7 @@ namespace NetFusion.Bootstrap.Container
 
         /// <summary>
         /// Creates an instance of the application container.  The static Create methods of AppContainer 
-        /// are the suggested method for creating a new container.  This constructor is usually used for 
+        /// are the suggested methods for creating a new container.  This constructor is usually used for 
         /// creating an application container for testing purposes.
         /// </summary>
         /// <param name="typeResolver">The type resolver implementation used to determine the plug-in
@@ -177,7 +177,7 @@ namespace NetFusion.Bootstrap.Container
         {
             Check.NotNull(config, nameof(config), "configuration not specified");
 
-            if (this.Registry.AllManifests != null)
+            if (Registry.AllManifests != null)
             {
                 throw new ContainerException("Container has already been built.");
             }
@@ -200,15 +200,15 @@ namespace NetFusion.Bootstrap.Container
             return this;
         }
 
-        public IAppContainer WithConfig<T>(Action<T> configAction)
+        public IAppContainer WithConfig<T>(Action<T> configInit)
             where T : IContainerConfig, new()
         {
-            Check.NotNull(configAction, nameof(configAction), "configuration delegate not specified");
+            Check.NotNull(configInit, nameof(configInit), "configuration delegate not specified");
 
             T config = new T();
             WithConfig(config);
 
-            configAction(config);
+            configInit(config);
             return this;
         }
 
@@ -229,6 +229,7 @@ namespace NetFusion.Bootstrap.Container
                     LoadContainer();
                     ComposeLoadedPlugins();
                     SetKnownTypeDiscoveries();
+
                     LogPlugins(_application.Plugins);
 
                     CreateAutofacContainer();
@@ -326,7 +327,7 @@ namespace NetFusion.Bootstrap.Container
             }
 
             DisposePluginModules();
-            this.Services?.Dispose();
+            Services?.Dispose();
 
             _disposed = true;
         }
@@ -341,7 +342,7 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        // Configure overall environment settings such as .NET configuration.
+        // Configure overall environment settings such as .NET configuration extensions.
         private void ConfigureEnvironment()
         {
             _enviromentConfig = _configs.Values.OfType<EnvironmentConfig>()
@@ -362,20 +363,21 @@ namespace NetFusion.Bootstrap.Container
         // Delegate to the type resolver to search all assemblies representing plug-ins.
         private void LoadManifestRegistry()
         {
-            var validator = new ManifestValidation(this.Registry);
+            var validator = new ManifestValidation(Registry);
 
-            _typeResover.Initialize(this.LoggerFactory);
-            _typeResover.SetPluginManifests(this.Registry);
+            _typeResover.Initialize(_loggerFactory);
+            _typeResover.SetPluginManifests(Registry);
             validator.Validate();
 
-            LogManifests(this.Registry);
+            LogManifests(Registry);
         }
 
         // For each found plug-in manifest assembly, create a plug-in instance
-        // associated with the manifest and add to composite application.
+        // associated with the manifest and add to composite application.  Then
+        // load all plug-in instances.
         private void LoadPlugins()
         {
-            _application.Plugins = this.Registry.AllManifests
+            _application.Plugins = Registry.AllManifests
                 .Select(m => new Plugin(m))
                 .ToArray();
 

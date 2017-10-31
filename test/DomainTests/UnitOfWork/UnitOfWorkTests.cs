@@ -14,6 +14,7 @@ using NetFusion.Messaging;
 using NetFusion.Messaging.Types;
 using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;
+using NetFusion.Testing.Logging;
 using NetFusion.Utilities.Modules;
 using NetFusion.Utilities.Validation;
 using System;
@@ -43,7 +44,7 @@ namespace DomainTests.UnitOfWork
 
                     // Publish command.
                     var msgSrv = c.Services.Resolve<IMessagingService>();
-                    await msgSrv.PublishAsync(new TestCommand());
+                    await msgSrv.SendAsync(new TestCommand());
                 },
                 (IAppContainer c) =>
                 {
@@ -71,7 +72,7 @@ namespace DomainTests.UnitOfWork
 
                     // Publish command.
                     var msgSrv = c.Services.Resolve<IMessagingService>();
-                    await msgSrv.PublishAsync(testCommand);
+                    await msgSrv.SendAsync(testCommand);
                 },
                 (IAppContainer c) =>
                 {
@@ -98,7 +99,7 @@ namespace DomainTests.UnitOfWork
 
                     // Publish command.
                     var msgSrv = c.Services.Resolve<IMessagingService>();
-                    await msgSrv.PublishAsync(testCommand);
+                    await msgSrv.SendAsync(testCommand);
                 },
                 (IAppContainer c, Exception ex) =>
                 {
@@ -124,7 +125,7 @@ namespace DomainTests.UnitOfWork
 
                     // Publish command.
                     var msgSrv = c.Services.Resolve<IMessagingService>();
-                    await msgSrv.PublishAsync(testCommand);
+                    await msgSrv.SendAsync(testCommand);
                 },
                 (IAppContainer c, Exception ex) =>
                 {
@@ -146,7 +147,7 @@ namespace DomainTests.UnitOfWork
 
                     // Publish command.
                     var msgSrv = c.Services.Resolve<IMessagingService>();
-                    await msgSrv.PublishAsync(testCommand);
+                    await msgSrv.SendAsync(testCommand);
                 },
                 (IAppContainer c, Exception ex) =>
                 {
@@ -168,7 +169,7 @@ namespace DomainTests.UnitOfWork
 
                     // Publish command.
                     var msgSrv = c.Services.Resolve<IMessagingService>();
-                    await msgSrv.PublishAsync(testCommand);
+                    await msgSrv.SendAsync(testCommand);
                 },
                 (IAppContainer c) =>
                 {
@@ -193,7 +194,7 @@ namespace DomainTests.UnitOfWork
 
                     // Publish command.
                     var msgSrv = c.Services.Resolve<IMessagingService>();
-                    await msgSrv.PublishAsync(testCommand);
+                    await msgSrv.SendAsync(testCommand);
                 },
                 (IAppContainer c, Exception ex) =>
                 {
@@ -212,7 +213,7 @@ namespace DomainTests.UnitOfWork
         {
             var entityFactory = EntityFactory.WithIntegration;
             var aggregate = entityFactory.Create<SampleAggregateOne>();
-            var uow = new AggregateUnitOfWork(MockMessagingService.Mock);
+            var uow = new AggregateUnitOfWork(new TestLoggerFactory(), MockMessagingService.Mock);
 
             await uow.CommitAsync(aggregate, () => Task.CompletedTask);
             (await Assert.ThrowsAsync<InvalidOperationException>(() => uow.CommitAsync(aggregate, () => Task.CompletedTask)))
@@ -228,7 +229,7 @@ namespace DomainTests.UnitOfWork
         {
             var entityFactory = EntityFactory.WithIntegration;
             var aggregate = entityFactory.Create<SampleAggregateOne>();
-            var uow = new AggregateUnitOfWork(MockMessagingService.Mock);
+            var uow = new AggregateUnitOfWork(new TestLoggerFactory(), MockMessagingService.Mock);
 
             await uow.CommitAsync(aggregate, () => Task.CompletedTask);
             var foundAggregate = uow.GetEnlistedAggregate<SampleAggregateOne>(_ => true);

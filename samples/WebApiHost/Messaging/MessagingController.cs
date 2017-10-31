@@ -114,7 +114,7 @@ namespace WebApiHost.Messaging
         public Task<HandlerResponse> PostAsyncCommand([FromBody]CommandInfo info)
         {
             var cmd = new ExampleAsyncCommand(info);
-            return _messagingSrv.PublishAsync(cmd);
+            return _messagingSrv.SendAsync(cmd);
         }
 
         /// <summary>

@@ -53,14 +53,14 @@ namespace NetFusion.Messaging.Core
             return PublishMessageAsync(domainEvent, integrationType, cancellationToken);
         }
 
-        public Task PublishAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken),
+        public Task SendAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             Check.NotNull(command, nameof(command), "command not specified");
             return PublishMessageAsync(command, integrationType, cancellationToken);
         }
 
-        public async Task<TResult> PublishAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken),
+        public async Task<TResult> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             Check.NotNull(command, nameof(command), "command not specified");
