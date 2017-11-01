@@ -21,7 +21,7 @@ namespace NetFusion.Bootstrap.Container
         /// <returns>Application specific manifest information.</returns>
         public IAppHostPluginManifest AppPluginManifest
         {
-            get { return this.AppHostPluginManifests.FirstOrDefault(); }
+            get { return AppHostPluginManifests.FirstOrDefault(); }
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace NetFusion.Bootstrap.Container
         /// <returns>Application specific manifest information.</returns>
         public IEnumerable<IAppHostPluginManifest> AppHostPluginManifests
         {
-            get { return this.AllManifests.OfType<IAppHostPluginManifest>(); }
+            get { return AllManifests.OfType<IAppHostPluginManifest>(); }
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace NetFusion.Bootstrap.Container
         /// </returns>
         public IEnumerable<IAppComponentPluginManifest> AppComponentPluginManifests
         {
-            get { return this.AllManifests.OfType<IAppComponentPluginManifest>(); }
+            get { return AllManifests.OfType<IAppComponentPluginManifest>(); }
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace NetFusion.Bootstrap.Container
         /// <returns>Plug-in component specific manifest information.</returns>
         public IEnumerable<ICorePluginManifest> CorePluginManifests
         {
-            get { return this.AllManifests.OfType<ICorePluginManifest>(); }
+            get { return AllManifests.OfType<ICorePluginManifest>(); }
         }
     }
 }

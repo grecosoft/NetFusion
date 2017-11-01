@@ -26,14 +26,14 @@ namespace NetFusion.Bootstrap.Container
         /// </summary>
         /// <param name="type">The type to search.</param>
         /// <returns>The plug-in containing the type.</returns>
-        Plugin GetPluginForType(Type type);
+        Plugin GetPluginContainingType(Type type);
 
         /// <summary>
         /// For a given type name, excluding the assembly name, determines 
         /// the plug-in where it is defined.
         /// </summary>
-        /// <param name="typeName">The type name to search.</param>
+        /// <param name="fullTypeName">The type name to search.</param>
         /// <returns>The plug-in containing the type.</returns>
-        Plugin GetPluginForFullTypeName(string typeName);
+        Plugin GetPluginContainingFullTypeName(string fullTypeName);
     }
 }

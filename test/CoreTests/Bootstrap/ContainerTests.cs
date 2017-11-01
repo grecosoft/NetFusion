@@ -326,7 +326,7 @@ namespace CoreTests.Bootstrap
                     c => c.Build(),
                     c =>
                     {
-                        var plugIn = c.GetPluginForType(typeof(MockTypeOneBasedOnKnownType));
+                        var plugIn = c.GetPluginContainingType(typeof(MockTypeOneBasedOnKnownType));
                         plugIn.Manifest.PluginId.Should().Be("__101");
                     }
                );

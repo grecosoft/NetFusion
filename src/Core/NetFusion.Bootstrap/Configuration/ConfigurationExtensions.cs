@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using NetFusion.Common;
 using System;
 using System.IO;
 
@@ -23,7 +22,10 @@ namespace NetFusion.Bootstrap.Configuration
         /// <returns>Instance to the configuration builder.</returns>
         public static ConfigurationBuilder AddDefaultAppSettings(this ConfigurationBuilder configBuilder)
         {
-            Check.NotNull(configBuilder, "Configuration build not specified.");
+            if (configBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(configBuilder), "Configuration builder not specified.");
+            }
 
             configBuilder.SetBasePath(Directory.GetCurrentDirectory());
             configBuilder.AddJsonFile($"{APP_SETTINGS_FILE_NAME}.json", optional: true, reloadOnChange: true);

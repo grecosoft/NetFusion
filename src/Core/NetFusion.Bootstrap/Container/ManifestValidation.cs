@@ -18,7 +18,8 @@ namespace NetFusion.Bootstrap.Container
 
         public ManifestValidation(ManifestRegistry registry)
         {
-            _registry = registry;
+            _registry = registry ??
+                throw new ArgumentNullException(nameof(registry), "Manifest Registry cannot be null.");
         }
 
         public void Validate()
@@ -80,14 +81,14 @@ namespace NetFusion.Bootstrap.Container
             if (_registry.AppHostPluginManifests.Empty())
             {
                 throw new ContainerException(
-                    $"An application plug-in manifest could not be found " +
+                    $"A Host Application Plug-In manifest could not be found " +
                     $"derived from: {typeof(IAppHostPluginManifest)}");
             }
 
             if (!_registry.AppHostPluginManifests.IsSingletonSet())
             {
                 throw new ContainerException(
-                    "More than one application plug-in manifest was found.",
+                    "More than one Host Application Plug-In manifest was found.",
                     _registry.AppHostPluginManifests.Select(am => new
                     {
                         ManifestType = am.GetType().FullName,

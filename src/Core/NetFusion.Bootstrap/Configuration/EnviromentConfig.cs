@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Common;
 using System;
 
 namespace NetFusion.Bootstrap.Configuration
@@ -67,8 +66,8 @@ namespace NetFusion.Bootstrap.Configuration
         /// <param name="builder">A built configuration with providers used to lookup configuration settings.</param>
         public void UseConfiguration(IConfiguration configuration)
         {
-            Check.NotNull(configuration, nameof(configuration));
-            _configuration = configuration;
+            _configuration = configuration
+                ?? throw new ArgumentNullException(nameof(configuration), "Configuration must be specified.");
         }
     }
 }

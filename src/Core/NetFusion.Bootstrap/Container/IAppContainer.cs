@@ -8,11 +8,14 @@ namespace NetFusion.Bootstrap.Container
     /// <summary>
     /// Container that bootstraps the application using plug-in types determined by the specified TypeResolver.  
     /// The plug-in types are scanned based on a set of conventions and used to create an application container.
+    /// The end product of the bootstrapped application container is a configured DI Container configured based
+    /// on a set of conventions.
     /// </summary>
     public interface IAppContainer: IDisposable
     {
         /// <summary>
-        /// Reference to the associated container logger.
+        /// Reference to the associated container logger factory.  This is a reference to the factory
+        /// logger provided by MS Logging Extensions.
         /// </summary>
         ILoggerFactory LoggerFactory { get; }
 
@@ -24,8 +27,7 @@ namespace NetFusion.Bootstrap.Container
         IAppContainer WithConfig(IContainerConfig config);
 
         /// <summary>
-        /// Adds a container configuration to the container specified
-        /// by the generic type.
+        /// Adds a container configuration to the container specified by the generic type.
         /// </summary>
         /// <typeparam name="T">The type of the configuration.</typeparam>
         /// <returns>The application container.</returns>
@@ -37,10 +39,10 @@ namespace NetFusion.Bootstrap.Container
         /// the generic type and then calls an initialize function.
         /// </summary>
         /// <typeparam name="T">The type of the configuration.</typeparam>
-        /// <param name="configAction">Delegate called to initialize the
+        /// <param name="configInit">Delegate called to initialize the
         /// created configuration.</param>
         /// <returns>The application container.</returns>
-        IAppContainer WithConfig<T>(Action<T> configAction)
+        IAppContainer WithConfig<T>(Action<T> configInit)
             where T : IContainerConfig, new();
 
         /// <summary>
@@ -61,11 +63,11 @@ namespace NetFusion.Bootstrap.Container
         /// <summary>
         /// Log of the composite application built by the application container.
         /// </summary>
-        /// <returns>Dictionary of key value pairs that can be serialized to JSON.</returns>
+        /// <returns>Dictionary of key/value pairs that can be serialized to JSON.</returns>
         IDictionary<string, object> Log { get; }
 
         /// <summary>
-        /// Allows each module to safely stopped.
+        /// Allows each module to be safely stopped.
         /// </summary>
         void Stop();
     }

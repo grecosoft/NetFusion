@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Extensions;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,26 +26,29 @@ namespace NetFusion.Bootstrap.Container
 
         /// <summary>
         /// The application process hosting the application container.
+        /// This will be a WebApi application or a Console executable.
         /// </summary>
         public Plugin AppHostPlugin
         {
-            get { return this.Plugins.First(p => p.Manifest is IAppHostPluginManifest); }
+            get { return Plugins.First(p => p.Manifest is IAppHostPluginManifest); }
         }
 
         /// <summary>
         /// All plug-ins containing application components that are specific to the application.
+        /// These plug-ins will contain Domain Entities, Services, and Repositories.
         /// </summary>
         public IEnumerable<Plugin> AppComponentPlugins
         {
-            get { return this.Plugins.Where(p => p.Manifest is IAppComponentPluginManifest); }
+            get { return Plugins.Where(p => p.Manifest is IAppComponentPluginManifest); }
         }
 
         /// <summary>
         /// All plug-ins containing core components that are generic and reusable across applications.
+        /// These plug-ins often implement cross-cutting concerns.
         /// </summary>
         public IEnumerable<Plugin> CorePlugins
         {
-            get { return this.Plugins.Where(p => p.Manifest is ICorePluginManifest); }
+            get { return Plugins.Where(p => p.Manifest is ICorePluginManifest); }
         }
 
         /// <summary>
@@ -56,14 +58,15 @@ namespace NetFusion.Bootstrap.Container
         /// <returns>List of limited plug in types or all plug-in types if no category is specified.</returns>
         public IEnumerable<PluginType> GetPluginTypes(params PluginTypes[] pluginTypes)
         {
-            Check.NotNull(pluginTypes, nameof(pluginTypes));
+            if (pluginTypes == null)
+                throw new ArgumentNullException(nameof(pluginTypes), "List of Plug-in types cannot be null.");
 
             if (pluginTypes.Length == 0)
             {
-                return this.Plugins.SelectMany(p => p.PluginTypes);
+                return Plugins.SelectMany(p => p.PluginTypes);
             }
 
-            return this.Plugins.SelectMany(p => p.PluginTypes)
+            return Plugins.SelectMany(p => p.PluginTypes)
                 .Where(pt => pluginTypes.Contains(pt.Plugin.PluginType));
         }
 
@@ -72,19 +75,19 @@ namespace NetFusion.Bootstrap.Container
         /// </summary>
         public IEnumerable<IPluginModule> AllPluginModules
         {
-            get { return this.Plugins?.SelectMany(p => p.PluginModules); }
+            get { return Plugins?.SelectMany(p => p.PluginModules); }
         }
 
-        //------------------------------------------Plug-in Component Registration------------------------------------------//
+        //------------------------------------------ Plug-in Component Registration ------------------------------------------//
 
         /// <summary>
-        /// Populates the dependency injection container with services
-        /// registered by plug-in modules.
+        /// Populates the dependency injection container with services registered by plug-in modules.
         /// </summary>
         /// <param name="builder">The DI container builder.</param>
         public void RegisterComponents(Autofac.ContainerBuilder builder)
-        {
-            Check.NotNull(builder, nameof(builder));
+        {            
+            if (builder == null)
+                throw new ArgumentNullException(nameof(builder), "DI Container cannot be null.");            
 
             InitializePluginModules();
 
@@ -98,9 +101,9 @@ namespace NetFusion.Bootstrap.Container
 
         private void InitializePluginModules()
         {
-            InitializePluginModules(this.CorePlugins);
-            InitializePluginModules(this.AppComponentPlugins);
-            InitializePluginModules(new[] { this.AppHostPlugin });
+            InitializePluginModules(CorePlugins);
+            InitializePluginModules(AppComponentPlugins);
+            InitializePluginModules(new[] { AppHostPlugin });
         }
 
         private void InitializePluginModules(IEnumerable<Plugin> plugins)
@@ -109,7 +112,7 @@ namespace NetFusion.Bootstrap.Container
             {
                 foreach (IPluginModule module in plugin.IncludedModules())
                 {
-                    module.Context = new ModuleContext(this.LoggerFactory, this, plugin);
+                    module.Context = new ModuleContext(LoggerFactory, this, plugin);
                     module.Initialize();
                 }
 
@@ -126,7 +129,7 @@ namespace NetFusion.Bootstrap.Container
         // Null implementations can be registered here.
         private void RegisterDefaultPluginComponents(Autofac.ContainerBuilder builder)
         {
-            foreach (IPluginModule module in this.AllPluginModules)
+            foreach (IPluginModule module in AllPluginModules)
             {
                 module.RegisterDefaultComponents(builder);
             }
@@ -135,7 +138,7 @@ namespace NetFusion.Bootstrap.Container
         private void RegisterCorePluginComponents(Autofac.ContainerBuilder builder)
         {
             IEnumerable<PluginType> allPluginTypes = GetPluginTypes();
-            foreach (Plugin plugin in this.CorePlugins)
+            foreach (Plugin plugin in CorePlugins)
             {
                 ScanPluginTypes(plugin, builder);
                 RegisterComponents(plugin, builder);
@@ -171,8 +174,7 @@ namespace NetFusion.Bootstrap.Container
         // Allows a plug-in to scan all specified plug-in types, excluding types
         // defined within it's plug-in, for components to be registered in the
         // Autofac container.
-        private void ScanAllOtherPluginTypes(Plugin plugin,
-            Autofac.ContainerBuilder builder,
+        private void ScanAllOtherPluginTypes(Plugin plugin, Autofac.ContainerBuilder builder,
             IEnumerable<PluginType> sourceTypes)
         {
             var typeRegistration = new TypeRegistration(
@@ -185,8 +187,7 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        private void ScanOnlyApplicationPluginTypes(Plugin plugin,
-            Autofac.ContainerBuilder builder)
+        private void ScanOnlyApplicationPluginTypes(Plugin plugin, Autofac.ContainerBuilder builder)
         {
             IEnumerable<PluginType> appPluginTypes = GetPluginTypes(PluginTypes.AppComponentPlugin, PluginTypes.AppHostPlugin);
 
@@ -205,7 +206,7 @@ namespace NetFusion.Bootstrap.Container
             IEnumerable<PluginType> allAppPluginTypes = GetPluginTypes(PluginTypes.AppComponentPlugin, PluginTypes.AppHostPlugin);
 
             // Application Components:
-            foreach (Plugin plugin in this.AppComponentPlugins)
+            foreach (Plugin plugin in AppComponentPlugins)
             {
                 ScanPluginTypes(plugin, builder);
                 RegisterComponents(plugin, builder);
@@ -213,35 +214,36 @@ namespace NetFusion.Bootstrap.Container
             }
 
             // Application Host:
-            ScanPluginTypes(this.AppHostPlugin, builder);
-            RegisterComponents(this.AppHostPlugin, builder);
-            ScanAllOtherPluginTypes(this.AppHostPlugin, builder, allAppPluginTypes);
+            ScanPluginTypes(AppHostPlugin, builder);
+            RegisterComponents(AppHostPlugin, builder);
+            ScanAllOtherPluginTypes(AppHostPlugin, builder, allAppPluginTypes);
         }
 
-        //------------------------------------------Start Plug-in Modules------------------------------------------//
+        //------------------------------------------ Start Plug-in Modules ------------------------------------------//
 
         /// <summary>
         /// This is the last step of the bootstrap process.  Each module is passed the instance of 
-        /// the created container so that it can enable any runtime services requiring the container.
+        /// the created container so that it can start any runtime services requiring the container.
         /// </summary>
         /// <param name="container">The built container.</param>
         public void StartPluginModules(IContainer container)
         {
-            Check.NotNull(container, nameof(container));
+            if (container == null)
+                throw new ArgumentNullException(nameof(container), "DI Container cannot be null.");
 
             // Start the plug-in modules in dependent order starting with core modules 
             // and ending with the application host modules.
-            this.IsStarted = true;
+            IsStarted = true;
 
             using (ILifetimeScope scope = container.BeginLifetimeScope())
             {
-                StartPluginModules(container, scope, this.CorePlugins);
-                StartPluginModules(container, scope, this.AppComponentPlugins);
-                StartPluginModules(container, scope, new[] { this.AppHostPlugin });
+                StartPluginModules(container, scope, CorePlugins);
+                StartPluginModules(container, scope, AppComponentPlugins);
+                StartPluginModules(container, scope, new[] { AppHostPlugin });
 
                 // Last phase to allow any modules to execute any processing that
                 // might be dependent on another module being started.
-                foreach (IPluginModule module in this.Plugins.SelectMany(p => p.IncludedModules()))
+                foreach (IPluginModule module in Plugins.SelectMany(p => p.IncludedModules()))
                 {
                     module.RunModule(scope);
                 }
@@ -266,12 +268,12 @@ namespace NetFusion.Bootstrap.Container
         {
             using (ILifetimeScope scope = container.BeginLifetimeScope())
             {
-                StopPluginModules(scope, new[] { this.AppHostPlugin });
-                StopPluginModules(scope, this.AppComponentPlugins);
-                StopPluginModules(scope, this.CorePlugins);
+                StopPluginModules(scope, new[] { AppHostPlugin });
+                StopPluginModules(scope, AppComponentPlugins);
+                StopPluginModules(scope, CorePlugins);
             }
 
-            this.IsStarted = false;
+            IsStarted = false;
         }
 
         private void StopPluginModules(ILifetimeScope scope, IEnumerable<Plugin> plugins)
