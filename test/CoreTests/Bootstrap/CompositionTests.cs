@@ -208,7 +208,7 @@ namespace CoreTests.Bootstrap
         [Fact]
         public void ModulesUsedTo_BootstrapPlugin()
         {
-            Action<Plugin, Type> assertOneModule = (p, type) => p.PluginModules.Should()
+            Action<Plugin, Type> assertOneModule = (p, type) => p.Modules.Should()
                 .HaveCount(1)
                 .And.Subject.First().Should().BeOfType(type);
 
@@ -254,7 +254,7 @@ namespace CoreTests.Bootstrap
                     c => c.Build(),
                     (CompositeApplication ca) =>
                     {
-                        var pluginModules = ca.CorePlugins.First().PluginModules;
+                        var pluginModules = ca.CorePlugins.First().Modules;
                         pluginModules.Should().HaveCount(2);
                         pluginModules.OfType<MockPluginTwoModule>().Should().HaveCount(1);
                         pluginModules.OfType<MockPluginThreeModule>().Should().HaveCount(1);

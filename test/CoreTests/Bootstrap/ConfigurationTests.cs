@@ -13,36 +13,34 @@ using Xunit;
 namespace CoreTests.Bootstrap
 {
     /// <summary>
-    /// The host application can register container configurations during the 
-    /// bootstrap process.  All container configurations belong to a specific
-    /// plug-in.  When the application is composed, all provided configurations
-    /// are associated with the plug-in defining them.  The configurations can
-    /// be referenced within the plug-in modules.
+    /// The host application can register container configurations during the bootstrap process.  
+    /// All container configurations belong to a specific plug-in.  When the application is composed, 
+    /// all provided configurations are associated with the plug-in defining them.  The configurations 
+    /// can be referenced within the plug-in modules.
     /// </summary>
     public class ConfigurationTests
     {
         /// <summary>
         /// Host application can provide an instance of a configuration object.
+        /// When the container is bootstrapped, each specified configuration is
+        /// associated with the plug-in instance where defined.
         /// </summary>
         [Fact(DisplayName = nameof(SpecifiedPluginConfiguration_AssociatedWithPlugin))]
         public void SpecifiedPluginConfiguration_AssociatedWithPlugin()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
-                {
-                    config.AddPlugin<MockAppHostPlugin>()
+            ContainerTestFixture.Instance
+                .Arrange.Resolver(r => {
+                    r.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginConfig>();
                 })
-                .Test(c =>
-                {
+                .Act.OnContainer(c => {
                     c.WithConfig(new MockPluginConfig());
                     c.Build();
-                },
-                (CompositeApplication ca) =>
-                {
+                })
+                .Assert.CompositeApp(ca => {
                     ca.AppHostPlugin.PluginConfigs.Should().HaveCount(1);
                     ca.AppHostPlugin.PluginConfigs.First().Should().BeOfType<MockPluginConfig>();
-                });
+                });           
         }
 
         /// <summary>

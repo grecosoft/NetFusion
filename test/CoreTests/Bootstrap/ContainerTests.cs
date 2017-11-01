@@ -28,7 +28,7 @@ namespace CoreTests.Bootstrap
                     c => { c.Build(); c.Dispose(); }, 
                     (CompositeApplication ca) =>
                     {
-                        var pluginModule = ca.AppHostPlugin.PluginModules.First();
+                        var pluginModule = ca.AppHostPlugin.Modules.First();
                         (pluginModule as MockPluginModule).IsDisposed.Should().BeTrue();
                     });
         }

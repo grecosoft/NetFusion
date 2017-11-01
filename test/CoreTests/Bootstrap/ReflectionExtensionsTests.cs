@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using NetFusion.Bootstrap.Extensions;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Test.Plugins;
 using System;
 using System.Linq;
 using System.Text;
@@ -31,18 +32,18 @@ namespace BootstrapTests.Bootstrap
         public void FilterInstances_BasedOnListOfPluginTypes()
         {
             var instances = new ICommon[] { new TypeOne(), new TypeTwo() };
-            instances.CreatedFrom(new PluginType[] { new PluginType(null,typeof(string), null) })
+            instances.CreatedFrom(new PluginType[] { new PluginType(new Plugin(new MockCorePlugin()), typeof(string), "TestAssemblyName") })
                 .Should()
                 .HaveCount(0);
 
-            instances.CreatedFrom(new PluginType[] { new PluginType(null, typeof(TypeTwo), null) } )
+            instances.CreatedFrom(new PluginType[] { new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo), "TestAssemblyName") } )
                .Should()
                .HaveCount(1);
 
             instances.CreatedFrom(new PluginType[] {
-                new PluginType(null, typeof(TypeOne), null),
-                new PluginType(null, typeof(TypeTwo), null),
-                new PluginType(null, typeof(TypeTwo), null) })
+                new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeOne),  "TestAssemblyName"),
+                new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo),  "TestAssemblyName"),
+                new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo),  "TestAssemblyName") })
                 .Should()
                 .HaveCount(2);
         }
@@ -51,10 +52,10 @@ namespace BootstrapTests.Bootstrap
         public void CreateInstancesOfPluginTypes_MatchingSpecifiedOrBaseType()
         {
             var types = new PluginType[] {
-                new PluginType(null, typeof(TypeOne), null),
-                new PluginType(null, typeof(TypeTwo), null),
-                new PluginType(null, typeof(TypeTwo), null),
-                new PluginType(null, typeof(StringBuilder), null)
+                new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeOne), "TestAssemblyName"),
+                new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo),  "TestAssemblyName"),
+                new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo),  "TestAssemblyName"),
+                new PluginType(new Plugin(new MockCorePlugin()), typeof(StringBuilder),  "TestAssemblyName")
             };
 
             var instances = types.CreateInstancesDerivingFrom(typeof(ICommon));

@@ -75,7 +75,7 @@ namespace NetFusion.Bootstrap.Container
         /// </summary>
         public IEnumerable<IPluginModule> AllPluginModules
         {
-            get { return Plugins?.SelectMany(p => p.PluginModules); }
+            get { return Plugins?.SelectMany(p => p.Modules); }
         }
 
         //------------------------------------------ Plug-in Component Registration ------------------------------------------//
@@ -110,13 +110,13 @@ namespace NetFusion.Bootstrap.Container
         {
             foreach (Plugin plugin in plugins)
             {
-                foreach (IPluginModule module in plugin.IncludedModules())
+                foreach (IPluginModule module in plugin.IncludedModules)
                 {
                     module.Context = new ModuleContext(LoggerFactory, this, plugin);
                     module.Initialize();
                 }
 
-                foreach (IPluginModule module in plugin.IncludedModules())
+                foreach (IPluginModule module in plugin.IncludedModules)
                 {
                     module.Configure();
                 }
@@ -155,7 +155,7 @@ namespace NetFusion.Bootstrap.Container
         private void ScanPluginTypes(Plugin plugin, Autofac.ContainerBuilder builder)
         {
             var typeRegistration = new TypeRegistration(builder, plugin.PluginTypes);
-            foreach (IPluginModule module in plugin.IncludedModules())
+            foreach (IPluginModule module in plugin.IncludedModules)
             {
                 module.ScanPlugin(typeRegistration);
             }
@@ -165,7 +165,7 @@ namespace NetFusion.Bootstrap.Container
         // any needed service components with the Autofac Container.
         private void RegisterComponents(Plugin plugin, Autofac.ContainerBuilder builder)
         {
-            foreach (IPluginModule module in plugin.IncludedModules())
+            foreach (IPluginModule module in plugin.IncludedModules)
             {
                 module.RegisterComponents(builder);
             }
@@ -181,7 +181,7 @@ namespace NetFusion.Bootstrap.Container
                 builder,
                 sourceTypes.Except(plugin.PluginTypes));
 
-            foreach (IPluginModule module in plugin.IncludedModules())
+            foreach (IPluginModule module in plugin.IncludedModules)
             {
                 module.ScanAllOtherPlugins(typeRegistration);
             }
@@ -195,7 +195,7 @@ namespace NetFusion.Bootstrap.Container
                 builder,
                 appPluginTypes);
 
-            foreach (var module in plugin.IncludedModules())
+            foreach (var module in plugin.IncludedModules)
             {
                 module.ScanApplicationPlugins(typeRegistration);
             }
@@ -243,7 +243,7 @@ namespace NetFusion.Bootstrap.Container
 
                 // Last phase to allow any modules to execute any processing that
                 // might be dependent on another module being started.
-                foreach (IPluginModule module in Plugins.SelectMany(p => p.IncludedModules()))
+                foreach (IPluginModule module in Plugins.SelectMany(p => p.IncludedModules))
                 {
                     module.RunModule(scope);
                 }
@@ -252,7 +252,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void StartPluginModules(IContainer container, ILifetimeScope scope, IEnumerable<Plugin> plugins)
         {
-            foreach (IPluginModule module in plugins.SelectMany(p => p.IncludedModules()))
+            foreach (IPluginModule module in plugins.SelectMany(p => p.IncludedModules))
             {
                 module.StartModule(container, scope);
             }
@@ -278,7 +278,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void StopPluginModules(ILifetimeScope scope, IEnumerable<Plugin> plugins)
         {
-            foreach (IPluginModule module in plugins.SelectMany(p => p.IncludedModules()))
+            foreach (IPluginModule module in plugins.SelectMany(p => p.IncludedModules))
             {
                 module.StopModule(scope);
             }

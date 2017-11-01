@@ -392,8 +392,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void LoadPlugin(Plugin plugin)
         {
-            _typeResover.SetPluginTypes(plugin);
-            _typeResover.SetPluginModules(plugin);
+            _typeResover.SetPluginResolvedTypes(plugin);
 
             // Assign all configurations that are instances of types defined within plug-in.
             plugin.PluginConfigs = plugin.CreatedFrom(_configs.Values).ToList();
@@ -435,7 +434,7 @@ namespace NetFusion.Bootstrap.Container
         private void ComposePluginModules(Plugin plugin, IEnumerable<PluginType> fromPluginTypes)
         {
             var pluginDiscoveredTypes = new HashSet<Type>();
-            foreach (IPluginModule module in plugin.PluginModules)
+            foreach (IPluginModule module in plugin.Modules)
             {
                 IEnumerable<Type> discoveredTypes = _typeResover.SetPluginModuleKnownTypes(module, fromPluginTypes);
                 discoveredTypes.ForEach(dt => pluginDiscoveredTypes.Add(dt));
@@ -601,7 +600,7 @@ namespace NetFusion.Bootstrap.Container
                     plugin.Manifest.PluginId,
                     plugin.AssemblyName,
                     Configs = plugin.PluginConfigs.Select(c => c.GetType().Name),
-                    Modules = plugin.PluginModules.Select(m => m.GetType().Name),
+                    Modules = plugin.Modules.Select(m => m.GetType().Name),
                     Discovers = plugin.DiscoveredTypes.Select(t => t.Name)
                 });
             }

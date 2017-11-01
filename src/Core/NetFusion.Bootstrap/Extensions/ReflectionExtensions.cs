@@ -1,5 +1,4 @@
 ﻿using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
@@ -9,28 +8,26 @@ using System.Reflection;
 namespace NetFusion.Bootstrap.Extensions
 {
     /// <summary>
-    /// Extension methods for filtering a container's plug-in types and for
-    /// creating instances.
+    /// Extension methods for filtering a container's plug-in types and creating instances.
     /// </summary>
     public static class ReflectionExtensions
     {
         /// <summary>
-        /// Provided a list of types, finds the unique set of assemblies 
-        /// containing the types.
+        /// Provided a list of types, finds the unique set of assemblies containing the types.
         /// </summary>
         /// <param name="types">The types to find the containing assemblies.</param>
         /// <returns>Distinct list of assemblies.</returns>
         public static IEnumerable<Assembly> ContainingAssemblies(this IEnumerable<Type> types)
         {
-            Check.NotNull(types, nameof(types));
+            if (types == null) throw new ArgumentNullException(nameof(types), "List of types cannot be null.");
 
             return types.Select(t => t.GetTypeInfo().Assembly)
                 .Distinct();
         }
 
         /// <summary>
-        /// Provided a list of object instances, reduces the list to only instances
-        /// created from a list of specific types.
+        /// Provided a list of object instances, reduces the list to only instances created 
+        /// from a list of specific types.
         /// </summary>
         /// <typeparam name="T">The type of the object instances.</typeparam>
         /// <param name="instances">The list of object instances to filter.</param>
@@ -40,10 +37,10 @@ namespace NetFusion.Bootstrap.Extensions
         public static IEnumerable<T> CreatedFrom<T>(this IEnumerable<T> instances,
             IEnumerable<Type> types)
         {
-            Check.NotNull(instances, nameof(instances));
-            Check.NotNull(types, nameof(types));
-
-            return instances.Where(i => types.Contains(i.GetType()));
+            if (instances == null) throw new ArgumentNullException(nameof(instances), "List of instance object cannot be null.");
+            if (types == null) throw new ArgumentNullException(nameof(types), "List of types cannot be null.");
+            
+            return instances.Where(i => types.Contains(i.GetType())).OfType<T>();
         }
 
         /// <summary>
@@ -58,8 +55,8 @@ namespace NetFusion.Bootstrap.Extensions
         public static IEnumerable<T> CreatedFrom<T>(this IEnumerable<T> instances,
             IEnumerable<PluginType> pluginTypes)
         {
-            Check.NotNull(instances, nameof(instances));
-            Check.NotNull(pluginTypes, nameof(pluginTypes));
+            if (instances == null) throw new ArgumentNullException(nameof(instances), "List of instance object cannot be null.");
+            if (pluginTypes == null) throw new ArgumentNullException(nameof(pluginTypes), "List of plug-in types cannot be null.");
 
             IEnumerable<Type> types = pluginTypes.Select(pt => pt.Type);
             return instances.CreatedFrom(types);
@@ -74,11 +71,10 @@ namespace NetFusion.Bootstrap.Extensions
         /// <returns>Object instances of all plug-in types that are assignable to the specified matching type.</returns>
         public static IEnumerable<object> CreateInstancesDerivingFrom(this IEnumerable<PluginType> pluginTypes, Type baseType)
         {
-            Check.NotNull(pluginTypes, nameof(pluginTypes));
-            Check.NotNull(baseType, nameof(baseType));
+            if (pluginTypes == null) throw new ArgumentNullException(nameof(pluginTypes), "List of plug-in types cannot be null.");
+            if (baseType == null) throw new ArgumentNullException(nameof(baseType), "Base type cannot be null.");
 
-            IEnumerable<Type> types = pluginTypes.Select(pt => pt.Type);
-            return types.CreateInstancesDerivingFrom(baseType);
+            return pluginTypes.Select(pt => pt.Type).CreateInstancesDerivingFrom(baseType);
         }
 
         /// <summary>
@@ -90,7 +86,7 @@ namespace NetFusion.Bootstrap.Extensions
         /// provided filter type.</returns>
         public static IEnumerable<T> CreateInstancesDerivingFrom<T>(this IEnumerable<PluginType> pluginTypes)
         {
-            Check.NotNull(pluginTypes, nameof(pluginTypes));
+            if (pluginTypes == null) throw new ArgumentNullException(nameof(pluginTypes), "List of plug-in types cannot be null.");
 
             return pluginTypes.Select(pt => pt.Type).CreateInstancesDerivingFrom<T>();
         }

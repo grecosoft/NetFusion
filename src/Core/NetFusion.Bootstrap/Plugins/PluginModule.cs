@@ -17,7 +17,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         public PluginModule()
         {
-            this.IsExcluded = false;
+            IsExcluded = false;
         }
 
         public void Dispose()
@@ -43,8 +43,8 @@ namespace NetFusion.Bootstrap.Plugins
         /// Contains plug-in context information that can be used by the plug-in
         /// module during bootstrapping.
         /// </summary>
-        /// <returns>Contains information that can be used by the module
-        /// when it is being configured.</returns>
+        /// <returns>Contains information that can be used by the module when it is
+        /// being configured.</returns>
         public ModuleContext Context { get; set; }
 
         /// <summary>
@@ -56,8 +56,7 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Called after all plug-in modules have been initialized but 
-        /// before container type registration.
+        /// Called after all plug-in modules have been initialized but before container type registration.
         /// </summary>
         public virtual void Configure()
         {
@@ -65,9 +64,8 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Called first for all plug-in modules to allow for default instances
-        /// of services to be registered that will be used if no overridden by
-        /// another plug-in module.
+        /// Called first for all plug-in modules to allow for default instances of services to be registered
+        /// that will be used if not overridden by another plug-in module.
         /// </summary>
         /// <param name="builder">The Autofac builder used to 
         /// register components that can be dependency injected.
@@ -78,8 +76,8 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Allows the plug-in to scan for types it defines that are 
-        /// to be registered with the dependency injection container.
+        /// Allows the plug-in to scan for types it defines that are to be registered with the
+        /// dependency injection container.
         /// </summary>
         /// <param name="registration">Reference to instance used to
         /// filter types to be registered.  This registration only
@@ -91,8 +89,8 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Allows the plug-in to register specific components
-        /// as services within the dependency injection container.
+        /// Allows the plug-in to register specific components as services within the
+        /// dependency injection container.
         /// </summary>
         /// <param name="builder">The Autofac builder used to 
         /// register components that can be dependency injected.
@@ -103,21 +101,19 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Allows the plug-in module to scan for types within all other 
-        /// plug-ins.  This registration is limited to all other plug-in
-        /// types when called on a core plug in.  For an application plug in, 
-        /// the types are limited to just other application plug ins.
+        /// Allows the plug-in module to scan for types within all other plug-ins.  
+        /// This registration is limited to all other plug-in types when called on
+        /// a core plug in.  For an application plug in, the types are limited to 
+        /// just other application plug ins.
         /// </summary>
-        /// <param name="registration">Reference to instance used to
-        /// filter types to be registered.</param>
+        /// <param name="registration">Reference to instance used to filter types to be registered.</param>
         public virtual void ScanAllOtherPlugins(TypeRegistration registration)
         {
 
         }
 
         /// <summary>
-        /// Allows a core plug-in module to scan for type limited to only 
-        /// application centric plug-in types.
+        /// Allows a core plug-in module to scan for type limited to only application centric plug-in types.
         /// </summary>
         /// <param name="registration">Reference to instance used to
         /// filter types to be registered.</param>
@@ -158,9 +154,8 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Called after the module is initialized and configured so
-        /// that it can add module specific logs to the application
-        /// composite log.
+        /// Called after the module is initialized and configured so that it can add 
+        /// module specific logs to the application composite log.
         /// </summary>
         /// <param name="moduleLog">Log dictionary to populate.</param>
         public virtual void Log(IDictionary<string, object> moduleLog)

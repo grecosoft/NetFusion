@@ -135,7 +135,7 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        public virtual void SetPluginTypes(Plugin plugin)
+        public virtual void SetPluginResolvedTypes(Plugin plugin)
         {
             if (plugin == null)
                 throw new ArgumentNullException(nameof(plugin), "Plug-In cannot be null.");
@@ -145,23 +145,13 @@ namespace NetFusion.Bootstrap.Container
             var manifestTypeInfo = plugin.Manifest.GetType().GetTypeInfo();
             var pluginAssembly = manifestTypeInfo.Assembly;
 
-            plugin.PluginTypes = pluginAssembly.GetTypes()
+            var pluginTypes = pluginAssembly.GetTypes()
                 .Select(t => new PluginType(plugin, t, pluginAssembly.GetName().Name))
                 .ToArray();
-        }
 
-        public void SetPluginModules(Plugin plugin)
-        {
-            if (plugin == null)
-                throw new ArgumentNullException(nameof(plugin), "Plug-In cannot be null.");
+            var pluginModules = pluginTypes.CreateInstancesDerivingFrom<IPluginModule>().ToArray();
 
-            if (plugin.PluginTypes == null)
-            {
-                throw new InvalidOperationException(
-                    "Plug-In types must loaded before modules can be discovered.");
-            }
-
-            plugin.PluginModules = plugin.PluginTypes.CreateInstancesDerivingFrom<IPluginModule>().ToArray();
+            plugin.SetPluginResolvedTypes(pluginTypes, pluginModules);
         }
 
         // Automatically populates all properties on a plug-in module that are an enumeration of

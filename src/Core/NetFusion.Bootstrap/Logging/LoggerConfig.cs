@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Common;
+using System;
 
 namespace NetFusion.Bootstrap.Plugins
 {
@@ -30,9 +30,8 @@ namespace NetFusion.Bootstrap.Plugins
         /// <param name="loggerFactory">The logger instance.</param>
         public void UseLoggerFactory(ILoggerFactory loggerFactory)
         {
-            Check.NotNull(loggerFactory, nameof(loggerFactory), "logger factory implementation not specified");
-
-            LoggerFactory = loggerFactory;
+            LoggerFactory = loggerFactory ?? 
+                throw new ArgumentNullException(nameof(loggerFactory), "Logger factory implementation cannot be null.");
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace NetFusion.Test.Container
 {
+
     /// <summary>
     /// Allows client to act on an instance of a container.  
     /// </summary>
