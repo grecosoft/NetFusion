@@ -14,7 +14,7 @@ namespace NetFusion.Bootstrap.Plugins
     public class Plugin
     {
         /// <summary>
-        /// The type of the plugin based on the containing assembly manifest type.
+        /// The type of the plug-in based on the containing assembly manifest type.
         /// </summary>
         public PluginTypes PluginType { get; internal set; }
 

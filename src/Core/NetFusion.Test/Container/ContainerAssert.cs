@@ -1,11 +1,12 @@
 ﻿using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Test.Plugins;
 using System;
 using System.Linq;
 
 namespace NetFusion.Test.Container
 {
-    public class ContainerAssert
+    public class ContainerAssert : IDisposable
     {
         private AppContainer _container;
         private Exception _resultingException;
@@ -43,6 +44,25 @@ namespace NetFusion.Test.Container
 
             assert(module);
 
+            return this;
+        }
+
+        public ContainerAssert Plugin<TPlugin>(Action<Plugin> assert)
+            where TPlugin : MockPlugin
+        {
+            var composite = (IComposite)_container;
+            var plugins = composite.Plugins.Where(p => p.Manifest.GetType() == typeof(TPlugin));
+
+            if (plugins.Count() > 1)
+            {
+                throw new InvalidOperationException(
+                    $"More than one plug-in of the type: {typeof(TPlugin)} as found.");
+            }
+
+            var plugin = plugins.FirstOrDefault() ??
+                throw new InvalidOperationException($"Plug-in of type: {typeof(TPlugin)} not found.");
+
+            assert(plugin);
             return this;
         }
 
@@ -100,6 +120,11 @@ namespace NetFusion.Test.Container
 
             assert(_resultingException);
             return this;
+        }
+
+        public void Dispose()
+        {
+            _container?.Dispose();
         }
     }
 }

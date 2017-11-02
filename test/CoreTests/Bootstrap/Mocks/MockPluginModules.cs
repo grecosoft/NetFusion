@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CoreTests.Bootstrap.Mocks
 {
-    public abstract class MockPluginModule : PluginModule
+    public class MockPluginModule : PluginModule
     {
         public bool IsDisposed { get; private set; }
         public bool IsStarted { get; private set; }
