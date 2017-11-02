@@ -66,7 +66,7 @@ namespace CoreTests.Bootstrap
                 fixture.Arrange.Resolver(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
-                        .AddPluginType<MockPluginModule>()
+                        .AddPluginType<MockPluginOneModule>()
                         .AddPluginType<MockPluginConfig>();
                 })
                 .Act.OnContainer(c =>
@@ -74,7 +74,7 @@ namespace CoreTests.Bootstrap
                     c.WithConfig(new MockPluginConfig());
                     c.Build();
                 })
-                .Assert.PluginModule<MockPluginModule>(m => {
+                .Assert.PluginModule<MockPluginOneModule>(m => {
                         m.Context.Plugin.GetConfig<MockPluginConfig>().Should().NotBeNull();
                 });
             });
