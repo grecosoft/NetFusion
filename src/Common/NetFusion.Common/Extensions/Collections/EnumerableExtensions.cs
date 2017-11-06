@@ -3,23 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace NetFusion.Common.Extensions.Collection
+namespace NetFusion.Common.Extensions.Collections
 {
     public static class EnumerableExtensions
     {
-        /// <summary>
-        /// Checks if an enumerable null and returns an instance of an 
-        /// enumerable with no items.
-        /// </summary>
-        /// <typeparam name="T">The type of the item contained within the enumerable.</typeparam>
-        /// <param name="set">The set to check if null.</param>
-        /// <returns>Instance of an empty enumerable.</returns>
-        [DebuggerStepThrough]
-        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> set)
-        {
-            return set ?? Enumerable.Empty<T>();
-        }
-
         /// <summary>
         /// Checks to see of the enumerable has been materialized and if not converts it to a
         /// list and enumerates the items calling a delegate.

@@ -13,13 +13,21 @@ namespace NetFusion.Base.Exceptions
         /// </summary>
         /// <typeparam name="TException">The exception for which the action should be retried.</typeparam>
         /// <param name="numberRetries">The number attempts to retry the action.</param>
-        /// <param name="action">The action to invoke.</param>
+        /// <param name="action">The action to invoked.  Passed the current retry count.</param>
         /// <param name="backoffSeconds">The number of back-off seconds.</param>
         public static void WithRetry<TException>(
             int numberRetries,
             Action<int> action,
             int backoffSeconds = 2) where TException : Exception
         {
+            if (numberRetries < 0)
+                throw new ArgumentOutOfRangeException(nameof(numberRetries), 
+                    "Number of retries must be greater than zero.");
+
+            if (action == null)
+                throw new ArgumentNullException(nameof(action),
+                    "Action to invoke cannot be null.");
+
             Policy policy = GetBackoffPolicy<TException>(numberRetries, backoffSeconds);
             int retryCount = -1;
 

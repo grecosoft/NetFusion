@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-
 namespace NetFusion.Common.Extensions.Reflection
 {
     public static class GenericTypeExtensions
@@ -16,28 +15,26 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <example>List<> would return true.  List<string> would return false.</string></example>
         public static bool IsOpenGenericType(this Type sourceType)
         {
-            Check.NotNull(sourceType, nameof(sourceType));
+            if (sourceType == null) throw new ArgumentNullException(nameof(sourceType));
 
             var typeInfo = sourceType.GetTypeInfo();
             return typeInfo.IsGenericType && typeInfo.ContainsGenericParameters;
         }
 
         /// <summary>
-        /// Determines if the specified type is a closed type of the specified
-        /// open generic type.
+        /// Determines if the specified type is a closed type of the specified open generic type.
         /// </summary>
         /// <param name="closedGenericType">The closed-generic type to check.</param>
         /// <param name="openGenericType">The open-generic type to test.</param>
         /// <param name="specificClosedArgTypes">Optional.  If specified, the closed type
         /// arguments must be assignable to those listed.</param>
-        /// <returns>True if the type if a closed generic type of the specified open
-        /// generic type. </returns>
+        /// <returns>True if the type if a closed generic type of the specified open generic type.</returns>
         public static bool IsClosedGenericTypeOf(this Type closedGenericType,
             Type openGenericType,
             params Type[] specificClosedArgTypes)
         {
-            Check.NotNull(closedGenericType, nameof(closedGenericType));
-            Check.NotNull(openGenericType, nameof(openGenericType));
+            if (closedGenericType == null) throw new ArgumentNullException(nameof(closedGenericType));
+            if (openGenericType == null) throw new ArgumentNullException(nameof(openGenericType));
 
             var closedGenericTypeInfo = closedGenericType.GetTypeInfo();
 
@@ -96,8 +93,8 @@ namespace NetFusion.Common.Extensions.Reflection
             Type openGenericType,
             params Type[] genericArgTypes)
         {
-            Check.NotNull(closedGenericTypes, nameof(closedGenericTypes));
-            Check.NotNull(openGenericType, nameof(openGenericType));
+            if (closedGenericTypes == null) throw new ArgumentNullException(nameof(closedGenericTypes));
+            if (openGenericType == null) throw new ArgumentNullException(nameof(openGenericType));
 
             var openGenericTypeInfo = openGenericType.GetTypeInfo();
 
@@ -123,5 +120,11 @@ namespace NetFusion.Common.Extensions.Reflection
                 }
             }
         }
+    }
+
+    public class GenericTypeInfo
+    {
+        public Type Type { get; set; }
+        public Type[] GenericArguments { get; set; }
     }
 }

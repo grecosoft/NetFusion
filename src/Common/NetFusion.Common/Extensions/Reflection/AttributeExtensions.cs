@@ -15,11 +15,13 @@ namespace NetFusion.Common.Extensions.Reflection
         public static bool HasAttribute<T>(this ICustomAttributeProvider source)
             where T : Attribute
         {
-            Check.NotNull(source, nameof(source));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             return source.GetCustomAttributes(typeof(T), true).Length > 0;
         }
 
-        /// <summary>
+        /// <summary> 
         /// Returns an attribute if present on the specified source.
         /// </summary>
         /// <typeparam name="T">The type of the attribute to find.</typeparam>
@@ -29,7 +31,8 @@ namespace NetFusion.Common.Extensions.Reflection
         public static T GetAttribute<T>(this ICustomAttributeProvider source)
             where T : Attribute
         {
-            Check.NotNull(source, nameof(source));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
 
             var matchingAttrs = source.GetCustomAttributes(typeof(T), true);
             if (matchingAttrs.Length > 1)
@@ -49,7 +52,9 @@ namespace NetFusion.Common.Extensions.Reflection
         public static bool HasAttribute<T>(this Type source)
             where T : Attribute
         {
-            Check.NotNull(source, nameof(source));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             return source.GetTypeInfo().GetCustomAttributes(typeof(T), true).Count() > 0;
         }
 
@@ -63,7 +68,8 @@ namespace NetFusion.Common.Extensions.Reflection
         public static T GetAttribute<T>(this object source)
             where T : Attribute
         {
-            Check.NotNull(source, nameof(source));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
 
             return GetAttribute<T>(source.GetType());
         }
@@ -78,7 +84,9 @@ namespace NetFusion.Common.Extensions.Reflection
         public static T GetAttribute<T>(this Type source)
             where T : Attribute
         {
-            Check.NotNull(source, nameof(source));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
 
             var matchingAttrs = source.GetTypeInfo().GetCustomAttributes<T>(true);
             if (matchingAttrs.Count() > 1)

@@ -1,5 +1,5 @@
 ﻿using NetFusion.Common;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Messaging.Types;
 using System.Collections.Generic;
 using System.Linq;

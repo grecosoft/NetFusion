@@ -2,7 +2,7 @@
 using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Messaging.Types;
 using RabbitMQ.Client;
 using System;
@@ -140,7 +140,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
             if (predicate != null)
             {
-                return await _scriptingSrv.SatisfiesPredicate(message, predicate);
+                return await _scriptingSrv.SatisfiesPredicateAsync(message, predicate);
             }
 
             return exchangeDef.Exchange.Satisfies(message);

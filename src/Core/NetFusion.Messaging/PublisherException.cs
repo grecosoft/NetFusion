@@ -114,7 +114,7 @@ namespace NetFusion.Messaging
         /// Publisher Exception.
         /// </summary>
         /// <param name="futureResult">The task and associated publisher.</param>
-        public PublisherException(FutureResult<IMessagePublisher> futureResult): 
+        public PublisherException(TaskListItem<IMessagePublisher> futureResult): 
             base("Error Invoking Publishers.")
         {
             Check.NotNull(futureResult, nameof(futureResult));

@@ -1,14 +1,14 @@
 ﻿using FluentAssertions;
 using NetFusion.Common.Extensions.Reflection;
 using System;
-using Xunit;
 using System.Reflection;
+using Xunit;
 
-namespace CommonTests.Extensions
+namespace CommonTests.Extensions.Reflection
 {
     public class AttributeTests
     {
-        [Fact(DisplayName = nameof(GivenType_CanTestForAttribute))]
+        [Fact(DisplayName = "Given Type can test for Attribute")]
         public void GivenType_CanTestForAttribute()
         {
             typeof(TestClassWithAttribute).HasAttribute<TestAttribute>()
@@ -18,7 +18,7 @@ namespace CommonTests.Extensions
                 .Should().BeFalse();
         }
 
-        [Fact(DisplayName = nameof(GivenAttributeProvider_CanTestForAttribute))]
+        [Fact(DisplayName = "Given Attribute Provider can test for Attribute")]
         public void GivenAttributeProvider_CanTestForAttribute()
         {
             typeof(TestClassWithAttribute).GetProperty("SomeProperty")
@@ -30,7 +30,7 @@ namespace CommonTests.Extensions
                 .Should().BeFalse();
         }
 
-        [Fact(DisplayName = nameof(GivenType_CanReferenceAttribute))]
+        [Fact(DisplayName = "Given Type can reference Attribute")]
         public void GivenType_CanReferenceAttribute()
         {
             typeof(TestClassWithAttribute).GetAttribute<TestAttribute>()
@@ -40,8 +40,8 @@ namespace CommonTests.Extensions
                 .Should().BeNull();
         }
 
-        [Fact(DisplayName = nameof(GivenAttributePrivider_CanReferenceAttribute))]
-        public void GivenAttributePrivider_CanReferenceAttribute()
+        [Fact(DisplayName = "Given Attribute Provider can reference Attribute")]
+        public void GivenAttributeProvider_CanReferenceAttribute()
         {
             typeof(TestClassWithAttribute).GetProperty("SomeProperty")
                 .GetAttribute<ObsoleteAttribute>()
@@ -52,7 +52,7 @@ namespace CommonTests.Extensions
                .Should().BeNull();
         }
 
-        [Fact(DisplayName = nameof(GivenInstance_CanReferenceAttribute))]
+        [Fact(DisplayName = "Given Instance can reference Attribute")]
         public void GivenInstance_CanReferenceAttribute()
         {
             var instance = new TestClassWithAttribute();

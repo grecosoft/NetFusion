@@ -5,13 +5,14 @@ using System.Runtime.CompilerServices;
 namespace NetFusion.Base.Entity
 {
     /// <summary>
-    /// Represents a set of dynamic key/value pairs that can be associated
-    /// with an entity.
+    /// Represents a set of dynamic key/value pairs that can be associated with an entity.
     /// </summary>
     public interface IEntityAttributes
     {
         /// <summary>
-        /// Provides dynamic access to the entity's attributes.
+        /// Provides dynamic access to the entity's attributes.  This property is a .NET
+        /// dynamic type allows arbitrary properties not statically defined to be associated
+        /// with an object.
         /// </summary>
         dynamic Values { get; }
 

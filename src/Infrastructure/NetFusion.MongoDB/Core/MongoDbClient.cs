@@ -101,7 +101,7 @@ namespace NetFusion.MongoDB.Core
             MongoClientSettings clientSettings = DbSettings.ClientSettings;
             if (clientSettings == null)
             {
-                if (DbSettings.MongoUrl.IsNullOrWhiteSpace())
+                if (string.IsNullOrWhiteSpace(DbSettings.MongoUrl))
                 {
                     throw new InvalidOperationException(
                         "Either the MongoDB URL or client settings must specified.");

@@ -15,7 +15,7 @@ namespace NetFusion.Messaging
         /// Constructor.
         /// </summary>
         /// <param name="futureResult">The future result containing the exception.</param>
-        public EnricherException(FutureResult<IMessageEnricher> futureResult)
+        public EnricherException(TaskListItem<IMessageEnricher> futureResult)
         {
              Check.NotNull(futureResult, nameof(futureResult));
 

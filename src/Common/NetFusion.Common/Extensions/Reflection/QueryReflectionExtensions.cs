@@ -15,8 +15,8 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>True if the child type is not abstract and is derived from the parent type.</returns>
         public static bool IsConcreteTypeDerivedFrom(this Type type, Type parentType)
         {
-            Check.NotNull(type, nameof(type));
-            Check.NotNull(parentType, nameof(parentType));
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (parentType == null) throw new ArgumentNullException(nameof(parentType));
 
             var childTypeInfo = type.GetTypeInfo();
 
@@ -31,7 +31,7 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>True if the type derives from the specified base type otherwise false.</returns>
         public static bool IsConcreteTypeDerivedFrom<T>(this Type childType)
         {
-            Check.NotNull(childType, nameof(childType));
+            if (childType == null) throw new ArgumentNullException(nameof(childType));
             return IsConcreteTypeDerivedFrom(childType, typeof(T));
         }
 
@@ -43,7 +43,7 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>True if the type derives from the specified base type otherwise false.</returns>
         public static bool IsDerivedFrom<T>(this Type childType)
         {
-            Check.NotNull(childType, nameof(childType));
+            if (childType == null) throw new ArgumentNullException(nameof(childType));
             return typeof(T).IsAssignableFrom(childType) && childType != typeof(T);
         }
 
@@ -55,8 +55,8 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>True if the type derives from the specified base type otherwise false.</returns>
         public static bool IsDerivedFrom(this Type childType, Type parentType)
         {
-            Check.NotNull(childType, nameof(childType));
-            Check.NotNull(parentType, nameof(parentType));
+            if (childType == null) throw new ArgumentNullException(nameof(childType));
+            if (parentType == null) throw new ArgumentNullException(nameof(parentType));
 
             return parentType.IsAssignableFrom(childType) && childType != parentType;
         }
@@ -69,8 +69,8 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>True if the child type is assignable to the parent type.  Otherwise, False.</returns>
         public static bool CanAssignTo(this Type childType, Type parentType)
         {
-            Check.NotNull(childType, nameof(childType));
-            Check.NotNull(parentType, nameof(parentType));
+            if (childType == null) throw new ArgumentNullException(nameof(childType));
+            if (parentType == null) throw new ArgumentNullException(nameof(parentType));
 
             return parentType.IsAssignableFrom(childType);
         }
@@ -83,7 +83,7 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>True if the child type is assignable to the parent type.  Otherwise, False.</returns>
         public static bool CanAssignTo<T>(this Type childType)
         {
-            Check.NotNull(childType, nameof(childType));
+            if (childType == null) throw new ArgumentNullException(nameof(childType));
             return typeof(T).IsAssignableFrom(childType);
         }
 
@@ -95,7 +95,7 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>Returns the list of matching interfaces.</returns>
         public static IEnumerable<Type> GetInterfacesDerivedFrom<T>(this Type type)
         {
-            Check.NotNull(type, nameof(type));
+            if (type == null) throw new ArgumentNullException(nameof(type));
 
             if (!typeof(T).GetTypeInfo().IsInterface)
             {
@@ -115,14 +115,21 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>True if the type has an empty constructor.  Otherwise, false.</returns>
         public static bool HasDefaultConstructor(this Type type)
         {
-            Check.NotNull(type, nameof(type));
+            if (type == null) throw new ArgumentNullException(nameof(type));
 
             var typeInfo = type.GetTypeInfo();
             return typeInfo.IsValueType || typeInfo.GetConstructor(Type.EmptyTypes) != null;
         }
 
+        /// <summary>
+        /// Returns all method parameter types.
+        /// </summary>
+        /// <param name="methodInfo">Reference to a types method.</param>
+        /// <returns>List of types.</returns>
         public static Type[] GetParameterTypes(this MethodInfo methodInfo)
         {
+            if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
+
             return methodInfo.GetParameters()
                 .Select(p => p.ParameterType)
                 .ToArray();

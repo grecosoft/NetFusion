@@ -12,7 +12,7 @@ namespace NetFusion.MongoDB
         /// <param name="value">The value to be validated.</param>
         public static void ValidObjectId(string value)
         {
-            if (value.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(value))
             {
                 throw new InvalidOperationException("MongoDB ObjectId string representation can't be null.");
             }

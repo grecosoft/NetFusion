@@ -1,7 +1,7 @@
 ﻿using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Common.Extensions;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +32,7 @@ namespace NetFusion.Bootstrap.Container
         private void AssertManifestIds()
         {
             IEnumerable<Type> invalidManifestTypes = _registry.AllManifests
-                .Where(m => m.PluginId.IsNullOrWhiteSpace())
+                .Where(m => string.IsNullOrWhiteSpace(m.PluginId))
                 .Select(m => m.GetType());
 
             if (invalidManifestTypes.Any())
@@ -56,7 +56,7 @@ namespace NetFusion.Bootstrap.Container
         private void AssertManifestNames()
         {
             IEnumerable<Type> invalidManifestTypes = _registry.AllManifests
-                .Where(m => m.AssemblyName.IsNullOrWhiteSpace() || m.Name.IsNullOrWhiteSpace())
+                .Where(m => string.IsNullOrWhiteSpace(m.AssemblyName) || string.IsNullOrWhiteSpace(m.Name))
                 .Select(m => m.GetType());
 
             if (invalidManifestTypes.Any())

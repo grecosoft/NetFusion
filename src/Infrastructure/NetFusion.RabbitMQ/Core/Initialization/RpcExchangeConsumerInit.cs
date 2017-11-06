@@ -122,7 +122,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             }
 
             string messageType = deleveryEvent.BasicProperties.Type;
-            if (messageType.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(messageType))
             {
                 throw new BrokerException(
                     "The basic properties of the received RPC request does not specify the message type.");

@@ -175,7 +175,6 @@ namespace CoreTests.Bootstrap
 
             string GetFileAtPosition(ConfigurationBuilder builder, int position)
                 => builder.Sources.OfType<JsonConfigurationSource>().ElementAt(position)?.Path ?? "";
-
         }
 
         /// <summary>

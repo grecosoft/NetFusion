@@ -85,7 +85,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             Check.NotNull(deliveryEvent, nameof(deliveryEvent));
 
             string contentType = deliveryEvent.BasicProperties.ContentType;
-            if (contentType.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(contentType))
             {
                 throw new BrokerException(
                     $"The content type for a message of type: {messageType} was not " +

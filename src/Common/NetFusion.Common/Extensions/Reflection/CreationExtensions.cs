@@ -5,16 +5,16 @@ using System.Reflection;
 
 namespace NetFusion.Common.Extensions.Reflection
 {
-    public static class CreationReflectionExtensions
+    public static class CreationExtensions
     {
         /// <summary>
-        /// Determines if the type can have an instance created and has a default constructor.
+        /// Determines if the type is a class that can be instantiated with a default constructor.
         /// </summary>
-        /// <param name="type">Type to be checked for default constructor instantiation.</param>
-        /// <returns>True if an instance of the type can be created from default constructor.  Otherwise false.</returns>
-        public static bool IsCreatableType(this Type type)
+        /// <param name="type">Class type to be checked for default constructor instantiation.</param>
+        /// <returns>True if the type is a class with a default constructor.  Otherwise False.</returns>
+        public static bool IsCreatableClassType(this Type type)
         {
-            Check.NotNull(type, nameof(type));
+            if (type == null) throw new ArgumentNullException(nameof(type));
 
             var typeInfo = type.GetTypeInfo();
 
@@ -30,7 +30,7 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>The created instance.</returns>
         public static object CreateInstance(this Type type, params object[] args)
         {
-            Check.NotNull(type, nameof(type));
+            if (type == null) throw new ArgumentNullException(nameof(type));
 
             return Activator.CreateInstance(type, args);
         }
@@ -44,9 +44,9 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>Object instances of all plug-in types that are assignable to the specified types.</returns>
         public static IEnumerable<T> CreateInstancesDerivingFrom<T>(this IEnumerable<Type> types)
         {
-            Check.NotNull(types, nameof(types));
+            if (types == null) throw new ArgumentNullException(nameof(types));
 
-            foreach (Type type in types.Where(t => t.IsCreatableType() && t.IsDerivedFrom<T>()).Distinct())
+            foreach (Type type in types.Where(t => t.IsCreatableClassType() && t.IsDerivedFrom<T>()).Distinct())
             {
                 yield return (T)type.CreateInstance();
             }
@@ -61,10 +61,10 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>Object instances of all plug-in types that are assignable to the specified types.</returns>
         public static IEnumerable<object> CreateInstancesDerivingFrom(this IEnumerable<Type> types, Type baseType)
         {
-            Check.NotNull(types, nameof(types));
-            Check.NotNull(baseType, nameof(baseType));
+            if (types == null) throw new ArgumentNullException(nameof(types));
+            if (baseType == null) throw new ArgumentNullException(nameof(baseType));
 
-            foreach(Type type in types.Where(t => t.IsCreatableType() && t.IsDerivedFrom(baseType)).Distinct())
+            foreach (Type type in types.Where(t => t.IsCreatableClassType() && t.IsDerivedFrom(baseType)).Distinct())
             {
                 yield return type.CreateInstance();
             }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace NetFusion.Common.Extensions.Collection
+namespace NetFusion.Common.Extensions.Collections
 {
     /// <summary>
     /// Extension methods for checking set membership.

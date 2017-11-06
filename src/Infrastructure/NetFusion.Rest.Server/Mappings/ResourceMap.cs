@@ -1,4 +1,4 @@
-﻿using NetFusion.Common.Extensions.Collection;
+﻿using NetFusion.Common.Extensions.Collections;
 using NetFusion.Rest.Server.Meta;
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace NetFusion.Rest.Server.Mappings
         public ResourceMap()
         {
             _resourceMeta = new List<IResourceMeta>();
-            ResourceMeta = _resourceMeta.ToReadOnly();
+            ResourceMeta = _resourceMeta.AsReadOnly();
         }
 
         public IReadOnlyCollection<IResourceMeta> ResourceMeta { get; }

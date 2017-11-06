@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using Xunit;
 
-namespace CommonTests.Extensions
+namespace CommonTests.Extensions.Collections
 {
     public class SetTests
     {

@@ -6,7 +6,7 @@ using NetFusion.Bootstrap.Extensions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;

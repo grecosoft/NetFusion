@@ -1,7 +1,6 @@
 ﻿using NetFusion.Base.Scripting;
 using NetFusion.Common;
-using NetFusion.Common.Extensions;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Configs;
@@ -89,7 +88,7 @@ namespace NetFusion.RabbitMQ.Core
 
         internal virtual void ValidateConfiguration()
         {
-            if (Settings.BrokerName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(Settings.BrokerName))
             {
                 throw new BrokerException(
                     "Broker Name must be set for all exchange types.");
@@ -112,7 +111,7 @@ namespace NetFusion.RabbitMQ.Core
             // The default exchange is being used if the ExchangeType is null.
             if (settings.ExchangeType == null) return;
 
-            if (ExchangeName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(ExchangeName))
             {
                 throw new BrokerException(
                     "Exchange name must be specified for non-default exchange type.");

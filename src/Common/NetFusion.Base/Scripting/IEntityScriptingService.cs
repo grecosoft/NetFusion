@@ -11,7 +11,7 @@ namespace NetFusion.Base.Scripting
     {
         /// <summary>
         /// Loads the entity scripting service with a list of scripts.
-        /// The implementation should pre-compile that expressions upon 
+        /// The implementation should pre-compile the expressions upon 
         /// first use.
         /// </summary>
         /// <param name="scripts">List of entity associated scripts.</param>
@@ -30,7 +30,7 @@ namespace NetFusion.Base.Scripting
         /// <param name="scriptName">The optional script name to be executed.  If not specified,
         /// the script with the name 'default' is executed.  If a script name is specified, the
         /// default named script followed by the named script is executed.</param>
-        /// <returns>Future result that is completed after evaluation.</returns>
+        /// <returns>Task result that is completed after evaluation.</returns>
         Task ExecuteAsync(object entity, string scriptName = "default");
 
         /// <summary>
@@ -41,6 +41,6 @@ namespace NetFusion.Base.Scripting
         /// <param name="predicate">Specifies the script and the property corresponding to 
         /// the predicate value.</param>
         /// <returns>True if the entity satisfies the predicated.  Otherwise, False</returns>
-        Task<bool> SatisfiesPredicate(object entity, ScriptPredicate predicate);
+        Task<bool> SatisfiesPredicateAsync(object entity, ScriptPredicate predicate);
     }
 }

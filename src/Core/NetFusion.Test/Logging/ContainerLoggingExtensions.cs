@@ -1,6 +1,5 @@
 ﻿using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
 using System;
 
 namespace NetFusion.Testing.Logging
@@ -18,7 +17,7 @@ namespace NetFusion.Testing.Logging
         /// <returns>Reference to the configured container.</returns>
         public static IAppContainer UseTestLogger(this IAppContainer container)
         {
-            Check.NotNull(container, nameof(container));
+            if (container == null) throw new ArgumentNullException(nameof(container));
 
             container.WithConfig<LoggerConfig>(config =>
             {
@@ -35,9 +34,11 @@ namespace NetFusion.Testing.Logging
         /// should be returned.
         /// </summary>
         /// <param name="container">The container configured with a test-logger.</param>
-        /// <returns>Reference to the test-loger.</returns>
+        /// <returns>Reference to the test-logger.</returns>
         public static TestLogger GetTestLogger(this IAppContainer container)
         {
+            if (container == null) throw new ArgumentNullException(nameof(container));
+
             var factory = container.LoggerFactory as TestLoggerFactory;
 
             if (factory == null)

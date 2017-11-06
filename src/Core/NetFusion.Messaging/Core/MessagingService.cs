@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using NetFusion.Common;
 using NetFusion.Common.Extensions;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Enrichers;
 using NetFusion.Messaging.Modules;
@@ -112,20 +112,20 @@ namespace NetFusion.Messaging.Core
 
         private async Task ApplyMessageEnrichers(IMessage message)
         {
-            FutureResult<IMessageEnricher>[] futureResults = null;
+            TaskListItem<IMessageEnricher>[] taskList = null;
 
             try
             {
-                futureResults = _messageEnrichers.Invoke(message,
+                taskList = _messageEnrichers.Invoke(message,
                     (enricher, msg) => enricher.Enrich(msg));
 
-                await futureResults.WhenAll();
+                await taskList.WhenAll();
             }
             catch (Exception ex)
             {
-                if (futureResults != null)
+                if (taskList != null)
                 {
-                    var enricherErrors = futureResults.GetExceptions(fr => new EnricherException(fr));
+                    var enricherErrors = taskList.GetExceptions(fr => new EnricherException(fr));
                     if (enricherErrors.Any())
                     {
                         throw new PublisherException("Exception when invoking message enrichers.",
@@ -147,23 +147,23 @@ namespace NetFusion.Messaging.Core
         private async Task InvokePublishers(IMessage message, CancellationToken cancellationToken, IntegrationTypes integrationType)
         {
 
-            FutureResult<IMessagePublisher>[] futureResults = null;
+            TaskListItem<IMessagePublisher>[] taskList = null;
 
             var publishers = integrationType == IntegrationTypes.All ? _messagePublishers.ToArray() 
                 : _messagePublishers.Where(p => p.IntegrationType == integrationType).ToArray();
 
             try
             {
-                futureResults = publishers.Invoke(message,
+                taskList = publishers.Invoke(message,
                     (pub, msg) => pub.PublishMessageAsync(msg, cancellationToken));
 
-                await futureResults.WhenAll();
+                await taskList.WhenAll();
             }
             catch (Exception ex)
             {
-                if (futureResults != null)
+                if (taskList != null)
                 {
-                    var publisherErrors = futureResults.GetExceptions(fr => new PublisherException(fr));
+                    var publisherErrors = taskList.GetExceptions(fr => new PublisherException(fr));
                     if (publisherErrors.Any())
                     {
                         throw new PublisherException("Exception when invoking message publishers.",

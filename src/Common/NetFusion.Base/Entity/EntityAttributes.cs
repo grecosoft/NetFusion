@@ -11,10 +11,9 @@ using System.Runtime.Serialization;
 namespace NetFusion.Base.Entity
 {
     /// <summary>
-    /// Default implementation of a set of properties that can be dynamically
-    /// associated with a given domain entity.  An domain entity can provide
-    /// dynamic behaviors by implementing the IAttributedEntity interface and
-    /// delegating to an instance of this class.
+    /// Default implementation of a set of properties that can be dynamically associated with 
+    /// a given domain entity.  An domain entity can provide dynamic behaviors by implementing 
+    /// the IAttributedEntity interface and delegating to an instance of this class.
     /// </summary>
 #if NET461
     [Serializable]
@@ -47,8 +46,8 @@ namespace NetFusion.Base.Entity
         //------------------------------------------ VALUE MAINTENANCE ------------------------------------------------//
         public void SetValues(IDictionary<string, object> values)
         {
-            Check.NotNull(values, nameof(values));
-            _attributes = values;
+            _attributes = values ?? 
+                throw new ArgumentNullException(nameof(values), "Values cannot be null.");
         }
 
         public IDictionary<string, object> GetValues()
@@ -60,17 +59,22 @@ namespace NetFusion.Base.Entity
             Type context = null,
             bool overrideIfPresent = false)
         {
-            Check.NotNullOrWhiteSpace(name, nameof(name));
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Attribute name cannot be null or empty string.", nameof(name));
 
             string prefixedNamed = GetPropertyPrefixedName(context, name);
 
-            if (_attributes.ContainsKey(name) && !overrideIfPresent) return;
+            if (_attributes.ContainsKey(name) && !overrideIfPresent)
+            {
+                return;
+            }
             _attributes[prefixedNamed] = value;
         }
 
         public object GetValue(string name, Type context = null)
         {
-            Check.NotNullOrWhiteSpace(name, nameof(name));
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Attribute name cannot be null or empty string.", nameof(name));
 
             string prefixedNamed = GetPropertyPrefixedName(context, name);
 
@@ -80,14 +84,16 @@ namespace NetFusion.Base.Entity
 
         public T GetValue<T>(string name, Type context = null)
         {
-            Check.NotNullOrWhiteSpace(name, nameof(name));
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Attribute name cannot be null or empty string.", nameof(name));
 
             return (T)GetValue(name, context);
         }
 
         public T GetValueOrDefault<T>(string name, T defaultValue = default(T), Type context = null)
         {
-            Check.NotNullOrWhiteSpace(name, nameof(name));
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Attribute name cannot be null or empty string.", nameof(name));
 
             string prefixedNamed = GetPropertyPrefixedName(context, name);
             if (_attributes.ContainsKey(prefixedNamed))
@@ -100,7 +106,8 @@ namespace NetFusion.Base.Entity
 
         public bool Contains(string name, Type context = null)
         {
-            Check.NotNullOrWhiteSpace(name, nameof(name));
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Attribute name cannot be null or empty string.", nameof(name));
 
             string prefixedNamed = GetPropertyPrefixedName(context, name);
             return _attributes.ContainsKey(prefixedNamed);
@@ -108,7 +115,8 @@ namespace NetFusion.Base.Entity
 
         public bool Delete(string name, Type context = null)
         {
-            Check.NotNullOrWhiteSpace(name, nameof(name));
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Attribute name cannot be null or empty string.", nameof(name));
 
             string prefixedNamed = GetPropertyPrefixedName(context, name);
             return _attributes.Remove(prefixedNamed);
@@ -132,7 +140,8 @@ namespace NetFusion.Base.Entity
         // Returns the corresponding property for a given method name.
         private string GetBasePropertyName(string methodName)
         {
-            Check.NotNullOrWhiteSpace(methodName, nameof(methodName));
+            if (string.IsNullOrWhiteSpace(methodName))
+                throw new ArgumentException("Method name cannot be null or empty string.", nameof(methodName));
 
             return methodName.Replace("Get", "").Replace("Set", "");
         }

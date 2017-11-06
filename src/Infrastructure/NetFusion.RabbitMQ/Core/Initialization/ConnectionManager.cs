@@ -3,7 +3,7 @@ using NetFusion.Base.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common;
 using NetFusion.Common.Extensions;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.RabbitMQ.Configs;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Exceptions;
@@ -234,13 +234,13 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         private BrokerConnection GetBrokerConnection(string brokerName)
         {
-            BrokerConnection brokerConn = _connections.GetOptionalValue(brokerName);
-            if (brokerConn == null)
+            if (_connections.TryGetValue(brokerName, out BrokerConnection brokerConn))
             {
-                throw new BrokerException(
-                   $"An existing broker with the name of: {brokerName} does not exist.");
+                return brokerConn;
             }
-            return brokerConn;
+
+            throw new BrokerException(
+                 $"An existing broker with the name of: {brokerName} does not exist.");
         }
 
         public void Dispose()

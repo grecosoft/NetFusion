@@ -77,7 +77,7 @@ namespace NetFusion.Test.Plugins
         /// <param name="plugins">The plug-ins to be added.</param>
         public void AddPlugin(params MockPlugin[] plugins)
         {
-            Check.NotNull(plugins, nameof(plugins), "plug-ins not specified");
+            if (plugins == null) throw new ArgumentNullException(nameof(plugins));
             _plugins.AddRange(plugins);
         }
 

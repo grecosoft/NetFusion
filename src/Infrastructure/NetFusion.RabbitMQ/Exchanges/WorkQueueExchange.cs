@@ -41,7 +41,7 @@ namespace NetFusion.RabbitMQ.Exchanges
         internal override void ValidateConfiguration()
         {
             base.ValidateConfiguration();
-            if (!Settings.ExchangeName.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(Settings.ExchangeName))
             {
                 throw new InvalidOperationException(
                     $"Exchange Name cannot be set for a WorkQueue.  Exchange Type: {GetType()}.");

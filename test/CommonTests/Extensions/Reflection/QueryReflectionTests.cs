@@ -3,12 +3,12 @@ using NetFusion.Common.Extensions.Reflection;
 using Xunit;
 using System.Linq;
 
-namespace CommonTests.Extensions
+namespace CommonTests.Extensions.Reflection
 {
     public class QueryReflectionTests
     {
-        [Fact(DisplayName = nameof(GivenType_CanDetermine_DerivedType))]
-        public void GivenType_CanDetermine_DerivedType()
+        [Fact(DisplayName = "Given Type can determine Derived type of Another")]
+        public void GivenType_CanDetermine_DerivedTypeOfAnother()
         {
             typeof(TestClass1).IsDerivedFrom<TestBase>().Should().BeTrue();
             typeof(TestClass1).IsDerivedFrom<ITest>().Should().BeTrue();
@@ -16,15 +16,15 @@ namespace CommonTests.Extensions
             typeof(TestClass1).IsDerivedFrom<TestClass1>().Should().BeFalse();
         }
 
-        [Fact (DisplayName = nameof(GivenType_CanDetermine_ConcreateDerivedType))]
-        public void GivenType_CanDetermine_ConcreateDerivedType()
+        [Fact (DisplayName = "Given Type can determine Concrete type of Another")]
+        public void GivenType_CanDetermine_ConcreteDerivedTypeOfAnother()
         {
             typeof(TestClass3).IsConcreteTypeDerivedFrom<ITest>().Should().BeFalse();
             typeof(TestClass1).IsConcreteTypeDerivedFrom<ITest>().Should().BeTrue();
         }
 
-        [Fact(DisplayName = nameof(GivenType_FindAllDerivedInterfaces))]
-        public void GivenType_FindAllDerivedInterfaces()
+        [Fact(DisplayName = "Given Type find all Interfaces Deriving from Type")]
+        public void GivenType_FindAllInterfacedDerivingFromType()
         {
             typeof(TestClass6).GetInterfacesDerivedFrom<IService>().Should().HaveCount(0);
             var foundInterface = typeof(TestClass7).GetInterfacesDerivedFrom<IService>().SingleOrDefault();
@@ -37,8 +37,8 @@ namespace CommonTests.Extensions
             foundInfterfaces.Should().Contain(typeof(IRunnable));
         }
 
-        [Fact(DisplayName = nameof(GivenType_DetermineDefaultConstructor))]
-        public void GivenType_DetermineDefaultConstructor()
+        [Fact(DisplayName = "Given Type check declared Default Constructor")]
+        public void GivenType_CheckDeclaredDefaultConstructor()
         {
             typeof(TestClass4).HasDefaultConstructor().Should().BeFalse();
             typeof(TestClass5).HasDefaultConstructor().Should().BeTrue();
@@ -69,7 +69,5 @@ namespace CommonTests.Extensions
         class TestClass7 : IModuleService { };
         interface IRunnable : IService { }
         class TestClass8 : IModuleService, IRunnable { }
-       
-
     }
 }

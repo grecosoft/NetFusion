@@ -4,6 +4,11 @@ using System.Threading.Tasks;
 
 namespace NetFusion.Test.Container
 {
+    /// <summary>
+    /// Returns object used to act on the created and arranged application container.
+    /// After the container is acted on, the unit-test uses the Assert property to 
+    /// test the state of the container or one of its related objects.
+    /// </summary>
     public class ContainerAct
     {
         private AppContainer _container;
@@ -15,6 +20,12 @@ namespace NetFusion.Test.Container
             _container = container;
         }
 
+        /// <summary>
+        /// Allows an unit-test to act on the application container under test.
+        /// </summary>
+        /// <param name="act">Method passed the instance of the container under test to be
+        /// acted on by the unit-test.</param>
+        /// <returns>Self reference for method chaining.</returns>
         public ContainerAct OnContainer(Action<IAppContainer> act)
         {
             if (_actedOn)
@@ -35,6 +46,12 @@ namespace NetFusion.Test.Container
             return this;
         }
 
+        /// <summary>
+        /// Allows an unit-test to act on the application container under test.
+        /// </summary>
+        /// <param name="act">Method passed the instance of the container under test to be
+        /// acted on by the unit-test.  The method can invoke an asynchronous method.</param>
+        /// <returns>Self reference for method chaining.</returns>
         public async Task<ContainerAct> OnContainer(Func<IAppContainer, Task> act)
         {
             if (_actedOn)
@@ -55,6 +72,10 @@ namespace NetFusion.Test.Container
             return this;
         }
 
+        /// <summary>
+        /// After acting on the container under test, the unit-test can call methods on this
+        /// property to assert its state.
+        /// </summary>
         public ContainerAssert Assert => new ContainerAssert(_container, _resultingException);
 
     }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Routing;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Resources;

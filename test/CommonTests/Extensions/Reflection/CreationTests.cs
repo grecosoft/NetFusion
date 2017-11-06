@@ -3,18 +3,18 @@ using NetFusion.Common.Extensions.Reflection;
 using System.Linq;
 using Xunit;
 
-namespace CommonTests.Extensions
+namespace CommonTests.Extensions.Reflection
 {
-    public class CreationReflectionTests
+    public class CreationTests
     {
-        [Fact (DisplayName = nameof(GivenType_CanDetermineCreatable))]
-        public void GivenType_CanDetermineCreatable()
+        [Fact (DisplayName = "Given type can determine if Instance can be Created")]
+        public void GivenType_CanDetermineIf_InstanceCanBeCreated()
         {
-            typeof(TestTypeOne).IsCreatableType().Should().BeTrue();
-            typeof(TestTypeTwo).IsCreatableType().Should().BeFalse();
+            typeof(TestTypeOne).IsCreatableClassType().Should().BeTrue();
+            typeof(TestTypeTwo).IsCreatableClassType().Should().BeFalse();
         }
 
-        [Fact(DisplayName = nameof(GivenType_CanCreateInstance))]
+        [Fact(DisplayName = "Given type can Create Instance")]
         public void GivenType_CanCreateInstance()
         {
             var value = typeof(string).CreateInstance('a', 7);
@@ -25,7 +25,8 @@ namespace CommonTests.Extensions
         [Fact(DisplayName = nameof(GivenListOfTypes_CanCreateInstances_DerivingFromType))]
         public void GivenListOfTypes_CanCreateInstances_DerivingFromType()
         {
-            var listOfTypes = new[] { typeof(TestTypeOne), typeof(TestTypeTwo), typeof(TestTypeThree) };
+            // Note:  Passing TestTypeOne twice to assure one instance is returned.
+            var listOfTypes = new[] { typeof(TestTypeOne), typeof(TestTypeOne), typeof(TestTypeTwo), typeof(TestTypeThree) };
             var instances = listOfTypes.CreateInstancesDerivingFrom<IRunnable>();
 
             instances.Should().HaveCount(2);

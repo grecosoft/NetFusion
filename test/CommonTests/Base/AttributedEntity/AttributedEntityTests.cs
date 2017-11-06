@@ -1,15 +1,14 @@
-﻿using CoreTests.Domain.Mocks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NetFusion.Base.Entity;
 using System.Linq;
 using Xunit;
 
-namespace CoreTests.Domain
+namespace CommonTest.Base.AttributedEntity
 {
     public class AttributedEntityTests
     {
-        [Fact(DisplayName = nameof(SetAndRetrieve_EntityAttribute))]
-        public void SetAndRetrieve_EntityAttribute()
+        [Fact(DisplayName = "Can set Entity Attribute and Retrieve Dynamically")]
+        public void CanSetEntityAttribute_And_RetrieveDynamically()
         {
             var entity = new DynamicEntity();
             entity.Attributes.SetValue("Value1", 1000);
@@ -22,8 +21,8 @@ namespace CoreTests.Domain
             typedValue.Should().Be(1000);
         }
 
-        [Fact(DisplayName = nameof(Delete_EntityAttribute))]
-        public void Delete_EntityAttribute()
+        [Fact(DisplayName = "Entity associated Attribute can be Deleted")]
+        public void EntityAssocatedAttribute_CanBeDeleted()
         {
             var entity = new DynamicEntity();
             entity.Attributes.SetValue("Value1", 1000);
@@ -35,8 +34,8 @@ namespace CoreTests.Domain
             isDeleted.Should().BeFalse();
         }
 
-        [Fact(DisplayName = nameof(Check_EntityAttributeExits))]
-        public void Check_EntityAttributeExits()
+        [Fact(DisplayName = "Can Check if Entity has associated Attribute")]
+        public void CanCheckIfEntity_HasAssociatedAttribute()
         {
             var entity = new DynamicEntity();
             entity.Attributes.SetValue("Value1", 1000);
@@ -45,8 +44,8 @@ namespace CoreTests.Domain
             entity.Attributes.Contains("Value2").Should().BeFalse();
         }
 
-        [Fact(DisplayName = nameof(GetTyped_EntityAttributeValue))]
-        public void GetTyped_EntityAttributeValue()
+        [Fact(DisplayName = "Entity Attribute can be Retrieved as Specific Type")]
+        public void EntityAttribute_CanBeRetrievedAsSpecificType()
         {
             var entity = new DynamicEntity();
             entity.Attributes.SetValue("Value1", 1000);
@@ -55,33 +54,33 @@ namespace CoreTests.Domain
             value.Should().Be(1000);
         }
 
-        [Fact(DisplayName = nameof(RequestDefaultValue_WhenAttributeNotPresent))]
-        public void RequestDefaultValue_WhenAttributeNotPresent()
+        [Fact(DisplayName = "Can return types Default value if Attribute not present")]
+        public void CanReturnTypesDefaultValue_IfAttributeNotPresent()
         {
             var entity = new DynamicEntity();
             var value = entity.Attributes.GetValueOrDefault<int>("Value1");
             value.Should().Be(0);
         }
 
-        [Fact(DisplayName = nameof(RequestSpecificDefaultValue_WhenAttributeNotPresent))]
-        public void RequestSpecificDefaultValue_WhenAttributeNotPresent()
+        [Fact(DisplayName = "Can return specified Default Value if Attribute not present")]
+        public void CanReturnSpecifiedDefaultValue_IfAttributeNotPresent()
         {
             var entity = new DynamicEntity();
-            var value = entity.Attributes.GetValueOrDefault<int>("Value1",  1000);
+            var value = entity.Attributes.GetValueOrDefault("Value1",  1000);
             value.Should().Be(1000);
         }
 
-        [Fact(DisplayName = nameof(EntityAttributePresent_DefaultValueNotReturned))]
+        [Fact(DisplayName = "Entity Attribute present Default value not returned")]
         public void EntityAttributePresent_DefaultValueNotReturned()
         {
             var entity = new DynamicEntity();
             entity.Attributes.Values.Value1 = 1000;
-            var value = entity.Attributes.GetValueOrDefault<int>("Value1", 2000);
+            var value = entity.Attributes.GetValueOrDefault("Value1", 2000);
             value.Should().Be(1000);
         }
 
-        [Fact(DisplayName = nameof(AssociateContext_WithAttribute))]
-        public void AssociateContext_WithAttribute()
+        [Fact(DisplayName = "Attribute value can be Scoped to Context")]
+        public void AttributeValue_CanBeScopedToContext()
         {
             var entity = new DynamicEntity();
             entity.Attributes.SetValue("TestValue", 7777, typeof(SampleContext));
@@ -91,8 +90,8 @@ namespace CoreTests.Domain
             key.Should().Be(typeof(SampleContext).Namespace + "-TestValue");
         }
 
-        [Fact(DisplayName = nameof(ReceiveValue_AssociatedWithContext))]
-        public void ReceiveValue_AssociatedWithContext()
+        [Fact(DisplayName = "Can Receive value Scoped to Context")]
+        public void CanReceiveValue_ScopedToContext()
         {
             var entity = new DynamicEntity();
             entity.Attributes.SetValue("TestValue", 7777, typeof(SampleContext));
@@ -100,7 +99,7 @@ namespace CoreTests.Domain
             var value = entity.Attributes.GetValue<int>("TestValue", typeof(SampleContext));
         }
 
-        [Fact(DisplayName = nameof(CallingMethodNameUsed_WhenNameNotSpecified))]
+        [Fact(DisplayName = "Calling Method Name used when name not specified")]
         public void CallingMethodNameUsed_WhenNameNotSpecified()
         {
             var entity = new DynamicEntity();
@@ -113,12 +112,12 @@ namespace CoreTests.Domain
             entity.AttributeValues.First().Key.Should().Be("ValueWithNoName");
         }
 
-        [Fact(DisplayName = nameof(ContextAssociatedValueNotPresent_DefaultValueUsed))]
-        public void ContextAssociatedValueNotPresent_DefaultValueUsed()
+        [Fact(DisplayName = "Context Scoped value not present Default Value used")]
+        public void ContextScopedValueNotPresent_DefaultValueUsed()
         {
             var entity = new DynamicEntity();
 
-            var value = entity.Attributes.GetValueOrDefault<int>("TestValue", 8000, typeof(SampleContext));
+            var value = entity.Attributes.GetValueOrDefault("TestValue", 8000, typeof(SampleContext));
             value.Should().Be(8000);
         }
     }

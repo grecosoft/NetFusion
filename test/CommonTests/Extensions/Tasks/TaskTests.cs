@@ -6,41 +6,41 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CommonTests.Extensions
+namespace CommonTests.Extensions.Tasks
 {
     /// <summary>
-    /// When executing a collection of tasks, representing future results, the exception
-    /// for the first failing Task is returned.  The following tests the FutureResult and 
-    /// the associated extensions.  The implementation associates a Task with the Invoker
-    /// that produced that Task.  This allows for easy logging of the Invoker information
-    /// that the failed Task is associated with.  A collection of these future results are
-    /// maintained and all failed task exceptions can be queried and logged.
+    /// When executing a collection of tasks, representing asynchronous results, the exception for the first failing 
+    /// Task is returned.  The following tests the TaskListItem and  the associated extensions.  The implementation 
+    /// associates a Task with the Invoker that produced that Task.  This allows for easy logging of the Invoker 
+    /// information that the failed Task is associated with.  A collection of these task items are maintained and 
+    /// all failed task exceptions can be queried and logged.
     /// </summary>
-    public class FutureResultTests
+    public class TaskExtensions
     {
-        [Fact]
-        public async Task CallInvokersAgainstInput_Succeeds_FutureResultNoExceptions()
+        [Fact (DisplayName = "No Exceptions when All task list items Succeed")]
+        public async Task NoExceptions_WhenAllTaskListItemsSucceed()
         {
             // State and list of invokers that all succeed.
             var state = new TestState { Value1 = 100, Value2 = 200 };
             var invokers = new TestInvoker[] {
                 new TestInvoker(),
-                new TestInvoker() };
+                new TestInvoker()
+            };
 
             // Caller specifies via lambda what method on invoker is called and passes state.
-            var futureResults = invokers.Invoke(state, (i, s) => i.Invoke(s));
-            await futureResults.WhenAll();
+            var taskList = invokers.Invoke(state, (i, s) => i.Invoke(s));
+            await taskList.WhenAll();
 
             // The caller specifies the custom exception that should be created for each failed 
             // Task - for this test, there should be none.
-            var exceptions = futureResults.GetExceptions(
+            var exceptions = taskList.GetExceptions(
                     fr => new TestException("Expected Exception", fr.Task.Exception, fr.Invoker));
 
             exceptions.Should().BeEmpty();
         }
 
-        [Fact]
-        public async Task CallInvokersAgainstInput_Exceptions_CanGetExceptionAndInvoker()
+        [Fact(DisplayName = "Can Query Exceptions when one or more task list item Fails")]
+        public async Task CanQueryException_WhenOneOrMoreTalskListItemFails()
         {
             var state = new TestState { Value1 = 100, Value2 = 200 };
             var invokers = new TestInvoker[] {
@@ -49,15 +49,15 @@ namespace CommonTests.Extensions
                 new TestInvoker(),
                 new TestInvoker("InvokerError2") };
 
-            var futureResults = invokers.Invoke(state, (i, s) => i.Invoke(s));
+            var taskList = invokers.Invoke(state, (i, s) => i.Invoke(s));
 
             try {
-                await futureResults.WhenAll();
+                await taskList.WhenAll();
                 Assert.False(true, "Expected Exception Not Raised");
             }
             catch 
             {
-                var exceptions = futureResults.GetExceptions(
+                var exceptions = taskList.GetExceptions(
                     fr => new TestException("Expected Exception", fr.Task.Exception, fr.Invoker));
 
                 exceptions.Should().NotBeNull();
@@ -78,18 +78,18 @@ namespace CommonTests.Extensions
 
         public TestInvoker(string errorMessage = null)
         {
-            this.ErrorMessage = errorMessage;
+            ErrorMessage = errorMessage;
         }
 
         public Task Invoke(TestState state)
         {
             Check.NotNull(state, nameof(state));
-            if (this.ErrorMessage == null)
+            if (ErrorMessage == null)
             {
                 return Task.CompletedTask;
             }
 
-            return Task.FromException(new InvalidOperationException(this.ErrorMessage));
+            return Task.FromException(new InvalidOperationException(ErrorMessage));
         }
     }
 
@@ -106,7 +106,7 @@ namespace CommonTests.Extensions
         public TestException(string message, Exception innerException, TestInvoker invoker) :
             base(message, innerException)
         {
-            this.Invoker = invoker;
+            Invoker = invoker;
         }
     }
 }

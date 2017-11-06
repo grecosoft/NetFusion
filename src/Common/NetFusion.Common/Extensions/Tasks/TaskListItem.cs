@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace NetFusion.Common.Extensions.Tasks
 {
@@ -7,7 +8,7 @@ namespace NetFusion.Common.Extensions.Tasks
     /// for starting the asynchronous call pending completion. 
     /// </summary>
     /// <typeparam name="TInvoker">The type of the invoker.</typeparam>
-    public class FutureResult<TInvoker>
+    public class TaskListItem<TInvoker>
         where TInvoker : class
     {
         /// <summary>
@@ -25,13 +26,13 @@ namespace NetFusion.Common.Extensions.Tasks
         /// </summary>
         /// <param name="task">The task associated with the work being completed.</param>
         /// <param name="invoker">The object instance that started the asynchronous call.</param>
-        public FutureResult(Task task, TInvoker invoker)
+        public TaskListItem(Task task, TInvoker invoker)
         {
-            Check.NotNull(task, nameof(task));
-            Check.NotNull(invoker, nameof(invoker));
-
-            this.Task = task;
-            this.Invoker = invoker;
+            if (task == null) throw new ArgumentNullException(nameof(task));
+            if (invoker == null) throw new ArgumentNullException(nameof(invoker));
+            
+            Task = task;
+            Invoker = invoker;
         }
     }
 }

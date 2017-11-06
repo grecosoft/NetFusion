@@ -7,7 +7,7 @@ using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common;
 using NetFusion.Common.Extensions;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -240,7 +240,7 @@ namespace NetFusion.Domain.Roslyn.Core
             return assemblies.Distinct().ToList();
         }
 
-        public async Task<bool> SatisfiesPredicate(object entity, ScriptPredicate predicate)
+        public async Task<bool> SatisfiesPredicateAsync(object entity, ScriptPredicate predicate)
         {
             Check.NotNull(entity, nameof(entity));
             Check.NotNull(predicate, nameof(predicate));

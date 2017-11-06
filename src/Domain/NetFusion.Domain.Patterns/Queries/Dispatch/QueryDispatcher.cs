@@ -66,18 +66,18 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
         // any task error(s) are checked and raised.
         private async Task ApplyFilters(IQuery query, IEnumerable<IQueryFilter> filters)
         {
-            FutureResult<IQueryFilter>[] futureResults = null;
+            TaskListItem<IQueryFilter>[] taskList = null;
 
             try
             {
-                futureResults = filters.Invoke(query, (filter, q) => filter.OnExecute(q));
-                await futureResults.WhenAll();
+                taskList = filters.Invoke(query, (filter, q) => filter.OnExecute(q));
+                await taskList.WhenAll();
             }
             catch (Exception ex)
             {
-                if (futureResults != null)
+                if (taskList != null)
                 {
-                    var filterErrors = futureResults.GetExceptions(fr => new QueryFilterException(fr));
+                    var filterErrors = taskList.GetExceptions(fr => new QueryFilterException(fr));
                     if (filterErrors.Any())
                     {
                         throw new QueryDispatchException("Exception when invoking query filters.", filterErrors);

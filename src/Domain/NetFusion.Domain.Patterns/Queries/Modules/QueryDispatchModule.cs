@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Domain.Patterns.Queries.Dispatch;
 using System;

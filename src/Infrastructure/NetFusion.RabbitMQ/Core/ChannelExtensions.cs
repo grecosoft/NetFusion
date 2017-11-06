@@ -1,6 +1,6 @@
 ﻿using NetFusion.Common;
 using NetFusion.Common.Extensions;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.RabbitMQ.Exchanges;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -72,7 +72,7 @@ namespace NetFusion.RabbitMQ.Core
 
             foreach(string routeKey in eventConsumer.RouteKeys)
             {
-                if (routeKey.IsNullOrWhiteSpace())
+                if (string.IsNullOrWhiteSpace(routeKey))
                 {
                     throw new InvalidOperationException(
                         $"The queue named: {eventConsumer.QueueName} on the exchange named: {eventConsumer.ExchangeName} " +

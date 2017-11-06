@@ -14,7 +14,7 @@ namespace NetFusion.Domain.Patterns.Queries.Filters
         /// Constructor.
         /// </summary>
         /// <param name="futureResult">The future result containing the exception.</param>
-        public QueryFilterException(FutureResult<IQueryFilter> futureResult)
+        public QueryFilterException(TaskListItem<IQueryFilter> futureResult)
         {
             Check.NotNull(futureResult, nameof(futureResult));
 

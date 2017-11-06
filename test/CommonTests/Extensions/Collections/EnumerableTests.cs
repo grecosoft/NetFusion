@@ -1,21 +1,13 @@
 ﻿using FluentAssertions;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace CommonTests.Extensions
+namespace CommonTests.Extensions.Collections
 {
     public class EnumerableTests
     {
-        [Fact(DisplayName = nameof(IfNullEnumerable_ReturnEmptySet))]
-        public void IfNullEnumerable_ReturnEmptySet()
-        {
-            const IEnumerable<int> nullEnumerable = null;
-            var value = nullEnumerable.EmptyIfNull().ToList();
-            value.Should().NotBeNull();
-            value.Should().BeEmpty();
-        }
 
         [Fact(DisplayName = nameof(GivenLookup_ReteriveAllValues))]
         public void GivenLookup_ReteriveAllValues()

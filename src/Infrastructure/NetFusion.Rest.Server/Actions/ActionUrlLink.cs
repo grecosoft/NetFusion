@@ -1,4 +1,4 @@
-﻿using NetFusion.Common.Extensions.Collection;
+﻿using NetFusion.Common.Extensions.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +29,7 @@ namespace NetFusion.Rest.Server.Actions
 
         public ActionUrlLink()
         {
-            RouteValues = _routeValues.ToReadOnly();            
+            RouteValues = _routeValues.AsReadOnly();            
         }
 
         public ActionUrlLink(ActionParamValue actionParamValues) 
@@ -38,13 +38,13 @@ namespace NetFusion.Rest.Server.Actions
                 throw new ArgumentNullException(nameof(actionParamValues), "Action parameter values not specified.");
 
             _routeValues = new List<ActionParamValue> { actionParamValues };
-            RouteValues = _routeValues.ToReadOnly();
+            RouteValues = _routeValues.AsReadOnly();
         }
 
         private void SetRouteValues(IEnumerable<ActionParamValue> actionPramValues)
         {
             _routeValues = actionPramValues.ToList();
-            RouteValues = _routeValues.ToReadOnly(); 
+            RouteValues = _routeValues.AsReadOnly(); 
         }
 
         private List<ActionParamValue> _routeValues = new List<ActionParamValue>();

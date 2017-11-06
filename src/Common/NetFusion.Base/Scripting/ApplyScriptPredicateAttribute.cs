@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using System;
+﻿using System;
 
 namespace NetFusion.Base.Scripting
 {
@@ -26,18 +25,25 @@ namespace NetFusion.Base.Scripting
         /// <param name="scriptName">The name of the script stored external to the application.</param>
         public ApplyScriptPredicateAttribute(string scriptName, string variableName)
         {
-            Check.NotNullOrWhiteSpace(scriptName, nameof(scriptName));
-            Check.NotNullOrWhiteSpace(variableName, nameof(variableName));
+            if (string.IsNullOrWhiteSpace(scriptName))
+                throw new ArgumentException("Script name cannot be null or empty string.", nameof(scriptName));
+
+            if (string.IsNullOrWhiteSpace(variableName))
+                throw new ArgumentException("Variable name cannot be null or empty string.", nameof(variableName));
 
             ScriptName = scriptName;
             AttributeName = variableName;
         }
 
+        /// <summary>
+        /// Returns a simple object containing information about the script predicate.
+        /// </summary>
+        /// <returns>Object instance describing script predicate.</returns>
         public ScriptPredicate ToPredicate()
         {
             return new ScriptPredicate {
-                ScriptName = this.ScriptName,
-                AttributeName = this.AttributeName };
+                ScriptName = ScriptName,
+                AttributeName = AttributeName };
         }
     }
 }

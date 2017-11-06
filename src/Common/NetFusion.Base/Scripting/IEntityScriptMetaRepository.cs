@@ -18,7 +18,7 @@ namespace NetFusion.Base.Scripting
         /// <summary>
         /// Saves a new script or updates an existing.
         /// </summary>
-        /// <param name="script">The script to same.</param>
+        /// <param name="script">The script to save.</param>
         /// <returns>The existing identity value or the newly generated value.</returns>
         Task<string> SaveAsync(EntityScript script);
     }

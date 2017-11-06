@@ -6,7 +6,7 @@ using NetFusion.Bootstrap.Configuration;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
@@ -333,7 +333,8 @@ namespace NetFusion.Bootstrap.Container
             }
 
             DisposePluginModules();
-            Services?.Dispose();
+            _container?.Dispose();
+            _loggerFactory?.Dispose();
 
             _disposed = true;
         }

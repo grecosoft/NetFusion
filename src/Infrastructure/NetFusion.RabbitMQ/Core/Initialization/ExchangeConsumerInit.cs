@@ -110,7 +110,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
             // Bind to the existing or newly created queue to the exchange
             // if the default exchange is not specified.
-            if (!messageConsumer.ExchangeName.IsNullOrWhiteSpace())
+            if (!string.IsNullOrWhiteSpace(messageConsumer.ExchangeName))
             {
                 // Apply any queue settings stored external in the application's configuration.
                 _brokerState.BrokerSettings.ApplyQueueSettings(messageConsumer);

@@ -55,21 +55,21 @@ namespace NetFusion.Messaging.Core
             IEnumerable<MessageDispatchInfo> dispatchers,
             CancellationToken cancellationToken)
         {
-            FutureResult<MessageDispatchInfo>[] futureResults = null;
+            TaskListItem<MessageDispatchInfo>[] taskList = null;
 
             try
             {
                 MessageDispatchInfo[] matchingDispatchers = await GetMatchingDispatchers(dispatchers, message);
                 AssertMessageDispatchers(message, matchingDispatchers);
 
-                futureResults = matchingDispatchers.Invoke(message, InvokeDispatcher, cancellationToken);
-                await futureResults.WhenAll();
+                taskList = matchingDispatchers.Invoke(message, InvokeDispatcher, cancellationToken);
+                await taskList.WhenAll();
             }
             catch (Exception ex)
             {
-                if (futureResults != null)
+                if (taskList != null)
                 {
-                    var dispatchErrors = futureResults.GetExceptions(GetDispatchException);
+                    var dispatchErrors = taskList.GetExceptions(GetDispatchException);
                     if (dispatchErrors.Any())
                     {
                         throw new MessageDispatchException(
@@ -106,7 +106,7 @@ namespace NetFusion.Messaging.Core
 
             if (predicate != null)
             {
-                return await _scriptingSrv.SatisfiesPredicate(message, predicate);
+                return await _scriptingSrv.SatisfiesPredicateAsync(message, predicate);
             }
 
             return dispatchInfo.IsMatch(message);
@@ -128,7 +128,7 @@ namespace NetFusion.Messaging.Core
             return dispatcher.Dispatch(message, consumer, cancellationToken);
         }
 
-        private MessageDispatchException GetDispatchException(FutureResult<MessageDispatchInfo> futureResult)
+        private MessageDispatchException GetDispatchException(TaskListItem<MessageDispatchInfo> futureResult)
         {
             var sourceEx = futureResult.Task.Exception.InnerException;
 

@@ -47,10 +47,5 @@ namespace NetFusion.Common.Extensions
             Check.NotNull(value, nameof(value));
             return JsonConvert.SerializeObject(value, Formatting.None);
         }
-
-        private static string GetBasePropertyName(string name)
-        {
-            return name.Replace("Get", "").Replace("Set", ""); 
-        }
     }
 }

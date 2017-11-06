@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Mappings;
@@ -106,7 +106,8 @@ namespace NetFusion.Rest.Server.Modules
             if (resourceType == null)
                 throw new ArgumentNullException(nameof(resourceType), "Resource type not specified.");
 
-            return _namedResourceModels.GetOptionalValue(resourceType);
+            _namedResourceModels.TryGetValue(resourceType, out string resourceName);
+            return resourceName;
         }
 
         public bool ApplyResourceMeta(string mediaType, ResourceContext context)

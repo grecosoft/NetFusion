@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Rest.Resources.Doc;
 using NetFusion.Rest.Server.Actions;

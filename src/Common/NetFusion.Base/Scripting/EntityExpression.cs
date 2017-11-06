@@ -1,4 +1,5 @@
 ﻿using NetFusion.Common;
+using System;
 
 namespace NetFusion.Base.Scripting
 {
@@ -13,29 +14,36 @@ namespace NetFusion.Base.Scripting
             int sequence,
             string attributeName = null)
         {
-            Check.NotNullOrEmpty(expression, nameof(expression));
-            Check.IsTrue(sequence >= 0, nameof(sequence),  "expression sequence must be greater or equal to 0");
+            if (string.IsNullOrWhiteSpace(expression))
+            {
+                throw new ArgumentException("Expression cannot be null or contain an empty string", 
+                    nameof(expression));
+            }
 
+            if (sequence < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sequence), 
+                    "Expression sequence must be greater or equal to 0");
+            }
+            
             Expression = expression;
             Sequence = sequence;
             AttributeName = attributeName;
         }
 
         /// <summary>
-        /// The name a dynamic entity attribute for the expression.
+        /// The optional name of the dynamic entity attribute associated with the expression.
         /// </summary>
         public string AttributeName { get; }
 
         /// <summary>
-        /// The expression script containing a short C# expression having
-        /// full access to the static domain entity and its set of dynamic
-        /// runtime attribute values.
+        /// The expression script containing a short C# expression having full access to the 
+        /// static domain entity properties and its set of dynamic runtime attribute values.
         /// </summary>
         public string Expression { get; }
 
         /// <summary>
-        /// The order in which the expression should be executed within 
-        /// the script.
+        /// The order in which the expression should be executed within the script.
         /// </summary>
         public int Sequence { get; }
 

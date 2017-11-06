@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Actions;
 using NetFusion.Rest.Server.Mappings;
@@ -33,7 +33,7 @@ namespace NetFusion.Rest.Server.Meta
 
         public ResourceMeta(IResourceMap resourceMap)
         {
-            Links = _links.ToReadOnly();
+            Links = _links.AsReadOnly();
 
             _resourceMap = resourceMap;
         }

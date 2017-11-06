@@ -5,19 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace CommonTests.Extensions
+namespace CommonTests.Extensions.Reflection
 {
     public class GenericTypeTests
     {
-        [Fact (DisplayName = nameof(GivenType_DetermineOpenGeneric))]
-        public void GivenType_DetermineOpenGeneric()
+        [Fact (DisplayName = "Given Type can determine Open Generic")]
+        public void GivenType_CanDetermineOpenGeneric()
         {
             typeof(List<>).IsOpenGenericType().Should().BeTrue();
             typeof(List<int>).IsOpenGenericType().Should().BeFalse();
         }
 
-        [Fact (DisplayName = nameof(GivenType_DetermineClosedGeneric))]
-        public void GivenType_DetermineClosedGeneric()
+        [Fact (DisplayName = "Gen Type can determine Closed Generic")]
+        public void GivenType_CanDetermineClosedGeneric()
         {
             var closedType = typeof(Tuple<int, string, int>);
             var openType = typeof(Tuple<,,>);
@@ -28,8 +28,8 @@ namespace CommonTests.Extensions
             closedType.IsClosedGenericTypeOf(openType).Should().BeFalse();
         }
 
-        [Fact (DisplayName = nameof(GivenType_DetermineClosedGenericOfParamTypes))]
-        public void GivenType_DetermineClosedGenericOfParamTypes()
+        [Fact (DisplayName = "Given Type can determine Close Generic of Assignable Param. Types")]
+        public void GivenType_CanDetermineClosedGenericOfAssignableParamTypes()
         {
             var closedType = typeof(Tuple<int, string, int>);
             var openType = typeof(Tuple<,,>);
@@ -41,10 +41,14 @@ namespace CommonTests.Extensions
             closedType.IsClosedGenericTypeOf(openType,
                typeof(string), typeof(string), typeof(int))
                .Should().BeFalse();
+
+            closedType.IsClosedGenericTypeOf(openType,
+              typeof(object), typeof(string), typeof(object))
+              .Should().BeTrue();
         }
 
-        [Fact (DisplayName = nameof(GivenType_DetermineImplementedClosedInterfacesOfParamTypes))]
-        public void GivenType_DetermineImplementedClosedInterfacesOfParamTypes()
+        [Fact (DisplayName = "Given Types can determine those Implementing Closed Generic Interface of Assignable Param. Types.")]
+        public void GivenTypes_CanDetermineThoseImplementingClosedGenericInterfacesOfAssignableParamTypes()
         {
             var closedTypes = new[] { typeof(Dictionary<string, int>), typeof(List<int>) };
             var matchingTypes = closedTypes.WhereHavingClosedInterfaceTypeOf(

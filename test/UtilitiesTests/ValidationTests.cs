@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Domain.Entities;
 using NetFusion.Domain.Entities.Core;
 using NetFusion.Domain.Entities.Registration;
