@@ -7,6 +7,6 @@ namespace CoreTests.Messaging.Mocks
     /// </summary>
     public class MockDomainEvent : DomainEvent
     {
-        
+
     }
 }

@@ -4,7 +4,7 @@ using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Enrichers;
 using System.Collections.Generic;
 
-namespace NetFusion.Messaging
+namespace NetFusion.Messaging.Enrichers
 {
     /// <summary>
     /// Contains information about a message enricher that throws and exception when applied.

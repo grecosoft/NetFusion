@@ -1,15 +1,11 @@
 ﻿using Autofac;
-using Autofac.Core;
 using BootstrapTests.Settings.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NetFusion.Bootstrap.Configuration;
-using NetFusion.Bootstrap.Container;
 using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;
-using NetFusion.Utilities.Validation;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace CoreTests.Settings
@@ -18,23 +14,22 @@ namespace CoreTests.Settings
     /// Unit tests for testing the injecting of configuration setting classes
     /// that are loaded from the providers specified on the ConfigurationBuilder.
     /// </summary>
-    public class PluginSettingTests
+    public class SettingsTests
     {
         /// <summary>
         /// A configuration setting class deriving from IAppSetting and marked with the
         /// ConfigurationSection attribute will be loaded from the associated section.
         /// </summary>
-        [Fact(DisplayName = nameof(CanInjectSettings_DirectlyIntoConsumer))]
+        [Fact(DisplayName = "Can inject Settings directly into Consumer")]
         public void CanInjectSettings_DirectlyIntoConsumer()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver resolver) =>
+            ContainerFixture.Test(fixture => {
+                fixture.Arrange.Resolver(r =>
                 {
-                    resolver.DefaultSettingsConfig();
-                    resolver.AddPlugin<MockCorePlugin>().AddPluginType<MockSetttings>();
+                    r.DefaultSettingsConfig();
+                    r.AddPlugin<MockCorePlugin>().AddPluginType<MockSetttings>();
                 })
-                
-                .Test(c =>
+                .Act.OnContainer(c =>
                 {
                     c.WithConfig<EnvironmentConfig>(settings => {
 
@@ -42,8 +37,8 @@ namespace CoreTests.Settings
                     });
 
                     c.Build();
-                },
-                (IAppContainer c) =>
+                })
+                .Assert.Container(c =>
                 {
                     var settings = c.Services.Resolve<MockSetttings>();
                     settings.Should().NotBeNull();
@@ -51,41 +46,43 @@ namespace CoreTests.Settings
                     settings.Height.Should().Be(20);
                     settings.Width.Should().Be(50);
                 });
+            });
         }
 
-        [Fact(DisplayName = nameof(SettingConfigSectionNotDefined_DefaultUnitilizedInstance))]
-        public void SettingConfigSectionNotDefined_DefaultUnitilizedInstance()
+        [Fact(DisplayName = "Settings config section Not defined Default uninitialized Instance returned")]
+        public void SettingConfigSectionNotDefined_DefaultUnintializedInstanceReturned()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
+            ContainerFixture.Test(fixture => {
+                fixture.Arrange.Resolver(r =>
                 {
-                    config.DefaultSettingsConfig();
-                    config.AddPlugin<MockCorePlugin>().AddPluginType<MockSetttings>();
+                    r.DefaultSettingsConfig();
+                    r.AddPlugin<MockCorePlugin>().AddPluginType<MockSetttings>();
                 })
+                .Act.OnContainer(c =>
+                {
+                    c.Build();
+                })
+                .Assert.Container(c =>
+                {
+                    var settings = c.Services.Resolve<MockSetttings>();
+                    settings.Should().NotBeNull();
 
-                .Test(
-                    c => c.Build(),
-                    (IAppContainer c) =>
-                    {
-                        var settings = c.Services.Resolve<MockSetttings>();
-                        settings.Should().NotBeNull();
-
-                        settings.Height.Should().Be(1000);
-                        settings.Width.Should().Be(2000);
-                    });
+                    settings.Height.Should().Be(1000);
+                    settings.Width.Should().Be(2000);
+                });
+            });
         }
 
-        [Fact (DisplayName = nameof(CanReadSpecificSettingValue_FromConfiguration))]
+        [Fact (DisplayName = "Can read specific settings value from configuration")]
         public void CanReadSpecificSettingValue_FromConfiguration()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
+            ContainerFixture.Test(fixture => {
+                fixture.Arrange.Resolver(r =>
                 {
-                    config.DefaultSettingsConfig();
-                    config.AddPlugin<MockCorePlugin>().AddPluginType<MockSetttings>();
+                    r.DefaultSettingsConfig();
+                    r.AddPlugin<MockCorePlugin>().AddPluginType<MockSetttings>();
                 })
-
-                .Test(c =>
+                .Act.OnContainer(c =>
                 {
                     c.WithConfig<EnvironmentConfig>(settings => {
 
@@ -93,27 +90,27 @@ namespace CoreTests.Settings
                     });
 
                     c.Build();
-                },
-                (IAppContainer c) =>
+                })
+                .Assert.Container(c =>
                 {
                     var configuration = c.Services.Resolve<IConfiguration>();
 
                     int width = configuration.GetValue<int>("App:MainWindow:Width");
                     width.Should().Be(50);
                 });
+            });
         }
 
-        [Fact(DisplayName = nameof(WhenSettingsDerived_LoadsBaseAndDerivedProperties))]
+        [Fact(DisplayName = "When settings derived loads base and derived properties")]
         public void WhenSettingsDerived_LoadsBaseAndDerivedProperties()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver resolver) =>
+            ContainerFixture.Test(fixture => {
+                fixture.Arrange.Resolver(r =>
                 {
-                    resolver.DefaultSettingsConfig();
-                    resolver.AddPlugin<MockCorePlugin>().AddPluginType<MockDerivedSettings>();
+                    r.DefaultSettingsConfig();
+                    r.AddPlugin<MockCorePlugin>().AddPluginType<MockDerivedSettings>();
                 })
-
-                .Test(c =>
+                .Act.OnContainer(c =>
                 {
                     c.WithConfig<EnvironmentConfig>(settings => {
 
@@ -121,8 +118,8 @@ namespace CoreTests.Settings
                     });
 
                     c.Build();
-                },
-                (IAppContainer c) =>
+                })
+                .Assert.Container(c =>
                 {
                     var settings = c.Services.Resolve<MockDerivedSettings>();
                     settings.Should().NotBeNull();
@@ -132,6 +129,7 @@ namespace CoreTests.Settings
                     settings.Dialog.Colors.Frame.Should().Be("RED");
                     settings.Dialog.Colors.Title.Should().Be("DARK_RED");
                 });
+            });
         }
 
         private void AddInMemorySettings(EnvironmentConfig config)

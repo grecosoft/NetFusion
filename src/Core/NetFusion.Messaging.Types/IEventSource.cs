@@ -5,7 +5,7 @@ namespace NetFusion.Messaging.Types
     /// <summary>
     /// Implemented by an entity that can have associated domain events.
     /// This can be used to decouple domain entities from the infrastructure
-    /// used to publish the event.
+    /// used to publish the events.
     /// </summary>
     public interface IEventSource
     {

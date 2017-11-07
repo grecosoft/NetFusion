@@ -4,9 +4,8 @@ using System;
 namespace NetFusion.Messaging.Types
 {
     /// <summary>
-    /// Used to specify that a command should be published to a consumer's queue
-    /// that processes incoming RPC style messages.  This attribute is applied
-    /// to a class deriving from ICommand.
+    /// Used to specify that a command should be published to a consumer's queue that processes 
+    /// incoming RPC style messages.  This attribute is applied to a class deriving from ICommand.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class RpcCommandAttribute : Attribute
@@ -36,13 +35,9 @@ namespace NetFusion.Messaging.Types
         /// <param name="externalTypeName">The name used to represent the message to external consumers.</param>
         public RpcCommandAttribute(string brokerName, string requestQueueKey, string externalTypeName)
         {
-            Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
-            Check.NotNullOrWhiteSpace(requestQueueKey, nameof(requestQueueKey));
-            Check.NotNullOrWhiteSpace(externalTypeName, nameof(externalTypeName));
-
-            this.BrokerName = brokerName;
-            this.RequestQueueKey = requestQueueKey;
-            this.ExternalTypeName = externalTypeName;
+            BrokerName = brokerName ?? throw new ArgumentNullException(nameof(brokerName));
+            RequestQueueKey = requestQueueKey ?? throw new ArgumentNullException(nameof(requestQueueKey)); 
+            ExternalTypeName = externalTypeName ?? throw new ArgumentNullException(nameof(externalTypeName));
         }
 
         /// <summary>
@@ -51,9 +46,9 @@ namespace NetFusion.Messaging.Types
         /// </summary>
         /// <param name="externalTypeName">The name used to represent the message to external consumers.</param>
         public RpcCommandAttribute(string externalTypeName)
-        {
-            Check.NotNullOrWhiteSpace(externalTypeName, nameof(externalTypeName));
-            this.ExternalTypeName = externalTypeName;
+        {            
+            ExternalTypeName = externalTypeName ?? 
+                throw new ArgumentNullException(nameof(externalTypeName));
         }
 
         /// <summary>

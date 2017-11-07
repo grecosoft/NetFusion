@@ -1,0 +1,1640 @@
+2017-11-06 12:42:20.307 -05:00 [Debug] Container Setup "{
+  \"TypeResolver\": \"NetFusion.Bootstrap.Container.TypeResolver, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [
+    \"NetFusion.Bootstrap.Configuration.EnvironmentConfig, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging.Config.MessagingConfig, NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap.Plugins.LoggerConfig, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Web.Mvc.WebMvcConfig, NetFusion.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap.Container.AutofacRegistrationConfig, NetFusion.Bootstrap, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-11-06 12:42:20.342 -05:00 [Verbose] Start Process: "Building Container"
+2017-11-06 12:42:20.366 -05:00 [Debug] Type Resolver "{
+  \"SearchPatterns\": [
+    \"webapihost\",
+    \"exampleapi\",
+    \"netfusion.*\",
+    \"netfusion.*.*\"
+  ],
+  \"MatchingAssemblies\": [
+    \"WebApiHost, Culture=neutral, PublicKeyToken=null\",
+    \"ExampleApi, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Base, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Bootstrap, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Common, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Domain, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.EntityFramework, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Logging.Serilog, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging.Types, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ.MongoDB, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Settings, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Utilities.Mapping, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Utilities.Validation, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Web.Mvc, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-11-06 12:42:20.410 -05:00 [Debug] Manifests "{
+  \"Host\": \"NetFusion.Client.HostManifest, WebApiHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Application\": [
+    \"RefArch.Api.Manifest, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\"
+  ],
+  \"Core\": [
+    \"NetFusion.Domain.Manifest, NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB.EntityFrameworkManifest, NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Messaging.MessagingManifest, NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.MongoDB.MongoDBManifest, NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.RabbitMQ.RabbitMQManifest, NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Integration.RabbitMqMongoDbManifest, NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Settings.SettingsManifest, NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Utilities.Mapping.Manifest, NetFusion.Utilities.Mapping, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Utilities.Validation.Manifest, NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"NetFusion.Web.Mvc.WebMvcManifest, NetFusion.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+  ]
+}"
+2017-11-06 12:42:20.475 -05:00 [Verbose] Plug-in "{
+  \"Name\": \"Example WebApi Host\",
+  \"PluginId\": \"{F54482C8-7D92-471E-B9AB-CF816D5EBC5A}\",
+  \"AssemblyName\": \"WebApiHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"RepositoryModule\",
+    \"RepositoryModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-11-06 12:42:20.476 -05:00 [Verbose] Plug-in "{
+  \"Name\": \"Public Application Programming Interface.\",
+  \"PluginId\": \"{E797B872-DDC9-418C-9DED-DF981BA164FC}\",
+  \"AssemblyName\": \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [],
+  \"Discovers\": []
+}"
+2017-11-06 12:42:20.476 -05:00 [Verbose] Plug-in "{
+  \"Name\": \"Domain Plug-in\",
+  \"PluginId\": \"{CB97D67FG-8455-4866-B839-A66A062E2870}\",
+  \"AssemblyName\": \"NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"DomainScriptingModule\",
+    \"EntityBehaviorModule\",
+    \"ReferenceTypeModule\"
+  ],
+  \"Discovers\": [
+    \"IBehaviorRegistry\"
+  ]
+}"
+2017-11-06 12:42:20.476 -05:00 [Verbose] Plug-in "{
+  \"Name\": \"EntityFramework Plug-in\",
+  \"PluginId\": \"{F66BA457-F387-4D45-9972-31EC9DB7D4A0}\",
+  \"AssemblyName\": \"NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"EntityContextModule\"
+  ],
+  \"Discovers\": [
+    \"IEntityTypeMapping\"
+  ]
+}"
+2017-11-06 12:42:20.476 -05:00 [Verbose] Plug-in "{
+  \"Name\": \"Messaging Plug-in\",
+  \"PluginId\": \"{4576D809-E216-4C03-BE43-737728047BAA}\",
+  \"AssemblyName\": \"NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [
+    \"MessagingConfig\"
+  ],
+  \"Modules\": [
+    \"MessageEnricherModule\",
+    \"MessagingModule\"
+  ],
+  \"Discovers\": [
+    \"IMessageDispatchRule\"
+  ]
+}"
+2017-11-06 12:42:20.476 -05:00 [Verbose] Plug-in "{
+  \"Name\": \"MongoDb Plug-in\",
+  \"PluginId\": \"{4BE391F9-F687-4E49-90A3-D38300E3A751}\",
+  \"AssemblyName\": \"NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"MappingModule\",
+    \"MongoModule\"
+  ],
+  \"Discovers\": [
+    \"IEntityClassMap\"
+  ]
+}"
+2017-11-06 12:42:20.476 -05:00 [Verbose] Plug-in "{
+  \"Name\": \"RabbitMQ Plug-in\",
+  \"PluginId\": \"{086DBC42-CF80-4B1D-A4F2-C9DC7E3CA24C}\",
+  \"AssemblyName\": \"NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"MessageBrokerModule\"
+  ],
+  \"Discovers\": [
+    \"IMessageExchange\",
+    \"IBrokerSerializerRegistry\"
+  ]
+}"
+2017-11-06 12:42:20.476 -05:00 [Verbose] Plug-in "{
+  \"Name\": \"NetFusion RabbitMQ MongoDB Plug-in\",
+  \"PluginId\": \"{1E4D2D7F-75D5-486B-A3CB-1971EAD7C801}\",
+  \"AssemblyName\": \"NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"RabbitIntegrationModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-11-06 12:42:20.476 -05:00 [Verbose] Plug-in "{
+  \"Name\": \"Settings Plug-in\",
+  \"PluginId\": \"{1FC4C728-83E0-4407-B846-2871B3F0A1B6}\",
+  \"AssemblyName\": \"NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"AppSettingsModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-11-06 12:42:20.477 -05:00 [Verbose] Plug-in "{
+  \"Name\": \"Mapping Utility Plug-in\",
+  \"PluginId\": \"{83C90E78-D245-4B0D-A4FC-E74B11227766}\",
+  \"AssemblyName\": \"NetFusion.Utilities.Mapping, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"MappingModule\"
+  ],
+  \"Discovers\": [
+    \"IMappingStrategyFactory\"
+  ]
+}"
+2017-11-06 12:42:20.477 -05:00 [Verbose] Plug-in "{
+  \"Name\": \"Validation Utility Plug-in\",
+  \"PluginId\": \"{63042550-AC9F-4EF3-A047-F54E7572B79B}\",
+  \"AssemblyName\": \"NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [],
+  \"Modules\": [
+    \"ValidationModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-11-06 12:42:20.477 -05:00 [Verbose] Plug-in "{
+  \"Name\": \"Web MVC Plug-in\",
+  \"PluginId\": \"{3C757DE1-48E1-452D-959A-01C8961B43D8}\",
+  \"AssemblyName\": \"NetFusion.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+  \"Configs\": [
+    \"WebMvcConfig\"
+  ],
+  \"Modules\": [
+    \"ApiMetadataModule\"
+  ],
+  \"Discovers\": []
+}"
+2017-11-06 12:42:20.634 -05:00 [Verbose] End Process: "Building Container", 290
+2017-11-06 12:42:20.635 -05:00 [Verbose] Start Process: "Starting Container"
+2017-11-06 12:42:21.258 -05:00 [Verbose] End Process: "Starting Container", 623
+2017-11-06 12:42:21.353 -05:00 [Verbose] Composite Log "{
+  \"Searched-Plugin-Assemblies\": {
+    \"AppHost-Assembly\": \"WebApiHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"AppComponent-Assemblies\": [
+      \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\"
+    ],
+    \"Core-Assemblies\": [
+      \"NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Utilities.Mapping, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"NetFusion.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+    ]
+  },
+  \"Host Plug-in\": {
+    \"Plugin-Name\": \"Example WebApi Host\",
+    \"Plugin-Id\": \"{F54482C8-7D92-471E-B9AB-CF816D5EBC5A}\",
+    \"Plugin-Assembly\": \"WebApiHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+    \"Plugin-Description\": \"Test WebApi host application with REST based routes.\",
+    \"Plugin-Modules\": {
+      \"WebApiHost.MongoDB.RepositoryModule\": {
+        \"Log\": {}
+      },
+      \"WebApiHost.EntityFramwork.RepositoryModule\": {
+        \"Log\": {}
+      }
+    },
+    \"Known-Types\": {
+      \"WebApi.MongoDB.ContactDB\": [],
+      \"WebApiHost.RabbitMQ.Exchanges.ExampleDirectExchange\": [
+        \"RabbitMQ Plug-in\"
+      ],
+      \"WebApiHost.RabbitMQ.Exchanges.HighImportanceExchange\": [
+        \"RabbitMQ Plug-in\"
+      ],
+      \"WebApiHost.RabbitMQ.Exchanges.LowImportanceExchange\": [
+        \"RabbitMQ Plug-in\"
+      ],
+      \"WebApiHost.RabbitMQ.Exchanges.ExampleTopicExchange\": [
+        \"RabbitMQ Plug-in\"
+      ],
+      \"WebApiHost.RabbitMQ.Exchanges.ExampleWorkQueueExchange\": [
+        \"RabbitMQ Plug-in\"
+      ],
+      \"WebApiHost.MongoDB.Repositories.CustomerMapping\": [
+        \"MongoDb Plug-in\"
+      ],
+      \"WebApiHost.MongoDB.Repositories.PreferredCustomerMapping\": [
+        \"MongoDb Plug-in\"
+      ],
+      \"WebApiHost.Messaging.Messages.ExampleAsyncCancelEvent\": [],
+      \"WebApiHost.Messaging.Messages.ExampleAsyncCommand\": [],
+      \"WebApiHost.Messaging.Messages.ExampleAsyncDomainEvent\": [],
+      \"WebApiHost.Messaging.Messages.ExampleAsyncDomainEventException\": [],
+      \"WebApiHost.Messaging.Messages.ExampleBaseDomainEvent\": [],
+      \"WebApiHost.Messaging.Messages.ExampleDerivedDomainEvent\": [],
+      \"WebApiHost.Messaging.Messages.ExampleRuleDomainEvent\": [],
+      \"WebApiHost.Messaging.Messages.ExampleSyncDomainEvent\": [],
+      \"WebApiHost.Messaging.Consumers.ExampleAsyncCancelHandler1\": [],
+      \"WebApiHost.Messaging.Consumers.ExampleAsyncCancelHandler2\": [],
+      \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler1\": [],
+      \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler2\": [],
+      \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler3\": [],
+      \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler4\": [],
+      \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler5\": [],
+      \"WebApiHost.Messaging.Consumers.ExampleHierarchyHandler\": [],
+      \"WebApiHost.Messaging.Consumers.ExampleRuleHandler\": [],
+      \"WebApiHost.Messaging.Consumers.ExampleSyncHandler1\": [],
+      \"WebApiHost.Messaging.Consumers.ExampleSyncHandler2\": [],
+      \"WebApiHost.Messaging.Consumers.Rules.IsHighImportance\": [
+        \"Messaging Plug-in\"
+      ],
+      \"WebApiHost.Messaging.Consumers.Rules.IsLowImportance\": [
+        \"Messaging Plug-in\"
+      ],
+      \"WebApiHost.EntityFramework.Contacts.ContactDbContext\": [],
+      \"WebApiHost.EntityFramework.Contacts.Mappings.ContactMappings\": [
+        \"EntityFramework Plug-in\"
+      ]
+    },
+    \"Discovered-Types\": [],
+    \"Plugin-Services\": [
+      {
+        \"Type\": \"ExampleAsyncCancelHandler1\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"WebApiHost.Messaging.Consumers.ExampleAsyncCancelHandler1\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleAsyncCancelHandler2\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"WebApiHost.Messaging.Consumers.ExampleAsyncCancelHandler2\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleAsyncHandler1\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler1\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleAsyncHandler2\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler2\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleAsyncHandler3\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler3\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleAsyncHandler4\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler4\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleAsyncHandler5\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler5\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleHierarchyHandler\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"WebApiHost.Messaging.Consumers.ExampleHierarchyHandler\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleRuleHandler\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"WebApiHost.Messaging.Consumers.ExampleRuleHandler\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleSyncHandler1\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"WebApiHost.Messaging.Consumers.ExampleSyncHandler1\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ExampleSyncHandler2\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"NetFusion.Messaging.IMessageConsumer\",
+              \"WebApiHost.Messaging.Consumers.ExampleSyncHandler2\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"ContactDB\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"WebApi.MongoDB.ContactDB\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"CustomerRepository\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"WebApiHost.MongoDB.ICustomerRepository\"
+            ]
+          }
+        ]
+      },
+      {
+        \"Type\": \"AddressRepository\",
+        \"Services\": [
+          {
+            \"LifeTime\": \"CurrentScopeLifetime\",
+            \"Services\": [
+              \"WebApiHost.EntityFramework.IAddressRepository\"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  \"Application Plug-Ins\": {
+    \"Public Application Programming Interface.\": {
+      \"Plugin-Name\": \"Public Application Programming Interface.\",
+      \"Plugin-Id\": \"{E797B872-DDC9-418C-9DED-DF981BA164FC}\",
+      \"Plugin-Assembly\": \"ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides commands and responses for business use cases.\",
+      \"Plugin-Modules\": {},
+      \"Known-Types\": {
+        \"ExampleApi.Messages.ExampleDirectEvent\": [],
+        \"ExampleApi.Messages.ExampleFanoutEvent\": [],
+        \"ExampleApi.Messages.ExampleRpcCommand\": [],
+        \"ExampleApi.Messages.ExampleRpcResponse\": [],
+        \"ExampleApi.Messages.ExampleTopicEvent\": [],
+        \"ExampleApi.Messages.ExampleWorkQueueEvent\": []
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": []
+    }
+  },
+  \"Core Plug-Ins\": {
+    \"Domain Plug-in\": {
+      \"Plugin-Name\": \"Domain Plug-in\",
+      \"Plugin-Id\": \"{CB97D67FG-8455-4866-B839-A66A062E2870}\",
+      \"Plugin-Assembly\": \"NetFusion.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides patterns that can be used to extend domain entities.  Also provides other domain based patterns.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Domain.Modules.DomainScriptingModule\": {
+          \"Log\": {
+            \"Attributed-Entities\": [
+              \"WebApiHost.Messaging.Messages.ExampleAsyncCancelEvent\",
+              \"WebApiHost.Messaging.Messages.ExampleAsyncCommand\",
+              \"WebApiHost.Messaging.Messages.ExampleAsyncDomainEvent\",
+              \"WebApiHost.Messaging.Messages.ExampleAsyncDomainEventException\",
+              \"WebApiHost.Messaging.Messages.ExampleBaseDomainEvent\",
+              \"WebApiHost.Messaging.Messages.ExampleDerivedDomainEvent\",
+              \"WebApiHost.Messaging.Messages.ExampleRuleDomainEvent\",
+              \"WebApiHost.Messaging.Messages.ExampleSyncDomainEvent\",
+              \"ExampleApi.Messages.ExampleDirectEvent\",
+              \"ExampleApi.Messages.ExampleFanoutEvent\",
+              \"ExampleApi.Messages.ExampleRpcCommand\",
+              \"ExampleApi.Messages.ExampleRpcResponse\",
+              \"ExampleApi.Messages.ExampleTopicEvent\",
+              \"ExampleApi.Messages.ExampleWorkQueueEvent\"
+            ]
+          }
+        },
+        \"NetFusion.Domain.Modules.EntityBehaviorModule\": {
+          \"Log\": {}
+        },
+        \"NetFusion.Domain.Modules.ReferenceTypeModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [
+        \"IBehaviorRegistry\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"NullReferenceTypeRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.ReferenceTypes.Core.IReferenceTypeRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"IDomainEntityFactory\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Domain.Entities.IDomainEntityFactory\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"EntityFramework Plug-in\": {
+      \"Plugin-Name\": \"EntityFramework Plug-in\",
+      \"Plugin-Id\": \"{F66BA457-F387-4D45-9972-31EC9DB7D4A0}\",
+      \"Plugin-Assembly\": \"NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides initialization for DBContext and also allows for automatic registration of entity mappings.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.EntityFramework.Modules.EntityContextModule\": {
+          \"Log\": {
+            \"Entity Mappings\": [
+              {
+                \"MappingType\": \"WebApiHost.EntityFramework.Contacts.Mappings.ContactMappings, WebApiHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+              }
+            ]
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"NetFusion.EntityFramework.EntityContext`1\": [],
+        \"NetFusion.EntityFramework.Configs.ContextSettings\": [],
+        \"NetFusion.EntityFramework.Configs.EntityFrameworkConfig\": []
+      },
+      \"Discovered-Types\": [
+        \"IEntityTypeMapping\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"ContextSettings\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.EntityFramework.Configs.ContextSettings\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"Messaging Plug-in\": {
+      \"Plugin-Name\": \"Messaging Plug-in\",
+      \"Plugin-Id\": \"{4576D809-E216-4C03-BE43-737728047BAA}\",
+      \"Plugin-Assembly\": \"NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Contains common implementation for publishing messages in-process that can be extended by other plug-ins to publish messages out of process.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Messaging.Modules.MessageEnricherModule\": {
+          \"Log\": {
+            \"Message Enrichers\": [
+              {
+                \"EnricherType\": \"NetFusion.Messaging.Enrichers.CorrelationEnricher, NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+              },
+              {
+                \"EnricherType\": \"NetFusion.Messaging.Enrichers.DatePublishedEnricher, NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+              }
+            ]
+          }
+        },
+        \"NetFusion.Messaging.Modules.MessagingModule\": {
+          \"Log\": {
+            \"Messaging - In Process Dispatchers\": {
+              \"WebApiHost.Messaging.Messages.ExampleAsyncCancelEvent\": [
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleAsyncCancelHandler1\",
+                  \"Method\": \"OnEventAsync\",
+                  \"EventType\": \"ExampleAsyncCancelEvent\",
+                  \"IsAsync\": true,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                },
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleAsyncCancelHandler2\",
+                  \"Method\": \"OnEventAsync\",
+                  \"EventType\": \"ExampleAsyncCancelEvent\",
+                  \"IsAsync\": true,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                },
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleRuleHandler\",
+                  \"Method\": \"OnEvent\",
+                  \"EventType\": \"DomainEvent\",
+                  \"IsAsync\": false,
+                  \"IncludedDerivedTypes\": true,
+                  \"DispatchRules\": [
+                    \"WebApiHost.Messaging.Consumers.Rules.IsLowImportance\"
+                  ],
+                  \"RuleApplyType\": \"All\"
+                }
+              ],
+              \"WebApiHost.Messaging.Messages.ExampleAsyncDomainEvent\": [
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler1\",
+                  \"Method\": \"OnEventAsync\",
+                  \"EventType\": \"ExampleAsyncDomainEvent\",
+                  \"IsAsync\": true,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                },
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler2\",
+                  \"Method\": \"OnEventAsync\",
+                  \"EventType\": \"ExampleAsyncDomainEvent\",
+                  \"IsAsync\": true,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                },
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleRuleHandler\",
+                  \"Method\": \"OnEvent\",
+                  \"EventType\": \"DomainEvent\",
+                  \"IsAsync\": false,
+                  \"IncludedDerivedTypes\": true,
+                  \"DispatchRules\": [
+                    \"WebApiHost.Messaging.Consumers.Rules.IsLowImportance\"
+                  ],
+                  \"RuleApplyType\": \"All\"
+                }
+              ],
+              \"WebApiHost.Messaging.Messages.ExampleAsyncDomainEventException\": [
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler3\",
+                  \"Method\": \"OnEventAsync\",
+                  \"EventType\": \"ExampleAsyncDomainEventException\",
+                  \"IsAsync\": true,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                },
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler4\",
+                  \"Method\": \"OnEventAsync\",
+                  \"EventType\": \"ExampleAsyncDomainEventException\",
+                  \"IsAsync\": true,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                },
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleRuleHandler\",
+                  \"Method\": \"OnEvent\",
+                  \"EventType\": \"DomainEvent\",
+                  \"IsAsync\": false,
+                  \"IncludedDerivedTypes\": true,
+                  \"DispatchRules\": [
+                    \"WebApiHost.Messaging.Consumers.Rules.IsLowImportance\"
+                  ],
+                  \"RuleApplyType\": \"All\"
+                }
+              ],
+              \"WebApiHost.Messaging.Messages.ExampleAsyncCommand\": [
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleAsyncHandler5\",
+                  \"Method\": \"OnCommand\",
+                  \"EventType\": \"ExampleAsyncCommand\",
+                  \"IsAsync\": true,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                }
+              ],
+              \"WebApiHost.Messaging.Messages.ExampleBaseDomainEvent\": [
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleHierarchyHandler\",
+                  \"Method\": \"OnEvent\",
+                  \"EventType\": \"ExampleBaseDomainEvent\",
+                  \"IsAsync\": false,
+                  \"IncludedDerivedTypes\": true,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                },
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleRuleHandler\",
+                  \"Method\": \"OnEvent\",
+                  \"EventType\": \"DomainEvent\",
+                  \"IsAsync\": false,
+                  \"IncludedDerivedTypes\": true,
+                  \"DispatchRules\": [
+                    \"WebApiHost.Messaging.Consumers.Rules.IsLowImportance\"
+                  ],
+                  \"RuleApplyType\": \"All\"
+                }
+              ],
+              \"WebApiHost.Messaging.Messages.ExampleDerivedDomainEvent\": [
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleHierarchyHandler\",
+                  \"Method\": \"OnEvent\",
+                  \"EventType\": \"ExampleBaseDomainEvent\",
+                  \"IsAsync\": false,
+                  \"IncludedDerivedTypes\": true,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                },
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleHierarchyHandler\",
+                  \"Method\": \"OnEvent\",
+                  \"EventType\": \"ExampleDerivedDomainEvent\",
+                  \"IsAsync\": false,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                },
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleRuleHandler\",
+                  \"Method\": \"OnEvent\",
+                  \"EventType\": \"DomainEvent\",
+                  \"IsAsync\": false,
+                  \"IncludedDerivedTypes\": true,
+                  \"DispatchRules\": [
+                    \"WebApiHost.Messaging.Consumers.Rules.IsLowImportance\"
+                  ],
+                  \"RuleApplyType\": \"All\"
+                }
+              ],
+              \"NetFusion.Messaging.Types.DomainEvent\": [
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleRuleHandler\",
+                  \"Method\": \"OnEvent\",
+                  \"EventType\": \"DomainEvent\",
+                  \"IsAsync\": false,
+                  \"IncludedDerivedTypes\": true,
+                  \"DispatchRules\": [
+                    \"WebApiHost.Messaging.Consumers.Rules.IsLowImportance\"
+                  ],
+                  \"RuleApplyType\": \"All\"
+                }
+              ],
+              \"WebApiHost.Messaging.Messages.ExampleRuleDomainEvent\": [
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleRuleHandler\",
+                  \"Method\": \"OnEvent\",
+                  \"EventType\": \"DomainEvent\",
+                  \"IsAsync\": false,
+                  \"IncludedDerivedTypes\": true,
+                  \"DispatchRules\": [
+                    \"WebApiHost.Messaging.Consumers.Rules.IsLowImportance\"
+                  ],
+                  \"RuleApplyType\": \"All\"
+                },
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleRuleHandler\",
+                  \"Method\": \"OnEvent\",
+                  \"EventType\": \"ExampleRuleDomainEvent\",
+                  \"IsAsync\": false,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [
+                    \"WebApiHost.Messaging.Consumers.Rules.IsHighImportance\"
+                  ],
+                  \"RuleApplyType\": \"All\"
+                }
+              ],
+              \"WebApiHost.Messaging.Messages.ExampleSyncDomainEvent\": [
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleRuleHandler\",
+                  \"Method\": \"OnEvent\",
+                  \"EventType\": \"DomainEvent\",
+                  \"IsAsync\": false,
+                  \"IncludedDerivedTypes\": true,
+                  \"DispatchRules\": [
+                    \"WebApiHost.Messaging.Consumers.Rules.IsLowImportance\"
+                  ],
+                  \"RuleApplyType\": \"All\"
+                },
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleSyncHandler1\",
+                  \"Method\": \"OnEvent\",
+                  \"EventType\": \"ExampleSyncDomainEvent\",
+                  \"IsAsync\": false,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                },
+                {
+                  \"Consumer\": \"WebApiHost.Messaging.Consumers.ExampleSyncHandler2\",
+                  \"Method\": \"OnEvent\",
+                  \"EventType\": \"ExampleSyncDomainEvent\",
+                  \"IsAsync\": false,
+                  \"IncludedDerivedTypes\": false,
+                  \"DispatchRules\": [],
+                  \"RuleApplyType\": null
+                }
+              ]
+            },
+            \"Message Publishers\": [
+              {
+                \"PublisherType\": \"NetFusion.Messaging.Core.InProcessMessagePublisher, NetFusion.Messaging, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"IsConfigured\": true
+              },
+              {
+                \"PublisherType\": \"NetFusion.RabbitMQ.Core.RabbitMqMessagePublisher, NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"IsConfigured\": true
+              }
+            ]
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"NetFusion.Messaging.Core.InProcessMessagePublisher\": [],
+        \"NetFusion.Messaging.Config.MessagingConfig\": []
+      },
+      \"Discovered-Types\": [
+        \"IMessageDispatchRule\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"MessagingService\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.IMessagingService\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"CorrelationEnricher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Enrichers.IMessageEnricher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"DatePublishedEnricher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Enrichers.IMessageEnricher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"InProcessMessagePublisher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Core.IMessagePublisher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"MessagingModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Modules.IMessagingModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"MongoDb Plug-in\": {
+      \"Plugin-Name\": \"MongoDb Plug-in\",
+      \"Plugin-Id\": \"{4BE391F9-F687-4E49-90A3-D38300E3A751}\",
+      \"Plugin-Assembly\": \"NetFusion.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Plug-in that registers a client for connecting to a MongoDB instance.Also finds all MongoDb entity type mappings and configures then with the client.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.MongoDB.Modules.MappingModule\": {
+          \"Log\": {
+            \"Entity Mappings\": [
+              {
+                \"MappingType\": \"WebApiHost.MongoDB.Repositories.CustomerMapping, WebApiHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"EntityType\": \"WebApiHost.MongoDB.Models.CustomerModel, WebApiHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"CollectionName\": \"RefArch.Customers\",
+                \"Descriminator\": \"CustomerModel\",
+                \"KnownTypes\": [
+                  \"WebApiHost.MongoDB.Models.PreferredCustomerModel, WebApiHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+                ]
+              },
+              {
+                \"MappingType\": \"WebApiHost.MongoDB.Repositories.PreferredCustomerMapping, WebApiHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"EntityType\": \"WebApiHost.MongoDB.Models.PreferredCustomerModel, WebApiHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"CollectionName\": null,
+                \"Descriminator\": \"fred\",
+                \"KnownTypes\": []
+              },
+              {
+                \"MappingType\": \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaMapping, NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"EntityType\": \"NetFusion.RabbitMQ.Integration.BrokerMeta, NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"CollectionName\": null,
+                \"Descriminator\": \"BrokerMeta\",
+                \"KnownTypes\": []
+              }
+            ]
+          }
+        },
+        \"NetFusion.MongoDB.Modules.MongoModule\": {
+          \"Log\": {
+            \"Database-Settings\": [
+              \"WebApi.MongoDB.ContactDB, WebApiHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+              \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaDb, NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\"
+            ]
+          }
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [
+        \"IEntityClassMap\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"MappingModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.MongoDB.Modules.IMongoMappingModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"RabbitMQ Plug-in\": {
+      \"Plugin-Name\": \"RabbitMQ Plug-in\",
+      \"Plugin-Id\": \"{086DBC42-CF80-4B1D-A4F2-C9DC7E3CA24C}\",
+      \"Plugin-Assembly\": \"NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides support for integrating RabbitMQ as a message publisher.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.RabbitMQ.Modules.MessageBrokerModule\": {
+          \"Log\": {
+            \"Message-Exchanges\": [
+              {
+                \"MessageType\": \"ExampleApi.Messages.ExampleDirectEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"Exchanges\": [
+                  {
+                    \"ExchangeName\": \"SampleDirectExchange\",
+                    \"Settings\": {
+                      \"BrokerName\": \"TestBroker\",
+                      \"ExchangeType\": \"direct\",
+                      \"ExchangeName\": \"SampleDirectExchange\",
+                      \"ContentType\": \"application/json; charset=utf-8\",
+                      \"IsDurable\": true,
+                      \"IsAutoDelete\": false,
+                      \"IsConsumerExchange\": false,
+                      \"Arguments\": {},
+                      \"Predicate\": {
+                        \"ScriptName\": \"ClassicCarCriteria\",
+                        \"AttributeName\": \"IsClassic\"
+                      }
+                    },
+                    \"Queues\": [
+                      {
+                        \"QueueName\": \"GENERAL-MOTORS\",
+                        \"RouteKeys\": [
+                          \"CHEVY\",
+                          \"Buick\",
+                          \"GMC\",
+                          \"CADILLAC\"
+                        ],
+                        \"Settings\": {
+                          \"IsDurable\": true,
+                          \"IsAutoDelete\": false,
+                          \"IsExclusive\": false,
+                          \"IsBrokerAssignedName\": false,
+                          \"IsNoAck\": false,
+                          \"PrefetchSize\": null,
+                          \"PrefetchCount\": null,
+                          \"Arguments\": {}
+                        }
+                      },
+                      {
+                        \"QueueName\": \"VOLKSWAGEN\",
+                        \"RouteKeys\": [
+                          \"VW\",
+                          \"Audi\",
+                          \"PORSCHE\",
+                          \"BENTLEY\",
+                          \"LAMBORGHINI\"
+                        ],
+                        \"Settings\": {
+                          \"IsDurable\": true,
+                          \"IsAutoDelete\": false,
+                          \"IsExclusive\": false,
+                          \"IsBrokerAssignedName\": false,
+                          \"IsNoAck\": false,
+                          \"PrefetchSize\": null,
+                          \"PrefetchCount\": null,
+                          \"Arguments\": {}
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                \"MessageType\": \"ExampleApi.Messages.ExampleFanoutEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"Exchanges\": [
+                  {
+                    \"ExchangeName\": \"HighImportanceExchange\",
+                    \"Settings\": {
+                      \"BrokerName\": \"TestBroker\",
+                      \"ExchangeType\": \"fanout\",
+                      \"ExchangeName\": \"HighImportanceExchange\",
+                      \"ContentType\": \"application/json; charset=utf-8\",
+                      \"IsDurable\": true,
+                      \"IsAutoDelete\": false,
+                      \"IsConsumerExchange\": false,
+                      \"Arguments\": {},
+                      \"Predicate\": {
+                        \"ScriptName\": \"HighImportanceCriteria\",
+                        \"AttributeName\": \"IsHighImportance\"
+                      }
+                    },
+                    \"Queues\": []
+                  },
+                  {
+                    \"ExchangeName\": \"LowImportanceExchange\",
+                    \"Settings\": {
+                      \"BrokerName\": \"TestBroker\",
+                      \"ExchangeType\": \"fanout\",
+                      \"ExchangeName\": \"LowImportanceExchange\",
+                      \"ContentType\": \"application/json; charset=utf-8\",
+                      \"IsDurable\": true,
+                      \"IsAutoDelete\": false,
+                      \"IsConsumerExchange\": false,
+                      \"Arguments\": {},
+                      \"Predicate\": null
+                    },
+                    \"Queues\": []
+                  }
+                ]
+              },
+              {
+                \"MessageType\": \"ExampleApi.Messages.ExampleTopicEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"Exchanges\": [
+                  {
+                    \"ExchangeName\": \"SampleTopicExchange\",
+                    \"Settings\": {
+                      \"BrokerName\": \"TestBroker\",
+                      \"ExchangeType\": \"topic\",
+                      \"ExchangeName\": \"SampleTopicExchange\",
+                      \"ContentType\": \"application/json; charset=utf-8\",
+                      \"IsDurable\": true,
+                      \"IsAutoDelete\": false,
+                      \"IsConsumerExchange\": false,
+                      \"Arguments\": {},
+                      \"Predicate\": null
+                    },
+                    \"Queues\": [
+                      {
+                        \"QueueName\": \"VW-GTI\",
+                        \"RouteKeys\": [
+                          \"VW.GTI.*.*\"
+                        ],
+                        \"Settings\": {
+                          \"IsDurable\": true,
+                          \"IsAutoDelete\": false,
+                          \"IsExclusive\": false,
+                          \"IsBrokerAssignedName\": false,
+                          \"IsNoAck\": false,
+                          \"PrefetchSize\": null,
+                          \"PrefetchCount\": null,
+                          \"Arguments\": {}
+                        }
+                      },
+                      {
+                        \"QueueName\": \"VW-BLACK\",
+                        \"RouteKeys\": [
+                          \"VW.*.*.BLACK\"
+                        ],
+                        \"Settings\": {
+                          \"IsDurable\": true,
+                          \"IsAutoDelete\": false,
+                          \"IsExclusive\": false,
+                          \"IsBrokerAssignedName\": false,
+                          \"IsNoAck\": false,
+                          \"PrefetchSize\": null,
+                          \"PrefetchCount\": null,
+                          \"Arguments\": {}
+                        }
+                      },
+                      {
+                        \"QueueName\": \"AUDI\",
+                        \"RouteKeys\": [
+                          \"Audi.A6.*.*\",
+                          \"Audi.A4.*.*\",
+                          \"Audi.A5.*.*\"
+                        ],
+                        \"Settings\": {
+                          \"IsDurable\": true,
+                          \"IsAutoDelete\": false,
+                          \"IsExclusive\": false,
+                          \"IsBrokerAssignedName\": false,
+                          \"IsNoAck\": false,
+                          \"PrefetchSize\": null,
+                          \"PrefetchCount\": null,
+                          \"Arguments\": {}
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                \"MessageType\": \"ExampleApi.Messages.ExampleWorkQueueEvent, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"Exchanges\": [
+                  {
+                    \"ExchangeName\": \"\",
+                    \"Settings\": {
+                      \"BrokerName\": \"TestBroker\",
+                      \"ExchangeType\": null,
+                      \"ExchangeName\": \"\",
+                      \"ContentType\": \"application/json; charset=utf-8\",
+                      \"IsDurable\": false,
+                      \"IsAutoDelete\": false,
+                      \"IsConsumerExchange\": false,
+                      \"Arguments\": {},
+                      \"Predicate\": null
+                    },
+                    \"Queues\": [
+                      {
+                        \"QueueName\": \"PROCESS_SALE\",
+                        \"RouteKeys\": null,
+                        \"Settings\": {
+                          \"IsDurable\": true,
+                          \"IsAutoDelete\": false,
+                          \"IsExclusive\": false,
+                          \"IsBrokerAssignedName\": false,
+                          \"IsNoAck\": false,
+                          \"PrefetchSize\": null,
+                          \"PrefetchCount\": null,
+                          \"Arguments\": {}
+                        }
+                      },
+                      {
+                        \"QueueName\": \"PROCESS_SERVICE\",
+                        \"RouteKeys\": null,
+                        \"Settings\": {
+                          \"IsDurable\": true,
+                          \"IsAutoDelete\": false,
+                          \"IsExclusive\": false,
+                          \"IsBrokerAssignedName\": false,
+                          \"IsNoAck\": false,
+                          \"PrefetchSize\": null,
+                          \"PrefetchCount\": null,
+                          \"Arguments\": {}
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            \"Message-Consumers\": [],
+            \"Broker Details\": {
+              \"RPC Messages\": {
+                \"ExampleApi.Messages.ExampleRpcCommand, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\": {
+                  \"RpcMessageType\": \"ExampleApi.Messages.ExampleRpcCommand, ExampleApi, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null\",
+                  \"BrokerName\": \"TestBroker\",
+                  \"RequestQueueKey\": \"ExampleRpcConsumer\",
+                  \"RequestQueueName\": \"RpcMessageQueue\",
+                  \"ReplyQueueName\": \"amq.gen-mi_o2CTsD3_FcmH5ra0w9g\",
+                  \"Channel\": {
+                    \"ChannelNumber\": 1,
+                    \"NextPublishSeqNo\": 0,
+                    \"Conn\": {
+                      \"AutoClose\": false,
+                      \"ChannelMax\": 65535,
+                      \"HostName\": \"localhost\",
+                      \"Port\": 5672,
+                      \"Heartbeat\": 60
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      \"Known-Types\": {
+        \"NetFusion.RabbitMQ.Serialization.JsonBrokerSerializer\": [],
+        \"NetFusion.RabbitMQ.Serialization.MessagePackBrokerSerializer\": [],
+        \"NetFusion.RabbitMQ.Core.RabbitMqMessagePublisher\": [],
+        \"NetFusion.RabbitMQ.Configs.BrokerSettings\": []
+      },
+      \"Discovered-Types\": [
+        \"IMessageExchange\",
+        \"IBrokerSerializerRegistry\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"NullBrokerMetaRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"MessageBroker\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IMessageBroker\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"RabbitMqMessagePublisher\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Messaging.Core.IMessagePublisher\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"BrokerSettings\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Configs.BrokerSettings\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"NetFusion RabbitMQ MongoDB Plug-in\": {
+      \"Plugin-Name\": \"NetFusion RabbitMQ MongoDB Plug-in\",
+      \"Plugin-Id\": \"{1E4D2D7F-75D5-486B-A3CB-1971EAD7C801}\",
+      \"Plugin-Assembly\": \"NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Plug-in that provides RabbitMQ MongoDB based implementations.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.RabbitMQ.MongoDB.Metadata.RabbitIntegrationModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {
+        \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaDb\": [],
+        \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaMapping\": [
+          \"MongoDb Plug-in\"
+        ]
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"BrokerMetaRepository\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            },
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.Core.IBrokerMetaRepository\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"BrokerMetaDb\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaDb\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"Settings Plug-in\": {
+      \"Plugin-Name\": \"Settings Plug-in\",
+      \"Plugin-Id\": \"{1FC4C728-83E0-4407-B846-2871B3F0A1B6}\",
+      \"Plugin-Assembly\": \"NetFusion.Settings, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Plug-in that locates application settings using Microsoft Configuration Extensions and  initializes them when injected into a dependent component for the first time.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Settings.Modules.AppSettingsModule\": {
+          \"Log\": {
+            \"Application-Settings\": [
+              {
+                \"SettingsClass\": \"WebApi.MongoDB.ContactDB, WebApiHost, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"ConfigSectionName\": \"netfusion:plugins:mongoDB:customers:contactDb\"
+              },
+              {
+                \"SettingsClass\": \"NetFusion.EntityFramework.Configs.ContextSettings, NetFusion.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"ConfigSectionName\": \"netfusion:plugins:entityFramework\"
+              },
+              {
+                \"SettingsClass\": \"NetFusion.RabbitMQ.Configs.BrokerSettings, NetFusion.RabbitMQ, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"ConfigSectionName\": \"netfusion:plugins:rabbitMQ\"
+              },
+              {
+                \"SettingsClass\": \"NetFusion.RabbitMQ.MongoDB.Metadata.BrokerMetaDb, NetFusion.RabbitMQ.MongoDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+                \"ConfigSectionName\": \"netfusion:plugins:mongoDB:integration:brokerMetadata\"
+              }
+            ]
+          }
+        }
+      },
+      \"Known-Types\": {},
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": []
+    },
+    \"Mapping Utility Plug-in\": {
+      \"Plugin-Name\": \"Mapping Utility Plug-in\",
+      \"Plugin-Id\": \"{83C90E78-D245-4B0D-A4FC-E74B11227766}\",
+      \"Plugin-Assembly\": \"NetFusion.Utilities.Mapping, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Utility Plug-In used to map domain entities to other object representations.  This plug-in configures and coordinates the mapping process but does not dependent on any specific mapping library.  The mapping library is specified by the host application.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Utilities.Modules.MappingModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {
+        \"NetFusion.Utilities.Mapping.MappingDelegate`2\": [],
+        \"NetFusion.Utilities.Mapping.Configs.MappingConfig\": []
+      },
+      \"Discovered-Types\": [
+        \"IMappingStrategyFactory\"
+      ],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"ObjectMapper\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Utilities.Mapping.IObjectMapper\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"MappingStrategy`2\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"CurrentScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Utilities.Mapping.MappingStrategy`2\"
+              ]
+            }
+          ]
+        },
+        {
+          \"Type\": \"MappingModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Utilities.Core.IMappingModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"Validation Utility Plug-in\": {
+      \"Plugin-Name\": \"Validation Utility Plug-in\",
+      \"Plugin-Id\": \"{63042550-AC9F-4EF3-A047-F54E7572B79B}\",
+      \"Plugin-Assembly\": \"NetFusion.Utilities.Validation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Utility Plug-In used to validate domain entities.  This plug-in configures and coordinates the validation process and provides default validation based on Microsoft Validation Attributes.  The host application can override this default validation and use a validation library of choice.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Utilities.Modules.ValidationModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {
+        \"NetFusion.Utilities.Validation.Configs.ValidationConfig\": []
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"ValidationModule\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Utilities.Validation.Core.IValidationModule\"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    \"Web MVC Plug-in\": {
+      \"Plugin-Name\": \"Web MVC Plug-in\",
+      \"Plugin-Id\": \"{3C757DE1-48E1-452D-959A-01C8961B43D8}\",
+      \"Plugin-Assembly\": \"NetFusion.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",
+      \"Plugin-Description\": \"Provides MVC related features that can be used to extend an MVC application.\",
+      \"Plugin-Modules\": {
+        \"NetFusion.Web.Mvc.Metadata.Modules.ApiMetadataModule\": {
+          \"Log\": {}
+        }
+      },
+      \"Known-Types\": {
+        \"NetFusion.Web.Mvc.WebMvcConfig\": []
+      },
+      \"Discovered-Types\": [],
+      \"Plugin-Services\": [
+        {
+          \"Type\": \"ApiMetadataService\",
+          \"Services\": [
+            {
+              \"LifeTime\": \"RootScopeLifetime\",
+              \"Services\": [
+                \"NetFusion.Web.Mvc.Metadata.IApiMetadataService\"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}"
+2017-11-06 12:42:21.569 -05:00 [Debug] Hosting starting
+2017-11-06 12:42:21.635 -05:00 [Debug] Hosting started
+2017-11-06 12:42:21.791 -05:00 [Debug] Connection id ""0HL957MTTPPTG"" started.
+2017-11-06 12:42:21.871 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/index.html  
+2017-11-06 12:42:22.080 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.088 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.138 -05:00 [Debug] Connection id ""0HL957MTTPPTG"" completed keep alive response.
+2017-11-06 12:42:22.151 -05:00 [Information] Request finished in 291.7417ms 200 text/html
+2017-11-06 12:42:22.154 -05:00 [Debug] Connection id ""0HL957MTTPPTJ"" started.
+2017-11-06 12:42:22.153 -05:00 [Debug] Connection id ""0HL957MTTPPTI"" started.
+2017-11-06 12:42:22.153 -05:00 [Debug] Connection id ""0HL957MTTPPTH"" started.
+2017-11-06 12:42:22.154 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/css/screen.css  
+2017-11-06 12:42:22.154 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/lib/object-assign-pollyfill.js  
+2017-11-06 12:42:22.154 -05:00 [Debug] Connection id ""0HL957MTTPPTK"" started.
+2017-11-06 12:42:22.155 -05:00 [Debug] Connection id ""0HL957MTTPPTL"" started.
+2017-11-06 12:42:22.155 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.155 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.155 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.155 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.155 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/lib/jquery-1.8.0.min.js  
+2017-11-06 12:42:22.155 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.155 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.156 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/lib/jquery.slideto.min.js  
+2017-11-06 12:42:22.155 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/css/reset.css  
+2017-11-06 12:42:22.156 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.156 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.156 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.157 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.179 -05:00 [Information] Sending file. Request path: '"/lib/jquery-1.8.0.min.js"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.179 -05:00 [Information] Sending file. Request path: '"/css/reset.css"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.179 -05:00 [Information] Sending file. Request path: '"/css/screen.css"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.179 -05:00 [Information] Sending file. Request path: '"/lib/jquery.slideto.min.js"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.179 -05:00 [Information] Sending file. Request path: '"/lib/object-assign-pollyfill.js"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.190 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/css/typography.css  
+2017-11-06 12:42:22.190 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.190 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.190 -05:00 [Information] Sending file. Request path: '"/css/typography.css"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.201 -05:00 [Debug] Connection id ""0HL957MTTPPTH"" completed keep alive response.
+2017-11-06 12:42:22.201 -05:00 [Debug] Connection id ""0HL957MTTPPTL"" completed keep alive response.
+2017-11-06 12:42:22.201 -05:00 [Information] Request finished in 46.0791ms 200 text/css
+2017-11-06 12:42:22.201 -05:00 [Information] Request finished in 45.3718ms 200 application/javascript
+2017-11-06 12:42:22.201 -05:00 [Debug] Connection id ""0HL957MTTPPTG"" completed keep alive response.
+2017-11-06 12:42:22.201 -05:00 [Debug] Connection id ""0HL957MTTPPTK"" completed keep alive response.
+2017-11-06 12:42:22.201 -05:00 [Debug] Connection id ""0HL957MTTPPTI"" completed keep alive response.
+2017-11-06 12:42:22.202 -05:00 [Information] Request finished in 11.9535ms 200 text/css
+2017-11-06 12:42:22.202 -05:00 [Information] Request finished in 46.6022ms 200 application/javascript
+2017-11-06 12:42:22.202 -05:00 [Information] Request finished in 47.7278ms 200 text/css
+2017-11-06 12:42:22.201 -05:00 [Debug] Connection id ""0HL957MTTPPTJ"" completed keep alive response.
+2017-11-06 12:42:22.202 -05:00 [Information] Request finished in 48.1747ms 200 application/javascript
+2017-11-06 12:42:22.209 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/lib/jquery.ba-bbq.min.js  
+2017-11-06 12:42:22.210 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.210 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.210 -05:00 [Information] Sending file. Request path: '"/lib/jquery.ba-bbq.min.js"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.210 -05:00 [Debug] Connection id ""0HL957MTTPPTG"" completed keep alive response.
+2017-11-06 12:42:22.210 -05:00 [Information] Request finished in 1.3516ms 200 application/javascript
+2017-11-06 12:42:22.211 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/lib/jquery.wiggle.min.js  
+2017-11-06 12:42:22.211 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.211 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/lib/handlebars-4.0.5.js  
+2017-11-06 12:42:22.211 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.212 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.212 -05:00 [Information] Sending file. Request path: '"/lib/jquery.wiggle.min.js"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.212 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.212 -05:00 [Information] Sending file. Request path: '"/lib/handlebars-4.0.5.js"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.212 -05:00 [Debug] Connection id ""0HL957MTTPPTJ"" completed keep alive response.
+2017-11-06 12:42:22.212 -05:00 [Information] Request finished in 0.9451ms 200 application/javascript
+2017-11-06 12:42:22.215 -05:00 [Debug] Connection id ""0HL957MTTPPTL"" completed keep alive response.
+2017-11-06 12:42:22.212 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/lib/lodash.min.js  
+2017-11-06 12:42:22.215 -05:00 [Information] Request finished in 3.5897ms 200 application/javascript
+2017-11-06 12:42:22.215 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.215 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.215 -05:00 [Information] Sending file. Request path: '"/lib/lodash.min.js"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.216 -05:00 [Debug] Connection id ""0HL957MTTPPTH"" completed keep alive response.
+2017-11-06 12:42:22.216 -05:00 [Information] Request finished in 3.7027ms 200 application/javascript
+2017-11-06 12:42:22.220 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/lib/backbone-min.js  
+2017-11-06 12:42:22.220 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/swagger-ui.min.js  
+2017-11-06 12:42:22.220 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.220 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.220 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.220 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.221 -05:00 [Information] Sending file. Request path: '"/lib/backbone-min.js"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.221 -05:00 [Information] Sending file. Request path: '"/swagger-ui.min.js"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.221 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/lib/highlight.9.1.0.pack.js  
+2017-11-06 12:42:22.221 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.221 -05:00 [Debug] Connection id ""0HL957MTTPPTJ"" completed keep alive response.
+2017-11-06 12:42:22.221 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.221 -05:00 [Information] Request finished in 1.4549ms 200 application/javascript
+2017-11-06 12:42:22.221 -05:00 [Information] Sending file. Request path: '"/lib/highlight.9.1.0.pack.js"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.222 -05:00 [Debug] Connection id ""0HL957MTTPPTG"" completed keep alive response.
+2017-11-06 12:42:22.222 -05:00 [Information] Request finished in 0.7843ms 200 application/javascript
+2017-11-06 12:42:22.226 -05:00 [Debug] Connection id ""0HL957MTTPPTI"" completed keep alive response.
+2017-11-06 12:42:22.226 -05:00 [Information] Request finished in 6.0436ms 200 application/javascript
+2017-11-06 12:42:22.226 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/lib/highlight.9.1.0.pack_extended.js  
+2017-11-06 12:42:22.227 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.227 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.228 -05:00 [Information] Sending file. Request path: '"/lib/highlight.9.1.0.pack_extended.js"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.228 -05:00 [Debug] Connection id ""0HL957MTTPPTK"" completed keep alive response.
+2017-11-06 12:42:22.228 -05:00 [Information] Request finished in 2.0281ms 200 application/javascript
+2017-11-06 12:42:22.232 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/lib/swagger-oauth.js  
+2017-11-06 12:42:22.232 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.232 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/lib/jsoneditor.min.js  
+2017-11-06 12:42:22.232 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.233 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.233 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.233 -05:00 [Information] Sending file. Request path: '"/lib/jsoneditor.min.js"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.233 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/lib/marked.js  
+2017-11-06 12:42:22.233 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.233 -05:00 [Information] Sending file. Request path: '"/lib/swagger-oauth.js"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.234 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.234 -05:00 [Information] Sending file. Request path: '"/lib/marked.js"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.234 -05:00 [Debug] Connection id ""0HL957MTTPPTJ"" completed keep alive response.
+2017-11-06 12:42:22.234 -05:00 [Debug] Connection id ""0HL957MTTPPTH"" completed keep alive response.
+2017-11-06 12:42:22.234 -05:00 [Information] Request finished in 1.0564ms 200 application/javascript
+2017-11-06 12:42:22.234 -05:00 [Information] Request finished in 2.2569ms 200 application/javascript
+2017-11-06 12:42:22.235 -05:00 [Debug] Connection id ""0HL957MTTPPTG"" completed keep alive response.
+2017-11-06 12:42:22.235 -05:00 [Information] Request finished in 2.3363ms 200 application/javascript
+2017-11-06 12:42:22.249 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/images/logo_small.png  
+2017-11-06 12:42:22.249 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.249 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.249 -05:00 [Information] Sending file. Request path: '"/images/logo_small.png"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.249 -05:00 [Debug] Connection id ""0HL957MTTPPTK"" completed keep alive response.
+2017-11-06 12:42:22.250 -05:00 [Information] Request finished in 0.8179ms 200 image/png
+2017-11-06 12:42:22.253 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/css/print.css  
+2017-11-06 12:42:22.253 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.253 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.254 -05:00 [Information] Sending file. Request path: '"/css/print.css"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.254 -05:00 [Debug] Connection id ""0HL957MTTPPTL"" completed keep alive response.
+2017-11-06 12:42:22.254 -05:00 [Information] Request finished in 1.2955ms 200 text/css
+2017-11-06 12:42:22.408 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/v1/swagger.json  
+2017-11-06 12:42:22.409 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.409 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.432 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/images/favicon-32x32.png  
+2017-11-06 12:42:22.432 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.433 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.433 -05:00 [Information] Sending file. Request path: '"/images/favicon-32x32.png"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.433 -05:00 [Debug] Connection id ""0HL957MTTPPTJ"" completed keep alive response.
+2017-11-06 12:42:22.433 -05:00 [Information] Request finished in 0.6551ms 200 image/png
+2017-11-06 12:42:22.437 -05:00 [Information] Request starting HTTP/1.1 GET http://localhost:55716/swagger/ui/images/favicon-16x16.png  
+2017-11-06 12:42:22.437 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.437 -05:00 [Debug] Request did not match any routes.
+2017-11-06 12:42:22.437 -05:00 [Information] Sending file. Request path: '"/images/favicon-16x16.png"'. Physical path: '"N/A"'
+2017-11-06 12:42:22.437 -05:00 [Debug] Connection id ""0HL957MTTPPTG"" completed keep alive response.
+2017-11-06 12:42:22.437 -05:00 [Information] Request finished in 0.7553ms 200 image/png
+2017-11-06 12:42:22.613 -05:00 [Debug] Connection id ""0HL957MTTPPTH"" completed keep alive response.
+2017-11-06 12:42:22.613 -05:00 [Information] Request finished in 204.2126ms 200 application/json
+2017-11-06 12:44:11.779 -05:00 [Debug] Connection id ""0HL957MTTPPTG"" received FIN.
+2017-11-06 12:44:11.779 -05:00 [Debug] Connection id ""0HL957MTTPPTH"" received FIN.
+2017-11-06 12:44:11.779 -05:00 [Debug] Connection id ""0HL957MTTPPTI"" received FIN.
+2017-11-06 12:44:11.780 -05:00 [Debug] Connection id ""0HL957MTTPPTH"" disconnecting.
+2017-11-06 12:44:11.780 -05:00 [Debug] Connection id ""0HL957MTTPPTG"" disconnecting.
+2017-11-06 12:44:11.780 -05:00 [Debug] Connection id ""0HL957MTTPPTI"" disconnecting.
+2017-11-06 12:44:11.779 -05:00 [Debug] Connection id ""0HL957MTTPPTL"" received FIN.
+2017-11-06 12:44:11.779 -05:00 [Debug] Connection id ""0HL957MTTPPTK"" received FIN.
+2017-11-06 12:44:11.780 -05:00 [Debug] Connection id ""0HL957MTTPPTL"" disconnecting.
+2017-11-06 12:44:11.780 -05:00 [Debug] Connection id ""0HL957MTTPPTK"" disconnecting.
+2017-11-06 12:44:11.781 -05:00 [Debug] Connection id ""0HL957MTTPPTI"" sending FIN.
+2017-11-06 12:44:11.781 -05:00 [Debug] Connection id ""0HL957MTTPPTH"" sending FIN.
+2017-11-06 12:44:11.781 -05:00 [Debug] Connection id ""0HL957MTTPPTG"" sending FIN.
+2017-11-06 12:44:11.781 -05:00 [Debug] Connection id ""0HL957MTTPPTL"" sending FIN.
+2017-11-06 12:44:11.779 -05:00 [Debug] Connection id ""0HL957MTTPPTJ"" received FIN.
+2017-11-06 12:44:11.781 -05:00 [Debug] Connection id ""0HL957MTTPPTK"" sending FIN.
+2017-11-06 12:44:11.781 -05:00 [Debug] Connection id ""0HL957MTTPPTJ"" disconnecting.
+2017-11-06 12:44:11.782 -05:00 [Debug] Connection id ""0HL957MTTPPTJ"" sending FIN.
+2017-11-06 12:44:11.785 -05:00 [Debug] Connection id ""0HL957MTTPPTG"" sent FIN with status "0".
+2017-11-06 12:44:11.785 -05:00 [Debug] Connection id ""0HL957MTTPPTJ"" sent FIN with status "0".
+2017-11-06 12:44:11.785 -05:00 [Debug] Connection id ""0HL957MTTPPTI"" sent FIN with status "0".
+2017-11-06 12:44:11.785 -05:00 [Debug] Connection id ""0HL957MTTPPTL"" sent FIN with status "0".
+2017-11-06 12:44:11.785 -05:00 [Debug] Connection id ""0HL957MTTPPTH"" sent FIN with status "0".
+2017-11-06 12:44:11.785 -05:00 [Debug] Connection id ""0HL957MTTPPTK"" sent FIN with status "0".
+2017-11-06 12:44:11.787 -05:00 [Debug] Connection id ""0HL957MTTPPTG"" stopped.
+2017-11-06 12:44:11.787 -05:00 [Debug] Connection id ""0HL957MTTPPTJ"" stopped.
+2017-11-06 12:44:11.787 -05:00 [Debug] Connection id ""0HL957MTTPPTI"" stopped.
+2017-11-06 12:44:11.787 -05:00 [Debug] Connection id ""0HL957MTTPPTH"" stopped.
+2017-11-06 12:44:11.787 -05:00 [Debug] Connection id ""0HL957MTTPPTK"" stopped.
+2017-11-06 12:44:11.787 -05:00 [Debug] Connection id ""0HL957MTTPPTL"" stopped.

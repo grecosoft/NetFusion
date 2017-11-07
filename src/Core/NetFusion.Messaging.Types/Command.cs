@@ -5,9 +5,8 @@ using System.Collections.Generic;
 namespace NetFusion.Messaging.Types
 {
     /// <summary>
-    /// Default implementation representing message that can have one and only
-    /// one message handler.  The handling consumer can associate a result after
-    /// processing the message.
+    /// Default implementation representing message that can have one and only one consumer.
+    /// The handling consumer can associate a result after processing the message.
     /// </summary>
     public abstract class Command : ICommand
     {
@@ -46,9 +45,8 @@ namespace NetFusion.Messaging.Types
     }
 
     /// <summary>
-    /// Default implementation representing a message that can have one and only one 
-    /// consumer handler.  The handling consumer can associate a result after processing 
-    /// the message.
+    /// Default implementation representing a message that can have one and only one consumer.  
+    /// The handling consumer can associate a result after processing the message.
     /// </summary>
     /// <typeparam name="TResult">The response type of the command.</typeparam>
     public abstract class Command<TResult> : Command, ICommand<TResult>

@@ -33,11 +33,12 @@ namespace NetFusion.Settings.Modules
         private void LoadConfiguration(IActivatingEventArgs<object> handler)
         {
             var settings = handler.Instance;
-            var sectionName = GetSectionName(settings);
+            var sectionName = GetSettingsTypeSectionName(settings.GetType());
 
             if (sectionName != null)
             {
-                // Lookup settings with the specified section name.
+                // Lookup settings with the specified section name.  IConfiguration
+                // is a service provided by MS Configuration Extensions.
                 var configuration = handler.Context.Resolve<IConfiguration>();
                 var section = configuration.GetSection(sectionName);
 
@@ -54,24 +55,22 @@ namespace NetFusion.Settings.Modules
 
         // Navigates up the settings base types and looks for all ConfigurationSection attributes
         // to build the full path of the settings location.
-        private string GetSectionName(object settings)
+        private string GetSettingsTypeSectionName(Type settingsType)
         {
-            var sectionNames = GetSectionNames(settings);
-            return String.Join(":", sectionNames.Reverse().ToArray());
+            var sectionNames = GetSectionNames(settingsType);
+            return string.Join(":", sectionNames.Reverse().ToArray());
         }
 
-        private IEnumerable<string> GetSectionNames(object settings)
+        private IEnumerable<string> GetSectionNames(Type settingsType)
         {
-            Type baseType = settings.GetType();
-
-            while (baseType != null)
+            while (settingsType != null)
             {
-                string sectionName = GetSectionName(baseType);
+                string sectionName = GetSectionName(settingsType);
                 if (sectionName != null)
                 {
                     yield return sectionName;
                 }
-                baseType = baseType.GetTypeInfo().BaseType;
+                settingsType = settingsType.GetTypeInfo().BaseType;
             }
         }
 
@@ -80,14 +79,14 @@ namespace NetFusion.Settings.Modules
             return settingsType.GetAttribute<ConfigurationSectionAttribute>()?.SectionName;
         }
 
-        private void LogAppSettings(IDictionary<string, object> moduleLog)
+        public override void Log(IDictionary<string, object> moduleLog)
         {
             moduleLog["Application-Settings"] = Context.AllPluginTypes
-                .Where(t =>
-                {
-                    return t.IsConcreteTypeDerivedFrom<IAppSettings>();
-                })
-                .Select(t => t.AssemblyQualifiedName);
+               .Where(t => t.IsConcreteTypeDerivedFrom<IAppSettings>())
+               .Select(t => new {
+                   SettingsClass = t.AssemblyQualifiedName,
+                   ConfigSectionName = GetSettingsTypeSectionName(t)
+               });
         }
     }
 }

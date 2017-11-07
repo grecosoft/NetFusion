@@ -3,7 +3,6 @@ using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Extensions;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,6 +78,17 @@ namespace NetFusion.Test.Plugins
         {
             if (plugins == null) throw new ArgumentNullException(nameof(plugins));
             _plugins.AddRange(plugins);
+        }
+
+        public MockPlugin GetHostPlugin()
+        {
+            var hostPlugin = _plugins.OfType<MockAppHostPlugin>().FirstOrDefault();
+            if (hostPlugin == null)
+            {
+                throw new InvalidOperationException("Mock Application Host Plug-in not registered by unit-test.");
+            }
+
+            return hostPlugin;
         }
 
         /// <summary>

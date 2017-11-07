@@ -1,12 +1,11 @@
 ﻿using Autofac;
+using CoreTests.Messaging.Mocks;
 using FluentAssertions;
-using NetFusion.Bootstrap.Container;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Modules;
 using NetFusion.Test.Container;
-using NetFusion.Test.Plugins;
 using Xunit;
 
 namespace CoreTests.Messaging
@@ -18,50 +17,53 @@ namespace CoreTests.Messaging
     public class ConfigurationTests
     {
         /// <summary>
-        /// The domain event plug-in has a configuration class for specifying related settings.
+        /// The messaging plug-in has a configuration class for specifying related settings.
+        /// If the host application doesn't specify configuration a default one is used.  
+        /// See next unit-test.
         /// </summary>
-        [Fact]
-        public void Configuration_SetOnPlugin()
+        [Fact (DisplayName = "Messaging plug-in can reference Configuration.")]
+        public void MessagingPlugin_CanReferenceConfiguration()
         {
-            DefaultSetup.EventConsumer
-                .Test(c =>
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => r.WithHostConsumer())
+                    .Container(c => c.UsingDefaultServices())
+                .Act.OnContainer(c =>
                 {
                     c.WithConfig<MessagingConfig>();
                     c.Build();
-                },
-                (MessagingModule m) =>
+                })
+                .Assert.PluginModule<MessagingModule>(m =>
                 {
                     var moduleConfig = m.Context.Plugin.GetConfig<MessagingConfig>();
                     moduleConfig.Should().NotBeNull();
                 });
+            });
         }
 
         /// <summary>
         /// Unless cleared, the InProcessEventDispatcher will be used by default
-        /// to dispatch events to local consumer event handlers.  
+        /// to dispatch events to local consumer event handlers.  This is also the
+        /// default configuration if the host does not provide one.
         /// </summary>
-        [Fact(DisplayName = nameof(InProcessEventDispatcher_ConfiguredByDefault))]
+        [Fact(DisplayName = "In-Process event dispatcher configured by default")]
         public void InProcessEventDispatcher_ConfiguredByDefault()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
-                {
-                    config.AddPlugin<MockAppHostPlugin>();
-                    config.AddPlugin<MockCorePlugin>()
-                        .UseMessagingPlugin();
-
-                })
-                .TestConfig(c =>
-                {
-                    c.WithConfig<MessagingConfig>();
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => r.WithHostConsumer())
+                    .Container(c => c.UsingDefaultServices())
+                .Act.OnContainer(c =>
+                {                  
+                    // NOTE:  No configuration being specified.
                     c.Build();
-
-                },
-                (MessagingConfig ca) =>
+                })
+                .Assert.Configuration<MessagingConfig>(config =>
                 {
-                    ca.PublisherTypes.Should().HaveCount(1);
-                    ca.PublisherTypes.Should().Contain(typeof(InProcessMessagePublisher));
+                    config.PublisherTypes.Should().HaveCount(1);
+                    config.PublisherTypes.Should().Contain(typeof(InProcessMessagePublisher));
                 });
+            });
         }
 
         /// <summary>
@@ -71,23 +73,20 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = nameof(DefaultDispatchers_CanBeCleared))]
         public void DefaultDispatchers_CanBeCleared()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
-                {
-                    config.AddPlugin<MockAppHostPlugin>();
-                    config.AddPlugin<MockCorePlugin>()
-                        .UseMessagingPlugin();
-                })
-                .TestConfig(c =>
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => r.WithHostConsumer())
+                    .Container(c => c.UsingDefaultServices())
+                .Act.OnContainer(c =>
                 {
                     c.WithConfig<MessagingConfig>(config => config.ClearMessagePublishers());
                     c.Build();
-
-                }, 
-                (MessagingConfig ca) =>
+                })
+                .Assert.Configuration<MessagingConfig>(config =>
                 {
-                    ca.PublisherTypes.Should().HaveCount(0);
+                    config.PublisherTypes.Should().HaveCount(0);
                 });
+            });
         }
 
         /// <summary>
@@ -96,14 +95,20 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = nameof(RegistersService_ForPublishingEvents))]
         public void RegistersService_ForPublishingEvents()
         {
-            DefaultSetup.EventConsumer
-                .Test(
-                    c => c.Build(),
-                    (IAppContainer c) =>
-                    {
-                        var service = c.Services.Resolve<IMessagingService>();
-                        service.Should().NotBeNull();
-                    });
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => r.WithHostConsumer())
+                    .Container(c => c.UsingDefaultServices())
+                .Act.OnContainer(c =>
+                {
+                    c.Build();
+                })
+                .Assert.Container(c =>
+                {
+                    var service = c.Services.Resolve<IMessagingService>();
+                    service.Should().NotBeNull();
+                });
+            });
         }
     }
 }
