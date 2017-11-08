@@ -1,5 +1,6 @@
 ﻿using NetFusion.Common;
 using NetFusion.Messaging.Types;
+using System;
 using System.Threading.Tasks;
 
 namespace NetFusion.Messaging.Enrichers
@@ -28,8 +29,8 @@ namespace NetFusion.Messaging.Enrichers
         /// <param name="value">The value of the property.</param>
         protected void AddMessageProperty(IMessage message, string name, object value)
         {
-            Check.NotNull(message, nameof(message));
-            Check.NotNull(name, nameof(name));
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (name == null) throw new ArgumentNullException(nameof(name));
 
             message.Attributes.SetValue(name, value, GetType());
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common;
 using NetFusion.Domain.Entities;
@@ -8,8 +9,6 @@ using NetFusion.Domain.Patterns.Behaviors.Validation;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Types;
-using NetFusion.Utilities.Validation;
-using NetFusion.Utilities.Validation.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +31,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
         private readonly IMessagingService _messagingSrv;
 
         private readonly List<EnlistedAggregate> _enlistedAggregates;
-        private readonly List<ValidationResult> _aggregateValidations;
+        private readonly List<ValidationResultSet> _aggregateValidations;
 
         public AggregateUnitOfWork(ILoggerFactory loggerFactory, IMessagingService messagingSrv)
         {
@@ -40,7 +39,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
             _messagingSrv = messagingSrv;
 
             _enlistedAggregates = new List<EnlistedAggregate>();
-            _aggregateValidations = new List<ValidationResult>();
+            _aggregateValidations = new List<ValidationResultSet>();
         }
 
         private bool HasErrorValidations => _aggregateValidations.Any(vr => vr.ValidationType == ValidationTypes.Error);
@@ -164,7 +163,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
   
             var behavior = aggregate.Behaviors.Get<IValidationBehavior>();
 
-            ValidationResult valResult = behavior.instance?.Validate();                     
+            ValidationResultSet valResult = behavior.instance?.Validate();                     
             if (valResult != null && valResult.ObjectValidations.Any())
             {
                 _aggregateValidations.Add(valResult);

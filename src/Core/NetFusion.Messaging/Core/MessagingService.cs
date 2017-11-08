@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using NetFusion.Common;
-using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Enrichers;
@@ -49,21 +48,27 @@ namespace NetFusion.Messaging.Core
         public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
-            Check.NotNull(domainEvent, nameof(domainEvent), "domain event not specified");
+            if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent), 
+                "Domain event cannot be null.");
+
             return PublishMessageAsync(domainEvent, integrationType, cancellationToken);
         }
 
         public Task SendAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
-            Check.NotNull(command, nameof(command), "command not specified");
+            if (command == null) throw new ArgumentNullException(nameof(command),
+                "Command cannot be null.");
+
             return PublishMessageAsync(command, integrationType, cancellationToken);
         }
 
         public async Task<TResult> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
-            Check.NotNull(command, nameof(command), "command not specified");
+            if (command == null) throw new ArgumentNullException(nameof(command),
+                "Command cannot be null.");
+
             await PublishMessageAsync(command, integrationType, cancellationToken);
             return command.Result;
         }
@@ -71,7 +76,9 @@ namespace NetFusion.Messaging.Core
         public async Task PublishAsync(IEventSource eventSource, CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
-            Check.NotNull(eventSource, nameof(eventSource), "event source not specified");
+            if (eventSource == null) throw new ArgumentNullException(nameof(eventSource),
+                "Event source cannot be null.");
+
             var publisherErrors = new List<PublisherException>();
 
             foreach (IDomainEvent domainEvent in eventSource.DomainEvents)

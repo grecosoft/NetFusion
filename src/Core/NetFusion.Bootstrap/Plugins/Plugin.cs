@@ -155,7 +155,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// <returns>True if found, otherwise false.</returns>
         internal bool HasType(Type type)
         {
-            Check.NotNull(type, nameof(type));
+            if (type == null) throw new ArgumentNullException(nameof(type));
 
             return Types.Contains(type);
         }

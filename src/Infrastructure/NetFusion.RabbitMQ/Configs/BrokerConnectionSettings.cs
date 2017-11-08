@@ -1,5 +1,5 @@
-﻿using NetFusion.Common;
-using NetFusion.Utilities.Validation;
+﻿using NetFusion.Base.Validation;
+using NetFusion.Common;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -75,8 +75,8 @@ namespace NetFusion.RabbitMQ.Configs
         {
             if (validator.IsValid)
             {
-                RpcConsumers.Select(c => validator.AddChildValidator(c));
-                QueueProperties.Select(p => validator.AddChildValidator(p));
+                RpcConsumers.Select(c => validator.AddChild(c));
+                QueueProperties.Select(p => validator.AddChild(p));
             }
         }
     }

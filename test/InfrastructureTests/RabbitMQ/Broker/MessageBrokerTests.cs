@@ -211,7 +211,7 @@ namespace InfrastructureTests.RabbitMQ.Broker
             brokerSetup.Initialize(stateSetup.BrokerState, msgConsumer);
 
             // Provide a mock consumer that acknowledges the received message,
-            brokerSetup.MockMsgModule.Setup(m => m.InvokeDispatcherAsync(
+            brokerSetup.MockMsgModule.Setup(m => m.InvokeDispatcherInNewLifetimeScopeAsync(
                 It.IsAny<MessageDispatchInfo>(), 
                 It.IsAny<IMessage>(), 
                 It.IsAny<CancellationToken>()))
@@ -249,7 +249,7 @@ namespace InfrastructureTests.RabbitMQ.Broker
             brokerSetup.Initialize(stateSetup.BrokerState, msgConsumer);
 
             // Provide a mock consumer that rejects the received message,
-            brokerSetup.MockMsgModule.Setup(m => m.InvokeDispatcherAsync(
+            brokerSetup.MockMsgModule.Setup(m => m.InvokeDispatcherInNewLifetimeScopeAsync(
                 It.IsAny<MessageDispatchInfo>(),
                 It.IsAny<IMessage>(), 
                 It.IsAny<CancellationToken>()))

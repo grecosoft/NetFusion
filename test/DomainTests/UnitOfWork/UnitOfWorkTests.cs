@@ -2,6 +2,7 @@
 using DomainUnitTests;
 using FluentAssertions;
 using NetFusion.Base.Scripting;
+using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Domain.Entities;
 using NetFusion.Domain.Entities.Core;
@@ -15,8 +16,6 @@ using NetFusion.Messaging.Types;
 using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;
 using NetFusion.Testing.Logging;
-using NetFusion.Utilities.Modules;
-using NetFusion.Utilities.Validation;
 using System;
 using System.Threading.Tasks;
 using Xunit;
@@ -249,7 +248,6 @@ namespace DomainTests.UnitOfWork
                    // unit -of-work module.
                    config.AddPlugin<MockCorePlugin>()
                         .AddPluginType<UnitOfWorkModule>()
-                        .AddPluginType<ValidationModule>()
                         .AddPluginType<EntityBehaviorModule>()
                         .UseMessagingPlugin();
 
@@ -301,7 +299,7 @@ namespace DomainTests.UnitOfWork
 
             public void Validate(IObjectValidator validator)
             {
-                validator.Validate(!_testCommand.IsCommittedAggregateInvalid, "Invalidate Aggregate");
+                validator.Verify(!_testCommand.IsCommittedAggregateInvalid, "Invalidate Aggregate");
             }
         }
 
@@ -318,7 +316,7 @@ namespace DomainTests.UnitOfWork
 
             public void Validate(IObjectValidator validator)
             {
-                validator.Validate(!_makeInvalid, "Invalidate Aggregate");
+                validator.Verify(!_makeInvalid, "Invalidate Aggregate");
             }
 
             void IBehaviorDelegator.SetDelegatee(IBehaviorDelegatee behaviors)

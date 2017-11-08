@@ -1,7 +1,6 @@
 ﻿using NetFusion.Base.Exceptions;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Tasks;
-using NetFusion.Messaging.Enrichers;
+using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Messaging.Enrichers
@@ -14,18 +13,18 @@ namespace NetFusion.Messaging.Enrichers
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="futureResult">The future result containing the exception.</param>
-        public EnricherException(TaskListItem<IMessageEnricher> futureResult)
+        /// <param name="taskList">The future result containing the exception.</param>
+        public EnricherException(TaskListItem<IMessageEnricher> taskList)
         {
-             Check.NotNull(futureResult, nameof(futureResult));
+            if (taskList == null) throw new NullReferenceException(nameof(taskList));
 
-            var taskException = futureResult.Task.Exception;
+            var taskException = taskList.Task.Exception;
             var sourceException = taskException.InnerException;
 
             Details = new Dictionary<string, object>
             {
                 { "Message", sourceException?.Message },
-                { "Enricher", futureResult.Invoker.GetType().FullName }
+                { "Enricher", taskList.Invoker.GetType().FullName }
             };
         }
     }

@@ -1,10 +1,9 @@
 ﻿using Autofac;
 using Autofac.Core;
 using Microsoft.Extensions.Configuration;
+using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Utilities.Validation.Core;
-using NetFusion.Utilities.Validation.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,11 +45,14 @@ namespace NetFusion.Settings.Modules
                 section.Bind(settings);
             }
 
-            // Determine if the settings object can be validated.
+            // Determine if the settings object can be validated.  Note:  The validation implementation
+            // is being directly created and not using the host specified implementation so all settings
+            // can be consistently validated.  But all other application validation delegates to the 
+            // host specified implementation.
             var validator = new ObjectValidator(settings);
-            var validationResult = new ValidationResult(settings, validator);
-
-            validationResult.ThrowIfInvalid();
+            var result = validator.Validate();
+            
+            result.ThrowIfInvalid();
         }
 
         // Navigates up the settings base types and looks for all ConfigurationSection attributes

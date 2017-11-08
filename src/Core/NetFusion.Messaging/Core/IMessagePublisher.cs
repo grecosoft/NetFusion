@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 namespace NetFusion.Messaging.Core
 {
     /// <summary>
-    /// Called when an message is published to allow plug-ins to customize the publishing of messages.
+    /// Called when a message is published to allow plug-ins to customize the publishing of messages.
+    /// For example the InProcessMessagePublisher dispatches messages locally while the optional 
+    /// RabbitMqMessagePublisher delivers messages to configured broker exchanges.
     /// </summary> 
     public interface IMessagePublisher : IKnownPluginType
     {

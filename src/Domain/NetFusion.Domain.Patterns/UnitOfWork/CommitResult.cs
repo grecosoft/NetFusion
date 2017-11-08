@@ -1,5 +1,5 @@
-﻿using NetFusion.Common;
-using NetFusion.Utilities.Validation.Results;
+﻿using NetFusion.Base.Validation;
+using NetFusion.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +33,9 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
         /// <summary>
         /// The validations for any of the enlisted aggregates.
         /// </summary>
-        public IEnumerable<ValidationResult> ValidationResults { get; private set; }
+        public IEnumerable<ValidationResultSet> ValidationResults { get; private set; }
 
-        internal static CommitResult Sucessful(IAggregateUnitOfWork unitOfwork, IEnumerable<ValidationResult> validationResults)
+        internal static CommitResult Sucessful(IAggregateUnitOfWork unitOfwork, IEnumerable<ValidationResultSet> validationResults)
         {
             Check.NotNull(validationResults, nameof(validationResults));
 
@@ -45,11 +45,11 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
 
                 IsSucessful = true,
                 HasErrors = false,
-                ValidationResults = new List<ValidationResult>(validationResults)
+                ValidationResults = new List<ValidationResultSet>(validationResults)
             };
         }
 
-        internal static CommitResult Invalid(IAggregateUnitOfWork unitOfwork, IEnumerable<ValidationResult> validationResults)
+        internal static CommitResult Invalid(IAggregateUnitOfWork unitOfwork, IEnumerable<ValidationResultSet> validationResults)
         {
             Check.NotNull(validationResults, nameof(validationResults));
 
@@ -59,7 +59,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
 
                 IsSucessful = false,
                 HasErrors = true,
-                ValidationResults = new List<ValidationResult>(validationResults)
+                ValidationResults = new List<ValidationResultSet>(validationResults)
             };
         }
 

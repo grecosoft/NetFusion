@@ -47,8 +47,9 @@ namespace NetFusion.Messaging.Types
 
         public static void SetRouteKey(this IMessage message, string value)
         {
-            Check.NotNullOrWhiteSpace(value, nameof(value));
-
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("Value can't be null or empty string.", nameof(value));
+            
             message.Attributes.SetMemberValue(value.ToUpper(), Context);
         }
 

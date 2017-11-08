@@ -47,7 +47,7 @@ namespace NetFusion.Messaging.Core
 
             LogMessageDespatchInfo(message, dispatchers);
 
-            // Execute all handlers and return the future result to the caller to await.
+            // Execute all handlers and return the task for the caller to await.
             return InvokeMessageDispatchersAsync(message, dispatchers, cancellationToken);
         }
 

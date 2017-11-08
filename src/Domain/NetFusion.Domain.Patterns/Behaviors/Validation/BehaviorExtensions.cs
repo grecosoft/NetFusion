@@ -1,6 +1,6 @@
-﻿using NetFusion.Common;
+﻿using NetFusion.Base.Validation;
+using NetFusion.Common;
 using NetFusion.Domain.Entities.Core;
-using NetFusion.Utilities.Validation.Results;
 
 namespace NetFusion.Domain.Patterns.Behaviors.Validation
 {
@@ -15,7 +15,7 @@ namespace NetFusion.Domain.Patterns.Behaviors.Validation
         /// </summary>
         /// <param name="domainEntity">The entity to be validated.</param>
         /// <returns>The validation result.</returns>
-        public static ValidationResult Validate(this IBehaviorDelegator domainEntity)
+        public static ValidationResultSet Validate(this IBehaviorDelegator domainEntity)
         {
             Check.NotNull(domainEntity, nameof(domainEntity));
 
@@ -24,7 +24,7 @@ namespace NetFusion.Domain.Patterns.Behaviors.Validation
             {
                 return behavior.instance.Validate();
             }
-            return ValidationResult.NotSpecified(domainEntity);
+            return ValidationResultSet.ValidResult(domainEntity);
         }
     }
 }

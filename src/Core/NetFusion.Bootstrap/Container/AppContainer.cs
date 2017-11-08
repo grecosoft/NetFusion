@@ -2,10 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Configuration;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Bootstrap.Validation;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using System;
@@ -35,6 +37,9 @@ namespace NetFusion.Bootstrap.Container
         private ILoggerFactory _loggerFactory;
         private ILogger _logger;
         private CompositeLog _compositeLog;
+
+        // Validation:
+        private ValidationConfig _validationConfig;
 
         // Settings:
         private EnvironmentConfig _enviromentConfig;
@@ -103,6 +108,12 @@ namespace NetFusion.Bootstrap.Container
                 ThrowIfDisposed(this);
                 return _loggerFactory;
             }
+        }
+
+        public IObjectValidator CreateValidator(object obj)
+        {
+            ThrowIfDisposed(this);
+            return (IObjectValidator)Activator.CreateInstance(_validationConfig.ValidatorType, obj);
         }
 
         // The created dependency-injection container.
@@ -225,6 +236,7 @@ namespace NetFusion.Bootstrap.Container
         public IBuiltContainer Build()
         {
             ConfigureLogging();
+            ConfigureValidation();
             ConfigureEnvironment();
             LogContainerInitialization();
 
@@ -476,6 +488,7 @@ namespace NetFusion.Bootstrap.Container
             RegisterAppContainerAsService(builder);
             RegisterPluginModuleServices(builder);
             RegisterHostProvidedServices(builder);
+            RegisterContainerProvidedServices(builder);
 
             // Register logging and configuration.
             RegisterLogging(builder);
@@ -532,6 +545,13 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
+        private void RegisterContainerProvidedServices(Autofac.ContainerBuilder builder)
+        {
+            builder.RegisterType<ValidationService>()
+                .As<IValidationService>()
+                .SingleInstance();
+        }
+
         //------------------------------------------Logging------------------------------------------//
 
         // Determines if the host application specified how logging should
@@ -556,6 +576,12 @@ namespace NetFusion.Bootstrap.Container
             // with a reference to the log factory so it can create plug-in-specific loggers.
             _logger = _loggerFactory.CreateLogger<AppContainer>();
             _application.LoggerFactory = _loggerFactory;
+        }
+
+        private void ConfigureValidation()
+        {
+            _validationConfig = _configs.Values.OfType<ValidationConfig>()
+                .FirstOrDefault() ?? new ValidationConfig();
         }
 
         private Exception LogException(Exception ex)

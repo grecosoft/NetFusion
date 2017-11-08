@@ -97,7 +97,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
             try
             {
-                result = _messagingModule.InvokeDispatcherAsync(dispatcher, message).Result;
+                result = _messagingModule.InvokeDispatcherInNewLifetimeScopeAsync(dispatcher, message).Result;
 
                 // Publish the reply back to the publisher that made the request on the
                 // queue specified by them in the message header on a new channel.

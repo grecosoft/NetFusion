@@ -1,11 +1,6 @@
 ﻿using FluentAssertions;
+using NetFusion.Base.Validation;
 using NetFusion.Common.Extensions.Collections;
-using NetFusion.Domain.Entities;
-using NetFusion.Domain.Entities.Core;
-using NetFusion.Domain.Entities.Registration;
-using NetFusion.Domain.Patterns.Behaviors.Validation;
-using NetFusion.Utilities.Validation;
-using NetFusion.Utilities.Validation.Core;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Xunit;
@@ -14,24 +9,16 @@ namespace UtilitiesTests
 {
     public class ValidationTests
     {
-        [Fact(DisplayName = nameof(ValidationBehaviorCanBe_SupportedByDomainEntity))]
-        public void ValidationBehaviorCanBe_SupportedByDomainEntity()
-        {
-            var domainEntity = CreateTestEntity<MockValidatableDomainEntity>();
-            var behavior = domainEntity.Behaviors.Get<IValidationBehavior>();
-
-            behavior.supported.Should().BeTrue();
-            behavior.instance.Should().NotBeNull();
-        }
-
         [Fact(DisplayName = nameof(DomainEntityValidated_UsingMsValidationAttributes_ByDefault))]
         public void DomainEntityValidated_UsingMsValidationAttributes_ByDefault()
         {
-            var domainEntity = CreateTestEntity<MockValidatableDomainEntity>();
-            domainEntity.ValueOne = new string('X', 50);
-            domainEntity.ValueTwo = 200;
+            var domainEntity = new MockValidatableDomainEntity
+            {
+                ValueOne = new string('X', 50),
+                ValueTwo = 200
+            };
 
-            var valResult = domainEntity.Validate();
+            var valResult = Validate(domainEntity);
             valResult.ValidationType.Should().Be(ValidationTypes.Error);
 
             // There should be one domain entity validation with two validations items
@@ -53,24 +40,15 @@ namespace UtilitiesTests
             valResult.RootObject.Should().BeSameAs(domainEntity);
         }
 
-        [Fact(DisplayName = nameof(ValidationBehaviorNotSupported_NotSpecifiedResult))]
-        public void ValidationBehaviorNotSupported_NotSpecifiedResult()
-        {
-            var domainEntity = CreateTestEntity<MockDomainEntity>();
-            var valResult = domainEntity.Validate();
-
-            valResult.ValidationType.Should().Be(ValidationTypes.NotSpecified);
-            valResult.RootObject.Should().BeSameAs(domainEntity);
-            valResult.ObjectValidations.Should().BeEmpty();
-        }
-
         [Fact(DisplayName = nameof(DomainEntityCalled_DuringValidation))]
         public void DomainEntityCalled_DuringValidation()
         {
-            var domainEntity = CreateTestEntity<MockValidatableDomainEntity>();
-            domainEntity.ValueThree = 200;
+            var domainEntity = new MockValidatableDomainEntity
+            {
+                ValueThree = 200
+            };
 
-            var valResult = domainEntity.Validate();
+            var valResult = Validate(domainEntity);
 
             valResult.ValidationType.Should().Be(ValidationTypes.Error);
             valResult.ObjectValidations.First()
@@ -81,11 +59,13 @@ namespace UtilitiesTests
         [Fact(DisplayName = nameof(IfValidatorDetermines_EntityNotValid_EntityValidationMethodNotInvoked))]
         public void IfValidatorDetermines_EntityNotValid_EntityValidationMethodNotInvoked()
         {
-            var domainEntity = CreateTestEntity<MockValidatableDomainEntity>();
-            domainEntity.ValueOne = new string('X', 50);
-            domainEntity.ValueTwo = 200;
+            var domainEntity = new MockValidatableDomainEntity
+            {
+                ValueOne = new string('X', 50),
+                ValueTwo = 200
+            };
 
-            var valResult = domainEntity.Validate();
+            var valResult = Validate(domainEntity);
             valResult.ValidationType.Should().Be(ValidationTypes.Error);
             domainEntity.EntityValidateInvoked.Should().BeFalse();
         }
@@ -93,13 +73,15 @@ namespace UtilitiesTests
         [Fact(DisplayName = nameof(DomainEntityCan_ValidateChildDomainEntity))]
         public void DomainEntityCan_ValidateChildDomainEntity()
         {
-            var domainEntity = CreateTestEntity<MockValidatableDomainEntity>();
-            var child = new MockChildDomainEntity();
+            var domainEntity = new MockValidatableDomainEntity();
+            var child = new MockChildDomainEntity
+            {
+                ValueFour = 5
+            };
 
-            child.ValueFour = 5;
             domainEntity.SetChild(child);
 
-            var valResults = domainEntity.Validate();
+            var valResults = Validate(domainEntity);
             valResults.ValidationType.Should().Be(ValidationTypes.Error);
 
             // The validation result aggregate should be the domain entity that was validated.
@@ -119,7 +101,7 @@ namespace UtilitiesTests
         [Fact(DisplayName = nameof(DomainEntityCan_ValidateChildDomainEntities))]
         public void DomainEntityCan_ValidateChildDomainEntities()
         {
-            var domainEntity = CreateTestEntity<MockValidatableDomainEntity>();
+            var domainEntity = new MockValidatableDomainEntity();
 
             var children = new MockChildDomainEntity[] {
                 new MockChildDomainEntity { ValueFour = 5 },
@@ -128,7 +110,7 @@ namespace UtilitiesTests
 
             domainEntity.SetChildren(children);
 
-            var valResults = domainEntity.Validate();
+            var valResults = Validate(domainEntity);
             valResults.ValidationType.Should().Be(ValidationTypes.Error);
 
             // The validation result aggregate should be the domain entity that was validated.
@@ -141,28 +123,28 @@ namespace UtilitiesTests
         [Fact(DisplayName = nameof(ResultValidationLevel_IsMaxValidationLevel_ForAllInvalidations))]
         public void ResultValidationLevel_IsMaxValidationLevel_ForAllInvalidations()
         {
-            var domainEntity = CreateTestEntity<MockValidatableDomainEntity>();
+            var domainEntity = new MockValidatableDomainEntity();
             var child = new MockChildDomainEntity();
 
             domainEntity.ValueInfoOne = 33;
             child.ValueWarningTwo = 77;
             domainEntity.SetChild(child);
 
-            var valResult = domainEntity.Validate();
+            var valResult = Validate(domainEntity);
             valResult.ValidationType.Should().Be(ValidationTypes.Warning);
         }
 
         [Fact(DisplayName = nameof(ResultIsFlatenedList_OfAllValidatedEntities))]
         public void ResultIsFlatenedList_OfAllValidatedEntities()
         {
-            var domainEntity = CreateTestEntity<MockValidatableDomainEntity>();
+            var domainEntity = new MockValidatableDomainEntity();
             var child = new MockChildDomainEntity();
 
             domainEntity.ValueInfoOne = 33;
             child.ValueWarningTwo = 77;
             domainEntity.SetChild(child);
 
-            var valResult = domainEntity.Validate();
+            var valResult = Validate(domainEntity);
             valResult.ObjectValidations.SelectMany(ov => ov.Validations)
                 .Should().HaveCount(2)
                 .And.Contain(v => v.ValidationType == ValidationTypes.Info)
@@ -172,36 +154,25 @@ namespace UtilitiesTests
         [Fact(DisplayName = nameof(CanThrowExceptionFor_InvalidResult))]
         public void CanThrowExceptionFor_InvalidResult()
         {
-            var domainEntity = CreateTestEntity<MockValidatableDomainEntity>();
-            domainEntity.ValueOne = new string('X', 50);
+            var domainEntity = new MockValidatableDomainEntity
+            {
+                ValueOne = new string('X', 50)
+            };
 
-            var valResult = domainEntity.Validate();
-
+            var valResult = Validate(domainEntity);
             Assert.ThrowsAny<ValidationResultException>(() => valResult.ThrowIfInvalid());
+        }
+
+        private ValidationResultSet Validate(object obj)
+        {
+            var validator = new ObjectValidator(obj);
+            return validator.Validate();
         }
 
         // --------------------------MOCK VALIDATION ENTITIES----------------------------
 
-        private MockValidatableDomainEntity CreateTestEntity<T>() where T : IBehaviorDelegator
+        private class MockValidatableDomainEntity : IValidatableType
         {
-            var factory = new DomainEntityFactory(new MockResolver());
-
-            factory.BehaviorsFor<T>(
-                e => e.Add<IValidationBehavior, MockValidationBehavior>());
-
-            return factory.Create<MockValidatableDomainEntity>();
-        }
-
-        private class MockValidatableDomainEntity : IBehaviorDelegator,
-            IValidatableType
-        {
-            public IBehaviorDelegatee Behaviors { get; private set; }
-
-            void IBehaviorDelegator.SetDelegatee(IBehaviorDelegatee behaviors)
-            {
-                Behaviors = behaviors;
-            }
-
             private MockChildDomainEntity Child { get; set; }
             private MockChildDomainEntity[] Children { get; set; }
 
@@ -219,30 +190,30 @@ namespace UtilitiesTests
 
             public void SetChild(MockChildDomainEntity child)
             {
-                this.Child = child;
+                Child = child;
             }
 
             public void SetChildren(MockChildDomainEntity[] children)
             {
-                this.Children = children;
+                Children = children;
             }
 
             public void Validate(IObjectValidator validator)
             {
-                validator.Validate(ValueThree > 500, "ValueThreeValidationMessage", ValidationTypes.Error);
+                validator.Verify(ValueThree > 500, "ValueThreeValidationMessage", ValidationTypes.Error);
                 this.EntityValidateInvoked = true;
 
                 if (this.Child != null)
                 {
-                    validator.AddChildValidator(this.Child);
+                    validator.AddChild(this.Child);
                 }
 
                 if (this.Children != null)
                 {
-                    Children.ForEach(c => validator.AddChildValidator(c));
+                    Children.ForEach(c => validator.AddChild(c));
                 }
 
-                validator.Validate(ValueInfoOne == 1000,
+                validator.Verify(ValueInfoOne == 1000,
                    "ValueWarningOne", ValidationTypes.Info);
             }
         }
@@ -256,45 +227,8 @@ namespace UtilitiesTests
 
             public void Validate(IObjectValidator validator)
             {
-                validator.Validate(ValueWarningTwo == 2000,
+                validator.Verify(ValueWarningTwo == 2000,
                     "ValueWarningTwoMessage", ValidationTypes.Warning);
-            }
-        }
-
-        private class MockDomainEntity : IBehaviorDelegator
-        {
-            public IBehaviorDelegatee Behaviors { get; private set; }
-
-            void IBehaviorDelegator.SetDelegatee(IBehaviorDelegatee behaviors)
-            {
-                Behaviors = behaviors;
-            }
-        }
-
-        private class MockResolver : IDomainServiceResolver
-        {
-            public void ResolveDomainServices(IDomainBehavior domainBehavior)
-            {
-
-            }
-        }
-
-        // This simulates what happens during the bootstrap process.  The host application can
-        // specify using a container configuration the implementation of IObjectValidator should
-        // be used.  The below returns the default object-validator instance.
-        private class MockValidationBehavior : ValidationBehavior
-        {
-            public MockValidationBehavior(IBehaviorDelegator entity) : base(entity)
-            {
-                this.ValidationModule = new MockValidationModule();
-            }
-        }
-
-        private class MockValidationModule : IValidationModule
-        {
-            public IObjectValidator CreateValidator(object obj)
-            {
-                return new ObjectValidator(obj);
             }
         }
     }

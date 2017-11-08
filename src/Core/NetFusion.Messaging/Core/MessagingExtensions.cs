@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Common.Extensions.Reflection;
+﻿using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Rules;
 using NetFusion.Messaging.Types;
 using System;
@@ -8,7 +7,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace NetFusion.Messaging.Core
 {
@@ -26,7 +24,7 @@ namespace NetFusion.Messaging.Core
         /// <returns>Filtered list of types that are message consumers.</returns>
         public static IEnumerable<Type> WhereEventConsumer(this IEnumerable<Type> types)
         {
-            Check.NotNull(types, nameof(types));
+            if (types == null) throw new ArgumentNullException(nameof(types));
 
             return types.Where(t => t.IsConcreteTypeDerivedFrom<IMessageConsumer>());
         }
@@ -38,7 +36,7 @@ namespace NetFusion.Messaging.Core
         /// <returns>List of methods that can handle messages.</returns>
         public static IEnumerable<MethodInfo> SelectMessageHandlers(this IEnumerable<Type> types)
         {
-            Check.NotNull(types, nameof(types));
+            if (types == null) throw new ArgumentNullException(nameof(types));
 
             return types.SelectMany(ec => ec.GetMethods()
                 .Where(IsMessageHandlerMethod));
@@ -61,7 +59,7 @@ namespace NetFusion.Messaging.Core
             }
 
             if (paramTypes.Length == 2 && paramTypes[0].CanAssignTo<IMessage>()
-                && (paramTypes[1].CanAssignTo<CancellationToken>() && IsAsyncDispatch(methodInfo)))
+                && (paramTypes[1].CanAssignTo<CancellationToken>() && methodInfo.IsAsyncMethod()))
             {
                 return true;
             }
@@ -77,27 +75,27 @@ namespace NetFusion.Messaging.Core
         /// <returns>List of objects with information used to dispatch the method at runtime.</returns>
         public static IEnumerable<MessageDispatchInfo> SelectDispatchInfo(this IEnumerable<MethodInfo> messageHandlers)
         {
-            Check.NotNull(messageHandlers, nameof(messageHandlers));
+            if (messageHandlers == null) throw new ArgumentNullException(nameof(messageHandlers));
 
             return messageHandlers.Select(mi => new MessageDispatchInfo
             {
                 MessageType = mi.GetParameters().First().ParameterType,
                 ConsumerType = mi.DeclaringType,
-                Invoker = GetMethodDispatch(mi),
+                Invoker = GetMethodDelegate(mi),
                 IncludeDerivedTypes = IncludeDerivedTypes(mi.GetParameters().First()),
                 DispatchRuleTypes = GetOptionalRuleTypes(mi),
                 RuleApplyType = GetOptionalRuleApplyType(mi),
                 MessageHandlerMethod = mi,
                 IsInProcessHandler = IsInProcessHandler(mi),
-                IsAsync = IsAsyncDispatch(mi),
-                IsAsyncWithResult = IsAsyncWithResult(mi),
-                IsCancellable = IsCancellable(mi)
+                IsAsync = mi.IsAsyncMethod(),
+                IsAsyncWithResult = mi.IsAsyncMethodWithResult(),
+                IsCancellable = mi.IsCancellableMethod()
             });
         }
 
         // Creates a delegate representing a reflected MethodInfo for the consumer's
         // message handler.  
-        private static MulticastDelegate GetMethodDispatch(MethodInfo methodInfo)
+        private static MulticastDelegate GetMethodDelegate(MethodInfo methodInfo)
         {
             // Required Handler Parameters:
             var paramTypes = new List<Type>
@@ -107,7 +105,7 @@ namespace NetFusion.Messaging.Core
             };
 
             // Optional Handler Parameters:
-            if (IsCancellable(methodInfo))
+            if (methodInfo.IsCancellableMethod())
             {
                 paramTypes.Add(typeof(CancellationToken));
             }
@@ -121,34 +119,6 @@ namespace NetFusion.Messaging.Core
         private static bool IsInProcessHandler(MethodInfo methodInfo)
         {
             return methodInfo.HasAttribute<InProcessHandlerAttribute>();
-        }
-
-        private static bool IsAsyncDispatch(MethodInfo methodInfo)
-        {
-            return methodInfo.ReturnType != null && methodInfo.ReturnType.CanAssignTo<Task>();
-        }
-
-        private static bool IsCancellable(MethodInfo methodInfo)
-        {
-            bool isAsync = IsAsyncDispatch(methodInfo);
-            if (!isAsync)
-            {
-                return false;
-            }
-
-            return methodInfo.GetParameterTypes()
-                .Any(pt => pt.CanAssignTo<CancellationToken>());
-        }
-
-        private static bool IsAsyncWithResult(MethodInfo methodInfo)
-        {
-            bool isAsync = IsAsyncDispatch(methodInfo);
-            if (!isAsync)
-            {
-                return false;
-            }
-
-            return methodInfo.ReturnType.GetTypeInfo().IsGenericType;
         }
 
         private static bool IncludeDerivedTypes(ParameterInfo parameterInfo)
@@ -178,9 +148,9 @@ namespace NetFusion.Messaging.Core
             this ILookup<Type, MessageDispatchInfo> messageDispatchers, 
             Type messageType)
         {
-            Check.NotNull(messageDispatchers, nameof(messageDispatchers));
-            Check.NotNull(messageType, nameof(messageType));
-
+            if (messageDispatchers == null) throw new ArgumentNullException(nameof(messageDispatchers));
+            if (messageType == null) throw new ArgumentNullException(nameof(messageType));
+     
             // A handler method defined for the message type will be invoked.
             // Message handlers for base message types will be included if specified. 
             return messageDispatchers

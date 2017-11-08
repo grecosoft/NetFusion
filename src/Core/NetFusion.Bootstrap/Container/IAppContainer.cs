@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Validation;
 using System;
 using System.Collections.Generic;
 
@@ -18,6 +19,8 @@ namespace NetFusion.Bootstrap.Container
         /// logger provided by MS Logging Extensions.
         /// </summary>
         ILoggerFactory LoggerFactory { get; }
+
+        IObjectValidator CreateValidator(object obj);
 
         /// <summary>
         /// Adds a container configuration to the container.

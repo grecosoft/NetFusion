@@ -159,7 +159,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             LogReceivedExchangeMessage(message, messageConsumer);
 
             // Delegate to the Messaging Module to dispatch the message to queue consumer.
-            Task<object> futureResult = _messagingModule.InvokeDispatcherAsync(
+            Task<object> futureResult = _messagingModule.InvokeDispatcherInNewLifetimeScopeAsync(
                messageConsumer.DispatchInfo, message);
 
             futureResult.Wait();

@@ -66,8 +66,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Domain.MongoDB", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Utilities.Mapping", "src\Utilities\NetFusion.Utilities.Mapping\NetFusion.Utilities.Mapping.csproj", "{74AC155C-68CC-48AB-91FC-1E89EA5E2332}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Utilities.Validation", "src\Utilities\NetFusion.Utilities.Validation\NetFusion.Utilities.Validation.csproj", "{94398201-53EA-457C-B81B-D6A5EEAD586D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UtilitiesTests", "test\UtilitiesTests\UtilitiesTests.csproj", "{B5F94BA2-C0B1-496A-8D33-377D87F554EB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Common", "src\Infrastructure\NetFusion.Rest.Common\NetFusion.Rest.Common.csproj", "{6DB1C50C-CCA3-4E16-9183-5E4AADB56A27}"
@@ -86,7 +84,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Roslyn", "src\Int
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Messaging.Types", "src\Core\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj", "{F58C6A10-A627-41D0-B1A0-972F12A8F31D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Domain.Patterns", "src\Domain\NetFusion.Domain.Patterns\NetFusion.Domain.Patterns.csproj", "{5543B14B-16DD-45D3-8F0F-46EFE22FECD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Domain.Patterns", "src\Domain\NetFusion.Domain.Patterns\NetFusion.Domain.Patterns.csproj", "{5543B14B-16DD-45D3-8F0F-46EFE22FECD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -186,10 +184,6 @@ Global
 		{74AC155C-68CC-48AB-91FC-1E89EA5E2332}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74AC155C-68CC-48AB-91FC-1E89EA5E2332}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74AC155C-68CC-48AB-91FC-1E89EA5E2332}.Release|Any CPU.Build.0 = Release|Any CPU
-		{94398201-53EA-457C-B81B-D6A5EEAD586D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{94398201-53EA-457C-B81B-D6A5EEAD586D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{94398201-53EA-457C-B81B-D6A5EEAD586D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{94398201-53EA-457C-B81B-D6A5EEAD586D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B5F94BA2-C0B1-496A-8D33-377D87F554EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B5F94BA2-C0B1-496A-8D33-377D87F554EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5F94BA2-C0B1-496A-8D33-377D87F554EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -260,7 +254,6 @@ Global
 		{939E85A1-B51D-46FF-B0C8-71B3709BEC74} = {1EEBF08A-7413-403E-8A4E-EB9E8C96CD00}
 		{DC55A0D6-B839-4BBA-B02D-06453A691FAA} = {1EEBF08A-7413-403E-8A4E-EB9E8C96CD00}
 		{74AC155C-68CC-48AB-91FC-1E89EA5E2332} = {52784779-B3B6-47E8-AD88-89E2477FB830}
-		{94398201-53EA-457C-B81B-D6A5EEAD586D} = {52784779-B3B6-47E8-AD88-89E2477FB830}
 		{B5F94BA2-C0B1-496A-8D33-377D87F554EB} = {32232913-3E63-4EE3-8DC1-2FCB6717198F}
 		{6DB1C50C-CCA3-4E16-9183-5E4AADB56A27} = {4464FFBD-68C0-424A-9E3A-BCD390CD3068}
 		{0AFE34CE-A289-4B0D-9D20-C9E609686BBA} = {4464FFBD-68C0-424A-9E3A-BCD390CD3068}

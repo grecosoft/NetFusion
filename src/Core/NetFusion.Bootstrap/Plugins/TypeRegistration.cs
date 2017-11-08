@@ -4,6 +4,7 @@ using Autofac.Features.Scanning;
 using NetFusion.Common;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace NetFusion.Bootstrap.Plugins
 {
@@ -18,11 +19,8 @@ namespace NetFusion.Bootstrap.Plugins
 
         internal TypeRegistration(ContainerBuilder builder, IEnumerable<PluginType> sourceTypes)
         {
-            Check.NotNull(builder, nameof(builder));
-            Check.NotNull(sourceTypes, nameof(sourceTypes));
-
-            _builder = builder;
-            _sourceTypes = sourceTypes;
+            _builder = builder ?? throw new ArgumentNullException(nameof(builder));
+            _sourceTypes = sourceTypes ?? throw new ArgumentNullException(nameof(sourceTypes));
         }
 
         /// <summary>

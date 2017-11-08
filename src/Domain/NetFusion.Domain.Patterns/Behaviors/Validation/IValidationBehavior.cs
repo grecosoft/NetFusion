@@ -1,5 +1,5 @@
-﻿using NetFusion.Domain.Entities;
-using NetFusion.Utilities.Validation.Results;
+﻿using NetFusion.Base.Validation;
+using NetFusion.Domain.Entities;
 
 namespace NetFusion.Domain.Patterns.Behaviors.Validation
 {
@@ -13,6 +13,6 @@ namespace NetFusion.Domain.Patterns.Behaviors.Validation
         /// Validates the domain entity and optionally should validate any needed child entities.
         /// </summary>
         /// <returns>The result of the validation.</returns>
-        ValidationResult Validate();
+        ValidationResultSet Validate();
     }
 }

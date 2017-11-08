@@ -14,7 +14,6 @@
     <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
     <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
     <ProjectReference Include="..\..\Utilities\NetFusion.Utilities.Mapping\NetFusion.Utilities.Mapping.csproj" />
-    <ProjectReference Include="..\..\Utilities\NetFusion.Utilities.Validation\NetFusion.Utilities.Validation.csproj" />
   </ItemGroup>
 
   <ItemGroup>

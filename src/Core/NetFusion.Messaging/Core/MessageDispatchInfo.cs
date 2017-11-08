@@ -101,8 +101,8 @@ namespace NetFusion.Messaging.Core
 
         /// <summary>
         /// Identifies an externally stored script that is executed against the
-        /// associated message handler to determine if the message matches the
-        /// criteria.  If the message has matching criteria, the handler is called.
+        /// message to determine if it matches the criteria of the handler.  
+        /// If the message has matching criteria, the handler is called.
         /// </summary>
         public ScriptPredicate Predicate { get; set; }
 
@@ -114,7 +114,7 @@ namespace NetFusion.Messaging.Core
         /// <returns>Returns True if the event handler should be called.</returns>
         public bool IsMatch(IMessage message)
         {
-            Check.NotNull(message, nameof(message));
+            if (message == null) throw new ArgumentNullException(nameof(message));
 
             if (!DispatchRuleTypes.Any()) return true;
 
@@ -140,10 +140,10 @@ namespace NetFusion.Messaging.Core
         /// <returns>The response as a future result.</returns>
         public async Task<object> Dispatch(IMessage message, IMessageConsumer consumer, CancellationToken cancellationToken)
         {
-            Check.NotNull(message, nameof(message));
-            Check.NotNull(consumer, nameof(consumer));
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (consumer == null) throw new ArgumentNullException(nameof(consumer));
 
-            var futureResult = new TaskCompletionSource<object>();
+            var taskSource = new TaskCompletionSource<object>();
 
             try
             {
@@ -161,13 +161,13 @@ namespace NetFusion.Messaging.Core
                     await asyncResult;
 
                     object result = ProcessResult(message, asyncResult);
-                    futureResult.SetResult(result);
+                    taskSource.SetResult(result);
                 }
                 else
                 {
                     object syncResult = Invoker.DynamicInvoke(consumer, message);
                     object result = ProcessResult(message, syncResult);
-                    futureResult.SetResult(result);
+                    taskSource.SetResult(result);
                 }
             }
             catch (Exception ex)
@@ -184,10 +184,10 @@ namespace NetFusion.Messaging.Core
                     this, 
                     sourceEx);      
                           
-                futureResult.SetException(dispatchEx);
+                taskSource.SetException(dispatchEx);
             }
 
-            return await futureResult.Task;
+            return await taskSource.Task;
         }
 
         private object ProcessResult(IMessage message, object result)
