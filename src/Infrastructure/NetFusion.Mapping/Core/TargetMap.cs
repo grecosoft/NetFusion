@@ -1,7 +1,7 @@
-﻿using NetFusion.Utilities.Mapping;
+﻿using NetFusion.Mapping;
 using System;
 
-namespace NetFusion.Utilities.Core
+namespace NetFusion.Mapping.Core
 {
     /// <summary>
     /// Stores for a given source and target type the corresponding mapping strategy.

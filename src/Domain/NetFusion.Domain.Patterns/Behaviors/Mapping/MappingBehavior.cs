@@ -1,6 +1,6 @@
 ﻿using NetFusion.Common;
 using NetFusion.Domain.Entities.Core;
-using NetFusion.Utilities.Mapping;
+using NetFusion.Mapping;
 
 namespace NetFusion.Domain.Patterns.Behaviors.Mapping
 {

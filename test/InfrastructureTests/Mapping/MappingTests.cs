@@ -2,8 +2,8 @@
 using NetFusion.Domain.Entities;
 using NetFusion.Domain.Entities.Core;
 using NetFusion.Domain.Patterns.Behaviors.Mapping;
-using NetFusion.Utilities.Core;
-using NetFusion.Utilities.Mapping;
+using NetFusion.Mapping;
+using NetFusion.Mapping.Core;
 using UtilitiesTests.Mapping.Setup;
 using Xunit;
 

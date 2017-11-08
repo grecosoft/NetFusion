@@ -1,8 +1,8 @@
 ﻿using NetFusion.Base.Plugins;
-using NetFusion.Utilities.Core;
+using NetFusion.Mapping.Core;
 using System;
 
-namespace NetFusion.Utilities.Mapping
+namespace NetFusion.Mapping
 {
     /// <summary>
     /// Interface defining the contract for a type responsible for mapping an object 

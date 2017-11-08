@@ -1,6 +1,6 @@
 ﻿using Autofac;
-using NetFusion.Utilities.Core;
-using NetFusion.Utilities.Mapping;
+using NetFusion.Mapping;
+using NetFusion.Mapping.Core;
 
 namespace UtilitiesTests.Mapping.Setup
 {

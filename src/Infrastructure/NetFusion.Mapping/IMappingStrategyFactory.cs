@@ -1,7 +1,7 @@
 ﻿using NetFusion.Base.Plugins;
 using System.Collections.Generic;
 
-namespace NetFusion.Utilities.Mapping
+namespace NetFusion.Mapping
 {
     public interface IMappingStrategyFactory : IKnownPluginType
     {

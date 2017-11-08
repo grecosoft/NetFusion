@@ -2,14 +2,13 @@
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Utilities.Core;
-using NetFusion.Utilities.Mapping;
-using NetFusion.Utilities.Mapping.Configs;
+using NetFusion.Mapping.Configs;
+using NetFusion.Mapping.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetFusion.Utilities.Modules
+namespace NetFusion.Mapping.Modules
 {
     public class MappingModule : PluginModule,
         IMappingModule

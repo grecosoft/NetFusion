@@ -1,8 +1,9 @@
 ﻿using NetFusion.Bootstrap.Plugins;
+using NetFusion.Mapping.Core;
 using System;
 using System.Linq;
 
-namespace NetFusion.Utilities.Core
+namespace NetFusion.Mapping.Core
 {
     /// <summary>
     /// Interface implemented by a plug-in module responsible for finding all mapping strategies.

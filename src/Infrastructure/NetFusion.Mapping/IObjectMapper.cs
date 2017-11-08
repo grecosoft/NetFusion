@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetFusion.Utilities.Mapping
+namespace NetFusion.Mapping
 {
     /// <summary>
     /// Defines the contract for a component that determines how a source type is

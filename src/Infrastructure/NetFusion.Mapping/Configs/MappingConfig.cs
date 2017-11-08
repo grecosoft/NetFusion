@@ -1,9 +1,9 @@
 ﻿using NetFusion.Base.Plugins;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Utilities.Core;
+using NetFusion.Mapping.Core;
 using System;
 
-namespace NetFusion.Utilities.Mapping.Configs
+namespace NetFusion.Mapping.Configs
 {
     public class MappingConfig : IContainerConfig, IKnownPluginType
     {

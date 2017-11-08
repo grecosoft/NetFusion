@@ -1,11 +1,12 @@
 ﻿using Autofac;
 using NetFusion.Common;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Utilities.Mapping;
+using NetFusion.Mapping;
+using NetFusion.Mapping.Core;
 using System;
 using System.Linq;
 
-namespace NetFusion.Utilities.Core
+namespace NetFusion.Mapping.Core
 {
     /// <summary>
     /// Responsible for finding the mapping strategy for mapping a specified source type

@@ -1,4 +1,4 @@
-﻿namespace NetFusion.Utilities.Core
+﻿namespace NetFusion.Mapping.Core
 {
     /// <summary>
     /// Interface implemented by the host application used to delegate to the

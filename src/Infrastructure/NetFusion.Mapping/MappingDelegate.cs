@@ -1,8 +1,8 @@
 ﻿using NetFusion.Common;
-using NetFusion.Utilities.Core;
+using NetFusion.Mapping.Core;
 using System;
 
-namespace NetFusion.Utilities.Mapping
+namespace NetFusion.Mapping
 {
     /// <summary>
     /// Mapping strategy for which the created instance delegates to specified

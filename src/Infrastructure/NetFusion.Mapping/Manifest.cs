@@ -1,6 +1,6 @@
 ﻿using NetFusion.Bootstrap.Manifests;
 
-namespace NetFusion.Utilities.Mapping
+namespace NetFusion.Mapping
 {
     public class Manifest : PluginManifestBase,
         ICorePluginManifest

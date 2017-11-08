@@ -1,4 +1,4 @@
-﻿using NetFusion.Utilities.Core;
+﻿using NetFusion.Mapping.Core;
 using System;
 using System.Linq;
 

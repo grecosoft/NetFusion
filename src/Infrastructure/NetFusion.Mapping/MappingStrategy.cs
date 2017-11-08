@@ -1,8 +1,8 @@
 ﻿using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Utilities.Core;
+using NetFusion.Mapping.Core;
 using System;
 
-namespace NetFusion.Utilities.Mapping
+namespace NetFusion.Mapping
 {
     /// <summary>
     /// Base class used to define mapping strategies between source and target types.

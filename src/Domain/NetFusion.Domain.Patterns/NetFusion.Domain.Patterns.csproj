@@ -20,7 +20,7 @@
     <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
     <ProjectReference Include="..\..\Core\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
     <ProjectReference Include="..\..\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
-    <ProjectReference Include="..\..\Utilities\NetFusion.Utilities.Mapping\NetFusion.Utilities.Mapping.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\NetFusion.Mapping\NetFusion.Mapping.csproj" />
     <ProjectReference Include="..\NetFusion.Domain\NetFusion.Domain.csproj" />
   </ItemGroup>
 

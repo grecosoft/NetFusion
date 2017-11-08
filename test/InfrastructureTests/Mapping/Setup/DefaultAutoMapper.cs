@@ -1,6 +1,6 @@
-﻿using System;
-using Mapster;
-using NetFusion.Utilities.Core;
+﻿using Mapster;
+using NetFusion.Mapping.Core;
+using System;
 
 namespace UtilitiesTests.Mapping.Setup
 {
