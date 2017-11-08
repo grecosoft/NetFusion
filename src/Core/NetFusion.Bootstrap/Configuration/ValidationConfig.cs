@@ -19,7 +19,7 @@ namespace NetFusion.Bootstrap.Configuration
         /// <typeparam name="T">The type used for validation.</typeparam>
         public void UseValidatorType<T>() where T : IObjectValidator
         {
-            this.ValidatorType = typeof(T);
+            ValidatorType = typeof(T);
         }
     }
 }
