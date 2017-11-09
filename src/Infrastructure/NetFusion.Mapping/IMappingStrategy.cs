@@ -1,5 +1,4 @@
 ﻿using NetFusion.Base.Plugins;
-using NetFusion.Mapping.Core;
 using System;
 
 namespace NetFusion.Mapping
@@ -24,10 +23,9 @@ namespace NetFusion.Mapping
         /// Maps a source type to its corresponding target type.
         /// </summary>
         /// <param name="mapper">Reference to the IObjectMapper service.</param>
-        /// <param name="autoMapper">Reference to the configured IAutoMapper.</param>
         /// <param name="obj">The source object to be mapped.</param>
         /// <returns>The resulting target type instance.</returns>
-        object Map(IObjectMapper mapper, IAutoMapper autoMapper, object obj);
+        object Map(IObjectMapper mapper, object obj);
     }
 
     /// <summary>

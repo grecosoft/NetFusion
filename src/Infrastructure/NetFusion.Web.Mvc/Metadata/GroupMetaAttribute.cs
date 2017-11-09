@@ -4,7 +4,7 @@ namespace NetFusion.Web.Mvc.Metadata
 {
     /// <summary>
     /// Applied to a controller to include metadata about itself and any routes
-    /// marked with the ActionMetaAttribute attribute.
+    /// marked with the ActionMeta attribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class GroupMetaAttribute : Attribute
@@ -22,7 +22,7 @@ namespace NetFusion.Web.Mvc.Metadata
         /// <param name="groupName">Group name.  If not specified, controller name is used.</param>
         public GroupMetaAttribute(string groupName = null) 
         {
-            this.GroupName = groupName;
+            GroupName = groupName;
         }
     }
 }

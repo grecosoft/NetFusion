@@ -12,5 +12,8 @@ namespace NetFusion.Web.Mvc.Metadata.Models
 
         [JsonProperty("defaultValue")]
         public object DefaultValue { get; set; }
+
+        [JsonProperty("type")]
+        public object Type { get; set; }
     }
 }

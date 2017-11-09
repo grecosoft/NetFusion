@@ -28,16 +28,16 @@ namespace NetFusion.Web.Mvc.Metadata.Core
 
         public ApiGroupMeta[] GetApiGroup(string groupName)
         {
-            Check.NotNull(groupName, nameof(groupName));
-
+            if (groupName == null) throw new ArgumentNullException(nameof(groupName));
+            
             return _metadata.Value.Where(g => g.GroupName == groupName)
                 .ToArray();
         }
 
         public ApiActionMeta GetApiAction(string groupName, string actionName)
         {
-            Check.NotNull(actionName, nameof(actionName));
-
+            if (actionName == null) throw new ArgumentNullException(nameof(actionName));
+            
             ApiGroupMeta apiGroup = GetApiGroup(groupName).FirstOrDefault();
             if (apiGroup == null)
             {

@@ -18,6 +18,5 @@ namespace UtilitiesTests.Mapping.Setup
         }
 
         public ILookup<Type, TargetMap> SourceTypeMappings { get; }
-        public IAutoMapper AutoMapper => new DefaultAutoMapper();
     }
 }

@@ -58,7 +58,6 @@ namespace NetFusion.Base.Validation
 
             if (validator == null) throw new ArgumentNullException(nameof(validator));
 
-
             var validations = new List<ObjectValidation>();
             BuildValidationList(validations, validator);
 

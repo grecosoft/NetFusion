@@ -21,8 +21,7 @@ namespace NetFusion.Web.Mvc.Metadata.Core
         public Type ParameterType { get; }
 
         /// <summary>
-        /// Determines if the route parameter is optional and a value
-        /// not need specified.
+        /// Determines if the route parameter is optional and a value need not specified.
         /// </summary>
         public bool IsOptional { get; }
 
@@ -33,12 +32,12 @@ namespace NetFusion.Web.Mvc.Metadata.Core
 
         public ApiParameterMeta(ControllerParameterDescriptor descriptor)
         {
-            Check.NotNull(descriptor, nameof(descriptor));
-
-            this.ParameterName = descriptor.Name;
-            //this.ParameterType = descriptor.ParameterType;
-            this.IsOptional = descriptor.ParameterInfo.IsOptional;
-            this.DefaultValue = descriptor.ParameterInfo.DefaultValue;
+            if (descriptor == null) throw new ArgumentNullException(nameof(descriptor));
+            
+            ParameterName = descriptor.Name;
+            ParameterType = descriptor.ParameterType;
+            IsOptional = descriptor.ParameterInfo.IsOptional;
+            DefaultValue = descriptor.ParameterInfo.DefaultValue;
         }
     }
 }

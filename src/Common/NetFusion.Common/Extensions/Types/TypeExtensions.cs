@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetFusion.Rest.Server.Mappings
+namespace NetFusion.Common.Extensions.Types
 {
     /// <summary>
     /// Extensions for mapping .NET type to common client types.

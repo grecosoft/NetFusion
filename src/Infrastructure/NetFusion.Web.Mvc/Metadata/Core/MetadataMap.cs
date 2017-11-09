@@ -1,4 +1,5 @@
-﻿using NetFusion.Web.Mvc.Metadata.Models;
+﻿using NetFusion.Common.Extensions.Types;
+using NetFusion.Web.Mvc.Metadata.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -35,6 +36,7 @@ namespace NetFusion.Web.Mvc.Metadata.Core
                 .Select(p => new ParameterInfo {
                     Name = p.ParameterName,
                     IsOptional = p.IsOptional,
+                    Type = p.ParameterType.GetJsTypeName(),
                     DefaultValue = p.DefaultValue
                 });
         }

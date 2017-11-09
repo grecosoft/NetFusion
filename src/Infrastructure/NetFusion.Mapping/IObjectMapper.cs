@@ -17,7 +17,7 @@ namespace NetFusion.Mapping
         /// based on the source type.</typeparam>
         /// <param name="source">The source object to be mapped.</param>
         /// <returns>Instance of the target type or a derived instance.</returns>
-        TTarget Map<TTarget>(object source) where TTarget : class, new();
+        TTarget Map<TTarget>(object source) where TTarget : class;
 
         /// <summary>
         ///  Maps a source type to the specified target type.

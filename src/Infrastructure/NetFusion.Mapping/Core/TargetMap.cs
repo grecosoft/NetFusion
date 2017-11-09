@@ -1,5 +1,4 @@
-﻿using NetFusion.Mapping;
-using System;
+﻿using System;
 
 namespace NetFusion.Mapping.Core
 {

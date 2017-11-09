@@ -30,9 +30,9 @@ namespace WebApiHost.Messaging.Consumers
         [InProcessHandler]
         public async Task OnEventAsync(ExampleAsyncDomainEventException evt)
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                Thread.Sleep(evt.Seconds * 1000);
+                await Task.Delay(evt.Seconds * 1000);
             });
 
             if (evt.ThrowEx)
@@ -47,9 +47,9 @@ namespace WebApiHost.Messaging.Consumers
         [InProcessHandler]
         public async Task OnEventAsync(ExampleAsyncDomainEventException evt)
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                Thread.Sleep(evt.Seconds * 1000);
+                await Task.Delay(evt.Seconds * 1000);
             });
 
             if (evt.ThrowEx)
@@ -64,9 +64,9 @@ namespace WebApiHost.Messaging.Consumers
         [InProcessHandler]
         public async Task<HandlerResponse> OnCommand(ExampleAsyncCommand command)
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                Thread.Sleep(command.Seconds * 1000);
+                await Task.Delay(command.Seconds * 1000);
             });
 
             return new HandlerResponse

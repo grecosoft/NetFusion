@@ -4,10 +4,11 @@ using NetFusion.Domain.Entities.Core;
 using NetFusion.Domain.Patterns.Behaviors.Mapping;
 using NetFusion.Mapping;
 using NetFusion.Mapping.Core;
+using System;
 using UtilitiesTests.Mapping.Setup;
 using Xunit;
 
-namespace UtilitiesTests.Mapping
+namespace InfrastructureTests.Mapping
 {
     public class MappingTests
     {
@@ -16,7 +17,7 @@ namespace UtilitiesTests.Mapping
         // type.  An object can also be mapped by injecting the IMappingBehavior into a component where it can be
         // directly referenced.  Having it configured as a domain entity behavior simplifies the calling code by
         // keeping the behavior closer to the domain entity being mapped and improves the readability of the code.
-        [Fact(DisplayName = nameof(MappingBehaviorCanBe_SupportedByDomainEntity))]
+        [Fact(DisplayName = "Mapping behavior can be Supported by Domain Entity")]
         public void MappingBehaviorCanBe_SupportedByDomainEntity()
         {
             var targetMaps = new TargetMap[] { };
@@ -30,10 +31,9 @@ namespace UtilitiesTests.Mapping
 
         // The ObjectMapper implementation will search the lookup registry for the mapping strategy that best
         // matches the target type that the source type is to be mapped.  If no matching strategy is found,
-        // the ObjectMapper will delegate the mapping to the register IAutoMapper to automatically create an
-        // instance of the target object.
-        [Fact(DisplayName = nameof(NoMappingStragetySpecified_ObjectsAreAutoMapped))]
-        public void NoMappingStragetySpecified_ObjectsAreAutoMapped()
+        // an exception is raised.
+        [Fact(DisplayName = "No Mappings Strategy found Exception raised")]
+        public void NoMappingStrategyFound_ExceptionIsRaised()
         {
             var targetMaps = new TargetMap[] { };
 
@@ -42,14 +42,13 @@ namespace UtilitiesTests.Mapping
             domainEntity.ValueOne = "V1";
             domainEntity.ValueTwo = "V2";
 
-            var model = domainEntity.MapTo<TargetModel>();
-            Assert.Equal(model.ValueOne, domainEntity.ValueOne);
-            Assert.Equal(model.ValueTwo, domainEntity.ValueTwo);
+            Assert.Throws<InvalidOperationException>(() => domainEntity.MapTo<TargetModel>())
+                .Message.Should().Contain("Mapping strategy not found.");
         }
 
         // The ObjectMapper will first search for a mapping strategy based on the source type matching
         // the target type exactly.  If found, the mapping strategy is executed.
-        [Fact(DisplayName = nameof(StrategyUsedTo_MapSourceToTarget))]
+        [Fact(DisplayName = "Strategy used to Map Source to Target")]
         public void StrategyUsedTo_MapSourceToTarget()
         {
             var targetMaps = new TargetMap[] {
@@ -74,7 +73,7 @@ namespace UtilitiesTests.Mapping
         // When mapping from a target type to a source type, a mapping strategy where the
         // source type is the target type and the target type is the source type will be 
         // used.  If not found, a reverse lookup is completed.
-        [Fact(DisplayName = nameof(StrategyUsedTo_MapTargetToSource))]
+        [Fact(DisplayName = "Strategy used to Map Target to Source")]
         public void StrategyUsedTo_MapTargetToSource()
         {
             var targetMaps = new TargetMap[] {
@@ -102,7 +101,7 @@ namespace UtilitiesTests.Mapping
         // This allows for the case where the target type is specified for a given source
         // type but the calling code does not need to know the exact derived type and can
         // be generically written using the base type regardless of source type.
-        [Fact(DisplayName = nameof(CanMapSourceTo_DerivedTarget))]
+        [Fact(DisplayName = "Can map Source to Derived Target")]
         public void CanMapSourceTo_DerivedTarget()
         {
             var targetMaps = new TargetMap[] {
@@ -124,17 +123,6 @@ namespace UtilitiesTests.Mapping
 
             derivedModel.Should().NotBeNull();
             Assert.Equal("V1V2", derivedModel.ValueThree);
-        }
-
-        // Mapping strategies when invoked can function as a factory and create a new instance of the target type.  
-        // In this case the mapping strategy has full control over the mapping and no auto-mapping takes place.  
-        // If the strategy implements the method taking both source and target types, then the ObjectMapper will
-        // automatically create an instance of the target type and apply auto-mappings.  The auto-mapped target 
-        // instance is then passed to the strategy where additional mappings can be preformed.
-        [Fact(DisplayName = nameof(Strategy_CanAcceptAutoMappedTarget))]
-        public void Strategy_CanAcceptAutoMappedTarget()
-        {
-            CanMapSourceTo_DerivedTarget();
         }
 
         // --------------------------MOCK DOMAIN ENTITIES----------------------------
@@ -199,9 +187,12 @@ namespace UtilitiesTests.Mapping
 
         public class ExampleDerivedMapStrategy : MappingStrategy<SourceDomainEntity, TargetDerivedModel>
         {
-            protected override void SourceToTarget(SourceDomainEntity source, TargetDerivedModel target)
+            protected override TargetDerivedModel SourceToTarget(SourceDomainEntity source)
             {
-                target.ValueThree = source.ValueOne + source.ValueTwo;
+                return new TargetDerivedModel
+                {
+                    ValueThree = source.ValueOne + source.ValueTwo
+                };
             }
         }
     }
