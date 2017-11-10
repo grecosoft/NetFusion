@@ -31,20 +31,21 @@ namespace NetFusion.Rest.Client.Core
             IMediaTypeSerializer> contentSerializers, 
             IRequestSettings requestSettings)
         {
-            _httpClient = httpClient 
-                ?? throw new ArgumentNullException(nameof(httpClient), "HTTP Client not set.");
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient), 
+                "HTTP Client cannot be null.");
 
-            _mediaTypeSerializers = contentSerializers
-                ?? throw new ArgumentNullException(nameof(contentSerializers), "HTTP Context Serializers not set.");
+            _mediaTypeSerializers = contentSerializers ?? throw new ArgumentNullException(nameof(contentSerializers),
+                "HTTP Context Serializers cannot be null.");
 
-            _defaultRequestSettings = requestSettings
-                ?? throw new ArgumentNullException(nameof(requestSettings), "Default Request Settings not set.");
+            _defaultRequestSettings = requestSettings ?? throw new ArgumentNullException(nameof(requestSettings),
+                "Default Request Settings cannot be null.");
         }
 
 		public Task<ApiResponse> Send(ApiRequest request,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (request == null) throw new ArgumentNullException(nameof(request), "Request not specified.");
+            if (request == null) throw new ArgumentNullException(nameof(request),
+                "Request cannot be null.");
 
             return SendRequest(request, cancellationToken);
         }
@@ -53,7 +54,8 @@ namespace NetFusion.Rest.Client.Core
             CancellationToken cancellationToken = default(CancellationToken))
             where TContent : class
         {
-            if (request == null) throw new ArgumentNullException(nameof(request), "Request not specified.");
+            if (request == null) throw new ArgumentNullException(nameof(request),
+                "Request cannot be null.");
 
             return SendRequest<TContent>(request, cancellationToken);
         }

@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Common.Extensions.Reflection;
+﻿using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Domain.Entities.Registration;
 using System;
 using System.Collections.Generic;
@@ -25,8 +24,7 @@ namespace NetFusion.Domain.Entities.Core
         // Constructor for creating a domain entity level supported behaviors.
         public SupportedBehaviors(Type domainEntityType)
         {
-            Check.NotNull(domainEntityType, nameof(domainEntityType));
-            DomainEntityType = domainEntityType;
+            DomainEntityType = domainEntityType ?? throw new ArgumentNullException(nameof(domainEntityType));
         }
 
         public IEnumerable<Behavior> Behaviors => _behaviors.Values;

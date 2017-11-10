@@ -26,8 +26,7 @@ namespace NetFusion.Web.Mvc.Metadata.Core
                 "Group name cannot be null or empty string.");
             
             GroupName = groupName;
-            Actions = actions ?? 
-                throw new ArgumentNullException(nameof(actions));
+            Actions = actions ?? throw new ArgumentNullException(nameof(actions));
         }
     }
 }

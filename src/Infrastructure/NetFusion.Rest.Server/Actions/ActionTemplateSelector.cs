@@ -44,7 +44,7 @@ namespace NetFusion.Rest.Server.Actions
             if (attrib == null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(ActionMetaAttribute)} not specified on action: {action.Name} for controller: {action.DeclaringType.FullName}");
+                    $"{nameof(ActionMetaAttribute)} not specified on action: {action.Name} for controller: {action.DeclaringType.FullName}.");
             }
             return attrib.ActionName;
         }
@@ -55,7 +55,7 @@ namespace NetFusion.Rest.Server.Actions
             if (attrib == null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(GroupMetaAttribute)} not specified on controller: {controllerType.FullName}");
+                    $"{nameof(GroupMetaAttribute)} not specified on controller: {controllerType.FullName}.");
             }
             return attrib.GroupName;                          
         }

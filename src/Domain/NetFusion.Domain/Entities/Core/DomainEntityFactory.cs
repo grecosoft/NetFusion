@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Domain.Entities.Registration;
+﻿using NetFusion.Domain.Entities.Registration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,13 +26,11 @@ namespace NetFusion.Domain.Entities.Core
         private readonly Dictionary<Type, SupportedBehaviors> _entityBehaviors;   // EntityType => SupportedBehavior (1..*)
 
         public DomainEntityFactory(IDomainServiceResolver resolver)
-        {
-            Check.NotNull(resolver, nameof(resolver));
-
+        {            
             _factoryBehaviors = new Dictionary<Type, SupportedBehaviors>();
             _entityBehaviors = new Dictionary<Type, SupportedBehaviors>();
 
-            _resolver = resolver;
+            _resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
         }
 
         /// <summary>
@@ -42,8 +39,7 @@ namespace NetFusion.Domain.Entities.Core
         /// <param name="factory">The created singleton domain-entity factory instance.</param>
         public static void SetInstance(IDomainEntityFactory factory)
         {
-            Check.NotNull(factory, nameof(factory));
-            Instance = factory;
+            Instance = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
         public TDomainEntity Create<TDomainEntity>()
@@ -111,7 +107,7 @@ namespace NetFusion.Domain.Entities.Core
         public void BehaviorsFor<TDomainEntity>(Action<ISupportedBehaviors> entity) 
             where TDomainEntity : IBehaviorDelegator
         {
-            Check.NotNull(entity, nameof(entity));
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
 
             var domainEntityType = typeof(TDomainEntity);
 

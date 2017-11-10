@@ -1,5 +1,4 @@
 ﻿using NetFusion.Base.Validation;
-using NetFusion.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +36,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
 
         internal static CommitResult Sucessful(IAggregateUnitOfWork unitOfwork, IEnumerable<ValidationResultSet> validationResults)
         {
-            Check.NotNull(validationResults, nameof(validationResults));
+            if (validationResults == null) throw new ArgumentNullException(nameof(validationResults));
 
             return new CommitResult
             {
@@ -51,7 +50,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
 
         internal static CommitResult Invalid(IAggregateUnitOfWork unitOfwork, IEnumerable<ValidationResultSet> validationResults)
         {
-            Check.NotNull(validationResults, nameof(validationResults));
+            if (validationResults == null) throw new ArgumentNullException(nameof(validationResults));
 
             return new CommitResult {
 

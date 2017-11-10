@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NetFusion.Common.Extensions.Collections
@@ -30,8 +31,7 @@ namespace NetFusion.Common.Extensions.Collections
         /// <returns>True if a value is a member of source.  Otherwise, False.</returns>
         public static bool ContainsAny<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer, params T[] values)
         {
-            Check.NotNull(source, nameof(source));
-
+            if (source == null) throw new ArgumentNullException(nameof(source));
             return values.Any( v => source.Contains(v, comparer));
         }
 
@@ -44,8 +44,7 @@ namespace NetFusion.Common.Extensions.Collections
         /// <returns>True if a value is a member of source.  Otherwise, False.</returns>
         public static bool ContainsAny<T>(this IEnumerable<T> source, params T[] values)
         {
-            Check.NotNull(source, nameof(source));
-
+            if (source == null) throw new ArgumentNullException(nameof(source));
             return values.Any(source.Contains);
         }
     }

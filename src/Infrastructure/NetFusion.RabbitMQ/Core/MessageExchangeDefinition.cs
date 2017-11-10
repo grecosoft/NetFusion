@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using System;
+﻿using System;
 
 namespace NetFusion.RabbitMQ.Core
 {
@@ -27,10 +26,8 @@ namespace NetFusion.RabbitMQ.Core
         /// <param name="messageType"> The message type associated with the exchange.</param>
         public MessageExchangeDefinition(IMessageExchange exchange, Type messageType = null)
         {
-            Check.NotNull(exchange, nameof(exchange));
-
             MessageType = messageType;
-            Exchange = exchange;
+            Exchange = exchange ?? throw new ArgumentNullException(nameof(exchange));
         }
     }
 } 

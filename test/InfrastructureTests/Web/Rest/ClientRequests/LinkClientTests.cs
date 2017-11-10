@@ -135,7 +135,7 @@ namespace InfrastructureTests.Web.Rest.ClientRequests
             // Act:
             var exception = Record.Exception(() => link.ToRequest());
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Be("Links containing non populated template URL tokens can't be requested.");
+            exception.Message.Should().Be("Links containing non-populated template URL tokens can't be requested.");
         }
 
         /// <summary>

@@ -63,8 +63,8 @@ namespace NetFusion.Bootstrap.Container
         /// singleton instance of the created container.  Useful for unit testing.</param>
         public AppContainer(ITypeResolver typeResolver, bool setGlobalReference = true)
         {
-            _typeResover = typeResolver ??
-                throw new ArgumentNullException(nameof(typeResolver), "Type Resolver implementation not specified.");
+            _typeResover = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver),
+                "Type Resolver implementation not specified.");
 
             _application = new CompositeApplication();
             _configs = new Dictionary<Type, IContainerConfig>();
@@ -143,10 +143,9 @@ namespace NetFusion.Bootstrap.Container
 
         Plugin IComposite.GetPluginContainingType(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type), "Reference to type not specified.");
+            if (type == null) throw new ArgumentNullException(nameof(type), 
+                "Reference to type not specified.");
                
-
             if (_application.Plugins == null)
             {
                 return null;
@@ -177,8 +176,8 @@ namespace NetFusion.Bootstrap.Container
         /// <returns>Configured application container.</returns>
         public static IAppContainer Create(ITypeResolver typeResolver)
         {
-            if (typeResolver == null)
-                throw new ArgumentNullException(nameof(typeResolver), "Type Resolver implementation not specified.");
+            if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver),
+                "Type Resolver implementation not specified.");
 
             if (_instance != null)
             {
@@ -190,8 +189,8 @@ namespace NetFusion.Bootstrap.Container
 
         public IAppContainer WithConfig(IContainerConfig config)
         {
-            if (config == null)
-                throw new ArgumentNullException(nameof(config), "Configuration cannot be null.");
+            if (config == null) throw new ArgumentNullException(nameof(config), 
+                "Configuration cannot be null.");
             
             if (Registry.AllManifests != null)
             {
@@ -219,8 +218,8 @@ namespace NetFusion.Bootstrap.Container
         public IAppContainer WithConfig<T>(Action<T> configInit)
             where T : IContainerConfig, new()
         {
-            if (configInit == null)
-                throw new ArgumentNullException(nameof(configInit), "Configuration Initialization function not specified.");
+            if (configInit == null) throw new ArgumentNullException(nameof(configInit), 
+                "Configuration Initialization function not specified.");
 
             T config = new T();
             WithConfig(config);

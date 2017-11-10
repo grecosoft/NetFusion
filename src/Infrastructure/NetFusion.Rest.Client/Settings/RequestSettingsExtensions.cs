@@ -17,8 +17,8 @@ namespace NetFusion.Rest.Client.Settings
         /// <param name="requestSettings">The request settings to configure.</param>
         public static IRequestSettings UseHalDefaults(this IRequestSettings requestSettings)
         {
-            if (requestSettings == null)
-                throw new ArgumentNullException(nameof(requestSettings), "Request Settings must be specified.");
+            if (requestSettings == null) throw new ArgumentNullException(nameof(requestSettings),
+                "Request Settings cannot be null.");
 
             requestSettings.Headers.AcceptMediaType(InternetMediaTypes.HalJson);
             requestSettings.Headers.AcceptMediaType(InternetMediaTypes.Json);

@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Messaging.Types;
+﻿using NetFusion.Messaging.Types;
 using System;
 
 namespace NetFusion.Domain.Patterns.Behaviors.Integration
@@ -18,8 +17,7 @@ namespace NetFusion.Domain.Patterns.Behaviors.Integration
 
         public IntegrationEvent(IDomainEvent domainEvent)
         {
-            Check.NotNull(domainEvent, nameof(Domain));
-            DomainEvent = domainEvent;
+            DomainEvent = domainEvent ?? throw new ArgumentNullException(nameof(domainEvent));
         }
 
         public bool IsInternalIntegrated => _isInternalIntegrated;

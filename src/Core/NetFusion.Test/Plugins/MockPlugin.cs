@@ -38,8 +38,7 @@ namespace NetFusion.Test.Plugins
         /// <returns>Reference to self.</returns>
         public IPluginTypeAccessor AddPluginType(params Type[] types)
         {
-            if (types == null)
-                throw new ArgumentNullException(nameof(types));
+            if (types == null)throw new ArgumentNullException(nameof(types));
 
             _pluginTypes.AddRange(types);
             return this;

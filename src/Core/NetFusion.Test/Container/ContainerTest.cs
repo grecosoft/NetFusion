@@ -1,6 +1,5 @@
 ﻿using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,8 +16,7 @@ namespace NetFusion.Test.Container
 
         public ContainerTest(IAppContainer container)
         {
-            Check.NotNull(container, nameof(container));
-            _container = container;
+            _container = container ?? throw new ArgumentNullException(nameof(container));
         }
 
         /// <summary>
@@ -30,8 +28,6 @@ namespace NetFusion.Test.Container
         /// of the application container after the action has been taken.</returns>
         public void Act(Action<IAppContainer> act)
         {
-            Check.NotNull(act, nameof(act), "action delegate not specified");
-
             act(_container);
         }
 
@@ -46,9 +42,6 @@ namespace NetFusion.Test.Container
         /// <returns>Task representing a future result.</returns>
         public async Task Test(Func<IAppContainer, Task> act, Action<IAppContainer> assert)
         {
-            Check.NotNull(act, nameof(act), "act delegate not specified");
-            Check.NotNull(assert, nameof(assert), "assert delegate not specified");
-
             await act(_container);
             assert(_container);
         }
@@ -61,9 +54,6 @@ namespace NetFusion.Test.Container
         /// <returns>Task representing a future result.</returns>
         public async Task Test(Func<IAppContainer, Task> act, Action<IComposite> assert)
         {
-            Check.NotNull(act, nameof(act), "act delegate not specified");
-            Check.NotNull(assert, nameof(assert), "assert delegate not specified");
-
             await act(_container);
             assert((IComposite)_container);
         }
@@ -76,9 +66,6 @@ namespace NetFusion.Test.Container
         /// <returns>Task representing a future result.</returns>
         public async Task Test(Func<IAppContainer, Task> act, Action<CompositeApplication> assert)
         {
-            Check.NotNull(act, nameof(act), "act delegate not specified");
-            Check.NotNull(assert, nameof(assert), "assert delegate not specified");
-
             await act(_container);
             var composite = (IComposite)_container;
             assert(composite.Application);
@@ -92,9 +79,6 @@ namespace NetFusion.Test.Container
         /// <returns>Task representing a future result.</returns>
         public async Task Test(Func<IAppContainer, Task> act, Action<IAppContainer, Exception> assert)
         {
-            Check.NotNull(act, nameof(act), "act delegate not specified");
-            Check.NotNull(assert, nameof(assert), "assert delegate not specified");
-
             try
             {
                 await act(_container);
@@ -116,9 +100,6 @@ namespace NetFusion.Test.Container
         public async Task Test<T>(Func<IAppContainer, Task> act, Action<T> assert)
             where T : IPluginModule
         {
-            Check.NotNull(act, nameof(act), "act delegate not specified");
-            Check.NotNull(assert, nameof(assert), "assert delegate not specified");
-
             await act(_container);
 
             AssertPluginModule(assert);
@@ -134,9 +115,6 @@ namespace NetFusion.Test.Container
         public async Task TestConfig<T>(Func<IAppContainer, Task> act, Action<T> assert)
             where T : IContainerConfig
         {
-            Check.NotNull(act, nameof(act), "act delegate not specified");
-            Check.NotNull(assert, nameof(assert), "assert delegate not specified");
-
             await act(_container);
 
             AssertConfig<T>(assert);
@@ -152,9 +130,6 @@ namespace NetFusion.Test.Container
         /// <param name="assert">Asserts the container when the action completes.</param>
         public void Test(Action<IAppContainer> act, Action<IAppContainer> assert)
         {
-            Check.NotNull(act, nameof(act), "act delegate not specified");
-            Check.NotNull(assert, nameof(assert), "assert delegate not specified");
-
             act(_container);
             assert(_container);
         }
@@ -166,9 +141,6 @@ namespace NetFusion.Test.Container
         /// <param name="assert">Asserts the created composite application when the action completes.</param>
         public void Test(Action<IAppContainer> act, Action<IComposite> assert)
         {
-            Check.NotNull(act, nameof(act), "act delegate not specified");
-            Check.NotNull(assert, nameof(assert), "assert delegate not specified");
-
             act(_container);
             assert((IComposite)_container);
         }
@@ -180,9 +152,6 @@ namespace NetFusion.Test.Container
         /// <param name="assert">Asserts the created composite application when the action completes.</param>
         public void Test(Action<IAppContainer> act, Action<CompositeApplication> assert)
         {
-            Check.NotNull(act, nameof(act), "act delegate not specified");
-            Check.NotNull(assert, nameof(assert), "assert delegate not specified");
-
             act(_container);
             var composite = (IComposite)_container;
             assert(composite.Application);
@@ -195,9 +164,6 @@ namespace NetFusion.Test.Container
         /// <param name="assert">Asserts the action resulted in an expected exception.</param>
         public void Test(Action<IAppContainer> act, Action<IAppContainer, Exception> assert)
         {
-            Check.NotNull(act, nameof(act), "act delegate not specified");
-            Check.NotNull(assert, nameof(assert), "assert delegate not specified");
-
             try
             {
                 act(_container);
@@ -217,9 +183,6 @@ namespace NetFusion.Test.Container
         public void Test<T>(Action<IAppContainer> act, Action<T> assert)
             where T : IPluginModule
         {
-            Check.NotNull(act, nameof(act), "act delegate not specified");
-            Check.NotNull(assert, nameof(assert), "assert delegate not specified");
-
             act(_container);
 
             AssertPluginModule<T>(assert);
@@ -234,9 +197,6 @@ namespace NetFusion.Test.Container
         public void TestConfig<T>(Action<IAppContainer> act, Action<T> assert)
             where T : IContainerConfig
         {
-            Check.NotNull(act, nameof(act), "act delegate not specified");
-            Check.NotNull(assert, nameof(assert), "assert delegate not specified");
-
             act(_container);
 
             AssertConfig(assert);

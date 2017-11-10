@@ -1,5 +1,4 @@
-﻿using NetFusion.Common.Extensions.Collections;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -34,8 +33,8 @@ namespace NetFusion.Rest.Server.Actions
 
         public ActionUrlLink(ActionParamValue actionParamValues) 
         {
-            if (actionParamValues == null)
-                throw new ArgumentNullException(nameof(actionParamValues), "Action parameter values not specified.");
+            if (actionParamValues == null) throw new ArgumentNullException(nameof(actionParamValues),
+                "Action parameter values cannot be null.");
 
             _routeValues = new List<ActionParamValue> { actionParamValues };
             RouteValues = _routeValues.AsReadOnly();
@@ -55,8 +54,8 @@ namespace NetFusion.Rest.Server.Actions
         /// <param name="actionParam">Mapping between action parameter and corresponding resource property.</param>
         public void AddRouteValue(ActionParamValue actionParam)
         {
-            if (actionParam == null)
-                throw new ArgumentNullException(nameof(actionParam), "Route parameter value not specified.");
+            if (actionParam == null) throw new ArgumentNullException(nameof(actionParam),
+                "Route parameter cannot be null.");
 
             if (_routeValues.Any(rv => rv.ActionParamName == actionParam.ActionParamName))
             {

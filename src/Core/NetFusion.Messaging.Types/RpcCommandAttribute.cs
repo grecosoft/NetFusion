@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using System;
+﻿using System;
 
 namespace NetFusion.Messaging.Types
 {
@@ -47,8 +46,7 @@ namespace NetFusion.Messaging.Types
         /// <param name="externalTypeName">The name used to represent the message to external consumers.</param>
         public RpcCommandAttribute(string externalTypeName)
         {            
-            ExternalTypeName = externalTypeName ?? 
-                throw new ArgumentNullException(nameof(externalTypeName));
+            ExternalTypeName = externalTypeName ?? throw new ArgumentNullException(nameof(externalTypeName));
         }
 
         /// <summary>

@@ -1,5 +1,4 @@
 ﻿using NetFusion.Base.Exceptions;
-using NetFusion.Common;
 using NetFusion.Domain.Patterns.Queries.Filters;
 using System;
 using System.Collections.Generic;
@@ -42,7 +41,7 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
         public QueryDispatchException(string message, QueryDispatchInfo dispatchInfo, Exception innerException)
             : base(message, innerException)
         {
-            Check.NotNull(dispatchInfo, nameof(dispatchInfo));
+            if (dispatchInfo == null) throw new ArgumentNullException(nameof(dispatchInfo));
 
             Details["DispatchInfo"] = new
             {
@@ -60,7 +59,7 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
         public QueryDispatchException(string errorMessage, IEnumerable<QueryFilterException> filterExceptions)
             : base(errorMessage)
         {
-            Check.NotNull(filterExceptions, nameof(filterExceptions));
+            if (filterExceptions == null) throw new ArgumentNullException(nameof(filterExceptions));
 
             Details = new Dictionary<string, object>
             {

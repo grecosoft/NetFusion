@@ -1,5 +1,5 @@
 ﻿using NetFusion.Base.Entity;
-using NetFusion.Common;
+using System;
 
 namespace NetFusion.Domain.Roslyn.Core
 {
@@ -23,7 +23,7 @@ namespace NetFusion.Domain.Roslyn.Core
 
         public EntityScriptScope(object entity)
         {
-            Check.NotNull(entity, nameof(entity));
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
 
             Entity = (TEntity)entity;
 

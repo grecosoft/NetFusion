@@ -18,8 +18,7 @@ namespace NetFusion.Base.Validation
 
         public ObjectValidator(object obj)
         {            
-            Object = obj ??
-                throw new ArgumentNullException(nameof(obj));
+            Object = obj ?? throw new ArgumentNullException(nameof(obj));
 
             _items = new List<ValidationItem>();
             _children = new List<IObjectValidator>();

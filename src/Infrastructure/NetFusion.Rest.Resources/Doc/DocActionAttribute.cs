@@ -38,7 +38,8 @@ namespace NetFusion.Rest.Resources.Doc
             HttpStatusCode[] statusCodes = null,            
             Type responseResourceType = null) 
         {
-            Id = id ?? throw new ArgumentNullException(nameof(id), "Action Documentation Identifier not specified.");
+            Id = id ?? throw new ArgumentNullException(nameof(id), 
+                "Action Documentation Identifier cannot be null.");
 
             StatusCodes = statusCodes;
             ResponseResourceType = responseResourceType;

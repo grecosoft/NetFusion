@@ -48,8 +48,8 @@ namespace NetFusion.Rest.Web.Actions
 
         public ActionResourceLink(Expression<Func<TResource, string>> resourceUrl)
         {
-            if (resourceUrl == null)
-                throw new ArgumentNullException(nameof(resourceUrl), "Resource URL not specified.");
+            if (resourceUrl == null)throw new ArgumentNullException(nameof(resourceUrl),
+                "Resource URL cannot be null.");
 
             // Compile the expression so it can be executed at runtime against a resource.
             ResourceUrlFormatFunc = resourceUrl.Compile();
@@ -123,8 +123,8 @@ namespace NetFusion.Rest.Web.Actions
         /// <returns>The formatted string populated with resource property values.</returns>
         public override string FormatUrl(IResource resource)
         {
-            if (resource == null)
-                throw new ArgumentNullException(nameof(resource), "Resource not specified.");
+            if (resource == null) throw new ArgumentNullException(nameof(resource), 
+                "Resource cannot be null.");
 
             TResource typedResource = (TResource)resource;
             return ResourceUrlFormatFunc(typedResource);

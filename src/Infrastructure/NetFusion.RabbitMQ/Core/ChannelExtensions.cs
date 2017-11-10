@@ -1,6 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Common.Extensions;
-using NetFusion.Common.Extensions.Collections;
+﻿using NetFusion.Common.Extensions.Collections;
 using NetFusion.RabbitMQ.Exchanges;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -17,8 +15,8 @@ namespace NetFusion.RabbitMQ.Core
         public static void ExchangeDeclare(this IModel channel,
             ExchangeSettings settings)
         {
-            Check.NotNull(channel, nameof(channel));
-            Check.NotNull(settings, nameof(settings));
+            if (channel == null) throw new ArgumentNullException(nameof(channel));
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
 
             channel.ExchangeDeclare(settings.ExchangeName, settings.ExchangeType,
                 settings.IsDurable,
@@ -30,9 +28,11 @@ namespace NetFusion.RabbitMQ.Core
             string queueName,
             QueueSettings settings)
         {
-            Check.NotNull(channel, nameof(channel));
-            Check.NotNullOrWhiteSpace(queueName, nameof(queueName));
-            Check.NotNull(settings, nameof(settings));
+            if (channel == null) throw new ArgumentNullException(nameof(channel));
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+
+            if (string.IsNullOrWhiteSpace(queueName))
+                throw new ArgumentException("Queue name must be specified.", nameof(queueName));
 
             channel.QueueDeclare(queueName,
                 settings.IsDurable,
@@ -44,8 +44,8 @@ namespace NetFusion.RabbitMQ.Core
         public static void QueueDeclare(this IModel channel,
             MessageConsumer eventConsumer)
         {
-            Check.NotNull(channel, nameof(channel));
-            Check.NotNull(eventConsumer, nameof(eventConsumer));
+            if (channel == null) throw new ArgumentNullException(nameof(channel));
+            if (eventConsumer == null) throw new ArgumentNullException(nameof(eventConsumer));
 
             if (eventConsumer.IsBrokerAssignedName)
             {
@@ -61,8 +61,8 @@ namespace NetFusion.RabbitMQ.Core
 
         public static void QueueBind(this IModel channel, MessageConsumer eventConsumer)
         {
-            Check.NotNull(channel, nameof(channel));
-            Check.NotNull(eventConsumer, nameof(eventConsumer));
+            if (channel == null) throw new ArgumentNullException(nameof(channel));
+            if (eventConsumer == null) throw new ArgumentNullException(nameof(eventConsumer));
 
             if (eventConsumer.RouteKeys.Empty())
             {
@@ -86,8 +86,8 @@ namespace NetFusion.RabbitMQ.Core
         public static EventingBasicConsumer GetBasicConsumer(this IModel channel,
             MessageConsumer eventConsumer)
         {
-            Check.NotNull(channel, nameof(channel));
-            Check.NotNull(eventConsumer, nameof(eventConsumer));
+            if (channel == null) throw new ArgumentNullException(nameof(channel));
+            if (eventConsumer == null) throw new ArgumentNullException(nameof(eventConsumer));
 
             var basicConsumer = new EventingBasicConsumer(channel);
             channel.BasicConsume(eventConsumer.QueueName, eventConsumer.QueueSettings, basicConsumer);
@@ -97,8 +97,8 @@ namespace NetFusion.RabbitMQ.Core
         public static EventingBasicConsumer GetBasicConsumer(this IModel channel, 
             ExchangeQueue queue)
         {
-            Check.NotNull(channel, nameof(channel));
-            Check.NotNull(queue, nameof(queue));
+            if (channel == null) throw new ArgumentNullException(nameof(channel));
+            if (queue == null) throw new ArgumentNullException(nameof(queue));
 
             var consumer = new EventingBasicConsumer(channel);
             channel.BasicConsume(queue.QueueName, queue.Settings, consumer);
@@ -106,15 +106,17 @@ namespace NetFusion.RabbitMQ.Core
         }
 
         public static void BasicConsume(this IModel channel,
-            string queue,
+            string queueName,
             QueueSettings settings,
             EventingBasicConsumer basicConsumer)
         {
-            Check.NotNullOrWhiteSpace(queue, nameof(queue));
-            Check.NotNull(settings, nameof(settings));
-            Check.NotNull(basicConsumer, nameof(basicConsumer));
+            if (string.IsNullOrWhiteSpace(queueName))
+                throw new ArgumentException("Queue name must be specified.", nameof(queueName));
 
-            channel.BasicConsume(queue, settings.IsNoAck, basicConsumer);
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+            if (basicConsumer == null) throw new ArgumentNullException(nameof(basicConsumer));
+
+            channel.BasicConsume(queueName, settings.IsNoAck, basicConsumer);
         }
     }
 }

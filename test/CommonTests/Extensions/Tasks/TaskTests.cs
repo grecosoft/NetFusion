@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Tasks;
 using System;
 using System.Linq;
@@ -83,7 +82,8 @@ namespace CommonTests.Extensions.Tasks
 
         public Task Invoke(TestState state)
         {
-            Check.NotNull(state, nameof(state));
+            if (state == null) throw new ArgumentNullException(nameof(state));
+
             if (ErrorMessage == null)
             {
                 return Task.CompletedTask;

@@ -30,8 +30,8 @@ namespace NetFusion.Test.Container
         /// <returns>Self reference for method chaining.</returns>
         public ContainerAssert Container(Action<IAppContainer> assert)
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert), "Assert method not specified.");
+            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+                "Assert method not specified.");
 
             assert(_container);
             return this;
@@ -46,8 +46,8 @@ namespace NetFusion.Test.Container
         /// <returns>Self reference for method chaining.</returns>
         public ContainerAssert CompositeApp(Action<CompositeApplication> assert)
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert), "Assert method not specified.");
+            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+                "Assert method not specified.");
 
             assert(_container.Application);
             return this;
@@ -64,8 +64,8 @@ namespace NetFusion.Test.Container
         public ContainerAssert PluginModule<TModule>(Action<TModule> assert)
             where TModule : IPluginModule
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert), "Assert method not specified.");
+            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+                "Assert method not specified.");
 
             var composite = (IComposite)_container;
             var module = composite.Application.AllPluginModules
@@ -93,8 +93,8 @@ namespace NetFusion.Test.Container
         public ContainerAssert Plugin<TPlugin>(Action<Plugin> assert)
             where TPlugin : IPluginManifest
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert), "Assert method not specified.");
+            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+                "Assert method not specified.");
 
             var composite = (IComposite)_container;
             var plugins = composite.Plugins.Where(p => p.Manifest.GetType() == typeof(TPlugin));
@@ -122,8 +122,8 @@ namespace NetFusion.Test.Container
         public ContainerAssert Configuration<TConfig>(Action<TConfig> assert)
             where TConfig : IContainerConfig
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert), "Assert method not specified.");
+            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+                "Assert method not specified.");
 
             var composite = (IComposite)_container;
             if (composite.Application.Plugins == null)
@@ -157,8 +157,8 @@ namespace NetFusion.Test.Container
         public ContainerAssert Exception<TEx>(Action<TEx> assert)
             where TEx : Exception
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert), "Assert method not specified.");
+            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+                "Assert method not specified.");
 
             if (_resultingException == null)
             {
@@ -186,8 +186,8 @@ namespace NetFusion.Test.Container
         /// <returns>Self reference for method chaining.</returns>
         public ContainerAssert Exception(Action<Exception> assert)
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert), "Assert method not specified.");
+            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+                "Assert method not specified.");
 
             if (_resultingException == null)
             {

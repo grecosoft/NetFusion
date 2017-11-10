@@ -26,10 +26,10 @@ namespace NetFusion.Rest.Server.Resources
         /// <param name="resourceType">The resource type.</param>
         /// <returns>The embedded name specified by the NamedResource attribute.  If the
         /// attribute is not present, null is returned.</returns>
-        public static string GetEmbeddedName(this Type resourceType)
+        public static string GetEmbeddedTypeName(this Type resourceType)
         {
-            if (resourceType == null)
-                throw new ArgumentNullException(nameof(resourceType), "Resource Type not specified.");
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType),
+                "Resource Type cannot be null.");
 
             return resourceType.GetAttribute<NamedResourceAttribute>()?.ResourceName;
         }

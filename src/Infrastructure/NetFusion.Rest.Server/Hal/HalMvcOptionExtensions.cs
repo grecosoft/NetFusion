@@ -21,8 +21,8 @@ namespace NetFusion.Rest.Server.Hal
         /// <returns></returns>
         public static MvcOptions UseHalFormatter(this MvcOptions options, JsonSerializerSettings settings = null)
         {
-            if (options == null)
-                throw new ArgumentNullException(nameof(options), "Options reference not specified.");
+            if (options == null) throw new ArgumentNullException(nameof(options), 
+                "Options reference not specified.");
 
             // Use default settings if not specified by caller.
             settings = settings ?? new JsonSerializerSettings {

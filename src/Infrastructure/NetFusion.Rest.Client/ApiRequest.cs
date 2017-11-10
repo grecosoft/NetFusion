@@ -124,8 +124,8 @@ namespace NetFusion.Rest.Client
         /// <returns>Created API request.</returns>
         public static ApiRequest Create(Link link)
         {
-            if (link == null)
-                throw new ArgumentNullException(nameof(link), "Link not specified.");
+            if (link == null) throw new ArgumentNullException(nameof(link),
+                "Link not specified.");
 
             return CreateFromLink(link.Href, link);
         }
@@ -138,11 +138,11 @@ namespace NetFusion.Rest.Client
         /// <returns>Created API request.</returns>
         public static ApiRequest Create(Link link, IDictionary<string, object> tokens)
         {
-            if (link == null)
-                throw new ArgumentNullException(nameof(link), "Link not specified.");
+            if (link == null) throw new ArgumentNullException(nameof(link),
+                "Link cannot be null.");
 
-            if (tokens == null)
-                throw new ArgumentNullException(nameof(tokens), "Route value dictionary not specified.");
+            if (tokens == null) throw new ArgumentNullException(nameof(tokens),
+                "Route value dictionary cannot be null.");
 
             // Note: The href of the Link must not be set to the URL after replacing tokens since
             // template links need to be able to be reused.
@@ -163,8 +163,8 @@ namespace NetFusion.Rest.Client
         /// <returns>Created API request.</returns>
         public static ApiRequest Create(Link link, Action<dynamic> tokens)
         {
-            if (tokens == null)
-                throw new ArgumentNullException(nameof(tokens), "Values delegate not specified.");
+            if (tokens == null) throw new ArgumentNullException(nameof(tokens),
+                "Values delegate cannot be null.");
 
             var expando = new ExpandoObject();
             tokens(expando);
@@ -176,7 +176,7 @@ namespace NetFusion.Rest.Client
             if (IsTemplateUrl(href))
             {
                 throw new InvalidOperationException(
-                    $"Links containing non populated template URL tokens can't be requested.");
+                    $"Links containing non-populated template URL tokens can't be requested.");
             }
 
             AssertLink(link);
@@ -200,8 +200,9 @@ namespace NetFusion.Rest.Client
         /// <returns>The API request instance updated with the request specific settings.</returns>
         public ApiRequest UsingSettings(IRequestSettings settings)
         {
-            Settings = settings ??
-                throw new ArgumentNullException(nameof(settings), "Settings not specified.");
+            Settings = settings ?? throw new ArgumentNullException(nameof(settings), 
+                "Settings cannot be null.");
+
             return this;
         }
 
@@ -212,8 +213,9 @@ namespace NetFusion.Rest.Client
         /// <returns>The API request instance updated with the content.</returns>
         public ApiRequest WithContent(object content)
         {
-            Content = content
-                ?? throw new ArgumentNullException(nameof(content), "Content not specified");
+            Content = content ?? throw new ArgumentNullException(nameof(content), 
+                "Content cannot be null.");
+
             return this;
         }
 
@@ -232,11 +234,6 @@ namespace NetFusion.Rest.Client
             return this;
         }
 
-        public ApiRequest Embed(params Type[] resourceTypes)
-        {
-            return null;
-        }
-
         /// <summary>
         /// Specifies the values used to replace URI template tokens.
         /// </summary>
@@ -244,8 +241,8 @@ namespace NetFusion.Rest.Client
         /// <returns>Updated API Request.</returns>
         public ApiRequest WithRouteValues(IDictionary<string, object> tokens)
         {
-            if (tokens == null)
-                throw new ArgumentNullException(nameof(tokens), "Route value dictionary not specified.");
+            if (tokens == null) throw new ArgumentNullException(nameof(tokens),
+                "Route value dictionary cannot be null.");
 
             RequestUri = ReplaceTemplateTokensWithValues(RequestUri, tokens);
             IsTemplate = IsTemplateUrl(RequestUri);
@@ -259,8 +256,8 @@ namespace NetFusion.Rest.Client
         /// <returns>Updated API Request.</returns>
         public ApiRequest WithRouteValues(Action<dynamic> tokens)
         {
-            if (tokens == null)
-                throw new ArgumentNullException(nameof(tokens), "Values delegate not specified.");
+            if (tokens == null) throw new ArgumentNullException(nameof(tokens),
+                "Values delegate cannot be null.");
 
             var expando = new ExpandoObject();
             tokens(expando);

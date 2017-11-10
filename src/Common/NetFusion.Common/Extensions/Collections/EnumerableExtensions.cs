@@ -18,8 +18,8 @@ namespace NetFusion.Common.Extensions.Collections
         [DebuggerStepThrough]
         public static IList<T> ForEach<T>(this IEnumerable<T> source, Action<T> valueAction)
         {
-            Check.NotNull(source, "source");
-            Check.NotNull(valueAction, "valueAction");
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (valueAction == null) throw new ArgumentNullException(nameof(valueAction));
 
             var list = (source as IList<T>) ?? source.ToList();
             foreach (var value in list)
@@ -40,7 +40,7 @@ namespace NetFusion.Common.Extensions.Collections
         [DebuggerStepThrough]
         public static IEnumerable<TElement> Values<TKey, TElement>(this ILookup<TKey, TElement> source)
         {
-            Check.NotNull(source, "source");
+            if (source == null) throw new ArgumentNullException(nameof(source));
             return source.SelectMany(v => v);
         }
 
@@ -53,7 +53,7 @@ namespace NetFusion.Common.Extensions.Collections
         [DebuggerStepThrough]
         public static bool Empty<T>(this IEnumerable<T> source)
         {
-            Check.NotNull(source, "source");
+            if (source == null) throw new ArgumentNullException(nameof(source));
             return !source.Any();
         }
 
@@ -66,7 +66,7 @@ namespace NetFusion.Common.Extensions.Collections
         [DebuggerStepThrough]
         public static bool IsSingletonSet<T>(this IEnumerable<T> source)
         {
-            Check.NotNull(source, "source");
+            if (source == null) throw new ArgumentNullException(nameof(source));
             return source.Count() == 1;
         } 
 
@@ -80,8 +80,8 @@ namespace NetFusion.Common.Extensions.Collections
         /// <returns>Enumerable of all the duplicated property values.</returns>
         public static IEnumerable<TKey> WhereDuplicated<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> propertySelector)
         {
-            Check.NotNull(source, "source");
-            Check.NotNull(propertySelector, "propertySelector");
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (propertySelector == null) throw new ArgumentNullException(nameof(propertySelector));
 
             return source.GroupBy(propertySelector)
                 .Where(g => g.Count() > 1)
@@ -119,7 +119,7 @@ namespace NetFusion.Common.Extensions.Collections
         public static T OneAndOnlyOne<T>(this IEnumerable<T> source)
             where T : class
         {
-            Check.NotNull(source, "source");
+            if (source == null) throw new ArgumentNullException(nameof(source));
 
             if (source.Count() == 1)
             {

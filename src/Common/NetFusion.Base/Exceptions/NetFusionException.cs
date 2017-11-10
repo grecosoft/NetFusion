@@ -100,8 +100,8 @@ namespace NetFusion.Base.Exceptions
         public NetFusionException(string message, object details, Exception innerException)
             : base(message, innerException)
         {
-            if (details == null)
-                throw new ArgumentNullException(nameof(details), "Exception details cannot be null.");
+            if (details == null) throw new ArgumentNullException(nameof(details),
+                "Exception details cannot be null.");
 
             Details = details.ToDictionary();
         }

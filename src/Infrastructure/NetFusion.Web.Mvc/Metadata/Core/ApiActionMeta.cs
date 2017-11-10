@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Linq;
@@ -37,9 +36,6 @@ namespace NetFusion.Web.Mvc.Metadata.Core
             ApiDescription description,
             ControllerActionDescriptor actionDescriptor)
         {
-            Check.NotNull(description, nameof(description));
-            Check.NotNull(actionDescriptor, nameof(actionDescriptor));
-
             if (description == null) throw new ArgumentNullException(nameof(description));
             if (actionDescriptor == null) throw new ArgumentNullException(nameof(actionDescriptor));
 

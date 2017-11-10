@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -13,7 +14,7 @@ namespace NetFusion.Common.Extensions
         /// <returns>Dictionary.</returns>
         public static IDictionary<string, object> ToDictionary(this object value)
         {
-            Check.NotNull(value, nameof(value));
+            if (value == null) throw new ArgumentNullException(nameof(value));
 
             var dictionary = new Dictionary<string, object>();
             var valueTypeInfo = value.GetType().GetTypeInfo();
@@ -33,7 +34,7 @@ namespace NetFusion.Common.Extensions
         /// <returns>JSON encoded object.</returns>
         public static string ToIndentedJson(this object value)
         {
-            Check.NotNull(value, nameof(value));
+            if (value == null) throw new ArgumentNullException(nameof(value));
             return JsonConvert.SerializeObject(value, Formatting.Indented);
         }
 
@@ -44,7 +45,7 @@ namespace NetFusion.Common.Extensions
         /// <returns>JSON encoded object.</returns>
         public static string ToJson(this object value)
         {
-            Check.NotNull(value, nameof(value));
+            if (value == null) throw new ArgumentNullException(nameof(value));
             return JsonConvert.SerializeObject(value, Formatting.None);
         }
     }

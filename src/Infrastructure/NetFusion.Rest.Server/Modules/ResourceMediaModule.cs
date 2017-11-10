@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Mappings;
@@ -47,6 +46,12 @@ namespace NetFusion.Rest.Server.Modules
         {
             foreach (IResourceMap resourceMap in ResourceMappings)
             {
+                if (resourceMap.MediaType == null)
+                {
+                    throw new InvalidOperationException(
+                        $"The resource map of type: {resourceMap.GetType()} didn't specify the media-type.");
+                }
+
                 // Create an entry for the media-type name.  Each media-type will have a single entry.
                 if (!_mediaResourceTypeMeta.TryGetValue(resourceMap.MediaType, out MediaTypeEntry mediaTypeEntry))
                 {
@@ -68,6 +73,12 @@ namespace NetFusion.Rest.Server.Modules
 
         private IResourceProvider CreateProvider(IResourceMap resourceMap)
         {
+            if (resourceMap.ProviderType == null)
+            {
+                throw new InvalidOperationException(
+                    $"The resource map of type: {resourceMap.GetType()} did not set the provider type.");
+            }
+
             return (IResourceProvider)resourceMap.ProviderType.CreateInstance();
         }
 
@@ -103,8 +114,8 @@ namespace NetFusion.Rest.Server.Modules
 
         public string GetMappedResourceName(Type resourceType)
         {
-            if (resourceType == null)
-                throw new ArgumentNullException(nameof(resourceType), "Resource type not specified.");
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType),
+                "Resource type cannot be null.");
 
             _namedResourceModels.TryGetValue(resourceType, out string resourceName);
             return resourceName;

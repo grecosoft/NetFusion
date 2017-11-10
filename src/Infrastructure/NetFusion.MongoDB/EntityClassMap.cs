@@ -2,7 +2,6 @@
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson.Serialization.Serializers;
-using NetFusion.Common;
 using NetFusion.MongoDB.Core;
 using System;
 using System.Collections.Generic;
@@ -34,9 +33,9 @@ namespace NetFusion.MongoDB
         /// <returns>Reference to the created member map.</returns>
         protected BsonMemberMap MapStringPropertyToObjectId(Expression<Func<TClass, string>> propertyLambda)
         {
-            Check.NotNull(propertyLambda, nameof(propertyLambda), "property selector not specified");
+            if (propertyLambda == null) throw new ArgumentNullException(nameof(propertyLambda));
 
-            return this.MapIdProperty(propertyLambda)
+            return MapIdProperty(propertyLambda)
                 .SetIdGenerator(StringObjectIdGenerator.Instance)
                 .SetSerializer(new StringSerializer(BsonType.ObjectId));
         }

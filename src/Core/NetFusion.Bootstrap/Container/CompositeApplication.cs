@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Extensions;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
 using System;
@@ -58,8 +57,8 @@ namespace NetFusion.Bootstrap.Container
         /// <returns>List of limited plug in types or all plug-in types if no category is specified.</returns>
         public IEnumerable<PluginType> GetPluginTypes(params PluginTypes[] pluginTypes)
         {
-            if (pluginTypes == null)
-                throw new ArgumentNullException(nameof(pluginTypes), "List of Plug-in types cannot be null.");
+            if (pluginTypes == null) throw new ArgumentNullException(nameof(pluginTypes),
+                "List of Plug-in types cannot be null.");
 
             if (pluginTypes.Length == 0)
             {
@@ -86,8 +85,8 @@ namespace NetFusion.Bootstrap.Container
         /// <param name="builder">The DI container builder.</param>
         public void RegisterComponents(Autofac.ContainerBuilder builder)
         {            
-            if (builder == null)
-                throw new ArgumentNullException(nameof(builder), "DI Container cannot be null.");            
+            if (builder == null) throw new ArgumentNullException(nameof(builder), 
+                "DI Container cannot be null.");            
 
             InitializePluginModules();
 
@@ -228,8 +227,8 @@ namespace NetFusion.Bootstrap.Container
         /// <param name="container">The built container.</param>
         public void StartPluginModules(IContainer container)
         {
-            if (container == null)
-                throw new ArgumentNullException(nameof(container), "DI Container cannot be null.");
+            if (container == null) throw new ArgumentNullException(nameof(container), 
+                "DI Container cannot be null.");
 
             // Start the plug-in modules in dependent order starting with core modules 
             // and ending with the application host modules.

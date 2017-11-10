@@ -66,8 +66,11 @@ namespace NetFusion.Rest.Server.Meta
         /// <returns>Object used to add optional metadata to the created link.</returns>
         public LinkDescriptor<TResource> Href(string relName, HttpMethod httpMethod, Expression<Func<TResource, string>> resourceUrl)
         {
-            if (string.IsNullOrWhiteSpace(relName)) throw new ArgumentException("Relation Name not specified.", nameof(relName));
-            if (resourceUrl == null) throw new ArgumentNullException(nameof(resourceUrl), "Resource Delegate not specified.");
+            if (string.IsNullOrWhiteSpace(relName)) throw new ArgumentException(
+                "Relation Name not specified.", nameof(relName));
+
+            if (resourceUrl == null) throw new ArgumentNullException(nameof(resourceUrl), 
+                "Resource Delegate cannot be null.");
 
             var actionLink = new ActionResourceLink<TResource>(resourceUrl);
             var linkDescriptor = new LinkDescriptor<TResource>(actionLink);
@@ -99,8 +102,11 @@ namespace NetFusion.Rest.Server.Meta
         public LinkDescriptor<TResource> Url(string relName,
             Expression<Action<TController, TResource>> action)
         {
-            if (string.IsNullOrWhiteSpace(relName)) throw new ArgumentException("Relation Name not specified.", nameof(relName));
-            if (action == null) throw new ArgumentNullException(nameof(action), "Controller Action selector not specified.");
+            if (string.IsNullOrWhiteSpace(relName)) throw new ArgumentException(
+                "Relation Name not specified.", nameof(relName));
+
+            if (action == null) throw new ArgumentNullException(nameof(action),
+                "Controller Action selector cannot be null.");
 
             var actionLink = new ActionUrlLink();
             var actionSelector = new ActionUrlSelector<TController, TResource>(actionLink, action);          
@@ -270,8 +276,11 @@ namespace NetFusion.Rest.Server.Meta
 
         private LinkDescriptor<TResource> SetUrlTemplateMetadata(string relName, LambdaExpression action)
         {
-            if (string.IsNullOrWhiteSpace(relName)) throw new ArgumentException("Relation Name not specified.", nameof(relName));
-            if (action == null) throw new ArgumentNullException(nameof(action), "Controller Action selector not specified.");
+            if (string.IsNullOrWhiteSpace(relName)) throw new ArgumentException(
+                "Relation Name not specified.", nameof(relName));
+
+            if (action == null) throw new ArgumentNullException(nameof(action), 
+                "Controller Action selector cannot be null.");
 
             var actionLink = new ActionTemplateLink();
             var actionSelector = new ActionTemplateSelector<TController>(actionLink, action);

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
-using NetFusion.Common;
 using NetFusion.Messaging.Modules;
 using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Core.Initialization;
@@ -39,16 +38,13 @@ namespace NetFusion.RabbitMQ.Core
             IBrokerMetaRepository exchangeRep,
             IEntityScriptingService scriptingSrv)
         {
-            Check.NotNull(loggerFactory, nameof(loggerFactory));
-            Check.NotNull(messagingModule, nameof(messagingModule));
-            Check.NotNull(exchangeRep, nameof(exchangeRep));
-            Check.NotNull(scriptingSrv, nameof(scriptingSrv));
+         
+            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+            _messagingModule = messagingModule ?? throw new ArgumentNullException(nameof(messagingModule));
+            _exchangeRep = exchangeRep ?? throw new ArgumentNullException(nameof(exchangeRep));
+            _scriptingSrv = scriptingSrv ?? throw new ArgumentNullException(nameof(scriptingSrv));
 
-            _loggerFactory = loggerFactory;
             _logger = loggerFactory.CreateLogger<MessageBroker>();
-            _messagingModule = messagingModule;
-            _exchangeRep = exchangeRep;
-            _scriptingSrv = scriptingSrv;
         }
 
         // External settings and configuration information
@@ -70,15 +66,14 @@ namespace NetFusion.RabbitMQ.Core
 
         public void Initialize(MessageBrokerState brokerState)
         {
-            Check.NotNull(brokerState, nameof(brokerState));
-            Check.NotNull(brokerState.ConnectionMgr, nameof(brokerState.ConnectionMgr));
-            Check.NotNull(brokerState.SerializationMgr, nameof(brokerState.SerializationMgr));
-            Check.NotNull(brokerState.Exchanges, nameof(brokerState.Exchanges));
-            
-            _brokerState = brokerState;
+            _brokerState = brokerState ?? throw new ArgumentNullException(nameof(brokerState));
 
-            _connMgr = brokerState.ConnectionMgr;
-            _serializationMgr = brokerState.SerializationMgr;
+            if (brokerState.Exchanges == null) throw new ArgumentNullException(nameof(brokerState.Exchanges),
+                "Message Broker must be initialized with Exchanges.");
+
+            _connMgr = brokerState.ConnectionMgr ?? throw new ArgumentNullException(nameof(brokerState.ConnectionMgr));
+            _serializationMgr = brokerState.SerializationMgr ?? throw new ArgumentNullException(nameof(brokerState.SerializationMgr));
+
             _brokerInitializers = new List<IBrokerInitializer>();
 
             InitializePublishers();
@@ -133,9 +128,7 @@ namespace NetFusion.RabbitMQ.Core
 
         public void BindConsumers(IEnumerable<MessageConsumer> messageConsumers)
         {
-            Check.NotNull(messageConsumers, nameof(messageConsumers));
-
-            _messageConsumers = messageConsumers;
+            _messageConsumers = messageConsumers ?? throw new ArgumentNullException(nameof(messageConsumers));
 
             _exchangeConsumer.BindConsumersToQueues(messageConsumers);
             _rpcExchangeConsumer.BindConsumersToRpcQueues();

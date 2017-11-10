@@ -38,8 +38,8 @@ namespace NetFusion.Rest.Server.Mappings
         /// <param name="resourceType">The resource type.</param>
         public (IResourceMeta meta, bool ok) GetResourceTypeMeta(Type resourceType)
         {
-            if (resourceType == null)
-                throw new ArgumentNullException(nameof(resourceType), "Resource type not specified.");
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType),
+                "Resource type not specified.");
 
             bool isFound = _resourceTypeMeta.TryGetValue(resourceType, out IResourceMeta resourceMeta);
             return (resourceMeta, isFound);
@@ -51,8 +51,8 @@ namespace NetFusion.Rest.Server.Mappings
         /// <param name="resourceMeta">The resource metadata.</param>
         public void AddResourceMeta(IResourceMeta resourceMeta)
         {
-            if (resourceMeta == null)
-                throw new ArgumentNullException(nameof(resourceMeta), "Resource metadata not specified.");
+            if (resourceMeta == null) throw new ArgumentNullException(nameof(resourceMeta),
+                "Resource metadata cannot be null.");
 
             if (_resourceTypeMeta.ContainsKey(resourceMeta.ResourceType)) 
             {
@@ -70,8 +70,8 @@ namespace NetFusion.Rest.Server.Mappings
         /// <returns>True if metadata for resource type specified.  Otherwise, False.</returns>
         public bool ContainsResourceMeta(Type resourceType)
         {
-			if (resourceType == null)
-				throw new ArgumentNullException(nameof(resourceType), "Resource type not specified.");
+			if (resourceType == null) throw new ArgumentNullException(nameof(resourceType),
+                "Resource type cannot be null.");
             
             return _resourceTypeMeta.ContainsKey(resourceType);
         }

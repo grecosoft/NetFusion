@@ -3,6 +3,7 @@ using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Actions;
 using NetFusion.Rest.Web.Actions;
 using NetFusion.Web.Mvc.Metadata.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,10 +13,12 @@ namespace NetFusion.Rest.Server.Mappings
     /// Base provider that processes IResource based resources and applies
     /// REST links to the resource.
     /// </summary>
-    public class ResourceProvider : IResourceProvider
+    public abstract class ResourceProvider : IResourceProvider
     {
         public virtual void ApplyResourceMeta(ResourceContext context)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             var linkedResource = context.Resource as ILinkedResource;
             if (linkedResource == null || context.Meta.Links.Count == 0)
             {

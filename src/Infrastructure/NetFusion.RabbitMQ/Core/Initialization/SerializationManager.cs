@@ -1,6 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Common.Extensions;
-using NetFusion.Messaging.Types;
+﻿using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Serialization;
 using RabbitMQ.Client.Events;
 using System;
@@ -20,9 +18,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         public SerializationManager(IDictionary<string, IBrokerSerializer> serializers)
         {
-            Check.NotNull(serializers, nameof(serializers));
-
-            _serializers = serializers;
+            _serializers = serializers ?? throw new ArgumentNullException(nameof(serializers));
 
             // Add the default serializers if not overridden by the application host.
             AddSerializer(serializers, new JsonBrokerSerializer());
@@ -61,8 +57,10 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         public byte[] Serialize(object value, string contentType)
         {
-            Check.NotNull(value, nameof(value));
-            Check.NotNullOrWhiteSpace(contentType, nameof(contentType));
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
+            if (string.IsNullOrWhiteSpace(contentType))
+                throw new ArgumentException("Content type name must be specified.", nameof(contentType));
 
             IBrokerSerializer serializer = GetSerializer(contentType);
             return serializer.Serialize(value);
@@ -70,7 +68,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         public byte[] Serialize(IMessage message, params string[] contentTypes)
         {
-            Check.NotNull(message, nameof(message));
+            if (message == null) throw new ArgumentNullException(nameof(message));
 
             string contentType = GetFistContentType(contentTypes);
             message.SetContentType(contentType);
@@ -81,8 +79,8 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         public IMessage Deserialize(Type messageType, BasicDeliverEventArgs deliveryEvent)
         {
-            Check.NotNull(messageType, nameof(messageType));
-            Check.NotNull(deliveryEvent, nameof(deliveryEvent));
+            if (messageType == null) throw new ArgumentNullException(nameof(messageType));
+            if (deliveryEvent == null) throw new ArgumentNullException(nameof(deliveryEvent));
 
             string contentType = deliveryEvent.BasicProperties.ContentType;
             if (string.IsNullOrWhiteSpace(contentType))
@@ -98,9 +96,10 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         public object Deserialize(string contentType, Type valueType, byte[] value)
         {
-            Check.NotNullOrWhiteSpace(contentType, nameof(contentType));
-            Check.NotNull(valueType, nameof(valueType));
-            Check.NotNull(value, nameof(value));
+            if (string.IsNullOrWhiteSpace(contentType))
+                throw new ArgumentException("Broker name must be specified.", nameof(contentType));
+
+            if (valueType == null) throw new ArgumentNullException(nameof(valueType));
 
             IBrokerSerializer serializer = GetSerializer(contentType);
             return serializer.Deserialize(value, valueType);
@@ -108,12 +107,13 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         public T Deserialize<T>(string contentType, byte[] value)
         {
-            Check.NotNullOrWhiteSpace(contentType, nameof(contentType));
-            Check.NotNull(value, nameof(value));
+            if (string.IsNullOrWhiteSpace(contentType))
+                throw new ArgumentException("Broker name must be specified.", nameof(contentType));
+
+            if (value == null) throw new ArgumentNullException(nameof(value));
 
             IBrokerSerializer serializer = GetSerializer(contentType);
             return serializer.Deserialize<T>(value, typeof(T));
-
         }
 
         private IBrokerSerializer GetSerializer(string contentType)

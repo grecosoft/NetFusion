@@ -1,6 +1,6 @@
-﻿using NetFusion.Common;
-using NetFusion.Common.Extensions.Collections;
+﻿using NetFusion.Common.Extensions.Collections;
 using NetFusion.Messaging.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,7 +30,7 @@ namespace NetFusion.Domain.Patterns.Behaviors.Integration
 
         public void Record(IDomainEvent domainEvent)
         {
-            Check.NotNull(domainEvent, nameof(domainEvent));
+            if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
 
             _integrationEvents.Add(new IntegrationEvent(domainEvent));
         }

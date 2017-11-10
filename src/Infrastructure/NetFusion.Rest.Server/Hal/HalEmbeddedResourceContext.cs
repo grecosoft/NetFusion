@@ -8,10 +8,9 @@ using System.Linq;
 namespace NetFusion.Rest.Server.Hal
 {
     /// <summary>
-    /// Can be used by service components to determine the embedded resources
-    /// requested by the client.  If the client didn't specify, the service
-    /// should return all default embedded resources.  The service is not 
-    /// required to support this feature.
+    /// Can be used by service components to determine the embedded resources requested by the client.  
+    /// If the client didn't specify, the service should return all default embedded resources.  The 
+    /// service is not required to support this feature.
     /// </summary>
     public class HalEmbeddedResourceContext : IHalEmbededResourceContext
     {

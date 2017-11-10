@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Domain.Patterns.Queries.Dispatch;
@@ -76,7 +75,7 @@ namespace NetFusion.Domain.Patterns.Queries.Modules
 
         public QueryDispatchInfo GetQueryDispatchInfo(Type queryType)
         {
-            Check.NotNull(queryType, nameof(queryType));
+            if (queryType == null) throw new ArgumentNullException(nameof(queryType)); ;
 
             if (_queryDispatchers.TryGetValue(queryType, out QueryDispatchInfo dispatchEntry))
             {

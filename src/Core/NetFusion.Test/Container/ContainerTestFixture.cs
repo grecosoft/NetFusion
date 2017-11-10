@@ -39,8 +39,8 @@ namespace NetFusion.Test.Container
         {
             var testFixture = CreateTestFixture();
 
-            if (fixture == null)
-                throw new ArgumentNullException(nameof(fixture), "Test fixture cannot be null.");
+            if (fixture == null) throw new ArgumentNullException(nameof(fixture), 
+                "Test fixture cannot be null.");
 
             fixture(testFixture);
 

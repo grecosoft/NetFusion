@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Common.Extensions.Reflection;
+﻿using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +52,7 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
       
         public QueryDispatchInfo(MethodInfo methodInfo)
         {
-            Check.NotNull(methodInfo, nameof(methodInfo));
+            HandlerMethod = methodInfo ?? throw new ArgumentNullException(nameof(methodInfo));
 
             QueryType = GetQueryParamType(methodInfo);
             ConsumerType = methodInfo.DeclaringType;
@@ -61,8 +60,7 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
             IsAsync = methodInfo.IsAsyncMethod();
             IsAsyncWithResult = methodInfo.IsAsyncMethodWithResult();
             IsCancellable = methodInfo.IsCancellableMethod();
-            HandlerMethod = methodInfo;
-
+    
             Invoker = CreateHandlerDelegate();
         }
 
@@ -96,8 +94,8 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
         // Dispatches the query to the handling consumer.
         public async Task<object> Dispatch(IQuery query, IQueryConsumer consumer, CancellationToken cancellationToken)
         {
-            Check.NotNull(query, nameof(query));
-            Check.NotNull(consumer, nameof(consumer));
+            if (query == null) throw new ArgumentNullException(nameof(query));
+            if (consumer == null) throw new ArgumentNullException(nameof(consumer));
 
             var futureResult = new TaskCompletionSource<object>();
 

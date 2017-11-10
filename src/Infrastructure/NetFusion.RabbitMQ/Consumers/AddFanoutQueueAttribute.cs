@@ -1,4 +1,4 @@
-﻿using NetFusion.Common;
+﻿using System;
 
 namespace NetFusion.RabbitMQ.Consumers
 {
@@ -19,12 +19,13 @@ namespace NetFusion.RabbitMQ.Consumers
         public AddFanoutQueueAttribute(string exchangeName) :
             base(null, exchangeName, QueueBindingTypes.Create)
         {
-            Check.NotNullOrWhiteSpace(exchangeName, nameof(exchangeName));
+            if (string.IsNullOrWhiteSpace(exchangeName))
+                throw new ArgumentException("Exchange name must be specified.", nameof(exchangeName));
 
-            this.QueueSettings.IsAutoDelete = true;
-            this.QueueSettings.IsDurable = false;
-            this.QueueSettings.IsNoAck = true;
-            this.QueueSettings.IsExclusive = true;
+            QueueSettings.IsAutoDelete = true;
+            QueueSettings.IsDurable = false;
+            QueueSettings.IsNoAck = true;
+            QueueSettings.IsExclusive = true;
         }
     }
 }

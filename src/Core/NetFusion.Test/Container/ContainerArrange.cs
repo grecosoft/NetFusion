@@ -44,12 +44,9 @@ namespace NetFusion.Test.Container
         /// <returns>Self reference for method chaining</returns>
         public ContainerArrange Container(Action<IAppContainer> arrange)
         {
-            if (arrange == null)
-            {
-                throw new ArgumentNullException(nameof(arrange),
-                    "The method for arranging the application container cannot be null.");  
-            }
-
+            if (arrange == null) throw new ArgumentNullException(nameof(arrange),
+                "The method for arranging the application container cannot be null.");  
+          
             arrange(_container);
             return this;
         }

@@ -47,7 +47,8 @@ namespace NetFusion.Rest.Server.Meta
         public TResourceMeta LinkMeta<TController>(Action<ResourceLinkMeta<TController, TResource>> meta)
             where TController : Controller
         {
-            if (meta == null) throw new ArgumentNullException(nameof(meta), "Metadata delegate not specified.");
+            if (meta == null) throw new ArgumentNullException(nameof(meta),
+                "Metadata delegate cannot be null.");
 
             AsertControllerMeetsConstraints(typeof(TController));
 
@@ -65,7 +66,8 @@ namespace NetFusion.Rest.Server.Meta
         /// <returns>Reference to self for method chaining.</returns>
         public TResourceMeta LinkMeta(Action<ResourceLinkMeta<TResource>> meta)
         {
-            if (meta == null) throw new ArgumentNullException(nameof(meta), "Metadata delegate not specified.");
+            if (meta == null) throw new ArgumentNullException(nameof(meta),
+                "Metadata delegate not specified.");
 
             var resourceLinkMeta = new ResourceLinkMeta<TResource>();
             meta(resourceLinkMeta);
@@ -114,8 +116,7 @@ namespace NetFusion.Rest.Server.Meta
         {
             if (links == null)
             {
-                throw new ArgumentNullException(nameof(links),
-                    "Reference to link array cannot be null.");
+                throw new ArgumentNullException(nameof(links), "Reference to link array cannot be null.");
             }
             _links.AddRange(links);
         }
@@ -124,8 +125,7 @@ namespace NetFusion.Rest.Server.Meta
         {
             if (link == null)
             {
-                throw new ArgumentNullException(nameof(link),
-                    "Reference to link cannot be null.");
+                throw new ArgumentNullException(nameof(link), "Reference to link cannot be null.");
             }
             _links.Add(link);
         }

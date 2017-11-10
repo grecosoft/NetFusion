@@ -1,7 +1,5 @@
 ﻿using MongoDB.Driver;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
-using NetFusion.Common.Extensions;
 using NetFusion.MongoDB.Configs;
 using NetFusion.MongoDB.Modules;
 using System;
@@ -28,12 +26,10 @@ namespace NetFusion.MongoDB.Core
         public TSettings DbSettings { get; }
 
         public MongoDbClient(TSettings dbSettings, IMongoMappingModule mappingModule)
-        {
-            Check.NotNull(dbSettings, nameof(dbSettings), "database settings not specified");
-            Check.NotNull(mappingModule, nameof(mappingModule), "database mappings not specified");
+        {            
+            DbSettings = dbSettings ?? throw new ArgumentNullException(nameof(dbSettings));
 
-            DbSettings = dbSettings;
-            _mappingModule = mappingModule;
+            _mappingModule = mappingModule ?? throw new ArgumentNullException(nameof(mappingModule));
         }
 
         // Executed when the service component is activated.
@@ -49,7 +45,8 @@ namespace NetFusion.MongoDB.Core
         public IMongoCollection<TDocument> GetCollection<TDocument>(string collectionName,
             MongoCollectionSettings settings = null)
         {
-            Check.NotNullOrWhiteSpace(collectionName, nameof(collectionName));
+            if (string.IsNullOrWhiteSpace(collectionName))
+                throw new ArgumentException("Collection name must be specified.", nameof(collectionName));
 
             return _database.GetCollection<TDocument>(collectionName, settings);
         }

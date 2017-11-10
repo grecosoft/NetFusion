@@ -1,6 +1,6 @@
 ﻿using NetFusion.Base.Exceptions;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Tasks;
+using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Domain.Patterns.Queries.Filters
@@ -13,18 +13,18 @@ namespace NetFusion.Domain.Patterns.Queries.Filters
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="futureResult">The future result containing the exception.</param>
-        public QueryFilterException(TaskListItem<IQueryFilter> futureResult)
+        /// <param name="taskResult">Task result containing the exception.</param>
+        public QueryFilterException(TaskListItem<IQueryFilter> taskResult)
         {
-            Check.NotNull(futureResult, nameof(futureResult));
+            if (taskResult == null) throw new ArgumentNullException(nameof(taskResult));
 
-            var taskException = futureResult.Task.Exception;
+            var taskException = taskResult.Task.Exception;
             var sourceException = taskException.InnerException;
 
             Details = new Dictionary<string, object>
             {
                 { "Message", sourceException?.Message },
-                { "Filter", futureResult.Invoker.GetType().FullName }
+                { "Filter", taskResult.Invoker.GetType().FullName }
             };
         }
     }

@@ -19,8 +19,8 @@ namespace NetFusion.Rest.Resources.Doc
         /// <param name="description">Resource property description.</param>
         public DocPropertyAttribute(string description)
         {
-            Description = description 
-                ?? throw new ArgumentNullException(nameof(description), "Resource Property Description not specified.");
+            Description = description ?? throw new ArgumentNullException(nameof(description),
+                "Resource Property Description cannot be null.");
         }
     }
 }

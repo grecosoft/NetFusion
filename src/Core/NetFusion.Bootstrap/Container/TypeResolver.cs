@@ -36,8 +36,8 @@ namespace NetFusion.Bootstrap.Container
         ///</param>
         public TypeResolver(params string[] searchPattern)
         {
-            if (searchPattern == null)
-                throw new ArgumentNullException(nameof(searchPattern), "Search Pattern cannot be null.");
+            if (searchPattern == null) throw new ArgumentNullException(nameof(searchPattern),
+                "Search Pattern cannot be null.");
             
             _searchPatterns = AddDefaultSearchPatterns(searchPattern);
         }
@@ -59,8 +59,8 @@ namespace NetFusion.Bootstrap.Container
 
         public virtual void SetPluginManifests(ManifestRegistry registry)
         {
-            if (registry == null)
-                throw new ArgumentNullException(nameof(registry), "Register cannot be null.");
+            if (registry == null) throw new ArgumentNullException(nameof(registry),
+                "Register cannot be null.");
             
             Assembly[] pluginAssemblies = GetPluginAssemblies(_searchPatterns);
             SetManifestTypes(registry, pluginAssemblies);
@@ -137,8 +137,8 @@ namespace NetFusion.Bootstrap.Container
 
         public virtual void SetPluginResolvedTypes(Plugin plugin)
         {
-            if (plugin == null)
-                throw new ArgumentNullException(nameof(plugin), "Plug-In cannot be null.");
+            if (plugin == null) throw new ArgumentNullException(nameof(plugin), 
+                "Plug-In cannot be null.");
 
             // Get all types contained within the same assembly as the discovered
             // Plug-in Manifest type.  This will all the types belonging to the plug-in.
@@ -160,11 +160,11 @@ namespace NetFusion.Bootstrap.Container
         // on MEF - coding for a specific need and not the World.
         public IEnumerable<Type> SetPluginModuleKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes)
         {
-            if (forModule == null)
-                throw new ArgumentNullException(nameof(forModule), "Module to discover know types cannot be null.");
+            if (forModule == null) throw new ArgumentNullException(nameof(forModule), 
+                "Module to discover know types cannot be null.");
 
-            if (fromPluginTypes == null)
-                throw new ArgumentNullException(nameof(fromPluginTypes), "List of Plug-in types to search for know types cannot be null.");
+            if (fromPluginTypes == null) throw new ArgumentNullException(nameof(fromPluginTypes), 
+                "List of Plug-in types to search for know types cannot be null.");
             
             IEnumerable<PropertyInfo> knownTypeProps = GetKnownTypeProperties(forModule);
             knownTypeProps.ForEach(ktp => SetKnownPropertyInstances(forModule, ktp, fromPluginTypes));

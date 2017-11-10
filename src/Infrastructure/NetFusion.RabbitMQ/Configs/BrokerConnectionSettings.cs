@@ -1,5 +1,5 @@
 ﻿using NetFusion.Base.Validation;
-using NetFusion.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -65,7 +65,7 @@ namespace NetFusion.RabbitMQ.Configs
         /// <returns>The configured properties or a default instance.</returns>
         public QueuePropertiesSettings GetQueueProperties(string queueName)
         {
-            Check.NotNull(queueName, nameof(queueName));
+            if (queueName == null) throw new ArgumentNullException(nameof(queueName));
 
             QueuePropertiesSettings props = QueueProperties.FirstOrDefault(qp => qp.QueueName == queueName);
             return props ?? new QueuePropertiesSettings { QueueName = queueName };

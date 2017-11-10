@@ -20,8 +20,8 @@ namespace NetFusion.Rest.Server.Resources
         /// <param name="resourceType">The resource type.</param>
         public ResourceTypeAttribute(Type resourceType)
         {
-            ResourceType = resourceType ??
-                throw new ArgumentNullException(nameof(resourceType), "resource type not specified.");
+            ResourceType = resourceType ?? throw new ArgumentNullException(nameof(resourceType),
+                "Resource type cannot be null.");
         }
     }
 }

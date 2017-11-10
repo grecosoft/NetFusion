@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Domain.Entities.Core;
+﻿using NetFusion.Domain.Entities.Core;
 using System;
 
 namespace NetFusion.Domain.Entities
@@ -35,7 +34,8 @@ namespace NetFusion.Domain.Entities
         public TDomainEntity Using<TBuilder>(Func<TBuilder, TDomainEntity> buildStrategy)
             where TBuilder : IDomainEntityBuilder<TDomainEntity>, new()
         {
-            Check.NotNull(buildStrategy, nameof(buildStrategy), "Caller builder strategy method not specified.");
+            if (buildStrategy == null) throw new ArgumentNullException(nameof(buildStrategy), 
+                "Caller builder strategy method not specified.");
 
             var entityBuilder = new TBuilder();
             TDomainEntity domainEntity = buildStrategy(entityBuilder);

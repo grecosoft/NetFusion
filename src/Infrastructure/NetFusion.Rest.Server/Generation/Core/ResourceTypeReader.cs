@@ -24,6 +24,8 @@ namespace NetFusion.Rest.Server.Generation.Core
 
         public Task<MemoryStream> ReadTypeDefinitionFiles(MethodInfo actionMethodInfo)
         {
+            if (actionMethodInfo == null) throw new ArgumentNullException(nameof(actionMethodInfo));
+
             string generatedCodePath = _environmentSettings.GetTypeScriptPath();
             var actionMethodTypes = GetActionMethodTypes(actionMethodInfo);
 
@@ -51,10 +53,12 @@ namespace NetFusion.Rest.Server.Generation.Core
 
             memoryStream.Position = 0;
             return memoryStream;
-            }
+        }
 
         public Task<MemoryStream> ReadTypeDefinitonFile(Type resourceType)
         {
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+
             return GetTypeDefinitions(new[] { resourceType });
         }
 

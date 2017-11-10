@@ -20,13 +20,11 @@ namespace NetFusion.Base.Exceptions
             Action<int> action,
             int backoffSeconds = 2) where TException : Exception
         {
-            if (numberRetries < 0)
-                throw new ArgumentOutOfRangeException(nameof(numberRetries), 
-                    "Number of retries must be greater than zero.");
+            if (numberRetries < 0) throw new ArgumentOutOfRangeException(nameof(numberRetries), 
+                "Number of retries must be greater than zero.");
 
-            if (action == null)
-                throw new ArgumentNullException(nameof(action),
-                    "Action to invoke cannot be null.");
+            if (action == null) throw new ArgumentNullException(nameof(action),
+                "Action to invoke cannot be null.");
 
             Policy policy = GetBackoffPolicy<TException>(numberRetries, backoffSeconds);
             int retryCount = -1;

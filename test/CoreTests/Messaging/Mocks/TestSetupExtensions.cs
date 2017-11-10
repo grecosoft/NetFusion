@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Common;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Types;
 using NetFusion.Test.Plugins;
@@ -82,7 +81,8 @@ namespace CoreTests.Messaging.Mocks
         [InProcessHandler]
         public void OnEventHandlerOne(MockDomainEvent domainEvent)
         {
-            Check.NotNull(domainEvent, nameof(domainEvent));
+            if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
+
             AddCalledHandler("OnEventHandlerOne");
         }
     }
@@ -120,14 +120,16 @@ namespace CoreTests.Messaging.Mocks
         [InProcessHandler]
         public void OnBaseEventHandler(MockBaseDomainEvent domainEvent)
         {
-            Check.NotNull(domainEvent, nameof(domainEvent));
+            if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
+
             AddCalledHandler("OnBaseEventHandler");
         }
 
         [InProcessHandler]
         public void OnIncludeBaseEventHandler([IncludeDerivedMessages]MockBaseDomainEvent domainEvent)
         {
-            Check.NotNull(domainEvent, nameof(domainEvent));
+            if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
+
             AddCalledHandler("OnIncludeBaseEventHandler");
         }
     }

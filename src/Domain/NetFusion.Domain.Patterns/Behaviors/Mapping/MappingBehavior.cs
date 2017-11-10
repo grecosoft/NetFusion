@@ -1,6 +1,6 @@
-﻿using NetFusion.Common;
-using NetFusion.Domain.Entities.Core;
+﻿using NetFusion.Domain.Entities.Core;
 using NetFusion.Mapping;
+using System;
 
 namespace NetFusion.Domain.Patterns.Behaviors.Mapping
 {
@@ -17,8 +17,7 @@ namespace NetFusion.Domain.Patterns.Behaviors.Mapping
 
         public MappingBehavior(IBehaviorDelegator entity)
         {
-            Check.NotNull(entity, nameof(entity));
-            Entity = entity;
+            Entity = entity ?? throw new ArgumentNullException(nameof(entity));
         }
 
         public TTarget MapTo<TTarget>() where TTarget : class, new()

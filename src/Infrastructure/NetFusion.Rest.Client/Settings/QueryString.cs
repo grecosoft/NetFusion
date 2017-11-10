@@ -44,14 +44,14 @@ namespace NetFusion.Rest.Client.Settings
         {
             var mergedQuery = new QueryString();
 
-			// Add all the params from this query object to the new merged version.
+			// Add all the parameters from this query object to the new merged version.
 			foreach (var param in Params)
 			{
 				mergedQuery._params[param.Key] = param.Value;
 			}
 
-			// Override or add any param values being merged.
-			foreach (var param in queryString.Params)
+            // Override or add any parameter values being merged.
+            foreach (var param in queryString.Params)
 			{
 				mergedQuery._params[param.Key] = param.Value;
 			}

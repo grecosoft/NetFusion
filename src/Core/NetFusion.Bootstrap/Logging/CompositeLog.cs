@@ -20,11 +20,11 @@ namespace NetFusion.Bootstrap.Logging
 
         public CompositeLog(CompositeApplication application, IComponentRegistry registry)
         {
-            _application = application ?? 
-                throw new ArgumentNullException(nameof(application), "Composite Application to log cannot be null.");
+            _application = application ?? throw new ArgumentNullException(nameof(application), 
+                "Composite Application to log cannot be null.");
 
-            _registry = registry ?? 
-                throw new ArgumentNullException(nameof(registry), "Plug-in Registry to log cannot be null.");
+            _registry = registry ?? throw new ArgumentNullException(nameof(registry),
+                "Plug-in Registry to log cannot be null.");
         }
 
         public IDictionary<string, object> GetLog()

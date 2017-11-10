@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Logging;
-using NetFusion.Common;
-using NetFusion.Common.Extensions;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Modules;
 using NetFusion.Messaging.Types;
@@ -56,9 +54,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// <param name="brokerName">The optional name of the broker to which consumers should be created.</param>
         public void BindConsumersToQueues(IEnumerable<MessageConsumer> consumers, string brokerName = null)
         {
-            Check.NotNull(consumers, nameof(consumers));
-                
-            _messageConsumers = consumers;
+            _messageConsumers = consumers ?? throw new ArgumentNullException(nameof(consumers));
 
             // Broker name will be null when re-creating the message consumers after a connection failure.
             IEnumerable<MessageConsumer> messageConsumers = brokerName == null ? _messageConsumers :

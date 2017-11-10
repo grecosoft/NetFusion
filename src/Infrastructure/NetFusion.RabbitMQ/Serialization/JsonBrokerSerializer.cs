@@ -1,5 +1,4 @@
 ﻿using NetFusion.Base;
-using NetFusion.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -23,7 +22,7 @@ namespace NetFusion.RabbitMQ.Serialization
 
         public byte[] Serialize(object value)
         {
-            Check.NotNull(value, nameof(value));
+            if (value == null) throw new ArgumentNullException(nameof(value));
 
             var settings = new JsonSerializerSettings {
                 Formatting = Formatting.None,
@@ -37,8 +36,8 @@ namespace NetFusion.RabbitMQ.Serialization
 
         public object Deserialize(byte[] value, Type valueType)
         {
-            Check.NotNull(value, nameof(value));
-            Check.NotNull(valueType, nameof(valueType));
+            if (value == null) throw new ArgumentNullException(nameof(value));
+            if (valueType == null) throw new ArgumentNullException(nameof(valueType));
 
             var settings = new JsonSerializerSettings
             {

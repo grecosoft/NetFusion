@@ -1,6 +1,6 @@
-﻿using NetFusion.Common;
-using RabbitMQ.Client;
+﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Framing.Impl;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,16 +18,13 @@ namespace NetFusion.RabbitMQ.Core
             IEnumerable<IMessageExchange> exchanges,
             IEnumerable<MessageConsumer> messageConsumers)
         {
-            Check.NotNull(exchanges, nameof(exchanges));
-            Check.NotNull(messageConsumers, nameof(messageConsumers));
-
-            _exchanges = exchanges;
-            _messageConsumers = messageConsumers;
+            _exchanges = exchanges ?? throw new ArgumentNullException(nameof(exchanges));
+            _messageConsumers = messageConsumers ?? throw new ArgumentNullException(nameof(messageConsumers));
         }
 
         public void LogMessageExchanges(IDictionary<string, object> moduleLog)
         {
-            Check.NotNull(moduleLog, nameof(moduleLog));
+            if (moduleLog == null) throw new ArgumentNullException(nameof(moduleLog));
 
             var log = from e in _exchanges.ToLookup(k => k.MessageType)
                 select new
@@ -47,7 +44,7 @@ namespace NetFusion.RabbitMQ.Core
 
         public void LogMessageConsumers(IDictionary<string, object> moduleLog)
         {
-            Check.NotNull(moduleLog, nameof(moduleLog));
+            if (moduleLog == null) throw new ArgumentNullException(nameof(moduleLog));
 
             var log = from c in _messageConsumers
                 select new

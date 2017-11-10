@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Domain.Patterns.Queries.Filters;
 using NetFusion.Domain.Patterns.Queries.Modules;
@@ -35,7 +34,8 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
         public async Task<TResult> Dispatch<TResult>(IQuery<TResult> query, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            Check.NotNull(query, nameof(query), "query to dispatch can't be null.");
+            if (query == null) throw new ArgumentNullException(nameof(query),
+                "Query to dispatch can't be null.");
 
             QueryDispatchInfo dispatchInfo = _dispatchModule.GetQueryDispatchInfo(query.GetType());
 

@@ -1,11 +1,11 @@
 ﻿#if NET461
 
-using System;
 using NetFusion.Base;
-using NetFusion.Messaging;
-using NetFusion.Common.Serialization;
 using NetFusion.Common;
+using NetFusion.Common.Serialization;
+using NetFusion.Messaging;
 using NetFusion.Messaging.Types;
+using System;
 
 namespace NetFusion.RabbitMQ.Serialization
 {
@@ -20,15 +20,13 @@ namespace NetFusion.RabbitMQ.Serialization
 
         public byte[] Serialize(object value)
         {
-            Check.NotNull(value, nameof(value));
+            if (value == null) throw new ArgumentNullException(nameof(value));
             return BinaryFormatterUtility.Serialize(value);
         }
 
         public object Deserialize(byte[] value, Type valueType)
         {
-            Check.NotNull(value, nameof(value));
-            Check.NotNull(valueType, nameof(valueType));
-
+            if (value == null) throw new ArgumentNullException(nameof(value));
             return BinaryFormatterUtility.Deserialize<IMessage>(value);
         }
 

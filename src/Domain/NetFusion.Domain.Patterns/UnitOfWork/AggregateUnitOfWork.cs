@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Logging;
-using NetFusion.Common;
 using NetFusion.Domain.Entities;
 using NetFusion.Domain.Patterns.Behaviors.Integration;
 using NetFusion.Domain.Patterns.Behaviors.State;
@@ -56,8 +55,8 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
             CommitSettings settings = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            Check.NotNull(aggregate, nameof(aggregate));
-            Check.NotNull(commitAction, nameof(commitAction));
+            if (aggregate == null) throw new ArgumentNullException(nameof(aggregate));
+            if (commitAction == null) throw new ArgumentNullException(nameof(commitAction));
 
             settings = settings ?? new CommitSettings();
 
@@ -118,7 +117,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
             Func<Task> commitAction = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            Check.NotNull(aggregate, nameof(aggregate));
+            if (aggregate == null) throw new ArgumentNullException(nameof(aggregate));
 
             if (!_enlistedAggregates.Any())
             {
@@ -147,7 +146,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
         public TAggregate GetEnlistedAggregate<TAggregate>(Func<TAggregate, bool> predicate)
             where TAggregate : IAggregate
         {
-            Check.NotNull(predicate, nameof(predicate));
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
             return Aggregates.OfType<TAggregate>().FirstOrDefault(predicate);
         }

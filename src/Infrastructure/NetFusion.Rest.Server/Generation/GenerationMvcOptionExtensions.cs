@@ -19,8 +19,8 @@ namespace NetFusion.Rest.Server.Generation
         /// <returns>MVC Options object.</returns>
         public static MvcOptions AllowTypeScriptQueries(this MvcOptions options)
         {
-            if (options == null)
-                throw new ArgumentNullException(nameof(options), "MVC Options not specified.");
+            if (options == null) throw new ArgumentNullException(nameof(options), 
+                "MVC Options cannot be null.");
 
             options.Filters.Add(typeof(ResourceTypeFilter), 0);
             return options;

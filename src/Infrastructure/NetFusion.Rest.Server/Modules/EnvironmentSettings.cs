@@ -22,7 +22,7 @@ namespace NetFusion.Rest.Server.Modules
         /// <summary>
         /// The directory containing the controller XML documents.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Child directory of the content root.</returns>
         public string GetControllerDocPath()
         {
             return Path.Combine(_hostingEnvironment.ContentRootPath, _restModule.GetControllerDocDirectoryName());
@@ -31,7 +31,7 @@ namespace NetFusion.Rest.Server.Modules
         /// <summary>
         /// The optional directory containing type-script definitions.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Child directory of the content root.</returns>
         public string GetTypeScriptPath()
         {
             return Path.Combine(_hostingEnvironment.ContentRootPath, _restModule.GetTypeScriptDirectoryName());

@@ -42,8 +42,8 @@ namespace NetFusion.Rest.Server.Actions
             if (string.IsNullOrWhiteSpace(actionParamName))
                 throw new ArgumentException("Action parameter name not specified.", nameof(actionParamName));
 
-            if (resourcePropInfo == null)
-                throw new ArgumentNullException(nameof(resourcePropInfo), "Resource property info not specified.");
+            if (resourcePropInfo == null) throw new ArgumentNullException(nameof(resourcePropInfo),
+                "Resource property cannot be null.");
 
             ActionParamName = actionParamName;
             ResourcePropName = resourcePropInfo.Name;
@@ -63,8 +63,8 @@ namespace NetFusion.Rest.Server.Actions
         // to the action method's route parameter.
         public object GetModelPropValue(object resource)
         {
-            if (resource == null)
-                throw new ArgumentNullException(nameof(resource), "Resource not specified.");
+            if (resource == null)throw new ArgumentNullException(nameof(resource), 
+                "Resource not specified.");
 
             return ResourceMethodInfo.Invoke(resource, null);
         }

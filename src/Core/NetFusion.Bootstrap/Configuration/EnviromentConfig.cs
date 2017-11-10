@@ -66,8 +66,8 @@ namespace NetFusion.Bootstrap.Configuration
         /// <param name="builder">A built configuration with providers used to lookup configuration settings.</param>
         public void UseConfiguration(IConfiguration configuration)
         {
-            _configuration = configuration
-                ?? throw new ArgumentNullException(nameof(configuration), "Configuration must be specified.");
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration), 
+                "Configuration must be specified.");
         }
     }
 }

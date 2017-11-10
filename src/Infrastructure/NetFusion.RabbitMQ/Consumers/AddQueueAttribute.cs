@@ -1,4 +1,4 @@
-﻿using NetFusion.Common;
+﻿using System;
 using System.Linq;
 
 namespace NetFusion.RabbitMQ.Consumers
@@ -22,8 +22,11 @@ namespace NetFusion.RabbitMQ.Consumers
         public AddQueueAttribute(string queueName, string exchangeName) :
             base(queueName, exchangeName, QueueBindingTypes.Create)
         {
-            Check.NotNullOrWhiteSpace(queueName, nameof(queueName));
-            Check.NotNullOrWhiteSpace(exchangeName, nameof(exchangeName));
+            if (string.IsNullOrWhiteSpace(queueName))
+                throw new ArgumentException("Queue name must be specified.", nameof(queueName));
+
+            if (string.IsNullOrWhiteSpace(exchangeName))
+                throw new ArgumentException("Exchange name must be specified.", nameof(exchangeName));
         }
 
         /// <summary>
@@ -33,7 +36,9 @@ namespace NetFusion.RabbitMQ.Consumers
         public AddQueueAttribute(string exchangeName) :
             base(null, exchangeName, QueueBindingTypes.Create)
         {
-            Check.NotNullOrWhiteSpace(exchangeName, nameof(exchangeName));
+            if (string.IsNullOrWhiteSpace(exchangeName))
+                throw new ArgumentException("Exchange name must be specified.", nameof(exchangeName));
+
             QueueSettings.IsExclusive = true;
         }
 

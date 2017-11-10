@@ -30,8 +30,8 @@ namespace NetFusion.Bootstrap.Plugins
         /// <param name="loggerFactory">The logger instance.</param>
         public void UseLoggerFactory(ILoggerFactory loggerFactory)
         {
-            LoggerFactory = loggerFactory ?? 
-                throw new ArgumentNullException(nameof(loggerFactory), "Logger factory implementation cannot be null.");
+            LoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory), 
+                "Logger factory implementation cannot be null.");
         }
     }
 }

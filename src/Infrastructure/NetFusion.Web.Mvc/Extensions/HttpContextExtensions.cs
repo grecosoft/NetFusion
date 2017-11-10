@@ -17,8 +17,7 @@ namespace NetFusion.Web.Mvc.Extensions
         /// <returns>The registered service.</returns>
         public static T GetService<T>(this HttpContext httpContext)
         {
-            if (httpContext == null)
-                throw new ArgumentNullException(nameof(httpContext));
+            if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
 
             return (T)httpContext.RequestServices.GetService(typeof(T));
         }

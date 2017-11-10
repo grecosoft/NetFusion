@@ -20,7 +20,6 @@ namespace NetFusion.Bootstrap.Logging
             string message, object details, object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Debug, eventId, exception, message, args, details);
         }
 
@@ -28,14 +27,12 @@ namespace NetFusion.Bootstrap.Logging
             string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Debug, eventId, null, message, args, details);
         }
 
         public static void LogDebugDetails(this ILogger logger, string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Debug, 0, null, message, args, details);
         }
 
@@ -45,7 +42,6 @@ namespace NetFusion.Bootstrap.Logging
             string message, object details, object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Trace, eventId, exception, message, args, details);
         }
 
@@ -53,22 +49,22 @@ namespace NetFusion.Bootstrap.Logging
             string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Trace, eventId, null, message, args, details);
         }
 
         public static void LogTraceDetails(this ILogger logger, string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Trace, 0, null, message, args, details);
         }
 
         public static DurationLogger LogTraceDuration(this ILogger logger, EventId eventId, string processName)
         {
-            if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-            if (processName == null)
-                throw new ArgumentException("Name identifying process being logged cannot be null.", nameof(processName));
+            if (logger == null) throw new ArgumentNullException(nameof(logger), 
+                "Logger cannot be null.");
+
+            if (processName == null) throw new ArgumentException(
+                "Name identifying process being logged cannot be null.", nameof(processName));
 
             logger.LogTrace(eventId, 
                 "Start Process: {ProcessName}", 
@@ -83,7 +79,6 @@ namespace NetFusion.Bootstrap.Logging
             string message, object details, object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Information, eventId, exception, message, args, details);
         }
 
@@ -91,14 +86,12 @@ namespace NetFusion.Bootstrap.Logging
             string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Information, eventId, null, message, args, details);
         }
 
         public static void LogInformationDetails(this ILogger logger, string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Information, 0, null, message, args, details);
         }
 
@@ -108,7 +101,6 @@ namespace NetFusion.Bootstrap.Logging
              string message, object details, object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Warning, eventId, exception, message, args, details);
         }
 
@@ -116,14 +108,12 @@ namespace NetFusion.Bootstrap.Logging
              string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Warning, eventId, null, message, args, details);
         }
 
         public static void LogWarningDetails(this ILogger logger, string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Warning, 0, null, message, args, details);
         }
 
@@ -133,7 +123,6 @@ namespace NetFusion.Bootstrap.Logging
             string message, object details, object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Error, eventId, exception, message, args, details);
         }
 
@@ -141,7 +130,6 @@ namespace NetFusion.Bootstrap.Logging
             string message, object details)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Error, eventId, exception, message, new string[]{}, details);
         }
 
@@ -149,14 +137,12 @@ namespace NetFusion.Bootstrap.Logging
             string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Error, eventId, null, message, args, details);
         }
 
         public static void LogErrorDetails(this ILogger logger, string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Error, 0, null, message, args, details);
         }
 
@@ -166,7 +152,6 @@ namespace NetFusion.Bootstrap.Logging
             string message, object details, object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Critical, eventId, exception, message, args, details);
         }
 
@@ -174,14 +159,12 @@ namespace NetFusion.Bootstrap.Logging
             string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Critical, eventId, null, message, args, details);
         }
 
         public static void LogCriticalDetails(this ILogger logger, string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-
             logger.LogDetails(LogLevel.Critical, 0, null, message, args, details);
         }
 

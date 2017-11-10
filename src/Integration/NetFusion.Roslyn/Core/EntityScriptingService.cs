@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Base.Entity;
 using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Logging;
-using NetFusion.Common;
 using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 using System;
@@ -31,7 +30,7 @@ namespace NetFusion.Domain.Roslyn.Core
 
         public EntityScriptingService(ILoggerFactory logger)
         {
-            Check.NotNull(logger, nameof(logger));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
             _logger = logger.CreateLogger<EntityScriptingService>();
         }
 
@@ -39,7 +38,7 @@ namespace NetFusion.Domain.Roslyn.Core
         // given entity.  The expressions will be compiled upon first use.
         public void Load(IEnumerable<EntityScript> scripts)
         {
-            Check.NotNull(scripts, nameof(scripts));
+            if (scripts == null) throw new ArgumentNullException(nameof(scripts));
 
             _scriptEvaluators = scripts.Select(s => new ScriptEvaluator(s))
                 .ToLookup(se => se.Script.EntityType);
@@ -47,8 +46,8 @@ namespace NetFusion.Domain.Roslyn.Core
 
         public async Task ExecuteAsync(object entity, string scriptName = "default")
         {
-            Check.NotNull(entity, nameof(entity));
-            Check.NotNull(scriptName, nameof(scriptName));
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (scriptName == null) throw new ArgumentNullException(nameof(scriptName));
 
             Type entityType = entity.GetType();
 
@@ -242,8 +241,8 @@ namespace NetFusion.Domain.Roslyn.Core
 
         public async Task<bool> SatisfiesPredicateAsync(object entity, ScriptPredicate predicate)
         {
-            Check.NotNull(entity, nameof(entity));
-            Check.NotNull(predicate, nameof(predicate));
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
             var attributedEntity = entity as IAttributedEntity;
             if (attributedEntity == null)

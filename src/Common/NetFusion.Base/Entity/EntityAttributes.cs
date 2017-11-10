@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Runtime.CompilerServices;
@@ -46,8 +45,8 @@ namespace NetFusion.Base.Entity
         //------------------------------------------ VALUE MAINTENANCE ------------------------------------------------//
         public void SetValues(IDictionary<string, object> values)
         {
-            _attributes = values ?? 
-                throw new ArgumentNullException(nameof(values), "Values cannot be null.");
+            _attributes = values ?? throw new ArgumentNullException(nameof(values), 
+                "Values cannot be null.");
         }
 
         public IDictionary<string, object> GetValues()

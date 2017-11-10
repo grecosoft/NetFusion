@@ -1,5 +1,4 @@
 ﻿using NetFusion.Bootstrap.Container;
-using NetFusion.Common;
 using NetFusion.Test.Plugins;
 using System;
 
@@ -27,8 +26,6 @@ namespace NetFusion.Test.Container
         public static ContainerTest Arrange(Action<TestTypeResolver> resolver,
             Action<IAppContainer> container = null)
         {
-            Check.NotNull(resolver, nameof(resolver), "configuration delegate not specified");
-
             var typeResolver = new TestTypeResolver();
             var appcontainer = new AppContainer(typeResolver, setGlobalReference: false);
 
@@ -49,8 +46,6 @@ namespace NetFusion.Test.Container
         /// container.</returns>
         public static ContainerTest Arrange(ITypeResolver typeResolver, Action<IAppContainer> container = null)
         {
-            Check.NotNull(typeResolver, nameof(typeResolver), "type resolver not specified");
-
             var appcontainer = new AppContainer(typeResolver, setGlobalReference: false);
             container?.Invoke(appcontainer);
 
@@ -64,7 +59,6 @@ namespace NetFusion.Test.Container
         /// <returns>Configured application container.</returns>
         public static AppContainer Bootstrap(ITypeResolver typeResolver)
         {
-            Check.NotNull(typeResolver, nameof(typeResolver), "type resolver not specified");
             return new AppContainer(typeResolver, setGlobalReference: false);
         }
     }

@@ -18,8 +18,8 @@ namespace NetFusion.Rest.Resources.Doc
         /// <param name="embeddedResourceNames">The names used to identify the returned embedded resources.</param>
         public DocEmbeddedResourceAttribute(params string[] embeddedResourceNames)
         {            
-            EmbeddedResourceNames = embeddedResourceNames ??
-                throw new ArgumentNullException(nameof(embeddedResourceNames), "Embedded Resource names not specified.");
+            EmbeddedResourceNames = embeddedResourceNames ?? throw new ArgumentNullException(nameof(embeddedResourceNames),
+                "Embedded Resource names cannot be null.");
         }
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace NetFusion.Rest.Resources.Doc
         /// <param name="embeddedResourceTypes">The types of the embedded resources.</param>
         public DocEmbeddedResourceAttribute(params Type[] embeddedResourceTypes)
         {
-            EmbeddedResourceTypes = embeddedResourceTypes ??
-                throw new ArgumentNullException(nameof(embeddedResourceTypes), "Embedded Resource types not specified.");
+            EmbeddedResourceTypes = embeddedResourceTypes ?? throw new ArgumentNullException(nameof(embeddedResourceTypes),
+                "Embedded Resource types cannot be null.");
            
         }
     }

@@ -1,5 +1,4 @@
 ﻿using NetFusion.Base.Exceptions;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Enrichers;
@@ -106,9 +105,7 @@ namespace NetFusion.Messaging
             IMessage message,
             Exception innerException) : base(errorMessage, innerException)
         {
-            if (message == null) throw new ArgumentNullException(nameof(message));
-
-            Details["PublishedMessage"] = message;
+            Details["PublishedMessage"] = message ?? throw new ArgumentNullException(nameof(message));
         }
 
         /// <summary>

@@ -1,6 +1,5 @@
 ﻿using NetFusion.Base.Entity;
 using NetFusion.Base.Scripting;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
@@ -24,21 +23,19 @@ namespace NetFusion.Domain.Roslyn.Core
 
         public ScriptEvaluator(EntityScript script)
         {
-            Check.NotNull(script, nameof(script));
-            Script = script;
+            Script = script ?? throw new ArgumentNullException(nameof(script));
         }
 
         public void SetExpressionEvaluators(IEnumerable<ExpressionEvaluator> evaluators)
         {
-            Check.NotNull(evaluators, nameof(evaluators));
-            Evaluators = evaluators;
+            Evaluators = evaluators ?? throw new ArgumentNullException(nameof(evaluators));
         }
 
         public bool IsDefault => this.Script.Name == DEFAULT_SCRIPT_NAME;
 
         public async Task ExecuteAsync(object entity)
         {
-            Check.NotNull(entity, nameof(entity));
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
 
             // The scope that will be used to resolve references made within
             // expressions.  This includes the entity and its set of optional

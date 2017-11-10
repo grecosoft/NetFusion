@@ -32,8 +32,8 @@ namespace NetFusion.Rest.Client.Settings
 
         public void Apply(HttpRequestMessage requestMessage)
         {
-            if (requestMessage == null)
-                throw new ArgumentNullException(nameof(requestMessage), "Request message not specified.");
+            if (requestMessage == null) throw new ArgumentNullException(nameof(requestMessage),
+                "Request message cannot be null.");
 
             Headers.ApplyHeaders(requestMessage);
         }

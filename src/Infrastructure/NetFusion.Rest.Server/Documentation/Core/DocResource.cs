@@ -19,7 +19,7 @@ namespace NetFusion.Rest.Server.Documentation.Core
 
         public DocResource(Type resourceType, DocResourceAttribute resourceDoc)
         {
-            Name = resourceType.GetEmbeddedName();
+            Name = resourceType.GetEmbeddedTypeName();
             Description = resourceDoc.Description;
             Properties = GetPropertyDoc(resourceType);
         }

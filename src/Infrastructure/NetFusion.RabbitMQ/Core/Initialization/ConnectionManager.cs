@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using NetFusion.Base.Exceptions;
 using NetFusion.Bootstrap.Logging;
-using NetFusion.Common;
 using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.RabbitMQ.Configs;
@@ -33,15 +32,13 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             BrokerSettings brokerSettings,
             IDictionary<string, object> clientProperties)
         {
-            Check.NotNull(loggerFactory, nameof(loggerFactory));
-            Check.NotNull(brokerSettings, nameof(brokerSettings));
-            Check.NotNull(clientProperties, nameof(clientProperties));
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
 
-            _logger = loggerFactory.CreateLogger<ConnectionManager>();
-            _brokerSettings = brokerSettings;
-            _clientProperties = clientProperties;
+            _brokerSettings = brokerSettings ?? throw new ArgumentNullException(nameof(brokerSettings));
+            _clientProperties = clientProperties ??  throw new ArgumentNullException(nameof(clientProperties));
 
             _connections = GetConnections(brokerSettings);
+            _logger = loggerFactory.CreateLogger<ConnectionManager>();
         }
 
         private IDictionary<string, BrokerConnection> GetConnections(BrokerSettings settings)
@@ -157,7 +154,8 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// <returns>The created connection channel.</returns>
         public IModel CreateChannel(string brokerName)
         {
-            Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
+            if (string.IsNullOrWhiteSpace(brokerName))
+                throw new ArgumentException("Broker name must be specified.", nameof(brokerName));
 
             BrokerConnection brokerConn = GetBrokerConnection(brokerName);
 
@@ -186,7 +184,8 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// <param name="brokerName">The name of the broker.</param>
         public bool ReconnectToBroker(string brokerName)
         {
-            Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
+            if (string.IsNullOrWhiteSpace(brokerName))
+                throw new ArgumentException("Broker name must be specified.", nameof(brokerName));
 
             BrokerConnection brokerConn = GetBrokerConnection(brokerName);
           
@@ -213,8 +212,9 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// <returns>True if connection is open.  Otherwise, False.</returns>
         public bool IsBrokerConnected(string brokerName)
         {
-            Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
-
+            if (string.IsNullOrWhiteSpace(brokerName))
+                throw new ArgumentException("Broker name must be specified.", nameof(brokerName));
+            
             BrokerConnection brokerConn = GetBrokerConnection(brokerName);
             return brokerConn.Connection != null && brokerConn.Connection.IsOpen;
         }
@@ -226,7 +226,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// <returns>True if unexpected.  Otherwise, False.</returns>
         public bool IsUnexpectedShutdown(ShutdownEventArgs shutdownEvent)
         {
-            Check.NotNull(shutdownEvent, nameof(shutdownEvent));
+            if (shutdownEvent == null) throw new ArgumentNullException(nameof(shutdownEvent));
 
             return shutdownEvent.Initiator == ShutdownInitiator.Library
                 || shutdownEvent.Initiator == ShutdownInitiator.Peer;

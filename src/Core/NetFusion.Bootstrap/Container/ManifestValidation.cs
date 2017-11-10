@@ -1,6 +1,5 @@
 ﻿using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Manifests;
-using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 using System;
 using System.Collections.Generic;
@@ -18,8 +17,8 @@ namespace NetFusion.Bootstrap.Container
 
         public ManifestValidation(ManifestRegistry registry)
         {
-            _registry = registry ??
-                throw new ArgumentNullException(nameof(registry), "Manifest Registry cannot be null.");
+            _registry = registry ?? throw new ArgumentNullException(nameof(registry),
+                "Manifest Registry cannot be null.");
         }
 
         public void Validate()
