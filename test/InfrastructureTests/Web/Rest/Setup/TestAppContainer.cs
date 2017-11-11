@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Configuration;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;
 using NetFusion.Web.Mvc;
 
@@ -20,7 +19,7 @@ namespace InfrastructureTests.Web.Rest.Setup
             var resolver = new TestTypeResolver();
            
             resolver.AddPlugin(hostPlugin);
-            var container = ContainerSetup.Bootstrap(resolver);
+            var container = new AppContainer(resolver, setGlobalReference: false);
 
             container.WithConfig((EnvironmentConfig envConfig) =>
             {

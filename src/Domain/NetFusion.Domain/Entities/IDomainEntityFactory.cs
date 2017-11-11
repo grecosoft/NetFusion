@@ -1,4 +1,5 @@
 ﻿using NetFusion.Domain.Entities.Core;
+using System;
 
 namespace NetFusion.Domain.Entities
 {
@@ -13,6 +14,15 @@ namespace NetFusion.Domain.Entities
         /// <typeparam name="TDomainEntity">The domain entity type to be created.</typeparam>
         /// <returns>Instance of the domain entity.</returns>
         TDomainEntity Create<TDomainEntity>() where TDomainEntity : IBehaviorDelegator, new();
+
+        /// <summary>
+        /// Creates an instance of a domain-entity by delegation to a creation method.
+        /// </summary>
+        /// <typeparam name="TDomainEntity">The domain entity type to be created.</typeparam>
+        /// <param name="creationMethod">Factory method returning instance of the domain entity.</param>
+        /// <returns>Instance of the domain entity.</returns>
+        TDomainEntity Create<TDomainEntity>(Func<TDomainEntity> creationMethod)
+            where TDomainEntity : IBehaviorDelegator;
 
         /// <summary>
         /// Builds an instance of a domain-entity with its supported behaviors by delegating 

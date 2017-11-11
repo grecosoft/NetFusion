@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using CoreTests.Messaging.Mocks;
 using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Messaging;
@@ -7,7 +8,7 @@ using NetFusion.Test.Plugins;
 using System;
 using System.Threading.Tasks;
 
-namespace CoreTests.Messaging.Mocks
+namespace CoreTests.Messaging
 {
     /// <summary>
     /// Provides a basic set up for testing publishing of domain-events.

@@ -7,7 +7,7 @@ namespace NetFusion.Domain.Entities.Core
 {
     /// <summary>
     /// Factory used to create domain aggregates or entity instances.  The created entity will 
-    /// have any behaviors registered for the entity type associated with the created instance.
+    /// have any behaviors registered for the entity type.
     /// </summary>
     public class DomainEntityFactory : IDomainEntityFactory,
         IFactoryRegistry
@@ -46,6 +46,24 @@ namespace NetFusion.Domain.Entities.Core
             where TDomainEntity : IBehaviorDelegator, new()
         {
             TDomainEntity domainEntity = new TDomainEntity();
+            SetBehaviorDelegatee(domainEntity);
+
+            return domainEntity;
+        }
+
+        public TDomainEntity Create<TDomainEntity>(Func<TDomainEntity> creationMethod)
+            where TDomainEntity : IBehaviorDelegator
+        {
+            if (creationMethod == null) throw new ArgumentNullException(nameof(creationMethod));
+
+            TDomainEntity domainEntity = creationMethod();
+
+            if (domainEntity == null)
+            {
+                throw new InvalidOperationException(
+                    $"The creation method provided for entity type: {typeof(TDomainEntity)} returned a null instance.");
+            }
+
             SetBehaviorDelegatee(domainEntity);
 
             return domainEntity;

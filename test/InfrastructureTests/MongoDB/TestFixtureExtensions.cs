@@ -5,21 +5,18 @@ using NetFusion.Test.Plugins;
 
 namespace InfrastructureTests.MongoDB
 {
-    public static class MongoDbTestExtensions
+    public static class TestFixtureExtensions
     {
-        public static TestTypeResolver UseDefaultSettingsConfig(this TestTypeResolver resolver)
+        public static TestTypeResolver WithMongoDbConfiguredHost(this TestTypeResolver resolver)
         {
-            resolver.AddPlugin<MockAppHostPlugin>();
-
-            resolver.AddPlugin<MockCorePlugin>()
-                 .UseSettingsPlugin()
-                 .UseMongoDbPlugin();
-                
+            resolver.AddPlugin<MockAppHostPlugin>()
+                .UseSettingsPlugin()
+                .UseMongoDbPlugin();
 
             return resolver;
         }
 
-        public static void SetupValidMongoConsumingPlugin(this TestTypeResolver resolver)
+        public static void SetupMongoConsumingPlugin(this TestTypeResolver resolver)
         {
             resolver.AddPlugin<MockAppComponentPlugin>()
                 .AddPluginType<MockMongoModule>()

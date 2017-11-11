@@ -1,10 +1,8 @@
 ﻿using Autofac;
 using FluentAssertions;
 using InfrastructureTests.MongoDB.Mocks;
-using NetFusion.Bootstrap.Container;
 using NetFusion.MongoDB;
 using NetFusion.Test.Container;
-using NetFusion.Test.Plugins;
 using Xunit;
 
 namespace InfrastructureTests.MongoDB
@@ -16,49 +14,47 @@ namespace InfrastructureTests.MongoDB
         /// A client to the database is resolved by specifying the IMongoDbClient
         /// with the settings class as the generic parameters.
         /// </summary>
-        [Fact(DisplayName = nameof(DatabaseClientResolved_ForDatabase))]
-        public void DatabaseClientResolved_ForDatabase()
+        [Fact(DisplayName = "Database Client can be Resolved for Database")]
+        public void DatabaseClientCanBeResolved_ForDatabase()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
+             ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => {
+                        r.WithMongoDbConfiguredHost();
+                        r.SetupMongoConsumingPlugin();
+                    })
+                .Act.OnContainer(c => c.Build())
+                .Assert.Container(c =>
                 {
-                    config.UseDefaultSettingsConfig();
-                    config.SetupValidMongoConsumingPlugin();
-                })
-                .Test(
-                    c => c.Build(),
-                    (IAppContainer c) =>
-                    {
-                        var client = (MockMongoDbClient<MockMongoDb>)c.Services.ResolveOptional<IMongoDbClient<MockMongoDb>>();
-                        client.Should().NotBeNull();
+                    var client = (MockMongoDbClient<MockMongoDb>)c.Services.ResolveOptional<IMongoDbClient<MockMongoDb>>();
+                    client.Should().NotBeNull();
 
-                        client.DbSettings.Should().BeOfType<MockMongoDb>();
-                        client.DbSettings.Should().NotBeNull();
-                        client.DbSettings.MongoUrl.Should().NotBeNull();
-                    });
+                    client.DbSettings.Should().BeOfType<MockMongoDb>();
+                    client.DbSettings.Should().NotBeNull();
+                    client.DbSettings.MongoUrl.Should().NotBeNull();
+                });
+            });
         }
 
         /// <summary>
-        /// The connection is established to the server when the MongoDB client is
-        /// activated.  This allows for any exceptions to be thrown for the activation
-        /// method and not from within the constructor.
+        /// The connection is established to the server when the MongoDB client is activated. 
         /// </summary>
-        [Fact(DisplayName = nameof(DatabaseClientActivated_WhenResolved))]
+        [Fact(DisplayName = "Database Client activated when Resolved")]
         public void DatabaseClientActivated_WhenResolved()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => {
+                        r.WithMongoDbConfiguredHost();
+                        r.SetupMongoConsumingPlugin();
+                    })
+                .Act.OnContainer(c => c.Build())
+                .Assert.Container(c =>
                 {
-                    config.UseDefaultSettingsConfig();
-                    config.SetupValidMongoConsumingPlugin();
-                })
-                .Test(
-                    c => c.Build(),
-                    (IAppContainer c) =>
-                    {
-                        var client = (MockMongoDbClient<MockMongoDb>)c.Services.ResolveOptional<IMongoDbClient<MockMongoDb>>();
-                        client.IsActivated.Should().BeTrue();
-                    });
+                    var client = (MockMongoDbClient<MockMongoDb>)c.Services.ResolveOptional<IMongoDbClient<MockMongoDb>>();
+                    client.IsActivated.Should().BeTrue();
+                });
+            });
         }
     }
 }

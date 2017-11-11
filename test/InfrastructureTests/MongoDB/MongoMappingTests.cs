@@ -3,7 +3,6 @@ using InfrastructureTests.MongoDB.Mocks;
 using MongoDB.Bson.Serialization;
 using NetFusion.MongoDB.Modules;
 using NetFusion.Test.Container;
-using NetFusion.Test.Plugins;
 using System.Linq;
 using Xunit;
 
@@ -14,84 +13,84 @@ namespace InfrastructureTests.MongoDB
         /// <summary>
         /// All MongoDB entity class mappings are discovered by the module.
         /// </summary>
-        [Fact(DisplayName = nameof(EntityClassMaps_DiscoveredByModule))]
+        [Fact(DisplayName = "Entity Class Maps discovered by Module")]
         public void EntityClassMaps_DiscoveredByModule()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => {
+                        r.WithMongoDbConfiguredHost();
+                        r.SetupMongoConsumingPlugin();
+                    })
+                .Act.OnContainer(c => c.Build())
+                .Assert.PluginModule<MappingModule>(m =>
                 {
-                    config.UseDefaultSettingsConfig();
-                    config.SetupValidMongoConsumingPlugin();
-                })
-                .Test(
-                    c => c.Build(),
-                    (MappingModule module) =>
-                    {
-                        module.Mappings.Should().HaveCount(2);
-                        module.Mappings.OfType<MockEntityClassMap>().Should().HaveCount(1);
-                        module.Mappings.OfType<MockDerivedEntityClassMap>().Should().HaveCount(1);
-                    });
+                    m.Mappings.Should().HaveCount(2);
+                    m.Mappings.OfType<MockEntityClassMap>().Should().HaveCount(1);
+                    m.Mappings.OfType<MockDerivedEntityClassMap>().Should().HaveCount(1);
+                });
+            });
         }
 
         /// <summary>
         /// The discovered MongoDB class mappings are added to the driver.
         /// </summary>
-        [Fact(DisplayName = nameof(DiscoveredEntityClassMaps_AddedToMongo))]
-        public void DiscoveredEntityClassMaps_AddedToMongo()
+        [Fact(DisplayName = "Discovered Entity Class Maps added to MongoDb")]
+        public void DiscoveredEntityClassMaps_AddedToMongoDb()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
-                {
-                    config.UseDefaultSettingsConfig();
-                    config.SetupValidMongoConsumingPlugin();
-                })
-                .Test(
-                    c => c.Build().Start(),
-                    (MappingModule module) =>
-                    {
-                        var classMap = BsonClassMap.GetRegisteredClassMaps().FirstOrDefault();
-                        classMap.Should().NotBeNull();
-                        classMap.Should().BeOfType<MockEntityClassMap>();
-                    });
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => {
+                        r.WithMongoDbConfiguredHost();
+                        r.SetupMongoConsumingPlugin();
+                    })
+                .Act.OnContainer(c => c.Build().Start())
+                .Assert.Container(_ =>
+                {                    
+                    var classMap = BsonClassMap.GetRegisteredClassMaps().FirstOrDefault();
+                    classMap.Should().NotBeNull();
+                    classMap.Should().BeOfType<MockEntityClassMap>();
+                });
+            });
         }
 
         /// <summary>
         /// Class maps can obtained by using services exposed from the module.
         /// </summary>
-        [Fact(DisplayName = nameof(CanLookup_ClassMapping))]
-        public void CanLookup_ClassMapping()
+        [Fact(DisplayName = "Can lookup Class Mapping using Module")]
+        public void CanLookup_ClassMapping_UsingModule()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => {
+                        r.WithMongoDbConfiguredHost();
+                        r.SetupMongoConsumingPlugin();
+                    })
+                .Act.OnContainer(c => c.Build())
+                .Assert.PluginModule<MappingModule>(m =>
                 {
-                    config.UseDefaultSettingsConfig();
-                    config.SetupValidMongoConsumingPlugin();
-                })
-                .Test(
-                    c => c.Build(),
-                    (MappingModule module) =>
-                    {
-                        var entityMap = module.GetEntityMap(typeof(MockEntity));
-                        entityMap.Should().NotBeNull();
-                    });
+                    var entityMap = m.GetEntityMap(typeof(MockEntity));
+                    entityMap.Should().NotBeNull();
+                });
+            });
         }
 
         [Fact(DisplayName = nameof(CanLookup_KnowTypeClassDescriminator))]
         public void CanLookup_KnowTypeClassDescriminator()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => {
+                        r.WithMongoDbConfiguredHost();
+                        r.SetupMongoConsumingPlugin();
+                    })
+                .Act.OnContainer(c => c.Build())
+                .Assert.PluginModule<MappingModule>(m =>
                 {
-                    config.UseDefaultSettingsConfig();
-                    config.SetupValidMongoConsumingPlugin();
-                })
-                .Test(
-                    c => c.Build(),
-                    (MappingModule module) =>
-                    {
-                        var descriminator  = module.GetEntityDiscriminator(typeof(MockEntity), typeof(MockDerivedEntity));
-                        descriminator.Should().Be("expected_descriminator_name");
-                    });
+                    var descriminator = m.GetEntityDiscriminator(typeof(MockEntity), typeof(MockDerivedEntity));
+                    descriminator.Should().Be("expected_descriminator_name");
+                });
+            });
         }
     }
 }

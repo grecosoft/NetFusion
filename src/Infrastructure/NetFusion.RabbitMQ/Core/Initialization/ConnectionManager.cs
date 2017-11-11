@@ -256,7 +256,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
             foreach(BrokerConnection brokerConn in _connections.Values)
             {
-                brokerConn?.Connection.Dispose();
+                brokerConn?.Connection?.Dispose();
             }
 
             _disposed = true;

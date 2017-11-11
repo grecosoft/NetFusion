@@ -1,20 +1,11 @@
 ﻿using Autofac;
+using DomainTests.UnitOfWork.Mocks;
 using DomainUnitTests;
 using FluentAssertions;
-using NetFusion.Base.Scripting;
-using NetFusion.Base.Validation;
-using NetFusion.Bootstrap.Container;
-using NetFusion.Domain.Entities;
-using NetFusion.Domain.Entities.Core;
-using NetFusion.Domain.Entities.Registration;
-using NetFusion.Domain.Modules;
 using NetFusion.Domain.Patterns.Behaviors.Integration;
-using NetFusion.Domain.Patterns.Behaviors.Validation;
 using NetFusion.Domain.Patterns.UnitOfWork;
 using NetFusion.Messaging;
-using NetFusion.Messaging.Types;
 using NetFusion.Test.Container;
-using NetFusion.Test.Plugins;
 using NetFusion.Testing.Logging;
 using System;
 using System.Threading.Tasks;
@@ -33,26 +24,28 @@ namespace DomainTests.UnitOfWork
         /// services managing other aggregates.  
         /// </summary>
         [Fact (DisplayName = "Unit-of-Work: Aggregates Can Integrate Using Domain Events")]
-        public Task AggragatesCanIntegrate_Using_DomainEvents()
+        public void AggragatesCanIntegrate_Using_DomainEvents()
         {
-            var typesUnderTest = new Type[] { typeof(CommitService), typeof(EnlistingService), typeof(BehaviorRegistry) };
+            var typesUnderTest = new Type[] { typeof(MockCommitService), typeof(MockEnlistingService), typeof(MockBehaviorRegistry) };
 
-            return TestContainer(typesUnderTest).Test(
-                async (IAppContainer c) => { 
-                    c.Build().Start();
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                .Act.OnContainer(c => 
+                    {
+                        c.UsingDefaultServices();
+                        c.Build().Start();
 
-                    // Publish command.
-                    var msgSrv = c.Services.Resolve<IMessagingService>();
-                    await msgSrv.SendAsync(new TestCommand());
-                },
-                (IAppContainer c) =>
+                        var msgSrv = c.Services.Resolve<IMessagingService>();
+                        return msgSrv.SendAsync(new MockCommand());
+                    })
+                .Result.Assert.Container(c =>
                 {
                     // Obtain reference to the service that is the receiver of
                     // the integration domain-event:
-                    var enlistingSrv = c.Services.Resolve<EnlistingService>();
+                    var enlistingSrv = c.Services.Resolve<MockEnlistingService>();
                     enlistingSrv.ReceivedIntegrationEvent.Should().BeTrue();
-                }
-            );
+                });
+            });
         }
 
         /// <summary>
@@ -60,26 +53,28 @@ namespace DomainTests.UnitOfWork
         /// events recorded for an aggregate are cleared.
         /// </summary>
         [Fact (DisplayName = "Unit-of-Work: Integration Events Cleared on Successful Commit")]
-        public Task IntegrationEvents_Cleared_OnSuccessfulCommit()
+        public void IntegrationEvents_Cleared_OnSuccessfulCommit()
         {
-            var typesUnderTest = new Type[] { typeof(CommitService), typeof(EnlistingService), typeof(BehaviorRegistry) };
-            var testCommand = new TestCommand();
+            var typesUnderTest = new Type[] { typeof(MockCommitService), typeof(MockEnlistingService), typeof(MockBehaviorRegistry) };
+            var testCommand = new MockCommand();
 
-            return TestContainer(typesUnderTest).Test(
-                async (IAppContainer c) => {
-                    c.Build().Start();
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                .Act.OnContainer(c => 
+                    {
+                        c.UsingDefaultServices();
+                        c.Build().Start();
 
-                    // Publish command.
-                    var msgSrv = c.Services.Resolve<IMessagingService>();
-                    await msgSrv.SendAsync(testCommand);
-                },
-                (IAppContainer c) =>
+                        var msgSrv = c.Services.Resolve<IMessagingService>();
+                        return msgSrv.SendAsync(testCommand);
+                    })
+                .Result.Assert.Container(_ =>
                 {
                     // Verify that the aggregate used by the test no longer
                     // has any recorded integration events.
                     testCommand.Result.IntegrationEvents().Should().BeEmpty();
-                }
-            );
+                });
+            });
         }
 
         /// <summary>
@@ -87,25 +82,27 @@ namespace DomainTests.UnitOfWork
         /// domain events are not cleared.
         /// </summary>
         [Fact (DisplayName = "Unit-of-Work: Integration Events Not Cleared on Save with Exception")]
-        public Task IntegrationEvents_NotCleared_OnSaveWithException()
+        public void IntegrationEvents_NotCleared_OnSaveWithException()
         {
-            var typesUnderTest = new Type[] { typeof(CommitService), typeof(EnlistingService), typeof(BehaviorRegistry) };
-            var testCommand = new TestCommand { EnlistingSrvThrowEx = true };
+            var typesUnderTest = new Type[] { typeof(MockCommitService), typeof(MockEnlistingService), typeof(MockBehaviorRegistry) };
+            var testCommand = new MockCommand { EnlistingSrvThrowEx = true };
 
-            return TestContainer(typesUnderTest).Test(
-                async (IAppContainer c) => {
-                    c.Build().Start();
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                .Act.OnContainer(c => 
+                    {
+                        c.UsingDefaultServices();
+                        c.Build().Start();
 
-                    // Publish command.
-                    var msgSrv = c.Services.Resolve<IMessagingService>();
-                    await msgSrv.SendAsync(testCommand);
-                },
-                (IAppContainer c, Exception ex) =>
+                        var msgSrv = c.Services.Resolve<IMessagingService>();
+                        return msgSrv.SendAsync(testCommand);
+                    })
+                .Result.Assert.Exception<PublisherException>(ex =>
                 {
                     ex.Should().NotBeNull();
                     ex.Should().BeOfType<PublisherException>();
-                }
-            );
+                });
+            });
         }
 
         /// <summary>
@@ -113,68 +110,74 @@ namespace DomainTests.UnitOfWork
         /// does not pass validation.
         /// </summary>
         [Fact (DisplayName = "Unit-of-Work: Aggregate Not Committed for Invalid Aggregate")]
-        public async Task Aggregate_NotCommited_ForInvalidAggregate()
+        public void Aggregate_NotCommited_ForInvalidAggregate()
         {
-            var typesUnderTest = new Type[] { typeof(CommitService), typeof(EnlistingService), typeof(BehaviorRegistry) };
-            var testCommand = new TestCommand { IsCommittedAggregateInvalid = true };
+            var typesUnderTest = new Type[] { typeof(MockCommitService), typeof(MockEnlistingService), typeof(MockBehaviorRegistry) };
+            var testCommand = new MockCommand { IsCommittedAggregateInvalid = true };
 
-            await TestContainer(typesUnderTest).Test(
-                async (IAppContainer c) => {
-                    c.Build().Start();
+             ContainerFixture.Test(fixture => { fixture
+                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                .Act.OnContainer(c => 
+                    {
+                        c.UsingDefaultServices();
+                        c.Build().Start();
 
-                    // Publish command.
-                    var msgSrv = c.Services.Resolve<IMessagingService>();
-                    await msgSrv.SendAsync(testCommand);
-                },
-                (IAppContainer c, Exception ex) =>
+                        var msgSrv = c.Services.Resolve<IMessagingService>();
+                        return msgSrv.SendAsync(testCommand);
+                    })
+                .Result.Assert.Exception<PublisherException>(ex =>
                 {
                     ex.Should().NotBeNull();
                     ex.Should().BeOfType<PublisherException>();
-                }
-            );
+                });
+            });
         }
 
         [Fact (DisplayName = "Unit-of-Work: Aggregate Not Enlisted for Invalid Aggregate")]
-        public async Task Aggregate_NotEnlisted_ForInvalidAggregate()
+        public void Aggregate_NotEnlisted_ForInvalidAggregate()
         {
-            var typesUnderTest = new Type[] { typeof(CommitService), typeof(EnlistingService), typeof(BehaviorRegistry) };
-            var testCommand = new TestCommand { IsEnlistedAggregateInvalid = true };
+            var typesUnderTest = new Type[] { typeof(MockCommitService), typeof(MockEnlistingService), typeof(MockBehaviorRegistry) };
+            var testCommand = new MockCommand { IsEnlistedAggregateInvalid = true };
 
-            await TestContainer(typesUnderTest).Test(
-                async (IAppContainer c) => {
-                    c.Build().Start();
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                .Act.OnContainer(c => 
+                    {
+                        c.UsingDefaultServices();
+                        c.Build().Start();
 
-                    // Publish command.
-                    var msgSrv = c.Services.Resolve<IMessagingService>();
-                    await msgSrv.SendAsync(testCommand);
-                },
-                (IAppContainer c, Exception ex) =>
+                        var msgSrv = c.Services.Resolve<IMessagingService>();
+                        return msgSrv.SendAsync(testCommand);
+                    })
+                .Result.Assert.Exception<PublisherException>(ex =>
                 {
                     ex.Should().NotBeNull();
                     ex.Should().BeOfType<PublisherException>();
-                }
-            );
+                });
+            });
         }
 
         [Fact (DisplayName = "Unit-of-Work: Consumer Called to Commit when Successful.")]
-        public Task Consumer_CalledToCommit_WhenSuccessful()
+        public void Consumer_CalledToCommit_WhenSuccessful()
         {
-            var typesUnderTest = new Type[] { typeof(CommitService), typeof(EnlistingService), typeof(BehaviorRegistry) };
-            var testCommand = new TestCommand();
+            var typesUnderTest = new Type[] { typeof(MockCommitService), typeof(MockEnlistingService), typeof(MockBehaviorRegistry) };
+            var testCommand = new MockCommand();
 
-            return TestContainer(typesUnderTest).Test(
-                async (IAppContainer c) => {
-                    c.Build().Start();
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                .Act.OnContainer(c => 
+                    {
+                        c.UsingDefaultServices();
+                        c.Build().Start();
 
-                    // Publish command.
-                    var msgSrv = c.Services.Resolve<IMessagingService>();
-                    await msgSrv.SendAsync(testCommand);
-                },
-                (IAppContainer c) =>
+                        var msgSrv = c.Services.Resolve<IMessagingService>();
+                        return msgSrv.SendAsync(testCommand);
+                    })
+                .Result.Assert.Container(_ =>
                 {
                     testCommand.Result.WasUowCommited.Should().BeTrue();
-                }
-            );
+                });
+            });
         }
 
         /// <summary>
@@ -182,25 +185,27 @@ namespace DomainTests.UnitOfWork
         /// an unit of work.
         /// </summary>
         [Fact (DisplayName = "Unit-of-Work: Unit-of-work Must Have Unique Integration Events")]
-        public Task UnitOfWork_MustHave_UniqueIntegrationEvents()
+        public void UnitOfWork_MustHave_UniqueIntegrationEvents()
         {
-            var typesUnderTest = new Type[] { typeof(CommitService), typeof(EnlistingService), typeof(BehaviorRegistry) };
-            var testCommand = new TestCommand { EnlistDuplicateIntegrationEvent = true };
+            var typesUnderTest = new Type[] { typeof(MockCommitService), typeof(MockEnlistingService), typeof(MockBehaviorRegistry) };
+            var testCommand = new MockCommand { EnlistDuplicateIntegrationEvent = true };
 
-            return TestContainer(typesUnderTest).Test(
-                async (IAppContainer c) => {
-                    c.Build().Start();
+             ContainerFixture.Test(fixture => { fixture
+                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                .Act.OnContainer(c => 
+                    {
+                        c.UsingDefaultServices();
+                        c.Build().Start();
 
-                    // Publish command.
-                    var msgSrv = c.Services.Resolve<IMessagingService>();
-                    await msgSrv.SendAsync(testCommand);
-                },
-                (IAppContainer c, Exception ex) =>
+                        var msgSrv = c.Services.Resolve<IMessagingService>();
+                        return msgSrv.SendAsync(testCommand);
+                    })
+                .Result.Assert.Exception<PublisherException>(ex =>
                 {
                     ex.Should().NotBeNull();
                     ex.Should().BeOfType<PublisherException>();
-                }
-            );
+                });
+            });
         }
 
         /// <summary>
@@ -211,7 +216,7 @@ namespace DomainTests.UnitOfWork
         public async Task UnitOfWork_CanBe_CommittedOnlyOnce()
         {
             var entityFactory = EntityFactory.WithIntegration;
-            var aggregate = entityFactory.Create<SampleAggregateOne>();
+            var aggregate = entityFactory.Create<MockAggregateOne>();
             var uow = new AggregateUnitOfWork(new TestLoggerFactory(), MockMessagingService.Mock);
 
             await uow.CommitAsync(aggregate, () => Task.CompletedTask);
@@ -227,200 +232,14 @@ namespace DomainTests.UnitOfWork
         public async Task Consumer_CanQuery_UnitOfWork_ForEnlistedAggregate()
         {
             var entityFactory = EntityFactory.WithIntegration;
-            var aggregate = entityFactory.Create<SampleAggregateOne>();
+            var aggregate = entityFactory.Create<MockAggregateOne>();
             var uow = new AggregateUnitOfWork(new TestLoggerFactory(), MockMessagingService.Mock);
 
             await uow.CommitAsync(aggregate, () => Task.CompletedTask);
-            var foundAggregate = uow.GetEnlistedAggregate<SampleAggregateOne>(_ => true);
+            var foundAggregate = uow.GetEnlistedAggregate<MockAggregateOne>(_ => true);
 
             foundAggregate.Should().NotBeNull();
             aggregate.Should().BeSameAs(foundAggregate);
-        }
-
-        //--------------------- TEST CONTAINER CONFIGURATION -----------------------
-
-        public static ContainerTest TestContainer(params Type[] pluginTypes)
-        {
-            return ContainerSetup
-               .Arrange((TestTypeResolver config) =>
-               {
-                   // Configure Core Plugin with messaging and the 
-                   // unit -of-work module.
-                   config.AddPlugin<MockCorePlugin>()
-                        .AddPluginType<UnitOfWorkModule>()
-                        .AddPluginType<EntityBehaviorModule>()
-                        .UseMessagingPlugin();
-
-                   // Add host plugin with the plugin-types to be used
-                   // for the unit-test.
-                   config.AddPlugin<MockAppHostPlugin>()
-                        .AddPluginType(pluginTypes);   
-                
-               }, c =>
-               {
-                   c.WithConfig<AutofacRegistrationConfig>(regConfig =>
-                   {
-                       regConfig.Build = builder =>
-                       {
-                           builder.RegisterType<NullEntityScriptingService>()
-                               .As<IEntityScriptingService>()
-                               .SingleInstance();
-                       };
-                   });
-               });
-        }
-
-        // Aggregate used for testing integration events with other services.
-        public class SampleAggregateOne : IAggregate,
-            IValidatableType
-        {
-            public IBehaviorDelegatee Behaviors { get; private set; }
-            public bool WasUowCommited { get; set; }
-            private TestCommand _testCommand;
-
-            void IBehaviorDelegator.SetDelegatee(IBehaviorDelegatee behaviors)
-            {
-                Behaviors = behaviors;
-            }
-
-            public void TakeAction(TestCommand command)
-            {
-                _testCommand = command;
-
-                var integrationEvt = new TestIntegrationEvent {
-                    EnlistingSrvThrowEx = command.EnlistingSrvThrowEx,
-                    EnlistDuplicateIntegrationEvent = command.EnlistDuplicateIntegrationEvent,
-                    IsEnlistedAggregateInvalid = command.IsEnlistedAggregateInvalid
-                    
-                };
-
-                this.IntegrationEvent(integrationEvt);
-            }
-
-            public void Validate(IObjectValidator validator)
-            {
-                validator.Verify(!_testCommand.IsCommittedAggregateInvalid, "Invalidate Aggregate");
-            }
-        }
-
-        public class SampleAggregateTwo : IAggregate,
-            IValidatableType
-        {
-            public IBehaviorDelegatee Behaviors { get; private set; }
-            private bool _makeInvalid { get; set; }
-
-            public void MakeInvalid()
-            {
-                _makeInvalid = true;
-            }
-
-            public void Validate(IObjectValidator validator)
-            {
-                validator.Verify(!_makeInvalid, "Invalidate Aggregate");
-            }
-
-            void IBehaviorDelegator.SetDelegatee(IBehaviorDelegatee behaviors)
-            {
-                Behaviors = behaviors;
-            }
-        }
-
-        // Test application-service representing the service that will 
-        // modify and commit an aggregate.
-        public class CommitService : IMessageConsumer
-        {
-            private readonly IAggregateUnitOfWork _uow;
-            private readonly IDomainEntityFactory _entityFactory;
-
-            public CommitService(IAggregateUnitOfWork uow, IDomainEntityFactory entityFactory)
-            {
-                _uow = uow;
-                _entityFactory = entityFactory;
-            }
-
-            // Creates a new aggregate and invokes a method representing a change
-            // in the state of the aggregate.  The change is registers an integration
-            // domain-event used to communicate the change to other interested services.
-            [InProcessHandler]
-            public async Task<SampleAggregateOne> OnCommand(TestCommand command)
-            {
-                SampleAggregateOne aggregate = _entityFactory.Create<SampleAggregateOne>();
-                aggregate.TakeAction(command);
-
-                await _uow.CommitAsync(aggregate, () => {
-                    aggregate.WasUowCommited = true;
-                    return Task.CompletedTask;
-                });
-
-                return aggregate;
-            }
-        }
-
-        // Example of another application service consuming an integration event.
-        public class EnlistingService : IMessageConsumer
-        {
-            private readonly IAggregateUnitOfWork _uow;
-            private readonly IDomainEntityFactory _entityFactory;
-            public bool ReceivedIntegrationEvent { get; private set; } = false;
-
-            public EnlistingService(IAggregateUnitOfWork uow, IDomainEntityFactory entityFactory)
-            {
-                _uow = uow;
-                _entityFactory = entityFactory;
-            }
-
-            [InProcessHandler]
-            public Task When (TestIntegrationEvent evt)
-            {
-                ReceivedIntegrationEvent = true;
-
-                if (evt.EnlistingSrvThrowEx)
-                {
-                    throw new InvalidOperationException(
-                        "Enlisting Service Exception");
-                }
-
-                var aggregate = _entityFactory.Create<SampleAggregateTwo>();
-                if (evt.EnlistDuplicateIntegrationEvent)
-                {
-                    aggregate.IntegrationEvent(new TestIntegrationEvent());
-                   
-                }
-
-                if (evt.IsEnlistedAggregateInvalid)
-                {
-                    aggregate.MakeInvalid();
-                }
-
-                return _uow.EnlistAsync(aggregate);
-            }
-        }
-
-        // Test command to invoke an action to test integration events.
-        public class TestCommand : Command<SampleAggregateOne>
-        {
-            public bool EnlistingSrvThrowEx { get; set; } = false;
-            public bool IsCommittedAggregateInvalid { get; set; } = false;
-            public bool IsEnlistedAggregateInvalid { get; set; } = false;
-            public bool EnlistDuplicateIntegrationEvent { get; set; } = false;
-        }
-
-        // Test event recorded by an aggregate used to integrate with
-        // other application services.
-        public class TestIntegrationEvent : DomainEvent
-        {
-            public bool EnlistingSrvThrowEx { get; set; } = false;
-            public bool EnlistDuplicateIntegrationEvent { get; set; } = false;
-            public bool IsEnlistedAggregateInvalid { get; set; } = false;
-        }
-
-        public class BehaviorRegistry : IBehaviorRegistry
-        {
-            public void Register(IFactoryRegistry registry)
-            {
-                registry.AddBehavior<IValidationBehavior, ValidationBehavior>();
-                registry.AddBehavior<IEventIntegrationBehavior, EventIntegrationBehavior>();
-            }
         }
     }
 }
