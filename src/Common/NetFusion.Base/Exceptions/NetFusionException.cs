@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 namespace NetFusion.Base.Exceptions
 {
     /// <summary>
-    /// Base exception from which all other plug-in specific exceptions derive.
+    /// Base exception from which all other NetFusion specific exceptions derive.
     /// </summary>
 #if NET461
     [Serializable]
@@ -84,8 +84,8 @@ namespace NetFusion.Base.Exceptions
         public NetFusionException(string message, object details)
             : base(message)
         {
-            if (details == null)
-                throw new ArgumentNullException(nameof(details), "Exception details cannot be null.");
+            if (details == null) throw new ArgumentNullException(nameof(details),
+                "Exception details cannot be null.");
 
             Details = details.ToDictionary();
         }

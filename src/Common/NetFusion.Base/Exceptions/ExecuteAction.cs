@@ -13,7 +13,7 @@ namespace NetFusion.Base.Exceptions
         /// </summary>
         /// <typeparam name="TException">The exception for which the action should be retried.</typeparam>
         /// <param name="numberRetries">The number attempts to retry the action.</param>
-        /// <param name="action">The action to invoked.  Passed the current retry count.</param>
+        /// <param name="action">The action to invoke.  Passed the current retry count.</param>
         /// <param name="backoffSeconds">The number of back-off seconds.</param>
         public static void WithRetry<TException>(
             int numberRetries,

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace NetFusion.Base.Scripting
 {
     /// <summary>
-    /// If a host uses a plug-in that is dependent on the  IEntityScriptingSerivce, but doesn't 
+    /// If a host uses a plug-in that is dependent on the IEntityScriptingSerivce, but doesn't 
     /// need to utilize its provided functionality, an singleton instance of this NULL implementation 
     /// can be registered.
     /// </summary>

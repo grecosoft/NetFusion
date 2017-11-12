@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 
 namespace NetFusion.Base.Validation
 {
@@ -33,8 +34,8 @@ namespace NetFusion.Base.Validation
             IEnumerable<string> propertyNames,
             ValidationTypes validationType)
         {
-            Message = message;
-            PropertyNames = propertyNames;
+            Message = message ?? throw new ArgumentNullException(nameof(message));
+            PropertyNames = propertyNames ?? throw new ArgumentNullException(nameof(propertyNames));
             ValidationType = validationType;
         }
 
@@ -47,7 +48,7 @@ namespace NetFusion.Base.Validation
             string message,
             ValidationTypes validationType)
         {
-            Message = message;
+            Message = message ?? throw new ArgumentNullException(nameof(message));
             ValidationType = validationType;
         }
     }

@@ -58,8 +58,8 @@ namespace NetFusion.Base.Entity
             Type context = null,
             bool overrideIfPresent = false)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Attribute name cannot be null or empty string.", nameof(name));
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
+                "Attribute name cannot be null or empty string.", nameof(name));
 
             string prefixedNamed = GetPropertyPrefixedName(context, name);
 
@@ -72,8 +72,8 @@ namespace NetFusion.Base.Entity
 
         public object GetValue(string name, Type context = null)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Attribute name cannot be null or empty string.", nameof(name));
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
+                "Attribute name cannot be null or empty string.", nameof(name));
 
             string prefixedNamed = GetPropertyPrefixedName(context, name);
 
@@ -83,16 +83,16 @@ namespace NetFusion.Base.Entity
 
         public T GetValue<T>(string name, Type context = null)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Attribute name cannot be null or empty string.", nameof(name));
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
+                "Attribute name cannot be null or empty string.", nameof(name));
 
             return (T)GetValue(name, context);
         }
 
         public T GetValueOrDefault<T>(string name, T defaultValue = default(T), Type context = null)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Attribute name cannot be null or empty string.", nameof(name));
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
+                "Attribute name cannot be null or empty string.", nameof(name));
 
             string prefixedNamed = GetPropertyPrefixedName(context, name);
             if (_attributes.ContainsKey(prefixedNamed))
@@ -105,8 +105,8 @@ namespace NetFusion.Base.Entity
 
         public bool Contains(string name, Type context = null)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Attribute name cannot be null or empty string.", nameof(name));
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
+                "Attribute name cannot be null or empty string.", nameof(name));
 
             string prefixedNamed = GetPropertyPrefixedName(context, name);
             return _attributes.ContainsKey(prefixedNamed);
@@ -114,8 +114,8 @@ namespace NetFusion.Base.Entity
 
         public bool Delete(string name, Type context = null)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Attribute name cannot be null or empty string.", nameof(name));
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
+                "Attribute name cannot be null or empty string.", nameof(name));
 
             string prefixedNamed = GetPropertyPrefixedName(context, name);
             return _attributes.Remove(prefixedNamed);
@@ -139,8 +139,8 @@ namespace NetFusion.Base.Entity
         // Returns the corresponding property for a given method name.
         private string GetBasePropertyName(string methodName)
         {
-            if (string.IsNullOrWhiteSpace(methodName))
-                throw new ArgumentException("Method name cannot be null or empty string.", nameof(methodName));
+            if (string.IsNullOrWhiteSpace(methodName)) throw new ArgumentException(
+                "Method name cannot be null or empty string.", nameof(methodName));
 
             return methodName.Replace("Get", "").Replace("Set", "");
         }

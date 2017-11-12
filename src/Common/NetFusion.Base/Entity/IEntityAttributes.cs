@@ -59,7 +59,7 @@ namespace NetFusion.Base.Entity
         /// </summary>
         /// <typeparam name="T">The type of the attribute value.</typeparam>
         /// <param name="name">The name of the attribute.</param>
-        /// <param name="defaultValue"></param>
+        /// <param name="defaultValue">The value to return if not present.</param>
         /// <param name="context">Identifies the context associated with the attribute.</param>
         /// <returns>The current value or the specified default if not present.</returns>
         T GetValueOrDefault<T>(string name, T defaultValue = default(T), Type context = null );

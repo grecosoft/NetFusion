@@ -4,7 +4,7 @@ using NetFusion.RabbitMQ.Exchanges;
 
 namespace WebApiHost.RabbitMQ.Exchanges
 {
-    [ApplyScriptPredicate("ClassicCarCriteria", variableName: "IsClassic")]
+    [ApplyScriptPredicate("ClassicCarCriteria", attributeName: "IsClassic")]
     public class ExampleDirectExchange : DirectExchange<ExampleDirectEvent>
     {
         protected override void OnDeclareExchange()

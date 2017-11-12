@@ -23,16 +23,16 @@ namespace NetFusion.Base.Scripting
         /// Attribute Constructor
         /// </summary>
         /// <param name="scriptName">The name of the script stored external to the application.</param>
-        public ApplyScriptPredicateAttribute(string scriptName, string variableName)
+        public ApplyScriptPredicateAttribute(string scriptName, string attributeName)
         {
-            if (string.IsNullOrWhiteSpace(scriptName))
-                throw new ArgumentException("Script name cannot be null or empty string.", nameof(scriptName));
+            if (string.IsNullOrWhiteSpace(scriptName)) throw new ArgumentException(
+                "Script name cannot be null or empty string.", nameof(scriptName));
 
-            if (string.IsNullOrWhiteSpace(variableName))
-                throw new ArgumentException("Variable name cannot be null or empty string.", nameof(variableName));
+            if (string.IsNullOrWhiteSpace(attributeName)) throw new ArgumentException(
+                "Variable name cannot be null or empty string.", nameof(attributeName));
 
             ScriptName = scriptName;
-            AttributeName = variableName;
+            AttributeName = attributeName;
         }
 
         /// <summary>
