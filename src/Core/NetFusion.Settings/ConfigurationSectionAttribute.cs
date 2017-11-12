@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using System;
+﻿using System;
 
 namespace NetFusion.Settings
 {
