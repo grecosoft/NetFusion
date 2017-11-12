@@ -5,6 +5,9 @@ using System.Reflection;
 
 namespace NetFusion.Common.Extensions.Reflection
 {
+    /// <summary>
+    /// Extension methods used to query closed-generic types.
+    /// </summary>
     public static class GenericTypeExtensions
     {
         /// <summary>
@@ -12,7 +15,7 @@ namespace NetFusion.Common.Extensions.Reflection
         /// </summary>
         /// <param name="sourceType">The type to check.</param>
         /// <returns>Returns true if the type is an open-generic type.</returns>
-        /// <example>List<> would return true.  List<string> would return false.</string></example>
+        /// <example>List<> would return true.  List<string> would return false.</example>
         public static bool IsOpenGenericType(this Type sourceType)
         {
             if (sourceType == null) throw new ArgumentNullException(nameof(sourceType));
@@ -25,7 +28,7 @@ namespace NetFusion.Common.Extensions.Reflection
         /// Determines if the specified type is a closed type of the specified open generic type.
         /// </summary>
         /// <param name="closedGenericType">The closed-generic type to check.</param>
-        /// <param name="openGenericType">The open-generic type to test.</param>
+        /// <param name="openGenericType">The open-generic type to test for.</param>
         /// <param name="specificClosedArgTypes">Optional.  If specified, the closed type
         /// arguments must be assignable to those listed.</param>
         /// <returns>True if the type if a closed generic type of the specified open generic type.</returns>
@@ -83,10 +86,10 @@ namespace NetFusion.Common.Extensions.Reflection
         }
 
         /// <summary>
-        /// Filters a list of types to only those implementing an closed interface of a specific type.
+        /// Filters a list of types to only those implementing a closed interface of a specific open generic interface type.
         /// </summary>
         /// <param name="closedGenericTypes">The list of closed-generic types.</param>
-        /// <param name="openGenericType">The open-generic interface type to determine if the closed-generic type is based.</param>
+        /// <param name="openGenericType">The open-generic interface type used to filter the list of closed generic types.</param>
         /// <param name="genericArgTypes">Optional.  If specified, the closed type arguments must be assignable to those listed.</param>
         /// <returns></returns>
         static public IEnumerable<GenericTypeInfo> WhereHavingClosedInterfaceTypeOf(this IEnumerable<Type> closedGenericTypes,

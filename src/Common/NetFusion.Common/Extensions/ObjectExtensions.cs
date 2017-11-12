@@ -12,17 +12,16 @@ namespace NetFusion.Common.Extensions
         /// </summary>
         /// <param name="value">The value to be converted to a dictionary.</param>
         /// <returns>Dictionary.</returns>
-        public static IDictionary<string, object> ToDictionary(this object value)
+        public static IDictionary<string, object> ToDictionary(this object obj)
         {
-            if (value == null) throw new ArgumentNullException(nameof(value));
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
 
             var dictionary = new Dictionary<string, object>();
-            var valueTypeInfo = value.GetType().GetTypeInfo();
-
-            foreach (PropertyInfo property in valueTypeInfo.GetProperties()) 
+  
+            foreach (PropertyInfo property in obj.GetType().GetProperties()) 
             {
-                var obj = property.GetValue(value);
-                dictionary.Add(property.Name, obj);
+                var value = property.GetValue(obj);
+                dictionary.Add(property.Name, value);
             }
             return dictionary;
         }

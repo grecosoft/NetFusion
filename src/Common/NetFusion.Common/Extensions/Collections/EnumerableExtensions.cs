@@ -91,13 +91,15 @@ namespace NetFusion.Common.Extensions.Collections
         /// <summary>
         /// Orders a list of object instances by their types.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="types"></param>
+        /// <typeparam name="T">The type or common base type of each item within the source list.</typeparam>
+        /// <param name="source">The enumeration of types or order.</param>
+        /// <param name="types">The list of types to order items in source enumeration.</param>
         /// <returns></returns>
         public static IEnumerable<T> OrderByMatchingType<T>(this IEnumerable<T> source, IEnumerable<Type> types)
             where T : class
         {
+            if (types == null) throw new ArgumentNullException(nameof(types));
+
             foreach (var itemType in types)
             {
                 var itemsOfType = source.Where(d => d.GetType() == itemType);
@@ -109,8 +111,7 @@ namespace NetFusion.Common.Extensions.Collections
         }
 
         /// <summary>
-        /// Determines if an enumeration of class instances contains
-        /// exactly one item.  
+        /// Determines if an enumeration of class instances contains exactly one item.  
         /// </summary>
         /// <typeparam name="T">The type of the class instances.</typeparam>
         /// <param name="souce">The enumeration to check.</param>

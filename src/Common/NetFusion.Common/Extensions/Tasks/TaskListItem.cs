@@ -28,11 +28,8 @@ namespace NetFusion.Common.Extensions.Tasks
         /// <param name="invoker">The object instance that started the asynchronous call.</param>
         public TaskListItem(Task task, TInvoker invoker)
         {
-            if (task == null) throw new ArgumentNullException(nameof(task));
-            if (invoker == null) throw new ArgumentNullException(nameof(invoker));
-            
-            Task = task;
-            Invoker = invoker;
+            Task = task ?? throw new ArgumentNullException(nameof(task));
+            Invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
         }
     }
 }

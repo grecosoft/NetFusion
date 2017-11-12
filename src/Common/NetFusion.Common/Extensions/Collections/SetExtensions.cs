@@ -28,7 +28,7 @@ namespace NetFusion.Common.Extensions.Collections
         /// <param name="source">The list of values.</param>
         /// <param name="comparer">Used to compare the values.</param>
         /// <param name="values">The values to check if any given one is a member of source</param>
-        /// <returns>True if a value is a member of source.  Otherwise, False.</returns>
+        /// <returns>True if any value is a member of source.  Otherwise, False.</returns>
         public static bool ContainsAny<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer, params T[] values)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
@@ -41,7 +41,7 @@ namespace NetFusion.Common.Extensions.Collections
         /// <typeparam name="T">The type to check.</typeparam>
         /// <param name="source">The list of values.</param>
         /// <param name="values"></param>
-        /// <returns>True if a value is a member of source.  Otherwise, False.</returns>
+        /// <returns>True if any value is a member of source.  Otherwise, False.</returns>
         public static bool ContainsAny<T>(this IEnumerable<T> source, params T[] values)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));

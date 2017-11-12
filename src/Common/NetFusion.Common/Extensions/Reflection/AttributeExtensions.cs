@@ -4,6 +4,9 @@ using System.Reflection;
 
 namespace NetFusion.Common.Extensions.Reflection
 {
+    /// <summary>
+    /// Extension methods for retrieving attributes from types.
+    /// </summary>
     public static class AttributeExtensions
     {
         /// <summary>
@@ -44,7 +47,7 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <summary>
         /// Returns an attribute if present on a specified type.
         /// </summary>
-        /// <typeparam name="T">The type of the attribute to fine.</typeparam>
+        /// <typeparam name="T">The type of the attribute to find.</typeparam>
         /// <param name="source">The type to search for attribute.</param>
         /// <returns>True if attribute is found.  Otherwise false.</returns>
         public static bool HasAttribute<T>(this Type source)

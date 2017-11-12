@@ -2,9 +2,13 @@
 using Microsoft.Extensions.DependencyModel;
 using System.Linq;
 using System.Reflection;
+using System;
 
 namespace NetFusion.Common.Extensions.Reflection
 {
+    /// <summary>
+    /// Extensions for query an application's assemblies.
+    /// </summary>
     public static class RuntimeExtensions
     {
         /// <summary>
@@ -16,6 +20,8 @@ namespace NetFusion.Common.Extensions.Reflection
         public static AssemblyName[] ProbeForMatchingAssemblyNames(this DependencyContext context,
             params string[] patterns)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             var runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
             var assemblyNames = context.GetRuntimeAssemblyNames(runtimeId)
                 .Where(an => MatchesPattern(an.Name, patterns))

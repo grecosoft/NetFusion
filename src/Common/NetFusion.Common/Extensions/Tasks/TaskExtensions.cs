@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace NetFusion.Common.Extensions.Tasks
 {
     /// <summary>
-    /// Extension methods for executing a collection of invokers that call an asynchronous method that will  complete 
+    /// Extension methods for executing a collection of invokers that call an asynchronous method that will complete 
     /// in the future.  When awaiting a collection of Tasks and there is an exception, only the exception  that first 
     /// occurred will be thrown.  However, all of the exceptions can be accessed since they are associated with their 
-    /// task.  These methods generalize the calling a collection of tasks and returning a collection of all the exceptions.
+    /// task.  These methods generalize the calling a collection of tasks and returning a collection of all exceptions.
     /// </summary>
     public static class TaskExtensions
     {
@@ -22,22 +22,22 @@ namespace NetFusion.Common.Extensions.Tasks
         /// <typeparam name="TInput">The type of value passed to all invokers.</typeparam>
         /// <param name="invokers">List of objects that will invoke an asynchronous method.</param>
         /// <param name="input">Reference to object passed to all invokers.</param>
-        /// <param name="promise">The delegate invoked that will call the asynchronous method on passed invoker.</param>
+        /// <param name="invoke">The delegate invoked that will call the asynchronous method on passed invoker.</param>
         /// <returns>Collection of invokers and associated task.</returns>
         public static TaskListItem<TInvoker>[] Invoke<TInvoker, TInput>(this IEnumerable<TInvoker> invokers, 
             TInput input,
-            Func<TInvoker, TInput, Task> promise) 
+            Func<TInvoker, TInput, Task> invoke) 
             where TInput : class where TInvoker : class
         {
             if (invokers == null) throw new ArgumentNullException(nameof(invokers));
             if (input == null) throw new ArgumentNullException(nameof(input));
-            if (promise == null) throw new ArgumentNullException(nameof(promise));    
+            if (invoke == null) throw new ArgumentNullException(nameof(invoke));    
 
             var taskList = new List<TaskListItem<TInvoker>>();
             foreach(TInvoker invoker in invokers)
             {
-                Task futureResult = promise(invoker, input);
-                taskList.Add(new TaskListItem<TInvoker>(futureResult, invoker));
+                Task task = invoke(invoker, input);
+                taskList.Add(new TaskListItem<TInvoker>(task, invoker));
             }
             return taskList.ToArray();
         }
@@ -50,25 +50,25 @@ namespace NetFusion.Common.Extensions.Tasks
         /// <typeparam name="TInput">The type of value passed to all invokers.</typeparam>
         /// <param name="invokers">List of objects that will invoke an asynchronous method.</param>
         /// <param name="input">Reference to object passed to all invokers.</param>
-        /// <param name="promise">The delegate invoked that will call the asynchronous method on passed invoker.</param>
+        /// <param name="invoke">The delegate invoked that will call the asynchronous method on passed invoker.</param>
         /// <param name="cancellationToken">Cancellation token used to signal if the asynchronous task should be canceled.</param>
         /// <returns>Collection of invokers and associated task.</returns>
         public static TaskListItem<TInvoker>[] Invoke<TInvoker, TInput>(this IEnumerable<TInvoker> invokers,
             TInput input,
-            Func<TInvoker, TInput, CancellationToken, Task> promise,
+            Func<TInvoker, TInput, CancellationToken, Task> invoke,
             CancellationToken cancellationToken)
             where TInput : class where TInvoker : class
         {
             if (invokers == null) throw new ArgumentNullException(nameof(invokers));
             if (input == null) throw new ArgumentNullException(nameof(input));
-            if (promise == null) throw new ArgumentNullException(nameof(promise));
+            if (invoke == null) throw new ArgumentNullException(nameof(invoke));
             if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken));
 
             var taskList = new List<TaskListItem<TInvoker>>();
             foreach (TInvoker invoker in invokers)
             {
-                Task futureResult = promise(invoker, input, cancellationToken);
-                taskList.Add(new TaskListItem<TInvoker>(futureResult, invoker));
+                Task task = invoke(invoker, input, cancellationToken);
+                taskList.Add(new TaskListItem<TInvoker>(task, invoker));
             }
             return taskList.ToArray();
         }
@@ -83,7 +83,7 @@ namespace NetFusion.Common.Extensions.Tasks
             where TInvoker : class
         {
             if (taskList == null) throw new ArgumentNullException(nameof(taskList));
-            return Task.WhenAll(taskList.Select(fr => fr.Task));
+            return Task.WhenAll(taskList.Select(i => i.Task));
         }
 
         /// <summary>
@@ -106,9 +106,9 @@ namespace NetFusion.Common.Extensions.Tasks
             
             var exceptions = new List<TEx>(taskList.Length);
 
-            foreach (var futureResult in taskList.Where(pt => pt.Task.Exception != null))
+            foreach (var task in taskList.Where(pt => pt.Task.Exception != null))
             {
-                exceptions.Add(exFactory(futureResult));
+                exceptions.Add(exFactory(task));
             }
             return exceptions.ToArray();
         }
