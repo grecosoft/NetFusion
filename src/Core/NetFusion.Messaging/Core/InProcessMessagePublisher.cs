@@ -76,9 +76,6 @@ namespace NetFusion.Messaging.Core
                             "An exception was received when dispatching a message to one or more handlers.",
                             dispatchErrors);
                     }
-
-                    throw new MessageDispatchException(
-                        "An exception was received when dispatching a message.", ex);
                 }
 
                 throw new MessageDispatchException(
@@ -128,9 +125,9 @@ namespace NetFusion.Messaging.Core
             return dispatcher.Dispatch(message, consumer, cancellationToken);
         }
 
-        private MessageDispatchException GetDispatchException(TaskListItem<MessageDispatchInfo> futureResult)
+        private MessageDispatchException GetDispatchException(TaskListItem<MessageDispatchInfo> taskItem)
         {
-            var sourceEx = futureResult.Task.Exception.InnerException;
+            var sourceEx = taskItem.Task.Exception.InnerException;
 
             if (sourceEx is MessageDispatchException dispatchEx)
             {
@@ -138,7 +135,7 @@ namespace NetFusion.Messaging.Core
             }
 
             return new MessageDispatchException("Error calling message consumer.", 
-                futureResult.Invoker, sourceEx);
+                taskItem.Invoker, sourceEx);
             
         }
 
@@ -150,8 +147,8 @@ namespace NetFusion.Messaging.Core
             }
 
             var dispatcherDetails = dispatchers.Select(d => new {
-                d.MessageType,
-                Consumer = d.ConsumerType.Name,
+                d.MessageType.FullName,
+                Consumer = d.ConsumerType.FullName,
                 Method = d.MessageHandlerMethod.Name    
             })
             .ToList();

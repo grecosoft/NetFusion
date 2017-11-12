@@ -1,5 +1,4 @@
 ﻿using NetFusion.Base.Exceptions;
-using NetFusion.Common;
 using NetFusion.Messaging.Core;
 using System;
 using System.Collections.Generic;

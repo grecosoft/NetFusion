@@ -4,7 +4,6 @@ using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Config;
@@ -224,7 +223,7 @@ namespace NetFusion.Messaging.Modules
                     {
                         Consumer = ed.ConsumerType.FullName,
                         Method = ed.MessageHandlerMethod.Name,
-                        EventType = ed.MessageType.Name,
+                        MessageType = ed.MessageType.FullName,
                         IsAsync = ed.IsAsync,
                         IncludedDerivedTypes = ed.IncludeDerivedTypes,
                         DispatchRules = ed.DispatchRuleTypes.Select(dr => dr.FullName).ToArray(),

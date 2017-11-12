@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Enrichers;
@@ -139,10 +138,6 @@ namespace NetFusion.Messaging.Core
                             message,
                             enricherErrors);
                     }
-
-                    throw new PublisherException("Exception when invoking message enrichers.",
-                        message,
-                        ex);
                 }
 
                 throw new PublisherException("Exception when invoking message enrichers.",
@@ -177,9 +172,6 @@ namespace NetFusion.Messaging.Core
                             message,
                             publisherErrors);
                     }
-
-                    throw new PublisherException("Exception when invoking message publishers.",
-                        message, ex);
                 }
 
                 throw new PublisherException("Exception when invoking message publishers.",

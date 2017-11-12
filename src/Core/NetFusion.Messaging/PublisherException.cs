@@ -111,19 +111,19 @@ namespace NetFusion.Messaging
         /// <summary>
         /// Publisher Exception.
         /// </summary>
-        /// <param name="taskList">The task and associated publisher.</param>
-        public PublisherException(TaskListItem<IMessagePublisher> taskList): 
+        /// <param name="taskItem">The task and associated publisher.</param>
+        public PublisherException(TaskListItem<IMessagePublisher> taskItem): 
             base("Error Invoking Publishers.")
         {
-            if (taskList == null) throw new ArgumentNullException(nameof(taskList));
+            if (taskItem == null) throw new ArgumentNullException(nameof(taskItem));
 
-            var taskException = taskList.Task.Exception;
+            var taskException = taskItem.Task.Exception;
             var sourceException = taskException.InnerException;
 
             Details = new Dictionary<string, object>
             {
                 { "Message", sourceException?.Message },
-                { "Publisher", taskList.Invoker.GetType().FullName }
+                { "Publisher", taskItem.Invoker.GetType().FullName }
             };
 
             if (sourceException is MessageDispatchException dispatchException)

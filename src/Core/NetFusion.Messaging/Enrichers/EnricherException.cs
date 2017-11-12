@@ -13,18 +13,18 @@ namespace NetFusion.Messaging.Enrichers
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="taskList">The future result containing the exception.</param>
-        public EnricherException(TaskListItem<IMessageEnricher> taskList)
+        /// <param name="taskItem">The future result containing the exception.</param>
+        public EnricherException(TaskListItem<IMessageEnricher> taskItem)
         {
-            if (taskList == null) throw new NullReferenceException(nameof(taskList));
+            if (taskItem == null) throw new NullReferenceException(nameof(taskItem));
 
-            var taskException = taskList.Task.Exception;
+            var taskException = taskItem.Task.Exception;
             var sourceException = taskException.InnerException;
 
             Details = new Dictionary<string, object>
             {
                 { "Message", sourceException?.Message },
-                { "Enricher", taskList.Invoker.GetType().FullName }
+                { "Enricher", taskItem.Invoker.GetType().FullName }
             };
         }
     }
