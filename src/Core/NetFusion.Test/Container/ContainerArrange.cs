@@ -6,8 +6,8 @@ namespace NetFusion.Test.Container
 {
     /// <summary>
     /// Contains methods for arranging the type-resolver and application container
-    /// under-test before actions to be asserted are executed.  The methods on this
-    /// class allow the unit-test to initialize the expected state.
+    /// under-test before actions are executed and their results asserted.  The 
+    /// methods on this class allow the unit-test to initialize the expected state.
     /// </summary>
     public class ContainerArrange
     {

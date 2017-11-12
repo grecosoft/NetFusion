@@ -48,10 +48,9 @@ namespace NetFusion.Test.Container
         }
 
         /// <summary>
-        /// Allows the unit-test to arrange the type-resolver associated with the application
-        /// container under test.  The type-resolver basically abstracts the logic for loading
-        /// plug-in types without being dependent on .NET assemblies.  This makes unit-testing
-        /// much easier.
+        /// Allows the unit-test to arrange the type-resolver and application container under test.  
+        /// The type-resolver basically abstracts the logic for loading plug-in types without being 
+        /// dependent on .NET assemblies.  This makes unit-testing much easier.
         /// </summary>
         public ContainerArrange Arrange => new ContainerArrange(_resolver, _container);
     }

@@ -1,6 +1,7 @@
 ﻿using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Common.Extensions.Collections;
 using System;
 using System.Linq;
 
@@ -68,16 +69,22 @@ namespace NetFusion.Test.Container
                 "Assert method not specified.");
 
             var composite = (IComposite)_container;
-            var module = composite.Application.AllPluginModules
-                .OfType<TModule>().FirstOrDefault();
+            var modules = composite.Application.AllPluginModules
+                .OfType<TModule>();
 
-            if (module == null)
+            if (modules.Empty())
             {
-                throw new InvalidOperationException
-                    ($"Plug-in module of type: {typeof(TModule)} was not found to assert.");
+                throw new InvalidOperationException(
+                    $"Plug-in module of type: {typeof(TModule)} was not found to assert.");
+            }
+            
+            if (modules.Count() > 1)
+            {
+                throw new InvalidOperationException(
+                    $"Multiple Plug-in modules of type: {typeof(TModule)} were found.");
             }
 
-            assert(module);
+            assert(modules.First());
 
             return this;
         }
@@ -87,7 +94,7 @@ namespace NetFusion.Test.Container
         /// application container.  
         /// </summary>
         /// <typeparam name="TPlugin">The type of the plug-in manifest used to find the
-        /// underlying plugin object created.</typeparam>
+        /// underlying plug-in object created.</typeparam>
         /// <param name="assert">The method passed an instance of the plug-in to be asserted.</param>
         /// <returns>Self reference for method chaining.</returns>
         public ContainerAssert Plugin<TPlugin>(Action<Plugin> assert)
@@ -126,10 +133,6 @@ namespace NetFusion.Test.Container
                 "Assert method not specified.");
 
             var composite = (IComposite)_container;
-            if (composite.Application.Plugins == null)
-            {
-                throw new InvalidOperationException("Container has not been built.");
-            }
 
             var config = composite.Application
                 .Plugins.SelectMany(p => p.PluginConfigs)
