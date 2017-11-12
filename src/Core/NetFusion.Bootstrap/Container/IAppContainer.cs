@@ -20,8 +20,6 @@ namespace NetFusion.Bootstrap.Container
         /// </summary>
         ILoggerFactory LoggerFactory { get; }
 
-        IObjectValidator CreateValidator(object obj);
-
         /// <summary>
         /// Adds a container configuration to the container.
         /// </summary>
@@ -42,22 +40,19 @@ namespace NetFusion.Bootstrap.Container
         /// the generic type and then calls an initialize function.
         /// </summary>
         /// <typeparam name="T">The type of the configuration.</typeparam>
-        /// <param name="configInit">Delegate called to initialize the
-        /// created configuration.</param>
+        /// <param name="configInit">Delegate called to initialize the created configuration.</param>
         /// <returns>The application container.</returns>
         IAppContainer WithConfig<T>(Action<T> configInit)
             where T : IContainerConfig, new();
 
         /// <summary>
-        /// Loads and initializes all of the plug-ins but does not start
-        /// their execution.
+        /// Loads and initializes all of the plug-ins but does not start their execution.
         /// </summary>
         /// <returns>Reference to the loaded container.</returns>
         IBuiltContainer Build();
 
         /// <summary>
-        /// Dependency injection container from which lifetime scopes can 
-        /// be created to resolve plug-in services.
+        /// Dependency injection container from which lifetime scopes can be created to resolve plug-in services.
         /// </summary>
         /// <returns>Configured DI container that can be used to resolve services.
         /// </returns>
@@ -68,6 +63,13 @@ namespace NetFusion.Bootstrap.Container
         /// </summary>
         /// <returns>Dictionary of key/value pairs that can be serialized to JSON.</returns>
         IDictionary<string, object> Log { get; }
+
+        /// <summary>
+        /// Creates an IObjectValidator used to validate a specific object instance.
+        /// </summary>
+        /// <param name="obj">The object to be validated.</param>
+        /// <returns>Instance of IObjectValidator.</returns>
+        IObjectValidator CreateValidator(object obj);
 
         /// <summary>
         /// Allows each module to be safely stopped.

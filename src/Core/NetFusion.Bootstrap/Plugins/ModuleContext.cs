@@ -35,11 +35,6 @@ namespace NetFusion.Bootstrap.Plugins
         public ILogger Logger { get; }
 
         /// <summary>
-        /// All modules contained within the plug-in.
-        /// </summary>
-        public IEnumerable<IPluginModule> AllPluginModules { get; }
-
-        /// <summary>
         /// The plug-in types that can be accessed by the module limited to the set based on its type of plug-in.  
         /// This list will contain all types from all plug-ins if the context is associated with a core plug-in.
         /// However, for application centric plug-ins, the list is limited to types found in application plug-ins.
@@ -66,7 +61,6 @@ namespace NetFusion.Bootstrap.Plugins
             Logger = loggerFactory.CreateLogger(plugin.GetType());
 
             AppHost = compositeApp.AppHostPlugin;
-            AllPluginModules = compositeApp.AllPluginModules;
             AllPluginTypes = FilteredTypesByPluginType();
             AllAppPluginTypes = GetAppPluginTypes();
         }
@@ -122,7 +116,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// only one module is not found, an exception is thrown.</returns>
         public T GetPluginModule<T>() where T : IPluginModuleService
         {
-            var foundModules = AllPluginModules.OfType<T>();
+            var foundModules = _compositeApp.AllPluginModules.OfType<T>();
             if (!foundModules.Any())
             {
                 throw new ContainerException($"Plug-in module of type: {typeof(T)} not found.");

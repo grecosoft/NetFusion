@@ -1,7 +1,6 @@
 ﻿using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Manifests;
-using NetFusion.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// <summary>
         /// The type of the plug-in based on the containing assembly manifest type.
         /// </summary>
-        public PluginTypes PluginType { get; internal set; }
+        public PluginTypes PluginType { get; private set; }
 
         /// <summary>
         /// The manifest associated with the plug-in.
@@ -43,21 +42,21 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         /// <returns>List of plug-in types containing additional information for 
         /// the associated .NET type.</returns>
-        public PluginType[] PluginTypes { get; private set; }
+        public PluginType[] PluginTypes { get; private set; } = Array.Empty<PluginType>();
 
         /// <summary>
         /// Modules found within the plug-in used to bootstrap the plug-in.
         /// </summary>
         /// <returns>List of plug-in modules.</returns>
-        public IPluginModule[] Modules { get; private set; }
+        public IPluginModule[] Modules { get; private set; } = Array.Empty<IPluginModule>();
 
-        
+
         /// <summary>
-        /// Sets the resolved types from which a plugin-in is built.  This method is invoked 
+        /// Sets the resolved types from which a plug-in is built.  This method is invoked 
         /// by the ITypeResolver implementation.
         /// </summary>
         /// <param name="pluginTypes">Type types contained with-in the plug-in.</param>
-        /// <param name="pluginModules">Modules used to bootstrap the plugin.</param>
+        /// <param name="pluginModules">Modules used to bootstrap the plug-in.</param>
         public void SetPluginResolvedTypes(PluginType[] pluginTypes, IPluginModule[] pluginModules)
         {
             PluginTypes = pluginTypes ?? throw new ArgumentNullException(nameof(pluginTypes));
@@ -73,12 +72,12 @@ namespace NetFusion.Bootstrap.Plugins
         /// <summary>
         /// The configurations associated with the plug-in.
         /// </summary>
-        public IList<IContainerConfig> PluginConfigs { get; internal set; }
+        public IList<IContainerConfig> PluginConfigs { get; internal set; } = Array.Empty<IContainerConfig>();
 
         /// <summary>
         /// The known types that were discovered by all of the modules contained within the plug-in.
         /// </summary>
-        public Type[] DiscoveredTypes { get; internal set; }
+        public Type[] DiscoveredTypes { get; internal set; } = Array.Empty<Type>();
 
         private IEnumerable<Type> Types => PluginTypes.Select(pt => pt.Type);
 
@@ -93,14 +92,11 @@ namespace NetFusion.Bootstrap.Plugins
         {
             if (instances == null) throw new ArgumentNullException(nameof(instances));
 
-            return instances
-                .Where(i => HasType(i.GetType()))
-                .OfType<T>();
+            return instances.Where(i => HasType(i.GetType()));
         }
 
         /// <summary>
-        /// Returns a configuration associated with the plug-in for a given
-        /// configuration type. 
+        /// Returns a configuration associated with the plug-in for a given configuration type. 
         /// </summary>
         /// <typeparam name="T">The configuration type.</typeparam>
         /// <returns>The registered configuration if found. Otherwise,
@@ -130,8 +126,7 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Returns a required configuration associated with the plug-in for a 
-        /// given configuration type. 
+        /// Returns a required configuration associated with the plug-in for a given configuration type. 
         /// </summary>
         /// <typeparam name="T">The configuration type.</typeparam>
         /// <returns>The registered configuration if found. Otherwise,

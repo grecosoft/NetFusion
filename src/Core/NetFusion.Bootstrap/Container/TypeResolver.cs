@@ -29,8 +29,8 @@ namespace NetFusion.Bootstrap.Container
         private ILogger<TypeResolver> _logger;
 
         /// <summary>
-        /// Creates a type resolver that will load assembles representing plug-ins 
-        /// contained within the application's base directory.
+        /// Creates a type resolver that will load assembles representing plug-ins contained 
+        /// within the application's base directory.
         /// </summary>
         /// <param name="searchPattern">Patterns used to filter the assemblies that represent plug-ins.
         ///</param>
@@ -44,8 +44,8 @@ namespace NetFusion.Bootstrap.Container
 
         public void Initialize(ILoggerFactory loggerFactory)
         {
-            if (loggerFactory == null)
-                throw new ArgumentNullException(nameof(loggerFactory), "Logger Factory cannot be null.");
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory), 
+                "Logger Factory cannot be null.");
             
             _logger = loggerFactory.CreateLogger<TypeResolver>();
         }
@@ -60,7 +60,7 @@ namespace NetFusion.Bootstrap.Container
         public virtual void SetPluginManifests(ManifestRegistry registry)
         {
             if (registry == null) throw new ArgumentNullException(nameof(registry),
-                "Register cannot be null.");
+                "Registry cannot be null.");
             
             Assembly[] pluginAssemblies = GetPluginAssemblies(_searchPatterns);
             SetManifestTypes(registry, pluginAssemblies);
@@ -113,9 +113,7 @@ namespace NetFusion.Bootstrap.Container
                 }
                 catch (Exception ex)
                 {
-                    throw new ContainerException(
-                        $"Error Loading Assembly: {assemblyName.Name}",
-                        ex);
+                    throw new ContainerException($"Error Loading Assembly: {assemblyName.Name}", ex);
                 }
             }
             return loadedAssemblies;
@@ -156,8 +154,7 @@ namespace NetFusion.Bootstrap.Container
 
         // Automatically populates all properties on a plug-in module that are an enumeration of
         // a derived IPluginKnownType.  The plug-in known types specific by the module are returned
-        // for use by the consumer.  This my Friend does what is needed without having to add a dependency
-        // on MEF - coding for a specific need and not the World.
+        // for use by the consumer. 
         public IEnumerable<Type> SetPluginModuleKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes)
         {
             if (forModule == null) throw new ArgumentNullException(nameof(forModule), 

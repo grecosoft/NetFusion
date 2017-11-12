@@ -49,7 +49,7 @@ namespace NetFusion.Test.Container
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
                 "Assert method not specified.");
 
-            assert(_container.Application);
+            assert(((IComposite)_container).Application);
             return this;
         }
 
@@ -97,7 +97,7 @@ namespace NetFusion.Test.Container
                 "Assert method not specified.");
 
             var composite = (IComposite)_container;
-            var plugins = composite.Plugins.Where(p => p.Manifest.GetType() == typeof(TPlugin));
+            var plugins = composite.Application.Plugins.Where(p => p.Manifest.GetType() == typeof(TPlugin));
 
             if (plugins.Count() > 1)
             {

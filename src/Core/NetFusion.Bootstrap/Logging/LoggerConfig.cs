@@ -5,10 +5,9 @@ using System;
 namespace NetFusion.Bootstrap.Plugins
 {
     /// <summary>
-    /// Container configuration that allows the host application 
-    /// to specify the ILoggerFactory to be used.  If the not
-    /// configured, a default ILoggerFactory configured instance
-    /// is used.
+    /// Container configuration that allows the host application to specify the 
+    /// ILoggerFactory to be used.  If the not configured, a default ILoggerFactory 
+    /// configured instance is used.
     /// </summary>
     public class LoggerConfig : IContainerConfig
     {
@@ -24,8 +23,8 @@ namespace NetFusion.Bootstrap.Plugins
         public bool LogExceptions { get; set; } = true;
 
         /// <summary>
-        /// The logger implementation that will be used by the container
-        /// to log container and plug-in specific errors and messages.
+        /// The logger implementation that will be used by the container to log container 
+        /// and plug-in specific errors and messages.
         /// </summary>
         /// <param name="loggerFactory">The logger instance.</param>
         public void UseLoggerFactory(ILoggerFactory loggerFactory)

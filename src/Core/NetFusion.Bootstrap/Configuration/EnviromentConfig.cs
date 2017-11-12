@@ -6,7 +6,7 @@ namespace NetFusion.Bootstrap.Configuration
 {
     /// <summary>
     /// Configuration for the overall application environment.  Provides default initialization
-    /// of the .NET configuration that can be overridden or modified by the host application.
+    /// of the .NET configuration extensions that can be overridden or modified by the host application.
     /// </summary>
     public class EnvironmentConfig : IContainerConfig
     {

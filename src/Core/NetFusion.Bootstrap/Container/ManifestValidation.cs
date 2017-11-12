@@ -23,6 +23,11 @@ namespace NetFusion.Bootstrap.Container
 
         public void Validate()
         {
+            if (_registry.AllManifests == null)
+            {
+                throw new ContainerException("Plug-in manifests not set by type resolver.");
+            }
+
             AssertManifestIds();
             AssertManifestNames();
             AssertLoadedManifests();

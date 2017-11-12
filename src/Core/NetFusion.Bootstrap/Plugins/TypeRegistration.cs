@@ -1,10 +1,9 @@
 ﻿using Autofac;
 using Autofac.Builder;
 using Autofac.Features.Scanning;
-using NetFusion.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace NetFusion.Bootstrap.Plugins
 {

@@ -49,7 +49,7 @@ namespace NetFusion.Settings.Modules
             // is being directly created and not using the host specified implementation so all settings
             // can be consistently validated.  But all other application validation delegates to the 
             // host specified implementation.
-            var validator = new ObjectValidator(settings);
+            var validator = new MSObjectValidator(settings);
             var result = validator.Validate();
             
             result.ThrowIfInvalid();

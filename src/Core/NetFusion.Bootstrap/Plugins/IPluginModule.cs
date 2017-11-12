@@ -28,7 +28,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// The first method called on the module.  This method is called on 
-        /// all modules before the configuration method is called.
+        /// all modules before the Configure method is called.
         /// </summary>
         void Initialize();
 
@@ -77,7 +77,7 @@ namespace NetFusion.Bootstrap.Plugins
         void ScanAllOtherPlugins(TypeRegistration registration);
 
         /// <summary>
-        /// Allows a core plug-in module to scan for type limited to only 
+        /// Allows a core plug-in module to scan for types limited to only 
         /// application centric plug-in types.
         /// </summary>
         /// <param name="registration">Reference to instance used to

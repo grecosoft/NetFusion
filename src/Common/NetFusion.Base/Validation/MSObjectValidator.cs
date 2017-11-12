@@ -9,14 +9,14 @@ namespace NetFusion.Base.Validation
     /// Validation based on Microsoft DataAnnotations.  This is the IObjectValidator implementation
     /// used by default if not overridden when bootstrapping the application container.
     /// </summary>
-    public class ObjectValidator : IObjectValidator
+    public class MSObjectValidator : IObjectValidator
     {
         private List<ValidationItem> _items;
         private readonly List<IObjectValidator> _children;
 
         public object Object { get; }
 
-        public ObjectValidator(object obj)
+        public MSObjectValidator(object obj)
         {            
             Object = obj ?? throw new ArgumentNullException(nameof(obj));
 
@@ -75,7 +75,7 @@ namespace NetFusion.Base.Validation
             if (childObject == null) throw new ArgumentNullException(nameof(childObject), 
                 "Child object to validate cannot be null.");
 
-            var validator = new ObjectValidator(childObject);
+            var validator = new MSObjectValidator(childObject);
             validator.ValidateObject();
 
             _children.Add(validator);

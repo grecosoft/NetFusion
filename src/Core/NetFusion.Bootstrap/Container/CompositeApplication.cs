@@ -74,7 +74,7 @@ namespace NetFusion.Bootstrap.Container
         /// </summary>
         public IEnumerable<IPluginModule> AllPluginModules
         {
-            get { return Plugins?.SelectMany(p => p.Modules); }
+            get { return Plugins.SelectMany(p => p.Modules); }
         }
 
         //------------------------------------------ Plug-in Component Registration ------------------------------------------//

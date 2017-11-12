@@ -37,8 +37,8 @@ namespace NetFusion.Bootstrap.Logging
             string processName,
             Action<string, object[]> logMessage) : this(logger, logMessage)
         {
-            if (string.IsNullOrWhiteSpace(processName))
-                throw new ArgumentException("Process name to log duration of cannot be null", nameof(processName));
+            if (string.IsNullOrWhiteSpace(processName)) throw new ArgumentException(
+                "Process name to log duration of cannot be null", nameof(processName));
 
             _processName = processName;
         }

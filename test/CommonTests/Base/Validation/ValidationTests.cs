@@ -165,7 +165,7 @@ namespace UtilitiesTests
 
         private ValidationResultSet Validate(object obj)
         {
-            var validator = new ObjectValidator(obj);
+            var validator = new MSObjectValidator(obj);
             return validator.Validate();
         }
 

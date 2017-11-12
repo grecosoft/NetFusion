@@ -11,7 +11,7 @@ namespace NetFusion.Bootstrap.Configuration
         /// The type implementing IObjectValidator to be used.  This defaults to 
         /// an implementation based on Microsoft's component validation attributes.
         /// </summary>
-        public Type ValidatorType { get; private set; } = typeof(ObjectValidator);
+        public Type ValidatorType { get; private set; } = typeof(MSObjectValidator);
 
         /// <summary>
         /// Used to specify the type implementing IObjectValidator to be used.

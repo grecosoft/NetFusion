@@ -77,11 +77,6 @@ namespace NetFusion.Bootstrap.Container
             Registry = new ManifestRegistry();
         }
 
-        public CompositeApplication Application
-        {
-            get { return _application; }
-        }
-
         // Log of the composite application structure showing how it was constructed.
         public IDictionary<string, object> Log
         {
@@ -110,6 +105,8 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
+        // Creates a validation instance, based on the application configuration, used to validate an object.
+        // The host application can specify an implementation using a validation library of choice.
         public IObjectValidator CreateValidator(object obj)
         {
             ThrowIfDisposed(this);
@@ -137,19 +134,17 @@ namespace NetFusion.Bootstrap.Container
 
         //------------------------------------------ IComposite Methods -----------------------------------------------//
         // This is an interface exposed for use by components that may need details about the composite application.
-        // The consumer must access these methods via the IComposite interface since they are not generally used.
+        // This interface is often used when unit-testing and not by typical business applications.
 
-        IEnumerable<Plugin> IComposite.Plugins => _application.Plugins;
+        CompositeApplication IComposite.Application
+        {
+            get { return _application; }
+        }
 
         Plugin IComposite.GetPluginContainingType(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type), 
                 "Reference to type not specified.");
-               
-            if (_application.Plugins == null)
-            {
-                return null;
-            }
 
             return _application.Plugins.FirstOrDefault(p => p.PluginTypes.Any(pt => pt.Type == type));
         }
@@ -158,11 +153,6 @@ namespace NetFusion.Bootstrap.Container
         {
             if (string.IsNullOrWhiteSpace(fullTypeName))
                 throw new ArgumentException("Full type not cannot be null or whitespace.", nameof(fullTypeName));
-
-            if (_application.Plugins == null)
-            {
-                return null;
-            }
 
             return _application.Plugins.FirstOrDefault(p => p.PluginTypes.Any(pt => pt.Type.FullName == fullTypeName));
         }
@@ -234,9 +224,9 @@ namespace NetFusion.Bootstrap.Container
         // but does not start their execution.
         public IBuiltContainer Build()
         {
+            ConfigureEnvironment();
             ConfigureLogging();
             ConfigureValidation();
-            ConfigureEnvironment();
             LogContainerInitialization();
 
             try
@@ -267,8 +257,7 @@ namespace NetFusion.Bootstrap.Container
             return this;
         }
 
-        // The last step in the bootstrap process allowing plug-in modules to start  
-        // runtime services.
+        // The last step in the bootstrap process allowing plug-in modules to start runtime services.
         public void Start()
         {
             if (_application.IsStarted)
@@ -344,6 +333,7 @@ namespace NetFusion.Bootstrap.Container
             }
 
             DisposePluginModules();
+
             _container?.Dispose();
             _loggerFactory?.Dispose();
 
@@ -352,8 +342,6 @@ namespace NetFusion.Bootstrap.Container
 
         private void DisposePluginModules()
         {
-            if (_application.AllPluginModules == null) return;
-
             foreach (var module in _application.AllPluginModules)
             {
                 (module as IDisposable)?.Dispose();
@@ -367,6 +355,12 @@ namespace NetFusion.Bootstrap.Container
                 .FirstOrDefault() ?? new EnvironmentConfig();
 
             _configuration = _enviromentConfig.Configuration;
+        }
+
+        private void ConfigureValidation()
+        {
+            _validationConfig = _configs.Values.OfType<ValidationConfig>()
+                .FirstOrDefault() ?? new ValidationConfig();
         }
 
         private void LoadContainer()
@@ -504,7 +498,7 @@ namespace NetFusion.Bootstrap.Container
         // Register MS Logging Extensions.
         private void RegisterLogging(Autofac.ContainerBuilder builder)
         {
-            builder.RegisterInstance(this.LoggerFactory).As<ILoggerFactory>().SingleInstance();
+            builder.RegisterInstance(LoggerFactory).As<ILoggerFactory>().SingleInstance();
             builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).SingleInstance();
         }
 
@@ -577,12 +571,6 @@ namespace NetFusion.Bootstrap.Container
             _application.LoggerFactory = _loggerFactory;
         }
 
-        private void ConfigureValidation()
-        {
-            _validationConfig = _configs.Values.OfType<ValidationConfig>()
-                .FirstOrDefault() ?? new ValidationConfig();
-        }
-
         private Exception LogException(Exception ex)
         {
             if (_loggerConfig.LogExceptions)
@@ -601,7 +589,7 @@ namespace NetFusion.Bootstrap.Container
         {
             _logger.LogDebugDetails(BootstrapLogEvents.BOOTSTRAP_INITIALIZE, "Container Setup", new
             {
-                TypeResolver = _typeResover.GetType(),
+                TypeResolver = _typeResover.GetType().AssemblyQualifiedName,
                 Configs = _configs.Keys.Select(ct => ct.AssemblyQualifiedName)
             });
         }
@@ -610,9 +598,9 @@ namespace NetFusion.Bootstrap.Container
         {
             _logger.LogDebugDetails(BootstrapLogEvents.BOOTSTRAP_EXCEPTION, "Manifests", new
             {
-                Host = registry.AppHostPluginManifests.First().GetType(),
-                Application = registry.AppComponentPluginManifests.Select(m => m.GetType()),
-                Core = registry.CorePluginManifests.Select(c => c.GetType())
+                Host = registry.AppHostPluginManifests.First().GetType().AssemblyQualifiedName,
+                Application = registry.AppComponentPluginManifests.Select(m => m.GetType().AssemblyQualifiedName),
+                Core = registry.CorePluginManifests.Select(c => c.GetType().AssemblyQualifiedName)
             });
         }
 
@@ -625,9 +613,9 @@ namespace NetFusion.Bootstrap.Container
                     plugin.Manifest.Name,
                     plugin.Manifest.PluginId,
                     plugin.AssemblyName,
-                    Configs = plugin.PluginConfigs.Select(c => c.GetType().Name),
-                    Modules = plugin.Modules.Select(m => m.GetType().Name),
-                    Discovers = plugin.DiscoveredTypes.Select(t => t.Name)
+                    Configs = plugin.PluginConfigs.Select(c => c.GetType().FullName),
+                    Modules = plugin.Modules.Select(m => m.GetType().FullName),
+                    Discovers = plugin.DiscoveredTypes.Select(t => t.FullName)
                 });
             }
         }
