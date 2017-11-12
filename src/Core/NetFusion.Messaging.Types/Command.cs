@@ -20,7 +20,7 @@ namespace NetFusion.Messaging.Types
         /// <summary>
         /// The optional result of executing the command.
         /// </summary>
-        public object Result { get; set; }
+        public object Result { get; private set; }
 
         /// <summary>
         /// Dynamic message attributes that can be associated with the command.
@@ -58,10 +58,5 @@ namespace NetFusion.Messaging.Types
         /// The result of executing the command.
         /// </summary>
         public new TResult Result => (TResult)base.Result;
-
-        public override void SetResult(object result)
-        {
-            base.SetResult(result);
-        }
     }
 }

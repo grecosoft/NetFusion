@@ -6,8 +6,8 @@ namespace NetFusion.Messaging.Types.Rules
     /// Base class for specifying a rule to determine if a consumer's handler should be 
     /// invoked for a given message.
     /// </summary> 
-    /// <typeparam name="TMessage">The type or base type of the
-    /// message associated with the rule.</typeparam>
+    /// <typeparam name="TMessage">The type or base type of the  message associated 
+    /// with the rule.</typeparam>
     public abstract class MessageDispatchRule<TMessage> : IMessageDispatchRule
         where TMessage : IMessage
     {
