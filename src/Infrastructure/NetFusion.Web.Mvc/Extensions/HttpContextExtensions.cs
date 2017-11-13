@@ -10,7 +10,7 @@ namespace NetFusion.Web.Mvc.Extensions
     {
         /// <summary>
         /// Returns a service registered with the dependency injection container from
-        /// with the context of a Web MVC component class.
+        /// the context of a Web MVC component class.
         /// </summary>
         /// <typeparam name="T">The type of the service to receive.</typeparam>
         /// <param name="httpContext">The httpContext of the current request.</param>

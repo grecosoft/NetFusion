@@ -5,6 +5,10 @@ using System.Linq;
 
 namespace NetFusion.Web.Mvc.Metadata.Core
 {
+    /// <summary>
+    /// Maps the internal classes containing the group and action metadata into 
+    /// models returned from the service API.
+    /// </summary>
     public static class MetadataMap
     {
         public static ApiServiceInfo GetModel(ApiGroupMeta[] groups)

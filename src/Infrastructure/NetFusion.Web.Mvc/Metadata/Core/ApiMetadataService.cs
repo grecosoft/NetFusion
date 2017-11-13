@@ -30,7 +30,7 @@ namespace NetFusion.Web.Mvc.Metadata.Core
         {
             if (groupName == null) throw new ArgumentNullException(nameof(groupName));
             
-            return _metadata.Value.Where(g => g.GroupName == groupName)
+            return GetApiGroups().Where(g => g.GroupName == groupName)
                 .ToArray();
         }
 

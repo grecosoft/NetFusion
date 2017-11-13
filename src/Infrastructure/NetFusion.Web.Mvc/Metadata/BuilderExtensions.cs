@@ -15,7 +15,7 @@ namespace NetFusion.Web.Mvc
     /// <summary>
     /// Extends the MVC application builder with a method called to 
     /// specify the base URL that can be called to obtain route metadata.
-    /// NOTE:  This is not required if the metadata is queried on the server.
+    /// NOTE:  This is not required if the metadata is only queried on the server.
     /// </summary>
     public static class BuilderExtensions
     {
