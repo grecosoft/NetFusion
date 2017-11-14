@@ -39,7 +39,7 @@ namespace NetFusion.Domain.Roslyn.Core
 
             // The scope that will be used to resolve references made within
             // expressions.  This includes the entity and its set of optional
-            // dynamic attributes referenced as _ within scripts..
+            // dynamic attributes referenced as _ within scripts.
             Type entityScopeType = typeof(EntityScriptScope<>).MakeGenericType(Script.EntityType);
             object entityScope = entityScopeType.CreateInstance(entity);
 

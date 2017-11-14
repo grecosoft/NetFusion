@@ -25,7 +25,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
         public bool HasErrors { get; private set; }
 
         /// <summary>
-        /// Indicates the committed the unit-of-work has associated validations.
+        /// Indicates the committed unit-of-work has associated validations.
         /// </summary>
         public bool HasValidations => ValidationResults.Any();
 
@@ -36,6 +36,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
 
         internal static CommitResult Sucessful(IAggregateUnitOfWork unitOfwork, IEnumerable<ValidationResultSet> validationResults)
         {
+            if (unitOfwork == null) throw new ArgumentNullException(nameof(unitOfwork));
             if (validationResults == null) throw new ArgumentNullException(nameof(validationResults));
 
             return new CommitResult
@@ -50,6 +51,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
 
         internal static CommitResult Invalid(IAggregateUnitOfWork unitOfwork, IEnumerable<ValidationResultSet> validationResults)
         {
+            if (unitOfwork == null) throw new ArgumentNullException(nameof(unitOfwork));
             if (validationResults == null) throw new ArgumentNullException(nameof(validationResults));
 
             return new CommitResult {

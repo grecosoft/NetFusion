@@ -46,9 +46,9 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
 
         // All the integration events for all enlisted aggregates.
         private IEnumerable<Type> EnlistedIntegrationEventTypes => Aggregates
-            .Select(a => a.Behaviors.Get<IEventIntegrationBehavior>().instance)
-            .Where(ib => ib != null)
-            .SelectMany(ib => ib.DomainEvents.Select(de => de.GetType()));
+            .Select(a => a.Behaviors.Get<IEventIntegrationBehavior>())
+            .Where(b => b.supported)
+            .SelectMany(b => b.instance.DomainEvents.Select(de => de.GetType()));
 
 
         public Task<CommitResult> CommitAsync(IAggregate aggregate, Func<Task> commitAction,
@@ -63,7 +63,8 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
             if (_enlistedAggregates.Any())
             {
                 throw new InvalidOperationException(
-                    "The unit-of-work has already being committed.  Other aggregates must be enlisted.");
+                    "The unit-of-work is being committed or a prior commit-result has not been disposed.  " + 
+                    "Other aggregates must be enlisted or the last commit-result disposed.");
             }
 
             ValidateAggregate(aggregate);
@@ -138,8 +139,10 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
             return DoInternalIntegration(aggregate, cancellationToken);
         }
 
-        private bool IsEnlisted (IAggregate aggregate)
+        public bool IsEnlisted (IAggregate aggregate)
         {
+            if (aggregate == null) throw new ArgumentNullException(nameof(aggregate));
+
             return Aggregates.Contains(aggregate);
         }
 

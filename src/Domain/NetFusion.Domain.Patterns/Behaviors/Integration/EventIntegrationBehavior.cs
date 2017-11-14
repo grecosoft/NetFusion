@@ -20,7 +20,7 @@ namespace NetFusion.Domain.Patterns.Behaviors.Integration
 
         // Returns all integration events for which internal-integration has not been completed.
         public IEnumerable<IDomainEvent> DomainEvents => _integrationEvents
-            .Where(ie => !ie.IsInternalIntegrated)
+            .Where(ie => !ie.IsInternallyIntegrated)
             .Select(ie => ie.DomainEvent);
 
         public EventIntegrationBehavior()
@@ -40,7 +40,7 @@ namespace NetFusion.Domain.Patterns.Behaviors.Integration
         // same micro-service.
         public void MarkInternallyIntegrated()
         {
-            _integrationEvents.Where(ie => !ie.IsInternalIntegrated)
+            _integrationEvents.Where(ie => !ie.IsInternallyIntegrated)
                 .ForEach(ie => ie.SetInternalIntegrated());
         }
 

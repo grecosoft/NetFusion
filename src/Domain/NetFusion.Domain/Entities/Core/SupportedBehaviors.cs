@@ -46,7 +46,7 @@ namespace NetFusion.Domain.Entities.Core
             throw new InvalidOperationException(
                 $"The class: {implementationType.FullName} implementing the behavior type: {behaviorType.FullName} " +
                 $"does not have a valid constructor.  A behavior type must have a default constructor or a single " +
-                $"parameter constructor with a type implementing the: {typeof(IBehaviorDelegator)} interface.");
+                $"parameter constructor with a type implementing the: {typeof(IBehaviorDelegator).FullName} interface.");
         }
 
         private void AddBehavior(Type behaviorType, Type implementationType, bool hasDelegatorConstructor)

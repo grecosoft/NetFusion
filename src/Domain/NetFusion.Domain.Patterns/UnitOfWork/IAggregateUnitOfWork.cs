@@ -43,6 +43,13 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
             CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
+        /// Determines if an aggregate has been enlisted within the unit-of-work.
+        /// </summary>
+        /// <param name="aggregate">The aggregate to check for enlistment.</param>
+        /// <returns>Returns True if the aggregate is enlisted.  Otherwise, False.</returns>
+        bool IsEnlisted(IAggregate aggregate);
+
+        /// <summary>
         /// Returns an existing aggregate that has been enlisted within the unit-of-work.
         /// </summary>
         /// <typeparam name="TAggregate">The type of aggregate to return.</typeparam>

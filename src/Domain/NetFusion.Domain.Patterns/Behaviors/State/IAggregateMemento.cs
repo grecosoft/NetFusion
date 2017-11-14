@@ -7,8 +7,7 @@
     public interface IAggregateMemento
     {
         /// <summary>
-        /// Notifies the aggregate to load its state from its associated
-        /// IAggregateStateBehavior instance.
+        /// Notifies the aggregate to load its state.
         /// </summary>
         /// <param name="state">The state to restore aggregate from.</param>
         void RestoreFromState(object state);

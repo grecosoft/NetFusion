@@ -45,8 +45,8 @@ namespace NetFusion.MongoDB.Core
         public IMongoCollection<TDocument> GetCollection<TDocument>(string collectionName,
             MongoCollectionSettings settings = null)
         {
-            if (string.IsNullOrWhiteSpace(collectionName))
-                throw new ArgumentException("Collection name must be specified.", nameof(collectionName));
+            if (string.IsNullOrWhiteSpace(collectionName)) throw new ArgumentException(
+                "Collection name must be specified.", nameof(collectionName));
 
             return _database.GetCollection<TDocument>(collectionName, settings);
         }

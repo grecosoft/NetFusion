@@ -48,8 +48,8 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
             return query.Result;
         }
 
-        // Creates an instance of the consumer that will execute the query and calls it after invoking the
-        // pre-filters and before the post-filters.
+        // Creates an instance of the consumer that will execute the query and calls it between the
+        // pre and post filters.
         private async Task InvokeDispatcher(QueryDispatchInfo dispatcher, IQuery query, CancellationToken cancellationToken)
         {
             var consumer = (IQueryConsumer)_lifetimeScope.Resolve(dispatcher.ConsumerType);
@@ -82,8 +82,6 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
                     {
                         throw new QueryDispatchException("Exception when invoking query filters.", filterErrors);
                     }
-
-                    throw new QueryDispatchException("Exception when invoking query filters.", ex);
                 }
 
                 throw new QueryDispatchException("Exception when invoking query filters.", ex);

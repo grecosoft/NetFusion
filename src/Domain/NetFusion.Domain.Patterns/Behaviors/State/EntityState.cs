@@ -11,17 +11,17 @@ namespace NetFusion.Domain.Patterns.Behaviors.State
         /// The entity associated with the state.
         /// </summary>
         public object Entity { get; }
-        
+
         /// <summary>
         /// The state of the entity.
         /// </summary>
         public EntityStateTypes State { get; }
 
         /// <summary>
-        /// Optional data model associated with the entity if the underlying data
-        /// model is different from the domain entity.
+        /// Optional model associated with the entity.  This can be used by consumers of
+        /// the EntityState such as a repository to track an associated data model.
         /// </summary>
-        public object DataModel { get; private set; }
+        public object AssociatedModel { get; private set; }
 
         /// <summary>
         /// Records information associated with the state of an entity.
@@ -35,13 +35,21 @@ namespace NetFusion.Domain.Patterns.Behaviors.State
         }
 
         /// <summary>
-        /// Used to specify the data model associated with the domain entity.  This can be used if
-        /// the underlying data model is different from the domain entity.
+        /// Model associated with the entity.  This can be used by consumers of the EntityState
+        /// such as repository to track an associated data model.
         /// </summary>
-        /// <param name="dataModel"></param>
-        public void SetDataModel(object dataModel)
+        /// <param name="model">The associated model.</param>
+        public void SetAssociatedModel(object model)
         {
-            DataModel = dataModel ?? throw new ArgumentNullException("Data model must be specified.", nameof(dataModel));
+            AssociatedModel = model ?? throw new ArgumentNullException("Associated model cannot be null.", nameof(model));
+        }
+
+        /// <summary>
+        /// Clears the entity state's associated model.
+        /// </summary>
+        public void ClearAssociatedModel()
+        {
+            AssociatedModel = null;
         }
     }
 }

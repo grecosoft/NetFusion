@@ -13,14 +13,14 @@ namespace NetFusion.Domain.Patterns.Behaviors.Integration
         /// The associated domain-event.
         /// </summary>
         public IDomainEvent DomainEvent { get; }
-        private bool _isInternalIntegrated = false;
+        private bool _isInternallyIntegrated = false;
 
         public IntegrationEvent(IDomainEvent domainEvent)
         {
             DomainEvent = domainEvent ?? throw new ArgumentNullException(nameof(domainEvent));
         }
 
-        public bool IsInternalIntegrated => _isInternalIntegrated;
+        public bool IsInternallyIntegrated => _isInternallyIntegrated;
 
         /// <summary>
         /// Indicates that the domain-event has been published to interested consumers
@@ -28,13 +28,13 @@ namespace NetFusion.Domain.Patterns.Behaviors.Integration
         /// </summary>
         public void SetInternalIntegrated()
         {
-            if (_isInternalIntegrated)
+            if (_isInternallyIntegrated)
             {
                 throw new InvalidOperationException(
                     $"Domain Event has already been integrated with other aggregates.");
             }
 
-            _isInternalIntegrated = true;
+            _isInternallyIntegrated = true;
         }
     }
 }

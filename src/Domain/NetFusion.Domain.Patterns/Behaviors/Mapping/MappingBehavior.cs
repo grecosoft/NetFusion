@@ -20,7 +20,7 @@ namespace NetFusion.Domain.Patterns.Behaviors.Mapping
             Entity = entity ?? throw new ArgumentNullException(nameof(entity));
         }
 
-        public TTarget MapTo<TTarget>() where TTarget : class, new()
+        public TTarget MapTo<TTarget>() where TTarget : class
         {
             return Mapper.Map<TTarget>(Entity);
         }

@@ -89,7 +89,7 @@ namespace NetFusion.Rest.Server.Actions
         }
 
         /// <summary>
-        /// Returns the resource type returned from a controller's method.
+        /// Gets the resource type returned from a controller's method.
         /// </summary>
         /// <param name="methodInfo">The controller's action method information.</param>
         /// <returns>The resource type being returned from action method.  Returns null,

@@ -12,6 +12,11 @@ namespace NetFusion.Domain.Patterns.Queries
         /// </summary>
         public object Result { get; private set; }
 
+        internal Query()
+        {
+
+        }
+
         // The type of the result declared by the query.  Base abstract
         // class does not have a declared result type.
         Type IQuery.DeclaredResultType => throw new NotImplementedException();

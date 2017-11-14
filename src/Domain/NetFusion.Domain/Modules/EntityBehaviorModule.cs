@@ -24,7 +24,7 @@ namespace NetFusion.Domain.Modules
 
         public override void StartModule(IContainer container, ILifetimeScope scope)
         {
-            var resolver = new AutofacDomainServiceRosolver(container);
+            var resolver = new AutofacDomainServiceRosolver(container); // TODO Remove Direct Ref... pass via container config...
             var factory = new DomainEntityFactory(resolver);
 
             // Add the application's entity behavior registrations to the Domain-Entity Factory

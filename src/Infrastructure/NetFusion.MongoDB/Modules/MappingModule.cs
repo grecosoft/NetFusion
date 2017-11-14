@@ -23,11 +23,11 @@ namespace NetFusion.MongoDB.Modules
         {
             lock(_mapLock)
             {
-                foreach (IEntityClassMap map in this.Mappings)
+                foreach (IEntityClassMap map in Mappings)
                 {
                     if (!BsonClassMap.IsClassMapRegistered(map.EntityType))
                     {
-                        map.AddKnownPluginTypes(this.Context.AllPluginTypes);
+                        map.AddKnownPluginTypes(Context.AllPluginTypes);
                         BsonClassMap.RegisterClassMap(map.ClassMap);
                     }
                 }

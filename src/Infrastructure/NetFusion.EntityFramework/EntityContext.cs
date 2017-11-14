@@ -16,13 +16,14 @@ namespace NetFusion.EntityFramework
         where TEntityDbContext : EntityDbContext
     {
         private TEntityDbContext _dbContext;
+        private bool _disposed = false;
 
         public Type DbContextType => typeof(TEntityDbContext);
 
         public void SetDbContext(IEntityDbContext context)
         {
             _dbContext = (TEntityDbContext)context ?? throw new ArgumentNullException(nameof(context), 
-                "Inner context not specified.");
+                "Inner context cannot be null.");
         }
 
         public ChangeTracker ChangeTracker
@@ -72,7 +73,17 @@ namespace NetFusion.EntityFramework
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing || _disposed) return;
+
             _dbContext?.Dispose();
+
+            _disposed = true;
         }
     }
 }

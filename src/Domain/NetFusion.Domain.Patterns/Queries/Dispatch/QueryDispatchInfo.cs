@@ -97,7 +97,7 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
             if (query == null) throw new ArgumentNullException(nameof(query));
             if (consumer == null) throw new ArgumentNullException(nameof(consumer));
 
-            var futureResult = new TaskCompletionSource<object>();
+            var taskSource = new TaskCompletionSource<object>();
 
             try
             {
@@ -115,13 +115,13 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
                     await asyncResult;
 
                     object result = ProcessResult(query, asyncResult);
-                    futureResult.SetResult(result);
+                    taskSource.SetResult(result);
                 }
                 else
                 {
                     object syncResult = Invoker.DynamicInvoke(consumer, query);
                     object result = ProcessResult(query, syncResult);
-                    futureResult.SetResult(result);
+                    taskSource.SetResult(result);
                 }
             }
             catch (Exception ex)
@@ -138,10 +138,10 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
                     this,
                     sourceEx);
 
-                futureResult.SetException(dispatchEx);
+                taskSource.SetException(dispatchEx);
             }
 
-            return await futureResult.Task;
+            return await taskSource.Task;
         }
 
         private object ProcessResult(IQuery query, object result)

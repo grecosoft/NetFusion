@@ -20,8 +20,8 @@ namespace NetFusion.Rest.Client.Core
         private IRequestSettings _defaultRequestSettings;
 
         /// <summary>
-        /// Initializes an instance of the client with its associated HttpClient
-        /// delegated to for making network requests.
+        /// Initializes an instance of the client with its associated HttpClient delegated to 
+        /// for making network requests.
         /// </summary>
         /// <param name="httpClient">Reference to a HttpClient instance.</param>
         /// <param name="contentSerializers">Dictionary of serializers keyed by media-type.</param>

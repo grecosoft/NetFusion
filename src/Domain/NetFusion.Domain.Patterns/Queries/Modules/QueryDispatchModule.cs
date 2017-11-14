@@ -56,7 +56,6 @@ namespace NetFusion.Domain.Patterns.Queries.Modules
             {
                 builder.RegisterType(consumerType)
                     .AsSelf()
-                    .AsImplementedInterfaces()
                     .InstancePerLifetimeScope();
             }
         }

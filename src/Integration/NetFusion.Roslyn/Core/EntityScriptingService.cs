@@ -73,7 +73,7 @@ namespace NetFusion.Domain.Roslyn.Core
                 {
                     throw new InvalidOperationException(
                         $"A script named: {scriptName} for the entity type of: {entityType} could not be found.  " +
-                        $"Script names are case-sensitive.");
+                        $"Note: Script names are case-sensitive.");
                 }
 
                 await ExecuteScript(entity, namedEvalScript);
@@ -84,7 +84,7 @@ namespace NetFusion.Domain.Roslyn.Core
         {
             var preEvalDetails = GetPreEvalDetails(entity, evaluator);
 
-            using (var durationLogger = _logger.LogTraceDuration(ScriptingLogEvents.SCRIPT_EVALUATION, "Script Evaluation"))
+            using (var durationLogger = _logger.LogTraceDuration(ScriptingLogEvents.SCRIPT_EXECUTION, "Script Evaluation"))
             {
                 durationLogger.Log.LogTraceDetails(ScriptingLogEvents.SCRIPT_PRE_EVALUATION, 
                     "Pre-Evaluation Details", preEvalDetails);

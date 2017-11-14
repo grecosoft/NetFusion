@@ -24,8 +24,8 @@ namespace NetFusion.Rest.Client.Resources
         [JsonProperty(PropertyName = "_links")]
         public Dictionary<string, Link> Links { get; set; }
 
-        // When submitting resources back to the server for updating or 
-        // other use-cases, the embedded resources should not be serialized.
+        // When submitting resources back to the server for updating or other 
+        // use-cases, the embedded resources and links should not be serialized.
         public bool ShouldSerializeEmbedded() => false;
         public bool ShouldSerializeLinks() => false;
 

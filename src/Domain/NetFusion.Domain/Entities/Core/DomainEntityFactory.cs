@@ -69,7 +69,8 @@ namespace NetFusion.Domain.Entities.Core
             return domainEntity;
         }
 
-        public DomainEntityConstructor<TDomainEntity> Build<TDomainEntity>() where TDomainEntity : IBehaviorDelegator
+        public DomainEntityConstructor<TDomainEntity> Build<TDomainEntity>() 
+            where TDomainEntity : IBehaviorDelegator
         {
             return new DomainEntityConstructor<TDomainEntity>(domainEntity => {
                 SetBehaviorDelegatee(domainEntity);
