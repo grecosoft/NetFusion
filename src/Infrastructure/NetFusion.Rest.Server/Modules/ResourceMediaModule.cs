@@ -99,14 +99,14 @@ namespace NetFusion.Rest.Server.Modules
 
             var mediaType = values.Select(v => MediaTypeHeaderValue.Parse(v))
                 .OrderByDescending(mt => mt.Quality)
-                .FirstOrDefault(mt => _mediaResourceTypeMeta.ContainsKey(mt.MediaType))?.MediaType;
+                .FirstOrDefault(mt => _mediaResourceTypeMeta.ContainsKey(mt.MediaType.ToString()))?.MediaType;
 
             if (mediaType == null)
             {
                 return null;
             }
 
-			var foundEntry = GetMediaTypeEntry(mediaType);
+			var foundEntry = GetMediaTypeEntry(mediaType.ToString());
 			var foundMeta = foundEntry.entry.GetResourceTypeMeta(resourceType);
 
             return foundMeta.meta;

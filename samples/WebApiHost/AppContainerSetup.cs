@@ -49,7 +49,7 @@ namespace WebApiHost
 
                 .WithConfig((WebMvcConfig config) =>
                 {
-                    config.EnableRouteMetadata = true;
+                    //config.EnableRouteMetadata = true;
                     config.UseServices(services);
                 })
 
