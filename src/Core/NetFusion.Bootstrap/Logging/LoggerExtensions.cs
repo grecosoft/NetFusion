@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Internal;
+using NetFusion.Base.Exceptions;
 using NetFusion.Common.Extensions;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace NetFusion.Bootstrap.Logging
         //------------------------------------------DEBUG------------------------------------------//
 
         public static void LogDebugDetails(this ILogger logger, EventId eventId, Exception exception,
-            string message, object details, object[] args)
+            string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
             logger.LogDetails(LogLevel.Debug, eventId, exception, message, args, details);
@@ -39,7 +40,7 @@ namespace NetFusion.Bootstrap.Logging
         //------------------------------------------TRACE------------------------------------------//
 
         public static void LogTraceDetails(this ILogger logger, EventId eventId, Exception exception,
-            string message, object details, object[] args)
+            string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
             logger.LogDetails(LogLevel.Trace, eventId, exception, message, args, details);
@@ -76,7 +77,7 @@ namespace NetFusion.Bootstrap.Logging
         //------------------------------------------INFORMATION------------------------------------------//
 
         public static void LogInformationDetails(this ILogger logger, EventId eventId, Exception exception,
-            string message, object details, object[] args)
+            string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
             logger.LogDetails(LogLevel.Information, eventId, exception, message, args, details);
@@ -120,9 +121,23 @@ namespace NetFusion.Bootstrap.Logging
         //------------------------------------------ERROR------------------------------------------//
 
         public static void LogErrorDetails(this ILogger logger, EventId eventId, Exception exception,
-            string message, object details, object[] args)
+            string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
+            logger.LogDetails(LogLevel.Error, eventId, exception, message, args, details);
+        }
+
+        public static void LogErrorDetails(this ILogger logger, EventId eventId, Exception exception,
+            string message, params object[] args)
+        {
+            if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
+
+            object details = null;
+            if (exception is NetFusionException netFusionEx)
+            {
+                details = netFusionEx.Details;
+            }
+
             logger.LogDetails(LogLevel.Error, eventId, exception, message, args, details);
         }
 
@@ -149,7 +164,7 @@ namespace NetFusion.Bootstrap.Logging
         //------------------------------------------CRITICAL------------------------------------------//
 
         public static void LogCriticalDetails(this ILogger logger, EventId eventId, Exception exception,
-            string message, object details, object[] args)
+            string message, object details, params object[] args)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
             logger.LogDetails(LogLevel.Critical, eventId, exception, message, args, details);
@@ -174,13 +189,12 @@ namespace NetFusion.Bootstrap.Logging
             object[] args,
             object details)
         {
+            string msgDetails = details?.ToIndentedJson();
 
-            var values = new List<object>(args)
-            {
-                details.ToIndentedJson()
-            };
-
-            logger.Log(logLevel, eventId, new FormattedLogValues(message + " {details}", values.ToArray()), exception, _messageFormatter);
+            logger.Log(logLevel, eventId, 
+                new FormattedLogValues(message + $"Details: {msgDetails}", args), 
+                exception, 
+                _messageFormatter);
         }
     }
 }

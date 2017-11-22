@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Enrichers;
@@ -111,7 +112,7 @@ namespace NetFusion.Messaging.Core
             catch (PublisherException ex)
             {
                 // Log the details of the publish exception and throw a generic error messages.
-                _logger.LogError(MessagingLogEvents.MESSAGING_EXCEPTION, ex, "Exception publishing message.");
+                _logger.LogErrorDetails(MessagingLogEvents.MESSAGING_EXCEPTION, ex, "Exception publishing message.");
                 throw new PublisherException("Exception publishing message.  See log for details.");
             }
         }

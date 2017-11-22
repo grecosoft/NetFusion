@@ -20,7 +20,7 @@ namespace NetFusion.Messaging.Types
         /// <summary>
         /// The optional result of executing the command.
         /// </summary>
-        public object Result { get; private set; }
+        public object Result { get; protected set; }
 
         /// <summary>
         /// Dynamic message attributes that can be associated with the command.
@@ -52,6 +52,11 @@ namespace NetFusion.Messaging.Types
     public abstract class Command<TResult> : Command, ICommand<TResult>
     {
    
+        public Command()
+        {
+            base.Result = default(TResult);
+        }
+
         Type ICommand.ResultType => typeof(TResult);
 
         /// <summary>

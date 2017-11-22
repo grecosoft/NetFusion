@@ -98,7 +98,7 @@ namespace WebApiHost.Messaging
             }
             catch (PublisherException ex)
             {
-                return ex.Details.ToIndentedJson();
+                return ex.Message;
             }
 
             return "No Exception";

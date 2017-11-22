@@ -42,7 +42,12 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
             try { await InvokeDispatcher(dispatchInfo, query, cancellationToken); }
             catch (Exception ex)
             {
-                throw new QueryDispatchException("Error dispatching query.", query, ex);
+                var details = new {
+                    Query = query,
+                    DispatchInfo = dispatchInfo
+                };
+
+                throw new QueryDispatchException("Error dispatching query.", details, ex);
             }
 
             return query.Result;
