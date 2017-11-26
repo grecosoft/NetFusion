@@ -10,7 +10,7 @@ namespace NetFusion.Rest.Client.Resources
     /// Also allows the consumer of the resource to obtain any embedded 
     /// named resources.
     /// </summary>
-    public abstract class HalResource
+    public class HalResource
     {
         /// <summary>
         /// Embedded related named resources.

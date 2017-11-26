@@ -10,7 +10,7 @@ namespace NetFusion.Domain.Patterns.Queries
         /// <summary>
         /// The result of the query provided by the consumer.
         /// </summary>
-        public object Result { get; private set; }
+        public object Result { get; protected set; }
 
         internal Query()
         {
@@ -38,6 +38,11 @@ namespace NetFusion.Domain.Patterns.Queries
     /// <typeparam name="TResult">The type of the result expected by the query.</typeparam>
     public abstract class Query<TResult> : Query, IQuery<TResult>
     {
+        public Query()
+        {
+            base.Result = default(TResult);
+        }
+
         // The type of the result declared by the query.
         Type IQuery.DeclaredResultType => typeof(TResult);
 
