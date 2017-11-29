@@ -2,7 +2,7 @@
 
 NET_STANDARD="netstandard2.0"
 NET_CORE_APP="netcoreapp2.0"
-PACKAGE_OUTPUT="../../../../../_packages"
+PACKAGE_OUTPUT="../../_packages"
 NUGET_VERSION="2.0.0"
 
 COMMAND="$1"
@@ -68,7 +68,7 @@ dotnet_run_test()
 
 	for var in ${files[@]}
 	do
-		dotnet test "${var}" -f "$NET_CORE_APP" 
+		dotnet test "${var}" -f "$NET_CORE_APP"
 	done
 }
 
@@ -94,6 +94,7 @@ LIBRARIES=(
 	./src/Core/NetFusion.Messaging.Types/NetFusion.Messaging.Types.csproj
 	./src/Core/NetFusion.Messaging/NetFusion.Messaging.csproj
 
+	./src/Infrastructure/NetFusion.Mapping/NetFusion.Mapping.csproj
 	./src/Infrastructure/NetFusion.EntityFramework/NetFusion.EntityFramework.csproj
 	./src/Infrastructure/NetFusion.Mapping/NetFusion.Mapping.csproj
 	./src/Infrastructure/NetFusion.MongoDB/NetFusion.MongoDB.csproj
