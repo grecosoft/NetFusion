@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-  	<PackageId>NetFusion.Utilities.Mapping</PackageId>
+  	<PackageId>NetFusion.Mapping</PackageId>
 	<Title>NetFusion Mapping Plug-In</Title>
     <Description>Plug-In providing process and structure for mapping objects.  Provides extension point for specifying an open-source mapping library of choice.</Description>
 	<PackageTags>netfusion;plugin;mapping</PackageTags>
