@@ -6,6 +6,7 @@ using NetFusion.Test.Container;
 using NetFusion.Testing.Logging;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace CoreTests.Messaging
@@ -20,22 +21,23 @@ namespace CoreTests.Messaging
         /// consumer event handler methods will be invoked.
         /// </summary>
         [Fact (DisplayName = "Domain Event Consumer handler invoked")]
-        public void DomainEventConsumer_HandlerInvoked()
+        public Task DomainEventConsumer_HandlerInvoked()
         {
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange
-                    .Resolver(r => {
-                        r.WithHostConsumer();
-                    })
+            return ContainerFixture.TestAsync(async fixture => {
+
+                var testResult = await fixture.Arrange
+                    .Resolver(r => r.WithHostConsumer())
                     .Container(c => c.UsingDefaultServices())
+
                 .Act.OnContainer(async c => {
                     c.Build();
 
                     var mockEvt = new MockDomainEvent();
                     await c.Services.Resolve<IMessagingService>()
                         .PublishAsync(mockEvt);
-                })
-                .Result.Assert.Container(c =>
+                });
+
+                testResult.Assert.Container(c =>
                 {
                     var consumer = c.Services.Resolve<IEnumerable<IMessageConsumer>>()
                         .OfType<MockDomainEventConsumer>()
@@ -52,23 +54,26 @@ namespace CoreTests.Messaging
         /// called for any derived domain events.
         /// </summary>
         [Fact(DisplayName = "Event handler for Base Type invoked if applied attribute")]
-        public void EventHandlerForBaseType_InvokedIfAppliedAttribute()
+        public Task EventHandlerForBaseType_InvokedIfAppliedAttribute()
         {
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange
-                    .Resolver(r => {
+            return ContainerFixture.TestAsync(async fixture => {
+
+                var testResult = await fixture
+                .Arrange.Resolver(r => {
                         r.WithHost();
                         r.AddDerivedEventAndConsumer();
                     })
                     .Container(c => c.UsingDefaultServices())
+                
                 .Act.OnContainer(async c => {
                     c.Build();
 
                     var mockEvt = new MockDerivedDomainEvent();
                     await c.Services.Resolve<IMessagingService>()
                         .PublishAsync(mockEvt);
-                })
-                .Result.Assert.Container(c =>
+                });
+
+                testResult.Assert.Container(c =>
                 {
                     var consumer = c.Services.Resolve<IEnumerable<IMessageConsumer>>()
                         .OfType<MockBaseMessageConsumer>()
@@ -80,10 +85,11 @@ namespace CoreTests.Messaging
         }
 
         [Fact(DisplayName = "Publisher exception Generic Exception Raised details Logged")]
-        public void PublisherException_GenericExceptionRaised_DetailsLogged()
+        public Task PublisherException_GenericExceptionRaised_DetailsLogged()
         {
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange
+            return ContainerFixture.TestAsync(async fixture => {
+
+                var testResult = await fixture.Arrange
                     .Resolver(r => {
                         r.WithHost();
                         r.AddEventAndExceptionConsumer();
@@ -91,14 +97,16 @@ namespace CoreTests.Messaging
                     .Container(c => {
                         c.UseTestLogger();
                         c.UsingDefaultServices(); })
+
                 .Act.OnContainer(async c => {
                     c.Build();
 
                     var mockEvt = new MockDomainEvent();
                     await c.Services.Resolve<IMessagingService>()
                         .PublishAsync(mockEvt);
-                })
-                .Result.Assert.Exception<PublisherException>(ex =>
+                });
+
+                testResult.Assert.Exception<PublisherException>(ex =>
                 {
                     ex.Message.Should().Contain("Exception publishing message.  See log for details.");
                 })

@@ -24,21 +24,24 @@ namespace DomainTests.UnitOfWork
         /// services managing other aggregates.  
         /// </summary>
         [Fact (DisplayName = "Unit-of-Work: Aggregates Can Integrate Using Domain Events")]
-        public void AggragatesCanIntegrate_Using_DomainEvents()
+        public Task AggragatesCanIntegrate_Using_DomainEvents()
         {
             var typesUnderTest = new Type[] { typeof(MockCommitService), typeof(MockEnlistingService), typeof(MockBehaviorRegistry) };
 
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                .Act.OnContainer(c => 
+            return ContainerFixture.TestAsync(async fixture => {
+
+                var testResult = await fixture.Arrange
+                .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                .Act.OnContainer(c =>
                     {
                         c.UsingDefaultServices();
                         c.Build().Start();
 
                         var msgSrv = c.Services.Resolve<IMessagingService>();
                         return msgSrv.SendAsync(new MockCommand());
-                    })
-                .Result.Assert.Container(c =>
+                    });
+
+                testResult.Assert.Container(c =>
                 {
                     // Obtain reference to the service that is the receiver of
                     // the integration domain-event:
@@ -53,22 +56,24 @@ namespace DomainTests.UnitOfWork
         /// events recorded for an aggregate are cleared.
         /// </summary>
         [Fact (DisplayName = "Unit-of-Work: Integration Events Cleared on Successful Commit")]
-        public void IntegrationEvents_Cleared_OnSuccessfulCommit()
+        public Task IntegrationEvents_Cleared_OnSuccessfulCommit()
         {
             var typesUnderTest = new Type[] { typeof(MockCommitService), typeof(MockEnlistingService), typeof(MockBehaviorRegistry) };
             var testCommand = new MockCommand();
 
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                .Act.OnContainer(c => 
+            return ContainerFixture.TestAsync(async fixture => {
+                var testResult = await fixture.Arrange
+                .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                .Act.OnContainer(c =>
                     {
                         c.UsingDefaultServices();
                         c.Build().Start();
 
                         var msgSrv = c.Services.Resolve<IMessagingService>();
                         return msgSrv.SendAsync(testCommand);
-                    })
-                .Result.Assert.Container(_ =>
+                    });
+
+                testResult.Assert.Container(_ =>
                 {
                     // Verify that the aggregate used by the test no longer
                     // has any recorded integration events.
@@ -82,22 +87,24 @@ namespace DomainTests.UnitOfWork
         /// domain events are not cleared.
         /// </summary>
         [Fact (DisplayName = "Unit-of-Work: Integration Events Not Cleared on Save with Exception")]
-        public void IntegrationEvents_NotCleared_OnSaveWithException()
+        public Task IntegrationEvents_NotCleared_OnSaveWithException()
         {
             var typesUnderTest = new Type[] { typeof(MockCommitService), typeof(MockEnlistingService), typeof(MockBehaviorRegistry) };
             var testCommand = new MockCommand { EnlistingSrvThrowEx = true };
 
-            ContainerFixture.Test(fixture => { fixture
+            return ContainerFixture.TestAsync(async fixture => {
+                var testResult = await fixture
                 .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                .Act.OnContainer(c => 
+                .Act.OnContainer(c =>
                     {
                         c.UsingDefaultServices();
                         c.Build().Start();
 
                         var msgSrv = c.Services.Resolve<IMessagingService>();
                         return msgSrv.SendAsync(testCommand);
-                    })
-                .Result.Assert.Exception<PublisherException>(ex =>
+                    });
+
+                testResult.Assert.Exception<PublisherException>(ex =>
                 {
                     ex.Should().NotBeNull();
                     ex.Should().BeOfType<PublisherException>();
@@ -110,22 +117,25 @@ namespace DomainTests.UnitOfWork
         /// does not pass validation.
         /// </summary>
         [Fact (DisplayName = "Unit-of-Work: Aggregate Not Committed for Invalid Aggregate")]
-        public void Aggregate_NotCommited_ForInvalidAggregate()
+        public Task Aggregate_NotCommited_ForInvalidAggregate()
         {
             var typesUnderTest = new Type[] { typeof(MockCommitService), typeof(MockEnlistingService), typeof(MockBehaviorRegistry) };
             var testCommand = new MockCommand { IsCommittedAggregateInvalid = true };
 
-             ContainerFixture.Test(fixture => { fixture
-                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                .Act.OnContainer(c => 
-                    {
-                        c.UsingDefaultServices();
-                        c.Build().Start();
+             return ContainerFixture.TestAsync(async fixture => {
 
-                        var msgSrv = c.Services.Resolve<IMessagingService>();
-                        return msgSrv.SendAsync(testCommand);
-                    })
-                .Result.Assert.Exception<PublisherException>(ex =>
+                 var testResult = await fixture.Arrange
+                    .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                    .Act.OnContainer(c =>
+                        {
+                            c.UsingDefaultServices();
+                            c.Build().Start();
+
+                            var msgSrv = c.Services.Resolve<IMessagingService>();
+                            return msgSrv.SendAsync(testCommand);
+                        });
+
+                testResult.Assert.Exception<PublisherException>(ex =>
                 {
                     ex.Should().NotBeNull();
                     ex.Should().BeOfType<PublisherException>();
@@ -134,46 +144,53 @@ namespace DomainTests.UnitOfWork
         }
 
         [Fact (DisplayName = "Unit-of-Work: Aggregate Not Enlisted for Invalid Aggregate")]
-        public void Aggregate_NotEnlisted_ForInvalidAggregate()
+        public Task Aggregate_NotEnlisted_ForInvalidAggregate()
         {
             var typesUnderTest = new Type[] { typeof(MockCommitService), typeof(MockEnlistingService), typeof(MockBehaviorRegistry) };
             var testCommand = new MockCommand { IsEnlistedAggregateInvalid = true };
 
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                .Act.OnContainer(c => 
-                    {
-                        c.UsingDefaultServices();
-                        c.Build().Start();
+            return ContainerFixture.TestAsync(async fixture => {
 
-                        var msgSrv = c.Services.Resolve<IMessagingService>();
-                        return msgSrv.SendAsync(testCommand);
-                    })
-                .Result.Assert.Exception<PublisherException>(ex =>
-                {
-                    ex.Should().NotBeNull();
-                    ex.Should().BeOfType<PublisherException>();
-                });
+                var testResult = await fixture.Arrange
+                    .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                    .Act.OnContainer(c =>
+                        {
+                            c.UsingDefaultServices();
+                            c.Build().Start();
+
+                            var msgSrv = c.Services.Resolve<IMessagingService>();
+                            return msgSrv.SendAsync(testCommand);
+                        });
+
+                testResult.Assert.Exception<PublisherException>(ex =>
+                    {
+                        ex.Should().NotBeNull();
+                        ex.Should().BeOfType<PublisherException>();
+                    });
             });
         }
 
         [Fact (DisplayName = "Unit-of-Work: Consumer Called to Commit when Successful.")]
-        public void Consumer_CalledToCommit_WhenSuccessful()
+        public Task Consumer_CalledToCommit_WhenSuccessful()
         {
             var typesUnderTest = new Type[] { typeof(MockCommitService), typeof(MockEnlistingService), typeof(MockBehaviorRegistry) };
             var testCommand = new MockCommand();
 
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                .Act.OnContainer(c => 
-                    {
-                        c.UsingDefaultServices();
-                        c.Build().Start();
+            return ContainerFixture.TestAsync( async fixture => {
 
-                        var msgSrv = c.Services.Resolve<IMessagingService>();
-                        return msgSrv.SendAsync(testCommand);
-                    })
-                .Result.Assert.Container(_ =>
+                var testResult = await fixture.Arrange
+                    .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                    .Act.OnContainer(c =>
+                        {
+                            c.UsingDefaultServices();
+                            c.Build().Start();
+
+                            var msgSrv = c.Services.Resolve<IMessagingService>();
+                            return msgSrv.SendAsync(testCommand);
+                        });
+
+
+                testResult.Assert.Container(_ =>
                 {
                     testCommand.Result.WasUowCommited.Should().BeTrue();
                 });
@@ -185,22 +202,24 @@ namespace DomainTests.UnitOfWork
         /// an unit of work.
         /// </summary>
         [Fact (DisplayName = "Unit-of-Work: Unit-of-work Must Have Unique Integration Events")]
-        public void UnitOfWork_MustHave_UniqueIntegrationEvents()
+        public Task UnitOfWork_MustHave_UniqueIntegrationEvents()
         {
             var typesUnderTest = new Type[] { typeof(MockCommitService), typeof(MockEnlistingService), typeof(MockBehaviorRegistry) };
             var testCommand = new MockCommand { EnlistDuplicateIntegrationEvent = true };
 
-             ContainerFixture.Test(fixture => { fixture
-                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                .Act.OnContainer(c => 
-                    {
-                        c.UsingDefaultServices();
-                        c.Build().Start();
+             return ContainerFixture.TestAsync(async fixture => {
+                 var testResult = await fixture.Arrange
+                    .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                    .Act.OnContainer(c =>
+                        {
+                            c.UsingDefaultServices();
+                            c.Build().Start();
 
-                        var msgSrv = c.Services.Resolve<IMessagingService>();
-                        return msgSrv.SendAsync(testCommand);
-                    })
-                .Result.Assert.Exception<PublisherException>(ex =>
+                            var msgSrv = c.Services.Resolve<IMessagingService>();
+                            return msgSrv.SendAsync(testCommand);
+                        });
+
+                testResult.Assert.Exception<PublisherException>(ex =>
                 {
                     ex.Should().NotBeNull();
                     ex.Should().BeOfType<PublisherException>();

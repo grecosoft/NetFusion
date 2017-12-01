@@ -3,6 +3,7 @@ using CoreTests.Messaging.Mocks;
 using FluentAssertions;
 using NetFusion.Messaging;
 using NetFusion.Test.Container;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace BootstrapTests.Messaging
@@ -16,22 +17,24 @@ namespace BootstrapTests.Messaging
     public class DispatchEvaluationTests
     {
         [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesDispathPredicate))]
-        public void HandlerCalled_WhenMessagePassesDispathPredicate()
+        public Task HandlerCalled_WhenMessagePassesDispathPredicate()
         {
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange
+            return ContainerFixture.TestAsync(async fixture => {
+
+                var testResult = await fixture.Arrange
                     .Resolver(r => r.WithHostEvalBasedConsumer())
                     .Container(c => {
                         c.UseMockedEvalService();
                     })
-                .Act.OnContainer(async c => {
+                .Act.OnContainer(c => {
                     c.Build();
 
                     var mockEvt = new MockEvalDomainEvent { RuleTestValue = 7000 };
-                    await c.Services.Resolve<IMessagingService>()
+                    return c.Services.Resolve<IMessagingService>()
                         .PublishAsync(mockEvt);
-                })
-                .Result.Assert.Container(c =>
+                });
+
+                testResult.Assert.Container(c =>
                 {
                     var consumer = c.Services.Resolve<MockDomainEventEvalBasedConsumer>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventPredicatePases");

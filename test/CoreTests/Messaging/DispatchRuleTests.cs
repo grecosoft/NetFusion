@@ -4,6 +4,7 @@ using CoreTests.Messaging.Mocks;
 using FluentAssertions;
 using NetFusion.Messaging;
 using NetFusion.Test.Container;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace BootstrapTests.Messaging
@@ -16,22 +17,24 @@ namespace BootstrapTests.Messaging
     public class DispatchRuleTests
     {
         [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesAllDispatchRules))]
-        public void HandlerCalled_WhenMessagePassesAllDispatchRules()
+        public Task HandlerCalled_WhenMessagePassesAllDispatchRules()
         {
-            ContainerFixture.Test(fixture => { fixture
+            return ContainerFixture.TestAsync(async fixture => {
+
+                var testResult = await fixture
                 .Arrange
-                    .Resolver(r => {
-                        r.WithHostRuleBasedConsumer();
-                    })
+                    .Resolver(r => r.WithHostRuleBasedConsumer())
                     .Container(c => c.UsingDefaultServices())
-                .Act.OnContainer(async c => {
+
+                .Act.OnContainer(c => {
                     c.Build();
 
                     var mockEvt = new MockRuleDomainEvent { RuleTestValue = 1500 };
-                    await c.Services.Resolve<IMessagingService>()
+                    return c.Services.Resolve<IMessagingService>()
                         .PublishAsync(mockEvt);
-                })
-                .Result.Assert.Container(c =>
+                });
+
+                testResult.Assert.Container(c =>
                 {
                     var consumer = c.Services.Resolve<MockDomainEventRuleBasedConsumer>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventAllRulesPass");
@@ -40,22 +43,23 @@ namespace BootstrapTests.Messaging
         }
 
         [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesAnyDispatchRule))]
-        public void HandlerCalled_WhenMessagePassesAnyDispatchRule()
+        public Task HandlerCalled_WhenMessagePassesAnyDispatchRule()
         {
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange
-                    .Resolver(r => {
-                        r.WithHostRuleBasedConsumer();
-                    })
+            return ContainerFixture.TestAsync(async fixture => {
+
+                var testResult = await fixture.Arrange
+                    .Resolver(r => r.WithHostRuleBasedConsumer())
                     .Container(c => c.UsingDefaultServices())
-                .Act.OnContainer(async c => {
+
+                .Act.OnContainer(c => {
                     c.Build();
 
                     var mockEvt = new MockRuleDomainEvent { RuleTestValue = 3000 };
-                    await c.Services.Resolve<IMessagingService>()
+                    return c.Services.Resolve<IMessagingService>()
                         .PublishAsync(mockEvt);
-                })
-                .Result.Assert.Container(c =>
+                });
+
+                testResult.Assert.Container(c =>
                 {
                     var consumer = c.Services.Resolve<MockDomainEventRuleBasedConsumer>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventAnyRulePasses");

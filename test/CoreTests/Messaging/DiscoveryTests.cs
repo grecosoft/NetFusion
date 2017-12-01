@@ -29,6 +29,7 @@ namespace CoreTests.Messaging
                 .Arrange
                     .Resolver(r => r.WithHostConsumer())
                     .Container(c => c.UsingDefaultServices())
+
                 .Act.OnContainer(c => c.Build())
                 .Assert.PluginModule<MessagingModule>(m =>
                 {
@@ -51,6 +52,7 @@ namespace CoreTests.Messaging
                 .Arrange
                     .Resolver(r => r.WithHostConsumer())
                     .Container(c => c.UsingDefaultServices())
+
                 .Act.OnContainer(c => c.Build())
                 .Assert.PluginModule<MessagingModule>(m =>
                 {
@@ -77,6 +79,7 @@ namespace CoreTests.Messaging
                 .Arrange
                     .Resolver(r => r.WithHostConsumer())
                     .Container(c => c.UsingDefaultServices())
+
                 .Act.OnContainer(c => c.Build())
                 .Assert.Container(c =>
                 {

@@ -24,9 +24,7 @@ namespace BootstrapTests.Messaging
 
             ContainerFixture.Test(fixture => { fixture
                 .Arrange
-                    .Resolver(r => {
-                        r.WithHostCommandConsumer();
-                    })
+                    .Resolver(r => r.WithHostCommandConsumer())
                     .Container(c => c.UsingDefaultServices())
 
                 .Act.OnContainer(async c => {
@@ -65,12 +63,12 @@ namespace BootstrapTests.Messaging
                     })
                     .Container(c => c.UsingDefaultServices())
 
-                .Act.OnContainer(async c => {
+                .Act.OnContainer(c => {
                     c.Build();
 
                     var domainEventSrv = c.Services.Resolve<IMessagingService>();
                     var evt = new MockCommand();
-                    await domainEventSrv.SendAsync(evt);
+                    return domainEventSrv.SendAsync(evt);
                 })
                 .Result.Assert
                     .Exception<PublisherException>(ex =>
@@ -87,9 +85,7 @@ namespace BootstrapTests.Messaging
         
             ContainerFixture.Test(fixture => { fixture
                 .Arrange
-                    .Resolver(r => {
-                        r.WithHostCommandConsumer();
-                    })
+                    .Resolver(r => r.WithHostCommandConsumer())
                     .Container(c => c.UsingDefaultServices())
 
                 .Act.OnContainer(c => {

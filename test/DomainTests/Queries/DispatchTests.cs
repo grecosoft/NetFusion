@@ -7,6 +7,7 @@ using NetFusion.Domain.Patterns.Queries.Config;
 using NetFusion.Domain.Patterns.Queries.Dispatch;
 using NetFusion.Test.Container;
 using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DomainTests.Queries
@@ -37,21 +38,24 @@ namespace DomainTests.Queries
         }
 
         [Fact(DisplayName = "Queries: Query Cannot have Multiple Consumers")]
-        public void Query_CannotHave_MultipleConsumers()
+        public Task Query_CannotHave_MultipleConsumers()
         {
             var typesUnderTest = new[] { typeof(DuplicateConsumerOne), typeof(DuplicateConsumerTwo) };
             var testQuery = new TestQuery();
 
-             ContainerFixture.Test(fixture => { fixture
+             return ContainerFixture.TestAsync(async fixture => {
+
+                 var restResult = await fixture
                 .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                .Act.OnContainer(c => 
+                .Act.OnContainer(c =>
                     {
                         c.Build().Start();
 
                         var dispatcher = c.Services.Resolve<IQueryDispatcher>();
                         return dispatcher.Dispatch(testQuery);
-                    })
-                .Result.Assert.Exception<ContainerException>(ex =>
+                    });
+
+                restResult.Assert.Exception<ContainerException>(ex =>
                 {
                     ex?.InnerException.Should().NotBeNull();
                     ex.InnerException.Message.Should()
@@ -61,21 +65,23 @@ namespace DomainTests.Queries
         }
 
         [Fact(DisplayName = "Queries:  Query Must have Consumer")]
-        public void Query_MustHave_Consumer()
+        public Task Query_MustHave_Consumer()
         {
             var typesUnderTest = new[] { typeof(TestConsumer) };
             var testQuery = new TestQueryNoConsumer();
 
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                .Act.OnContainer(c => 
-                    {
-                        c.Build().Start();
+            return ContainerFixture.TestAsync(async fixture => {
 
-                        var dispatcher = c.Services.Resolve<IQueryDispatcher>();
-                        return dispatcher.Dispatch(testQuery);
-                    })
-                .Result.Assert.Exception<QueryDispatchException>(ex =>
+                var testResult = await fixture.Arrange
+                    .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                .Act.OnContainer(c => {
+                    c.Build().Start();
+
+                    var dispatcher = c.Services.Resolve<IQueryDispatcher>();
+                    return dispatcher.Dispatch(testQuery);
+                });
+
+                testResult.Assert.Exception<QueryDispatchException>(ex =>
                 {
                     ex.Should().NotBeNull();
                     ex.Message.Should().Contain("is not registered");
@@ -84,21 +90,24 @@ namespace DomainTests.Queries
         }
 
         [Fact (DisplayName = "Queries: Consumer Can Dispatch Query to Consumer")]
-        public void Consumer_Can_DispatchQuery_To_Consumer()
+        public Task Consumer_Can_DispatchQuery_To_Consumer()
         {
             var typesUnderTest = new[] { typeof(TestConsumer) };
             var testQuery = new TestQuery();
 
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                .Act.OnContainer(c => 
-                    {
-                        c.Build().Start();
+            return ContainerFixture.TestAsync(async fixture => {
 
-                        var dispatcher = c.Services.Resolve<IQueryDispatcher>();
-                        return dispatcher.Dispatch(testQuery);
-                    })
-                .Result.Assert.Container(_ =>
+                var testResult = await fixture.Arrange
+                    .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                    .Act.OnContainer(c =>
+                        {
+                            c.Build().Start();
+
+                            var dispatcher = c.Services.Resolve<IQueryDispatcher>();
+                            return dispatcher.Dispatch(testQuery);
+                        });
+
+                testResult.Assert.Container(_ =>
                 {
                     testQuery.Result.Should().NotBeNull();
                     testQuery.TestLog.Should().HaveCount(1);
@@ -108,7 +117,7 @@ namespace DomainTests.Queries
         }
 
         [Fact(DisplayName = "Queries: Filters Applied Correct Order")]
-        public void Filters_Applied_CorrectOrder()
+        public Task Filters_Applied_CorrectOrder()
         {
             var typesUnderTest = new[] { typeof(TestConsumer)};
             var testQuery = new TestQuery();
@@ -117,19 +126,20 @@ namespace DomainTests.Queries
             dispatchConfig.AddPreQueryFilter<QueryFilterOne>();
             dispatchConfig.AddPostQueryFilter<QueryFilterTwo>();
 
+            return ContainerFixture.TestAsync(async fixture => {
 
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange
+                var testResult = await fixture.Arrange
                     .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
                     .Container(c => c.WithConfig(dispatchConfig))
-                .Act.OnContainer(c => 
+                .Act.OnContainer(c =>
                     {
                         c.Build().Start();
 
                         var dispatcher = c.Services.Resolve<IQueryDispatcher>();
                         return dispatcher.Dispatch(testQuery);
-                    })
-                .Result.Assert.Container(_ =>
+                    });
+
+                testResult.Assert.Container(_ =>
                 {
                     testQuery.Result.Should().NotBeNull();
                     testQuery.TestLog.Should().HaveCount(3);

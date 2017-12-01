@@ -1,6 +1,7 @@
 ﻿using NetFusion.Bootstrap.Container;
 using NetFusion.Test.Plugins;
 using System;
+using System.Threading.Tasks;
 
 namespace NetFusion.Test.Container
 {
@@ -45,6 +46,25 @@ namespace NetFusion.Test.Container
             fixture(testFixture);
 
             testFixture._container.Dispose();           
+        }
+
+        /// <summary>
+        /// Creates a new test fixture for testing an application container.  The created
+        /// instance is passed to the provided fixture method used to execute the unit-test.
+        /// Once the fixture method completed, the test container is disposed.
+        /// </summary>
+        /// <param name="fixture">Method specified by the unit-test to execute logic against
+        /// a created test-fixture instance.</param>
+        public static async Task TestAsync(Func<ContainerFixture, Task> fixture)
+        {
+            var testFixture = CreateTestFixture();
+
+            if (fixture == null) throw new ArgumentNullException(nameof(fixture),
+                "Test fixture cannot be null.");
+
+            await fixture(testFixture);
+
+            testFixture._container.Dispose();
         }
 
         /// <summary>

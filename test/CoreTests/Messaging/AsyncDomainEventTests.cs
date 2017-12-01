@@ -4,6 +4,7 @@ using CoreTests.Messaging.Mocks;
 using FluentAssertions;
 using NetFusion.Messaging;
 using NetFusion.Test.Container;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace BootstrapTests.Messaging
@@ -21,23 +22,23 @@ namespace BootstrapTests.Messaging
         /// publishes an event that will be handled by two asynchronous handlers and one synchronous.
         /// </summary>
         [Fact(DisplayName = nameof(DomainEventAsyncHandlers_CanBeInvoked))]
-        public void DomainEventAsyncHandlers_CanBeInvoked()
+        public Task DomainEventAsyncHandlers_CanBeInvoked()
         {
+            return ContainerFixture.TestAsync(async fixture => {
 
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange
-                    .Resolver(r => {
-                        r.WithHostAsyncConsumer();
-                    })
+                var testResult = await fixture.Arrange
+                    .Resolver(r => r.WithHostAsyncConsumer())
                     .Container(c => c.UsingDefaultServices())
+
                 .Act.OnContainer(async c => {
                     c.Build();
 
                     var domainEventSrv = c.Services.Resolve<IMessagingService>();
                     var evt = new MockDomainEvent();
                     await domainEventSrv.PublishAsync(evt);
-                })
-                .Result.Assert.Container(c =>
+                });
+
+                testResult.Assert.Container(c =>
                 {
                     var consumer = c.Services.Resolve<MockAsyncMessageConsumer>();
                     consumer.ExecutedHandlers.Should().HaveCount(3);

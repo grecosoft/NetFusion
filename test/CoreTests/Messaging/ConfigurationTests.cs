@@ -28,6 +28,7 @@ namespace CoreTests.Messaging
                 .Arrange
                     .Resolver(r => r.WithHostConsumer())
                     .Container(c => c.UsingDefaultServices())
+
                 .Act.OnContainer(c =>
                 {
                     c.WithConfig<MessagingConfig>();
@@ -53,6 +54,7 @@ namespace CoreTests.Messaging
                 .Arrange
                     .Resolver(r => r.WithHostConsumer())
                     .Container(c => c.UsingDefaultServices())
+
                 .Act.OnContainer(c =>
                 {                  
                     // NOTE:  No configuration being specified.
@@ -77,6 +79,7 @@ namespace CoreTests.Messaging
                 .Arrange
                     .Resolver(r => r.WithHostConsumer())
                     .Container(c => c.UsingDefaultServices())
+
                 .Act.OnContainer(c =>
                 {
                     c.WithConfig<MessagingConfig>(config => config.ClearMessagePublishers());
@@ -99,6 +102,7 @@ namespace CoreTests.Messaging
                 .Arrange
                     .Resolver(r => r.WithHostConsumer())
                     .Container(c => c.UsingDefaultServices())
+
                 .Act.OnContainer(c =>
                 {
                     c.Build();

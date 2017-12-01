@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NetFusion.Base.Scripting;
 using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Configuration;
 using NetFusion.Bootstrap.Exceptions;
@@ -507,7 +508,6 @@ namespace NetFusion.Bootstrap.Container
         {
             builder.RegisterGeneric(typeof(OptionsManager<>)).As(typeof(IOptions<>)).SingleInstance();
             builder.RegisterGeneric(typeof(OptionsMonitor<>)).As(typeof(IOptionsMonitor<>)).SingleInstance();
-           // builder.RegisterGeneric(typeof(OptionsSnapshot<>)).As(typeof(IOptionsSnapshot<>)).InstancePerLifetimeScope();
             builder.RegisterInstance(_configuration).As<IConfiguration>();
         }
 
@@ -542,6 +542,10 @@ namespace NetFusion.Bootstrap.Container
         {
             builder.RegisterType<ValidationService>()
                 .As<IValidationService>()
+                .SingleInstance();
+
+            builder.RegisterType<NullEntityScriptingService>()
+                .As<IEntityScriptingService>()
                 .SingleInstance();
         }
 
