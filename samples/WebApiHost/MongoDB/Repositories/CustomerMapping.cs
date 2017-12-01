@@ -1,4 +1,4 @@
-﻿using NetFusion.Common.Extensions.Collection;
+﻿using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.MongoDB;
 using System;

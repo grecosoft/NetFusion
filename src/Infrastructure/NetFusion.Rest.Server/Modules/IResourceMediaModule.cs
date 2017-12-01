@@ -25,7 +25,7 @@ namespace NetFusion.Rest.Server.Modules
         /// </summary>
         /// <param name="headers">The request headers.</param>
         /// <param name="resourceType">The resource type.</param>
-        /// <returns></returns>
+        /// <returns>Resource metadata for associated resource type.</returns>
         IResourceMeta GetRequestedResourceMediaMeta(IHeaderDictionary headers, Type resourceType);
 
         /// <summary>

@@ -3,6 +3,7 @@ using CoreTests.Messaging.Mocks;
 using FluentAssertions;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Messaging.Modules;
+using NetFusion.Test.Container;
 using System.Linq;
 using System.Reflection;
 using Xunit;
@@ -21,44 +22,47 @@ namespace CoreTests.Messaging
         /// contains all of the meta-data required to dispatch an event at runtime to
         /// the correct consumer handlers.
         /// </summary>
-        [Fact(DisplayName = nameof(Discovers_DomainEvent))]
-        public void Discovers_DomainEvent()
+        [Fact(DisplayName = "Messaging Module discovers Domain Event")]
+        public void MessagingModule_DiscoversDomainEvent()
         {
-            DefaultSetup.EventConsumer
-                .Test(
-                    c => c.Build(), 
-                    (MessagingModule m) =>
-                    {
-                        var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)]?.FirstOrDefault();
-                        dispatchInfo.Should().NotBeNull();
-
-                        // Assert that the domain event and the associated message consumer were found.
-                        dispatchInfo.ConsumerType.Should().Be(typeof(MockDomainEventConsumer));
-                        dispatchInfo.MessageType.Should().Be(typeof(MockDomainEvent));      
-                    });
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => r.WithHostConsumer())
+                    .Container(c => c.UsingDefaultServices())
+                .Act.OnContainer(c => c.Build())
+                .Assert.PluginModule<MessagingModule>(m =>
+                {
+                    var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)]?.FirstOrDefault();
+                    dispatchInfo.Should().NotBeNull(); 
+                });
+            });           
         }
 
         /// <summary>
         /// The domain event module will discover all defined domain event consumer classes with methods that 
         /// handle a given domain event.  Application components are scanned for event handler methods during
-        /// the bootstrap process by implementing the IMessageConsumer marker interface.
+        /// the bootstrap process by implementing the IMessageConsumer marker interface and marking their
+        /// messages handlers with the InProcessHandler attribute.
         /// </summary>
         [Fact(DisplayName = nameof(Discovers_DomainEventConsumerHandler))]
         public void Discovers_DomainEventConsumerHandler()
         {
-            DefaultSetup.EventConsumer
-                .Test(
-                    c => c.Build(),
-                    (MessagingModule m) =>
-                    {
-                        var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)]?.FirstOrDefault();
-                        dispatchInfo.Should().NotBeNull();
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => r.WithHostConsumer())
+                    .Container(c => c.UsingDefaultServices())
+                .Act.OnContainer(c => c.Build())
+                .Assert.PluginModule<MessagingModule>(m =>
+                {
+                    var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)]?.FirstOrDefault();
+                    dispatchInfo.Should().NotBeNull();
 
-                        dispatchInfo.MessageType.Should().Be(typeof(MockDomainEvent));
-                        dispatchInfo.ConsumerType.Should().Be(typeof(MockDomainEventConsumer));
-                        dispatchInfo.MessageHandlerMethod.Should()
-                            .Equals(typeof(MockDomainEventConsumer).GetMethod("OnEventHandlerOne"));
-                    });
+                    dispatchInfo.MessageType.Should().Be(typeof(MockDomainEvent));
+                    dispatchInfo.ConsumerType.Should().Be(typeof(MockDomainEventConsumer));
+                    dispatchInfo.MessageHandlerMethod.Should()
+                        .Equals(typeof(MockDomainEventConsumer).GetMethod("OnEventHandlerOne"));
+                });
+            });    
         }
 
         /// <summary>
@@ -69,14 +73,17 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = nameof(DomainEventConsumer_Registered))]
         public void DomainEventConsumer_Registered()
         {
-            DefaultSetup.EventConsumer
-                .Test(
-                    c => c.Build(),
-                    (IAppContainer c) =>
-                    {
-                        var consumer = c.Services.Resolve<MockDomainEventConsumer>();
-                        consumer.Should().NotBeNull();
-                    });
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => r.WithHostConsumer())
+                    .Container(c => c.UsingDefaultServices())
+                .Act.OnContainer(c => c.Build())
+                .Assert.Container(c =>
+                {
+                    var consumer = c.Services.Resolve<MockDomainEventConsumer>();
+                    consumer.Should().NotBeNull();
+                });
+            });                
         }
     }
 }

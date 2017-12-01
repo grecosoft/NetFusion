@@ -5,9 +5,8 @@ using System.Collections.Generic;
 namespace NetFusion.Messaging.Types
 {
     /// <summary>
-    /// Default implementation representing message that can have one and only
-    /// one message handler.  The handling consumer can associate a result after
-    /// processing the message.
+    /// Default implementation representing message that can have one and only one consumer.
+    /// The handling consumer can associate a result after processing the message.
     /// </summary>
     public abstract class Command : ICommand
     {
@@ -21,7 +20,7 @@ namespace NetFusion.Messaging.Types
         /// <summary>
         /// The optional result of executing the command.
         /// </summary>
-        public object Result { get; set; }
+        public object Result { get; protected set; }
 
         /// <summary>
         /// Dynamic message attributes that can be associated with the command.
@@ -46,24 +45,23 @@ namespace NetFusion.Messaging.Types
     }
 
     /// <summary>
-    /// Default implementation representing a message that can have one and only one 
-    /// consumer handler.  The handling consumer can associate a result after processing 
-    /// the message.
+    /// Default implementation representing a message that can have one and only one consumer.  
+    /// The handling consumer can associate a result after processing the message.
     /// </summary>
     /// <typeparam name="TResult">The response type of the command.</typeparam>
     public abstract class Command<TResult> : Command, ICommand<TResult>
     {
    
+        public Command()
+        {
+            base.Result = default(TResult);
+        }
+
         Type ICommand.ResultType => typeof(TResult);
 
         /// <summary>
         /// The result of executing the command.
         /// </summary>
         public new TResult Result => (TResult)base.Result;
-
-        public override void SetResult(object result)
-        {
-            base.SetResult(result);
-        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Common.Extensions.Reflection;
+﻿using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Domain.Entities.Registration;
 using System;
 using System.Collections.Generic;
@@ -25,8 +24,7 @@ namespace NetFusion.Domain.Entities.Core
         // Constructor for creating a domain entity level supported behaviors.
         public SupportedBehaviors(Type domainEntityType)
         {
-            Check.NotNull(domainEntityType, nameof(domainEntityType));
-            DomainEntityType = domainEntityType;
+            DomainEntityType = domainEntityType ?? throw new ArgumentNullException(nameof(domainEntityType));
         }
 
         public IEnumerable<Behavior> Behaviors => _behaviors.Values;
@@ -48,7 +46,7 @@ namespace NetFusion.Domain.Entities.Core
             throw new InvalidOperationException(
                 $"The class: {implementationType.FullName} implementing the behavior type: {behaviorType.FullName} " +
                 $"does not have a valid constructor.  A behavior type must have a default constructor or a single " +
-                $"parameter constructor with a type implementing the: {typeof(IBehaviorDelegator)} interface.");
+                $"parameter constructor with a type implementing the: {typeof(IBehaviorDelegator).FullName} interface.");
         }
 
         private void AddBehavior(Type behaviorType, Type implementationType, bool hasDelegatorConstructor)

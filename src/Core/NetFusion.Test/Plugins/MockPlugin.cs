@@ -14,14 +14,14 @@ namespace NetFusion.Test.Plugins
     public abstract class MockPlugin : IPluginManifest,
         IPluginTypeAccessor
     {
-        private List<Type> _pluginTypes = new List<System.Type>();
+        private List<Type> _pluginTypes = new List<Type>();
         public IEnumerable<Type> PluginTypes { get { return _pluginTypes; } }
 
         public MockPlugin()
         {
-            this.PluginId = Guid.NewGuid().ToString();
-            this.AssemblyName = $"Mock Assembly for Plug-in: {this.Name}";
-            this.Name = this.GetType().Name + Guid.NewGuid();
+            PluginId = Guid.NewGuid().ToString();
+            AssemblyName = $"Mock Assembly for Plug-in: {this.Name}";
+            Name = GetType().Name + Guid.NewGuid();
         }
 
         public string PluginId { get; set; }
@@ -38,7 +38,7 @@ namespace NetFusion.Test.Plugins
         /// <returns>Reference to self.</returns>
         public IPluginTypeAccessor AddPluginType(params Type[] types)
         {
-            Check.NotNull(types, nameof(types), "types not specified");
+            if (types == null)throw new ArgumentNullException(nameof(types));
 
             _pluginTypes.AddRange(types);
             return this;

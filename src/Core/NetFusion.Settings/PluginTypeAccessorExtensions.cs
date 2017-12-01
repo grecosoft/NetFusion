@@ -18,8 +18,7 @@ namespace NetFusion.Settings
         /// <returns>Reference to the plug-in for method chaining.</returns>
         public static IPluginTypeAccessor UseSettingsPlugin(this IPluginTypeAccessor plugin)
         {
-            plugin
-                .AddPluginType<AppSettingsModule>();
+            plugin.AddPluginType<AppSettingsModule>();
 
             return plugin;
         }

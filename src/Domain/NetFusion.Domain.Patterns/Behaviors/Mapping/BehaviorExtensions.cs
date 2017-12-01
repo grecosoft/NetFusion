@@ -1,5 +1,5 @@
-﻿using NetFusion.Common;
-using NetFusion.Domain.Entities.Core;
+﻿using NetFusion.Domain.Entities.Core;
+using System;
 
 namespace NetFusion.Domain.Patterns.Behaviors.Mapping
 {
@@ -18,7 +18,7 @@ namespace NetFusion.Domain.Patterns.Behaviors.Mapping
         public static TTarget MapTo<TTarget>(this IBehaviorDelegator domainEntity)
             where TTarget : class, new()
         {
-            Check.NotNull(domainEntity, nameof(domainEntity));
+            if (domainEntity == null) throw new ArgumentNullException(nameof(domainEntity));
 
             var behavior = domainEntity.Behaviors.Get<IMappingBehavior>();
             if (behavior.supported)

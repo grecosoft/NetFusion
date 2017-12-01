@@ -60,11 +60,11 @@ namespace NetFusion.Rest.Client
 
         public ApiResponse(HttpRequestMessage requestMsg, HttpResponseMessage responseMsg)
         {
-            Request = requestMsg ??
-                throw new ArgumentNullException(nameof(requestMsg), "Request Message not set.");
+            Request = requestMsg ?? throw new ArgumentNullException(nameof(requestMsg),
+                "Request Message cannot be null.");
 
-            _responseMsg = responseMsg ??
-                throw new ArgumentNullException(nameof(responseMsg), "Response Message not set.");
+            _responseMsg = responseMsg ?? throw new ArgumentNullException(nameof(responseMsg),
+                "Response Message cannot be null.");
             
             IsSuccessStatusCode = responseMsg.IsSuccessStatusCode;
             StatusCode = responseMsg.StatusCode;
@@ -95,8 +95,7 @@ namespace NetFusion.Rest.Client
     }
 
 	/// <summary>
-    /// Contains result properties for a submitted request and
-    /// the response content returned from the server.
+    /// Contains result properties for a submitted request and the response content returned from the server.
 	/// </summary>
 	public class ApiResponse<TContent> : ApiResponse
         where TContent : class

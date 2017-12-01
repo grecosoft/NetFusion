@@ -46,7 +46,7 @@ namespace NetFusion.Rest.Client
         /// <param name="settings">The default settings applied when making a request.</param>
         public void RegisterBaseAddress(string baseAddress, IRequestSettings requestSettings)
         {
-            if (String.IsNullOrWhiteSpace(baseAddress))
+            if (string.IsNullOrWhiteSpace(baseAddress))
                 throw new ArgumentException("Client base address not specified.", nameof(baseAddress));
 
             if (_baseAddressRegistrations.ContainsKey(baseAddress))
@@ -55,8 +55,8 @@ namespace NetFusion.Rest.Client
                     $"The base address: {baseAddress} is already registered.");
             }
 
-            _baseAddressRegistrations[baseAddress] = requestSettings ??
-                throw new ArgumentNullException(nameof(requestSettings), "Default client settings not specified.");
+            _baseAddressRegistrations[baseAddress] = requestSettings ?? throw new ArgumentNullException(nameof(requestSettings),
+                "Default client settings not specified.");
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace NetFusion.Rest.Client
             var serializer = new T();
             mediaType = mediaType ?? serializer.MediaType;
 
-            if (String.IsNullOrWhiteSpace(mediaType))
+            if (string.IsNullOrWhiteSpace(mediaType))
                 throw new ArgumentException("Client base address not specified.", nameof(mediaType));
 
             if (_mediaTypeSerializers.ContainsKey(mediaType))
@@ -90,7 +90,7 @@ namespace NetFusion.Rest.Client
         /// <param name="baseAddress">The base address for the associated client.</param>
         public IRequestClient GetClient(string baseAddress)
         {
-            if (String.IsNullOrWhiteSpace(baseAddress))
+            if (string.IsNullOrWhiteSpace(baseAddress))
                 throw new ArgumentException("Base address not specified.", nameof(baseAddress));
 
             return _resourceClients.GetOrAdd(baseAddress, CreateResourceClient);

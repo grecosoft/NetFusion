@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Routing;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Resources;
@@ -25,8 +25,8 @@ namespace NetFusion.Rest.Server.Actions
         /// <returns>Information for all action methods.</returns>
 		public static IEnumerable<MethodInfo> GetActionMethods(this Type controller)
 		{
-            if (controller == null)
-                throw new ArgumentNullException(nameof(controller), "Type not specified.");
+            if (controller == null) throw new ArgumentNullException(nameof(controller),
+                "Type cannot be null.");
 
 			return controller.GetMethods(
 				BindingFlags.DeclaredOnly |
@@ -49,15 +49,17 @@ namespace NetFusion.Rest.Server.Actions
         public static ActionMethodInfo[] FindActionMethods(this IEnumerable<MethodInfo> controllerMethods,
             Type resourceType,
             HttpMethod[] httpMethods,
+
+            // Optional search parameters:
             bool? acceptsResourceArg = null,
             bool? acceptsIdentityArg = null,
             bool? returnsResourceType = null)
         {
-            if (resourceType == null)
-                throw new ArgumentNullException(nameof(resourceType), "Resource type not specified.");
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType),
+                "Resource type cannot be null.");
 
-            if (httpMethods == null)
-                throw new ArgumentNullException(nameof(httpMethods), "HTTP methods not specified.");
+            if (httpMethods == null) throw new ArgumentNullException(nameof(httpMethods),
+                "HTTP methods cannot be null.");
 
             var results = controllerMethods.Select(cm => GetActionMethodCallInfo(cm, resourceType)).ToList();
 
@@ -79,19 +81,23 @@ namespace NetFusion.Rest.Server.Actions
         /// <returns>The resource type being passed to the action method.</returns>
         public static Type GetActionRequestResourceType(MethodInfo actionMethod)
         {
+            if (actionMethod == null) throw new ArgumentNullException(nameof(actionMethod));
+
             return actionMethod.GetParameters()
                 .Select(p => p.ParameterType)
                 .FirstOrDefault(pt => pt.IsDerivedFrom<IResource>());
         }
 
         /// <summary>
-        /// Returns the resource type returned from a controller's method.
+        /// Gets the resource type returned from a controller's method.
         /// </summary>
         /// <param name="methodInfo">The controller's action method information.</param>
         /// <returns>The resource type being returned from action method.  Returns null,
         /// if no resource is returned.</returns>
         public static Type GetActionResponseResourceType(MethodInfo methodInfo)
         {
+            if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
+
             if (methodInfo.ReturnType == null)
             {
                 return null;
@@ -123,6 +129,8 @@ namespace NetFusion.Rest.Server.Actions
         /// <returns>Link metadata used to generate resource specific links.</returns>
         public static IEnumerable<ActionUrlLink> ToActionLink(this IEnumerable<ActionMethodInfo> source)
         {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
             var validConventionBasedHttpMethods = new[] { HttpMethod.Post.Method, HttpMethod.Delete.Method };
 
             foreach (ActionMethodInfo methodInfo in source)
@@ -192,6 +200,7 @@ namespace NetFusion.Rest.Server.Actions
             PropertyInfo resourceIdentityProp = resourceIdentityProps.OneAndOnlyOne();
             ParameterInfo actionIdentityParam = actionIdentityArgs.OneAndOnlyOne();
 
+            // And their types must match.
             if (resourceIdentityProp?.PropertyType == actionIdentityParam?.ParameterType)
             {               
                 return new ActionParamValue(actionIdentityParam.Name, resourceIdentityProp);

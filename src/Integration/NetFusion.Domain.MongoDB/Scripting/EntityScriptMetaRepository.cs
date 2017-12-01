@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
 using NetFusion.Base.Scripting;
-using NetFusion.Common;
 using NetFusion.MongoDB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,8 +27,9 @@ namespace NetFusion.Domain.MongoDB.Scripting
 
         public async Task<string> SaveAsync(EntityScript script)
         {
-            Check.NotNull(script, nameof(script), "script not specified");
-
+            if (script == null) throw new ArgumentNullException(nameof(script), 
+                "Script cannot be null.");
+            
             EntityScriptMeta scriptMetadata = new EntityScriptMeta(script);
 
             if (scriptMetadata.ScriptId == null)

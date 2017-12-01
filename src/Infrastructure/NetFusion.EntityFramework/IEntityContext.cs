@@ -35,8 +35,7 @@ namespace NetFusion.EntityFramework
         where TEntityDbContext : EntityDbContext
     {
         /// <summary>
-        ///  Provides access to information and operations for entity instances this context
-        //   is tracking.
+        ///  Provides access to information and operations for entity instances this context is tracking.
         /// </summary>
         ChangeTracker ChangeTracker { get; }
 

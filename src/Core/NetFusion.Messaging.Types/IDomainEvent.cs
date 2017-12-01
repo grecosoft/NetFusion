@@ -1,8 +1,7 @@
 ﻿namespace NetFusion.Messaging.Types
 {
     /// <summary>
-    /// Identifies a type as a message that is used to notify
-    /// consumers that and event has occurred. 
+    /// Identifies a type as a message that is used to notify consumers that and event has occurred. 
     /// </summary>
     public interface IDomainEvent : IMessage
     {

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using NetFusion.Common;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,14 +16,14 @@ namespace NetFusion.EntityFramework
         where TEntityDbContext : EntityDbContext
     {
         private TEntityDbContext _dbContext;
+        private bool _disposed = false;
 
         public Type DbContextType => typeof(TEntityDbContext);
 
         public void SetDbContext(IEntityDbContext context)
         {
-            Check.NotNull(context, nameof(context), "inner context not specified");
-
-            _dbContext = (TEntityDbContext)context;
+            _dbContext = (TEntityDbContext)context ?? throw new ArgumentNullException(nameof(context), 
+                "Inner context cannot be null.");
         }
 
         public ChangeTracker ChangeTracker
@@ -74,7 +73,17 @@ namespace NetFusion.EntityFramework
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing || _disposed) return;
+
             _dbContext?.Dispose();
+
+            _disposed = true;
         }
     }
 }

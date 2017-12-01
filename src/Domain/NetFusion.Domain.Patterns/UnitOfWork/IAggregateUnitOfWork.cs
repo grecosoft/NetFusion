@@ -17,9 +17,11 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
         /// </summary>
         /// <param name="aggregate">The aggregate to be committed.</param>
         /// <param name="commitAction">The action used to commit changes to the aggregate.</param>
+        /// <param name="settings">Settings used to specify of the unit-of-work is committed.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Task that is completed when the commit finishes.</returns>
-        Task CommitAsync(IAggregate aggregate, Func<Task> commitAction,
+        Task<CommitResult> CommitAsync(IAggregate aggregate, Func<Task> commitAction,
+            CommitSettings settings = null,
             CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
@@ -29,11 +31,23 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
         /// be published.
         /// </summary>
         /// <param name="aggregate">The aggregate to enlist within the unit-of-work.</param>
+        /// <param name="commitAction">The action used to commit changes to the aggregate. 
+        /// Optional if the commit-action passed to the CommitAsync method saves all changes
+        /// made to all enlisted aggregates.  This is the case when using a technology such
+        /// as Entity-Framework.</param>
         /// <param name="cancellationToken">The optional cancellation token.</param>
         /// <returns>Task that will be completed after publishing the aggregate's associated
         /// integration events.</returns>
         Task EnlistAsync(IAggregate aggregate,
+            Func<Task> commitAction = null,
             CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Determines if an aggregate has been enlisted within the unit-of-work.
+        /// </summary>
+        /// <param name="aggregate">The aggregate to check for enlistment.</param>
+        /// <returns>Returns True if the aggregate is enlisted.  Otherwise, False.</returns>
+        bool IsEnlisted(IAggregate aggregate);
 
         /// <summary>
         /// Returns an existing aggregate that has been enlisted within the unit-of-work.
@@ -43,5 +57,11 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
         /// <returns>The matching aggregate or null if not found.</returns>
         TAggregate GetEnlistedAggregate<TAggregate>(Func<TAggregate, bool> predicate)
            where TAggregate : IAggregate;
+
+        /// <summary>
+        /// Clears the enlisted aggregates and any unit-of-work related aggregate data.
+        /// This method is also called when the CommitResult returned instance is disposed.
+        /// </summary>
+        void Clear();
     }
 }

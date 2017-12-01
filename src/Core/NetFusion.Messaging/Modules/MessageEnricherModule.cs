@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace NetFusion.Messaging.Modules
 {
+    /// <summary>
+    /// Registers all message enrichers with the dependency-injection container.
+    /// </summary>
     public class MessageEnricherModule : PluginModule
     {
         private MessagingConfig MessagingConfig { get; set; }

@@ -2,7 +2,7 @@
   <Import Project="..\..\..\build\common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.6;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.6|AnyCPU'">
@@ -13,13 +13,11 @@
     <ProjectReference Include="..\..\Common\NetFusion.Base\NetFusion.Base.csproj" />
     <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
     <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
-    <ProjectReference Include="..\..\Utilities\NetFusion.Utilities.Mapping\NetFusion.Utilities.Mapping.csproj" />
-    <ProjectReference Include="..\..\Utilities\NetFusion.Utilities.Validation\NetFusion.Utilities.Validation.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">

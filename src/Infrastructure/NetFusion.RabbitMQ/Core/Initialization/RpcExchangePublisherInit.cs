@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Logging;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Types;
@@ -87,7 +86,8 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         public void ClearRpcClients(string brokerName)
         {
-            Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
+            if (string.IsNullOrWhiteSpace(brokerName))
+                throw new ArgumentException("Broker name must be specified.", nameof(brokerName));
 
             lock(_rpcPublisherLock)
             {
@@ -109,7 +109,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// <returns>True if a RPC style message, otherwise, false.</returns>
         public bool IsRpcCommand(IMessage message)
         {
-            Check.NotNull(message, nameof(message));
+            if (message == null) throw new ArgumentNullException(nameof(message));
 
             Type messageType = message.GetType();
 
@@ -158,7 +158,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// <returns>Future result after the reply is received.</returns>
         public async Task PublishToRpcConsumerAsync(IMessage message, CancellationToken cancellationToken)
         {
-            Check.NotNull(message, nameof(message));
+            if (message == null) throw new ArgumentNullException(nameof(message));
 
             AssertRpcCommand(message);
 

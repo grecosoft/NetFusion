@@ -1,5 +1,5 @@
 ﻿using NetFusion.Base;
-using NetFusion.Utilities.Validation;
+using NetFusion.Base.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetFusion.RabbitMQ.Configs
@@ -38,7 +38,7 @@ namespace NetFusion.RabbitMQ.Configs
 
         public void Validate(IObjectValidator validator)
         {
-            validator.Validate(this.CancelRequestAfterMs > 0,
+            validator.Verify(this.CancelRequestAfterMs > 0,
                 "Cancel Request After Milliseconds must be Greater than 0.",
                 ValidationTypes.Error);
         }

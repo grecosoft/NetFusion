@@ -1,7 +1,7 @@
-﻿using NetFusion.Common;
-using NetFusion.Messaging.Core;
+﻿using NetFusion.Messaging.Core;
 using NetFusion.RabbitMQ.Consumers;
 using NetFusion.RabbitMQ.Exchanges;
+using System;
 using System.Collections.Generic;
 
 namespace NetFusion.RabbitMQ.Core
@@ -29,18 +29,15 @@ namespace NetFusion.RabbitMQ.Core
             QueueConsumerAttribute queueAttrib,
             MessageDispatchInfo dispatchInfo)
         {
-            Check.NotNull(brokerAttrib, nameof(brokerAttrib));
-            Check.NotNull(queueAttrib, nameof(queueAttrib));
-            Check.NotNull(dispatchInfo, nameof(dispatchInfo));
+            _brokerAttrib = brokerAttrib ?? throw new ArgumentNullException(nameof(brokerAttrib));
+            _queueAttrib = queueAttrib ?? throw new ArgumentNullException(nameof(queueAttrib));
 
-            _brokerAttrib = brokerAttrib;
-            _queueAttrib = queueAttrib;
+            DispatchInfo = dispatchInfo ?? throw new ArgumentNullException(nameof(dispatchInfo));
+
             _queueName = _queueAttrib.QueueName;
             _routeKeys = _queueAttrib.RouteKeys ?? new string[] { };
 
-            MessageHandlers = new List<MessageHandler>();
-
-            DispatchInfo = dispatchInfo;
+            MessageHandlers = new List<MessageHandler>();           
         }
 
         /// <summary>

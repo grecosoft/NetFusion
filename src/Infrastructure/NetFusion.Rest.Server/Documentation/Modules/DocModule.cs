@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Rest.Resources.Doc;
 using NetFusion.Rest.Server.Actions;
@@ -42,8 +42,8 @@ namespace NetFusion.Rest.Server.Documentation.Modules
 
         public DocAction GetActionDoc(MethodInfo actionMethod)
         {
-            if (actionMethod == null)
-                throw new ArgumentNullException(nameof(actionMethod), "Action Method not specified.");
+            if (actionMethod == null) throw new ArgumentNullException(nameof(actionMethod), 
+                "Action Method cannot be null.");
 
             Type controllerType = actionMethod.DeclaringType;
 
@@ -62,8 +62,8 @@ namespace NetFusion.Rest.Server.Documentation.Modules
 
         public DocResource GetResourceDoc(Type resourceType)
         {
-            if (resourceType == null)
-                throw new ArgumentNullException(nameof(resourceType), "Resource Type not specified.");
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType), 
+                "Resource Type cannot be null.");
 
             if(_resourceDocs.TryGetValue(resourceType, out Lazy<DocResource> resourceDoc))
             {

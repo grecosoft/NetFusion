@@ -6,8 +6,7 @@ using NetFusion.Bootstrap.Extensions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
@@ -22,7 +21,7 @@ namespace NetFusion.Bootstrap.Container
     /// a IPluginManifest derived type signifies that the assembly is a plug-in.
     /// 
     /// Having this component load the plug-in types decouples the AppContainer 
-    /// from .NET assemblies and makes the design easy to unit-test.
+    /// from .NET assemblies and makes the design easier to unit-test.
     /// </summary>
     public class TypeResolver : ITypeResolver
     {
@@ -30,23 +29,24 @@ namespace NetFusion.Bootstrap.Container
         private ILogger<TypeResolver> _logger;
 
         /// <summary>
-        /// Creates a type resolver that will load assembles representing plug-ins 
-        /// contained within the application's base directory.
+        /// Creates a type resolver that will load assembles representing plug-ins contained 
+        /// within the application's base directory.
         /// </summary>
-        /// <param name="searchPattern">Patterns used to filter the assemblies that
-        /// represent plug-ins.
+        /// <param name="searchPattern">Patterns used to filter the assemblies that represent plug-ins.
         ///</param>
         public TypeResolver(params string[] searchPattern)
         {
-            Check.NotNull(searchPattern, nameof(searchPattern));
-
+            if (searchPattern == null) throw new ArgumentNullException(nameof(searchPattern),
+                "Search Pattern cannot be null.");
+            
             _searchPatterns = AddDefaultSearchPatterns(searchPattern);
         }
 
         public void Initialize(ILoggerFactory loggerFactory)
         {
-            Check.NotNull(loggerFactory, nameof(loggerFactory), "logger-factory not specified");
-
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory), 
+                "Logger Factory cannot be null.");
+            
             _logger = loggerFactory.CreateLogger<TypeResolver>();
         }
 
@@ -59,8 +59,9 @@ namespace NetFusion.Bootstrap.Container
 
         public virtual void SetPluginManifests(ManifestRegistry registry)
         {
-            Check.NotNull(registry, nameof(registry), "registry not specified");
-
+            if (registry == null) throw new ArgumentNullException(nameof(registry),
+                "Registry cannot be null.");
+            
             Assembly[] pluginAssemblies = GetPluginAssemblies(_searchPatterns);
             SetManifestTypes(registry, pluginAssemblies);
         }
@@ -81,7 +82,7 @@ namespace NetFusion.Bootstrap.Container
             catch (ReflectionTypeLoadException ex)
             {
                 var loadErrors = ex.LoaderExceptions.Select(le => le.Message).Distinct().ToList();
-                throw new ContainerException("Error loading plug-in assembly.", loadErrors, ex);
+                throw new ContainerException("Error Loading Plug-In Assembly.", loadErrors, ex);
             }
         }
 
@@ -108,13 +109,11 @@ namespace NetFusion.Bootstrap.Container
                 catch (ReflectionTypeLoadException ex)
                 {
                     var loadErrors = ex.LoaderExceptions.Select(le => le.Message).Distinct().ToList();
-                    throw new ContainerException("Error loading plug-in assembly.", loadErrors, ex);
+                    throw new ContainerException("Error Loading Plug-In Assembly.", loadErrors, ex);
                 }
                 catch (Exception ex)
                 {
-                    throw new ContainerException(
-                        $"Error loading assembly: {assemblyName.Name}",
-                        ex);
+                    throw new ContainerException($"Error Loading Assembly: {assemblyName.Name}", ex);
                 }
             }
             return loadedAssemblies;
@@ -134,29 +133,23 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        public virtual void SetPluginTypes(Plugin plugin)
+        public virtual void SetPluginResolvedTypes(Plugin plugin)
         {
-            Check.NotNull(plugin, nameof(plugin), "plug-in not specified");
+            if (plugin == null) throw new ArgumentNullException(nameof(plugin), 
+                "Plug-In cannot be null.");
 
+            // Get all types contained within the same assembly as the discovered
+            // Plug-in Manifest type.  This will all the types belonging to the plug-in.
             var manifestTypeInfo = plugin.Manifest.GetType().GetTypeInfo();
             var pluginAssembly = manifestTypeInfo.Assembly;
 
-            plugin.PluginTypes = pluginAssembly.GetTypes()
+            var pluginTypes = pluginAssembly.GetTypes()
                 .Select(t => new PluginType(plugin, t, pluginAssembly.GetName().Name))
                 .ToArray();
-        }
 
-        public void SetPluginModules(Plugin plugin)
-        {
-            Check.NotNull(plugin, nameof(plugin), "plug-in not specified");
+            var pluginModules = pluginTypes.CreateInstancesDerivingFrom<IPluginModule>().ToArray();
 
-            if (plugin.PluginTypes == null)
-            {
-                throw new InvalidOperationException(
-                    "plug-in types must loaded before modules can be discovered");
-            }
-
-            plugin.PluginModules = plugin.PluginTypes.CreateInstancesDerivingFrom<IPluginModule>().ToArray();
+            plugin.SetPluginResolvedTypes(pluginTypes, pluginModules);
         }
 
         // Automatically populates all properties on a plug-in module that are an enumeration of
@@ -164,9 +157,12 @@ namespace NetFusion.Bootstrap.Container
         // for use by the consumer. 
         public IEnumerable<Type> SetPluginModuleKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes)
         {
-            Check.NotNull(forModule, nameof(forModule), "module to discover known types not specified");
-            Check.NotNull(fromPluginTypes, nameof(fromPluginTypes), "list of plug-in types not specified");
+            if (forModule == null) throw new ArgumentNullException(nameof(forModule), 
+                "Module to discover know types cannot be null.");
 
+            if (fromPluginTypes == null) throw new ArgumentNullException(nameof(fromPluginTypes), 
+                "List of Plug-in types to search for know types cannot be null.");
+            
             IEnumerable<PropertyInfo> knownTypeProps = GetKnownTypeProperties(forModule);
             knownTypeProps.ForEach(ktp => SetKnownPropertyInstances(forModule, ktp, fromPluginTypes));
             return knownTypeProps.Select(ktp => ktp.PropertyType.GenericTypeArguments.First());
@@ -182,10 +178,10 @@ namespace NetFusion.Bootstrap.Container
                     && p.CanWrite);
         }
 
-        private void SetKnownPropertyInstances(IPluginModule forModule, PropertyInfo KnownTypeProperty,
+        private void SetKnownPropertyInstances(IPluginModule forModule, PropertyInfo knownTypeProperty,
            IEnumerable<PluginType> fromPluginTypes)
         {
-            var knownType = KnownTypeProperty.PropertyType.GetGenericArguments().First();
+            var knownType = knownTypeProperty.PropertyType.GetGenericArguments().First();
             var discoveredInstances = fromPluginTypes.CreateInstancesDerivingFrom(knownType).ToList();
 
             // Create an array based on the known type and populate it from discovered instances.
@@ -196,7 +192,7 @@ namespace NetFusion.Bootstrap.Container
             }
 
             // Set the corresponding property on the module.
-            KnownTypeProperty.SetValue(forModule, array);
+            knownTypeProperty.SetValue(forModule, array);
         }
     }
 }

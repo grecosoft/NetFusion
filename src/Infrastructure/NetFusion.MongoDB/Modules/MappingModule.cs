@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson.Serialization;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
 using NetFusion.MongoDB.Core;
 using System;
 using System.Collections.Generic;
@@ -24,11 +23,11 @@ namespace NetFusion.MongoDB.Modules
         {
             lock(_mapLock)
             {
-                foreach (IEntityClassMap map in this.Mappings)
+                foreach (IEntityClassMap map in Mappings)
                 {
                     if (!BsonClassMap.IsClassMapRegistered(map.EntityType))
                     {
-                        map.AddKnownPluginTypes(this.Context.AllPluginTypes);
+                        map.AddKnownPluginTypes(Context.AllPluginTypes);
                         BsonClassMap.RegisterClassMap(map.ClassMap);
                     }
                 }
@@ -38,8 +37,11 @@ namespace NetFusion.MongoDB.Modules
         // IMongoMappingModule:
         public string GetEntityDiscriminator(Type mappedEntityType, Type knownEntityType)
         {
-            Check.NotNull(mappedEntityType, nameof(mappedEntityType), "mapped entity type not specified");
-            Check.NotNull(knownEntityType, nameof(knownEntityType), "derived known type of mapped type not specified");
+            if (mappedEntityType == null) throw new ArgumentNullException(nameof(mappedEntityType), 
+                "Mapped entity type not specified.");
+
+            if (knownEntityType == null) throw new ArgumentNullException(nameof(knownEntityType), 
+                "Derived known type of mapped type not specified,");
 
             IEntityClassMap entityMapping = GetEntityMap(mappedEntityType);
             if (entityMapping == null)
@@ -64,7 +66,7 @@ namespace NetFusion.MongoDB.Modules
         // IMongoMappingModule:
         public IEntityClassMap GetEntityMap(Type entityType)
         {
-            Check.NotNull(entityType, nameof(entityType), "entity type not specified");
+            if (entityType == null) throw new ArgumentNullException(nameof(entityType));
 
             return BsonClassMap.LookupClassMap(entityType) as IEntityClassMap;
         }

@@ -12,10 +12,11 @@ namespace NetFusion.Bootstrap.Plugins
     {
         public PluginType(Plugin plugin, Type type, string assemblyName)
         {
-            this.Plugin = plugin;
-            this.Type = type;
-            this.AssemblyName = assemblyName;
-            this.IsKnownType = type.IsDerivedFrom<IKnownPluginType>();
+            Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
+            Type = type ?? throw new ArgumentNullException(nameof(type));
+            AssemblyName = assemblyName ?? throw new ArgumentNullException(nameof(assemblyName));
+
+            IsKnownType = type.IsDerivedFrom<IKnownPluginType>();
         }
 
         /// <summary>

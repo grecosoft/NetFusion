@@ -18,11 +18,8 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>True if the method returns a Task assignable type.</returns>
         public static bool IsAsyncMethod(this MethodInfo methodInfo) 
         {
-            if (methodInfo == null)
-            {
-                throw new ArgumentNullException(nameof(methodInfo), 
-                    "Method information not specified");
-            }
+            if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo), 
+                "Method information cannot be null.");
 
             return methodInfo.ReturnType != null && methodInfo.ReturnType.CanAssignTo<Task>();
         }
@@ -34,6 +31,9 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>True if the method returns a Task assignable type with generic result.</returns>
         public static bool IsAsyncMethodWithResult(this MethodInfo methodInfo) 
         {
+            if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo),
+                "Method information cannot be null.");
+
             bool isAsync = IsAsyncMethod(methodInfo);
             if (!isAsync)
             {
@@ -51,6 +51,9 @@ namespace NetFusion.Common.Extensions.Reflection
         /// to CancellationToken.</returns>
         public static bool IsCancellableMethod(this MethodInfo methodInfo) 
         {
+            if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo),
+                "Method information cannot be null.");
+
             bool isAsync = IsAsyncMethod(methodInfo);
             if (!isAsync)
             {

@@ -19,8 +19,8 @@ namespace NetFusion.Rest.Server.Meta
 
         public LinkDescriptor(ActionLink actionLink)
         {
-            _actionLink = actionLink
-                ?? throw new ArgumentNullException(nameof(actionLink), "Action Link not specified.");
+            _actionLink = actionLink ?? throw new ArgumentNullException(nameof(actionLink),
+                "Action Link cannot be null.");
         }
 
         //---------------- REQUIRED LINK PROPERTIES SET BY LINK METADATA METHODS ----------------------
@@ -36,8 +36,8 @@ namespace NetFusion.Rest.Server.Meta
 
         internal LinkDescriptor<TResource> SetMethod(HttpMethod method)
         {
-            if (method == null)
-                throw new ArgumentNullException(nameof(method), "HTTP Method not specified.");
+            if (method == null) throw new ArgumentNullException(nameof(method), 
+                "HTTP Method cannot be null.");
 
             _actionLink.Methods = new[] { method.Method };
 
@@ -139,7 +139,8 @@ namespace NetFusion.Rest.Server.Meta
         public ActionUrlLink BuildActionUrlLink<TController>(Expression<Action<TController, TResource>> action)
             where TController : Controller
         {
-            if (action == null) throw new ArgumentNullException(nameof(action), "Controller Action selector not specified.");
+            if (action == null) throw new ArgumentNullException(nameof(action), 
+                "Controller Action selector cannot be null.");
 
             var actionLink = new ActionUrlLink();
             var actionSelector = new ActionUrlSelector<TController, TResource>(actionLink, action);
@@ -150,7 +151,7 @@ namespace NetFusion.Rest.Server.Meta
 
         public ActionResourceLink<TResource> BuildResourceUrl(HttpMethod httpMethod, Expression<Func<TResource, string>> resourceUrl)
         {
-            if (resourceUrl == null) throw new ArgumentNullException(nameof(resourceUrl), "Resource Delegate not specified.");
+            if (resourceUrl == null) throw new ArgumentNullException(nameof(resourceUrl), "Resource Delegate cannot be null.");
 
             var actionLink = new ActionResourceLink<TResource>(resourceUrl);
             var linkDescriptor = new LinkDescriptor<TResource>(actionLink);

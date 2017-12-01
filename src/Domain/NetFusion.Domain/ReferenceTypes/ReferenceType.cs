@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -84,11 +83,11 @@ namespace NetFusion.Domain.ReferenceTypes
         /// <param name="descriptor">Object describing the enumerated value.</param>
         public void AddDescriptor(TEnum enumValue, TDescriptor descriptor)
         {
-            Check.NotNull(descriptor, nameof(descriptor));
+            if (descriptor == null) throw new ArgumentNullException(nameof(descriptor));
 
             var enumValueName = Enum.GetName(typeof(TEnum), enumValue);
             descriptor.Value = enumValue;
-            this.Descriptors[enumValueName] = descriptor;
+            Descriptors[enumValueName] = descriptor;
         }
 
         public TDescriptor GetDescriptor(TEnum enumValue)
@@ -96,9 +95,9 @@ namespace NetFusion.Domain.ReferenceTypes
             var enumValueName = Enum.GetName(typeof(TEnum), enumValue);
             TDescriptor value = null;
 
-            if(this.Descriptors.TryGetValue(enumValueName, out value))
+            if(Descriptors.TryGetValue(enumValueName, out value))
             {
-                return (TDescriptor)this.Descriptors[enumValueName];
+                return Descriptors[enumValueName];
             }
 
             throw new InvalidOperationException(
@@ -129,13 +128,13 @@ namespace NetFusion.Domain.ReferenceTypes
     {
         public void AddDescriptor(TEnum enumValue, ValueDescriptor descriptor)
         {
-            Check.NotNull(descriptor, nameof(descriptor));
+            if (descriptor == null) throw new ArgumentNullException(nameof(descriptor));
 
             var enumValueName = Enum.GetName(typeof(TEnum), enumValue);
             var typedDiscriptor = new ValueDescriptor<TEnum>(descriptor);
 
             typedDiscriptor.Value = enumValue;
-            this.Descriptors[enumValueName] = typedDiscriptor;
+            Descriptors[enumValueName] = typedDiscriptor;
         }
     }
 }

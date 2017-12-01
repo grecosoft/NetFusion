@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.PlatformAbstractions;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Web.Mvc;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 using WebApiHost.Filters;
@@ -42,8 +44,22 @@ namespace WebApiHost
                 config.Filters.Add(typeof(ExceptionHandlerFilter));
             });
 
-            services.AddSwaggerGen(c => c.IncludeXmlComments(
-                Path.Combine(AppContext.BaseDirectory, "WebApiHost.xml")));
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "ToDo API",
+                    Description = "A simple example ASP.NET Core Web API",
+                    TermsOfService = "None",
+                    Contact = new Contact { Name = "Shayne Boyer", Email = "", Url = "https://twitter.com/spboyer" },
+                    License = new License { Name = "Use under LICX", Url = "https://example.com/license" }
+                });
+
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var xmlPath = Path.Combine(basePath, "WebApiHost.xml");
+                c.IncludeXmlComments(xmlPath);
+            });
 
             AppContainerSetup.Bootstrap(services);
             return new AutofacServiceProvider(AppContainer.Instance.Services);
@@ -54,11 +70,16 @@ namespace WebApiHost
         /// </summary>
         public void Configure(IApplicationBuilder app)
         {
-            app.UseMvc();
-            app.UseRouteMetadata();
-
+            app.UseStaticFiles();
             app.UseSwagger();
-            app.UseSwaggerUi();
+
+            app.UseSwaggerUI(c =>
+            {
+               c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
+            app.UseMvc();
+           // app.UseRouteMetadata();
         }
     }
 }

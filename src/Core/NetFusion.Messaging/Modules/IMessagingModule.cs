@@ -53,7 +53,7 @@ namespace NetFusion.Messaging.Modules
         /// <exception cref="InvalidOperationException">Exception if the type of message is not
         /// is not the same type associated with the dispatcher.
         /// </exception>
-        Task<object> InvokeDispatcherAsync(MessageDispatchInfo dispatcher, IMessage message, 
+        Task<object> InvokeDispatcherInNewLifetimeScopeAsync(MessageDispatchInfo dispatcher, IMessage message, 
             CancellationToken cancellationToken = default(CancellationToken));
 
     }

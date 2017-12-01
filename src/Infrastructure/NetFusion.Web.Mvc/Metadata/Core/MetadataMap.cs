@@ -1,9 +1,14 @@
-﻿using NetFusion.Web.Mvc.Metadata.Models;
+﻿using NetFusion.Common.Extensions.Types;
+using NetFusion.Web.Mvc.Metadata.Models;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace NetFusion.Web.Mvc.Metadata.Core
 {
+    /// <summary>
+    /// Maps the internal classes containing the group and action metadata into 
+    /// models returned from the service API.
+    /// </summary>
     public static class MetadataMap
     {
         public static ApiServiceInfo GetModel(ApiGroupMeta[] groups)
@@ -35,6 +40,7 @@ namespace NetFusion.Web.Mvc.Metadata.Core
                 .Select(p => new ParameterInfo {
                     Name = p.ParameterName,
                     IsOptional = p.IsOptional,
+                    Type = p.ParameterType.GetJsTypeName(),
                     DefaultValue = p.DefaultValue
                 });
         }

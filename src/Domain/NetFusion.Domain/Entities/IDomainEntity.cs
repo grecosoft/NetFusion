@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a domain-entity with an identity.
     /// </summary>
-    /// <typeparam name="TId">Tye type of the identity.</typeparam>
+    /// <typeparam name="TId">The type of the identity.</typeparam>
     public interface IDomainEntity<TId> 
     {
         /// <summary>

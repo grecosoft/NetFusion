@@ -4,7 +4,7 @@ using NetFusion.RabbitMQ.Exchanges;
 
 namespace WebApiHost.RabbitMQ.Exchanges
 {
-    [ApplyScriptPredicate("HighImportanceCriteria", variableName: "IsHighImportance")]
+    [ApplyScriptPredicate("HighImportanceCriteria", attributeName: "IsHighImportance")]
     public class HighImportanceExchange : FanoutExchange<ExampleFanoutEvent>
     {
         protected override void OnDeclareExchange()

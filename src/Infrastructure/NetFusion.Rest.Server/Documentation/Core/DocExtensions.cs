@@ -22,8 +22,8 @@ namespace NetFusion.Rest.Server.Documentation.Core
         /// <returns>List of embedded names.</returns>
         public static ActionEmbeddedName[] GetEmbeddedNames(this MethodInfo actionMethodInfo)
         {
-            if (actionMethodInfo == null)
-                throw new ArgumentNullException(nameof(actionMethodInfo), "Action Method not specified.");
+            if (actionMethodInfo == null) throw new ArgumentNullException(nameof(actionMethodInfo),
+                "Action Method cannot be null.");
 
             var specifiedEmbeddedNames = GetEmbeddedSpecifiedNames(actionMethodInfo);
             var specifiedEmbeddedTypes = GetEmbeddedSpecifiedTypes(actionMethodInfo);
@@ -48,7 +48,7 @@ namespace NetFusion.Rest.Server.Documentation.Core
                 .Where(t => t.IsReturnableResourceType())
                 .Select(rt => new ActionEmbeddedName
                 {
-                    Name = rt.GetEmbeddedName(),
+                    Name = rt.GetEmbeddedTypeName(),
                     ResourceType = rt,  // Return resource type so consumer can use to determine documentation.
 
                 }).Where(en => en.Name != null);
@@ -56,8 +56,8 @@ namespace NetFusion.Rest.Server.Documentation.Core
 
         public static string GetResourceDescription(this Type resourceType)
         {
-            if (resourceType == null)
-                throw new ArgumentNullException(nameof(resourceType), "Resource Type not specified.");
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType),
+                "Resource Type cannot be null.");
 
             return resourceType.GetAttribute<DocResourceAttribute>()?.Description;
         }

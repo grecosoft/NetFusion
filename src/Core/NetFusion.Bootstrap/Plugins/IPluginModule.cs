@@ -28,7 +28,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// The first method called on the module.  This method is called on 
-        /// all modules before the configuration method is called.
+        /// all modules before the Configure method is called.
         /// </summary>
         void Initialize();
 
@@ -39,12 +39,11 @@ namespace NetFusion.Bootstrap.Plugins
         void Configure();
 
         /// <summary>
-        /// Called first for all plug-in modules to allow for default instances
-        /// of services to be registered to be used if not overridden by another
-        /// plug-in module.
+        /// Called first for all plug-in modules to allow default service instances
+        /// to be registered for use if not overridden by another plug-in module.
         /// </summary>
-        /// <param name="builder">The Autofac builder used to 
-        /// register components that can be dependency injected.
+        /// <param name="builder">The Autofac builder used to register components 
+        /// that can be dependency injected.
         /// </param>
         void RegisterDefaultComponents(Autofac.ContainerBuilder builder);
 
@@ -78,7 +77,7 @@ namespace NetFusion.Bootstrap.Plugins
         void ScanAllOtherPlugins(TypeRegistration registration);
 
         /// <summary>
-        /// Allows a core plug-in module to scan for type limited to only 
+        /// Allows a core plug-in module to scan for types limited to only 
         /// application centric plug-in types.
         /// </summary>
         /// <param name="registration">Reference to instance used to

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Linq;
@@ -37,13 +36,13 @@ namespace NetFusion.Web.Mvc.Metadata.Core
             ApiDescription description,
             ControllerActionDescriptor actionDescriptor)
         {
-            Check.NotNull(description, nameof(description));
-            Check.NotNull(actionDescriptor, nameof(actionDescriptor));
+            if (description == null) throw new ArgumentNullException(nameof(description));
+            if (actionDescriptor == null) throw new ArgumentNullException(nameof(actionDescriptor));
 
-            this.ActionName = GetActionName(actionDescriptor);
-            this.RelativePath = description.RelativePath;
-            this.HttpMethod  = description.HttpMethod;
-            this.Parameters = GetActionParameters(actionDescriptor);
+            ActionName = GetActionName(actionDescriptor);
+            RelativePath = description.RelativePath;
+            HttpMethod  = description.HttpMethod;
+            Parameters = GetActionParameters(actionDescriptor);
         }
 
         private string GetActionName(ControllerActionDescriptor actionDescriptor)
@@ -54,7 +53,7 @@ namespace NetFusion.Web.Mvc.Metadata.Core
                 throw new InvalidOperationException(
                     $"Action metadata can only be created for controller routes decorated with " +
                     $"{nameof(ActionMetaAttribute)}.  The route named {actionDescriptor.ActionName} " +
-                    $"does not have attribute specified");
+                    $"defined on controller {actionDescriptor.ControllerName} does not have attribute specified");
             }
 
             return attrib.ActionName;

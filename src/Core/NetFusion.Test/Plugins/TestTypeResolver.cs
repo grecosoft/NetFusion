@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Extensions;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +37,7 @@ namespace NetFusion.Test.Plugins
             registry.AllManifests = _plugins.Cast<IPluginManifest>().ToList();
         }
 
-        public void SetPluginTypes(Plugin plugin)
+        public void SetPluginResolvedTypes(Plugin plugin)
         {
             var mockPlugin = plugin.Manifest as MockPlugin;
 
@@ -57,13 +57,12 @@ namespace NetFusion.Test.Plugins
                 pluginTypes = pluginTypes.Union(_scanAssembly.GetTypes());
             }
 
-            plugin.PluginTypes = pluginTypes.Select(t => 
+            var allPluginTypes = pluginTypes.Select(t => 
                 new PluginType(plugin, t, mockPlugin.AssemblyName)).ToArray();
-        }
 
-        public void SetPluginModules(Plugin plugin)
-        {
-            _delegateResolver.SetPluginModules(plugin);
+            var pluginModules = allPluginTypes.CreateInstancesDerivingFrom<IPluginModule>().ToArray();
+
+            plugin.SetPluginResolvedTypes(allPluginTypes, pluginModules);
         }
 
         public IEnumerable<Type> SetPluginModuleKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes)
@@ -77,8 +76,19 @@ namespace NetFusion.Test.Plugins
         /// <param name="plugins">The plug-ins to be added.</param>
         public void AddPlugin(params MockPlugin[] plugins)
         {
-            Check.NotNull(plugins, nameof(plugins), "plug-ins not specified");
+            if (plugins == null) throw new ArgumentNullException(nameof(plugins));
             _plugins.AddRange(plugins);
+        }
+
+        public MockPlugin GetHostPlugin()
+        {
+            var hostPlugin = _plugins.OfType<MockAppHostPlugin>().FirstOrDefault();
+            if (hostPlugin == null)
+            {
+                throw new InvalidOperationException("Mock Application Host Plug-in not registered by unit-test.");
+            }
+
+            return hostPlugin;
         }
 
         /// <summary>

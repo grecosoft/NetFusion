@@ -49,13 +49,9 @@ namespace NetFusion.Base.Scripting
             string entityTypeName,
             IReadOnlyCollection<EntityExpression> expressions) : this()
         {
-            Check.NotNullOrWhiteSpace(name, nameof(name));
-            Check.NotNullOrWhiteSpace(entityTypeName, nameof(entityTypeName));
-            Check.NotNull(expressions, nameof(expressions));
-
-            ScriptId = scriptId;
-            Name = name;
-            Expressions = expressions;
+            ScriptId = scriptId ?? throw new ArgumentNullException(nameof(scriptId));
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Expressions = expressions ?? throw new ArgumentNullException(nameof(expressions));
 
             EntityType = Type.GetType(entityTypeName, false);
             if (EntityType == null)
@@ -77,12 +73,12 @@ namespace NetFusion.Base.Scripting
         public IDictionary<string, object> InitialAttributes { get; set; }
 
         /// <summary>
-        /// The assembles that can be access by the script.
+        /// The assembles that can be accessed by the script.
         /// </summary>
         public ICollection<string> ImportedAssemblies { get; set; }
 
         /// <summary>
-        /// The name spaces that can be referenced by the script.
+        /// The namespaces that can be referenced by the script.
         /// </summary>
         public ICollection<string> ImportedNamespaces { get; set; }
     }

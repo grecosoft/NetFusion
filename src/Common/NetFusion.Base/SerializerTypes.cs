@@ -1,7 +1,7 @@
 ﻿namespace NetFusion.Base
 {
     /// <summary>
-    /// Serialization content-types supported by default.
+    /// Common serialization type MIME values.
     /// </summary>
     public static class SerializerTypes
     {

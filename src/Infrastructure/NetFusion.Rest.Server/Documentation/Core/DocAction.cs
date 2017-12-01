@@ -30,8 +30,8 @@ namespace NetFusion.Rest.Server.Documentation.Core
 
         public DocAction(MethodInfo actionMethodInfo)
         {
-            ActionMethodInfo = actionMethodInfo ?? 
-                throw new ArgumentNullException(nameof(actionMethodInfo), "Action name not specified.");
+            ActionMethodInfo = actionMethodInfo ?? throw new ArgumentNullException(nameof(actionMethodInfo),
+                "Action name cannot be null.");
 
             SetAttributeSpecifiedValues(actionMethodInfo);
         }

@@ -10,8 +10,8 @@ namespace NetFusion.Rest.Server.Documentation
     {
         public DocActionModel(DocAction actionDoc)
         {
-            if (actionDoc == null)
-                throw new ArgumentNullException(nameof(actionDoc), "Action Documentation not specified");
+            if (actionDoc == null) throw new ArgumentNullException(nameof(actionDoc),
+                "Action Documentation cannot be null.");
 
             ActionId = actionDoc.ActionId;
             Description = actionDoc.Description;

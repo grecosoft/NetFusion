@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Common;
 using NetFusion.Common.Extensions;
 using NetFusion.Web.Mvc.Metadata;
 using NetFusion.Web.Mvc.Metadata.Core;
@@ -16,6 +15,7 @@ namespace NetFusion.Web.Mvc
     /// <summary>
     /// Extends the MVC application builder with a method called to 
     /// specify the base URL that can be called to obtain route metadata.
+    /// NOTE:  This is not required if the metadata is only queried on the server.
     /// </summary>
     public static class BuilderExtensions
     {
@@ -31,7 +31,7 @@ namespace NetFusion.Web.Mvc
         public static IApplicationBuilder UseRouteMetadata(this IApplicationBuilder app, 
             string baseUrl = DEFAULT_URL)
         {
-            Check.NotNull(app, nameof(app));
+            if (app == null) throw new ArgumentNullException(nameof(app));
 
             if (baseUrl.Trim().Length == 0)
             {

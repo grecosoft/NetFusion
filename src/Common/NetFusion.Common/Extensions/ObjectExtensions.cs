@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -11,17 +12,16 @@ namespace NetFusion.Common.Extensions
         /// </summary>
         /// <param name="value">The value to be converted to a dictionary.</param>
         /// <returns>Dictionary.</returns>
-        public static IDictionary<string, object> ToDictionary(this object value)
+        public static IDictionary<string, object> ToDictionary(this object obj)
         {
-            Check.NotNull(value, nameof(value));
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
 
             var dictionary = new Dictionary<string, object>();
-            var valueTypeInfo = value.GetType().GetTypeInfo();
-
-            foreach (PropertyInfo property in valueTypeInfo.GetProperties()) 
+  
+            foreach (PropertyInfo property in obj.GetType().GetProperties()) 
             {
-                var obj = property.GetValue(value);
-                dictionary.Add(property.Name, obj);
+                var value = property.GetValue(obj);
+                dictionary.Add(property.Name, value);
             }
             return dictionary;
         }
@@ -33,7 +33,7 @@ namespace NetFusion.Common.Extensions
         /// <returns>JSON encoded object.</returns>
         public static string ToIndentedJson(this object value)
         {
-            Check.NotNull(value, nameof(value));
+            if (value == null) throw new ArgumentNullException(nameof(value));
             return JsonConvert.SerializeObject(value, Formatting.Indented);
         }
 
@@ -44,13 +44,8 @@ namespace NetFusion.Common.Extensions
         /// <returns>JSON encoded object.</returns>
         public static string ToJson(this object value)
         {
-            Check.NotNull(value, nameof(value));
+            if (value == null) throw new ArgumentNullException(nameof(value));
             return JsonConvert.SerializeObject(value, Formatting.None);
-        }
-
-        private static string GetBasePropertyName(string name)
-        {
-            return name.Replace("Get", "").Replace("Set", ""); 
         }
     }
 }

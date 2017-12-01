@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using System;
+﻿using System;
 
 namespace NetFusion.Domain.Entities.Core
 {
@@ -17,11 +16,9 @@ namespace NetFusion.Domain.Entities.Core
 
         public Behavior(Type behaviorType, Type implementationType, bool hasDelegatorConstructor)
         {
-            Check.NotNull(behaviorType, nameof(behaviorType));
-            Check.NotNull(implementationType, nameof(implementationType));
+            BehaviorType = behaviorType ?? throw new ArgumentNullException(nameof(behaviorType));
+            ImplementationType = implementationType ?? throw new ArgumentNullException(nameof(hasDelegatorConstructor));
 
-            BehaviorType = behaviorType;
-            ImplementationType = implementationType;
             HasDelegatorConstructor = hasDelegatorConstructor;
         }
     }

@@ -47,15 +47,16 @@ namespace NetFusion.Messaging.Types
 
         public static void SetRouteKey(this IMessage message, string value)
         {
-            Check.NotNullOrWhiteSpace(value, nameof(value));
-
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("Value can't be null or empty string.", nameof(value));
+            
             message.Attributes.SetMemberValue(value.ToUpper(), Context);
         }
 
         public static void SetRouteKey(this IMessage message, params object[] args)
         {
             string[] argValues = args.Select(a => a?.ToString()?.ToUpper()).ToArray();
-            message.Attributes.SetMemberValue(String.Join(".", argValues), Context);
+            message.Attributes.SetMemberValue(string.Join(".", argValues), Context);
         }
 
         public static string GetRouteKey(this IMessage message)

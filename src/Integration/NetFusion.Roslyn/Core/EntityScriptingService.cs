@@ -5,9 +5,8 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Base.Entity;
 using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Logging;
-using NetFusion.Common;
 using NetFusion.Common.Extensions;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -31,7 +30,7 @@ namespace NetFusion.Domain.Roslyn.Core
 
         public EntityScriptingService(ILoggerFactory logger)
         {
-            Check.NotNull(logger, nameof(logger));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
             _logger = logger.CreateLogger<EntityScriptingService>();
         }
 
@@ -39,7 +38,7 @@ namespace NetFusion.Domain.Roslyn.Core
         // given entity.  The expressions will be compiled upon first use.
         public void Load(IEnumerable<EntityScript> scripts)
         {
-            Check.NotNull(scripts, nameof(scripts));
+            if (scripts == null) throw new ArgumentNullException(nameof(scripts));
 
             _scriptEvaluators = scripts.Select(s => new ScriptEvaluator(s))
                 .ToLookup(se => se.Script.EntityType);
@@ -47,8 +46,8 @@ namespace NetFusion.Domain.Roslyn.Core
 
         public async Task ExecuteAsync(object entity, string scriptName = "default")
         {
-            Check.NotNull(entity, nameof(entity));
-            Check.NotNull(scriptName, nameof(scriptName));
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (scriptName == null) throw new ArgumentNullException(nameof(scriptName));
 
             Type entityType = entity.GetType();
 
@@ -74,7 +73,7 @@ namespace NetFusion.Domain.Roslyn.Core
                 {
                     throw new InvalidOperationException(
                         $"A script named: {scriptName} for the entity type of: {entityType} could not be found.  " +
-                        $"Script names are case-sensitive.");
+                        $"Note: Script names are case-sensitive.");
                 }
 
                 await ExecuteScript(entity, namedEvalScript);
@@ -85,7 +84,7 @@ namespace NetFusion.Domain.Roslyn.Core
         {
             var preEvalDetails = GetPreEvalDetails(entity, evaluator);
 
-            using (var durationLogger = _logger.LogTraceDuration(ScriptingLogEvents.SCRIPT_EVALUATION, "Script Evaluation"))
+            using (var durationLogger = _logger.LogTraceDuration(ScriptingLogEvents.SCRIPT_EXECUTION, "Script Evaluation"))
             {
                 durationLogger.Log.LogTraceDetails(ScriptingLogEvents.SCRIPT_PRE_EVALUATION, 
                     "Pre-Evaluation Details", preEvalDetails);
@@ -240,10 +239,10 @@ namespace NetFusion.Domain.Roslyn.Core
             return assemblies.Distinct().ToList();
         }
 
-        public async Task<bool> SatisfiesPredicate(object entity, ScriptPredicate predicate)
+        public async Task<bool> SatisfiesPredicateAsync(object entity, ScriptPredicate predicate)
         {
-            Check.NotNull(entity, nameof(entity));
-            Check.NotNull(predicate, nameof(predicate));
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
             var attributedEntity = entity as IAttributedEntity;
             if (attributedEntity == null)

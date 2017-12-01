@@ -1,5 +1,4 @@
 ﻿using MongoDB.Driver;
-using NetFusion.Common.Extensions;
 using NetFusion.Settings;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,7 +7,7 @@ namespace NetFusion.MongoDB.Configs
     /// <summary>
     /// Setting uses by the MongoDB client when connecting to the database.
     /// Consuming applications derive from this base class to represent each
-    /// MongoDb being used.
+    /// MongoDb database being used.
     /// </summary>
     [ConfigurationSection("netfusion:plugins:mongoDB")]
     public abstract class MongoSettings : AppSettings
@@ -52,9 +51,10 @@ namespace NetFusion.MongoDB.Configs
         public bool IsPasswordSet
         {
             get {
-                return (!this.AuthDatabaseName.IsNullOrWhiteSpace() || !this.DatabaseName.IsNullOrWhiteSpace())
-                    && !this.UserName.IsNullOrWhiteSpace() 
-                    && !this.Password.IsNullOrWhiteSpace(); }
+                return (!string.IsNullOrWhiteSpace(AuthDatabaseName) || !string.IsNullOrWhiteSpace(DatabaseName))
+                     && !string.IsNullOrWhiteSpace(UserName) 
+                     && !string.IsNullOrWhiteSpace(Password);
+            }
         }
     }
 }

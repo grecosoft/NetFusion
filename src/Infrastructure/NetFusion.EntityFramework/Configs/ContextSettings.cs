@@ -11,7 +11,7 @@ namespace NetFusion.EntityFramework.Configs
     public class ContextSettings : AppSettings
     {
         /// <summary>
-        /// List of context database connection strings.
+        /// List of context database context connection strings.
         /// </summary>
         public IEnumerable<ContextConnection> Connections { get; set; }
     }

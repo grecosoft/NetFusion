@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Domain.Entities.Registration;
+﻿using NetFusion.Domain.Entities.Registration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +7,13 @@ namespace NetFusion.Domain.Entities.Core
 {
     /// <summary>
     /// Factory used to create domain aggregates or entity instances.  The created entity will 
-    /// have any behaviors registered for the entity type associated with the created instance.
+    /// have any behaviors registered for the entity type.
     /// </summary>
     public class DomainEntityFactory : IDomainEntityFactory,
         IFactoryRegistry
     {
         /// <summary>
-        /// Reference to the factory instance creating during the bootstrap process.
+        /// Reference to the factory instance created during the bootstrap process.
         /// </summary>
         public static IDomainEntityFactory Instance { get; private set; }
 
@@ -27,13 +26,11 @@ namespace NetFusion.Domain.Entities.Core
         private readonly Dictionary<Type, SupportedBehaviors> _entityBehaviors;   // EntityType => SupportedBehavior (1..*)
 
         public DomainEntityFactory(IDomainServiceResolver resolver)
-        {
-            Check.NotNull(resolver, nameof(resolver));
-
+        {            
             _factoryBehaviors = new Dictionary<Type, SupportedBehaviors>();
             _entityBehaviors = new Dictionary<Type, SupportedBehaviors>();
 
-            _resolver = resolver;
+            _resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
         }
 
         /// <summary>
@@ -42,22 +39,62 @@ namespace NetFusion.Domain.Entities.Core
         /// <param name="factory">The created singleton domain-entity factory instance.</param>
         public static void SetInstance(IDomainEntityFactory factory)
         {
-            Check.NotNull(factory, nameof(factory));
-            Instance = factory;
+            Instance = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
         public TDomainEntity Create<TDomainEntity>()
             where TDomainEntity : IBehaviorDelegator, new()
         {
+            TDomainEntity domainEntity = new TDomainEntity();
+            SetBehaviorDelegatee(domainEntity);
+
+            return domainEntity;
+        }
+
+        public TDomainEntity Create<TDomainEntity>(Func<TDomainEntity> creationMethod)
+            where TDomainEntity : IBehaviorDelegator
+        {
+            if (creationMethod == null) throw new ArgumentNullException(nameof(creationMethod));
+
+            TDomainEntity domainEntity = creationMethod();
+
+            if (domainEntity == null)
+            {
+                throw new InvalidOperationException(
+                    $"The creation method provided for entity type: {typeof(TDomainEntity)} returned a null instance.");
+            }
+
+            SetBehaviorDelegatee(domainEntity);
+
+            return domainEntity;
+        }
+
+        public DomainEntityConstructor<TDomainEntity> Build<TDomainEntity>() 
+            where TDomainEntity : IBehaviorDelegator
+        {
+            return new DomainEntityConstructor<TDomainEntity>(domainEntity => {
+                SetBehaviorDelegatee(domainEntity);
+            });
+        }
+
+        public void Build(IBehaviorDelegator domainEntity)
+        {
+            if (domainEntity.Behaviors != null)
+            {
+                return;
+            }
+
+            SetBehaviorDelegatee(domainEntity);
+        }
+
+        private void SetBehaviorDelegatee(IBehaviorDelegator domainEntity)
+        {
             // When an entity's behaviors are first accessed, the supported behavior types are loaded.
             // The behavior instances are not created until first used.
-            var supportedBehaviors = new Lazy<IEnumerable<EntityBehavior>>( () => GetSupportedBehaviors(typeof(TDomainEntity)));
+            var supportedBehaviors = new Lazy<IEnumerable<EntityBehavior>>(() => GetSupportedBehaviors(domainEntity.GetType()));
 
-            TDomainEntity domainEntity = new TDomainEntity();
             IBehaviorDelegatee delegatee = new BehaviorDelegatee(domainEntity, supportedBehaviors, _resolver);
-
             domainEntity.SetDelegatee(delegatee);
-            return domainEntity;
         }
 
         private IEnumerable<EntityBehavior> GetSupportedBehaviors(Type domainEntityType)
@@ -89,7 +126,7 @@ namespace NetFusion.Domain.Entities.Core
         public void BehaviorsFor<TDomainEntity>(Action<ISupportedBehaviors> entity) 
             where TDomainEntity : IBehaviorDelegator
         {
-            Check.NotNull(entity, nameof(entity));
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
 
             var domainEntityType = typeof(TDomainEntity);
 

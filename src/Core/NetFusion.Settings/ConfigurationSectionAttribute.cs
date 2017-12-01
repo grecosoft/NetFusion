@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using System;
+﻿using System;
 
 namespace NetFusion.Settings
 {
@@ -10,12 +9,21 @@ namespace NetFusion.Settings
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class ConfigurationSectionAttribute : Attribute
     {
+        /// <summary>
+        /// The section name.  Can be a string or a string separated by the colon
+        /// character for a nested name.
+        /// </summary>
         public string SectionName { get; }
 
+        /// <summary>
+        /// Specifies the sections name use to load the application setting.
+        /// </summary>
+        /// <param name="sectionName">The section name.  Can be a string or a string separated by 
+        /// the colon character for a nested name.</param>
         public ConfigurationSectionAttribute(string sectionName)
         {
-            Check.NotNull(sectionName, nameof(sectionName));
-            this.SectionName = sectionName;
+            SectionName = sectionName ?? throw new ArgumentNullException(nameof(sectionName),
+                "Settings configuration name cannot be null.");
         }
     }
 }

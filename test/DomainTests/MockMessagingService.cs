@@ -18,12 +18,12 @@ namespace DomainTests
 
         }
 
-        public Task PublishAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken), IntegrationTypes integrationType = IntegrationTypes.All)
+        public Task SendAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken), IntegrationTypes integrationType = IntegrationTypes.All)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<TResult> PublishAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken), IntegrationTypes integrationType = IntegrationTypes.All)
+        public Task<TResult> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken), IntegrationTypes integrationType = IntegrationTypes.All)
         {
             throw new System.NotImplementedException();
         }

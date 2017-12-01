@@ -1,4 +1,4 @@
-﻿using NetFusion.Common;
+﻿using System;
 
 namespace NetFusion.Domain.ReferenceTypes
 {
@@ -26,11 +26,11 @@ namespace NetFusion.Domain.ReferenceTypes
 
         public ValueDescriptor(ValueDescriptor descriptor) : base()
         {
-            Check.NotNull(descriptor, nameof(descriptor));
+            if (descriptor == null) throw new ArgumentNullException(nameof(descriptor));
 
-            this.DisplayValue = descriptor.DisplayValue;
-            this.Description = descriptor.Description;
-            this.ExternalValue = descriptor.ExternalValue;
+            DisplayValue = descriptor.DisplayValue;
+            Description = descriptor.Description;
+            ExternalValue = descriptor.ExternalValue;
         }
     }
 }

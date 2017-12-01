@@ -1,5 +1,4 @@
-﻿using NetFusion.Common.Extensions.Collection;
-using NetFusion.Rest.Server.Meta;
+﻿using NetFusion.Rest.Server.Meta;
 using System;
 using System.Collections.Generic;
 
@@ -17,12 +16,14 @@ namespace NetFusion.Rest.Server.Mappings
         public ResourceMap()
         {
             _resourceMeta = new List<IResourceMeta>();
-            ResourceMeta = _resourceMeta.ToReadOnly();
+            ResourceMeta = _resourceMeta.AsReadOnly();
         }
 
         public IReadOnlyCollection<IResourceMeta> ResourceMeta { get; }
         public abstract string MediaType { get; }
 
+        // Called by module during bootstrap to instruct derived class
+        // to add resource mappings.
         void IResourceMap.BuildMap()
         {
             OnBuildResourceMap();
@@ -36,8 +37,8 @@ namespace NetFusion.Rest.Server.Mappings
         /// <param name="resourceMeta">The resource metadata configured by derived map.</param>
         protected void AddResourceMeta(IResourceMeta resourceMeta)
         {
-            if (resourceMeta == null)
-                throw new ArgumentNullException(nameof(resourceMeta), "Resource metadata not specified.");
+            if (resourceMeta == null) throw new ArgumentNullException(nameof(resourceMeta),
+                "Resource metadata cannot be null.");
             
             _resourceMeta.Add(resourceMeta);
         }

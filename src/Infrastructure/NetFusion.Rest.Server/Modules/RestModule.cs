@@ -20,10 +20,8 @@ namespace NetFusion.Rest.Server.Modules
             _config = Context.Plugin.GetConfig<RestApiConfig>();
         }
 
-        public string GetControllerSuffix() => _config.ControllerSuffix;
-
+        public string GetControllerSuffix() => _config.ControllerSuffix;    
         public string GetTypeScriptDirectoryName() => _config.TypeScriptDirectoryName;
-
         public string GetControllerDocDirectoryName() => _config.ControllerDocDirectoryName;
 
         public override void RegisterComponents(ContainerBuilder builder)

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using NetFusion.Common;
 using System;
 using System.IO;
 
@@ -10,7 +9,7 @@ namespace NetFusion.Bootstrap.Configuration
     /// </summary>
     public static class ConfigurationExtensions
     {
-        private const string APP_SETTINGS_FILE_NAME = "appsettings.json";
+        private const string APP_SETTINGS_FILE_NAME = "appsettings";
 
         /// <summary>
         /// Configures an ordered list of application JSON files to be searched for settings.
@@ -23,10 +22,13 @@ namespace NetFusion.Bootstrap.Configuration
         /// <returns>Instance to the configuration builder.</returns>
         public static ConfigurationBuilder AddDefaultAppSettings(this ConfigurationBuilder configBuilder)
         {
-            Check.NotNull(configBuilder, "Configuration build not specified.");
+            if (configBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(configBuilder), "Configuration builder not specified.");
+            }
 
             configBuilder.SetBasePath(Directory.GetCurrentDirectory());
-            configBuilder.AddJsonFile(APP_SETTINGS_FILE_NAME, optional: true, reloadOnChange: true);
+            configBuilder.AddJsonFile($"{APP_SETTINGS_FILE_NAME}.json", optional: true, reloadOnChange: true);
             configBuilder.AddJsonFile($"{APP_SETTINGS_FILE_NAME}.{EnvironmentConfig.EnvironmentName}.json", reloadOnChange: true, optional: true);
             configBuilder.AddJsonFile($"{APP_SETTINGS_FILE_NAME}.{Environment.MachineName}.json", reloadOnChange: true, optional: true);
             return configBuilder;

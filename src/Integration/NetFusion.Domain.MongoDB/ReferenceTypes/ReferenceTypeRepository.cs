@@ -1,8 +1,8 @@
 ﻿using MongoDB.Driver;
-using NetFusion.Common;
 using NetFusion.Domain.ReferenceTypes;
 using NetFusion.Domain.ReferenceTypes.Core;
 using NetFusion.MongoDB;
+using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Domain.MongoDB.ReferenceTypes
@@ -24,8 +24,8 @@ namespace NetFusion.Domain.MongoDB.ReferenceTypes
          
         public void AddReferenceType(ReferenceType referenceType)
         {
-            Check.NotNull(referenceType, nameof(referenceType));
-        
+            if (referenceType == null) throw new ArgumentNullException(nameof(referenceType));
+
             ReferenceTypeColl.InsertOne(referenceType);
         }
 

@@ -1,4 +1,4 @@
-﻿using NetFusion.Common;
+﻿using System;
 
 namespace NetFusion.Domain.Entities.Core
 {
@@ -11,10 +11,8 @@ namespace NetFusion.Domain.Entities.Core
         public IDomainBehavior Instance { get; set; }
 
         public EntityBehavior(Behavior behavior)
-        {
-            Check.NotNull(behavior, nameof(behavior));
-
-            Behavior = behavior;
+        {           
+            Behavior = behavior ?? throw new ArgumentNullException(nameof(behavior));
         }
     }
 }

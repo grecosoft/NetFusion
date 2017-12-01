@@ -20,7 +20,7 @@
         /// behavior.  If supported, a reference to the behavior is returned.
         /// </returns>
         (TBehavior instance, bool supported) Get<TBehavior>()
-            where TBehavior : class, IDomainBehavior;
+            where TBehavior : IDomainBehavior;
 
         /// <summary>
         /// Returns a required behavior.  If the entity does not support the specified
@@ -28,6 +28,6 @@
         /// </summary>
         /// <typeparam name="TBehavior">The type of the behavior to receive.</typeparam>
         /// <returns>The supported behavior or an exception if not supported.</returns>
-        TBehavior GetRequired<TBehavior>() where TBehavior : class, IDomainBehavior;
+        TBehavior GetRequired<TBehavior>() where TBehavior : IDomainBehavior;
     }
 }

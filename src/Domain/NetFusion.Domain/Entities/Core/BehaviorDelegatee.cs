@@ -46,11 +46,11 @@ namespace NetFusion.Domain.Entities.Core
         }
 
         public (TBehavior instance, bool supported) Get<TBehavior>() 
-            where TBehavior : class, IDomainBehavior
+            where TBehavior : IDomainBehavior
         {
             if (!Behaviors.TryGetValue(typeof(TBehavior), out EntityBehavior entityBehavior))
             {
-                return (null, false);
+                return (default(TBehavior), false);
             }
 
             IDomainBehavior behaviorInstance = GetOrCreateBehavior(entityBehavior);
@@ -58,7 +58,7 @@ namespace NetFusion.Domain.Entities.Core
         }
 
         public TBehavior GetRequired<TBehavior>() 
-            where TBehavior : class, IDomainBehavior
+            where TBehavior : IDomainBehavior
         {
             var behavior = Get<TBehavior>();
             if (behavior.supported)
@@ -68,7 +68,7 @@ namespace NetFusion.Domain.Entities.Core
 
             throw new NotSupportedException(
                 $"The entity of type: {_entityDelegator.GetType().FullName} does not support " +
-                $" the behavior:{typeof(TBehavior).FullName}.");
+                $" the behavior: {typeof(TBehavior).FullName}.");
         }
 
         // Creates an instance of an entity behavior and injects and needed domain services

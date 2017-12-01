@@ -1,4 +1,4 @@
-﻿using NetFusion.Rest.Server.Mappings;
+﻿using NetFusion.Common.Extensions.Types;
 using System.Reflection;
 
 namespace NetFusion.Rest.Server.Documentation.Core

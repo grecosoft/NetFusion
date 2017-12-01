@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Common.Extensions;
+﻿using NetFusion.Common.Extensions;
 using System;
 using System.Collections.Generic;
 
@@ -10,7 +9,7 @@ using System.Runtime.Serialization;
 namespace NetFusion.Base.Exceptions
 {
     /// <summary>
-    /// Base exception from which all other plug-in specific exceptions derive.
+    /// Base exception from which all other NetFusion specific exceptions derive.
     /// </summary>
 #if NET461
     [Serializable]
@@ -20,7 +19,8 @@ namespace NetFusion.Base.Exceptions
         private const string NETFUSION_DETAILS_VALUE = "NetFusionExDetails";
 
         /// <summary>
-        /// Dictionary of key/value pairs containing details of the exception.
+        /// Dictionary of key/value pairs containing details of the exception.  This property
+        /// can be logged as JSON to provide a detailed description of the exception.
         /// </summary>
         public IDictionary<string, object> Details { get; protected set; } = new Dictionary<string, object>();
 
@@ -84,9 +84,10 @@ namespace NetFusion.Base.Exceptions
         public NetFusionException(string message, object details)
             : base(message)
         {
-            Check.NotNull(details, nameof(details));
+            if (details == null) throw new ArgumentNullException(nameof(details),
+                "Exception details cannot be null.");
 
-            this.Details = details.ToDictionary();
+            Details = details.ToDictionary();
         }
 
         /// <summary>
@@ -99,9 +100,10 @@ namespace NetFusion.Base.Exceptions
         public NetFusionException(string message, object details, Exception innerException)
             : base(message, innerException)
         {
-            Check.NotNull(details, nameof(details));
+            if (details == null) throw new ArgumentNullException(nameof(details),
+                "Exception details cannot be null.");
 
-            this.Details = details.ToDictionary();
+            Details = details.ToDictionary();
         }
     }
 }

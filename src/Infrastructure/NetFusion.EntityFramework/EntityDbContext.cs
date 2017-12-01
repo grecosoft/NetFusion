@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NetFusion.Common;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
+using System;
 using System.Linq;
 
 namespace NetFusion.EntityFramework
@@ -16,12 +16,9 @@ namespace NetFusion.EntityFramework
         private readonly IEntityTypeMapping[] _mappings;
 
         public EntityDbContext(string connectionString, IEntityTypeMapping[] mappings)
-        {
-            Check.NotNull(connectionString, "connection string not specified");
-            Check.NotNull(mappings, nameof(mappings), "entity mappings not specified");
-
-            _connectionString = connectionString;
-            _mappings = mappings;
+        {            
+            _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+            _mappings = mappings ?? throw new ArgumentNullException(nameof(mappings));
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

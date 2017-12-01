@@ -5,13 +5,14 @@ using System.Runtime.CompilerServices;
 namespace NetFusion.Base.Entity
 {
     /// <summary>
-    /// Represents a set of dynamic key/value pairs that can be associated
-    /// with an entity.
+    /// Represents a set of dynamic key/value pairs that can be associated with an entity.
     /// </summary>
     public interface IEntityAttributes
     {
         /// <summary>
-        /// Provides dynamic access to the entity's attributes.
+        /// Provides dynamic access to the entity's attributes.  This property is a .NET
+        /// dynamic type allows arbitrary properties not statically defined to be associated
+        /// with an object.
         /// </summary>
         dynamic Values { get; }
 
@@ -58,7 +59,7 @@ namespace NetFusion.Base.Entity
         /// </summary>
         /// <typeparam name="T">The type of the attribute value.</typeparam>
         /// <param name="name">The name of the attribute.</param>
-        /// <param name="defaultValue"></param>
+        /// <param name="defaultValue">The value to return if not present.</param>
         /// <param name="context">Identifies the context associated with the attribute.</param>
         /// <returns>The current value or the specified default if not present.</returns>
         T GetValueOrDefault<T>(string name, T defaultValue = default(T), Type context = null );

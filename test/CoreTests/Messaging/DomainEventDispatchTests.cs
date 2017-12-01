@@ -1,16 +1,11 @@
 ﻿using Autofac;
 using CoreTests.Messaging.Mocks;
 using FluentAssertions;
-using NetFusion.Base.Scripting;
-using NetFusion.Bootstrap.Container;
-using NetFusion.Common;
 using NetFusion.Messaging;
-using NetFusion.Messaging.Types;
 using NetFusion.Test.Container;
-using NetFusion.Test.Plugins;
+using NetFusion.Testing.Logging;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace CoreTests.Messaging
@@ -24,26 +19,31 @@ namespace CoreTests.Messaging
         /// When a domain event is published using the service, the corresponding discovered
         /// consumer event handler methods will be invoked.
         /// </summary>
-        [Fact (DisplayName = nameof(DomainEventConsumer_HandlerInvoked))]
-        public Task DomainEventConsumer_HandlerInvoked()
+        [Fact (DisplayName = "Domain Event Consumer handler invoked")]
+        public void DomainEventConsumer_HandlerInvoked()
         {
-            return DefaultSetup.EventConsumer.Test(
-                async c => 
-                {
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => {
+                        r.WithHostConsumer();
+                    })
+                    .Container(c => c.UsingDefaultServices())
+                .Act.OnContainer(async c => {
                     c.Build();
 
                     var mockEvt = new MockDomainEvent();
                     await c.Services.Resolve<IMessagingService>()
                         .PublishAsync(mockEvt);
-                }, 
-                (IAppContainer c) =>
+                })
+                .Result.Assert.Container(c =>
                 {
                     var consumer = c.Services.Resolve<IEnumerable<IMessageConsumer>>()
-                       .OfType<MockDomainEventConsumer>()
-                       .First();
+                        .OfType<MockDomainEventConsumer>()
+                        .First();
 
                     consumer.ExecutedHandlers.Should().Contain("OnEventHandlerOne");
                 });
+            });                
         }
 
         /// <summary>
@@ -51,19 +51,24 @@ namespace CoreTests.Messaging
         /// with the IncludeDerivedEvents attribute to indicate it should be 
         /// called for any derived domain events.
         /// </summary>
-        [Fact(DisplayName = nameof(EventHandlerForBaseType_InvokedIfAppliedAttribute))]
-        public Task EventHandlerForBaseType_InvokedIfAppliedAttribute()
+        [Fact(DisplayName = "Event handler for Base Type invoked if applied attribute")]
+        public void EventHandlerForBaseType_InvokedIfAppliedAttribute()
         {
-            return ConsumerWithDerivedEventHandler.Test(
-                async c =>
-                {
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => {
+                        r.WithHost();
+                        r.AddDerivedEventAndConsumer();
+                    })
+                    .Container(c => c.UsingDefaultServices())
+                .Act.OnContainer(async c => {
                     c.Build();
 
                     var mockEvt = new MockDerivedDomainEvent();
                     await c.Services.Resolve<IMessagingService>()
                         .PublishAsync(mockEvt);
-                },
-                (IAppContainer c) =>
+                })
+                .Result.Assert.Container(c =>
                 {
                     var consumer = c.Services.Resolve<IEnumerable<IMessageConsumer>>()
                         .OfType<MockBaseMessageConsumer>()
@@ -71,95 +76,36 @@ namespace CoreTests.Messaging
 
                     consumer.ExecutedHandlers.Should().ContainSingle("OnIncludeBaseEventHandler");
                 });
+            });    
         }
 
-        [Fact(DisplayName = nameof(ExceptionsRecorded_ForEachEventHandler))]
-        public Task ExceptionsRecorded_ForEachEventHandler()
+        [Fact(DisplayName = "Publisher exception Generic Exception Raised details Logged")]
+        public void PublisherException_GenericExceptionRaised_DetailsLogged()
         {
-            return ContainerSetup.Arrange((TestTypeResolver config) => {
-
-                    config.AddPlugin<MockAppHostPlugin>()
-                        .AddPluginType<MockDomainEvent>()
-                        .AddPluginType<MockErrorMessageConsumer>();
-
-                    config.AddPlugin<MockCorePlugin>()
-                        .UseMessagingPlugin();
-                })
-                .Test(async c =>
-                {
-                    c.WithConfig<AutofacRegistrationConfig>(regConfig =>
-                    {
-                        regConfig.Build = builder =>
-                        {
-                            builder.RegisterType<NullEntityScriptingService>()
-                                .As<IEntityScriptingService>()
-                                .SingleInstance();
-                        };
-                    });
-
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => {
+                        r.WithHost();
+                        r.AddEventAndExceptionConsumer();
+                    })
+                    .Container(c => {
+                        c.UseTestLogger();
+                        c.UsingDefaultServices(); })
+                .Act.OnContainer(async c => {
                     c.Build();
 
-                    var srv = c.Services.Resolve<IMessagingService>();
-                    var evt = new MockDomainEvent();
-                    await srv.PublishAsync(evt);
-                },
-                (c, e) =>
+                    var mockEvt = new MockDomainEvent();
+                    await c.Services.Resolve<IMessagingService>()
+                        .PublishAsync(mockEvt);
+                })
+                .Result.Assert.Exception<PublisherException>(ex =>
                 {
-                    e.Should().NotBeNull();
-                    e.Should().BeOfType<PublisherException>();
+                    ex.Message.Should().Contain("Exception publishing message.  See log for details.");
+                })
+                .Container(c => {
+                    var logger = c.GetTestLogger();
                 });
+            });    
         }
-
-        //--------------------------------TEST SPECIFIC SETUP------------------------------------------//
-
-        public class MockBaseDomainEvent : DomainEvent
-        {
-
-        }
-
-        public class MockDerivedDomainEvent : MockBaseDomainEvent
-        {
-        }
-
-        public class MockBaseMessageConsumer : MockConsumer,
-        IMessageConsumer
-        {
-
-            [InProcessHandler]
-            public void OnBaseEventHandler(MockBaseDomainEvent domainEvent)
-            {
-                Check.NotNull(domainEvent, nameof(domainEvent));
-                AddCalledHandler("OnBaseEventHandler");
-            }
-
-            [InProcessHandler]
-            public void OnIncludeBaseEventHandler([IncludeDerivedMessages]MockBaseDomainEvent domainEvent)
-            {
-                Check.NotNull(domainEvent, nameof(domainEvent));
-                AddCalledHandler("OnIncludeBaseEventHandler");
-            }
-        }
-
-        public static ContainerTest ConsumerWithDerivedEventHandler => ContainerSetup
-            .Arrange((TestTypeResolver config) =>
-            {
-                config.AddPlugin<MockAppHostPlugin>()
-                    .AddPluginType<MockDerivedDomainEvent>()
-                    .AddPluginType<MockBaseMessageConsumer>();
-
-                config.AddPlugin<MockCorePlugin>()
-                    .UseMessagingPlugin();
-            }, c =>
-            {
-                c.WithConfig<AutofacRegistrationConfig>(regConfig =>
-                {
-                    regConfig.Build = builder =>
-                    {
-                        builder.RegisterType<NullEntityScriptingService>()
-                            .As<IEntityScriptingService>()
-                            .SingleInstance();
-                    };
-                });
-            });
-    }
+     }
 }

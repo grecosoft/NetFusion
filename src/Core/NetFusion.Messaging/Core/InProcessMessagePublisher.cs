@@ -47,7 +47,7 @@ namespace NetFusion.Messaging.Core
 
             LogMessageDespatchInfo(message, dispatchers);
 
-            // Execute all handlers and return the future result to the caller to await.
+            // Execute all handlers and return the task for the caller to await.
             return InvokeMessageDispatchersAsync(message, dispatchers, cancellationToken);
         }
 
@@ -55,30 +55,27 @@ namespace NetFusion.Messaging.Core
             IEnumerable<MessageDispatchInfo> dispatchers,
             CancellationToken cancellationToken)
         {
-            FutureResult<MessageDispatchInfo>[] futureResults = null;
+            TaskListItem<MessageDispatchInfo>[] taskList = null;
 
             try
             {
                 MessageDispatchInfo[] matchingDispatchers = await GetMatchingDispatchers(dispatchers, message);
                 AssertMessageDispatchers(message, matchingDispatchers);
 
-                futureResults = matchingDispatchers.Invoke(message, InvokeDispatcher, cancellationToken);
-                await futureResults.WhenAll();
+                taskList = matchingDispatchers.Invoke(message, InvokeDispatcher, cancellationToken);
+                await taskList.WhenAll();
             }
             catch (Exception ex)
             {
-                if (futureResults != null)
+                if (taskList != null)
                 {
-                    var dispatchErrors = futureResults.GetExceptions(GetDispatchException);
+                    var dispatchErrors = taskList.GetExceptions(GetDispatchException);
                     if (dispatchErrors.Any())
                     {
                         throw new MessageDispatchException(
                             "An exception was received when dispatching a message to one or more handlers.",
                             dispatchErrors);
                     }
-
-                    throw new MessageDispatchException(
-                        "An exception was received when dispatching a message.", ex);
                 }
 
                 throw new MessageDispatchException(
@@ -106,7 +103,7 @@ namespace NetFusion.Messaging.Core
 
             if (predicate != null)
             {
-                return await _scriptingSrv.SatisfiesPredicate(message, predicate);
+                return await _scriptingSrv.SatisfiesPredicateAsync(message, predicate);
             }
 
             return dispatchInfo.IsMatch(message);
@@ -128,9 +125,9 @@ namespace NetFusion.Messaging.Core
             return dispatcher.Dispatch(message, consumer, cancellationToken);
         }
 
-        private MessageDispatchException GetDispatchException(FutureResult<MessageDispatchInfo> futureResult)
+        private MessageDispatchException GetDispatchException(TaskListItem<MessageDispatchInfo> taskItem)
         {
-            var sourceEx = futureResult.Task.Exception.InnerException;
+            var sourceEx = taskItem.Task.Exception.InnerException;
 
             if (sourceEx is MessageDispatchException dispatchEx)
             {
@@ -138,7 +135,7 @@ namespace NetFusion.Messaging.Core
             }
 
             return new MessageDispatchException("Error calling message consumer.", 
-                futureResult.Invoker, sourceEx);
+                taskItem.Invoker, sourceEx);
             
         }
 
@@ -150,8 +147,8 @@ namespace NetFusion.Messaging.Core
             }
 
             var dispatcherDetails = dispatchers.Select(d => new {
-                d.MessageType,
-                Consumer = d.ConsumerType.Name,
+                d.MessageType.FullName,
+                Consumer = d.ConsumerType.FullName,
                 Method = d.MessageHandlerMethod.Name    
             })
             .ToList();

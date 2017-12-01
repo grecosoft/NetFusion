@@ -1,6 +1,6 @@
 ﻿using Autofac.Builder;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
+using System;
 
 namespace NetFusion.Bootstrap.Extensions
 {
@@ -13,7 +13,7 @@ namespace NetFusion.Bootstrap.Extensions
             NotifyOnActivating<TLimit, TActivatorData, TRegistrationStyle>(
             this IRegistrationBuilder<TLimit, TActivatorData, TRegistrationStyle> builder)
         {
-            Check.NotNull(builder, nameof(builder));
+            if (builder == null) throw new ArgumentNullException(nameof(builder)); 
 
             return builder.OnActivating(e =>
             {

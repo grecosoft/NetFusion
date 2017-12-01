@@ -4,8 +4,7 @@ using System.Collections.Generic;
 namespace NetFusion.Messaging.Types
 {
     /// <summary>
-    /// Base domain-event that can be published to notify application
-    /// component consumers of an occurrence.
+    /// Base domain-event that can be published to notify application component consumers of an occurrence.
     /// </summary>
     public abstract class DomainEvent : IDomainEvent
     {

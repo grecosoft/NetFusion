@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.Scripting;
 using NetFusion.Base.Scripting;
-using NetFusion.Common;
+using System;
 
 namespace NetFusion.Domain.Roslyn.Core
 {
@@ -13,11 +13,8 @@ namespace NetFusion.Domain.Roslyn.Core
             EntityExpression expression,
             ScriptRunner<object> executor)
         {
-            Check.NotNull(expression, nameof(expression));
-            Check.NotNull(executor, nameof(executor));
-
-            Expression = expression;
-            Executor = executor;
+            Expression = expression ?? throw new ArgumentNullException(nameof(expression));
+            Executor = executor ?? throw new ArgumentNullException(nameof(executor));
         }
 
         /// <summary>

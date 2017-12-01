@@ -1,6 +1,6 @@
 ﻿using Autofac;
-using NetFusion.Common;
 using NetFusion.Domain.Entities.Registration;
+using System;
 
 namespace NetFusion.Domain.Entities.Core
 {
@@ -14,8 +14,7 @@ namespace NetFusion.Domain.Entities.Core
 
         public AutofacDomainServiceRosolver(IContainer container)
         {
-            Check.NotNull(container, nameof(container));
-            _container = container;
+            _container = container ?? throw new ArgumentNullException(nameof(container));
         }
 
         /// <summary>
@@ -24,7 +23,8 @@ namespace NetFusion.Domain.Entities.Core
         /// <param name="domainBehavior">The domain behavior to have domain services resolved.</param>
         public void ResolveDomainServices(IDomainBehavior domainBehavior)
         {
-            Check.NotNull(domainBehavior, nameof(domainBehavior));
+            if (domainBehavior == null)throw new ArgumentNullException(nameof(domainBehavior));
+
             _container.InjectProperties(domainBehavior);
         }
     }

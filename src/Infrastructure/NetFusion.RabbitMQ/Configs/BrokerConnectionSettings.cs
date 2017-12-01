@@ -1,5 +1,5 @@
-﻿using NetFusion.Common;
-using NetFusion.Utilities.Validation;
+﻿using NetFusion.Base.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -65,7 +65,7 @@ namespace NetFusion.RabbitMQ.Configs
         /// <returns>The configured properties or a default instance.</returns>
         public QueuePropertiesSettings GetQueueProperties(string queueName)
         {
-            Check.NotNull(queueName, nameof(queueName));
+            if (queueName == null) throw new ArgumentNullException(nameof(queueName));
 
             QueuePropertiesSettings props = QueueProperties.FirstOrDefault(qp => qp.QueueName == queueName);
             return props ?? new QueuePropertiesSettings { QueueName = queueName };
@@ -75,8 +75,8 @@ namespace NetFusion.RabbitMQ.Configs
         {
             if (validator.IsValid)
             {
-                RpcConsumers.Select(c => validator.AddChildValidator(c));
-                QueueProperties.Select(p => validator.AddChildValidator(p));
+                RpcConsumers.Select(c => validator.AddChild(c));
+                QueueProperties.Select(p => validator.AddChild(p));
             }
         }
     }

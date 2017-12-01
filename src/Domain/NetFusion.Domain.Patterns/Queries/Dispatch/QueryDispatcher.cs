@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Domain.Patterns.Queries.Filters;
 using NetFusion.Domain.Patterns.Queries.Modules;
@@ -35,21 +34,27 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
         public async Task<TResult> Dispatch<TResult>(IQuery<TResult> query, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            Check.NotNull(query, nameof(query), "query to dispatch can't be null.");
+            if (query == null) throw new ArgumentNullException(nameof(query),
+                "Query to dispatch can't be null.");
 
             QueryDispatchInfo dispatchInfo = _dispatchModule.GetQueryDispatchInfo(query.GetType());
 
             try { await InvokeDispatcher(dispatchInfo, query, cancellationToken); }
             catch (Exception ex)
             {
-                throw new QueryDispatchException("Error dispatching query.", query, ex);
+                var details = new {
+                    Query = query,
+                    DispatchInfo = dispatchInfo
+                };
+
+                throw new QueryDispatchException("Error dispatching query.", details, ex);
             }
 
             return query.Result;
         }
 
-        // Creates an instance of the consumer that will execute the query and calls it after invoking the
-        // pre-filters and before the post-filters.
+        // Creates an instance of the consumer that will execute the query and calls it between the
+        // pre and post filters.
         private async Task InvokeDispatcher(QueryDispatchInfo dispatcher, IQuery query, CancellationToken cancellationToken)
         {
             var consumer = (IQueryConsumer)_lifetimeScope.Resolve(dispatcher.ConsumerType);
@@ -66,24 +71,22 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
         // any task error(s) are checked and raised.
         private async Task ApplyFilters(IQuery query, IEnumerable<IQueryFilter> filters)
         {
-            FutureResult<IQueryFilter>[] futureResults = null;
+            TaskListItem<IQueryFilter>[] taskList = null;
 
             try
             {
-                futureResults = filters.Invoke(query, (filter, q) => filter.OnExecute(q));
-                await futureResults.WhenAll();
+                taskList = filters.Invoke(query, (filter, q) => filter.OnExecute(q));
+                await taskList.WhenAll();
             }
             catch (Exception ex)
             {
-                if (futureResults != null)
+                if (taskList != null)
                 {
-                    var filterErrors = futureResults.GetExceptions(fr => new QueryFilterException(fr));
+                    var filterErrors = taskList.GetExceptions(fr => new QueryFilterException(fr));
                     if (filterErrors.Any())
                     {
                         throw new QueryDispatchException("Exception when invoking query filters.", filterErrors);
                     }
-
-                    throw new QueryDispatchException("Exception when invoking query filters.", ex);
                 }
 
                 throw new QueryDispatchException("Exception when invoking query filters.", ex);

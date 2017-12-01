@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -8,7 +9,7 @@ namespace NetFusion.Common.Extensions.Expressions
     {
         public static MethodInfo GetCallMethodInfo(this LambdaExpression expression)
         {
-            Check.NotNull(expression, nameof(expression));
+            if (expression == null) throw new ArgumentNullException(nameof(expression));
 
             UnaryExpression unaryExpression = expression.Body as UnaryExpression;
 

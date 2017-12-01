@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using NetFusion.Common;
 using System;
 using System.Diagnostics;
 
@@ -20,11 +19,8 @@ namespace NetFusion.Bootstrap.Logging
         private DurationLogger(ILogger logger,
             Action<string, object[]> logMessage)
         {
-            Check.NotNull(logger, nameof(logger));
-            Check.NotNull(logMessage, nameof(logMessage));
-
-            _logger = logger;
-            _logMessage = logMessage;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _logMessage = logMessage ?? throw new ArgumentNullException(nameof(logger));
 
             _stopWatch = new Stopwatch();
             _stopWatch.Start();
@@ -41,7 +37,8 @@ namespace NetFusion.Bootstrap.Logging
             string processName,
             Action<string, object[]> logMessage) : this(logger, logMessage)
         {
-            Check.NotNullOrWhiteSpace(processName, nameof(processName));
+            if (string.IsNullOrWhiteSpace(processName)) throw new ArgumentException(
+                "Process name to log duration of cannot be null", nameof(processName));
 
             _processName = processName;
         }

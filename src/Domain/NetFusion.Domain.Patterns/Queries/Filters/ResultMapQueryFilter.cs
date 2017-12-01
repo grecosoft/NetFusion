@@ -1,4 +1,4 @@
-﻿using NetFusion.Utilities.Mapping;
+﻿using NetFusion.Mapping;
 using System;
 using System.Collections;
 using System.Threading.Tasks;

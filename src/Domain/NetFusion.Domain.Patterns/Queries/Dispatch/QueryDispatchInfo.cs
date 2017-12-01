@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Common.Extensions.Reflection;
+﻿using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +52,7 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
       
         public QueryDispatchInfo(MethodInfo methodInfo)
         {
-            Check.NotNull(methodInfo, nameof(methodInfo));
+            HandlerMethod = methodInfo ?? throw new ArgumentNullException(nameof(methodInfo));
 
             QueryType = GetQueryParamType(methodInfo);
             ConsumerType = methodInfo.DeclaringType;
@@ -61,8 +60,7 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
             IsAsync = methodInfo.IsAsyncMethod();
             IsAsyncWithResult = methodInfo.IsAsyncMethodWithResult();
             IsCancellable = methodInfo.IsCancellableMethod();
-            HandlerMethod = methodInfo;
-
+    
             Invoker = CreateHandlerDelegate();
         }
 
@@ -96,10 +94,10 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
         // Dispatches the query to the handling consumer.
         public async Task<object> Dispatch(IQuery query, IQueryConsumer consumer, CancellationToken cancellationToken)
         {
-            Check.NotNull(query, nameof(query));
-            Check.NotNull(consumer, nameof(consumer));
+            if (query == null) throw new ArgumentNullException(nameof(query));
+            if (consumer == null) throw new ArgumentNullException(nameof(consumer));
 
-            var futureResult = new TaskCompletionSource<object>();
+            var taskSource = new TaskCompletionSource<object>();
 
             try
             {
@@ -117,13 +115,13 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
                     await asyncResult;
 
                     object result = ProcessResult(query, asyncResult);
-                    futureResult.SetResult(result);
+                    taskSource.SetResult(result);
                 }
                 else
                 {
                     object syncResult = Invoker.DynamicInvoke(consumer, query);
                     object result = ProcessResult(query, syncResult);
-                    futureResult.SetResult(result);
+                    taskSource.SetResult(result);
                 }
             }
             catch (Exception ex)
@@ -140,10 +138,10 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
                     this,
                     sourceEx);
 
-                futureResult.SetException(dispatchEx);
+                taskSource.SetException(dispatchEx);
             }
 
-            return await futureResult.Task;
+            return await taskSource.Task;
         }
 
         private object ProcessResult(IQuery query, object result)

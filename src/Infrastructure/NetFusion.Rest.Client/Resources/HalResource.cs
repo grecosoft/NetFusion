@@ -10,7 +10,7 @@ namespace NetFusion.Rest.Client.Resources
     /// Also allows the consumer of the resource to obtain any embedded 
     /// named resources.
     /// </summary>
-    public abstract class HalResource : Resource
+    public class HalResource
     {
         /// <summary>
         /// Embedded related named resources.
@@ -18,9 +18,16 @@ namespace NetFusion.Rest.Client.Resources
         [JsonProperty(PropertyName = "_embedded")]
 		public Dictionary<string, object> Embedded { get; set; }
 
-        // When submitting resources back to the server for updating or 
-        // other use-cases, the embedded resources should not be serialized.
+        /// <summary>
+        /// The links associated with the resource.
+        /// </summary>
+        [JsonProperty(PropertyName = "_links")]
+        public Dictionary<string, Link> Links { get; set; }
+
+        // When submitting resources back to the server for updating or other 
+        // use-cases, the embedded resources and links should not be serialized.
         public bool ShouldSerializeEmbedded() => false;
+        public bool ShouldSerializeLinks() => false;
 
         /// <summary>
         /// Determines if the resources contains a named embedded resource.

@@ -12,7 +12,7 @@ namespace NetFusion.MongoDB
         /// <param name="value">The value to be validated.</param>
         public static void ValidObjectId(string value)
         {
-            if (value.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(value))
             {
                 throw new InvalidOperationException("MongoDB ObjectId string representation can't be null.");
             }
@@ -25,12 +25,11 @@ namespace NetFusion.MongoDB
         }
 
         /// <summary>
-        /// If valid returns the ObjectId instance corresponding
-        /// to the specified string value.
+        /// If valid returns the ObjectId instance corresponding to the specified string value.
         /// </summary>
         /// <param name="value">The value to convert.</param>
-        /// <returns>If the value is not a valid MongoDB value, an exception 
-        /// is thrown.  Otherwise the corresponding ObjectId instance.</returns>
+        /// <returns>If the value is not a valid MongoDB value, an exception is thrown.  
+        /// Otherwise the corresponding ObjectId instance.</returns>
         public static ObjectId AsObjectId(this string value)
         {
             ValidObjectId(value);

@@ -1,7 +1,5 @@
 ﻿using NetFusion.Base.Scripting;
-using NetFusion.Common;
-using NetFusion.Common.Extensions;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Configs;
@@ -89,7 +87,7 @@ namespace NetFusion.RabbitMQ.Core
 
         internal virtual void ValidateConfiguration()
         {
-            if (Settings.BrokerName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(Settings.BrokerName))
             {
                 throw new BrokerException(
                     "Broker Name must be set for all exchange types.");
@@ -100,7 +98,7 @@ namespace NetFusion.RabbitMQ.Core
         // on the channel.
         public virtual void Declare(IModel channel)
         {
-            Check.NotNull(channel, nameof(channel));
+            if (channel == null) throw new ArgumentNullException(nameof(channel));
 
             // Declare the exchange and its queues.
             CreateExchange(channel, Settings);
@@ -112,7 +110,7 @@ namespace NetFusion.RabbitMQ.Core
             // The default exchange is being used if the ExchangeType is null.
             if (settings.ExchangeType == null) return;
 
-            if (ExchangeName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(ExchangeName))
             {
                 throw new BrokerException(
                     "Exchange name must be specified for non-default exchange type.");
@@ -163,7 +161,8 @@ namespace NetFusion.RabbitMQ.Core
         /// to configure the queue.</param>
         protected void QueueDeclare(string name, Action<ExchangeQueue> config = null)
         {
-            Check.NotNullOrWhiteSpace(name, nameof(name));
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Queue name must be specified.", nameof(name));
 
             var exchangeQueue = new ExchangeQueue
             {
@@ -197,9 +196,9 @@ namespace NetFusion.RabbitMQ.Core
         public virtual void Publish(IModel channel, IMessage message, byte[] messageBody,
             string replyToQueueName = null)
         {
-            Check.NotNull(channel, nameof(channel));
-            Check.NotNull(message, nameof(message));
-            Check.NotNull(messageBody, nameof(messageBody));
+            if (channel == null) throw new ArgumentNullException(nameof(channel));
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (messageBody == null) throw new ArgumentNullException(nameof(messageBody));
 
             string routeKey = message.GetRouteKey();
             var props = GetPublisherBasicProperties(channel, message);
@@ -220,8 +219,8 @@ namespace NetFusion.RabbitMQ.Core
         /// <returns>Configured set of properties.</returns>
         private IBasicProperties GetPublisherBasicProperties(IModel channel, IMessage message)
         {
-            Check.NotNull(channel, nameof(channel));
-            Check.NotNull(message, nameof(message));
+            if (channel == null) throw new ArgumentNullException(nameof(message));
+            if (message == null) throw new ArgumentNullException(nameof(message));
 
             string contentType = message.GetContentType();
             IBasicProperties properties = channel.CreateBasicProperties();
@@ -254,7 +253,7 @@ namespace NetFusion.RabbitMQ.Core
 
         public override bool Satisfies(IMessage message)
         {
-            Check.NotNull(message, nameof(message));
+            if (message == null) throw new ArgumentNullException(nameof(message));
             return Matches((TMessage)message);
         }
 

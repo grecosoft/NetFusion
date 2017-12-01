@@ -3,14 +3,14 @@ using NetFusion.Web.Mvc.Metadata.Core;
 namespace NetFusion.Web.Mvc.Metadata
 {
     /// <summary>
-    /// Returns metadata for controller and
+    /// Returns metadata for controller and its associated routes.
     /// </summary>
     public interface IApiMetadataService
     {
         /// <summary>
         /// Returns route metadata for all defined groups.
         /// </summary>
-        /// <returns>Metadata describing API group and actions.</returns>
+        /// <returns>Metadata describing API groups and actions.</returns>
         ApiGroupMeta[] GetApiGroups();
 
         /// <summary>

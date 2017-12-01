@@ -1,6 +1,6 @@
-﻿using NetFusion.Common;
-using NetFusion.Domain.Entities;
+﻿using NetFusion.Domain.Entities;
 using NetFusion.Messaging.Types;
+using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Domain.Patterns.Behaviors.Integration
@@ -20,7 +20,7 @@ namespace NetFusion.Domain.Patterns.Behaviors.Integration
         /// <param name="domainEvent">The integration domain-event.</param>
         public static void IntegrationEvent(this IAggregate aggregate, IDomainEvent domainEvent)
         {
-            Check.NotNull(aggregate, nameof(aggregate));
+            if (aggregate == null) throw new ArgumentNullException(nameof(aggregate));
             aggregate.Behaviors.GetRequired<IEventIntegrationBehavior>().Record(domainEvent);
         }
 
@@ -31,7 +31,7 @@ namespace NetFusion.Domain.Patterns.Behaviors.Integration
         /// <returns>List of integration events.</returns>
         public static IEnumerable<IDomainEvent> IntegrationEvents(this IAggregate aggregate)
         {
-            Check.NotNull(aggregate, nameof(aggregate));
+            if (aggregate == null) throw new ArgumentNullException(nameof(aggregate));
             return aggregate.Behaviors.GetRequired<IEventIntegrationBehavior>().DomainEvents;
         }
     }

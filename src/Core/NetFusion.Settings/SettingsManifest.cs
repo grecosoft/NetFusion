@@ -9,7 +9,7 @@ namespace NetFusion.Settings
         public string Name => "Settings Plug-in";
 
         public string Description =>
-            "Plug-in that locates application settings and initializes them " +
-            "when injected into a dependent component for the first time.";
+            "Plug-in that locates application settings using Microsoft Configuration Extensions and " + 
+            " initializes them when injected into a dependent component for the first time.";
     }
 }

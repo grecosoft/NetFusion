@@ -19,18 +19,16 @@ namespace NetFusion.MongoDB.Modules
         /// Returns the mappings for a given entity type.
         /// </summary>
         /// <param name="entityType">The type of entity.</param>
-        /// <returns>Returns the entity map associated with the entity.  
-        /// If the specified entity doesn't have a registered mappings,
-        /// a null reference is returned.</returns>
+        /// <returns>Returns the entity map associated with the entity.  If the specified
+        /// entity doesn't have a registered mappings, a null reference is returned.</returns>
         IEntityClassMap GetEntityMap(Type entityType);
 
         /// <summary>
         /// Returns the mapping for a given entity type.
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
-        /// <returns>Returns the entity map associated with the entity.  
-        /// If the specified entity doesn't have a registered mappings,
-        /// a null reference is returned.</returns>
+        /// <returns>Returns the entity map associated with the entity.  If the specified entity 
+        /// doesn't have a registered mappings, a null reference is returned.</returns>
         IEntityClassMap GetEntityMap<T>() where T : class;
 
         /// <summary>
@@ -41,8 +39,7 @@ namespace NetFusion.MongoDB.Modules
         /// <param name="mappedEntityType">The mapped type.</param>
         /// <param name="knownEntityType">The derived mapped type.</param>
         /// <returns>The discriminator name.  If a mapping can't be found,
-        /// and InvalidOperationException is raised.  If the know type,
-        /// is not found, null is returned.</returns>
+        /// and InvalidOperationException is raised.  </returns>
         string GetEntityDiscriminator(Type mappedEntityType, Type knownEntityType);
     }
 }

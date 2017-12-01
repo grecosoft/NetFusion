@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Logging;
-using NetFusion.Common;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Messaging.Types;
 using RabbitMQ.Client;
 using System;
@@ -81,7 +80,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// <returns>True if one or more exchanges are associated with the message.</returns>
         public bool IsExchangeMessage(IMessage message)
         {
-            Check.NotNull(message, nameof(message));
+            if (message == null) throw new ArgumentNullException(nameof(message));
 
             return _messageExchanges.Contains(message.GetType());
         }
@@ -93,7 +92,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         /// <returns>The future result.</returns>
         public async Task PublishToExchangeAsync(IMessage message)
         {
-            Check.NotNull(message, nameof(message));
+            if (message == null) throw new ArgumentNullException(nameof(message));
 
             Type messageType = message.GetType();
             IEnumerable<MessageExchangeDefinition> exchangeDefs = _messageExchanges[messageType];
@@ -140,7 +139,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
             if (predicate != null)
             {
-                return await _scriptingSrv.SatisfiesPredicate(message, predicate);
+                return await _scriptingSrv.SatisfiesPredicateAsync(message, predicate);
             }
 
             return exchangeDef.Exchange.Satisfies(message);

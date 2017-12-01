@@ -1,8 +1,8 @@
 ﻿using MongoDB.Driver;
-using NetFusion.Common;
 using NetFusion.MongoDB;
 using NetFusion.RabbitMQ.Core;
 using NetFusion.RabbitMQ.Integration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,15 +20,14 @@ namespace NetFusion.RabbitMQ.MongoDB.Metadata
 
         public BrokerMetaRepository(BrokerMetaDb settings, IMongoDbClient<BrokerMetaDb> dbClient)
         {
-            Check.NotNull(dbClient, nameof(dbClient));
+            _dbClient = dbClient ?? throw new ArgumentNullException(nameof(dbClient));
 
-            _dbClient = dbClient;
             _brokerColl = _dbClient.GetCollection<BrokerMeta>(settings.CollectionName);
         }
 
         public async Task<IEnumerable<BrokerMeta>> LoadAsync(string brokerName)
         {
-            Check.NotNull(brokerName, nameof(brokerName));
+            if (brokerName == null) throw new ArgumentNullException(nameof(brokerName));
 
             var filter = Builders<BrokerMeta>.Filter;
             return await _brokerColl.Find(filter.Where(e => e.BrokerName == brokerName))

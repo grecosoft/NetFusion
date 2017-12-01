@@ -1,4 +1,3 @@
-using NetFusion.Common;
 using System;
 
 namespace NetFusion.Web.Mvc.Metadata
@@ -22,8 +21,12 @@ namespace NetFusion.Web.Mvc.Metadata
         /// <param name="actionName">Name returned in metadata.</param>
         public ActionMetaAttribute(string actionName)
         {
-            Check.NotNullOrEmpty(actionName, nameof(actionName));
-            this.ActionName = actionName;
+            if (string.IsNullOrWhiteSpace(actionName))
+            {
+                throw new ArgumentException("Action name cannot be null or empty string.");
+            }
+            
+            ActionName = actionName;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using System;
+﻿using System;
 
 namespace NetFusion.RabbitMQ.Core.Rpc
 {
@@ -21,8 +20,7 @@ namespace NetFusion.RabbitMQ.Core.Rpc
         /// <param name="exception">The serialized RPC reply exception.</param>
         public RpcReplyException(byte[] exception)
         {
-            Check.NotNull(exception, nameof(exception));
-            Exception = exception;
+            Exception = exception ?? throw new ArgumentNullException(nameof(exception));
         }
     }
 }

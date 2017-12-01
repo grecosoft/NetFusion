@@ -11,12 +11,12 @@ build_script:
   - ps: msbuild "/t:Restore;Pack" .\NetFusion.sln /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
   
 test_script:
-  - ps: dotnet test .\test\CommonTests\CommonTests.csproj -f netcoreapp1.1
-  - ps: dotnet test .\test\CoreTests\CoreTests.csproj -f netcoreapp1.1
-  - ps: dotnet test .\test\DomainTests\DomainTests.csproj -f netcoreapp1.1
-  - ps: dotnet test .\test\InfrastructureTests\InfrastructureTests.csproj -f netcoreapp1.1
-  - ps: dotnet test .\test\IntegrationTests\IntegrationTests.csproj -f netcoreapp1.1
-  - ps: dotnet test .\test\UtilitiesTests\UtilitiesTests.csproj -f netcoreapp1.1
+  - ps: dotnet test .\test\CommonTests\CommonTests.csproj 
+  - ps: dotnet test .\test\CoreTests\CoreTests.csproj 
+  - ps: dotnet test .\test\DomainTests\DomainTests.csproj 
+  - ps: dotnet test .\test\InfrastructureTests\InfrastructureTests.csproj 
+  - ps: dotnet test .\test\IntegrationTests\IntegrationTests.csproj 
+  - ps: dotnet test .\test\UtilitiesTests\UtilitiesTests.csproj 
   
 artifacts:
   - path: src\**\*.nupkg

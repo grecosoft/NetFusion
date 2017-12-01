@@ -1,15 +1,12 @@
 ﻿using Autofac;
 using DomainTests.Queries.Mocks;
 using FluentAssertions;
-using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Domain.Patterns.Queries;
 using NetFusion.Domain.Patterns.Queries.Config;
-using NetFusion.Domain.Patterns.Queries.Filters;
-using NetFusion.Domain.Patterns.Queries.Modules;
+using NetFusion.Domain.Patterns.Queries.Dispatch;
 using NetFusion.Test.Container;
-using NetFusion.Test.Plugins;
 using System;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace DomainTests.Queries
@@ -40,75 +37,78 @@ namespace DomainTests.Queries
         }
 
         [Fact(DisplayName = "Queries: Query Cannot have Multiple Consumers")]
-        public Task Query_CannotHave_MultipleConsumers()
+        public void Query_CannotHave_MultipleConsumers()
         {
             var typesUnderTest = new[] { typeof(DuplicateConsumerOne), typeof(DuplicateConsumerTwo) };
             var testQuery = new TestQuery();
 
-            return TestContainer(typesUnderTest).Test(
-               async (IAppContainer c) => {
-                   c.Build().Start();
+             ContainerFixture.Test(fixture => { fixture
+                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                .Act.OnContainer(c => 
+                    {
+                        c.Build().Start();
 
-                   // Publish command.
-                   var dispatcher = c.Services.Resolve<IQueryDispatcher>();
-                   await dispatcher.Dispatch(testQuery);
-               },
-               (IAppContainer c, Exception ex) =>
-               {
-                   ex?.InnerException.Should().NotBeNull();
-                   ex.InnerException.Message.Should()
-                        .Contain("The following query types have multiple consumers");
-               }
-           );
+                        var dispatcher = c.Services.Resolve<IQueryDispatcher>();
+                        return dispatcher.Dispatch(testQuery);
+                    })
+                .Result.Assert.Exception<ContainerException>(ex =>
+                {
+                    ex?.InnerException.Should().NotBeNull();
+                    ex.InnerException.Message.Should()
+                         .Contain("The following query types have multiple consumers");
+                });
+            });
         }
 
         [Fact(DisplayName = "Queries:  Query Must have Consumer")]
-        public Task Query_MustHave_Consumer()
+        public void Query_MustHave_Consumer()
         {
             var typesUnderTest = new[] { typeof(TestConsumer) };
             var testQuery = new TestQueryNoConsumer();
 
-            return TestContainer(typesUnderTest).Test(
-               async (IAppContainer c) => {
-                   c.Build().Start();
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                .Act.OnContainer(c => 
+                    {
+                        c.Build().Start();
 
-                   // Publish command.
-                   var dispatcher = c.Services.Resolve<IQueryDispatcher>();
-                   await dispatcher.Dispatch(testQuery);
-               },
-               (IAppContainer c, Exception ex) =>
-               {
-                   ex.Should().NotBeNull();
-                   ex.Message.Should().Contain("is not registered");
-               }
-           );
+                        var dispatcher = c.Services.Resolve<IQueryDispatcher>();
+                        return dispatcher.Dispatch(testQuery);
+                    })
+                .Result.Assert.Exception<QueryDispatchException>(ex =>
+                {
+                    ex.Should().NotBeNull();
+                    ex.Message.Should().Contain("is not registered");
+                });
+            });
         }
 
         [Fact (DisplayName = "Queries: Consumer Can Dispatch Query to Consumer")]
-        public Task Consumer_Can_DispatchQuery_To_Consumer()
+        public void Consumer_Can_DispatchQuery_To_Consumer()
         {
             var typesUnderTest = new[] { typeof(TestConsumer) };
             var testQuery = new TestQuery();
 
-            return TestContainer(typesUnderTest).Test(
-               async (IAppContainer c) => {
-                   c.Build().Start();
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                .Act.OnContainer(c => 
+                    {
+                        c.Build().Start();
 
-                    // Publish command.
-                    var dispatcher = c.Services.Resolve<IQueryDispatcher>();
-                   await dispatcher.Dispatch(testQuery);
-               },
-               (IAppContainer c) =>
-               {
-                   testQuery.Result.Should().NotBeNull();
-                   testQuery.TestLog.Should().HaveCount(1);
-                   testQuery.TestLog.Should().Contain(nameof(TestConsumer));
-               }
-           );
+                        var dispatcher = c.Services.Resolve<IQueryDispatcher>();
+                        return dispatcher.Dispatch(testQuery);
+                    })
+                .Result.Assert.Container(_ =>
+                {
+                    testQuery.Result.Should().NotBeNull();
+                    testQuery.TestLog.Should().HaveCount(1);
+                    testQuery.TestLog.Should().Contain(nameof(TestConsumer));
+                });
+            });
         }
 
         [Fact(DisplayName = "Queries: Filters Applied Correct Order")]
-        public Task Filters_Applied_CorrectOrder()
+        public void Filters_Applied_CorrectOrder()
         {
             var typesUnderTest = new[] { typeof(TestConsumer)};
             var testQuery = new TestQuery();
@@ -117,55 +117,27 @@ namespace DomainTests.Queries
             dispatchConfig.AddPreQueryFilter<QueryFilterOne>();
             dispatchConfig.AddPostQueryFilter<QueryFilterTwo>();
 
-            return TestContainer(typesUnderTest).Test(
-               async (IAppContainer c) => {
-                   c.WithConfig(dispatchConfig);
-                   c.Build().Start();
 
-                   // Publish command.
-                   var dispatcher = c.Services.Resolve<IQueryDispatcher>();
-                   await dispatcher.Dispatch(testQuery);
-               },
-               (IAppContainer c) =>
-               {
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange
+                    .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                    .Container(c => c.WithConfig(dispatchConfig))
+                .Act.OnContainer(c => 
+                    {
+                        c.Build().Start();
+
+                        var dispatcher = c.Services.Resolve<IQueryDispatcher>();
+                        return dispatcher.Dispatch(testQuery);
+                    })
+                .Result.Assert.Container(_ =>
+                {
                     testQuery.Result.Should().NotBeNull();
                     testQuery.TestLog.Should().HaveCount(3);
                     testQuery.TestLog[0].Should().Be(nameof(QueryFilterOne));
                     testQuery.TestLog[1].Should().Be(nameof(TestConsumer));
                     testQuery.TestLog[2].Should().Be(nameof(QueryFilterTwo));
-               }
-           );
-        }
-
-        //--------------------- TEST CONTAINER CONFIGURATION -----------------------
-
-        public static ContainerTest TestContainer(params Type[] pluginTypes)
-        {
-            return ContainerSetup
-               .Arrange((TestTypeResolver config) =>
-               {
-                   // Configure Core Plugin with messaging and the 
-                   // unit -of-work module.
-                   config.AddPlugin<MockCorePlugin>()
-                        .AddPluginType<QueryDispatchModule>()
-                        .AddPluginType<QueryFilterModule>()
-                        .AddPluginType<QueryDispatchConfig>();
-
-                   // Add host plugin with the plugin-types to be used
-                   // for the unit-test.
-                   config.AddPlugin<MockAppHostPlugin>()
-                        .AddPluginType(pluginTypes);
-
-               }, c =>
-               {
-                   c.WithConfig<AutofacRegistrationConfig>(regConfig =>
-                   {
-                       regConfig.Build = builder =>
-                       {
-                          
-                       };
-                   });
-               });
+                });
+            });
         }
     }
 }

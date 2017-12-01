@@ -5,58 +5,61 @@ using System.Reflection;
 
 namespace NetFusion.Common.Extensions.Reflection
 {
+    /// <summary>
+    /// Extension methods for querying type information.
+    /// </summary>
     public static class QueryReflectionExtensions
     {
         /// <summary>
         /// Determines if the type is a non-abstract type derived from the specified parent type.
         /// </summary>
-        /// <param name="type">The type to test if a derived concrete type.</param>
+        /// <param name="childType">The type to test if a derived concrete type.</param>
         /// <param name="parentType">The possible parent type of the child type.</param>
         /// <returns>True if the child type is not abstract and is derived from the parent type.</returns>
-        public static bool IsConcreteTypeDerivedFrom(this Type type, Type parentType)
+        public static bool IsConcreteTypeDerivedFrom(this Type childType, Type parentType)
         {
-            Check.NotNull(type, nameof(type));
-            Check.NotNull(parentType, nameof(parentType));
+            if (childType == null) throw new ArgumentNullException(nameof(childType));
+            if (parentType == null) throw new ArgumentNullException(nameof(parentType));
 
-            var childTypeInfo = type.GetTypeInfo();
+            var childTypeInfo = childType.GetTypeInfo();
 
-            return type.IsDerivedFrom(parentType) && !childTypeInfo.IsAbstract;
+            return childType.IsDerivedFrom(parentType) && !childTypeInfo.IsAbstract;
         }
 
         /// <summary>
         /// Determines if the type is a non-abstract type derived from the specified parent type.
         /// </summary>
-        /// <typeparam name="T">The possible parent type of the child type.</typeparam>
-        /// <param name="childType">TThe type to test if a derived concrete type.</param>
-        /// <returns>True if the type derives from the specified base type otherwise false.</returns>
-        public static bool IsConcreteTypeDerivedFrom<T>(this Type childType)
+        /// <typeparam name="TParent">The possible parent type of the child type.</typeparam>
+        /// <param name="childType">The type to test if a derived concrete type.</param>
+        /// <returns>True if the child type is not abstract and is derived from the parent type.</returns>
+        public static bool IsConcreteTypeDerivedFrom<TParent>(this Type childType)
         {
-            Check.NotNull(childType, nameof(childType));
-            return IsConcreteTypeDerivedFrom(childType, typeof(T));
+            if (childType == null) throw new ArgumentNullException(nameof(childType));
+            return IsConcreteTypeDerivedFrom(childType, typeof(TParent));
         }
 
         /// <summary>
-        /// Determines if a type derives from a base type.
+        /// Determines if a type derives from a parent type.
         /// </summary>
-        /// <typeparam name="T">The parent type.</typeparam>
+        /// <typeparam name="TParent">The parent type.</typeparam>
         /// <param name="childType">The child type to check.</param>
         /// <returns>True if the type derives from the specified base type otherwise false.</returns>
-        public static bool IsDerivedFrom<T>(this Type childType)
+        public static bool IsDerivedFrom<TParent>(this Type childType)
         {
-            Check.NotNull(childType, nameof(childType));
-            return typeof(T).IsAssignableFrom(childType) && childType != typeof(T);
+            if (childType == null) throw new ArgumentNullException(nameof(childType));
+            return typeof(TParent).IsAssignableFrom(childType) && childType != typeof(TParent);
         }
 
         /// <summary>
-        /// Determines if a type is assignable to a parent type.
+        /// Determines if a type derives from a parent type.
         /// </summary>
         /// <param name="childType">The child type to check.</param>
         /// <param name="parentType">The parent type.</param>
         /// <returns>True if the type derives from the specified base type otherwise false.</returns>
         public static bool IsDerivedFrom(this Type childType, Type parentType)
         {
-            Check.NotNull(childType, nameof(childType));
-            Check.NotNull(parentType, nameof(parentType));
+            if (childType == null) throw new ArgumentNullException(nameof(childType));
+            if (parentType == null) throw new ArgumentNullException(nameof(parentType));
 
             return parentType.IsAssignableFrom(childType) && childType != parentType;
         }
@@ -69,8 +72,8 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>True if the child type is assignable to the parent type.  Otherwise, False.</returns>
         public static bool CanAssignTo(this Type childType, Type parentType)
         {
-            Check.NotNull(childType, nameof(childType));
-            Check.NotNull(parentType, nameof(parentType));
+            if (childType == null) throw new ArgumentNullException(nameof(childType));
+            if (parentType == null) throw new ArgumentNullException(nameof(parentType));
 
             return parentType.IsAssignableFrom(childType);
         }
@@ -78,13 +81,13 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <summary>
         ///  Determines if a child type can be assigned to a specified parent type.
         /// </summary>
-        /// <typeparam name="T">The parent type to test</typeparam>
+        /// <typeparam name="TParent">The parent type to test.</typeparam>
         /// <param name="childType">The child type to test.</param>
         /// <returns>True if the child type is assignable to the parent type.  Otherwise, False.</returns>
-        public static bool CanAssignTo<T>(this Type childType)
+        public static bool CanAssignTo<TParent>(this Type childType)
         {
-            Check.NotNull(childType, nameof(childType));
-            return typeof(T).IsAssignableFrom(childType);
+            if (childType == null) throw new ArgumentNullException(nameof(childType));
+            return typeof(TParent).IsAssignableFrom(childType);
         }
 
         /// <summary>
@@ -95,7 +98,7 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>Returns the list of matching interfaces.</returns>
         public static IEnumerable<Type> GetInterfacesDerivedFrom<T>(this Type type)
         {
-            Check.NotNull(type, nameof(type));
+            if (type == null) throw new ArgumentNullException(nameof(type));
 
             if (!typeof(T).GetTypeInfo().IsInterface)
             {
@@ -115,14 +118,21 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <returns>True if the type has an empty constructor.  Otherwise, false.</returns>
         public static bool HasDefaultConstructor(this Type type)
         {
-            Check.NotNull(type, nameof(type));
+            if (type == null) throw new ArgumentNullException(nameof(type));
 
             var typeInfo = type.GetTypeInfo();
             return typeInfo.IsValueType || typeInfo.GetConstructor(Type.EmptyTypes) != null;
         }
 
+        /// <summary>
+        /// Returns all method parameter types.
+        /// </summary>
+        /// <param name="methodInfo">Reference to a types method.</param>
+        /// <returns>List of types.</returns>
         public static Type[] GetParameterTypes(this MethodInfo methodInfo)
         {
+            if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
+
             return methodInfo.GetParameters()
                 .Select(p => p.ParameterType)
                 .ToArray();

@@ -1,7 +1,7 @@
 ﻿using NetFusion.Base.Exceptions;
-using NetFusion.Common;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Enrichers;
 using NetFusion.Messaging.Types;
 using System;
 using System.Collections.Generic;
@@ -37,8 +37,8 @@ namespace NetFusion.Messaging
             IMessage message,
             IEnumerable<PublisherException> publisherExceptions) : base(errorMessage)
         {
-            Check.NotNull(message, nameof(message));
-            Check.NotNull(publisherExceptions, nameof(publisherExceptions));
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (publisherExceptions == null) throw new ArgumentNullException(nameof(publisherExceptions));
 
             Details = new Dictionary<string, object>
             {
@@ -60,8 +60,8 @@ namespace NetFusion.Messaging
             IMessage message,
             IEnumerable<EnricherException> enricherExceptions) : base(errorMessage)
         {
-            Check.NotNull(message, nameof(message));
-            Check.NotNull(enricherExceptions, nameof(enricherExceptions));
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (enricherExceptions == null) throw new ArgumentNullException(nameof(enricherExceptions));
 
             Details = new Dictionary<string, object>
             {
@@ -82,8 +82,8 @@ namespace NetFusion.Messaging
             IEventSource eventSource,
             IEnumerable<PublisherException> publisherExceptions) : base(errorMessage)
         {
-            Check.NotNull(eventSource, nameof(eventSource));
-            Check.NotNull(publisherExceptions, nameof(publisherExceptions));
+            if (eventSource == null) throw new ArgumentNullException(nameof(eventSource));
+            if (publisherExceptions == null) throw new ArgumentNullException(nameof(publisherExceptions));
 
             Details = new Dictionary<string, object>
             {
@@ -105,27 +105,25 @@ namespace NetFusion.Messaging
             IMessage message,
             Exception innerException) : base(errorMessage, innerException)
         {
-            Check.NotNull(message, nameof(message));
-
-            Details["PublishedMessage"] = message;
+            Details["PublishedMessage"] = message ?? throw new ArgumentNullException(nameof(message));
         }
 
         /// <summary>
         /// Publisher Exception.
         /// </summary>
-        /// <param name="futureResult">The task and associated publisher.</param>
-        public PublisherException(FutureResult<IMessagePublisher> futureResult): 
+        /// <param name="taskItem">The task and associated publisher.</param>
+        public PublisherException(TaskListItem<IMessagePublisher> taskItem): 
             base("Error Invoking Publishers.")
         {
-            Check.NotNull(futureResult, nameof(futureResult));
+            if (taskItem == null) throw new ArgumentNullException(nameof(taskItem));
 
-            var taskException = futureResult.Task.Exception;
+            var taskException = taskItem.Task.Exception;
             var sourceException = taskException.InnerException;
 
             Details = new Dictionary<string, object>
             {
                 { "Message", sourceException?.Message },
-                { "Publisher", futureResult.Invoker.GetType().FullName }
+                { "Publisher", taskItem.Invoker.GetType().FullName }
             };
 
             if (sourceException is MessageDispatchException dispatchException)

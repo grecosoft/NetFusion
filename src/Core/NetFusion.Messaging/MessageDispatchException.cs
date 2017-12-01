@@ -1,5 +1,4 @@
 ﻿using NetFusion.Base.Exceptions;
-using NetFusion.Common;
 using NetFusion.Messaging.Core;
 using System;
 using System.Collections.Generic;
@@ -47,8 +46,8 @@ namespace NetFusion.Messaging
         public MessageDispatchException(string message, MessageDispatchInfo dispatchInfo, Exception innerException)
             : base(message, innerException)
         {
-            Check.NotNull(dispatchInfo, nameof(dispatchInfo));
-
+            if (dispatchInfo == null) throw new ArgumentNullException(nameof(dispatchInfo));
+            
             Details["DispatchInfo"] = new
             {
                 MessageType = dispatchInfo.MessageType.FullName,
@@ -65,8 +64,8 @@ namespace NetFusion.Messaging
         public MessageDispatchException(string errorMessage, IEnumerable<MessageDispatchException> dispatchExceptions) 
             : base(errorMessage)
         {
-            Check.NotNull(dispatchExceptions, nameof(dispatchExceptions));
-
+            if (dispatchExceptions == null) throw new ArgumentNullException(nameof(errorMessage));
+            
             Details = new Dictionary<string, object>
             {
                 { "DispatchExceptions", dispatchExceptions.Select(de => de.Details).ToArray() }

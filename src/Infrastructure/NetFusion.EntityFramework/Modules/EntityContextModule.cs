@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Common.Extensions.Reflection;
 using NetFusion.EntityFramework.Configs;
 using System;
 using System.Collections.Generic;
@@ -83,6 +84,10 @@ namespace NetFusion.EntityFramework.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
+            moduleLog["DB Contexts"] = Context.AllPluginTypes
+                .Where(pt => pt.IsDerivedFrom<IEntityDbContext>())
+                .Select(dc => dc.AssemblyQualifiedName);
+
             moduleLog["Entity Mappings"] = EntityMappings
                 .Select(m => new
                 {

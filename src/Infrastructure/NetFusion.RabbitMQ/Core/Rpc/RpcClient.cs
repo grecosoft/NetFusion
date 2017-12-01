@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Messaging.Types;
+﻿using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Configs;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -35,14 +34,13 @@ namespace NetFusion.RabbitMQ.Core.Rpc
  
         public RpcClient(string brokerName, RpcConsumerSettings consumerSettings, IModel channel)
         {
-            Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
-            Check.NotNull(consumerSettings, nameof(consumerSettings)); 
-            Check.NotNull(channel, nameof(channel));
+            if (string.IsNullOrWhiteSpace(brokerName))
+                throw new ArgumentException("Broker name must be specified.", nameof(brokerName));
 
             _brokerName = brokerName;
-            _consumerSettings = consumerSettings;
+            _consumerSettings = consumerSettings ?? throw new ArgumentNullException(nameof(consumerSettings));
 
-            Channel = channel;
+            Channel = channel ?? throw new ArgumentNullException(nameof(channel));
             ReplyConsumer = new EventingBasicConsumer(channel);
             ReplyQueueName = Channel.QueueDeclare().QueueName;
 
@@ -63,9 +61,9 @@ namespace NetFusion.RabbitMQ.Core.Rpc
             CancellationToken cancellationToken,
             byte[] messageBody)
         {
-            Check.NotNull(command, nameof(command));
-            Check.NotNull(rpcProps, nameof(rpcProps));
-            Check.NotNull(messageBody, nameof(messageBody));
+            if (command == null) throw new ArgumentNullException(nameof(command));
+            if (rpcProps == null) throw new ArgumentNullException(nameof(rpcProps));
+            if (messageBody == null) throw new ArgumentNullException(nameof(messageBody));
 
             // Associate a correlation value with the outgoing message.
             string correlationId = Guid.NewGuid().ToString();

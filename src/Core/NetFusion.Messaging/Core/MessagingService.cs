@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using NetFusion.Common;
-using NetFusion.Common.Extensions;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Bootstrap.Logging;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Enrichers;
 using NetFusion.Messaging.Modules;
@@ -49,21 +48,27 @@ namespace NetFusion.Messaging.Core
         public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
-            Check.NotNull(domainEvent, nameof(domainEvent), "domain event not specified");
+            if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent), 
+                "Domain event cannot be null.");
+
             return PublishMessageAsync(domainEvent, integrationType, cancellationToken);
         }
 
-        public Task PublishAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken),
+        public Task SendAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
-            Check.NotNull(command, nameof(command), "command not specified");
+            if (command == null) throw new ArgumentNullException(nameof(command),
+                "Command cannot be null.");
+
             return PublishMessageAsync(command, integrationType, cancellationToken);
         }
 
-        public async Task<TResult> PublishAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken),
+        public async Task<TResult> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
-            Check.NotNull(command, nameof(command), "command not specified");
+            if (command == null) throw new ArgumentNullException(nameof(command),
+                "Command cannot be null.");
+
             await PublishMessageAsync(command, integrationType, cancellationToken);
             return command.Result;
         }
@@ -71,7 +76,9 @@ namespace NetFusion.Messaging.Core
         public async Task PublishAsync(IEventSource eventSource, CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
-            Check.NotNull(eventSource, nameof(eventSource), "event source not specified");
+            if (eventSource == null) throw new ArgumentNullException(nameof(eventSource),
+                "Event source cannot be null.");
+
             var publisherErrors = new List<PublisherException>();
 
             foreach (IDomainEvent domainEvent in eventSource.DomainEvents)
@@ -105,37 +112,33 @@ namespace NetFusion.Messaging.Core
             catch (PublisherException ex)
             {
                 // Log the details of the publish exception and throw a generic error messages.
-                _logger.LogError(MessagingLogEvents.MESSAGING_EXCEPTION, ex, "Exception publishing message.");
+                _logger.LogErrorDetails(MessagingLogEvents.MESSAGING_EXCEPTION, ex, "Exception publishing message.");
                 throw new PublisherException("Exception publishing message.  See log for details.");
             }
         }
 
         private async Task ApplyMessageEnrichers(IMessage message)
         {
-            FutureResult<IMessageEnricher>[] futureResults = null;
+            TaskListItem<IMessageEnricher>[] taskList = null;
 
             try
             {
-                futureResults = _messageEnrichers.Invoke(message,
+                taskList = _messageEnrichers.Invoke(message,
                     (enricher, msg) => enricher.Enrich(msg));
 
-                await futureResults.WhenAll();
+                await taskList.WhenAll();
             }
             catch (Exception ex)
             {
-                if (futureResults != null)
+                if (taskList != null)
                 {
-                    var enricherErrors = futureResults.GetExceptions(fr => new EnricherException(fr));
+                    var enricherErrors = taskList.GetExceptions(fr => new EnricherException(fr));
                     if (enricherErrors.Any())
                     {
                         throw new PublisherException("Exception when invoking message enrichers.",
                             message,
                             enricherErrors);
                     }
-
-                    throw new PublisherException("Exception when invoking message enrichers.",
-                        message,
-                        ex);
                 }
 
                 throw new PublisherException("Exception when invoking message enrichers.",
@@ -147,32 +150,29 @@ namespace NetFusion.Messaging.Core
         private async Task InvokePublishers(IMessage message, CancellationToken cancellationToken, IntegrationTypes integrationType)
         {
 
-            FutureResult<IMessagePublisher>[] futureResults = null;
+            TaskListItem<IMessagePublisher>[] taskList = null;
 
             var publishers = integrationType == IntegrationTypes.All ? _messagePublishers.ToArray() 
                 : _messagePublishers.Where(p => p.IntegrationType == integrationType).ToArray();
 
             try
             {
-                futureResults = publishers.Invoke(message,
+                taskList = publishers.Invoke(message,
                     (pub, msg) => pub.PublishMessageAsync(msg, cancellationToken));
 
-                await futureResults.WhenAll();
+                await taskList.WhenAll();
             }
             catch (Exception ex)
             {
-                if (futureResults != null)
+                if (taskList != null)
                 {
-                    var publisherErrors = futureResults.GetExceptions(fr => new PublisherException(fr));
+                    var publisherErrors = taskList.GetExceptions(fr => new PublisherException(fr));
                     if (publisherErrors.Any())
                     {
                         throw new PublisherException("Exception when invoking message publishers.",
                             message,
                             publisherErrors);
                     }
-
-                    throw new PublisherException("Exception when invoking message publishers.",
-                        message, ex);
                 }
 
                 throw new PublisherException("Exception when invoking message publishers.",

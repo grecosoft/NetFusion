@@ -8,8 +8,7 @@ using System.Runtime.Serialization;
 namespace NetFusion.Bootstrap.Exceptions
 {
     /// <summary>
-    /// Exception thrown by the container when there is an issue bootstrapping
-    /// the application.
+    /// Exception thrown by the container when there is an issue bootstrapping the application.
     /// </summary>
 #if NET461
     [Serializable]

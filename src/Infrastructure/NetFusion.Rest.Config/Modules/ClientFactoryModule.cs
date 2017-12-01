@@ -127,7 +127,7 @@ namespace NetFusion.Rest.Config.Modules
                     var response = client.Send<HalEntryPointResource>(request).Result;
                     if (!response.IsSuccessStatusCode)
                     {
-                        Context.Logger.LogError(LogEvents.EntryPoint, errorMsg, 
+                        Context.Logger.LogError(RestConfigLogEvents.REST_CONFIG_EXCEPTION, errorMsg, 
                             clientSettings.EntryPointUrl, 
                             clientSettings.BaseAddress);
                     }
@@ -136,7 +136,7 @@ namespace NetFusion.Rest.Config.Modules
                 }
                 catch (Exception ex)
                 {
-                    Context.Logger.LogError(LogEvents.EntryPoint, ex, errorMsg,
+                    Context.Logger.LogError(RestConfigLogEvents.REST_CONFIG_EXCEPTION, ex, errorMsg,
                         clientSettings.EntryPointUrl,
                         clientSettings.BaseAddress);
                 }
@@ -160,7 +160,7 @@ namespace NetFusion.Rest.Config.Modules
 
             if (!_addressNameMappings.TryGetValue(clientName, out string baseAddress))
             {
-                throw new InvalidCastException(
+                throw new InvalidOperationException(
                     $"Base address not been register for the client name: {clientName}");
             }
 

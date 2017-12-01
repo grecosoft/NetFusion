@@ -12,6 +12,6 @@ namespace NetFusion.Domain.Patterns.Behaviors.Mapping
         /// </summary>
         /// <typeparam name="TTarget">The target type to map entity.</typeparam>
         /// <returns>Instance of the target type.</returns>
-        TTarget MapTo<TTarget>() where TTarget : class, new();
+        TTarget MapTo<TTarget>() where TTarget : class;
     }
 }

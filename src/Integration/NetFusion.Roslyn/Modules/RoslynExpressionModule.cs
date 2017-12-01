@@ -18,7 +18,7 @@ namespace NetFusion.Domain.Roslyn.Modules
         // of the same matching type.
         private IEnumerable<EntityScript> _scripts;
 
-        public override void RegisterDefaultComponents(ContainerBuilder builder)
+        public override void RegisterComponents(ContainerBuilder builder)
         {
             // If this plug-in is being used, override the Null scripting service
             // that is configured by default by the NetFusion.Domain plug-in.

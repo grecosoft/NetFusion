@@ -1,5 +1,5 @@
-﻿using NetFusion.Common;
-using NetFusion.RabbitMQ.Configs;
+﻿using NetFusion.RabbitMQ.Configs;
+using System;
 
 namespace NetFusion.RabbitMQ.Core.Rpc
 {
@@ -22,15 +22,17 @@ namespace NetFusion.RabbitMQ.Core.Rpc
             RpcConsumerSettings settings, 
             IRpcClient client)
         {
-            Check.NotNullOrWhiteSpace(brokerName, nameof(brokerName));
-            Check.NotNull(settings, nameof(settings));
-            Check.NotNull(client, nameof(client));
+            if (string.IsNullOrWhiteSpace(brokerName))
+                throw new ArgumentException("Broker name must be specified.", nameof(brokerName));
 
-            this.BrokerName = brokerName;
-            this.RequestQueueKey = settings.RequestQueueKey;
-            this.RequestQueueName = settings.RequestQueueName;
-            this.ContentType = settings.ContentType;
-            this.Client = client;
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+
+            Client = client ?? throw new ArgumentNullException(nameof(client));
+            BrokerName = brokerName;
+            RequestQueueKey = settings.RequestQueueKey;
+            RequestQueueName = settings.RequestQueueName;
+            ContentType = settings.ContentType;
+
         }
     }
 }

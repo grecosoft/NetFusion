@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp1.1;net461</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
     <VersionPrefix>1.2.0</VersionPrefix>
   </PropertyGroup>
 
@@ -15,8 +15,10 @@
     <ProjectReference Include="..\..\src\Core\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Test\NetFusion.Test.csproj" />
+    <ProjectReference Include="..\..\src\Domain\NetFusion.Domain.Patterns\NetFusion.Domain.Patterns.csproj" />
     <ProjectReference Include="..\..\src\Domain\NetFusion.Domain\NetFusion.Domain.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure\NetFusion.EntityFramework\NetFusion.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\NetFusion.Mapping\NetFusion.Mapping.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure\NetFusion.MongoDB\NetFusion.MongoDB.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure\NetFusion.RabbitMQ\NetFusion.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure\NetFusion.Rest.Client\NetFusion.Rest.Client.csproj" />
@@ -28,21 +30,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="1.1.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
-    <PackageReference Include="xunit" Version="2.2.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
-    <PackageReference Include="FluentAssertions" Version="4.19.3" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.2" />
-    <PackageReference Include="Moq" Version="4.7.63" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="2.2.0" />
-    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <PackageReference Include="FluentAssertions" Version="4.19.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
+    <PackageReference Include="Moq" Version="4.7.145" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="2.4.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup>

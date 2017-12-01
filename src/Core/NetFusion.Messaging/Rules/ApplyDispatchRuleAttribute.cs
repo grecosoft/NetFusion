@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Common.Extensions.Reflection;
+﻿using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Types.Rules;
 using System;
 using System.Linq;
@@ -30,7 +29,7 @@ namespace NetFusion.Messaging.Rules
         /// <param name="dispatchRuleTypes">The types of the rules to be tested.</param>
         public ApplyDispatchRuleAttribute(params Type[] dispatchRuleTypes)
         {
-            Check.NotNull(dispatchRuleTypes, nameof(dispatchRuleTypes));
+            if (dispatchRuleTypes == null) throw new ArgumentNullException(nameof(dispatchRuleTypes));
 
             var invalidRules = dispatchRuleTypes
                 .Where(drt => !drt.IsConcreteTypeDerivedFrom<IMessageDispatchRule>())

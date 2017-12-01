@@ -1,6 +1,6 @@
-﻿using NetFusion.Common;
-using RabbitMQ.Client;
+﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System;
 
 namespace NetFusion.RabbitMQ.Core
 {
@@ -19,11 +19,8 @@ namespace NetFusion.RabbitMQ.Core
 
         public MessageHandler(IModel channel, EventingBasicConsumer eventConsumer)
         {
-            Check.NotNull(channel, nameof(channel));
-            Check.NotNull(eventConsumer, nameof(eventConsumer));
-
-            Channel = channel;
-            EventConsumer = eventConsumer;
+            Channel = channel ?? throw new ArgumentNullException(nameof(channel));
+            EventConsumer = eventConsumer ?? throw new ArgumentNullException(nameof(eventConsumer));
         }
     }
 }

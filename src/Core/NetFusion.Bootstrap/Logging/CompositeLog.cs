@@ -1,7 +1,7 @@
 ﻿using Autofac.Core;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -20,11 +20,11 @@ namespace NetFusion.Bootstrap.Logging
 
         public CompositeLog(CompositeApplication application, IComponentRegistry registry)
         {
-            Check.NotNull(application, nameof(application));
-            Check.NotNull(registry, nameof(registry));
+            _application = application ?? throw new ArgumentNullException(nameof(application), 
+                "Composite Application to log cannot be null.");
 
-            _application = application;
-            _registry = registry;
+            _registry = registry ?? throw new ArgumentNullException(nameof(registry),
+                "Plug-in Registry to log cannot be null.");
         }
 
         public IDictionary<string, object> GetLog()
@@ -50,14 +50,14 @@ namespace NetFusion.Bootstrap.Logging
         private void LogHostApp(IDictionary<string, object> log)
         {
             var hostLog = new Dictionary<string, object>();
-            log["Application-Host"] = hostLog;
+            log["Host Plug-in"] = hostLog;
 
             LogPlugin(_application.AppHostPlugin, hostLog);
         }
 
         private void LogAppComponentPlugins(IDictionary<string, object> log)
         {
-            log["Component-Plugins"] = _application.AppComponentPlugins.Select(plugin =>
+            log["Application Plug-Ins"] = _application.AppComponentPlugins.Select(plugin =>
             {
                 var pluginLog = new Dictionary<string, object>();
                 LogPlugin(plugin, pluginLog);
@@ -67,7 +67,7 @@ namespace NetFusion.Bootstrap.Logging
 
         private void LogCorePlugins(IDictionary<string, object> log)
         {
-            log["Core-Plugins"] = _application.CorePlugins.Select(plugin =>
+            log["Core Plug-Ins"] = _application.CorePlugins.Select(plugin =>
             {
                 var pluginLog = new Dictionary<string, object>();
                 LogPlugin(plugin, pluginLog);
@@ -90,8 +90,8 @@ namespace NetFusion.Bootstrap.Logging
 
         private void LogPluginModules(Plugin plugin, IDictionary<string, object> log)
         {
-            log["Plugin-Modules"] = plugin.PluginModules.ToDictionary(
-                p => p.GetType().FullName,
+            log["Plugin-Modules"] = plugin.Modules.ToDictionary(
+                m => m.GetType().FullName,
                 pm =>
                 {
                     var moduleLog = new Dictionary<string, object>();
@@ -105,7 +105,7 @@ namespace NetFusion.Bootstrap.Logging
             log["Known-Types"] = plugin.PluginTypes
                 .Where(pt => pt.IsKnownType && !pt.Type.GetTypeInfo().IsAbstract)
                 .ToDictionary(
-                    pt => pt.Type.FullName.Replace(pt.AssemblyName + ".", ""), 
+                    pt => pt.Type.FullName,
                     pt => pt.DiscoveredByPlugins.Select(dp => dp.Manifest.Name)); 
         }
 

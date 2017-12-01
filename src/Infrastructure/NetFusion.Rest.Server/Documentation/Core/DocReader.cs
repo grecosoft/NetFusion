@@ -33,8 +33,8 @@ namespace NetFusion.Rest.Server.Documentation.Core
 
         public async Task<DocActionModel> GetActionDocModel(IHeaderDictionary headers, MethodInfo methodInfo)
         {
-            if (methodInfo == null)
-                throw new ArgumentNullException(nameof(methodInfo), "Method information not specified.");
+            if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo), 
+                "Method information cannot be null.");
 
             DocAction actionDoc = _docModule.GetActionDoc(methodInfo);
             if (actionDoc == null)
@@ -81,11 +81,11 @@ namespace NetFusion.Rest.Server.Documentation.Core
 
         public async Task AddResourceDocs(DocActionModel actionDocModel, DocAction actionDoc)
         {
-            if (actionDocModel == null)
-                throw new ArgumentNullException(nameof(actionDocModel), "Action Document Model not specified.");
+            if (actionDocModel == null) throw new ArgumentNullException(nameof(actionDocModel), 
+                "Action Document Model not specified.");
 
-            if (actionDoc == null)
-                throw new ArgumentNullException(nameof(actionDoc), "Action Document not specified.");
+            if (actionDoc == null) throw new ArgumentNullException(nameof(actionDoc), 
+                "Action Document not specified.");
 
             if (actionDoc.RequestResourceType != null)
             {

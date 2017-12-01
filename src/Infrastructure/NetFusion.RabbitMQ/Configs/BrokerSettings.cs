@@ -1,7 +1,7 @@
-﻿using NetFusion.Common;
+﻿using NetFusion.Base.Validation;
 using NetFusion.RabbitMQ.Core;
 using NetFusion.Settings;
-using NetFusion.Utilities.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,7 +38,7 @@ namespace NetFusion.RabbitMQ.Configs
         /// <returns>The found connection configuration or an exception.</returns>
         public BrokerConnectionSettings GetConnection(string brokerName)
         {
-            Check.NotNull(brokerName, nameof(brokerName));
+            if (brokerName == null) throw new ArgumentNullException(nameof(brokerName));
 
             BrokerConnectionSettings conn = Connections.FirstOrDefault(c => c.BrokerName == brokerName);
             
@@ -55,7 +55,7 @@ namespace NetFusion.RabbitMQ.Configs
         /// <param name="exchange">Exchange configuration.</param>
         public void ApplyQueueSettings(IMessageExchange exchange)
         {
-            Check.NotNull(exchange, nameof(exchange));
+            if (exchange == null) throw new ArgumentNullException(nameof(exchange));
 
             foreach (QueuePropertiesSettings queueProps in GetBrokerQueueProperties(exchange.BrokerName))
             {
@@ -73,7 +73,7 @@ namespace NetFusion.RabbitMQ.Configs
         /// <param name="consumer">The consumer configuration.</param>
         public void ApplyQueueSettings(MessageConsumer consumer)
         {
-            Check.NotNull(consumer, nameof(consumer));
+            if (consumer == null) throw new ArgumentNullException(nameof(consumer));
 
             IEnumerable<QueuePropertiesSettings> properties = GetBrokerQueueProperties(consumer.BrokerName);
             QueuePropertiesSettings queueProps = properties.FirstOrDefault(qp => qp.QueueName == consumer.QueueName);
@@ -92,12 +92,12 @@ namespace NetFusion.RabbitMQ.Configs
 
         public void Validate(IObjectValidator validator)
         {
-            validator.Validate(this.NumConnectionRetries > 0,
+            validator.Verify(this.NumConnectionRetries > 0,
                 "Number Connection Retries must be Greater than 0.", ValidationTypes.Error);
 
             if (validator.IsValid)
             {
-                Connections.Select(c => validator.AddChildValidator(c));
+                Connections.Select(c => validator.AddChild(c));
             }
         }
     }

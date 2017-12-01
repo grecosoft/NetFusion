@@ -1,23 +1,21 @@
 ﻿using Microsoft.Extensions.Configuration;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Common;
 using System;
 
 namespace NetFusion.Bootstrap.Configuration
 {
     /// <summary>
     /// Configuration for the overall application environment.  Provides default initialization
-    /// of the .NET configuration that can be overridden or modified by the host application.
+    /// of the .NET configuration extensions that can be overridden or modified by the host application.
     /// </summary>
     public class EnvironmentConfig : IContainerConfig
     {
-        private static string[] CommonEnviromentNameKeys = { "ASPNETCORE_ENVIRONMENT", "NETFUSION_ENVIRONMENT" };
+        private static string[] CommonEnviromentNameKeys = { "NETFUSION_ENVIRONMENT", "ASPNETCORE_ENVIRONMENT" };
 
         private IConfiguration _configuration { get; set; }
 
         /// <summary>
-        /// The value of the variable specifying the environment of the 
-        /// executing application.
+        /// The value of the variable specifying the environment of the executing application.
         /// </summary>
         public static string EnvironmentName => GetEnvironmentName();
 
@@ -68,8 +66,8 @@ namespace NetFusion.Bootstrap.Configuration
         /// <param name="builder">A built configuration with providers used to lookup configuration settings.</param>
         public void UseConfiguration(IConfiguration configuration)
         {
-            Check.NotNull(configuration, nameof(configuration));
-            _configuration = configuration;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration), 
+                "Configuration must be specified.");
         }
     }
 }

@@ -9,67 +9,30 @@ using Xunit;
 
 namespace CoreTests.Bootstrap
 {
+    /// <summary>
+    /// Modules when called during the bootstrap process can register components with
+    /// the dependency injection container.  In addition, specific convention based
+    /// components will also be registered.  the application host can also specify
+    /// components to be registered with the DI container.
+    /// </summary>
     public class RegistrationTests
     {
-        /// <summary>
-        /// The application container is also registered within the dependency
-        /// injection container as a service.
-        /// </summary>
-        [Fact(DisplayName = nameof(AppContainerRegistered_AsSingletonService))]
-        public void AppContainerRegistered_AsSingletonService()
-        {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
-                {
-                    config.AddPlugin<MockAppHostPlugin>();
-                })
-                .Test(
-                c => c.Build(), 
-                (IAppContainer ac) =>
-                {
-                    var appContainer = ac.Services.Resolve<IAppContainer>();
-                    appContainer.Should().BeSameAs(ac);
-                });
-        }
 
         /// <summary>
-        /// Plug-in modules implementing any interfaces deriving from the base
-        /// IPluginModuleService interface will automatically be registered as
-        /// a service within the dependency-injection container.
+        /// The host application can register components as services during the bootstrap process.  
+        /// This will often be for services such as logging that will need to be created before the 
+        /// bootstrap process.
         /// </summary>
-        [Fact(DisplayName = nameof(ModuleRegisteredAsService_IfImplementsMarkerInterface))]
-        public void ModuleRegisteredAsService_IfImplementsMarkerInterface()
-        {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
-                {
-                    config.AddPlugin<MockAppHostPlugin>()
-                        .AddPluginType<MockPluginOneModule>();
-                })
-                .Test(
-                    c => c.Build(),
-                    (IAppContainer ac) =>
-                    {
-                        var moduleAsService = ac.Services.Resolve<IMockPluginOneModule>();
-                        moduleAsService.Should().NotBeNull();
-                        moduleAsService.Should().BeOfType<MockPluginOneModule>();
-                    });
-        }
-
-        /// <summary>
-        /// The host application can also register components as services during
-        /// the bootstrap process.  This will often be for services such as logging
-        /// that will need to be created before the bootstrap process.
-        /// </summary>
-        [Fact(DisplayName = nameof(HostSpecifiedServices_Registered))]
+        [Fact(DisplayName = "Host specified Services Registered")]
         public void HostSpecifiedServices_Registered()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange.Resolver(r =>
                 {
-                    config.AddPlugin<MockAppHostPlugin>();
+                    r.AddPlugin<MockAppHostPlugin>();
                 })
-                .Test(c =>
+                .Act.OnContainer(c =>
                 {
                     c.WithConfig<AutofacRegistrationConfig>(rc =>
                     {
@@ -80,30 +43,33 @@ namespace CoreTests.Bootstrap
                         };
                     });
                     c.Build();
-                }, 
-                (IAppContainer c) =>
+                })
+                .Assert.Container(c =>
                 {
                     var hostRegistration = c.Services.Resolve<IMockHostServiceType>();
                     hostRegistration.Should().NotBeNull();
                     hostRegistration.Should().BeOfType<MockHostServiceType>();
                 });
+
+            });
         }
 
         /// <summary>
-        /// When a component implementing the IComponentActivated interface is registered 
-        /// in the dependency injection container and invokes the NotifyOnActivating 
-        /// method, the component's OnActivated method will be invoked.
+        /// When a component implementing the IComponentActivated interface is registered,
+        /// in the dependency injection container and invokes the NotifyOnActivating method, 
+        /// the component's OnActivated method will be invoked.
         /// </summary>
-        [Fact(DisplayName = nameof(ComponentCanBeNotified_OnCreation))]
-        public void ComponentCanBeNotified_OnCreation()
+        [Fact(DisplayName = "Component can be Notified on Creation")]
+        public void Component_CanBeNotified_OnCreation()
         {
-            ContainerSetup
-                .Arrange((TestTypeResolver config) =>
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange.Resolver(r =>
                 {
-                    config.AddPlugin<MockAppHostPlugin>()
-                        .AddPluginType<MockActivatedType>();
+                    r.AddPlugin<MockAppHostPlugin>()
+                     .AddPluginType<MockActivatedType>();
                 })
-                .Test(c =>
+                .Act.OnContainer(c =>
                 {
                     c.WithConfig<AutofacRegistrationConfig>(rc =>
                     {
@@ -114,14 +80,70 @@ namespace CoreTests.Bootstrap
                     });
 
                     c.Build();
-                },
-                (IAppContainer c) =>
+                })
+                .Assert.Container(c =>
                 {
                     var comp = c.Services.Resolve<MockActivatedType>();
                     comp.Should().NotBeNull();
                     comp.IsActivated.Should().BeTrue();
                 });
+
+            });
+        }
+        
+        /// <summary>
+        /// The application container is also registered within the dependency
+        /// injection container as a service.
+        /// </summary>
+        [Fact(DisplayName = "Application Container registered as Singleton Service")]
+        public void AppContainer_Registered_AsSingletonService()
+        {
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange.Resolver(r =>
+                {
+                    r.AddPlugin<MockAppHostPlugin>();
+                })
+                .Act.OnContainer(c =>
+                {
+                    c.Build();
+                })
+                .Assert.Container(c =>
+                {
+                    var appContainer = c.Services.Resolve<IAppContainer>();
+                    appContainer.Should().BeSameAs(c);
+                });
+
+            });
         }
 
+        /// <summary>
+        /// Plug-in modules implementing any interfaces deriving from the base
+        /// IPluginModuleService interface will automatically be registered as
+        /// a service within the dependency-injection container.
+        /// </summary>
+        [Fact(DisplayName = "Module Registered as Service if implements Marker interface")]
+        public void ModuleRegisteredAsService_IfImplements_MarkerInterface()
+        {
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange.Resolver(r =>
+                {
+                    r.AddPlugin<MockAppHostPlugin>()
+                     .AddPluginType<MockPluginOneModule>();
+                })
+                .Act.OnContainer(c =>
+                {
+                    c.Build();
+                })
+                .Assert.Container(c =>
+                {
+                    var moduleAsService = c.Services.Resolve<IMockPluginOneModule>();
+                    moduleAsService.Should().NotBeNull();
+                    moduleAsService.Should().BeOfType<MockPluginOneModule>();
+                });
+
+            });
+        }
     }
 }

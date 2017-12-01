@@ -4,8 +4,7 @@ using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
-using NetFusion.Common.Extensions.Collection;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Core;
@@ -40,7 +39,7 @@ namespace NetFusion.Messaging.Modules
         {
             MessagingConfig = Context.Plugin.GetConfig<MessagingConfig>();
 
-            MessageDispatchInfo[] allDispatchers = this.Context.AllPluginTypes
+            MessageDispatchInfo[] allDispatchers = Context.AllPluginTypes
                 .WhereEventConsumer()
                 .SelectMessageHandlers()
                 .SelectDispatchInfo()
@@ -136,8 +135,10 @@ namespace NetFusion.Messaging.Modules
 
         public MessageDispatchInfo GetInProcessCommandDispatcher(Type commandType)
         {
-            Check.NotNull(commandType, nameof(commandType));
-            Check.IsTrue(commandType.IsDerivedFrom<ICommand>(), nameof(commandType), "must be command type");
+            if (commandType == null) throw new ArgumentNullException(nameof(commandType));
+
+            if (!commandType.IsDerivedFrom<ICommand>())
+                throw new ArgumentException("Must be of command type.", nameof(commandType));
 
             IEnumerable<MessageDispatchInfo> dispatchers = InProcessDispatchers.WhereHandlerForMessage(commandType);
             if (dispatchers.Empty())
@@ -149,11 +150,11 @@ namespace NetFusion.Messaging.Modules
             return dispatchers.First();
         }
 
-        public async Task<object> InvokeDispatcherAsync(MessageDispatchInfo dispatcher, IMessage message, 
+        public async Task<object> InvokeDispatcherInNewLifetimeScopeAsync(MessageDispatchInfo dispatcher, IMessage message, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            Check.NotNull(dispatcher, nameof(dispatcher));
-            Check.NotNull(message, nameof(message));
+            if (dispatcher == null) throw new ArgumentNullException(nameof(dispatcher));
+            if (message == null) throw new ArgumentNullException(nameof(message));
 
             if (!message.GetType().CanAssignTo(dispatcher.MessageType))
             {
@@ -222,7 +223,7 @@ namespace NetFusion.Messaging.Modules
                     {
                         Consumer = ed.ConsumerType.FullName,
                         Method = ed.MessageHandlerMethod.Name,
-                        EventType = ed.MessageType.Name,
+                        MessageType = ed.MessageType.FullName,
                         IsAsync = ed.IsAsync,
                         IncludedDerivedTypes = ed.IncludeDerivedTypes,
                         DispatchRules = ed.DispatchRuleTypes.Select(dr => dr.FullName).ToArray(),

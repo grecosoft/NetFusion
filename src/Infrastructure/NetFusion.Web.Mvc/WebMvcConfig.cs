@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
-using NetFusion.Common;
+using System;
 
 namespace NetFusion.Web.Mvc
 {
@@ -26,13 +26,12 @@ namespace NetFusion.Web.Mvc
         /// <param name="services">Service collection.</param>
         public void UseServices(IServiceCollection services)
         {
-            Check.NotNull(services, nameof(services));
-            this.Services = services;
+            Services = services ?? throw new ArgumentNullException(nameof(services));
         }
 
         public void Validate()
         {
-            if (this.Services == null)
+            if (Services == null)
             {
                 throw new ContainerException(
                     $"Service collection not specified for configuration: {nameof(WebMvcConfig)}");

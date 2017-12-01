@@ -51,8 +51,9 @@ namespace InfrastructureTests.Web.Rest.Setup
                     // This service will be injected by the WebApi controller and
                     // can be used to very the system under test.
                     services.AddSingleton<IMockedService>(mockService ?? new NullUnitTestService());
-                });
+                }).UseSetting(WebHostDefaults.ApplicationKey, typeof(TestClientExtensions).Assembly.FullName);
 
+           
             // Create an instance of the server and create an HTTP Client 
             // to communicate with in-memory web-host.
             var server = new TestServer(builder);

@@ -1,7 +1,6 @@
-﻿using NetFusion.Domain.Entities.Core;
-using NetFusion.Utilities.Validation;
-using NetFusion.Utilities.Validation.Core;
-using NetFusion.Utilities.Validation.Results;
+﻿using NetFusion.Base.Validation;
+using NetFusion.Bootstrap.Validation;
+using NetFusion.Domain.Entities.Core;
 
 namespace NetFusion.Domain.Patterns.Behaviors.Validation
 {
@@ -10,29 +9,19 @@ namespace NetFusion.Domain.Patterns.Behaviors.Validation
     /// </summary>
     public class ValidationBehavior : IValidationBehavior
     {
-        // Collaborations:
-        public IValidationModule ValidationModule { get; set; }
-
         private readonly IBehaviorDelegator _entity;
+
+        // Collaborations:
+        public IValidationService ValidationService { get; set; }
 
         public ValidationBehavior(IBehaviorDelegator entity)
         {
             _entity = entity;
         }
 
-        public ValidationResult Validate()
+        public ValidationResultSet Validate()
         {
-            IObjectValidator validator = ValidationModule.CreateValidator(_entity);
-            IValidatableType validatable = _entity as IValidatableType;
-
-            // If the base validation has passed, invoke the validation on the
-            // entity if supported.
-            if (validator.IsValid && validatable != null)
-            {
-                validatable.Validate(validator);
-            }
-
-            return new ValidationResult(_entity, validator);
+            return ValidationService.Validate(_entity);
         }
     }
 }

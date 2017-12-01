@@ -26,8 +26,8 @@ namespace NetFusion.Rest.Resources.Hal
 		/// <param name="named">Optional name used to identity the embedded resource.</param>
 		public void Embed(IHalResource embeddedResource, string named = null)
 		{
-            if (embeddedResource == null)
-                throw new ArgumentNullException(nameof(embeddedResource), "Resource to embedded not specified.");
+            if (embeddedResource == null) throw new ArgumentNullException(nameof(embeddedResource), 
+                "Resource to embedded cannot be null.");
 
             EmbedResource(embeddedResource, named);
 		}
@@ -41,8 +41,8 @@ namespace NetFusion.Rest.Resources.Hal
 		public void Embed<T>(IEnumerable<T> embeddedResources, string named = null)
 			where T : class, IHalResource
 		{
-            if (embeddedResources == null)
-                throw new ArgumentNullException(nameof(embeddedResources), "Enumeration of resources not specified.");
+            if (embeddedResources == null) throw new ArgumentNullException(nameof(embeddedResources),
+                "Enumeration of resources cannot be null.");
 
 			EmbedResource(new ResourceCollection<T>(embeddedResources), named);
 		}

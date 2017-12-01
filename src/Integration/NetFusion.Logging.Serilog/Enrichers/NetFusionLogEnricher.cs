@@ -40,7 +40,7 @@ namespace NetFusion.Logging.Serilog.Enrichers
             if (contextType == null) return null;
 
             var composite = (IComposite)AppContainer.Instance;
-            return composite.GetPluginForFullTypeName(contextType);
+            return composite.GetPluginContainingFullTypeName(contextType);
         }
 
         private void AddPluginLogProperties(LogEvent logEvent, ILogEventPropertyFactory propertyFactory, Plugin plugin)

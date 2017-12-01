@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using NetFusion.Domain.Entities.Core;
+﻿using NetFusion.Domain.Entities.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,8 +29,8 @@ namespace NetFusion.Domain.Patterns.Behaviors.State
 
         public void Replace(object existingEntity, object newEntity)
         {
-            Check.NotNull(existingEntity, nameof(existingEntity));
-            Check.NotNull(newEntity, nameof(newEntity));
+            if (existingEntity == null) throw new ArgumentNullException(nameof(existingEntity));
+            if (newEntity == null) throw new ArgumentNullException(nameof(newEntity));
 
             SetRemoved(existingEntity);
             SetAdded(newEntity);
@@ -39,7 +38,7 @@ namespace NetFusion.Domain.Patterns.Behaviors.State
 
         private void RecordState(object[] entities, EntityStateTypes entityStateType)
         {
-            Check.NotNull(entities, nameof(entities));
+            if (entities == null) throw new ArgumentNullException(nameof(entities));
 
             foreach (var entity in entities)
             {

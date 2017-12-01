@@ -97,7 +97,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
             try
             {
-                result = _messagingModule.InvokeDispatcherAsync(dispatcher, message).Result;
+                result = _messagingModule.InvokeDispatcherInNewLifetimeScopeAsync(dispatcher, message).Result;
 
                 // Publish the reply back to the publisher that made the request on the
                 // queue specified by them in the message header on a new channel.
@@ -122,7 +122,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             }
 
             string messageType = deleveryEvent.BasicProperties.Type;
-            if (messageType.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(messageType))
             {
                 throw new BrokerException(
                     "The basic properties of the received RPC request does not specify the message type.");

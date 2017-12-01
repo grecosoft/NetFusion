@@ -18,6 +18,11 @@ namespace NetFusion.Rest.Server.Generation
         /// <returns>Scream containing the corresponding type-script definitions.</returns>
         Task<MemoryStream> ReadTypeDefinitionFiles(MethodInfo actionMethodInfo);
 
+        /// <summary>
+        /// Returns type-script definition for a given resource type.
+        /// </summary>
+        /// <param name="resourceType">The type of the resource.</param>
+        /// <returns>Stream containing the corresponding type-script definition.</returns>
         Task<MemoryStream> ReadTypeDefinitonFile(Type resourceType);
     }
 }
