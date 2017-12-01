@@ -16,7 +16,6 @@ test_script:
   - ps: dotnet test .\test\DomainTests\DomainTests.csproj 
   - ps: dotnet test .\test\InfrastructureTests\InfrastructureTests.csproj 
   - ps: dotnet test .\test\IntegrationTests\IntegrationTests.csproj
-  - ps: dotnet test .\test\UtilitiesTests\UtilitiesTests.csproj 
   
 artifacts:
   - path: src\**\*.nupkg
