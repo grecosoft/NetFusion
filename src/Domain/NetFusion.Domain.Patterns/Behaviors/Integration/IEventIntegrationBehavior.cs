@@ -1,5 +1,6 @@
 ﻿using NetFusion.Domain.Entities;
 using NetFusion.Messaging.Types;
+using System.Collections.Generic;
 
 namespace NetFusion.Domain.Patterns.Behaviors.Integration
 {
@@ -11,9 +12,12 @@ namespace NetFusion.Domain.Patterns.Behaviors.Integration
     /// with via a central event bus.  Aggregates are integrated when enlisted with
     /// the unit-of-work.
     /// </summary>
-    public interface IEventIntegrationBehavior : IDomainBehavior,
-        IEventSource
+    public interface IEventIntegrationBehavior : IDomainBehavior
     {
+        IEnumerable<IDomainEvent> NonIntegratedEvents { get; }
+
+        IEnumerable<IDomainEvent> AllDomainEvents { get; }
+
         /// <summary>
         /// Records an integration event for publishing to other aggregates.
         /// </summary>

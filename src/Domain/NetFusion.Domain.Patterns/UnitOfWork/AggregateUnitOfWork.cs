@@ -48,7 +48,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
         private IEnumerable<Type> EnlistedIntegrationEventTypes => Aggregates
             .Select(a => a.Behaviors.Get<IEventIntegrationBehavior>())
             .Where(b => b.supported)
-            .SelectMany(b => b.instance.DomainEvents.Select(de => de.GetType()));
+            .SelectMany(b => b.instance.AllDomainEvents.Select(de => de.GetType()));
 
 
         public Task<CommitResult> CommitAsync(IAggregate aggregate, Func<Task> commitAction,
@@ -182,7 +182,7 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
                 return;
             }
 
-            foreach (IDomainEvent domainEvent in behavior.instance.DomainEvents)
+            foreach (IDomainEvent domainEvent in behavior.instance.AllDomainEvents)
             {
                 Type domainEventType = domainEvent.GetType();
                 if (EnlistedIntegrationEventTypes.Contains(domainEventType))
@@ -201,7 +201,11 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
             {
                 LogIntegrationEvents(IntegrationTypes.Internal, aggregate);
 
-                await _messagingSrv.PublishAsync(behavior.instance, cancellationToken, IntegrationTypes.Internal);
+                foreach (IDomainEvent domainEvent in behavior.instance.NonIntegratedEvents)
+                {
+                    await _messagingSrv.PublishAsync(domainEvent, cancellationToken, IntegrationTypes.Internal);
+                }
+
                 behavior.instance.MarkInternallyIntegrated();
             }
         }
@@ -215,22 +219,25 @@ namespace NetFusion.Domain.Patterns.UnitOfWork
             }
         }
 
-        protected Task DoExternalIntegration(IAggregate aggregate, CancellationToken cancellationToken)
+        protected async Task DoExternalIntegration(IAggregate aggregate, CancellationToken cancellationToken)
         {
             var behavior = aggregate.Behaviors.Get<IEventIntegrationBehavior>();
             if (behavior.supported)
             {
                 LogIntegrationEvents(IntegrationTypes.External, aggregate);
-                return _messagingSrv.PublishAsync(behavior.instance, cancellationToken, IntegrationTypes.External);
+                foreach (IDomainEvent domainEvent in behavior.instance.AllDomainEvents)
+                {
+                    await _messagingSrv.PublishAsync(domainEvent, cancellationToken, IntegrationTypes.External);
+                }
             }
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
         private void LogIntegrationEvents(IntegrationTypes integrationType, IAggregate aggregate)
         {
             var integrationBehavior = aggregate.Behaviors.GetRequired<IEventIntegrationBehavior>();
 
-            var eventTypeNames = integrationBehavior.DomainEvents
+            var eventTypeNames = integrationBehavior.NonIntegratedEvents
                 .Select(de => de.GetType().FullName)
                 .ToArray();
 

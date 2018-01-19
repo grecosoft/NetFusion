@@ -19,8 +19,11 @@ namespace NetFusion.Domain.Patterns.Behaviors.Integration
         public IEnumerable<IntegrationEvent> IntegrationEvents { get; }
 
         // Returns all integration events for which internal-integration has not been completed.
-        public IEnumerable<IDomainEvent> DomainEvents => _integrationEvents
+        public IEnumerable<IDomainEvent> NonIntegratedEvents => _integrationEvents
             .Where(ie => !ie.IsInternallyIntegrated)
+            .Select(ie => ie.DomainEvent);
+
+        public IEnumerable<IDomainEvent> AllDomainEvents => _integrationEvents
             .Select(ie => ie.DomainEvent);
 
         public EventIntegrationBehavior()

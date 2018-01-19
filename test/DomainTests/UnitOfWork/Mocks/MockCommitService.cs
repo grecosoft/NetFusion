@@ -32,6 +32,8 @@ namespace DomainTests.UnitOfWork.Mocks
                 return Task.CompletedTask;
             });
 
+            _uow.Clear();
+
             return aggregate;
         }
     }

@@ -32,7 +32,7 @@ namespace NetFusion.Domain.Patterns.Behaviors.Integration
         public static IEnumerable<IDomainEvent> IntegrationEvents(this IAggregate aggregate)
         {
             if (aggregate == null) throw new ArgumentNullException(nameof(aggregate));
-            return aggregate.Behaviors.GetRequired<IEventIntegrationBehavior>().DomainEvents;
+            return aggregate.Behaviors.GetRequired<IEventIntegrationBehavior>().AllDomainEvents;
         }
     }
 }
