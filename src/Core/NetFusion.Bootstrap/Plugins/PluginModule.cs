@@ -98,7 +98,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// Allows the plug-in module to scan for types within all other plug-ins.  This registration is limited 
-        /// to all other plug-in types when called on a core plug in.  For an application plug in, the types are 
+        /// to all other plug-in types when called on a core plug-in.  For an application plug in, the types are 
         /// limited to just other application plug ins.
         /// </summary>
         /// <param name="registration">Reference to instance used to filter types to be registered.</param>
@@ -108,7 +108,7 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Allows a core plug-in module to scan for type limited to only application centric plug-in types.
+        /// Allows a core plug-in module to scan for types limited to only application centric plug-in types.
         /// </summary>
         /// <param name="registration">Reference to instance used to
         /// filter types to be registered.</param>

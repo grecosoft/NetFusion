@@ -47,13 +47,14 @@ namespace NetFusion.Bootstrap.Container
             }
 
             IEnumerable<string> duplicateManifestIds = _registry.AllManifests
-                .WhereDuplicated(m => m.PluginId);
+                .WhereDuplicated(m => m.PluginId)
+                .ToArray();
 
             if (duplicateManifestIds.Any())
             {
                 throw new ContainerException(
                     "Plug-in identity values must be unique.  See details for duplicated Plug-in Ids.",
-                    duplicateManifestIds);
+                     new { DuplidatedIds = duplicateManifestIds });
             }
         }
 

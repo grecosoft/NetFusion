@@ -30,7 +30,7 @@ namespace NetFusion.Bootstrap.Plugins
         public ILoggerFactory LoggerFactory { get; }
 
         /// <summary>
-        /// Logger with the name of the plug-in to identify the log messages.
+        /// Logger with the name of the plug-in used to identify the log messages.
         /// </summary>
         public ILogger Logger { get; }
 

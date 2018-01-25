@@ -39,12 +39,12 @@ namespace NetFusion.Bootstrap.Container
         private ILogger _logger;
         private CompositeLog _compositeLog;
 
-        // Validation:
-        private ValidationConfig _validationConfig;
-
         // Settings:
         private EnvironmentConfig _enviromentConfig;
         private IConfiguration _configuration;
+
+        // Validation:
+        private ValidationConfig _validationConfig;
 
         // Contains references to all the discovered plug-in manifests
         // used to bootstrap the container.
@@ -58,7 +58,7 @@ namespace NetFusion.Bootstrap.Container
         /// are the suggested methods for creating a new container.  This constructor is usually used for 
         /// creating an application container for testing purposes.
         /// </summary>
-        /// <param name="typeResolver">The type resolver implementation used to determine the plug-in
+        /// <param name="typeResolver">The type resolver implementation used to probe the plug-in
         /// components and their types.</param>
         /// <param name="setGlobalReference">Determines if AppContainer.Instance should be set to a
         /// singleton instance of the created container.  Useful for unit testing.</param>
@@ -399,9 +399,10 @@ namespace NetFusion.Bootstrap.Container
 
         private void LoadPlugin(Plugin plugin)
         {
+            // Locates any IPluginModule instances defined within the plug-in assembly.
             _typeResover.SetPluginResolvedTypes(plugin);
 
-            // Assign all configurations that are instances of types defined within plug-in.
+            // Assign all configurations that are instances of configuration types defined within plug-in.
             plugin.PluginConfigs = plugin.CreatedFrom(_configs.Values).ToList();
         }
 
@@ -456,7 +457,7 @@ namespace NetFusion.Bootstrap.Container
             _application.Plugins.ForEach(SetDiscoveredKnowTypes);
         }
 
-        // For plug-in derived known-type, find the plug-in(s) that discovered the type.  
+        // For plug-in derived known-types, find the plug-in(s) that discovered the type.  
         // This information is used for logging how the application was composed.
         private void SetDiscoveredKnowTypes(Plugin plugin)
         {
@@ -476,7 +477,7 @@ namespace NetFusion.Bootstrap.Container
 
             // Allow the composite application plug-in modules
             // to register services with container.
-            _application.RegisterComponents(builder);
+            _application.RegisterServices(builder);
 
             // Register additional services,
             RegisterAppContainerAsService(builder);
@@ -579,7 +580,7 @@ namespace NetFusion.Bootstrap.Container
         {
             if (_loggerConfig.LogExceptions)
             {
-                _logger.LogError(BootstrapLogEvents.BOOTSTRAP_EXCEPTION, "Bootstrap Exception", ex);
+                _logger.LogErrorDetails(BootstrapLogEvents.BOOTSTRAP_EXCEPTION, ex, "Bootstrap Exception");
             }
             return ex;
         }

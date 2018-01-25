@@ -83,7 +83,7 @@ namespace NetFusion.Bootstrap.Container
         /// Populates the dependency injection container with services registered by plug-in modules.
         /// </summary>
         /// <param name="builder">The DI container builder.</param>
-        public void RegisterComponents(Autofac.ContainerBuilder builder)
+        public void RegisterServices(Autofac.ContainerBuilder builder)
         {            
             if (builder == null) throw new ArgumentNullException(nameof(builder), 
                 "DI Container cannot be null.");            

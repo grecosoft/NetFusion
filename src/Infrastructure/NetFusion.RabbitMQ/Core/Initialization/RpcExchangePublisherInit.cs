@@ -197,7 +197,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
             catch (RpcReplyException ex)
             {
                 var dispatchEx = _serializationMgr.Deserialize<MessageDispatchException>(rpcProps.ContentType, ex.Exception);
-                _logger.LogError(RabbitMqLogEvents.PUBLISHER_RPC_RESPONSE, "RPC Exception Reply.", dispatchEx);
+                _logger.LogError(RabbitMqLogEvents.PUBLISHER_RPC_RESPONSE, dispatchEx, "RPC Exception Reply.");
                 throw dispatchEx;
             }
         }

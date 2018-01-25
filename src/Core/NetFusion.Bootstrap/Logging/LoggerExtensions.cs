@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging.Internal;
 using NetFusion.Base.Exceptions;
 using NetFusion.Common.Extensions;
 using System;
-using System.Collections.Generic;
 
 namespace NetFusion.Bootstrap.Logging
 {
@@ -192,7 +191,7 @@ namespace NetFusion.Bootstrap.Logging
             string msgDetails = details?.ToIndentedJson();
 
             logger.Log(logLevel, eventId, 
-                new FormattedLogValues(message + $"Details: {msgDetails}", args), 
+                new FormattedLogValues(message + $" Details: {msgDetails}", args), 
                 exception, 
                 _messageFormatter);
         }

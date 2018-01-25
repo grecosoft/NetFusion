@@ -113,7 +113,7 @@ namespace NetFusion.Bootstrap.Container
                 }
                 catch (Exception ex)
                 {
-                    throw new ContainerException($"Error Loading Assembly: {assemblyName.Name}", ex);
+                    throw new ContainerException($"Error Loading Plug-In Assembly: {assemblyName.Name}", ex);
                 }
             }
             return loadedAssemblies;
@@ -139,7 +139,7 @@ namespace NetFusion.Bootstrap.Container
                 "Plug-In cannot be null.");
 
             // Get all types contained within the same assembly as the discovered
-            // Plug-in Manifest type.  This will all the types belonging to the plug-in.
+            // Plug-in Manifest type.  This will all types belonging to the plug-in.
             var manifestTypeInfo = plugin.Manifest.GetType().GetTypeInfo();
             var pluginAssembly = manifestTypeInfo.Assembly;
 
@@ -154,7 +154,7 @@ namespace NetFusion.Bootstrap.Container
 
         // Automatically populates all properties on a plug-in module that are an enumeration of
         // a derived IPluginKnownType.  The plug-in known types specific by the module are returned
-        // for use by the consumer. 
+        // for use by the consumer for logging.
         public IEnumerable<Type> SetPluginModuleKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes)
         {
             if (forModule == null) throw new ArgumentNullException(nameof(forModule), 

@@ -1,4 +1,5 @@
-﻿using NetFusion.Base.Exceptions;
+﻿using System;
+using NetFusion.Base.Exceptions;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
@@ -20,6 +21,7 @@ namespace NetFusion.Logging.Serilog.Enrichers
 
             if (!logEvent.Properties.TryGetValue(SOURCE_CONTEXT_PROP, out LogEventPropertyValue pv))
             {
+                AddDetailLogProperty(logEvent, propertyFactory);
                 return;
             }
 
@@ -31,7 +33,10 @@ namespace NetFusion.Logging.Serilog.Enrichers
                 if (plugin != null)
                 {
                     AddPluginLogProperties(logEvent, propertyFactory, plugin);
+                    return;
                 }
+
+                AddDetailLogProperty(logEvent, propertyFactory);
             }
         }
 
@@ -51,6 +56,14 @@ namespace NetFusion.Logging.Serilog.Enrichers
             logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("PluginName", manifest.Name));
             logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("PluginAssembly", manifest.AssemblyName));
 
+            if (logEvent.Exception is NetFusionException ex)
+            {
+                logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("Details", ex.Details.ToIndentedJson()));
+            }
+        }
+
+        private void AddDetailLogProperty(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+        {
             if (logEvent.Exception is NetFusionException ex)
             {
                 logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("Details", ex.Details.ToIndentedJson()));

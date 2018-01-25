@@ -139,7 +139,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
                     // Since an unexpected exception occurred, reject the message and
                     // have the broker re-queue the message for another consumer.
                     RejectAndRequeueMessage(messageHandler.Channel, deliveryEvent);
-                    _logger.LogError(RabbitMqLogEvents.MESSAGE_CONSUMER, "Error Consuming Message", ex);
+                    _logger.LogError(RabbitMqLogEvents.MESSAGE_CONSUMER, ex, "Error Consuming Message");
                 }
             };
         }

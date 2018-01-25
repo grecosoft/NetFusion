@@ -79,6 +79,9 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         public Type[] DiscoveredTypes { get; internal set; } = Array.Empty<Type>();
 
+        /// <summary>
+        /// The underlying .net type for all plug-in types.
+        /// </summary>
         private IEnumerable<Type> Types => PluginTypes.Select(pt => pt.Type);
 
         /// <summary>

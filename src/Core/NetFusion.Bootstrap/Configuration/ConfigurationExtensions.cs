@@ -13,7 +13,7 @@ namespace NetFusion.Bootstrap.Configuration
 
         /// <summary>
         /// Configures an ordered list of application JSON files to be searched for settings.
-        /// File are search in following order:  
+        /// Files are search in following order:  
         ///     appsettings.MachineName.json
         ///     appsettings.EnvironmentName.json
         ///     appsettings.json

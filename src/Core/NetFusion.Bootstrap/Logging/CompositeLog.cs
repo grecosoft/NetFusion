@@ -42,8 +42,8 @@ namespace NetFusion.Bootstrap.Logging
         {
             log["Searched-Plugin-Assemblies"] = new Dictionary<string, object> {
                 {"AppHost-Assembly", _application.AppHostPlugin.AssemblyName },
-                {"AppComponent-Assemblies", _application.AppComponentPlugins.Select(p => p.AssemblyName) },
-                {"Core-Assemblies", _application.CorePlugins.Select(p => p.AssemblyName) }
+                {"AppComponent-Assemblies", _application.AppComponentPlugins.Select(p => p.AssemblyName).ToArray() },
+                {"Core-Assemblies", _application.CorePlugins.Select(p => p.AssemblyName).ToArray() }
             };
         }
 
