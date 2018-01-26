@@ -3,6 +3,7 @@ using NetFusion.Bootstrap.Plugins;
 using NetFusion.Domain.Patterns.Queries.Config;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NetFusion.Domain.Patterns.Queries.Filters
 {
@@ -32,12 +33,9 @@ namespace NetFusion.Domain.Patterns.Queries.Filters
 
         private void RegisterQueryFilters(ContainerBuilder builder, IEnumerable<Type> filterTypes)
         {
-            foreach (Type filterType in filterTypes)
-            {
-                builder.RegisterType(filterType)
-                    .AsSelf()
-                    .InstancePerLifetimeScope();
-            }
+            builder.RegisterTypes(filterTypes.ToArray())
+                .AsSelf()
+                .InstancePerLifetimeScope();
         }
     }
 }

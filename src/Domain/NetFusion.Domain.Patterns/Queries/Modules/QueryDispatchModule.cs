@@ -50,14 +50,12 @@ namespace NetFusion.Domain.Patterns.Queries.Modules
         {
             var queryConsumers = _queryDispatchers.Values
                .Select(qd => qd.ConsumerType)
-               .Distinct();
+               .Distinct()
+               .ToArray();
 
-            foreach (Type consumerType in queryConsumers)
-            {
-                builder.RegisterType(consumerType)
-                    .AsSelf()
-                    .InstancePerLifetimeScope();
-            }
+            builder.RegisterTypes(queryConsumers)
+                .AsSelf()
+                .InstancePerLifetimeScope();
         }
 
         public static void AssureNoDuplicateHandlers(IEnumerable<QueryDispatchInfo> queryHandlers)

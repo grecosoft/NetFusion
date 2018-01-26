@@ -37,9 +37,15 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
             if (query == null) throw new ArgumentNullException(nameof(query),
                 "Query to dispatch can't be null.");
 
+            if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken),
+                "Cancellation token can't be null.");
+
             QueryDispatchInfo dispatchInfo = _dispatchModule.GetQueryDispatchInfo(query.GetType());
 
-            try { await InvokeDispatcher(dispatchInfo, query, cancellationToken); }
+            try
+            {
+                await InvokeDispatcher(dispatchInfo, query, cancellationToken);
+            }
             catch (Exception ex)
             {
                 var details = new {
@@ -59,8 +65,8 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
         {
             var consumer = (IQueryConsumer)_lifetimeScope.Resolve(dispatcher.ConsumerType);
 
-            var preFilters = _filterModule.PreFilterTypes.Select(ft => _lifetimeScope.Resolve(ft)).OfType<IQueryFilter>();
-            var postFilters = _filterModule.PostFilterTypes.Select(ft => _lifetimeScope.Resolve(ft)).OfType<IQueryFilter>();
+            var preFilters = _filterModule.PreFilterTypes.Select(qf => _lifetimeScope.Resolve(qf)).OfType<IQueryFilter>();
+            var postFilters = _filterModule.PostFilterTypes.Select(qf => _lifetimeScope.Resolve(qf)).OfType<IQueryFilter>();
 
             await ApplyFilters(query, preFilters);
             await dispatcher.Dispatch(query, consumer, cancellationToken);
@@ -82,7 +88,7 @@ namespace NetFusion.Domain.Patterns.Queries.Dispatch
             {
                 if (taskList != null)
                 {
-                    var filterErrors = taskList.GetExceptions(fr => new QueryFilterException(fr));
+                    var filterErrors = taskList.GetExceptions(ti => new QueryFilterException(ti));
                     if (filterErrors.Any())
                     {
                         throw new QueryDispatchException("Exception when invoking query filters.", filterErrors);

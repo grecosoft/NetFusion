@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace NetFusion.Domain.Patterns.Queries
 {
     /// <summary>
-    /// An optional base model from which a query result can be derived to add 
-    /// a set of dynamic properties.  These dynamic properties can be utilized 
+    /// An optional model from which a query result can be derived to add  a 
+    /// set of dynamic properties.  These dynamic properties can be utilized 
     /// by query filters - for example to add calculated properties based on 
     /// expressions evaluated by Roslyn.
     /// </summary>

@@ -31,7 +31,7 @@ namespace NetFusion.Domain.Patterns.Queries.Filters
                 await _scriptingService.ExecuteAsync(resultItem, PropertyScriptName);
             }
 
-            return;
+            await Task.CompletedTask;
         }
 
         private bool IsAttributedResult(object resultItem)
