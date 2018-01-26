@@ -23,14 +23,14 @@ namespace NetFusion.RabbitMQ.Core.Initialization
     public class RpcExchangeConsumerInit : IBrokerInitializer
     {
         private ILogger _logger;
-        private IMessagingModule _messagingModule;
+        private IMessageDispatchModule _messagingModule;
         private MessageBrokerState _brokerState;
         private IConnectionManager _connMgr;
         private ISerializationManager _serializationMgr;
 
         public RpcExchangeConsumerInit(
            ILoggerFactory loggerFactory,
-           IMessagingModule messagingModule,
+           IMessageDispatchModule messagingModule,
            MessageBrokerState brokerState)
         {
             _logger = loggerFactory.CreateLogger<ExchangePublisherInit>();

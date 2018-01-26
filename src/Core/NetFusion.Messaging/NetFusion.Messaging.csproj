@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\NetFusion.Base\NetFusion.Base.csproj" />
     <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\NetFusion.Mapping\NetFusion.Mapping.csproj" />
     <ProjectReference Include="..\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
     <ProjectReference Include="..\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
   </ItemGroup>

@@ -1,8 +1,8 @@
 ﻿using NetFusion.Bootstrap.Plugins;
-using NetFusion.Domain.Patterns.Queries.Dispatch;
+using NetFusion.Messaging.Core;
 using System;
 
-namespace NetFusion.Domain.Patterns.Queries.Modules
+namespace NetFusion.Messaging.Modules
 {
     /// <summary>
     /// Plug-in interface exposing information managed by the module.

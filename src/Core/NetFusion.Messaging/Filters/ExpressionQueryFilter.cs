@@ -1,12 +1,13 @@
 ﻿using NetFusion.Base.Entity;
 using NetFusion.Base.Scripting;
 using NetFusion.Common.Extensions.Reflection;
+using NetFusion.Messaging.Types;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NetFusion.Domain.Patterns.Queries.Filters
+namespace NetFusion.Messaging.Filters
 {
     /// <summary>
     /// A query filter registered as a post filter that delegates to the IEntityScriptingService 

@@ -67,9 +67,9 @@ namespace NetFusion.RabbitMQ.Modules
 
         public override void Configure()
         {
-            var messageModule = Context.GetPluginModule<IMessagingModule>();
+            var messageModule = Context.GetPluginModule<IMessageDispatchModule>();
 
-            Type publisher = messageModule.MessagingConfig.PublisherTypes
+            Type publisher = messageModule.DispatchConfig.PublisherTypes
                 .FirstOrDefault(pt => pt == typeof(RabbitMqMessagePublisher));
 
             if (publisher == null && Exchanges.Any())
@@ -116,7 +116,7 @@ namespace NetFusion.RabbitMQ.Modules
         // and associates the queue meta-data with the message dispatch meta-data.
         private IEnumerable<MessageConsumer> GetQueueConsumers(ILifetimeScope container)
         {
-            var messagingServices = container.Resolve<IMessagingModule>();
+            var messagingServices = container.Resolve<IMessageDispatchModule>();
 
             // All message handlers that are consumers of a queue that should be
             // called when an event is received based on the exchange distribution rules.

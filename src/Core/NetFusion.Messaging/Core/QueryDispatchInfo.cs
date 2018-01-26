@@ -1,4 +1,5 @@
 ﻿using NetFusion.Common.Extensions.Reflection;
+using NetFusion.Messaging.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NetFusion.Domain.Patterns.Queries.Dispatch
+namespace NetFusion.Messaging.Core
 {
     /// <summary>
     /// Contains information used to dispatch a query to its corresponding consumer.

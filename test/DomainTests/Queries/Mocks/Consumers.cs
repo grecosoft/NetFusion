@@ -1,4 +1,4 @@
-﻿using NetFusion.Domain.Patterns.Queries;
+﻿using NetFusion.Messaging;
 
 namespace DomainTests.Queries.Mocks
 {

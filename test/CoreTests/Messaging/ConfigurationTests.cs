@@ -31,12 +31,12 @@ namespace CoreTests.Messaging
 
                 .Act.OnContainer(c =>
                 {
-                    c.WithConfig<MessagingConfig>();
+                    c.WithConfig<MessageDispatchConfig>();
                     c.Build();
                 })
-                .Assert.PluginModule<MessagingModule>(m =>
+                .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
-                    var moduleConfig = m.Context.Plugin.GetConfig<MessagingConfig>();
+                    var moduleConfig = m.Context.Plugin.GetConfig<MessageDispatchConfig>();
                     moduleConfig.Should().NotBeNull();
                 });
             });
@@ -60,7 +60,7 @@ namespace CoreTests.Messaging
                     // NOTE:  No configuration being specified.
                     c.Build();
                 })
-                .Assert.Configuration<MessagingConfig>(config =>
+                .Assert.Configuration<MessageDispatchConfig>(config =>
                 {
                     config.PublisherTypes.Should().HaveCount(1);
                     config.PublisherTypes.Should().Contain(typeof(InProcessMessagePublisher));
@@ -82,10 +82,10 @@ namespace CoreTests.Messaging
 
                 .Act.OnContainer(c =>
                 {
-                    c.WithConfig<MessagingConfig>(config => config.ClearMessagePublishers());
+                    c.WithConfig<MessageDispatchConfig>(config => config.ClearMessagePublishers());
                     c.Build();
                 })
-                .Assert.Configuration<MessagingConfig>(config =>
+                .Assert.Configuration<MessageDispatchConfig>(config =>
                 {
                     config.PublisherTypes.Should().HaveCount(0);
                 });

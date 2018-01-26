@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-		<Authors>Brian Greco</Authors>
+		<Authors>NetFusion Contributors</Authors>
         <Product>NetFusion</Product>
 		<PackageProjectUrl>https://github.com/grecosoft/NetFusion/wiki</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/grecosoft/NetFusion</RepositoryUrl>

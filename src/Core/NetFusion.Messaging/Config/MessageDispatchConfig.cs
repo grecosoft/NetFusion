@@ -10,14 +10,14 @@ namespace NetFusion.Messaging.Config
     /// <summary>
     /// Messaging specific plug-in configurations.
     /// </summary>
-    public class MessagingConfig : IContainerConfig
+    public class MessageDispatchConfig : IContainerConfig
     {
         // The list of message publishers that can handle message delivery.  
         // The default publisher dispatches messages to in-process event handlers.
         private List<Type> _messagePublisherTypes = new List<Type> { typeof(InProcessMessagePublisher) };
         private List<Type> _messageEnrichers = new List<Type> { };
 
-        public MessagingConfig()
+        public MessageDispatchConfig()
         {
             AddMessageEnricher<CorrelationEnricher>();
             AddMessageEnricher<DatePublishedEnricher>();

@@ -73,7 +73,7 @@ namespace NetFusion.Messaging.Core
         /// </summary>
         /// <param name="messageHandlers">List of message handler methods.</param>
         /// <returns>List of objects with information used to dispatch the method at runtime.</returns>
-        public static IEnumerable<MessageDispatchInfo> SelectDispatchInfo(this IEnumerable<MethodInfo> messageHandlers)
+        public static IEnumerable<MessageDispatchInfo> SelectMessageDispatchInfo(this IEnumerable<MethodInfo> messageHandlers)
         {
             if (messageHandlers == null) throw new ArgumentNullException(nameof(messageHandlers));
 

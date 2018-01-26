@@ -1,4 +1,4 @@
-﻿namespace NetFusion.Domain.Patterns.Queries
+﻿namespace NetFusion.Messaging.Types.Paging
 {
     // TODO:
     public interface IPagedQuery<TResult> : IQuery<TResult>

@@ -1,11 +1,11 @@
 ﻿using Autofac;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Domain.Patterns.Queries.Config;
+using NetFusion.Messaging.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetFusion.Domain.Patterns.Queries.Filters
+namespace NetFusion.Messaging.Filters
 {
     /// <summary>
     /// Module that manages filters to be invoked when a query is dispatched.

@@ -24,7 +24,7 @@ namespace InfrastructureTests.RabbitMQ
 
         public static IAppContainer AddRabbitMqPublisher(this IAppContainer container)
         {
-            container.WithConfig((MessagingConfig config) =>
+            container.WithConfig((MessageDispatchConfig config) =>
             {
                 config.AddMessagePublisher<RabbitMqMessagePublisher>();
             });

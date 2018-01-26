@@ -1,7 +1,8 @@
 ﻿using NetFusion.Base.Plugins;
+using NetFusion.Messaging.Types;
 using System.Threading.Tasks;
 
-namespace NetFusion.Domain.Patterns.Queries.Filters
+namespace NetFusion.Messaging.Filters
 {
     /// <summary>
     /// Interface implemented by classes that are invoked when a query is dispatched.

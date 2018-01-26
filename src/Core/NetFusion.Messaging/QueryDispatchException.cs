@@ -1,10 +1,11 @@
 ﻿using NetFusion.Base.Exceptions;
-using NetFusion.Domain.Patterns.Queries.Filters;
+using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetFusion.Domain.Patterns.Queries.Dispatch
+namespace NetFusion.Messaging
 {
     /// <summary>
     /// An exception that is thrown when there is an exception dispatching a query to a consumer.

@@ -1,9 +1,10 @@
 ﻿using NetFusion.Mapping;
+using NetFusion.Messaging.Types;
 using System;
 using System.Collections;
 using System.Threading.Tasks;
 
-namespace NetFusion.Domain.Patterns.Queries.Filters
+namespace NetFusion.Messaging.Filters
 {
     /// <summary>
     /// Simple mapping filter that determines if the consumer returned type matches the declared result type of 

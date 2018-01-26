@@ -1,7 +1,7 @@
 ﻿using NetFusion.Base.Plugins;
 using System;
 
-namespace NetFusion.Domain.Patterns.Queries
+namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// Represents a query request that can be dispatched to a consumer.

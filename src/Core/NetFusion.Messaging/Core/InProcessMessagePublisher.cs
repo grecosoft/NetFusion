@@ -21,13 +21,13 @@ namespace NetFusion.Messaging.Core
     {
         private readonly ILifetimeScope _lifetimeScope;
         private readonly ILogger _logger;
-        private readonly IMessagingModule _messagingModule;
+        private readonly IMessageDispatchModule _messagingModule;
         private readonly IEntityScriptingService _scriptingSrv;
 
         public InProcessMessagePublisher(
             ILifetimeScope liftimeScope,
             ILogger<InProcessMessagePublisher> logger,
-            IMessagingModule eventingModule,
+            IMessageDispatchModule eventingModule,
             IEntityScriptingService scriptingSrv)
         {
             _lifetimeScope = liftimeScope;

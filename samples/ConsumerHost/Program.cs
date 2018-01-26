@@ -30,7 +30,7 @@ namespace ConsumerHost
                     envConfig.UseConfiguration(configuration);
                 })
 
-                .WithConfig((MessagingConfig config) =>
+                .WithConfig((MessageDispatchConfig config) =>
                 {
                     // Only required if client will be publishing events.
                     config.AddMessagePublisher<RabbitMqMessagePublisher>();

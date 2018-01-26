@@ -3,7 +3,7 @@ using NetFusion.Common.Extensions.Tasks;
 using System;
 using System.Collections.Generic;
 
-namespace NetFusion.Domain.Patterns.Queries.Filters
+namespace NetFusion.Messaging.Filters
 {
     /// <summary>
     /// Contains information about a query filter that threw an exception when applied.

@@ -103,7 +103,7 @@ namespace InfrastructureTests.RabbitMQ.Broker
             private IBrokerSerializer _messageSerializer;
 
             public Mock<ILogger> MockLogger { get; }
-            public Mock<IMessagingModule> MockMsgModule { get; }
+            public Mock<IMessageDispatchModule> MockMsgModule { get; }
 
             // Instance to the configured message broker.
             public IMessageBroker Instance { get; }
@@ -114,7 +114,7 @@ namespace InfrastructureTests.RabbitMQ.Broker
 
                 ILoggerFactory loggerFactory = new TestLoggerFactory();
 
-                this.MockMsgModule = new Mock<IMessagingModule>();
+                this.MockMsgModule = new Mock<IMessageDispatchModule>();
 
                 this.Instance = new MockMessageBroker(loggerFactory, this.MockMsgModule);
             }

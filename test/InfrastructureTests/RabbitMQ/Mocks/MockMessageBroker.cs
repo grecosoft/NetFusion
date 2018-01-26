@@ -10,7 +10,7 @@ namespace NetFusion.Tests.Infrastructure.RabbitMQ.Mocks
     {
         public MockMessageBroker(
             ILoggerFactory logger, 
-            Mock<IMessagingModule> mockMsgModule) :
+            Mock<IMessageDispatchModule> mockMsgModule) :
 
             base(logger, mockMsgModule.Object,
                 new Mock<IBrokerMetaRepository>().Object,

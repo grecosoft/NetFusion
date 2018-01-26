@@ -1,20 +1,21 @@
 ﻿using Autofac;
 using NetFusion.Common.Extensions.Tasks;
-using NetFusion.Domain.Patterns.Queries.Filters;
-using NetFusion.Domain.Patterns.Queries.Modules;
+using NetFusion.Messaging.Filters;
+using NetFusion.Messaging.Modules;
+using NetFusion.Messaging.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NetFusion.Domain.Patterns.Queries.Dispatch
+namespace NetFusion.Messaging.Core
 {
     /// <summary>
     /// Responsible for dispatching a query to its consumer and invoking
     /// any registered query filters.
     /// </summary>
-    public class QueryDispatcher : IQueryDispatcher
+    public class QueryDispatcher 
     {
         private readonly ILifetimeScope _lifetimeScope;
         

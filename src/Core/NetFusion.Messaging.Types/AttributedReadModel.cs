@@ -1,7 +1,7 @@
 ﻿using NetFusion.Base.Entity;
 using System.Collections.Generic;
 
-namespace NetFusion.Domain.Patterns.Queries
+namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// An optional model from which a query result can be derived to add  a 

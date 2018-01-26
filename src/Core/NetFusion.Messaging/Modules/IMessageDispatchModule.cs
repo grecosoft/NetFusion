@@ -13,12 +13,12 @@ namespace NetFusion.Messaging.Modules
     /// Services exposed by the messaging module for access by other 
     /// application modules and services.
     /// </summary>
-    public interface IMessagingModule : IPluginModuleService
+    public interface IMessageDispatchModule : IPluginModuleService
     {
         /// <summary>
         /// The associated messaging configuration.
         /// </summary>
-        MessagingConfig MessagingConfig { get; }
+        MessageDispatchConfig DispatchConfig { get; }
 
         /// <summary>
         /// A lookup by message type used to find the dispatch information for all

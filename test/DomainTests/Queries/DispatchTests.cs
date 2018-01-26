@@ -2,9 +2,8 @@
 using DomainTests.Queries.Mocks;
 using FluentAssertions;
 using NetFusion.Bootstrap.Exceptions;
-using NetFusion.Domain.Patterns.Queries;
-using NetFusion.Domain.Patterns.Queries.Config;
-using NetFusion.Domain.Patterns.Queries.Dispatch;
+using NetFusion.Messaging;
+using NetFusion.Messaging.Config;
 using NetFusion.Test.Container;
 using System;
 using System.Threading.Tasks;
@@ -51,8 +50,8 @@ namespace DomainTests.Queries
                     {
                         c.Build().Start();
 
-                        var dispatcher = c.Services.Resolve<IQueryDispatcher>();
-                        return dispatcher.Dispatch(testQuery);
+                        var dispatcher = c.Services.Resolve<IMessagingService>();
+                        return dispatcher.DispatchAsync(testQuery);
                     });
 
                 restResult.Assert.Exception<ContainerException>(ex =>
@@ -77,8 +76,8 @@ namespace DomainTests.Queries
                 .Act.OnContainer(c => {
                     c.Build().Start();
 
-                    var dispatcher = c.Services.Resolve<IQueryDispatcher>();
-                    return dispatcher.Dispatch(testQuery);
+                    var dispatcher = c.Services.Resolve<IMessagingService>();
+                    return dispatcher.DispatchAsync(testQuery);
                 });
 
                 testResult.Assert.Exception<QueryDispatchException>(ex =>
@@ -103,8 +102,8 @@ namespace DomainTests.Queries
                         {
                             c.Build().Start();
 
-                            var dispatcher = c.Services.Resolve<IQueryDispatcher>();
-                            return dispatcher.Dispatch(testQuery);
+                            var dispatcher = c.Services.Resolve<IMessagingService>();
+                            return dispatcher.DispatchAsync(testQuery);
                         });
 
                 testResult.Assert.Container(_ =>
@@ -135,8 +134,8 @@ namespace DomainTests.Queries
                     {
                         c.Build().Start();
 
-                        var dispatcher = c.Services.Resolve<IQueryDispatcher>();
-                        return dispatcher.Dispatch(testQuery);
+                        var dispatcher = c.Services.Resolve<IMessagingService>();
+                        return dispatcher.DispatchAsync(testQuery);
                     });
 
                 testResult.Assert.Container(_ =>

@@ -38,5 +38,10 @@ namespace DomainTests
             _publishedEvents.AddRange(eventSource.DomainEvents);
             return Task.CompletedTask;
         }
+
+        public Task<TResult> DispatchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

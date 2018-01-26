@@ -26,7 +26,7 @@ namespace NetFusion.RabbitMQ.Core
 
         // The broker delegates to the base messaging module when received
         // messages need to be dispatched to in-process consumers handlers.
-        private readonly IMessagingModule _messagingModule;
+        private readonly IMessageDispatchModule _messagingModule;
 
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger _logger;
@@ -34,7 +34,7 @@ namespace NetFusion.RabbitMQ.Core
         private readonly IEntityScriptingService _scriptingSrv;
 
         public MessageBroker(ILoggerFactory loggerFactory, 
-            IMessagingModule messagingModule,
+            IMessageDispatchModule messagingModule,
             IBrokerMetaRepository exchangeRep,
             IEntityScriptingService scriptingSrv)
         {

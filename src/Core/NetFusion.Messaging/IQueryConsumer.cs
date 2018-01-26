@@ -1,4 +1,4 @@
-﻿namespace NetFusion.Domain.Patterns.Queries
+﻿namespace NetFusion.Messaging
 {
     /// <summary>
     /// Marker interface used to identify a query consumer.

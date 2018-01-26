@@ -1,5 +1,6 @@
 ﻿using NetFusion.Bootstrap.Plugins;
 using NetFusion.Messaging.Config;
+using NetFusion.Messaging.Filters;
 using NetFusion.Messaging.Modules;
 
 namespace NetFusion.Messaging
@@ -21,7 +22,12 @@ namespace NetFusion.Messaging
         {
             plugin
                 .AddPluginType<MessagingModule>()
-                .AddPluginType<MessagingConfig>();
+                .AddPluginType<MessageDispatchModule>()
+                .AddPluginType<MessageEnricherModule>()
+                .AddPluginType<QueryDispatchModule>()
+                .AddPluginType<QueryFilterModule>()           
+                .AddPluginType<MessageDispatchConfig>()
+                .AddPluginType<QueryDispatchConfig>();
 
             return plugin;
         }

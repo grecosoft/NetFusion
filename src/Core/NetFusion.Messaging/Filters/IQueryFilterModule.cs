@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NetFusion.Domain.Patterns.Queries.Filters
+namespace NetFusion.Messaging.Filters
 {
     /// <summary>
     /// Module interface for the filter module exposing information it manages.

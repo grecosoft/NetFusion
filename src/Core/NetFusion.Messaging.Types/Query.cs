@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetFusion.Domain.Patterns.Queries
+namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// An object representing a query dispatched and handled by a consumer.

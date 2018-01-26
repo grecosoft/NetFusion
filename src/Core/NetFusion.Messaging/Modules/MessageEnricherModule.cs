@@ -12,11 +12,11 @@ namespace NetFusion.Messaging.Modules
     /// </summary>
     public class MessageEnricherModule : PluginModule
     {
-        private MessagingConfig MessagingConfig { get; set; }
+        private MessageDispatchConfig MessagingConfig { get; set; }
 
         public override void Initialize()
         {
-            MessagingConfig = Context.Plugin.GetConfig<MessagingConfig>();
+            MessagingConfig = Context.Plugin.GetConfig<MessageDispatchConfig>();
         }
 
         public override void RegisterComponents(ContainerBuilder builder)

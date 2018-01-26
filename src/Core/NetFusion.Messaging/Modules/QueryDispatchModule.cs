@@ -2,14 +2,15 @@
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Domain.Patterns.Queries.Dispatch;
+using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 
-namespace NetFusion.Domain.Patterns.Queries.Modules
+namespace NetFusion.Messaging.Modules
 {
     /// <summary>
     /// Plug-in module called during the bootstrap process to configure
@@ -26,7 +27,7 @@ namespace NetFusion.Domain.Patterns.Queries.Modules
             var queryHandlers = Context.AllPluginTypes
                .WhereQueryConsumer()
                .SelectQueryHandlers()
-               .SelectDispatchInfo();
+               .SelectQueryDispatchInfo();
 
             AssureNoDuplicateHandlers(queryHandlers);
 
@@ -35,10 +36,8 @@ namespace NetFusion.Domain.Patterns.Queries.Modules
 
         public override void RegisterComponents(ContainerBuilder builder)
         {
-            // Register the implementation that can be injected into application
-            // components to dispatch queries.
             builder.RegisterType<QueryDispatcher>()
-                .As<IQueryDispatcher>()
+                .AsSelf()
                 .InstancePerLifetimeScope();
 
             RegisterQueryConsumers(builder);
@@ -124,7 +123,7 @@ namespace NetFusion.Domain.Patterns.Queries.Modules
             return false;
         }
 
-        public static IEnumerable<QueryDispatchInfo> SelectDispatchInfo(
+        public static IEnumerable<QueryDispatchInfo> SelectQueryDispatchInfo(
             this IEnumerable<MethodInfo> queryHandlerMethods)
         {
             foreach (MethodInfo handler in queryHandlerMethods)

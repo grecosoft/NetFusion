@@ -31,7 +31,7 @@ namespace CoreTests.Messaging
                     .Container(c => c.UsingDefaultServices())
 
                 .Act.OnContainer(c => c.Build())
-                .Assert.PluginModule<MessagingModule>(m =>
+                .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
                     var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)]?.FirstOrDefault();
                     dispatchInfo.Should().NotBeNull(); 
@@ -54,7 +54,7 @@ namespace CoreTests.Messaging
                     .Container(c => c.UsingDefaultServices())
 
                 .Act.OnContainer(c => c.Build())
-                .Assert.PluginModule<MessagingModule>(m =>
+                .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
                     var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)]?.FirstOrDefault();
                     dispatchInfo.Should().NotBeNull();

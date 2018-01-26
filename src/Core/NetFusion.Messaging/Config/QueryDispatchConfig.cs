@@ -1,9 +1,9 @@
 ﻿using NetFusion.Bootstrap.Container;
-using NetFusion.Domain.Patterns.Queries.Filters;
+using NetFusion.Messaging.Filters;
 using System;
 using System.Collections.Generic;
 
-namespace NetFusion.Domain.Patterns.Queries.Config
+namespace NetFusion.Messaging.Config
 {
     /// <summary>
     /// Plug-in bootstrap configuration used to specify query dispatching

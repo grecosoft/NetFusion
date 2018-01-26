@@ -25,7 +25,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
         private bool _disposed;
 
         private readonly ILogger _logger;
-        private readonly IMessagingModule _messagingModule;
+        private readonly IMessageDispatchModule _messagingModule;
         private readonly MessageBrokerState _brokerState;
         private readonly IConnectionManager _connMgr;
         private readonly ISerializationManager _serializationMgr;
@@ -34,7 +34,7 @@ namespace NetFusion.RabbitMQ.Core.Initialization
 
         public ExchangeConsumerInit(
            ILoggerFactory loggerFactory,
-           IMessagingModule messagingModule,
+           IMessageDispatchModule messagingModule,
            MessageBrokerState brokerState)
         {
             _logger = loggerFactory.CreateLogger<ExchangePublisherInit>();

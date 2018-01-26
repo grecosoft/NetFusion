@@ -1,6 +1,4 @@
-﻿using NetFusion.Domain.Patterns.Queries.Config;
-using NetFusion.Domain.Patterns.Queries.Filters;
-using NetFusion.Domain.Patterns.Queries.Modules;
+﻿using NetFusion.Messaging;
 using NetFusion.Test.Plugins;
 using System;
 
@@ -14,9 +12,7 @@ namespace DomainTests.Queries
             // Configure Core Plugin with messaging and the 
             // unit -of-work module.
             resolver.AddPlugin<MockCorePlugin>()
-                 .AddPluginType<QueryDispatchModule>()
-                 .AddPluginType<QueryFilterModule>()
-                 .AddPluginType<QueryDispatchConfig>();
+                 .UseMessagingPlugin();
 
             // Add host plugin with the plugin-types to be used
             // for the unit-test.

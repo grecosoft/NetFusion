@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using NetFusion.Domain.Patterns.Queries;
-using NetFusion.Domain.Patterns.Queries.Filters;
+﻿using NetFusion.Messaging.Filters;
+using NetFusion.Messaging.Types;
+using System.Threading.Tasks;
 
 namespace DomainTests.Queries.Mocks
 {
