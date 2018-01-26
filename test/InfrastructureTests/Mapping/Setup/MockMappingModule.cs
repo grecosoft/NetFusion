@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace UtilitiesTests.Mapping.Setup
+namespace InfrastructureTests.Mapping.Setup
 {
     // Simulates the runtime execution of the module that takes place during the bootstrap process.  
     // The actual module automatically finds all defined mapping strategies and creates a cached

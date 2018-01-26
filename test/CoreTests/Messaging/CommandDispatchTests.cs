@@ -1,12 +1,11 @@
 ﻿using Autofac;
-using CoreTests.Messaging;
 using CoreTests.Messaging.Mocks;
 using FluentAssertions;
 using NetFusion.Messaging;
 using NetFusion.Test.Container;
 using Xunit;
 
-namespace BootstrapTests.Messaging
+namespace CoreTests.Messaging
 {
     /// <summary>
     /// Unit tests for command message types.  A command can only have one associated message

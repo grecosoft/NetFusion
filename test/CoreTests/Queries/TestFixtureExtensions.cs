@@ -2,7 +2,7 @@
 using NetFusion.Test.Plugins;
 using System;
 
-namespace DomainTests.Queries
+namespace CoreTests.Queries
 {
     public static class TestFixtureExtensions
     {

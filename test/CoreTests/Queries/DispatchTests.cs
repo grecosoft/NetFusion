@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using DomainTests.Queries.Mocks;
+using CoreTests.Queries.Mocks;
 using FluentAssertions;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Messaging;
@@ -9,7 +9,7 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace DomainTests.Queries
+namespace CoreTests.Queries
 {
     public class DispatchTests
     {

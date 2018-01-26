@@ -1,7 +1,7 @@
 ﻿using NetFusion.Settings;
 using System.ComponentModel.DataAnnotations;
 
-namespace BootstrapTests.Settings.Mocks
+namespace CoreTests.Settings.Mocks
 {
     [ConfigurationSection("App:MainWindow")]
     public class MockSetttings : AppSettings

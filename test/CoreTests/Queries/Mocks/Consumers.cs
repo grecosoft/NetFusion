@@ -1,6 +1,6 @@
 ﻿using NetFusion.Messaging;
 
-namespace DomainTests.Queries.Mocks
+namespace CoreTests.Queries.Mocks
 {
     public class TestConsumer : IQueryConsumer
     {

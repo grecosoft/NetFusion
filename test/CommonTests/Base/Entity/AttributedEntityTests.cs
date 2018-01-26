@@ -3,7 +3,7 @@ using NetFusion.Base.Entity;
 using System.Linq;
 using Xunit;
 
-namespace CommonTest.Base.AttributedEntity
+namespace CommonTests.Base.Entity
 {
     public class AttributedEntityTests
     {

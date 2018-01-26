@@ -1,11 +1,11 @@
 ﻿using FluentAssertions;
+using InfrastructureTests.Mapping.Setup;
 using NetFusion.Domain.Entities;
 using NetFusion.Domain.Entities.Core;
 using NetFusion.Domain.Patterns.Behaviors.Mapping;
 using NetFusion.Mapping;
 using NetFusion.Mapping.Core;
 using System;
-using UtilitiesTests.Mapping.Setup;
 using Xunit;
 
 namespace InfrastructureTests.Mapping

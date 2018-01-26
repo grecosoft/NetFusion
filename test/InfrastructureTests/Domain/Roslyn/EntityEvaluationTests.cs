@@ -1,11 +1,10 @@
-﻿using CoreTests.Domain.Mocks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NetFusion.Base.Scripting;
 using NetFusion.Domain.Roslyn.Testing;
 using System.Collections.Generic;
 using Xunit;
 
-namespace NetFusion.Tests.Core.Domain
+namespace InfrastructureTests.Domain.Roslyn
 {
     public class EntityEvaluationTests
     {

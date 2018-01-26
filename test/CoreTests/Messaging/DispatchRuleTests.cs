@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using CoreTests.Messaging;
 using CoreTests.Messaging.Mocks;
 using FluentAssertions;
 using NetFusion.Messaging;
@@ -7,7 +6,7 @@ using NetFusion.Test.Container;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace BootstrapTests.Messaging
+namespace CoreTests.Messaging
 {
     /// <summary>
     /// One or more rules can be associated with a message handler.  These rules are static

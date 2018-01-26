@@ -1,11 +1,9 @@
 ﻿using Autofac;
 using CoreTests.Messaging.Mocks;
 using FluentAssertions;
-using NetFusion.Bootstrap.Container;
 using NetFusion.Messaging.Modules;
 using NetFusion.Test.Container;
 using System.Linq;
-using System.Reflection;
 using Xunit;
 
 namespace CoreTests.Messaging

@@ -1,7 +1,7 @@
 ﻿using NetFusion.Base.Entity;
 using System.Collections.Generic;
 
-namespace CommonTest.Base.AttributedEntity
+namespace CommonTests.Base.Entity
 {
     public class DynamicEntity : IAttributedEntity
     {

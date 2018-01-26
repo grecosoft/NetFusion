@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Xunit;
 
-namespace UtilitiesTests
+namespace CommonTests.Base.Validation
 {
     public class ValidationTests
     {

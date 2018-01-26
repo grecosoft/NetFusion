@@ -2,7 +2,7 @@
 using NetFusion.Mapping;
 using NetFusion.Mapping.Core;
 
-namespace UtilitiesTests.Mapping.Setup
+namespace InfrastructureTests.Mapping.Setup
 {
     public class ObjectMapperConfig
     {

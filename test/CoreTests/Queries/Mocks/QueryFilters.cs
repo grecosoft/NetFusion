@@ -2,7 +2,7 @@
 using NetFusion.Messaging.Types;
 using System.Threading.Tasks;
 
-namespace DomainTests.Queries.Mocks
+namespace CoreTests.Queries.Mocks
 {
     public class QueryFilterOne : IQueryFilter
     {

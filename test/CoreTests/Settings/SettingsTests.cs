@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using BootstrapTests.Settings.Mocks;
+using CoreTests.Settings.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NetFusion.Bootstrap.Configuration;

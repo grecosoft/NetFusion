@@ -3,7 +3,7 @@ using NetFusion.Domain.Entities.Registration;
 using NetFusion.Domain.Patterns.Behaviors.Mapping;
 using NetFusion.Mapping.Core;
 
-namespace UtilitiesTests.Mapping.Setup
+namespace InfrastructureTests.Mapping.Setup
 {
     // Mock resolver that correctly configures the MappingBehavior to use the
     // ObjectMapper instance configured for the unit-tests.  The actual resolver

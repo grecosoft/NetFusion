@@ -6,7 +6,7 @@ using NetFusion.Test.Container;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace BootstrapTests.Messaging
+namespace CoreTests.Messaging
 {
     /// <summary>
     /// An in-process message handler method can be decorated with the ApplyScriptPredicate attribute.  

@@ -1,7 +1,7 @@
 ﻿using NetFusion.Messaging.Types;
 using System.Collections.Generic;
 
-namespace DomainTests.Queries.Mocks
+namespace CoreTests.Queries.Mocks
 {
     public class TestQuery : Query<TestQueryResult>
     {

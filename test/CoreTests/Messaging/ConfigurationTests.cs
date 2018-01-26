@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using CoreTests.Messaging.Mocks;
 using FluentAssertions;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Config;
