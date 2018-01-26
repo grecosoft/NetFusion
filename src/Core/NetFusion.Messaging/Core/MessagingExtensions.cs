@@ -68,8 +68,8 @@ namespace NetFusion.Messaging.Core
         }
 
         /// <summary>
-        /// For a list of methods, returns an object with properties that can be used to 
-        /// dispatch the method at runtime.
+        /// For a list of methods, returns an object with properties that can cached and
+        /// used to dispatch the method at runtime.
         /// </summary>
         /// <param name="messageHandlers">List of message handler methods.</param>
         /// <returns>List of objects with information used to dispatch the method at runtime.</returns>

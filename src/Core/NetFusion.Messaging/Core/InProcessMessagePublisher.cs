@@ -111,11 +111,27 @@ namespace NetFusion.Messaging.Core
 
         private void AssertMessageDispatchers(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
         {
-            if (message is ICommand commandMessage && dispatchers.Count() > 1)
+            var command = message as ICommand;
+            if (command == null)
             {
-                throw new InvalidOperationException(
-                    $"More than one message consumer handler was found for message type: {commandMessage.GetType()}" +
-                    $"A command message type can have only one in-process message consumer handler.");
+                return;
+            }
+
+            if (dispatchers.Count() > 1)
+            {
+                var dispatcherDetails = GetDispatchLogDetails(dispatchers);
+
+                throw new PublisherException(
+                    $"More than one message consumer handler was found for command message type: {command.GetType()}." +
+                    $"A command message type can have only one in-process message consumer handler.", dispatcherDetails);
+            }
+
+            if (!dispatchers.Any())
+            {
+                throw new PublisherException(
+                    $"No message consumer handler was found for the command message of type: {command.GetType()}." +
+                    $"Make sure there is a class implementing: {typeof(IMessageConsumer)} with a method decorated with " +
+                    $"the attribute of type: {typeof(InProcessHandlerAttribute)} for the corresponding command type.");
             }
         }
 
@@ -141,17 +157,12 @@ namespace NetFusion.Messaging.Core
 
         private void LogMessageDespatchInfo(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
         {
-            if (!_logger.IsEnabled(LogLevel.Trace))
+            if (!_logger.IsEnabled(LogLevel.Debug))
             {
                 return;
             }
 
-            var dispatcherDetails = dispatchers.Select(d => new {
-                d.MessageType.FullName,
-                Consumer = d.ConsumerType.FullName,
-                Method = d.MessageHandlerMethod.Name    
-            })
-            .ToList();
+            var dispatcherDetails = GetDispatchLogDetails(dispatchers);
 
             _logger.LogTraceDetails(MessagingLogEvents.MESSAGING_DISPATCH, $"Message Published: {message.GetType()}",
                 new
@@ -159,6 +170,16 @@ namespace NetFusion.Messaging.Core
                     Message = message,
                     Dispatchers = dispatcherDetails
                 });
+        }
+
+        private object GetDispatchLogDetails(IEnumerable<MessageDispatchInfo> dispatchers)
+        {
+            return dispatchers.Select(d => new {
+                d.MessageType.FullName,
+                Consumer = d.ConsumerType.FullName,
+                Method = d.MessageHandlerMethod.Name
+            })
+            .ToList();
         }
     }
 }

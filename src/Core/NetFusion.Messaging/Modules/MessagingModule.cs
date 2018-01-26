@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
@@ -50,10 +51,10 @@ namespace NetFusion.Messaging.Modules
             AssertDispatchRules(allDispatchers);
 
             AllMessageTypeDispatchers = allDispatchers
-                .ToLookup(k => k.MessageType);
+                .ToLookup(d => d.MessageType);
 
             InProcessDispatchers = allDispatchers
-                .Where(h => h.IsInProcessHandler)
+                .Where(d => d.IsInProcessHandler)
                 .ToLookup(k => k.MessageType);
 
             LogInvalidConsumers();
@@ -79,6 +80,7 @@ namespace NetFusion.Messaging.Modules
 
         public override void ScanAllOtherPlugins(TypeRegistration registration)
         {
+            // Add all the message consumers to the dependency injection container.
             registration.PluginTypes.AssignableTo<IMessageConsumer>()
                 .As<IMessageConsumer>()
                 .AsSelf()
@@ -122,14 +124,14 @@ namespace NetFusion.Messaging.Modules
                     d.MessageType,
                     d.ConsumerType,
                     d.MessageHandlerMethod.Name
-                });
+                }).ToArray();
                 
             if (invalidEvtHandlers.Any())
             {
                 throw new ContainerException(
                     "The following message consumers have invalid rule attributes applied.  " +
                     "The handler message type and the rule message type must be assignable to each other.", 
-                    invalidEvtHandlers);
+                    new { InvalidHandlers = invalidEvtHandlers });
             }
         }
 
@@ -155,6 +157,7 @@ namespace NetFusion.Messaging.Modules
         {
             if (dispatcher == null) throw new ArgumentNullException(nameof(dispatcher));
             if (message == null) throw new ArgumentNullException(nameof(message));
+            if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken));
 
             if (!message.GetType().CanAssignTo(dispatcher.MessageType))
             {
@@ -176,7 +179,7 @@ namespace NetFusion.Messaging.Modules
                 }
                 catch (Exception ex)
                 {
-                    Context.Logger.LogError(MessagingLogEvents.MESSAGING_EXCEPTION, "Message Dispatch Error Details.", ex);
+                    Context.Logger.LogError(MessagingLogEvents.MESSAGING_EXCEPTION, ex, "Message Dispatch Error Details.");
                     throw;
                 }
             }
@@ -193,15 +196,15 @@ namespace NetFusion.Messaging.Modules
 
             if (invalidConsumerTypes.Any())
             {
-                Context.Logger.LogWarning(
+                Context.Logger.LogWarningDetails(
                     MessagingLogEvents.MESSAGING_CONFIGURATION,
                     $"The following classes have in-process event handler methods but do not implement: {typeof(IMessageConsumer)}.",
-                    invalidConsumerTypes);
+                    new { invalidConsumerTypes = invalidConsumerTypes });
             }
         }
 
         // For each discovered message event type, execute the same code that is used at runtime to determine
-        // the consumer methods that handle the message.  Then log this information.
+        // the consumer methods that handle the message.  Then log the information.
         public override void Log(IDictionary<string, object> moduleLog)
         {
             LogMessagesAndDispatchInfo(moduleLog);

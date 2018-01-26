@@ -14,9 +14,9 @@ namespace NetFusion.Messaging.Core
     /// <summary>
     /// Contains information used to invoke message handlers for a given message type at runtime.
     /// This information is gathered by the plug-in module during the bootstrap process.  Other
-    /// plug-ins requiring the publishing of messages (i.e. NetFusion.RabbitMQ) can also access 
-    /// this information.  Other plug-ins can use metadata attributes specific to their plug-in 
-    /// to further filter the consumer handlers that should be invoked.
+    /// plug-ins requiring the publishing of messages can also access this information.  Other 
+    /// plug-ins can use metadata attributes specific to their plug-in to further filter the 
+    /// consumer handlers that should be invoked.
     /// </summary>
     public class MessageDispatchInfo
     {
@@ -89,6 +89,8 @@ namespace NetFusion.Messaging.Core
         /// <summary>
         /// Rule instances associated with the message handler.  The message
         /// handler will only be called if the message meets the rule criteria.
+        /// NOTE:  these are instances of the types within the DispatchRuleTypes
+        /// property.
         /// </summary>
         public IMessageDispatchRule[] DispatchRules { get; set; }
 
@@ -131,16 +133,17 @@ namespace NetFusion.Messaging.Core
         /// This allows the method handler to be re-factored to one or the other 
         /// without having to change any of the calling code.  This also decouples
         /// the publisher from the consumer.  The publisher should not be concerned 
-        /// or determine how the message is handled.
+        /// of how the message is handled.
         /// </summary>
         /// <param name="message">The message to be dispatched.</param>
         /// <param name="consumer">Instance of the consumer to have message dispatched.</param>
-        /// <param name="cancellationToken">The optional cancellation token passed to the message handler.</param>
-        /// <returns>The response as a future result.</returns>
+        /// <param name="cancellationToken">The cancellation token passed to the message handler.</param>
+        /// <returns>The response as a future task result.</returns>
         public async Task<object> Dispatch(IMessage message, IMessageConsumer consumer, CancellationToken cancellationToken)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
             if (consumer == null) throw new ArgumentNullException(nameof(consumer));
+            if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken));
 
             var taskSource = new TaskCompletionSource<object>();
 

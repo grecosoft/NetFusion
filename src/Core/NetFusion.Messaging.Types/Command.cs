@@ -51,7 +51,6 @@ namespace NetFusion.Messaging.Types
     /// <typeparam name="TResult">The response type of the command.</typeparam>
     public abstract class Command<TResult> : Command, ICommand<TResult>
     {
-   
         public Command()
         {
             base.Result = default(TResult);

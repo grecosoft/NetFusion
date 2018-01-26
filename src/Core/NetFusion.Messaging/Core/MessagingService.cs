@@ -35,7 +35,8 @@ namespace NetFusion.Messaging.Core
             _messagingModule = messagingModule;
 
             // Order the enrichers and the publishers based on the order of the type
-            // registration specified during configuration.
+            // registration specified during configuration.  Order should never matter
+            // but this will make the order known.
             _messageEnrichers = messageEnrichers
                 .OrderByMatchingType(_messagingModule.MessagingConfig.EnricherTypes)
                 .ToList();
@@ -79,6 +80,9 @@ namespace NetFusion.Messaging.Core
             if (eventSource == null) throw new ArgumentNullException(nameof(eventSource),
                 "Event source cannot be null.");
 
+            if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken),
+               "Cancellation token cannot be null.");
+
             var publisherErrors = new List<PublisherException>();
 
             foreach (IDomainEvent domainEvent in eventSource.DomainEvents)
@@ -104,6 +108,9 @@ namespace NetFusion.Messaging.Core
         // the enrichers and to invoke all registered message publishers.
         private async Task PublishMessageAsync(IMessage message, IntegrationTypes integrationType, CancellationToken cancellationToken)
         {
+            if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken),
+               "Cancellation token cannot be null.");
+
             try
             {
                 await ApplyMessageEnrichers(message);
@@ -132,7 +139,7 @@ namespace NetFusion.Messaging.Core
             {
                 if (taskList != null)
                 {
-                    var enricherErrors = taskList.GetExceptions(fr => new EnricherException(fr));
+                    var enricherErrors = taskList.GetExceptions(ti => new EnricherException(ti));
                     if (enricherErrors.Any())
                     {
                         throw new PublisherException("Exception when invoking message enrichers.",
@@ -149,7 +156,6 @@ namespace NetFusion.Messaging.Core
 
         private async Task InvokePublishers(IMessage message, CancellationToken cancellationToken, IntegrationTypes integrationType)
         {
-
             TaskListItem<IMessagePublisher>[] taskList = null;
 
             var publishers = integrationType == IntegrationTypes.All ? _messagePublishers.ToArray() 
@@ -166,7 +172,7 @@ namespace NetFusion.Messaging.Core
             {
                 if (taskList != null)
                 {
-                    var publisherErrors = taskList.GetExceptions(fr => new PublisherException(fr));
+                    var publisherErrors = taskList.GetExceptions(ti => new PublisherException(ti));
                     if (publisherErrors.Any())
                     {
                         throw new PublisherException("Exception when invoking message publishers.",

@@ -11,7 +11,7 @@ namespace NetFusion.Messaging.Core
     public abstract class MessagePublisher : IMessagePublisher
     {
         /// <summary>
-        /// Specifies the scope to which publishers send messages to subscribers.
+        /// Specifies the scope to which publisher sends messages to subscribers.
         /// </summary>
         public abstract IntegrationTypes IntegrationType { get; }
 

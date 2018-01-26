@@ -51,6 +51,18 @@ namespace NetFusion.Messaging
         /// <summary>
         /// Publisher Exception.
         /// </summary>
+        /// <param name="errorMessage">The error message raised when publishing the message.</param>
+        /// <param name="details">Details associated with the exception.</param>
+        public PublisherException(
+            string errorMessage,
+            object details): base (errorMessage, details)
+        {
+
+        }
+
+        /// <summary>
+        /// Publisher Exception.
+        /// </summary>
         /// <param name="errorMessage">The enricher related error message raised when publishing the message.</param>
         /// <param name="message">The message being dispatched.</param>
         /// <param name="enricherExceptions">List of enricher exceptions when publishing message to one

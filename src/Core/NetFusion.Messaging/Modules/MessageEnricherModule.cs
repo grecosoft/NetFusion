@@ -33,7 +33,7 @@ namespace NetFusion.Messaging.Modules
                 .Select(t => new
                 {
                     EnricherType = t.AssemblyQualifiedName
-                });
+                }).ToArray();
         }
     }
 }

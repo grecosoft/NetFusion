@@ -7,8 +7,8 @@ namespace NetFusion.Messaging.Core
 {
     /// <summary>
     /// Called when a message is published to allow plug-ins to customize the publishing of messages.
-    /// For example the InProcessMessagePublisher dispatches messages locally while the optional 
-    /// RabbitMqMessagePublisher delivers messages to configured broker exchanges.
+    /// For example the InProcessMessagePublisher dispatches messages locally while another publisher
+    /// could deliver the messages to a configured broker.
     /// </summary> 
     public interface IMessagePublisher : IKnownPluginType
     {
@@ -21,6 +21,7 @@ namespace NetFusion.Messaging.Core
         /// Publishes a message asynchronously. 
         /// </summary>
         /// <param name="message">The message to be delivered.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The task that will be completed when publishing has completed.</returns>
         Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken);
     }

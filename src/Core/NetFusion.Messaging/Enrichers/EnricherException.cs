@@ -13,7 +13,7 @@ namespace NetFusion.Messaging.Enrichers
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="taskItem">The future result containing the exception.</param>
+        /// <param name="taskItem">The task item containing the exception.</param>
         public EnricherException(TaskListItem<IMessageEnricher> taskItem)
         {
             if (taskItem == null) throw new NullReferenceException(nameof(taskItem));

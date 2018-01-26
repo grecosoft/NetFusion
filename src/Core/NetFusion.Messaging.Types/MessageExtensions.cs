@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using System;
+﻿using System;
 using System.Linq;
 
 namespace NetFusion.Messaging.Types
