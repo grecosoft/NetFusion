@@ -6,7 +6,8 @@ namespace NetFusion.Mapping
     /// Mapping strategy for which the created instance delegates to specified mapping function. 
     /// The mapping function will usually delegate to an open-source mapping library of choice.
     /// Note: the consuming application returns instances of this delegate strategy type by 
-    /// defining one or more IMappingStrategyFactory instances.
+    /// defining one or more IMappingStrategyFactory instances.  This was created since many
+    /// of the newer mapping libraries are generic based.
     /// </summary>
     /// <typeparam name="TSource">The source type of the object being mapped.</typeparam>
     /// <typeparam name="TTarget">The target type of the object being mapped.</typeparam>

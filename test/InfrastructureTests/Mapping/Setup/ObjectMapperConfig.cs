@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using NetFusion.Mapping;
 using NetFusion.Mapping.Core;
+using NetFusion.Testing.Logging;
 
 namespace InfrastructureTests.Mapping.Setup
 {
@@ -19,7 +20,8 @@ namespace InfrastructureTests.Mapping.Setup
             }
 
             var module = new MockMappingModule(targetMaps);
-            return new ObjectMapper(module, builder.Build());
+            var mockLogFactory = new TestLoggerFactory();
+            return new ObjectMapper(mockLogFactory, module, builder.Build());
         }
     }
 }

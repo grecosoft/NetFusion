@@ -9,7 +9,7 @@ namespace NetFusion.Mapping
         public string Name => "Mapping Plug-in";
 
         public string Description => 
-            "Plug-In used to map domain entities to other object representations.  This plug-in configures and " + 
+            "Plug-In used to map object instances to other object representations.  This plug-in configures and " + 
             "coordinates the mapping process but does not dependent on any specific mapping library.  The host " +
             "application can use an open-source mapping library of choice.";
     }

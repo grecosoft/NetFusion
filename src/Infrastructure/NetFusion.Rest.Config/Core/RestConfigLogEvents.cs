@@ -5,7 +5,7 @@ namespace NetFusion.Rest.Config.Core
 {
     public static class RestConfigLogEvents
     {
-        private const int PluginLog = LogEvents.Infrastructure + 800;
+        private const int PluginLog = LogEvents.Infrastructure + 200;
 
         public static EventId REST_CONFIG_EXCEPTION = new EventId(-(PluginLog + 1), "REST Configuration: Configuration Exception");
     }

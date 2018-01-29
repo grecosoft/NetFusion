@@ -1,11 +1,13 @@
 ﻿using Autofac;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Config;
+using NetFusion.Messaging.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetFusion.Messaging.Filters
+namespace NetFusion.Messaging.Modules
 {
     /// <summary>
     /// Module that manages filters to be invoked when a query is dispatched.
@@ -36,6 +38,21 @@ namespace NetFusion.Messaging.Filters
             builder.RegisterTypes(filterTypes.ToArray())
                 .AsSelf()
                 .InstancePerLifetimeScope();
+        }
+
+        public override void Log(IDictionary<string, object> moduleLog)
+        {
+            moduleLog["Query filters"] = Context.AllPluginTypes
+               .Where(pt => {
+                   return pt.IsConcreteTypeDerivedFrom<IQueryFilter>();
+               })
+               .Select(ft => new
+               {
+                   FilterType = ft.AssemblyQualifiedName,
+                   IsConfigured = _queryDispatchConfig.PreQueryFilters.Contains(ft) || _queryDispatchConfig.PostQueryFiters.Contains(ft),
+                   IsPreFilter = _queryDispatchConfig.PreQueryFilters.Contains(ft),
+                   IsPostFilter = _queryDispatchConfig.PostQueryFiters.Contains(ft)
+               }).ToArray();      
         }
     }
 }

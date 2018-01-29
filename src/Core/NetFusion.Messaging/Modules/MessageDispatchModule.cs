@@ -62,6 +62,7 @@ namespace NetFusion.Messaging.Modules
 
         public override void RegisterDefaultComponents(ContainerBuilder builder)
         {
+            // The dispatcher delegated to my the MessagingService class.
             builder.RegisterType<MessageDispatcher>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
@@ -113,7 +114,8 @@ namespace NetFusion.Messaging.Modules
         }
 
         // Assert that the dispatch rules are based on a type compatible with the 
-        // message.  This applies to dispatch rules that are applied via attributes.
+        // message.  This applies to dispatch rules that are applied via attributes
+        // since attributes can't be a constrained generic type.
         private void AssertDispatchRules(MessageDispatchInfo[] allDispatchers)
         {
             var invalidEvtHandlers = allDispatchers
@@ -162,7 +164,7 @@ namespace NetFusion.Messaging.Modules
             {
                 throw new ContainerException(
                     $"The message event type: {message.GetType()} being dispatched does not match or " +
-                    $"derived from the dispatch information type of: {dispatcher.MessageType}.");
+                    $"derive from the dispatch information type of: {dispatcher.MessageType}.");
             }
 
             // Invoke the message consumers in a new lifetime scope.  This is for the case where a message
@@ -230,7 +232,7 @@ namespace NetFusion.Messaging.Modules
                         IncludedDerivedTypes = ed.IncludeDerivedTypes,
                         DispatchRules = ed.DispatchRuleTypes.Select(dr => dr.FullName).ToArray(),
                         RuleApplyType = ed.DispatchRules.Any() ? ed.RuleApplyType.ToString() : null
-                    });
+                    }).ToArray();
             }
         }
 

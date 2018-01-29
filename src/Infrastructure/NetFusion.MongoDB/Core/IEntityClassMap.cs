@@ -18,7 +18,7 @@ namespace NetFusion.MongoDB.Core
         Type EntityType { get; }
 
         /// <summary>
-        /// The collection corresponding to the entity class type.
+        /// The name of the collection corresponding to the entity class type.
         /// </summary>
         /// <returns>Name of the collection.</returns>
         string CollectionName { get; set; }

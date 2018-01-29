@@ -1,4 +1,5 @@
 ﻿using NetFusion.Bootstrap.Plugins;
+using NetFusion.MongoDB.Configs;
 using NetFusion.MongoDB.Modules;
 
 namespace NetFusion.MongoDB
@@ -20,7 +21,8 @@ namespace NetFusion.MongoDB
         {
             plugin
                 .AddPluginType<MappingModule>()
-                .AddPluginType<MongoModule>();
+                .AddPluginType<MongoModule>()
+                .AddPluginType<MongoSettings>();
 
             return plugin;
         }

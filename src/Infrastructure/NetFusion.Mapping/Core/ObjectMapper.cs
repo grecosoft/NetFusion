@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Microsoft.Extensions.Logging;
 using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
@@ -12,13 +13,16 @@ namespace NetFusion.Mapping.Core
     /// </summary>
     public class ObjectMapper : IObjectMapper
     {
-        private static ILookup<Type, TargetMap> _sourceTypeMappings;
+        private readonly ILogger<ObjectMapper> _logger;
+        private readonly ILookup<Type, TargetMap> _sourceTypeMappings;
         private readonly ILifetimeScope _lifetimeScope;
 
         public ObjectMapper(
+            ILoggerFactory loggerFactory,
             IMappingModule mappingModule,
             ILifetimeScope lifetimeScope)
         {
+            _logger = loggerFactory.CreateLogger<ObjectMapper>();
             _lifetimeScope = lifetimeScope;
             _sourceTypeMappings = mappingModule.SourceTypeMappings;
         }
@@ -62,6 +66,8 @@ namespace NetFusion.Mapping.Core
             if (targetMap != null)
             {
                 strategy = targetMap.StrategyInstance ?? (IMappingStrategy)_lifetimeScope.Resolve(targetMap.StrategyType);
+
+                LogFoundMapping(targetMap);
                 return strategy.Map(this, source);
             }
 
@@ -69,14 +75,15 @@ namespace NetFusion.Mapping.Core
         }
 
         // Determines if there is a mapping strategy matching the exact target type.  
-        // If not present, a strategy with a matching target type deriving from the 
-        // specified target type is searched.
+        // If not present, a strategy with a matching target type, deriving from the 
+        // specified target type, is searched.  This allows mapping polymorphic-ally 
+        // to a derived target type for a corresponding source type.
         private TargetMap FindMappingStrategy(Type sourceType, Type targetType)
         {
             var sourceMappings = _sourceTypeMappings[sourceType];
             if (!sourceMappings.Any())
             {
-                // Not registered mappings.
+                // No source type registered mappings.
                 return null;
             }
 
@@ -94,6 +101,14 @@ namespace NetFusion.Mapping.Core
                 sourceMappings.Where(tm => tm.TargetType.IsDerivedFrom(targetType)));
 
             return derivedTargetMapping;
+        }
+
+        private void LogFoundMapping(TargetMap targetMap)
+        {
+            _logger.LogDebug(MappingLogEvents.MAPPING_APPLIED, "Mapping Applied: {SourceType} --> {TargetType} Using Strategy: {StrategyType}", 
+                targetMap.SourceType,
+                targetMap.TargetType, 
+                targetMap.StrategyType);
         }
 
         private TargetMap AssertAndGetMapping(Type sourceType, Type targetType,  IEnumerable<TargetMap> targetMaps)

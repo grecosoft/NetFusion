@@ -36,6 +36,7 @@ namespace NetFusion.Messaging.Modules
 
         public override void RegisterComponents(ContainerBuilder builder)
         {
+            // Register the dispatcher used specifically for queries.
             builder.RegisterType<QueryDispatcher>()
                 .AsSelf()
                 .InstancePerLifetimeScope();
@@ -63,7 +64,7 @@ namespace NetFusion.Messaging.Modules
 
             if (queryTypes.Any())
             {
-                throw new InvalidOperationException(
+                throw new QueryDispatchException(
                     $"The following query types have multiple consumers: { String.Join(" | ", queryTypes)}." +
                     $"A query can only have one consumer.");
             }
@@ -80,6 +81,24 @@ namespace NetFusion.Messaging.Modules
 
             throw new QueryDispatchException(
                 $"Dispatch information for the query type: { queryType.FullName } is not registered.");
+        }
+
+        public override void Log(IDictionary<string, object> moduleLog)
+        {
+            var messagingDispatchLog = new Dictionary<string, object>();
+            moduleLog["Query Consumers"] = messagingDispatchLog;
+
+            foreach (var queryDispatcherRegistration in _queryDispatchers)
+            {
+                var queryType = queryDispatcherRegistration.Key;
+                var queryDispatcher = queryDispatcherRegistration.Value;
+
+                messagingDispatchLog[queryType.FullName] = new {
+                    Consumer = queryDispatcher.ConsumerType.FullName,
+                    Method = queryDispatcher.HandlerMethod.Name,
+                    IsAsync = queryDispatcher.IsAsync
+                };
+            }
         }
     }
 

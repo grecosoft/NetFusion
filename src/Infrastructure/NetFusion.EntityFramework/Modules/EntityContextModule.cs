@@ -86,13 +86,14 @@ namespace NetFusion.EntityFramework.Modules
         {
             moduleLog["DB Contexts"] = Context.AllPluginTypes
                 .Where(pt => pt.IsDerivedFrom<IEntityDbContext>())
-                .Select(dc => dc.AssemblyQualifiedName);
+                .Select(dc => dc.AssemblyQualifiedName)
+                .ToArray();
 
             moduleLog["Entity Mappings"] = EntityMappings
                 .Select(m => new
                 {
                     MappingType = m.GetType().AssemblyQualifiedName
-                }).ToList();
+                }).ToArray();
         }
     }
 }

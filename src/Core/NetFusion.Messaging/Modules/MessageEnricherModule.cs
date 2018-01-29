@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Enrichers;
 using System.Collections.Generic;
@@ -29,11 +30,15 @@ namespace NetFusion.Messaging.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Message Enrichers"] = MessagingConfig.EnricherTypes
-                .Select(t => new
-                {
-                    EnricherType = t.AssemblyQualifiedName
-                }).ToArray();
+            moduleLog["Message Enrichers"] = Context.AllPluginTypes
+              .Where(pt => {
+                  return pt.IsConcreteTypeDerivedFrom<IMessageEnricher>();
+              })
+              .Select(et => new
+              {
+                  EnricherType = et.AssemblyQualifiedName,
+                  IsConfigured = MessagingConfig.EnricherTypes.Contains(et)
+              }).ToArray();
         }
     }
 }

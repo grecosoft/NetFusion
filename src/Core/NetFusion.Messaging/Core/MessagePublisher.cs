@@ -20,7 +20,7 @@ namespace NetFusion.Messaging.Core
         /// </summary>
         /// <param name="message">The message to be delivered.</param>
         /// <param name="cancellationToken">The cancellation token passed to the publisher.</param>
-        /// <returns>The task that will be completed when the dispatch has completed.</returns>
+        /// <returns>The task that will be completed when the publish has completed.</returns>
         public virtual Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;

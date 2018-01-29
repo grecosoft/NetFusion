@@ -30,8 +30,7 @@ namespace NetFusion.Mapping
         public MappingStrategy()
             : base(typeof(TSource), typeof(TTarget)) { }
 
-        // Provides access to derived mapping strategy instances that can be used
-        // to map other objects related to the source object being mapped.
+        // Provides access to the object-mapper for use by derived mapping strategy instances.
         protected IObjectMapper Mapper { get; private set; }
 
         public override object Map(IObjectMapper mapper, object obj)

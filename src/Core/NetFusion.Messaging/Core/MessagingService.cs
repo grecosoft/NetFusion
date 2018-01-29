@@ -5,8 +5,12 @@ using System.Threading.Tasks;
 
 namespace NetFusion.Messaging.Core
 {
+    /// <summary>
+    ///  Central service for executing Commands, Domain-Events, and Queries.
+    /// </summary>
     public class MessagingService : IMessagingService
     {
+        // Inner classes delegated to for executing specific types.
         private Lazy<MessageDispatcher> _messageDispatcher;
         private Lazy<QueryDispatcher> _queryDispatcher;
 

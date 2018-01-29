@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using Microsoft.Extensions.Logging;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Filters;
 using NetFusion.Messaging.Modules;
@@ -17,16 +19,18 @@ namespace NetFusion.Messaging.Core
     /// </summary>
     public class QueryDispatcher 
     {
+        private readonly ILogger<QueryDispatcher> _logger;
         private readonly ILifetimeScope _lifetimeScope;
         
         // Dependent modules.
         private readonly IQueryDispatchModule _dispatchModule;
         private readonly IQueryFilterModule _filterModule;
 
-        public QueryDispatcher(ILifetimeScope lifetimeScope, 
+        public QueryDispatcher(ILogger<QueryDispatcher> logger, ILifetimeScope lifetimeScope, 
             IQueryDispatchModule dispatchModule,
             IQueryFilterModule filterModule)
         {
+            _logger = logger;
             _lifetimeScope = lifetimeScope;
             _dispatchModule = dispatchModule;
             _filterModule = filterModule;
@@ -69,6 +73,8 @@ namespace NetFusion.Messaging.Core
             var preFilters = _filterModule.PreFilterTypes.Select(qf => _lifetimeScope.Resolve(qf)).OfType<IQueryFilter>();
             var postFilters = _filterModule.PostFilterTypes.Select(qf => _lifetimeScope.Resolve(qf)).OfType<IQueryFilter>();
 
+            _logger.LogDebug($"Dispatching Query Type: {query.GetType()} to Consumer: {consumer.GetType()}");
+
             await ApplyFilters(query, preFilters);
             await dispatcher.Dispatch(query, consumer, cancellationToken);
             await ApplyFilters(query, postFilters);
@@ -78,6 +84,11 @@ namespace NetFusion.Messaging.Core
         // any task error(s) are checked and raised.
         private async Task ApplyFilters(IQuery query, IEnumerable<IQueryFilter> filters)
         {
+            _logger.LogDebugDetails(MessagingLogEvents.QUERY_DISPATCH, "Applying Query Filters",
+                new {
+                    FilterTypes = filters.Select(f => f.GetType().FullName).ToArray()
+                });
+
             TaskListItem<IQueryFilter>[] taskList = null;
 
             try

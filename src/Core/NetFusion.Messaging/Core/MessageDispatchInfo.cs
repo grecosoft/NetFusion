@@ -69,7 +69,7 @@ namespace NetFusion.Messaging.Core
         /// <summary>
         /// Indicates that the handler is marked with the InProcessHandler attribute.
         /// This indicates that the handler will be used by the InProcessMessagePublisher
-        /// and will not be published to another process using a messaging technology.
+        /// and will not be published to another process.
         /// </summary>
         public bool IsInProcessHandler { get; set; }
 
@@ -87,10 +87,9 @@ namespace NetFusion.Messaging.Core
         public Type[] DispatchRuleTypes { get; set; }
 
         /// <summary>
-        /// Rule instances associated with the message handler.  The message
-        /// handler will only be called if the message meets the rule criteria.
-        /// NOTE:  these are instances of the types within the DispatchRuleTypes
-        /// property.
+        /// Rule instances associated with the message handler.  The message handler will only be 
+        /// called if the message meets the rule criteria.
+        /// NOTE:  these are instances of the types contained within the DispatchRuleTypes property.
         /// </summary>
         public IMessageDispatchRule[] DispatchRules { get; set; }
 

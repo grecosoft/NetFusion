@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace NetFusion.Messaging.Core
 {
     /// <summary>
-    /// Service containing methods to publish messages to all registered message 
+    /// Contains methods to publish messages to all registered message 
     /// publishers.  The message publishers are responsible for determining how
     /// the event is dispatched.  
     /// </summary>

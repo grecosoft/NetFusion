@@ -4,6 +4,10 @@ using NetFusion.Messaging.Core;
 
 namespace NetFusion.Messaging.Modules
 {
+    /// <summary>
+    /// The root messaging module that registering the MessagingService that delegates
+    /// to specific inner classes responsible for handling different message types.
+    /// </summary>
     public class MessagingModule : PluginModule
     {
         public override void RegisterDefaultComponents(ContainerBuilder builder)

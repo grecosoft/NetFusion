@@ -56,7 +56,7 @@ namespace NetFusion.MongoDB.Modules
             if (knownType == null)
             {
                 throw new InvalidOperationException(
-                    $"The type of: {knownType.FullName} is not a configured know type of: {mappedEntityType}");
+                    $"The type of: {knownType.FullName} is not a configured know type of: {mappedEntityType.FullName}");
             }
 
             var knowTypeMap = GetEntityMap(knownType);
@@ -78,14 +78,14 @@ namespace NetFusion.MongoDB.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Entity Mappings"] = this.Mappings.Select(m => new
+            moduleLog["Entity Mappings"] = Mappings.Select(m => new
             {
                 MappingType = m.GetType().AssemblyQualifiedName,
                 EntityType = m.EntityType.AssemblyQualifiedName,
                 CollectionName = m.CollectionName,
                 Descriminator = m.ClassMap.Discriminator,
                 KnownTypes = m.ClassMap.KnownTypes.Select( kt => kt.AssemblyQualifiedName)
-            });
+            }).ToArray();
         }
     }
 }

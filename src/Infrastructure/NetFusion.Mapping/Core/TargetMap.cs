@@ -3,7 +3,7 @@
 namespace NetFusion.Mapping.Core
 {
     /// <summary>
-    /// Stores for a given source and target type the corresponding mapping strategy.
+    /// Stores for a given source and target type for the corresponding mapping strategy.
     /// </summary>
     public class TargetMap
     {

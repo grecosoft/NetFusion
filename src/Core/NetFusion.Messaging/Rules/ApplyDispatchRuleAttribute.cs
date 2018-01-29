@@ -6,7 +6,7 @@ using System.Linq;
 namespace NetFusion.Messaging.Rules
 {
     /// <summary>
-    /// Associates a rule with a message handler that determines if the 
+    /// Associates a rule with a rule classes that determine if the 
     /// handler should be called based on the message's state.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]

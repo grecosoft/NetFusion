@@ -97,15 +97,19 @@ namespace NetFusion.Messaging.Core
             return matchingDispatchers.ToArray();
         }
 
+        // Determines message dispatchers apply to the message being published.  This is optional and
+        // specified by decorating the message handler method with attributes.
         private async Task<bool> PassesDispatchCriteria(MessageDispatchInfo dispatchInfo, IMessage message)
         {
             ScriptPredicate predicate = dispatchInfo.Predicate;
 
+            // Run a dynamic script against the message and check the result of the specified predicate property.
             if (predicate != null)
             {
                 return await _scriptingSrv.SatisfiesPredicateAsync(message, predicate);
             }
 
+            // Check static rules to determine if message meets criteria.
             return dispatchInfo.IsMatch(message);
         }
 
@@ -122,8 +126,8 @@ namespace NetFusion.Messaging.Core
                 var dispatcherDetails = GetDispatchLogDetails(dispatchers);
 
                 throw new PublisherException(
-                    $"More than one message consumer handler was found for command message type: {command.GetType()}." +
-                    $"A command message type can have only one in-process message consumer handler.", dispatcherDetails);
+                    $"More than one message consumer handler was found for command message type: {command.GetType()}.  " +
+                    $"A command message type can have only one in-process message consumer handler.", new { dispatchers = dispatcherDetails });
             }
 
             if (!dispatchers.Any())
@@ -137,6 +141,10 @@ namespace NetFusion.Messaging.Core
 
         private Task InvokeDispatcher(MessageDispatchInfo dispatcher, IMessage message, CancellationToken cancellationToken)
         {
+            _logger.LogDebug(
+                $"Dispatching message Type: {message.GetType()} to Consumer: { dispatcher.ConsumerType } " +
+                $"Method: { dispatcher.MessageHandlerMethod.Name} ");
+
             var consumer = (IMessageConsumer)_lifetimeScope.Resolve(dispatcher.ConsumerType);
             return dispatcher.Dispatch(message, consumer, cancellationToken);
         }
@@ -157,8 +165,9 @@ namespace NetFusion.Messaging.Core
 
         private void LogMessageDespatchInfo(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
         {
-            if (!_logger.IsEnabled(LogLevel.Debug))
+            if (!_logger.IsEnabled(LogLevel.Trace))
             {
+                _logger.LogDebug(MessagingLogEvents.MESSAGING_DISPATCH, $"Message Published: {message.GetType()}");
                 return;
             }
 
@@ -179,7 +188,7 @@ namespace NetFusion.Messaging.Core
                 Consumer = d.ConsumerType.FullName,
                 Method = d.MessageHandlerMethod.Name
             })
-            .ToList();
+            .ToArray();
         }
     }
 }

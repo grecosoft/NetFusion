@@ -102,7 +102,6 @@ namespace InfrastructureTests.RabbitMQ.Broker
             private MessageConsumer _messageConsumer;
             private IBrokerSerializer _messageSerializer;
 
-            public Mock<ILogger> MockLogger { get; }
             public Mock<IMessageDispatchModule> MockMsgModule { get; }
 
             // Instance to the configured message broker.

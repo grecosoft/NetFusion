@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NetFusion.Messaging.Filters
+namespace NetFusion.Messaging.Modules
 {
     /// <summary>
     /// Module interface for the filter module exposing information it manages.

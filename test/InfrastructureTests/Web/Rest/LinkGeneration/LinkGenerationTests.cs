@@ -244,10 +244,10 @@ namespace InfrastructureTests.Web.Rest.LinkGeneration
             resource.AssertLink("scenario-30", HttpMethod.Options, "http://external/api/call/10/info/value-2");
 
             var link = resource.Links["scenario-30"];
-            Assert.Equal(link.Name, "test-name");
-            Assert.Equal(link.Title, "test-title");
-            Assert.Equal(link.Type, "test-type");
-            Assert.Equal(link.HrefLang, "test-href-lang");
+            Assert.Equal("test-name", link.Name);
+            Assert.Equal("test-title", link.Title);
+            Assert.Equal("test-type", link.Type);
+            Assert.Equal("test-href-lang", link.HrefLang);
         } 
     }
 }

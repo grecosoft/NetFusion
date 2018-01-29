@@ -31,8 +31,6 @@ namespace NetFusion.Messaging.Filters
             {
                 await _scriptingService.ExecuteAsync(resultItem, PropertyScriptName);
             }
-
-            await Task.CompletedTask;
         }
 
         private bool IsAttributedResult(object resultItem)

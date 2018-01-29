@@ -9,13 +9,17 @@ using System.Linq;
 
 namespace NetFusion.Mapping.Modules
 {
+    /// <summary>
+    /// Plug-in module responsible for finding the mapping strategies to be applied at
+    /// runtime to map a source objects to their corresponding target types.
+    /// </summary>
     public class MappingModule : PluginModule,
         IMappingModule
     {
         // Discovered Properties:
         public IEnumerable<IMappingStrategyFactory> StrategyFactories { get; private set; }
 
-        public ILookup<Type, TargetMap> SourceTypeMappings { get; private set; }
+        public ILookup<Type, TargetMap> SourceTypeMappings { get; private set; } // SourceType ==> TargetMap
 
         // Finds all mapping strategies and cache the information to be used
         // at runtime by ObjectMapper.
@@ -30,7 +34,7 @@ namespace NetFusion.Mapping.Modules
         // Finds all mappings provided by instances implementing IMappingStrategyFactory.
         // The strategies provided by a factory often are MappingDelegateStrategy 
         // instances that provides non-custom mapping and delegate to an open-source
-        // library. 
+        // library.
         private TargetMap[] GetFactoryProvidedMappingStrategies()
         {
             TargetMap[] targetMappings = StrategyFactories
@@ -47,7 +51,9 @@ namespace NetFusion.Mapping.Modules
 
         // Find all types that are a closed type of IMappingStrategy<,> such 
         // as IMappingStrategy<Car, CarModel>.  These are mapping strategies
-        // containing custom mapping logic.
+        // containing custom mapping logic.  These mapping strategies are
+        // registered in the DI container and therefore can have dependencies 
+        // injected. 
         private TargetMap[] GetCustomMappingStrategies()
         {
             Type openGenericMapType = typeof(IMappingStrategy<,>);
