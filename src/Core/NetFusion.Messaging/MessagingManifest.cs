@@ -5,7 +5,7 @@ namespace NetFusion.Messaging
     public class MessagingManifest : PluginManifestBase,
         ICorePluginManifest
     {
-        public string PluginId => "{4576D809-E216-4C03-BE43-737728047BAA}";
+        public string PluginId => "4576D809-E216-4C03-BE43-737728047BAA";
         public string Name => "Messaging Plug-in"; 
 
         public string Description =>
