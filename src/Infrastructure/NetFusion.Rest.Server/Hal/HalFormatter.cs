@@ -75,7 +75,7 @@ namespace NetFusion.Rest.Server.Hal
                         ApplyMetadataToResource(childResource, resourceContext);
                     }
 
-                    return;
+                    continue;
                 }
 
                 // Add metadata to single embedded resource.
