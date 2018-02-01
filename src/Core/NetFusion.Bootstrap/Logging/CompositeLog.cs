@@ -40,47 +40,48 @@ namespace NetFusion.Bootstrap.Logging
 
         private void LogFoundPluginAssemblies(IDictionary<string, object> log)
         {
-            log["Searched-Plugin-Assemblies"] = new Dictionary<string, object> {
-                {"AppHost-Assembly", _application.AppHostPlugin.AssemblyName },
-                {"AppComponent-Assemblies", _application.AppComponentPlugins.Select(p => p.AssemblyName).ToArray() },
-                {"Core-Assemblies", _application.CorePlugins.Select(p => p.AssemblyName).ToArray() }
+            log["Plugin:Assemblies"] = new Dictionary<string, object> {
+                {"Host:Assembly", _application.AppHostPlugin.AssemblyName },
+                {"Application:Assemblies", _application.AppComponentPlugins.Select(p => p.AssemblyName).ToArray() },
+                {"Core:Assemblies", _application.CorePlugins.Select(p => p.AssemblyName).ToArray() }
             };
         }
 
         private void LogHostApp(IDictionary<string, object> log)
         {
+            
             var hostLog = new Dictionary<string, object>();
-            log["Host Plug-in"] = hostLog;
+            log["Plugin:Host"] = hostLog;
 
             LogPlugin(_application.AppHostPlugin, hostLog);
         }
 
         private void LogAppComponentPlugins(IDictionary<string, object> log)
         {
-            log["Application Plug-Ins"] = _application.AppComponentPlugins.Select(plugin =>
+            log["Plugins:Application"] = _application.AppComponentPlugins.Select(plugin =>
             {
                 var pluginLog = new Dictionary<string, object>();
                 LogPlugin(plugin, pluginLog);
                 return pluginLog;
-            }).ToDictionary(p => p["Plugin-Name"]);
+            }).ToDictionary(p => p["Plugin:Id"].ToString());
         }
 
         private void LogCorePlugins(IDictionary<string, object> log)
         {
-            log["Core Plug-Ins"] = _application.CorePlugins.Select(plugin =>
+            log["Plugins:Core"] = _application.CorePlugins.Select(plugin =>
             {
                 var pluginLog = new Dictionary<string, object>();
                 LogPlugin(plugin, pluginLog);
                 return pluginLog;
-            }).ToDictionary(p => p["Plugin-Name"]);
+            }).ToDictionary(p => p["Plugin:Id"].ToString());
         }
 
         private void LogPlugin(Plugin plugin, IDictionary<string, object> log)
         {
-            log["Plugin-Name"] = plugin.Manifest.Name;
-            log["Plugin-Id"] = plugin.Manifest.PluginId;
-            log["Plugin-Assembly"] = plugin.Manifest.AssemblyName;
-            log["Plugin-Description"] = plugin.Manifest.Description;
+            log["Plugin:Name"] = plugin.Manifest.Name;
+            log["Plugin:Id"] = plugin.Manifest.PluginId;
+            log["Plugin:Assembly"] = plugin.Manifest.AssemblyName;
+            log["Plugin:Description"] = plugin.Manifest.Description;
 
             LogPluginModules(plugin, log);
             LogPluginKnownTypes(plugin, log);
@@ -90,7 +91,7 @@ namespace NetFusion.Bootstrap.Logging
 
         private void LogPluginModules(Plugin plugin, IDictionary<string, object> log)
         {
-            log["Plugin-Modules"] = plugin.Modules.ToDictionary(
+            log["Plugin:Modules"] = plugin.Modules.ToDictionary(
                 m => m.GetType().FullName,
                 pm =>
                 {
@@ -102,7 +103,7 @@ namespace NetFusion.Bootstrap.Logging
 
         private void LogPluginKnownTypes(Plugin plugin, IDictionary<string, object> log)
         {
-            log["Known-Types"] = plugin.PluginTypes
+            log["Plugin:KnownTypes"] = plugin.PluginTypes
                 .Where(pt => pt.IsKnownType && !pt.Type.GetTypeInfo().IsAbstract)
                 .ToDictionary(
                     pt => pt.Type.FullName,
@@ -111,12 +112,12 @@ namespace NetFusion.Bootstrap.Logging
 
         private void LogPuginDiscoveredTypes(Plugin plugin, IDictionary<string, object> log)
         {
-            log["Discovered-Types"] = plugin.DiscoveredTypes.Select(kt => kt.Name).ToArray();
+            log["Plugin:DiscoveredTypes"] = plugin.DiscoveredTypes.Select(kt => kt.Name).ToArray();
         }
 
         private void LogPluginRegistrations(Plugin plugin, IDictionary<string, object> log)
         {
-            log["Plugin-Services"] = _registry.Registrations
+            log["Plugin:ServiceRegistrations"] = _registry.Registrations
                 .Where(r => plugin.HasType(r.Activator.LimitType))
                 .GroupBy(
                     r => r.Activator.LimitType.Name,
