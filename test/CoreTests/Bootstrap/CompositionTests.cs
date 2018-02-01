@@ -195,7 +195,7 @@ namespace CoreTests.Bootstrap
                 .Assert.CompositeApp(ca =>
                 {
                     // Verifies that the known plug-in type under test was discovered by the expected plug-in.
-                    var knownTypes = ca.AppHostPlugin.PluginTypes.Where(pt => pt.IsKnownType);
+                    var knownTypes = ca.AppHostPlugin.PluginTypes.Where(pt => pt.IsKnownTypeDefinition);
                     knownTypes.First().DiscoveredByPlugins.Should().HaveCount(1);
                     knownTypes.First().DiscoveredByPlugins.First().Manifest.Should().BeOfType<MockCorePlugin>();
                 });

@@ -78,7 +78,7 @@ namespace NetFusion.MongoDB.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Entity Mappings"] = Mappings.Select(m => new
+            moduleLog["entity:mappings"] = Mappings.Select(m => new
             {
                 MappingType = m.GetType().AssemblyQualifiedName,
                 EntityType = m.EntityType.AssemblyQualifiedName,

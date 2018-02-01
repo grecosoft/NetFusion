@@ -16,7 +16,8 @@ namespace NetFusion.Bootstrap.Plugins
             Type = type ?? throw new ArgumentNullException(nameof(type));
             AssemblyName = assemblyName ?? throw new ArgumentNullException(nameof(assemblyName));
 
-            IsKnownType = type.IsDerivedFrom<IKnownPluginType>();
+            IsKnownTypeContract = type.IsDerivedAbstractType<IKnownPluginType>();
+            IsKnownTypeDefinition = type.IsConcreteTypeDerivedFrom<IKnownPluginType>();
         }
 
         /// <summary>
@@ -30,9 +31,15 @@ namespace NetFusion.Bootstrap.Plugins
         public Type Type { get; }
 
         /// <summary>
-        /// Indicates that the type implements the IKnownPluginType interface.
+        /// Indicates that the type is abstract and implements the IKnownPluginType interface.
         /// </summary>
-        public bool IsKnownType { get; }
+        public bool IsKnownTypeContract { get; set; }
+
+        /// <summary>
+        /// Indicates that the type implements the IKnownPluginType interface and 
+        /// is a concrete instance.
+        /// </summary>
+        public bool IsKnownTypeDefinition { get; }
 
         /// <summary>
         /// The name of the .NET assembly containing the type.

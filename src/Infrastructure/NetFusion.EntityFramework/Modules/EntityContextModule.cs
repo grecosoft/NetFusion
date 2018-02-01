@@ -84,12 +84,12 @@ namespace NetFusion.EntityFramework.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["DB Contexts"] = Context.AllPluginTypes
+            moduleLog["database:contexts"] = Context.AllPluginTypes
                 .Where(pt => pt.IsDerivedFrom<IEntityDbContext>())
                 .Select(dc => dc.AssemblyQualifiedName)
                 .ToArray();
 
-            moduleLog["Entity Mappings"] = EntityMappings
+            moduleLog["entity:mappings"] = EntityMappings
                 .Select(m => new
                 {
                     MappingType = m.GetType().AssemblyQualifiedName

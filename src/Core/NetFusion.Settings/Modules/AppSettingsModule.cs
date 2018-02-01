@@ -83,7 +83,7 @@ namespace NetFusion.Settings.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Application-Settings"] = Context.AllPluginTypes
+            moduleLog["application:settings"] = Context.AllPluginTypes
                .Where(t => t.IsConcreteTypeDerivedFrom<IAppSettings>())
                .Select(t => new {
                    SettingsClass = t.AssemblyQualifiedName,

@@ -51,6 +51,19 @@ namespace NetFusion.Common.Extensions.Reflection
         }
 
         /// <summary>
+        /// Determines if a type is abstract and derives from a parent type.
+        /// </summary>
+        /// <typeparam name="TParent">The parent type.</typeparam>
+        /// <param name="childType">Che child type to check.</param>
+        /// <returns>True if the type derives from the specified base type and is abstract.
+        /// Otherwise, false is returned.</returns>
+        public static bool IsDerivedAbstractType<TParent>(this Type childType)
+        {
+            if (childType == null) throw new ArgumentNullException(nameof(childType));
+            return childType.IsAbstract && IsDerivedFrom<TParent>(childType);
+        }
+
+        /// <summary>
         /// Determines if a type derives from a parent type.
         /// </summary>
         /// <param name="childType">The child type to check.</param>

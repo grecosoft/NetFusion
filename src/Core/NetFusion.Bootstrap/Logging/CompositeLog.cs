@@ -1,10 +1,10 @@
 ﻿using Autofac.Core;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Common.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace NetFusion.Bootstrap.Logging
 {
@@ -84,8 +84,8 @@ namespace NetFusion.Bootstrap.Logging
             log["Plugin:Description"] = plugin.Manifest.Description;
 
             LogPluginModules(plugin, log);
-            LogPluginKnownTypes(plugin, log);
-            LogPuginDiscoveredTypes(plugin, log);
+            LogPluginKnownTypeContracts(plugin, log);
+            LogPluginKnownTypeDefinitions(plugin, log);
             LogPluginRegistrations(plugin, log);
         }
 
@@ -97,39 +97,38 @@ namespace NetFusion.Bootstrap.Logging
                 {
                     var moduleLog = new Dictionary<string, object>();
                     pm.Log(moduleLog);
-                    return new { Log = moduleLog };
+                    return moduleLog;
                 });
         }
 
-        private void LogPluginKnownTypes(Plugin plugin, IDictionary<string, object> log)
+        private void LogPluginKnownTypeContracts(Plugin plugin, IDictionary<string, object> log)
         {
-            log["Plugin:KnownTypes"] = plugin.PluginTypes
-                .Where(pt => pt.IsKnownType && !pt.Type.GetTypeInfo().IsAbstract)
-                .ToDictionary(
-                    pt => pt.Type.FullName,
-                    pt => pt.DiscoveredByPlugins.Select(dp => dp.Manifest.Name)); 
+            log["Plugin:KnownType:Contracts"] = plugin.PluginTypes
+                .Where(pt => pt.IsKnownTypeContract)
+                .Select(pt => pt.Type.FullName)
+                .ToArray();
         }
 
-        private void LogPuginDiscoveredTypes(Plugin plugin, IDictionary<string, object> log)
+        private void LogPluginKnownTypeDefinitions(Plugin plugin, IDictionary<string, object> log)
         {
-            log["Plugin:DiscoveredTypes"] = plugin.DiscoveredTypes.Select(kt => kt.Name).ToArray();
+            log["Plugin:KnownType:Definitions"] = plugin.PluginTypes
+                .Where(pt => pt.IsKnownTypeDefinition)
+                .ToDictionary(
+                    pt => pt.Type.FullName,
+                    pt => pt.DiscoveredByPlugins.Select(dp => dp.Manifest.Name).ToArray()); 
         }
 
         private void LogPluginRegistrations(Plugin plugin, IDictionary<string, object> log)
         {
-            log["Plugin:ServiceRegistrations"] = _registry.Registrations
+            log["Plugin:Type:Registrations"] = _registry.Registrations
                 .Where(r => plugin.HasType(r.Activator.LimitType))
-                .GroupBy(
-                    r => r.Activator.LimitType.Name,
-                    r => new
-                    {
-                        LifeTime = r.Lifetime.GetType().Name,
-                        Services = r.Services.Select(s => s.Description)
-                    }).Select(tg => new
-                    {
-                        Type = tg.Key,
-                        Services = tg
-                    });
+                .SelectMany(r => r.Services, (r, s) =>
+                    new {
+                        RegisteredType = r.Activator.LimitType.Name,
+                        ServiceType = s.Description,
+                        LifeTime = r.Lifetime.GetType().Name
+                    }.ToDictionary()
+                ).ToArray();
         }
     }
 }

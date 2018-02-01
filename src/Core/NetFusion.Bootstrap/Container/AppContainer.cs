@@ -236,7 +236,7 @@ namespace NetFusion.Bootstrap.Container
                 {
                     LoadContainer();
                     ComposeLoadedPlugins();
-                    SetKnownTypeDiscoveries();
+                    SetDiscoveredTypes();
 
                     LogPlugins(_application.Plugins);
 
@@ -452,20 +452,27 @@ namespace NetFusion.Bootstrap.Container
             plugin.DiscoveredTypes = pluginDiscoveredTypes.ToArray();
         }
 
-        private void SetKnownTypeDiscoveries()
+        private void SetDiscoveredTypes()
         {
-            _application.Plugins.ForEach(SetDiscoveredKnowTypes);
+            _application.Plugins.ForEach(SetDiscoveredTypes);
         }
 
         // For plug-in derived known-types, find the plug-in(s) that discovered the type.  
         // This information is used for logging how the application was composed.
-        private void SetDiscoveredKnowTypes(Plugin plugin)
+        private void SetDiscoveredTypes(Plugin plugin)
         {
-            foreach (PluginType knownType in plugin.PluginTypes.Where(pt => pt.IsKnownType))
+            PluginType[] thisPluginKnowTypeDefinitions = plugin.PluginTypes.Where(pt => pt.IsKnownTypeDefinition).ToArray();
+
+            PluginType[] allPluginKnownTypeContracts = _application.Plugins
+                .SelectMany(p => p.PluginTypes)
+                .Where(pt => pt.IsKnownTypeContract)
+                .ToArray();
+
+            foreach (PluginType thisPluginKnowType in thisPluginKnowTypeDefinitions)
             {
-                knownType.DiscoveredByPlugins = _application.Plugins
-                    .Where(p => p.DiscoveredTypes.Any(dt => knownType.Type.IsConcreteTypeDerivedFrom(dt)))
-                    .ToArray();
+                thisPluginKnowType.DiscoveredByPlugins = allPluginKnownTypeContracts.Where(kt => thisPluginKnowType.Type.IsConcreteTypeDerivedFrom(kt.Type))
+                    .Select(kt => kt.Plugin)
+                    .Distinct();
             }
         }
 
@@ -619,8 +626,7 @@ namespace NetFusion.Bootstrap.Container
                     plugin.Manifest.PluginId,
                     plugin.AssemblyName,
                     Configs = plugin.PluginConfigs.Select(c => c.GetType().FullName),
-                    Modules = plugin.Modules.Select(m => m.GetType().FullName),
-                    Discovers = plugin.DiscoveredTypes.Select(t => t.FullName)
+                    Modules = plugin.Modules.Select(m => m.GetType().FullName)
                 });
             }
         }

@@ -249,7 +249,7 @@ namespace NetFusion.RabbitMQ.Modules
             brokerLog.LogMessageConsumers(moduleLog);
 
             var brokerDetailLog = new Dictionary<string, object>();
-            moduleLog["Broker Details"] = brokerDetailLog;
+            moduleLog["broker:details"] = brokerDetailLog;
 
             _messageBroker.LogDetails(brokerDetailLog);
         }

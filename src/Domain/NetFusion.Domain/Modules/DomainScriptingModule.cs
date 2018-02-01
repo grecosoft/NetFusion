@@ -26,7 +26,7 @@ namespace NetFusion.Domain.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Attributed-Entities"] = Context.AllAppPluginTypes
+            moduleLog["attributed:entities"] = Context.AllAppPluginTypes
                 .Where(pt => pt.IsConcreteTypeDerivedFrom<IAttributedEntity>())
                 .Select(ae => ae.FullName);
         }
