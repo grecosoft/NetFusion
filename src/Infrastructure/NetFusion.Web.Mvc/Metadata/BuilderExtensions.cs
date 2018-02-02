@@ -10,7 +10,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace NetFusion.Web.Mvc
+namespace NetFusion.Web.Mvc.Metadata
 {
     /// <summary>
     /// Extends the MVC application builder with a method called to 
@@ -77,6 +77,8 @@ namespace NetFusion.Web.Mvc
             }
 
             var model = MetadataMap.GetModel(metadata);
+
+            response.ContentType = "application/json";
             return response.WriteAsync(model.ToJson());
         }
     }
