@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -45,7 +46,9 @@ namespace NetFusion.Common.Extensions
         public static string ToJson(this object value)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
-            return JsonConvert.SerializeObject(value, Formatting.None);
+            return JsonConvert.SerializeObject(value, Formatting.None, new JsonSerializerSettings {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
         }
     }
 }
