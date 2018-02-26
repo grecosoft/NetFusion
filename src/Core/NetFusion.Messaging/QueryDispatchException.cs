@@ -72,10 +72,11 @@ namespace NetFusion.Messaging
         /// Dispatch Exception.
         /// </summary>
         /// <param name="message">Dispatch exception message.</param>
-        /// <param name="details">Details of the query dispatch.</param>
         /// <param name="innerException">The inner received exception.</param>
-        public QueryDispatchException(string message, object details, Exception innerException)
-            : base (message, details, innerException)
+        /// <param name="detailKey">Identifies the exception details.</param>
+        /// <param name="details">Details of the query dispatch.</param>
+        public QueryDispatchException(string message, string detailKey, object details, Exception innerException)
+            : base (message, innerException, detailKey, details)
         {
 
         }

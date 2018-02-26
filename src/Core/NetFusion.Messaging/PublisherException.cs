@@ -52,10 +52,12 @@ namespace NetFusion.Messaging
         /// Publisher Exception.
         /// </summary>
         /// <param name="errorMessage">The error message raised when publishing the message.</param>
+        /// <param name="detailKey">Identifies the exception details.</param>
         /// <param name="details">Details associated with the exception.</param>
         public PublisherException(
             string errorMessage,
-            object details): base (errorMessage, details)
+            string detailKey,
+            object details): base (errorMessage, detailKey, details)
         {
 
         }

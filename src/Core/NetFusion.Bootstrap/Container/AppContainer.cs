@@ -50,6 +50,8 @@ namespace NetFusion.Bootstrap.Container
         // used to bootstrap the container.
         private ManifestRegistry Registry { get; }
 
+        // The composite application is just an in-memory built structure
+        // representing the discovered plug-ins and the modules.
         private readonly CompositeApplication _application;
         private Autofac.IContainer _container;
 
@@ -61,7 +63,8 @@ namespace NetFusion.Bootstrap.Container
         /// <param name="typeResolver">The type resolver implementation used to probe the plug-in
         /// components and their types.</param>
         /// <param name="setGlobalReference">Determines if AppContainer.Instance should be set to a
-        /// singleton instance of the created container.  Useful for unit testing.</param>
+        /// singleton instance of the created container.  Useful for unit testing where a shared 
+        /// instance my not be wanted.</param>
         public AppContainer(ITypeResolver typeResolver, bool setGlobalReference = true)
         {
             _typeResover = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver),
@@ -407,9 +410,11 @@ namespace NetFusion.Bootstrap.Container
         }
 
         // This allows the plug-in to find concrete types deriving from IKnownPluginType.
-        // This is how plug-in *modules* are composed.  All plug-in *module* properties 
-        // that are of type: IEnumerable<T> where T is a derived IKnownPluginType will be 
-        // set to instances of types deriving from T.
+        // All plug-in *module* properties that are of type: IEnumerable<T> where T is a 
+        // derived IKnownPluginType will be set to instances of types deriving from T.
+        // NOTE:  think of this as a very light version of Managed Extensibility Framework
+        // that does only what we need and does not try to solve World problems :)
+
         private void ComposeLoadedPlugins()
         {
             ComposeCorePlugins();
@@ -441,14 +446,14 @@ namespace NetFusion.Bootstrap.Container
 
         private void ComposePluginModules(Plugin plugin, IEnumerable<PluginType> fromPluginTypes)
         {
-            var pluginDiscoveredTypes = new HashSet<Type>();
+            var pluginDiscoveredTypes = new HashSet<Type>(); // Keeping track of unique set of discovered types.
             foreach (IPluginModule module in plugin.Modules)
             {
                 IEnumerable<Type> discoveredTypes = _typeResover.SetPluginModuleKnownTypes(module, fromPluginTypes);
                 discoveredTypes.ForEach(dt => pluginDiscoveredTypes.Add(dt));
             }
 
-            // Record all the types discovered by the plug-in.  Only used for logging.
+            // Record all the unique types discovered by the plug-in.  Only used for logging.
             plugin.DiscoveredTypes = pluginDiscoveredTypes.ToArray();
         }
 
@@ -457,8 +462,8 @@ namespace NetFusion.Bootstrap.Container
             _application.Plugins.ForEach(SetDiscoveredTypes);
         }
 
-        // For plug-in derived known-types, find the plug-in(s) that discovered the type.  
-        // This information is used for logging how the application was composed.
+        // For each plug-in concrete derived known-type, find the plug-in(s) defining the base types 
+        // on which it is based.  This information is used for logging how the application was composed.
         private void SetDiscoveredTypes(Plugin plugin)
         {
             PluginType[] thisPluginKnowTypeDefinitions = plugin.PluginTypes.Where(pt => pt.IsKnownTypeDefinition).ToArray();
@@ -470,7 +475,8 @@ namespace NetFusion.Bootstrap.Container
 
             foreach (PluginType thisPluginKnowType in thisPluginKnowTypeDefinitions)
             {
-                thisPluginKnowType.DiscoveredByPlugins = allPluginKnownTypeContracts.Where(kt => thisPluginKnowType.Type.IsConcreteTypeDerivedFrom(kt.Type))
+                thisPluginKnowType.DiscoveredByPlugins = allPluginKnownTypeContracts.Where(
+                        kt => thisPluginKnowType.Type.IsConcreteTypeDerivedFrom(kt.Type))
                     .Select(kt => kt.Plugin)
                     .Distinct();
             }

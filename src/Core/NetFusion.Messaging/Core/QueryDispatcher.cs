@@ -58,7 +58,7 @@ namespace NetFusion.Messaging.Core
                     DispatchInfo = dispatchInfo
                 };
 
-                throw new QueryDispatchException("Error dispatching query.", details, ex);
+                throw new QueryDispatchException("Error dispatching query.", "DispatchDetails", details, ex);
             }
 
             return query.Result;

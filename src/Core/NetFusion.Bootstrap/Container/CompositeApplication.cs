@@ -34,7 +34,7 @@ namespace NetFusion.Bootstrap.Container
 
         /// <summary>
         /// All plug-ins containing application components that are specific to the application.
-        /// These plug-ins will contain Domain Entities, Services, and Repositories.
+        /// These plug-ins will contain Domain Entities, Services, and Repositories, etc...
         /// </summary>
         public IEnumerable<Plugin> AppComponentPlugins
         {
@@ -149,7 +149,7 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        // Allows for each plug-in module to scan its types for any
+        // Allows for each plug-in module to scan *its* types for any
         // service components to be registered in the Autofac Container.
         private void ScanPluginTypes(Plugin plugin, Autofac.ContainerBuilder builder)
         {
@@ -170,8 +170,8 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        // Allows a plug-in to scan all specified plug-in types, excluding types
-        // defined within it's plug-in, for components to be registered in the
+        // Allows a plug-in to scan all specified plug-in types, *excluding* types
+        // defined within *it's* plug-in, for components to be registered in the
         // Autofac container.
         private void ScanAllOtherPluginTypes(Plugin plugin, Autofac.ContainerBuilder builder,
             IEnumerable<PluginType> sourceTypes)

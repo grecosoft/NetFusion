@@ -131,8 +131,8 @@ namespace NetFusion.Messaging.Modules
             {
                 throw new ContainerException(
                     "The following message consumers have invalid rule attributes applied.  " +
-                    "The handler message type and the rule message type must be assignable to each other.", 
-                    new { InvalidHandlers = invalidEvtHandlers });
+                    "The handler message type and the rule message type must be assignable to each other.",
+                    "InvalidHandlers", invalidEvtHandlers);
             }
         }
 

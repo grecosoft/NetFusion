@@ -82,7 +82,7 @@ namespace NetFusion.Bootstrap.Container
             catch (ReflectionTypeLoadException ex)
             {
                 var loadErrors = ex.LoaderExceptions.Select(le => le.Message).Distinct().ToList();
-                throw new ContainerException("Error Loading Plug-In Assembly.", loadErrors, ex);
+                throw new ContainerException("Error Loading Plug-In Assembly.", ex, "LoadErrors", loadErrors);
             }
         }
 
@@ -109,7 +109,7 @@ namespace NetFusion.Bootstrap.Container
                 catch (ReflectionTypeLoadException ex)
                 {
                     var loadErrors = ex.LoaderExceptions.Select(le => le.Message).Distinct().ToList();
-                    throw new ContainerException("Error Loading Plug-In Assembly.", loadErrors, ex);
+                    throw new ContainerException("Error Loading Plug-In Assembly.", ex, "LoadErrors", loadErrors);
                 }
                 catch (Exception ex)
                 {

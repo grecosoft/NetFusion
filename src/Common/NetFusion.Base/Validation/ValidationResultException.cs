@@ -37,7 +37,10 @@ namespace NetFusion.Base.Validation
         public ValidationResultException(
             object invalidObject,
             bool notifyClient,
-            ValidationResultSet result) : base("Validation Exceptions", GetValidationDetails(invalidObject, result))
+            ValidationResultSet result) : base(
+                "Validation Exceptions", 
+                "Validations", 
+                GetValidationDetails(invalidObject, result))
         {
             InvalidObject = invalidObject ?? throw new ArgumentNullException(nameof(invalidObject));
             Result = result ?? throw new ArgumentNullException(nameof(result));

@@ -225,7 +225,7 @@ namespace NetFusion.Domain.Roslyn.Core
                 catch (ReflectionTypeLoadException ex)
                 {
                     var loadErrors = ex.LoaderExceptions.Select(le => le.Message).Distinct().ToList();
-                    throw new ScriptException("Error loading plug-in assembly.", loadErrors, ex);
+                    throw new ScriptException("Error loading plug-in assembly.", ex, "LoadErrors", loadErrors);
                 }
                 catch (Exception ex)
                 {

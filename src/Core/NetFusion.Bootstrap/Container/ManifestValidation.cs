@@ -42,8 +42,8 @@ namespace NetFusion.Bootstrap.Container
             if (invalidManifestTypes.Any())
             {
                 throw new ContainerException(
-                    "All manifest instances must have a PluginId specified.  " +
-                    "See details for invalid manifest types.", invalidManifestTypes);
+                    "All manifest instances must have a PluginId specified.  See details for invalid manifest types.",
+                    "MissingPluginIds", invalidManifestTypes);
             }
 
             IEnumerable<string> duplicateManifestIds = _registry.AllManifests
@@ -54,7 +54,7 @@ namespace NetFusion.Bootstrap.Container
             {
                 throw new ContainerException(
                     "Plug-in identity values must be unique.  See details for duplicated Plug-in Ids.",
-                     new { DuplidatedIds = duplicateManifestIds });
+                     "DuplicateManifestIds", duplicateManifestIds);
             }
         }
 
@@ -67,8 +67,8 @@ namespace NetFusion.Bootstrap.Container
             if (invalidManifestTypes.Any())
             {
                 throw new ContainerException(
-                    "All manifest instances must have AssemblyName and Name values.  " +
-                    "See details for invalid manifest types.", invalidManifestTypes);
+                    "All manifest instances must have AssemblyName and Name values.  See details for invalid manifest types.", 
+                    "InvalidManifestTypes", invalidManifestTypes);
             }
 
             IEnumerable<string> duplicateNames = _registry.AllManifests.WhereDuplicated(m => m.Name);
@@ -77,7 +77,7 @@ namespace NetFusion.Bootstrap.Container
             {
                 throw new ContainerException(
                     "Plug-in names must be unique.  See details for duplicated Plug-in names.",
-                    duplicateNames);
+                    "DuplicateNames", duplicateNames);
             }
         }
 
@@ -90,17 +90,19 @@ namespace NetFusion.Bootstrap.Container
                     $"derived from: {typeof(IAppHostPluginManifest)}");
             }
 
-            if (!_registry.AppHostPluginManifests.IsSingletonSet())
+            if (! _registry.AppHostPluginManifests.IsSingletonSet())
             {
+                var hostManifests = _registry.AppHostPluginManifests.Select(am => new
+                {
+                    ManifestType = am.GetType().FullName,
+                    am.AssemblyName,
+                    PluginName = am.Name,
+                    am.PluginId
+                });
+
                 throw new ContainerException(
                     "More than one Host Application Plug-In manifest was found.",
-                    _registry.AppHostPluginManifests.Select(am => new
-                    {
-                        ManifestType = am.GetType().FullName,
-                        am.AssemblyName,
-                        PluginName = am.Name,
-                        am.PluginId
-                    }));
+                    "HostManifests", hostManifests);
             }
         }
     }

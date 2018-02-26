@@ -127,7 +127,8 @@ namespace NetFusion.Messaging.Core
 
                 throw new PublisherException(
                     $"More than one message consumer handler was found for command message type: {command.GetType()}.  " +
-                    $"A command message type can have only one in-process message consumer handler.", new { dispatchers = dispatcherDetails });
+                    $"A command message type can have only one in-process message consumer handler.", 
+                    "DispatcherDetails", dispatcherDetails);
             }
 
             if (!dispatchers.Any())

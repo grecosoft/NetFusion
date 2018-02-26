@@ -79,31 +79,29 @@ namespace NetFusion.Base.Exceptions
         /// Constructor.
         /// </summary>
         /// <param name="message">The message describing the exception.</param>
+        /// <param name="detailKey">Value used to identify the exception details.</param>
         /// <param name="details">Object containing details of the application's state
         /// at the time of the exception.</param>
-        public NetFusionException(string message, object details)
+        public NetFusionException(string message, string detailKey, object details)
             : base(message)
         {
-            if (details == null) throw new ArgumentNullException(nameof(details),
+            Details[detailKey] = details ?? throw new ArgumentNullException(nameof(details),
                 "Exception details cannot be null.");
-
-            Details = details.ToDictionary();
         }
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="message">The message describing the exception.</param>
+        /// <param name="innerException">The source of the exception.</param>
+        /// <param name="detailKey">Value used to identify the exception details.</param>
         /// <param name="details">Object containing details of the application's state
         /// at the time of the exception.</param>
-        /// <param name="innerException">The source of the exception.</param>
-        public NetFusionException(string message, object details, Exception innerException)
+        public NetFusionException(string message, Exception innerException, string detailKey, object details)
             : base(message, innerException)
         {
-            if (details == null) throw new ArgumentNullException(nameof(details),
+            Details[detailKey] = details ?? throw new ArgumentNullException(nameof(details),
                 "Exception details cannot be null.");
-
-            Details = details.ToDictionary();
         }
     }
 }
