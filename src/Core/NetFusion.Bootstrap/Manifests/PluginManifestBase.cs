@@ -9,5 +9,7 @@
         public string AssemblyName { get; set; }
         public string AssemblyVersion { get; set; }
         public string MachineName { get; set; }
+        public string SourceUrl { get; set; } 
+        public string DocUrl { get; set; }
     }
 }

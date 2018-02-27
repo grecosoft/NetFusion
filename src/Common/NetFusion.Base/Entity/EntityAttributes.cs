@@ -128,7 +128,7 @@ namespace NetFusion.Base.Entity
 
         private void AssertValidKey(string name)
         {
-            if (!_attributes.ContainsKey(name))
+            if (! _attributes.ContainsKey(name))
             {
                 throw new InvalidOperationException(
                     $"The attribute with the name: {name} does not exist");

@@ -24,7 +24,7 @@ namespace NetFusion.Bootstrap.Configuration
             foreach (string key in CommonEnviromentNameKeys)
             {
                 string value = Environment.GetEnvironmentVariable(key);
-                if (!string.IsNullOrWhiteSpace(value))
+                if (! string.IsNullOrWhiteSpace(value))
                 {
                     return value;
                 }

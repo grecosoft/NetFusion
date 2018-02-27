@@ -2,9 +2,15 @@
 
 namespace NetFusion.Mapping
 {
-    public class Manifest : PluginManifestBase,
+    public class MappingManifest : PluginManifestBase,
         ICorePluginManifest
     {
+        public MappingManifest()
+        {
+            SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/src/Common/NetFusion.Mapping";
+            DocUrl = "https://github.com/grecosoft/NetFusion/wiki/infrastructure.mapping.overview";
+        }
+
         public string PluginId => "83C90E78-D245-4B0D-A4FC-E74B11227766";
         public string Name => "Mapping Plug-in";
 

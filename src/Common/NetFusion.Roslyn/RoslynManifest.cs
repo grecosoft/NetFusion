@@ -2,9 +2,15 @@
 
 namespace NetFusion.Domain.Roslyn
 {
-    public class DomainEntityRoslynManifest : PluginManifestBase,
+    public class RoslynManifest : PluginManifestBase,
         ICorePluginManifest
     {
+        public RoslynManifest()
+        {
+            SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/src/Common/NetFusion.Roslyn";
+            DocUrl = "https://github.com/grecosoft/NetFusion/wiki/integration.domain.roslyn.overview";
+        }
+
         public string PluginId => "316A9C70-C3AE-4DC2-8DEA-097EBDB342F7";
         public string Name => "NetFusion Roslyn Plug-in";
 

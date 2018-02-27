@@ -49,7 +49,6 @@ namespace NetFusion.Bootstrap.Logging
 
         private void LogHostApp(IDictionary<string, object> log)
         {
-            
             var hostLog = new Dictionary<string, object>();
             log["Plugin:Host"] = hostLog;
 
@@ -82,6 +81,8 @@ namespace NetFusion.Bootstrap.Logging
             log["Plugin:Id"] = plugin.Manifest.PluginId;
             log["Plugin:Assembly"] = plugin.Manifest.AssemblyName;
             log["Plugin:Description"] = plugin.Manifest.Description;
+            log["Plugin:SourceUrl"] = plugin.Manifest.SourceUrl;
+            log["Plugin:DocUrl"] = plugin.Manifest.DocUrl;
 
             LogPluginModules(plugin, log);
             LogPluginKnownTypeContracts(plugin, log);

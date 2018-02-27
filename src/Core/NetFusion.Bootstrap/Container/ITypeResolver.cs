@@ -37,7 +37,6 @@ namespace NetFusion.Bootstrap.Container
         /// </summary>
         /// <param name="forModule">The module to have known type properties populated.</param>
         /// <param name="fromPluginTypes">The list of types from which instances should be created.</param>
-        /// <returns>The knows type defined by the plug-in and set on the module.</returns>
-        IEnumerable<Type> SetPluginModuleKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes);
+        void SetPluginModuleKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes);
     }
 }

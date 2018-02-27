@@ -30,6 +30,8 @@ namespace NetFusion.Test.Plugins
         public string MachineName { get; set; }
         public string Name { get; set; }
         public string Description => "Mock Plug-in";
+        public string SourceUrl => String.Empty;
+        public string DocUrl => String.Empty;
 
         /// <summary>
         /// Adds one or more types to the plug-in.

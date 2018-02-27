@@ -117,7 +117,7 @@ namespace NetFusion.Bootstrap.Plugins
         public T GetPluginModule<T>() where T : IPluginModuleService
         {
             var foundModules = _compositeApp.AllPluginModules.OfType<T>();
-            if (!foundModules.Any())
+            if (! foundModules.Any())
             {
                 throw new ContainerException($"Plug-in module of type: {typeof(T)} not found.");
             }

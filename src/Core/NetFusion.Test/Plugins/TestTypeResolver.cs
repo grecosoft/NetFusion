@@ -65,9 +65,9 @@ namespace NetFusion.Test.Plugins
             plugin.SetPluginResolvedTypes(allPluginTypes, pluginModules);
         }
 
-        public IEnumerable<Type> SetPluginModuleKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes)
+        public void SetPluginModuleKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes)
         {
-            return _delegateResolver.SetPluginModuleKnownTypes(forModule, fromPluginTypes);
+            _delegateResolver.SetPluginModuleKnownTypes(forModule, fromPluginTypes);
         }
 
         /// <summary>

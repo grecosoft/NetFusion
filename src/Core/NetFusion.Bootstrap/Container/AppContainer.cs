@@ -51,7 +51,7 @@ namespace NetFusion.Bootstrap.Container
         private ManifestRegistry Registry { get; }
 
         // The composite application is just an in-memory built structure
-        // representing the discovered plug-ins and the modules.
+        // representing the discovered plug-ins and their modules.
         private readonly CompositeApplication _application;
         private Autofac.IContainer _container;
 
@@ -296,7 +296,7 @@ namespace NetFusion.Bootstrap.Container
 
         public void Stop()
         {
-            if (!_application.IsStarted)
+            if (! _application.IsStarted)
             {
                 throw LogException(new ContainerException(
                     "The application container plug-in modules have not been started."));
@@ -329,7 +329,7 @@ namespace NetFusion.Bootstrap.Container
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing || _disposed) return;
+            if (! disposing || _disposed) return;
 
             if (_application.IsStarted)
             {
@@ -405,7 +405,7 @@ namespace NetFusion.Bootstrap.Container
             // Locates any IPluginModule instances defined within the plug-in assembly.
             _typeResover.SetPluginResolvedTypes(plugin);
 
-            // Assign all configurations that are instances of configuration types defined within plug-in.
+            // Assign all configuration instances of configuration types defined within plug-in.
             plugin.PluginConfigs = plugin.CreatedFrom(_configs.Values).ToList();
         }
 
@@ -414,7 +414,6 @@ namespace NetFusion.Bootstrap.Container
         // derived IKnownPluginType will be set to instances of types deriving from T.
         // NOTE:  think of this as a very light version of Managed Extensibility Framework
         // that does only what we need and does not try to solve World problems :)
-
         private void ComposeLoadedPlugins()
         {
             ComposeCorePlugins();
@@ -446,15 +445,10 @@ namespace NetFusion.Bootstrap.Container
 
         private void ComposePluginModules(Plugin plugin, IEnumerable<PluginType> fromPluginTypes)
         {
-            var pluginDiscoveredTypes = new HashSet<Type>(); // Keeping track of unique set of discovered types.
             foreach (IPluginModule module in plugin.Modules)
             {
-                IEnumerable<Type> discoveredTypes = _typeResover.SetPluginModuleKnownTypes(module, fromPluginTypes);
-                discoveredTypes.ForEach(dt => pluginDiscoveredTypes.Add(dt));
+                _typeResover.SetPluginModuleKnownTypes(module, fromPluginTypes);
             }
-
-            // Record all the unique types discovered by the plug-in.  Only used for logging.
-            plugin.DiscoveredTypes = pluginDiscoveredTypes.ToArray();
         }
 
         private void SetDiscoveredTypes()

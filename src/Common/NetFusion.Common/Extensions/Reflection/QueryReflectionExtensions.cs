@@ -113,7 +113,7 @@ namespace NetFusion.Common.Extensions.Reflection
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            if (!typeof(T).GetTypeInfo().IsInterface)
+            if (! typeof(T).GetTypeInfo().IsInterface)
             {
                 throw new InvalidOperationException(
                     "The specified generic parameter must be an interface type.");

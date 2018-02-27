@@ -52,7 +52,7 @@ namespace NetFusion.Domain.Roslyn.Core
             Type entityType = entity.GetType();
 
             IEnumerable<ScriptEvaluator> scripts = _scriptEvaluators[entityType];
-            if (!scripts.Any())
+            if (! scripts.Any())
             {
                 return;
             }
@@ -151,7 +151,7 @@ namespace NetFusion.Domain.Roslyn.Core
 
             foreach (var attribute in script.InitialAttributes)
             {
-                if (!attributedEntity.Attributes.Contains(attribute.Key))
+                if (! attributedEntity.Attributes.Contains(attribute.Key))
                 {
                     attributedEntity.Attributes.SetValue(attribute.Key, attribute.Value);
                 }
@@ -253,7 +253,7 @@ namespace NetFusion.Domain.Roslyn.Core
 
             await ExecuteAsync(entity, predicate.ScriptName);
 
-            if (!attributedEntity.Attributes.Contains(predicate.AttributeName))
+            if (! attributedEntity.Attributes.Contains(predicate.AttributeName))
             {
                 throw new InvalidOperationException(
                     $"After the predicate script named: {predicate.ScriptName} was executed, " + 

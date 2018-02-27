@@ -37,7 +37,8 @@ namespace NetFusion.Bootstrap.Container
         {
             IEnumerable<Type> invalidManifestTypes = _registry.AllManifests
                 .Where(m => string.IsNullOrWhiteSpace(m.PluginId))
-                .Select(m => m.GetType());
+                .Select(m => m.GetType())
+                .ToArray();
 
             if (invalidManifestTypes.Any())
             {
@@ -62,7 +63,8 @@ namespace NetFusion.Bootstrap.Container
         {
             IEnumerable<Type> invalidManifestTypes = _registry.AllManifests
                 .Where(m => string.IsNullOrWhiteSpace(m.AssemblyName) || string.IsNullOrWhiteSpace(m.Name))
-                .Select(m => m.GetType());
+                .Select(m => m.GetType())
+                .ToArray();
 
             if (invalidManifestTypes.Any())
             {
@@ -71,7 +73,9 @@ namespace NetFusion.Bootstrap.Container
                     "InvalidManifestTypes", invalidManifestTypes);
             }
 
-            IEnumerable<string> duplicateNames = _registry.AllManifests.WhereDuplicated(m => m.Name);
+            IEnumerable<string> duplicateNames = _registry.AllManifests
+                .WhereDuplicated(m => m.Name)
+                .ToArray();
 
             if (duplicateNames.Any())
             {
@@ -98,7 +102,7 @@ namespace NetFusion.Bootstrap.Container
                     am.AssemblyName,
                     PluginName = am.Name,
                     am.PluginId
-                });
+                }).ToArray();
 
                 throw new ContainerException(
                     "More than one Host Application Plug-In manifest was found.",

@@ -81,7 +81,7 @@ namespace NetFusion.Bootstrap.Container
             }
             catch (ReflectionTypeLoadException ex)
             {
-                var loadErrors = ex.LoaderExceptions.Select(le => le.Message).Distinct().ToList();
+                var loadErrors = ex.LoaderExceptions.Select(le => le.Message).Distinct().ToArray();
                 throw new ContainerException("Error Loading Plug-In Assembly.", ex, "LoadErrors", loadErrors);
             }
         }
@@ -108,7 +108,7 @@ namespace NetFusion.Bootstrap.Container
                 }
                 catch (ReflectionTypeLoadException ex)
                 {
-                    var loadErrors = ex.LoaderExceptions.Select(le => le.Message).Distinct().ToList();
+                    var loadErrors = ex.LoaderExceptions.Select(le => le.Message).Distinct().ToArray();
                     throw new ContainerException("Error Loading Plug-In Assembly.", ex, "LoadErrors", loadErrors);
                 }
                 catch (Exception ex)
@@ -147,15 +147,15 @@ namespace NetFusion.Bootstrap.Container
                 .Select(t => new PluginType(plugin, t, pluginAssembly.GetName().Name))
                 .ToArray();
 
+            // Create instances of all plugin-modules.
             var pluginModules = pluginTypes.CreateInstancesDerivingFrom<IPluginModule>().ToArray();
 
             plugin.SetPluginResolvedTypes(pluginTypes, pluginModules);
         }
 
         // Automatically populates all properties on a plug-in module that are an enumeration of
-        // a derived IPluginKnownType.  The plug-in known types specific by the module are returned
-        // for use by the consumer for logging.
-        public IEnumerable<Type> SetPluginModuleKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes)
+        // a derived IPluginKnownType.
+        public void SetPluginModuleKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes)
         {
             if (forModule == null) throw new ArgumentNullException(nameof(forModule), 
                 "Module to discover know types cannot be null.");
@@ -165,7 +165,6 @@ namespace NetFusion.Bootstrap.Container
             
             IEnumerable<PropertyInfo> knownTypeProps = GetKnownTypeProperties(forModule);
             knownTypeProps.ForEach(ktp => SetKnownPropertyInstances(forModule, ktp, fromPluginTypes));
-            return knownTypeProps.Select(ktp => ktp.PropertyType.GenericTypeArguments.First());
         }
 
         private IEnumerable<PropertyInfo> GetKnownTypeProperties(IPluginModule module)
@@ -182,7 +181,7 @@ namespace NetFusion.Bootstrap.Container
            IEnumerable<PluginType> fromPluginTypes)
         {
             var knownType = knownTypeProperty.PropertyType.GetGenericArguments().First();
-            var discoveredInstances = fromPluginTypes.CreateInstancesDerivingFrom(knownType).ToList();
+            var discoveredInstances = fromPluginTypes.CreateInstancesDerivingFrom(knownType).ToArray();
 
             // Create an array based on the known type and populate it from discovered instances.
             Array array = Array.CreateInstance(knownType, discoveredInstances.Count());

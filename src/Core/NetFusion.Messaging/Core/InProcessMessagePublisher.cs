@@ -131,7 +131,7 @@ namespace NetFusion.Messaging.Core
                     "DispatcherDetails", dispatcherDetails);
             }
 
-            if (!dispatchers.Any())
+            if (! dispatchers.Any())
             {
                 throw new PublisherException(
                     $"No message consumer handler was found for the command message of type: {command.GetType()}." +
@@ -166,7 +166,7 @@ namespace NetFusion.Messaging.Core
 
         private void LogMessageDespatchInfo(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
         {
-            if (!_logger.IsEnabled(LogLevel.Trace))
+            if (! _logger.IsEnabled(LogLevel.Trace))
             {
                 _logger.LogDebug(MessagingLogEvents.MESSAGING_DISPATCH, $"Message Published: {message.GetType()}");
                 return;

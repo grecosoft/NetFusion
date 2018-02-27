@@ -75,11 +75,6 @@ namespace NetFusion.Bootstrap.Plugins
         public IList<IContainerConfig> PluginConfigs { get; internal set; } = Array.Empty<IContainerConfig>();
 
         /// <summary>
-        /// The known types that were discovered by all of the modules contained within the plug-in.
-        /// </summary>
-        public Type[] DiscoveredTypes { get; internal set; } = Array.Empty<Type>();
-
-        /// <summary>
         /// The underlying .net type for all plug-in types.
         /// </summary>
         private IEnumerable<Type> Types => PluginTypes.Select(pt => pt.Type);
@@ -136,7 +131,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// and exception is thrown.</returns>
         public T GetRequiredConfig<T>() where T : IContainerConfig, new()
         {
-            if (!IsConfigSet<T>())
+            if (! IsConfigSet<T>())
             {
                 throw new ContainerException(
                     $"The container configuration of type: {typeof(T).FullName} has not been " +

@@ -72,7 +72,7 @@ namespace NetFusion.Messaging.Filters
 
         private Type GetTargetArrayType(IQuery query)
         {                   
-            if (!query.DeclaredResultType.IsArray)
+            if (! query.DeclaredResultType.IsArray)
             {
                 return null;
             }

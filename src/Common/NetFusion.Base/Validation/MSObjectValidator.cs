@@ -63,7 +63,7 @@ namespace NetFusion.Base.Validation
             if (string.IsNullOrWhiteSpace(message)) throw new ArgumentNullException(nameof(message),
                 "Message cannot be null or empty string.");
 
-            if (!predicate)
+            if (! predicate)
             {
                 _items.Add(new ValidationItem(message, level));
             }

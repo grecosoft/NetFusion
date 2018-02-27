@@ -28,7 +28,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         protected virtual void Dispose(bool dispose)
         {
-            if (!dispose || _disposed) return;
+            if (! dispose || _disposed) return;
 
             _disposed = true;
         }

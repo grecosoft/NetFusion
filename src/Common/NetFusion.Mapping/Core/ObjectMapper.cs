@@ -81,7 +81,7 @@ namespace NetFusion.Mapping.Core
         private TargetMap FindMappingStrategy(Type sourceType, Type targetType)
         {
             var sourceMappings = _sourceTypeMappings[sourceType];
-            if (!sourceMappings.Any())
+            if (! sourceMappings.Any())
             {
                 // No source type registered mappings.
                 return null;

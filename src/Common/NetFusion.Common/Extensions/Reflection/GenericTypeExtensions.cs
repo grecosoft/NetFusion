@@ -41,13 +41,13 @@ namespace NetFusion.Common.Extensions.Reflection
 
             var closedGenericTypeInfo = closedGenericType.GetTypeInfo();
 
-            if (!openGenericType.IsOpenGenericType())
+            if (! openGenericType.IsOpenGenericType())
             {
                 throw new InvalidOperationException(
                     $"The type of: {openGenericType} is not an open generic type.");
             }
 
-            if (!closedGenericTypeInfo.IsGenericType) return false;
+            if (! closedGenericTypeInfo.IsGenericType) return false;
 
             // Test if the closed type is based on the same open type.
             var closedGenericTypeDef = closedGenericTypeInfo.GetGenericTypeDefinition();
@@ -76,7 +76,7 @@ namespace NetFusion.Common.Extensions.Reflection
             for (int i = 0; i < specificClosedArgTypes.Length; i++)
             {
                 var typeInfo = specificClosedArgTypes[i].GetTypeInfo();
-                if (!typeInfo.IsAssignableFrom(closedTypeArgTypes[i]))
+                if (! typeInfo.IsAssignableFrom(closedTypeArgTypes[i]))
                 {
                     return false;
                 }
@@ -101,7 +101,7 @@ namespace NetFusion.Common.Extensions.Reflection
 
             var openGenericTypeInfo = openGenericType.GetTypeInfo();
 
-            if (!openGenericTypeInfo.IsInterface || !openGenericTypeInfo.IsGenericType)
+            if (! openGenericTypeInfo.IsInterface || !openGenericTypeInfo.IsGenericType)
             {
                 throw new InvalidOperationException("Open generic interface type must be specified.");
             }

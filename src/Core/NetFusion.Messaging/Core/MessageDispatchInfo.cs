@@ -116,7 +116,7 @@ namespace NetFusion.Messaging.Core
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
 
-            if (!DispatchRuleTypes.Any()) return true;
+            if (! DispatchRuleTypes.Any()) return true;
 
             if (RuleApplyType == RuleApplyTypes.All)
             {

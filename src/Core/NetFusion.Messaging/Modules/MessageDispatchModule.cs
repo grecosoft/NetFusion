@@ -140,7 +140,7 @@ namespace NetFusion.Messaging.Modules
         {
             if (commandType == null) throw new ArgumentNullException(nameof(commandType));
 
-            if (!commandType.IsDerivedFrom<ICommand>())
+            if (! commandType.IsDerivedFrom<ICommand>())
                 throw new ArgumentException("Must be of command type.", nameof(commandType));
 
             IEnumerable<MessageDispatchInfo> dispatchers = InProcessDispatchers.WhereHandlerForMessage(commandType);
@@ -160,7 +160,7 @@ namespace NetFusion.Messaging.Modules
             if (message == null) throw new ArgumentNullException(nameof(message));
             if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken));
 
-            if (!message.GetType().CanAssignTo(dispatcher.MessageType))
+            if (! message.GetType().CanAssignTo(dispatcher.MessageType))
             {
                 throw new ContainerException(
                     $"The message event type: {message.GetType()} being dispatched does not match or " +

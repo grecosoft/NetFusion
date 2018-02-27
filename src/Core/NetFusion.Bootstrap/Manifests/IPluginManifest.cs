@@ -38,5 +38,15 @@
         /// </summary>
         /// <returns>Description of functionality.</returns>
         string Description { get; }
+
+        /// <summary>
+        /// URL pointing to source about the plug-in and its use.
+        /// </summary>
+        string SourceUrl { get; }
+
+        /// <summary>
+        /// URL pointing to documentation about the plug-in and its use.
+        /// </summary>
+        string DocUrl { get; }
     }
 }
