@@ -11,7 +11,7 @@ Vincent Van Gogh
 
 The NetFusion open-source project consists of three repositories:
 
-* [NetFusion-Core](https://github.com/grecosoft/NetFusion) - Composite-Application Bootstrap
+* [NetFusion-Core](https://github.com/grecosoft/NetFusion) - Composite-Application Bootstrap (This Repository)
     * The contents of this repository contain the core implementation of the application bootstrap process.  
     * Builds a composite-application from a set of referenced plug-ins.
     * This repository does not contain any reference to technology specific implementations.
