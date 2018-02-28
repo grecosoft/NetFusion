@@ -7,7 +7,7 @@
 ![image](https://raw.githubusercontent.com/wiki/grecosoft/NetFusion/img/DotNetCore.png)
 
 ### "Great things are done by a series of small things that are brought together" </br>
-    Vincent Van Gogh
+Vincent Van Gogh
 
 The NetFusion open-source project consists of three repositories:
 
