@@ -19,7 +19,7 @@ namespace NetFusion.Mapping.Modules
         // Discovered Properties:
         public IEnumerable<IMappingStrategyFactory> StrategyFactories { get; private set; }
 
-        public ILookup<Type, TargetMap> SourceTypeMappings { get; private set; } // SourceType ==> TargetMap
+        public ILookup<Type, TargetMap> SourceTypeMappings { get; private set; } // SourceType ==> TargetMap(s)
 
         // Finds all mapping strategies and cache the information to be used
         // at runtime by ObjectMapper.

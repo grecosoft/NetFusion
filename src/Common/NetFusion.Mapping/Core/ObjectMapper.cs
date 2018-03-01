@@ -14,7 +14,7 @@ namespace NetFusion.Mapping.Core
     public class ObjectMapper : IObjectMapper
     {
         private readonly ILogger<ObjectMapper> _logger;
-        private readonly ILookup<Type, TargetMap> _sourceTypeMappings;
+        private readonly ILookup<Type, TargetMap> _sourceTypeMappings; // SourceType => TargetType(s)
         private readonly ILifetimeScope _lifetimeScope;
 
         public ObjectMapper(
@@ -34,13 +34,6 @@ namespace NetFusion.Mapping.Core
                 "Source object to map cannot be null.");
 
             object mappedObj = Map(source, typeof(TTarget));
-            
-            if (mappedObj == null)
-            {
-                throw new InvalidOperationException(
-                    $"Mapping strategy not found.  Source: { source.GetType().FullName} Target: {typeof(TTarget).FullName}");
-            }
-
             return (TTarget)mappedObj;           
         }
 
@@ -61,17 +54,18 @@ namespace NetFusion.Mapping.Core
                 targetMap = FindMappingStrategy(targetType, source.GetType());
             }
 
-            // If the mapping strategy instance was originally created by a IMappingStrategyFactory return the cached instance.
-            // Otherwise, create an instance of the custom mapping strategy using the container so it can have injected dependencies.
-            if (targetMap != null)
+            if (targetMap == null)
             {
-                strategy = targetMap.StrategyInstance ?? (IMappingStrategy)_lifetimeScope.Resolve(targetMap.StrategyType);
-
-                LogFoundMapping(targetMap);
-                return strategy.Map(this, source);
+                throw new InvalidOperationException(
+                   $"Mapping strategy not found.  Source: { source.GetType().FullName} Target: {targetType.FullName}");
             }
 
-            return null;
+            // If the mapping strategy instance was originally created by a IMappingStrategyFactory, return the cached instance.
+            // Otherwise, create an instance of the custom mapping strategy using the container so it can have injected dependencies.
+            strategy = targetMap.StrategyInstance ?? (IMappingStrategy)_lifetimeScope.Resolve(targetMap.StrategyType);
+
+            LogFoundMapping(targetMap);
+            return strategy.Map(this, source);
         }
 
         // Determines if there is a mapping strategy matching the exact target type.  
