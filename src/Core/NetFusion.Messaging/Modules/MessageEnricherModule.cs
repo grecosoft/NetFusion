@@ -30,7 +30,7 @@ namespace NetFusion.Messaging.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["message:enrichers"] = Context.AllPluginTypes
+            moduleLog["Message:Enrichers"] = Context.AllPluginTypes
               .Where(pt => {
                   return pt.IsConcreteTypeDerivedFrom<IMessageEnricher>();
               })

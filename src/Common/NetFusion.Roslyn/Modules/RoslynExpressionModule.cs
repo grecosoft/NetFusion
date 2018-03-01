@@ -45,7 +45,7 @@ namespace NetFusion.Domain.Roslyn.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-           moduleLog["entity:scripts"] = _scripts.ToDictionary(s => s.EntityType, s =>
+           moduleLog["Entity:Scripts"] = _scripts.ToDictionary(s => s.EntityType, s =>
            {
                return _scripts.Where(e => e.EntityType == s.EntityType)
                 .ToDictionary(e => e.Name, es => new {

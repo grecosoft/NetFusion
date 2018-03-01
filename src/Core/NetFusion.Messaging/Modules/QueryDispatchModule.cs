@@ -86,7 +86,7 @@ namespace NetFusion.Messaging.Modules
         public override void Log(IDictionary<string, object> moduleLog)
         {
             var messagingDispatchLog = new Dictionary<string, object>();
-            moduleLog["query:consumers"] = messagingDispatchLog;
+            moduleLog["Query:Consumers"] = messagingDispatchLog;
 
             foreach (var queryDispatcherRegistration in _queryDispatchers)
             {

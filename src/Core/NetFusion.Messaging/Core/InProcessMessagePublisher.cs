@@ -97,7 +97,7 @@ namespace NetFusion.Messaging.Core
             return matchingDispatchers.ToArray();
         }
 
-        // Determines message dispatchers apply to the message being published.  This is optional and
+        // Determines message dispatchers that apply to the message being published.  This is optional and
         // specified by decorating the message handler method with attributes.
         private async Task<bool> PassesDispatchCriteria(MessageDispatchInfo dispatchInfo, IMessage message)
         {

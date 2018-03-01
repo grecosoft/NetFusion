@@ -51,7 +51,7 @@ namespace NetFusion.Messaging.Config
         /// Adds a query filter that should be executed after dispatching
         /// the query to the consumer.
         /// </summary>
-        /// <typeparam name="TFilter"></typeparam>
+        /// <typeparam name="TFilter">The Type of the filter.</typeparam>
         public void AddPostQueryFilter<TFilter>() where TFilter : IQueryFilter
         {
             if (_postQueryFilterTypes.Contains(typeof(TFilter)))

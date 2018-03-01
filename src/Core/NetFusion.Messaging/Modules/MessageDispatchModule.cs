@@ -31,9 +31,9 @@ namespace NetFusion.Messaging.Modules
 
         // IMessagingModule:
         public MessageDispatchConfig DispatchConfig { get; private set; }
-        public ILookup<Type, MessageDispatchInfo> AllMessageTypeDispatchers { get; private set; }
-        public ILookup<Type, MessageDispatchInfo> InProcessDispatchers { get; private set; }
-      
+        public ILookup<Type, MessageDispatchInfo> AllMessageTypeDispatchers { get; private set; } // MessageType => Dispatcher(s)
+        public ILookup<Type, MessageDispatchInfo> InProcessDispatchers { get; private set; } //MessageType => Dispatcher(s)
+
         // Stores type meta-data for the message consumers that should be notified when
         // a given message is published. 
         public override void Initialize()
@@ -82,8 +82,8 @@ namespace NetFusion.Messaging.Modules
         {
             // Add all the message consumers to the dependency injection container.
             registration.PluginTypes.AssignableTo<IMessageConsumer>()
-                .As<IMessageConsumer>()
                 .AsSelf()
+                .As<IMessageConsumer>()
                 .InstancePerLifetimeScope();
         }
 
@@ -200,7 +200,7 @@ namespace NetFusion.Messaging.Modules
                 Context.Logger.LogWarningDetails(
                     MessagingLogEvents.MESSAGING_CONFIGURATION,
                     $"The following classes have in-process event handler methods but do not implement: {typeof(IMessageConsumer)}.",
-                    new { invalidConsumerTypes = invalidConsumerTypes });
+                    invalidConsumerTypes);
             }
         }
 
@@ -215,7 +215,7 @@ namespace NetFusion.Messaging.Modules
         private void LogMessagesAndDispatchInfo(IDictionary<string, object> moduleLog)
         {
             var messagingDispatchLog = new Dictionary<string, object>();
-            moduleLog["Messaging - In Process Dispatchers"] = messagingDispatchLog;
+            moduleLog["Messaging:InProcess:Dispatchers"] = messagingDispatchLog;
 
             foreach (var messageTypeDispatcher in InProcessDispatchers)
             {
@@ -238,7 +238,7 @@ namespace NetFusion.Messaging.Modules
 
         private void LogMessagePublishers(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Message Publishers"] = Context.AllPluginTypes
+            moduleLog["Message:Publishers"] = Context.AllPluginTypes
                 .Where(pt => {
                     return pt.IsConcreteTypeDerivedFrom<IMessagePublisher>();
                 })
