@@ -1,10 +1,10 @@
 
-# <img src="https://raw.githubusercontent.com/wiki/grecosoft/NetFusion/img/NetFusion_Plug.jpg" width="54" height="40" /> NetFusion-Core
+![image](./img/netfusionlogo.png)
 ## Composite Plugin Architecture for .NET Full and Core
 
 [![Build status](https://ci.appveyor.com/api/projects/status/8k6l6lvmuulk2y94?svg=true)](https://ci.appveyor.com/project/grecosoft/netfusion)
 
-![image](./img/netfusionlogo.png)
+![image](https://raw.githubusercontent.com/wiki/grecosoft/NetFusion/img/DotNetCore.png)
 
 ### "Great things are done by a series of small things that are brought together" </br>
 Vincent Van Gogh
