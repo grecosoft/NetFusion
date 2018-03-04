@@ -4,7 +4,7 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/8k6l6lvmuulk2y94?svg=true)](https://ci.appveyor.com/project/grecosoft/netfusion)
 
-![image](https://raw.githubusercontent.com/wiki/grecosoft/NetFusion/img/DotNetCore.png)
+![image](./img/netfusionlogo.png)
 
 ### "Great things are done by a series of small things that are brought together" </br>
 Vincent Van Gogh
