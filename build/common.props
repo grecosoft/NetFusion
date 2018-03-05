@@ -7,5 +7,6 @@
 		<PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
         <RepositoryType>git</RepositoryType>
 		<IncludeSymbols>true</IncludeSymbols>
+		<PackageIconUrl>https://github.com/grecosoft/NetFusion-Tools/blob/master/img/netfusion-nuget.png</PackageIconUrl>
     </PropertyGroup>
 </Project>
