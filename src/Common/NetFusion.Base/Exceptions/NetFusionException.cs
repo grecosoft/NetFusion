@@ -85,6 +85,9 @@ namespace NetFusion.Base.Exceptions
         public NetFusionException(string message, string detailKey, object details)
             : base(message)
         {
+            if (String.IsNullOrWhiteSpace(detailKey)) throw new ArgumentException(
+                "Key to identify exception details not specified.", nameof(detailKey));
+
             Details[detailKey] = details ?? throw new ArgumentNullException(nameof(details),
                 "Exception details cannot be null.");
         }
@@ -100,6 +103,9 @@ namespace NetFusion.Base.Exceptions
         public NetFusionException(string message, Exception innerException, string detailKey, object details)
             : base(message, innerException)
         {
+            if (String.IsNullOrWhiteSpace(detailKey)) throw new ArgumentException(
+                "Key to identify exception details not specified.", nameof(detailKey));
+
             Details[detailKey] = details ?? throw new ArgumentNullException(nameof(details),
                 "Exception details cannot be null.");
         }

@@ -55,7 +55,7 @@ namespace NetFusion.Common.Extensions.Reflection
                 "Method information cannot be null.");
 
             bool isAsync = IsAsyncMethod(methodInfo);
-            if (!isAsync)
+            if (! isAsync)
             {
                 return false;
             }

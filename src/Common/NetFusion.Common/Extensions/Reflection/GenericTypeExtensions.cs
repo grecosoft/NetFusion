@@ -91,7 +91,8 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <param name="closedGenericTypes">The list of closed-generic types.</param>
         /// <param name="openGenericType">The open-generic interface type used to filter the list of closed generic types.</param>
         /// <param name="genericArgTypes">Optional.  If specified, the closed type arguments must be assignable to those listed.</param>
-        /// <returns></returns>
+        /// <returns>Returns the type implementing the specified open-generic interface and the generics parameters of the matching
+        /// closed interface.</returns>
         static public IEnumerable<GenericTypeInfo> WhereHavingClosedInterfaceTypeOf(this IEnumerable<Type> closedGenericTypes,
             Type openGenericType,
             params Type[] genericArgTypes)
@@ -101,7 +102,7 @@ namespace NetFusion.Common.Extensions.Reflection
 
             var openGenericTypeInfo = openGenericType.GetTypeInfo();
 
-            if (! openGenericTypeInfo.IsInterface || !openGenericTypeInfo.IsGenericType)
+            if (!openGenericTypeInfo.IsInterface || !openGenericTypeInfo.IsGenericType)
             {
                 throw new InvalidOperationException("Open generic interface type must be specified.");
             }

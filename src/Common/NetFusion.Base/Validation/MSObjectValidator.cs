@@ -24,8 +24,8 @@ namespace NetFusion.Base.Validation
             _children = new List<IObjectValidator>();
         }
 
-        public IEnumerable<ValidationItem> Validations => _items;
-        public IEnumerable<IObjectValidator> Children => _children;
+        public IReadOnlyCollection<ValidationItem> Validations => _items;
+        public IReadOnlyCollection<IObjectValidator> Children => _children;
 
         public bool IsValid =>
            !_items.Any(i => i.ValidationType == ValidationTypes.Error) &&

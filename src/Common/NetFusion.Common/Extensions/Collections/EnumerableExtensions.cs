@@ -102,7 +102,7 @@ namespace NetFusion.Common.Extensions.Collections
 
             foreach (var itemType in types)
             {
-                var itemsOfType = source.Where(d => d.GetType() == itemType);
+                var itemsOfType = source.Where(s => s.GetType() == itemType);
                 foreach(var item in itemsOfType)
                 {
                     yield return item;
