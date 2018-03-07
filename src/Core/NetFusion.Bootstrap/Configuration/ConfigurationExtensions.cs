@@ -20,7 +20,7 @@ namespace NetFusion.Bootstrap.Configuration
         /// </summary>
         /// <param name="configBuilder">The configuration to add setting files.</param>
         /// <returns>Instance to the configuration builder.</returns>
-        public static ConfigurationBuilder AddDefaultAppSettings(this ConfigurationBuilder configBuilder)
+        public static IConfigurationBuilder AddDefaultAppSettings(this IConfigurationBuilder configBuilder)
         {
             if (configBuilder == null)
             {
