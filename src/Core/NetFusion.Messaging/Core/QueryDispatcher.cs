@@ -72,8 +72,15 @@ namespace NetFusion.Messaging.Core
 
             var preFilters = _filterModule.PreFilterTypes.Select(qf => _lifetimeScope.Resolve(qf)).OfType<IQueryFilter>();
             var postFilters = _filterModule.PostFilterTypes.Select(qf => _lifetimeScope.Resolve(qf)).OfType<IQueryFilter>();
-
-            _logger.LogDebug($"Dispatching Query Type: {query.GetType()} to Consumer: {consumer.GetType()}");
+        
+            if (_logger.IsEnabled(LogLevel.Trace))
+            {
+                _logger.LogTraceDetails($"Dispatching Query Type: {query.GetType()} to Consumer: {consumer.GetType()}", query);
+            }
+            else
+            {
+                _logger.LogDebug($"Dispatching Query Type: {query.GetType()} to Consumer: {consumer.GetType()}");
+            }
 
             await ApplyFilters(query, preFilters);
             await dispatcher.Dispatch(query, consumer, cancellationToken);
