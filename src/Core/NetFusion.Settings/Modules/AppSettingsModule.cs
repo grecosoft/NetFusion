@@ -2,6 +2,7 @@
 using Autofac.Core;
 using Microsoft.Extensions.Configuration;
 using NetFusion.Base.Validation;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Reflection;
 using System;
@@ -51,6 +52,13 @@ namespace NetFusion.Settings.Modules
             // host specified implementation.
             var validator = new MSObjectValidator(settings);
             var result = validator.Validate();
+
+            if (result.IsInvalid)
+            {
+                Context.Logger.LogErrorDetails(
+                    $"Invalid application setting: {settings.GetType().FullName}. With section name: {sectionName}.", 
+                    result.ObjectValidations);
+            }
             
             result.ThrowIfInvalid();
         }
