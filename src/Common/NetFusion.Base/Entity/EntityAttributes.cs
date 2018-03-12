@@ -56,7 +56,7 @@ namespace NetFusion.Base.Entity
 
         public void SetValue(string name, object value, 
             Type context = null,
-            bool overrideIfPresent = false)
+            bool overrideIfPresent = true)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
                 "Attribute name cannot be null or empty string.", nameof(name));
@@ -145,7 +145,7 @@ namespace NetFusion.Base.Entity
             return methodName.Replace("Get", "").Replace("Set", "");
         }
 
-        public void SetMemberValue<T>(T value, Type context = null, bool overrideIfPresent = false,
+        public void SetMemberValue<T>(T value, Type context = null, bool overrideIfPresent = true,
             [CallerMemberName] string callerName = null)
         {
             string propName = GetBasePropertyName(callerName);

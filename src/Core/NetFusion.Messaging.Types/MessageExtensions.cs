@@ -75,7 +75,7 @@ namespace NetFusion.Messaging.Types
 
         public static void SetCorrelationId(this IMessage message, string value)
         {
-            message.Attributes.SetMemberValue(value, Context);
+            message.Attributes.SetMemberValue(value, Context, overrideIfPresent: false);
         }
 
         public static string GetCorrelationId(this IMessage message)

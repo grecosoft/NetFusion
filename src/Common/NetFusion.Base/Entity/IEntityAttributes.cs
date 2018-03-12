@@ -35,7 +35,7 @@ namespace NetFusion.Base.Entity
         /// <param name="value">The value of the attribute.</param>
         /// <param name="context">Identifies the context associated with the attribute.</param>
         /// <param name="overrideIfPresent">Determines if existing attribute value is overridden.</param>
-        void SetValue(string name, object value, Type context = null, bool overrideIfPresent = false);
+        void SetValue(string name, object value, Type context = null, bool overrideIfPresent = true);
 
         /// <summary>
         /// Returns the value of an attribute.
@@ -88,7 +88,7 @@ namespace NetFusion.Base.Entity
         /// <param name="context">Identifies the context associated with the attribute.</param>
         /// <param name="overrideIfPresent">Determines if existing attribute value is overridden.</param>
         /// <param name="callerName">The name of the attribute.</param>
-        void SetMemberValue<T>(T value, Type context = null, bool overrideIfPresent = false,
+        void SetMemberValue<T>(T value, Type context = null, bool overrideIfPresent = true,
             [CallerMemberName] string callerName = null);
 
         /// <summary>

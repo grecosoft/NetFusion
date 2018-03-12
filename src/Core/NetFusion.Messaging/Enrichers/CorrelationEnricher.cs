@@ -11,12 +11,7 @@ namespace NetFusion.Messaging.Enrichers
     {
         public override Task Enrich(IMessage message)
         {
-            string correlationId = message.GetCorrelationId();
-            if (correlationId == null)
-            {
-                message.SetCorrelationId(Guid.NewGuid().ToString());
-            }
-
+            message.SetCorrelationId(Guid.NewGuid().ToString());            
             return base.Enrich(message);
         }
     }

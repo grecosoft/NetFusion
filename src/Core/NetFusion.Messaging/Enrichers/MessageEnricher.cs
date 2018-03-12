@@ -31,7 +31,7 @@ namespace NetFusion.Messaging.Enrichers
             if (message == null) throw new ArgumentNullException(nameof(message));
             if (name == null) throw new ArgumentNullException(nameof(name));
 
-            message.Attributes.SetValue(name, value, GetType());
+            message.Attributes.SetValue(name, value, GetType(), overrideIfPresent: false);
         }
     }
 }

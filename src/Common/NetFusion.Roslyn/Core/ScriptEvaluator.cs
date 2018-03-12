@@ -31,7 +31,7 @@ namespace NetFusion.Domain.Roslyn.Core
             Evaluators = evaluators ?? throw new ArgumentNullException(nameof(evaluators));
         }
 
-        public bool IsDefault => this.Script.Name == DEFAULT_SCRIPT_NAME;
+        public bool IsDefault => Script.Name == DEFAULT_SCRIPT_NAME;
 
         public async Task ExecuteAsync(object entity)
         {
@@ -52,7 +52,7 @@ namespace NetFusion.Domain.Roslyn.Core
                 // static domain-entity property.  If so update or add the attribute's value.
                 if (entity is IAttributedEntity attributedEntity && evaluator.Expression.AttributeName != null)
                 {
-                    attributedEntity.Attributes.SetValue(evaluator.Expression.AttributeName, result, overrideIfPresent: true);
+                    attributedEntity.Attributes.SetValue(evaluator.Expression.AttributeName, result);
                 }
             }
         }
