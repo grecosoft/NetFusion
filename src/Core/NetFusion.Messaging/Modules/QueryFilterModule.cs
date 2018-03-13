@@ -22,15 +22,13 @@ namespace NetFusion.Messaging.Modules
         }
 
         // The pre and post filters configured for the application host during bootstrap configuration.
-        public IReadOnlyCollection<Type> PreFilterTypes => _queryDispatchConfig.PreQueryFilters;
-        public IReadOnlyCollection<Type> PostFilterTypes => _queryDispatchConfig.PostQueryFiters;
+        public IReadOnlyCollection<Type> QueryFilterTypes => _queryDispatchConfig.QueryFilters;
 
         // Registers the pre and post filters within the container so the can 
         // inject needed services.
         public override void RegisterComponents(ContainerBuilder builder)
         {
-            RegisterQueryFilters(builder, PreFilterTypes);
-            RegisterQueryFilters(builder, PostFilterTypes);
+            RegisterQueryFilters(builder, QueryFilterTypes);
         }
 
         private void RegisterQueryFilters(ContainerBuilder builder, IEnumerable<Type> filterTypes)
@@ -49,9 +47,9 @@ namespace NetFusion.Messaging.Modules
                .Select(ft => new
                {
                    FilterType = ft.AssemblyQualifiedName,
-                   IsConfigured = _queryDispatchConfig.PreQueryFilters.Contains(ft) || _queryDispatchConfig.PostQueryFiters.Contains(ft),
-                   IsPreFilter = _queryDispatchConfig.PreQueryFilters.Contains(ft),
-                   IsPostFilter = _queryDispatchConfig.PostQueryFiters.Contains(ft)
+                   IsConfigured = _queryDispatchConfig.QueryFilters.Contains(ft),
+                   IsPreFilter = ft.IsConcreteTypeDerivedFrom<IPreQueryFilter>(),
+                   IsPostFilter = ft.IsConcreteTypeDerivedFrom<IPostQueryFilter>()
                }).ToArray();      
         }
     }

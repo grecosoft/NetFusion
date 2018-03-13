@@ -14,7 +14,7 @@ namespace NetFusion.Messaging.Filters
     /// to execute a script containing calculated properties that can be dynamically added to the
     /// query result.  This applies to any result implementing the IAttributedEntity interface.
     /// </summary>
-    public class ExpressionQueryFilter : IQueryFilter
+    public class ExpressionQueryFilter : IPostQueryFilter
     {
         private const string PropertyScriptName = "AttributedReadModel";
 
@@ -25,7 +25,7 @@ namespace NetFusion.Messaging.Filters
             _scriptingService = scriptingService;
         }
 
-        public async Task OnExecute(IQuery query)
+        public async Task OnPostExecute(IQuery query)
         {
             foreach (object resultItem in GetQueryResults(query).Where(IsAttributedResult))
             {

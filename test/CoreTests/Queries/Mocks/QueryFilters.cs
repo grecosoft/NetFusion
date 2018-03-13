@@ -4,26 +4,46 @@ using System.Threading.Tasks;
 
 namespace CoreTests.Queries.Mocks
 {
-    public class QueryFilterOne : IQueryFilter
+    public class QueryFilterOne : IPreQueryFilter, IPostQueryFilter
     {
-        public Task OnExecute(IQuery query)
+        public Task OnPreExecute(IQuery query)
         {
             if (query is TestQuery testQuery)
             {
-                testQuery.TestLog.Add(nameof(QueryFilterOne));
+                testQuery.TestLog.Add("QueryFilterOne-Pre");
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task OnPostExecute(IQuery query)
+        {
+            if (query is TestQuery testQuery)
+            {
+                testQuery.TestLog.Add("QueryFilterOne-Post");
             }
 
             return Task.CompletedTask;
         }
     }
 
-    public class QueryFilterTwo : IQueryFilter
+    public class QueryFilterTwo : IPreQueryFilter, IPostQueryFilter
     {
-        public Task OnExecute(IQuery query)
+        public Task OnPreExecute(IQuery query)
         {
             if(query is TestQuery testQuery)
             {
-                testQuery.TestLog.Add(nameof(QueryFilterTwo));
+                testQuery.TestLog.Add("QueryFilterTwo-Pre");
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task OnPostExecute(IQuery query)
+        {
+            if (query is TestQuery testQuery)
+            {
+                testQuery.TestLog.Add("QueryFilterTwo-Post");
             }
 
             return Task.CompletedTask;

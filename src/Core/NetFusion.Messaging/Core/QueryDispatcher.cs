@@ -70,8 +70,8 @@ namespace NetFusion.Messaging.Core
         {
             var consumer = (IQueryConsumer)_lifetimeScope.Resolve(dispatcher.ConsumerType);
 
-            var preFilters = _filterModule.PreFilterTypes.Select(qf => _lifetimeScope.Resolve(qf)).OfType<IQueryFilter>();
-            var postFilters = _filterModule.PostFilterTypes.Select(qf => _lifetimeScope.Resolve(qf)).OfType<IQueryFilter>();
+            var preFilters = _filterModule.QueryFilterTypes.Select(qf => _lifetimeScope.Resolve(qf)).OfType<IPreQueryFilter>();
+            var postFilters = _filterModule.QueryFilterTypes.Select(qf => _lifetimeScope.Resolve(qf)).OfType<IPostQueryFilter>();
         
             if (_logger.IsEnabled(LogLevel.Trace))
             {
@@ -82,14 +82,14 @@ namespace NetFusion.Messaging.Core
                 _logger.LogDebug($"Dispatching Query Type: {query.GetType()} to Consumer: {consumer.GetType()}");
             }
 
-            await ApplyFilters(query, preFilters);
+            await ApplyFilters(query, preFilters, (f, q) => (f as IPreQueryFilter).OnPreExecute(q));
             await dispatcher.Dispatch(query, consumer, cancellationToken);
-            await ApplyFilters(query, postFilters);
+            await ApplyFilters(query, postFilters, (f, q) => (f as IPostQueryFilter).OnPostExecute(q));
         }
         
         // Executes a list of asynchronous filters and awaits their completion.  Once completed,
         // any task error(s) are checked and raised.
-        private async Task ApplyFilters(IQuery query, IEnumerable<IQueryFilter> filters)
+        private async Task ApplyFilters(IQuery query, IEnumerable<IQueryFilter> filters, Func<IQueryFilter, IQuery, Task> executeFilter)
         {
             _logger.LogDebugDetails(MessagingLogEvents.QUERY_DISPATCH, "Applying Query Filters",
                 new {
@@ -100,7 +100,7 @@ namespace NetFusion.Messaging.Core
 
             try
             {
-                taskList = filters.Invoke(query, (filter, q) => filter.OnExecute(q));
+                taskList = filters.Invoke(query, executeFilter);
                 await taskList.WhenAll();
             }
             catch (Exception ex)

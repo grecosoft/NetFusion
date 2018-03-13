@@ -13,7 +13,7 @@ namespace NetFusion.Messaging.Filters
     /// both the consumer returned object type and declared query result types are arrays.  Only arrays types 
     /// are checked since most often, the consumer will be returning results that should been materialized.
     /// </summary>
-    public class ResultMapQueryFilter : IQueryFilter
+    public class ResultMapQueryFilter : IPostQueryFilter
     {
         private readonly IObjectMapper _objectMapper;
 
@@ -22,7 +22,7 @@ namespace NetFusion.Messaging.Filters
             _objectMapper = objectMapper;
         }
 
-        public Task OnExecute(IQuery query)
+        public Task OnPostExecute(IQuery query)
         {
             if (QueryResultMatchesConsumerReturnType(query))
             {

@@ -13,27 +13,16 @@ namespace CoreTests.Queries
 {
     public class DispatchTests
     {
-        [Fact(DisplayName = "Queries: Configured Pre-Filters Unique")]
+        [Fact(DisplayName = "Queries: Configured Filters Unique")]
         public void Configured_PreFilters_Unique()
         {
             var config = new QueryDispatchConfig();
-            config.AddPreQueryFilter<QueryFilterOne>();
-            config.AddPreQueryFilter<QueryFilterTwo>();
+            config.AddQueryFilter<QueryFilterOne>();
+            config.AddQueryFilter<QueryFilterTwo>();
 
-            Assert.Throws<InvalidOperationException>(() => config.AddPreQueryFilter<QueryFilterOne>())
+            Assert.Throws<InvalidOperationException>(() => config.AddQueryFilter<QueryFilterOne>())
                 .Message.Should().Contain("has already been added");
            
-        }
-
-        [Fact(DisplayName = "Queries: Configured Post-Filters Unique")]
-        public void Configured_PostFilters_Unique()
-        {
-            var config = new QueryDispatchConfig();
-            config.AddPostQueryFilter<QueryFilterOne>();
-            config.AddPostQueryFilter<QueryFilterTwo>();
-
-            Assert.Throws<InvalidOperationException>(() => config.AddPostQueryFilter<QueryFilterOne>())
-                .Message.Should().Contain("has already been added");
         }
 
         [Fact(DisplayName = "Queries: Query Cannot have Multiple Consumers")]
@@ -122,8 +111,8 @@ namespace CoreTests.Queries
             var testQuery = new TestQuery();
             var dispatchConfig = new QueryDispatchConfig();
 
-            dispatchConfig.AddPreQueryFilter<QueryFilterOne>();
-            dispatchConfig.AddPostQueryFilter<QueryFilterTwo>();
+            dispatchConfig.AddQueryFilter<QueryFilterOne>();
+            dispatchConfig.AddQueryFilter<QueryFilterTwo>();
 
             return ContainerFixture.TestAsync(async fixture => {
 
@@ -141,10 +130,12 @@ namespace CoreTests.Queries
                 testResult.Assert.Container(_ =>
                 {
                     testQuery.Result.Should().NotBeNull();
-                    testQuery.TestLog.Should().HaveCount(3);
-                    testQuery.TestLog[0].Should().Be(nameof(QueryFilterOne));
-                    testQuery.TestLog[1].Should().Be(nameof(TestConsumer));
-                    testQuery.TestLog[2].Should().Be(nameof(QueryFilterTwo));
+                    testQuery.TestLog.Should().HaveCount(5);
+                    testQuery.TestLog[0].Should().Be("QueryFilterOne-Pre");
+                    testQuery.TestLog[1].Should().Be("QueryFilterTwo-Pre");
+                    testQuery.TestLog[2].Should().Be(nameof(TestConsumer));
+                    testQuery.TestLog[3].Should().Be("QueryFilterOne-Post");
+                    testQuery.TestLog[4].Should().Be("QueryFilterTwo-Post");
                 });
             });
         }
