@@ -1,4 +1,5 @@
-﻿using NetFusion.Rest.Client.Settings;
+﻿using NetFusion.Rest.Client.Resources;
+using NetFusion.Rest.Client.Settings;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,6 +20,9 @@ namespace NetFusion.Rest.Client.Core
         private IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
         private IRequestSettings _defaultRequestSettings;
 
+        private IServiceEntryApiProvider _serviceApiProvider;
+        private Action<IRequestSettings> _eachRequestAction;
+
         /// <summary>
         /// Initializes an instance of the client with its associated HttpClient delegated to 
         /// for making network requests.
@@ -38,6 +42,23 @@ namespace NetFusion.Rest.Client.Core
 
             _defaultRequestSettings = requestSettings ?? throw new ArgumentNullException(nameof(requestSettings),
                 "Default Request Settings cannot be null.");
+        }
+
+        public Task<HalEntryPointResource> GetApiEntry()
+        {
+            return _serviceApiProvider.GetEntryPointResource();
+        }
+
+        // Called the builder when creating client...
+        internal void SetApiServiceProvider(IServiceEntryApiProvider provider)
+        {
+            _serviceApiProvider = provider ?? throw new ArgumentNullException(nameof(provider));
+        }
+
+        // Called the builder when creating client...
+        internal void SetEachRequestAction(Action<IRequestSettings> config)
+        {
+            _eachRequestAction = config ?? throw new ArgumentNullException(nameof(config));
         }
 
 		public Task<ApiResponse> SendAsync(ApiRequest request,
@@ -93,6 +114,8 @@ namespace NetFusion.Rest.Client.Core
             }
 
             var requestSettings = _defaultRequestSettings.GetMerged(request.Settings);
+
+            _eachRequestAction?.Invoke(requestSettings);
 
             // Check if the request has any embedded names specified.  This allows the client
             // to suggest to the server the subset of resources it needs from the default set

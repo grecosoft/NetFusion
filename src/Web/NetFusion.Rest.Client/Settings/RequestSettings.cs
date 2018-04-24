@@ -40,16 +40,20 @@ namespace NetFusion.Rest.Client.Settings
 
         public IRequestSettings GetMerged(IRequestSettings requestSettings)
         {
-            if (requestSettings == null)
+            if (requestSettings != null)
             {
-                return this;
+                return new RequestSettings()
+                {
+                    Headers = Headers.GetMergedHeaders(requestSettings.Headers),
+                    QueryString = QueryString.GetMerged(requestSettings.QueryString)
+                };
             }
 
             return new RequestSettings()
             {
-                Headers = Headers.GetMergedHeaders(requestSettings.Headers),
-                QueryString = QueryString.GetMerged(requestSettings.QueryString)
-            };
+                Headers = Headers,
+                QueryString = QueryString
+            };                      
         }
     }
 }

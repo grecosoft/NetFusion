@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using NetFusion.Rest.Client.Resources;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NetFusion.Rest.Client
@@ -8,6 +9,14 @@ namespace NetFusion.Rest.Client
     /// </summary>
     public interface IRequestClient
     {
+        /// <summary>
+        /// Return the service api entry resource associated with the client.
+        /// If the client was built without specifying the entry point address,
+        /// an exception is thrown.
+        /// </summary>
+        /// <returns>The entry point response containing the root api of the service.</returns>
+        Task<HalEntryPointResource> GetApiEntry();
+
         /// <summary>
         /// Sends an API request to the server.
         /// </summary>

@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Common\NetFusion.Common\NetFusion.Common.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Test\NetFusion.Test.csproj" />
     <ProjectReference Include="..\..\src\Web\NetFusion.Rest.Client\NetFusion.Rest.Client.csproj" />
     <ProjectReference Include="..\..\src\Web\NetFusion.Rest.Common\NetFusion.Rest.Common.csproj" />
