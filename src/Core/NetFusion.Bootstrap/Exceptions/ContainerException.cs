@@ -1,18 +1,11 @@
 ﻿using NetFusion.Base.Exceptions;
 using System;
 
-#if NET461
-using System.Runtime.Serialization;
-#endif
-
 namespace NetFusion.Bootstrap.Exceptions
 {
     /// <summary>
     /// Exception thrown by the container when there is an issue bootstrapping the application.
     /// </summary>
-#if NET461
-    [Serializable]
-#endif
     public class ContainerException : NetFusionException
     {
         /// <summary>
@@ -22,14 +15,6 @@ namespace NetFusion.Bootstrap.Exceptions
         {
 
         }
-
-        #if NET461
-        public ContainerException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-
-        }
-        #endif
 
         /// <summary>
         /// Constructor.

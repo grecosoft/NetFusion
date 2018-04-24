@@ -14,9 +14,6 @@ namespace NetFusion.Base.Entity
     /// a given domain entity.  An domain entity can provide dynamic behaviors by implementing 
     /// the IAttributedEntity interface and delegating to an instance of this class.
     /// </summary>
-#if NET461
-    [Serializable]
-#endif
     public class EntityAttributes : DynamicObject,
         IEntityAttributes
     {

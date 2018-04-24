@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-
+    <LangVersion>7</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -13,6 +13,7 @@
     <PackageReference Include="FluentAssertions" Version="5.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.2" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>

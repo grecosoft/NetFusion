@@ -2,10 +2,7 @@
   <Import Project="..\..\..\build\common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>7</LangVersion>
   </PropertyGroup>
   
@@ -14,11 +11,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ApiExplorer" Version="2.0.3" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.1" />
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
   <ItemGroup>

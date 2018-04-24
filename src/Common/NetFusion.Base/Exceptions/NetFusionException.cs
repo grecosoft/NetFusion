@@ -1,19 +1,11 @@
-﻿using NetFusion.Common.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
-
-#if NET461
-using System.Runtime.Serialization;
-#endif
 
 namespace NetFusion.Base.Exceptions
 {
     /// <summary>
     /// Base exception from which all other NetFusion specific exceptions derive.
     /// </summary>
-#if NET461
-    [Serializable]
-#endif
     public class NetFusionException : Exception
     {
         private const string NETFUSION_DETAILS_VALUE = "NetFusionExDetails";
@@ -31,20 +23,6 @@ namespace NetFusion.Base.Exceptions
         {
     
         }
-
-        #if NET461
-        public NetFusionException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            Details = (IDictionary<string, object>)info.GetValue(NETFUSION_DETAILS_VALUE, typeof(IDictionary<string, object>));
-        }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue(NETFUSION_DETAILS_VALUE, this.Details);
-            base.GetObjectData(info, context);
-        }
-        #endif
 
         /// <summary>
         /// Constructor.

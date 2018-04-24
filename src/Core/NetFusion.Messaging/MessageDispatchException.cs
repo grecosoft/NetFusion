@@ -4,18 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-#if NET461
-using System.Runtime.Serialization;
-#endif
-
 namespace NetFusion.Messaging
 {
     /// <summary>
     /// An exception that is thrown when there is an exception dispatching a message.
     /// </summary>
-#if NET461
-    [Serializable]
-#endif
     public class MessageDispatchException : NetFusionException
     {
         public MessageDispatchException() { }

@@ -2,18 +2,9 @@
   <Import Project="..\..\..\build\common.props" />
   
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>7</LangVersion>
   </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
@@ -23,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\NetFusion.Rest.Common\NetFusion.Rest.Common.csproj" />
   </ItemGroup>
+  
   <ItemGroup>
     <Folder Include="Core\" />
   </ItemGroup>

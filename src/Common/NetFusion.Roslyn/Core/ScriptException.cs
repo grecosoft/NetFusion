@@ -1,18 +1,11 @@
 ﻿using NetFusion.Base.Exceptions;
 using System;
 
-#if NET461
-using System.Runtime.Serialization;
-#endif
-
 namespace NetFusion.Domain.Roslyn
 {
     /// <summary>
     /// Exception thrown by script evaluation.
     /// </summary>
-#if NET461
-    [Serializable]
-#endif
     public class ScriptException : NetFusionException
     {
         /// <summary>
@@ -22,14 +15,6 @@ namespace NetFusion.Domain.Roslyn
         {
 
         }
-
-#if NET461
-        public ScriptException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-
-        }
-#endif
 
         /// <summary>
         /// Constructor.
