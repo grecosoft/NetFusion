@@ -1,5 +1,7 @@
-﻿using NetFusion.Rest.Client.Resources;
+﻿using Microsoft.Extensions.Logging;
+using NetFusion.Rest.Client.Resources;
 using NetFusion.Rest.Client.Settings;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +19,7 @@ namespace NetFusion.Rest.Client.Core
     public class RequestClient : IRequestClient
     {
         private HttpClient _httpClient;
+        private ILogger _logger;
         private IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
         private IRequestSettings _defaultRequestSettings;
 
@@ -28,14 +31,19 @@ namespace NetFusion.Rest.Client.Core
         /// for making network requests.
         /// </summary>
         /// <param name="httpClient">Reference to a HttpClient instance.</param>
+        /// <param name="logger">The logger to use for log messages.</param>
         /// <param name="contentSerializers">Dictionary of serializers keyed by media-type.</param>
         /// <param name="requestSettings">The default request settings to be used for each request.</param>
         public RequestClient(HttpClient httpClient, 
+            ILogger logger,
             IDictionary<string, IMediaTypeSerializer> contentSerializers, 
             IRequestSettings requestSettings)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient), 
                 "HTTP Client cannot be null.");
+
+            _logger = logger ?? throw new ArgumentNullException(nameof(httpClient), 
+                "Logger cannot be null.");
 
             _mediaTypeSerializers = contentSerializers ?? throw new ArgumentNullException(nameof(contentSerializers),
                 "HTTP Context Serializers cannot be null.");
@@ -49,13 +57,13 @@ namespace NetFusion.Rest.Client.Core
             return _serviceApiProvider.GetEntryPointResource();
         }
 
-        // Called the builder when creating client...
+        // Called by builder when creating client...
         internal void SetApiServiceProvider(IServiceEntryApiProvider provider)
         {
             _serviceApiProvider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
-        // Called the builder when creating client...
+        // Called by builder when creating client...
         internal void SetEachRequestAction(Action<IRequestSettings> config)
         {
             _eachRequestAction = config ?? throw new ArgumentNullException(nameof(config));
@@ -83,9 +91,15 @@ namespace NetFusion.Rest.Client.Core
         private async Task<ApiResponse> SendRequest(ApiRequest request, CancellationToken cancellationToken)
         {
             HttpRequestMessage requestMsg = await CreateRequestMessage(request);
-            HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
+            
+            _logger.LogDebug("Sending request to: {uri} (method)", requestMsg.RequestUri, requestMsg.Method);
+            _logger.LogTrace("Request Message: {request}", JsonConvert.SerializeObject(request, Formatting.Indented));
 
-            return new ApiResponse(requestMsg, responseMsg);
+            HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
+            var response = new ApiResponse(requestMsg, responseMsg);
+
+            _logger.LogTrace("Response Message: {response}", JsonConvert.SerializeObject(response, Formatting.Indented));
+            return response;
         }
 
         private async Task<ApiResponse<TContent>> SendRequest<TContent>(ApiRequest request,  CancellationToken cancellationToken)

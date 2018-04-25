@@ -9,6 +9,7 @@ using NetFusion.Rest.Server.Modules;
 using NetFusion.Test.Plugins;
 using System.Collections.Generic;
 using NetFusion.Rest.Client.Settings;
+using Microsoft.Extensions.Logging;
 
 namespace InfrastructureTests.Web.Rest.Setup
 {
@@ -58,9 +59,10 @@ namespace InfrastructureTests.Web.Rest.Setup
             // to communicate with in-memory web-host.
             var server = new TestServer(builder);
             var httpClient = server.CreateClient();
+            var logger = new LoggerFactory().CreateLogger("Unit-Test Logger");
 
             // Return an instance of the ResourceClient to be tested.
-            return new RequestClient(httpClient, serializers, requestSettings);
+            return new RequestClient(httpClient, logger, serializers, requestSettings);
         }
     }
 }

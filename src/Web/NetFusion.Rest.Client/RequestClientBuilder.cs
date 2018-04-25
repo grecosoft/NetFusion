@@ -1,4 +1,5 @@
-﻿using NetFusion.Rest.Client.Core;
+﻿using Microsoft.Extensions.Logging;
+using NetFusion.Rest.Client.Core;
 using NetFusion.Rest.Client.Resources;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
@@ -19,10 +20,11 @@ namespace NetFusion.Rest.Client
         private string _entryPointPath;
 
         private IRequestSettings _defaultRequestSettings;
-        private IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
-        private Lazy<Task<HalEntryPointResource>> _apiEntryPointLazy;
-
         private Action<IRequestSettings> _eachRequestAction;
+        private IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
+
+        private Lazy<Task<HalEntryPointResource>> _apiEntryPointLazy;
+        private ILoggerFactory _loggerFactory;
 
         private RequestClientBuilder(string baseAddressUri)
         {
@@ -73,6 +75,18 @@ namespace NetFusion.Rest.Client
         }
 
         /// <summary>
+        /// Specifies the logger factory to use.
+        /// </summary>
+        /// <param name="factory">The logger factory to use to log request/response messages.</param>
+        /// <returns>Builder for method chaining.</returns>
+        public RequestClientBuilder UsingLoggerFactory(ILoggerFactory factory)
+        {
+            _loggerFactory = factory ?? 
+                throw new ArgumentNullException(nameof(factory));
+            return this;
+        }
+
+        /// <summary>
         /// Registers a delegate that will be invoked before each request.
         /// </summary>
         /// <param name="settings">Reference to the request settings being used for the current request.</param>
@@ -119,8 +133,11 @@ namespace NetFusion.Rest.Client
             AssureDefaultSerializers();
 
             var settings = _defaultRequestSettings ?? RequestSettings.Create(config => config.UseHalDefaults());
+            var logger = (_loggerFactory ?? new LoggerFactory()).CreateLogger<RequestClient>();
+            
+            // Create an instance of the RequestClient that delegates to the MS HttpClient.
             var httpClient = new HttpClient { BaseAddress = new Uri(_baseAddressUri) };
-            var requestClient = new RequestClient(httpClient, _mediaTypeSerializers, settings);
+            var requestClient = new RequestClient(httpClient, logger, _mediaTypeSerializers, settings);
 
             // If the configuration specified a service entry point path, configure a delegate to load
             // the resource of first successful response.
@@ -139,7 +156,7 @@ namespace NetFusion.Rest.Client
         }
 
         // Invoked by the created request client when the entry point is requested.
-        public Task<HalEntryPointResource> GetEntryPointResource()
+        Task<HalEntryPointResource> IServiceEntryApiProvider.GetEntryPointResource()
         {
             if (_apiEntryPointLazy == null)
             {
