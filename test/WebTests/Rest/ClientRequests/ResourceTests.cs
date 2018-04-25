@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using NetFusion.Rest.Client.Resources;
 using Xunit;
 
 namespace InfrastructureTests.Web.Rest.ClientRequests

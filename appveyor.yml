@@ -28,3 +28,7 @@ deploy:
 skip_commits:
   files:
     - '**/*.md'
+	message: /\[nobuild\]/
+
+  
+

@@ -1,4 +1,4 @@
-﻿namespace NetFusion.Rest.Client
+﻿namespace NetFusion.Rest.Client.Resources
 {
     /// <summary>
     /// Representation of REST Link for consuming client returned
