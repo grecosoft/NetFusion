@@ -26,9 +26,9 @@ deploy:
     skip_symbols: false
 
 skip_commits:
+  message: /\[nobuild\]/
   files:
     - '**/*.md'
-	message: /\[nobuild\]/
 
   
 
