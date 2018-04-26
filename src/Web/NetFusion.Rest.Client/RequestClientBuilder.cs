@@ -16,6 +16,7 @@ namespace NetFusion.Rest.Client
     /// </summary>
     public class RequestClientBuilder : IServiceEntryApiProvider
     {
+        public const string CorrelationHeaderName = "nf_CorrelationId";
         private readonly string _baseAddressUri;
         private string _entryPointPath;
 
@@ -23,8 +24,10 @@ namespace NetFusion.Rest.Client
         private Action<IRequestSettings> _eachRequestAction;
         private IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
 
+        private string _correlationIdHeaderName = "NF_CorrelationId";
         private Lazy<Task<HalEntryPointResource>> _apiEntryPointLazy;
         private ILoggerFactory _loggerFactory;
+        private ILogger _logger;
 
         private RequestClientBuilder(string baseAddressUri)
         {
@@ -87,6 +90,23 @@ namespace NetFusion.Rest.Client
         }
 
         /// <summary>
+        /// Indicates that a header should be added containing a correlation id value.
+        /// </summary>
+        /// <param name="headerName">The name of the header to use.  If not specified, 
+        /// a default value is used.</param>
+        /// <returns></returns>
+        public RequestClientBuilder AddRequestCorrelationId(string headerName = CorrelationHeaderName)
+        {
+            if (string.IsNullOrWhiteSpace(headerName))
+            {
+                throw new ArgumentException("Header name not specified.", nameof(headerName));
+            }
+
+            _correlationIdHeaderName = headerName;
+            return this;
+        }
+
+        /// <summary>
         /// Registers a delegate that will be invoked before each request.
         /// </summary>
         /// <param name="settings">Reference to the request settings being used for the current request.</param>
@@ -133,17 +153,20 @@ namespace NetFusion.Rest.Client
             AssureDefaultSerializers();
 
             var settings = _defaultRequestSettings ?? RequestSettings.Create(config => config.UseHalDefaults());
-            var logger = (_loggerFactory ?? new LoggerFactory()).CreateLogger<RequestClient>();
+
+            _logger = (_loggerFactory ?? new LoggerFactory()).CreateLogger<RequestClient>();
             
             // Create an instance of the RequestClient that delegates to the MS HttpClient.
             var httpClient = new HttpClient { BaseAddress = new Uri(_baseAddressUri) };
-            var requestClient = new RequestClient(httpClient, logger, _mediaTypeSerializers, settings);
+            var requestClient = new RequestClient(httpClient, _logger, _mediaTypeSerializers, settings);
 
             // If the configuration specified a service entry point path, configure a delegate to load
             // the resource of first successful response.
             if (_entryPointPath != null)
             {
-                _apiEntryPointLazy = new Lazy<Task<HalEntryPointResource>>(() => GetEntryPointResource(requestClient), true);
+                _apiEntryPointLazy = new Lazy<Task<HalEntryPointResource>>(
+                    () => GetEntryPointResource(requestClient), true);
+
                 requestClient.SetApiServiceProvider(this);
             }
 
@@ -152,6 +175,12 @@ namespace NetFusion.Rest.Client
             {
                 requestClient.SetEachRequestAction(_eachRequestAction);
             }
+
+            if (_correlationIdHeaderName != null)
+            {
+                requestClient.AddCorrelationId(_correlationIdHeaderName);
+            }
+
             return requestClient;
         }
 
@@ -176,10 +205,13 @@ namespace NetFusion.Rest.Client
             {
                 var request = ApiRequest.Get(_entryPointPath);
                 var response = await requestClient.SendAsync<HalEntryPointResource>(request);
+
+                response.ThrowIfNotSuccessStatusCode();
                 return response.Content;
             }
-            catch (Exception ex) // TODO:  Pass in logger...
+            catch (Exception ex) 
             {
+                _logger.LogError(ex, "Error loading service entry resource");
                 _apiEntryPointLazy = new Lazy<Task<HalEntryPointResource>>(() => GetEntryPointResource(requestClient), true);
                 throw;
             }

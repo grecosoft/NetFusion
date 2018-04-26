@@ -12,6 +12,7 @@
 //        {
 //            var client = RequestClientBuilder.ForBaseAddress("http://localhost:8086")
 //                .ForEntryPoint("v1.0/device/entries")
+//                .AddRequestCorrelationId()
 //                .BeforeEachRequest(settings =>
 //                {
 //                    Console.WriteLine(settings.ToIndentedJson());
@@ -22,7 +23,8 @@
 //            {
 //                var e = client.GetApiEntry().Result;
 //            }
-//            catch {
+//            catch
+//            {
 
 //            }
 

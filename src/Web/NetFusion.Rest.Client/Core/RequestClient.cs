@@ -20,6 +20,7 @@ namespace NetFusion.Rest.Client.Core
     {
         private HttpClient _httpClient;
         private ILogger _logger;
+        private string _correlationHeaderName;
         private IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
         private IRequestSettings _defaultRequestSettings;
 
@@ -58,16 +59,26 @@ namespace NetFusion.Rest.Client.Core
         }
 
         // Called by builder when creating client...
+        // ---------------------------------------------
         internal void SetApiServiceProvider(IServiceEntryApiProvider provider)
         {
             _serviceApiProvider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
 
-        // Called by builder when creating client...
         internal void SetEachRequestAction(Action<IRequestSettings> config)
         {
             _eachRequestAction = config ?? throw new ArgumentNullException(nameof(config));
         }
+
+        internal void AddCorrelationId(string headerName)
+        {
+            if (string.IsNullOrWhiteSpace(headerName))
+                throw new ArgumentException("Correlation header name not specified.", nameof(headerName));
+
+            _correlationHeaderName = headerName;
+        }
+
+        // -----
 
 		public Task<ApiResponse> SendAsync(ApiRequest request,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -124,12 +135,11 @@ namespace NetFusion.Rest.Client.Core
             if (request.IsTemplate)
             {
                 throw new InvalidOperationException(
-                    $"Request URI: {request.RequestUri}.  Templates must have all route-tokens populated before making request to server.");
+                    $"Request URI: {request.RequestUri}.  Templates must have all route-tokens populated " + 
+                    $"before making request to server.");
             }
 
             var requestSettings = _defaultRequestSettings.GetMerged(request.Settings);
-
-            _eachRequestAction?.Invoke(requestSettings);
 
             // Check if the request has any embedded names specified.  This allows the client
             // to suggest to the server the subset of resources it needs from the default set
@@ -138,6 +148,15 @@ namespace NetFusion.Rest.Client.Core
             {
                 requestSettings.QueryString.AddParam("embed", request.EmbeddedNames);
             }
+
+            // Add correlation value to request if configured.
+            if (_correlationHeaderName != null)
+            {
+                var correlationId = Guid.NewGuid().ToString();
+                requestSettings.Headers.Add(_correlationHeaderName, correlationId);
+            }
+
+            _eachRequestAction?.Invoke(requestSettings);
 
             // Build the query string and append to request URL.
             if (requestSettings.QueryString.Params.Any())

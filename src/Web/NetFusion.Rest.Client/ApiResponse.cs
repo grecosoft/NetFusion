@@ -91,7 +91,7 @@ namespace NetFusion.Rest.Client
         /// Allows the consumer handling the response to throw an HttpRequestException
         /// if a success HTTP status code was not received.
         /// </summary>
-        public void ThrowIfNotSucessStatusCode()
+        public void ThrowIfNotSuccessStatusCode()
         {
             if (!IsSuccessStatusCode)
             {
