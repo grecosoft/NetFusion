@@ -1,10 +1,9 @@
-﻿using Autofac;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Common.Extensions;
-using NetFusion.Web.Mvc.Metadata;
 using NetFusion.Web.Mvc.Metadata.Core;
 using System;
 using System.Net;
@@ -38,33 +37,33 @@ namespace NetFusion.Web.Mvc.Metadata
                 throw new ArgumentException("URL not specified");
             }
            
-            var metadataSrv = AppContainer.Instance.Services.ResolveOptional<IApiMetadataService>();
-            if (metadataSrv != null)
-            {
-                ConfigureMetadataRoutes(app, baseUrl, metadataSrv);
-            }
-
+            ConfigureMetadataRoutes(app, baseUrl);
             return app;
         }
 
-        private static void ConfigureMetadataRoutes(
-            IApplicationBuilder app,
-            string baseUrl,
-            IApiMetadataService metadataSrv)
+        private static void ConfigureMetadataRoutes(IApplicationBuilder app, string baseUrl)
         {
             app.UseMvc(routes =>
             {
                 routes.MapGet(baseUrl + "/groups", (HttpContext context) =>
                 {
-                    var metadata = metadataSrv.GetApiGroups();
-                    return SetResponse(context.Response, metadata);
+                    using (var scope = AppContainer.Instance.CreateServiceScope())
+                    {
+                        var metadataSrv = scope.ServiceProvider.GetService<IApiMetadataService>();
+                        var metadata = metadataSrv.GetApiGroups();
+                        return SetResponse(context.Response, metadata);
+                    }
                 });
 
                 routes.MapGet(baseUrl + "/groups/{groupName}", (HttpContext context) =>
                 {
-                    var groupName = context.GetRouteValue("groupName").ToString();
-                    var metadata = metadataSrv.GetApiGroup(groupName);
-                    return SetResponse(context.Response, metadata);
+                    using (var scope = AppContainer.Instance.CreateServiceScope())
+                    {
+                        var metadataSrv = scope.ServiceProvider.GetService<IApiMetadataService>();
+                        var groupName = context.GetRouteValue("groupName").ToString();
+                        var metadata = metadataSrv.GetApiGroup(groupName);
+                        return SetResponse(context.Response, metadata);
+                    }
                 });
             });
         }

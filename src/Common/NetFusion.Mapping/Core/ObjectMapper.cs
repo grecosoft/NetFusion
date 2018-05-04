@@ -1,5 +1,5 @@
-﻿using Autofac;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
@@ -13,17 +13,17 @@ namespace NetFusion.Mapping.Core
     /// </summary>
     public class ObjectMapper : IObjectMapper
     {
-        private readonly ILogger<ObjectMapper> _logger;
+        private readonly ILogger _logger;
         private readonly ILookup<Type, TargetMap> _sourceTypeMappings; // SourceType => TargetType(s)
-        private readonly ILifetimeScope _lifetimeScope;
+        private readonly IServiceProvider _services;
 
         public ObjectMapper(
             ILoggerFactory loggerFactory,
             IMappingModule mappingModule,
-            ILifetimeScope lifetimeScope)
+            IServiceProvider services)
         {
             _logger = loggerFactory.CreateLogger<ObjectMapper>();
-            _lifetimeScope = lifetimeScope;
+            _services = services;
             _sourceTypeMappings = mappingModule.SourceTypeMappings;
         }
 
@@ -60,9 +60,10 @@ namespace NetFusion.Mapping.Core
                    $"Mapping strategy not found.  Source: { source.GetType().FullName} Target: {targetType.FullName}");
             }
 
-            // If the mapping strategy instance was originally created by a IMappingStrategyFactory, return the cached instance.
-            // Otherwise, create an instance of the custom mapping strategy using the container so it can have injected dependencies.
-            strategy = targetMap.StrategyInstance ?? (IMappingStrategy)_lifetimeScope.Resolve(targetMap.StrategyType);
+            // If the mapping strategy instance was originally created by a IMappingStrategyFactory, 
+            // return the cached instance.  Otherwise, create an instance of the custom mapping strategy
+            // using the service provider..
+            strategy = targetMap.StrategyInstance ?? (IMappingStrategy)_services.GetRequiredService(targetMap.StrategyType);
 
             LogFoundMapping(targetMap);
             return strategy.Map(this, source);

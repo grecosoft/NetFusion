@@ -68,7 +68,7 @@ namespace NetFusion.Messaging.Core
         }
 
         /// <summary>
-        /// For a list of methods, returns an object with properties that can cached and
+        /// For a list of methods, returns an object with properties that can be cached and
         /// used to dispatch the method at runtime.
         /// </summary>
         /// <param name="messageHandlers">List of message handler methods.</param>
@@ -137,13 +137,12 @@ namespace NetFusion.Messaging.Core
         }
 
         /// <summary>
-        /// Given a lookup of message dispatch information keyed by message type,
-        /// finds the message dispatchers that should be called to handle the message.
+        /// Given a lookup of message dispatch information keyed by message type, finds the message 
+        /// dispatchers that should be called to handle the message.
         /// </summary>
         /// <param name="messageDispatchers">Lookup of message dispatchers.</param>
         /// <param name="messageType">The message type being published.</param>
-        /// <returns>List dispatchers for the handlers that should be invoked for 
-        /// the message.</returns>
+        /// <returns>List dispatchers for the handlers that should be invoked for the message.</returns>
         public static IEnumerable<MessageDispatchInfo> WhereHandlerForMessage(
             this ILookup<Type, MessageDispatchInfo> messageDispatchers, 
             Type messageType)

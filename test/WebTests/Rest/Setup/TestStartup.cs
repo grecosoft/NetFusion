@@ -1,5 +1,4 @@
-﻿using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
@@ -15,11 +14,11 @@ namespace InfrastructureTests.Web.Rest.Setup.Setup
     /// </summary>
     public class TestStartup : IStartup
     {
-        private MockAppHostPlugin _hostPlugin;
+        private MockAppHostPlugin _pluginUnderTest;
 
-        public TestStartup(MockAppHostPlugin hostPlugin)
+        public TestStartup(MockAppHostPlugin pluginUnderTest)
         {
-            _hostPlugin = hostPlugin;
+            _pluginUnderTest = pluginUnderTest;
         }
 
         public IAppContainer AppContainer { get; private set; }
@@ -27,20 +26,22 @@ namespace InfrastructureTests.Web.Rest.Setup.Setup
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            
             // Add framework services.
-            services.AddMvc(options => {
+            services.AddMvc(options =>
+            {
                 options.UseHalFormatter();
             });
 
             // Create, Build, and Start the NetFusion container.
-            AppContainer = TestAppContainer.Create(_hostPlugin, services);
+            AppContainer = TestAppContainer.Create(_pluginUnderTest, services);
 
             AppContainer
                 .Build()
                 .Start();
 
             // Integrate the NetFusion container.
-            return new AutofacServiceProvider(AppContainer.Services);
+            return AppContainer.ServiceProvider;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

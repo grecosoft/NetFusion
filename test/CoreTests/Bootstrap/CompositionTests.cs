@@ -18,9 +18,9 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Modules having Known Type Properties will be Populated")]
         public void ModulesHavingKnownTypeProperties_WillBePopulated()
         {
-            ContainerFixture.Test(fixture =>
+            ContainerFixture.Test2(fixture =>
             {
-                fixture.Arrange.Resolver(r =>
+                fixture.Arrange2.Resolver2(r =>
                 {
                     // Plug-in type based on the type in the core plug-in.
                     r.AddPlugin<MockAppHostPlugin>()
@@ -32,11 +32,7 @@ namespace CoreTests.Bootstrap
                           .AddPluginType<MockComposedModule>()
                           .AddPluginType<MockKnownType>();
                 })
-                .Act.OnContainer(c =>
-                {
-                    c.Build().Start();
-                })
-                .Assert.PluginModule<MockComposedModule>(m =>
+                .Assert2.PluginModule<MockComposedModule>(m =>
                 {
                     m.ImportedTypes.Should().NotBeNull();
                     m.ImportedTypes.Should().HaveCount(1);
@@ -56,9 +52,9 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Core Plug-Ins Composted from All Other Plug-in Types")]
         public void CorePluginsComposed_FromAllOtherPluginTypes()
         {
-            ContainerFixture.Test(fixture =>
+            ContainerFixture.Test2(fixture =>
             {
-                fixture.Arrange.Resolver(r =>
+                fixture.Arrange2.Resolver2(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
                                  .AddPluginType<MockTypeOneBasedOnKnownType>();
@@ -74,11 +70,7 @@ namespace CoreTests.Bootstrap
                     r.AddPlugin<MockCorePlugin>()
                         .AddPluginType<MockComposedModule>();
                 })
-                .Act.OnContainer(c =>
-                {
-                    c.Build();
-                })
-                .Assert.PluginModule<MockComposedModule>(m =>
+                .Assert2.PluginModule<MockComposedModule>(m =>
                 {
                     m.ImportedTypes.Should().NotBeNull();
                     m.ImportedTypes.Should().HaveCount(3);
@@ -96,10 +88,9 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Application Plug-Ins composed from Other Plugin-In types Only")]
         public void AppPluginsComposed_FromOnlyOtherAppPluginTypesOnly()
         {
-
-            ContainerFixture.Test(fixture =>
+            ContainerFixture.Test2(fixture =>
             {
-                fixture.Arrange.Resolver(r =>
+                fixture.Arrange2.Resolver2(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockTypeOneBasedOnKnownType>();
@@ -113,11 +104,7 @@ namespace CoreTests.Bootstrap
                     r.AddPlugin<MockAppComponentPlugin>()
                         .AddPluginType<MockComposedModule>();
                 })
-                .Act.OnContainer(c =>
-                {
-                    c.Build();
-                })
-                .Assert.PluginModule<MockComposedModule>(m =>
+                .Assert2.PluginModule<MockComposedModule>(m =>
                 {
                     m.ImportedTypes.Should().NotBeNull();
                     m.ImportedTypes.Should().HaveCount(1);
@@ -140,9 +127,9 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Known Type instance Discovered by Plug-in defining Known Type")]
         public void KnownTypeInstance_DiscoverdByPlugin_DefiningKnownType()
         {
-            ContainerFixture.Test(fixture =>
+            ContainerFixture.Test2(fixture =>
             {
-                fixture.Arrange.Resolver(r =>
+                fixture.Arrange2.Resolver2(r =>
                 {
                     // Plug-in type based on the type in the core plug-in.
                     r.AddPlugin<MockAppHostPlugin>()
@@ -153,11 +140,7 @@ namespace CoreTests.Bootstrap
                          .AddPluginType<MockKnownType>()
                          .AddPluginType<MockComposedModule>();
                 })
-                .Act.OnContainer(c =>
-                {
-                    c.Build();
-                })
-                .Assert.CompositeApp(ca =>
+                .Assert2.CompositeApp(ca =>
                 {
                     // Verifies that the known plug-in type under test was discovered.
                     var discoveredTypes = ca.AppHostPlugin.PluginTypes.Where(pt => pt.DiscoveredByPlugins.Any());
@@ -174,9 +157,9 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Known Type discovered by correct Plug-in")]
         public void KnowType_DiscoveredBy_CorrectPlugin()
         {
-            ContainerFixture.Test(fixture =>
+            ContainerFixture.Test2(fixture =>
             {
-                fixture.Arrange.Resolver(r =>
+                fixture.Arrange2.Resolver2(r =>
                 {
                     // Plug-in type based on the type in the core plug-in.
                     r.AddPlugin<MockAppHostPlugin>()
@@ -188,14 +171,10 @@ namespace CoreTests.Bootstrap
                           .AddPluginType<MockComposedModule>()
                           .AddPluginType<MockKnownType>();
                 })
-                .Act.OnContainer(c =>
-                {
-                    c.Build().Start();
-                })
-                .Assert.CompositeApp(ca =>
+                .Assert2.CompositeApp(ca =>
                 {
                     // Verifies that the known plug-in type under test was discovered by the expected plug-in.
-                    var knownTypes = ca.AppHostPlugin.PluginTypes.Where(pt => pt.IsKnownTypeDefinition);
+                    var knownTypes = ca.AppHostPlugin.PluginTypes.Where(pt => pt.IsKnownTypeImplementation);
                     knownTypes.First().DiscoveredByPlugins.Should().HaveCount(1);
                     knownTypes.First().DiscoveredByPlugins.First().Manifest.Should().BeOfType<MockCorePlugin>();
                 });

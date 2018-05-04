@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Logging;
@@ -19,21 +19,21 @@ namespace NetFusion.Messaging.Core
     /// </summary>
     public class InProcessMessagePublisher : MessagePublisher
     {
-        private readonly ILifetimeScope _lifetimeScope;
+        private readonly IServiceProvider _services;
         private readonly ILogger _logger;
         private readonly IMessageDispatchModule _messagingModule;
         private readonly IEntityScriptingService _scriptingSrv;
 
         public InProcessMessagePublisher(
-            ILifetimeScope liftimeScope,
+            IServiceProvider services,
             ILogger<InProcessMessagePublisher> logger,
             IMessageDispatchModule eventingModule,
             IEntityScriptingService scriptingSrv)
         {
-            _lifetimeScope = liftimeScope;
-            _logger = logger;
-            _messagingModule = eventingModule;
-            _scriptingSrv = scriptingSrv;
+            _services = services ?? throw new ArgumentNullException(nameof(services));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _messagingModule = eventingModule ?? throw new ArgumentNullException(nameof(eventingModule));
+            _scriptingSrv = scriptingSrv ?? throw new ArgumentNullException(nameof(scriptingSrv));
         }
 
         public override IntegrationTypes IntegrationType => IntegrationTypes.Internal;
@@ -146,7 +146,7 @@ namespace NetFusion.Messaging.Core
                 $"Dispatching message Type: {message.GetType()} to Consumer: { dispatcher.ConsumerType } " +
                 $"Method: { dispatcher.MessageHandlerMethod.Name} ");
 
-            var consumer = (IMessageConsumer)_lifetimeScope.Resolve(dispatcher.ConsumerType);
+            var consumer = (IMessageConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
             return dispatcher.Dispatch(message, consumer, cancellationToken);
         }
 

@@ -1,6 +1,6 @@
-﻿using Autofac;
-using NetFusion.Bootstrap.Plugins;
+﻿using NetFusion.Bootstrap.Plugins;
 using System.Collections.Generic;
+using System;
 
 namespace CoreTests.Bootstrap.Mocks
 {
@@ -15,9 +15,9 @@ namespace CoreTests.Bootstrap.Mocks
             this.IsDisposed = true;
         }
 
-        public override void StartModule(IContainer container, ILifetimeScope scope)
+        public override void StartModule(IServiceProvider services)
         {
-            this.IsStarted = true;
+            IsStarted = true;
         }
     }
 

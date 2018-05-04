@@ -1,7 +1,6 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
-using NetFusion.Bootstrap.Container;
 using NetFusion.Domain.Roslyn.Core;
 using NetFusion.Domain.Roslyn.Testing;
 using NetFusion.Messaging;
@@ -28,19 +27,12 @@ namespace CoreTests.Messaging.Mocks
             return resolver;
         }
 
-        public static IAppContainer UseMockedEvalService(this IAppContainer container)
+        public static IServiceCollection UseMockedEvalService(this IServiceCollection services)
         {
             var scriptingService = CreateEvalService();
-            container.WithConfig<AutofacRegistrationConfig>(regConfig =>
-            {
-                regConfig.Build = builder =>
-                {
-                    builder.RegisterInstance(scriptingService)
-                        .As<IEntityScriptingService>();
-                };
-            });
+            services.AddSingleton<IEntityScriptingService>(scriptingService);
 
-            return container;
+            return services;
         }
 
         // Creates a configured evaluation service with a single expression.

@@ -3,11 +3,10 @@
 namespace NetFusion.Bootstrap.Plugins
 {
     /// <summary>
-    /// This interface is used by the NetFusion.Test assembly 
-    /// and is implemented by classes representing mock plug-ins.
-    /// This interface is used so a plug-in can add its needed 
-    /// types for unit-test purposes without having a dependency 
-    /// on the NetFusion.Test assembly.
+    /// This interface is used by the NetFusion.Test assembly and is implemented by 
+    /// classes representing mock plug-ins.  This interface is used so a plug-in can 
+    /// add its needed types for unit-test purposes without having a dependency on
+    /// the NetFusion.Test assembly.
     /// </summary>
     public interface IPluginTypeAccessor
     {

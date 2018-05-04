@@ -55,22 +55,20 @@ namespace NetFusion.Messaging.Core
             return PublishMessageAsync(domainEvent, integrationType, cancellationToken);
         }
 
-        public Task SendAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken),
-            IntegrationTypes integrationType = IntegrationTypes.All)
+        public Task SendAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (command == null) throw new ArgumentNullException(nameof(command),
                 "Command cannot be null.");
 
-            return PublishMessageAsync(command, integrationType, cancellationToken);
+            return PublishMessageAsync(command, IntegrationTypes.Internal, cancellationToken);
         }
 
-        public async Task<TResult> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken),
-            IntegrationTypes integrationType = IntegrationTypes.All)
+        public async Task<TResult> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (command == null) throw new ArgumentNullException(nameof(command),
                 "Command cannot be null.");
 
-            await PublishMessageAsync(command, integrationType, cancellationToken);
+            await PublishMessageAsync(command, IntegrationTypes.Internal, cancellationToken);
             return command.Result;
         }
 

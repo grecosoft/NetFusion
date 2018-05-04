@@ -5,7 +5,7 @@ namespace CoreTests.Settings
 {
     public static class SettingsTestExtensions
     {
-        public static TestTypeResolver DefaultSettingsConfig(this TestTypeResolver resolver)
+        public static TestTypeResolver AddPluginsUnderTests(this TestTypeResolver resolver)
         {
             resolver.AddPlugin<MockAppHostPlugin>();
 

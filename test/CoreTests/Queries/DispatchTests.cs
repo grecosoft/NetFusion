@@ -1,13 +1,13 @@
-﻿using Autofac;
-using CoreTests.Queries.Mocks;
+﻿using CoreTests.Queries.Mocks;
 using FluentAssertions;
-using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Config;
 using NetFusion.Test.Container;
 using System;
+using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using Xunit;
+using NetFusion.Bootstrap.Exceptions;
 
 namespace CoreTests.Queries
 {
@@ -26,29 +26,29 @@ namespace CoreTests.Queries
         }
 
         [Fact(DisplayName = "Queries: Query Cannot have Multiple Consumers")]
-        public Task Query_CannotHave_MultipleConsumers()
+        public void Query_CannotHave_MultipleConsumers()
         {
             var typesUnderTest = new[] { typeof(DuplicateConsumerOne), typeof(DuplicateConsumerTwo) };
             var testQuery = new TestQuery();
 
-             return ContainerFixture.TestAsync(async fixture => {
-
-                 var restResult = await fixture
-                .Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                .Act.OnContainer(c =>
-                    {
-                        c.Build().Start();
-
-                        var dispatcher = c.Services.Resolve<IMessagingService>();
-                        return dispatcher.DispatchAsync(testQuery);
-                    });
-
-                restResult.Assert.Exception<ContainerException>(ex =>
+            ContainerFixture.Test2(fixture =>
+            {
+                try
                 {
-                    ex?.InnerException.Should().NotBeNull();
+                    fixture.Arrange2.Resolver2(r => r.WithDispatchConfiguredHost(typesUnderTest));
+                    fixture.InitContainer();
+                    Assert.True(false, "Expected exception not raised.");
+                }
+                catch (ContainerException ex)
+                {
+                    ex.InnerException.Should().NotBeNull();
                     ex.InnerException.Message.Should()
                          .Contain("The following query types have multiple consumers");
-                });
+                }
+                catch
+                {
+                    Assert.True(false, "Unexpected exception raised.");
+                }
             });
         }
 
@@ -58,44 +58,43 @@ namespace CoreTests.Queries
             var typesUnderTest = new[] { typeof(TestConsumer) };
             var testQuery = new TestQueryNoConsumer();
 
-            return ContainerFixture.TestAsync(async fixture => {
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange2
+                        .Resolver2(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                    .Act2.OnServices2(s =>
+                    {
 
-                var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                .Act.OnContainer(c => {
-                    c.Build().Start();
+                        var dispatcher = s.GetService<IMessagingService>();
+                        return dispatcher.DispatchAsync(testQuery);
+                    });
 
-                    var dispatcher = c.Services.Resolve<IMessagingService>();
-                    return dispatcher.DispatchAsync(testQuery);
-                });
-
-                testResult.Assert.Exception<QueryDispatchException>(ex =>
+                testResult.Assert2.Exception<QueryDispatchException>(ex =>
                 {
                     ex.Should().NotBeNull();
                     ex.Message.Should().Contain("is not registered");
                 });
             });
         }
-
-        [Fact (DisplayName = "Queries: Consumer Can Dispatch Query to Consumer")]
+        
+        [Fact(DisplayName = "Queries: Consumer Can Dispatch Query to Consumer")]
         public Task Consumer_Can_DispatchQuery_To_Consumer()
         {
             var typesUnderTest = new[] { typeof(TestConsumer) };
             var testQuery = new TestQuery();
 
-            return ContainerFixture.TestAsync(async fixture => {
-
-                var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                    .Act.OnContainer(c =>
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange2
+                        .Resolver2(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                    .Act2.OnServices2(s =>
                         {
-                            c.Build().Start();
-
-                            var dispatcher = c.Services.Resolve<IMessagingService>();
+                           
+                            var dispatcher = s.GetService<IMessagingService>();
                             return dispatcher.DispatchAsync(testQuery);
                         });
 
-                testResult.Assert.Container(_ =>
+                testResult.Assert2.State(() =>
                 {
                     testQuery.Result.Should().NotBeNull();
                     testQuery.TestLog.Should().HaveCount(1);
@@ -107,27 +106,27 @@ namespace CoreTests.Queries
         [Fact(DisplayName = "Queries: Filters Applied Correct Order")]
         public Task Filters_Applied_CorrectOrder()
         {
-            var typesUnderTest = new[] { typeof(TestConsumer)};
+            var typesUnderTest = new[] { typeof(TestConsumer) };
             var testQuery = new TestQuery();
             var dispatchConfig = new QueryDispatchConfig();
 
             dispatchConfig.AddQueryFilter<QueryFilterOne>();
             dispatchConfig.AddQueryFilter<QueryFilterTwo>();
 
-            return ContainerFixture.TestAsync(async fixture => {
+            return ContainerFixture.TestAsync(async fixture =>
+            {
 
-                var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                    .Container(c => c.WithConfig(dispatchConfig))
-                .Act.OnContainer(c =>
+                var testResult = await fixture.Arrange2
+                        .Resolver2(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                        .Container2(c => c.WithConfig(dispatchConfig))
+                    .Act2.OnServices2(s =>
                     {
-                        c.Build().Start();
 
-                        var dispatcher = c.Services.Resolve<IMessagingService>();
+                        var dispatcher = s.GetService<IMessagingService>();
                         return dispatcher.DispatchAsync(testQuery);
                     });
 
-                testResult.Assert.Container(_ =>
+                testResult.Assert2.State(() =>
                 {
                     testQuery.Result.Should().NotBeNull();
                     testQuery.TestLog.Should().HaveCount(5);

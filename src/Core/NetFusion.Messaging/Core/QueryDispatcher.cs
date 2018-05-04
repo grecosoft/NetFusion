@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions.Tasks;
@@ -20,18 +20,18 @@ namespace NetFusion.Messaging.Core
     public class QueryDispatcher 
     {
         private readonly ILogger<QueryDispatcher> _logger;
-        private readonly ILifetimeScope _lifetimeScope;
+        private readonly IServiceProvider _services;
         
         // Dependent modules.
         private readonly IQueryDispatchModule _dispatchModule;
         private readonly IQueryFilterModule _filterModule;
 
-        public QueryDispatcher(ILogger<QueryDispatcher> logger, ILifetimeScope lifetimeScope, 
+        public QueryDispatcher(ILogger<QueryDispatcher> logger, IServiceProvider services, 
             IQueryDispatchModule dispatchModule,
             IQueryFilterModule filterModule)
         {
             _logger = logger;
-            _lifetimeScope = lifetimeScope;
+            _services = services;
             _dispatchModule = dispatchModule;
             _filterModule = filterModule;
         }
@@ -68,10 +68,10 @@ namespace NetFusion.Messaging.Core
         // pre and post filters.
         private async Task InvokeDispatcher(QueryDispatchInfo dispatcher, IQuery query, CancellationToken cancellationToken)
         {
-            var consumer = (IQueryConsumer)_lifetimeScope.Resolve(dispatcher.ConsumerType);
+            var consumer = (IQueryConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
 
-            var preFilters = _filterModule.QueryFilterTypes.Select(qf => _lifetimeScope.Resolve(qf)).OfType<IPreQueryFilter>();
-            var postFilters = _filterModule.QueryFilterTypes.Select(qf => _lifetimeScope.Resolve(qf)).OfType<IPostQueryFilter>();
+            var preFilters = _filterModule.QueryFilterTypes.Select(qf => _services.GetRequiredService(qf)).OfType<IPreQueryFilter>();
+            var postFilters = _filterModule.QueryFilterTypes.Select(qf => _services.GetRequiredService(qf)).OfType<IPostQueryFilter>();
         
             if (_logger.IsEnabled(LogLevel.Trace))
             {

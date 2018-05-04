@@ -29,11 +29,6 @@
         string AssemblyVersion { get; set; }
 
         /// <summary>
-        /// The name of the computer running the manifest.
-        /// </summary>
-        string MachineName { get; set; }
-
-        /// <summary>
         /// Description of the functionality implemented by the assembly containing the manifest.
         /// </summary>
         /// <returns>Description of functionality.</returns>

@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
@@ -60,6 +60,7 @@ namespace NetFusion.Mapping.Modules
 
             TargetMap[] targetMappings = Context.AllPluginTypes
                 .WhereHavingClosedInterfaceTypeOf(openGenericMapType)
+                .Where(pt => !pt.Type.IsAbstract)
                 .Select(ti => new TargetMap
                 {
                     StrategyType = ti.Type,
@@ -69,22 +70,18 @@ namespace NetFusion.Mapping.Modules
 
             return targetMappings;
         }
-        
-        public override void RegisterComponents(ContainerBuilder builder)
+       
+        public override void RegisterDefaultServices(IServiceCollection services)
         {
             // Service used as the central entry point for mapping objects.
-            builder.RegisterType<ObjectMapper>()
-                .As<IObjectMapper>()
-                .InstancePerLifetimeScope();
+            services.AddScoped<IObjectMapper, ObjectMapper>();
 
             // Register the custom mappings with the container.  This will allow mappings 
             // to inject any services needed to complete the mapping.
             foreach (TargetMap map in SourceTypeMappings.Values().Where(
                 map => map.StrategyInstance == null))
             {
-                builder.RegisterType(map.StrategyType)
-                    .AsSelf()
-                    .InstancePerLifetimeScope();
+                services.AddScoped(map.StrategyType);
             }
         }
     }

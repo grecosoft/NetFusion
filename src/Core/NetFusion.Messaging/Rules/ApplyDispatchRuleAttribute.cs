@@ -1,13 +1,13 @@
 ﻿using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Messaging.Types.Rules;
+using NetFusion.Messaging.Types;
 using System;
 using System.Linq;
 
 namespace NetFusion.Messaging.Rules
 {
     /// <summary>
-    /// Associates a rule with a rule classes that determine if the 
-    /// handler should be called based on the message's state.
+    /// Used to specify rule classes that determine if the handler 
+    /// should be called based on the message's state.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class ApplyDispatchRuleAttribute : Attribute

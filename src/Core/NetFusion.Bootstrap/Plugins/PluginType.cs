@@ -17,7 +17,7 @@ namespace NetFusion.Bootstrap.Plugins
             AssemblyName = assemblyName ?? throw new ArgumentNullException(nameof(assemblyName));
 
             IsKnownTypeContract = type.IsDerivedAbstractType<IKnownPluginType>();
-            IsKnownTypeDefinition = type.IsConcreteTypeDerivedFrom<IKnownPluginType>();
+            IsKnownTypeImplementation = type.IsConcreteTypeDerivedFrom<IKnownPluginType>();
         }
 
         /// <summary>
@@ -36,10 +36,9 @@ namespace NetFusion.Bootstrap.Plugins
         public bool IsKnownTypeContract { get; set; }
 
         /// <summary>
-        /// Indicates that the type implements the IKnownPluginType interface and 
-        /// is a concrete instance.
+        /// Indicates that the type implements the IKnownPluginType interface and is concrete.
         /// </summary>
-        public bool IsKnownTypeDefinition { get; }
+        public bool IsKnownTypeImplementation { get; }
 
         /// <summary>
         /// The name of the .NET assembly containing the type.
@@ -47,7 +46,8 @@ namespace NetFusion.Bootstrap.Plugins
         public string AssemblyName { get; }
 
         /// <summary>
-        /// If a known type, the plug-ins that discovered the type.
+        /// If a known type, the plug-ins that discovered the type.  This is only used
+        /// for logging and provides details of how the application was composed.
         /// </summary>
         public IEnumerable<Plugin> DiscoveredByPlugins { get; set; }
     }

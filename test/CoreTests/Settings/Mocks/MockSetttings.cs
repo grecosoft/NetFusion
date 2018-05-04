@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace CoreTests.Settings.Mocks
 {
     [ConfigurationSection("App:MainWindow")]
-    public class MockSetttings : AppSettings
+    public class MockSetttings : IAppSettings
     {
         public int Height { get; set; } = 1000;
         public int Width { get; set; } = 2000;

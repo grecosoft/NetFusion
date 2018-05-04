@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Config;
@@ -26,16 +26,12 @@ namespace NetFusion.Messaging.Modules
 
         // Registers the pre and post filters within the container so the can 
         // inject needed services.
-        public override void RegisterComponents(ContainerBuilder builder)
+        public override void RegisterServices(IServiceCollection services)
         {
-            RegisterQueryFilters(builder, QueryFilterTypes);
-        }
-
-        private void RegisterQueryFilters(ContainerBuilder builder, IEnumerable<Type> filterTypes)
-        {
-            builder.RegisterTypes(filterTypes.ToArray())
-                .AsSelf()
-                .InstancePerLifetimeScope();
+            foreach (var queryFilterType in QueryFilterTypes)
+            {
+                services.AddScoped(queryFilterType);
+            }
         }
 
         public override void Log(IDictionary<string, object> moduleLog)

@@ -1,6 +1,6 @@
-﻿using Autofac;
-using CoreTests.Messaging.Mocks;
+﻿using CoreTests.Messaging.Mocks;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
 using NetFusion.Test.Container;
 using System.Threading.Tasks;
@@ -23,27 +23,24 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = nameof(DomainEventAsyncHandlers_CanBeInvoked))]
         public Task DomainEventAsyncHandlers_CanBeInvoked()
         {
-            return ContainerFixture.TestAsync(async fixture => {
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange2
+                        .Resolver2(r => r.WithHostAsyncConsumer())
+                    .Act2.OnServices2(async s =>
+                    {
+                        var messagingSrv = s.GetService<IMessagingService>();                        
+                        var evt = new MockDomainEvent();
+                        await messagingSrv.PublishAsync(evt);
+                    });
 
-                var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithHostAsyncConsumer())
-                    .Container(c => c.UsingDefaultServices())
-
-                .Act.OnContainer(async c => {
-                    c.Build();
-
-                    var domainEventSrv = c.Services.Resolve<IMessagingService>();
-                    var evt = new MockDomainEvent();
-                    await domainEventSrv.PublishAsync(evt);
-                });
-
-                testResult.Assert.Container(c =>
+                testResult.Assert2.Services2(s =>
                 {
-                    var consumer = c.Services.Resolve<MockAsyncMessageConsumer>();
+                    var consumer = s.GetRequiredService<MockAsyncMessageConsumer>();
                     consumer.ExecutedHandlers.Should().HaveCount(3);
-                    consumer.ExecutedHandlers.Should().Contain("OnEvent1Async", "OnEvent2Async", "OnEvent3");
+                    consumer.ExecutedHandlers.Should().Contain("OnEvent1Async", "OnEvent2Async", "OnEvent3");                    
                 });
-            });       
+            });     
         }
     }
 }

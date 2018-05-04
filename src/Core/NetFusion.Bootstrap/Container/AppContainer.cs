@@ -1,10 +1,9 @@
-﻿using Autofac;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Validation;
-using NetFusion.Bootstrap.Configuration;
+using NetFusion.Bootstrap.Dependencies;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
@@ -18,60 +17,75 @@ using System.Linq;
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Responsible for bootstrapping an application composed from plug-in components.  
-    /// After the application container is created, services registered by the plug-in 
-    /// modules, can be accessed using the configured dependency injection container. 
+    /// Responsible for bootstrapping an application composed from plug-in components.
+    /// The bootstrap orchestrates the construction of the application container and
+    /// the service collection that is populated.  An assembly is identified as being
+    /// a plug-in by containing a class deriving from one of the base IPluginManifest
+    /// derived types used to identify the category of plug-in:
+    /// 
+    ///     - AppHost:  The executable process (WebApi/Console)
+    ///     - AppComponent:  Contains application specific components.
+    ///     - Core: Contains technology centric reusable implementations and cross-cut 
+    ///     concerns.
+    ///     
+    /// The application container and bootstrap process is only dependent on Microsoft
+    /// libraries and open-source projects.  Core plug-ins should be written for non
+    /// Microsoft open-source implementations.  This allows the base implementation to
+    /// have a small footprint that can be easily extended without requiring changes.
     /// </summary>
     public class AppContainer : IAppContainer,
         IComposite,
         IBuiltContainer
     {
-        // Singleton instance of created container.
+        // Singleton instance of created container:
         private static AppContainer _instance;
         private bool _disposed = false;
 
-        private readonly ITypeResolver _typeResover;
-        private readonly Dictionary<Type, IContainerConfig> _configs;  // ConfigType => Instance
+        // Microsoft Common Abstractions:
+        private readonly IServiceCollection _serviceCollection;
+        private readonly IConfiguration _configuration;
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly ILogger _logger;
+        private IServiceProvider _serviceProvider;
 
-        // Logging:
-        private LoggerConfig _loggerConfig;
-        private ILoggerFactory _loggerFactory;
-        private ILogger _logger;
+        // Composite Application:
+        private readonly ITypeResolver _typeResover;
+        private ManifestRegistry Registry { get; }
+        private readonly Dictionary<Type, IContainerConfig> _configs;  // ConfigType => Instance
+        private readonly CompositeApplication _application;
         private CompositeLog _compositeLog;
 
-        // Settings:
-        private EnvironmentConfig _enviromentConfig;
-        private IConfiguration _configuration;
-
-        // Validation:
+        // Container Abstractions:
         private ValidationConfig _validationConfig;
-
-        // Contains references to all the discovered plug-in manifests
-        // used to bootstrap the container.
-        private ManifestRegistry Registry { get; }
-
-        // The composite application is just an in-memory built structure
-        // representing the discovered plug-ins and their modules.
-        private readonly CompositeApplication _application;
-        private Autofac.IContainer _container;
-
+        
         /// <summary>
-        /// Creates an instance of the application container.  The static Create methods of AppContainer 
-        /// are the suggested methods for creating a new container.  This constructor is usually used for 
-        /// creating an application container for testing purposes.
+        /// Creates an instance of the application container.  An instance of this class should be
+        /// created using the ContainerBuilder class during startup of the application host.
         /// </summary>
-        /// <param name="typeResolver">The type resolver implementation used to probe the plug-in
-        /// components and their types.</param>
+        /// <param name="services">Abstraction of a collection of services populated by modules.</param>
+        /// <param name="configuration">Abstraction used to read application configuration settings.</param>
+        /// <param name="loggerFactory">Abstraction used to log messages.</param>
+        /// <param name="typeResolver">Abstraction used to discover plug-ins and their types.</param>
         /// <param name="setGlobalReference">Determines if AppContainer.Instance should be set to a
         /// singleton instance of the created container.  Useful for unit testing where a shared 
         /// instance my not be wanted.</param>
-        public AppContainer(ITypeResolver typeResolver, bool setGlobalReference = true)
+        public AppContainer(
+            IServiceCollection services, 
+            IConfiguration configuration,
+            ILoggerFactory loggerFactory, 
+            ITypeResolver typeResolver, 
+            bool setGlobalReference = true)
         {
-            _typeResover = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver),
-                "Type Resolver implementation not specified.");
-
-            _application = new CompositeApplication();
-            _configs = new Dictionary<Type, IContainerConfig>();
+            // Dependent Core Abstraction Implementations:
+            _serviceCollection = services ?? throw new ArgumentNullException(nameof(services));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+            _typeResover = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
+                  
+            // Composite Application:
+            _application = new CompositeApplication(configuration, loggerFactory);
+            _logger = _loggerFactory.CreateLogger<AppContainer>();
+            _configs = new Dictionary<Type, IContainerConfig>();  
 
             if (setGlobalReference)
             {
@@ -91,6 +105,12 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
+        /// <summary>
+        /// Reference to the singleton application container instance.  This should only
+        /// be used when service-locater is necessary from a root component.  If a given
+        /// service implementation is contained within the service collection, it can 
+        /// reference the application container by injecting the IAppContainer interface.
+        /// </summary>
         public static IAppContainer Instance
         {
             get
@@ -109,22 +129,47 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
+        // Note:  This property should only be referenced to pass to a requesting component and
+        // not to be used to create service instances.  Instead the CreateSerivceScope and
+        // ExecuteInServiceScope methods should be used when not running within a given request
+        // pipeline such as is done for ASP.NET Core.
+        public IServiceProvider ServiceProvider
+        {
+            get
+            {
+                ThrowIfDisposed(this);
+                return _serviceProvider;
+            }
+        }
+
+        // Returns a new service scope that can be used to instantiate services.  After the scope 
+        // is used, it should be disposed.   When running within a host such as ASP.NET, the service 
+        // scope is automatically created and disposed.
+        public IServiceScope CreateServiceScope()
+        {
+            ThrowIfDisposed(this);
+            return _serviceProvider.CreateScope();
+        }
+
+        // Execute a delegate within a new service scope instance that is disposed.
+        public void ExecuteInServiceScope(Action<IServiceProvider> action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+
+            ThrowIfDisposed(this);
+
+            using (var scope = CreateServiceScope())
+            {
+                action(scope.ServiceProvider);
+            }
+        }
+
         // Creates a validation instance, based on the application configuration, used to validate an object.
         // The host application can specify an implementation using a validation library of choice.
         public IObjectValidator CreateValidator(object obj)
         {
             ThrowIfDisposed(this);
             return (IObjectValidator)Activator.CreateInstance(_validationConfig.ValidatorType, obj);
-        }
-
-        // The created dependency-injection container.
-        public IContainer Services
-        {
-            get
-            {
-                ThrowIfDisposed(this);
-                return _container;
-            }
         }
 
         private static void ThrowIfDisposed(AppContainer container)
@@ -163,24 +208,6 @@ namespace NetFusion.Bootstrap.Container
 
         //---------------------------------------Container Creation-------------------------------//
 
-        /// <summary>
-        /// Creates an application container using the types provided by the specified type resolver.
-        /// </summary>
-        /// <param name="typeResolver">Reference to a custom type resolver.</param>
-        /// <returns>Configured application container.</returns>
-        public static IAppContainer Create(ITypeResolver typeResolver)
-        {
-            if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver),
-                "Type Resolver implementation not specified.");
-
-            if (_instance != null)
-            {
-                throw new ContainerException("Container has already been created.");
-            }
-
-            return new AppContainer(typeResolver);
-        }
-
         public IAppContainer WithConfig(IContainerConfig config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config), 
@@ -213,7 +240,7 @@ namespace NetFusion.Bootstrap.Container
             where T : IContainerConfig, new()
         {
             if (configInit == null) throw new ArgumentNullException(nameof(configInit), 
-                "Configuration Initialization function not specified.");
+                "Configuration delegate not specified.");
 
             T config = new T();
             WithConfig(config);
@@ -224,14 +251,11 @@ namespace NetFusion.Bootstrap.Container
 
         //------------------------------------------Container Build and Life Cycle-------------------------------------//
 
-        // Loads and initializes all of the plug-ins and builds the DI container
+        // Loads and initializes all of the plug-ins and builds the service collection
         // but does not start their execution.
         public IBuiltContainer Build()
         {
-            ConfigureEnvironment();
-            ConfigureLogging();
             ConfigureValidation();
-            LogContainerInitialization();
 
             try
             {
@@ -243,7 +267,7 @@ namespace NetFusion.Bootstrap.Container
 
                     LogPlugins(_application.Plugins);
 
-                    CreateAutofacContainer();
+                    CreateServiceProvider();
                     CreateCompositeLogger();
                 }
             }
@@ -267,14 +291,15 @@ namespace NetFusion.Bootstrap.Container
             if (_application.IsStarted)
             {
                 throw LogException(new ContainerException(
-                    "The application container plug-in modules have already been started."));
+                    "The application container has already been started."));
             }
 
             try
             {
                 using (var logger = _logger.LogTraceDuration(BootstrapLogEvents.BOOTSTRAP_START, "Starting Container"))
+                using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
-                    _application.StartPluginModules(_container);
+                    _application.StartPluginModules(scope.ServiceProvider);
                 }
                
                 if (_logger.IsEnabled(LogLevel.Trace))
@@ -299,14 +324,15 @@ namespace NetFusion.Bootstrap.Container
             if (! _application.IsStarted)
             {
                 throw LogException(new ContainerException(
-                    "The application container plug-in modules have not been started."));
+                    "The application container has not been started."));
             }
 
             try
             {
                 using (var logger = _logger.LogTraceDuration(BootstrapLogEvents.BOOTSTRAP_STOP, "Stopping Container"))
+                using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
-                    _application.StopPluginModules(_container);
+                    _application.StopPluginModules(scope.ServiceProvider);
                 }
             }
             catch (ContainerException ex)
@@ -338,9 +364,7 @@ namespace NetFusion.Bootstrap.Container
 
             DisposePluginModules();
 
-            _container?.Dispose();
             _loggerFactory?.Dispose();
-
             _disposed = true;
         }
 
@@ -350,15 +374,6 @@ namespace NetFusion.Bootstrap.Container
             {
                 (module as IDisposable)?.Dispose();
             }
-        }
-
-        // Configure overall environment settings such as .NET configuration extensions.
-        private void ConfigureEnvironment()
-        {
-            _enviromentConfig = _configs.Values.OfType<EnvironmentConfig>()
-                .FirstOrDefault() ?? new EnvironmentConfig();
-
-            _configuration = _enviromentConfig.Configuration;
         }
 
         private void ConfigureValidation()
@@ -376,7 +391,7 @@ namespace NetFusion.Bootstrap.Container
 
         //------------------------------------------Plug-in Loading-------------------------------------//
 
-        // Delegate to the type resolver to search all assemblies representing plug-ins.
+        // Delegate to the type resolver to search for all assemblies representing plug-ins.
         private void LoadManifestRegistry()
         {
             var validator = new ManifestValidation(Registry);
@@ -460,14 +475,14 @@ namespace NetFusion.Bootstrap.Container
         // on which it is based.  This information is used for logging how the application was composed.
         private void SetDiscoveredTypes(Plugin plugin)
         {
-            PluginType[] thisPluginKnowTypeDefinitions = plugin.PluginTypes.Where(pt => pt.IsKnownTypeDefinition).ToArray();
+            PluginType[] thisPluginKnowTypeImplementations = plugin.PluginTypes.Where(pt => pt.IsKnownTypeImplementation).ToArray();
 
             PluginType[] allPluginKnownTypeContracts = _application.Plugins
                 .SelectMany(p => p.PluginTypes)
                 .Where(pt => pt.IsKnownTypeContract)
                 .ToArray();
 
-            foreach (PluginType thisPluginKnowType in thisPluginKnowTypeDefinitions)
+            foreach (PluginType thisPluginKnowType in thisPluginKnowTypeImplementations)
             {
                 thisPluginKnowType.DiscoveredByPlugins = allPluginKnownTypeContracts.Where(
                         kt => thisPluginKnowType.Type.IsConcreteTypeDerivedFrom(kt.Type))
@@ -478,48 +493,25 @@ namespace NetFusion.Bootstrap.Container
 
         //------------------------------------------DI Container Build------------------------------------------//
 
-        private void CreateAutofacContainer()
-        {
-            var builder = new Autofac.ContainerBuilder();
-
-            // Allow the composite application plug-in modules
-            // to register services with container.
-            _application.RegisterServices(builder);
+        private void CreateServiceProvider()
+        {          
+            // Allow the composite application plug-in modules to register services.
+            _application.PopulateServices(_serviceCollection);
 
             // Register additional services,
-            RegisterAppContainerAsService(builder);
-            RegisterPluginModuleServices(builder);
-            RegisterHostProvidedServices(builder);
-            RegisterContainerProvidedServices(builder);
-
-            // Register logging and configuration.
-            RegisterLogging(builder);
-            RegisterConfigSettings(builder);
-
-            _container = builder.Build();
+            RegisterAppContainerAsService();
+            RegisterPluginModuleServices();
+            RegisterContainerProvidedServices();
+  
+            _serviceProvider = _serviceCollection.BuildServiceProvider(true);
         }
 
-        private void RegisterAppContainerAsService(Autofac.ContainerBuilder builder)
+        private void RegisterAppContainerAsService()
         {
-            builder.RegisterInstance(this).As<IAppContainer>().SingleInstance();
+            _serviceCollection.AddSingleton<IAppContainer>(this);
         }
 
-        // Register MS Logging Extensions.
-        private void RegisterLogging(Autofac.ContainerBuilder builder)
-        {
-            builder.RegisterInstance(LoggerFactory).As<ILoggerFactory>().SingleInstance();
-            builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).SingleInstance();
-        }
-
-        // Register MS Configuration Extensions.
-        private void RegisterConfigSettings(Autofac.ContainerBuilder builder)
-        {
-            builder.RegisterGeneric(typeof(OptionsManager<>)).As(typeof(IOptions<>)).SingleInstance();
-            builder.RegisterGeneric(typeof(OptionsMonitor<>)).As(typeof(IOptionsMonitor<>)).SingleInstance();
-            builder.RegisterInstance(_configuration).As<IConfiguration>();
-        }
-
-        private void RegisterPluginModuleServices(Autofac.ContainerBuilder builder)
+        private void RegisterPluginModuleServices()
         {
             var modulesWithServices = _application.AllPluginModules.OfType<IPluginModuleService>();
 
@@ -528,88 +520,34 @@ namespace NetFusion.Bootstrap.Container
                 var moduleServiceType = moduleService.GetType();
                 var moduleServiceInterfaces = moduleServiceType.GetInterfacesDerivedFrom<IPluginModuleService>();
 
-                builder.RegisterInstance(moduleService)
-                    .As(moduleServiceInterfaces.ToArray())
-                    .SingleInstance();
+                _serviceCollection.AddSingleton(moduleServiceInterfaces, moduleService);
             }
         }
 
-        // Allow the host application to register any service types or instances created during 
-        // the initialization of the application.
-        private void RegisterHostProvidedServices(Autofac.ContainerBuilder builder)
+        private void RegisterContainerProvidedServices()
         {
-            var regConfig = _configs.Values.OfType<AutofacRegistrationConfig>().FirstOrDefault();
-
-            if (regConfig != null && regConfig.Build != null)
-            {
-                regConfig.Build(builder);
-            }
-        }
-
-        private void RegisterContainerProvidedServices(Autofac.ContainerBuilder builder)
-        {
-            builder.RegisterType<ValidationService>()
-                .As<IValidationService>()
-                .SingleInstance();
-
-            builder.RegisterType<NullEntityScriptingService>()
-                .As<IEntityScriptingService>()
-                .SingleInstance();
+            _serviceCollection.AddSingleton<IConfiguration>(_configuration);
+            _serviceCollection.AddSingleton<IValidationService, ValidationService>();
+            _serviceCollection.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();            
         }
 
         //------------------------------------------Logging------------------------------------------//
-
-        // Determines if the host application specified how logging should
-        // be configured.  If not specified, a default configuration is used.
-        private void ConfigureLogging()
-        {
-            _loggerConfig = _configs.Values.OfType<LoggerConfig>()
-               .FirstOrDefault() ?? new LoggerConfig();
-
-            _loggerFactory = _loggerConfig.LoggerFactory;
-
-            // Since no longer specified, all logs having level greater than Warning will
-            // be written to standard debug output.
-            if (_loggerFactory == null)
-            {
-                _loggerFactory = new LoggerFactory();
-                _loggerFactory.AddDebug(LogLevel.Warning);
-                _loggerConfig.LogExceptions = true;
-            }
-
-            // Create logger to be used by this class and also provide the composite application
-            // with a reference to the log factory so it can create plug-in-specific loggers.
-            _logger = _loggerFactory.CreateLogger<AppContainer>();
-            _application.LoggerFactory = _loggerFactory;
-        }
-
         private Exception LogException(Exception ex)
         {
-            if (_loggerConfig.LogExceptions)
-            {
-                _logger.LogErrorDetails(BootstrapLogEvents.BOOTSTRAP_EXCEPTION, ex, "Bootstrap Exception");
-            }
+            _logger.LogErrorDetails(BootstrapLogEvents.BOOTSTRAP_EXCEPTION, ex, "Bootstrap Exception");
             return ex;
         }
 
         private void CreateCompositeLogger()
         {
-            _compositeLog = new CompositeLog(_application, _container.ComponentRegistry);
-        }
-
-        private void LogContainerInitialization()
-        {
-            _logger.LogDebugDetails(BootstrapLogEvents.BOOTSTRAP_INITIALIZE, "Container Setup", new
-            {
-                TypeResolver = _typeResover.GetType().AssemblyQualifiedName,
-                Configs = _configs.Keys.Select(ct => ct.AssemblyQualifiedName)
-            });
+            _compositeLog = new CompositeLog(_application, _serviceCollection);
         }
 
         private void LogManifests(ManifestRegistry registry)
         {
             _logger.LogDebugDetails(BootstrapLogEvents.BOOTSTRAP_EXCEPTION, "Manifests", new
             {
+                TypeResolver = _typeResover.GetType().AssemblyQualifiedName,
                 Host = registry.AppHostPluginManifests.First().GetType().AssemblyQualifiedName,
                 Application = registry.AppComponentPluginManifests.Select(m => m.GetType().AssemblyQualifiedName),
                 Core = registry.CorePluginManifests.Select(c => c.GetType().AssemblyQualifiedName)

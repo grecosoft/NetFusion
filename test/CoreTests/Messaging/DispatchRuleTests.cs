@@ -1,6 +1,6 @@
-﻿using Autofac;
-using CoreTests.Messaging.Mocks;
+﻿using CoreTests.Messaging.Mocks;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
 using NetFusion.Test.Container;
 using System.Threading.Tasks;
@@ -17,53 +17,46 @@ namespace CoreTests.Messaging
     {
         [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesAllDispatchRules))]
         public Task HandlerCalled_WhenMessagePassesAllDispatchRules()
-        {
-            return ContainerFixture.TestAsync(async fixture => {
+        { 
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange2
+                        .Resolver2(r => r.WithHostRuleBasedConsumer())
+                    .Act2.OnServices2(s =>
+                    {
+                        var mockEvt = new MockRuleDomainEvent { RuleTestValue = 1500 };
+                        return s.GetRequiredService<IMessagingService>()
+                                         .PublishAsync(mockEvt);
+                    });
 
-                var testResult = await fixture
-                .Arrange
-                    .Resolver(r => r.WithHostRuleBasedConsumer())
-                    .Container(c => c.UsingDefaultServices())
-
-                .Act.OnContainer(c => {
-                    c.Build();
-
-                    var mockEvt = new MockRuleDomainEvent { RuleTestValue = 1500 };
-                    return c.Services.Resolve<IMessagingService>()
-                        .PublishAsync(mockEvt);
-                });
-
-                testResult.Assert.Container(c =>
+                testResult.Assert2.Services2(s =>
                 {
-                    var consumer = c.Services.Resolve<MockDomainEventRuleBasedConsumer>();
+                    var consumer = s.GetRequiredService<MockDomainEventRuleBasedConsumer>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventAllRulesPass");
                 });
-            });               
+            });
         }
 
         [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesAnyDispatchRule))]
         public Task HandlerCalled_WhenMessagePassesAnyDispatchRule()
         {
-            return ContainerFixture.TestAsync(async fixture => {
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange2
+                        .Resolver2(r => r.WithHostRuleBasedConsumer())
+                    .Act2.OnServices2(s =>
+                    {
+                        var mockEvt = new MockRuleDomainEvent { RuleTestValue = 3000 };
+                        return s.GetRequiredService<IMessagingService>()
+                                         .PublishAsync(mockEvt);
+                    });
 
-                var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithHostRuleBasedConsumer())
-                    .Container(c => c.UsingDefaultServices())
-
-                .Act.OnContainer(c => {
-                    c.Build();
-
-                    var mockEvt = new MockRuleDomainEvent { RuleTestValue = 3000 };
-                    return c.Services.Resolve<IMessagingService>()
-                        .PublishAsync(mockEvt);
-                });
-
-                testResult.Assert.Container(c =>
+                testResult.Assert2.Services2(s =>
                 {
-                    var consumer = c.Services.Resolve<MockDomainEventRuleBasedConsumer>();
+                    var consumer = s.GetRequiredService<MockDomainEventRuleBasedConsumer>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventAnyRulePasses");
                 });
-            });               
+            });
         }
     }
 }

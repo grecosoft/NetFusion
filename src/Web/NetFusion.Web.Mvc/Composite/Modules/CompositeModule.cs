@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Web.Mvc.Composite.Core;
 
@@ -6,11 +6,9 @@ namespace NetFusion.Web.Mvc.Composite.Modules
 {
     public class CompositeModule : PluginModule
     {
-        public override void RegisterComponents(ContainerBuilder builder)
+        public override void RegisterServices(IServiceCollection services)
         {
-            builder.RegisterType<CompositeService>()
-                 .As<ICompositeService>()
-                 .SingleInstance();
+            services.AddSingleton<ICompositeService, CompositeService>();
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿using Autofac.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Bootstrap.Configuration;
+using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Test.Plugins;
 using NetFusion.Web.Mvc;
@@ -17,27 +16,21 @@ namespace InfrastructureTests.Web.Rest.Setup
         public static IAppContainer Create(MockAppHostPlugin hostPlugin, IServiceCollection services)
         {
             var resolver = new TestTypeResolver();
-           
+            var configuration = new ConfigurationBuilder().Build();
+            var loggerFactory = new LoggerFactory();
+
             resolver.AddPlugin(hostPlugin);
-            var container = new AppContainer(resolver, setGlobalReference: false);
+            services.AddOptions();
+            services.AddLogging();
 
-            container.WithConfig((EnvironmentConfig envConfig) =>
-            {
-                var configBuilder = new ConfigurationBuilder();
-                configBuilder.AddDefaultAppSettings();
+            var container = new AppContainer(
+                services,
+                configuration,
+                loggerFactory,
+                resolver, 
+                setGlobalReference: false);
 
-                envConfig.UseConfiguration(configBuilder.Build());
-            })
-         
-            .WithConfig((AutofacRegistrationConfig config) =>
-            {
-                config.Build = builder =>
-                {
-                    builder.Populate(services);
-                };
-            })
-
-            .WithConfig((WebMvcConfig config) =>
+            container.WithConfig((WebMvcConfig config) =>
             {
                 config.EnableRouteMetadata = true;
                 config.UseServices(services);

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
 using System;
@@ -8,7 +9,8 @@ using System.Linq;
 namespace NetFusion.Bootstrap.Plugins
 {
     /// <summary>
-    /// Class containing information that can be used by a given module.
+    /// Class containing information that can be used by a given module
+    /// when the application container is bootstrapped.
     /// </summary>
     public class ModuleContext
     {
@@ -25,9 +27,14 @@ namespace NetFusion.Bootstrap.Plugins
         public Plugin Plugin { get; }
 
         /// <summary>
-        /// The logger factory configured by the application container.
+        /// The logger factory configured for the application container.
         /// </summary>
         public ILoggerFactory LoggerFactory { get; }
+
+        /// <summary>
+        /// The application configuration configured for the application container.
+        /// </summary>
+        public IConfiguration Configuration { get; }
 
         /// <summary>
         /// Logger with the name of the plug-in used to identify the log messages.
@@ -50,12 +57,14 @@ namespace NetFusion.Bootstrap.Plugins
 
         internal ModuleContext(
             ILoggerFactory loggerFactory,
+            IConfiguration configuration,
             CompositeApplication compositeApp, 
             Plugin plugin)
         {
             _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
 
             LoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
 
             Logger = loggerFactory.CreateLogger(plugin.GetType());
@@ -105,11 +114,10 @@ namespace NetFusion.Bootstrap.Plugins
                     $"A plug-in type could not be found for the corresponding .NET type: {type}.");
             }
             return pluginType;
-
         }
 
         /// <summary>
-        ///  Returns a plug-in module that implements a specific interface.
+        /// Returns a plug-in module that implements a specific interface.
         /// </summary>
         /// <typeparam name="T">The interface of the module to locate.</typeparam>
         /// <returns>The module implementing the specified interface.  If one and

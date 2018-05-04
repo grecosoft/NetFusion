@@ -31,18 +31,14 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Specified Configuration associated with Plug-in")]
         public void SpecifiedConfiguration_AssociatedWithPlugin()
         {
-            ContainerFixture.Test(fixture => {
-                fixture.Arrange.Resolver(r =>
+            ContainerFixture.Test2(fixture => {
+                fixture.Arrange2.Resolver2(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginConfig>();
-                })
-                .Act.OnContainer(c =>
-                {
-                    c.WithConfig(new MockPluginConfig());
-                    c.Build();
-                })
-                .Assert
+                }).Container2(c => c.WithConfig(new MockPluginConfig()))
+                
+                .Assert2
                     .CompositeApp(ca =>
                     {
                         ca.AppHostPlugin.PluginConfigs.Should().HaveCount(1);
@@ -62,19 +58,15 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Plug-in Developer can access Configuration from Module")]
         public void PluginDeveloper_CanAccess_ConfigurationFromModule()
         {
-            ContainerFixture.Test(fixture => {
-                fixture.Arrange.Resolver(r =>
+            ContainerFixture.Test2(fixture => {
+                fixture.Arrange2.Resolver2(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginOneModule>()
                         .AddPluginType<MockPluginConfig>();
                 })
-                .Act.OnContainer(c =>
-                {
-                    c.WithConfig(new MockPluginConfig());
-                    c.Build();
-                })
-                .Assert.PluginModule<MockPluginOneModule>(m => {
+                .Container2(c => c.WithConfig(new MockPluginConfig()))
+                .Assert2.PluginModule<MockPluginOneModule>(m => {
                         m.Context.Plugin.GetConfig<MockPluginConfig>().Should().NotBeNull();
                 });
             });
@@ -86,18 +78,16 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Plug-in Configuration can be initialized using Factory")]
         public void PluginConfiguration_CanBeInitialized_UsingFactory()
         {
-            ContainerFixture.Test(fixture => {
-                fixture.Arrange.Resolver(r =>
+            ContainerFixture.Test2(fixture => {
+                fixture.Arrange2.Resolver2(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginConfig>();
                 })
-                .Act.OnContainer(c =>
-                {
+                .Container2(c => {
                     c.WithConfig<MockPluginConfig>((confg) => confg.ConfigValue = "TEST_VALUE");
-                    c.Build();
-                })
-                .Assert.CompositeApp(ca => {
+                })     
+                .Assert2.CompositeApp(ca => {
                     ca.AppHostPlugin.PluginConfigs.Should().HaveCount(1);
 
                     var config = ca.AppHostPlugin.PluginConfigs.First();
@@ -111,15 +101,15 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "After Container built Configuration cannot be Added")]
         public void AfterContainerBuilt_ConfigurationCannotBeAdded()
         {
-            ContainerFixture.Test(fixture => {
-                fixture.Arrange.Resolver(r =>
+            ContainerFixture.Test2(fixture => {
+                fixture.Arrange2.Resolver2(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginConfig>();
                 })
-                .Act.OnContainer(c =>
+                .Container2(c => c.WithConfig<MockPluginConfig>())
+                .Act2.OnContainer(c =>
                 {
-                    c.Build();
                     c.WithConfig<MockPluginConfig>();
                 })
                 .Assert.Exception<ContainerException>(e => {

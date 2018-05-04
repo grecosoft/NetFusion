@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
@@ -34,28 +34,27 @@ namespace NetFusion.Messaging.Modules
             _queryDispatchers = queryHandlers.ToDictionary(qh => qh.QueryType);
         }       
 
-        public override void RegisterComponents(ContainerBuilder builder)
+        public override void RegisterServices(IServiceCollection services)
         {
             // Register the dispatcher used specifically for queries.
-            builder.RegisterType<QueryDispatcher>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
+            services.AddScoped<QueryDispatcher>();
 
-            RegisterQueryConsumers(builder);
+            RegisterQueryConsumers(services);
         }
 
         // Register all query consumers within the container so they can be resolved 
         // to handle executed queries within the current lifetime scope.
-        private void RegisterQueryConsumers(ContainerBuilder builder)
+        private void RegisterQueryConsumers(IServiceCollection services)
         {
             var queryConsumers = _queryDispatchers.Values
                .Select(qd => qd.ConsumerType)
                .Distinct()
                .ToArray();
 
-            builder.RegisterTypes(queryConsumers)
-                .AsSelf()
-                .InstancePerLifetimeScope();
+            foreach (Type queryConsumer in queryConsumers)
+            {
+                services.AddScoped(queryConsumer);
+            }
         }
 
         public static void AssureNoDuplicateHandlers(IEnumerable<QueryDispatchInfo> queryHandlers)

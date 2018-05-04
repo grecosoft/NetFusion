@@ -1,8 +1,9 @@
-﻿using Autofac;
-using CoreTests.Messaging.Mocks;
+﻿using CoreTests.Messaging.Mocks;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
 using NetFusion.Test.Container;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace CoreTests.Messaging
@@ -17,92 +18,77 @@ namespace CoreTests.Messaging
         /// Command domain events can have a return result. 
         /// </summary>
         [Fact(DisplayName = "Can Send Command with Async Handler returning Result")]
-        public void CanSendCommand_WithAsyncHandler_ReturningResult()
+        public Task CanSendCommand_WithAsyncHandler_ReturningResult()
         {
             MockCommandResult cmdResult = null;
 
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange
-                    .Resolver(r => r.WithHostCommandConsumer())
-                    .Container(c => c.UsingDefaultServices())
-
-                .Act.OnContainer(async c => {
-                    c.Build();
-
-                    var domainEventSrv = c.Services.Resolve<IMessagingService>();
-                    var evt = new MockCommand();
-
-                    cmdResult = await domainEventSrv.SendAsync(evt);
-                })
-                .Result.Assert
-                    .Container(c =>
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange2
+                        .Resolver2(r => r.WithHostCommandConsumer())
+                    .Act2.OnServices2(async s =>
                     {
-                        cmdResult.Should().NotBeNull();
-                        cmdResult.Value.Should().Be("MOCK_VALUE");
+                        var messagingSrv = s.GetService<IMessagingService>();
+                        var cmd = new MockCommand();
 
-                        var consumer = c.Services.Resolve<MockCommandConsumer>();
-                        consumer.ExecutedHandlers.Should().HaveCount(1);
-                        consumer.ExecutedHandlers.Should().Contain("OnCommand");
+                        cmdResult = await messagingSrv.SendAsync(cmd);
                     });
-            });               
-        }
 
-        /// <summary>
-        /// A command domain event can have only one event consumer handler.
-        /// If there are more than one event handler, an exception is raised.
-        /// </summary>
-        [Fact(DisplayName = nameof(CommandMessagesCanOnly_HaveOneEventHandler))]
-        public void CommandMessagesCanOnly_HaveOneEventHandler()
-        {
-             ContainerFixture.Test(fixture => { fixture
-                .Arrange
-                    .Resolver(r => {
-                        r.WithHostCommandConsumer();
-                        r.AddMultipleConsumers();
-                    })
-                    .Container(c => c.UsingDefaultServices())
+                testResult.Assert2.Services2(s =>
+                {
+                    cmdResult.Should().NotBeNull();
+                    cmdResult.Value.Should().Be("MOCK_VALUE");
 
-                .Act.OnContainer(c => {
-                    c.Build();
-
-                    var domainEventSrv = c.Services.Resolve<IMessagingService>();
-                    var evt = new MockCommand();
-                    return domainEventSrv.SendAsync(evt);
-                })
-                .Result.Assert
-                    .Exception<PublisherException>(ex =>
-                    {
-                        ex.Message.Should().Contain(
-                            "Exception publishing message.  See log for details.");
-                    });
-            });                
+                    var consumer = s.GetRequiredService<MockCommandConsumer>();
+                    consumer.ExecutedHandlers.Should().HaveCount(1);
+                    consumer.ExecutedHandlers.Should().Contain("OnCommand");
+                });
+            });
         }
 
         [Fact(DisplayName = nameof(CommandResult_NotRequired))]
-        public void CommandResult_NotRequired()
-        {
-        
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange
-                    .Resolver(r => r.WithHostCommandConsumer())
-                    .Container(c => c.UsingDefaultServices())
-
-                .Act.OnContainer(c => {
-                    c.Build();
-
-                    var domainEventSrv = c.Services.Resolve<IMessagingService>();
-                    var evt = new MockCommandNoResult();
-
-                    domainEventSrv.SendAsync(evt);
-                })
-                .Assert
-                    .Container(c =>
+        public Task CommandResult_NotRequired()
+        {          
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange2
+                        .Resolver2(r => r.WithHostCommandConsumer())
+                    .Act2.OnServices2(async s =>
                     {
-                        var consumer = c.Services.Resolve<MockCommandConsumer>();
-                        consumer.ExecutedHandlers.Should().HaveCount(1);
-                        consumer.ExecutedHandlers.Should().Contain("OnCommandNoResult");
+                        var messagingSrv = s.GetService<IMessagingService>();
+                        var cmd = new MockCommandNoResult();
+
+                        await messagingSrv.SendAsync(cmd);
                     });
-            });           
+
+                testResult.Assert2.Services2(s =>
+                {
+                    var consumer = s.GetRequiredService<MockCommandConsumer>();
+                    consumer.ExecutedHandlers.Should().HaveCount(1);
+                    consumer.ExecutedHandlers.Should().Contain("OnCommandNoResult");
+                });
+            });
+        }
+
+        [Fact(DisplayName = nameof(CommandMessagesCanOnly_HaveOneEventHandler))]
+        public Task CommandMessagesCanOnly_HaveOneEventHandler()
+        {
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange2
+                        .Resolver2(r => r.WithHostCommandConsumer().AddMultipleConsumers())
+                    .Act2.OnServices2(s =>
+                    {
+                        var messagingSrv = s.GetService<IMessagingService>();
+                        var evt = new MockCommand();
+                        return messagingSrv.SendAsync(evt);
+                    });
+
+                testResult.Assert2.Exception<PublisherException>(ex =>
+                {
+                    ex.Message.Should().Contain("Exception publishing message.  See log for details.");
+                });
+            });
         }
     }
 }

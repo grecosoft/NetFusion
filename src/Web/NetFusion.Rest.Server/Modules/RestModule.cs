@@ -1,7 +1,7 @@
-﻿using Autofac;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Rest.Server.Hal;
 
@@ -24,27 +24,18 @@ namespace NetFusion.Rest.Server.Modules
         public string GetTypeScriptDirectoryName() => _config.TypeScriptDirectoryName;
         public string GetControllerDocDirectoryName() => _config.ControllerDocDirectoryName;
 
-        public override void RegisterComponents(ContainerBuilder builder)
+        public override void RegisterServices(IServiceCollection services)
         {
-            builder.RegisterType<ActionContextAccessor>()
-                .As<IActionContextAccessor>()
-                .SingleInstance();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-            builder.Register<IUrlHelper>(c =>
-            {
-                var context = c.Resolve<IActionContextAccessor>();
-                var urlFactory = c.Resolve<IUrlHelperFactory>();
+            services.AddScoped<IUrlHelper>(sp => {
+                var context = sp.GetRequiredService<IActionContextAccessor>();
+                var urlFactory = sp.GetRequiredService<IUrlHelperFactory>();
                 return urlFactory.GetUrlHelper(context.ActionContext);
+            });
 
-            }).InstancePerLifetimeScope();
-
-            builder.RegisterType<HalEmbeddedResourceContext>()
-                .As<IHalEmbededResourceContext>()
-                .SingleInstance();
-
-            builder.RegisterType<EnvironmentSettings>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
+            services.AddSingleton<IHalEmbededResourceContext, HalEmbeddedResourceContext>();
+            services.AddScoped<EnvironmentSettings>();
         }
     }
 }

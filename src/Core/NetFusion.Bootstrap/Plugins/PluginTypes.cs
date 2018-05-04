@@ -17,7 +17,7 @@
         AppComponentPlugin,
 
         /// <summary>
-        /// Plug-ins containing cross-cutting concerns.
+        /// Plug-ins containing common centric implementations and cross-cutting concerns.
         /// </summary>
         CorePlugin
     }

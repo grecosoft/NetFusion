@@ -16,12 +16,36 @@ namespace NetFusion.Test.Container
     {
         private AppContainer _container;
         private Exception _resultingException;
+        private IServiceProvider _testServiceScope;
 
         public ContainerAssert(AppContainer container, Exception resultingException)
         {
             _container = container;
             _resultingException = resultingException;
         }
+
+        public ContainerAssert(AppContainer container, IServiceProvider serviceProvider, Exception resultingException)
+        {
+            _container = container;
+            _resultingException = resultingException;
+            _testServiceScope = serviceProvider;
+        }
+
+        public ContainerAssert(ContainerFixture fixture)
+        {
+            _container = fixture.ContainerUnderTest;
+            fixture.InitContainer();
+        }
+
+
+        public ContainerAssert Services2(Action<IServiceProvider> assert)
+        {
+            var services = _testServiceScope ?? _container.CreateServiceScope().ServiceProvider;
+            assert(services);
+      
+            return this;
+        }
+
 
         /// <summary>
         /// Allows the unit-test to assert the state of the created application container.
@@ -35,6 +59,15 @@ namespace NetFusion.Test.Container
                 "Assert method not specified.");
 
             assert(_container);
+            return this;
+        }
+
+        public ContainerAssert State(Action assert)
+        {
+            if (assert == null) throw new ArgumentNullException(nameof(assert),
+                "Assert method not specified.");
+
+            assert();
             return this;
         }
 

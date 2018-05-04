@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using NetFusion.Bootstrap.Container;
+﻿using NetFusion.Bootstrap.Container;
 using System;
 
 namespace NetFusion.Bootstrap.Configuration
@@ -11,8 +10,6 @@ namespace NetFusion.Bootstrap.Configuration
     public class EnvironmentConfig : IContainerConfig
     {
         private static string[] CommonEnviromentNameKeys = { "NETFUSION_ENVIRONMENT", "ASPNETCORE_ENVIRONMENT" };
-
-        private IConfiguration _configuration { get; set; }
 
         /// <summary>
         /// The value of the variable specifying the environment of the executing application.
@@ -52,22 +49,5 @@ namespace NetFusion.Bootstrap.Configuration
         /// Indicates application is running in Production environment.
         /// </summary>
         public static bool IsProduction => EnvironmentName.Equals(EnvironmentNames.Production, StringComparison.OrdinalIgnoreCase);
-
-        /// <summary>
-        /// The created application configuration specified by the host application.
-        /// If not specified, a default configured instance is returned.
-        /// </summary>
-        public IConfiguration Configuration =>
-            _configuration ?? new ConfigurationBuilder().AddDefaultAppSettings().Build();
-
-        /// <summary>
-        /// Specifies the .NET configuration that should be used by the application container.
-        /// </summary>
-        /// <param name="builder">A built configuration with providers used to lookup configuration settings.</param>
-        public void UseConfiguration(IConfiguration configuration)
-        {
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration), 
-                "Configuration must be specified.");
-        }
     }
 }

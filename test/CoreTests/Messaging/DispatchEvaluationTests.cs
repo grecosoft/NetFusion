@@ -1,6 +1,6 @@
-﻿using Autofac;
-using CoreTests.Messaging.Mocks;
+﻿using CoreTests.Messaging.Mocks;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
 using NetFusion.Test.Container;
 using System.Threading.Tasks;
@@ -19,28 +19,25 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesDispathPredicate))]
         public Task HandlerCalled_WhenMessagePassesDispathPredicate()
         {
-            return ContainerFixture.TestAsync(async fixture => {
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange2
+                        .Resolver2(r => r.WithHostEvalBasedConsumer())
+                        .Services2(s => s.UseMockedEvalService())
+                    .Act2.OnServices2(s =>
+                    {
+                        var mockEvt = new MockEvalDomainEvent { RuleTestValue = 7000 };
+                        return s.GetRequiredService<IMessagingService>()
+                                         .PublishAsync(mockEvt);
+                    });
 
-                var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithHostEvalBasedConsumer())
-                    .Container(c => {
-                        c.UseMockedEvalService();
-                    })
-                .Act.OnContainer(c => {
-                    c.Build();
-
-                    var mockEvt = new MockEvalDomainEvent { RuleTestValue = 7000 };
-                    return c.Services.Resolve<IMessagingService>()
-                        .PublishAsync(mockEvt);
-                });
-
-                testResult.Assert.Container(c =>
+                testResult.Assert2.Services2(s =>
                 {
-                    var consumer = c.Services.Resolve<MockDomainEventEvalBasedConsumer>();
+                    var consumer = s.GetRequiredService<MockDomainEventEvalBasedConsumer>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventPredicatePases");
                 });
-            });          
+            });
         }
     }
 }
-    
+

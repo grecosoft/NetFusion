@@ -14,11 +14,21 @@ namespace NetFusion.Test.Container
         private AppContainer _container;
         private bool _actedOn = false;
         private Exception _resultingException;
+        private IServiceProvider _services;
+        private ContainerFixture _fixture;
 
         public ContainerAct(AppContainer container)
         {
             _container = container;
         }
+
+        public ContainerAct(ContainerFixture fixture)
+        {
+            _fixture = fixture;
+            _container = fixture.ContainerUnderTest;
+        }
+
+        public IServiceProvider TestServiceScope => _services;
 
         /// <summary>
         /// Allows an unit-test to act on the application container under test.
@@ -72,11 +82,36 @@ namespace NetFusion.Test.Container
             return this;
         }
 
+        public async Task<ContainerAct> OnServices2(Func<IServiceProvider, Task> act)
+        {
+            if (_actedOn)
+            {
+                throw new InvalidOperationException("The container can only be acted on once.");
+            }
+
+            _actedOn = true;
+            _fixture.InitContainer();
+            try
+            {
+                var testScope = _container.CreateServiceScope();
+                _services = testScope.ServiceProvider;
+
+                await act(_services);
+            }
+            catch (Exception ex)
+            {
+                _resultingException = ex;
+            }
+
+            return this;
+        }
+
         /// <summary>
         /// After acting on the container under test, the unit-test can call methods on this
         /// property to assert its state.
         /// </summary>
         public ContainerAssert Assert => new ContainerAssert(_container, _resultingException);
+        public ContainerAssert Assert2 => new ContainerAssert(_container, _services, _resultingException);
 
     }
 }

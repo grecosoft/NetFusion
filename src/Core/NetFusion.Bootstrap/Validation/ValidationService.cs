@@ -5,8 +5,8 @@ using System;
 namespace NetFusion.Bootstrap.Validation
 {
     /// <summary>
-    /// Simple service that delegates to the IAppContainer to create an instance 
-    /// of the host provided IObjectValidator instance used to validated an object.
+    /// Service that delegates to the IAppContainer to create an instance 
+    /// of the host provided IObjectValidator instance used for validation.
     /// </summary>
     public class ValidationService : IValidationService
     {
@@ -14,7 +14,7 @@ namespace NetFusion.Bootstrap.Validation
 
         public ValidationService(IAppContainer appContainer)
         {
-            _appContainer = appContainer;
+            _appContainer = appContainer ?? throw new ArgumentNullException(nameof(appContainer));
         }
 
         public ValidationResultSet Validate(object obj)

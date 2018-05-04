@@ -5,6 +5,7 @@ namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
     /// Provides interface for obtaining information about the composite application.
+    /// This interface should rarely be needed by plug-ins.
     /// </summary>
     public interface IComposite
     {

@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Config;
@@ -9,7 +9,7 @@ using System.Linq;
 namespace NetFusion.Messaging.Modules
 {
     /// <summary>
-    /// Registers all message enrichers with the dependency-injection container.
+    /// Registers all message enrichers with the service collection.
     /// </summary>
     public class MessageEnricherModule : PluginModule
     {
@@ -20,12 +20,13 @@ namespace NetFusion.Messaging.Modules
             MessagingConfig = Context.Plugin.GetConfig<MessageDispatchConfig>();
         }
 
-        public override void RegisterComponents(ContainerBuilder builder)
+        public override void RegisterServices(IServiceCollection services)
         {
             // Register all of the message enrichers with the container.
-            builder.RegisterTypes(MessagingConfig.EnricherTypes)
-                .As<IMessageEnricher>()
-                .InstancePerLifetimeScope();
+            foreach (var enricherType in MessagingConfig.EnricherTypes)
+            {
+                services.AddScoped(typeof(IMessageEnricher), enricherType);
+            }
         }
 
         public override void Log(IDictionary<string, object> moduleLog)

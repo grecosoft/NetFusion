@@ -1,7 +1,7 @@
-﻿using Autofac;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Common.Extensions;
 using System;
@@ -50,19 +50,25 @@ namespace NetFusion.Web.Mvc.Composite
             {
                 routes.MapGet(baseUrl + "/structure", (HttpContext context) =>
                 {
-                    var compositeSrv = AppContainer.Instance.Services.ResolveOptional<ICompositeService>();
+                    using (var scope = AppContainer.Instance.CreateServiceScope())
+                    {
+                        var compositeSrv = scope.ServiceProvider.GetRequiredService<ICompositeService>();
+                        var compositeModel = compositeSrv.GetStructure();
 
-                    var compositeModel = compositeSrv.GetStructure();
-                    return SetResponse(context.Response, compositeModel);
+                        return SetResponse(context.Response, compositeModel);
+                    }
                 });
 
                 routes.MapGet(baseUrl + "/plugins/{pluginId}", (HttpContext context) =>
                 {
-                    var compositeSrv = AppContainer.Instance.Services.ResolveOptional<ICompositeService>();
                     var pluginId = context.GetRouteValue("pluginId").ToString();
 
-                    var compositeModel = compositeSrv.GetPluginDetails(pluginId);
-                    return SetResponse(context.Response, compositeModel);
+                    using (var scope = AppContainer.Instance.CreateServiceScope())
+                    {
+                        var compositeSrv = scope.ServiceProvider.GetRequiredService<ICompositeService>();
+                        var pluginDetailModel = compositeSrv.GetPluginDetails(pluginId);
+                        return SetResponse(context.Response, pluginDetailModel);
+                    }
                 });
             });
         }

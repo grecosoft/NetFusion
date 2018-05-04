@@ -8,7 +8,7 @@ namespace NetFusion.Messaging.Core
     /// <summary>
     /// Called when a message is published to allow plug-ins to customize the publishing of messages.
     /// For example the InProcessMessagePublisher dispatches messages locally while another publisher
-    /// could deliver the messages to a configured broker.
+    /// could deliver the messages externally to a configured broker such as RabbitMQ.
     /// </summary> 
     public interface IMessagePublisher : IKnownPluginType
     {

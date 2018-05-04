@@ -1,7 +1,4 @@
-﻿using Autofac;
-using CoreTests.Messaging.Mocks;
-using NetFusion.Base.Scripting;
-using NetFusion.Bootstrap.Container;
+﻿using CoreTests.Messaging.Mocks;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Types;
 using NetFusion.Test.Plugins;
@@ -53,21 +50,6 @@ namespace CoreTests.Messaging
               .AddPluginType<MockErrorMessageConsumer>();
 
             return resolver;
-        }
-
-        public static IAppContainer UsingDefaultServices(this IAppContainer container)
-        {
-            container.WithConfig<AutofacRegistrationConfig>(regConfig =>
-            {
-                regConfig.Build = builder =>
-                {
-                    builder.RegisterType<NullEntityScriptingService>()
-                        .As<IEntityScriptingService>()
-                        .SingleInstance();
-                };
-            });
-
-            return container;
         }
     }
 

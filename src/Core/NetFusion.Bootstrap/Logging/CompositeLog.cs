@@ -1,4 +1,4 @@
-﻿using Autofac.Core;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions;
@@ -9,22 +9,22 @@ using System.Linq;
 namespace NetFusion.Bootstrap.Logging
 {
     /// <summary>
-    /// Takes an instance of the composite application and the built container registry
+    /// Takes an instance of the composite application and the built service collection
     /// and produces a nested dictionary structure representing the application that can
     /// be logged during host application initialization as JSON.
     /// </summary>
     internal class CompositeLog
     {
         private readonly CompositeApplication _application;
-        private readonly IComponentRegistry _registry;
+        private readonly IServiceCollection _services;
 
-        public CompositeLog(CompositeApplication application, IComponentRegistry registry)
+        public CompositeLog(CompositeApplication application, IServiceCollection services)
         {
-            _application = application ?? throw new ArgumentNullException(nameof(application), 
+            _application = application ?? throw new ArgumentNullException(nameof(application),
                 "Composite Application to log cannot be null.");
 
-            _registry = registry ?? throw new ArgumentNullException(nameof(registry),
-                "Plug-in Registry to log cannot be null.");
+            _services = services ?? throw new ArgumentNullException(nameof(services),
+                "Service collection to log cannot be null.");
         }
 
         public IDictionary<string, object> GetLog()
@@ -86,7 +86,7 @@ namespace NetFusion.Bootstrap.Logging
 
             LogPluginModules(plugin, log);
             LogPluginKnownTypeContracts(plugin, log);
-            LogPluginKnownTypeDefinitions(plugin, log);
+            LogPluginKnownTypeImplementations(plugin, log);
             LogPluginRegistrations(plugin, log);
         }
 
@@ -110,26 +110,27 @@ namespace NetFusion.Bootstrap.Logging
                 .ToArray();
         }
 
-        private void LogPluginKnownTypeDefinitions(Plugin plugin, IDictionary<string, object> log)
+        private void LogPluginKnownTypeImplementations(Plugin plugin, IDictionary<string, object> log)
         {
             log["Plugin:KnownType:Definitions"] = plugin.PluginTypes
-                .Where(pt => pt.IsKnownTypeDefinition)
+                .Where(pt => pt.IsKnownTypeImplementation)
                 .ToDictionary(
                     pt => pt.Type.FullName,
-                    pt => pt.DiscoveredByPlugins.Select(dp => dp.Manifest.Name).ToArray()); 
+                    pt => pt.DiscoveredByPlugins.Select(dp => dp.Manifest.Name).ToArray());
         }
 
         private void LogPluginRegistrations(Plugin plugin, IDictionary<string, object> log)
         {
-            log["Plugin:Type:Registrations"] = _registry.Registrations
-                .Where(r => plugin.HasType(r.Activator.LimitType))
-                .SelectMany(r => r.Services, (r, s) =>
-                    new {
-                        RegisteredType = r.Activator.LimitType.Name,
-                        ServiceType = s.Description,
-                        LifeTime = r.Lifetime.GetType().Name
-                    }.ToDictionary()
-                ).ToArray();
+            var implementationTypes = _services.Select(s => new {
+                ServiceType = s.ServiceType,
+                ImplementationType = s.ImplementationType ?? s.ImplementationInstance?.GetType(),
+                Lifetime = s.Lifetime.ToString(),
+                IsFactory = s.ImplementationFactory != null
+            });
+
+            log["Plugin:Service:Registrations"] = implementationTypes
+                .Where(it => !it.IsFactory && plugin.HasType(it.ImplementationType))
+                .Select(it => it.ToDictionary()).ToArray();
         }
     }
 }

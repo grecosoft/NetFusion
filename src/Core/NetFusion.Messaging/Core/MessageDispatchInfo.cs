@@ -1,7 +1,6 @@
 ﻿using NetFusion.Base.Scripting;
 using NetFusion.Messaging.Rules;
 using NetFusion.Messaging.Types;
-using NetFusion.Messaging.Types.Rules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -127,12 +126,11 @@ namespace NetFusion.Messaging.Core
         }
 
         /// <summary>
-        /// Dispatches a message to the specified consumer.  The implementation
-        /// normalizes the calling for synchronous and asynchronous message handlers.
-        /// This allows the method handler to be re-factored to one or the other 
-        /// without having to change any of the calling code.  This also decouples
-        /// the publisher from the consumer.  The publisher should not be concerned 
-        /// of how the message is handled.
+        /// Dispatches a message to the specified consumer.  The implementation normalizes the
+        /// calling for synchronous and asynchronous message handlers.  This allows the method 
+        /// handler to be re-factored to one or the other without having to change any of the 
+        /// calling code.  This also decouples the publisher from the consumer.  The publisher 
+        /// should not be concerned of how the message is handled.
         /// </summary>
         /// <param name="message">The message to be dispatched.</param>
         /// <param name="consumer">Instance of the consumer to have message dispatched.</param>

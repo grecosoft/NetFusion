@@ -1,4 +1,6 @@
-﻿using NetFusion.Bootstrap.Container;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Bootstrap.Container;
 using NetFusion.Test.Plugins;
 using System;
 
@@ -14,11 +16,52 @@ namespace NetFusion.Test.Container
         private TestTypeResolver _resolver;
         private AppContainer _container;
 
+        private ContainerFixture _fixture;
+
+        public ContainerArrange(ContainerFixture fixture)
+        {
+            _fixture = fixture;
+        }
+
         public ContainerArrange(TestTypeResolver resolver, AppContainer container)
         {
             _resolver = resolver;
             _container = container;
         }
+
+        public ContainerArrange Services2(Action<IServiceCollection> arrange)
+        {
+            if (arrange == null) throw new ArgumentNullException(nameof(arrange));
+
+            arrange(_fixture.Services);
+            return this;
+        }
+
+        public ContainerArrange Resolver2(Action<TestTypeResolver> arrange)
+        {
+            if (arrange == null) throw new ArgumentNullException(nameof(arrange));
+
+            arrange(_fixture.Resolver);
+            return this;
+        }
+
+        public ContainerArrange Configuration2(Action<IConfigurationBuilder> arrange)
+        {
+            if (arrange == null) throw new ArgumentNullException(nameof(arrange));
+
+            arrange(_fixture.ConfigBuilder);
+            return this;
+        }
+
+        public ContainerArrange Container2(Action<IAppContainer> arrange)
+        {
+            if (arrange == null) throw new ArgumentNullException(nameof(arrange));
+
+            arrange(_fixture.ContainerUnderTest);
+            return this;
+        }
+
+
 
         /// <summary>
         /// Called by a unit-test to arrange the type-resolver to an expected state.
@@ -55,6 +98,10 @@ namespace NetFusion.Test.Container
         /// Allows the unit-test to act on the arranged container to assert its correct behavior.  
         /// </summary>
         public ContainerAct Act => new ContainerAct(_container);
+        public ContainerAct Act2 => new ContainerAct(_fixture);
+        public ContainerAssert Assert2 => new ContainerAssert(_fixture);
+
+
     }
 }
 

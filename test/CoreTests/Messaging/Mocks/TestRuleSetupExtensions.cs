@@ -1,7 +1,6 @@
 ﻿using NetFusion.Messaging;
 using NetFusion.Messaging.Rules;
 using NetFusion.Messaging.Types;
-using NetFusion.Messaging.Types.Rules;
 using NetFusion.Test.Plugins;
 
 namespace CoreTests.Messaging.Mocks

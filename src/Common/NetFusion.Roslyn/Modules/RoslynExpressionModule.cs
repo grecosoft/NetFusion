@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Domain.Roslyn.Core;
@@ -18,18 +18,18 @@ namespace NetFusion.Domain.Roslyn.Modules
         // of the same matching type.
         private IEnumerable<EntityScript> _scripts;
 
-        public override void RegisterComponents(ContainerBuilder builder)
+        public override void RegisterServices(IServiceCollection services)
         {
             // If this plug-in is being used, override the Null scripting service
             // that is configured by default by the NetFusion.Domain plug-in.
-            builder.RegisterType<EntityScriptingService>()
-                .As<IEntityScriptingService>()
-                .SingleInstance();
+            services.AddSingleton<IEntityScriptingService, EntityScriptingService>();
         }
 
-        public override void RunModule(ILifetimeScope scope)
+        public override void RunModule(IServiceProvider services)
         {
-            if (! scope.TryResolve(out IEntityScriptMetaRepository expressionRep))
+            IEntityScriptMetaRepository expressionRep = services.GetService<IEntityScriptMetaRepository>();
+
+            if (expressionRep == null)
             {
                 throw new InvalidOperationException(
                     $"An component implementing the interface: {typeof(IEntityScriptMetaRepository)} " +
@@ -38,7 +38,7 @@ namespace NetFusion.Domain.Roslyn.Modules
 
             // Read all of the scripts and load them into the scripting service.
             _scripts = expressionRep.ReadAll().Result;
-            var scriptingSrv = scope.Resolve<IEntityScriptingService>();
+            var scriptingSrv = services.GetService<IEntityScriptingService>();
 
             scriptingSrv.Load(_scripts);
         }

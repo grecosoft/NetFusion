@@ -1,8 +1,8 @@
-﻿using Autofac;
-using CoreTests.Messaging.Mocks;
+﻿using CoreTests.Messaging.Mocks;
 using FluentAssertions;
 using NetFusion.Messaging.Modules;
 using NetFusion.Test.Container;
+using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Xunit;
 
@@ -23,13 +23,12 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = "Messaging Module discovers Domain Event")]
         public void MessagingModule_DiscoversDomainEvent()
         {
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange
-                    .Resolver(r => r.WithHostConsumer())
-                    .Container(c => c.UsingDefaultServices())
+            ContainerFixture.Test2(fixture => { fixture
+                .Arrange2
+                    .Resolver2(r => r.WithHostConsumer())
 
-                .Act.OnContainer(c => c.Build())
-                .Assert.PluginModule<MessageDispatchModule>(m =>
+
+                .Assert2.PluginModule<MessageDispatchModule>(m =>
                 {
                     var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)]?.FirstOrDefault();
                     dispatchInfo.Should().NotBeNull(); 
@@ -46,13 +45,11 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = nameof(Discovers_DomainEventConsumerHandler))]
         public void Discovers_DomainEventConsumerHandler()
         {
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange
-                    .Resolver(r => r.WithHostConsumer())
-                    .Container(c => c.UsingDefaultServices())
-
-                .Act.OnContainer(c => c.Build())
-                .Assert.PluginModule<MessageDispatchModule>(m =>
+            ContainerFixture.Test2(fixture => { fixture
+                .Arrange2
+                    .Resolver2(r => r.WithHostConsumer())
+   
+                .Assert2.PluginModule<MessageDispatchModule>(m =>
                 {
                     var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)]?.FirstOrDefault();
                     dispatchInfo.Should().NotBeNull();
@@ -73,15 +70,13 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = nameof(DomainEventConsumer_Registered))]
         public void DomainEventConsumer_Registered()
         {
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange
-                    .Resolver(r => r.WithHostConsumer())
-                    .Container(c => c.UsingDefaultServices())
+            ContainerFixture.Test2(fixture => { fixture
+                .Arrange2
+                    .Resolver2(r => r.WithHostConsumer())
 
-                .Act.OnContainer(c => c.Build())
-                .Assert.Container(c =>
+                .Assert2.Services2(s =>
                 {
-                    var consumer = c.Services.Resolve<MockDomainEventConsumer>();
+                    var consumer = s.GetService<MockDomainEventConsumer>();
                     consumer.Should().NotBeNull();
                 });
             });                

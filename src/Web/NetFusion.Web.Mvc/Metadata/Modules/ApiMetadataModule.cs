@@ -1,4 +1,3 @@
-using Autofac;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Web.Mvc.Metadata.Core;
@@ -37,11 +36,9 @@ namespace NetFusion.Web.Mvc.Metadata.Modules
             }
         }
 
-        public override void RegisterComponents(ContainerBuilder builder)
+        public override void RegisterServices(IServiceCollection services)
         {
-            builder.RegisterType<ApiMetadataService>()
-                .As<IApiMetadataService>()
-                .SingleInstance();
+            services.AddSingleton<IApiMetadataService, ApiMetadataService>();
         }
     }
 }

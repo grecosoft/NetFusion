@@ -1,5 +1,4 @@
 ﻿using NetFusion.Messaging.Types;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,12 +10,12 @@ namespace NetFusion.Messaging.Core
     public class MessagingService : IMessagingService
     {
         // Inner classes delegated to for executing specific types.
-        private Lazy<MessageDispatcher> _messageDispatcher;
-        private Lazy<QueryDispatcher> _queryDispatcher;
+        private MessageDispatcher _messageDispatcher;
+        private QueryDispatcher _queryDispatcher;
 
         public MessagingService(
-            Lazy<MessageDispatcher> messageDispatcher,
-            Lazy<QueryDispatcher> queryDispatcher)
+            MessageDispatcher messageDispatcher,
+            QueryDispatcher queryDispatcher)
         {
             _messageDispatcher = messageDispatcher;
             _queryDispatcher = queryDispatcher;
@@ -26,34 +25,32 @@ namespace NetFusion.Messaging.Core
             CancellationToken cancellationToken = default(CancellationToken), 
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
-            return _messageDispatcher.Value.PublishAsync(domainEvent, cancellationToken, integrationType);
+            return _messageDispatcher.PublishAsync(domainEvent, cancellationToken, integrationType);
         }
 
         public Task PublishAsync(IEventSource eventSource, 
             CancellationToken cancellationToken = default(CancellationToken), 
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
-            return _messageDispatcher.Value.PublishAsync(eventSource, cancellationToken, integrationType);
+            return _messageDispatcher.PublishAsync(eventSource, cancellationToken, integrationType);
         }
 
         public Task SendAsync(ICommand command, 
-            CancellationToken cancellationToken = default(CancellationToken), 
-            IntegrationTypes integrationType = IntegrationTypes.All)
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _messageDispatcher.Value.SendAsync(command, cancellationToken, integrationType);
+            return _messageDispatcher.SendAsync(command, cancellationToken);
         }
 
         public Task<TResult> SendAsync<TResult>(ICommand<TResult> command, 
-            CancellationToken cancellationToken = default(CancellationToken), 
-            IntegrationTypes integrationType = IntegrationTypes.All)
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _messageDispatcher.Value.SendAsync(command, cancellationToken, integrationType);
+            return _messageDispatcher.SendAsync(command, cancellationToken);
         }
 
         public Task<TResult> DispatchAsync<TResult>(IQuery<TResult> query,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return _queryDispatcher.Value.Dispatch(query, cancellationToken);
+            return _queryDispatcher.Dispatch(query, cancellationToken);
         }
     }
 }

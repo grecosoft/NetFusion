@@ -318,18 +318,15 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Types Loaded for Application Plug-In")]
         public void TypesLoaded_ForAppPlugin()
         {
-            ContainerFixture.Test(fixture =>
+            ContainerFixture.Test2(fixture =>
             {
-                fixture.Arrange.Resolver(r =>
+                fixture.Arrange2.Resolver2(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockOneType>();
                 })
-                .Act.OnContainer(c =>
-                {
-                    c.Build();
-                })
-                .Assert.CompositeApp(ca =>
+
+                .Assert2.CompositeApp(ca =>
                 {
                     // Type assignment:
                     ca.AppHostPlugin.PluginTypes.Should().HaveCount(1);
@@ -481,7 +478,7 @@ namespace CoreTests.Bootstrap
                 })
                 .Assert.Exception<ContainerException>(ex =>
                 {
-                    ex.Message.Should().Contain("The application container plug-in modules have already been started.");
+                    ex.Message.Should().Contain("The application container has already been started.");
                 });
             });
         }
@@ -535,7 +532,7 @@ namespace CoreTests.Bootstrap
                 })
                 .Assert.Exception<ContainerException>(ex =>
                 {
-                    ex.Message.Should().Contain("The application container plug-in modules have not been started.");
+                    ex.Message.Should().Contain("The application container has not been started.");
                 });
             });
         }
@@ -569,28 +566,34 @@ namespace CoreTests.Bootstrap
         }
 
         /// <summary>
-        /// Once the application container is disposed, the its provided
-        /// services can no longer be accessed.
+        /// Once the application container is disposed, the associated service
+        /// provider can no longer be accessed.
         /// </summary>
-        [Fact(DisplayName = "Disposed Container cannot have Services accessed")]
+        [Fact(DisplayName = "Disposed Container cannot have Service Provider accessed")]
         public void DisposedAppContainer_CannotHave_ServicesAccessed()
         {
-            ContainerFixture.Test(fixture => {
-                fixture.Arrange.Resolver(r =>
+            ContainerFixture.Test2(fixture =>
+            {
+                fixture.Arrange2.Resolver2(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>();
                 })
-                .Act.OnContainer(c =>
-                {                   
-                    c.Build();
+                .Act2.OnContainer(c =>
+                {
                     c.Dispose();
-                    var s = c.Services;
+                    var s = c.ServiceProvider;
                 })
-                .Assert.Exception<ContainerException>(ex => {
+                .Assert2.Exception<ContainerException>(ex =>
+                {
                     ex.Message.Should().Be(
                         "The application container has been disposed and can no longer be accessed.");
                 });
-            });           
+            });
         }
+        // Test same for Log
+        // Test same for LoggerFactory
+        // Test same for CreateServiceScope
+        // Test same for CreateValidator
+        // Test same for Execute within service scope
     }
 }

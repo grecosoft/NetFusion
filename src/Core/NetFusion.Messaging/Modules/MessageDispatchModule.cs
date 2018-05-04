@@ -1,7 +1,8 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Dependencies;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
@@ -10,7 +11,6 @@ using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Types;
-using NetFusion.Messaging.Types.Rules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,31 +60,28 @@ namespace NetFusion.Messaging.Modules
             LogInvalidConsumers();
         }
 
-        public override void RegisterDefaultComponents(ContainerBuilder builder)
+        // The dispatcher delegated to my the MessagingService class.
+        public override void RegisterDefaultServices(IServiceCollection services)
         {
-            // The dispatcher delegated to my the MessagingService class.
-            builder.RegisterType<MessageDispatcher>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
+            services.AddScoped<MessageDispatcher>();
         }
 
-        public override void RegisterComponents(ContainerBuilder builder)
+        // Register all of the message publishers that determine how a given
+        // message is delivered.  This is how the message dispatch pipeline
+        // is extended.
+        public override void RegisterServices(IServiceCollection services)
         {
-            // Register all of the message publishers that determine how a given
-            // message is delivered.  This is how the message dispatch pipeline
-            // is extended.
-            builder.RegisterTypes(DispatchConfig.PublisherTypes)
-                .As<IMessagePublisher>()
-                .InstancePerLifetimeScope();
+            foreach (Type publisherType in DispatchConfig.PublisherTypes)
+            {
+                services.AddScoped(typeof(IMessagePublisher), publisherType);
+            }
         }
 
-        public override void ScanAllOtherPlugins(TypeRegistration registration)
+        public override void ScanAllOtherPlugins(ITypeCatalog catalog)
         {
-            // Add all the message consumers to the dependency injection container.
-            registration.PluginTypes.AssignableTo<IMessageConsumer>()
-                .AsSelf()
-                .As<IMessageConsumer>()
-                .InstancePerLifetimeScope();
+            catalog.AsSelf(
+                t => t.IsConcreteTypeDerivedFrom<IMessageConsumer>(),
+                ServiceLifetime.Scoped);
         }
 
         private void SetDispatchRules(MessageDispatchInfo[] allDispatchers)
@@ -170,12 +167,13 @@ namespace NetFusion.Messaging.Modules
             // Invoke the message consumers in a new lifetime scope.  This is for the case where a message
             // is received outside of the normal lifetime scope such as the one associated with the current
             // web request.
-            using (var scope = AppContainer.Instance.Services.BeginLifetimeScope())
+
+            using (var scope = AppContainer.Instance.CreateServiceScope())
             {
                 try
                 {
                     // Resolve the component and call the message handler.
-                    var consumer = (IMessageConsumer)scope.Resolve(dispatcher.ConsumerType);
+                    var consumer = (IMessageConsumer)scope.ServiceProvider.GetRequiredService(dispatcher.ConsumerType);
                     return await dispatcher.Dispatch(message, consumer, cancellationToken);
                 }
                 catch (Exception ex)

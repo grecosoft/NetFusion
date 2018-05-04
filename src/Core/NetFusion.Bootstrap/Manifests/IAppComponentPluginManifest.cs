@@ -3,7 +3,7 @@
     /// <summary>
     /// Identifies and describes an application specific plug-in component.  
     /// This type of plug-in contains application specific components such
-    /// as business services and repositories.
+    /// as domain entities, business services, and repositories.
     /// </summary>
     public interface IAppComponentPluginManifest : IPluginManifest
     {

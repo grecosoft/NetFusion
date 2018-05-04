@@ -12,8 +12,8 @@ namespace NetFusion.Mapping
 
         protected MappingStrategy(Type sourceType, Type targetType)
         {
-            SourceType = sourceType;
-            TargetType = targetType;
+            SourceType = sourceType ?? throw new ArgumentNullException(nameof(sourceType));
+            TargetType = targetType ?? throw new ArgumentNullException(nameof(targetType));
         }
 
         public abstract object Map(IObjectMapper mapper, object obj);

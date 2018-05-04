@@ -21,7 +21,7 @@ namespace NetFusion.Bootstrap.Container
     /// a IPluginManifest derived type signifies that the assembly is a plug-in.
     /// 
     /// Having this component load the plug-in types decouples the AppContainer 
-    /// from .NET assemblies and makes the design easier to unit-test.
+    /// from .NET assemblies and makes the design easier to unit-test and extend.
     /// </summary>
     public class TypeResolver : ITypeResolver
     {
@@ -129,7 +129,6 @@ namespace NetFusion.Bootstrap.Container
                 Assembly assembly = manifest.GetType().GetTypeInfo().Assembly;
                 manifest.AssemblyName = assembly.FullName;
                 manifest.AssemblyVersion = assembly.GetName().Version.ToString();
-                manifest.MachineName = Environment.MachineName;
             }
         }
 
@@ -147,14 +146,17 @@ namespace NetFusion.Bootstrap.Container
                 .Select(t => new PluginType(plugin, t, pluginAssembly.GetName().Name))
                 .ToArray();
 
-            // Create instances of all plugin-modules.
+            // Create instances of all plugin-modules.  These modules are what will be calling during 
+            // the bootstrap process to allow plug-ins to register services and to initialize and cache 
+            // any information needed during execution of its services during normal application operation.
             var pluginModules = pluginTypes.CreateInstancesDerivingFrom<IPluginModule>().ToArray();
 
             plugin.SetPluginResolvedTypes(pluginTypes, pluginModules);
         }
 
         // Automatically populates all properties on a plug-in module that are an enumeration of
-        // a derived IPluginKnownType.
+        // a derived IPluginKnownType.  This can be thought of as a very simple implementation of
+        // MEF doing only what is needed.
         public void SetPluginModuleKnownTypes(IPluginModule forModule, IEnumerable<PluginType> fromPluginTypes)
         {
             if (forModule == null) throw new ArgumentNullException(nameof(forModule), 

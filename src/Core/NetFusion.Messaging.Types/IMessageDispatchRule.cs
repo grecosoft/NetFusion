@@ -1,7 +1,7 @@
 ﻿using NetFusion.Base.Plugins;
 using System;
 
-namespace NetFusion.Messaging.Types.Rules
+namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// Implemented by a class that determines if a given consumer's message 
