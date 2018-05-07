@@ -19,24 +19,24 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesDispathPredicate))]
         public Task HandlerCalled_WhenMessagePassesDispathPredicate()
         {
-            return ContainerFixture.TestAsync(async fixture =>
+            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
             {
-                var testResult = await fixture.Arrange2
-                        .Resolver2(r => r.WithHostEvalBasedConsumer())
-                        .Services2(s => s.UseMockedEvalService())
-                    .Act2.OnServices2(s =>
+                var testResult = await fixture.Arrange
+                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostEvalBasedConsumer()))
+                        .Services(s => s.UseMockedEvalService())
+                    .Act.OnServices(s =>
                     {
                         var mockEvt = new MockEvalDomainEvent { RuleTestValue = 7000 };
                         return s.GetRequiredService<IMessagingService>()
                                          .PublishAsync(mockEvt);
                     });
 
-                testResult.Assert2.Services2(s =>
+                testResult.Assert.Services2((System.IServiceProvider s) =>
                 {
                     var consumer = s.GetRequiredService<MockDomainEventEvalBasedConsumer>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventPredicatePases");
                 });
-            });
+            }));
         }
     }
 }

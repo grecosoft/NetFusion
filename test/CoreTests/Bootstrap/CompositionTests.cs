@@ -18,9 +18,9 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Modules having Known Type Properties will be Populated")]
         public void ModulesHavingKnownTypeProperties_WillBePopulated()
         {
-            ContainerFixture.Test2(fixture =>
+            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture =>
             {
-                fixture.Arrange2.Resolver2(r =>
+                fixture.Arrange.Resolver((System.Action<TestTypeResolver>)(r =>
                 {
                     // Plug-in type based on the type in the core plug-in.
                     r.AddPlugin<MockAppHostPlugin>()
@@ -31,14 +31,14 @@ namespace CoreTests.Bootstrap
                     r.AddPlugin<MockCorePlugin>()
                           .AddPluginType<MockComposedModule>()
                           .AddPluginType<MockKnownType>();
-                })
-                .Assert2.PluginModule<MockComposedModule>(m =>
+                }))
+                .Assert.PluginModule<MockComposedModule>(m =>
                 {
                     m.ImportedTypes.Should().NotBeNull();
                     m.ImportedTypes.Should().HaveCount(1);
                     m.ImportedTypes.First().Should().BeOfType<MockTypeOneBasedOnKnownType>();
                 });
-            });
+            }));
         }
 
         /// <summary>
@@ -52,9 +52,9 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Core Plug-Ins Composted from All Other Plug-in Types")]
         public void CorePluginsComposed_FromAllOtherPluginTypes()
         {
-            ContainerFixture.Test2(fixture =>
+            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture =>
             {
-                fixture.Arrange2.Resolver2(r =>
+                fixture.Arrange.Resolver((System.Action<TestTypeResolver>)(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
                                  .AddPluginType<MockTypeOneBasedOnKnownType>();
@@ -69,8 +69,8 @@ namespace CoreTests.Bootstrap
                     // from types contained within the above plug-ins.
                     r.AddPlugin<MockCorePlugin>()
                         .AddPluginType<MockComposedModule>();
-                })
-                .Assert2.PluginModule<MockComposedModule>(m =>
+                }))
+                .Assert.PluginModule<MockComposedModule>(m =>
                 {
                     m.ImportedTypes.Should().NotBeNull();
                     m.ImportedTypes.Should().HaveCount(3);
@@ -78,7 +78,7 @@ namespace CoreTests.Bootstrap
                     m.ImportedTypes.OfType<MockTypeTwoBasedOnKnownType>().Should().HaveCount(1);
                     m.ImportedTypes.OfType<MockTypeThreeBasedOnKnownType>().Should().HaveCount(1);
                 });
-            });
+            }));
         }
 
         /// <summary>
@@ -88,9 +88,9 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Application Plug-Ins composed from Other Plugin-In types Only")]
         public void AppPluginsComposed_FromOnlyOtherAppPluginTypesOnly()
         {
-            ContainerFixture.Test2(fixture =>
+            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture =>
             {
-                fixture.Arrange2.Resolver2(r =>
+                fixture.Arrange.Resolver((System.Action<TestTypeResolver>)(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockTypeOneBasedOnKnownType>();
@@ -103,14 +103,14 @@ namespace CoreTests.Bootstrap
 
                     r.AddPlugin<MockAppComponentPlugin>()
                         .AddPluginType<MockComposedModule>();
-                })
-                .Assert2.PluginModule<MockComposedModule>(m =>
+                }))
+                .Assert.PluginModule<MockComposedModule>(m =>
                 {
                     m.ImportedTypes.Should().NotBeNull();
                     m.ImportedTypes.Should().HaveCount(1);
                     m.ImportedTypes.OfType<MockTypeOneBasedOnKnownType>().Should().HaveCount(1);
                 });
-            });
+            }));
         }
 
         /// <summary>
@@ -127,9 +127,9 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Known Type instance Discovered by Plug-in defining Known Type")]
         public void KnownTypeInstance_DiscoverdByPlugin_DefiningKnownType()
         {
-            ContainerFixture.Test2(fixture =>
+            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture =>
             {
-                fixture.Arrange2.Resolver2(r =>
+                fixture.Arrange.Resolver((System.Action<TestTypeResolver>)(r =>
                 {
                     // Plug-in type based on the type in the core plug-in.
                     r.AddPlugin<MockAppHostPlugin>()
@@ -139,15 +139,15 @@ namespace CoreTests.Bootstrap
                     r.AddPlugin<MockCorePlugin>()
                          .AddPluginType<MockKnownType>()
                          .AddPluginType<MockComposedModule>();
-                })
-                .Assert2.CompositeApp(ca =>
+                }))
+                .Assert.CompositeApp(ca =>
                 {
                     // Verifies that the known plug-in type under test was discovered.
                     var discoveredTypes = ca.AppHostPlugin.PluginTypes.Where(pt => pt.DiscoveredByPlugins.Any());
                     discoveredTypes.Should().HaveCount(1);
                     discoveredTypes.First().Type.Should().Be(typeof(MockTypeOneBasedOnKnownType));
                 });
-            });
+            }));
         }
 
         /// <summary>
@@ -157,9 +157,9 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Known Type discovered by correct Plug-in")]
         public void KnowType_DiscoveredBy_CorrectPlugin()
         {
-            ContainerFixture.Test2(fixture =>
+            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture =>
             {
-                fixture.Arrange2.Resolver2(r =>
+                fixture.Arrange.Resolver((System.Action<TestTypeResolver>)(r =>
                 {
                     // Plug-in type based on the type in the core plug-in.
                     r.AddPlugin<MockAppHostPlugin>()
@@ -170,15 +170,15 @@ namespace CoreTests.Bootstrap
                     r.AddPlugin<MockCorePlugin>()
                           .AddPluginType<MockComposedModule>()
                           .AddPluginType<MockKnownType>();
-                })
-                .Assert2.CompositeApp(ca =>
+                }))
+                .Assert.CompositeApp(ca =>
                 {
                     // Verifies that the known plug-in type under test was discovered by the expected plug-in.
                     var knownTypes = ca.AppHostPlugin.PluginTypes.Where(pt => pt.IsKnownTypeImplementation);
                     knownTypes.First().DiscoveredByPlugins.Should().HaveCount(1);
                     knownTypes.First().DiscoveredByPlugins.First().Manifest.Should().BeOfType<MockCorePlugin>();
                 });
-            });
+            }));
         } 
     }
 }

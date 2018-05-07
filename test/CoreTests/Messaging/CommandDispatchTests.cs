@@ -22,11 +22,11 @@ namespace CoreTests.Messaging
         {
             MockCommandResult cmdResult = null;
 
-            return ContainerFixture.TestAsync(async fixture =>
+            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
             {
-                var testResult = await fixture.Arrange2
-                        .Resolver2(r => r.WithHostCommandConsumer())
-                    .Act2.OnServices2(async s =>
+                var testResult = await fixture.Arrange
+                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostCommandConsumer()))
+                    .Act.OnServices(async s =>
                     {
                         var messagingSrv = s.GetService<IMessagingService>();
                         var cmd = new MockCommand();
@@ -34,7 +34,7 @@ namespace CoreTests.Messaging
                         cmdResult = await messagingSrv.SendAsync(cmd);
                     });
 
-                testResult.Assert2.Services2(s =>
+                testResult.Assert.Services2((System.IServiceProvider s) =>
                 {
                     cmdResult.Should().NotBeNull();
                     cmdResult.Value.Should().Be("MOCK_VALUE");
@@ -43,17 +43,17 @@ namespace CoreTests.Messaging
                     consumer.ExecutedHandlers.Should().HaveCount(1);
                     consumer.ExecutedHandlers.Should().Contain("OnCommand");
                 });
-            });
+            }));
         }
 
         [Fact(DisplayName = nameof(CommandResult_NotRequired))]
         public Task CommandResult_NotRequired()
         {          
-            return ContainerFixture.TestAsync(async fixture =>
+            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
             {
-                var testResult = await fixture.Arrange2
-                        .Resolver2(r => r.WithHostCommandConsumer())
-                    .Act2.OnServices2(async s =>
+                var testResult = await fixture.Arrange
+                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostCommandConsumer()))
+                    .Act.OnServices(async s =>
                     {
                         var messagingSrv = s.GetService<IMessagingService>();
                         var cmd = new MockCommandNoResult();
@@ -61,34 +61,34 @@ namespace CoreTests.Messaging
                         await messagingSrv.SendAsync(cmd);
                     });
 
-                testResult.Assert2.Services2(s =>
+                testResult.Assert.Services2((System.IServiceProvider s) =>
                 {
                     var consumer = s.GetRequiredService<MockCommandConsumer>();
                     consumer.ExecutedHandlers.Should().HaveCount(1);
                     consumer.ExecutedHandlers.Should().Contain("OnCommandNoResult");
                 });
-            });
+            }));
         }
 
         [Fact(DisplayName = nameof(CommandMessagesCanOnly_HaveOneEventHandler))]
         public Task CommandMessagesCanOnly_HaveOneEventHandler()
         {
-            return ContainerFixture.TestAsync(async fixture =>
+            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
             {
-                var testResult = await fixture.Arrange2
-                        .Resolver2(r => r.WithHostCommandConsumer().AddMultipleConsumers())
-                    .Act2.OnServices2(s =>
+                var testResult = await fixture.Arrange
+                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostCommandConsumer().AddMultipleConsumers()))
+                    .Act.OnServices(s =>
                     {
                         var messagingSrv = s.GetService<IMessagingService>();
                         var evt = new MockCommand();
                         return messagingSrv.SendAsync(evt);
                     });
 
-                testResult.Assert2.Exception<PublisherException>(ex =>
+                testResult.Assert.Exception<PublisherException>((PublisherException ex) =>
                 {
                     ex.Message.Should().Contain("Exception publishing message.  See log for details.");
                 });
-            });
+            }));
         }
     }
 }

@@ -23,19 +23,19 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Application Container registered as Singleton Service")]
         public void AppContainer_Registered_AsSingletonService()
         {
-            ContainerFixture.Test2(fixture =>
+            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture =>
             {
-                fixture.Arrange2.Resolver2(r =>
+                fixture.Arrange.Resolver((System.Action<TestTypeResolver>)(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>();
-                })
-                .Assert2.Services2(s =>
+                }))
+                .Assert.Services2(s =>
                 {
                     var appContainer = s.GetService<IAppContainer>();
                     appContainer.Should().NotBeNull();
                 });
 
-            });
+            }));
         }
 
         /// <summary>
@@ -46,21 +46,21 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Module Registered as Service if implements Marker interface")]
         public void ModuleRegisteredAsService_IfImplements_MarkerInterface()
         {
-            ContainerFixture.Test2(fixture =>
+            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture =>
             {
-                fixture.Arrange2.Resolver2(r =>
+                fixture.Arrange.Resolver((System.Action<TestTypeResolver>)(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
                      .AddPluginType<MockPluginOneModule>();
-                })
-                .Assert2.Services2(s =>
+                }))
+                .Assert.Services2(s =>
                 {
                     var moduleAsService = s.GetService<IMockPluginOneModule>();
                     moduleAsService.Should().NotBeNull();
                     moduleAsService.Should().BeOfType<MockPluginOneModule>();
                 });
 
-            });
+            }));
         }
     }
 }

@@ -20,23 +20,23 @@ namespace CoreTests.Messaging
         [Fact (DisplayName = "Domain Event Consumer handler invoked")]
         public Task DomainEventConsumer_HandlerInvoked()
         {
-            return ContainerFixture.TestAsync(async fixture =>
+            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
             {
-                var testResult = await fixture.Arrange2
-                        .Resolver2(r => r.WithHostConsumer())
-                    .Act2.OnServices2(async s =>
+                var testResult = await fixture.Arrange
+                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostConsumer()))
+                    .Act.OnServices(async s =>
                     {
                         var mockEvt = new MockDomainEvent();
                         await s.GetService<IMessagingService>()
                             .PublishAsync(mockEvt);
                     });
 
-                testResult.Assert2.Services2(s =>
+                testResult.Assert.Services2((System.IServiceProvider s) =>
                 {
                     var consumer = s.GetService<MockDomainEventConsumer>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventHandlerOne");
                 });
-            });
+            }));
         }
 
         /// <summary>
@@ -47,23 +47,23 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = "Event handler for Base Type invoked if applied attribute")]
         public Task EventHandlerForBaseType_InvokedIfAppliedAttribute()
         {
-            return ContainerFixture.TestAsync(async fixture =>
+            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
             {
-                var testResult = await fixture.Arrange2
-                        .Resolver2(r => r.WithHost().AddDerivedEventAndConsumer())
-                    .Act2.OnServices2(async s =>
+                var testResult = await fixture.Arrange
+                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHost().AddDerivedEventAndConsumer()))
+                    .Act.OnServices(async s =>
                     {
                         var mockEvt = new MockDerivedDomainEvent();
                         await s.GetService<IMessagingService>()
                            .PublishAsync(mockEvt);
                     });
 
-                testResult.Assert2.Services2(s =>
+                testResult.Assert.Services2((System.IServiceProvider s) =>
                 {
                     var consumer = s.GetService<MockBaseMessageConsumer>();
                     consumer.ExecutedHandlers.Should().ContainSingle("OnIncludeBaseEventHandler");
                 });
-            });
+            }));
         }
     }
 }

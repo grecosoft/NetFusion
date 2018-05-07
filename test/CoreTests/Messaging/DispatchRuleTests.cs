@@ -18,45 +18,45 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesAllDispatchRules))]
         public Task HandlerCalled_WhenMessagePassesAllDispatchRules()
         { 
-            return ContainerFixture.TestAsync(async fixture =>
+            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
             {
-                var testResult = await fixture.Arrange2
-                        .Resolver2(r => r.WithHostRuleBasedConsumer())
-                    .Act2.OnServices2(s =>
+                var testResult = await fixture.Arrange
+                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostRuleBasedConsumer()))
+                    .Act.OnServices(s =>
                     {
                         var mockEvt = new MockRuleDomainEvent { RuleTestValue = 1500 };
                         return s.GetRequiredService<IMessagingService>()
                                          .PublishAsync(mockEvt);
                     });
 
-                testResult.Assert2.Services2(s =>
+                testResult.Assert.Services2((System.IServiceProvider s) =>
                 {
                     var consumer = s.GetRequiredService<MockDomainEventRuleBasedConsumer>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventAllRulesPass");
                 });
-            });
+            }));
         }
 
         [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesAnyDispatchRule))]
         public Task HandlerCalled_WhenMessagePassesAnyDispatchRule()
         {
-            return ContainerFixture.TestAsync(async fixture =>
+            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
             {
-                var testResult = await fixture.Arrange2
-                        .Resolver2(r => r.WithHostRuleBasedConsumer())
-                    .Act2.OnServices2(s =>
+                var testResult = await fixture.Arrange
+                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostRuleBasedConsumer()))
+                    .Act.OnServices(s =>
                     {
                         var mockEvt = new MockRuleDomainEvent { RuleTestValue = 3000 };
                         return s.GetRequiredService<IMessagingService>()
                                          .PublishAsync(mockEvt);
                     });
 
-                testResult.Assert2.Services2(s =>
+                testResult.Assert.Services2((System.IServiceProvider s) =>
                 {
                     var consumer = s.GetRequiredService<MockDomainEventRuleBasedConsumer>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventAnyRulePasses");
                 });
-            });
+            }));
         }
     }
 }

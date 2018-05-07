@@ -18,12 +18,6 @@ namespace NetFusion.Test.Container
         private Exception _resultingException;
         private IServiceProvider _testServiceScope;
 
-        public ContainerAssert(AppContainer container, Exception resultingException)
-        {
-            _container = container;
-            _resultingException = resultingException;
-        }
-
         public ContainerAssert(AppContainer container, IServiceProvider serviceProvider, Exception resultingException)
         {
             _container = container;
@@ -34,7 +28,7 @@ namespace NetFusion.Test.Container
         public ContainerAssert(ContainerFixture fixture)
         {
             _container = fixture.ContainerUnderTest;
-            fixture.InitContainer();
+           fixture.InitContainer();
         }
 
 

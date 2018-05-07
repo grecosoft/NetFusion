@@ -31,11 +31,11 @@ namespace CoreTests.Queries
             var typesUnderTest = new[] { typeof(DuplicateConsumerOne), typeof(DuplicateConsumerTwo) };
             var testQuery = new TestQuery();
 
-            ContainerFixture.Test2(fixture =>
+            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
             {
                 try
                 {
-                    fixture.Arrange2.Resolver2(r => r.WithDispatchConfiguredHost(typesUnderTest));
+                    fixture.Arrange.Resolver((Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithDispatchConfiguredHost((Type[])typesUnderTest)));
                     fixture.InitContainer();
                     Assert.True(false, "Expected exception not raised.");
                 }
@@ -49,7 +49,7 @@ namespace CoreTests.Queries
                 {
                     Assert.True(false, "Unexpected exception raised.");
                 }
-            });
+            }));
         }
 
         [Fact(DisplayName = "Queries:  Query Must have Consumer")]
@@ -58,23 +58,23 @@ namespace CoreTests.Queries
             var typesUnderTest = new[] { typeof(TestConsumer) };
             var testQuery = new TestQueryNoConsumer();
 
-            return ContainerFixture.TestAsync(async fixture =>
+            return ContainerFixture.TestAsync((Func<ContainerFixture, Task>)(async fixture =>
             {
-                var testResult = await fixture.Arrange2
-                        .Resolver2(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                    .Act2.OnServices2(s =>
+                var testResult = await fixture.Arrange
+                        .Resolver((Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithDispatchConfiguredHost((Type[])typesUnderTest)))
+                    .Act.OnServices(s =>
                     {
 
                         var dispatcher = s.GetService<IMessagingService>();
                         return dispatcher.DispatchAsync(testQuery);
                     });
 
-                testResult.Assert2.Exception<QueryDispatchException>(ex =>
+                testResult.Assert.Exception<QueryDispatchException>((QueryDispatchException ex) =>
                 {
                     ex.Should().NotBeNull();
                     ex.Message.Should().Contain("is not registered");
                 });
-            });
+            }));
         }
         
         [Fact(DisplayName = "Queries: Consumer Can Dispatch Query to Consumer")]
@@ -85,16 +85,16 @@ namespace CoreTests.Queries
 
             return ContainerFixture.TestAsync(async fixture =>
             {
-                var testResult = await fixture.Arrange2
-                        .Resolver2(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                    .Act2.OnServices2(s =>
+                var testResult = await fixture.Arrange
+                        .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                    .Act.OnServices(s =>
                         {
                            
                             var dispatcher = s.GetService<IMessagingService>();
                             return dispatcher.DispatchAsync(testQuery);
                         });
 
-                testResult.Assert2.State(() =>
+                testResult.Assert.State(() =>
                 {
                     testQuery.Result.Should().NotBeNull();
                     testQuery.TestLog.Should().HaveCount(1);
@@ -116,17 +116,17 @@ namespace CoreTests.Queries
             return ContainerFixture.TestAsync(async fixture =>
             {
 
-                var testResult = await fixture.Arrange2
-                        .Resolver2(r => r.WithDispatchConfiguredHost(typesUnderTest))
-                        .Container2(c => c.WithConfig(dispatchConfig))
-                    .Act2.OnServices2(s =>
+                var testResult = await fixture.Arrange
+                        .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
+                        .Container(c => c.WithConfig(dispatchConfig))
+                    .Act.OnServices(s =>
                     {
 
                         var dispatcher = s.GetService<IMessagingService>();
                         return dispatcher.DispatchAsync(testQuery);
                     });
 
-                testResult.Assert2.State(() =>
+                testResult.Assert.State(() =>
                 {
                     testQuery.Result.Should().NotBeNull();
                     testQuery.TestLog.Should().HaveCount(5);

@@ -31,14 +31,14 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Specified Configuration associated with Plug-in")]
         public void SpecifiedConfiguration_AssociatedWithPlugin()
         {
-            ContainerFixture.Test2(fixture => {
-                fixture.Arrange2.Resolver2(r =>
+            ContainerFixture.Test((Action<ContainerFixture>)(fixture => {
+                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginConfig>();
-                }).Container2(c => c.WithConfig(new MockPluginConfig()))
+                })).Container(c => c.WithConfig(new MockPluginConfig()))
                 
-                .Assert2
+                .Assert
                     .CompositeApp(ca =>
                     {
                         ca.AppHostPlugin.PluginConfigs.Should().HaveCount(1);
@@ -48,7 +48,7 @@ namespace CoreTests.Bootstrap
                         p.PluginConfigs.Should().HaveCount(1);
                         p.PluginConfigs.First().Should().BeOfType<MockPluginConfig>();
                     });
-            });              
+            }));              
         }
 
         /// <summary>
@@ -58,18 +58,18 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Plug-in Developer can access Configuration from Module")]
         public void PluginDeveloper_CanAccess_ConfigurationFromModule()
         {
-            ContainerFixture.Test2(fixture => {
-                fixture.Arrange2.Resolver2(r =>
+            ContainerFixture.Test((Action<ContainerFixture>)(fixture => {
+                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginOneModule>()
                         .AddPluginType<MockPluginConfig>();
-                })
-                .Container2(c => c.WithConfig(new MockPluginConfig()))
-                .Assert2.PluginModule<MockPluginOneModule>(m => {
+                }))
+                .Container(c => c.WithConfig(new MockPluginConfig()))
+                .Assert.PluginModule<MockPluginOneModule>(m => {
                         m.Context.Plugin.GetConfig<MockPluginConfig>().Should().NotBeNull();
                 });
-            });
+            }));
         }
 
         /// <summary>
@@ -78,16 +78,16 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Plug-in Configuration can be initialized using Factory")]
         public void PluginConfiguration_CanBeInitialized_UsingFactory()
         {
-            ContainerFixture.Test2(fixture => {
-                fixture.Arrange2.Resolver2(r =>
+            ContainerFixture.Test((Action<ContainerFixture>)(fixture => {
+                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginConfig>();
-                })
-                .Container2(c => {
+                }))
+                .Container(c => {
                     c.WithConfig<MockPluginConfig>((confg) => confg.ConfigValue = "TEST_VALUE");
                 })     
-                .Assert2.CompositeApp(ca => {
+                .Assert.CompositeApp(ca => {
                     ca.AppHostPlugin.PluginConfigs.Should().HaveCount(1);
 
                     var config = ca.AppHostPlugin.PluginConfigs.First();
@@ -95,27 +95,27 @@ namespace CoreTests.Bootstrap
                     config.Should().BeOfType<MockPluginConfig>();
                     (config as MockPluginConfig).ConfigValue.Should().Be("TEST_VALUE");
                 });               
-            });               
+            }));               
         }
         
         [Fact(DisplayName = "After Container built Configuration cannot be Added")]
         public void AfterContainerBuilt_ConfigurationCannotBeAdded()
         {
-            ContainerFixture.Test2(fixture => {
-                fixture.Arrange2.Resolver2(r =>
+            ContainerFixture.Test((Action<ContainerFixture>)(fixture => {
+                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
                 {
                     r.AddPlugin<MockAppHostPlugin>()
                         .AddPluginType<MockPluginConfig>();
-                })
-                .Container2(c => c.WithConfig<MockPluginConfig>())
-                .Act2.OnContainer(c =>
+                }))
+                .Container(c => c.WithConfig<MockPluginConfig>())
+                .Act.OnContainer(c =>
                 {
                     c.WithConfig<MockPluginConfig>();
                 })
                 .Assert.Exception<ContainerException>(e => {
                     e.Message.Contains("Container has already been built.");
                 });
-            });
+            }));
         }
 
         /// <summary>

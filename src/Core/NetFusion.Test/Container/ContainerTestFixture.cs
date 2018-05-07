@@ -61,13 +61,14 @@ namespace NetFusion.Test.Container
             }
         }
 
-
-
-
-
-            
-
-        public static void Test2(Action<ContainerFixture> test)
+        /// <summary>
+        /// Creates a new test fixture for testing an application container.  The created
+        /// instance is passed to the provided fixture method used to execute the unit-test.
+        /// Once the fixture method completed, the test container is disposed.
+        /// </summary>
+        /// <param name="fixture">Method specified by the unit-test to execute logic against
+        /// a created test-fixture instance.</param>
+        public static void Test(Action<ContainerFixture> test)
         {
             if (test == null) throw new ArgumentNullException(nameof(test),
                 "Test delegate cannot be null.");
@@ -96,8 +97,6 @@ namespace NetFusion.Test.Container
             fixture._container.Dispose();
         }
 
-
-
         /// <summary>
         /// Returns a new test fixture with a created application container that
         /// can be arranged for testing a specific scenario.
@@ -122,31 +121,11 @@ namespace NetFusion.Test.Container
         }
 
         /// <summary>
-        /// Creates a new test fixture for testing an application container.  The created
-        /// instance is passed to the provided fixture method used to execute the unit-test.
-        /// Once the fixture method completed, the test container is disposed.
-        /// </summary>
-        /// <param name="fixture">Method specified by the unit-test to execute logic against
-        /// a created test-fixture instance.</param>
-        public static void Test(Action<ContainerFixture> fixture)
-        {
-            var testFixture = CreateTestFixture();
-
-            if (fixture == null) throw new ArgumentNullException(nameof(fixture), 
-                "Test fixture cannot be null.");
-
-            fixture(testFixture);
-
-            testFixture._container.Dispose();           
-        }
-
-        /// <summary>
         /// Allows the unit-test to arrange the type-resolver and application container under test.  
         /// The type-resolver basically abstracts the logic for loading plug-in types without being 
         /// dependent on .NET assemblies.  This makes unit-testing much easier.
         /// </summary>
-        public ContainerArrange Arrange => new ContainerArrange(Resolver, _container);
-        public ContainerArrange Arrange2 => new ContainerArrange(this);
+        public ContainerArrange Arrange => new ContainerArrange(this);
 
     }
 }
