@@ -73,6 +73,15 @@ namespace NetFusion.Messaging.Core
             var preFilters = _filterModule.QueryFilterTypes.Select(qf => _services.GetRequiredService(qf)).OfType<IPreQueryFilter>();
             var postFilters = _filterModule.QueryFilterTypes.Select(qf => _services.GetRequiredService(qf)).OfType<IPostQueryFilter>();
         
+            LogQueryDispatch(query, consumer);
+
+            await ApplyFilters(query, preFilters, (f, q) => (f as IPreQueryFilter).OnPreExecute(q));
+            await dispatcher.Dispatch(query, consumer, cancellationToken);
+            await ApplyFilters(query, postFilters, (f, q) => (f as IPostQueryFilter).OnPostExecute(q));
+        }
+
+        private void LogQueryDispatch(IQuery query, IQueryConsumer consumer)
+        {
             if (_logger.IsEnabled(LogLevel.Trace))
             {
                 _logger.LogTraceDetails($"Dispatching Query Type: {query.GetType()} to Consumer: {consumer.GetType()}", query);
@@ -81,16 +90,14 @@ namespace NetFusion.Messaging.Core
             {
                 _logger.LogDebug($"Dispatching Query Type: {query.GetType()} to Consumer: {consumer.GetType()}");
             }
-
-            await ApplyFilters(query, preFilters, (f, q) => (f as IPreQueryFilter).OnPreExecute(q));
-            await dispatcher.Dispatch(query, consumer, cancellationToken);
-            await ApplyFilters(query, postFilters, (f, q) => (f as IPostQueryFilter).OnPostExecute(q));
         }
         
         // Executes a list of asynchronous filters and awaits their completion.  Once completed,
         // any task error(s) are checked and raised.
         private async Task ApplyFilters(IQuery query, IEnumerable<IQueryFilter> filters, Func<IQueryFilter, IQuery, Task> executeFilter)
         {
+            filters = filters.ToArray();
+            
             _logger.LogDebugDetails(MessagingLogEvents.QUERY_DISPATCH, "Applying Query Filters",
                 new {
                     FilterTypes = filters.Select(f => f.GetType().FullName).ToArray()

@@ -208,10 +208,7 @@ namespace CommonTests.Base.Validation
                     validator.AddChild(this.Child);
                 }
 
-                if (this.Children != null)
-                {
-                    Children.ForEach(c => validator.AddChild(c));
-                }
+                Children?.ForEach(c => validator.AddChild(c));
 
                 validator.Verify(ValueInfoOne == 1000,
                    "ValueWarningOne", ValidationTypes.Info);

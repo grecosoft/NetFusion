@@ -21,7 +21,7 @@ namespace NetFusion.Bootstrap.Container
     /// The bootstrap orchestrates the construction of the application container and
     /// the service collection that is populated.  An assembly is identified as being
     /// a plug-in by containing a class deriving from one of the base IPluginManifest
-    /// derived types used to identify the category of plug-in:
+    /// types used to identify the category of plug-in:
     /// 
     ///     - AppHost:  The executable process (WebApi/Console)
     ///     - AppComponent:  Contains application specific components.
@@ -29,9 +29,9 @@ namespace NetFusion.Bootstrap.Container
     ///     concerns.
     ///     
     /// The application container and bootstrap process is only dependent on Microsoft
-    /// libraries and open-source projects.  Core plug-ins should be written for non
-    /// Microsoft open-source implementations.  This allows the base implementation to
-    /// have a small footprint that can be easily extended without requiring changes.
+    /// libraries.  Core plug-ins should be written for non  Microsoft open-source
+    /// implementations.  This allows the base implementation to have a small footprint
+    /// that can be easily extended without requiring changes.
     /// </summary>
     public class AppContainer : IAppContainer,
         IComposite,
@@ -45,6 +45,8 @@ namespace NetFusion.Bootstrap.Container
         private readonly IServiceCollection _serviceCollection;
         private readonly IConfiguration _configuration;
         private readonly ILoggerFactory _loggerFactory;
+        
+        // Used abstraction implementations:
         private readonly ILogger _logger;
         private IServiceProvider _serviceProvider;
 
@@ -62,7 +64,7 @@ namespace NetFusion.Bootstrap.Container
         /// Creates an instance of the application container.  An instance of this class should be
         /// created using the ContainerBuilder class during startup of the application host.
         /// </summary>
-        /// <param name="services">Abstraction of a collection of services populated by modules.</param>
+        /// <param name="services">Abstraction of a collection of services populated by plug-in modules.</param>
         /// <param name="configuration">Abstraction used to read application configuration settings.</param>
         /// <param name="loggerFactory">Abstraction used to log messages.</param>
         /// <param name="typeResolver">Abstraction used to discover plug-ins and their types.</param>
@@ -129,11 +131,9 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        // Note:  This property should only be referenced to pass to a requesting component and
-        // not to be used to create service instances.  Instead the CreateSerivceScope and
-        // ExecuteInServiceScope methods should be used when not running within a given request
-        // pipeline such as is done for ASP.NET Core.
-        public IServiceProvider ServiceProvider
+        // NOTE:  Developers should not access this property but rather call the CreateServiceScope or
+        // ExecuteInServiceScope methods.
+        IServiceProvider IBuiltContainer.ServiceProvider
         {
             get
             {
@@ -185,10 +185,7 @@ namespace NetFusion.Bootstrap.Container
         // This is an interface exposed for use by components that may need details about the composite application.
         // This interface is often used when unit-testing and not by typical business applications.
 
-        CompositeApplication IComposite.Application
-        {
-            get { return _application; }
-        }
+        CompositeApplication IComposite.Application => _application;
 
         Plugin IComposite.GetPluginContainingType(Type type)
         {
@@ -251,15 +248,14 @@ namespace NetFusion.Bootstrap.Container
 
         //------------------------------------------Container Build and Life Cycle-------------------------------------//
 
-        // Loads and initializes all of the plug-ins and builds the service collection
-        // but does not start their execution.
+        // Loads and initializes all of the plug-ins and builds the service collection but does not start their execution.
         public IBuiltContainer Build()
         {
             ConfigureValidation();
 
             try
             {
-                using (var logger = _logger.LogTraceDuration(BootstrapLogEvents.BOOTSTRAP_BUILD, "Building Container"))
+                using (_logger.LogTraceDuration(BootstrapLogEvents.BOOTSTRAP_BUILD, "Building Container"))
                 {
                     LoadContainer();
                     ComposeLoadedPlugins();
@@ -286,7 +282,7 @@ namespace NetFusion.Bootstrap.Container
         }
 
         // The last step in the bootstrap process allowing plug-in modules to start runtime services.
-        public void Start()
+        void IBuiltContainer.Start()
         {
             if (_application.IsStarted)
             {
@@ -296,7 +292,7 @@ namespace NetFusion.Bootstrap.Container
 
             try
             {
-                using (var logger = _logger.LogTraceDuration(BootstrapLogEvents.BOOTSTRAP_START, "Starting Container"))
+                using (_logger.LogTraceDuration(BootstrapLogEvents.BOOTSTRAP_START, "Starting Container"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
                     _application.StartPluginModules(scope.ServiceProvider);
@@ -329,7 +325,7 @@ namespace NetFusion.Bootstrap.Container
 
             try
             {
-                using (var logger = _logger.LogTraceDuration(BootstrapLogEvents.BOOTSTRAP_STOP, "Stopping Container"))
+                using (_logger.LogTraceDuration(BootstrapLogEvents.BOOTSTRAP_STOP, "Stopping Container"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
                     _application.StopPluginModules(scope.ServiceProvider);
@@ -503,6 +499,7 @@ namespace NetFusion.Bootstrap.Container
             RegisterPluginModuleServices();
             RegisterContainerProvidedServices();
   
+            // Create service provider from populated service collection.
             _serviceProvider = _serviceCollection.BuildServiceProvider(true);
         }
 
@@ -554,7 +551,7 @@ namespace NetFusion.Bootstrap.Container
             });
         }
 
-        private void LogPlugins(Plugin[] plugins)
+        private void LogPlugins(IEnumerable<Plugin> plugins)
         {
             foreach (var plugin in plugins)
             {

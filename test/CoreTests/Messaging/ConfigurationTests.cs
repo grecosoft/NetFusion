@@ -23,17 +23,17 @@ namespace CoreTests.Messaging
         [Fact (DisplayName = "Messaging plug-in can reference Configuration.")]
         public void MessagingPlugin_CanReferenceConfiguration()
         {
-            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture => { fixture
+            ContainerFixture.Test(fixture => { fixture
                 .Arrange
-                    .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostConsumer()))
-                    .Container(c => c.WithConfig<MessageDispatchConfig>())
+                .Resolver(r => r.WithHostConsumer())
+                .Container(c => c.WithConfig<MessageDispatchConfig>())
 
                 .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
                     var moduleConfig = m.Context.Plugin.GetConfig<MessageDispatchConfig>();
                     moduleConfig.Should().NotBeNull();
                 });
-            }));
+            });
         }
 
         /// <summary>
@@ -44,9 +44,9 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = "In-Process event dispatcher configured by default")]
         public void InProcessEventDispatcher_ConfiguredByDefault()
         {
-            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture => { fixture
+            ContainerFixture.Test(fixture => { fixture
                 .Arrange
-                    .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostConsumer()))
+                .Resolver(r => r.WithHostConsumer())
 
 
                 .Assert.Configuration<MessageDispatchConfig>(config =>
@@ -54,7 +54,7 @@ namespace CoreTests.Messaging
                     config.PublisherTypes.Should().HaveCount(1);
                     config.PublisherTypes.Should().Contain(typeof(InProcessMessagePublisher));
                 });
-            }));
+            });
         }
 
         /// <summary>
@@ -64,18 +64,18 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = nameof(DefaultDispatchers_CanBeCleared))]
         public void DefaultDispatchers_CanBeCleared()
         {
-            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture => { fixture
+            ContainerFixture.Test(fixture => { fixture
                 .Arrange
-                    .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostConsumer()))
-                    .Container(c => {
-                        c.WithConfig<MessageDispatchConfig>(config => config.ClearMessagePublishers());
-                    })
+                .Resolver(r => r.WithHostConsumer())
+                .Container(c => {
+                    c.WithConfig<MessageDispatchConfig>(config => config.ClearMessagePublishers());
+                })
 
                 .Assert.Configuration<MessageDispatchConfig>(config =>
                 {
                     config.PublisherTypes.Should().HaveCount(0);
                 });
-            }));
+            });
         }
 
         /// <summary>
@@ -84,14 +84,14 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = nameof(RegistersService_ForPublishingEvents))]
         public void RegistersService_ForPublishingEvents()
         {
-            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture => { fixture
-                .Arrange.Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostConsumer()))                
-                .Assert.Services2(s =>
+            ContainerFixture.Test(fixture => { fixture
+                .Arrange.Resolver(r => r.WithHostConsumer())                
+                .Assert.Services(s =>
                 {
                     var service = s.GetService<IMessagingService>();
                     service.Should().NotBeNull();
                 });
-            }));
+            });
         }
     }
 }

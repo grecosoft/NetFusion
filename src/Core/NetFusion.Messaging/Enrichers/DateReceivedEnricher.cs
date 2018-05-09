@@ -7,11 +7,11 @@ namespace NetFusion.Messaging.Enrichers
     /// <summary>
     /// Adds the current date and time to the mess if not already present.
     /// </summary>
-    public class DatePublishedEnricher : MessageEnricher
+    public class DateReceivedEnricher : MessageEnricher
     {
         public override Task Enrich(IMessage message)
         {
-            AddMessageProperty(message, "DatePublished", DateTime.UtcNow);
+            AddMessageProperty(message, "DateReceived", DateTime.UtcNow);
             return base.Enrich(message);
         }
     }

@@ -30,7 +30,7 @@ namespace NetFusion.Bootstrap.Extensions
         /// Provided a list of object instances, reduces the list to only instances created 
         /// from a list of specific types.
         /// </summary>
-        /// <typeparam name="T">The type of the object instances to be returned.</typeparam>
+        /// <typeparam name="T">The type to cast the returned object instances.</typeparam>
         /// <param name="instances">The list of object instances to filter.</param>
         /// <param name="types">The list of types used to filter the list of object instances.</param>
         /// <returns>Filter list of instances based on a set of provided types.</returns>
@@ -50,7 +50,7 @@ namespace NetFusion.Bootstrap.Extensions
         /// Provided a list of object instances, reduces the list to only instances
         /// created from a list of specific plug-in types.
         /// </summary>
-        /// <typeparam name="T">The type of the object instances to be returned.</typeparam>
+        /// <typeparam name="T">The type to cast the returned object instances.</typeparam>
         /// <param name="instances">The list of object instances to filter.</param>
         /// <param name="pluginTypes">The list of plug-in types used to filter the list of object instances.</param>
         /// <returns>Filter list of instances based on a set of provided plug-ins.</returns>

@@ -10,7 +10,7 @@ namespace NetFusion.Bootstrap.Container
     /// Container that bootstraps the application using plug-in types determined by the specified TypeResolver.  
     /// The plug-in types are scanned based on a set of conventions and used to create an application container.
     /// The end product of the bootstrapped application container is a configured service collection based on a
-    /// set of conventions.
+    /// set of well defined conventions.
     /// </summary>
     public interface IAppContainer: IDisposable
     {
@@ -56,12 +56,6 @@ namespace NetFusion.Bootstrap.Container
         /// </summary>
         /// <returns>Dictionary of key/value pairs that can be serialized to JSON.</returns>
         IDictionary<string, object> Log { get; }
-
-        /// <summary>
-        /// The service provider created from the populated service collection that can be
-        /// reference or used to create new service scopes.
-        /// </summary>
-        IServiceProvider ServiceProvider { get; }
 
         /// <summary>
         /// Creates a new service scope that can be used to instantiate and execute services.

@@ -1,14 +1,15 @@
-﻿using InfrastructureTests.Web.Rest.Setup;
+﻿using System;
+using InfrastructureTests.Web.Rest.Setup;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using WebTests.Rest.Setup;
 
-namespace InfrastructureTests.Web.Rest.ClientRequests.Server
+namespace WebTests.Rest.ClientRequests.Server
 {
     [Route("api/error")]
     public class ErrorController : Controller
     {
-        private IMockedService _mockedService;
+        private readonly IMockedService _mockedService;
 
         public ErrorController(IMockedService mockedService)
         {

@@ -1,7 +1,7 @@
 ﻿using NetFusion.Rest.Common;
 using NetFusion.Rest.Server.Hal;
 
-namespace InfrastructureTests.Web.Rest.ClientRequests.Server
+namespace WebTests.Rest.ClientRequests.Server
 {
     /// <summary>
     /// Resource mapping class used by the unit-tests that will be discovered

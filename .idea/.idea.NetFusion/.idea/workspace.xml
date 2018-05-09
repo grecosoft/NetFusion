@@ -1,0 +1,1890 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="2f71f2be-b1e0-4b13-8bab-3ab0b2603a43" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.NetFusion/.idea/contentModel.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.NetFusion/.idea/indexLayout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.NetFusion/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.NetFusion/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.NetFusion/riderModule.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Core/NetFusion.Test/Messaging/MockMessagingService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/CoreTests/Settings/SettingBootstrapTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/CoreTests/Settings/SettingPathTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/ConfigurationExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/ConfigurationBuilderExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/EnviromentConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/EnviromentConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/EnvironmentNames.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/AppContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/AppContainer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/CompositeApplication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/CompositeApplication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/ContainerBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/ContainerBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/IAppContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/IAppContainer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/IBuiltContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/IBuiltContainer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/ITypeResolver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/ITypeResolver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/ManifestRegistry.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/ManifestRegistry.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/TypeResolver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/TypeResolver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Dependencies/ITypeCatalog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Dependencies/ITypeCatalog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Dependencies/ServiceBuilderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Dependencies/ServiceCollectionExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Dependencies/TypeCatalog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Dependencies/TypeCatalog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Extensions/ReflectionExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Extensions/ReflectionExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Logging/CompositeLog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Logging/CompositeLog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Logging/DurationLogger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Logging/DurationLogger.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/NetFusion.Bootstrap.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/NetFusion.Bootstrap.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/ModuleContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/ModuleContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/Plugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/Plugin.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/PluginModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/PluginModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/AttributedReadModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/AttributedReadModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/Command.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/Command.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/DomainEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/DomainEvent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/ICommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/ICommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/IQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/IQuery.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/Query.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/Query.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Config/MessageDispatchConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Config/MessageDispatchConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Config/QueryDispatchConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Config/QueryDispatchConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/InProcessMessagePublisher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/InProcessMessagePublisher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessageDispatchInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessageDispatchInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessageDispatcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessageDispatcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessagingExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessagingExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessagingService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessagingService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/QueryDispatcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/QueryDispatcher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Enrichers/DatePublishedEnricher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Enrichers/DateReceivedEnricher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/ExpressionQueryFilter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/ExpressionQueryFilter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/ResultMapQueryFilter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/ResultMapQueryFilter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/IMessagingService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/IMessagingService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessageDispatchModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessageDispatchModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessageEnricherModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessageEnricherModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessagingModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessagingModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/QueryDispatchModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/QueryDispatchModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/QueryFilterModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/QueryFilterModule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Rules/ApplyDispatchRuleAttribute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Rules/ApplyDispatchRuleAttribute.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Settings/SettingsExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Settings/SettingsExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerAct.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerAct.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerArrange.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerArrange.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerAssert.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerAssert.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerTestFixture.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerFixture.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Test/NetFusion.Test.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Test/NetFusion.Test.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CommonTests/Base/Entity/DynamicEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CommonTests/Base/Entity/DynamicEntity.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CommonTests/Base/Validation/ValidationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CommonTests/Base/Validation/ValidationTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CommonTests/Extensions/Collections/EnumerableTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CommonTests/Extensions/Collections/EnumerableTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CommonTests/Extensions/Collections/SetTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CommonTests/Extensions/Collections/SetTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/AsyncTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/AsyncTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/CreationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/CreationTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/GenericTypeTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/GenericTypeTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/QueryReflectionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/QueryReflectionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CommonTests/Extensions/Tasks/TaskTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CommonTests/Extensions/Tasks/TaskTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Bootstrap/CompositionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Bootstrap/CompositionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Bootstrap/ConfigurationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Bootstrap/ConfigurationTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Bootstrap/ContainerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Bootstrap/ContainerTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Bootstrap/ReflectionExtensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Bootstrap/ReflectionExtensionsTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Bootstrap/RegistrationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Bootstrap/RegistrationTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/CoreTests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/CoreTests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/AsyncDomainEventTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/AsyncDomainEventTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/CommandDispatchTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/CommandDispatchTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/ConfigurationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/ConfigurationTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/DiscoveryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/DiscoveryTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/DispatchEvaluationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/DispatchEvaluationTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/DispatchRuleTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/DispatchRuleTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/DomainEventDispatchTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/DomainEventDispatchTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/Mocks/MockConsumer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/Mocks/MockConsumer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/Mocks/TestEvalSetupExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/Mocks/TestEvalSetupExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/TestSetupExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/TestSetupExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Queries/DispatchTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Queries/DispatchTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Queries/Mocks/Queries.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Queries/Mocks/Queries.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Settings/SettingsTestExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Settings/SettingTestExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/CoreTests/Settings/SettingsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Settings/SettingTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/LinkClientTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/LinkClientTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/MockUnitTestService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/MockUnitTestService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/RequestSettingsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/RequestSettingsTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/ResourceTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/ResourceTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/ResultClientTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/ResultClientTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/AddressResource.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/AddressResource.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/CustomerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/CustomerController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/CustomerResource.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/CustomerResource.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/CustomerResourceMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/CustomerResourceMap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/ErrorController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/ErrorController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/TempTest.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Client/LinkedResourceModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Client/LinkedResourceModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Client/LinkedViewResourceModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Client/LinkedViewResourceModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/LinkConventionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/LinkConventionTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/LinkCopyGenerationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/LinkCopyGenerationTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/LinkGenerationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/LinkGenerationTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/ConventionBasedController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/ConventionBasedController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/ConventionBasedResourceMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/ConventionBasedResourceMap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedResource.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedResource.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedResource2.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedResource2.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedResourceController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedResourceController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedResourceMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedResourceMap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedViewResource.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedViewResource.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/Setup/IMockedService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/Setup/IMockedService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/Setup/NullUnitTestService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/Setup/NullUnitTestService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/Setup/TestAppContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/Setup/TestAppContainer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/Setup/TestClientExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/Setup/TestClientExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/Rest/Setup/TestStartup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/Rest/Setup/TestStartup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/WebTests/WebTests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/test/WebTests/WebTests.csproj" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="SettingTests.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingTests.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="642">
+              <caret line="131" column="23" selection-start-line="131" selection-start-column="23" selection-end-line="131" selection-end-column="23" />
+              <folding>
+                <marker date="1525898714899" expanded="false" signature="6:290" ph="..." />
+                <marker date="1525898714899" expanded="true" signature="320:6604" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="327:640" ph="/// Unit tests for testing the injecting of services directly into the dependent ... " />
+                <marker date="1525898714899" expanded="true" signature="670:6602" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="685:962" ph="/// A configuration setting class deriving from IAppSetting and marked with the ... " />
+                <marker date="1525898714899" expanded="true" signature="1098:1812" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="1154:1800" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="1222:1402" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="1501:1784" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="1822:2284" ph="/// Settings class can be derived and each marked with the ConfigurationSetion attribute. ... " />
+                <marker date="1525898714899" expanded="true" signature="2444:3321" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="2500:3309" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="2568:2754" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="2853:3293" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="3331:3618" ph="/// The IConfiguration service is automatically registered with the service  ... " />
+                <marker date="1525898714899" expanded="true" signature="3771:4428" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="3827:4416" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="3895:4044" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="4143:4400" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="4438:4785" ph="/// If needed, the settings can be obtained by a service by injecting the IOptions ... " />
+                <marker date="1525898714899" expanded="true" signature="4924:5756" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="4980:5744" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="5048:5228" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="5327:5728" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="5766:6057" ph="/* Test the generation of section for derived setting types. ... */" />
+                <marker date="1525898714899" expanded="true" signature="6130:6596" ph="{...}" />
+                <marker date="1525898714899" expanded="true" signature="6211:6535" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SettingPathTests.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingPathTests.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="468">
+              <caret line="36" column="9" selection-start-line="36" selection-start-column="9" selection-end-line="36" selection-end-column="9" />
+              <folding>
+                <marker date="1525899396155" expanded="true" signature="6:38" ph="..." />
+                <marker date="1525899396155" expanded="true" signature="68:1345" ph="{...}" />
+                <marker date="1525899396155" expanded="true" signature="104:1343" ph="{...}" />
+                <marker date="1525899396155" expanded="true" signature="186:376" ph="{...}" />
+                <marker date="1525899396155" expanded="true" signature="451:634" ph="{...}" />
+                <marker date="1525899396155" expanded="true" signature="704:896" ph="{...}" />
+                <marker date="1525899396155" expanded="true" signature="989:1022" ph="{...}" />
+                <marker date="1525899396155" expanded="true" signature="1081:1114" ph="{...}" />
+                <marker date="1525899396155" expanded="true" signature="1214:1247" ph="{...}" />
+                <marker date="1525899396155" expanded="true" signature="1304:1337" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AppSettingsModule.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/Modules/AppSettingsModule.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="208">
+              <caret line="25" column="51" selection-start-line="25" selection-start-column="51" selection-end-line="25" selection-end-column="51" />
+              <folding>
+                <marker date="1525865322692" expanded="false" signature="6:339" ph="..." />
+                <marker date="1525865322692" expanded="true" signature="377:3325" ph="{...}" />
+                <marker date="1525865322692" expanded="true" signature="384:940" ph="/// Extends the Microsoft configuration options by allowing setting types to be defined  ... " />
+                <marker date="1525865322692" expanded="true" signature="990:3323" ph="{...}" />
+                <marker date="1525865322692" expanded="true" signature="1071:1513" ph="{...}" />
+                <marker date="1525865322692" expanded="true" signature="1288:1503" ph="{...}" />
+                <marker date="1525865322692" expanded="true" signature="1523:1722" ph="/* Register each application setting so a factory method is invoked when injected ... */" />
+                <marker date="1525865322692" expanded="true" signature="1793:2299" ph="{...}" />
+                <marker date="1525865322692" expanded="true" signature="1965:2286" ph="{...}" />
+                <marker date="1525865322692" expanded="true" signature="2355:2898" ph="{...}" />
+                <marker date="1525865322692" expanded="true" signature="2508:2850" ph="{...}" />
+                <marker date="1525865322692" expanded="true" signature="2971:3317" ph="{...}" />
+                <marker date="1525865322692" expanded="true" signature="3157:3305" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SettingBootstrapTests.cs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingBootstrapTests.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="442">
+              <caret line="34" column="9" lean-forward="true" selection-start-line="34" selection-start-column="9" selection-end-line="34" selection-end-column="9" />
+              <folding>
+                <marker date="1525899768541" expanded="true" signature="42:628" ph="{...}" />
+                <marker date="1525899768541" expanded="true" signature="83:626" ph="{...}" />
+                <marker date="1525899768541" expanded="true" signature="162:195" ph="{...}" />
+                <marker date="1525899768541" expanded="true" signature="269:302" ph="{...}" />
+                <marker date="1525899768541" expanded="true" signature="380:413" ph="{...}" />
+                <marker date="1525899768541" expanded="true" signature="490:523" ph="{...}" />
+                <marker date="1525899768541" expanded="true" signature="587:620" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PluginModule.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/PluginModule.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="572">
+              <caret line="47" column="29" selection-start-line="47" selection-start-column="29" selection-end-line="47" selection-end-column="29" />
+              <folding>
+                <marker date="1525871767826" expanded="false" signature="6:135" ph="..." />
+                <marker date="1525871767826" expanded="true" signature="174:5749" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="181:524" ph="/// Implemented by one or more plug-in classes allowing the plug-in to be configured.   ... " />
+                <marker date="1525871767826" expanded="true" signature="600:5747" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="680:732" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="763:849" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="903:1002" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="1012:1205" ph="/// Indicates that the module should not be loaded.  This can be used when developing ... " />
+                <marker date="1525871767826" expanded="true" signature="1260:1514" ph="/// Contains plug-in information that can be used by the module during bootstrapping. ... " />
+                <marker date="1525871767826" expanded="true" signature="1575:1752" ph="/// The first method called on the module.  This method is called on all modules  ... " />
+                <marker date="1525871767826" expanded="true" signature="1793:1814" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="1824:1928" ph="/// Called after all plug-in modules have been initialized. ... " />
+                <marker date="1525871767826" expanded="true" signature="1968:1989" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="1999:2309" ph="/// Called first for all plug-in modules to allow default service implementations ... " />
+                <marker date="1525871767826" expanded="true" signature="2390:2411" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="2421:2817" ph="/// Allows the plug-in to scan for types it defines that are to be registered ... " />
+                <marker date="1525871767826" expanded="true" signature="2878:2898" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="2908:3214" ph="/// Allows the plug-in to register specific types as services within the  ... " />
+                <marker date="1525871767826" expanded="true" signature="3288:3308" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="3318:3759" ph="/// Allows the plug-in module to scan for types within all other plug-ins. ... " />
+                <marker date="1525871767826" expanded="true" signature="3829:3849" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="3859:4133" ph="/// Allows a core plug-in module to scan for types limited to only application ... " />
+                <marker date="1525871767826" expanded="true" signature="4206:4226" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="4236:4499" ph="/// Method called on the module by the bootstrap process.  Called after ... " />
+                <marker date="1525871767826" expanded="true" signature="4566:4599" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="4609:4914" ph="/// Called after all modules have been started.  This method can contain ... " />
+                <marker date="1525871767826" expanded="true" signature="4979:5012" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="5022:5267" ph="/// Called when the container is stopped.  Allows the module to complete ... " />
+                <marker date="1525871767826" expanded="true" signature="5333:5366" ph="{...}" />
+                <marker date="1525871767826" expanded="true" signature="5376:5649" ph="/// Called after the module is initialized and configured so that it can  ... " />
+                <marker date="1525871767826" expanded="true" signature="5720:5741" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ConfigurationSectionAttribute.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/ConfigurationSectionAttribute.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <marker date="1525865209569" expanded="true" signature="43:1121" ph="{...}" />
+                <marker date="1525865209569" expanded="true" signature="50:226" ph="/// Attribute specified on an application setting to indicate the ... " />
+                <marker date="1525865209569" expanded="true" signature="372:1119" ph="{...}" />
+                <marker date="1525865209569" expanded="true" signature="387:546" ph="/// The section name.  Can be a string or a string separated by the colon ... " />
+                <marker date="1525865209569" expanded="true" signature="599:870" ph="/// Specifies the sections name use to load the application setting. ... " />
+                <marker date="1525865209569" expanded="true" signature="935:1113" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PluginTypeAccessorExtensions.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/PluginTypeAccessorExtensions.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <marker date="1525865209569" expanded="true" signature="6:68" ph="..." />
+                <marker date="1525865209569" expanded="true" signature="98:905" ph="{...}" />
+                <marker date="1525865209569" expanded="true" signature="105:389" ph="/// Adds the types specific to the settings plug-in.  The extension ... " />
+                <marker date="1525865209569" expanded="true" signature="442:903" ph="{...}" />
+                <marker date="1525865209569" expanded="true" signature="457:701" ph="/// Adds the needed plug-in types specific to the plug-in. ... " />
+                <marker date="1525865209569" expanded="true" signature="794:897" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ServiceCollectionExtensions.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/ServiceCollectionExtensions.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <marker date="1525865322692" expanded="true" signature="6:139" ph="..." />
+                <marker date="1525865322692" expanded="true" signature="169:1965" ph="{...}" />
+                <marker date="1525865322692" expanded="true" signature="176:437" ph="/// Additional configuration service collection extensions.  These extension  ... " />
+                <marker date="1525865322692" expanded="true" signature="489:1963" ph="{...}" />
+                <marker date="1525865322692" expanded="true" signature="646:740" ph="{...}" />
+                <marker date="1525865322692" expanded="true" signature="905:1957" ph="{...}" />
+                <marker date="1525865322692" expanded="true" signature="949:1044" ph="{...}" />
+                <marker date="1525865322692" expanded="true" signature="1077:1170" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SettingsExtensions.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/SettingsExtensions.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="486">
+              <caret line="60" column="58" selection-start-line="60" selection-start-column="43" selection-end-line="60" selection-end-column="58" />
+              <folding>
+                <marker date="1525898714903" expanded="false" signature="6:179" ph="..." />
+                <marker date="1525898714903" expanded="true" signature="209:4486" ph="{...}" />
+                <marker date="1525898714903" expanded="true" signature="216:567" ph="/// Extensions for determining a setting classes's section path based on the  ... " />
+                <marker date="1525898714903" expanded="true" signature="610:4484" ph="{...}" />
+                <marker date="1525898714903" expanded="true" signature="625:1142" ph="/// Provided a IAppSettings derived type, determines the section path by recursively  ... " />
+                <marker date="1525898714903" expanded="true" signature="1205:1452" ph="{...}" />
+                <marker date="1525898714903" expanded="true" signature="1462:1977" ph="/// Provided a IAppSetting derived instance,  determines the section path by recursively  ... " />
+                <marker date="1525898714903" expanded="true" signature="2052:2222" ph="{...}" />
+                <marker date="1525898714903" expanded="true" signature="2232:2746" ph="/// Provided a IAppSettings derived type, determines the section path by recursively  ... " />
+                <marker date="1525898714903" expanded="true" signature="2829:2940" ph="{...}" />
+                <marker date="1525898714903" expanded="true" signature="3019:3366" ph="{...}" />
+                <marker date="1525898714903" expanded="true" signature="3070:3356" ph="{...}" />
+                <marker date="1525898714903" expanded="true" signature="3192:3274" ph="{...}" />
+                <marker date="1525898714903" expanded="true" signature="3431:3543" ph="{...}" />
+                <marker date="1525898714903" expanded="true" signature="3553:4147" ph="/// Returns an instance of the specified setting type populated from the configuration ... " />
+                <marker date="1525898714903" expanded="true" signature="4284:4478" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MockSetttings.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/CoreTests/Settings/Mocks/MockSetttings.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <marker date="1525865322696" expanded="false" signature="6:70" ph="..." />
+                <marker date="1525865322696" expanded="true" signature="106:782" ph="{...}" />
+                <marker date="1525865322696" expanded="true" signature="199:306" ph="{...}" />
+                <marker date="1525865322696" expanded="true" signature="359:414" ph="{...}" />
+                <marker date="1525865322696" expanded="true" signature="439:493" ph="{...}" />
+                <marker date="1525865322696" expanded="true" signature="519:610" ph="{...}" />
+                <marker date="1525865322696" expanded="true" signature="664:780" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>virtual</find>
+      <find>start</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Domain/EntityEvaluationTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Domain/EntitySerializationTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Domain/EntityEvaluationExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Queries/DispatchTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Queries/TestFixtureExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Queries/Mocks/QueryFilters.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Queries/Mocks/Consumers.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Queries/Mocks/Queries.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingTestExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Settings/Mocks/MockSetttings.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Bootstrap/ReflectionExtensionsTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Bootstrap/ConfigurationTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Bootstrap/RegistrationTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Bootstrap/ContainerTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Bootstrap/CompositionTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Messaging/DiscoveryTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Messaging/AsyncDomainEventTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Messaging/ConfigurationTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Messaging/TestSetupExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Messaging/DispatchEvaluationTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Messaging/DomainEventDispatchTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Messaging/DispatchRuleTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Messaging/CommandDispatchTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessagingService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Messaging/Mocks/TestRuleSetupExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/IMessagePublisher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Messaging/Mocks/TestCommandSetupExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessagePublisher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Messaging/Mocks/TestAsyncExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessageDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Messaging/Mocks/TestEvalSetupExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/IntegrationTypes.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Messaging/Mocks/MockConsumer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/QueryDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Messaging/Mocks/MockDomainEvent.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessagingExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/QueryDispatcher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessageDispatcher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/InProcessMessagePublisher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Rules/ApplyDispatchRuleAttribute.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Rules/RuleApplyTypes.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Config/QueryDispatchConfig.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Config/MessageDispatchConfig.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/QueryFilterException.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/ExpressionQueryFilter.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/IPostQueryFilter.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/ResultMapQueryFilter.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/IPreQueryFilter.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/IQueryFilter.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/QueryFilterModule.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessagingModule.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/IMessageDispatchModule.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/IQueryDispatchModule.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessageDispatchModule.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/IQueryFilterModule.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/QueryDispatchModule.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessageEnricherModule.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Enrichers/MessageEnricher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Enrichers/DateReceivedEnricher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Enrichers/IMessageEnricher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Enrichers/EnricherException.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Enrichers/CorrelationEnricher.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/IMessage.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/MessageExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/IEventSource.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/AttributedReadModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/IQuery.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/DomainEvent.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/Query.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/ICommand.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/IDomainEvent.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/Command.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/ConfigurationBuilderExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CommonTests/Base/Entity/DynamicEntity.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CommonTests/Base/Entity/AttributedEntityTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CommonTests/Base/Validation/ValidationTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CommonTests/Extensions/ObjectTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CommonTests/Extensions/Tasks/TaskTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/AsyncTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/QueryReflectionTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/AttributeTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/GenericTypeTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/CreationTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CommonTests/Extensions/Collections/SetTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CommonTests/Extensions/Collections/EnumerableTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerAssert.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerArrange.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerFixture.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerAct.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/SettingsManifest.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/PluginTypeAccessorExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/IAppSettings.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/ConfigurationSectionAttribute.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Validation/ValidationService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Validation/IValidationService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Validation/ValidationConfig.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Dependencies/ServiceCollectionExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Dependencies/TypeCatalog.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Dependencies/ITypeCatalog.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/ServiceCollectionExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/SettingsExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/MessageDispatchRule.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/IMessageDispatchRule.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/IContainerBuilder.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/ContainerBuilder.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/Modules/AppSettingsModule.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/ClientResourceTestExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/Setup/IMockedService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/Setup/NullUnitTestService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/Setup/TestStartup.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/Setup/TestAppContainer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/Setup/TestClientExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/RequestSettingsTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/ResultClientTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/MockUnitTestService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/LinkClientTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/ResourceTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Client/CustomerModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Client/AddressModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/CustomerController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/AddressResource.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/CustomerResourceMap.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/ErrorController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/ClientRequests/Server/CustomerResource.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/LinkGenerationTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Logging/DurationLogger.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/LinkConventionTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Logging/LoggerExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/LinkCopyGenerationTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Logging/CompositeLog.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Logging/BootstrapLogEvents.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Client/LinkedResourceModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Client/LinkedViewResourceModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/PluginTypes.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/ConventionBasedResourceMap.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/Plugin.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/ConventionBasedController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedResourceController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/IPluginModule.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedResource.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/PluginType.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedViewResource.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/PluginModule.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedResourceMap.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/IPluginTypeAccessor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedResource2.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/ModuleContext.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/ManifestValidation.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/CompositeApplication.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/ITypeResolver.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/TypeResolver.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/IComposite.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/ManifestRegistry.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/IContainerConfig.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/AppContainer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/IBuiltContainer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/IAppContainer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Manifests/IAppComponentPluginManifest.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Manifests/IAppHostPluginManifest.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Manifests/PluginManifestBase.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Manifests/ICorePluginManifest.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Manifests/IPluginManifest.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Exceptions/ContainerException.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Extensions/ReflectionExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/EnviromentConfig.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Messaging/MockMessagingService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/PluginTypeAccessorExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/IMessageConsumer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/MessagingManifest.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/IMessagingService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/IQueryConsumer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/InProcessHandlerAttribute.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/MessagingLogEvents.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/PublisherException.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/QueryDispatchException.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingPathTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/IncludeDerivedMessagesAttribute.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingBootstrapTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/MessageDispatchException.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedResourceMap.cs" />
+        <option value="$PROJECT_DIR$/test/WebTests/Rest/LinkGeneration/Server/LinkedViewResource.cs" />
+        <option value="$PROJECT_DIR$/test/WebTests/Rest/Setup/IMockedService.cs" />
+        <option value="$PROJECT_DIR$/test/WebTests/Rest/Setup/NullUnitTestService.cs" />
+        <option value="$PROJECT_DIR$/test/WebTests/Rest/Setup/TestAppContainer.cs" />
+        <option value="$PROJECT_DIR$/test/WebTests/Rest/Setup/TestStartup.cs" />
+        <option value="$PROJECT_DIR$/test/CommonTests/Base/Entity/DynamicEntity.cs" />
+        <option value="$PROJECT_DIR$/test/CommonTests/Base/Validation/ValidationTests.cs" />
+        <option value="$PROJECT_DIR$/test/CommonTests/Extensions/Collections/EnumerableTests.cs" />
+        <option value="$PROJECT_DIR$/test/CommonTests/Extensions/Collections/SetTests.cs" />
+        <option value="$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/AsyncTests.cs" />
+        <option value="$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/CreationTests.cs" />
+        <option value="$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/GenericTypeTests.cs" />
+        <option value="$PROJECT_DIR$/test/CommonTests/Extensions/Reflection/QueryReflectionTests.cs" />
+        <option value="$PROJECT_DIR$/test/CommonTests/Extensions/Tasks/TaskTests.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerTestFixture.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerArrange.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerAct.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerAssert.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/AttributedReadModel.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/Command.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/DomainEvent.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/ICommand.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/IQuery.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/Query.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Config/QueryDispatchConfig.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Config/MessageDispatchConfig.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Rules/ApplyDispatchRuleAttribute.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessagingExtensions.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessageDispatchModule.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessageEnricherModule.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessagingModule.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/QueryDispatchModule.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/QueryFilterModule.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/ExpressionQueryFilter.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/ResultMapQueryFilter.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Enrichers/DatePublishedEnricher.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/InProcessMessagePublisher.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessageDispatcher.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/IMessagingService.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessagingService.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessageDispatchInfo.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/QueryDispatcher.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/EnviromentConfig.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Test/Messaging/MockMessagingExtensions.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Test/Messaging/MockMessagingService.cs" />
+        <option value="$PROJECT_DIR$/test/CoreTests/Settings/SettingsTests.cs" />
+        <option value="$PROJECT_DIR$/test/CoreTests/Settings/SettingTestExtensions.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Settings/SettingsExtensions.cs" />
+        <option value="$PROJECT_DIR$/test/CoreTests/Settings/SettingPathTests.cs" />
+        <option value="$PROJECT_DIR$/test/CoreTests/Settings/SettingBootstrapTests.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="832" />
+    <option name="y" value="194" />
+    <option name="width" value="976" />
+    <option name="height" value="605" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="SolutionExplorer" proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="SolutionExplorer">
+        <subPane>
+          <expand>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="NetFusion (17 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="NetFusion (17 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="src" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="NetFusion (17 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="src" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Core" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="NetFusion (17 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="src" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Core" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="NetFusion.Settings" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="NetFusion (17 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="src" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Core" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="NetFusion.Settings" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Modules" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="NetFusion (17 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="test" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="NetFusion (17 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="test" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="CoreTests" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="NetFusion (17 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="test" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="CoreTests" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Settings" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <option name="show-file-system" value="false" />
+        <option name="show-all-items" value="false" />
+      </pane>
+      <pane id="Scratches" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="full.screen.before.presentation.mode" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../ca-git/Boondocks/src/Services/Boondocks.Management/Boondocks.Management.sln" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2f71f2be-b1e0-4b13-8bab-3ab0b2603a43" name="Default" comment="" />
+      <created>1525865284141</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1525865284141</updated>
+      <workItem from="1525865288756" duration="26037000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="26037000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="35" y="-4" width="2525" height="1444" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info anchor="bottom" id="TODO" order="14" />
+      <window_info anchor="right" id="Errors In Solution" order="1" visible="true" weight="0.3360226" />
+      <window_info anchor="bottom" id="Event Log" order="4" side_tool="true" />
+      <window_info anchor="bottom" id="Unit Tests" order="3" visible="true" weight="0.18126428" />
+      <window_info anchor="bottom" id="Database Changes" order="2" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" order="10" />
+      <window_info anchor="bottom" id="Version Control" order="6" />
+      <window_info anchor="bottom" id="Terminal" order="5" />
+      <window_info anchor="bottom" id="NuGet" order="0" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.19160952" />
+      <window_info anchor="bottom" id="Docker" order="1" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Build" order="7" weight="0.32901752" />
+      <window_info anchor="right" id="Database" order="0" />
+      <window_info anchor="bottom" id="Find" order="9" weight="0.32977912" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Debug" order="11" weight="0.4" />
+      <window_info id="Favorites" order="0" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="2" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="3" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="13" weight="0.4" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="8" />
+      <window_info anchor="bottom" id="Cvs" order="12" weight="0.25" />
+    </layout>
+    <layout-to-restore>
+      <window_info anchor="bottom" id="NuGet" order="0" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" order="1" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" order="10" />
+      <window_info anchor="right" id="Ant Build" order="3" weight="0.25" />
+      <window_info anchor="bottom" id="Cvs" order="12" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.18838242" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="2" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="14" />
+      <window_info anchor="bottom" id="Database Changes" order="2" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Unit Tests" order="3" visible="true" weight="0.1713633" />
+      <window_info anchor="bottom" id="Find" order="9" weight="0.32977912" />
+      <window_info anchor="right" id="Errors In Solution" order="0" visible="true" weight="0.32997176" />
+      <window_info anchor="right" id="Database" order="1" />
+      <window_info anchor="bottom" id="Terminal" order="4" />
+      <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" />
+      <window_info anchor="bottom" id="Inspection" order="13" weight="0.4" />
+      <window_info anchor="bottom" id="Version Control" order="6" />
+      <window_info anchor="bottom" id="Debug" order="11" weight="0.4" />
+      <window_info anchor="bottom" id="Build" order="7" weight="0.32901752" />
+      <window_info anchor="bottom" id="Message" order="8" />
+      <window_info id="Favorites" order="0" side_tool="true" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="UnityProjectConfiguration" isUnityUI="false" />
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/IBuiltContainer.cs</url>
+          <line>12</line>
+          <properties documentPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/IBuiltContainer.cs" initialLine="11">
+            <startOffsets>
+              <startOffset value="363" />
+            </startOffsets>
+            <endOffsets>
+              <endOffset value="367" />
+            </endOffsets>
+          </properties>
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/test/CoreTests/Messaging/DiscoveryTests.cs</url>
+          <line>74</line>
+          <properties documentPath="$PROJECT_DIR$/test/CoreTests/Messaging/DiscoveryTests.cs" initialLine="74">
+            <startOffsets>
+              <startOffset value="3312" />
+            </startOffsets>
+            <endOffsets>
+              <endOffset value="3331" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="6" />
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/IPostQueryFilter.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209565" expanded="false" signature="6:62" ph="..." />
+            <marker date="1525865209565" expanded="true" signature="101:604" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="108:217" ph="/// Filter executed after the query has been dispatched to the consumer. ... " />
+            <marker date="1525865209565" expanded="true" signature="270:602" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="285:554" ph="/// Invoked after the query has been dispatched to the consumer. ... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/IPreQueryFilter.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209565" expanded="false" signature="6:62" ph="..." />
+            <marker date="1525865209565" expanded="true" signature="101:592" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="108:212" ph="/// Filter executed before the query is dispatched to the consumer. ... " />
+            <marker date="1525865209565" expanded="true" signature="264:590" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="279:543" ph="/// Invoked before the query is dispatched to the consumer. ... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/QueryFilterModule.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="481">
+          <caret line="44" column="54" selection-start-line="44" selection-start-column="54" selection-end-line="44" selection-end-column="54" />
+          <folding>
+            <marker date="1525886321550" expanded="false" signature="6:264" ph="..." />
+            <marker date="1525886321550" expanded="true" signature="303:1884" ph="{...}" />
+            <marker date="1525886321550" expanded="true" signature="310:420" ph="/// Module that manages filters to be invoked when a query is dispatched. ... " />
+            <marker date="1525886321550" expanded="true" signature="490:1882" ph="{...}" />
+            <marker date="1525886321550" expanded="true" signature="597:701" ph="{...}" />
+            <marker date="1525886321550" expanded="true" signature="912:1017" ph="/* Registers the pre and post filters within the container so the can ... */" />
+            <marker date="1525886321550" expanded="true" signature="1092:1255" ph="{...}" />
+            <marker date="1525886321550" expanded="true" signature="1164:1245" ph="{...}" />
+            <marker date="1525886321550" expanded="true" signature="1328:1876" ph="{...}" />
+            <marker date="1525886321550" expanded="true" signature="1525:1848" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/IQueryFilter.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865322692" expanded="true" signature="68:288" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="75:212" ph="/// Common interface representing a class that is invoked during the ... " />
+            <marker date="1525865322692" expanded="true" signature="265:286" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/QueryFilterException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="16" column="71" selection-start-line="16" selection-start-column="63" selection-end-line="16" selection-end-column="71" />
+          <folding>
+            <marker date="1525865209565" expanded="false" signature="6:121" ph="..." />
+            <marker date="1525865209565" expanded="true" signature="160:1017" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="167:287" ph="/// Contains information about a query filter that threw an exception when applied. ... " />
+            <marker date="1525865209565" expanded="true" signature="346:1015" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="361:503" ph="/// Constructor. ... " />
+            <marker date="1525865209565" expanded="true" signature="576:1009" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="860:998" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/ResultMapQueryFilter.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="63" column="46" selection-start-line="63" selection-start-column="46" selection-end-line="63" selection-end-column="46" />
+          <folding>
+            <marker date="1525887212801" expanded="false" signature="6:127" ph="..." />
+            <marker date="1525887212801" expanded="true" signature="166:3051" ph="{...}" />
+            <marker date="1525887212801" expanded="true" signature="173:761" ph="/// Simple mapping filter that determines if the consumer returned type matches the declared result type of  ... " />
+            <marker date="1525887212801" expanded="true" signature="818:3049" ph="{...}" />
+            <marker date="1525887212801" expanded="true" signature="943:1062" ph="{...}" />
+            <marker date="1525887212801" expanded="true" signature="1111:1358" ph="{...}" />
+            <marker date="1525887212801" expanded="true" signature="1182:1253" ph="{...}" />
+            <marker date="1525887212801" expanded="true" signature="1438:1715" ph="{...}" />
+            <marker date="1525887212801" expanded="true" signature="1576:1633" ph="{...}" />
+            <marker date="1525887212801" expanded="true" signature="1786:2759" ph="{...}" />
+            <marker date="1525887212801" expanded="true" signature="1986:2182" ph="{...}" />
+            <marker date="1525887212801" expanded="true" signature="2460:2628" ph="{...}" />
+            <marker date="1525887212801" expanded="true" signature="2821:3043" ph="{...}" />
+            <marker date="1525887212801" expanded="true" signature="2902:2959" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Enrichers/CorrelationEnricher.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209565" expanded="false" signature="6:76" ph="..." />
+            <marker date="1525865209565" expanded="true" signature="117:499" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="124:238" ph="/// Adds a GUID value as the message's correlation identifier if not present. ... " />
+            <marker date="1525865209565" expanded="true" signature="293:497" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="353:491" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Enrichers/DateReceivedEnricher.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="91">
+          <caret line="9" column="25" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
+          <folding>
+            <marker date="1525887212805" expanded="false" signature="6:76" ph="..." />
+            <marker date="1525887212805" expanded="true" signature="117:490" ph="{...}" />
+            <marker date="1525887212805" expanded="true" signature="124:231" ph="/// Adds the current date and time to the mess if not already present. ... " />
+            <marker date="1525887212805" expanded="true" signature="287:488" ph="{...}" />
+            <marker date="1525887212805" expanded="true" signature="347:482" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Enrichers/EnricherException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="20" column="29" selection-start-line="20" selection-start-column="16" selection-end-line="20" selection-end-column="29" />
+          <folding>
+            <marker date="1525865209565" expanded="false" signature="6:121" ph="..." />
+            <marker date="1525865209565" expanded="true" signature="162:1028" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="169:295" ph="/// Contains information about a message enricher that throws and exception when applied. ... " />
+            <marker date="1525865209565" expanded="true" signature="351:1026" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="366:510" ph="/// Constructor. ... " />
+            <marker date="1525865209565" expanded="true" signature="584:1020" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="869:1009" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Enrichers/IMessageEnricher.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209565" expanded="false" signature="6:62" ph="..." />
+            <marker date="1525865209565" expanded="true" signature="103:730" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="110:372" ph="/// Types implementing this interface are registered within the application's ... " />
+            <marker date="1525865209565" expanded="true" signature="410:728" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="425:683" ph="/// Implementation should add a key/value part to the message if it is ... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Enrichers/MessageEnricher.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209565" expanded="false" signature="6:76" ph="..." />
+            <marker date="1525865209565" expanded="true" signature="117:1416" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="124:227" ph="/// Base implementation of a message enricher that can be derived. ... " />
+            <marker date="1525865209565" expanded="true" signature="288:1414" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="303:525" ph="/// Overridden by derived class to enrich the message. ... " />
+            <marker date="1525865209565" expanded="true" signature="578:637" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="647:1049" ph="/// Utility method that will add a key/value to the message if not already ... " />
+            <marker date="1525865209565" expanded="true" signature="1136:1408" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Rules/ApplyDispatchRuleAttribute.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="30" column="9" selection-start-line="30" selection-start-column="9" selection-end-line="30" selection-end-column="9" />
+          <folding>
+            <marker date="1525883702696" expanded="false" signature="6:111" ph="..." />
+            <marker date="1525883702696" expanded="true" signature="148:1822" ph="{...}" />
+            <marker date="1525883702696" expanded="true" signature="155:310" ph="/// Used to specify rule classes that determine if the handler  ... " />
+            <marker date="1525883702696" expanded="true" signature="453:1820" ph="{...}" />
+            <marker date="1525883702696" expanded="true" signature="468:553" ph="/// The types of the rules to be tested. ... " />
+            <marker date="1525883702696" expanded="true" signature="618:762" ph="/// Specifies how the list of roles should be evaluated to  ... " />
+            <marker date="1525883702696" expanded="true" signature="852:1042" ph="/// Constructor used to specify the dispatch rule types. ... " />
+            <marker date="1525883702696" expanded="true" signature="1117:1814" ph="{...}" />
+            <marker date="1525883702696" expanded="true" signature="1476:1753" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/IMessageDispatchModule.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209565" expanded="false" signature="6:220" ph="..." />
+            <marker date="1525865209565" expanded="true" signature="259:2733" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="266:410" ph="/// Services exposed by the messaging module for access by other  ... " />
+            <marker date="1525865209565" expanded="true" signature="477:2731" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="492:580" ph="/// The associated messaging configuration. ... " />
+            <marker date="1525865209565" expanded="true" signature="644:845" ph="/// A lookup by message type used to find the dispatch information for all ... " />
+            <marker date="1525865209565" expanded="true" signature="933:1190" ph="/// A lookup by message type used to find the dispatch information for all ... " />
+            <marker date="1525865209565" expanded="true" signature="1273:1687" ph="/// Returns the in-process dispatcher associated with the specified command type. ... " />
+            <marker date="1525865209565" expanded="true" signature="1774:2533" ph="/// Invokes the consumer with the message handler defined by the dispatcher instance. ... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessageDispatchModule.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="39" column="9" selection-start-line="39" selection-start-column="9" selection-end-line="39" selection-end-column="9" />
+          <folding>
+            <marker date="1525885632246" expanded="false" signature="6:613" ph="..." />
+            <marker date="1525885632246" expanded="true" signature="652:10949" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="659:886" ph="/// Plug-in module that finds all message related types and stores a lookup used to determine  ... " />
+            <marker date="1525885632246" expanded="true" signature="973:10947" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="1459:1580" ph="/* Stores type meta-data for the message consumers that should be notified when ... */" />
+            <marker date="1525885632246" expanded="true" signature="1622:2391" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="2544:2617" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="2627:2795" ph="/* Register all of the message publishers that determine how a given ... */" />
+            <marker date="1525885632246" expanded="true" signature="2870:3070" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="2954:3060" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="3142:3301" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="3389:3462" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="3472:3606" ph="/* Lookup the dispatch rules specified on the message consumer handler and ... */" />
+            <marker date="1525885632246" expanded="true" signature="3677:3863" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="3873:4130" ph="/* Check all message consumer handlers having the ApplyScriptPredicate attribute and ... */" />
+            <marker date="1525885632246" expanded="true" signature="4235:4520" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="4300:4510" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="4530:4753" ph="/* Assert that the dispatch rules are based on a type compatible with the ... */" />
+            <marker date="1525885632246" expanded="true" signature="4850:5623" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="5066:5204" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="5275:5613" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="5707:6352" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="6125:6301" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="6556:8116" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="6915:7191" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="7205:7435" ph="/* Invoke the message consumers in a new lifetime scope.  This is for the case where a message ... */" />
+            <marker date="1525885632246" expanded="true" signature="7511:8106" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="7545:7868" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="7905:8092" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="8160:8898" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="8569:8888" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="8908:9093" ph="/* For each discovered message event type, execute the same code that is used at runtime to determine ... */" />
+            <marker date="1525885632246" expanded="true" signature="9165:9281" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="9369:10471" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="9606:10461" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="9920:10435" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="10553:10941" ph="{...}" />
+            <marker date="1525885632246" expanded="true" signature="10762:10919" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/IMessageConsumer.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209565" expanded="true" signature="60:345" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="67:273" ph="/// Identifies component as a message consumer that should be searched when messages ... " />
+            <marker date="1525865209565" expanded="true" signature="330:343" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/IncludeDerivedMessagesAttribute.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209565" expanded="true" signature="44:486" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="51:320" ph="/// Used to specify that message handler method, declared as a base message type, ... " />
+            <marker date="1525865209565" expanded="true" signature="472:484" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/InProcessHandlerAttribute.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209565" expanded="true" signature="44:362" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="51:206" ph="/// Used to specify that a consumer's event handler method should be ... " />
+            <marker date="1525865209565" expanded="true" signature="348:360" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/IQueryConsumer.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209565" expanded="true" signature="29:178" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="36:128" ph="/// Marker interface used to identify a query consumer. ... " />
+            <marker date="1525865209565" expanded="true" signature="164:176" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/MessageDispatchException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="32" column="31" selection-start-line="32" selection-start-column="31" selection-end-line="32" selection-end-column="31" />
+          <folding>
+            <marker date="1525865209565" expanded="false" signature="6:131" ph="..." />
+            <marker date="1525865209565" expanded="true" signature="162:2835" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="169:287" ph="/// An exception that is thrown when there is an exception dispatching a message. ... " />
+            <marker date="1525865209565" expanded="true" signature="350:2833" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="412:546" ph="/// Dispatch exception. ... " />
+            <marker date="1525865209565" expanded="true" signature="644:970" ph="/// Dispatch Exception. ... " />
+            <marker date="1525865209565" expanded="true" signature="1110:1545" ph="/// Dispatch Exception. ... " />
+            <marker date="1525865209565" expanded="true" signature="1705:2105" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="1876:2094" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="2115:2364" ph="/// Dispatch Exception. ... " />
+            <marker date="1525865209565" expanded="true" signature="2517:2827" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="2705:2816" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/MessagingLogEvents.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209565" expanded="true" signature="6:57" ph="..." />
+            <marker date="1525865209565" expanded="true" signature="88:780" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="95:186" ph="/// Log event categories used when writing to the log. ... " />
+            <marker date="1525865209565" expanded="true" signature="222:778" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/MessagingManifest.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209565" expanded="true" signature="67:814" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="154:812" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="195:414" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/PluginTypeAccessorExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209569" expanded="false" signature="6:103" ph="..." />
+            <marker date="1525865209569" expanded="true" signature="134:1297" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="141:426" ph="/// Adds the types specific to the messaging plug-in.  The extension ... " />
+            <marker date="1525865209569" expanded="true" signature="479:1295" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="494:738" ph="/// Adds the needed plug-in types specific to the plug-in. ... " />
+            <marker date="1525865209569" expanded="true" signature="832:1289" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/PublisherException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-866">
+          <folding>
+            <marker date="1525865209569" expanded="false" signature="6:242" ph="..." />
+            <marker date="1525865209569" expanded="true" signature="273:6143" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="280:447" ph="/// An exception that is raised when there is an error publishing a message  ... " />
+            <marker date="1525865209569" expanded="true" signature="504:6141" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="519:657" ph="/// Publisher Exception. ... " />
+            <marker date="1525865209569" expanded="true" signature="734:755" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="765:1144" ph="/// Publisher Exception. ... " />
+            <marker date="1525865209569" expanded="true" signature="1328:1815" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="1595:1804" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="1825:2154" ph="/// Publisher Exception. ... " />
+            <marker date="1525865209569" expanded="true" signature="2321:2342" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="2352:2755" ph="/// Publisher Exception. ... " />
+            <marker date="1525865209569" expanded="true" signature="2937:3421" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="3202:3410" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="3431:3810" ph="/// Publisher Exception. ... " />
+            <marker date="1525865209569" expanded="true" signature="4002:4496" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="4277:4485" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="4506:4941" ph="/// Publisher Exception. ... " />
+            <marker date="1525865209569" expanded="true" signature="5114:5237" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="5247:5394" ph="/// Publisher Exception. ... " />
+            <marker date="1525865209569" expanded="true" signature="5519:6135" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="5803:5944" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="6025:6125" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/QueryDispatchException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209569" expanded="false" signature="6:166" ph="..." />
+            <marker date="1525865209569" expanded="true" signature="197:3419" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="204:334" ph="/// An exception that is thrown when there is an exception dispatching a query to a consumer. ... " />
+            <marker date="1525865209569" expanded="true" signature="395:3417" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="455:589" ph="/// Dispatch exception. ... " />
+            <marker date="1525865209569" expanded="true" signature="671:683" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="693:1019" ph="/// Dispatch Exception. ... " />
+            <marker date="1525865209569" expanded="true" signature="1143:1155" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="1165:1599" ph="/// Dispatch Exception. ... " />
+            <marker date="1525865209569" expanded="true" signature="1755:2132" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="1914:2121" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="2142:2391" ph="/// Dispatch Exception. ... " />
+            <marker date="1525865209569" expanded="true" signature="2535:2833" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="2713:2822" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="2843:3211" ph="/// Dispatch Exception. ... " />
+            <marker date="1525865209569" expanded="true" signature="3390:3411" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/IMessagePublisher.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="91">
+          <caret line="10" column="68" selection-start-line="10" selection-start-column="68" selection-end-line="10" selection-end-column="68" />
+          <folding>
+            <marker date="1525865322692" expanded="false" signature="6:116" ph="..." />
+            <marker date="1525865322692" expanded="true" signature="152:1153" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="159:483" ph="/// Called when a message is published to allow plug-ins to customize the publishing of messages. ... " />
+            <marker date="1525865322692" expanded="true" signature="541:1151" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="556:674" ph="/// Specifies the scope to which publishers send messages to subscribers. ... " />
+            <marker date="1525865322692" expanded="true" signature="734:1056" ph="/// Publishes a message asynchronously.  ... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/IntegrationTypes.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209565" expanded="true" signature="34:752" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="41:192" ph="/// Determines the scope to which a given message publisher ... " />
+            <marker date="1525865209565" expanded="true" signature="225:750" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="240:333" ph="/// Used to specify all integration types apply. ... " />
+            <marker date="1525865209565" expanded="true" signature="360:520" ph="/// The publisher dispatches the event to subscribers located ... " />
+            <marker date="1525865209565" expanded="true" signature="552:723" ph="/// The publisher dispatches the event to subscribers located ... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/InProcessMessagePublisher.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="837">
+          <caret line="186" column="51" selection-start-line="186" selection-start-column="30" selection-end-line="186" selection-end-column="51" />
+          <folding>
+            <marker date="1525892928929" expanded="false" signature="6:380" ph="..." />
+            <marker date="1525892928929" expanded="true" signature="416:8378" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="423:612" ph="/// This is the default message publisher that dispatches messages locally ... " />
+            <marker date="1525892928929" expanded="true" signature="674:8376" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="1143:1536" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="1546:1803" ph="/* Not used by the implementation, but other plug-ins can use the integration type to apply ... */" />
+            <marker date="1525892928929" expanded="true" signature="1995:2501" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="2684:3803" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="2776:3132" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="3165:3793" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="3217:3644" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="3368:3626" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="3941:4371" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="4115:4311" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="4202:4297" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="4381:4558" ph="/* Determines message dispatchers that apply to the message being published.  This is optional and ... */" />
+            <marker date="1525892928929" expanded="true" signature="4666:5141" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="4890:5006" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="5248:6320" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="5306:5358" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="5400:5838" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="5876:6310" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="6446:6854" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="6968:7327" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="7111:7174" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="7436:8018" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="7499:7667" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="7896:8006" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="8117:8370" ph="{...}" />
+            <marker date="1525892928929" expanded="true" signature="8175:8335" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessageDispatchInfo.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-216">
+          <caret line="115" column="82" selection-start-line="115" selection-start-column="82" selection-end-line="115" selection-end-column="82" />
+          <folding>
+            <marker date="1525893420883" expanded="true" signature="6:243" ph="..." />
+            <marker date="1525893420883" expanded="true" signature="279:8445" ph="{...}" />
+            <marker date="1525893420883" expanded="true" signature="286:752" ph="/// Contains information used to invoke message handlers for a given message type at runtime. ... " />
+            <marker date="1525893420883" expanded="true" signature="789:8443" ph="{...}" />
+            <marker date="1525893420883" expanded="true" signature="804:937" ph="/// The type of the message. ... " />
+            <marker date="1525893420883" expanded="true" signature="993:1264" ph="/// The component containing the method that can handle the message. All types ... " />
+            <marker date="1525893420883" expanded="true" signature="1321:1754" ph="/// Indicates if the message handler should be called for derived message types. ... " />
+            <marker date="1525893420883" expanded="true" signature="1818:2045" ph="/// The consumer's message handler method to be called at runtime when the ... " />
+            <marker date="1525893420883" expanded="true" signature="2116:2218" ph="/// Indicates that the handler is an asynchronous method. ... " />
+            <marker date="1525893420883" expanded="true" signature="2270:2390" ph="/// Indicates that the handler is an asynchronous method returning a value. ... " />
+            <marker date="1525893420883" expanded="true" signature="2452:2562" ph="/// Indicates if an asynchronous message handler can be canceled. ... " />
+            <marker date="1525893420883" expanded="true" signature="2620:2890" ph="/// Indicates that the handler is marked with the InProcessHandler attribute. ... " />
+            <marker date="1525893420883" expanded="true" signature="2953:3107" ph="/// Delegate used to invoke the message handler.  This is created from the ... " />
+            <marker date="1525893420883" expanded="true" signature="3172:3437" ph="/// The type of the dispatch rules associated with the message handler. ... " />
+            <marker date="1525893420883" expanded="true" signature="3501:3796" ph="/// Rule instances associated with the message handler.  The message handler will only be  ... " />
+            <marker date="1525893420883" expanded="true" signature="3872:4030" ph="/// Determines if all or any of the rules must evaluate to true for the ... " />
+            <marker date="1525893420883" expanded="true" signature="4098:4365" ph="/// Identifies an externally stored script that is executed against the ... " />
+            <marker date="1525893420883" expanded="true" signature="4430:4740" ph="/// Determines if the message handler applies based on the assigned dispatcher ... " />
+            <marker date="1525893420883" expanded="true" signature="4786:5110" ph="{...}" />
+            <marker date="1525893420883" expanded="true" signature="5120:5948" ph="/// Dispatches a message to the specified consumer.  The implementation normalizes the ... " />
+            <marker date="1525893420883" expanded="true" signature="6073:7896" ph="{...}" />
+            <marker date="1525893420883" expanded="true" signature="6437:7310" ph="{...}" />
+            <marker date="1525893420883" expanded="true" signature="6480:7035" ph="{...}" />
+            <marker date="1525893420883" expanded="true" signature="6661:6766" ph="{...}" />
+            <marker date="1525893420883" expanded="true" signature="7056:7296" ph="{...}" />
+            <marker date="1525893420883" expanded="true" signature="7343:7843" ph="{...}" />
+            <marker date="1525893420883" expanded="true" signature="7495:7587" ph="{...}" />
+            <marker date="1525893420883" expanded="true" signature="7967:8437" ph="{...}" />
+            <marker date="1525893420883" expanded="true" signature="8138:8260" ph="{...}" />
+            <marker date="1525893420883" expanded="true" signature="8317:8393" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessagePublisher.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209565" expanded="false" signature="6:86" ph="..." />
+            <marker date="1525865209565" expanded="true" signature="122:1098" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="129:297" ph="/// Base implementation for a message publisher that can be added to  ... " />
+            <marker date="1525865209565" expanded="true" signature="360:1096" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="375:493" ph="/// Specifies the scope to which publisher sends messages to subscribers. ... " />
+            <marker date="1525865209565" expanded="true" signature="569:928" ph="/// Override to publish message asynchronously.  ... " />
+            <marker date="1525865209565" expanded="true" signature="1031:1090" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessagingExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-858">
+          <caret line="20" column="53" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
+          <folding>
+            <marker date="1525884756738" expanded="false" signature="6:258" ph="..." />
+            <marker date="1525884756738" expanded="true" signature="294:6887" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="301:455" ph="/// Extensions used by the messaging implementation providing methods to  ... " />
+            <marker date="1525884756738" expanded="true" signature="501:6885" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="516:833" ph="/// Finds all types that are consumers of messages.  This is all types that ... " />
+            <marker date="1525884756738" expanded="true" signature="924:1110" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="1120:1392" ph="/// For a list of consumer types, returns the methods corresponding to handlers.   ... " />
+            <marker date="1525884756738" expanded="true" signature="1490:1697" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="1772:1926" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="2001:2496" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="2165:2222" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="2402:2459" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="2506:2873" ph="/// For a list of methods, returns an object with properties that can be cached and ... " />
+            <marker date="1525884756738" expanded="true" signature="3000:3876" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="3195:3864" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="3886:3992" ph="/* Creates a delegate representing a reflected MethodInfo for the consumer's ... */" />
+            <marker date="1525884756738" expanded="true" signature="4074:4799" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="4185:4369" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="4465:4552" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="4870:4963" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="5041:5143" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="5218:5347" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="5434:5571" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="5581:6056" ph="/// Given a lookup of message dispatch information keyed by message type, finds the message  ... " />
+            <marker date="1525884756738" expanded="true" signature="6238:6879" ph="{...}" />
+            <marker date="1525884756738" expanded="true" signature="6463:6615" ph="/* A handler method defined for the message type will be invoked. ... */" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessagingService.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="117">
+          <caret line="11" column="67" selection-start-line="11" selection-start-column="67" selection-end-line="11" selection-end-column="67" />
+          <folding>
+            <marker date="1525893420891" expanded="false" signature="6:86" ph="..." />
+            <marker date="1525893420891" expanded="true" signature="122:2299" ph="{...}" />
+            <marker date="1525893420891" expanded="true" signature="129:238" ph="///  Central service for executing Commands, Domain-Events, and Queries. ... " />
+            <marker date="1525893420891" expanded="true" signature="292:2297" ph="{...}" />
+            <marker date="1525893420891" expanded="true" signature="616:736" ph="{...}" />
+            <marker date="1525893420891" expanded="true" signature="945:1066" ph="{...}" />
+            <marker date="1525893420891" expanded="true" signature="1275:1396" ph="{...}" />
+            <marker date="1525893420891" expanded="true" signature="1593:1707" ph="{...}" />
+            <marker date="1525893420891" expanded="true" signature="1931:2045" ph="{...}" />
+            <marker date="1525893420891" expanded="true" signature="2199:2291" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessageDispatcher.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1885">
+          <caret line="156" column="43" selection-start-line="156" selection-start-column="27" selection-end-line="156" selection-end-column="43" />
+          <folding>
+            <marker date="1525892928921" expanded="false" signature="6:384" ph="..." />
+            <marker date="1525892928921" expanded="true" signature="420:7728" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="427:646" ph="/// Contains methods to publish messages to all registered message  ... " />
+            <marker date="1525892928921" expanded="true" signature="682:7726" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="1221:1867" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="1323:1533" ph="/* Order the enrichers and the publishers based on the order of the type ... */" />
+            <marker date="1525892928921" expanded="true" signature="2062:2312" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="2496:2728" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="2945:3211" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="3412:4381" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="3861:4168" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="3895:4027" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="4073:4154" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="4208:4371" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="4391:4550" ph="/* Private method to which all other publish methods delegate to asynchronously apply ... */" />
+            <marker date="1525892928921" expanded="true" signature="4686:5431" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="4869:5036" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="5078:5421" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="5499:6442" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="5588:5782" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="5815:6432" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="5867:6272" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="6029:6254" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="6576:7720" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="6865:7074" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="7107:7710" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="7159:7569" ph="{...}" />
+            <marker date="1525892928921" expanded="true" signature="7324:7551" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/QueryDispatcher.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1053">
+          <caret line="92" column="9" selection-start-line="92" selection-start-column="9" selection-end-line="92" selection-end-column="9" />
+          <folding>
+            <marker date="1525893835203" expanded="false" signature="6:383" ph="..." />
+            <marker date="1525893835203" expanded="true" signature="419:5071" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="426:569" ph="/// Responsible for dispatching a query to its consumer and invoking ... " />
+            <marker date="1525893835203" expanded="true" signature="603:5069" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="1069:1241" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="1397:2275" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="1813:1921" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="1954:2231" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="2003:2105" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="2285:2409" ph="/* Creates an instance of the consumer that will execute the query and calls it between the ... */" />
+            <marker date="1525893835203" expanded="true" signature="2534:3260" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="3338:3724" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="3399:3555" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="3572:3714" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="3742:3883" ph="/* Executes a list of asynchronous filters and awaits their completion.  Once completed, ... */" />
+            <marker date="1525893835203" expanded="true" signature="4020:5063" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="4202:4307" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="4385:4520" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="4553:5053" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="4605:4942" ph="{...}" />
+            <marker date="1525893835203" expanded="true" signature="4766:4924" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/QueryDispatchInfo.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="24" column="22" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
+          <folding>
+            <marker date="1525865209565" expanded="false" signature="6:255" ph="..." />
+            <marker date="1525865209565" expanded="true" signature="291:5333" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="298:415" ph="/// Contains information used to dispatch a query to its corresponding consumer. ... " />
+            <marker date="1525865209565" expanded="true" signature="450:5331" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="465:536" ph="/// The type of the query. ... " />
+            <marker date="1525865209565" expanded="true" signature="585:694" ph="/// The type of the consumer to be invoked to execute the query. ... " />
+            <marker date="1525865209565" expanded="true" signature="753:864" ph="/// Indicates the consumer's query handler method is asynchronous. ... " />
+            <marker date="1525865209565" expanded="true" signature="911:1035" ph="/// Indicates that the consumer's query handler returns an asynchronous result. ... " />
+            <marker date="1525865209565" expanded="true" signature="1095:1231" ph="/// Indicates that the consumer's query handler has a defined cancellation token parameter. ... " />
+            <marker date="1525865209565" expanded="true" signature="1284:1381" ph="/// The consumer method to call for query execution. ... " />
+            <marker date="1525865209565" expanded="true" signature="1441:1563" ph="/// Delegate to invoke the message handler method on the consumer at runtime. ... " />
+            <marker date="1525865209565" expanded="true" signature="1677:2136" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="2201:2329" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="2388:3005" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="2499:2612" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="2689:2776" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="3183:4866" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="3440:4306" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="3483:4035" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="3663:3768" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="4056:4292" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="4339:4813" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="4491:4583" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="4933:5325" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="5048:5170" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="5208:5282" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Logging/LoggerExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="798">
+          <caret line="195" column="29" selection-start-line="195" selection-start-column="19" selection-end-line="195" selection-end-column="29" />
+          <folding>
+            <marker date="1525865209565" expanded="false" signature="6:117" ph="..." />
+            <marker date="1525865209565" expanded="true" signature="156:9798" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="163:351" ph="/// Additional logging methods extending the ILogger interface that allow passing an object ... " />
+            <marker date="1525865209565" expanded="true" signature="392:9796" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="647:976" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="1102:1309" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="1406:1607" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="1857:2186" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="2312:2519" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="2616:2817" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="2930:3449" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="3711:4046" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="4178:4391" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="4494:4701" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="4956:5287" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="5416:5625" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="5724:5927" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="6177:6506" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="6637:7138" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="6967:7042" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="7264:7471" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="7568:7769" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="8025:8357" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="8486:8696" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="8796:9000" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="9183:9660" ph="{...}" />
+            <marker date="1525865209565" expanded="true" signature="9733:9790" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/ConfigurationBuilderExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="28" column="8" selection-start-line="28" selection-start-column="8" selection-end-line="28" selection-end-column="8" />
+          <folding>
+            <marker date="1525865879285" expanded="false" signature="6:106" ph="..." />
+            <marker date="1525865879285" expanded="true" signature="151:3654" ph="{...}" />
+            <marker date="1525865879285" expanded="true" signature="158:249" ph="/// Extension methods for MS Configuration Extensions. ... " />
+            <marker date="1525865879285" expanded="true" signature="297:3652" ph="{...}" />
+            <marker date="1525865879285" expanded="true" signature="400:864" ph="/// Configures an ordered list of application JSON files to be searched for settings. ... " />
+            <marker date="1525865879285" expanded="true" signature="959:1582" ph="{...}" />
+            <marker date="1525865879285" expanded="true" signature="1592:2262" ph="/// Configures settings for the preferred defaults when developing applications running in a Docker container. ... " />
+            <marker date="1525865879285" expanded="true" signature="2367:2735" ph="{...}" />
+            <marker date="1525865879285" expanded="true" signature="2622:2696" ph="{...}" />
+            <marker date="1525865879285" expanded="true" signature="2745:3175" ph="/// Shoud be called after adding all settings sources to override any existing configured settings with a set ... " />
+            <marker date="1525865879285" expanded="true" signature="3324:3646" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/EnviromentConfig.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="715">
+          <caret line="55" column="21" lean-forward="true" selection-start-line="55" selection-start-column="21" selection-end-line="55" selection-end-column="21" />
+          <folding>
+            <marker date="1525894097376" expanded="true" signature="6:49" ph="..." />
+            <marker date="1525894097376" expanded="true" signature="94:2485" ph="{...}" />
+            <marker date="1525894097376" expanded="true" signature="101:198" ph="/// Configuration for the overall application environment.   ... " />
+            <marker date="1525894097376" expanded="true" signature="234:2483" ph="{...}" />
+            <marker date="1525894097376" expanded="true" signature="317:403" ph="{...}" />
+            <marker date="1525894097376" expanded="true" signature="422:503" ph="/// Commonly used environment names. ... " />
+            <marker date="1525894097376" expanded="true" signature="537:724" ph="{...}" />
+            <marker date="1525894097376" expanded="true" signature="734:865" ph="/// The value of the variable specifying the environment of the executing application. ... " />
+            <marker date="1525894097376" expanded="true" signature="987:1333" ph="{...}" />
+            <marker date="1525894097376" expanded="true" signature="1058:1284" ph="{...}" />
+            <marker date="1525894097376" expanded="true" signature="1200:1270" ph="{...}" />
+            <marker date="1525894097376" expanded="true" signature="1343:1452" ph="/// Indicates application is running in Development environment. ... " />
+            <marker date="1525894097376" expanded="true" signature="1585:1687" ph="/// Indicates application is running in Test environment. ... " />
+            <marker date="1525894097376" expanded="true" signature="1806:1914" ph="/// Indicates application is running in Production environment. ... " />
+            <marker date="1525894097376" expanded="true" signature="2053:2257" ph="/// Determines the log level based on the execution environment: ... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/IMessagingService.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="30" column="22" selection-start-line="30" selection-start-column="22" selection-end-line="30" selection-end-column="22" />
+          <folding>
+            <marker date="1525893420879" expanded="false" signature="6:118" ph="..." />
+            <marker date="1525893420879" expanded="true" signature="149:3813" ph="{...}" />
+            <marker date="1525893420879" expanded="true" signature="156:314" ph="/// Service containing methods to dispatch commands, domain events, and quires  ... " />
+            <marker date="1525893420879" expanded="true" signature="353:3811" ph="{...}" />
+            <marker date="1525893420879" expanded="true" signature="368:802" ph="/// Sends a command to its associated consumer. ... " />
+            <marker date="1525893420879" expanded="true" signature="989:1476" ph="/// Sends a command to all associated consumer message handlers and returns  ... " />
+            <marker date="1525893420879" expanded="true" signature="1690:2152" ph="/// Publishes a domain-event to all associated consumer message handlers. ... " />
+            <marker date="1525893420879" expanded="true" signature="2362:2829" ph="/// Publishes domain-events associated with an event source.   ... " />
+            <marker date="1525893420879" expanded="true" signature="3039:3659" ph="/// Dispatches a query to its corresponding consumer.  When dispatching the ... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Messaging/MockMessagingExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="52">
+          <caret line="4" column="32" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Messaging/MockMessagingService.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-234">
+          <caret line="24" column="37" selection-start-line="24" selection-start-column="37" selection-end-line="24" selection-end-column="37" />
+          <folding>
+            <marker date="1525897816656" expanded="false" signature="6:193" ph="..." />
+            <marker date="1525897816656" expanded="true" signature="229:6199" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="236:613" ph="/// Implementation of the IMessagingService that can be passed to a dependent component that is ... " />
+            <marker date="1525897816656" expanded="true" signature="671:6197" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="1074:1144" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="1162:1516" ph="/// Registers a response to be returned when a command of a specific type is received. ... " />
+            <marker date="1525897816656" expanded="true" signature="1622:2099" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="1832:2008" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="2109:2458" ph="/// Registers a response to be returned when a query of a specific type is received. ... " />
+            <marker date="1525897816656" expanded="true" signature="2560:3023" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="2764:2936" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="3187:3465" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="3648:3935" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="4102:4313" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="4488:4712" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="4836:5113" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="5174:5657" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="5330:5508" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="5563:5617" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="5720:6191" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="5868:6042" ph="{...}" />
+            <marker date="1525897816656" expanded="true" signature="6097:6151" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingTestExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
+          <folding>
+            <marker date="1525898714907" expanded="true" signature="6:55" ph="..." />
+            <marker date="1525898714907" expanded="true" signature="85:431" ph="{...}" />
+            <marker date="1525898714907" expanded="true" signature="133:429" ph="{...}" />
+            <marker date="1525898714907" expanded="true" signature="231:423" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/CoreTests/Settings/Mocks/MockSetttings.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865322696" expanded="false" signature="6:70" ph="..." />
+            <marker date="1525865322696" expanded="true" signature="106:782" ph="{...}" />
+            <marker date="1525865322696" expanded="true" signature="199:306" ph="{...}" />
+            <marker date="1525865322696" expanded="true" signature="359:414" ph="{...}" />
+            <marker date="1525865322696" expanded="true" signature="439:493" ph="{...}" />
+            <marker date="1525865322696" expanded="true" signature="519:610" ph="{...}" />
+            <marker date="1525865322696" expanded="true" signature="664:780" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/ConfigurationSectionAttribute.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209569" expanded="true" signature="43:1121" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="50:226" ph="/// Attribute specified on an application setting to indicate the ... " />
+            <marker date="1525865209569" expanded="true" signature="372:1119" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="387:546" ph="/// The section name.  Can be a string or a string separated by the colon ... " />
+            <marker date="1525865209569" expanded="true" signature="599:870" ph="/// Specifies the sections name use to load the application setting. ... " />
+            <marker date="1525865209569" expanded="true" signature="935:1113" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/SettingsExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="486">
+          <caret line="60" column="58" selection-start-line="60" selection-start-column="43" selection-end-line="60" selection-end-column="58" />
+          <folding>
+            <marker date="1525898714903" expanded="false" signature="6:179" ph="..." />
+            <marker date="1525898714903" expanded="true" signature="209:4486" ph="{...}" />
+            <marker date="1525898714903" expanded="true" signature="216:567" ph="/// Extensions for determining a setting classes's section path based on the  ... " />
+            <marker date="1525898714903" expanded="true" signature="610:4484" ph="{...}" />
+            <marker date="1525898714903" expanded="true" signature="625:1142" ph="/// Provided a IAppSettings derived type, determines the section path by recursively  ... " />
+            <marker date="1525898714903" expanded="true" signature="1205:1452" ph="{...}" />
+            <marker date="1525898714903" expanded="true" signature="1462:1977" ph="/// Provided a IAppSetting derived instance,  determines the section path by recursively  ... " />
+            <marker date="1525898714903" expanded="true" signature="2052:2222" ph="{...}" />
+            <marker date="1525898714903" expanded="true" signature="2232:2746" ph="/// Provided a IAppSettings derived type, determines the section path by recursively  ... " />
+            <marker date="1525898714903" expanded="true" signature="2829:2940" ph="{...}" />
+            <marker date="1525898714903" expanded="true" signature="3019:3366" ph="{...}" />
+            <marker date="1525898714903" expanded="true" signature="3070:3356" ph="{...}" />
+            <marker date="1525898714903" expanded="true" signature="3192:3274" ph="{...}" />
+            <marker date="1525898714903" expanded="true" signature="3431:3543" ph="{...}" />
+            <marker date="1525898714903" expanded="true" signature="3553:4147" ph="/// Returns an instance of the specified setting type populated from the configuration ... " />
+            <marker date="1525898714903" expanded="true" signature="4284:4478" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/ServiceCollectionExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865322692" expanded="true" signature="6:139" ph="..." />
+            <marker date="1525865322692" expanded="true" signature="169:1965" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="176:437" ph="/// Additional configuration service collection extensions.  These extension  ... " />
+            <marker date="1525865322692" expanded="true" signature="489:1963" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="646:740" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="905:1957" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="949:1044" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="1077:1170" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/PluginTypeAccessorExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1525865209569" expanded="true" signature="6:68" ph="..." />
+            <marker date="1525865209569" expanded="true" signature="98:905" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="105:389" ph="/// Adds the types specific to the settings plug-in.  The extension ... " />
+            <marker date="1525865209569" expanded="true" signature="442:903" ph="{...}" />
+            <marker date="1525865209569" expanded="true" signature="457:701" ph="/// Adds the needed plug-in types specific to the plug-in. ... " />
+            <marker date="1525865209569" expanded="true" signature="794:897" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingTests.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="642">
+          <caret line="131" column="23" selection-start-line="131" selection-start-column="23" selection-end-line="131" selection-end-column="23" />
+          <folding>
+            <marker date="1525898714899" expanded="false" signature="6:290" ph="..." />
+            <marker date="1525898714899" expanded="true" signature="320:6604" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="327:640" ph="/// Unit tests for testing the injecting of services directly into the dependent ... " />
+            <marker date="1525898714899" expanded="true" signature="670:6602" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="685:962" ph="/// A configuration setting class deriving from IAppSetting and marked with the ... " />
+            <marker date="1525898714899" expanded="true" signature="1098:1812" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="1154:1800" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="1222:1402" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="1501:1784" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="1822:2284" ph="/// Settings class can be derived and each marked with the ConfigurationSetion attribute. ... " />
+            <marker date="1525898714899" expanded="true" signature="2444:3321" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="2500:3309" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="2568:2754" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="2853:3293" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="3331:3618" ph="/// The IConfiguration service is automatically registered with the service  ... " />
+            <marker date="1525898714899" expanded="true" signature="3771:4428" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="3827:4416" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="3895:4044" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="4143:4400" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="4438:4785" ph="/// If needed, the settings can be obtained by a service by injecting the IOptions ... " />
+            <marker date="1525898714899" expanded="true" signature="4924:5756" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="4980:5744" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="5048:5228" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="5327:5728" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="5766:6057" ph="/* Test the generation of section for derived setting types. ... */" />
+            <marker date="1525898714899" expanded="true" signature="6130:6596" ph="{...}" />
+            <marker date="1525898714899" expanded="true" signature="6211:6535" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingPathTests.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="36" column="9" selection-start-line="36" selection-start-column="9" selection-end-line="36" selection-end-column="9" />
+          <folding>
+            <marker date="1525899396155" expanded="true" signature="6:38" ph="..." />
+            <marker date="1525899396155" expanded="true" signature="68:1345" ph="{...}" />
+            <marker date="1525899396155" expanded="true" signature="104:1343" ph="{...}" />
+            <marker date="1525899396155" expanded="true" signature="186:376" ph="{...}" />
+            <marker date="1525899396155" expanded="true" signature="451:634" ph="{...}" />
+            <marker date="1525899396155" expanded="true" signature="704:896" ph="{...}" />
+            <marker date="1525899396155" expanded="true" signature="989:1022" ph="{...}" />
+            <marker date="1525899396155" expanded="true" signature="1081:1114" ph="{...}" />
+            <marker date="1525899396155" expanded="true" signature="1214:1247" ph="{...}" />
+            <marker date="1525899396155" expanded="true" signature="1304:1337" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/PluginModule.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="572">
+          <caret line="47" column="29" selection-start-line="47" selection-start-column="29" selection-end-line="47" selection-end-column="29" />
+          <folding>
+            <marker date="1525871767826" expanded="false" signature="6:135" ph="..." />
+            <marker date="1525871767826" expanded="true" signature="174:5749" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="181:524" ph="/// Implemented by one or more plug-in classes allowing the plug-in to be configured.   ... " />
+            <marker date="1525871767826" expanded="true" signature="600:5747" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="680:732" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="763:849" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="903:1002" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="1012:1205" ph="/// Indicates that the module should not be loaded.  This can be used when developing ... " />
+            <marker date="1525871767826" expanded="true" signature="1260:1514" ph="/// Contains plug-in information that can be used by the module during bootstrapping. ... " />
+            <marker date="1525871767826" expanded="true" signature="1575:1752" ph="/// The first method called on the module.  This method is called on all modules  ... " />
+            <marker date="1525871767826" expanded="true" signature="1793:1814" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="1824:1928" ph="/// Called after all plug-in modules have been initialized. ... " />
+            <marker date="1525871767826" expanded="true" signature="1968:1989" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="1999:2309" ph="/// Called first for all plug-in modules to allow default service implementations ... " />
+            <marker date="1525871767826" expanded="true" signature="2390:2411" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="2421:2817" ph="/// Allows the plug-in to scan for types it defines that are to be registered ... " />
+            <marker date="1525871767826" expanded="true" signature="2878:2898" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="2908:3214" ph="/// Allows the plug-in to register specific types as services within the  ... " />
+            <marker date="1525871767826" expanded="true" signature="3288:3308" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="3318:3759" ph="/// Allows the plug-in module to scan for types within all other plug-ins. ... " />
+            <marker date="1525871767826" expanded="true" signature="3829:3849" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="3859:4133" ph="/// Allows a core plug-in module to scan for types limited to only application ... " />
+            <marker date="1525871767826" expanded="true" signature="4206:4226" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="4236:4499" ph="/// Method called on the module by the bootstrap process.  Called after ... " />
+            <marker date="1525871767826" expanded="true" signature="4566:4599" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="4609:4914" ph="/// Called after all modules have been started.  This method can contain ... " />
+            <marker date="1525871767826" expanded="true" signature="4979:5012" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="5022:5267" ph="/// Called when the container is stopped.  Allows the module to complete ... " />
+            <marker date="1525871767826" expanded="true" signature="5333:5366" ph="{...}" />
+            <marker date="1525871767826" expanded="true" signature="5376:5649" ph="/// Called after the module is initialized and configured so that it can  ... " />
+            <marker date="1525871767826" expanded="true" signature="5720:5741" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/Modules/AppSettingsModule.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="25" column="51" selection-start-line="25" selection-start-column="51" selection-end-line="25" selection-end-column="51" />
+          <folding>
+            <marker date="1525865322692" expanded="false" signature="6:339" ph="..." />
+            <marker date="1525865322692" expanded="true" signature="377:3325" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="384:940" ph="/// Extends the Microsoft configuration options by allowing setting types to be defined  ... " />
+            <marker date="1525865322692" expanded="true" signature="990:3323" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="1071:1513" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="1288:1503" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="1523:1722" ph="/* Register each application setting so a factory method is invoked when injected ... */" />
+            <marker date="1525865322692" expanded="true" signature="1793:2299" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="1965:2286" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="2355:2898" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="2508:2850" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="2971:3317" ph="{...}" />
+            <marker date="1525865322692" expanded="true" signature="3157:3305" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingBootstrapTests.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="34" column="9" lean-forward="true" selection-start-line="34" selection-start-column="9" selection-end-line="34" selection-end-column="9" />
+          <folding>
+            <marker date="1525899768541" expanded="true" signature="42:628" ph="{...}" />
+            <marker date="1525899768541" expanded="true" signature="83:626" ph="{...}" />
+            <marker date="1525899768541" expanded="true" signature="162:195" ph="{...}" />
+            <marker date="1525899768541" expanded="true" signature="269:302" ph="{...}" />
+            <marker date="1525899768541" expanded="true" signature="380:413" ph="{...}" />
+            <marker date="1525899768541" expanded="true" signature="490:523" ph="{...}" />
+            <marker date="1525899768541" expanded="true" signature="587:620" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

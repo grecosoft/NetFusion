@@ -26,11 +26,11 @@ namespace NetFusion.Messaging.Types
     }
 
     /// <summary>
-    /// Represents a message that can have one and only one consumer.  The handling consumer can associate a result
-    /// after processing the message.  This type of message tells the consumer to take an action.
+    /// Represents a message that can have one and only one consumer.  The handling consumer can associate
+    /// a result after processing the message.  This type of message tells the consumer to take an action.
     /// </summary>
     /// <typeparam name="TResult">The response set by the consumer that processed the message.</typeparam>
-    public interface ICommand<TResult> : ICommand
+    public interface ICommand<out TResult> : ICommand
     {
         new TResult Result { get; }
     }

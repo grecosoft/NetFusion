@@ -20,19 +20,19 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "All Plug-In Manifests must have Identity value")]
         public void AllPluginManifests_MustHaveIdentityValue()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    var appHostPlugin = new MockAppHostPlugin { PluginId = null };
-                    r.AddPlugin(appHostPlugin);
-                }))
-                .Act.BuildAndStartContainer()
-                .Assert.Exception<ContainerException>(ex =>
-                {
+                fixture.Arrange.Resolver(r =>
+                    {
+                        var appHostPlugin = new MockAppHostPlugin { PluginId = null };
+                        r.AddPlugin(appHostPlugin);
+                    })
+                    .Act.BuildAndStartContainer()
+                    .Assert.Exception<ContainerException>(ex =>
+                    {
 
-                });
-            }));
+                    });
+            });
         }
 
         /// <summary>
@@ -42,21 +42,21 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Plug-In Id Values must be Unique")]
         public void PluginIdsValues_MustBeUnique()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    var appHostPlugin = new MockAppHostPlugin { PluginId = "1" };
-                    var corePlugin = new MockCorePlugin { PluginId = "1" };
+                fixture.Arrange.Resolver(r =>
+                    {
+                        var appHostPlugin = new MockAppHostPlugin { PluginId = "1" };
+                        var corePlugin = new MockCorePlugin { PluginId = "1" };
 
-                    r.AddPlugin((MockPlugin)appHostPlugin, (MockPlugin)corePlugin);
-                }))
-                .Act.BuildAndStartContainer()
-                .Assert.Exception<ContainerException>(ex =>
-                {
-                    ex.Message.Should().Contain("Plug-in identity values must be unique.");
-                });
-            }));
+                        r.AddPlugin((MockPlugin)appHostPlugin, (MockPlugin)corePlugin);
+                    })
+                    .Act.BuildAndStartContainer()
+                    .Assert.Exception<ContainerException>(ex =>
+                    {
+                        ex.Message.Should().Contain("Plug-in identity values must be unique.");
+                    });
+            });
         }
 
         /// <summary>
@@ -66,19 +66,19 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Plug-In Name must be Specified")]
         public void PluginName_MustBeSpecified()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    var appHostPlugin = new MockAppHostPlugin { Name = "" };
-                    r.AddPlugin(appHostPlugin);
-                }))
-                .Act.BuildAndStartContainer()
-                .Assert.Exception<ContainerException>(ex =>
-                {
-                    ex.Message.Should().Contain("All manifest instances must have AssemblyName and Name values.");
-                });
-            }));
+                fixture.Arrange.Resolver(r =>
+                    {
+                        var appHostPlugin = new MockAppHostPlugin { Name = "" };
+                        r.AddPlugin(appHostPlugin);
+                    })
+                    .Act.BuildAndStartContainer()
+                    .Assert.Exception<ContainerException>(ex =>
+                    {
+                        ex.Message.Should().Contain("All manifest instances must have AssemblyName and Name values.");
+                    });
+            });
         }
 
         /// <summary>
@@ -90,19 +90,19 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Plug-In Assembly Name must be Specified")]
         public void PluginAssemblyName_MustBeSpecified()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    var appHostPlugin = new MockAppHostPlugin { AssemblyName = "" };
-                    r.AddPlugin(appHostPlugin);
-                }))
-                .Act.BuildAndStartContainer()
-                .Assert.Exception<ContainerException>(ex =>
-                {
-                    ex.Message.Should().Contain("All manifest instances must have AssemblyName and Name values.");
-                });
-            }));
+                fixture.Arrange.Resolver(r =>
+                    {
+                        var appHostPlugin = new MockAppHostPlugin { AssemblyName = "" };
+                        r.AddPlugin(appHostPlugin);
+                    })
+                    .Act.BuildAndStartContainer()
+                    .Assert.Exception<ContainerException>(ex =>
+                    {
+                        ex.Message.Should().Contain("All manifest instances must have AssemblyName and Name values.");
+                    });
+            });
         }
 
         /// <summary>
@@ -111,19 +111,19 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Composite Application cannot have multiples Application Host Plug-Ins")]
         public void CompositeApplication_CannotHaveMultiple_AppHostPlugins()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>();
-                    r.AddPlugin<MockAppHostPlugin>();
-                }))
-                .Act.BuildAndStartContainer()
-                .Assert.Exception<ContainerException>(ex =>
-                {
-                    ex.Message.Should().Contain("More than one Host Application Plug-In manifest was found.");
-                });
-            }));
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>();
+                        r.AddPlugin<MockAppHostPlugin>();
+                    })
+                    .Act.BuildAndStartContainer()
+                    .Assert.Exception<ContainerException>(ex =>
+                    {
+                        ex.Message.Should().Contain("More than one Host Application Plug-In manifest was found.");
+                    });
+            });
         }
 
         /// <summary>
@@ -132,18 +132,18 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Composite Application must have one Application host Plug-In")]
         public void CompositeApplication_MustHaveOne_AppHostPlugin()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
+                fixture.Arrange.Resolver(r =>
+                    {
 
-                }))
-                .Act.BuildAndStartContainer()
-                .Assert.Exception<ContainerException>(ex =>
-                {
-                    ex.Message.Should().Contain("A Host Application Plug-In manifest could not be found");
-                });
-            }));
+                    })
+                    .Act.BuildAndStartContainer()
+                    .Assert.Exception<ContainerException>(ex =>
+                    {
+                        ex.Message.Should().Contain("A Host Application Plug-In manifest could not be found");
+                    });
+            });
         }
 
         /// <summary>
@@ -153,17 +153,17 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Composite Application has Application Host Plug-In")]
         public void Composite_Application_Has_AppHostPlugin()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>();
-                }))
-                .Assert.CompositeApp(ca =>
-                {
-                    ca.AppHostPlugin.Should().NotBeNull();
-                });
-            }));
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>();
+                    })
+                    .Assert.CompositeApp(ca =>
+                    {
+                        ca.AppHostPlugin.Should().NotBeNull();
+                    });
+            });
         }
 
         /// <summary>
@@ -174,19 +174,19 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Composite Application can have Multiple Application Component Plug-Ins")]
         public void CompositeApplication_CanHaveMultiple_AppComponentPlugins()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>();
-                    r.AddPlugin<MockAppComponentPlugin>();
-                    r.AddPlugin<MockAppComponentPlugin>();
-                }))
-                .Assert.CompositeApp(ca =>
-                {
-                    ca.AppComponentPlugins.Should().HaveCount(2);
-                });
-            }));
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>();
+                        r.AddPlugin<MockAppComponentPlugin>();
+                        r.AddPlugin<MockAppComponentPlugin>();
+                    })
+                    .Assert.CompositeApp(ca =>
+                    {
+                        ca.AppComponentPlugins.Should().HaveCount(2);
+                    });
+            });
         }
 
         /// <summary>
@@ -197,19 +197,19 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Composite Application can have Multiple Core Plug-Ins")]
         public void CompositeApplication_CanHaveMuliple_CorePlugins()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>();
-                    r.AddPlugin<MockCorePlugin>();
-                    r.AddPlugin<MockCorePlugin>();
-                }))
-                .Assert.CompositeApp(ca =>
-                {
-                    ca.CorePlugins.Should().HaveCount(2);
-                });
-            }));
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>();
+                        r.AddPlugin<MockCorePlugin>();
+                        r.AddPlugin<MockCorePlugin>();
+                    })
+                    .Assert.CompositeApp(ca =>
+                    {
+                        ca.CorePlugins.Should().HaveCount(2);
+                    });
+            });
         }
 
         /// <summary>
@@ -219,24 +219,24 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Plug-In can have Multiple Modules")]
         public void PluginCanHave_MultipleModules()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>();
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>();
 
-                    r.AddPlugin<MockCorePlugin>()
-                         .AddPluginType<MockPluginTwoModule>()
-                         .AddPluginType<MockPluginThreeModule>();
-                }))
-                .Assert.CompositeApp(ca =>
-                {
-                    var pluginModules = ca.CorePlugins.First().Modules;
-                    pluginModules.Should().HaveCount(2);
-                    pluginModules.OfType<MockPluginTwoModule>().Should().HaveCount(1);
-                    pluginModules.OfType<MockPluginThreeModule>().Should().HaveCount(1);
-                });
-            }));
+                        r.AddPlugin<MockCorePlugin>()
+                            .AddPluginType<MockPluginTwoModule>()
+                            .AddPluginType<MockPluginThreeModule>();
+                    })
+                    .Assert.CompositeApp(ca =>
+                    {
+                        var pluginModules = ca.CorePlugins.First().Modules;
+                        pluginModules.Should().HaveCount(2);
+                        pluginModules.OfType<MockPluginTwoModule>().Should().HaveCount(1);
+                        pluginModules.OfType<MockPluginThreeModule>().Should().HaveCount(1);
+                    });
+            });
         }
 
         /// <summary>
@@ -246,30 +246,32 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Plug-In Modules called during Bootstrap")]
         public void PluginModules_CalledDuring_Bootstrap()
         {
-            Action<Plugin, Type> assertOneModule = (p, type) => p.Modules.Should()
+            void AssertOneModule(Plugin p, Type type) => p.Modules.Should()
                 .HaveCount(1)
-                .And.Subject.First().Should().BeOfType(type);
+                .And.Subject.First()
+                .Should()
+                .BeOfType(type);
 
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>()
-                         .AddPluginType<MockPluginOneModule>();
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>()
+                            .AddPluginType<MockPluginOneModule>();
 
-                    r.AddPlugin<MockAppComponentPlugin>()
-                         .AddPluginType<MockPluginTwoModule>();
+                        r.AddPlugin<MockAppComponentPlugin>()
+                            .AddPluginType<MockPluginTwoModule>();
 
-                    r.AddPlugin<MockCorePlugin>()
-                         .AddPluginType<MockPluginThreeModule>();
-                }))
-                .Assert.CompositeApp(ca =>
-                {
-                    assertOneModule(ca.AppHostPlugin, typeof(MockPluginOneModule));
-                    assertOneModule(ca.AppComponentPlugins.First(), typeof(MockPluginTwoModule));
-                    assertOneModule(ca.CorePlugins.First(), typeof(MockPluginThreeModule));
-                });
-            }));
+                        r.AddPlugin<MockCorePlugin>()
+                            .AddPluginType<MockPluginThreeModule>();
+                    })
+                    .Assert.CompositeApp(ca =>
+                    {
+                        AssertOneModule(ca.AppHostPlugin, typeof(MockPluginOneModule));
+                        AssertOneModule(ca.AppComponentPlugins.First(), typeof(MockPluginTwoModule));
+                        AssertOneModule(ca.CorePlugins.First(), typeof(MockPluginThreeModule));
+                    });
+            });
         }
 
         /// <summary>
@@ -278,26 +280,26 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Types Loaded for Application Plug-In")]
         public void TypesLoaded_ForAppPlugin()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>()
-                        .AddPluginType<MockOneType>();
-                }))
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>()
+                            .AddPluginType<MockOneType>();
+                    })
 
-                .Assert.CompositeApp(ca =>
-                {
-                    // Type assignment:
-                    ca.AppHostPlugin.PluginTypes.Should().HaveCount(1);
-                    ca.AppHostPlugin.PluginTypes.Select(pt => pt.Type).Contains(typeof(MockOneType));
+                    .Assert.CompositeApp(ca =>
+                    {
+                        // Type assignment:
+                        ca.AppHostPlugin.PluginTypes.Should().HaveCount(1);
+                        ca.AppHostPlugin.PluginTypes.Select(pt => pt.Type).Contains(typeof(MockOneType));
 
-                    // Categorized Types:
-                    ca.GetPluginTypes().Should().HaveCount(1);
-                    ca.GetPluginTypes(PluginTypes.AppHostPlugin).Should().HaveCount(1);
-                    ca.GetPluginTypes(PluginTypes.CorePlugin, PluginTypes.AppComponentPlugin).Should().HaveCount(0);
-                });
-            }));
+                        // Categorized Types:
+                        ca.GetPluginTypes().Should().HaveCount(1);
+                        ca.GetPluginTypes(PluginTypes.AppHostPlugin).Should().HaveCount(1);
+                        ca.GetPluginTypes(PluginTypes.CorePlugin, PluginTypes.AppComponentPlugin).Should().HaveCount(0);
+                    });
+            });
         }
 
         /// <summary>
@@ -337,27 +339,27 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Types loaded for Core Plug-In")]
         public void TypesLoaded_ForCorePlugin()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>();
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>();
 
-                    r.AddPlugin<MockCorePlugin>()
-                         .AddPluginType<MockOneType>()
-                         .AddPluginType<MockTwoType>();
-                }))
-                .Assert.CompositeApp(ca =>
-                {
-                    var corePlugin = ca.CorePlugins.First();
-                    corePlugin.PluginTypes.Should().HaveCount(2);
+                        r.AddPlugin<MockCorePlugin>()
+                            .AddPluginType<MockOneType>()
+                            .AddPluginType<MockTwoType>();
+                    })
+                    .Assert.CompositeApp(ca =>
+                    {
+                        var corePlugin = ca.CorePlugins.First();
+                        corePlugin.PluginTypes.Should().HaveCount(2);
 
-                    // Categorized Types:
-                    ca.GetPluginTypes().Should().HaveCount(2);
-                    ca.GetPluginTypes(PluginTypes.CorePlugin).Should().HaveCount(2);
-                    ca.GetPluginTypes(PluginTypes.AppComponentPlugin, PluginTypes.AppHostPlugin).Should().HaveCount(0);
-                });
-            }));
+                        // Categorized Types:
+                        ca.GetPluginTypes().Should().HaveCount(2);
+                        ca.GetPluginTypes(PluginTypes.CorePlugin).Should().HaveCount(2);
+                        ca.GetPluginTypes(PluginTypes.AppComponentPlugin, PluginTypes.AppHostPlugin).Should().HaveCount(0);
+                    });
+            });
         }
 
         /// <summary>
@@ -368,63 +370,63 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Plug-In Types associated with Plug-In")]
         public void PluginTypes_AssociatedWithPlugin()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>()
-                       .AddPluginType<MockOneType>();
-                }))
-                .Assert.CompositeApp(ca =>
-                {
-                    var appHostPlugin = ca.AppHostPlugin;
-                    appHostPlugin.PluginTypes.First().Plugin.Should().BeSameAs(appHostPlugin);
-                });
-            }));
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>()
+                            .AddPluginType<MockOneType>();
+                    })
+                    .Assert.CompositeApp(ca =>
+                    {
+                        var appHostPlugin = ca.AppHostPlugin;
+                        appHostPlugin.PluginTypes.First().Plugin.Should().BeSameAs(appHostPlugin);
+                    });
+            });
         }
 
         [Fact(DisplayName = "Plug-In containing type can be Queried")]
         public void PluginContainingType_CanBeQueried()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    var appHostPlugin = new MockAppHostPlugin { PluginId = "__101" };
-                    appHostPlugin.AddPluginType<MockTypeOneBasedOnKnownType>();
-                    r.AddPlugin(appHostPlugin);
-                }))
-                .Assert.Container(c =>
-                {
-                    var composite = (IComposite)c;
-                    var plugIn = composite.GetPluginContainingType(typeof(MockTypeOneBasedOnKnownType));
-                    plugIn.Manifest.PluginId.Should().Be("__101");
-                });
-            }));
+                fixture.Arrange.Resolver(r =>
+                    {
+                        var appHostPlugin = new MockAppHostPlugin { PluginId = "__101" };
+                        appHostPlugin.AddPluginType<MockTypeOneBasedOnKnownType>();
+                        r.AddPlugin(appHostPlugin);
+                    })
+                    .Assert.Container(c =>
+                    {
+                        var composite = (IComposite)c;
+                        var plugIn = composite.GetPluginContainingType(typeof(MockTypeOneBasedOnKnownType));
+                        plugIn.Manifest.PluginId.Should().Be("__101");
+                    });
+            });
         }
 
 
         [Fact(DisplayName = "Container can only be Started Once")]
         public void Container_CanOnlyBeStartedOnce()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    var appHostPlugin = new MockAppHostPlugin { };
-                    r.AddPlugin(appHostPlugin);
-                }))
-                .Act.OnNonInitContainer(c =>
-                {
-                    var builtContainer = c.Build();
-                    builtContainer.Start();
-                    builtContainer.Start();
-                })
-                .Assert.Exception<ContainerException>(ex =>
-                {
-                    ex.Message.Should().Contain("The application container has already been started.");
-                });
-            }));
+                fixture.Arrange.Resolver(r =>
+                    {
+                        var appHostPlugin = new MockAppHostPlugin { };
+                        r.AddPlugin(appHostPlugin);
+                    })
+                    .Act.OnNonInitContainer(c =>
+                    {
+                        var builtContainer = c.Build();
+                        builtContainer.Start();
+                        builtContainer.Start();
+                    })
+                    .Assert.Exception<ContainerException>(ex =>
+                    {
+                        ex.Message.Should().Contain("The application container has already been started.");
+                    });
+            });
         }
 
         /// <summary>
@@ -437,43 +439,43 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "When Container Started each Plug-in Module is Started")]
         public void WhenAppContainerStarted_EachPluginModuleStarted()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>()
-                        .AddPluginType<MockPluginOneModule>();
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>()
+                            .AddPluginType<MockPluginOneModule>();
 
-                    r.AddPlugin<MockCorePlugin>()
-                        .AddPluginType<MockPluginTwoModule>();
-                }))
-                .Assert.CompositeApp(ca =>
-                {
-                    ca.AllPluginModules.OfType<MockPluginModule>()
-                         .All(m => m.IsStarted).Should().BeTrue();
-                });
-            }));
+                        r.AddPlugin<MockCorePlugin>()
+                            .AddPluginType<MockPluginTwoModule>();
+                    })
+                    .Assert.CompositeApp(ca =>
+                    {
+                        ca.AllPluginModules.OfType<MockPluginModule>()
+                            .All(m => m.IsStarted).Should().BeTrue();
+                    });
+            });
         }
 
         [Fact(DisplayName = "Non-Started Container cannot be Stopped")]
         public void NonStartedContainer_CannotBeStopped()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    var appHostPlugin = new MockAppHostPlugin { };
-                    r.AddPlugin(appHostPlugin);
-                }))
-                .Act.OnNonInitContainer(c =>
-                {
-                    c.Stop();
-                })
-                .Assert.Exception<ContainerException>(ex =>
-                {
-                    ex.Message.Should().Contain("The application container has not been started.");
-                });
-            }));
+                fixture.Arrange.Resolver(r =>
+                    {
+                        var appHostPlugin = new MockAppHostPlugin { };
+                        r.AddPlugin(appHostPlugin);
+                    })
+                    .Act.OnNonInitContainer(c =>
+                    {
+                        c.Stop();
+                    })
+                    .Assert.Exception<ContainerException>(ex =>
+                    {
+                        ex.Message.Should().Contain("The application container has not been started.");
+                    });
+            });
         }
 
         /// <summary>
@@ -484,23 +486,23 @@ namespace CoreTests.Bootstrap
         public void AppContainerDisposed_PluginModules_AreDisposed()
         {
 
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>()
-                        .AddPluginType<MockPluginOneModule>();
-                }))
-                .Act.OnContainer(c =>
-                {
-                    c.Dispose();
-                })
-                .Assert.CompositeApp(ca =>
-                {
-                    var pluginModule = ca.AppHostPlugin.Modules.First();
-                    (pluginModule as MockPluginModule).IsDisposed.Should().BeTrue();
-                });
-            }));
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>()
+                            .AddPluginType<MockPluginOneModule>();
+                    })
+                    .Act.OnContainer(c =>
+                    {
+                        c.Dispose();
+                    })
+                    .Assert.CompositeApp(ca =>
+                    {
+                        var pluginModule = ca.AppHostPlugin.Modules.First();
+                        (pluginModule as MockPluginModule).IsDisposed.Should().BeTrue();
+                    });
+            });
         }
 
         /// <summary>
@@ -510,23 +512,23 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Disposed Container cannot have Service Provider accessed")]
         public void DisposedAppContainer_CannotHave_ServicesAccessed()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>();
-                }))
-                .Act.OnContainer(c =>
-                {
-                    c.Dispose();
-                    var s = c.ServiceProvider;
-                })
-                .Assert.Exception<ContainerException>(ex =>
-                {
-                    ex.Message.Should().Be(
-                        "The application container has been disposed and can no longer be accessed.");
-                });
-            }));
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>();
+                    })
+                    .Act.OnContainer(c =>
+                    {
+                        c.Dispose();
+                        var s = c.CreateServiceScope();
+                    })
+                    .Assert.Exception<ContainerException>(ex =>
+                    {
+                        ex.Message.Should().Be(
+                            "The application container has been disposed and can no longer be accessed.");
+                    });
+            });
         }
         // Test same for Log
         // Test same for LoggerFactory

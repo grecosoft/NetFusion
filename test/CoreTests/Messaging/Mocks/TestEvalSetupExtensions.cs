@@ -30,7 +30,7 @@ namespace CoreTests.Messaging.Mocks
         public static IServiceCollection UseMockedEvalService(this IServiceCollection services)
         {
             var scriptingService = CreateEvalService();
-            services.AddSingleton<IEntityScriptingService>(scriptingService);
+            services.AddSingleton(scriptingService);
 
             return services;
         }
@@ -50,7 +50,7 @@ namespace CoreTests.Messaging.Mocks
             var loggerFactory = new LoggerFactory();
             var evalSrv = new EntityScriptingService(loggerFactory);
 
-            evalSrv.Load(new EntityScript[] { es });
+            evalSrv.Load(new[] { es });
             return evalSrv;
         }
     }

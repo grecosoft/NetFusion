@@ -22,10 +22,10 @@ namespace CoreTests.Messaging
         {
             MockCommandResult cmdResult = null;
 
-            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
+            return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostCommandConsumer()))
+                    .Resolver(r => r.WithHostCommandConsumer())
                     .Act.OnServices(async s =>
                     {
                         var messagingSrv = s.GetService<IMessagingService>();
@@ -34,7 +34,7 @@ namespace CoreTests.Messaging
                         cmdResult = await messagingSrv.SendAsync(cmd);
                     });
 
-                testResult.Assert.Services2((System.IServiceProvider s) =>
+                testResult.Assert.Services((System.IServiceProvider s) =>
                 {
                     cmdResult.Should().NotBeNull();
                     cmdResult.Value.Should().Be("MOCK_VALUE");
@@ -43,16 +43,16 @@ namespace CoreTests.Messaging
                     consumer.ExecutedHandlers.Should().HaveCount(1);
                     consumer.ExecutedHandlers.Should().Contain("OnCommand");
                 });
-            }));
+            });
         }
 
         [Fact(DisplayName = nameof(CommandResult_NotRequired))]
         public Task CommandResult_NotRequired()
         {          
-            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
+            return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostCommandConsumer()))
+                    .Resolver(r => r.WithHostCommandConsumer())
                     .Act.OnServices(async s =>
                     {
                         var messagingSrv = s.GetService<IMessagingService>();
@@ -61,22 +61,22 @@ namespace CoreTests.Messaging
                         await messagingSrv.SendAsync(cmd);
                     });
 
-                testResult.Assert.Services2((System.IServiceProvider s) =>
+                testResult.Assert.Services((System.IServiceProvider s) =>
                 {
                     var consumer = s.GetRequiredService<MockCommandConsumer>();
                     consumer.ExecutedHandlers.Should().HaveCount(1);
                     consumer.ExecutedHandlers.Should().Contain("OnCommandNoResult");
                 });
-            }));
+            });
         }
 
         [Fact(DisplayName = nameof(CommandMessagesCanOnly_HaveOneEventHandler))]
         public Task CommandMessagesCanOnly_HaveOneEventHandler()
         {
-            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
+            return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostCommandConsumer().AddMultipleConsumers()))
+                    .Resolver(r => r.WithHostCommandConsumer().AddMultipleConsumers())
                     .Act.OnServices(s =>
                     {
                         var messagingSrv = s.GetService<IMessagingService>();
@@ -84,11 +84,11 @@ namespace CoreTests.Messaging
                         return messagingSrv.SendAsync(evt);
                     });
 
-                testResult.Assert.Exception<PublisherException>((PublisherException ex) =>
+                testResult.Assert.Exception((PublisherException ex) =>
                 {
                     ex.Message.Should().Contain("Exception publishing message.  See log for details.");
                 });
-            }));
+            });
         }
     }
 }

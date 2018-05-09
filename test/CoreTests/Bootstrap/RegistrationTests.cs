@@ -23,19 +23,19 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Application Container registered as Singleton Service")]
         public void AppContainer_Registered_AsSingletonService()
         {
-            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((System.Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>();
-                }))
-                .Assert.Services2(s =>
-                {
-                    var appContainer = s.GetService<IAppContainer>();
-                    appContainer.Should().NotBeNull();
-                });
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>();
+                    })
+                    .Assert.Services(s =>
+                    {
+                        var appContainer = s.GetService<IAppContainer>();
+                        appContainer.Should().NotBeNull();
+                    });
 
-            }));
+            });
         }
 
         /// <summary>
@@ -46,21 +46,21 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Module Registered as Service if implements Marker interface")]
         public void ModuleRegisteredAsService_IfImplements_MarkerInterface()
         {
-            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((System.Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>()
-                     .AddPluginType<MockPluginOneModule>();
-                }))
-                .Assert.Services2(s =>
-                {
-                    var moduleAsService = s.GetService<IMockPluginOneModule>();
-                    moduleAsService.Should().NotBeNull();
-                    moduleAsService.Should().BeOfType<MockPluginOneModule>();
-                });
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>()
+                            .AddPluginType<MockPluginOneModule>();
+                    })
+                    .Assert.Services(s =>
+                    {
+                        var moduleAsService = s.GetService<IMockPluginOneModule>();
+                        moduleAsService.Should().NotBeNull();
+                        moduleAsService.Should().BeOfType<MockPluginOneModule>();
+                    });
 
-            }));
+            });
         }
     }
 }

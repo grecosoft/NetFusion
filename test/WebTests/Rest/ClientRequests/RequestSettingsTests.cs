@@ -1,19 +1,18 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using FluentAssertions;
 using InfrastructureTests.Web.Rest.ClientRequests.Client;
-using InfrastructureTests.Web.Rest.ClientRequests.Server;
-using InfrastructureTests.Web.Rest.LinkGeneration.Client;
-using InfrastructureTests.Web.Rest.LinkGeneration.Server;
 using InfrastructureTests.Web.Rest.Setup;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
 using NetFusion.Test.Plugins;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
+using WebTests.Rest.ClientRequests.Server;
+using WebTests.Rest.Setup;
 using Xunit;
 
-namespace InfrastructureTests.Web.Rest.ClientRequests
+namespace WebTests.Rest.ClientRequests
 {
     /// <summary>
     /// Unit tests for specifying header values.  Header values can be specified at the HttpClient
@@ -46,16 +45,16 @@ namespace InfrastructureTests.Web.Rest.ClientRequests
         [Fact]
         public void AddingHeader_MustHaveName()
         {
-            var settings = RequestSettings.Create(config =>
+            RequestSettings.Create(config =>
             {
                 Assert.Throws<ArgumentException>(
                     () => config.Headers.Add(null, InternetMediaTypes.Json));
 
                 Assert.Throws<ArgumentException>(
-                   () => config.Headers.Add("", InternetMediaTypes.Json));
+                    () => config.Headers.Add("", InternetMediaTypes.Json));
 
                 Assert.Throws<ArgumentException>(
-                   () => config.Headers.Add("  ", InternetMediaTypes.Json));
+                    () => config.Headers.Add("  ", InternetMediaTypes.Json));
 
             });
         }

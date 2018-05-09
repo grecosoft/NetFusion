@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/.Rider2018.1/system/resharper-host/local/Transient/ReSharperHost/v12/SolutionCaches/_NetFusion.-1944960287.00" t="ExcludeRecursive" />
+    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/netcoreapp1.0/xunit.runner.reporters.netcoreapp10.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/netcoreapp1.0/xunit.runner.utility.netcoreapp10.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.3.1/build/netcoreapp1.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll" t="Include" />
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p="NetFusion.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="src" t="Include">
+        <e p="Common" t="Include">
+          <e p="NetFusion.Base" t="IncludeRecursive">
+            <e p="Entity" t="Include">
+              <e p="EntityAttributes.cs" t="Include" />
+              <e p="IAttributedEntity.cs" t="Include" />
+              <e p="IEntityAttributes.cs" t="Include" />
+            </e>
+            <e p="Exceptions" t="Include">
+              <e p="ExecuteAction.cs" t="Include" />
+              <e p="NetFusionException.cs" t="Include" />
+            </e>
+            <e p="LogEvents.cs" t="Include" />
+            <e p="NetFusion.Base.csproj" t="IncludeRecursive" />
+            <e p="Plugings" t="Include">
+              <e p="IKnownPluginType.cs" t="Include" />
+            </e>
+            <e p="Scripting" t="Include">
+              <e p="ApplyScriptPredicateAttribute.cs" t="Include" />
+              <e p="EntityExpression.cs" t="Include" />
+              <e p="EntityScript.cs" t="Include" />
+              <e p="IEntityScriptMetaRepository.cs" t="Include" />
+              <e p="IEntityScriptingService.cs" t="Include" />
+              <e p="NullEntityScriptingService.cs" t="Include" />
+              <e p="ScriptPredicate.cs" t="Include" />
+            </e>
+            <e p="SerializerTypes.cs" t="Include" />
+            <e p="Validation" t="Include">
+              <e p="IObjectValidator.cs" t="Include" />
+              <e p="IValidatableType.cs" t="Include" />
+              <e p="MSObjectValidator.cs" t="Include" />
+              <e p="ObjectValidation.cs" t="Include" />
+              <e p="ValidationItem.cs" t="Include" />
+              <e p="ValidationResultException.cs" t="Include" />
+              <e p="ValidationResultSet.cs" t="Include" />
+              <e p="ValidationTypes.cs" t="Include" />
+            </e>
+            <e p="bin" t="ExcludeRecursive" />
+            <e p="obj" t="ExcludeRecursive">
+              <e p="Debug" t="Include">
+                <e p="netstandard2.0" t="Include">
+                  <e p="NetFusion.Base.AssemblyInfo.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="NetFusion.Common" t="IncludeRecursive">
+            <e p="Extensions" t="Include">
+              <e p="Collections" t="Include">
+                <e p="EnumerableExtensions.cs" t="Include" />
+                <e p="SetExtensions.cs" t="Include" />
+              </e>
+              <e p="Expressions" t="Include">
+                <e p="MethodCallExtensions.cs" t="Include" />
+              </e>
+              <e p="ObjectExtensions.cs" t="Include" />
+              <e p="Reflection" t="Include">
+                <e p="AsyncExtensions.cs" t="Include" />
+                <e p="AttributeExtensions.cs" t="Include" />
+                <e p="CreationExtensions.cs" t="Include" />
+                <e p="GenericTypeExtensions.cs" t="Include" />
+                <e p="QueryReflectionExtensions.cs" t="Include" />
+                <e p="RuntimeExtensions.cs" t="Include" />
+              </e>
+              <e p="Tasks" t="Include">
+                <e p="TaskExtensions.cs" t="Include" />
+                <e p="TaskListItem.cs" t="Include" />
+              </e>
+              <e p="Types" t="Include">
+                <e p="TypeExtensions.cs" t="Include" />
+              </e>
+            </e>
+            <e p="NetFusion.Common.csproj" t="IncludeRecursive" />
+            <e p="bin" t="ExcludeRecursive" />
+            <e p="obj" t="ExcludeRecursive">
+              <e p="Debug" t="Include">
+                <e p="netstandard2.0" t="Include">
+                  <e p="NetFusion.Common.AssemblyInfo.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="NetFusion.Mapping" t="IncludeRecursive">
+            <e p="Core" t="Include">
+              <e p="IMappingModule.cs" t="Include" />
+              <e p="ObjectMapper.cs" t="Include" />
+              <e p="TargetMap.cs" t="Include" />
+            </e>
+            <e p="IMappingStrategy.cs" t="Include" />
+            <e p="IMappingStrategyFactory.cs" t="Include" />
+            <e p="IObjectMapper.cs" t="Include" />
+            <e p="MappingDelegate.cs" t="Include" />
+            <e p="MappingLogEvents.cs" t="Include" />
+            <e p="MappingManifest.cs" t="Include" />
+            <e p="MappingStrategy.cs" t="Include" />
+            <e p="Modules" t="Include">
+              <e p="MappingModule.cs" t="Include" />
+            </e>
+            <e p="NetFusion.Mapping.csproj" t="IncludeRecursive" />
+            <e p="bin" t="ExcludeRecursive" />
+            <e p="obj" t="ExcludeRecursive">
+              <e p="Debug" t="Include">
+                <e p="netstandard2.0" t="Include">
+                  <e p="NetFusion.Mapping.AssemblyInfo.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="NetFusion.Roslyn" t="IncludeRecursive">
+            <e p="Core" t="Include">
+              <e p="EntityScriptScope.cs" t="Include" />
+              <e p="EntityScriptingService.cs" t="Include" />
+              <e p="ExpressionEvaluator.cs" t="Include" />
+              <e p="ScriptEvaluator.cs" t="Include" />
+              <e p="ScriptException.cs" t="Include" />
+            </e>
+            <e p="Modules" t="Include">
+              <e p="RoslynExpressionModule.cs" t="Include" />
+            </e>
+            <e p="NetFusion.Roslyn.csproj" t="IncludeRecursive" />
+            <e p="RoslynManifest.cs" t="Include" />
+            <e p="ScriptingLogEvents.cs" t="Include" />
+            <e p="Testing" t="Include">
+              <e p="EvaluationExtensions.cs" t="Include" />
+            </e>
+            <e p="bin" t="ExcludeRecursive" />
+            <e p="obj" t="ExcludeRecursive">
+              <e p="Debug" t="Include">
+                <e p="netstandard2.0" t="Include">
+                  <e p="NetFusion.Roslyn.AssemblyInfo.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+        </e>
+        <e p="Core" t="Include">
+          <e p="NetFusion.Bootstrap" t="IncludeRecursive">
+            <e p="Configuration" t="Include">
+              <e p="ConfigurationBuilderExtensions.cs" t="Include" />
+              <e p="EnviromentConfig.cs" t="Include" />
+            </e>
+            <e p="Container" t="Include">
+              <e p="AppContainer.cs" t="Include" />
+              <e p="CompositeApplication.cs" t="Include" />
+              <e p="ContainerBuilder.cs" t="Include" />
+              <e p="IAppContainer.cs" t="Include" />
+              <e p="IBuiltContainer.cs" t="Include" />
+              <e p="IComposite.cs" t="Include" />
+              <e p="IContainerBuilder.cs" t="Include" />
+              <e p="IContainerConfig.cs" t="Include" />
+              <e p="ITypeResolver.cs" t="Include" />
+              <e p="ManifestRegistry.cs" t="Include" />
+              <e p="ManifestValidation.cs" t="Include" />
+              <e p="TypeResolver.cs" t="Include" />
+            </e>
+            <e p="Dependencies" t="Include">
+              <e p="ITypeCatalog.cs" t="Include" />
+              <e p="ServiceCollectionExtensions.cs" t="Include" />
+              <e p="TypeCatalog.cs" t="Include" />
+            </e>
+            <e p="Exceptions" t="Include">
+              <e p="ContainerException.cs" t="Include" />
+            </e>
+            <e p="Extensions" t="Include">
+              <e p="ReflectionExtensions.cs" t="Include" />
+            </e>
+            <e p="Logging" t="Include">
+              <e p="BootstrapLogEvents.cs" t="Include" />
+              <e p="CompositeLog.cs" t="Include" />
+              <e p="DurationLogger.cs" t="Include" />
+              <e p="LoggerExtensions.cs" t="Include" />
+            </e>
+            <e p="Manifests" t="Include">
+              <e p="IAppComponentPluginManifest.cs" t="Include" />
+              <e p="IAppHostPluginManifest.cs" t="Include" />
+              <e p="ICorePluginManifest.cs" t="Include" />
+              <e p="IPluginManifest.cs" t="Include" />
+              <e p="PluginManifestBase.cs" t="Include" />
+            </e>
+            <e p="NetFusion.Bootstrap.csproj" t="IncludeRecursive" />
+            <e p="Plugins" t="Include">
+              <e p="IPluginModule.cs" t="Include" />
+              <e p="IPluginModuleService.cs" t="Include" />
+              <e p="IPluginTypeAccessor.cs" t="Include" />
+              <e p="ModuleContext.cs" t="Include" />
+              <e p="Plugin.cs" t="Include" />
+              <e p="PluginModule.cs" t="Include" />
+              <e p="PluginType.cs" t="Include" />
+              <e p="PluginTypes.cs" t="Include" />
+            </e>
+            <e p="Validation" t="Include">
+              <e p="IValidationService.cs" t="Include" />
+              <e p="ValidationConfig.cs" t="Include" />
+              <e p="ValidationService.cs" t="Include" />
+            </e>
+            <e p="bin" t="ExcludeRecursive" />
+            <e p="obj" t="ExcludeRecursive">
+              <e p="Debug" t="Include">
+                <e p="netstandard2.0" t="Include">
+                  <e p="NetFusion.Bootstrap.AssemblyInfo.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="NetFusion.Messaging" t="IncludeRecursive">
+            <e p="Config" t="Include">
+              <e p="MessageDispatchConfig.cs" t="Include" />
+              <e p="QueryDispatchConfig.cs" t="Include" />
+            </e>
+            <e p="Core" t="Include">
+              <e p="IMessagePublisher.cs" t="Include" />
+              <e p="InProcessMessagePublisher.cs" t="Include" />
+              <e p="IntegrationTypes.cs" t="Include" />
+              <e p="MessageDispatchInfo.cs" t="Include" />
+              <e p="MessageDispatcher.cs" t="Include" />
+              <e p="MessagePublisher.cs" t="Include" />
+              <e p="MessagingExtensions.cs" t="Include" />
+              <e p="MessagingService.cs" t="Include" />
+              <e p="QueryDispatchInfo.cs" t="Include" />
+              <e p="QueryDispatcher.cs" t="Include" />
+            </e>
+            <e p="Enrichers" t="Include">
+              <e p="CorrelationEnricher.cs" t="Include" />
+              <e p="DateReceivedEnricher.cs" t="Include" />
+              <e p="EnricherException.cs" t="Include" />
+              <e p="IMessageEnricher.cs" t="Include" />
+              <e p="MessageEnricher.cs" t="Include" />
+            </e>
+            <e p="Filters" t="Include">
+              <e p="ExpressionQueryFilter.cs" t="Include" />
+              <e p="IPostQueryFilter.cs" t="Include" />
+              <e p="IPreQueryFilter.cs" t="Include" />
+              <e p="IQueryFilter.cs" t="Include" />
+              <e p="QueryFilterException.cs" t="Include" />
+              <e p="ResultMapQueryFilter.cs" t="Include" />
+            </e>
+            <e p="IMessageConsumer.cs" t="Include" />
+            <e p="IMessagingService.cs" t="Include" />
+            <e p="IQueryConsumer.cs" t="Include" />
+            <e p="InProcessHandlerAttribute.cs" t="Include" />
+            <e p="IncludeDerivedMessagesAttribute.cs" t="Include" />
+            <e p="MessageDispatchException.cs" t="Include" />
+            <e p="MessagingLogEvents.cs" t="Include" />
+            <e p="MessagingManifest.cs" t="Include" />
+            <e p="Modules" t="Include">
+              <e p="IMessageDispatchModule.cs" t="Include" />
+              <e p="IQueryDispatchModule.cs" t="Include" />
+              <e p="IQueryFilterModule.cs" t="Include" />
+              <e p="MessageDispatchModule.cs" t="Include" />
+              <e p="MessageEnricherModule.cs" t="Include" />
+              <e p="MessagingModule.cs" t="Include" />
+              <e p="QueryDispatchModule.cs" t="Include" />
+              <e p="QueryFilterModule.cs" t="Include" />
+            </e>
+            <e p="NetFusion.Messaging.csproj" t="IncludeRecursive" />
+            <e p="PluginTypeAccessorExtensions.cs" t="Include" />
+            <e p="PublisherException.cs" t="Include" />
+            <e p="QueryDispatchException.cs" t="Include" />
+            <e p="Rules" t="Include">
+              <e p="ApplyDispatchRuleAttribute.cs" t="Include" />
+              <e p="RuleApplyTypes.cs" t="Include" />
+            </e>
+            <e p="bin" t="ExcludeRecursive" />
+            <e p="obj" t="ExcludeRecursive">
+              <e p="Debug" t="Include">
+                <e p="netstandard2.0" t="Include">
+                  <e p="NetFusion.Messaging.AssemblyInfo.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="NetFusion.Messaging.Types" t="IncludeRecursive">
+            <e p="AttributedReadModel.cs" t="Include" />
+            <e p="Command.cs" t="Include" />
+            <e p="DomainEvent.cs" t="Include" />
+            <e p="ICommand.cs" t="Include" />
+            <e p="IDomainEvent.cs" t="Include" />
+            <e p="IEventSource.cs" t="Include" />
+            <e p="IMessage.cs" t="Include" />
+            <e p="IMessageDispatchRule.cs" t="Include" />
+            <e p="IQuery.cs" t="Include" />
+            <e p="MessageDispatchRule.cs" t="Include" />
+            <e p="MessageExtensions.cs" t="Include" />
+            <e p="NetFusion.Messaging.Types.csproj" t="IncludeRecursive" />
+            <e p="Query.cs" t="Include" />
+            <e p="bin" t="ExcludeRecursive" />
+            <e p="obj" t="ExcludeRecursive">
+              <e p="Debug" t="Include">
+                <e p="netstandard2.0" t="Include">
+                  <e p="NetFusion.Messaging.Types.AssemblyInfo.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="NetFusion.Settings" t="IncludeRecursive">
+            <e p="ConfigurationSectionAttribute.cs" t="Include" />
+            <e p="IAppSettings.cs" t="Include" />
+            <e p="Modules" t="Include">
+              <e p="AppSettingsModule.cs" t="Include" />
+            </e>
+            <e p="NetFusion.Settings.csproj" t="IncludeRecursive" />
+            <e p="PluginTypeAccessorExtensions.cs" t="Include" />
+            <e p="ServiceCollectionExtensions.cs" t="Include" />
+            <e p="SettingsExtensions.cs" t="Include" />
+            <e p="SettingsManifest.cs" t="Include" />
+            <e p="bin" t="ExcludeRecursive" />
+            <e p="obj" t="ExcludeRecursive">
+              <e p="Debug" t="Include">
+                <e p="netstandard2.0" t="Include">
+                  <e p="NetFusion.Settings.AssemblyInfo.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="NetFusion.Test" t="IncludeRecursive">
+            <e p="Container" t="Include">
+              <e p="ContainerAct.cs" t="Include" />
+              <e p="ContainerArrange.cs" t="Include" />
+              <e p="ContainerAssert.cs" t="Include" />
+              <e p="ContainerFixture.cs" t="Include" />
+            </e>
+            <e p="Messaging" t="Include">
+              <e p="MockMessagingService.cs" t="Include" />
+            </e>
+            <e p="NetFusion.Test.csproj" t="IncludeRecursive" />
+            <e p="Plugins" t="Include">
+              <e p="MockAppComponentPlugin.cs" t="Include" />
+              <e p="MockAppHostPlugin.cs" t="Include" />
+              <e p="MockCorePlugin.cs" t="Include" />
+              <e p="MockPlugin.cs" t="Include" />
+              <e p="TestTypeResolver.cs" t="Include" />
+            </e>
+            <e p="bin" t="ExcludeRecursive" />
+            <e p="obj" t="ExcludeRecursive">
+              <e p="Debug" t="Include">
+                <e p="netstandard2.0" t="Include">
+                  <e p="NetFusion.Test.AssemblyInfo.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+        </e>
+        <e p="Web" t="Include">
+          <e p="NetFusion.Rest.Client" t="IncludeRecursive">
+            <e p="ApiRequest.cs" t="Include" />
+            <e p="ApiResponse.cs" t="Include" />
+            <e p="Core" t="Include">
+              <e p="IServiceEntryApiProvider.cs" t="Include" />
+              <e p="JsonMediaTypeSerializer.cs" t="Include" />
+              <e p="RequestClient.cs" t="Include" />
+              <e p="RequestClientService.cs" t="Include" />
+            </e>
+            <e p="IRequestClient.cs" t="Include" />
+            <e p="IRequestClientService.cs" t="Include" />
+            <e p="NetFusion.Rest.Client.csproj" t="IncludeRecursive" />
+            <e p="RequestClientBuilder.cs" t="Include" />
+            <e p="Resources" t="Include">
+              <e p="HalEntryPointResource.cs" t="Include" />
+              <e p="HalResource.cs" t="Include" />
+              <e p="Link.cs" t="Include" />
+              <e p="LinkExtensions.cs" t="Include" />
+            </e>
+            <e p="Settings" t="Include">
+              <e p="HeaderValue.cs" t="Include" />
+              <e p="IMediaTypeSerializer.cs" t="Include" />
+              <e p="IRequestSettings.cs" t="Include" />
+              <e p="QueryString.cs" t="Include" />
+              <e p="RequestHeaders.cs" t="Include" />
+              <e p="RequestSettings.cs" t="Include" />
+              <e p="RequestSettingsExtensions.cs" t="Include" />
+            </e>
+            <e p="bin" t="ExcludeRecursive" />
+            <e p="obj" t="ExcludeRecursive">
+              <e p="Debug" t="Include">
+                <e p="netstandard2.0" t="Include">
+                  <e p="NetFusion.Rest.Client.AssemblyInfo.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="NetFusion.Rest.Common" t="IncludeRecursive">
+            <e p="HttpHeaderNames.cs" t="Include" />
+            <e p="InternetMediaTypes.cs" t="Include" />
+            <e p="NetFusion.Rest.Common.csproj" t="IncludeRecursive" />
+            <e p="RelationTypes.cs" t="Include" />
+            <e p="bin" t="ExcludeRecursive" />
+            <e p="obj" t="ExcludeRecursive">
+              <e p="Debug" t="Include">
+                <e p="netstandard2.0" t="Include">
+                  <e p="NetFusion.Rest.Common.AssemblyInfo.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="NetFusion.Rest.Resources" t="IncludeRecursive">
+            <e p="Doc" t="Include">
+              <e p="DocActionAttribute.cs" t="Include" />
+              <e p="DocEmbeddedResourceAttribute.cs" t="Include" />
+              <e p="DocPropertyAttribute.cs" t="Include" />
+              <e p="DocResourceAttribute.cs" t="Include" />
+            </e>
+            <e p="Hal" t="Include">
+              <e p="HalEntryPointResource.cs" t="Include" />
+              <e p="HalResource.cs" t="Include" />
+              <e p="HalSecondaryService.cs" t="Include" />
+              <e p="IHalResource.cs" t="Include" />
+            </e>
+            <e p="ILinkedResource.cs" t="Include" />
+            <e p="IResource.cs" t="Include" />
+            <e p="IResourceCollection.cs" t="Include" />
+            <e p="Link.cs" t="Include" />
+            <e p="NamedResourceAttribute.cs" t="Include" />
+            <e p="NetFusion.Rest.Resources.csproj" t="IncludeRecursive" />
+            <e p="ResourceCollection.cs" t="Include" />
+            <e p="bin" t="ExcludeRecursive" />
+            <e p="obj" t="ExcludeRecursive">
+              <e p="Debug" t="Include">
+                <e p="netstandard2.0" t="Include">
+                  <e p="NetFusion.Rest.Resources.AssemblyInfo.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="NetFusion.Rest.Server" t="IncludeRecursive">
+            <e p="Actions" t="Include">
+              <e p="ActionExtensions.cs" t="Include" />
+              <e p="ActionLink.cs" t="Include" />
+              <e p="ActionMethodInfo.cs" t="Include" />
+              <e p="ActionParamValue.cs" t="Include" />
+              <e p="ActionResourceLink.cs" t="Include" />
+              <e p="ActionSelfSelector.cs" t="Include" />
+              <e p="ActionTemplateLink.cs" t="Include" />
+              <e p="ActionTemplateSelector.cs" t="Include" />
+              <e p="ActionUpdateSelector.cs" t="Include" />
+              <e p="ActionUrlLink.cs" t="Include" />
+              <e p="ActionUrlSelector.cs" t="Include" />
+            </e>
+            <e p="Hal" t="Include">
+              <e p="HalEmbeddedResourceContext.cs" t="Include" />
+              <e p="HalFormatter.cs" t="Include" />
+              <e p="HalMvcOptionExtensions.cs" t="Include" />
+              <e p="HalResourceMap.cs" t="Include" />
+              <e p="HalResourceMeta.cs" t="Include" />
+              <e p="HalResourceProvider.cs" t="Include" />
+              <e p="IHalEmbededResourceContext.cs" t="Include" />
+            </e>
+            <e p="Mappings" t="Include">
+              <e p="IResourceMap.cs" t="Include" />
+              <e p="IResourceProvider.cs" t="Include" />
+              <e p="MediaTypeEntry.cs" t="Include" />
+              <e p="ResourceContext.cs" t="Include" />
+              <e p="ResourceMap.cs" t="Include" />
+              <e p="ResourceProvider.cs" t="Include" />
+            </e>
+            <e p="Meta" t="Include">
+              <e p="IResourceMeta.cs" t="Include" />
+              <e p="LinkDescriptor.cs" t="Include" />
+              <e p="ResourceLinkMeta.cs" t="Include" />
+              <e p="ResourceMeta.cs" t="Include" />
+            </e>
+            <e p="Modules" t="Include">
+              <e p="EnvironmentSettings.cs" t="Include" />
+              <e p="IResourceMediaModule.cs" t="Include" />
+              <e p="IRestModule.cs" t="Include" />
+              <e p="PluginTypeAccessorExtensions.cs" t="Include" />
+              <e p="ResourceMediaModule.cs" t="Include" />
+              <e p="RestApiConfig.cs" t="Include" />
+              <e p="RestModule.cs" t="Include" />
+            </e>
+            <e p="NetFusion.Rest.Server.csproj" t="IncludeRecursive" />
+            <e p="Resources" t="Include">
+              <e p="ResourceExtensions.cs" t="Include" />
+              <e p="ResourceTypeAttribute.cs" t="Include" />
+            </e>
+            <e p="RestServerManifest.cs" t="Include" />
+            <e p="bin" t="ExcludeRecursive" />
+            <e p="obj" t="ExcludeRecursive">
+              <e p="Debug" t="Include">
+                <e p="netstandard2.0" t="Include">
+                  <e p="NetFusion.Rest.Server.AssemblyInfo.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="NetFusion.Web.Mvc" t="IncludeRecursive">
+            <e p="Composite" t="Include">
+              <e p="BuilderExtensions.cs" t="Include" />
+              <e p="Core" t="Include">
+                <e p="CompositeService.cs" t="Include" />
+              </e>
+              <e p="ICompositeService.cs" t="Include" />
+              <e p="Models" t="Include">
+                <e p="CompositeStructure.cs" t="Include" />
+                <e p="KnownTypeDefinition.cs" t="Include" />
+                <e p="PluginDetails.cs" t="Include" />
+                <e p="PluginModule.cs" t="Include" />
+                <e p="PluginSummary.cs" t="Include" />
+                <e p="RegisteredService.cs" t="Include" />
+              </e>
+              <e p="Modules" t="Include">
+                <e p="CompositeModule.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Extensions" t="Include">
+              <e p="HttpContextExtensions.cs" t="Include" />
+            </e>
+            <e p="Metadata" t="Include">
+              <e p="ActionMetaAttribute.cs" t="Include" />
+              <e p="BuilderExtensions.cs" t="Include" />
+              <e p="Core" t="Include">
+                <e p="ApiActionMeta.cs" t="Include" />
+                <e p="ApiExplorerConvention.cs" t="Include" />
+                <e p="ApiGroupMeta.cs" t="Include" />
+                <e p="ApiMetadataService.cs" t="Include" />
+                <e p="ApiParameterMeta.cs" t="Include" />
+                <e p="MetadataMap.cs" t="Include" />
+              </e>
+              <e p="GroupMetaAttribute.cs" t="Include" />
+              <e p="IApiMetadataService.cs" t="Include" />
+              <e p="Models" t="Include">
+                <e p="ActionInfo.cs" t="Include" />
+                <e p="ApiServiceInfo.cs" t="Include" />
+                <e p="GroupInfo.cs" t="Include" />
+                <e p="ParameterInfo.cs" t="Include" />
+              </e>
+              <e p="Modules" t="Include">
+                <e p="ApiMetadataModule.cs" t="Include" />
+              </e>
+            </e>
+            <e p="NetFusion.Web.Mvc.csproj" t="IncludeRecursive" />
+            <e p="WebMvcConfig.cs" t="Include" />
+            <e p="WebMvcManifest.cs" t="Include" />
+            <e p="bin" t="ExcludeRecursive" />
+            <e p="obj" t="ExcludeRecursive">
+              <e p="Debug" t="Include">
+                <e p="netstandard2.0" t="Include">
+                  <e p="NetFusion.Web.Mvc.AssemblyInfo.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="test" t="Include">
+        <e p="CommonTests" t="IncludeRecursive">
+          <e p="Base" t="Include">
+            <e p="Entity" t="Include">
+              <e p="AttributedEntityTests.cs" t="Include" />
+              <e p="DynamicEntity.cs" t="Include" />
+            </e>
+            <e p="Validation" t="Include">
+              <e p="ValidationTests.cs" t="Include" />
+            </e>
+          </e>
+          <e p="CommonTests.csproj" t="IncludeRecursive" />
+          <e p="Extensions" t="Include">
+            <e p="Collections" t="Include">
+              <e p="EnumerableTests.cs" t="Include" />
+              <e p="SetTests.cs" t="Include" />
+            </e>
+            <e p="ObjectTests.cs" t="Include" />
+            <e p="Reflection" t="Include">
+              <e p="AsyncTests.cs" t="Include" />
+              <e p="AttributeTests.cs" t="Include" />
+              <e p="CreationTests.cs" t="Include" />
+              <e p="GenericTypeTests.cs" t="Include" />
+              <e p="QueryReflectionTests.cs" t="Include" />
+            </e>
+            <e p="Tasks" t="Include">
+              <e p="TaskTests.cs" t="Include" />
+            </e>
+          </e>
+          <e p="bin" t="ExcludeRecursive" />
+          <e p="obj" t="ExcludeRecursive">
+            <e p="Debug" t="Include">
+              <e p="netcoreapp2.0" t="Include">
+                <e p="CommonTests.AssemblyInfo.cs" t="Include" />
+                <e p="CommonTests.Program.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+        <e p="CoreTests" t="IncludeRecursive">
+          <e p="Bootstrap" t="Include">
+            <e p="CompositionTests.cs" t="Include" />
+            <e p="ConfigurationTests.cs" t="Include" />
+            <e p="ContainerTests.cs" t="Include" />
+            <e p="Mocks" t="Include">
+              <e p="MockHostTypes.cs" t="Include" />
+              <e p="MockKnownTypes.cs" t="Include" />
+              <e p="MockPluginConfig.cs" t="Include" />
+              <e p="MockPluginModules.cs" t="Include" />
+            </e>
+            <e p="ReflectionExtensionsTests.cs" t="Include" />
+            <e p="RegistrationTests.cs" t="Include" />
+          </e>
+          <e p="CoreTests.csproj" t="IncludeRecursive" />
+          <e p="Domain" t="Include">
+            <e p="EntityEvaluationExtensions.cs" t="Include" />
+            <e p="EntityEvaluationTests.cs" t="Include" />
+            <e p="EntitySerializationTests.cs" t="Include" />
+          </e>
+          <e p="Messaging" t="Include">
+            <e p="AsyncDomainEventTests.cs" t="Include" />
+            <e p="CommandDispatchTests.cs" t="Include" />
+            <e p="ConfigurationTests.cs" t="Include" />
+            <e p="DiscoveryTests.cs" t="Include" />
+            <e p="DispatchEvaluationTests.cs" t="Include" />
+            <e p="DispatchRuleTests.cs" t="Include" />
+            <e p="DomainEventDispatchTests.cs" t="Include" />
+            <e p="Mocks" t="Include">
+              <e p="MockConsumer.cs" t="Include" />
+              <e p="MockDomainEvent.cs" t="Include" />
+              <e p="TestAsyncExtensions.cs" t="Include" />
+              <e p="TestCommandSetupExtensions.cs" t="Include" />
+              <e p="TestEvalSetupExtensions.cs" t="Include" />
+              <e p="TestRuleSetupExtensions.cs" t="Include" />
+            </e>
+            <e p="TestSetupExtensions.cs" t="Include" />
+          </e>
+          <e p="Queries" t="Include">
+            <e p="DispatchTests.cs" t="Include" />
+            <e p="Mocks" t="Include">
+              <e p="Consumers.cs" t="Include" />
+              <e p="Queries.cs" t="Include" />
+              <e p="QueryFilters.cs" t="Include" />
+            </e>
+            <e p="TestFixtureExtensions.cs" t="Include" />
+          </e>
+          <e p="Settings" t="Include">
+            <e p="Mocks" t="Include">
+              <e p="MockSetttings.cs" t="Include" />
+            </e>
+            <e p="SettingBootstrapTests.cs" t="Include" />
+            <e p="SettingPathTests.cs" t="Include" />
+            <e p="SettingTestExtensions.cs" t="Include" />
+            <e p="SettingTests.cs" t="Include" />
+          </e>
+          <e p="Testing" t="Include">
+            <e p="MockMessagingServiceTests.cs" t="Include" />
+            <e p="TypeCatalogTests.cs" t="Include" />
+          </e>
+          <e p="bin" t="ExcludeRecursive" />
+          <e p="obj" t="ExcludeRecursive">
+            <e p="Debug" t="Include">
+              <e p="netcoreapp2.0" t="Include">
+                <e p="CoreTests.AssemblyInfo.cs" t="Include" />
+                <e p="CoreTests.Program.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="xunit.runner.json" t="Include" />
+        </e>
+        <e p="WebTests" t="IncludeRecursive">
+          <e p="Rest" t="Include">
+            <e p="ClientRequests" t="Include">
+              <e p="Client" t="Include">
+                <e p="AddressModel.cs" t="Include" />
+                <e p="CustomerModel.cs" t="Include" />
+              </e>
+              <e p="LinkClientTests.cs" t="Include" />
+              <e p="MockUnitTestService.cs" t="Include" />
+              <e p="RequestSettingsTests.cs" t="Include" />
+              <e p="ResourceTests.cs" t="Include" />
+              <e p="ResultClientTests.cs" t="Include" />
+              <e p="Server" t="Include">
+                <e p="AddressResource.cs" t="Include" />
+                <e p="CustomerController.cs" t="Include" />
+                <e p="CustomerResource.cs" t="Include" />
+                <e p="CustomerResourceMap.cs" t="Include" />
+                <e p="ErrorController.cs" t="Include" />
+              </e>
+            </e>
+            <e p="ClientResourceTestExtensions.cs" t="Include" />
+            <e p="LinkGeneration" t="Include">
+              <e p="Client" t="Include">
+                <e p="LinkedResourceModel.cs" t="Include" />
+                <e p="LinkedViewResourceModel.cs" t="Include" />
+              </e>
+              <e p="LinkConventionTests.cs" t="Include" />
+              <e p="LinkCopyGenerationTests.cs" t="Include" />
+              <e p="LinkGenerationTests.cs" t="Include" />
+              <e p="Server" t="Include">
+                <e p="ConventionBasedController.cs" t="Include" />
+                <e p="ConventionBasedResourceMap.cs" t="Include" />
+                <e p="LinkedResource.cs" t="Include" />
+                <e p="LinkedResource2.cs" t="Include" />
+                <e p="LinkedResourceController.cs" t="Include" />
+                <e p="LinkedResourceMap.cs" t="Include" />
+                <e p="LinkedViewResource.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Setup" t="Include">
+              <e p="IMockedService.cs" t="Include" />
+              <e p="NullUnitTestService.cs" t="Include" />
+              <e p="TestAppContainer.cs" t="Include" />
+              <e p="TestClientExtensions.cs" t="Include" />
+              <e p="TestStartup.cs" t="Include" />
+            </e>
+          </e>
+          <e p="WebTests.csproj" t="IncludeRecursive" />
+          <e p="bin" t="ExcludeRecursive" />
+          <e p="obj" t="ExcludeRecursive">
+            <e p="Debug" t="Include">
+              <e p="netcoreapp2.0" t="Include">
+                <e p="WebTests.AssemblyInfo.cs" t="Include" />
+                <e p="WebTests.Program.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+      </e>
+    </e>
+  </component>
+</project>

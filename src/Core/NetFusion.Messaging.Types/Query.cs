@@ -38,7 +38,7 @@ namespace NetFusion.Messaging.Types
     /// <typeparam name="TResult">The type of the result expected by the query.</typeparam>
     public abstract class Query<TResult> : Query, IQuery<TResult>
     {
-        public Query()
+        protected Query()
         {
             base.Result = default(TResult);
         }

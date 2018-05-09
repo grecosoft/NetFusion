@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
     <LangVersion>7</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\Common\NetFusion.Base\NetFusion.Base.csproj" />
     <ProjectReference Include="..\..\src\Common\NetFusion.Roslyn\NetFusion.Roslyn.csproj" />
@@ -14,7 +12,6 @@
     <ProjectReference Include="..\..\src\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Test\NetFusion.Test.csproj" />
   </ItemGroup>
-  
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
     <PackageReference Include="xunit" Version="2.3.1" />
@@ -25,9 +22,7 @@
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.1" />
   </ItemGroup>
-
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
-
 </Project>

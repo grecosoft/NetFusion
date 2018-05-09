@@ -11,20 +11,18 @@ namespace NetFusion.Test.Container
     /// </summary>
     public class ContainerAct
     {
-        private AppContainer _container;
-        private bool _actedOn = false;
+        private readonly AppContainer _container;
+        private readonly ContainerFixture _fixture;
+        private bool _actedOn;
         private Exception _resultingException;
-        private IServiceProvider _services;
-        private ContainerFixture _fixture;
-
 
         public ContainerAct(ContainerFixture fixture)
         {
-            _fixture = fixture;
+            _fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
             _container = fixture.ContainerUnderTest;
         }
 
-        public IServiceProvider TestServiceScope => _services;
+        public IServiceProvider TestServiceScope { get; private set; }
 
         /// <summary>
         /// Allows an unit-test to act on the application container under test.
@@ -53,6 +51,11 @@ namespace NetFusion.Test.Container
             return this;
         }
 
+        /// <summary>
+        /// Builds and starts the container.  This can be used when testing an expected exception
+        /// thrown when the container is built and/or started.
+        /// </summary>
+        /// <returns>Self reference.</returns>
         public ContainerAct BuildAndStartContainer()
         {
             if (_actedOn)
@@ -73,6 +76,11 @@ namespace NetFusion.Test.Container
             return this;
         }
 
+        /// <summary>
+        /// Allows an application container that has not been built or started to be acted on.
+        /// </summary>
+        /// <param name="act">The method passed to act on the created container.</param>
+        /// <returns>Self reference.</returns>
         public ContainerAct OnNonInitContainer(Action<IAppContainer> act)
         {
             if (_actedOn)
@@ -107,9 +115,9 @@ namespace NetFusion.Test.Container
             }
 
             _actedOn = true;
-            _fixture.InitContainer();
             try
             {
+                _fixture.InitContainer();
                 await act(_container);
             }
             catch (Exception ex)
@@ -120,6 +128,12 @@ namespace NetFusion.Test.Container
             return this;
         }
 
+        /// <summary>
+        /// Allows an unit-test to act on the server provider created from the bootstrapped
+        /// application container.
+        /// </summary>
+        /// <param name="act">Method called to act on the service provider.</param>
+        /// <returns>Self reference for method chaining.</returns>
         public async Task<ContainerAct> OnServices(Func<IServiceProvider, Task> act)
         {
             if (_actedOn)
@@ -133,9 +147,9 @@ namespace NetFusion.Test.Container
                 _fixture.InitContainer();
 
                 var testScope = _container.CreateServiceScope();
-                _services = testScope.ServiceProvider;
+                TestServiceScope = testScope.ServiceProvider;
 
-                await act(_services);
+                await act(TestServiceScope);
             }
             catch (Exception ex)
             {
@@ -149,7 +163,6 @@ namespace NetFusion.Test.Container
         /// After acting on the container under test, the unit-test can call methods on this
         /// property to assert its state.
         /// </summary>
-        public ContainerAssert Assert => new ContainerAssert(_container, _services, _resultingException);
-
+        public ContainerAssert Assert => new ContainerAssert(_container, TestServiceScope, _resultingException);
     }
 }

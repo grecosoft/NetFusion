@@ -31,14 +31,14 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Specified Configuration associated with Plug-in")]
         public void SpecifiedConfiguration_AssociatedWithPlugin()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture => {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>()
-                        .AddPluginType<MockPluginConfig>();
-                })).Container(c => c.WithConfig(new MockPluginConfig()))
+            ContainerFixture.Test(fixture => {
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>()
+                            .AddPluginType<MockPluginConfig>();
+                    }).Container(c => c.WithConfig(new MockPluginConfig()))
                 
-                .Assert
+                    .Assert
                     .CompositeApp(ca =>
                     {
                         ca.AppHostPlugin.PluginConfigs.Should().HaveCount(1);
@@ -48,7 +48,7 @@ namespace CoreTests.Bootstrap
                         p.PluginConfigs.Should().HaveCount(1);
                         p.PluginConfigs.First().Should().BeOfType<MockPluginConfig>();
                     });
-            }));              
+            });              
         }
 
         /// <summary>
@@ -58,18 +58,18 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Plug-in Developer can access Configuration from Module")]
         public void PluginDeveloper_CanAccess_ConfigurationFromModule()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture => {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>()
-                        .AddPluginType<MockPluginOneModule>()
-                        .AddPluginType<MockPluginConfig>();
-                }))
-                .Container(c => c.WithConfig(new MockPluginConfig()))
-                .Assert.PluginModule<MockPluginOneModule>(m => {
+            ContainerFixture.Test(fixture => {
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>()
+                            .AddPluginType<MockPluginOneModule>()
+                            .AddPluginType<MockPluginConfig>();
+                    })
+                    .Container(c => c.WithConfig(new MockPluginConfig()))
+                    .Assert.PluginModule<MockPluginOneModule>(m => {
                         m.Context.Plugin.GetConfig<MockPluginConfig>().Should().NotBeNull();
-                });
-            }));
+                    });
+            });
         }
 
         /// <summary>
@@ -78,44 +78,44 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Plug-in Configuration can be initialized using Factory")]
         public void PluginConfiguration_CanBeInitialized_UsingFactory()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture => {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>()
-                        .AddPluginType<MockPluginConfig>();
-                }))
-                .Container(c => {
-                    c.WithConfig<MockPluginConfig>((confg) => confg.ConfigValue = "TEST_VALUE");
-                })     
-                .Assert.CompositeApp(ca => {
-                    ca.AppHostPlugin.PluginConfigs.Should().HaveCount(1);
+            ContainerFixture.Test(fixture => {
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>()
+                            .AddPluginType<MockPluginConfig>();
+                    })
+                    .Container(c => {
+                        c.WithConfig<MockPluginConfig>((confg) => confg.ConfigValue = "TEST_VALUE");
+                    })     
+                    .Assert.CompositeApp(ca => {
+                        ca.AppHostPlugin.PluginConfigs.Should().HaveCount(1);
 
-                    var config = ca.AppHostPlugin.PluginConfigs.First();
+                        var config = ca.AppHostPlugin.PluginConfigs.First();
 
-                    config.Should().BeOfType<MockPluginConfig>();
-                    (config as MockPluginConfig).ConfigValue.Should().Be("TEST_VALUE");
-                });               
-            }));               
+                        config.Should().BeOfType<MockPluginConfig>();
+                        (config as MockPluginConfig).ConfigValue.Should().Be("TEST_VALUE");
+                    });               
+            });               
         }
         
         [Fact(DisplayName = "After Container built Configuration cannot be Added")]
         public void AfterContainerBuilt_ConfigurationCannotBeAdded()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture => {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>()
-                        .AddPluginType<MockPluginConfig>();
-                }))
-                .Container(c => c.WithConfig<MockPluginConfig>())
-                .Act.OnContainer(c =>
-                {
-                    c.WithConfig<MockPluginConfig>();
-                })
-                .Assert.Exception<ContainerException>(e => {
-                    e.Message.Contains("Container has already been built.");
-                });
-            }));
+            ContainerFixture.Test(fixture => {
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>()
+                            .AddPluginType<MockPluginConfig>();
+                    })
+                    .Container(c => c.WithConfig<MockPluginConfig>())
+                    .Act.OnContainer(c =>
+                    {
+                        c.WithConfig<MockPluginConfig>();
+                    })
+                    .Assert.Exception<ContainerException>(e => {
+                        e.Message.Contains("Container has already been built.");
+                    });
+            });
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace CoreTests.Bootstrap
             Environment.SetEnvironmentVariable("NETFUSION_ENVIRONMENT", "UnitTest");
             ConfigurationBuilder configBuilder = new ConfigurationBuilder();
 
-            configBuilder.AddDefaultAppSettings();
+            configBuilder.AddAppSettings();
 
             configBuilder.Sources.Should().HaveCount(3);
             GetFileAtPosition(configBuilder, 0).Should().Be("appsettings.json");
@@ -178,7 +178,7 @@ namespace CoreTests.Bootstrap
             string expectedDirectoryName = Directory.GetCurrentDirectory();
 
             ConfigurationBuilder configBuilder = new ConfigurationBuilder();
-            configBuilder.AddDefaultAppSettings();
+            configBuilder.AddAppSettings();
 
             configBuilder.Properties.Keys.Should().Contain("FileProvider");
             var fileProvider = configBuilder.Properties["FileProvider"].Should().BeOfType<PhysicalFileProvider>().Subject;
@@ -198,7 +198,7 @@ namespace CoreTests.Bootstrap
 
             var configBuilder = new ConfigurationBuilder();
             configBuilder.AddEnvironmentVariables();
-            configBuilder.AddDefaultAppSettings();
+            configBuilder.AddAppSettings();
 
             var config = configBuilder.Build();
             config["TEST_ENV_VAR"].Should().NotBeNull();

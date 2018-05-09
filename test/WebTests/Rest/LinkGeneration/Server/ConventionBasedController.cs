@@ -1,13 +1,14 @@
-﻿using InfrastructureTests.Web.Rest.Setup;
-using Microsoft.AspNetCore.Mvc;
-using NetFusion.Rest.Resources;
-using NetFusion.Rest.Server.Resources;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InfrastructureTests.Web.Rest.Setup;
+using Microsoft.AspNetCore.Mvc;
+using NetFusion.Rest.Resources;
+using NetFusion.Rest.Server.Resources;
+using WebTests.Rest.Setup;
 
-namespace InfrastructureTests.Web.Rest.LinkGeneration.Server
+namespace WebTests.Rest.LinkGeneration.Server
 {
 
     [Route("api/convention/links")]
@@ -24,7 +25,7 @@ namespace InfrastructureTests.Web.Rest.LinkGeneration.Server
         public LinkedResource GetResource()
         {
             var resources = _mockedService.GetResources<LinkedResource>();
-            if (resources.Count() == 0)
+            if (!resources.Any())
             {
                 throw new InvalidOperationException(
                     "Unit test didn't provided mocked server resource.");
@@ -42,7 +43,7 @@ namespace InfrastructureTests.Web.Rest.LinkGeneration.Server
         public LinkedResource2 GetResource2()
         {
             var resources = _mockedService.GetResources<LinkedResource2>();
-            if (resources.Count() == 0)
+            if (!resources.Any())
             {
                 throw new InvalidOperationException(
                     "Unit test didn't provided mocked server resource.");
@@ -85,7 +86,7 @@ namespace InfrastructureTests.Web.Rest.LinkGeneration.Server
         public IActionResult GetResource2Self(int id)
         {
             var resources = _mockedService.GetResources<LinkedResource>();
-            if (resources.Count() == 0)
+            if (!resources.Any())
             {
                 throw new InvalidOperationException(
                     "Unit test didn't provided mocked server resource.");

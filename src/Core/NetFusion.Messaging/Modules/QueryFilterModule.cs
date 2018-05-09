@@ -37,9 +37,7 @@ namespace NetFusion.Messaging.Modules
         public override void Log(IDictionary<string, object> moduleLog)
         {
             moduleLog["Query:Filters"] = Context.AllPluginTypes
-               .Where(pt => {
-                   return pt.IsConcreteTypeDerivedFrom<IQueryFilter>();
-               })
+               .Where(pt => pt.IsConcreteTypeDerivedFrom<IQueryFilter>())
                .Select(ft => new
                {
                    FilterType = ft.AssemblyQualifiedName,

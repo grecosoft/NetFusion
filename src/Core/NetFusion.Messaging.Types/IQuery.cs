@@ -29,7 +29,7 @@ namespace NetFusion.Messaging.Types
     /// Represents a query request that can be dispatched to a consumer.
     /// </summary>
     /// <typeparam name="TResult">The type of the result expected by the query.</typeparam>
-    public interface IQuery<TResult> : IQuery
+    public interface IQuery<out TResult> : IQuery
     {
         /// <summary>
         /// The result of the query's execution.

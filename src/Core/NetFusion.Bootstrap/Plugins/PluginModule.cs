@@ -16,7 +16,7 @@ namespace NetFusion.Bootstrap.Plugins
     {
         private bool _disposed = false;
 
-        public PluginModule()
+        protected PluginModule()
         {
             IsExcluded = false;
         }

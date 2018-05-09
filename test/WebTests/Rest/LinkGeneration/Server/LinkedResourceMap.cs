@@ -1,7 +1,7 @@
-﻿using NetFusion.Rest.Server.Hal;
-using System.Net.Http;
+﻿using System.Net.Http;
+using NetFusion.Rest.Server.Hal;
 
-namespace InfrastructureTests.Web.Rest.LinkGeneration.Server
+namespace WebTests.Rest.LinkGeneration.Server
 {
     /// <summary>
     /// Resource map file used by the link-generation unit-tests.
@@ -32,10 +32,10 @@ namespace InfrastructureTests.Web.Rest.LinkGeneration.Server
                     meta => meta.Url("scenario-4", (c, r) => c.GetByIdWithMultipleOptionalParams(r.Id, r.Value3, r.Value2)))
 
                 .LinkMeta<LinkedResourceController>(
-                    meta => meta.Url("scenario-5", (c, r) => c.Create((LinkedResource)null)))
+                    meta => meta.Url("scenario-5", (c, r) => c.Create(default(LinkedResource))))
 
                 .LinkMeta<LinkedResourceController>(
-                    meta => meta.Url("scenario-6", (c, r) => c.Update(r.Id, (LinkedResource)null)))
+                    meta => meta.Url("scenario-6", (c, r) => c.Update(r.Id, default(LinkedResource))))
 
 
                 .LinkMeta<LinkedResourceController>(

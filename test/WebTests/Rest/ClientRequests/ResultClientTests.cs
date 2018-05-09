@@ -1,18 +1,18 @@
-﻿using FluentAssertions;
-using InfrastructureTests.Web.Rest.LinkGeneration.Client;
-using InfrastructureTests.Web.Rest.LinkGeneration.Server;
+﻿using System;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using FluentAssertions;
 using InfrastructureTests.Web.Rest.Setup;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Test.Plugins;
-using System;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+using WebTests.Rest.LinkGeneration.Client;
+using WebTests.Rest.LinkGeneration.Server;
 using Xunit;
 
-namespace InfrastructureTests.Web.Rest.ClientRequests
+namespace WebTests.Rest.ClientRequests
 {
     public class ResultClientTests
     {

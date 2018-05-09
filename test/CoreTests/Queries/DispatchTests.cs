@@ -29,13 +29,13 @@ namespace CoreTests.Queries
         public void Query_CannotHave_MultipleConsumers()
         {
             var typesUnderTest = new[] { typeof(DuplicateConsumerOne), typeof(DuplicateConsumerTwo) };
-            var testQuery = new TestQuery();
+            new TestQuery();
 
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
                 try
                 {
-                    fixture.Arrange.Resolver((Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithDispatchConfiguredHost((Type[])typesUnderTest)));
+                    fixture.Arrange.Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest));
                     fixture.InitContainer();
                     Assert.True(false, "Expected exception not raised.");
                 }
@@ -43,13 +43,13 @@ namespace CoreTests.Queries
                 {
                     ex.InnerException.Should().NotBeNull();
                     ex.InnerException.Message.Should()
-                         .Contain("The following query types have multiple consumers");
+                        .Contain("The following query types have multiple consumers");
                 }
                 catch
                 {
                     Assert.True(false, "Unexpected exception raised.");
                 }
-            }));
+            });
         }
 
         [Fact(DisplayName = "Queries:  Query Must have Consumer")]
@@ -58,10 +58,10 @@ namespace CoreTests.Queries
             var typesUnderTest = new[] { typeof(TestConsumer) };
             var testQuery = new TestQueryNoConsumer();
 
-            return ContainerFixture.TestAsync((Func<ContainerFixture, Task>)(async fixture =>
+            return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                        .Resolver((Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithDispatchConfiguredHost((Type[])typesUnderTest)))
+                    .Resolver(r => r.WithDispatchConfiguredHost(typesUnderTest))
                     .Act.OnServices(s =>
                     {
 
@@ -69,12 +69,12 @@ namespace CoreTests.Queries
                         return dispatcher.DispatchAsync(testQuery);
                     });
 
-                testResult.Assert.Exception<QueryDispatchException>((QueryDispatchException ex) =>
+                testResult.Assert.Exception((QueryDispatchException ex) =>
                 {
                     ex.Should().NotBeNull();
                     ex.Message.Should().Contain("is not registered");
                 });
-            }));
+            });
         }
         
         [Fact(DisplayName = "Queries: Consumer Can Dispatch Query to Consumer")]

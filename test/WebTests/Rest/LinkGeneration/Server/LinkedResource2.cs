@@ -1,4 +1,4 @@
-﻿namespace InfrastructureTests.Web.Rest.LinkGeneration.Server
+﻿namespace WebTests.Rest.LinkGeneration.Server
 {
     public class LinkedResource2 : LinkedResource
     {

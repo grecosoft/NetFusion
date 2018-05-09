@@ -36,6 +36,9 @@ namespace NetFusion.Messaging.Core
             _scriptingSrv = scriptingSrv ?? throw new ArgumentNullException(nameof(scriptingSrv));
         }
 
+        // Not used by the implementation, but other plug-ins can use the integration type to apply
+        // a subset of the publishers.  i.e. In a unit-of-work, you might want to deliver domain-events
+        // inprocess before doing so for borker based events.
         public override IntegrationTypes IntegrationType => IntegrationTypes.Internal;
 
         public override Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
@@ -43,7 +46,7 @@ namespace NetFusion.Messaging.Core
             // Determine the dispatchers associated with the message.
             IEnumerable<MessageDispatchInfo> dispatchers = _messagingModule.InProcessDispatchers
                 .WhereHandlerForMessage(message.GetType())
-                .ToList();
+                .ToArray();
 
             LogMessageDespatchInfo(message, dispatchers);
 
@@ -113,10 +116,9 @@ namespace NetFusion.Messaging.Core
             return dispatchInfo.IsMatch(message);
         }
 
-        private void AssertMessageDispatchers(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
+        private static void AssertMessageDispatchers(IMessage message, MessageDispatchInfo[] dispatchers)
         {
-            var command = message as ICommand;
-            if (command == null)
+            if (!(message is ICommand command))
             {
                 return;
             }
@@ -150,7 +152,7 @@ namespace NetFusion.Messaging.Core
             return dispatcher.Dispatch(message, consumer, cancellationToken);
         }
 
-        private MessageDispatchException GetDispatchException(TaskListItem<MessageDispatchInfo> taskItem)
+        private static MessageDispatchException GetDispatchException(TaskListItem<MessageDispatchInfo> taskItem)
         {
             var sourceEx = taskItem.Task.Exception.InnerException;
 
@@ -182,7 +184,7 @@ namespace NetFusion.Messaging.Core
                 });
         }
 
-        private object GetDispatchLogDetails(IEnumerable<MessageDispatchInfo> dispatchers)
+        private static object GetDispatchLogDetails(IEnumerable<MessageDispatchInfo> dispatchers)
         {
             return dispatchers.Select(d => new {
                 d.MessageType.FullName,

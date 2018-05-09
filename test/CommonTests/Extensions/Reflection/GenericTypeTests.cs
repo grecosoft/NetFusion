@@ -52,7 +52,8 @@ namespace CommonTests.Extensions.Reflection
         {
             var closedTypes = new[] { typeof(Dictionary<string, int>), typeof(List<int>) };
             var matchingTypes = closedTypes.WhereHavingClosedInterfaceTypeOf(
-                typeof(IDictionary<,>), typeof(string), typeof(object));
+                typeof(IDictionary<,>), typeof(string), typeof(object))
+                .ToArray();
 
             matchingTypes.Should().HaveCount(1);
             var genericInfo = matchingTypes.First();

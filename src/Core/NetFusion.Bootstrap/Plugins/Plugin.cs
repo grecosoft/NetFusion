@@ -67,7 +67,8 @@ namespace NetFusion.Bootstrap.Plugins
         /// Returns modules that are not marked as being executed.  This is for use during development 
         /// to disable a given plug-in module that is currently being developed and not complete.
         /// </summary>
-        public IPluginModule[] IncludedModules => Modules.Where(m => !m.IsExcluded).ToArray();
+        public IEnumerable<IPluginModule> IncludedModules => 
+            Modules.Where(m => !m.IsExcluded).ToArray();
 
         /// <summary>
         /// The configurations associated with the plug-in.
@@ -155,13 +156,20 @@ namespace NetFusion.Bootstrap.Plugins
 
         private void SetPluginType(IPluginManifest manifest)
         {
-            if (manifest is IAppHostPluginManifest)
-                PluginType = Plugins.PluginTypes.AppHostPlugin;
-            else if (manifest is IAppComponentPluginManifest)
-                PluginType = Plugins.PluginTypes.AppComponentPlugin;
-            else if (manifest is ICorePluginManifest)
-                PluginType = Plugins.PluginTypes.CorePlugin;
-            else throw new InvalidOperationException($"Invalided manifest type of: {manifest.GetType()}");
+            switch (manifest)
+            {
+                case IAppHostPluginManifest _:
+                    PluginType = Plugins.PluginTypes.AppHostPlugin;
+                    break;
+                case IAppComponentPluginManifest _:
+                    PluginType = Plugins.PluginTypes.AppComponentPlugin;
+                    break;
+                case ICorePluginManifest _:
+                    PluginType = Plugins.PluginTypes.CorePlugin;
+                    break;
+                default:
+                    throw new InvalidOperationException($"Invalided manifest type of: {manifest.GetType()}");
+            }
         }
     }
 }

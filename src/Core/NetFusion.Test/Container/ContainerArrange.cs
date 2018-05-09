@@ -13,7 +13,7 @@ namespace NetFusion.Test.Container
     /// </summary>
     public class ContainerArrange
     {
-        private ContainerFixture _fixture;
+        private readonly ContainerFixture _fixture;
 
         public ContainerArrange(ContainerFixture fixture)
         {
@@ -61,14 +61,16 @@ namespace NetFusion.Test.Container
             arrange(_fixture.ContainerUnderTest);
             return this;
         }
- 
+    
         /// <summary>
-        /// Allows the unit-test to act on the arranged container to assert its correct behavior.  
+        /// Allows the unit-test to act on the test-fixture under test.
         /// </summary>
         public ContainerAct Act => new ContainerAct(_fixture);
+    
+        /// <summary>
+        /// Allows the unit-test to assert on the state of the acted on test-fixture.
+        /// </summary>
         public ContainerAssert Assert => new ContainerAssert(_fixture);
-
-
     }
 }
 

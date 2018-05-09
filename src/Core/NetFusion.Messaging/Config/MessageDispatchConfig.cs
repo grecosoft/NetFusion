@@ -14,24 +14,27 @@ namespace NetFusion.Messaging.Config
     {
         // The list of message publishers that can handle message delivery.  
         // The default publisher dispatches messages to in-process event handlers.
-        private List<Type> _messagePublisherTypes = new List<Type> { typeof(InProcessMessagePublisher) };
-        private List<Type> _messageEnrichers = new List<Type> { };
+        private readonly List<Type> _messagePublisherTypes = new List<Type> { typeof(InProcessMessagePublisher) };
+        private readonly List<Type> _messageEnrichers = new List<Type>();
 
         public MessageDispatchConfig()
         {
+            PublisherTypes = _messagePublisherTypes.AsReadOnly();
+            EnricherTypes = _messageEnrichers.AsReadOnly();
+            
             AddMessageEnricher<CorrelationEnricher>();
-            AddMessageEnricher<DatePublishedEnricher>();
+            AddMessageEnricher<DateReceivedEnricher>();
         }
 
         /// <summary>
         /// Publishers that will be called to deliver published messages.
         /// </summary>
-        public Type[] PublisherTypes => _messagePublisherTypes.ToArray();
+        public IReadOnlyCollection<Type> PublisherTypes { get; }
 
         /// <summary>
         /// Enrichers that will be called before the message is published.
         /// </summary>
-        public Type[] EnricherTypes => _messageEnrichers.ToArray(); 
+        public IReadOnlyCollection<Type> EnricherTypes { get; } 
 
         /// <summary>
         /// Clears any registered default message publishers.

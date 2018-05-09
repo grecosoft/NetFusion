@@ -31,6 +31,20 @@ namespace NetFusion.Settings
         }
 
         /// <summary>
+        /// Provided a IAppSetting derived instance,  determines the section path by recursively 
+        /// walking the type hierarchy and finding all ConfigurationSection attributes and 
+        /// concatenating the section name associated with each attribute.
+        /// </summary>
+        /// <param name="appSettings">The application setting to determine section path.</param>
+        /// <returns>The section path that can be used to load the settings from the registered providers.</returns>
+        public static string GetSectionPath(this IAppSettings appSettings)
+        {
+            if (appSettings == null) throw new ArgumentNullException(nameof(appSettings));
+
+            return GetSectionPath(appSettings.GetType());
+        }
+
+        /// <summary>
         /// Provided a IAppSettings derived type, determines the section path by recursively 
         /// walking the type hierarchy and finding all ConfigurationSection attributes and 
         /// concatenating the section name associated with each attribute.

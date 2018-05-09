@@ -29,7 +29,7 @@ namespace NetFusion.Bootstrap.Logging
 
         public IDictionary<string, object> GetLog()
         {
-            var log = new Dictionary<string, object> { };
+            var log = new Dictionary<string, object>();
 
             LogFoundPluginAssemblies(log);
             LogHostApp(log);
@@ -90,7 +90,7 @@ namespace NetFusion.Bootstrap.Logging
             LogPluginRegistrations(plugin, log);
         }
 
-        private void LogPluginModules(Plugin plugin, IDictionary<string, object> log)
+        private static void LogPluginModules(Plugin plugin, IDictionary<string, object> log)
         {
             log["Plugin:Modules"] = plugin.Modules.ToDictionary(
                 m => m.GetType().FullName,
@@ -102,7 +102,7 @@ namespace NetFusion.Bootstrap.Logging
                 });
         }
 
-        private void LogPluginKnownTypeContracts(Plugin plugin, IDictionary<string, object> log)
+        private static void LogPluginKnownTypeContracts(Plugin plugin, IDictionary<string, object> log)
         {
             log["Plugin:KnownType:Contracts"] = plugin.PluginTypes
                 .Where(pt => pt.IsKnownTypeContract)
@@ -110,7 +110,7 @@ namespace NetFusion.Bootstrap.Logging
                 .ToArray();
         }
 
-        private void LogPluginKnownTypeImplementations(Plugin plugin, IDictionary<string, object> log)
+        private static void LogPluginKnownTypeImplementations(Plugin plugin, IDictionary<string, object> log)
         {
             log["Plugin:KnownType:Definitions"] = plugin.PluginTypes
                 .Where(pt => pt.IsKnownTypeImplementation)
@@ -122,7 +122,7 @@ namespace NetFusion.Bootstrap.Logging
         private void LogPluginRegistrations(Plugin plugin, IDictionary<string, object> log)
         {
             var implementationTypes = _services.Select(s => new {
-                ServiceType = s.ServiceType,
+                s.ServiceType,
                 ImplementationType = s.ImplementationType ?? s.ImplementationInstance?.GetType(),
                 Lifetime = s.Lifetime.ToString(),
                 IsFactory = s.ImplementationFactory != null

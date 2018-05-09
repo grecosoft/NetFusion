@@ -5,7 +5,7 @@ using NetFusion.Bootstrap.Container;
 using NetFusion.Test.Plugins;
 using NetFusion.Web.Mvc;
 
-namespace InfrastructureTests.Web.Rest.Setup
+namespace WebTests.Rest.Setup
 {
     /// <summary>
     /// Creates and configures the NetFusion AppContainer used 

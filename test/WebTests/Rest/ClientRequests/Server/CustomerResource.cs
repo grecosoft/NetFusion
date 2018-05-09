@@ -1,6 +1,6 @@
 ﻿using NetFusion.Rest.Resources.Hal;
 
-namespace InfrastructureTests.Web.Rest.ClientRequests.Server
+namespace WebTests.Rest.ClientRequests.Server
 {
     /// <summary>
     /// Server side resource returned by the API Controller under-test.

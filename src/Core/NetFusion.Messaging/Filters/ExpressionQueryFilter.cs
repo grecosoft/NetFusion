@@ -1,4 +1,5 @@
-﻿using NetFusion.Base.Entity;
+﻿using System;
+using NetFusion.Base.Entity;
 using NetFusion.Base.Scripting;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Types;
@@ -22,7 +23,7 @@ namespace NetFusion.Messaging.Filters
 
         public ExpressionQueryFilter(IEntityScriptingService scriptingService)
         {
-            _scriptingService = scriptingService;
+            _scriptingService = scriptingService ?? throw new ArgumentNullException(nameof(scriptingService));
         }
 
         public async Task OnPostExecute(IQuery query)
@@ -33,12 +34,12 @@ namespace NetFusion.Messaging.Filters
             }
         }
 
-        private bool IsAttributedResult(object resultItem)
+        private static bool IsAttributedResult(object resultItem)
         {
             return resultItem.GetType().IsDerivedFrom<IAttributedEntity>();
         }
 
-        private IEnumerable<object> GetQueryResults(IQuery query)
+        private static IEnumerable<object> GetQueryResults(IQuery query)
         {
             if (query.Result is IEnumerable items)
             {

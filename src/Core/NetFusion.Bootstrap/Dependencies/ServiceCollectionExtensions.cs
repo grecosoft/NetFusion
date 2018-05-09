@@ -8,7 +8,7 @@ namespace NetFusion.Bootstrap.Dependencies
     /// <summary>
     /// Extension methods for IServiceContainer.
     /// </summary>
-    public static class ServiceBuilderExtensions
+    public static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Registers a service instance for a sub list of supported interface types.

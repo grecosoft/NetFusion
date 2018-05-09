@@ -92,14 +92,15 @@ namespace NetFusion.Bootstrap.Container
 
             InitializePluginModules();
 
-            // Note that the order is important.  If a service type is registered more than once, 
-            // the last registered component is used.  This allows application services to override
-            // core defines services.
+            // Note that the order is important.  If a service type is registered more than once,
+            // the last registered component is used.  This allows application plug-in services
+            // to override core defines services.
             RegisterDefaultPluginServices(services);
             RegisterCorePluginServices(services);
             RegisterAppPluginServices(services);
         }
 
+        // Populates the context that can be referenced by each plug-in module.
         private void InitializePluginModules()
         {
             InitializePluginModules(CorePlugins);
@@ -151,7 +152,7 @@ namespace NetFusion.Bootstrap.Container
 
         // Allows for each plug-in module to scan *its* types for any
         // service components to be registered in the Service Collection.
-        private void ScanPluginForServices(Plugin plugin, IServiceCollection services)
+        private static void ScanPluginForServices(Plugin plugin, IServiceCollection services)
         {
             var typeCatalog = services.CreateCatalog(plugin.PluginTypes);
             foreach (IPluginModule module in plugin.IncludedModules)
@@ -162,7 +163,7 @@ namespace NetFusion.Bootstrap.Container
 
         // Allows the each plug-in module to manually register
         // any needed service components with the Service Collection.
-        private void RegisterServices(Plugin plugin, IServiceCollection services)
+        private static void RegisterServices(Plugin plugin, IServiceCollection services)
         {
             foreach (IPluginModule module in plugin.IncludedModules)
             {
@@ -173,7 +174,7 @@ namespace NetFusion.Bootstrap.Container
         // Allows a plug-in to scan all specified plug-in types, *excluding* types
         // defined within *it's* plug-in, for components to be registered in the
         // Service Collection.
-        private void ScanAllOtherPluginsForServices(Plugin plugin, IServiceCollection services,
+        private static void ScanAllOtherPluginsForServices(Plugin plugin, IServiceCollection services,
              IEnumerable<PluginType> sourceTypes)
         {
             var typeCatalog = services.CreateCatalog(sourceTypes.Except(plugin.PluginTypes));
@@ -215,8 +216,7 @@ namespace NetFusion.Bootstrap.Container
         //------------------------------------------ Start Plug-in Modules ------------------------------------------//
 
         /// <summary>
-        /// This is the last step of the bootstrap process.  Each module is passed the instance of 
-        /// the service provider created from the populated service collection. 
+        /// This is the last step of the bootstrap process.   
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
         public void StartPluginModules(IServiceProvider services)
@@ -240,7 +240,7 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        private void StartPluginModules(IServiceProvider services, IEnumerable<Plugin> plugins)
+        private static void StartPluginModules(IServiceProvider services, IEnumerable<Plugin> plugins)
         {
             foreach (IPluginModule module in plugins.SelectMany(p => p.IncludedModules))
             {
@@ -263,7 +263,7 @@ namespace NetFusion.Bootstrap.Container
             IsStarted = false;
         }
 
-        private void StopPluginModules(IServiceProvider services, IEnumerable<Plugin> plugins)
+        private static void StopPluginModules(IServiceProvider services, IEnumerable<Plugin> plugins)
         {
             foreach (IPluginModule module in plugins.SelectMany(p => p.IncludedModules))
             {

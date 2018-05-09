@@ -17,48 +17,48 @@ namespace CommonTests.Extensions.Reflection
             GetType().GetMethod(nameof(AsyncMethodToTest))
                 .IsAsyncMethod().Should().BeTrue();
 
-            GetType().GetMethod(nameof(AsyncTests.AscynMethodWithResultToTest))
+            GetType().GetMethod(nameof(AscynMethodWithResultToTest))
                 .IsAsyncMethod().Should().BeTrue();
 
-            GetType().GetMethod(nameof(AsyncTests.NonAsyncVoidMethod))
+            GetType().GetMethod(nameof(NonAsyncVoidMethod))
                 .IsAsyncMethod().Should().BeFalse();
 
-            GetType().GetMethod(nameof(AsyncTests.NonAsyncIntMethod))
+            GetType().GetMethod(nameof(NonAsyncIntMethod))
                 .IsAsyncMethod().Should().BeFalse();
         }
 
         [Fact (DisplayName = "Can determine if method returns Asynchronous result")]
         public void CanDetermineIfMethod_ReturnsAsynchronousResult()
         {
-            GetType().GetMethod(nameof(AsyncTests.AsyncMethodToTest))
+            GetType().GetMethod(nameof(AsyncMethodToTest))
                 .IsAsyncMethodWithResult().Should().BeFalse();
 
-            GetType().GetMethod(nameof(AsyncTests.AscynMethodWithResultToTest))
+            GetType().GetMethod(nameof(AscynMethodWithResultToTest))
                 .IsAsyncMethodWithResult().Should().BeTrue();
 
-            GetType().GetMethod(nameof(AsyncTests.NonAsyncVoidMethod))
+            GetType().GetMethod(nameof(NonAsyncVoidMethod))
                 .IsAsyncMethodWithResult().Should().BeFalse();
 
-            GetType().GetMethod(nameof(AsyncTests.NonAsyncIntMethod))
+            GetType().GetMethod(nameof(NonAsyncIntMethod))
                 .IsAsyncMethodWithResult().Should().BeFalse();
         }
 
         [Fact (DisplayName = "Can determine if method is Asynchronous and can be Canceled")]
         public void CanDetermineIfMethod_IsAsynchronousAndCanCanceled()
         {
-            GetType().GetMethod(nameof(AsyncTests.CancelableAsyncMethod))
+            GetType().GetMethod(nameof(CancelableAsyncMethod))
                .IsCancellableMethod().Should().BeTrue();
 
-            GetType().GetMethod(nameof(AsyncTests.AsyncMethodToTest))
+            GetType().GetMethod(nameof(AsyncMethodToTest))
                .IsCancellableMethod().Should().BeFalse();
 
-            GetType().GetMethod(nameof(AsyncTests.AscynMethodWithResultToTest))
+            GetType().GetMethod(nameof(AscynMethodWithResultToTest))
                 .IsCancellableMethod().Should().BeFalse();
 
-            GetType().GetMethod(nameof(AsyncTests.NonAsyncVoidMethod))
+            GetType().GetMethod(nameof(NonAsyncVoidMethod))
                 .IsCancellableMethod().Should().BeFalse();
 
-            GetType().GetMethod(nameof(AsyncTests.NonAsyncIntMethod))
+            GetType().GetMethod(nameof(NonAsyncIntMethod))
                 .IsCancellableMethod().Should().BeFalse();
         }
 

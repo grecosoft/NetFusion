@@ -117,12 +117,8 @@ namespace NetFusion.Messaging.Core
 
             if (! DispatchRuleTypes.Any()) return true;
 
-            if (RuleApplyType == RuleApplyTypes.All)
-            {
-                return DispatchRules.All(r => r.IsMatch(message));
-            }
-
-            return DispatchRules.Any(r => r.IsMatch(message));
+            return RuleApplyType == RuleApplyTypes.All ? DispatchRules.All(r => r.IsMatch(message)) 
+                : DispatchRules.Any(r => r.IsMatch(message));
         }
 
         /// <summary>

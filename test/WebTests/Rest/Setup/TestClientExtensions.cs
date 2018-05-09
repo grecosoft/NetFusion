@@ -10,6 +10,7 @@ using NetFusion.Test.Plugins;
 using System.Collections.Generic;
 using NetFusion.Rest.Client.Settings;
 using Microsoft.Extensions.Logging;
+using WebTests.Rest.Setup;
 
 namespace InfrastructureTests.Web.Rest.Setup
 {

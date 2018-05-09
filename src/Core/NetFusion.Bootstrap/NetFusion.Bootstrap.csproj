@@ -1,16 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\..\build\common.props" />
-
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>7</LangVersion>
   </PropertyGroup>
-  
   <ItemGroup>
     <ProjectReference Include="..\..\Common\NetFusion.Base\NetFusion.Base.csproj" />
     <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.1" />
@@ -24,12 +21,10 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" />
   </ItemGroup>
-  
   <PropertyGroup>
-  	<PackageId>NetFusion.Bootstrap</PackageId>
-	<Title>NetFusion Bootstrap</Title>
+    <PackageId>NetFusion.Bootstrap</PackageId>
+    <Title>NetFusion Bootstrap</Title>
     <Description>Contains bootstrap process for loading NetFusion based plug-in components.</Description>
-	<PackageTags>netfusion;bootstrap;composite;plugin;component</PackageTags>
+    <PackageTags>netfusion;bootstrap;composite;plugin;component</PackageTags>
   </PropertyGroup>
-
 </Project>

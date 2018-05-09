@@ -1,6 +1,6 @@
 ﻿using NetFusion.Rest.Server.Hal;
 
-namespace InfrastructureTests.Web.Rest.LinkGeneration.Server
+namespace WebTests.Rest.LinkGeneration.Server
 {
     public class ConventionBasedResourceMap  : HalResourceMap
     {

@@ -79,10 +79,7 @@ namespace CoreTests.Messaging
         [InProcessHandler]
         public Task OnEvent1Async(MockDomainEvent evt)
         {
-            return Task.Run(() =>
-            {
-                throw new InvalidOperationException(nameof(OnEvent1Async));
-            });
+            return Task.Run(() => throw new InvalidOperationException(nameof(OnEvent1Async)));
         }
     }
 

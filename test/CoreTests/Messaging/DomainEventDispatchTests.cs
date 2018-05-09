@@ -20,10 +20,10 @@ namespace CoreTests.Messaging
         [Fact (DisplayName = "Domain Event Consumer handler invoked")]
         public Task DomainEventConsumer_HandlerInvoked()
         {
-            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
+            return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostConsumer()))
+                    .Resolver(r => r.WithHostConsumer())
                     .Act.OnServices(async s =>
                     {
                         var mockEvt = new MockDomainEvent();
@@ -31,12 +31,12 @@ namespace CoreTests.Messaging
                             .PublishAsync(mockEvt);
                     });
 
-                testResult.Assert.Services2((System.IServiceProvider s) =>
+                testResult.Assert.Services(s =>
                 {
                     var consumer = s.GetService<MockDomainEventConsumer>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventHandlerOne");
                 });
-            }));
+            });
         }
 
         /// <summary>
@@ -47,23 +47,23 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = "Event handler for Base Type invoked if applied attribute")]
         public Task EventHandlerForBaseType_InvokedIfAppliedAttribute()
         {
-            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
+            return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHost().AddDerivedEventAndConsumer()))
+                    .Resolver(r => r.WithHost().AddDerivedEventAndConsumer())
                     .Act.OnServices(async s =>
                     {
                         var mockEvt = new MockDerivedDomainEvent();
                         await s.GetService<IMessagingService>()
-                           .PublishAsync(mockEvt);
+                            .PublishAsync(mockEvt);
                     });
 
-                testResult.Assert.Services2((System.IServiceProvider s) =>
+                testResult.Assert.Services(s =>
                 {
                     var consumer = s.GetService<MockBaseMessageConsumer>();
                     consumer.ExecutedHandlers.Should().ContainSingle("OnIncludeBaseEventHandler");
                 });
-            }));
+            });
         }
     }
 }

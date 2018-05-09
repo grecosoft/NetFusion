@@ -11,7 +11,7 @@ namespace NetFusion.Messaging.Types
     /// </summary>
     public class AttributedReadModel : IAttributedEntity
     {
-        private IEntityAttributes _attributes;
+        private readonly IEntityAttributes _attributes;
 
         public AttributedReadModel()
         {

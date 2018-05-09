@@ -10,10 +10,7 @@ namespace CoreTests.Messaging.Mocks
     {
         private readonly IList<string> _executedHandlers = new List<string>();
 
-        public IEnumerable<string> ExecutedHandlers
-        {
-            get { return _executedHandlers; }
-        }
+        public IEnumerable<string> ExecutedHandlers => _executedHandlers;
 
         protected void AddCalledHandler(string handlerName)
         {

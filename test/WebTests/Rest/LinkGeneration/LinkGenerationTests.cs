@@ -1,12 +1,13 @@
 ﻿using InfrastructureTests.Web.Rest.ClientRequests;
-using InfrastructureTests.Web.Rest.LinkGeneration.Client;
-using InfrastructureTests.Web.Rest.LinkGeneration.Server;
 using InfrastructureTests.Web.Rest.Setup;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Test.Plugins;
 using System.Net.Http;
 using System.Threading.Tasks;
+using WebTests.Rest.ClientRequests;
+using WebTests.Rest.LinkGeneration.Client;
+using WebTests.Rest.LinkGeneration.Server;
 using Xunit;
 
 namespace InfrastructureTests.Web.Rest.LinkGeneration

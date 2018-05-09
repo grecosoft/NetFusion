@@ -1,11 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <LangVersion>7</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
     <PackageReference Include="xunit" Version="2.3.1" />
@@ -14,7 +12,6 @@
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.2" />
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\Common\NetFusion.Common\NetFusion.Common.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Test\NetFusion.Test.csproj" />
@@ -24,5 +21,4 @@
     <ProjectReference Include="..\..\src\Web\NetFusion.Rest.Server\NetFusion.Rest.Server.csproj" />
     <ProjectReference Include="..\..\src\Web\NetFusion.Web.Mvc\NetFusion.Web.Mvc.csproj" />
   </ItemGroup>
-
 </Project>

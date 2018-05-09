@@ -19,7 +19,7 @@ namespace NetFusion.Messaging.Filters
 
         public ResultMapQueryFilter(IObjectMapper objectMapper)
         {
-            _objectMapper = objectMapper;
+            _objectMapper = objectMapper ?? throw new ArgumentNullException(nameof(objectMapper));
         }
 
         public Task OnPostExecute(IQuery query)
@@ -33,7 +33,7 @@ namespace NetFusion.Messaging.Filters
             return Task.CompletedTask;
         }
 
-        private bool QueryResultMatchesConsumerReturnType(IQuery query)
+        private static bool QueryResultMatchesConsumerReturnType(IQuery query)
         {
             // This is the case if the result type is .NET dynamic.
             if (query.DeclaredResultType == typeof(object))
@@ -67,10 +67,11 @@ namespace NetFusion.Messaging.Filters
                 mappedResults.SetValue(mappedResult, i++);
             }
             
+            // Update the query results that will be returned.
             query.SetResult(mappedResults); 
         }
 
-        private Type GetTargetArrayType(IQuery query)
+        private static Type GetTargetArrayType(IQuery query)
         {                   
             if (! query.DeclaredResultType.IsArray)
             {

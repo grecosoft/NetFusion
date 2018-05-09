@@ -5,6 +5,7 @@ using NetFusion.Bootstrap.Container;
 using NetFusion.Rest.Server.Hal;
 using NetFusion.Test.Plugins;
 using System;
+using WebTests.Rest.Setup;
 
 namespace InfrastructureTests.Web.Rest.Setup.Setup
 {
@@ -14,7 +15,7 @@ namespace InfrastructureTests.Web.Rest.Setup.Setup
     /// </summary>
     public class TestStartup : IStartup
     {
-        private MockAppHostPlugin _pluginUnderTest;
+        private readonly MockAppHostPlugin _pluginUnderTest;
 
         public TestStartup(MockAppHostPlugin pluginUnderTest)
         {
@@ -41,7 +42,7 @@ namespace InfrastructureTests.Web.Rest.Setup.Setup
                 .Start();
 
             // Integrate the NetFusion container.
-            return AppContainer.ServiceProvider;
+            return ((IBuiltContainer)AppContainer).ServiceProvider;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

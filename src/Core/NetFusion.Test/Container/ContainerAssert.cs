@@ -8,15 +8,15 @@ using System.Linq;
 namespace NetFusion.Test.Container
 {
     /// <summary>
-    /// Object containing method for asserting the container under test that was
-    /// acted on.  There are method for asserting the container and any of its 
-    /// related object created by the bootstrap process.
+    /// Object containing method for asserting the test fixture under test that was
+    /// acted on.  There are methods for asserting the container and any of its 
+    /// related objects created by the bootstrap process.
     /// </summary>
     public class ContainerAssert 
     {
-        private AppContainer _container;
-        private Exception _resultingException;
-        private IServiceProvider _testServiceScope;
+        private readonly AppContainer _container;
+        private readonly Exception _resultingException;
+        private readonly IServiceProvider _testServiceScope;
 
         public ContainerAssert(AppContainer container, IServiceProvider serviceProvider, Exception resultingException)
         {
@@ -31,22 +31,28 @@ namespace NetFusion.Test.Container
            fixture.InitContainer();
         }
 
-
-        public ContainerAssert Services2(Action<IServiceProvider> assert)
+        /// <summary>
+        /// Passed reference to the created service provider to be asserted.  The assert method can
+        /// create instances of servers to assert their state.
+        /// </summary>
+        /// <param name="assert">The assert method.</param>
+        /// <returns>Self reference.</returns>
+        public ContainerAssert Services(Action<IServiceProvider> assert)
         {
+            if (assert == null) throw new ArgumentNullException(nameof(assert));
+            
             var services = _testServiceScope ?? _container.CreateServiceScope().ServiceProvider;
             assert(services);
       
             return this;
         }
 
-
         /// <summary>
         /// Allows the unit-test to assert the state of the created application container.
         /// </summary>
         /// <param name="assert">The method passed an instance of the application container
         /// to be asserted.</param>
-        /// <returns>Self reference for method chaining.</returns>
+        /// <returns>Self reference.</returns>
         public ContainerAssert Container(Action<IAppContainer> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
@@ -56,6 +62,12 @@ namespace NetFusion.Test.Container
             return this;
         }
 
+        /// <summary>
+        /// Allows the unit-test to run an assert on state captured external to the
+        /// test fixture that is under test.
+        /// </summary>
+        /// <param name="assert">Method to assert state.</param>
+        /// <returns>Self reference.</returns>
         public ContainerAssert State(Action assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert),
@@ -77,6 +89,7 @@ namespace NetFusion.Test.Container
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
                 "Assert method not specified.");
 
+            // dig it out...
             assert(((IComposite)_container).Application);
             return this;
         }
@@ -130,6 +143,7 @@ namespace NetFusion.Test.Container
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
                 "Assert method not specified.");
 
+            // When unit-testing... a plug-in and the manifest are the same thing.
             var composite = (IComposite)_container;
             var plugins = composite.Application.Plugins.Where(p => p.Manifest.GetType() == typeof(TPlugin));
 

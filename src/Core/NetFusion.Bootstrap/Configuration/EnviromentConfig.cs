@@ -1,15 +1,28 @@
-﻿using NetFusion.Bootstrap.Container;
-using System;
+﻿using System;
+using Microsoft.Extensions.Logging;
 
 namespace NetFusion.Bootstrap.Configuration
 {
     /// <summary>
-    /// Configuration for the overall application environment.  Provides default initialization
-    /// of the .NET configuration extensions that can be overridden or modified by the host application.
+    /// Configuration for the overall application environment.  
     /// </summary>
-    public class EnvironmentConfig : IContainerConfig
+    public class EnvironmentConfig 
     {
-        private static string[] CommonEnviromentNameKeys = { "NETFUSION_ENVIRONMENT", "ASPNETCORE_ENVIRONMENT" };
+        private static readonly string[] CommonEnviromentNameKeys =
+        {
+            "NETFUSION_ENVIRONMENT", 
+            "ASPNETCORE_ENVIRONMENT"
+        };
+        
+        /// <summary>
+        /// Commonly used environment names.
+        /// </summary>
+        public static class Names
+        {
+            public const string Development = "Development";
+            public const string Test = "Test";
+            public const string Production = "Production";
+        }
 
         /// <summary>
         /// The value of the variable specifying the environment of the executing application.
@@ -27,27 +40,34 @@ namespace NetFusion.Bootstrap.Configuration
                 }
             }
 
-            return EnvironmentNames.Development;
+            return Names.Development;
         }
 
         /// <summary>
         /// Indicates application is running in Development environment.
         /// </summary>
-        public static bool IsDevelopment => EnvironmentName.Equals(EnvironmentNames.Development, StringComparison.OrdinalIgnoreCase);
-
-        /// <summary>
-        /// Indicates application is running in Staging environment.
-        /// </summary>
-        public static bool IsStaging => EnvironmentName.Equals(EnvironmentNames.Staging, StringComparison.OrdinalIgnoreCase);
+        public static bool IsDevelopment => EnvironmentName.Equals(Names.Development, StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// Indicates application is running in Test environment.
         /// </summary>
-        public static bool IsTest => EnvironmentName.Equals(EnvironmentNames.Test, StringComparison.OrdinalIgnoreCase);
+        public static bool IsTest => EnvironmentName.Equals(Names.Test, StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// Indicates application is running in Production environment.
         /// </summary>
-        public static bool IsProduction => EnvironmentName.Equals(EnvironmentNames.Production, StringComparison.OrdinalIgnoreCase);
+        public static bool IsProduction => EnvironmentName.Equals(Names.Production, StringComparison.OrdinalIgnoreCase);
+        
+        /// <summary>
+        /// Determines the log level based on the execution environment:
+        /// - Development: Trace,
+        /// - Test: Debug,
+        /// - Production: Warning
+        /// </summary>
+        public static LogLevel EnvironmentMinLogLevel =>
+            IsDevelopment ? LogLevel.Trace
+            : IsTest ? LogLevel.Debug
+            : IsProduction ? LogLevel.Warning
+            : LogLevel.Information;
     }
 }

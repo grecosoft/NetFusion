@@ -1,8 +1,8 @@
-﻿using InfrastructureTests.Web.Rest.ClientRequests.Server;
+﻿using System.Collections.Generic;
 using NetFusion.Rest.Resources.Hal;
-using System.Collections.Generic;
+using WebTests.Rest.ClientRequests.Server;
 
-namespace InfrastructureTests.Web.Rest.Setup
+namespace WebTests.Rest.Setup
 {
     public interface IMockedService
     {

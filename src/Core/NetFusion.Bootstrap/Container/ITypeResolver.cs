@@ -25,7 +25,7 @@ namespace NetFusion.Bootstrap.Container
         void SetPluginManifests(ManifestRegistry registry);
 
         /// <summary>
-        /// Loads all types from which a plug-in is built.
+        /// Loads all types based on a set of conventions from which a plug-in is built.
         /// </summary>
         /// <param name="plugin">The plug-in to load.</param>
         void SetPluginResolvedTypes(Plugin plugin);

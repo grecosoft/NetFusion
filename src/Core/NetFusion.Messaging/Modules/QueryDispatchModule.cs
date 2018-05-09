@@ -13,8 +13,8 @@ using System.Threading;
 namespace NetFusion.Messaging.Modules
 {
     /// <summary>
-    /// Plug-in module called during the bootstrap process to configure
-    /// the dispatching of queries to consumers.
+    /// Plug-in module called during the bootstrap process to configure the dispatching of queries to consumers.
+    /// This implements the query part of the CQRS design pattern.
     /// </summary>
     public class QueryDispatchModule : PluginModule,
         IQueryDispatchModule
@@ -25,9 +25,10 @@ namespace NetFusion.Messaging.Modules
         public override void Initialize()
         {
             var queryHandlers = Context.AllPluginTypes
-               .WhereQueryConsumer()
-               .SelectQueryHandlers()
-               .SelectQueryDispatchInfo();
+                .WhereQueryConsumer()
+                .SelectQueryHandlers()
+                .SelectQueryDispatchInfo()
+                .ToArray();
 
             AssureNoDuplicateHandlers(queryHandlers);
 
@@ -59,12 +60,14 @@ namespace NetFusion.Messaging.Modules
 
         public static void AssureNoDuplicateHandlers(IEnumerable<QueryDispatchInfo> queryHandlers)
         {
-            var queryTypes = queryHandlers.WhereDuplicated(qh => qh.QueryType);
+            var queryTypeNames = queryHandlers.WhereDuplicated(qh => qh.QueryType)
+                .Select(qt => qt.AssemblyQualifiedName)
+                .ToArray();
 
-            if (queryTypes.Any())
+            if (queryTypeNames.Any())
             {
                 throw new QueryDispatchException(
-                    $"The following query types have multiple consumers: { String.Join(" | ", queryTypes)}." +
+                    $"The following query types have multiple consumers: { string.Join(" | ", queryTypeNames)}." +
                     $"A query can only have one consumer.");
             }
         }
@@ -79,7 +82,7 @@ namespace NetFusion.Messaging.Modules
             }
 
             throw new QueryDispatchException(
-                $"Dispatch information for the query type: { queryType.FullName } is not registered.");
+                $"Dispatch information for the query type: { queryType.AssemblyQualifiedName } is not registered.");
         }
 
         public override void Log(IDictionary<string, object> moduleLog)
@@ -95,13 +98,13 @@ namespace NetFusion.Messaging.Modules
                 messagingDispatchLog[queryType.FullName] = new {
                     Consumer = queryDispatcher.ConsumerType.FullName,
                     Method = queryDispatcher.HandlerMethod.Name,
-                    IsAsync = queryDispatcher.IsAsync
+                    queryDispatcher.IsAsync
                 };
             }
         }
     }
 
-    static internal class QueryExtensions
+    internal static class QueryExtensions
     {
         // Find all plug-in types that know how to process a query.
         public static IEnumerable<Type> WhereQueryConsumer(this IEnumerable<Type> pluginTypes)
@@ -132,13 +135,8 @@ namespace NetFusion.Messaging.Modules
                 return true;
             }
 
-            if (paramTypes.Length == 2 && paramTypes[0].CanAssignTo<IQuery>()
-                && (paramTypes[1].CanAssignTo<CancellationToken>() && methodInfo.IsAsyncMethod()))
-            {
-                return true;
-            }
-
-            return false;
+            return paramTypes.Length == 2 && paramTypes[0].CanAssignTo<IQuery>() 
+                   && (paramTypes[1].CanAssignTo<CancellationToken>() && methodInfo.IsAsyncMethod());
         }
 
         public static IEnumerable<QueryDispatchInfo> SelectQueryDispatchInfo(

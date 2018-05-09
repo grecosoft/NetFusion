@@ -21,7 +21,7 @@ namespace CommonTests.Extensions.Tasks
         {
             // State and list of invokers that all succeed.
             var state = new TestState { Value1 = 100, Value2 = 200 };
-            var invokers = new TestInvoker[] {
+            var invokers = new[] {
                 new TestInvoker(),
                 new TestInvoker()
             };
@@ -42,7 +42,7 @@ namespace CommonTests.Extensions.Tasks
         public async Task CanQueryException_WhenOneOrMoreTalskListItemFails()
         {
             var state = new TestState { Value1 = 100, Value2 = 200 };
-            var invokers = new TestInvoker[] {
+            var invokers = new[] {
                 new TestInvoker(),
                 new TestInvoker("Invoker Error1"),
                 new TestInvoker(),

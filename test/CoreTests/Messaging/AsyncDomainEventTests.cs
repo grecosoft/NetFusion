@@ -23,10 +23,10 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = nameof(DomainEventAsyncHandlers_CanBeInvoked))]
         public Task DomainEventAsyncHandlers_CanBeInvoked()
         {
-            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
+            return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostAsyncConsumer()))
+                    .Resolver(r => r.WithHostAsyncConsumer())
                     .Act.OnServices(async s =>
                     {
                         var messagingSrv = s.GetService<IMessagingService>();                        
@@ -34,13 +34,13 @@ namespace CoreTests.Messaging
                         await messagingSrv.PublishAsync(evt);
                     });
 
-                testResult.Assert.Services2((System.IServiceProvider s) =>
+                testResult.Assert.Services(s =>
                 {
                     var consumer = s.GetRequiredService<MockAsyncMessageConsumer>();
                     consumer.ExecutedHandlers.Should().HaveCount(3);
                     consumer.ExecutedHandlers.Should().Contain("OnEvent1Async", "OnEvent2Async", "OnEvent3");                    
                 });
-            }));     
+            });     
         }
     }
 }

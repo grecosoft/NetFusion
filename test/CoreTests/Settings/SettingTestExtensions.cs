@@ -3,7 +3,7 @@ using NetFusion.Test.Plugins;
 
 namespace CoreTests.Settings
 {
-    public static class SettingsTestExtensions
+    public static class SettingTestExtensions
     {
         public static TestTypeResolver AddPluginsUnderTests(this TestTypeResolver resolver)
         {

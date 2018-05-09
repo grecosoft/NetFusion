@@ -31,7 +31,7 @@ namespace CommonTests.Extensions.Reflection
             foundInterface.Should().NotBeNull();
             foundInterface.Should().NotBeOfType(typeof(IModuleService));
 
-            var foundInfterfaces = typeof(TestClass8).GetInterfacesDerivedFrom<IService>();
+            var foundInfterfaces = typeof(TestClass8).GetInterfacesDerivedFrom<IService>().ToArray();
             foundInfterfaces.Should().HaveCount(2);
             foundInfterfaces.Should().Contain(typeof(IModuleService));
             foundInfterfaces.Should().Contain(typeof(IRunnable));

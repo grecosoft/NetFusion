@@ -12,7 +12,7 @@ namespace CommonTests.Extensions.Collections
         [Fact(DisplayName = nameof(GivenLookup_ReteriveAllValues))]
         public void GivenLookup_ReteriveAllValues()
         {
-            var data = new TestData[] {
+            var data = new[] {
                 new TestData { EventType = "NewCustomer", HandlerName = "CreateContact" },
                 new TestData { EventType = "NewCustomer", HandlerName = "SendEmail" },
                 new TestData { EventType = "NewOrder", HandlerName = "CheckInventory" }
@@ -48,7 +48,7 @@ namespace CommonTests.Extensions.Collections
         [Fact(DisplayName = nameof(GivenEnumerable_FindForDuplicateElementPropertyValues))]
         public void GivenEnumerable_FindForDuplicateElementPropertyValues()
         {
-            var data = new TestData[] {
+            var data = new[] {
                 new TestData { EventType = "NewCustomer", HandlerName = "CreateContact" },
                 new TestData { EventType = "NewCustomer", HandlerName = "SendEmail" },
                 new TestData { EventType = "NewOrder", HandlerName = "CheckInventory" }

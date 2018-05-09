@@ -1,25 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\..\build\common.props" />
-  
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>7</LangVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    <ProjectReference Include="..\NetFusion.Messaging\NetFusion.Messaging.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.1" />
   </ItemGroup>
-  
   <PropertyGroup>
-  	<PackageId>NetFusion.Test</PackageId>
-	<Title>NetFusion Test</Title>
+    <PackageId>NetFusion.Test</PackageId>
+    <Title>NetFusion Test</Title>
     <Description>Assembly containing classes and extensions to aid in unit-testing NetFusion based projects.</Description>
-	<PackageTags>netfusion;testing</PackageTags>
+    <PackageTags>netfusion;testing</PackageTags>
   </PropertyGroup>
-
 </Project>

@@ -9,7 +9,7 @@ namespace CommonTests.Extensions.Collections
         [Fact(DisplayName = nameof(GivenSingleValue_DetermineInSet))]
         public void GivenSingleValue_DetermineInSet()
         {
-            var value = 6;
+            const int value = 6;
             value.InSet(6, 8, 12).Should().BeTrue();
             value.InSet(6, 6, 12).Should().BeTrue();
             value.InSet(55, 99).Should().BeFalse();

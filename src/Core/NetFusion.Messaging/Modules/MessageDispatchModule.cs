@@ -41,7 +41,7 @@ namespace NetFusion.Messaging.Modules
             DispatchConfig = Context.Plugin.GetConfig<MessageDispatchConfig>();
 
             MessageDispatchInfo[] allDispatchers = Context.AllPluginTypes
-                .WhereEventConsumer()
+                .WhereMessageConsumer()
                 .SelectMessageHandlers()
                 .SelectMessageDispatchInfo()
                 .ToArray();
@@ -84,7 +84,7 @@ namespace NetFusion.Messaging.Modules
                 ServiceLifetime.Scoped);
         }
 
-        private void SetDispatchRules(MessageDispatchInfo[] allDispatchers)
+        private void SetDispatchRules(IEnumerable<MessageDispatchInfo> allDispatchers)
         {
             allDispatchers.ForEach(SetDispatchRule);
         }
@@ -101,7 +101,7 @@ namespace NetFusion.Messaging.Modules
         // Check all message consumer handlers having the ApplyScriptPredicate attribute and
         // store a reference to a ScriptPredicate instance indicating the script to be executed
         // at runtime to determine if the message handler should be invoked.
-        private void SetDispatchPredicateScripts(MessageDispatchInfo[] allDispatchers)
+        private static void SetDispatchPredicateScripts(IEnumerable<MessageDispatchInfo> allDispatchers)
         {
             foreach (var dispatcher in allDispatchers)
             {
@@ -113,7 +113,7 @@ namespace NetFusion.Messaging.Modules
         // Assert that the dispatch rules are based on a type compatible with the 
         // message.  This applies to dispatch rules that are applied via attributes
         // since attributes can't be a constrained generic type.
-        private void AssertDispatchRules(MessageDispatchInfo[] allDispatchers)
+        private static void AssertDispatchRules(IEnumerable<MessageDispatchInfo> allDispatchers)
         {
             var invalidEvtHandlers = allDispatchers
                 .Where(d => d.DispatchRules.Any(
@@ -140,7 +140,7 @@ namespace NetFusion.Messaging.Modules
             if (! commandType.IsDerivedFrom<ICommand>())
                 throw new ArgumentException("Must be of command type.", nameof(commandType));
 
-            IEnumerable<MessageDispatchInfo> dispatchers = InProcessDispatchers.WhereHandlerForMessage(commandType);
+            IEnumerable<MessageDispatchInfo> dispatchers = InProcessDispatchers.WhereHandlerForMessage(commandType).ToArray();
             if (dispatchers.Empty())
             {
                 throw new InvalidOperationException(
@@ -188,7 +188,7 @@ namespace NetFusion.Messaging.Modules
         {
             string[] invalidConsumerTypes = Context.AllPluginTypes
                .SelectMessageHandlers()
-               .Where(h => h.HasAttribute<InProcessHandlerAttribute>() && !h.DeclaringType.IsDerivedFrom<IMessageConsumer>())
+               .Where(h => !h.HasAttribute<InProcessHandlerAttribute>() && h.DeclaringType.IsDerivedFrom<IMessageConsumer>())
                .Select(h => h.DeclaringType.AssemblyQualifiedName)
                .Distinct()
                .ToArray();
@@ -226,7 +226,7 @@ namespace NetFusion.Messaging.Modules
                         Consumer = ed.ConsumerType.FullName,
                         Method = ed.MessageHandlerMethod.Name,
                         MessageType = ed.MessageType.FullName,
-                        IsAsync = ed.IsAsync,
+                        ed.IsAsync,
                         IncludedDerivedTypes = ed.IncludeDerivedTypes,
                         DispatchRules = ed.DispatchRuleTypes.Select(dr => dr.FullName).ToArray(),
                         RuleApplyType = ed.DispatchRules.Any() ? ed.RuleApplyType.ToString() : null
@@ -237,9 +237,7 @@ namespace NetFusion.Messaging.Modules
         private void LogMessagePublishers(IDictionary<string, object> moduleLog)
         {
             moduleLog["Message:Publishers"] = Context.AllPluginTypes
-                .Where(pt => {
-                    return pt.IsConcreteTypeDerivedFrom<IMessagePublisher>();
-                })
+                .Where(pt => pt.IsConcreteTypeDerivedFrom<IMessagePublisher>())
                 .Select(t => new
                 {
                     PublisherType = t.AssemblyQualifiedName,

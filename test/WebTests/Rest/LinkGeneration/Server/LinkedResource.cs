@@ -1,6 +1,6 @@
 ﻿using NetFusion.Rest.Resources.Hal;
 
-namespace InfrastructureTests.Web.Rest.LinkGeneration.Server
+namespace WebTests.Rest.LinkGeneration.Server
 {
     /// <summary>
     /// Server returned resource used to test server-side link generation.

@@ -19,20 +19,16 @@ namespace NetFusion.Bootstrap.Container
         /// The manifest that identifies the host application.
         /// </summary>
         /// <returns>Application specific manifest information.</returns>
-        public IAppHostPluginManifest AppHostPluginManifest
-        {
-            get { return AppHostPluginManifests.FirstOrDefault(); }
-        }
+        public IAppHostPluginManifest AppHostPluginManifest => 
+            AppHostPluginManifests.FirstOrDefault();
 
         /// <summary>
         /// The manifest that identifies the host application.  This collection must 
         /// have one item to be valid. There can only be one application host manifest.
         /// </summary>
         /// <returns>Application specific manifest information.</returns>
-        public IEnumerable<IAppHostPluginManifest> AppHostPluginManifests
-        {
-            get { return AllManifests.OfType<IAppHostPluginManifest>(); }
-        }
+        public IEnumerable<IAppHostPluginManifest> AppHostPluginManifests => 
+            AllManifests.OfType<IAppHostPluginManifest>();
 
         /// <summary>
         /// The manifests that identify the plug-ins that are specific to the application.
@@ -40,18 +36,14 @@ namespace NetFusion.Bootstrap.Container
         /// <returns>
         /// Application components specific manifest information.
         /// </returns>
-        public IEnumerable<IAppComponentPluginManifest> AppComponentPluginManifests
-        {
-            get { return AllManifests.OfType<IAppComponentPluginManifest>(); }
-        }
+        public IEnumerable<IAppComponentPluginManifest> AppComponentPluginManifests => 
+            AllManifests.OfType<IAppComponentPluginManifest>();
 
         /// <summary>
         /// The manifests that identifying core plug-ins.
         /// </summary>
         /// <returns>Plug-in component specific manifest information.</returns>
-        public IEnumerable<ICorePluginManifest> CorePluginManifests
-        {
-            get { return AllManifests.OfType<ICorePluginManifest>(); }
-        }
+        public IEnumerable<ICorePluginManifest> CorePluginManifests => 
+            AllManifests.OfType<ICorePluginManifest>();
     }
 }

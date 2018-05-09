@@ -31,8 +31,7 @@ namespace NetFusion.Bootstrap.Dependencies
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
 
-            var matchingTypes = _types.Where(filter).ToArray();
-            foreach (Type matchingType in matchingTypes)
+            foreach (Type matchingType in _types.Where(filter))
             {
                 _serviceCollection.Add(new ServiceDescriptor(typeof(TService), matchingType, lifetime));
             }
@@ -43,8 +42,7 @@ namespace NetFusion.Bootstrap.Dependencies
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
 
-            var matchingTypes = _types.Where(filter).ToArray();
-            foreach (Type matchingType in matchingTypes)
+            foreach (Type matchingType in _types.Where(filter))
             {
                 _serviceCollection.Add(new ServiceDescriptor(matchingType, matchingType, lifetime));
             }
@@ -57,8 +55,7 @@ namespace NetFusion.Bootstrap.Dependencies
             if (filter == null) throw new ArgumentNullException(nameof(filter));
             if (describedBy == null) throw new ArgumentNullException(nameof(describedBy));
        
-            var matchingTypes = _types.Where(filter).ToArray();
-            foreach (Type matchingType in matchingTypes)
+            foreach (Type matchingType in _types.Where(filter))
             {
                 _serviceCollection.Add(describedBy(matchingType));
             }
@@ -69,8 +66,7 @@ namespace NetFusion.Bootstrap.Dependencies
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
 
-            var matchingTypes = _types.Where(filter).ToArray();
-            foreach (Type matchingType in matchingTypes)
+            foreach (Type matchingType in _types.Where(filter))
             {
                 foreach (Type serviceType in matchingType.GetInterfaces())
                 {

@@ -23,9 +23,9 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = "Messaging Module discovers Domain Event")]
         public void MessagingModule_DiscoversDomainEvent()
         {
-            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture => { fixture
+            ContainerFixture.Test(fixture => { fixture
                 .Arrange
-                    .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostConsumer()))
+                .Resolver(r => r.WithHostConsumer())
 
 
                 .Assert.PluginModule<MessageDispatchModule>(m =>
@@ -33,7 +33,7 @@ namespace CoreTests.Messaging
                     var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)]?.FirstOrDefault();
                     dispatchInfo.Should().NotBeNull(); 
                 });
-            }));           
+            });           
         }
 
         /// <summary>
@@ -45,9 +45,9 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = nameof(Discovers_DomainEventConsumerHandler))]
         public void Discovers_DomainEventConsumerHandler()
         {
-            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture => { fixture
+            ContainerFixture.Test(fixture => { fixture
                 .Arrange
-                    .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostConsumer()))
+                .Resolver(r => r.WithHostConsumer())
    
                 .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
@@ -59,7 +59,7 @@ namespace CoreTests.Messaging
                     dispatchInfo.MessageHandlerMethod.Should()
                         .Equals(typeof(MockDomainEventConsumer).GetMethod("OnEventHandlerOne"));
                 });
-            }));    
+            });    
         }
 
         /// <summary>
@@ -70,16 +70,16 @@ namespace CoreTests.Messaging
         [Fact(DisplayName = nameof(DomainEventConsumer_Registered))]
         public void DomainEventConsumer_Registered()
         {
-            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture => { fixture
+            ContainerFixture.Test(fixture => { fixture
                 .Arrange
-                    .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostConsumer()))
+                .Resolver(r => r.WithHostConsumer())
 
-                .Assert.Services2(s =>
+                .Assert.Services(s =>
                 {
                     var consumer = s.GetService<MockDomainEventConsumer>();
                     consumer.Should().NotBeNull();
                 });
-            }));                
+            });                
         }
     }
 }

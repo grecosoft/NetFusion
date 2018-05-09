@@ -15,15 +15,15 @@ namespace BootstrapTests.Bootstrap
         public void FilterInstances_BasedOnListOfTypes()
         {
             var instances = new ICommon[] { new TypeOne(), new TypeTwo() };
-            instances.CreatedFrom(new Type[] { typeof(string) })
+            instances.CreatedFrom(new[] { typeof(string) })
                 .Should()
                 .HaveCount(0);
 
-            instances.CreatedFrom(new Type[] { typeof(TypeTwo) })
+            instances.CreatedFrom(new[] { typeof(TypeTwo) })
                .Should()
                .HaveCount(1);
 
-            instances.CreatedFrom(new Type[] { typeof(TypeOne), typeof(TypeTwo), typeof(TypeTwo) })
+            instances.CreatedFrom(new[] { typeof(TypeOne), typeof(TypeTwo), typeof(TypeTwo) })
               .Should()
               .HaveCount(2);
         }
@@ -32,15 +32,15 @@ namespace BootstrapTests.Bootstrap
         public void FilterInstances_BasedOnListOfPluginTypes()
         {
             var instances = new ICommon[] { new TypeOne(), new TypeTwo() };
-            instances.CreatedFrom(new PluginType[] { new PluginType(new Plugin(new MockCorePlugin()), typeof(string), "TestAssemblyName") })
+            instances.CreatedFrom(new[] { new PluginType(new Plugin(new MockCorePlugin()), typeof(string), "TestAssemblyName") })
                 .Should()
                 .HaveCount(0);
 
-            instances.CreatedFrom(new PluginType[] { new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo), "TestAssemblyName") } )
+            instances.CreatedFrom(new[] { new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo), "TestAssemblyName") } )
                .Should()
                .HaveCount(1);
 
-            instances.CreatedFrom(new PluginType[] {
+            instances.CreatedFrom(new[] {
                 new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeOne),  "TestAssemblyName"),
                 new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo),  "TestAssemblyName"),
                 new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo),  "TestAssemblyName") })
@@ -51,7 +51,7 @@ namespace BootstrapTests.Bootstrap
         [Fact(DisplayName = nameof(CreateInstancesOfPluginTypes_MatchingSpecifiedOrBaseType))]
         public void CreateInstancesOfPluginTypes_MatchingSpecifiedOrBaseType()
         {
-            var types = new PluginType[] {
+            var types = new[] {
                 new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeOne), "TestAssemblyName"),
                 new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo),  "TestAssemblyName"),
                 new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo),  "TestAssemblyName"),

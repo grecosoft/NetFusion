@@ -74,7 +74,7 @@ namespace NetFusion.Bootstrap.Plugins
             AllAppPluginTypes = GetAppPluginTypes();
         }
 
-        private IList<Type> FilteredTypesByPluginType()
+        private IEnumerable<Type> FilteredTypesByPluginType()
         {
             // Core plug-in can access types from all other plug-in types.
             if (Plugin.PluginType == PluginTypes.CorePlugin)
@@ -89,7 +89,7 @@ namespace NetFusion.Bootstrap.Plugins
             return GetAppPluginTypes();
         }
 
-        private IList<Type> GetAppPluginTypes()
+        private IEnumerable<Type> GetAppPluginTypes()
         {
             return _compositeApp.GetPluginTypes(PluginTypes.AppComponentPlugin, PluginTypes.AppHostPlugin)
                 .Select(pt => pt.Type)
@@ -124,7 +124,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// only one module is not found, an exception is thrown.</returns>
         public T GetPluginModule<T>() where T : IPluginModuleService
         {
-            var foundModules = _compositeApp.AllPluginModules.OfType<T>();
+            var foundModules = _compositeApp.AllPluginModules.OfType<T>().ToArray();
             if (! foundModules.Any())
             {
                 throw new ContainerException($"Plug-in module of type: {typeof(T)} not found.");

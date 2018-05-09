@@ -9,6 +9,7 @@ using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -25,7 +26,7 @@ namespace NetFusion.Bootstrap.Container
     /// </summary>
     public class TypeResolver : ITypeResolver
     {
-        private string[] _searchPatterns;
+        private readonly string[] _searchPatterns;
         private ILogger<TypeResolver> _logger;
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace NetFusion.Bootstrap.Container
             _logger = loggerFactory.CreateLogger<TypeResolver>();
         }
 
-        private static string[] AddDefaultSearchPatterns(string[] searchPatterns)
+        private static string[] AddDefaultSearchPatterns(IEnumerable<string> searchPatterns)
         {
             var patterns = new List<string>(searchPatterns.Select(p => p.ToLower()));
             patterns.AddRange(new[] { "netfusion.*", "netfusion.*.*" });
@@ -86,7 +87,7 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        private void LogMatchingAssemblies(string[] searchPatterns, IEnumerable<AssemblyName> matchingAssemblies)
+        private void LogMatchingAssemblies(IEnumerable searchPatterns, IEnumerable<AssemblyName> matchingAssemblies)
         {
             _logger.LogDebugDetails(BootstrapLogEvents.BOOTSTRAP_INITIALIZE, "Type Resolver", new {
                 SearchPatterns = searchPatterns,
@@ -94,16 +95,15 @@ namespace NetFusion.Bootstrap.Container
             });
         }
 
-        protected IEnumerable<Assembly> LoadAssemblies(IEnumerable<AssemblyName> assemblyNames)
+        protected static IEnumerable<Assembly> LoadAssemblies(IEnumerable<AssemblyName> assemblyNames)
         {
             var loadedAssemblies = new List<Assembly>();
 
             foreach (AssemblyName assemblyName in assemblyNames)
             {
-                Assembly assembly = null;
                 try
                 {
-                    assembly = Assembly.Load(assemblyName);
+                    var assembly = Assembly.Load(assemblyName);
                     loadedAssemblies.Add(assembly);
                 }
                 catch (ReflectionTypeLoadException ex)
@@ -119,7 +119,7 @@ namespace NetFusion.Bootstrap.Container
             return loadedAssemblies;
         }
 
-        protected void SetManifestTypes(ManifestRegistry registry, Assembly[] pluginAssemblies)
+        protected static void SetManifestTypes(ManifestRegistry registry, IEnumerable<Assembly> pluginAssemblies)
         {
             IEnumerable<Type> pluginTypes = pluginAssemblies.SelectMany(pa => pa.GetTypes());
             registry.AllManifests = pluginTypes.CreateInstancesDerivingFrom<IPluginManifest>().ToList();
@@ -138,7 +138,7 @@ namespace NetFusion.Bootstrap.Container
                 "Plug-In cannot be null.");
 
             // Get all types contained within the same assembly as the discovered
-            // Plug-in Manifest type.  This will all types belonging to the plug-in.
+            // Plug-in Manifest type.  This is all types belonging to the plug-in.
             var manifestTypeInfo = plugin.Manifest.GetType().GetTypeInfo();
             var pluginAssembly = manifestTypeInfo.Assembly;
 
@@ -171,7 +171,7 @@ namespace NetFusion.Bootstrap.Container
 
         private IEnumerable<PropertyInfo> GetKnownTypeProperties(IPluginModule module)
         {
-            BindingFlags bindings = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            const BindingFlags bindings = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
             return module.GetType().GetProperties(bindings)
                 .Where(p =>
@@ -179,7 +179,7 @@ namespace NetFusion.Bootstrap.Container
                     && p.CanWrite);
         }
 
-        private void SetKnownPropertyInstances(IPluginModule forModule, PropertyInfo knownTypeProperty,
+        private static void SetKnownPropertyInstances(IPluginModule forModule, PropertyInfo knownTypeProperty,
            IEnumerable<PluginType> fromPluginTypes)
         {
             var knownType = knownTypeProperty.PropertyType.GetGenericArguments().First();

@@ -9,17 +9,16 @@ namespace NetFusion.Bootstrap.Logging
     /// </summary>
     public class DurationLogger : IDisposable
     {
-        private readonly ILogger _logger;
         private readonly Action<string, object[]> _logMessage;
         private readonly Stopwatch _stopWatch;
         private readonly string _processName;
 
-        public ILogger Log => _logger;
+        public ILogger Log { get; }
 
         private DurationLogger(ILogger logger,
             Action<string, object[]> logMessage)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            Log = logger ?? throw new ArgumentNullException(nameof(logger));
             _logMessage = logMessage ?? throw new ArgumentNullException(nameof(logger));
 
             _stopWatch = new Stopwatch();
@@ -32,7 +31,6 @@ namespace NetFusion.Bootstrap.Logging
         /// <param name="logger">The associated logger.</param>
         /// <param name="processName">The name to identify the executed code being logged.</param>
         /// <param name="logMessage">Delegate called to log the message.</param>
-        /// <param name="details">Details to be logged with message.</param>
         public DurationLogger(ILogger logger,
             string processName,
             Action<string, object[]> logMessage) : this(logger, logMessage)

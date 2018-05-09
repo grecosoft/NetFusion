@@ -1,10 +1,11 @@
-﻿using InfrastructureTests.Web.Rest.Setup;
+﻿using System.Linq;
+using InfrastructureTests.Web.Rest.Setup;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Hal;
-using System.Linq;
+using WebTests.Rest.Setup;
 
-namespace InfrastructureTests.Web.Rest.ClientRequests.Server
+namespace WebTests.Rest.ClientRequests.Server
 {
     [Route("api/customers")]
     public class CustomerController : Controller

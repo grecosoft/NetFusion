@@ -10,11 +10,9 @@ namespace NetFusion.Messaging.Types
     /// </summary>
     public abstract class Command : ICommand
     {
-        private IEntityAttributes _attributes;
-
-        public Command()
+        protected Command()
         {
-            _attributes = new EntityAttributes();
+            Attributes = new EntityAttributes();
         }
 
         /// <summary>
@@ -25,15 +23,15 @@ namespace NetFusion.Messaging.Types
         /// <summary>
         /// Dynamic message attributes that can be associated with the command.
         /// </summary>
-        public IEntityAttributes Attributes => _attributes;
+        public IEntityAttributes Attributes { get; }
 
         /// <summary>
         /// Dynamic message attribute values.
         /// </summary>
         public IDictionary<string, object> AttributeValues
         {
-            get { return _attributes.GetValues(); }
-            set { _attributes.SetValues(value); }
+            get => Attributes.GetValues();
+            set => Attributes.SetValues(value);
         }
 
         Type ICommand.ResultType => null;
@@ -51,7 +49,7 @@ namespace NetFusion.Messaging.Types
     /// <typeparam name="TResult">The response type of the command.</typeparam>
     public abstract class Command<TResult> : Command, ICommand<TResult>
     {
-        public Command()
+        protected Command()
         {
             base.Result = default(TResult);
         }

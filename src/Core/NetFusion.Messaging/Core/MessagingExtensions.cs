@@ -22,7 +22,7 @@ namespace NetFusion.Messaging.Core
         /// </summary>
         /// <param name="types">The types to search.</param>
         /// <returns>Filtered list of types that are message consumers.</returns>
-        public static IEnumerable<Type> WhereEventConsumer(this IEnumerable<Type> types)
+        public static IEnumerable<Type> WhereMessageConsumer(this IEnumerable<Type> types)
         {
             if (types == null) throw new ArgumentNullException(nameof(types));
 

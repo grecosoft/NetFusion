@@ -5,7 +5,7 @@ namespace CoreTests.Queries.Mocks
 {
     public class TestQuery : Query<TestQueryResult>
     {
-        public List<string> TestLog = new List<string>();
+        public readonly List<string> TestLog = new List<string>();
     }
 
     public class TestQueryResult

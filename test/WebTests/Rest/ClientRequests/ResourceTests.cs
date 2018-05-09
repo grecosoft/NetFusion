@@ -1,18 +1,18 @@
-﻿using FluentAssertions;
-using InfrastructureTests.Web.Rest.ClientRequests.Client;
-using InfrastructureTests.Web.Rest.ClientRequests.Server;
-using InfrastructureTests.Web.Rest.Setup;
-using NetFusion.Rest.Client;
-using NetFusion.Rest.Client.Settings;
-using NetFusion.Test.Plugins;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using FluentAssertions;
+using InfrastructureTests.Web.Rest.ClientRequests.Client;
+using InfrastructureTests.Web.Rest.Setup;
+using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Resources;
+using NetFusion.Rest.Client.Settings;
+using NetFusion.Test.Plugins;
+using WebTests.Rest.ClientRequests.Server;
 using Xunit;
 
-namespace InfrastructureTests.Web.Rest.ClientRequests
+namespace WebTests.Rest.ClientRequests
 {
     public class ResourceTests
     {
@@ -126,7 +126,7 @@ namespace InfrastructureTests.Web.Rest.ClientRequests
 
             var mockSrv = new MockUnitTestService {
 
-                Customers = new CustomerResource[] { serverResource }
+                Customers = new[] { serverResource }
             };
 
             // Create the test client and call route returning an embedded resource.

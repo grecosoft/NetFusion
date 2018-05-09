@@ -11,7 +11,7 @@ namespace NetFusion.Messaging.Config
     /// </summary>
     public class QueryDispatchConfig : IContainerConfig
     {
-        private List<Type> _queryFilterTypes = new List<Type>();
+        private readonly List<Type> _queryFilterTypes = new List<Type>();
 
         /// <summary>
         /// The query filter types that should be executed when dispatching 

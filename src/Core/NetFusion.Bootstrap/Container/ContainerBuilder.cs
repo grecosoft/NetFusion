@@ -6,10 +6,13 @@ using System;
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Constructs an instance of an application container.
+    /// Constructs an instance of an application container.  This class is used during the start of
+    /// an application host to populate a service collection in an organized way from a set of plug-in
+    /// assemblies containing modules.
     /// </summary>
     public class ContainerBuilder : IContainerBuilder
     {
+        // Abstractions of the application's execution environment.
         private IServiceCollection _services;
         private IConfiguration _configuration;
         private ILoggerFactory _loggerFactory;

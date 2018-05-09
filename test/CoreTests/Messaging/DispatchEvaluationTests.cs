@@ -22,7 +22,7 @@ namespace CoreTests.Messaging
             return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                        .Resolver((System.Action<NetFusion.Test.Plugins.TestTypeResolver>)(r => r.WithHostEvalBasedConsumer()))
+                        .Resolver(r => r.WithHostEvalBasedConsumer())
                         .Services(s => s.UseMockedEvalService())
                     .Act.OnServices(s =>
                     {
@@ -31,7 +31,7 @@ namespace CoreTests.Messaging
                                          .PublishAsync(mockEvt);
                     });
 
-                testResult.Assert.Services2((System.IServiceProvider s) =>
+                testResult.Assert.Services(s =>
                 {
                     var consumer = s.GetRequiredService<MockDomainEventEvalBasedConsumer>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventPredicatePases");

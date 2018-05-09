@@ -20,8 +20,8 @@ namespace CommonTests.Base.Entity
 
         public IDictionary<string, object> AttributeValues
         {
-            get { return _attributes.GetValues(); }
-            set { _attributes.SetValues(value); }
+            get => _attributes.GetValues();
+            set => _attributes.SetValues(value);
         }
     }
 }

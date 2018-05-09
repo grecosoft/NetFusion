@@ -1,11 +1,12 @@
-﻿using InfrastructureTests.Web.Rest.Setup;
-using Microsoft.AspNetCore.Mvc;
-using NetFusion.Rest.Resources;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using InfrastructureTests.Web.Rest.Setup;
+using Microsoft.AspNetCore.Mvc;
+using NetFusion.Rest.Resources;
+using WebTests.Rest.Setup;
 
-namespace InfrastructureTests.Web.Rest.LinkGeneration.Server
+namespace WebTests.Rest.LinkGeneration.Server
 {
     [Route("api/linked/resource")]
     public class LinkedResourceController : Controller
@@ -20,8 +21,8 @@ namespace InfrastructureTests.Web.Rest.LinkGeneration.Server
         [HttpGet]
         public LinkedResource GetResource()
         {
-            var resources = _mockedService.GetResources<LinkedResource>();          
-            if (resources.Count() == 0)
+            var resources = _mockedService.GetResources<LinkedResource>().ToArray();          
+            if (!resources.Any())
             {
                 throw new InvalidOperationException(
                     "Unit test didn't provided mocked server resource.");
@@ -74,8 +75,8 @@ namespace InfrastructureTests.Web.Rest.LinkGeneration.Server
         [HttpGet("view")]
         public LinkedViewResource GetViewResource()
         {
-            var resources = _mockedService.GetResources<LinkedResource>();
-            if (resources.Count() == 0)
+            var resources = _mockedService.GetResources<LinkedResource>().ToArray();
+            if (!resources.Any())
             {
                 throw new InvalidOperationException(
                     "Unit test didn't provided mocked server resource.");

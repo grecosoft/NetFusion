@@ -6,11 +6,11 @@ namespace NetFusion.Messaging.Modules
 {
     /// <summary>
     /// The root messaging module that registering the MessagingService that delegates
-    /// to specific inner classes responsible for handling different message types.
+    /// to specific inner classes responsible for inplementing the CQRS design pattern.
     /// </summary>
     public class MessagingModule : PluginModule
     {
-        // Register the common messaging service used to publish messages.
+        // Registers a common service used to invoke the corresponding CQRS components.
         public override void RegisterDefaultServices(IServiceCollection services)
         {
             services.AddScoped<IMessagingService, MessagingService>();

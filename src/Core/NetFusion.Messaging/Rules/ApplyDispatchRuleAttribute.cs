@@ -33,7 +33,8 @@ namespace NetFusion.Messaging.Rules
 
             var invalidRules = dispatchRuleTypes
                 .Where(drt => !drt.IsConcreteTypeDerivedFrom<IMessageDispatchRule>())
-                .Select(drt => drt.FullName);
+                .Select(drt => drt.FullName)
+                .ToArray();
 
             if (invalidRules.Any())
             {

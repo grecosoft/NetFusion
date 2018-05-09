@@ -16,7 +16,7 @@ namespace CoreTests.Settings
     /// the IAppSetting interface and automatically configures them with the service
     /// collection. 
     /// </summary>
-    public class SettingsTests
+    public class SettingTests
     {
         /// <summary>
         /// A configuration setting class deriving from IAppSetting and marked with the
@@ -26,18 +26,15 @@ namespace CoreTests.Settings
         [Fact(DisplayName = "Can inject Settings directly into Consumer")]
         public void CanInjectSettings_DirectlyIntoConsumer()
         {
-            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture => {
+            ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver((System.Action<TestTypeResolver>)(r =>
+                    .Resolver(r =>
                     {
                         r.AddPluginsUnderTests();
                         r.AddPlugin<MockCorePlugin>().AddPluginType<MockSetttings>();
-                    }))
-                    .Configuration(c =>
-                    {
-                        AddInMemorySettings(c);
                     })
-                    .Assert.Services2(s =>
+                    .Configuration(AddInMemorySettings)
+                    .Assert.Services(s =>
                     {
                         var settings = s.GetService<MockSetttings>();
                         settings.Should().NotBeNull();
@@ -45,7 +42,7 @@ namespace CoreTests.Settings
                         settings.Height.Should().Be(20);
                         settings.Width.Should().Be(50);
                     });
-            }));
+            });
         }
 
         /// <summary>
@@ -58,18 +55,15 @@ namespace CoreTests.Settings
         [Fact(DisplayName = "When settings derived loads base and derived properties")]
         public void WhenSettingsDerived_LoadsBaseAndDerivedProperties()
         {
-            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture => {
+            ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver((System.Action<TestTypeResolver>)(r =>
+                    .Resolver(r =>
                     {
                         r.AddPluginsUnderTests();
                         r.AddPlugin<MockCorePlugin>().AddPluginType<MockDerivedSettings>();
-                    }))
-                    .Configuration(c =>
-                    {
-                        AddInMemorySettings(c);
                     })
-                    .Assert.Services2(s =>
+                    .Configuration(AddInMemorySettings)
+                    .Assert.Services(s =>
                     {
                         var settings = s.GetService<MockDerivedSettings>();
                         settings.Should().NotBeNull();
@@ -79,7 +73,7 @@ namespace CoreTests.Settings
                         settings.Dialog.Colors.Frame.Should().Be("RED");
                         settings.Dialog.Colors.Title.Should().Be("DARK_RED");
                     });
-            }));
+            });
         }
 
         /// <summary>
@@ -90,25 +84,22 @@ namespace CoreTests.Settings
         [Fact (DisplayName = "Can read specific settings value from configuration")]
         public void CanReadSpecificSettingValue_FromConfiguration()
         {
-            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture => {
+            ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver((System.Action<TestTypeResolver>)(r =>
+                    .Resolver(r =>
                     {
                         r.AddPluginsUnderTests();
                         r.AddPlugin<MockCorePlugin>();
-                    }))
-                    .Configuration(c =>
-                    {
-                        AddInMemorySettings(c);
                     })
-                    .Assert.Services2(s =>
+                    .Configuration(AddInMemorySettings)
+                    .Assert.Services(s =>
                     {
                         var configuration = s.GetService<IConfiguration>();
 
                         int width = configuration.GetValue<int>("App:MainWindow:Width");
                         width.Should().Be(50);
                     });
-            }));
+            });
         }
 
         /// <summary>
@@ -120,18 +111,15 @@ namespace CoreTests.Settings
         [Fact(DisplayName = "Can read specific settings object using options")]
         public void CanReadSpecificSettings_UsingOptions()
         {
-            ContainerFixture.Test((System.Action<ContainerFixture>)(fixture => {
+            ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver((System.Action<TestTypeResolver>)(r =>
+                    .Resolver(r =>
                     {
                         r.AddPluginsUnderTests();
                         r.AddPlugin<MockCorePlugin>().AddPluginType<MockSetttings>();
-                    }))
-                    .Configuration(c =>
-                    {
-                        AddInMemorySettings(c);
                     })
-                    .Assert.Services2(s =>
+                    .Configuration(AddInMemorySettings)
+                    .Assert.Services(s =>
                     {
                         var options = s.GetService<IOptions<MockSetttings>>();
                         options.Should().NotBeNull();
@@ -142,7 +130,7 @@ namespace CoreTests.Settings
                         settings.Height.Should().Be(20);
                         settings.Width.Should().Be(50);
                     });
-            }));
+            });
         }
 
         // Test the generation of section for derived setting types.

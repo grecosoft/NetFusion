@@ -10,8 +10,8 @@ namespace NetFusion.Messaging.Core
     public class MessagingService : IMessagingService
     {
         // Inner classes delegated to for executing specific types.
-        private MessageDispatcher _messageDispatcher;
-        private QueryDispatcher _queryDispatcher;
+        private readonly MessageDispatcher _messageDispatcher;
+        private readonly QueryDispatcher _queryDispatcher;
 
         public MessagingService(
             MessageDispatcher messageDispatcher,
@@ -36,15 +36,17 @@ namespace NetFusion.Messaging.Core
         }
 
         public Task SendAsync(ICommand command, 
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default(CancellationToken),
+            IntegrationTypes integrationType = IntegrationTypes.All)
         {
-            return _messageDispatcher.SendAsync(command, cancellationToken);
+            return _messageDispatcher.SendAsync(command, cancellationToken, integrationType);
         }
 
         public Task<TResult> SendAsync<TResult>(ICommand<TResult> command, 
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default(CancellationToken),
+            IntegrationTypes integrationType = IntegrationTypes.All)
         {
-            return _messageDispatcher.SendAsync(command, cancellationToken);
+            return _messageDispatcher.SendAsync(command, cancellationToken, integrationType);
         }
 
         public Task<TResult> DispatchAsync<TResult>(IQuery<TResult> query,
