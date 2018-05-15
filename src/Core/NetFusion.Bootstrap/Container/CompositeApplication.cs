@@ -19,19 +19,19 @@ namespace NetFusion.Bootstrap.Container
     {
         public bool IsStarted { get; private set; }
 
-        private readonly IConfiguration _configuration;
-        private readonly ILoggerFactory _loggerFactory;
+        public IConfiguration Configuration { get; }
+        public ILoggerFactory LoggerFactory { get; }
 
         public CompositeApplication(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            LoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
         }
 
         /// <summary>
         /// Object instances representing each discovered plug-in.
         /// </summary>
-        public Plugin[] Plugins { get; internal set; } = Array.Empty<Plugin>();
+        public Plugin[] Plugins { get; set; } = Array.Empty<Plugin>();
 
         /// <summary>
         /// The application process hosting the application container.
@@ -84,11 +84,11 @@ namespace NetFusion.Bootstrap.Container
         /// <summary>
         /// Populates the service collection with services registered by plug-in modules.
         /// </summary>
-        /// <param name="builder">The service collection to be populated.</param>
+        /// <param name="services">The service collection to be populated.</param>
         public void PopulateServices(IServiceCollection services)
         {
             if (services == null)
-                throw new ArgumentNullException("Service Collection not specified.", nameof(services));
+                throw new ArgumentNullException(nameof(services), "Service Collection not specified.");
 
             InitializePluginModules();
 
@@ -114,7 +114,7 @@ namespace NetFusion.Bootstrap.Container
             {
                 foreach (IPluginModule module in plugin.IncludedModules)
                 {
-                    module.Context = new ModuleContext(_loggerFactory, _configuration, this, plugin);
+                    module.Context = new ModuleContext(this, plugin);
                     module.Initialize();
                 }
 

@@ -13,6 +13,5 @@
         public const int Core = 2000;
         public const int Infrastructure = 3000;
         public const int Integration = 4000;
-        public const int Domain = 5000;
     }
 }

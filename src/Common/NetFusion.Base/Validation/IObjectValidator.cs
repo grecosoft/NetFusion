@@ -21,12 +21,12 @@ namespace NetFusion.Base.Validation
         /// <summary>
         /// The list of validation items associated with the object.
         /// </summary>
-        IReadOnlyCollection<ValidationItem> Validations { get; }
+        IEnumerable<ValidationItem> Validations { get; }
 
         /// <summary>
         /// The children object validators associated with the object.
         /// </summary>
-        IReadOnlyCollection<IObjectValidator> Children { get; }
+        IEnumerable<IObjectValidator> Children { get; }
 
         /// <summary>
         /// Validates the object and all if its children and returns a flattened

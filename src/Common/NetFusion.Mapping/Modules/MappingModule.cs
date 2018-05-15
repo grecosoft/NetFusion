@@ -35,18 +35,16 @@ namespace NetFusion.Mapping.Modules
         // The strategies provided by a factory often are MappingDelegateStrategy 
         // instances that provides non-custom mapping and delegate to an open-source
         // library.
-        private TargetMap[] GetFactoryProvidedMappingStrategies()
+        private IEnumerable<TargetMap> GetFactoryProvidedMappingStrategies()
         {
-            TargetMap[] targetMappings = StrategyFactories
+            return StrategyFactories
                 .SelectMany(f => f.GetStrategies())
                 .Select(s => new TargetMap
                 {
                     StrategyInstance = s,
                     SourceType = s.SourceType,
                     TargetType = s.TargetType
-                }).ToArray();
-
-            return targetMappings;
+                });
         }
 
         // Find all types that are a closed type of IMappingStrategy<,> such 
@@ -54,11 +52,11 @@ namespace NetFusion.Mapping.Modules
         // containing custom mapping logic.  These mapping strategies are
         // registered in the DI container and therefore can have dependencies 
         // injected. 
-        private TargetMap[] GetCustomMappingStrategies()
+        private IEnumerable<TargetMap> GetCustomMappingStrategies()
         {
             Type openGenericMapType = typeof(IMappingStrategy<,>);
 
-            TargetMap[] targetMappings = Context.AllPluginTypes
+            return Context.AllPluginTypes
                 .WhereHavingClosedInterfaceTypeOf(openGenericMapType)
                 .Where(pt => !pt.Type.IsAbstract)
                 .Select(ti => new TargetMap
@@ -66,16 +64,17 @@ namespace NetFusion.Mapping.Modules
                     StrategyType = ti.Type,
                     SourceType = ti.GenericArguments[0],
                     TargetType = ti.GenericArguments[1]
-                }).ToArray();
-
-            return targetMappings;
+                });
         }
        
         public override void RegisterDefaultServices(IServiceCollection services)
         {
             // Service used as the central entry point for mapping objects.
-            services.AddScoped<IObjectMapper, ObjectMapper>();
+            services.AddScoped<IObjectMapper, ObjectMapper>();           
+        }
 
+        public override void RegisterServices(IServiceCollection services)
+        {
             // Register the custom mappings with the container.  This will allow mappings 
             // to inject any services needed to complete the mapping.
             foreach (TargetMap map in SourceTypeMappings.Values().Where(

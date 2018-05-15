@@ -33,7 +33,8 @@ namespace NetFusion.Bootstrap.Plugins
         {          
             Manifest = manifest ?? throw new ArgumentNullException(nameof(manifest));
             AssemblyName = manifest.AssemblyName;
-
+            PluginConfigs = new List<IContainerConfig>();
+            
             SetPluginType(manifest);
         }
 
@@ -73,7 +74,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// <summary>
         /// The configurations associated with the plug-in.
         /// </summary>
-        public IList<IContainerConfig> PluginConfigs { get; internal set; } = Array.Empty<IContainerConfig>();
+        public IList<IContainerConfig> PluginConfigs { get; internal set; }
 
         /// <summary>
         /// The underlying .net type for all plug-in types.

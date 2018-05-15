@@ -27,7 +27,7 @@ namespace NetFusion.Mapping
         where TSource : class
         where TTarget : class
     {
-        public MappingStrategy()
+        protected MappingStrategy()
             : base(typeof(TSource), typeof(TTarget)) { }
 
         // Provides access to the object-mapper for use by derived mapping strategy instances.

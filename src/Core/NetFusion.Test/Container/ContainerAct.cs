@@ -158,6 +158,31 @@ namespace NetFusion.Test.Container
 
             return this;
         }
+        
+        public ContainerAct OnServices(Action<IServiceProvider> act)
+        {
+            if (_actedOn)
+            {
+                throw new InvalidOperationException("The container can only be acted on once.");
+            }
+
+            _actedOn = true;
+            try
+            {
+                _fixture.InitContainer();
+
+                var testScope = _container.CreateServiceScope();
+                TestServiceScope = testScope.ServiceProvider;
+
+                act(TestServiceScope);
+            }
+            catch (Exception ex)
+            {
+                _resultingException = ex;
+            }
+
+            return this;
+        }
 
         /// <summary>
         /// After acting on the container under test, the unit-test can call methods on this

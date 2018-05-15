@@ -61,8 +61,8 @@ namespace NetFusion.Base.Validation
             var validations = new List<ObjectValidation>();
             BuildValidationList(validations, validator);
 
-            ValidationType = GetMaxValidationType(validations);
             ObjectValidations = validations.ToArray();
+            ValidationType = GetMaxValidationType(ObjectValidations);
         }
 
         private ValidationResultSet()
@@ -104,7 +104,7 @@ namespace NetFusion.Base.Validation
             return ObjectValidations.Any(v => v.ValidationType == validationType);
         }
 
-        private ValidationTypes GetMaxValidationType(IEnumerable<ObjectValidation> validations)
+        private static ValidationTypes GetMaxValidationType(ObjectValidation[] validations)
         {
             if (validations.Empty())
             {

@@ -13,7 +13,7 @@ namespace NetFusion.Mapping
     /// <typeparam name="TTarget">The target type of the object being mapped.</typeparam>
     public sealed class MappingDelegate<TSource, TTarget> : MappingStrategy
     {
-        private Func<TSource, TTarget> _map;
+        private readonly Func<TSource, TTarget> _map;
 
         /// <summary>
         /// Constructor used to create mapping strategy delegating to a specified mapping function.
@@ -23,7 +23,7 @@ namespace NetFusion.Mapping
             : base(typeof(TSource), typeof(TTarget))
         {
             _map = map ?? throw new ArgumentNullException(nameof(map), 
-                "Mapping function not specified."); ;
+                "Mapping function not specified."); 
         }
 
         public override object Map(IObjectMapper mapper, object obj)

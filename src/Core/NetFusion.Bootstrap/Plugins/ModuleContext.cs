@@ -29,12 +29,12 @@ namespace NetFusion.Bootstrap.Plugins
         /// <summary>
         /// The logger factory configured for the application container.
         /// </summary>
-        public ILoggerFactory LoggerFactory { get; }
+        public ILoggerFactory LoggerFactory => _compositeApp.LoggerFactory;
 
         /// <summary>
         /// The application configuration configured for the application container.
         /// </summary>
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration => _compositeApp.Configuration;
 
         /// <summary>
         /// Logger with the name of the plug-in used to identify the log messages.
@@ -55,19 +55,14 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         public IEnumerable<Type> AllAppPluginTypes { get; }
 
-        internal ModuleContext(
-            ILoggerFactory loggerFactory,
-            IConfiguration configuration,
+        public ModuleContext(
             CompositeApplication compositeApp, 
             Plugin plugin)
         {
             _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
 
-            LoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
-            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
-
-            Logger = loggerFactory.CreateLogger(plugin.GetType());
+            Logger = _compositeApp.LoggerFactory.CreateLogger(plugin.GetType());
 
             AppHost = compositeApp.AppHostPlugin;
             AllPluginTypes = FilteredTypesByPluginType();

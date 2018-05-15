@@ -53,7 +53,7 @@ namespace NetFusion.Settings.Modules
 
         private void ValidateSettings(object settings)
         {
-            var validator = new MSObjectValidator(settings);
+            var validator = new DataAnnotationsValidator(settings);
             var result = validator.Validate();
 
             if (result.IsInvalid)

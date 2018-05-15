@@ -22,8 +22,11 @@ namespace NetFusion.Mapping.Core
             IMappingModule mappingModule,
             IServiceProvider services)
         {
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            if (mappingModule == null) throw new ArgumentNullException(nameof(mappingModule));
+            
             _logger = loggerFactory.CreateLogger<ObjectMapper>();
-            _services = services;
+            _services = services ?? throw new ArgumentNullException(nameof(services));
             _sourceTypeMappings = mappingModule.SourceTypeMappings;
         }
 
@@ -75,7 +78,7 @@ namespace NetFusion.Mapping.Core
         // to a derived target type for a corresponding source type.
         private TargetMap FindMappingStrategy(Type sourceType, Type targetType)
         {
-            var sourceMappings = _sourceTypeMappings[sourceType];
+            var sourceMappings = _sourceTypeMappings[sourceType].ToArray();
             if (! sourceMappings.Any())
             {
                 // No source type registered mappings.
@@ -100,14 +103,16 @@ namespace NetFusion.Mapping.Core
 
         private void LogFoundMapping(TargetMap targetMap)
         {
-            _logger.LogDebug(MappingLogEvents.MAPPING_APPLIED, "Mapping Applied: {SourceType} --> {TargetType} Using Strategy: {StrategyType}", 
+            _logger.LogDebug(MappingLogEvents.MappingApplied, "Mapping Applied: {SourceType} --> {TargetType} Using Strategy: {StrategyType}", 
                 targetMap.SourceType,
                 targetMap.TargetType, 
                 targetMap.StrategyType);
         }
 
-        private TargetMap AssertAndGetMapping(Type sourceType, Type targetType,  IEnumerable<TargetMap> targetMaps)
+        private static TargetMap AssertAndGetMapping(Type sourceType, Type targetType,  IEnumerable<TargetMap> targetMaps)
         {
+            targetMaps = targetMaps.ToArray();
+
             if (targetMaps.Count() > 1)
             {
                 throw new InvalidOperationException(

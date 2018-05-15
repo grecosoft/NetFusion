@@ -43,7 +43,7 @@ namespace NetFusion.Base.Validation
         /// Creates an object validation.
         /// </summary>
         /// <param name="message">The message associated with the validation.</param>
-        /// <param name="propertyNames">The object properties pertaining to the validation.</param>
+        /// <param name="validationType">The object properties pertaining to the validation.</param>
         public ValidationItem(
             string message,
             ValidationTypes validationType)

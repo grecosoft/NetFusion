@@ -12,12 +12,12 @@ namespace NetFusion.Bootstrap.Dependencies
     /// </summary>
     public class TypeCatalog : ITypeCatalog
     {
-        private readonly IServiceCollection _serviceCollection;
+        public IServiceCollection Services { get; }
         private readonly IEnumerable<Type> _types;
 
         public TypeCatalog(IServiceCollection serviceCollection, IEnumerable<Type> types)
         {
-            _serviceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
+            Services = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
             _types = types ?? throw new ArgumentNullException(nameof(types));
         }
 
@@ -26,14 +26,14 @@ namespace NetFusion.Bootstrap.Dependencies
         {
 
         }
-
+       
         public ITypeCatalog AsService<TService>(Func<Type, bool> filter, ServiceLifetime lifetime)
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
 
             foreach (Type matchingType in _types.Where(filter))
             {
-                _serviceCollection.Add(new ServiceDescriptor(typeof(TService), matchingType, lifetime));
+                Services.Add(new ServiceDescriptor(typeof(TService), matchingType, lifetime));
             }
             return this;
         }
@@ -44,7 +44,7 @@ namespace NetFusion.Bootstrap.Dependencies
 
             foreach (Type matchingType in _types.Where(filter))
             {
-                _serviceCollection.Add(new ServiceDescriptor(matchingType, matchingType, lifetime));
+                Services.Add(new ServiceDescriptor(matchingType, matchingType, lifetime));
             }
             return this;
         }
@@ -57,7 +57,7 @@ namespace NetFusion.Bootstrap.Dependencies
        
             foreach (Type matchingType in _types.Where(filter))
             {
-                _serviceCollection.Add(describedBy(matchingType));
+                Services.Add(describedBy(matchingType));
             }
             return this;
         }
@@ -70,7 +70,7 @@ namespace NetFusion.Bootstrap.Dependencies
             {
                 foreach (Type serviceType in matchingType.GetInterfaces())
                 {
-                    _serviceCollection.Add(new ServiceDescriptor(serviceType, matchingType, lifetime));
+                    Services.Add(new ServiceDescriptor(serviceType, matchingType, lifetime));
                 }
             }
 
