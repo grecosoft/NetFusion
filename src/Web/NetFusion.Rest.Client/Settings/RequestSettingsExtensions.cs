@@ -13,8 +13,8 @@ namespace NetFusion.Rest.Client.Settings
         /// Applies the settings commonly used when submitting and consuming
         /// REST/HAL based requests.
         /// </summary>
-        /// <returns>Reference to the settings being configured.<returns>
         /// <param name="requestSettings">The request settings to configure.</param>
+        /// <returns>Reference to the settings being configured.</returns>
         public static IRequestSettings UseHalDefaults(this IRequestSettings requestSettings)
         {
             if (requestSettings == null) throw new ArgumentNullException(nameof(requestSettings),

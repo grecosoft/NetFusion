@@ -1,13 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
-using NetFusion.Base.Entity;
-using NetFusion.Base.Scripting;
-using NetFusion.Domain.Roslyn.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
+using NetFusion.Base.Entity;
+using NetFusion.Base.Scripting;
+using NetFusion.Roslyn.Core;
+// ReSharper disable UseObjectOrCollectionInitializer
 
-namespace NetFusion.Domain.Roslyn.Testing
+namespace NetFusion.Roslyn.Testing
 {
     /// <summary>
     /// Provides extension methods used to test expression evaluations.
@@ -18,6 +19,8 @@ namespace NetFusion.Domain.Roslyn.Testing
             string propertyName,
             string expression) 
         {
+            if (expressions == null) throw new ArgumentNullException(nameof(expressions));
+            
             expressions.Add(new EntityExpression(expression, 0, propertyName));
             return expressions;
         }
@@ -25,6 +28,8 @@ namespace NetFusion.Domain.Roslyn.Testing
         public static IList<EntityExpression> AddExpression(this IList<EntityExpression> expressions,
             string expression) 
         {
+            if (expressions == null) throw new ArgumentNullException(nameof(expressions));
+            
             expressions.Add(new EntityExpression(expression, 0));
             return expressions;
         }
@@ -46,7 +51,7 @@ namespace NetFusion.Domain.Roslyn.Testing
 
             var evalSrv = new EntityScriptingService(loggerFactory);
 
-            evalSrv.Load(new EntityScript[] { es });
+            evalSrv.Load(new[] { es });
             return evalSrv;
         }
     }

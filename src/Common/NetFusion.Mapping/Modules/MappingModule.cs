@@ -21,7 +21,7 @@ namespace NetFusion.Mapping.Modules
 
         public ILookup<Type, TargetMap> SourceTypeMappings { get; private set; } // SourceType ==> TargetMap(s)
 
-        // Finds all mapping strategies and cache the information to be used
+        // Finds all mapping strategies and caches the information to be used
         // at runtime by ObjectMapper.
         public override void Configure()
         {
@@ -33,7 +33,7 @@ namespace NetFusion.Mapping.Modules
 
         // Finds all mappings provided by instances implementing IMappingStrategyFactory.
         // The strategies provided by a factory often are MappingDelegateStrategy 
-        // instances that provides non-custom mapping and delegate to an open-source
+        // instances that provides a non-custom mapping delegating to an open-source
         // library.
         private IEnumerable<TargetMap> GetFactoryProvidedMappingStrategies()
         {

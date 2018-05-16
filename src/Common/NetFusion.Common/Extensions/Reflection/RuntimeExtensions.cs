@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyModel;
 using System.Linq;
 using System.Reflection;
 using System;
+using System.Collections.Generic;
 
 namespace NetFusion.Common.Extensions.Reflection
 {
@@ -30,16 +31,9 @@ namespace NetFusion.Common.Extensions.Reflection
             return assemblyNames;
         }
 
-        private static bool MatchesPattern(string name, string[] patterns)
+        private static bool MatchesPattern(string name, IEnumerable<string> patterns)
         {
-            foreach(var pattern in patterns)
-            {
-                if (MatchesPattern(name, pattern))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return patterns.Any(pattern => MatchesPattern(name, pattern));
         }
 
         private static bool MatchesPattern(string name, string pattern)

@@ -23,6 +23,8 @@ namespace NetFusion.Base.Scripting
         /// Attribute Constructor
         /// </summary>
         /// <param name="scriptName">The name of the script stored external to the application.</param>
+        /// <param name="attributeName">The attribute name set by the script used to determine if the
+        /// predicate is true or false.</param>
         public ApplyScriptPredicateAttribute(string scriptName, string attributeName)
         {
             if (string.IsNullOrWhiteSpace(scriptName)) throw new ArgumentException(

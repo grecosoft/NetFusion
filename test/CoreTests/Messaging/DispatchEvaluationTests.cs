@@ -8,27 +8,28 @@ using Xunit;
 
 namespace CoreTests.Messaging
 {
-    /// <summary>
-    /// An in-process message handler method can be decorated with the ApplyScriptPredicate attribute.  
-    /// This attribute is used to specify a script name associated with the derived message type and 
-    /// the name of a property calculated by the script returning a boolean value  indicating if the
-    /// message handler applies to the published message.
-    /// </summary>
+    
     public class DispatchEvaluationTests
     {
+        /// <summary>
+        /// An in-process message handler method can be decorated with the ApplyScriptPredicate attribute.  
+        /// This attribute is used to specify a script name associated with the derived message type and 
+        /// the name of a property calculated by the script returning a boolean value  indicating if the
+        /// message handler applies to the published message.
+        /// </summary>
         [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesDispathPredicate))]
         public Task HandlerCalled_WhenMessagePassesDispathPredicate()
         {
-            return ContainerFixture.TestAsync((System.Func<ContainerFixture, Task>)(async fixture =>
+            return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                        .Resolver(r => r.WithHostEvalBasedConsumer())
-                        .Services(s => s.UseMockedEvalService())
+                    .Resolver(r => r.WithHostEvalBasedConsumer())
+                    .Services(s => s.UseMockedEvalService())
                     .Act.OnServices(s =>
                     {
                         var mockEvt = new MockEvalDomainEvent { RuleTestValue = 7000 };
                         return s.GetRequiredService<IMessagingService>()
-                                         .PublishAsync(mockEvt);
+                            .PublishAsync(mockEvt);
                     });
 
                 testResult.Assert.Services(s =>
@@ -36,7 +37,51 @@ namespace CoreTests.Messaging
                     var consumer = s.GetRequiredService<MockDomainEventEvalBasedConsumer>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventPredicatePases");
                 });
-            }));
+            });
+        }
+        
+        [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesAllDispatchRules))]
+        public Task HandlerCalled_WhenMessagePassesAllDispatchRules()
+        { 
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange
+                    .Resolver(r => r.WithHostRuleBasedConsumer())
+                    .Act.OnServices(s =>
+                    {
+                        var mockEvt = new MockRuleDomainEvent { RuleTestValue = 1500 };
+                        return s.GetRequiredService<IMessagingService>()
+                            .PublishAsync(mockEvt);
+                    });
+
+                testResult.Assert.Services(s =>
+                {
+                    var consumer = s.GetRequiredService<MockDomainEventRuleBasedConsumer>();
+                    consumer.ExecutedHandlers.Should().Contain("OnEventAllRulesPass");
+                });
+            });
+        }
+        
+        [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesAnyDispatchRule))]
+        public Task HandlerCalled_WhenMessagePassesAnyDispatchRule()
+        {
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange
+                    .Resolver(r => r.WithHostRuleBasedConsumer())
+                    .Act.OnServices(s =>
+                    {
+                        var mockEvt = new MockRuleDomainEvent { RuleTestValue = 3000 };
+                        return s.GetRequiredService<IMessagingService>()
+                            .PublishAsync(mockEvt);
+                    });
+
+                testResult.Assert.Services(s =>
+                {
+                    var consumer = s.GetRequiredService<MockDomainEventRuleBasedConsumer>();
+                    consumer.ExecutedHandlers.Should().Contain("OnEventAnyRulePasses");
+                });
+            });
         }
     }
 }

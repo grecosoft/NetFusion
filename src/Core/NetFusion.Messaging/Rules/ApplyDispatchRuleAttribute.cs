@@ -39,7 +39,7 @@ namespace NetFusion.Messaging.Rules
             if (invalidRules.Any())
             {
                 throw new InvalidOperationException(
-                    $"The following are not dispatch rule types: {String.Join(", ", invalidRules)}.  " + 
+                    $"The following are not dispatch rule types: {string.Join(", ", invalidRules)}.  " + 
                     $"Dispatch rules must derive from: {typeof(IMessageDispatchRule)}.");
             } 
       

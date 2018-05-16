@@ -3,9 +3,9 @@ using System.Linq;
 using NetFusion.Base.Validation;
 using Xunit;
 
-namespace CommonTests.Validation
+namespace CommonTests.Base.Validation
 {
-    public class ObjectValidationTests
+    public class BasicValidationTests
     {
         [Fact]
         public void ValidationAttributes_NotValid_ValidationMethodNotCalled()

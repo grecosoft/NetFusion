@@ -65,5 +65,32 @@ namespace CoreTests.Messaging
                 });
             });
         }
+        
+        /// <summary>
+        /// When a domain-event is published, the event handlers can be asynchronous.  This test 
+        /// publishes an event that will be handled by two asynchronous handlers and one synchronous.
+        /// </summary>
+        [Fact(DisplayName = nameof(DomainEventAsyncHandlers_CanBeInvoked))]
+        public Task DomainEventAsyncHandlers_CanBeInvoked()
+        {
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange
+                    .Resolver(r => r.WithHostAsyncConsumer())
+                    .Act.OnServices(async s =>
+                    {
+                        var messagingSrv = s.GetService<IMessagingService>();                        
+                        var evt = new MockDomainEvent();
+                        await messagingSrv.PublishAsync(evt);
+                    });
+
+                testResult.Assert.Services(s =>
+                {
+                    var consumer = s.GetRequiredService<MockAsyncMessageConsumer>();
+                    consumer.ExecutedHandlers.Should().HaveCount(3);
+                    consumer.ExecutedHandlers.Should().Contain("OnEvent1Async", "OnEvent2Async", "OnEvent3");                    
+                });
+            });     
+        }
     }
 }

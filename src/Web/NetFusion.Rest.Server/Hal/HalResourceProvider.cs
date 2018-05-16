@@ -1,4 +1,5 @@
 ﻿using NetFusion.Rest.Server.Mappings;
+// ReSharper disable RedundantOverriddenMember
 
 namespace NetFusion.Rest.Server.Hal
 {
@@ -9,7 +10,8 @@ namespace NetFusion.Rest.Server.Hal
     {
         public override void ApplyResourceMeta(ResourceContext context)
         {
-            base.ApplyResourceMeta(context);    // Call base provider to add resource links.
+            // Call base provider to add resource links.
+            base.ApplyResourceMeta(context);   
            
             // Complete any HAL Resource specific resource updates.
         }

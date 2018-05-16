@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Runtime.CompilerServices;
 
-#if NET461 
-using System.Runtime.Serialization;
-#endif
-
 namespace NetFusion.Base.Entity
 {
     /// <summary>
@@ -118,7 +114,7 @@ namespace NetFusion.Base.Entity
             return _attributes.Remove(prefixedNamed);
         }
 
-        private string GetPropertyPrefixedName(Type context, string name)
+        private static string GetPropertyPrefixedName(Type context, string name)
         {
             return context != null ? context.Namespace + "-" + name : name;
         }

@@ -1,11 +1,11 @@
-﻿using NetFusion.Base.Exceptions;
-using NetFusion.Messaging.Core;
-using NetFusion.Messaging.Filters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetFusion.Base.Exceptions;
+using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Filters;
 
-namespace NetFusion.Messaging
+namespace NetFusion.Messaging.Exceptions
 {
     /// <summary>
     /// An exception that is thrown when there is an exception dispatching a query to a consumer.
@@ -56,7 +56,7 @@ namespace NetFusion.Messaging
         /// Dispatch Exception.
         /// </summary>
         /// <param name="errorMessage">Dispatch error message.</param>
-        /// <param name="message">The message being dispatched.</param> when dispatching the message.</param>
+        /// <param name="filterExceptions">List of exceptions for failed query filters..</param>
         public QueryDispatchException(string errorMessage, IEnumerable<QueryFilterException> filterExceptions)
             : base(errorMessage)
         {

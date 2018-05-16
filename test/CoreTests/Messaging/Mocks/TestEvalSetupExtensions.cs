@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
-using NetFusion.Domain.Roslyn.Core;
-using NetFusion.Domain.Roslyn.Testing;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Types;
 using NetFusion.Test.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using NetFusion.Roslyn.Core;
+using NetFusion.Roslyn.Testing;
 
 namespace CoreTests.Messaging.Mocks
 {

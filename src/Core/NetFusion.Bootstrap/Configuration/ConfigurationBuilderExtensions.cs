@@ -10,7 +10,7 @@ namespace NetFusion.Bootstrap.Configuration
     /// </summary>
     public static class ConfigurationExtensions
     {
-        private const string APP_SETTINGS_FILE_NAME = "appsettings";
+        private const string AppSettingsFileName = "appsettings";
 
         
         
@@ -28,9 +28,9 @@ namespace NetFusion.Bootstrap.Configuration
             if (builder == null) throw new ArgumentNullException(nameof(builder), "Configuration builder not specified.");
         
             builder.SetBasePath(Directory.GetCurrentDirectory());
-            builder.AddJsonFile($"{APP_SETTINGS_FILE_NAME}.json", optional: true, reloadOnChange: true);
-            builder.AddJsonFile($"{APP_SETTINGS_FILE_NAME}.{EnvironmentConfig.EnvironmentName}.json", reloadOnChange: true, optional: true);
-            builder.AddJsonFile($"{APP_SETTINGS_FILE_NAME}.{Environment.MachineName}.json", reloadOnChange: true, optional: true);
+            builder.AddJsonFile($"{AppSettingsFileName}.json", optional: true, reloadOnChange: true);
+            builder.AddJsonFile($"{AppSettingsFileName}.{EnvironmentConfig.EnvironmentName}.json", reloadOnChange: true, optional: true);
+            builder.AddJsonFile($"{AppSettingsFileName}.{Environment.MachineName}.json", reloadOnChange: true, optional: true);
             return builder;
         }
 

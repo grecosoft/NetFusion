@@ -1,6 +1,6 @@
 ﻿using NetFusion.Bootstrap.Manifests;
 
-namespace NetFusion.Domain.Roslyn
+namespace NetFusion.Roslyn
 {
     public class RoslynManifest : PluginManifestBase,
         ICorePluginManifest

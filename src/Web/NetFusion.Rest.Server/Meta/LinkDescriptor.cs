@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Actions;
-using NetFusion.Rest.Web.Actions;
 using System;
 using System.Linq.Expressions;
 using System.Net.Http;
@@ -15,7 +14,7 @@ namespace NetFusion.Rest.Server.Meta
     public class LinkDescriptor<TResource>
         where TResource : class, IResource
     {
-        private ActionLink _actionLink;
+        private readonly ActionLink _actionLink;
 
         public LinkDescriptor(ActionLink actionLink)
         {

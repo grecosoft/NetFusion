@@ -15,10 +15,7 @@ namespace NetFusion.Web.Mvc.Metadata.Modules
         public override void Initialize()
         {
             _mvcConfig = Context.Plugin.GetConfig<WebMvcConfig>();
-            if (_mvcConfig != null)
-            {
-                _mvcConfig.Validate();
-            }
+            _mvcConfig?.Validate();
         }
 
         // Determine if the host application specified the WebMvcConfig configuration

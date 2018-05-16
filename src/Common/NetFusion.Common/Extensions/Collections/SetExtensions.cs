@@ -18,6 +18,8 @@ namespace NetFusion.Common.Extensions.Collections
         /// <returns>True values contains source.  Otherwise, False.</returns>
         public static bool InSet<T>(this T source, params T[] values)
         {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            
             return values.Contains(source);
         }
 
@@ -32,6 +34,7 @@ namespace NetFusion.Common.Extensions.Collections
         public static bool ContainsAny<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer, params T[] values)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
+            
             return values.Any( v => source.Contains(v, comparer));
         }
 

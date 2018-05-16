@@ -1,4 +1,10 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Scripting;
+﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.Extensions.Logging;
@@ -7,14 +13,8 @@ using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
-namespace NetFusion.Domain.Roslyn.Core
+namespace NetFusion.Roslyn.Core
 {
     /// <summary>
     /// Uses Roslyn to execute a named script against a domain entity.  A script with the name 'default' is executed
@@ -51,7 +51,7 @@ namespace NetFusion.Domain.Roslyn.Core
 
             Type entityType = entity.GetType();
 
-            IEnumerable<ScriptEvaluator> scripts = _scriptEvaluators[entityType];
+            IEnumerable<ScriptEvaluator> scripts = _scriptEvaluators[entityType].ToArray();
             if (! scripts.Any())
             {
                 return;
@@ -66,14 +66,14 @@ namespace NetFusion.Domain.Roslyn.Core
             }
 
             // Execute script with a specified name.
-            if (scriptName != ScriptEvaluator.DEFAULT_SCRIPT_NAME)
+            if (scriptName != ScriptEvaluator.DefaultScriptName)
             {
                 ScriptEvaluator namedEvalScript = scripts.FirstOrDefault(se => se.Script.Name == scriptName);
                 if (namedEvalScript == null)
                 {
                     throw new InvalidOperationException(
                         $"A script named: {scriptName} for the entity type of: {entityType} could not be found.  " +
-                        $"Note: Script names are case-sensitive.");
+                         "Note: Script names are case-sensitive.");
                 }
 
                 await ExecuteScript(entity, namedEvalScript);
@@ -84,16 +84,16 @@ namespace NetFusion.Domain.Roslyn.Core
         {
             var preEvalDetails = GetPreEvalDetails(entity, evaluator);
 
-            using (var durationLogger = _logger.LogTraceDuration(ScriptingLogEvents.SCRIPT_EXECUTION, "Script Evaluation"))
+            using (var durationLogger = _logger.LogTraceDuration(ScriptingLogEvents.ScriptExecution, "Script Evaluation"))
             {
-                durationLogger.Log.LogTraceDetails(ScriptingLogEvents.SCRIPT_PRE_EVALUATION, 
+                durationLogger.Log.LogTraceDetails(ScriptingLogEvents.ScriptPreEvaluation, 
                     "Pre-Evaluation Details", preEvalDetails);
 
                 CompileScript(evaluator);
                 SetDefaultAttributeValues(evaluator.Script, entity);
                 await evaluator.ExecuteAsync(entity);
 
-                durationLogger.Log.LogTraceDetails(ScriptingLogEvents.SCRIPT_POST_EVALUATION, 
+                durationLogger.Log.LogTraceDetails(ScriptingLogEvents.ScriptPostEvaluation, 
                     "Post-Evaluation Details", new { PostEvalValues = entity });
             }
         }
@@ -141,20 +141,16 @@ namespace NetFusion.Domain.Roslyn.Core
         // A script can specify the default values that should be used for an entity's 
         // dynamic attributes.  These are only set if the entity doesn't already have
         // the attribute from a prior evaluation or manually specified by the caller.
-        private void SetDefaultAttributeValues(EntityScript script, object entity)
+        private static void SetDefaultAttributeValues(EntityScript script, object entity)
         {
-            var attributedEntity = entity as IAttributedEntity;
-            if (attributedEntity == null)
+            if (!(entity is IAttributedEntity attributedEntity))
             {
                 return;
             }
 
             foreach (var attribute in script.InitialAttributes)
             {
-                if (! attributedEntity.Attributes.Contains(attribute.Key))
-                {
-                    attributedEntity.Attributes.SetValue(attribute.Key, attribute.Value);
-                }
+                attributedEntity.Attributes.SetValue(attribute.Key, attribute.Value, overrideIfPresent: false);
             }
         }
 
@@ -181,7 +177,7 @@ namespace NetFusion.Domain.Roslyn.Core
 
         private ScriptOptions GetScriptOptions(EntityScript script)
         {
-            var defaultTypes = new Type[]
+            var defaultTypes = new[]
             {
                 typeof(DynamicObject),
                 typeof(CSharpArgumentInfo),
@@ -199,7 +195,7 @@ namespace NetFusion.Domain.Roslyn.Core
 
         // A script can specify assemblies and name spaces that should be
         // imported for types used by the expressions.
-        private IList<Assembly> GetImportedAssemblies(EntityScript script, 
+        private static IEnumerable<Assembly> GetImportedAssemblies(EntityScript script, 
             IEnumerable<Type> assembliesContainingTypes)
         {
             var assemblies = new List<Assembly>();
@@ -216,10 +212,9 @@ namespace NetFusion.Domain.Roslyn.Core
             // If specified, load the additional assemblies specified by the script.
             foreach (string assemblyName in script.ImportedAssemblies)
             {
-                Assembly assembly = null;
                 try
                 {
-                    assembly = Assembly.Load(new AssemblyName(assemblyName));
+                    var assembly = Assembly.Load(new AssemblyName(assemblyName));
                     assemblies.Add(assembly);
                 }
                 catch (ReflectionTypeLoadException ex)
@@ -236,7 +231,7 @@ namespace NetFusion.Domain.Roslyn.Core
             }
 
             // Return the distinct list of assemblies.
-            return assemblies.Distinct().ToList();
+            return assemblies.Distinct().ToArray();
         }
 
         public async Task<bool> SatisfiesPredicateAsync(object entity, ScriptPredicate predicate)
@@ -244,8 +239,7 @@ namespace NetFusion.Domain.Roslyn.Core
             if (entity == null) throw new ArgumentNullException(nameof(entity));
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
-            var attributedEntity = entity as IAttributedEntity;
-            if (attributedEntity == null)
+            if (!(entity is IAttributedEntity attributedEntity))
             {
                 throw new InvalidOperationException(
                     $"The entity being evaluated must implement: {typeof(IAttributedEntity)}");
@@ -258,7 +252,7 @@ namespace NetFusion.Domain.Roslyn.Core
                 throw new InvalidOperationException(
                     $"After the predicate script named: {predicate.ScriptName} was executed, " + 
                     $"the expected predicate attribute named: {predicate.AttributeName} was not" +
-                    $"calculated.");
+                     "calculated.");
             }
 
             object value = attributedEntity.Attributes.GetValue(predicate.AttributeName);

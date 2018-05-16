@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Actions;
-using NetFusion.Rest.Web.Actions;
 using NetFusion.Web.Mvc.Metadata.Core;
 using System;
 using System.Collections.Generic;
@@ -129,7 +128,7 @@ namespace NetFusion.Rest.Server.Mappings
             }
         }
 
-        private void SetLinkTemplatedIndicator(Link link)
+        private static void SetLinkTemplatedIndicator(Link link)
         {
             // Value has already been determined based on URL link generation.
             if (link.Templated != null)

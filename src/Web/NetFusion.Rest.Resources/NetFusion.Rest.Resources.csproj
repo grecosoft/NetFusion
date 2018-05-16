@@ -1,26 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <Import Project="..\..\..\build\common.props" />
-
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>7</LangVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
   </ItemGroup>
-
   <PropertyGroup>
     <PackageId>NetFusion.Rest.Resources</PackageId>
     <Title>NetFusion REST Resource Models</Title>
     <Description>Contains Resource Models exposed by a Service's Public API.</Description>
     <PackageTags>netfusion;plugin;rest;hal;http;client;</PackageTags>
   </PropertyGroup>
-
 </Project>

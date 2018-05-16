@@ -98,11 +98,6 @@ namespace NetFusion.Rest.Server.Actions
         {
             if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
 
-            if (methodInfo.ReturnType == null)
-            {
-                return null;
-            }
-
             if (methodInfo.ReturnType.IsDerivedFrom<IResource>())
             {
                 return methodInfo.ReturnType;

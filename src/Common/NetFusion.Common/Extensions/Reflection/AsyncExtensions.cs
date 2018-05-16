@@ -21,7 +21,7 @@ namespace NetFusion.Common.Extensions.Reflection
             if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo), 
                 "Method information cannot be null.");
 
-            return methodInfo.ReturnType != null && methodInfo.ReturnType.CanAssignTo<Task>();
+            return methodInfo.ReturnType.CanAssignTo<Task>();
         }
 
         /// <summary>

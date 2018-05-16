@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetFusion.Messaging
+namespace NetFusion.Messaging.Exceptions
 {
     /// <summary>
     /// An exception that is raised when there is an error publishing a message 
@@ -24,6 +24,8 @@ namespace NetFusion.Messaging
         {
 
         }
+        
+        public IEnumerable<Exception> ExceptionDetails { get; private set; }
 
         /// <summary>
         /// Publisher Exception.
@@ -38,8 +40,9 @@ namespace NetFusion.Messaging
             IEnumerable<PublisherException> publisherExceptions) : base(errorMessage)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
-            if (publisherExceptions == null) throw new ArgumentNullException(nameof(publisherExceptions));
 
+            ExceptionDetails = publisherExceptions ?? throw new ArgumentNullException(nameof(publisherExceptions));
+            
             Details = new Dictionary<string, object>
             {
                 { "Message", errorMessage },
@@ -75,8 +78,9 @@ namespace NetFusion.Messaging
             IEnumerable<EnricherException> enricherExceptions) : base(errorMessage)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
-            if (enricherExceptions == null) throw new ArgumentNullException(nameof(enricherExceptions));
 
+            ExceptionDetails = enricherExceptions ?? throw new ArgumentNullException(nameof(enricherExceptions));
+            
             Details = new Dictionary<string, object>
             {
                 { "Message", errorMessage },
@@ -97,8 +101,9 @@ namespace NetFusion.Messaging
             IEnumerable<PublisherException> publisherExceptions) : base(errorMessage)
         {
             if (eventSource == null) throw new ArgumentNullException(nameof(eventSource));
-            if (publisherExceptions == null) throw new ArgumentNullException(nameof(publisherExceptions));
 
+            ExceptionDetails = publisherExceptions ?? throw new ArgumentNullException(nameof(publisherExceptions));
+                
             Details = new Dictionary<string, object>
             {
                 { "Message", errorMessage },
@@ -127,12 +132,11 @@ namespace NetFusion.Messaging
         /// </summary>
         /// <param name="taskItem">The task and associated publisher.</param>
         public PublisherException(TaskListItem<IMessagePublisher> taskItem): 
-            base("Error Invoking Publishers.")
+            base("Error Invoking Publishers.", GetSourceException(taskItem))
         {
             if (taskItem == null) throw new ArgumentNullException(nameof(taskItem));
 
-            var taskException = taskItem.Task.Exception;
-            var sourceException = taskException.InnerException;
+            var sourceException = GetSourceException(taskItem);
 
             Details = new Dictionary<string, object>
             {
@@ -144,6 +148,13 @@ namespace NetFusion.Messaging
             {
                 Details["DispatchDetails"] = dispatchException.Details;
             }
+        }
+
+        private static Exception GetSourceException(TaskListItem<IMessagePublisher> taskItem)
+        {
+            // Get the aggregrate inner exception.
+            var taskException = taskItem.Task.Exception;
+            return taskException.InnerException;
         }
     }
 }

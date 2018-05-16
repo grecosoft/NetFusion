@@ -38,7 +38,6 @@ namespace NetFusion.Messaging.Modules
         /// </summary>
         /// <param name="commandType">The type of the command to find associated dispatcher.</param>
         /// <returns>Command message dispatcher metadata information.</returns>
-        /// Exception if one and only one dispatcher can't be found for the specified command.</exception>
         MessageDispatchInfo GetInProcessCommandDispatcher(Type commandType);
 
         /// <summary>
@@ -50,8 +49,6 @@ namespace NetFusion.Messaging.Modules
         /// <param name="cancellationToken">Optional task cancellation token.</param>
         /// <returns>The result from the consumer.  If the message is a command and the response
         /// is assignable to its response type, it is automatically set on the command.</returns>
-        /// Exception if the type of message is not is not the same type associated with the dispatcher.
-        /// </exception>
         Task<object> InvokeDispatcherInNewLifetimeScopeAsync(MessageDispatchInfo dispatcher, IMessage message, 
             CancellationToken cancellationToken = default(CancellationToken));
 

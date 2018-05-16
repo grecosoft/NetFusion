@@ -1,15 +1,16 @@
-﻿using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Logging;
-using NetFusion.Common.Extensions.Collections;
-using NetFusion.Common.Extensions.Tasks;
-using NetFusion.Messaging.Enrichers;
-using NetFusion.Messaging.Modules;
-using NetFusion.Messaging.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using NetFusion.Bootstrap.Logging;
+using NetFusion.Common.Extensions.Collections;
+using NetFusion.Common.Extensions.Tasks;
+using NetFusion.Messaging.Enrichers;
+using NetFusion.Messaging.Exceptions;
+using NetFusion.Messaging.Modules;
+using NetFusion.Messaging.Types;
 
 namespace NetFusion.Messaging.Core
 {
@@ -21,7 +22,6 @@ namespace NetFusion.Messaging.Core
     public class MessageDispatcher 
     {
         private readonly ILogger<MessageDispatcher> _logger;
-        private readonly IMessageDispatchModule _messagingModule;
         private readonly IEnumerable<IMessageEnricher> _messageEnrichers;
         private readonly IEnumerable<IMessagePublisher> _messagePublishers;
 
@@ -32,17 +32,16 @@ namespace NetFusion.Messaging.Core
             IEnumerable<IMessagePublisher> messagePublishers)
         {
             _logger = logger;
-            _messagingModule = messagingModule;
 
             // Order the enrichers and the publishers based on the order of the type
             // registration specified during configuration.  Order should never matter
             // but this will make the order known.
             _messageEnrichers = messageEnrichers
-                .OrderByMatchingType(_messagingModule.DispatchConfig.EnricherTypes)
+                .OrderByMatchingType(messagingModule.DispatchConfig.EnricherTypes)
                 .ToList();
 
             _messagePublishers = messagePublishers
-                .OrderByMatchingType(_messagingModule.DispatchConfig.PublisherTypes)
+                .OrderByMatchingType(messagingModule.DispatchConfig.PublisherTypes)
                 .ToList();
         }
 
@@ -119,8 +118,8 @@ namespace NetFusion.Messaging.Core
             catch (PublisherException ex)
             {
                 // Log the details of the publish exception and throw a generic error messages.
-                _logger.LogErrorDetails(MessagingLogEvents.MESSAGING_EXCEPTION, ex, "Exception publishing message.");
-                throw new PublisherException("Exception publishing message.  See log for details.");
+                _logger.LogErrorDetails(MessagingLogEvents.MessagingException, ex, "Exception publishing message.");
+                throw;
             }
         }
 

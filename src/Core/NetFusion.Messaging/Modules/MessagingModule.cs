@@ -14,6 +14,12 @@ namespace NetFusion.Messaging.Modules
         public override void RegisterDefaultServices(IServiceCollection services)
         {
             services.AddScoped<IMessagingService, MessagingService>();
+            
+            // The dispatcher delegated to by the MessagingService for sending commands and publishing domain-events.
+            services.AddScoped<MessageDispatcher>();
+            
+            // The dispatcher delegated to by the MessagingService for dispatching commands.
+            services.AddScoped<QueryDispatcher>();
         }
     }
 }

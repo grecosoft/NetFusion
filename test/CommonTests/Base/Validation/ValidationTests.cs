@@ -201,7 +201,7 @@ namespace CommonTests.Base.Validation
             public void Validate(IObjectValidator validator)
             {
                 validator.Verify(ValueThree > 500, "ValueThreeValidationMessage", ValidationTypes.Error);
-                this.EntityValidateInvoked = true;
+                EntityValidateInvoked = true;
 
                 if (this.Child != null)
                 {

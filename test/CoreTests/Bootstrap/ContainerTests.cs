@@ -530,10 +530,5 @@ namespace CoreTests.Bootstrap
                     });
             });
         }
-        // Test same for Log
-        // Test same for LoggerFactory
-        // Test same for CreateServiceScope
-        // Test same for CreateValidator
-        // Test same for Execute within service scope
     }
 }

@@ -1,15 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Logging;
-using NetFusion.Common.Extensions.Tasks;
-using NetFusion.Messaging.Filters;
-using NetFusion.Messaging.Modules;
-using NetFusion.Messaging.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NetFusion.Bootstrap.Logging;
+using NetFusion.Common.Extensions.Tasks;
+using NetFusion.Messaging.Exceptions;
+using NetFusion.Messaging.Filters;
+using NetFusion.Messaging.Modules;
+using NetFusion.Messaging.Types;
 
 namespace NetFusion.Messaging.Core
 {
@@ -98,7 +99,7 @@ namespace NetFusion.Messaging.Core
         {
             filters = filters.ToArray();
             
-            _logger.LogDebugDetails(MessagingLogEvents.QUERY_DISPATCH, "Applying Query Filters",
+            _logger.LogDebugDetails(MessagingLogEvents.QueryDispatch, "Applying Query Filters",
                 new {
                     FilterTypes = filters.Select(f => f.GetType().FullName).ToArray()
                 });

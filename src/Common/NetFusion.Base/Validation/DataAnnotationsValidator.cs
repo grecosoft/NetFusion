@@ -47,10 +47,12 @@ namespace NetFusion.Base.Validation
             var validationItems = valResults.Select(r => new ValidationItem(
                 r.ErrorMessage,
                 r.MemberNames,
-                ValidationTypes.Error)).ToList();
+                ValidationTypes.Error)).ToArray();
 
             _items.AddRange(validationItems);
 
+            // If the object being validated is valied and it supports custom
+            // validation, invoke the Validate method on the object.
             if (IsValid && Object is IValidatableType validatable)
             {
                 validatable.Validate(this);
@@ -70,6 +72,7 @@ namespace NetFusion.Base.Validation
             return predicate;
         }
 
+        // Enlists a child object with its parent to be validated.
         public IObjectValidator AddChild(object childObject)
         {
             if (childObject == null) throw new ArgumentNullException(nameof(childObject), 

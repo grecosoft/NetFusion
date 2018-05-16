@@ -1,7 +1,8 @@
-﻿using NetFusion.Base.Entity;
-using System;
+﻿using System;
+using NetFusion.Base.Entity;
+// ReSharper disable JoinNullCheckWithUsage
 
-namespace NetFusion.Domain.Roslyn.Core
+namespace NetFusion.Roslyn.Core
 {
     /// <summary>
     /// When evaluating expressions against a given domain model and its set of optional 

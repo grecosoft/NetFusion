@@ -9,9 +9,9 @@ namespace NetFusion.Messaging
     public class MessagingLogEvents
     {
         private const int PluginLog = LogEvents.Core + 200;
-        public static EventId MESSAGING_EXCEPTION =     new EventId(-(PluginLog + 1), "Messaging: Message Publish Exception");
-        public static EventId MESSAGING_CONFIGURATION = new EventId(PluginLog + 20, "Messaging: Container Configuration");
-        public static EventId MESSAGING_DISPATCH =      new EventId(PluginLog + 21, "Messaging: Message Dispatched");
-        public static EventId QUERY_DISPATCH =          new EventId(PluginLog + 30, "Messaging: Query Dispatched");
+        public static EventId MessagingException =     new EventId(-(PluginLog + 1), "Messaging: Message Publish Exception");
+        public static EventId MessagingConfiguration = new EventId(PluginLog + 20, "Messaging: Container Configuration");
+        public static EventId MessagingDispatch =      new EventId(PluginLog + 21, "Messaging: Message Dispatched");
+        public static EventId QueryDispatch =          new EventId(PluginLog + 30, "Messaging: Query Dispatched");
     }
 }

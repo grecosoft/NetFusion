@@ -93,7 +93,7 @@ namespace NetFusion.Common.Extensions.Reflection
         /// <param name="genericArgTypes">Optional.  If specified, the closed type arguments must be assignable to those listed.</param>
         /// <returns>Returns the type implementing the specified open-generic interface and the generics parameters of the matching
         /// closed interface.</returns>
-        static public IEnumerable<GenericTypeInfo> WhereHavingClosedInterfaceTypeOf(this IEnumerable<Type> closedGenericTypes,
+        public static IEnumerable<GenericTypeInfo> WhereHavingClosedInterfaceTypeOf(this IEnumerable<Type> closedGenericTypes,
             Type openGenericType,
             params Type[] genericArgTypes)
         {

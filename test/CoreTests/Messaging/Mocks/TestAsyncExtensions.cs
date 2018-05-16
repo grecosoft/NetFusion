@@ -1,6 +1,6 @@
-﻿using NetFusion.Messaging;
-using NetFusion.Test.Plugins;
+﻿using NetFusion.Test.Plugins;
 using System.Threading.Tasks;
+using NetFusion.Messaging;
 
 namespace CoreTests.Messaging.Mocks
 {

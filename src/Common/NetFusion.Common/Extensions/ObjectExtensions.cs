@@ -11,7 +11,7 @@ namespace NetFusion.Common.Extensions
         /// <summary>
         /// Given an object returns a dictionary of name/value pairs for each property.
         /// </summary>
-        /// <param name="value">The value to be converted to a dictionary.</param>
+        /// <param name="obj">The value to be converted to a dictionary.</param>
         /// <returns>Dictionary.</returns>
         public static IDictionary<string, object> ToDictionary(this object obj)
         {

@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Core;
@@ -10,7 +8,7 @@ using NetFusion.Messaging.Types;
 using NetFusion.Test.Modules;
 using Xunit;
 
-namespace CoreTests.Messaging
+namespace CoreTests.Messaging.Bootstrap
 {
     public class MessageDispatchModuleUnitTests
     {

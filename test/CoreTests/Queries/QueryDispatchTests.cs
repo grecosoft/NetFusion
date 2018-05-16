@@ -1,17 +1,18 @@
 ﻿using CoreTests.Queries.Mocks;
 using FluentAssertions;
-using NetFusion.Messaging;
-using NetFusion.Messaging.Config;
 using NetFusion.Test.Container;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using Xunit;
 using NetFusion.Bootstrap.Exceptions;
+using NetFusion.Messaging;
+using NetFusion.Messaging.Config;
+using NetFusion.Messaging.Exceptions;
 
 namespace CoreTests.Queries
 {
-    public class DispatchTests
+    public class QueryDispatchTests
     {
         [Fact(DisplayName = "Queries: Configured Filters Unique")]
         public void Configured_PreFilters_Unique()
@@ -29,8 +30,7 @@ namespace CoreTests.Queries
         public void Query_CannotHave_MultipleConsumers()
         {
             var typesUnderTest = new[] { typeof(DuplicateConsumerOne), typeof(DuplicateConsumerTwo) };
-            new TestQuery();
-
+       
             ContainerFixture.Test(fixture =>
             {
                 try

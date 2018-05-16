@@ -6,8 +6,8 @@ using System.Linq;
 namespace NetFusion.Base.Validation
 {
     /// <summary>
-    /// Contains the result of validating an object.  The result contains a list of flattened object validations.
-    /// Each object validation has the list of associated validation items.
+    /// Contains the result of validating an object.  The result contains a list of flattened
+    /// object validations.  Each object validation has the list of associated validation items.
     /// </summary>
     public class ValidationResultSet
     {
@@ -36,6 +36,10 @@ namespace NetFusion.Base.Validation
         /// </summary>
         public bool IsValid => !IsInvalid;
 
+        private ValidationResultSet()
+        {
+        }
+        
         /// <summary>
         /// Returns all object validations containing validation items of a specific type.
         /// </summary>
@@ -63,10 +67,6 @@ namespace NetFusion.Base.Validation
 
             ObjectValidations = validations.ToArray();
             ValidationType = GetMaxValidationType(ObjectValidations);
-        }
-
-        private ValidationResultSet()
-        {
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace NetFusion.Base.Validation
         }
 
         // Recursively processed the validations and builds a flat list of object validations. 
-        private void BuildValidationList(List<ObjectValidation> validations,
+        private static void BuildValidationList(ICollection<ObjectValidation> validations,
             IObjectValidator validator)
         {
             var result = new ObjectValidation(

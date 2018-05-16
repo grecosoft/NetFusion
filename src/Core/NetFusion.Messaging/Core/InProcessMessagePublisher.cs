@@ -1,15 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using NetFusion.Base.Scripting;
-using NetFusion.Bootstrap.Logging;
-using NetFusion.Common.Extensions.Tasks;
-using NetFusion.Messaging.Modules;
-using NetFusion.Messaging.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NetFusion.Base.Scripting;
+using NetFusion.Bootstrap.Logging;
+using NetFusion.Common.Extensions.Tasks;
+using NetFusion.Messaging.Exceptions;
+using NetFusion.Messaging.Modules;
+using NetFusion.Messaging.Types;
 
 namespace NetFusion.Messaging.Core
 {
@@ -170,13 +171,13 @@ namespace NetFusion.Messaging.Core
         {
             if (! _logger.IsEnabled(LogLevel.Trace))
             {
-                _logger.LogDebug(MessagingLogEvents.MESSAGING_DISPATCH, $"Message Published: {message.GetType()}");
+                _logger.LogDebug(MessagingLogEvents.MessagingDispatch, $"Message Published: {message.GetType()}");
                 return;
             }
 
             var dispatcherDetails = GetDispatchLogDetails(dispatchers);
 
-            _logger.LogTraceDetails(MessagingLogEvents.MESSAGING_DISPATCH, $"Message Published: {message.GetType()}",
+            _logger.LogTraceDetails(MessagingLogEvents.MessagingDispatch, $"Message Published: {message.GetType()}",
                 new
                 {
                     Message = message,

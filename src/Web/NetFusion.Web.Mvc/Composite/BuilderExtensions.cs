@@ -17,7 +17,7 @@ namespace NetFusion.Web.Mvc.Composite
     /// </summary>
     public static class BuilderExtensions
     {
-        private const string DEFAULT_URL = "api/netfusion/composite";
+        private const string DefaultUrl = "api/netfusion/composite";
 
         /// <summary>
         /// Called when configuring an MVC application to specify the URL 
@@ -27,7 +27,7 @@ namespace NetFusion.Web.Mvc.Composite
         /// <param name="baseUrl">The base URL used to query the composite structure.</param>
         /// <returns>Application Builder</returns>
         public static IApplicationBuilder UseCompositeQuerying(this IApplicationBuilder app,
-            string baseUrl = DEFAULT_URL)
+            string baseUrl = DefaultUrl)
         {
             if (app == null) throw new ArgumentNullException(nameof(app));
 
@@ -48,7 +48,7 @@ namespace NetFusion.Web.Mvc.Composite
         {
             app.UseMvc(routes =>
             {
-                routes.MapGet(baseUrl + "/structure", (HttpContext context) =>
+                routes.MapGet(baseUrl + "/structure", context =>
                 {
                     using (var scope = AppContainer.Instance.CreateServiceScope())
                     {
@@ -59,7 +59,7 @@ namespace NetFusion.Web.Mvc.Composite
                     }
                 });
 
-                routes.MapGet(baseUrl + "/plugins/{pluginId}", (HttpContext context) =>
+                routes.MapGet(baseUrl + "/plugins/{pluginId}", context =>
                 {
                     var pluginId = context.GetRouteValue("pluginId").ToString();
 

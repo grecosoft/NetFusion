@@ -1,13 +1,12 @@
-﻿using NetFusion.Rest.Resources;
-using NetFusion.Rest.Server.Actions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using NetFusion.Rest.Resources;
 
-namespace NetFusion.Rest.Web.Actions
+namespace NetFusion.Rest.Server.Actions
 {
     /// <summary>
     /// Action link for which the URI is expressed as an interpolated string using
@@ -90,7 +89,7 @@ namespace NetFusion.Rest.Web.Actions
             FormattedResourceProps = resourceProps.ToArray();
         }
 
-        private void AddExpressionArgs(ReadOnlyCollection<Expression> arguments, List<PropertyInfo> resourceProps)
+        private static void AddExpressionArgs(IReadOnlyList<Expression> arguments, ICollection<PropertyInfo> resourceProps)
         {
             for (var i = 0; i < arguments.Count(); i++)
             {
@@ -110,7 +109,6 @@ namespace NetFusion.Rest.Web.Actions
                 if (propInfo != null)
                 {
                     resourceProps.Add(propInfo);
-                    continue;
                 }
             }
         }

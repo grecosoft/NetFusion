@@ -1,4 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Container;
@@ -10,18 +15,15 @@ using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace NetFusion.Messaging.Modules
 {
     /// <summary>
     /// Plug-in module that finds all message related types and stores a lookup used to determine 
-    /// what consumer component message handlers should be invoked when a message is published.
+    /// what consumer component message handlers should be invoked when a message is published
+    /// A message can be either a command or a domain-event.
     /// </summary>
     public class MessageDispatchModule : PluginModule, 
         IMessageDispatchModule
@@ -58,12 +60,6 @@ namespace NetFusion.Messaging.Modules
                 .ToLookup(k => k.MessageType);
 
             LogInvalidConsumers();
-        }
-
-        // The dispatcher delegated to my the MessagingService class.
-        public override void RegisterDefaultServices(IServiceCollection services)
-        {
-            services.AddScoped<MessageDispatcher>();
         }
 
         // Register all of the message publishers that determine how a given
@@ -178,7 +174,7 @@ namespace NetFusion.Messaging.Modules
                 }
                 catch (Exception ex)
                 {
-                    Context.Logger.LogError(MessagingLogEvents.MESSAGING_EXCEPTION, ex, "Message Dispatch Error Details.");
+                    Context.Logger.LogError(MessagingLogEvents.MessagingException, ex, "Message Dispatch Error Details.");
                     throw;
                 }
             }
@@ -196,7 +192,7 @@ namespace NetFusion.Messaging.Modules
             if (invalidConsumerTypes.Any())
             {
                 Context.Logger.LogWarningDetails(
-                    MessagingLogEvents.MESSAGING_CONFIGURATION,
+                    MessagingLogEvents.MessagingConfiguration,
                     $"The following classes have in-process event handler methods but do not implement: {typeof(IMessageConsumer)}.",
                     invalidConsumerTypes);
             }
@@ -219,8 +215,11 @@ namespace NetFusion.Messaging.Modules
             {
                 var messageType = messageTypeDispatcher.Key;
                 var messageDispatchers = InProcessDispatchers.WhereHandlerForMessage(messageType);
+                var messageTypeName = messageType.FullName;
 
-                messagingDispatchLog[messageType.FullName] = messageDispatchers.Select(
+                if (messageTypeName == null) continue;
+
+                messagingDispatchLog[messageTypeName] = messageDispatchers.Select(
                     ed => new
                     {
                         Consumer = ed.ConsumerType.FullName,

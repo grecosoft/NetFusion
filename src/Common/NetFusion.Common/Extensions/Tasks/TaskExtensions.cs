@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+// ReSharper disable LoopCanBeConvertedToQuery
 
 namespace NetFusion.Common.Extensions.Tasks
 {
@@ -16,7 +17,7 @@ namespace NetFusion.Common.Extensions.Tasks
     {
         /// <summary>
         /// Executes a list of invokers that call an asynchronous method and returns a collection of objects 
-        /// storing  the invoker and its associated task.
+        /// storing the invoker and its associated task.
         /// </summary>
         /// <typeparam name="TInvoker">The type of object making the asynchronous call.</typeparam>
         /// <typeparam name="TInput">The type of value passed to all invokers.</typeparam>

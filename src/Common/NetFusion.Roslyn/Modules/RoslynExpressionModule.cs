@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Base.Scripting;
-using NetFusion.Bootstrap.Plugins;
-using NetFusion.Domain.Roslyn.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Base.Scripting;
+using NetFusion.Bootstrap.Plugins;
+using NetFusion.Roslyn.Core;
 
-namespace NetFusion.Domain.Roslyn.Modules
+namespace NetFusion.Roslyn.Modules
 {
     /// <summary>
     /// Module that loads meta data containing expressions that can be evaluated
@@ -33,11 +33,11 @@ namespace NetFusion.Domain.Roslyn.Modules
             {
                 throw new InvalidOperationException(
                     $"An component implementing the interface: {typeof(IEntityScriptMetaRepository)} " +
-                    $"is not registered.");
+                     "is not registered.");
             }
 
             // Read all of the scripts and load them into the scripting service.
-            _scripts = expressionRep.ReadAll().Result;
+            _scripts = expressionRep.ReadAllAsync().Result;
             var scriptingSrv = services.GetService<IEntityScriptingService>();
 
             scriptingSrv.Load(_scripts);

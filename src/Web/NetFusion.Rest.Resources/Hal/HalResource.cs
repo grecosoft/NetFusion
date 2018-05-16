@@ -68,7 +68,7 @@ namespace NetFusion.Rest.Resources.Hal
             Embedded[embeddedName] = embeddedResource;
 		}
         
-        private string GetResourceEmbeddedName(IResource resource)
+        private static string GetResourceEmbeddedName(IResource resource)
         {
             var namedResource = resource.GetAttribute<NamedResourceAttribute>();
             return namedResource?.ResourceName;

@@ -21,7 +21,7 @@ namespace NetFusion.Common.Extensions.Collections
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (valueAction == null) throw new ArgumentNullException(nameof(valueAction));
 
-            var list = (source as IList<T>) ?? source.ToList();
+            var list = source as IList<T> ?? source.ToList();
             foreach (var value in list)
             {
                 valueAction(value);
@@ -99,6 +99,8 @@ namespace NetFusion.Common.Extensions.Collections
             where T : class
         {
             if (types == null) throw new ArgumentNullException(nameof(types));
+            
+            source = source as T[] ?? source.ToArray();
 
             foreach (var itemType in types)
             {
@@ -114,19 +116,16 @@ namespace NetFusion.Common.Extensions.Collections
         /// Determines if an enumeration of class instances contains exactly one item.  
         /// </summary>
         /// <typeparam name="T">The type of the class instances.</typeparam>
-        /// <param name="souce">The enumeration to check.</param>
+        /// <param name="source">The enumeration to check.</param>
         /// <returns>The value contained in the enumeration if there is
         /// exactly one instance.  Otherwise, null is returned.</returns>
         public static T OneAndOnlyOne<T>(this IEnumerable<T> source)
             where T : class
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-
-            if (source.Count() == 1)
-            {
-                return source.ElementAt(0);
-            }
-            return null;
+            
+            source = source as T[] ?? source.ToArray();
+            return source.Count() == 1 ? source.ElementAt(0) : null;
         }
     }
 }

@@ -12,6 +12,6 @@ namespace NetFusion.Messaging.Modules
         /// <summary>
         /// The types of the pre filters registered by the application's bootstrap configuration.
         /// </summary>
-        IReadOnlyCollection<Type> QueryFilterTypes { get; }
+        IEnumerable<Type> QueryFilterTypes { get; }
     }
 }

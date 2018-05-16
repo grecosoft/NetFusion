@@ -1,6 +1,7 @@
-﻿using NetFusion.Messaging;
+﻿using NetFusion.Messaging.Exceptions;
 using NetFusion.Test.Plugins;
 using System;
+using NetFusion.Messaging;
 
 namespace CoreTests.Queries
 {

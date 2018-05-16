@@ -1,12 +1,12 @@
-﻿using NetFusion.Base.Entity;
-using NetFusion.Base.Scripting;
-using NetFusion.Common.Extensions.Reflection;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NetFusion.Base.Entity;
+using NetFusion.Base.Scripting;
+using NetFusion.Common.Extensions.Reflection;
 
-namespace NetFusion.Domain.Roslyn.Core
+namespace NetFusion.Roslyn.Core
 {
     /// <summary>
     /// Instance of this class is cached by the EntityScriptingService and contains a set of
@@ -17,7 +17,7 @@ namespace NetFusion.Domain.Roslyn.Core
     /// </summary>
     public class ScriptEvaluator
     {
-        public const string DEFAULT_SCRIPT_NAME = "default";
+        public const string DefaultScriptName = "default";
         public EntityScript Script { get; }
         public IEnumerable<ExpressionEvaluator> Evaluators { get; private set; }
 
@@ -31,7 +31,7 @@ namespace NetFusion.Domain.Roslyn.Core
             Evaluators = evaluators ?? throw new ArgumentNullException(nameof(evaluators));
         }
 
-        public bool IsDefault => Script.Name == DEFAULT_SCRIPT_NAME;
+        public bool IsDefault => Script.Name == DefaultScriptName;
 
         public async Task ExecuteAsync(object entity)
         {

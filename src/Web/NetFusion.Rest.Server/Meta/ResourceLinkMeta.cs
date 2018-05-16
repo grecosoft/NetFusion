@@ -2,7 +2,6 @@
 using NetFusion.Rest.Common;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Actions;
-using NetFusion.Rest.Web.Actions;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -262,7 +261,7 @@ namespace NetFusion.Rest.Server.Meta
         /// <typeparam name="T2">The type of the second argument type.</typeparam>
         /// <typeparam name="T3">The type of the third argument type.</typeparam>
         /// <typeparam name="T4">The type of the forth argument type.</typeparam>
-        /// <typeparam name="T4">The type of the fifth argument type.</typeparam>
+        /// <typeparam name="T5">The type of the fifth argument type.</typeparam>
         /// <typeparam name="TResponse">The response returned by selected controller's action.</typeparam>
         /// <param name="relName">The relation name.</param>
         /// <param name="action">Controller type metadata used to select a controller's action method containing

@@ -1,13 +1,12 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using System.Text;
+using FluentAssertions;
 using NetFusion.Bootstrap.Extensions;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Test.Plugins;
-using System;
-using System.Linq;
-using System.Text;
 using Xunit;
 
-namespace BootstrapTests.Bootstrap
+namespace CoreTests.Bootstrap
 {
     public class ReflectionExtensionsTests
     {
@@ -58,24 +57,22 @@ namespace BootstrapTests.Bootstrap
                 new PluginType(new Plugin(new MockCorePlugin()), typeof(StringBuilder),  "TestAssemblyName")
             };
 
-            var instances = types.CreateInstancesDerivingFrom(typeof(ICommon));
-            instances.Should().HaveCount(2);
-            instances.OfType<TypeOne>().Should().HaveCount(1);
-            instances.OfType<TypeTwo>().Should().HaveCount(1);
+            var objInstances = types.CreateInstancesDerivingFrom(typeof(ICommon)).ToArray();
+            objInstances.Should().HaveCount(2);
+            objInstances.OfType<TypeOne>().Should().HaveCount(1);
+            objInstances.OfType<TypeTwo>().Should().HaveCount(1);
 
-            instances = types.CreateInstancesDerivingFrom<ICommon>();
-            instances.Should().HaveCount(2);
-            instances.OfType<TypeOne>().Should().HaveCount(1);
-            instances.OfType<TypeTwo>().Should().HaveCount(1);
+            var commonInstances = types.CreateInstancesDerivingFrom<ICommon>().ToArray();
+            commonInstances.Should().HaveCount(2);
+            commonInstances.OfType<TypeOne>().Should().HaveCount(1);
+            commonInstances.OfType<TypeTwo>().Should().HaveCount(1);
 
-            instances = types.CreateInstancesDerivingFrom<TypeTwo>();
-            instances.Should().HaveCount(0);
-            instances.OfType<TypeTwo>().Should().HaveCount(0);
+            var typeTwoInstances = types.CreateInstancesDerivingFrom<TypeTwo>().ToArray();
+            typeTwoInstances.Should().HaveCount(0);
+            typeTwoInstances.Should().HaveCount(0);
 
-            instances = types.CreateInstancesDerivingFrom<string>();
-            instances.Should().HaveCount(0);
-
-
+            var stringInstances = types.CreateInstancesDerivingFrom<string>().ToArray();
+            stringInstances.Should().HaveCount(0);
         }
 
         public interface ICommon { }

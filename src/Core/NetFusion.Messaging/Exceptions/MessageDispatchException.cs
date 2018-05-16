@@ -1,10 +1,10 @@
-﻿using NetFusion.Base.Exceptions;
-using NetFusion.Messaging.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetFusion.Base.Exceptions;
+using NetFusion.Messaging.Core;
 
-namespace NetFusion.Messaging
+namespace NetFusion.Messaging.Exceptions
 {
     /// <summary>
     /// An exception that is thrown when there is an exception dispatching a message.
@@ -53,7 +53,7 @@ namespace NetFusion.Messaging
         /// Dispatch Exception.
         /// </summary>
         /// <param name="errorMessage">Dispatch error message.</param>
-        /// <param name="message">The message being dispatched.</param> when dispatching the message.</param>
+        /// <param name="dispatchExceptions">List of message dispatch exceptions.</param>
         public MessageDispatchException(string errorMessage, IEnumerable<MessageDispatchException> dispatchExceptions) 
             : base(errorMessage)
         {

@@ -4,6 +4,7 @@ using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+// ReSharper disable ConvertIfStatementToNullCoalescingExpression
 
 namespace NetFusion.Mapping.Core
 {
@@ -48,7 +49,6 @@ namespace NetFusion.Mapping.Core
             if (targetType == null) throw new ArgumentNullException(nameof(targetType),
                 "Target Type to map source to cannot be null.");
 
-            IMappingStrategy strategy = null;
             TargetMap targetMap = FindMappingStrategy(source.GetType(), targetType);
 
             // Complete a reverse lookup.
@@ -66,7 +66,8 @@ namespace NetFusion.Mapping.Core
             // If the mapping strategy instance was originally created by a IMappingStrategyFactory, 
             // return the cached instance.  Otherwise, create an instance of the custom mapping strategy
             // using the service provider..
-            strategy = targetMap.StrategyInstance ?? (IMappingStrategy)_services.GetRequiredService(targetMap.StrategyType);
+            var strategy = targetMap.StrategyInstance ?? 
+                           (IMappingStrategy)_services.GetRequiredService(targetMap.StrategyType);
 
             LogFoundMapping(targetMap);
             return strategy.Map(this, source);

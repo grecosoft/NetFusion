@@ -1,12 +1,13 @@
-﻿using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Messaging.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using NetFusion.Common.Extensions.Reflection;
+using NetFusion.Messaging.Exceptions;
+using NetFusion.Messaging.Types;
 
 namespace NetFusion.Messaging.Core
 {
@@ -65,7 +66,7 @@ namespace NetFusion.Messaging.Core
             Invoker = CreateHandlerDelegate();
         }
 
-        private Type GetQueryParamType(MethodInfo queryHandler)
+        private static Type GetQueryParamType(MethodInfo queryHandler)
         {
             return queryHandler.GetParameterTypes()
                 .First(pt => pt.CanAssignTo<IQuery>());

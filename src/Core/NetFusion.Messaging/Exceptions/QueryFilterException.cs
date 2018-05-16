@@ -1,9 +1,10 @@
-﻿using NetFusion.Base.Exceptions;
-using NetFusion.Common.Extensions.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using NetFusion.Base.Exceptions;
+using NetFusion.Common.Extensions.Tasks;
+using NetFusion.Messaging.Filters;
 
-namespace NetFusion.Messaging.Filters
+namespace NetFusion.Messaging.Exceptions
 {
     /// <summary>
     /// Contains information about a query filter that threw an exception when applied.

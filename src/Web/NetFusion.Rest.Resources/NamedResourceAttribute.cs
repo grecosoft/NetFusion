@@ -12,7 +12,7 @@ namespace NetFusion.Rest.Resources
 
         public NamedResourceAttribute(string resourceName)
         {
-            if (String.IsNullOrWhiteSpace(resourceName))
+            if (string.IsNullOrWhiteSpace(resourceName))
                 throw new ArgumentException("Resource name not specified.", nameof(resourceName));
 
             ResourceName = resourceName;

@@ -22,7 +22,7 @@
             </e>
             <e p="LogEvents.cs" t="Include" />
             <e p="NetFusion.Base.csproj" t="IncludeRecursive" />
-            <e p="Plugings" t="Include">
+            <e p="Plugins" t="Include">
               <e p="IKnownPluginType.cs" t="Include" />
             </e>
             <e p="Scripting" t="Include">
@@ -36,9 +36,9 @@
             </e>
             <e p="SerializerTypes.cs" t="Include" />
             <e p="Validation" t="Include">
+              <e p="DataAnnotationsValidator.cs" t="Include" />
               <e p="IObjectValidator.cs" t="Include" />
               <e p="IValidatableType.cs" t="Include" />
-              <e p="MSObjectValidator.cs" t="Include" />
               <e p="ObjectValidation.cs" t="Include" />
               <e p="ValidationItem.cs" t="Include" />
               <e p="ValidationResultException.cs" t="Include" />
@@ -107,6 +107,7 @@
               <e p="MappingModule.cs" t="Include" />
             </e>
             <e p="NetFusion.Mapping.csproj" t="IncludeRecursive" />
+            <e p="PluginTypeAccessorExtensions.cs" t="Include" />
             <e p="bin" t="ExcludeRecursive" />
             <e p="obj" t="ExcludeRecursive">
               <e p="Debug" t="Include">
@@ -232,16 +233,21 @@
             <e p="Enrichers" t="Include">
               <e p="CorrelationEnricher.cs" t="Include" />
               <e p="DateReceivedEnricher.cs" t="Include" />
-              <e p="EnricherException.cs" t="Include" />
               <e p="IMessageEnricher.cs" t="Include" />
               <e p="MessageEnricher.cs" t="Include" />
+            </e>
+            <e p="Exceptions" t="Include">
+              <e p="EnricherException.cs" t="Include" />
+              <e p="MessageDispatchException.cs" t="Include" />
+              <e p="PublisherException.cs" t="Include" />
+              <e p="QueryDispatchException.cs" t="Include" />
+              <e p="QueryFilterException.cs" t="Include" />
             </e>
             <e p="Filters" t="Include">
               <e p="ExpressionQueryFilter.cs" t="Include" />
               <e p="IPostQueryFilter.cs" t="Include" />
               <e p="IPreQueryFilter.cs" t="Include" />
               <e p="IQueryFilter.cs" t="Include" />
-              <e p="QueryFilterException.cs" t="Include" />
               <e p="ResultMapQueryFilter.cs" t="Include" />
             </e>
             <e p="IMessageConsumer.cs" t="Include" />
@@ -249,7 +255,6 @@
             <e p="IQueryConsumer.cs" t="Include" />
             <e p="InProcessHandlerAttribute.cs" t="Include" />
             <e p="IncludeDerivedMessagesAttribute.cs" t="Include" />
-            <e p="MessageDispatchException.cs" t="Include" />
             <e p="MessagingLogEvents.cs" t="Include" />
             <e p="MessagingManifest.cs" t="Include" />
             <e p="Modules" t="Include">
@@ -264,8 +269,6 @@
             </e>
             <e p="NetFusion.Messaging.csproj" t="IncludeRecursive" />
             <e p="PluginTypeAccessorExtensions.cs" t="Include" />
-            <e p="PublisherException.cs" t="Include" />
-            <e p="QueryDispatchException.cs" t="Include" />
             <e p="Rules" t="Include">
               <e p="ApplyDispatchRuleAttribute.cs" t="Include" />
               <e p="RuleApplyTypes.cs" t="Include" />
@@ -331,6 +334,10 @@
             </e>
             <e p="Messaging" t="Include">
               <e p="MockMessagingService.cs" t="Include" />
+            </e>
+            <e p="Modules" t="Include">
+              <e p="CatalogTestFixture.cs" t="Include" />
+              <e p="ModuleTestFixture.cs" t="Include" />
             </e>
             <e p="NetFusion.Test.csproj" t="IncludeRecursive" />
             <e p="Plugins" t="Include">
@@ -403,12 +410,6 @@
             </e>
           </e>
           <e p="NetFusion.Rest.Resources" t="IncludeRecursive">
-            <e p="Doc" t="Include">
-              <e p="DocActionAttribute.cs" t="Include" />
-              <e p="DocEmbeddedResourceAttribute.cs" t="Include" />
-              <e p="DocPropertyAttribute.cs" t="Include" />
-              <e p="DocResourceAttribute.cs" t="Include" />
-            </e>
             <e p="Hal" t="Include">
               <e p="HalEntryPointResource.cs" t="Include" />
               <e p="HalResource.cs" t="Include" />
@@ -559,6 +560,7 @@
               <e p="DynamicEntity.cs" t="Include" />
             </e>
             <e p="Validation" t="Include">
+              <e p="BasicValidationTests.cs" t="Include" />
               <e p="ValidationTests.cs" t="Include" />
             </e>
           </e>
@@ -579,6 +581,10 @@
             <e p="Tasks" t="Include">
               <e p="TaskTests.cs" t="Include" />
             </e>
+          </e>
+          <e p="Mapping" t="Include">
+            <e p="MappingModuleTests.cs" t="Include" />
+            <e p="ObjectMapperTests.cs" t="Include" />
           </e>
           <e p="bin" t="ExcludeRecursive" />
           <e p="obj" t="ExcludeRecursive">
@@ -603,6 +609,7 @@
             </e>
             <e p="ReflectionExtensionsTests.cs" t="Include" />
             <e p="RegistrationTests.cs" t="Include" />
+            <e p="TypeCatalogTests.cs" t="Include" />
           </e>
           <e p="CoreTests.csproj" t="IncludeRecursive" />
           <e p="Domain" t="Include">
@@ -611,13 +618,16 @@
             <e p="EntitySerializationTests.cs" t="Include" />
           </e>
           <e p="Messaging" t="Include">
-            <e p="AsyncDomainEventTests.cs" t="Include" />
+            <e p="Bootstrap" t="Include">
+              <e p="ConfigurationTests.cs" t="Include" />
+              <e p="DiscoveryTests.cs" t="Include" />
+              <e p="MessageDispatchModuleUnitTests.cs" t="Include" />
+              <e p="MessageEnricherModuleUnitTests.cs" t="Include" />
+            </e>
             <e p="CommandDispatchTests.cs" t="Include" />
-            <e p="ConfigurationTests.cs" t="Include" />
-            <e p="DiscoveryTests.cs" t="Include" />
             <e p="DispatchEvaluationTests.cs" t="Include" />
-            <e p="DispatchRuleTests.cs" t="Include" />
             <e p="DomainEventDispatchTests.cs" t="Include" />
+            <e p="MessageDispatcherUnitTests.cs" t="Include" />
             <e p="Mocks" t="Include">
               <e p="MockConsumer.cs" t="Include" />
               <e p="MockDomainEvent.cs" t="Include" />
@@ -629,12 +639,15 @@
             <e p="TestSetupExtensions.cs" t="Include" />
           </e>
           <e p="Queries" t="Include">
-            <e p="DispatchTests.cs" t="Include" />
+            <e p="Bootstrap" t="Include">
+              <e p="QueryDispatchModuleTests.cs" t="Include" />
+            </e>
             <e p="Mocks" t="Include">
               <e p="Consumers.cs" t="Include" />
               <e p="Queries.cs" t="Include" />
               <e p="QueryFilters.cs" t="Include" />
             </e>
+            <e p="QueryDispatchTests.cs" t="Include" />
             <e p="TestFixtureExtensions.cs" t="Include" />
           </e>
           <e p="Settings" t="Include">

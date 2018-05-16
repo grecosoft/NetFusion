@@ -1,7 +1,7 @@
-﻿using NetFusion.Base.Exceptions;
-using System;
+﻿using System;
+using NetFusion.Base.Exceptions;
 
-namespace NetFusion.Domain.Roslyn
+namespace NetFusion.Roslyn.Core
 {
     /// <summary>
     /// Exception thrown by script evaluation.

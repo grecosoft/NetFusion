@@ -1,9 +1,10 @@
 ﻿using CoreTests.Messaging.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Messaging;
+using NetFusion.Messaging.Exceptions;
 using NetFusion.Test.Container;
 using System.Threading.Tasks;
+using NetFusion.Messaging;
 using Xunit;
 
 namespace CoreTests.Messaging
@@ -34,7 +35,7 @@ namespace CoreTests.Messaging
                         cmdResult = await messagingSrv.SendAsync(cmd);
                     });
 
-                testResult.Assert.Services((System.IServiceProvider s) =>
+                testResult.Assert.Services(s =>
                 {
                     cmdResult.Should().NotBeNull();
                     cmdResult.Value.Should().Be("MOCK_VALUE");
@@ -61,7 +62,7 @@ namespace CoreTests.Messaging
                         await messagingSrv.SendAsync(cmd);
                     });
 
-                testResult.Assert.Services((System.IServiceProvider s) =>
+                testResult.Assert.Services(s =>
                 {
                     var consumer = s.GetRequiredService<MockCommandConsumer>();
                     consumer.ExecutedHandlers.Should().HaveCount(1);
@@ -86,7 +87,7 @@ namespace CoreTests.Messaging
 
                 testResult.Assert.Exception((PublisherException ex) =>
                 {
-                    ex.Message.Should().Contain("Exception publishing message.  See log for details.");
+                    Assert.True(ex.Message.Contains("Exception when invoking message publishers"));
                 });
             });
         }

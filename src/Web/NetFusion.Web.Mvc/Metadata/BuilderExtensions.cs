@@ -18,7 +18,7 @@ namespace NetFusion.Web.Mvc.Metadata
     /// </summary>
     public static class BuilderExtensions
     {
-        private const string DEFAULT_URL = "api/netfusion/route/metadata";
+        private const string DefaultUrl = "api/netfusion/route/metadata";
 
         /// <summary>
         /// Called when configuring an MVC application to specify
@@ -28,7 +28,7 @@ namespace NetFusion.Web.Mvc.Metadata
         /// <param name="baseUrl">The base URL used to query the metadata.</param>
         /// <returns>Application Builder</returns>
         public static IApplicationBuilder UseRouteMetadata(this IApplicationBuilder app, 
-            string baseUrl = DEFAULT_URL)
+            string baseUrl = DefaultUrl)
         {
             if (app == null) throw new ArgumentNullException(nameof(app));
 
@@ -45,7 +45,7 @@ namespace NetFusion.Web.Mvc.Metadata
         {
             app.UseMvc(routes =>
             {
-                routes.MapGet(baseUrl + "/groups", (HttpContext context) =>
+                routes.MapGet(baseUrl + "/groups", context =>
                 {
                     using (var scope = AppContainer.Instance.CreateServiceScope())
                     {
@@ -55,7 +55,7 @@ namespace NetFusion.Web.Mvc.Metadata
                     }
                 });
 
-                routes.MapGet(baseUrl + "/groups/{groupName}", (HttpContext context) =>
+                routes.MapGet(baseUrl + "/groups/{groupName}", context =>
                 {
                     using (var scope = AppContainer.Instance.CreateServiceScope())
                     {

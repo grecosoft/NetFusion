@@ -16,14 +16,14 @@ namespace NetFusion.Base.Scripting
         {
             if (string.IsNullOrWhiteSpace(expression))
             {
-                throw new ArgumentException("Expression cannot be null or contain an empty string", 
+                throw new ArgumentException("Expression cannot be null or contain an empty string.", 
                     nameof(expression));
             }
 
             if (sequence < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(sequence), 
-                    "Expression sequence must be greater or equal to 0");
+                    "Expression sequence must be greater or equal to 0.");
             }
             
             Expression = expression;
@@ -43,7 +43,8 @@ namespace NetFusion.Base.Scripting
         public string Expression { get; }
 
         /// <summary>
-        /// The order in which the expression should be executed within the script.
+        /// The order in which the expression should be executed in relation to other expressions
+        /// defined within the script.
         /// </summary>
         public int Sequence { get; }
 

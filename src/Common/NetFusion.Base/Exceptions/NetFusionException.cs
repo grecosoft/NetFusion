@@ -8,7 +8,7 @@ namespace NetFusion.Base.Exceptions
     /// </summary>
     public class NetFusionException : Exception
     {
-        private const string NETFUSION_DETAILS_VALUE = "NetFusionExDetails";
+        private const string NetfusionDetailsValue = "NetFusionExDetails";
 
         /// <summary>
         /// Dictionary of key/value pairs containing details of the exception.  This property
@@ -19,7 +19,7 @@ namespace NetFusion.Base.Exceptions
         /// <summary>
         /// Default Constructor.
         /// </summary>
-        public NetFusionException()
+        protected NetFusionException()
         {
     
         }
@@ -28,7 +28,7 @@ namespace NetFusion.Base.Exceptions
         /// Constructor.
         /// </summary>
         /// <param name="message">The message describing the exception.</param>
-        public NetFusionException(string message)
+        protected NetFusionException(string message)
             : base(message)
         {
 
@@ -40,7 +40,7 @@ namespace NetFusion.Base.Exceptions
         /// <param name="message">The message describing the exception.</param>
         /// <param name="innerException">The source of the exception.  If an exception deriving 
         /// from NetFusionException, the details will be added as inner details to this exception.</param>
-        public NetFusionException(string message, Exception innerException)
+        protected NetFusionException(string message, Exception innerException)
             : base(message, innerException)
         {
             Details["Message"] = message;
@@ -60,10 +60,10 @@ namespace NetFusion.Base.Exceptions
         /// <param name="detailKey">Value used to identify the exception details.</param>
         /// <param name="details">Object containing details of the application's state
         /// at the time of the exception.</param>
-        public NetFusionException(string message, string detailKey, object details)
+        protected NetFusionException(string message, string detailKey, object details)
             : base(message)
         {
-            if (String.IsNullOrWhiteSpace(detailKey)) throw new ArgumentException(
+            if (string.IsNullOrWhiteSpace(detailKey)) throw new ArgumentException(
                 "Key to identify exception details not specified.", nameof(detailKey));
 
             Details[detailKey] = details ?? throw new ArgumentNullException(nameof(details),
@@ -78,10 +78,10 @@ namespace NetFusion.Base.Exceptions
         /// <param name="detailKey">Value used to identify the exception details.</param>
         /// <param name="details">Object containing details of the application's state
         /// at the time of the exception.</param>
-        public NetFusionException(string message, Exception innerException, string detailKey, object details)
+        protected NetFusionException(string message, Exception innerException, string detailKey, object details)
             : base(message, innerException)
         {
-            if (String.IsNullOrWhiteSpace(detailKey)) throw new ArgumentException(
+            if (string.IsNullOrWhiteSpace(detailKey)) throw new ArgumentException(
                 "Key to identify exception details not specified.", nameof(detailKey));
 
             Details[detailKey] = details ?? throw new ArgumentNullException(nameof(details),

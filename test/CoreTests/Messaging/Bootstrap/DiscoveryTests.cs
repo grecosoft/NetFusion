@@ -1,12 +1,12 @@
-﻿using CoreTests.Messaging.Mocks;
+﻿using System.Linq;
+using CoreTests.Messaging.Mocks;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging.Modules;
 using NetFusion.Test.Container;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 using Xunit;
 
-namespace CoreTests.Messaging
+namespace CoreTests.Messaging.Bootstrap
 {
     /// <summary>
     /// Unit test asserting that the message types and message consumer were
@@ -56,8 +56,10 @@ namespace CoreTests.Messaging
 
                     dispatchInfo.MessageType.Should().Be(typeof(MockDomainEvent));
                     dispatchInfo.ConsumerType.Should().Be(typeof(MockDomainEventConsumer));
-                    dispatchInfo.MessageHandlerMethod.Should()
-                        .Equals(typeof(MockDomainEventConsumer).GetMethod("OnEventHandlerOne"));
+                    
+                    Assert.Equal(
+                        typeof(MockDomainEventConsumer).GetMethod("OnEventHandlerOne"),
+                        dispatchInfo.MessageHandlerMethod);
                 });
             });    
         }

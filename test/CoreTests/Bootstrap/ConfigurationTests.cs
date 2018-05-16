@@ -2,13 +2,11 @@
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
-using Microsoft.Extensions.FileProviders;
 using NetFusion.Bootstrap.Configuration;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;
 using System;
-using System.IO;
 using System.Linq;
 using Xunit;
 
@@ -165,24 +163,6 @@ namespace CoreTests.Bootstrap
 
             string GetFileAtPosition(ConfigurationBuilder builder, int position)
                 => builder.Sources.OfType<JsonConfigurationSource>().ElementAt(position)?.Path ?? "";
-        }
-
-        /// <summary>
-        /// The default MS Configuration Extensions set by NetFusion if used specifies the application's
-        /// current directory as the root location of the configuration files.  This allows the same
-        /// configuration to be used between ASP.NET applications and Console executables.
-        /// </summary>
-        [Fact(DisplayName = "MS Configuration Extensions file-provider Location set.")]
-        public void MsConfigExtenions_FileProvider_LocationSet()
-        {
-            string expectedDirectoryName = Directory.GetCurrentDirectory();
-
-            ConfigurationBuilder configBuilder = new ConfigurationBuilder();
-            configBuilder.AddAppSettings();
-
-            configBuilder.Properties.Keys.Should().Contain("FileProvider");
-            var fileProvider = configBuilder.Properties["FileProvider"].Should().BeOfType<PhysicalFileProvider>().Subject;
-            fileProvider.Root.Should().Equals(expectedDirectoryName);
         }
 
         /// <summary>

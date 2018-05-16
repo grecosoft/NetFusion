@@ -1,13 +1,13 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Modules;
-using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Test.Container;
 using Xunit;
 
-namespace CoreTests.Messaging
+namespace CoreTests.Messaging.Bootstrap
 {
     /// <summary>
     /// Tests that assert that the messaging plug-in was correctly initialized

@@ -65,7 +65,7 @@
             /// an RFC can have a link to the Internet-Draft that became the RFC; in that case, the link relation would 
             /// be "convertedFrom".
             /// </summary>
-            public const string convertedFrom = "convertedFrom";
+            public const string ConvertedFrom = "convertedFrom";
 
             /// <summary>
             /// Refers to the immediately preceding archive resource.
@@ -136,7 +136,7 @@
             /// <summary>
             /// Refers to a copyright statement that applies to the link's context.
             /// </summary>
-            public const string copyright = "copyright";
+            public const string Copyright = "copyright";
 
             /// <summary>
             /// Refers to context-sensitive help.

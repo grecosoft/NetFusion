@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 
 namespace NetFusion.Web.Mvc.Metadata.Core
 {
@@ -59,7 +60,7 @@ namespace NetFusion.Web.Mvc.Metadata.Core
             return attrib.ActionName;
         }
 
-        private ApiParameterMeta[] GetActionParameters(ControllerActionDescriptor actionDescriptor) 
+        private static ApiParameterMeta[] GetActionParameters(ActionDescriptor actionDescriptor) 
         {
             return actionDescriptor.Parameters.OfType<ControllerParameterDescriptor>()
                 .Select(p => new ApiParameterMeta(p))

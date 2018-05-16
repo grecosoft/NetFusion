@@ -1,8 +1,8 @@
-﻿using Microsoft.CodeAnalysis.Scripting;
+﻿using System;
+using Microsoft.CodeAnalysis.Scripting;
 using NetFusion.Base.Scripting;
-using System;
 
-namespace NetFusion.Domain.Roslyn.Core
+namespace NetFusion.Roslyn.Core
 {
     /// <summary>
     /// The entity expression and the associated compiled script to be executed at runtime.

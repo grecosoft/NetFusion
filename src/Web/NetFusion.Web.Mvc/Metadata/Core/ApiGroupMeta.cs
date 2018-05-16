@@ -22,8 +22,8 @@ namespace NetFusion.Web.Mvc.Metadata.Core
         public ApiGroupMeta(string groupName, 
             ApiActionMeta[] actions)
         {
-            if (string.IsNullOrWhiteSpace(groupName)) throw new ArgumentException(nameof(groupName), 
-                "Group name cannot be null or empty string.");
+            if (string.IsNullOrWhiteSpace(groupName)) throw new ArgumentException(
+                    "Group name cannot be null or empty string.", nameof(groupName));
             
             GroupName = groupName;
             Actions = actions ?? throw new ArgumentNullException(nameof(actions));

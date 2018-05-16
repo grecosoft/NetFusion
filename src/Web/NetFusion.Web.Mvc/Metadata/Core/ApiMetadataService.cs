@@ -15,7 +15,7 @@ namespace NetFusion.Web.Mvc.Metadata.Core
     public class ApiMetadataService : IApiMetadataService
     {
         private readonly IApiDescriptionGroupCollectionProvider _descriptionProvider;
-        private Lazy<ApiGroupMeta[]> _metadata;
+        private readonly Lazy<ApiGroupMeta[]> _metadata;
 
         public ApiMetadataService(
             IApiDescriptionGroupCollectionProvider descriptionProvider)
@@ -71,7 +71,7 @@ namespace NetFusion.Web.Mvc.Metadata.Core
             }
         }
 
-        private IEnumerable<ApiActionMeta> GetGroupActions(IReadOnlyList<ApiDescription> descriptions)
+        private static IEnumerable<ApiActionMeta> GetGroupActions(IEnumerable<ApiDescription> descriptions)
         {
             foreach(ApiDescription description in descriptions)
             {
@@ -83,7 +83,7 @@ namespace NetFusion.Web.Mvc.Metadata.Core
             }
         }
 
-        private bool IsDiscoverableAction(ControllerActionDescriptor actionDescriptor)
+        private static bool IsDiscoverableAction(ControllerActionDescriptor actionDescriptor)
         {
             return actionDescriptor.MethodInfo.HasAttribute<ActionMetaAttribute>();
         }

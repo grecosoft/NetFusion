@@ -38,6 +38,7 @@ namespace NetFusion.Rest.Client
         /// <summary>
         /// The media-type of the returned response content.
         /// Null if the response didn't contain content.
+        /// </summary>
         public string MediaType { get; }
 
         /// <summary>

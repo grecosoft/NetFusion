@@ -1,14 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions.Collections;
-using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Messaging.Core;
-using NetFusion.Messaging.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Bootstrap.Plugins;
+using NetFusion.Common.Extensions.Collections;
+using NetFusion.Common.Extensions.Reflection;
+using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Exceptions;
+using NetFusion.Messaging.Types;
 
 namespace NetFusion.Messaging.Modules
 {
@@ -37,10 +38,7 @@ namespace NetFusion.Messaging.Modules
 
         public override void RegisterServices(IServiceCollection services)
         {
-            // Register the dispatcher used specifically for queries.
-            services.AddScoped<QueryDispatcher>();
-
-            RegisterQueryConsumers(services);
+           RegisterQueryConsumers(services);
         }
 
         // Register all query consumers within the container so they can be resolved 
@@ -94,8 +92,11 @@ namespace NetFusion.Messaging.Modules
             {
                 var queryType = queryDispatcherRegistration.Key;
                 var queryDispatcher = queryDispatcherRegistration.Value;
+                var queryTypeName = queryType.FullName;
 
-                messagingDispatchLog[queryType.FullName] = new {
+                if (queryTypeName == null) continue;
+                
+                messagingDispatchLog[queryTypeName] = new {
                     Consumer = queryDispatcher.ConsumerType.FullName,
                     Method = queryDispatcher.HandlerMethod.Name,
                     queryDispatcher.IsAsync

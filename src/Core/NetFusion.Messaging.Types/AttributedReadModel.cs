@@ -11,17 +11,15 @@ namespace NetFusion.Messaging.Types
     /// </summary>
     public class AttributedReadModel : IAttributedEntity
     {
-        private readonly IEntityAttributes _attributes;
-
-        public AttributedReadModel()
-        {
-            _attributes = new EntityAttributes();
-        }
-
         /// <summary>
         /// Set of dynamic properties associated with the model.
         /// </summary>
-        public IEntityAttributes Attributes => _attributes;
+        public IEntityAttributes Attributes { get; }
+        
+        public AttributedReadModel()
+        {
+            Attributes = new EntityAttributes();
+        }
 
         /// <summary>
         /// Used to set and retrieve the properties associated with the module.
@@ -29,8 +27,8 @@ namespace NetFusion.Messaging.Types
         /// </summary>
         public IDictionary<string, object> AttributeValues
         {
-            get => _attributes.GetValues();
-            set => _attributes.SetValues(value);
+            get => Attributes.GetValues();
+            set => Attributes.SetValues(value);
         }
     }
 }

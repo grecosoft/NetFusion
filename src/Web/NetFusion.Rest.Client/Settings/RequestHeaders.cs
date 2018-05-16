@@ -47,7 +47,7 @@ namespace NetFusion.Rest.Client.Settings
         /// <param name="value">The value of the header.</param>
         public RequestHeaders Add(string name,  params string[] value)
         {
-			if (String.IsNullOrWhiteSpace(name))
+			if (string.IsNullOrWhiteSpace(name))
 				throw new ArgumentException("Header name not specified.", nameof(name));
 
             if (IsKnownHeaderName(name))
@@ -62,7 +62,7 @@ namespace NetFusion.Rest.Client.Settings
             return this;
         }
 
-        private bool IsKnownHeaderName(string name)
+        private static bool IsKnownHeaderName(string name)
         {
             return new[] { HttpHeaderNames.Accept, HttpHeaderNames.ContentType }.Contains(name);
         }

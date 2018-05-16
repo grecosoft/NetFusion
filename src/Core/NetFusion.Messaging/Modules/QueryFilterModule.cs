@@ -22,7 +22,7 @@ namespace NetFusion.Messaging.Modules
         }
 
         // The pre and post filters configured for the application host during bootstrap configuration.
-        public IReadOnlyCollection<Type> QueryFilterTypes => _queryDispatchConfig.QueryFilters;
+        public IEnumerable<Type> QueryFilterTypes => _queryDispatchConfig.QueryFilters;
 
         // Registers the pre and post filters within the container so the can 
         // inject needed services.
