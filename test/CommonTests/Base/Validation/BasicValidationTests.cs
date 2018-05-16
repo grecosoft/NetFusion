@@ -38,14 +38,14 @@ namespace CommonTests.Base.Validation
             var resultSet = validator.Validate();
 
             Assert.NotNull(resultSet.ObjectValidations);
-            Assert.Equal(1, resultSet.ObjectValidations.Length);
+            Assert.Single(resultSet.ObjectValidations);
             Assert.Equal(testObj, resultSet.RootObject);
 
             var objValItem = resultSet.ObjectValidations.First();
             Assert.Equal(testObj, objValItem.Object);
             
             Assert.NotNull(objValItem.Validations);
-            Assert.Equal(1, objValItem.Validations.Length);
+            Assert.Single(objValItem.Validations);
 
             var valItem = objValItem.Validations.First();
             
@@ -70,7 +70,7 @@ namespace CommonTests.Base.Validation
                 .SelectMany(ov => ov.Validations)
                 .ToArray();
 
-            Assert.Equal(1, allValidations.Length);
+            Assert.Single(allValidations);
 
             var valItem = allValidations.First();
             Assert.Equal("Value can't be 13.", valItem.Message);
@@ -100,7 +100,7 @@ namespace CommonTests.Base.Validation
                 .SelectMany(ov => ov.Validations)
                 .ToArray();
 
-            Assert.Equal(1, allValidations.Length);
+            Assert.Single(allValidations);
 
             var valItem = allValidations.First();
             Assert.Equal("Value can't be 1013.", valItem.Message);
@@ -201,8 +201,8 @@ namespace CommonTests.Base.Validation
             var validator = new DataAnnotationsValidator(testObj);
             var resultSet = validator.Validate();
             
-            Assert.Equal(1, resultSet.GetValidationsOfType(ValidationTypes.Info).Count());
-            Assert.Equal(1, resultSet.GetValidationsOfType(ValidationTypes.Warning).Count());
+            Assert.Single(resultSet.GetValidationsOfType(ValidationTypes.Info));
+            Assert.Single(resultSet.GetValidationsOfType(ValidationTypes.Warning));
         }
 
         [Fact]

@@ -30,7 +30,7 @@ namespace CommonTests.Mapping
             
             // Assert:
             Assert.NotNull(module.StrategyFactories);
-            Assert.Equal(1, module.StrategyFactories.Count());           
+            Assert.Single(module.StrategyFactories);           
             Assert.Equal(1, module.SourceTypeMappings.Count);
             
             // .. Get the list of possible target types for the source type:
@@ -38,7 +38,7 @@ namespace CommonTests.Mapping
             var targetMappings = module.SourceTypeMappings[typeof(TestMapTypeOne)].ToArray();
             
             Assert.NotNull(targetMappings);           
-            Assert.Equal(1, targetMappings.Count());
+            Assert.Single(targetMappings);
 
             // ... Any strategies returned from a factory are cached:
             var targetMapping = targetMappings.First();
@@ -71,10 +71,10 @@ namespace CommonTests.Mapping
             var targetMappings = module.SourceTypeMappings[typeof(TestMapTypeThree)].ToArray();
             
             Assert.NotNull(targetMappings);           
-            Assert.Equal(1, targetMappings.Count());
+            Assert.Single(targetMappings);
 
             // ... Specific mapping strategies are not created and cached but are
-            // ... instanciated from the service collection.
+            // ... instantiated from the service collection.
             var targetMapping = targetMappings.First();
             Assert.Null(targetMapping.StrategyInstance);
             
@@ -96,7 +96,7 @@ namespace CommonTests.Mapping
             module.RegisterServices(services);
             
             // Assert:
-            Assert.Equal(1, services.Count);
+            Assert.Single(services);
             Assert.Equal(ServiceLifetime.Scoped, services.First().Lifetime);
         }
 
@@ -111,7 +111,7 @@ namespace CommonTests.Mapping
             module.RegisterDefaultServices(services);
             
             // Assert:
-            Assert.Equal(1, services.Count);
+            Assert.Single(services);
             Assert.Equal(typeof(IObjectMapper), services.First().ServiceType);
             Assert.Equal(typeof(ObjectMapper), services.First().ImplementationType);
             Assert.Equal(ServiceLifetime.Scoped, services.First().Lifetime);

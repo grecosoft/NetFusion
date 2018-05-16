@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using NetFusion.Common.Extensions.Reflection;
 using System;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -62,7 +61,9 @@ namespace CommonTests.Extensions.Reflection
                 .IsCancellableMethod().Should().BeFalse();
         }
 
+#pragma warning disable xUnit1013 // Public method should be marked as test
         public static Task AsyncMethodToTest()
+#pragma warning restore xUnit1013 // Public method should be marked as test
         {
             throw new NotImplementedException();
         }
@@ -77,7 +78,9 @@ namespace CommonTests.Extensions.Reflection
             throw new NotImplementedException();
         }
 
+#pragma warning disable xUnit1013 // Public method should be marked as test
         public static void NonAsyncVoidMethod()
+#pragma warning restore xUnit1013 // Public method should be marked as test
         {
 
         }

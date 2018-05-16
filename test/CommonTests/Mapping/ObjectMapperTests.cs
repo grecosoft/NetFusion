@@ -39,7 +39,7 @@ namespace CommonTests.Mapping
 
                 testResult.Assert.Exception<InvalidOperationException>(ex =>
                 {
-                    Assert.True(ex.Message.Contains("Mapping strategy not found."));
+                    Assert.Contains("Mapping strategy not found.", ex.Message);
                 });
             });
         }
@@ -108,9 +108,9 @@ namespace CommonTests.Mapping
                 {
                     Assert.NotNull(testTgtObj);
                     Assert.Equal(3, testTgtObj.Values.Length);
-                    Assert.True(testTgtObj.Values.Contains(5));
-                    Assert.True(testTgtObj.Values.Contains(60));
-                    Assert.True(testTgtObj.Values.Contains(65));
+                    Assert.Contains(5, testTgtObj.Values);
+                    Assert.Contains(60, testTgtObj.Values);
+                    Assert.Contains(65, testTgtObj.Values);
                 });
             });
         }
