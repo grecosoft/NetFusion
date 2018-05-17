@@ -46,6 +46,15 @@ namespace NetFusion.Bootstrap.Container
             where T : IContainerConfig, new();
 
         /// <summary>
+        /// Allows a delegate to be specified that is called right before the service provider is 
+        /// created from the service-collection.  This is that last point at which the host can
+        /// specify services.
+        /// </summary>
+        /// <param name="registration">Delegate used to add service registrations.</param>
+        /// <returns>The application container.</returns>
+        IAppContainer WithServices(Action<IServiceCollection> registration);
+
+        /// <summary>
         /// Loads and initializes all of the plug-ins but does not start their execution.
         /// </summary>
         /// <returns>Reference to the loaded container that can be started.</returns>

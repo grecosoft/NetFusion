@@ -43,6 +43,7 @@ namespace NetFusion.Bootstrap.Container
 
         // Microsoft Common Abstractions:
         private readonly IServiceCollection _serviceCollection;
+        private Action<IServiceCollection> _registration;
         private readonly IConfiguration _configuration;
         private readonly ILoggerFactory _loggerFactory;
         
@@ -243,6 +244,14 @@ namespace NetFusion.Bootstrap.Container
             WithConfig(config);
 
             configInit(config);
+            return this;
+        }
+
+        public IAppContainer WithServices(Action<IServiceCollection> registration)
+        {
+            _registration = registration ?? throw new ArgumentNullException(nameof(registration), 
+                "Service registration delegate not specified.");
+
             return this;
         }
 
@@ -498,6 +507,10 @@ namespace NetFusion.Bootstrap.Container
             RegisterAppContainerAsService();
             RegisterPluginModuleServices();
             RegisterContainerProvidedServices();
+
+            // Before creating the service provider, allow the host to add any additional 
+            // services and also an opportunity to override any existing added services. 
+            AddServiceRegistrations();
   
             // Create service provider from populated service collection.
             _serviceProvider = _serviceCollection.BuildServiceProvider(true);
@@ -526,6 +539,11 @@ namespace NetFusion.Bootstrap.Container
             _serviceCollection.AddSingleton<IConfiguration>(_configuration);
             _serviceCollection.AddSingleton<IValidationService, ValidationService>();
             _serviceCollection.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();            
+        }
+
+        private void AddServiceRegistrations()
+        {
+            _registration?.Invoke(_serviceCollection);
         }
 
         //------------------------------------------Logging------------------------------------------//
