@@ -10,8 +10,8 @@ namespace NetFusion.Test.Messaging
 {
     /// <summary>
     /// Implementation of the IMessagingService that can be passed to a dependent component that is
-    /// under test.  This mock implementation allows known expected respones to be registered for
-    /// commands.  Alos, the received Command, Queries, and Domain events are recorded so they can
+    /// under test.  This mock implementation allows known expected response to be registered for
+    /// commands.  Also, the received Command, Queries, and Domain events are recorded so they can
     /// be asserted by the unit-test if needed.
     /// </summary>
     public class MockMessagingService : IMessagingService

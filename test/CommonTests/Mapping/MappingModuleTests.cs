@@ -12,9 +12,9 @@ namespace CommonTests.Mapping
     public class MappingModuleTests
     {
         /// <summary>
-        /// One or more IMappingStrategyFactory types can be defined.  When the MappingModule boostraps,
+        /// One or more IMappingStrategyFactory types can be defined.  When the MappingModule bootstraps,
         /// it finds all the factories and executes their GetStrategies method to get the created mapping
-        /// strategy instances.  These instances are cached and are stored within the Sevice Container.
+        /// strategy instances.  These instances are cached and are stored within the Service Container.
         /// If a mapping strategy needs to inject a dependency, then a specific strategy should be defined
         /// which will be found and added to the service container (see next 2 unit tests);
         /// </summary>

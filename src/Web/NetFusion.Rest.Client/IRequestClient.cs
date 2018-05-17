@@ -10,11 +10,11 @@ namespace NetFusion.Rest.Client
     public interface IRequestClient
     {
         /// <summary>
-        /// Return the service api entry resource associated with the client.
+        /// Return the service API entry resource associated with the client.
         /// If the client was built without specifying the entry point address,
         /// an exception is thrown.
         /// </summary>
-        /// <returns>The entry point response containing the root api of the service.</returns>
+        /// <returns>The entry point response containing the root API of the service.</returns>
         Task<HalEntryPointResource> GetApiEntry();
 
         /// <summary>

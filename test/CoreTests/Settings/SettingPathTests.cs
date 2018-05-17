@@ -20,7 +20,7 @@ namespace CoreTests.Settings
             var appSettings = new BaseSettingClass();
             var path = appSettings.GetSectionPath();
                 
-            Assert.Equal(path, "A:B");
+            Assert.Equal("A:B", path);
         }
         
         [Fact]

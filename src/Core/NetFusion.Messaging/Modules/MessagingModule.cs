@@ -6,7 +6,7 @@ namespace NetFusion.Messaging.Modules
 {
     /// <summary>
     /// The root messaging module that registering the MessagingService that delegates
-    /// to specific inner classes responsible for inplementing the CQRS design pattern.
+    /// to specific inner classes responsible for implementing the CQRS design pattern.
     /// </summary>
     public class MessagingModule : PluginModule
     {

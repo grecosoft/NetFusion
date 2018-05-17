@@ -5,7 +5,7 @@ namespace NetFusion.Rest.Client.Core
     /// <summary>
     /// Class that wraps an instance of a IRequestClient and can be stored withing the
     /// services collection for a specific derived IRequestClientService interface used
-    /// to represent a specific service api base address.
+    /// to represent a specific service API base address.
     /// </summary> 
     public abstract class RequestClientService : IRequestClientService
     {

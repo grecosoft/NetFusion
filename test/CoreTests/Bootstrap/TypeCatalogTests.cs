@@ -19,8 +19,8 @@ namespace CoreTests.Bootstrap
             Assert.Equal(2, catalog.Services.Count);
             Assert.True(catalog.Services.All(s => s.ServiceType == typeof(ICommonComponent)));
             Assert.True(catalog.Services.All(s => s.Lifetime == ServiceLifetime.Scoped));
-            Assert.True(catalog.Services.Any(s => s.ImplementationType == typeof(ComponentOne)));
-            Assert.True(catalog.Services.Any(s => s.ImplementationType == typeof(ComponentTwo)));
+            Assert.Contains(catalog.Services, s => s.ImplementationType == typeof(ComponentOne));
+            Assert.Contains(catalog.Services, s => s.ImplementationType == typeof(ComponentTwo));
         }
 
         [Fact]
@@ -34,8 +34,8 @@ namespace CoreTests.Bootstrap
             
             Assert.Equal(2, catalog.Services.Count);
             Assert.True(catalog.Services.All(s => s.Lifetime == ServiceLifetime.Scoped));
-            Assert.True(catalog.Services.Any(s => s.ServiceType == typeof(ComponentOne) && s.ImplementationType == typeof(ComponentOne)));
-            Assert.True(catalog.Services.Any(s => s.ServiceType == typeof(ComponentTwo) && s.ImplementationType == typeof(ComponentTwo)));
+            Assert.Contains(catalog.Services, s => s.ServiceType == typeof(ComponentOne) && s.ImplementationType == typeof(ComponentOne));
+            Assert.Contains(catalog.Services, s => s.ServiceType == typeof(ComponentTwo) && s.ImplementationType == typeof(ComponentTwo));
         }
 
         [Fact]
@@ -49,8 +49,8 @@ namespace CoreTests.Bootstrap
             
             Assert.Equal(2, catalog.Services.Count);
             Assert.True(catalog.Services.All(s => s.Lifetime == ServiceLifetime.Transient));
-            Assert.True(catalog.Services.Any(s => s.ImplementationType == typeof(ComponentOne)));
-            Assert.True(catalog.Services.Any(s => s.ImplementationType == typeof(ComponentTwo)));
+            Assert.Contains(catalog.Services, s => s.ImplementationType == typeof(ComponentOne));
+            Assert.Contains(catalog.Services, s => s.ImplementationType == typeof(ComponentTwo));
         }
 
         [Fact]
@@ -65,8 +65,8 @@ namespace CoreTests.Bootstrap
             Assert.Equal(2, catalog.Services.Count);
             Assert.True(catalog.Services.All(s => s.ImplementationType == typeof(ComponentTwo)));
             Assert.True(catalog.Services.All(s => s.Lifetime == ServiceLifetime.Scoped));
-            Assert.True(catalog.Services.Any(s => s.ServiceType == typeof(ICommonComponent)));
-            Assert.True(catalog.Services.Any(s => s.ServiceType == typeof(ISpecial)));
+            Assert.Contains(catalog.Services, s => s.ServiceType == typeof(ICommonComponent));
+            Assert.Contains(catalog.Services, s => s.ServiceType == typeof(ISpecial));
         }
 
         [Fact]
@@ -79,8 +79,8 @@ namespace CoreTests.Bootstrap
             Assert.Equal(2, catalog.Services.Count);
             Assert.True(catalog.Services.All(s => s.ImplementationType == typeof(ComponentTwo)));
             Assert.True(catalog.Services.All(s => s.Lifetime == ServiceLifetime.Scoped));
-            Assert.True(catalog.Services.Any(s => s.ServiceType == typeof(ICommonComponent)));
-            Assert.True(catalog.Services.Any(s => s.ServiceType == typeof(ISpecial)));
+            Assert.Contains(catalog.Services, s => s.ServiceType == typeof(ICommonComponent));
+            Assert.Contains(catalog.Services, s => s.ServiceType == typeof(ISpecial));
         }
 
 

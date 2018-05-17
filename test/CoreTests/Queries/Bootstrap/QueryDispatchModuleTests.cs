@@ -55,7 +55,7 @@ namespace CoreTests.Queries.Bootstrap
                 sd.ServiceType == consumerType &&
                 sd.ImplementationType == consumerType);
             
-            Assert.Equal(1, consumerService.Count());
+            Assert.Single(consumerService);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace CoreTests.Queries.Bootstrap
             }
             catch (QueryDispatchException ex)
             {
-                Assert.True(ex.Message.Contains("A query can only have one consumer"));
+                Assert.Contains("A query can only have one consumer", ex.Message);
                 return;
             }
 
@@ -90,7 +90,6 @@ namespace CoreTests.Queries.Bootstrap
             public Task<int> OnMockQuery(MockQuery query, CancellationToken cancellationToken)
             {
                 Assert.NotNull(query);
-                Assert.NotNull(cancellationToken);
                 return Task.FromResult(100);
             }
         }
@@ -100,7 +99,6 @@ namespace CoreTests.Queries.Bootstrap
             public Task<int> OnMockQuery(MockQuery query, CancellationToken cancellationToken)
             {
                 Assert.NotNull(query);
-                Assert.NotNull(cancellationToken);
                 return Task.FromResult(100);
             }
         }

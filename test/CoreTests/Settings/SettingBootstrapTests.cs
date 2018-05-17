@@ -16,7 +16,7 @@ namespace CoreTests.Settings
     {
         /// <summary>
         /// When normally adding configuration settings as option classes for a section, one needs to invoke
-        /// Comfigure on the ServiceCollection for each option and specify the associated configuration path.
+        /// Configure on the ServiceCollection for each option and specify the associated configuration path.
         /// The NetFusion.Plugin does it automatically during the bootstrap process by locating all classes
         /// implementing IAppSettings and automatically configuring them using the section path determined
         /// by the specified ConfigurationSection attributes.
@@ -39,10 +39,10 @@ namespace CoreTests.Settings
 
             var serviceTypes = services.Select(s => s.ServiceType).ToArray();
             
-            Assert.True(serviceTypes.Contains(typeof(IOptionsChangeTokenSource<TestSettingsOne>)));
-            Assert.True(serviceTypes.Contains(typeof(IConfigureOptions<TestSettingsOne>)));
-            Assert.True(serviceTypes.Contains(typeof(IOptionsChangeTokenSource<TestSettingsTwo>)));
-            Assert.True(serviceTypes.Contains(typeof(IConfigureOptions<TestSettingsTwo>)));
+            Assert.Contains(typeof(IOptionsChangeTokenSource<TestSettingsOne>), serviceTypes);
+            Assert.Contains(typeof(IConfigureOptions<TestSettingsOne>), serviceTypes);
+            Assert.Contains(typeof(IOptionsChangeTokenSource<TestSettingsTwo>), serviceTypes);
+            Assert.Contains(typeof(IConfigureOptions<TestSettingsTwo>), serviceTypes);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace CoreTests.Settings
             module.Log(log);
             
             // Assert:
-            Assert.Equal(1, log.Count);
+            Assert.Single(log);
             var logItem = log.First();
 
             Assert.Equal("Application:Settings", logItem.Key);

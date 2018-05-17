@@ -49,7 +49,7 @@ namespace NetFusion.Rest.Client
 
         /// <summary>
         /// Sets a child path of the base address that is to be invoked to load the 
-        /// root service api methods to which the client can communicated.  All other
+        /// root service API methods to which the client can communicated.  All other
         /// URLs are obtained from returned resources.
         /// </summary>
         /// <param name="entryPointPath">Child path of bass address (Optional).</param>

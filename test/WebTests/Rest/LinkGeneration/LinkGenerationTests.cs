@@ -1,5 +1,4 @@
-﻿using InfrastructureTests.Web.Rest.ClientRequests;
-using InfrastructureTests.Web.Rest.Setup;
+﻿using InfrastructureTests.Web.Rest.Setup;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Test.Plugins;

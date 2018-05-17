@@ -87,7 +87,7 @@ namespace CoreTests.Messaging
 
                 testResult.Assert.Exception((PublisherException ex) =>
                 {
-                    Assert.True(ex.Message.Contains("Exception when invoking message publishers"));
+                    Assert.Contains("Exception when invoking message publishers", ex.Message);
                 });
             });
         }

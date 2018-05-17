@@ -58,7 +58,7 @@ namespace CoreTests.Messaging.Bootstrap
             module.Initialize();
             
             // Assert
-            Assert.True(module.DispatchConfig.EnricherTypes.Contains(typeof(DateReceivedEnricher)));
+            Assert.Contains(typeof(DateReceivedEnricher), module.DispatchConfig.EnricherTypes);
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace CoreTests.Messaging.Bootstrap
             module.Initialize();
             
             // Assert
-            Assert.True(module.DispatchConfig.EnricherTypes.Contains(typeof(CorrelationEnricher)));
+            Assert.Contains(typeof(CorrelationEnricher), module.DispatchConfig.EnricherTypes);
         }
         
         [Fact]
@@ -115,13 +115,13 @@ namespace CoreTests.Messaging.Bootstrap
             Assert.Equal(2, catalog.Services.Count);
             Assert.True(catalog.Services.All(sd => sd.Lifetime == ServiceLifetime.Scoped));
             
-            Assert.True(catalog.Services.Any(sd => 
+            Assert.Contains(catalog.Services, sd => 
                 sd.ServiceType == typeof(MessageConsumerOne) && 
-                sd.ImplementationType == typeof(MessageConsumerOne)));
+                sd.ImplementationType == typeof(MessageConsumerOne));
             
-            Assert.True(catalog.Services.Any(sd => 
+            Assert.Contains(catalog.Services, sd => 
                 sd.ServiceType == typeof(MessageConsumerTwo) && 
-                sd.ImplementationType == typeof(MessageConsumerTwo)));
+                sd.ImplementationType == typeof(MessageConsumerTwo));
         }
 
         public class MessageConsumerOne : IMessageConsumer

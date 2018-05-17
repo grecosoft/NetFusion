@@ -51,7 +51,7 @@ namespace NetFusion.Base.Validation
 
             _items.AddRange(validationItems);
 
-            // If the object being validated is valied and it supports custom
+            // If the object being validated is valid and it supports custom
             // validation, invoke the Validate method on the object.
             if (IsValid && Object is IValidatableType validatable)
             {

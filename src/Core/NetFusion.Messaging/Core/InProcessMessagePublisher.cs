@@ -39,7 +39,7 @@ namespace NetFusion.Messaging.Core
 
         // Not used by the implementation, but other plug-ins can use the integration type to apply
         // a subset of the publishers.  i.e. In a unit-of-work, you might want to deliver domain-events
-        // inprocess before doing so for borker based events.
+        // in-process before doing so for broker based events.
         public override IntegrationTypes IntegrationType => IntegrationTypes.Internal;
 
         public override Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)

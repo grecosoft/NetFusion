@@ -16,7 +16,7 @@ using Xunit;
 namespace CoreTests.Messaging
 {
     /// <summary>
-    /// The MessagingService class delegates to an istance of the MessageDispatcher to sent commands and to
+    /// The MessagingService class delegates to an instance of the MessageDispatcher to sent commands and to
     /// publish domain-event messages.  Each message passes through a collection of Message enrichers before
     /// being sent to all registered message publishers.
     /// </summary>
@@ -104,11 +104,11 @@ namespace CoreTests.Messaging
                 Assert.True(ex.ExceptionDetails.All(dEx => dEx.InnerException.GetType() == typeof(InvalidOperationException)));
                
                 var messages = ex.ExceptionDetails.Select(dEx => dEx.InnerException.Message).ToArray();
-                Assert.True(messages.Contains("ENRICHER_MESSAGE_1"));
-                Assert.True(messages.Contains("ENRICHER_MESSAGE_2"));
+                Assert.Contains("ENRICHER_MESSAGE_1", messages);
+                Assert.Contains("ENRICHER_MESSAGE_2", messages);
 
                 // ... If an enricher fails, message publishers are not called.
-                Assert.False(command.CallSequence.Any(cs => cs == typeof(MessagePublisher)));
+                Assert.DoesNotContain(command.CallSequence, cs => cs == typeof(MessagePublisher));
             }
         }
 
@@ -165,11 +165,11 @@ namespace CoreTests.Messaging
                 Assert.True(ex.ExceptionDetails.All(dEx => dEx.InnerException.GetType() == typeof(InvalidOperationException)));
                
                 var messages = ex.ExceptionDetails.Select(dEx => dEx.InnerException.Message).ToArray();
-                Assert.True(messages.Contains("PUBLISHER_MESSAGE_1"));
-                Assert.True(messages.Contains("PUBLISHER_MESSAGE_2"));
+                Assert.Contains("PUBLISHER_MESSAGE_1", messages);
+                Assert.Contains("PUBLISHER_MESSAGE_2", messages);
 
                 // ... If an enricher fails, message publishers are not called.
-                Assert.False(command.CallSequence.Any(cs => cs == typeof(MessagePublisher)));
+                Assert.DoesNotContain(command.CallSequence, cs => cs == typeof(MessagePublisher));
             }
         }
         

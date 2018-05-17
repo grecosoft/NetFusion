@@ -1,5 +1,4 @@
 ﻿using NetFusion.Messaging;
-using NetFusion.Messaging.Exceptions;
 
 namespace CoreTests.Queries.Mocks
 {

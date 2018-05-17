@@ -152,7 +152,7 @@ namespace NetFusion.Messaging.Exceptions
 
         private static Exception GetSourceException(TaskListItem<IMessagePublisher> taskItem)
         {
-            // Get the aggregrate inner exception.
+            // Get the aggregate inner exception.
             var taskException = taskItem.Task.Exception;
             return taskException.InnerException;
         }

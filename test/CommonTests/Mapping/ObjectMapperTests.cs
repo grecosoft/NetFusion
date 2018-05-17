@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Common.Extensions.Collections;
 using NetFusion.Mapping;
 using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;

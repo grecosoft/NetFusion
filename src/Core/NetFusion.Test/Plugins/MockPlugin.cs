@@ -1,6 +1,5 @@
 ﻿using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common;
 using System;
 using System.Collections.Generic;
 
