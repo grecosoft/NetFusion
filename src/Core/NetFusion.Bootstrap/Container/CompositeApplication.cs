@@ -137,7 +137,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void RegisterCorePluginServices(IServiceCollection services)
         {
-            IEnumerable<PluginType> allPluginTypes = GetPluginTypes();
+            IEnumerable<PluginType> allPluginTypes = GetPluginTypes().ToArray();
             foreach (Plugin plugin in CorePlugins)
             {
                 ScanPluginForServices(plugin, services);
@@ -197,7 +197,9 @@ namespace NetFusion.Bootstrap.Container
 
         private void RegisterAppPluginServices(IServiceCollection services)
         {
-            IEnumerable<PluginType> allAppPluginTypes = GetPluginTypes(PluginTypes.AppComponentPlugin, PluginTypes.AppHostPlugin);
+            IEnumerable<PluginType> allAppPluginTypes = GetPluginTypes(
+                PluginTypes.AppComponentPlugin, 
+                PluginTypes.AppHostPlugin).ToArray();
 
             // Application Components:
             foreach (Plugin plugin in AppComponentPlugins)
@@ -253,7 +255,7 @@ namespace NetFusion.Bootstrap.Container
         /// <summary>
         /// Stops all plug-in modules in the reverse order from which they were started.
         /// </summary>
-        /// <param name="container">Scoped service provider.</param>
+        /// <param name="services">Scoped service provider.</param>
         public void StopPluginModules(IServiceProvider services)
         {
             StopPluginModules(services, new[] { AppHostPlugin });

@@ -62,7 +62,7 @@ namespace NetFusion.Bootstrap.Plugins
             _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
 
             Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
-            Logger = _compositeApp.LoggerFactory.CreateLogger(plugin.GetType());
+            Logger = _compositeApp.LoggerFactory.CreateLogger(plugin.Manifest.Name);
 
             AppHost = compositeApp.AppHostPlugin;
             AllPluginTypes = FilteredTypesByPluginType();
