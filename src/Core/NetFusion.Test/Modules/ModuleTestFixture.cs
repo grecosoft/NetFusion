@@ -39,13 +39,12 @@ namespace NetFusion.Test.Modules
                 pluginTypes,
                 new IPluginModule[] {});
 
-            var context = new ModuleContext(compositeApp, plugin);
-            var moduleUnderTest = new TModule
-            {
-                Context = context
-            };
-            
+            var moduleUnderTest = new TModule();
+            var context = new ModuleContext(compositeApp, plugin, moduleUnderTest);
+
+            moduleUnderTest.Context = context;
             moduleUnderTest.SetPluginModuleKnownTypes();
+            
             return moduleUnderTest;
         }
 

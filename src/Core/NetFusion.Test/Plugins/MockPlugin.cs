@@ -13,8 +13,8 @@ namespace NetFusion.Test.Plugins
     public abstract class MockPlugin : IPluginManifest,
         IPluginTypeAccessor
     {
-        private List<Type> _pluginTypes = new List<Type>();
-        public IEnumerable<Type> PluginTypes { get { return _pluginTypes; } }
+        private readonly List<Type> _pluginTypes = new List<Type>();
+        public IEnumerable<Type> PluginTypes => _pluginTypes;
 
         public MockPlugin()
         {
@@ -29,8 +29,8 @@ namespace NetFusion.Test.Plugins
         public string MachineName { get; set; }
         public string Name { get; set; }
         public string Description => "Mock Plug-in";
-        public string SourceUrl => String.Empty;
-        public string DocUrl => String.Empty;
+        public string SourceUrl => string.Empty;
+        public string DocUrl => string.Empty;
 
         /// <summary>
         /// Adds one or more types to the plug-in.

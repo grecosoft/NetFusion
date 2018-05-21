@@ -114,7 +114,7 @@ namespace NetFusion.Bootstrap.Container
             {
                 foreach (IPluginModule module in plugin.IncludedModules)
                 {
-                    module.Context = new ModuleContext(this, plugin);
+                    module.Context = new ModuleContext(this, plugin, module);
                     module.Initialize();
                 }
 
