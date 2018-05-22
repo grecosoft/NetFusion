@@ -29,6 +29,7 @@ skip_commits:
   message: /\[nobuild\]/
   files:
     - '**/*.md'
+		- 'examples\**\*'
 
   
 
