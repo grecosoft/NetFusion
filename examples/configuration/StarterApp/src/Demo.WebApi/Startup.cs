@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
 using System;
 using NetFusion.Bootstrap.Configuration;
+using Demo.Infra;
 
 namespace Demo.WebApi
 {
@@ -58,10 +59,14 @@ namespace Demo.WebApi
                 "Demo.WebApi",
                 "Demo.*");
 
-            return services.CreateAppBuilder(
-											configuration, 
-											loggerFactory, 
-											typeResolver)
+            return services
+                .CreateAppBuilder(
+                    configuration, 
+                    loggerFactory, 
+                    typeResolver)
+                .Bootstrap(c => {
+                    c.WithConfig<ValidRangeConfig>(rc => rc.SetRange(100, 200));
+                })
             	.Build();
         }
         
