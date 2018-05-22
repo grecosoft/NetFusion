@@ -13,6 +13,7 @@ build_script:
 test_script:
   - ps: dotnet test .\test\CommonTests\CommonTests.csproj 
   - ps: dotnet test .\test\CoreTests\CoreTests.csproj
+  - ps: dotnet test .\test\WebTests\WebTests.csproj
   
 artifacts:
   - path: src\**\*.nupkg
