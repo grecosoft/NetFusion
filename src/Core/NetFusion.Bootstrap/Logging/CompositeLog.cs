@@ -124,7 +124,7 @@ namespace NetFusion.Bootstrap.Logging
             var implementationTypes = _services.Select(s => new {
                 s.ServiceType,
                 ImplementationType = s.ImplementationType ?? s.ImplementationInstance?.GetType(),
-                Lifetime = s.Lifetime.ToString(),
+                LifeTime = s.Lifetime.ToString(),
                 IsFactory = s.ImplementationFactory != null
             });
 
