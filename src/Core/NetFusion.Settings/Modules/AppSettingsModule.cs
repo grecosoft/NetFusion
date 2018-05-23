@@ -8,6 +8,7 @@ using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace NetFusion.Settings.Modules
 {
@@ -29,6 +30,14 @@ namespace NetFusion.Settings.Modules
             foreach (Type appSettingType in appSettingTypes)
             {
                 string sectionPath = SettingsExtensions.GetSectionPath(appSettingType);
+
+                if (string.IsNullOrWhiteSpace(sectionPath))
+                {
+                    Context.Logger.LogWarning(
+                        $"The section path for setting type: {appSettingType.AssemblyQualifiedName} could " + 
+                        $"not be determined. Make sure the attribute: {typeof(ConfigurationSectionAttribute)} is specified.");
+                }
+                
                 services.Configure(appSettingType, Context.Configuration.GetSection(sectionPath));
             }
         }

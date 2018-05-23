@@ -46,37 +46,6 @@ namespace CoreTests.Settings
         }
 
         /// <summary>
-        /// Settings class can be derived and each marked with the ConfigurationSetion attribute.
-        /// When there are multiple setting classes defined within a hierarchy, the section names
-        /// are appended from the parent to the child setting class being injected.  This combined
-        /// section path is then used to locate the configuration section from which the settings
-        /// should be populated.
-        /// </summary>
-        [Fact(DisplayName = "When settings derived loads base and derived properties")]
-        public void WhenSettingsDerived_LoadsBaseAndDerivedProperties()
-        {
-            ContainerFixture.Test(fixture => {
-                fixture.Arrange
-                    .Resolver(r =>
-                    {
-                        r.AddPluginsUnderTests();
-                        r.AddPlugin<MockCorePlugin>().AddPluginType<MockDerivedSettings>();
-                    })
-                    .Configuration(AddInMemorySettings)
-                    .Assert.Services(s =>
-                    {
-                        var settings = s.GetService<MockDerivedSettings>();
-                        settings.Should().NotBeNull();
-
-                        settings.Height.Should().Be(20);
-                        settings.Width.Should().Be(50);
-                        settings.Dialog.Colors.Frame.Should().Be("RED");
-                        settings.Dialog.Colors.Title.Should().Be("DARK_RED");
-                    });
-            });
-        }
-
-        /// <summary>
         /// The IConfiguration service is automatically registered with the service 
         /// collection when the AppContainer is built.  This can be used to load a
         /// specific value when there is not a needed from a typed settings class.

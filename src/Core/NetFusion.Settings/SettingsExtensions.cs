@@ -16,21 +16,6 @@ namespace NetFusion.Settings
     public static class SettingsExtensions
     {
         /// <summary>
-        /// Provided a IAppSettings derived type, determines the section path by recursively 
-        /// walking the type hierarchy and finding all ConfigurationSection attributes and 
-        /// concatenating the section name associated with each attribute.
-        /// </summary>
-        /// <param name="settingsType">The application setting type to determine section path.</param>
-        /// <returns>The section path that can be used to load the settings from the registered providers.</returns>
-        public static string GetSectionPath(Type settingsType)
-        {
-            if (settingsType == null) throw new ArgumentNullException(nameof(settingsType));
-
-            var sectionNames = GetSectionNames(settingsType);
-            return string.Join(":", sectionNames.Reverse().ToArray());
-        }
-
-        /// <summary>
         /// Provided a IAppSetting derived instance,  determines the section path by recursively 
         /// walking the type hierarchy and finding all ConfigurationSection attributes and 
         /// concatenating the section name associated with each attribute.
@@ -58,20 +43,7 @@ namespace NetFusion.Settings
             return GetSectionPath(settingsType);
         }
 
-        private static IEnumerable<string> GetSectionNames(Type settingsType)
-        {
-            while (settingsType != null)
-            {
-                string sectionName = GetSectionName(settingsType);
-                if (sectionName != null)
-                {
-                    yield return sectionName;
-                }
-                settingsType = settingsType.GetTypeInfo().BaseType;
-            }
-        }
-
-        private static string GetSectionName(Type settingsType)
+        public static string GetSectionPath(Type settingsType)
         {
             return settingsType.GetAttribute<ConfigurationSectionAttribute>()?.SectionName;
         }
