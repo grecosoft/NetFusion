@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,15 +15,24 @@ namespace Demo.WebApi
             BuildWebHost(args).Run();
         }
 
-        private static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((context, configBuilder) => SetupConfiguration(configBuilder))
+        private static IWebHost BuildWebHost(string[] args) 
+        {
+            var configuration = CreateConfiguration(args);
+
+            return WebHost.CreateDefaultBuilder(args)
+                .UseConfiguration(configuration)
                 .UseStartup<Startup>()
                 .Build();
+        }
 
-        private static void SetupConfiguration(IConfigurationBuilder configBuilder)
+        private static IConfiguration CreateConfiguration(string[] args)
         {
-            configBuilder.AddAppSettings();
+            var builder = new ConfigurationBuilder();
+            builder
+                .AddAppSettings()
+                .AddCommandLine(args);
+
+            return builder.Build();
         }
     }
 }
