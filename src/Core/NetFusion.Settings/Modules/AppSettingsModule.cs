@@ -36,6 +36,8 @@ namespace NetFusion.Settings.Modules
                     Context.Logger.LogWarning(
                         $"The section path for setting type: {appSettingType.AssemblyQualifiedName} could " + 
                         $"not be determined. Make sure the attribute: {typeof(ConfigurationSectionAttribute)} is specified.");
+                    
+                    continue;
                 }
                 
                 services.Configure(appSettingType, Context.Configuration.GetSection(sectionPath));
