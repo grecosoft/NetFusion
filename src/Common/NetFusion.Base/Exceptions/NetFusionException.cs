@@ -44,7 +44,7 @@ namespace NetFusion.Base.Exceptions
             : base(message, innerException)
         {
             Details["Message"] = message;
-            Details["InnerMessage"] = innerException.Message;
+            Details["InnerException"] = innerException.ToString();
 
             var innerDetails = (innerException as NetFusionException)?.Details;
             if (innerDetails != null)

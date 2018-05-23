@@ -32,7 +32,7 @@ namespace NetFusion.Web.Mvc.Composite.Models
             var knownTypeContracts = pluginLog["Plugin:KnownType:Contracts"] as string[];
             var knowTypeDefinitions = pluginLog["Plugin:KnownType:Definitions"] as IDictionary;
             var pluginModules = pluginLog["Plugin:Modules"] as IDictionary;
-            var pluginRegistrations = pluginLog["Plugin:Type:Registrations"] as ICollection;
+            var pluginRegistrations = pluginLog["Plugin:Service:Registrations"] as ICollection;
 
             var pluginResource = new PluginDetails
             {
@@ -86,9 +86,10 @@ namespace NetFusion.Web.Mvc.Composite.Models
             {
                 yield return new RegisteredService
                 {
-                    RegisteredType = registration["RegisteredType"] as string,
                     ServiceType = registration["ServiceType"] as string,
-                    LifeTime = registration["LifeTime"] as string
+                    ImplementationType = registration["ImplementationType"] as string,
+                    LifeTime = registration["LifeTime"] as string,
+                    IsFactory = (bool)registration["IsFactory"]
                 };
             }
         }

@@ -6,8 +6,9 @@
     /// </summary>
     public class RegisteredService
     {
-        public string RegisteredType { get; set; }
         public string ServiceType { get; set; }
+        public string ImplementationType { get; set; }
         public string LifeTime { get; set; }
+        public bool IsFactory { get; set; }
     }
 }

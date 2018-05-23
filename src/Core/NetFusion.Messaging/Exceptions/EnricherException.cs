@@ -24,7 +24,7 @@ namespace NetFusion.Messaging.Exceptions
 
             Details = new Dictionary<string, object>
             {
-                { "Message", sourceException?.Message },
+                { "Exception", sourceException?.ToString() },
                 { "Enricher", taskItem.Invoker.GetType().FullName }
             };
         }
