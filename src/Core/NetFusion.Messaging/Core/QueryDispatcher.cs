@@ -58,6 +58,11 @@ namespace NetFusion.Messaging.Core
                 _logger.LogErrorDetails(MessagingLogEvents.MessagingException, ex, "Excepton dispatching query.");
                 throw;
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(MessagingLogEvents.MessagingException, ex, "Unexpected Exception dispatching query.");
+                throw;
+            }
 
             return query.Result;
         }
