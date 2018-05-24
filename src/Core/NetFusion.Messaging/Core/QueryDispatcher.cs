@@ -52,14 +52,11 @@ namespace NetFusion.Messaging.Core
             {
                 await InvokeDispatcher(dispatchInfo, query, cancellationToken);
             }
-            catch (Exception ex)
+            catch (QueryDispatchException ex)
             {
-                var details = new {
-                    Query = query,
-                    DispatchInfo = dispatchInfo
-                };
-
-                throw new QueryDispatchException("Error dispatching query.", "DispatchDetails", details, ex);
+                // Log the details of the dispatch exception and rethrow.
+                _logger.LogErrorDetails(MessagingLogEvents.MessagingException, ex, "Excepton dispatching query.");
+                throw;
             }
 
             return query.Result;

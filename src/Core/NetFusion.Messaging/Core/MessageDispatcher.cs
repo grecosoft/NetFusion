@@ -117,7 +117,7 @@ namespace NetFusion.Messaging.Core
             }
             catch (PublisherException ex)
             {
-                // Log the details of the publish exception and throw a generic error messages.
+                // Log the details of the publish exception and rethrow.
                 _logger.LogErrorDetails(MessagingLogEvents.MessagingException, ex, "Exception publishing message.");
                 throw;
             }
