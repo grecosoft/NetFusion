@@ -2,106 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2f71f2be-b1e0-4b13-8bab-3ab0b2603a43" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/test/CoreTests/Queries/Bootstrap/QueryDispatchModuleTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.NetFusion/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NetFusion/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.NetFusion/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.NetFusion/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Base/Entity/EntityAttributes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Base/Entity/EntityAttributes.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Base/Exceptions/NetFusionException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Base/Exceptions/NetFusionException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Base/NetFusion.Base.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Base/NetFusion.Base.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Base/Plugings/IKnownPluginType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Base/Plugins/IKnownPluginType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Base/Scripting/ApplyScriptPredicateAttribute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Base/Scripting/ApplyScriptPredicateAttribute.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Base/Scripting/EntityExpression.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Base/Scripting/EntityExpression.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Base/Scripting/IEntityScriptMetaRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Base/Scripting/IEntityScriptMetaRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Base/Validation/DataAnnotationsValidator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Base/Validation/DataAnnotationsValidator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Base/Validation/ValidationResultSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Base/Validation/ValidationResultSet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Collections/EnumerableExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Collections/EnumerableExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Collections/SetExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Collections/SetExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/ObjectExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/ObjectExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Reflection/AsyncExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Reflection/AsyncExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Reflection/AttributeExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Reflection/AttributeExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Reflection/GenericTypeExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Reflection/GenericTypeExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Reflection/RuntimeExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Reflection/RuntimeExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Tasks/TaskExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Tasks/TaskExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Mapping/Core/ObjectMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Mapping/Core/ObjectMapper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Mapping/Modules/MappingModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Mapping/Modules/MappingModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/Core/EntityScriptScope.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/Core/EntityScriptScope.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/Core/EntityScriptingService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/Core/EntityScriptingService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/Core/ExpressionEvaluator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/Core/ExpressionEvaluator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/Core/ScriptEvaluator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/Core/ScriptEvaluator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/Core/ScriptException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/Core/ScriptException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/Modules/RoslynExpressionModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/Modules/RoslynExpressionModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/RoslynManifest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/RoslynManifest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/ScriptingLogEvents.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/ScriptingLogEvents.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/Testing/EvaluationExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Common/NetFusion.Roslyn/Testing/EvaluationExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/ConfigurationBuilderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/ConfigurationBuilderExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/AttributedReadModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging.Types/AttributedReadModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/InProcessMessagePublisher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/InProcessMessagePublisher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessageDispatchInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessageDispatchInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessageDispatcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/MessageDispatcher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/QueryDispatchInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/QueryDispatchInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/QueryDispatcher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Core/QueryDispatcher.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Enrichers/EnricherException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Exceptions/EnricherException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Filters/QueryFilterException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Exceptions/QueryFilterException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/MessageDispatchException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Exceptions/MessageDispatchException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/MessagingLogEvents.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/MessagingLogEvents.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/IMessageDispatchModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/IMessageDispatchModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/IQueryFilterModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/IQueryFilterModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessageDispatchModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessageDispatchModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessagingModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/MessagingModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/QueryDispatchModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/QueryDispatchModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/QueryFilterModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Modules/QueryFilterModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/NetFusion.Messaging.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/NetFusion.Messaging.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/PublisherException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Exceptions/PublisherException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/QueryDispatchException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Exceptions/QueryDispatchException.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Rules/ApplyDispatchRuleAttribute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Rules/ApplyDispatchRuleAttribute.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/ApiResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/ApiResponse.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Settings/RequestHeaders.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Settings/RequestHeaders.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Settings/RequestSettingsExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Settings/RequestSettingsExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Common/RelationTypes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Common/RelationTypes.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Doc/DocActionAttribute.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Doc/DocEmbeddedResourceAttribute.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Doc/DocPropertyAttribute.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Doc/DocResourceAttribute.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Hal/HalResource.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Hal/HalResource.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/NamedResourceAttribute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/NamedResourceAttribute.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/NetFusion.Rest.Resources.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/NetFusion.Rest.Resources.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Actions/ActionExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Actions/ActionExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Actions/ActionResourceLink.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Actions/ActionResourceLink.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Hal/HalResourceProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Hal/HalResourceProvider.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Mappings/ResourceProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Mappings/ResourceProvider.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Meta/LinkDescriptor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Meta/LinkDescriptor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Meta/ResourceLinkMeta.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Meta/ResourceLinkMeta.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/BuilderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/BuilderExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/Models/PluginDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/Models/PluginDetails.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/BuilderExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/BuilderExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Core/ApiActionMeta.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Core/ApiActionMeta.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Core/ApiGroupMeta.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Core/ApiGroupMeta.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Core/ApiMetadataService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Core/ApiMetadataService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Modules/ApiMetadataModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Modules/ApiMetadataModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CommonTests/Base/Entity/DynamicEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CommonTests/Base/Entity/DynamicEntity.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CommonTests/Base/Validation/ValidationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CommonTests/Base/Validation/ValidationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CommonTests/Validation/ObjectValidationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CommonTests/Base/Validation/BasicValidationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Bootstrap/CompositionTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Bootstrap/CompositionTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Bootstrap/ConfigurationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Bootstrap/ConfigurationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Bootstrap/ContainerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Bootstrap/ContainerTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Bootstrap/ReflectionExtensionsTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Bootstrap/ReflectionExtensionsTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/CoreTests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/CoreTests.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/AsyncDomainEventTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/CommandDispatchTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/CommandDispatchTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/ConfigurationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/Bootstrap/ConfigurationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/DiscoveryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/Bootstrap/DiscoveryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/DispatchEvaluationTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/DispatchEvaluationTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/DispatchRuleTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/DomainEventDispatchTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/DomainEventDispatchTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/MessageDispatchModuleUnitTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/Bootstrap/MessageDispatchModuleUnitTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/MessageDispatcherUnitTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/MessageDispatcherUnitTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/MessageEnricherModuleUnitTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/Bootstrap/MessageEnricherModuleUnitTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/Mocks/TestAsyncExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/Mocks/TestAsyncExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/Mocks/TestEvalSetupExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Messaging/Mocks/TestEvalSetupExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Messaging/QueryDispatchModuleUnitTests.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Queries/DispatchTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Queries/QueryDispatchTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Queries/Mocks/Consumers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Queries/Mocks/Consumers.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/CoreTests/Queries/TestFixtureExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/test/CoreTests/Queries/TestFixtureExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/bootstrap/StarterApp/src/Demo.WebApi/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/examples/bootstrap/StarterApp/src/Demo.WebApi/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/configuration/StarterApp/src/Demo.WebApi/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/examples/configuration/StarterApp/src/Demo.WebApi/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/modules/StarterApp/src/Demo.WebApi/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/examples/modules/StarterApp/src/Demo.WebApi/Program.cs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -111,7 +16,224 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="CompositeStructure.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/Models/CompositeStructure.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <marker date="1526567501767" expanded="false" signature="6:92" ph="..." />
+                <marker date="1526567501767" expanded="true" signature="138:2238" ph="{...}" />
+                <marker date="1526567501767" expanded="true" signature="145:340" ph="/// Model returned from the WebApi containing the root composite-structure ... " />
+                <marker date="1526567501767" expanded="true" signature="377:2236" ph="{...}" />
+                <marker date="1526567501767" expanded="true" signature="941:1895" ph="{...}" />
+                <marker date="1526567501767" expanded="true" signature="989:1088" ph="{...}" />
+                <marker date="1526567501767" expanded="true" signature="1398:1884" ph="{...}" />
+                <marker date="1526567501767" expanded="true" signature="1981:2230" ph="{...}" />
+                <marker date="1526567501767" expanded="true" signature="2052:2220" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="KnownTypeDefinition.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/Models/KnownTypeDefinition.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <marker date="1526567501767" expanded="true" signature="44:516" ph="{...}" />
+                <marker date="1526567501767" expanded="true" signature="51:353" ph="/// Model containing types defined within the plugin based on ... " />
+                <marker date="1526567501767" expanded="true" signature="390:514" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PluginDetails.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/Models/PluginDetails.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="403">
+              <caret line="34" column="35" selection-start-line="34" selection-start-column="16" selection-end-line="34" selection-end-column="35" />
+              <folding>
+                <marker date="1527007186942" expanded="false" signature="6:92" ph="..." />
+                <marker date="1527007186942" expanded="true" signature="138:3965" ph="{...}" />
+                <marker date="1527007186942" expanded="true" signature="145:256" ph="/// Model containing the details of plugin created from the composite log. ... " />
+                <marker date="1527007186942" expanded="true" signature="288:3963" ph="{...}" />
+                <marker date="1527007186942" expanded="true" signature="948:2422" ph="{...}" />
+                <marker date="1527007186942" expanded="true" signature="993:1089" ph="{...}" />
+                <marker date="1527007186942" expanded="true" signature="1513:2375" ph="{...}" />
+                <marker date="1527007186942" expanded="true" signature="2535:2953" ph="{...}" />
+                <marker date="1527007186942" expanded="true" signature="2608:2943" ph="{...}" />
+                <marker date="1527007186942" expanded="true" signature="2781:2928" ph="{...}" />
+                <marker date="1527007186942" expanded="true" signature="3047:3360" ph="{...}" />
+                <marker date="1527007186942" expanded="true" signature="3118:3350" ph="{...}" />
+                <marker date="1527007186942" expanded="true" signature="3195:3335" ph="{...}" />
+                <marker date="1527007186942" expanded="true" signature="3466:3957" ph="{...}" />
+                <marker date="1527007186942" expanded="true" signature="3540:3947" ph="{...}" />
+                <marker date="1527007186942" expanded="true" signature="3622:3932" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ContainerBuilder.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/ContainerBuilder.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <marker date="1526567501763" expanded="false" signature="6:139" ph="..." />
+                <marker date="1526567501763" expanded="true" signature="180:3300" ph="{...}" />
+                <marker date="1526567501763" expanded="true" signature="187:461" ph="/// Constructs an instance of an application container.  This class is used during the start of ... " />
+                <marker date="1526567501763" expanded="true" signature="515:2364" ph="{...}" />
+                <marker date="1526567501763" expanded="true" signature="1034:1528" ph="{...}" />
+                <marker date="1526567501763" expanded="true" signature="1097:1517" ph="{...}" />
+                <marker date="1526567501763" expanded="true" signature="1605:1888" ph="{...}" />
+                <marker date="1526567501763" expanded="true" signature="1928:2358" ph="{...}" />
+                <marker date="1526567501763" expanded="true" signature="2416:3298" ph="{...}" />
+                <marker date="1526567501763" expanded="true" signature="2431:2908" ph="/// Creates an application builder associated with a service collection. ... " />
+                <marker date="1526567501763" expanded="true" signature="3123:3292" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EnviromentConfig.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/EnviromentConfig.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <marker date="1526567501763" expanded="false" signature="6:49" ph="..." />
+                <marker date="1526567501763" expanded="true" signature="94:2485" ph="{...}" />
+                <marker date="1526567501763" expanded="true" signature="101:198" ph="/// Configuration for the overall application environment.   ... " />
+                <marker date="1526567501763" expanded="true" signature="234:2483" ph="{...}" />
+                <marker date="1526567501763" expanded="true" signature="317:403" ph="{...}" />
+                <marker date="1526567501763" expanded="true" signature="422:503" ph="/// Commonly used environment names. ... " />
+                <marker date="1526567501763" expanded="true" signature="537:724" ph="{...}" />
+                <marker date="1526567501763" expanded="true" signature="734:865" ph="/// The value of the variable specifying the environment of the executing application. ... " />
+                <marker date="1526567501763" expanded="true" signature="987:1333" ph="{...}" />
+                <marker date="1526567501763" expanded="true" signature="1058:1284" ph="{...}" />
+                <marker date="1526567501763" expanded="true" signature="1200:1270" ph="{...}" />
+                <marker date="1526567501763" expanded="true" signature="1343:1452" ph="/// Indicates application is running in Development environment. ... " />
+                <marker date="1526567501763" expanded="true" signature="1585:1687" ph="/// Indicates application is running in Test environment. ... " />
+                <marker date="1526567501763" expanded="true" signature="1806:1914" ph="/// Indicates application is running in Production environment. ... " />
+                <marker date="1526567501763" expanded="true" signature="2053:2257" ph="/// Determines the log level based on the execution environment: ... " />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SettingTests.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingTests.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="286">
+              <caret line="45" column="9" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="9" />
+              <folding>
+                <marker date="1527108143974" expanded="false" signature="6:290" ph="..." />
+                <marker date="1527108143974" expanded="true" signature="320:5095" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="327:640" ph="/// Unit tests for testing the injecting of services directly into the dependent ... " />
+                <marker date="1527108143974" expanded="true" signature="670:5093" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="685:962" ph="/// A configuration setting class deriving from IAppSetting and marked with the ... " />
+                <marker date="1527108143974" expanded="true" signature="1098:1812" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="1154:1800" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="1222:1402" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="1501:1784" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="1822:2109" ph="/// The IConfiguration service is automatically registered with the service  ... " />
+                <marker date="1527108143974" expanded="true" signature="2262:2919" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="2318:2907" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="2386:2535" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="2634:2891" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="2929:3276" ph="/// If needed, the settings can be obtained by a service by injecting the IOptions ... " />
+                <marker date="1527108143974" expanded="true" signature="3415:4247" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="3471:4235" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="3539:3719" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="3818:4219" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="4257:4548" ph="/* Test the generation of section for derived setting types. ... */" />
+                <marker date="1527108143974" expanded="true" signature="4621:5087" ph="{...}" />
+                <marker date="1527108143974" expanded="true" signature="4702:5026" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AppSettingsModule.cs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/Modules/AppSettingsModule.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="12" selection-start-column="12" selection-end-line="18" selection-end-column="65" />
+              <folding>
+                <marker date="1527108581516" expanded="true" signature="6:375" ph="..." />
+                <marker date="1527108581516" expanded="true" signature="413:3818" ph="{...}" />
+                <marker date="1527108581516" expanded="true" signature="420:976" ph="/// Extends the Microsoft configuration options by allowing setting types to be defined  ... " />
+                <marker date="1527108581516" expanded="true" signature="1026:3816" ph="{...}" />
+                <marker date="1527108581516" expanded="true" signature="1107:1999" ph="{...}" />
+                <marker date="1527108581516" expanded="true" signature="1324:1989" ph="{...}" />
+                <marker date="1527108581516" expanded="true" signature="1487:1859" ph="{...}" />
+                <marker date="1527108581516" expanded="true" signature="2009:2208" ph="/* Register each application setting so a factory method is invoked when injected ... */" />
+                <marker date="1527108581516" expanded="true" signature="2279:2785" ph="{...}" />
+                <marker date="1527108581516" expanded="true" signature="2451:2772" ph="{...}" />
+                <marker date="1527108581516" expanded="true" signature="2841:3391" ph="{...}" />
+                <marker date="1527108581516" expanded="true" signature="3001:3343" ph="{...}" />
+                <marker date="1527108581516" expanded="true" signature="3464:3810" ph="{...}" />
+                <marker date="1527108581516" expanded="true" signature="3650:3798" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SettingsExtensions.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/SettingsExtensions.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="225">
+              <caret line="28" column="33" selection-start-line="28" selection-start-column="19" selection-end-line="28" selection-end-column="33" />
+              <folding>
+                <marker date="1527107928825" expanded="false" signature="6:179" ph="..." />
+                <marker date="1527107928825" expanded="true" signature="209:3222" ph="{...}" />
+                <marker date="1527107928825" expanded="true" signature="216:567" ph="/// Extensions for determining a setting classes's section path based on the  ... " />
+                <marker date="1527107928825" expanded="true" signature="610:3220" ph="{...}" />
+                <marker date="1527107928825" expanded="true" signature="625:1140" ph="/// Provided a IAppSetting derived instance,  determines the section path by recursively  ... " />
+                <marker date="1527107928825" expanded="true" signature="1215:1385" ph="{...}" />
+                <marker date="1527107928825" expanded="true" signature="1395:1909" ph="/// Provided a IAppSettings derived type, determines the section path by recursively  ... " />
+                <marker date="1527107928825" expanded="true" signature="1992:2103" ph="{...}" />
+                <marker date="1527107928825" expanded="true" signature="2167:2279" ph="{...}" />
+                <marker date="1527107928825" expanded="true" signature="2289:2883" ph="/// Returns an instance of the specified setting type populated from the configuration ... " />
+                <marker date="1527107928825" expanded="true" signature="3020:3214" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CompositeLog.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Logging/CompositeLog.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1456">
+              <caret line="118" column="91" selection-start-line="118" selection-start-column="91" selection-end-line="118" selection-end-column="91" />
+              <folding>
+                <marker date="1527079528717" expanded="false" signature="6:221" ph="..." />
+                <marker date="1527079528717" expanded="true" signature="260:5457" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="267:542" ph="/// Takes an instance of the composite application and the built service collection ... " />
+                <marker date="1527079528717" expanded="true" signature="574:5455" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="787:1116" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="1169:1416" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="1496:1898" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="1577:1887" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="1964:2147" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="2225:2557" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="2326:2500" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="2627:2944" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="2713:2887" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="3024:3623" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="3717:4052" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="3857:4040" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="4157:4373" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="4484:4799" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="4892:5449" ph="{...}" />
+                <marker date="1527079528717" expanded="true" signature="4967:5221" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -126,6 +248,8 @@
       <find>namespace NetFusion.Messaging.Exceptions</find>
       <find>namespace NetFusion.Messaging.Exceptions.Exceptions</find>
       <find>services</find>
+      <find>Type:Reg</find>
+      <find>.message;</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -177,6 +301,8 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/B3824083-29EE-4512-A838-FCA9F4A05F42/51/01515591/ServiceDescriptor.cs" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/test/CoreTests/Bootstrap/TypeCatalogTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/ConfigurationBuilderExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Plugins/MockAppHostPlugin.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Plugins/MockPlugin.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerAssert.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerArrange.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Container/ContainerFixture.cs" root0="FORCE_HIGHLIGHTING" />
@@ -263,7 +389,6 @@
     <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/MessagingLogEvents.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Exceptions/PublisherException.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Exceptions/QueryDispatchException.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingPathTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/WebMvcManifest.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/IncludeDerivedMessagesAttribute.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingBootstrapTests.cs" root0="FORCE_HIGHLIGHTING" />
@@ -273,6 +398,7 @@
     <setting file="file://$PROJECT_DIR$/test/CoreTests/Testing/MockMessagingServiceTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/test/CoreTests/Domain/EntityEvaluationTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/test/CoreTests/Domain/EntitySerializationTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/examples/bootstrap/StarterApp/src/Demo.WebApi/Program.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/test/CoreTests/Domain/EntityEvaluationExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/test/CoreTests/Queries/QueryDispatchTests.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/test/CoreTests/Queries/TestFixtureExtensions.cs" root0="FORCE_HIGHLIGHTING" />
@@ -502,17 +628,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/test/CommonTests/Base/Entity/DynamicEntity.cs" />
-        <option value="$PROJECT_DIR$/test/CommonTests/Base/Validation/ValidationTests.cs" />
-        <option value="$PROJECT_DIR$/test/CommonTests/Validation/ObjectValidationTests.cs" />
-        <option value="$PROJECT_DIR$/test/CommonTests/Base/Validation/ObjectValidationTests.cs" />
-        <option value="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/ConfigurationBuilderExtensions.cs" />
-        <option value="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Collections/EnumerableExtensions.cs" />
-        <option value="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Collections/SetExtensions.cs" />
-        <option value="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Reflection/AsyncExtensions.cs" />
-        <option value="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Reflection/AttributeExtensions.cs" />
-        <option value="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Reflection/GenericTypeExtensions.cs" />
-        <option value="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Reflection/RuntimeExtensions.cs" />
         <option value="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/Tasks/TaskExtensions.cs" />
         <option value="$PROJECT_DIR$/src/Common/NetFusion.Common/Extensions/ObjectExtensions.cs" />
         <option value="$PROJECT_DIR$/src/Common/NetFusion.Mapping/Core/ObjectMapper.cs" />
@@ -539,7 +654,6 @@
         <option value="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Mappings/ResourceProvider.cs" />
         <option value="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Meta/LinkDescriptor.cs" />
         <option value="$PROJECT_DIR$/src/Web/NetFusion.Rest.Server/Meta/ResourceLinkMeta.cs" />
-        <option value="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/Models/PluginDetails.cs" />
         <option value="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/BuilderExtensions.cs" />
         <option value="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Core/ApiActionMeta.cs" />
         <option value="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Core/ApiGroupMeta.cs" />
@@ -553,6 +667,18 @@
         <option value="$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Settings/RequestHeaders.cs" />
         <option value="$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Settings/RequestSettingsExtensions.cs" />
         <option value="$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/ApiResponse.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/CompositeApplication.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/ModuleContext.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Test/Modules/ModuleTestFixture.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Test/Plugins/MockPlugin.cs" />
+        <option value="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/Models/RegisteredService.cs" />
+        <option value="$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/Models/PluginDetails.cs" />
+        <option value="$PROJECT_DIR$/src/Common/NetFusion.Base/Exceptions/NetFusionException.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Messaging/Exceptions/EnricherException.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Logging/CompositeLog.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Settings/SettingsExtensions.cs" />
+        <option value="$PROJECT_DIR$/test/CoreTests/Settings/SettingTests.cs" />
+        <option value="$PROJECT_DIR$/src/Core/NetFusion.Settings/Modules/AppSettingsModule.cs" />
       </list>
     </option>
   </component>
@@ -563,16 +689,17 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="35" />
-    <option name="y" value="-4" />
+    <option name="x" value="661" />
+    <option name="y" value="297" />
     <option name="width" value="2525" />
-    <option name="height" value="1444" />
+    <option name="height" value="1416" />
   </component>
   <component name="ProjectView">
     <navigator currentView="SolutionExplorer" proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="SolutionExplorer">
         <subPane>
           <expand>
@@ -589,12 +716,40 @@
               <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
               <item name="NetFusion (17 projects)" type="977d5f41:SolutionExplorerNodeRider" />
               <item name="src" type="977d5f41:SolutionExplorerNodeRider" />
-              <item name="Web" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Core" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="NetFusion (17 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="src" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Core" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="NetFusion.Settings" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="NetFusion (17 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="src" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Core" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="NetFusion.Settings" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Modules" type="977d5f41:SolutionExplorerNodeRider" />
             </path>
             <path>
               <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
               <item name="NetFusion (17 projects)" type="977d5f41:SolutionExplorerNodeRider" />
               <item name="test" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="NetFusion (17 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="test" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="CoreTests" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="NetFusion (17 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="test" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="CoreTests" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Settings" type="977d5f41:SolutionExplorerNodeRider" />
             </path>
           </expand>
           <select />
@@ -602,7 +757,6 @@
         <option name="show-file-system" value="false" />
         <option name="show-all-items" value="false" />
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -645,11 +799,17 @@
       <workItem from="1526380086759" duration="9996000" />
       <workItem from="1526407082009" duration="9912000" />
       <workItem from="1526467629507" duration="18626000" />
+      <workItem from="1526920413865" duration="1400000" />
+      <workItem from="1526932101989" duration="1324000" />
+      <workItem from="1527006693963" duration="527000" />
+      <workItem from="1527076261476" duration="608000" />
+      <workItem from="1527079218846" duration="2113000" />
+      <workItem from="1527107017474" duration="2680000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="103715000" />
+    <option name="totallyTimeSpent" value="112367000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -666,13 +826,13 @@
       <window_info anchor="bottom" id="TODO" order="14" />
       <window_info anchor="right" id="Errors In Solution" order="1" visible="true" weight="0.2129891" />
       <window_info anchor="bottom" id="Event Log" order="4" sideWeight="0.3565954" side_tool="true" weight="0.31530845" />
-      <window_info anchor="bottom" id="Unit Tests" order="3" sideWeight="0.6434046" visible="true" weight="0.31530845" />
+      <window_info active="true" anchor="bottom" id="Unit Tests" order="3" sideWeight="0.6434046" visible="true" weight="0.34044173" />
       <window_info anchor="bottom" id="Database Changes" order="2" show_stripe_button="false" />
       <window_info anchor="bottom" id="Run" order="10" />
-      <window_info anchor="bottom" id="Version Control" order="6" weight="0.4744859" />
+      <window_info anchor="bottom" id="Version Control" order="6" weight="0.33968014" />
       <window_info anchor="bottom" id="Terminal" order="5" weight="0.32977912" />
       <window_info anchor="bottom" id="NuGet" order="0" weight="0.32977912" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.2101654" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.2202501" />
       <window_info anchor="bottom" id="Docker" order="1" show_stripe_button="false" />
       <window_info anchor="bottom" id="Build" order="7" weight="0.32901752" />
       <window_info anchor="right" id="Database" order="0" />
@@ -683,10 +843,10 @@
       <window_info anchor="bottom" id="Inspection" order="13" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="2" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="3" weight="0.25" />
+      <window_info anchor="bottom" id="Messages" order="15" />
       <window_info anchor="bottom" id="Message" order="8" />
       <window_info anchor="bottom" id="Cvs" order="12" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="9" weight="0.32901752" />
-      <window_info anchor="bottom" id="Messages" order="15" />
+      <window_info anchor="bottom" id="Find" order="9" weight="0.32840466" />
     </layout>
     <layout-to-restore>
       <window_info anchor="bottom" id="NuGet" order="0" />
@@ -735,104 +895,127 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Core/ApiGroupMeta.cs">
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Plugins/MockAppHostPlugin.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="31" column="1" selection-start-line="31" selection-start-column="1" selection-end-line="31" selection-end-column="1" />
+        <state relative-caret-position="117">
+          <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Plugins/MockPlugin.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/Models/RegisteredService.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Logging/CompositeLog.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1599">
+          <caret line="129" selection-start-line="129" selection-end-line="129" />
           <folding>
-            <marker date="1526498337700" expanded="true" signature="56:1101" ph="{...}" />
-            <marker date="1526498337700" expanded="true" signature="63:208" ph="/// &lt;summary&gt; ... " />
-            <marker date="1526498337700" expanded="true" signature="238:1099" ph="{...}" />
-            <marker date="1526498337700" expanded="true" signature="253:415" ph="/// The name assigned to the group of related action descriptors. ... " />
-            <marker date="1526498337700" expanded="true" signature="466:640" ph="/// Collection of Action descriptors contained within the group. ... " />
-            <marker date="1526498337700" expanded="true" signature="773:1093" ph="{...}" />
+            <marker date="1527079528717" expanded="false" signature="6:221" ph="..." />
+            <marker date="1527079528717" expanded="true" signature="260:5457" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="267:542" ph="/// Takes an instance of the composite application and the built service collection ... " />
+            <marker date="1527079528717" expanded="true" signature="574:5455" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="787:1116" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="1169:1416" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="1496:1898" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="1577:1887" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="1964:2147" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="2225:2557" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="2326:2500" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="2627:2944" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="2713:2887" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="3024:3623" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="3717:4052" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="3857:4040" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="4157:4373" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="4484:4799" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="4892:5449" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="4967:5221" ph="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Core/ApiMetadataService.cs">
+    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/Models/PluginDetails.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="533">
-          <caret line="47" column="70" selection-start-line="47" selection-start-column="70" selection-end-line="47" selection-end-column="70" />
+        <state relative-caret-position="468">
+          <caret line="39" column="58" selection-start-line="39" selection-start-column="58" selection-end-line="39" selection-end-column="58" />
           <folding>
-            <marker date="1526498340204" expanded="false" signature="6:224" ph="..." />
-            <marker date="1526498340204" expanded="true" signature="267:3300" ph="{...}" />
-            <marker date="1526498340204" expanded="true" signature="274:405" ph="/// Service returning metadata for an MVC applications defined ... " />
-            <marker date="1526498340204" expanded="true" signature="463:3298" ph="{...}" />
-            <marker date="1526498340204" expanded="true" signature="720:860" ph="{...}" />
-            <marker date="1526498340204" expanded="true" signature="987:1206" ph="{...}" />
-            <marker date="1526498340204" expanded="true" signature="1286:2090" ph="{...}" />
-            <marker date="1526498340204" expanded="true" signature="1509:1677" ph="{...}" />
-            <marker date="1526498340204" expanded="true" signature="1849:2050" ph="{...}" />
-            <marker date="1526498340204" expanded="true" signature="2137:2207" ph="{...}" />
-            <marker date="1526498340204" expanded="true" signature="2270:2593" ph="{...}" />
-            <marker date="1526498340204" expanded="true" signature="2412:2583" ph="{...}" />
-            <marker date="1526498340204" expanded="true" signature="2702:3093" ph="{...}" />
-            <marker date="1526498340204" expanded="true" signature="2776:3083" ph="{...}" />
-            <marker date="1526498340204" expanded="true" signature="2950:3069" ph="{...}" />
-            <marker date="1526498340204" expanded="true" signature="3188:3292" ph="{...}" />
+            <marker date="1527007186942" expanded="false" signature="6:92" ph="..." />
+            <marker date="1527007186942" expanded="true" signature="138:3965" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="145:256" ph="/// Model containing the details of plugin created from the composite log. ... " />
+            <marker date="1527007186942" expanded="true" signature="288:3963" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="948:2422" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="993:1089" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="1513:2375" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="2535:2953" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="2608:2943" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="2781:2928" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="3047:3360" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="3118:3350" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="3195:3335" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="3466:3957" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="3540:3947" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="3622:3932" ph="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Core/MetadataMap.cs">
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/CompositeApplication.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209573" expanded="false" signature="6:134" ph="..." />
-            <marker date="1525865209573" expanded="true" signature="177:1600" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="184:343" ph="/// Maps the internal classes containing the group and action metadata into  ... " />
-            <marker date="1525865209573" expanded="true" signature="379:1598" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="454:760" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="515:749" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="619:734" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="847:1178" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="960:1166" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="1265:1592" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="1360:1580" ph="{...}" />
-          </folding>
+        <state relative-caret-position="1404">
+          <caret line="116" column="50" selection-start-line="116" selection-start-column="50" selection-end-line="116" selection-end-column="50" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Models/ActionInfo.cs">
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/ModuleContext.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209573" expanded="true" signature="67:427" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="97:425" ph="{...}" />
-          </folding>
+        <state relative-caret-position="624">
+          <caret line="54" column="22" selection-start-line="54" selection-start-column="22" selection-end-line="54" selection-end-column="22" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Models/ApiServiceInfo.cs">
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Modules/ModuleTestFixture.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209573" expanded="false" signature="6:56" ph="..." />
-            <marker date="1525865209573" expanded="true" signature="101:249" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="135:247" ph="{...}" />
-          </folding>
+        <state relative-caret-position="377">
+          <caret line="35" column="27" selection-start-line="35" selection-start-column="27" selection-end-line="35" selection-end-column="27" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Models/GroupInfo.cs">
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Plugins/MockAppHostPlugin.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209573" expanded="false" signature="6:56" ph="..." />
-            <marker date="1525865209573" expanded="true" signature="101:320" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="130:318" ph="{...}" />
-          </folding>
+        <state relative-caret-position="117">
+          <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/Models/ParameterInfo.cs">
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Plugins/MockPlugin.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209573" expanded="true" signature="67:431" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="100:429" ph="{...}" />
-          </folding>
+        <state relative-caret-position="182">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/CompositeApplication.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1404">
+          <caret line="116" column="50" selection-start-line="116" selection-start-column="50" selection-end-line="116" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/ModuleContext.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="637">
+          <caret line="55" column="59" selection-start-line="55" selection-start-column="59" selection-end-line="55" selection-end-column="59" />
         </state>
       </provider>
     </entry>
@@ -840,34 +1023,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="468">
           <caret line="38" column="9" selection-start-line="38" selection-start-column="9" selection-end-line="38" selection-end-column="9" />
-          <folding>
-            <marker date="1526498403899" expanded="false" signature="6:121" ph="..." />
-            <marker date="1526498403899" expanded="true" signature="167:1394" ph="{...}" />
-            <marker date="1526498403899" expanded="true" signature="174:311" ph="/// Plugin module configuring MVC to allow access to route  ... " />
-            <marker date="1526498403899" expanded="true" signature="361:1392" ph="{...}" />
-            <marker date="1526498403899" expanded="true" signature="457:580" ph="{...}" />
-            <marker date="1526498403899" expanded="true" signature="590:744" ph="/* Determine if the host application specified the WebMvcConfig configuration ... */" />
-            <marker date="1526498403899" expanded="true" signature="785:1212" ph="{...}" />
-            <marker date="1526498403899" expanded="true" signature="865:1202" ph="{...}" />
-            <marker date="1526498403899" expanded="true" signature="896:1020" ph="/* Add convention used to determine which route methods ... */" />
-            <marker date="1526498403899" expanded="true" signature="1076:1186" ph="{...}" />
-            <marker date="1526498403899" expanded="true" signature="1288:1386" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/ActionMetaAttribute.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209573" expanded="true" signature="51:1025" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="58:194" ph="/// Applied to a controller route to include metadata within the  ... " />
-            <marker date="1525865209573" expanded="true" signature="331:1023" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="346:493" ph="/// The name of the action returned in the route metadata. ... " />
-            <marker date="1525865209573" expanded="true" signature="545:718" ph="/// The name of the action returned within the metadata. ... " />
-            <marker date="1525865209573" expanded="true" signature="772:1017" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="837:957" ph="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -875,241 +1030,29 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="451">
           <caret line="56" selection-start-line="56" selection-end-line="56" />
-          <folding>
-            <marker date="1526498465742" expanded="false" signature="6:325" ph="..." />
-            <marker date="1526498465742" expanded="true" signature="363:3217" ph="{...}" />
-            <marker date="1526498465742" expanded="true" signature="370:628" ph="/// Extends the MVC application builder with a method called to  ... " />
-            <marker date="1526498465742" expanded="true" signature="670:3215" ph="{...}" />
-            <marker date="1526498465742" expanded="true" signature="760:1130" ph="/// Called when configuring an MVC application to specify ... " />
-            <marker date="1526498465742" expanded="true" signature="1261:1582" ph="{...}" />
-            <marker date="1526498465742" expanded="true" signature="1391:1485" ph="{...}" />
-            <marker date="1526498465742" expanded="true" signature="1676:2797" ph="{...}" />
-            <marker date="1526498465742" expanded="true" signature="1719:2785" ph="{...}" />
-            <marker date="1526498465742" expanded="true" signature="1795:2196" ph="{...}" />
-            <marker date="1526498465742" expanded="true" signature="1896:2178" ph="{...}" />
-            <marker date="1526498465742" expanded="true" signature="2273:2769" ph="{...}" />
-            <marker date="1526498465742" expanded="true" signature="2374:2751" ph="{...}" />
-            <marker date="1526498465742" expanded="true" signature="2886:3209" ph="{...}" />
-            <marker date="1526498465742" expanded="true" signature="2934:3030" ph="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/GroupMetaAttribute.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209573" expanded="true" signature="51:970" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="58:216" ph="/// Applied to a controller to include metadata about itself and any routes ... " />
-            <marker date="1525865209573" expanded="true" signature="351:968" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="366:627" ph="/// The name of the group to associate with the controller.  If not specified, ... " />
-            <marker date="1525865209573" expanded="true" signature="678:847" ph="///  Assigns group name. ... " />
-            <marker date="1525865209573" expanded="true" signature="907:962" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Metadata/IApiMetadataService.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209573" expanded="true" signature="76:1186" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="83:182" ph="/// Returns metadata for controller and its associated routes. ... " />
-            <marker date="1525865209573" expanded="true" signature="223:1184" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="238:408" ph="/// Returns route metadata for all defined groups. ... " />
-            <marker date="1525865209573" expanded="true" signature="457:688" ph="/// Returns route metadata for a given API group. ... " />
-            <marker date="1525865209573" expanded="true" signature="752:1105" ph="/// Returns the route meta for a specific API group and action. ... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/WebMvcConfig.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209573" expanded="false" signature="6:136" ph="..." />
-            <marker date="1525865209573" expanded="true" signature="165:1233" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="172:267" ph="/// General MVC configuration containing overall settings. ... " />
-            <marker date="1525865209573" expanded="true" signature="316:1231" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="331:403" ph="/// MVC Service collection. ... " />
-            <marker date="1525865209573" expanded="true" signature="478:584" ph="/// Determines if route metadata can be queried by consumers. ... " />
-            <marker date="1525865209573" expanded="true" signature="648:798" ph="/// Specifies the MVC services collection. ... " />
-            <marker date="1525865209573" expanded="true" signature="859:965" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="997:1225" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="1041:1215" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Doc/DocActionAttribute.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="117">
-          <caret line="10" column="29" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Doc/DocEmbeddedResourceAttribute.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="117">
-          <caret line="9" column="23" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Doc/DocPropertyAttribute.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Doc/DocResourceAttribute.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="18" column="35" selection-start-line="18" selection-start-column="35" selection-end-line="18" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/WebMvcManifest.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209573" expanded="true" signature="65:692" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="149:690" ph="{...}" />
-            <marker date="1525865209573" expanded="true" signature="187:430" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Hal/HalEntryPointResource.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="38:706" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="45:264" ph="/// Resource returned from an API service containing Links to root resources at which the client  ... " />
-            <marker date="1525865209569" expanded="true" signature="317:704" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="332:408" ph="/// Optional version indicator. ... " />
-            <marker date="1525865209569" expanded="true" signature="474:629" ph="/// List of secondary services to which the client requesting ... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Doc/DocActionAttribute.cs" />
+    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Doc/DocEmbeddedResourceAttribute.cs" />
+    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Doc/DocPropertyAttribute.cs" />
+    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Doc/DocResourceAttribute.cs" />
     <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Hal/HalResource.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="585">
           <caret line="47" column="9" selection-start-line="47" selection-start-column="9" selection-end-line="47" selection-end-column="9" />
-          <folding>
-            <marker date="1526498485078" expanded="false" signature="6:93" ph="..." />
-            <marker date="1526498485078" expanded="true" signature="133:3055" ph="{...}" />
-            <marker date="1526498485078" expanded="true" signature="140:268" ph="/// Base class implementing the IHalResource interface from which resources can be derived. ... " />
-            <marker date="1526498485078" expanded="true" signature="312:3053" ph="{...}" />
-            <marker date="1526498485078" expanded="true" signature="327:442" ph="/// List of links populated based on the configured resource metadata. ... " />
-            <marker date="1526498485078" expanded="true" signature="513:587" ph="/// Named embedded resources. ... " />
-            <marker date="1526498485078" expanded="true" signature="660:894" ph="/// Embeds a resource within parent resource. ... " />
-            <marker date="1526498485078" expanded="true" signature="966:1182" ph="{...}" />
-            <marker date="1526498485078" expanded="true" signature="1186:1511" ph="/// Embeds a collection of resources. ... " />
-            <marker date="1526498485078" expanded="true" signature="1622:1865" ph="{...}" />
-            <marker date="1526498485078" expanded="true" signature="1944:2815" ph="{...}" />
-            <marker date="1526498485078" expanded="true" signature="2072:2424" ph="{...}" />
-            <marker date="1526498485078" expanded="true" signature="2550:2755" ph="{...}" />
-            <marker date="1526498485078" expanded="true" signature="2898:3047" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Hal/HalSecondaryService.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="38:913" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="45:381" ph="/// Secondary service associated with the API entry point resource to which consuming ... " />
-            <marker date="1525865209569" expanded="true" signature="418:911" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="433:521" ph="/// The name used to reference the service. ... " />
-            <marker date="1525865209569" expanded="true" signature="572:657" ph="/// The base address of the API service. ... " />
-            <marker date="1525865209569" expanded="true" signature="715:854" ph="/// The child path of the base address to load the ... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Hal/IHalResource.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="false" signature="6:56" ph="..." />
-            <marker date="1525865209569" expanded="true" signature="96:1498" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="103:300" ph="/// Represents a resource model having an associated set of links ... " />
-            <marker date="1525865209569" expanded="true" signature="363:1496" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="378:466" ph="/// Dictionary of named embedded resources. ... " />
-            <marker date="1525865209569" expanded="true" signature="600:889" ph="/// Embeds resource into the parent resource. ... " />
-            <marker date="1525865209569" expanded="true" signature="971:1370" ph="/// Embeds a collection of resources into the parent resource ... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/ILinkedResource.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="false" signature="6:56" ph="..." />
-            <marker date="1525865209569" expanded="true" signature="92:462" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="99:200" ph="/// Implemented by a resource that can be associated with links. ... " />
-            <marker date="1525865209569" expanded="true" signature="237:460" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="252:340" ph="/// The links associated with the resource. ... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/IResource.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="34:180" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="41:126" ph="/// Marker interface used to identity resources. ... " />
-            <marker date="1525865209569" expanded="true" signature="157:178" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/IResourceCollection.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="34:328" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="41:220" ph="/// Represents a collection of resources. ... " />
-            <marker date="1525865209569" expanded="true" signature="319:326" ph="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/Link.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-82">
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="34:2715" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="41:341" ph="/// Defines a link with an associated relation name.  The relation ... " />
-            <marker date="1525865209569" expanded="true" signature="363:2713" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="378:478" ph="/// The hypertext reference to the associated resource. ... " />
-            <marker date="1525865209569" expanded="true" signature="529:715" ph="/// Its value is a string and is intended for indicating the language of ... " />
-            <marker date="1525865209569" expanded="true" signature="770:872" ph="/// Indicates if the HREF value is a template (Optional). ... " />
-            <marker date="1525865209569" expanded="true" signature="927:1032" ph="/// Indicates the methods that can be used to call the HREF. ... " />
-            <marker date="1525865209569" expanded="true" signature="1088:1255" ph="///  Its value MAY be used as a secondary key for selecting Link Objects which  ... " />
-            <marker date="1525865209569" expanded="true" signature="1306:1497" ph="///  Its value is a string and is intended for labeling the link with a ... " />
-            <marker date="1525865209569" expanded="true" signature="1549:1733" ph="/// Its value is a string used as a hint to indicate the media type ... " />
-            <marker date="1525865209569" expanded="true" signature="1784:2402" ph="/// Its presence indicates that the link is to be deprecated (i.e removed)  ... " />
-            <marker date="1525865209569" expanded="true" signature="2458:2665" ph="/// Its value is a string which is a URI that hints about the profile (as ... " />
-          </folding>
-        </state>
+        <state relative-caret-position="-82" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Resources/NamedResourceAttribute.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="273">
           <caret line="21" selection-start-line="21" selection-end-line="21" />
-          <folding>
-            <marker date="1526498485086" expanded="true" signature="49:654" ph="{...}" />
-            <marker date="1526498485086" expanded="true" signature="56:180" ph="/// Used to map a string name to a given resource implementing the IResource interface. ... " />
-            <marker date="1526498485086" expanded="true" signature="318:652" ph="{...}" />
-            <marker date="1526498485086" expanded="true" signature="428:646" ph="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1117,38 +1060,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="234">
           <caret line="18" selection-start-line="18" selection-end-line="18" />
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="69:502" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="76:270" ph="/// List based implementation for a resource collection. ... " />
-            <marker date="1525865209569" expanded="true" signature="400:500" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="485:494" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Common/HttpHeaderNames.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="31:407" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="38:113" ph="/// Common HTTP header name constants. ... " />
-            <marker date="1525865209569" expanded="true" signature="153:405" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="168:223" ph="/// Accept ... " />
-            <marker date="1525865209569" expanded="true" signature="280:341" ph="/// Content-Type ... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Common/InternetMediaTypes.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="31:423" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="38:103" ph="/// Common HTTP Media types. ... " />
-            <marker date="1525865209569" expanded="true" signature="139:421" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="154:219" ph="/// application/json ... " />
-            <marker date="1525865209569" expanded="true" signature="284:353" ph="/// application/hal+json ... " />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1156,332 +1067,28 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-433">
           <caret line="138" column="36" selection-start-line="138" selection-start-column="36" selection-end-line="138" selection-end-column="36" />
-          <folding>
-            <marker date="1526498569937" expanded="true" signature="31:8890" ph="{...}" />
-            <marker date="1526498569937" expanded="true" signature="38:110" ph="/// Common Resource Relation Types. ... " />
-            <marker date="1526498569937" expanded="true" signature="148:8888" ph="{...}" />
-            <marker date="1526498569937" expanded="true" signature="190:834" ph="{...}" />
-            <marker date="1526498569937" expanded="true" signature="213:346" ph="/// The target IRI points to a resource where a submission form can be obtained. ... " />
-            <marker date="1526498569937" expanded="true" signature="420:542" ph="/// Refers to a resource that can be used to edit the link's context. ... " />
-            <marker date="1526498569937" expanded="true" signature="603:768" ph="/// The target IRI points to a resource where a submission form for editing associated resource can be obtained. ... " />
-            <marker date="1526498569937" expanded="true" signature="871:3118" ph="{...}" />
-            <marker date="1526498569937" expanded="true" signature="894:1033" ph="/// Points to a resource containing the latest (e.g., current) version of the context. ... " />
-            <marker date="1526498569937" expanded="true" signature="1113:1247" ph="/// Points to a resource containing the successor version in the version history. ... " />
-            <marker date="1526498569937" expanded="true" signature="1333:1458" ph="/// Points to a resource containing the version history for the context. ... " />
-            <marker date="1526498569937" expanded="true" signature="1540:1640" ph="/// Points to a working copy for this resource. ... " />
-            <marker date="1526498569937" expanded="true" signature="1716:1848" ph="/// Points to the versioned resource from which this working copy was obtained. ... " />
-            <marker date="1526498569937" expanded="true" signature="1929:2038" ph="/// Refers to the immediately following archive resource ... " />
-            <marker date="1526498569937" expanded="true" signature="2114:2259" ph="/// Refers to a collection of records, documents, or other materials of historical interest. ... " />
-            <marker date="1526498569937" expanded="true" signature="2328:2648" ph="/// The document linked to was later converted to the document that contains this link relation. For example,  ... " />
-            <marker date="1526498569937" expanded="true" signature="2727:2837" ph="/// Refers to the immediately preceding archive resource. ... " />
-            <marker date="1526498569937" expanded="true" signature="2911:3055" ph="/// The Target IRI points to a Memento, a fixed resource that will not change state anymore ... " />
-            <marker date="1526498569937" expanded="true" signature="3166:4823" ph="{...}" />
-            <marker date="1526498569937" expanded="true" signature="3189:3325" ph="/// An IRI that refers to the furthest preceding resource in a series of resources. ... " />
-            <marker date="1526498569937" expanded="true" signature="3388:3524" ph="/// An IRI that refers to the furthest following resource in a series of resources. ... " />
-            <marker date="1526498569937" expanded="true" signature="3585:3750" ph="/// Indicates that the link's context is a part of a series, and that the next in the series is the link target. ... " />
-            <marker date="1526498569937" expanded="true" signature="3811:3980" ph="/// Indicates that the link's context is a part of a series, and that the previous in the series is the link targ ... " />
-            <marker date="1526498569937" expanded="true" signature="4041:4156" ph="/// Refers to the first resource in a collection of resources. ... " />
-            <marker date="1526498569937" expanded="true" signature="4219:4332" ph="/// Refers to a parent document in a hierarchy of documents. ... " />
-            <marker date="1526498569937" expanded="true" signature="4389:4525" ph="/// Points to a resource containing the predecessor version in the version history. ... " />
-            <marker date="1526498569937" expanded="true" signature="4615:4758" ph="/// Refers to the previous resource in an ordered series of resources. Synonym for &quot;prev&quot;. ... " />
-            <marker date="1526498569937" expanded="true" signature="4862:5887" ph="{...}" />
-            <marker date="1526498569937" expanded="true" signature="4885:5005" ph="/// Refers to a resource that is the subject of the link's context. ... " />
-            <marker date="1526498569937" expanded="true" signature="5068:5156" ph="/// Refers to the context's author. ... " />
-            <marker date="1526498569937" expanded="true" signature="5221:5345" ph="/// Refers to a copyright statement that applies to the link's context. ... " />
-            <marker date="1526498569937" expanded="true" signature="5416:5506" ph="/// Refers to context-sensitive help. ... " />
-            <marker date="1526498569937" expanded="true" signature="5567:5674" ph="/// Refers to an icon representing the link's context. ... " />
-            <marker date="1526498569937" expanded="true" signature="5735:5822" ph="/// Refers to a glossary of terms. ... " />
-            <marker date="1526498569937" expanded="true" signature="5927:6578" ph="{...}" />
-            <marker date="1526498569937" expanded="true" signature="5950:6092" ph="/// Refers to a hub that enables registration for notification of updates to the context. ... " />
-            <marker date="1526498569937" expanded="true" signature="6151:6285" ph="/// Refers to a resource that can be used to monitor changes in an HTTP resource. ... " />
-            <marker date="1526498569937" expanded="true" signature="6352:6504" ph="/// Refers to a resource that can be used to monitor changes in a specified group of HTTP resources ... " />
-            <marker date="1526498569937" expanded="true" signature="6588:6676" ph="/// Refers to a substitute for this context ... " />
-            <marker date="1526498569937" expanded="true" signature="6739:6856" ph="/// Refers to a resource providing information about the link's context. ... " />
-            <marker date="1526498569937" expanded="true" signature="6923:7229" ph="/// The relationship A 'describes' B asserts that resource A provides a description of resource B. There are no  ... " />
-            <marker date="1526498569937" expanded="true" signature="7292:7438" ph="/// The target IRI points to a resource which represents the collection resource for the context IRI. ... " />
-            <marker date="1526498569937" expanded="true" signature="7503:7637" ph="/// Refers to a resource containing the most recent item(s) in a collection of resources. ... " />
-            <marker date="1526498569937" expanded="true" signature="7696:7791" ph="/// The Target IRI points to an Original Resource. ... " />
-            <marker date="1526498569937" expanded="true" signature="7852:8198" ph="/// The prefetch link relation type is used to identify a resource that might be required by the next navigation  ... " />
-            <marker date="1526498569937" expanded="true" signature="8259:8375" ph="/// Refers to a resource that provides a preview of the link's context. ... " />
-            <marker date="1526498569937" expanded="true" signature="8434:8513" ph="/// Identifies a related resource. ... " />
-            <marker date="1526498569937" expanded="true" signature="8572:8686" ph="/// Identifies a resource that is a reply to the context of the link. ... " />
-            <marker date="1526498569937" expanded="true" signature="8745:8839" ph="/// Conveys an identifier for the link's context. ... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Core/IServiceEntryApiProvider.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="false" signature="6:68" ph="..." />
-            <marker date="1525865209569" expanded="true" signature="106:698" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="113:340" ph="/// Implemented by the RequestClientBuilder and passed to the ... " />
-            <marker date="1525865209569" expanded="true" signature="386:696" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="401:629" ph="/// Returns the associated service api entry resource.  The same ... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Core/JsonMediaTypeSerializer.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="false" signature="6:125" ph="..." />
-            <marker date="1525865209569" expanded="true" signature="163:862" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="170:256" ph="/// Serializes and Deserializes to and from JSON. ... " />
-            <marker date="1525865209569" expanded="true" signature="320:860" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="433:564" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="620:854" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="747:844" ph="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Core/RequestClient.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-199">
-          <folding>
-            <marker date="1525865209569" expanded="false" signature="6:327" ph="..." />
-            <marker date="1525865209569" expanded="true" signature="365:8991" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="372:449" ph="/// Client used to make HTTP requests.   ... " />
-            <marker date="1525865209569" expanded="true" signature="497:8989" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="896:1434" ph="/// Initializes an instance of the client with its associated HttpClient delegated to  ... " />
-            <marker date="1525865209569" expanded="true" signature="1636:2282" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="2340:2424" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="2434:2535" ph="/* Called by builder when creating client... ... */" />
-            <marker date="1525865209569" expanded="true" signature="2614:2731" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="2808:2920" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="2979:3211" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="3365:3572" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="3763:3980" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="4090:4761" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="4927:5481" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="5243:5389" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="5570:7732" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="5669:5918" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="6020:6271" ph="/* Check if the request has any embedded names specified.  This allows the client ... */" />
-            <marker date="1525865209569" expanded="true" signature="6338:6452" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="6564:6739" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="6921:7127" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="7289:7691" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="7359:7579" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="7828:8196" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="8275:8611" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="8393:8562" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="8737:8983" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Core/RequestClientService.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="51:822" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="58:324" ph="/// Class that wraps an instance of a IRequestClient and can be stored withing the ... " />
-            <marker date="1525865209569" expanded="true" signature="395:820" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="465:631" ph="/// Wraps instance of generic IRequestClient. ... " />
-            <marker date="1525865209569" expanded="true" signature="700:814" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Resources/HalEntryPointResource.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="41:515" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="48:289" ph="/// The response type returned from a service API entry point URL. ... " />
-            <marker date="1525865209569" expanded="true" signature="342:513" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="357:463" ph="/// Optional value indicating the version of the service API. ... " />
-          </folding>
-        </state>
+        <state relative-caret-position="-199" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Resources/HalResource.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-758">
-          <folding>
-            <marker date="1525865209569" expanded="false" signature="6:98" ph="..." />
-            <marker date="1525865209569" expanded="true" signature="141:5458" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="148:354" ph="/// Base resource class from which application resources are derived.   ... " />
-            <marker date="1525865209569" expanded="true" signature="383:5456" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="398:480" ph="/// Embedded related named resources. ... " />
-            <marker date="1525865209569" expanded="true" signature="600:688" ph="/// The links associated with the resource. ... " />
-            <marker date="1525865209569" expanded="true" signature="806:1011" ph="/* When submitting resources back to the server for updating or other ... */" />
-            <marker date="1525865209569" expanded="true" signature="1130:1391" ph="/// Determines if the resources contains a named embedded resource. ... " />
-            <marker date="1525865209569" expanded="true" signature="1437:1670" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="1680:2014" ph="/// Returns an instance of an embedded resource. ... " />
-            <marker date="1525865209569" expanded="true" signature="2118:4025" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="2319:2520" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="2534:3417" ph="/* Note:  The server side Web REST/HAL implementation of the Embedded property returns a simple dictionary ... */" />
-            <marker date="1525865209569" expanded="true" signature="3475:3539" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="3673:3884" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="4035:4397" ph="/// Returns an instance of an embedded collection resource. ... " />
-            <marker date="1525865209569" expanded="true" signature="4524:5450" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="4726:4933" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="4998:5062" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="5120:5304" ph="{...}" />
-          </folding>
-        </state>
+        <state relative-caret-position="-758" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Resources/Link.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-69">
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="41:2355" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="48:171" ph="/// Representation of REST Link for consuming client returned ... " />
-            <marker date="1525865209569" expanded="true" signature="193:2353" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="208:282" ph="/// The URL for the resource. ... " />
-            <marker date="1525865209569" expanded="true" signature="327:418" ph="/// The methods supported by the resource URL. ... " />
-            <marker date="1525865209569" expanded="true" signature="468:564" ph="/// Indicates if the URL contains template value place holders. ... " />
-            <marker date="1525865209569" expanded="true" signature="606:774" ph="/// Its value is a string and is intended for indicating the language of ... " />
-            <marker date="1525865209569" expanded="true" signature="817:966" ph="///  Its value MAY be used as a secondary key for selecting Link Objects which  ... " />
-            <marker date="1525865209569" expanded="true" signature="1005:1178" ph="///  Its value is a string and is intended for labeling the link with a ... " />
-            <marker date="1525865209569" expanded="true" signature="1218:1384" ph="/// Its value is a string used as a hint to indicate the media type ... " />
-            <marker date="1525865209569" expanded="true" signature="1429:2034" ph="/// Its presence indicates that the link is to be deprecated (i.e removed)  ... " />
-            <marker date="1525865209569" expanded="true" signature="2090:2297" ph="/// Its value is a string which is a URI that hints about the profile (as ... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Resources/LinkExtensions.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="false" signature="6:47" ph="..." />
-            <marker date="1525865209569" expanded="true" signature="90:1545" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="97:196" ph="/// Extension methods used to create request from link object. ... " />
-            <marker date="1525865209569" expanded="true" signature="235:1543" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="250:469" ph="/// Creates a request corresponding to the link. ... " />
-            <marker date="1525865209569" expanded="true" signature="528:592" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="602:904" ph="///  Creates a request corresponding to the link. ... " />
-            <marker date="1525865209569" expanded="true" signature="999:1071" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="1081:1382" ph="/// Creates a request corresponding to the link. ... " />
-            <marker date="1525865209569" expanded="true" signature="1465:1537" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Settings/HeaderValue.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="55:1237" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="62:162" ph="/// Contains a value to be sent as a request HTTP Header value. ... " />
-            <marker date="1525865209569" expanded="true" signature="191:1235" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="206:272" ph="/// The header value. ... " />
-            <marker date="1525865209569" expanded="true" signature="315:443" ph="/// The precedence of the value compared in relation to other values with the same header name. ... " />
-            <marker date="1525865209569" expanded="true" signature="539:902" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="592:689" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="729:833" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="987:1059" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="1142:1224" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Settings/IMediaTypeSerializer.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="58:1117" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="65:211" ph="/// Interface defining contract implemented by classes responsible for ... " />
-            <marker date="1525865209569" expanded="true" signature="253:1115" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="268:360" ph="/// The media type supported by the serializer. ... " />
-            <marker date="1525865209569" expanded="true" signature="404:636" ph="/// Serializes the provided value to a byte array. ... " />
-            <marker date="1525865209569" expanded="true" signature="686:1060" ph="/// Deserializes stream into an object instance. ... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Settings/IRequestSettings.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="64:1155" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="71:168" ph="/// Represents settings to be applied to sent HTTP requests. ... " />
-            <marker date="1525865209569" expanded="true" signature="206:1153" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="221:313" ph="/// Headers to be added to the request message. ... " />
-            <marker date="1525865209569" expanded="true" signature="363:463" ph="/// Query string values to be added to the request URI. ... " />
-            <marker date="1525865209569" expanded="true" signature="514:700" ph="/// Applies the settings to the provided request message. ... " />
-            <marker date="1525865209569" expanded="true" signature="765:1077" ph="/// Returns a new settings instance with all provided request settings ... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Settings/QueryString.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="false" signature="6:85" ph="..." />
-            <marker date="1525865209569" expanded="true" signature="127:1947" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="134:242" ph="/// Used to specify query string parameters used when making a request. ... " />
-            <marker date="1525865209569" expanded="true" signature="271:1945" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="286:364" ph="/// The collection of parameters. ... " />
-            <marker date="1525865209569" expanded="true" signature="525:653" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="663:1004" ph="/// Adds a query string parameter name and value to be added to query string. ... " />
-            <marker date="1525865209569" expanded="true" signature="1067:1418" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="1483:1939" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="1655:1715" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="1836:1896" ph="{...}" />
-          </folding>
-        </state>
+        <state relative-caret-position="-69" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Settings/RequestHeaders.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="117">
           <caret line="9" column="1" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
-          <folding>
-            <marker date="1526498693460" expanded="true" signature="6:187" ph="..." />
-            <marker date="1526498693460" expanded="true" signature="229:4817" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="236:321" ph="/// HTTP Headers associated with a HTTP request. ... " />
-            <marker date="1526498693460" expanded="true" signature="353:4815" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="362:427" ph="/// The HTTP accept media-type.  ... " />
-            <marker date="1526498693460" expanded="true" signature="483:548" ph="/// The HTTP content media-type. ... " />
-            <marker date="1526498693460" expanded="true" signature="607:702" ph="/// A named list of header values associated with the request. ... " />
-            <marker date="1526498693460" expanded="true" signature="836:885" ph="/// Constructor. ... " />
-            <marker date="1526498693460" expanded="true" signature="911:1040" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="1050:1354" ph="/// Adds a header value to be associated with the request. ... " />
-            <marker date="1526498693460" expanded="true" signature="1425:1963" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="1594:1868" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="2023:2140" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="2150:2594" ph="/// Sets the Accept media-type header value.  To accept multiple media types, ... " />
-            <marker date="1526498693460" expanded="true" signature="2678:2887" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="2897:3109" ph="/// Sets the content media-type value. ... " />
-            <marker date="1526498693460" expanded="true" signature="3170:3271" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="3336:3987" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="3363:3861" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="3428:3856" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="3897:3983" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="4063:4809" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="4181:4415" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="4531:4608" ph="{...}" />
-            <marker date="1526498693460" expanded="true" signature="4714:4779" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/Settings/RequestSettings.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="false" signature="6:36" ph="..." />
-            <marker date="1525865209569" expanded="true" signature="78:1893" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="85:184" ph="/// Used to configure settings to be applied to sent requests. ... " />
-            <marker date="1525865209569" expanded="true" signature="236:1891" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="411:652" ph="/// Creates a new request settings instance. ... " />
-            <marker date="1525865209569" expanded="true" signature="739:1020" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="816:927" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="1082:1301" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="1378:1885" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="1429:1705" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="1505:1690" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="1760:1852" ph="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1489,134 +1096,18 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="273">
           <caret line="22" column="80" selection-start-line="22" selection-start-column="80" selection-end-line="22" selection-end-column="80" />
-          <folding>
-            <marker date="1526498693444" expanded="false" signature="6:42" ph="..." />
-            <marker date="1526498693444" expanded="true" signature="84:1398" ph="{...}" />
-            <marker date="1526498693444" expanded="true" signature="91:242" ph="/// Extension methods used to configure a IRequestSettings instance ... " />
-            <marker date="1526498693444" expanded="true" signature="292:1396" ph="{...}" />
-            <marker date="1526498693444" expanded="true" signature="307:617" ph="/// Applies the settings commonly used when submitting and consuming ... " />
-            <marker date="1526498693444" expanded="true" signature="710:1390" ph="{...}" />
-            <marker date="1526498693444" expanded="true" signature="1045:1172" ph="/* If the settings content-type is not specified assume JSON serialized ... */" />
-            <marker date="1526498693444" expanded="true" signature="1233:1344" ph="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/ApiRequest.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3410">
-          <folding>
-            <marker date="1525865209569" expanded="false" signature="6:188" ph="..." />
-            <marker date="1525865209569" expanded="true" signature="221:12671" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="228:326" ph="/// Represents a request that can be submitted to the server. ... " />
-            <marker date="1525865209569" expanded="true" signature="354:12669" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="369:461" ph="/// The Uri to be used when making the request. ... " />
-            <marker date="1525865209569" expanded="true" signature="526:630" ph="/// Indicates that the RequestUri contains template tokens. ... " />
-            <marker date="1525865209569" expanded="true" signature="693:788" ph="/// The method to be used when making the request. ... " />
-            <marker date="1525865209569" expanded="true" signature="853:1155" ph="/// Set to indicate to the server what embedded resources should ... " />
-            <marker date="1525865209569" expanded="true" signature="1223:1347" ph="/// The content of the request-body to be serialized and sent with the request. ... " />
-            <marker date="1525865209569" expanded="true" signature="1409:1618" ph="/// The request settings specific to the request.  These settings are merged ... " />
-            <marker date="1525865209569" expanded="true" signature="1691:2151" ph="/// Creates a new request for a specified Uri for a given HTTP method. ... " />
-            <marker date="1525865209569" expanded="true" signature="2257:2550" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="2321:2444" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="2560:2919" ph="/// Creates a new GET request to a specified Uri. ... " />
-            <marker date="1525865209569" expanded="true" signature="3009:3092" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="3102:3462" ph="/// Creates a new POST request to a specified Uri. ... " />
-            <marker date="1525865209569" expanded="true" signature="3553:3637" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="3647:4006" ph="/// Creates a new PUT request to a specified Uri. ... " />
-            <marker date="1525865209569" expanded="true" signature="4096:4171" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="4181:4543" ph="/// Creates a new DELETE request to a specified Uri. ... " />
-            <marker date="1525865209569" expanded="true" signature="4636:4722" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="4732:4961" ph="/// Creates a new request based on a provided link. ... " />
-            <marker date="1525865209569" expanded="true" signature="5012:5201" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="5219:5550" ph="/// Creates a new request based on a provided link and route values. ... " />
-            <marker date="1525865209569" expanded="true" signature="5637:6288" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="5918:6063" ph="/* Note: The href of the Link must not be set to the URL after replacing tokens since ... */" />
-            <marker date="1525865209569" expanded="true" signature="6132:6230" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="6298:6629" ph="/// Creates a new request based on a provided link and route values. ... " />
-            <marker date="1525865209569" expanded="true" signature="6704:6975" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="7049:7584" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="7096:7273" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="7359:7507" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="7594:7958" ph="/// Specific settings to be used for the request.  These settings are merged ... " />
-            <marker date="1525865209569" expanded="true" signature="8025:8202" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="8212:8501" ph="/// The content to be sent to the server when the request is executed. ... " />
-            <marker date="1525865209569" expanded="true" signature="8555:8728" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="8738:9247" ph="/// Indicates to the server which named resources it should embed. ... " />
-            <marker date="1525865209569" expanded="true" signature="9302:9402" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="9412:9656" ph="/// Specifies the values used to replace URI template tokens. ... " />
-            <marker date="1525865209569" expanded="true" signature="9734:10049" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="10059:10303" ph="/// Specifies the values used to replace URI template tokens. ... " />
-            <marker date="1525865209569" expanded="true" signature="10369:10644" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="10744:10998" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="10794:10881" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="10905:10994" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="11043:11349" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="11075:11185" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="11219:11345" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="11543:12043" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="11605:11973" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="12149:12342" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="12397:12466" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="12544:12663" ph="{...}" />
-          </folding>
-        </state>
+        <state relative-caret-position="-3410" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/ApiResponse.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-355">
           <caret line="29" column="22" selection-start-line="29" selection-start-column="22" selection-end-line="29" selection-end-column="22" />
-          <folding>
-            <marker date="1526498693452" expanded="false" signature="6:85" ph="..." />
-            <marker date="1526498693452" expanded="true" signature="118:3963" ph="{...}" />
-            <marker date="1526498693452" expanded="true" signature="125:217" ph="/// Contains result properties for a submitted request. ... " />
-            <marker date="1526498693452" expanded="true" signature="246:3472" ph="{...}" />
-            <marker date="1526498693452" expanded="true" signature="261:357" ph="/// The message for which the result is associated. ... " />
-            <marker date="1526498693452" expanded="true" signature="418:523" ph="/// Indicates if the response code is considered successful. ... " />
-            <marker date="1526498693452" expanded="true" signature="582:677" ph="/// The HTTP status code returned from the server. ... " />
-            <marker date="1526498693452" expanded="true" signature="737:843" ph="/// A descriptive phase usually related with the status code. ... " />
-            <marker date="1526498693452" expanded="true" signature="896:966" ph="/// The response headers. ... " />
-            <marker date="1526498693452" expanded="true" signature="1029:1183" ph="/// The media-type of the returned response content. ... " />
-            <marker date="1526498693452" expanded="true" signature="1234:1391" ph="/// The character set of the returned response content. ... " />
-            <marker date="1526498693452" expanded="true" signature="1440:1590" ph="/// The length of the returned response content. ... " />
-            <marker date="1526498693452" expanded="true" signature="1644:1766" ph="/// Contains information about the server to which the request was submitted. ... " />
-            <marker date="1526498693452" expanded="true" signature="1814:1900" ph="/// Returns the value of the ETag header. ... " />
-            <marker date="1526498693452" expanded="true" signature="2079:2983" ph="{...}" />
-            <marker date="1526498693452" expanded="true" signature="2993:3176" ph="/// Allows the consumer handling the response to throw an HttpRequestException ... " />
-            <marker date="1526498693452" expanded="true" signature="3226:3466" ph="{...}" />
-            <marker date="1526498693452" expanded="true" signature="3274:3456" ph="{...}" />
-            <marker date="1526498693452" expanded="true" signature="3475:3614" ph="/// Contains result properties for a submitted request and the response content returned from the server. ... " />
-            <marker date="1526498693452" expanded="true" signature="3695:3961" ph="{...}" />
-            <marker date="1526498693452" expanded="true" signature="3896:3947" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/IRequestClient.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="false" signature="6:92" ph="..." />
-            <marker date="1525865209569" expanded="true" signature="125:1742" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="132:236" ph="/// Contract for a client used to make REST based Web API requests. ... " />
-            <marker date="1525865209569" expanded="true" signature="272:1740" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="287:613" ph="/// Return the service api entry resource associated with the client. ... " />
-            <marker date="1525865209569" expanded="true" signature="674:958" ph="/// Sends an API request to the server. ... " />
-            <marker date="1525865209569" expanded="true" signature="1103:1542" ph="///  Sends an API request to the server for a response containing content. ... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Rest.Client/IRequestClientService.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <marker date="1525865209569" expanded="true" signature="31:423" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="38:209" ph="/// Derived by an interface used to uniquely identify multiple ... " />
-            <marker date="1525865209569" expanded="true" signature="252:421" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="267:376" ph="/// Reference to the request client associated with the service. ... " />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1624,41 +1115,276 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="344">
           <caret line="169" column="58" lean-forward="true" selection-start-line="169" selection-start-column="58" selection-end-line="169" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/CompositeApplication.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1404">
+          <caret line="116" column="50" selection-start-line="116" selection-start-column="50" selection-end-line="116" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Plugins/ModuleContext.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="624">
+          <caret line="54" column="22" selection-start-line="54" selection-start-column="22" selection-end-line="54" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Plugins/MockAppHostPlugin.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="117">
+          <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Modules/ModuleTestFixture.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="35" column="27" selection-start-line="35" selection-start-column="27" selection-end-line="35" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Test/Plugins/MockPlugin.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Exceptions/EnricherException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Exceptions/MessageDispatchException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="38" column="114" selection-start-line="38" selection-start-column="100" selection-end-line="38" selection-end-column="114" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Messaging/Exceptions/PublisherException.cs">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Common/NetFusion.Base/Exceptions/NetFusionException.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="585">
+          <caret line="46" column="65" selection-start-line="46" selection-start-column="65" selection-end-line="46" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/Models/RegisteredService.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/Models/CompositeStructure.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
           <folding>
-            <marker date="1525865209569" expanded="false" signature="6:276" ph="..." />
-            <marker date="1525865209569" expanded="true" signature="309:9649" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="316:450" ph="/// Class used to build an instance of a IRequestClient based on a set ... " />
-            <marker date="1525865209569" expanded="true" signature="515:9647" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="1165:1395" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="1405:1676" ph="/// Creates a new builder for a specific base service Uri. ... " />
-            <marker date="1525865209569" expanded="true" signature="1757:1838" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="1848:2258" ph="/// Sets a child path of the base address that is to be invoked to load the  ... " />
-            <marker date="1525865209569" expanded="true" signature="2331:2608" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="2618:3081" ph="/// Specifies the default settings that should be used for each request.  Any request specific settings, ... " />
-            <marker date="1525865209569" expanded="true" signature="3172:3349" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="3359:3606" ph="/// Specifies the logger factory to use. ... " />
-            <marker date="1525865209569" expanded="true" signature="3685:3837" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="3847:4135" ph="/// Indicates that a header should be added containing a correlation id value. ... " />
-            <marker date="1525865209569" expanded="true" signature="4238:4513" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="4303:4426" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="4523:4805" ph="/// Registers a delegate that will be invoked before each request. ... " />
-            <marker date="1525865209569" expanded="true" signature="4894:5035" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="5045:5445" ph="/// Registers a object responsible for serializing and deserializing for a given media type. ... " />
-            <marker date="1525865209569" expanded="true" signature="5584:6297" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="6021:6202" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="6307:6494" ph="/// Returns an instance of the request client built using the specified configurations. ... " />
-            <marker date="1525865209569" expanded="true" signature="6532:7981" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="7102:7250" ph="/* If the configuration specified a service entry point path, configure a delegate to load ... */" />
-            <marker date="1525865209569" expanded="true" signature="7291:7526" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="7683:7783" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="7834:7936" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="8151:8495" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="8205:8439" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="8505:8650" ph="/* Attempts to load the entry point resource and resets the lazy loaded state if there ... */" />
-            <marker date="1525865209569" expanded="true" signature="8752:9360" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="8778:9061" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="9095:9350" ph="{...}" />
-            <marker date="1525865209569" expanded="true" signature="9409:9641" ph="{...}" />
+            <marker date="1526567501767" expanded="false" signature="6:92" ph="..." />
+            <marker date="1526567501767" expanded="true" signature="138:2238" ph="{...}" />
+            <marker date="1526567501767" expanded="true" signature="145:340" ph="/// Model returned from the WebApi containing the root composite-structure ... " />
+            <marker date="1526567501767" expanded="true" signature="377:2236" ph="{...}" />
+            <marker date="1526567501767" expanded="true" signature="941:1895" ph="{...}" />
+            <marker date="1526567501767" expanded="true" signature="989:1088" ph="{...}" />
+            <marker date="1526567501767" expanded="true" signature="1398:1884" ph="{...}" />
+            <marker date="1526567501767" expanded="true" signature="1981:2230" ph="{...}" />
+            <marker date="1526567501767" expanded="true" signature="2052:2220" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/Models/KnownTypeDefinition.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1526567501767" expanded="true" signature="44:516" ph="{...}" />
+            <marker date="1526567501767" expanded="true" signature="51:353" ph="/// Model containing types defined within the plugin based on ... " />
+            <marker date="1526567501767" expanded="true" signature="390:514" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Logging/CompositeLog.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1456">
+          <caret line="118" column="91" selection-start-line="118" selection-start-column="91" selection-end-line="118" selection-end-column="91" />
+          <folding>
+            <marker date="1527079528717" expanded="false" signature="6:221" ph="..." />
+            <marker date="1527079528717" expanded="true" signature="260:5457" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="267:542" ph="/// Takes an instance of the composite application and the built service collection ... " />
+            <marker date="1527079528717" expanded="true" signature="574:5455" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="787:1116" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="1169:1416" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="1496:1898" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="1577:1887" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="1964:2147" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="2225:2557" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="2326:2500" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="2627:2944" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="2713:2887" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="3024:3623" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="3717:4052" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="3857:4040" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="4157:4373" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="4484:4799" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="4892:5449" ph="{...}" />
+            <marker date="1527079528717" expanded="true" signature="4967:5221" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Container/ContainerBuilder.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1526567501763" expanded="false" signature="6:139" ph="..." />
+            <marker date="1526567501763" expanded="true" signature="180:3300" ph="{...}" />
+            <marker date="1526567501763" expanded="true" signature="187:461" ph="/// Constructs an instance of an application container.  This class is used during the start of ... " />
+            <marker date="1526567501763" expanded="true" signature="515:2364" ph="{...}" />
+            <marker date="1526567501763" expanded="true" signature="1034:1528" ph="{...}" />
+            <marker date="1526567501763" expanded="true" signature="1097:1517" ph="{...}" />
+            <marker date="1526567501763" expanded="true" signature="1605:1888" ph="{...}" />
+            <marker date="1526567501763" expanded="true" signature="1928:2358" ph="{...}" />
+            <marker date="1526567501763" expanded="true" signature="2416:3298" ph="{...}" />
+            <marker date="1526567501763" expanded="true" signature="2431:2908" ph="/// Creates an application builder associated with a service collection. ... " />
+            <marker date="1526567501763" expanded="true" signature="3123:3292" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/SettingsExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="28" column="33" selection-start-line="28" selection-start-column="19" selection-end-line="28" selection-end-column="33" />
+          <folding>
+            <marker date="1527107928825" expanded="false" signature="6:179" ph="..." />
+            <marker date="1527107928825" expanded="true" signature="209:3222" ph="{...}" />
+            <marker date="1527107928825" expanded="true" signature="216:567" ph="/// Extensions for determining a setting classes's section path based on the  ... " />
+            <marker date="1527107928825" expanded="true" signature="610:3220" ph="{...}" />
+            <marker date="1527107928825" expanded="true" signature="625:1140" ph="/// Provided a IAppSetting derived instance,  determines the section path by recursively  ... " />
+            <marker date="1527107928825" expanded="true" signature="1215:1385" ph="{...}" />
+            <marker date="1527107928825" expanded="true" signature="1395:1909" ph="/// Provided a IAppSettings derived type, determines the section path by recursively  ... " />
+            <marker date="1527107928825" expanded="true" signature="1992:2103" ph="{...}" />
+            <marker date="1527107928825" expanded="true" signature="2167:2279" ph="{...}" />
+            <marker date="1527107928825" expanded="true" signature="2289:2883" ph="/// Returns an instance of the specified setting type populated from the configuration ... " />
+            <marker date="1527107928825" expanded="true" signature="3020:3214" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingPathTests.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="18" column="9" lean-forward="true" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Bootstrap/Configuration/EnviromentConfig.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1526567501763" expanded="false" signature="6:49" ph="..." />
+            <marker date="1526567501763" expanded="true" signature="94:2485" ph="{...}" />
+            <marker date="1526567501763" expanded="true" signature="101:198" ph="/// Configuration for the overall application environment.   ... " />
+            <marker date="1526567501763" expanded="true" signature="234:2483" ph="{...}" />
+            <marker date="1526567501763" expanded="true" signature="317:403" ph="{...}" />
+            <marker date="1526567501763" expanded="true" signature="422:503" ph="/// Commonly used environment names. ... " />
+            <marker date="1526567501763" expanded="true" signature="537:724" ph="{...}" />
+            <marker date="1526567501763" expanded="true" signature="734:865" ph="/// The value of the variable specifying the environment of the executing application. ... " />
+            <marker date="1526567501763" expanded="true" signature="987:1333" ph="{...}" />
+            <marker date="1526567501763" expanded="true" signature="1058:1284" ph="{...}" />
+            <marker date="1526567501763" expanded="true" signature="1200:1270" ph="{...}" />
+            <marker date="1526567501763" expanded="true" signature="1343:1452" ph="/// Indicates application is running in Development environment. ... " />
+            <marker date="1526567501763" expanded="true" signature="1585:1687" ph="/// Indicates application is running in Test environment. ... " />
+            <marker date="1526567501763" expanded="true" signature="1806:1914" ph="/// Indicates application is running in Production environment. ... " />
+            <marker date="1526567501763" expanded="true" signature="2053:2257" ph="/// Determines the log level based on the execution environment: ... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/CoreTests/Settings/SettingTests.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="45" column="9" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="9" />
+          <folding>
+            <marker date="1527108143974" expanded="false" signature="6:290" ph="..." />
+            <marker date="1527108143974" expanded="true" signature="320:5095" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="327:640" ph="/// Unit tests for testing the injecting of services directly into the dependent ... " />
+            <marker date="1527108143974" expanded="true" signature="670:5093" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="685:962" ph="/// A configuration setting class deriving from IAppSetting and marked with the ... " />
+            <marker date="1527108143974" expanded="true" signature="1098:1812" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="1154:1800" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="1222:1402" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="1501:1784" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="1822:2109" ph="/// The IConfiguration service is automatically registered with the service  ... " />
+            <marker date="1527108143974" expanded="true" signature="2262:2919" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="2318:2907" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="2386:2535" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="2634:2891" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="2929:3276" ph="/// If needed, the settings can be obtained by a service by injecting the IOptions ... " />
+            <marker date="1527108143974" expanded="true" signature="3415:4247" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="3471:4235" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="3539:3719" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="3818:4219" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="4257:4548" ph="/* Test the generation of section for derived setting types. ... */" />
+            <marker date="1527108143974" expanded="true" signature="4621:5087" ph="{...}" />
+            <marker date="1527108143974" expanded="true" signature="4702:5026" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Web/NetFusion.Web.Mvc/Composite/Models/PluginDetails.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="403">
+          <caret line="34" column="35" selection-start-line="34" selection-start-column="16" selection-end-line="34" selection-end-column="35" />
+          <folding>
+            <marker date="1527007186942" expanded="false" signature="6:92" ph="..." />
+            <marker date="1527007186942" expanded="true" signature="138:3965" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="145:256" ph="/// Model containing the details of plugin created from the composite log. ... " />
+            <marker date="1527007186942" expanded="true" signature="288:3963" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="948:2422" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="993:1089" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="1513:2375" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="2535:2953" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="2608:2943" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="2781:2928" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="3047:3360" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="3118:3350" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="3195:3335" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="3466:3957" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="3540:3947" ph="{...}" />
+            <marker date="1527007186942" expanded="true" signature="3622:3932" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/NetFusion.Settings/Modules/AppSettingsModule.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="12" selection-start-column="12" selection-end-line="18" selection-end-column="65" />
+          <folding>
+            <marker date="1527108581516" expanded="true" signature="6:375" ph="..." />
+            <marker date="1527108581516" expanded="true" signature="413:3818" ph="{...}" />
+            <marker date="1527108581516" expanded="true" signature="420:976" ph="/// Extends the Microsoft configuration options by allowing setting types to be defined  ... " />
+            <marker date="1527108581516" expanded="true" signature="1026:3816" ph="{...}" />
+            <marker date="1527108581516" expanded="true" signature="1107:1999" ph="{...}" />
+            <marker date="1527108581516" expanded="true" signature="1324:1989" ph="{...}" />
+            <marker date="1527108581516" expanded="true" signature="1487:1859" ph="{...}" />
+            <marker date="1527108581516" expanded="true" signature="2009:2208" ph="/* Register each application setting so a factory method is invoked when injected ... */" />
+            <marker date="1527108581516" expanded="true" signature="2279:2785" ph="{...}" />
+            <marker date="1527108581516" expanded="true" signature="2451:2772" ph="{...}" />
+            <marker date="1527108581516" expanded="true" signature="2841:3391" ph="{...}" />
+            <marker date="1527108581516" expanded="true" signature="3001:3343" ph="{...}" />
+            <marker date="1527108581516" expanded="true" signature="3464:3810" ph="{...}" />
+            <marker date="1527108581516" expanded="true" signature="3650:3798" ph="{...}" />
           </folding>
         </state>
       </provider>

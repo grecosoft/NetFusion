@@ -655,7 +655,6 @@
               <e p="MockSetttings.cs" t="Include" />
             </e>
             <e p="SettingBootstrapTests.cs" t="Include" />
-            <e p="SettingPathTests.cs" t="Include" />
             <e p="SettingTestExtensions.cs" t="Include" />
             <e p="SettingTests.cs" t="Include" />
           </e>
