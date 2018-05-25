@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
 using System;
 using NetFusion.Bootstrap.Configuration;
+using NetFusion.Bootstrap.Validation;
+using Demo.Infra;
 
 namespace Demo.WebApi
 {
@@ -58,10 +60,15 @@ namespace Demo.WebApi
                 "Demo.WebApi",
                 "Demo.*");
 
-            return services.CreateAppBuilder(
-											configuration, 
-											loggerFactory, 
-											typeResolver)
+            return services
+                .CreateAppBuilder(
+                    configuration, 
+                    loggerFactory, 
+                    typeResolver)
+                .Bootstrap(c => {
+                    c.WithConfig<ValidationConfig>(
+                        vc => vc.UseValidatorType<CustomObjectValidator>());
+                })
             	.Build();
         }
         
