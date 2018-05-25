@@ -188,21 +188,31 @@ namespace NetFusion.Messaging.Core
 
         private object ProcessResult(IMessage message, object result)
         {
-            object resultValue = result;
-            var command = message as ICommand;
-
-            if (command != null && result != null && IsAsyncWithResult)
+            // If we are processing a result for a command, the result
+            // needs to be set.  Otherwise, just return the result.
+            if (!(message is ICommand command))
+            {
+                return result;
+            }
+           
+            // A Task containing a result is being returned so get the result
+            // from the returned task and set it as the commands's result:
+            if (result != null && IsAsyncWithResult)
             {
                 dynamic resultTask = result;
-                resultValue = resultTask.Result;
-            }
+                var resultValue = resultTask.Result;
 
-            if (command != null && resultValue != null)
-            {
                 command.SetResult(resultValue);
+                return resultValue;
             }
 
-            return resultValue; 
+            // The handler was not asynchronous set the result of the command:
+            if (result != null && !IsAsync)
+            {
+                command.SetResult(result);
+            }
+
+            return result; 
         }
     }
 }

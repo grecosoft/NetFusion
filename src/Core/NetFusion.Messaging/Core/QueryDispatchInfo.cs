@@ -149,14 +149,20 @@ namespace NetFusion.Messaging.Core
         private object ProcessResult(IQuery query, object result)
         {
             object resultValue = result;
-          
+
+            // The query request is a Task so get the result from the
+            // task and set it as the query's result:
             if (result != null && IsAsyncWithResult)
             {
                 dynamic resultTask = result;
                 resultValue = resultTask.Result;
+                
+                query.SetResult(resultValue);
+                return resultValue;
             }
 
-            if (resultValue != null)
+            // The handler was not asynchronous set the result of the query:
+            if (resultValue != null && !IsAsync)
             {
                 query.SetResult(resultValue);
             }
