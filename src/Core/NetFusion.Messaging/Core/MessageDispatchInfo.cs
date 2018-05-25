@@ -189,10 +189,10 @@ namespace NetFusion.Messaging.Core
         private object ProcessResult(IMessage message, object result)
         {
             // If we are processing a result for a command, the result
-            // needs to be set.  Otherwise, just return the result.
+            // needs to be set.  
             if (!(message is ICommand command))
             {
-                return result;
+                return null;
             }
            
             // A Task containing a result is being returned so get the result
@@ -210,9 +210,10 @@ namespace NetFusion.Messaging.Core
             if (result != null && !IsAsync)
             {
                 command.SetResult(result);
+                return result;
             }
 
-            return result; 
+            return null; 
         }
     }
 }
