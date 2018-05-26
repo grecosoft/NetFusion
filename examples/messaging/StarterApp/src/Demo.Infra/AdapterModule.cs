@@ -9,6 +9,9 @@ namespace Demo.Infra
         {
             services.AddSingleton<IRegistrationDataAdapter,
                  RegistrationDataAdapter>();
+
+            services.AddSingleton<ISalesDataAdapter,
+                 SalesDataAdapter>();
         }
     }
 }
