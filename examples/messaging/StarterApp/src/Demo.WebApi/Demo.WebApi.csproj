@@ -11,8 +11,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.20" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.34" />
     <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
+    <PackageReference Include="NetFusion.Messaging" Version="3.2.34" />
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" />
   </ItemGroup>
@@ -24,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Demo.App\Demo.App.csproj" />
     <ProjectReference Include="..\Demo.Infra\Demo.Infra.csproj" />
+    <ProjectReference Include="..\Demo.Api\Demo.Api.csproj" />
   </ItemGroup>
 
 </Project>

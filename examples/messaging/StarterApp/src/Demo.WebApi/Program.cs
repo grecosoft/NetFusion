@@ -3,6 +3,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using NetFusion.Bootstrap.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Demo.WebApi
 {
@@ -21,6 +22,12 @@ namespace Demo.WebApi
 
             return WebHost.CreateDefaultBuilder(args)
                 .UseConfiguration(configuration)
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.ClearProviders();
+                    logging.AddConsole().SetMinimumLevel(LogLevel.Trace);
+                    logging.AddDebug().SetMinimumLevel(LogLevel.Trace);
+                })            
                 .UseStartup<Startup>()
                 .Build();
         }

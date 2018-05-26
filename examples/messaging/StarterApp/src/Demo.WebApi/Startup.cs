@@ -25,6 +25,7 @@ namespace Demo.WebApi
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddLogging();
 
             var builtContainer = CreateAppContainer(services, _configuration, _loggerFactory);
 
