@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
 using System;
 using NetFusion.Bootstrap.Configuration;
+using NetFusion.Web.Mvc;
+using NetFusion.Rest.Server.Hal;
 
 namespace Demo.WebApi
 {
@@ -24,7 +26,9 @@ namespace Demo.WebApi
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(options => {
+                options.UseHalFormatter();
+            });
 
             var builtContainer = CreateAppContainer(services, _configuration, _loggerFactory);
 
@@ -62,6 +66,12 @@ namespace Demo.WebApi
                     configuration, 
                     loggerFactory, 
                     typeResolver)
+                .Bootstrap(c => {
+                    c.WithConfig((WebMvcConfig cfg) => {
+                        cfg.EnableRouteMetadata = true;
+                        cfg.UseServices(services);
+                    });
+                })
             	.Build();
         }
 
