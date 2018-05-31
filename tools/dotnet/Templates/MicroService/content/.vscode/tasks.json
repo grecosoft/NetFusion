@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "taskName": "Context-Microservice",
+            "label": "Build:Solution.Context",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -11,7 +11,7 @@
             ],
             "problemMatcher": "$msCompile",
             "group": {
-                "kind": "build"
+                "kind": "build", "isDefault": true
             }
         }
     ]

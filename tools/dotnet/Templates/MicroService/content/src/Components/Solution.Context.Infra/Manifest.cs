@@ -6,7 +6,7 @@ namespace Solution.Context.Infra
         IAppComponentPluginManifest
     {
         public string PluginId => "nf:infra-id";
-        public string Name => "Infrastructure Contacts Application Component";
-        public string Description => "The plugin containing the application Contacts infrastructure.";
+        public string Name => "Infrastructure Application Component";
+        public string Description => "The plugin containing the application infrastructure.";
     }
 }

@@ -5,10 +5,10 @@
    "version": "0.2.0",
    "configurations": [
         {
-            "name": "Launch Microservice",
+            "name": "Launch: Solution.Context",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "Context-Microservice",
+            "preLaunchTask": "Build:Solution.Context",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/src/Solution.Context.WebApi/bin/Debug/netcoreapp2.0/Solution.Context.WebApi.dll",
             "args": [],
@@ -16,7 +16,7 @@
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
-                "enabled": true,
+                "enabled": false,
                 "args": "${auto-detect-url}",
                 "windows": {
                     "command": "cmd.exe",

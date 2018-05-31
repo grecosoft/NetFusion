@@ -19,10 +19,10 @@ namespace Solution.Context.WebApi
         private readonly IConfiguration _configuration;
         private readonly ILoggerFactory _loggerFactory;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             _configuration = configuration;
-            _loggerFactory = CreateLoggerFactory(configuration);
+            _loggerFactory = loggerFactory;
         }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
@@ -55,7 +55,7 @@ namespace Solution.Context.WebApi
 
             if (env.IsDevelopment())
             {
-                string viewerUrl = _configuration.GetValue<string>("Startup:Netfusion:ViewerUrl");
+                string viewerUrl = _configuration.GetValue<string>("Netfusion:ViewerUrl");
                 if (! string.IsNullOrWhiteSpace(viewerUrl))
                 {
                     app.UseCors(builder => builder.WithOrigins(viewerUrl)
@@ -89,34 +89,6 @@ namespace Solution.Context.WebApi
 
                 })
                 .Build();
-        }
-        
-        private static ILoggerFactory CreateLoggerFactory(IConfiguration configuration)
-        {
-            var minLogLevel = GetMinLogLevel(configuration);
-            var loggerFactory = new LoggerFactory();
-                
-            if (EnvironmentConfig.IsDevelopment)
-            {
-                loggerFactory
-                    .AddDebug(minLogLevel)
-                    .AddConsole(minLogLevel);
-            }
-            else // PRODUCTION and STAGING/TEST
-            {
-            
-            }
-
-            return loggerFactory;
-        }
-        
-        // Determines the minimum log level that should be used.  First a configuration value used to specify the 
-        // minimum log level is checked.  If present, it will be used.  If not found, the minimum log level based 
-        // on the application's execution environment is used.
-        private static LogLevel GetMinLogLevel(IConfiguration configuration)
-        {
-            return configuration.GetValue<LogLevel?>("Logging:MinLogLevel")
-                   ?? EnvironmentConfig.EnvironmentMinLogLevel;
         }
 
         private static void OnShutdown()
