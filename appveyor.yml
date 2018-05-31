@@ -31,6 +31,8 @@ skip_commits:
   files:
     - '**/*.md'
     - 'examples\**\*'
+    - 'clients\**\*'
+    - 'tools\**\*'
 
   
 
