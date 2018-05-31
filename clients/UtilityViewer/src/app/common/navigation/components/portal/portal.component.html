@@ -1,0 +1,18 @@
+<!-- Component displaying the component associated with the selected menu and also
+     any common elements that should wrap displayed content -->
+
+<mat-toolbar name="active-menu-toobar">
+    <span>{{contentMessage}}</span>
+    <span class="toolbar-spacer"></span>
+    <span>{{selectedMenuItem?.title}}</span>
+    <mat-icon [svgIcon]="selectedMenuItem?.iconName"></mat-icon>
+</mat-toolbar>
+
+<!-- The container in which the selected menu's associated
+    content will be displayed. -->
+<div id="menu-content-container">
+    <ng-template menu-content>
+            
+    </ng-template>
+</div>
+   

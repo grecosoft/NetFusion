@@ -1,0 +1,15 @@
+<div name="entry-relations" *ngIf="entryResource">
+    <relation-viewer 
+        [loadedResource]="entryResource"
+        (relationSelected)="executeEntryLink($event)">
+    </relation-viewer>    
+</div>
+
+<div *ngIf="displayLoadMessage">
+    Load a connection to view its associated REST Entry-Resource.
+</div>
+
+
+
+
+ 

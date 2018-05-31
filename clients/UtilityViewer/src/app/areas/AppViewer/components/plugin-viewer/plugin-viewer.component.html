@@ -1,0 +1,204 @@
+<mat-table name="connection-listing" #table [dataSource]="plugins" *ngIf="!selectedPlugin">
+    <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Plugin Name</mat-header-cell>
+        <mat-cell *matCellDef="let plugin"> {{plugin.name}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+        <mat-header-cell *matHeaderCellDef>Plugin Type</mat-header-cell>
+        <mat-cell *matCellDef="let plugin"> {{plugin.type}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="assembly">
+        <mat-header-cell *matHeaderCellDef>Assembly</mat-header-cell>
+        <mat-cell *matCellDef="let plugin"> {{plugin.assembly}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let plugin">
+            <button mat-raised-button color="primary" (click)="viewPluginDetails(plugin)">
+                Details
+            </button>
+        </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="pluginColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: pluginColumns;"></mat-row>
+</mat-table>
+
+<div fxLayout="row" *ngIf="selectedPlugin && !selectedModuleLog" class="detailCard">
+    <mat-card  fxFlex="80" class="card-info card-list" fxFill>
+        <mat-card-title>Plug-in Information</mat-card-title>
+        <mat-card-content>
+            <dl>
+                <dt>Id</dt>
+                <dd>{{pluginProps.id}}</dd>
+                <dt>Name</dt>
+                <dd>{{pluginProps.name}}</dd>
+                <dt>Assembly</dt>
+                <dd>{{pluginProps.id}}</dd>
+                <dt>Description</dt>
+                <dd>{{pluginProps.description}}</dd>
+                <dt>Source</dt>
+                <dd>
+                    <a [href]="pluginProps.sourceUrl" _target="blank" >View on GitHub</a>
+                </dd>
+                <dt *ngIf="pluginProps.sourceUrl">Documentation</dt>
+                <dd *ngIf="pluginProps.sourceUrl">
+                    <a [href]="pluginProps.docUrl" target="_blank">View on GitHub Wiki</a>
+                </dd>
+            </dl>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<div fxLayout="row" *ngIf="selectedPlugin && !selectedModuleLog" class="detailCard">
+    <mat-card  fxFlex="80" class="card-info card-list" fxFill>
+        <mat-card-title>Plugin Modules</mat-card-title>
+        <mat-card-subtitle>
+            These are the modules that are invoked by the application's bootstrap process.
+            A given plugin assembly can have one or more modules.
+            <ul>
+                <li>register services with the container</li>
+                <li>scan and instantiate concrete types based on abstract types defined by the plugin</li>
+                <li>cache reflective metadata, based on the applications defined types, used at runtime</li>
+                <li>log information specific to the plugin-module</li>
+            </ul>
+        </mat-card-subtitle>
+        <mat-card-content>
+            <mat-table name="connection-listing" *ngIf="hasModules; else displayMessage" #table [dataSource]="modules">
+                <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef>Module Name</mat-header-cell>
+                    <mat-cell *matCellDef="let module"> {{module.name}} </mat-cell>
+                </ng-container>
+        
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let module">
+                        <button mat-raised-button color="primary" (click)="viewModuleLog(module)">
+                            Log
+                        </button>
+                    </mat-cell>
+                </ng-container>
+            
+                <mat-header-row *matHeaderRowDef="moduleColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: moduleColumns;"></mat-row>
+            </mat-table>
+            <ng-template #displayMessage>
+                <div class="noDataMessage">
+                    Plugin Does Not define any Modules
+                </div>
+            </ng-template>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<div fxLayout="row" *ngIf="selectedPlugin && !selectedModuleLog" class="detailCard">
+    <mat-card fxFlex="80" class="card-info card-list" fxFill>
+        <mat-card-title>Known Type Contracts</mat-card-title>
+        <mat-card-subtitle>
+            These are the base abstract types defined by this plugin for which Definitions are provided by other
+            plugins to integrate with the plugins functionality.  The plugin defining the abstract contract types
+            can also provide default base implementations.
+        </mat-card-subtitle>
+        <mat-card-content>
+            <mat-table #table [dataSource]="knownTypeContracts" *ngIf="hasTypeContracts; else displayMessage">
+                <ng-container matColumnDef="knownTypeName">
+                    <mat-header-cell *matHeaderCellDef>Contract Type Name</mat-header-cell>
+                    <mat-cell *matCellDef="let knownType"> {{knownType.knownTypeName}} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="knownTypeContractColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: knownTypeContractColumns;"></mat-row>
+            </mat-table>
+            <ng-template #displayMessage>
+                <div class="noDataMessage">
+                    Plugin Does Not define any Known Type Contracts
+                </div>
+            </ng-template>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<div fxLayout="row" *ngIf="selectedPlugin && !selectedModuleLog" class="detailCard">
+    <mat-card fxFlex="80" class="card-info card-list" fxFill>
+        <mat-card-title>Known Type Definitions</mat-card-title>
+        <mat-card-subtitle>
+            These are the concrete type definitions derived from contracts provided
+            by other plugins used to alter the plugin's runtime behavior.  
+        </mat-card-subtitle>
+        <mat-card-content>
+            <mat-table #table [dataSource]="knownTypeDefinitions" *ngIf="hasTypeDefinitions; else displayMessage">
+                <ng-container matColumnDef="definitionTypeName">
+                    <mat-header-cell *matHeaderCellDef>Definition Type Name</mat-header-cell>
+                    <mat-cell *matCellDef="let definitionType"> {{definitionType.definitionTypeName}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="discoveringPlugins">
+                    <mat-header-cell *matHeaderCellDef>Discovering Plugins</mat-header-cell>
+                    <mat-cell *matCellDef="let definitionType"> {{definitionType.discoveringPluginNames}} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="knownTypeDefinitionColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: knownTypeDefinitionColumns;"></mat-row>
+            </mat-table>
+            <ng-template #displayMessage>
+                <div class="noDataMessage">
+                    Plugin Does Not define any Know Type Definitions
+                </div>
+            </ng-template>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<div fxLayout="row" *ngIf="selectedPlugin && !selectedModuleLog" class="detailCard">
+    <mat-card fxFlex="80" class="card-info card-list" fxFill>
+        <mat-card-title>Service Registrations</mat-card-title>
+        <mat-card-subtitle>
+            These are the services registered by all components contained within the plugin
+            and added to the built dependency-injection container.
+
+        </mat-card-subtitle>
+        <mat-card-content>
+            <mat-table #table [dataSource]="registrations" *ngIf="hasRegistrations; else displayMessage">
+                <ng-container matColumnDef="serviceType">
+                    <mat-header-cell *matHeaderCellDef>Service Type</mat-header-cell>
+                    <mat-cell *matCellDef="let registration"> {{registration.serviceType}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="registeredType">
+                    <mat-header-cell *matHeaderCellDef>Registered Type</mat-header-cell>
+                    <mat-cell *matCellDef="let registration"> {{registration.registeredType}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="lifeTime">
+                        <mat-header-cell *matHeaderCellDef>Lifetime</mat-header-cell>
+                        <mat-cell *matCellDef="let registration"> {{registration.lifeTime}} </mat-cell>
+                    </ng-container>
+
+                <mat-header-row *matHeaderRowDef="registrationColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: registrationColumns;"></mat-row>
+            </mat-table>
+            <ng-template #displayMessage>
+                <div class="noDataMessage">
+                    Plugin Does Not have any registered Service Components.
+                </div>
+            </ng-template>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<div fxLayout="row" *ngIf="isReturnToPluginsEnabled">
+    <button mat-raised-button color="primary" (click)="viewPlugins()">
+        Return to Plugins
+    </button>
+</div>
+
+<div *ngIf="selectedModuleLog">
+    <json-viewer [json]="selectedModuleLog" class="viewer"></json-viewer>
+
+    <button mat-raised-button color="primary" (click)="viewSelectedPlugin()">
+        Return to Plugin
+    </button>
+</div>

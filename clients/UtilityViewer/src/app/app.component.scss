@@ -1,0 +1,75 @@
+.main-toolbar {
+    padding-right: 15px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+#sideToggleIcon.menu-closed {
+  transform: rotate(90deg);
+}
+
+#sidenav {
+  padding: 10px;
+  width: 190px;
+}
+
+.api-connections {
+    width: 25%;
+}
+
+.app-title {
+    padding-left: 8px;
+    font: 500 20px/32px Roboto,"Helvetica Neue",sans-serif;
+}
+
+#sidenav hr[name='header-divider'] {
+  border-color: #b0bec5;
+}
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+  }
+
+
+.footer-toolbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .app-container {
+    position: absolute;
+    top: 64px;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+  }
+
+  .area-toolbar {
+    bottom: 64px;
+  }
+  
+
+[name='app-areas'] {
+  width: 240px;
+}
+
+[svgIcon='menu-open'].menu-closed {
+  transform: rotate(90deg);
+}
+
+.example-radio-group {
+  display: block;
+  border: 1px solid #555;
+  margin: 20px;
+  padding: 10px;
+}
+
+
+
+
+
+
+

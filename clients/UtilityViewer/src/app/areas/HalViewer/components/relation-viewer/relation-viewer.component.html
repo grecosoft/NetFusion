@@ -1,0 +1,62 @@
+
+ <mat-table name="relation-listing" #table [dataSource]="resourceLinks">
+    <ng-container matColumnDef="relName">
+        <mat-header-cell *matHeaderCellDef>Resource Name</mat-header-cell>
+        <mat-cell *matCellDef="let link"> {{link.relName}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="resourceUrl">
+        <mat-header-cell *matHeaderCellDef>Resource Url</mat-header-cell>
+        <mat-cell *matCellDef="let link"> {{link.resourceUrl}} </mat-cell> 
+    </ng-container>
+
+    <ng-container matColumnDef="method">
+        <mat-header-cell *matHeaderCellDef>Method</mat-header-cell>
+        <mat-cell *matCellDef="let link">          
+            <button *ngIf="link.isTemplate || link.hasContentBody" mat-raised-button color="accent" (click)="populateUrl(link)">
+                <method-indicator [method]="link.method"></method-indicator>
+            </button>
+            <button *ngIf="!link.isTemplate && !link.hasContentBody" mat-raised-button color="accent" (click)="executeUrl(link)">
+                <method-indicator [method]="link.method"></method-indicator>
+            </button>
+        </mat-cell>
+    </ng-container> 
+
+    <mat-header-row *matHeaderRowDef="resourceLinkColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: resourceLinkColumns;"></mat-row>
+</mat-table>
+
+<form novalidate autocomplete="off" *ngIf="paramValueEntry" name="param-entry" [formGroup]="paramValueEntry">
+    <mat-table name="entry-listing" #table [dataSource]="paramValueInputs" *ngIf="hasParameters">
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef>Parameter Name</mat-header-cell>
+            <mat-cell *matCellDef="let templateParam">
+                {{templateParam.paramName}}
+            </mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="input">
+            <mat-header-cell *matHeaderCellDef>Value</mat-header-cell>
+            <mat-cell *matCellDef="let templateParam">
+                <input type="text" [formControlName]="templateParam.paramName">
+            </mat-cell> 
+        </ng-container>
+    
+        <mat-header-row *matHeaderRowDef="paramNameColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: paramNameColumns;"></mat-row>
+    </mat-table>
+    
+    <div *ngIf="hasContentBody" name="body-content">
+        <div>Content Body:</div>
+        <textarea formControlName="content">
+            
+        </textarea>
+    </div>
+
+    <button mat-raised-button name="execute" color="primary" 
+        [disabled]="!paramValueEntry.valid || !paramValueEntry.dirty" 
+        (click)="executeUrlTemplate(element)">
+        Execute
+    </button>
+</form>
+

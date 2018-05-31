@@ -1,0 +1,47 @@
+<div fxLayout="row" class="detailCard">
+        <mat-card  fxFlex="80" class="card-info card-list" fxFill>
+            <mat-card-title>Application Overview</mat-card-title>       
+            <mat-card-content>
+                Allows viewing how a NetFusion based application was composed from plug-in components.
+                A composite application consists of the following types of plug-ins:
+
+                <dl>
+                    <dt>Host</dt>
+                    <dd>
+                        The assembly representing the executable process.  This will most often be a ASP.NET Core WebApi project.
+                        There can only be one Host plug-in assembly.
+                    </dd>
+                    
+                    <dt>Application</dt>
+                    <dd>
+                        Plug-in components containing logic pertaining to the business application solution.  There will usually
+                        be application plugins for the following:  Domain, Api, Application, and Infrastructure
+                    </dd>
+                    
+                    <dt>Core</dt>
+                    <dd>
+                        Plug-in components containing cross-cutting implementation specific components.  Theses type of
+                        plug-ins are not specific to any given business application and can be optionally shared across
+                        applications.
+                    </dd>
+                </dl> 
+            
+                A plug-in invokes logic during the boot strap process by defining one or more PluginModule derived classes.
+                These derived class instances have their methods invoked at specific times during the boostrap process.
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+    
+    <div fxLayout="row" class="detailCard">
+        <mat-card  fxFlex="80" class="card-info card-list" fxFill>
+            <mat-card-title>Resources</mat-card-title>       
+            <mat-card-content>
+                <ul>
+                    <li><a href="https://github.com/grecosoft/NetFusion" target="_blank">NetFusion Core</a>: Contains the application bootstrap implementation.</li>
+                    <li><a href="https://github.com/grecosoft/NetFusion-Plugins" target="_blank">NetFusion Plug-Ins</a>: Contains technology specific plug-ins.</li>
+                    <li><a href="https://github.com/grecosoft/NetFusion-Tools" target="_blank">NetFusion Tools</a>: Contains related tools and resources.</li>
+                </ul>
+            </mat-card-content>
+        </mat-card>
+    </div>

@@ -1,0 +1,26 @@
+.card-list mat-card-content {
+    border-top: 2px solid #a5a5a5
+}
+
+.card-list mat-card-title {
+    margin-bottom: 10px;
+}
+
+mat-card.card-info {
+    padding: 15px;
+    margin-top: 15px;
+    margin-left: 5px;
+}
+
+mat-card.card-info mat-card-title {
+    font-size: 16px;
+}
+
+.detailCard {
+    padding-top: 20px;   
+
+    .noDataMessage {
+        padding-top: 15px;
+    }
+}
+

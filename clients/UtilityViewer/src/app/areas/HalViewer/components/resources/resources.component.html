@@ -1,0 +1,12 @@
+<mat-tab-group [(selectedIndex)]="application.selectedResourceTabIndex"> 
+    <mat-tab *ngFor="let loadedResource of loadedResources">
+        <ng-template mat-tab-label>
+            <span [matTooltip]="loadedResource.relationTag">{{loadedResource.relationName}}</span>
+            <button mat-icon-button (click)="closeResource(loadedResource)" >
+                <mat-icon svgIcon="nav-close"></mat-icon>
+            </button>
+        </ng-template>
+
+       <resource-viewer [loadedResource]="loadedResource"></resource-viewer>
+    </mat-tab>
+</mat-tab-group>

@@ -1,0 +1,27 @@
+
+<div fxLayout="row">
+    <div fxFlex="50" fxFill>
+        <mat-card class="card-info card-list">
+            <mat-card-title>Application Settings</mat-card-title>
+            <mat-card-content>
+                <form [formGroup]="settingEntry" novalidate autocomplete="off">
+                    <div fxLayout="row">
+                        <div fxLayout="column" fxFill>
+                            <mat-list role="list">
+                                <mat-list-item role="listitem">
+                                    <mat-slide-toggle formControlName="saveOpenedTabs">Save Open Tabs</mat-slide-toggle>
+                                </mat-list-item>
+                                <mat-list-item role="listitem">
+                                    <mat-slide-toggle formControlName="monitorForAuthToken">Monitor for JWT Token</mat-slide-toggle>
+                                </mat-list-item>
+                                <mat-list-item role="listitem">
+                                    <mat-slide-toggle formControlName="darkTheme">Dark Theme</mat-slide-toggle>
+                                </mat-list-item>
+                            </mat-list>                           
+                        </div>
+                    </div>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

@@ -1,0 +1,5 @@
+<mat-select placeholder="Select Connection" class="api-connections" [value]="selectedConn" (change)="connSelected($event.value)">
+    <mat-option *ngFor="let connection of connections" [value]="connection">
+        {{ connection.name }}
+    </mat-option>
+</mat-select> 

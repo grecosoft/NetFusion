@@ -1,0 +1,91 @@
+<div fxLayout="row" fxLayoutAlign="start center" *ngIf="!isEditingConnection">
+    <button mat-icon-button (click)="addConnection()" >
+        <mat-icon svgIcon="add-item"></mat-icon>
+    </button>
+    <button mat-icon-button (click)="testConnections()" >
+        <mat-icon svgIcon="process-item"></mat-icon>
+    </button>
+</div>
+
+<div *ngIf="application.connSettings.hasConnections && !isEditingConnection">
+    <mat-table name="connection-listing" #table [dataSource]="connections">
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef>Connection Name</mat-header-cell>
+            <mat-cell *matCellDef="let conn"> {{conn.name}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="address">
+            <mat-header-cell *matHeaderCellDef>HAL Entry Address</mat-header-cell>
+            <mat-cell *matCellDef="let conn"> {{conn.address}}/{{conn.entryPath}} </mat-cell> 
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+            <mat-cell *matCellDef="let conn">
+                <button mat-icon-button (click)="editConnection(conn)" >
+                    <mat-icon svgIcon="edit-item"></mat-icon>
+                </button>
+                <button mat-icon-button (click)="deleteConnection(conn)" >
+                    <mat-icon svgIcon="delete-item"></mat-icon>
+                </button>
+                <button mat-icon-button (click)="navigateToConnEntries(conn)" >
+                    <mat-icon svgIcon="nav-entries"></mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="connectionColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: connectionColumns;"></mat-row>
+    </mat-table>
+</div>
+
+<div name="connection-entry"> 
+    <div fxLayout="row" class="dialog-instructions">
+        <span class="dialog-message" *ngIf="!application.connSettings.hasConnections">
+            You currently don't have any saved connections.
+            Please enter your first REST service connection.
+        </span>
+    </div>
+    
+    <form [formGroup]="connectionEntry" novalidate autocomplete="off">
+        <div fxLayout="row" *ngIf="isEditingConnection">
+            <div fxLayout="column" fxFill>
+                <mat-form-field class="example-full-width">
+                    <input type="text" formControlName="name" matInput placeholder="API Name">
+                    <mat-icon matSuffix svgIcon="input-text"></mat-icon>
+                    <mat-error *ngIf="isInputInvalid('name')">
+                        Required and between 5 and 20 characters.
+                    </mat-error>        
+                </mat-form-field>
+    
+                <mat-form-field class="example-full-width">
+                    <input type="text" formControlName="address" matInput placeholder="API Address">
+                    <mat-icon matSuffix svgIcon="input-url" ></mat-icon>
+                    <mat-error *ngIf="isInputInvalid('address')">
+                        Required and between 5 and 50 characters.
+                    </mat-error>        
+                </mat-form-field>
+    
+                <mat-form-field class="example-full-width">
+                    <input type="text" formControlName="entryPath" matInput placeholder="API Entry Path">
+                    <mat-icon matSuffix svgIcon="input-entry"></mat-icon>
+                    <mat-error *ngIf="isInputInvalid('entryPath')">
+                        Required and between 5 and 50 characters.
+                    </mat-error>     
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-select placeholder="Notifications" formControlName="notificationIds" multiple>
+                      <mat-option *ngFor="let notification of notificationList" [value]="notification.id">{{notification.name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="end center">
+            <button mat-raised-button color="primary" *ngIf="isEditingConnection" 
+                [disabled]="!connectionEntry.valid || !connectionEntry.dirty" (click)="saveConnection()">Save</button>
+            <button mat-raised-button color="warn" *ngIf="displayCancel" (click)="cancelEdit()">Cancel</button>
+        </div>
+    </form>
+</div>
+

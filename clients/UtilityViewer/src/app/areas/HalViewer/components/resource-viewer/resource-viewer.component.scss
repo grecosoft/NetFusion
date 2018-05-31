@@ -1,0 +1,47 @@
+.card-list mat-card-content {
+    border-top: 2px solid #a5a5a5
+}
+
+.card-list mat-card-title {
+    margin-bottom: 10px;
+}
+
+mat-card.card-info {
+    padding: 15px;
+    margin-top: 15px;
+    margin-left: 5px;
+}
+
+mat-card.card-info mat-card-title {
+    font-size: 16px;
+}
+
+/* ---------------------------------- */
+
+[name='resource'] [name='edit-options'] .mat-button-toggle-label-content {
+    color: #e6e6e6;
+}
+
+[name='resource'] [name='edit-options'] {
+    background-color: #a5a5a5;
+    padding: 4px;
+    height: 40px;
+}
+
+[name='resource'] mat-card-content {
+    background-color: #e4e4e4;
+}
+
+[name='resourceJson'] {
+    width: 98%;
+}
+
+/* ---------------------------------- */
+
+[name='response'] mat-card-content {
+    background-color: #e4e4e4;
+}
+
+[name='response'] mat-card-title {
+    margin-bottom: 0;
+}
