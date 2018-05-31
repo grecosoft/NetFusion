@@ -6,7 +6,6 @@ pull_requests:
 
 before_build:
   - ps: dotnet restore
-  - ps: dotnet restore ./tools/dotnet/Templates/MicroService/content/Solution.Context.sln
 
 build_script:
   - ps: msbuild "/t:Restore;Pack" .\NetFusion.sln /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
