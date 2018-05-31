@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+	<metadata>
+		<id>NetFusion.Templates.MicroService</id>
+		<version>$version$</version>
+		<authors>NetFusion</authors>
+		<description>Creates a .net core project containing a shell for a Microservice.</description>		
+		<tags>.net core microservice</tags>
+		<packageTypes>
+			<packageType name="Template" />
+		</packageTypes>
+	</metadata>
+</package>

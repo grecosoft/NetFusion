@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Components\Solution.Context.Api\Solution.Context.Api.csproj" />
+    <ProjectReference Include="..\Components\Solution.Context.App\Solution.Context.App.csproj" />
+    <ProjectReference Include="..\Components\Solution.Context.Domain\Solution.Context.Domain.csproj" />
+    <ProjectReference Include="..\Components\Solution.Context.Infra\Solution.Context.Infra.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NetFusion.Common" Version="3.2.17" />
+    <PackageReference Include="NetFusion.Base" Version="3.2.17" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.17" />
+    <PackageReference Include="NetFusion.Mapping" Version="3.2.17" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NetFusion.Logging.Serilog" Version="3.0.0" />
+    <PackageReference Include="NetFusion.Web.Mvc" Version="3.2.17" />
+    <PackageReference Include="NetFusion.Rest.Common" Version="3.2.17" />
+    <PackageReference Include="NetFusion.Rest.Resources" Version="3.2.17" />
+    <PackageReference Include="NetFusion.Rest.Server" Version="3.2.17" />
+  </ItemGroup>
+</Project>

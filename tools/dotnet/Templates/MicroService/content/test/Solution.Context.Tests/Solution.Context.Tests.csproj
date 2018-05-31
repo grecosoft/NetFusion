@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <LangVersion>7</LangVersion>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170628-02" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Solution.Context.Api\Solution.Context.Api.csproj" />
+    <ProjectReference Include="..\..\src\Solution.Context.App\Solution.Context.App.csproj" />
+    <ProjectReference Include="..\..\src\Solution.Context.Infra\Solution.Context.Infra.csproj" />
+    <ProjectReference Include="..\..\src\Solution.Context.Domain\Solution.Context.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Solution.Context.WebApi\Solution.Context.WebApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NetFusion.Common" Version="3.2.6" />
+    <PackageReference Include="NetFusion.Base" Version="3.2.6" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.6" />
+    <PackageReference Include="NetFusion.Settings" Version="3.2.6" />
+    <PackageReference Include="NetFusion.Test" Version="3.2.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,72 @@
+
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "NetFusion-Contrib",
+    "classifications": [ "WebApi", "Microservice" ], 
+    "name": "Microservice bootstrapped with NetFusion",
+    "identity": "netfusion-microservice-template",         
+    "groupIdentity":"netfusion.microservice.templates",
+    "shortName": "nf.micro-srv",
+    "tags": {
+      "language": "C#",
+      "type":"project"
+    },
+    "sourceName": "Solution.Context", 
+    "preferNameDirectory": true,
+    "symbols":{
+     
+      "app-id": {
+        "type": "generated",
+        "generator": "guid",
+        "replaces": "nf:app-id",
+        "description": "The generated GUID used to identify the Application Service Plugin Component.",
+        "parameters": {
+          "format": "D"
+        }
+      },
+      "domain-id": {
+        "type": "generated",
+        "generator": "guid",
+        "replaces": "nf:domain-id",
+        "description": "The generated GUID used to identify the Domain Plugin Component.",
+        "parameters": {
+          "format": "D"
+        }
+      },
+      "api-infra": {
+        "type": "generated",
+        "generator": "guid",
+        "replaces": "nf:infra-id",
+        "description": "The generated GUID used to identify the Infrastructure Plugin Component.",
+        "parameters": {
+          "format": "D"
+        }
+      },
+      "host-id": {
+        "type": "generated",
+        "generator": "guid",
+        "replaces": "nf:host-id",
+        "description": "The generated GUID used to identify the Host Plugin Component.",
+        "parameters": {
+          "format": "D"
+        }
+      },
+      "port": {
+        "type": "parameter",
+        "defaultValue": "5050",
+        "replaces": "nf:host-port",
+        "datatype":"int",
+        "description": "The port used by WebApi host Plugin Component (defaults to 5050)."
+      }
+    },
+    "sources":[
+      { "include": "Solution.Context.sln" },
+      { "include": ".vscode/**/*" },
+      { "include": "src/Components/Solution.Context.Api/**/*" },
+      { "include": "src/Components/Solution.Context.App/**/*" },
+      { "include": "src/Components/Solution.Context.Domain/**/*" },
+      { "include": "src/Components/Solution.Context.Infra/**/*" },
+      { "include": "src/Solution.Context.WebApi/**/*" },
+      { "include": "src/Solution.Context.Tests/**/*" }
+    ]
+  }
