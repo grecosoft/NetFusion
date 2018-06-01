@@ -30,9 +30,10 @@ skip_commits:
   message: /\[nobuild\]/
   files:
     - '**/*.md'
-    - 'examples\**\*'
     - 'clients\**\*'
+    - 'examples\**\*'
     - 'tools\**\*'
+    - 'img\**\*'
 
   
 
