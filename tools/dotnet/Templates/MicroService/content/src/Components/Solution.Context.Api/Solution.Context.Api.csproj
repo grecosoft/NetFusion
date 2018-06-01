@@ -14,11 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="3.2.17" />
-    <PackageReference Include="NetFusion.Base" Version="3.2.17" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.17" />
-    <PackageReference Include="NetFusion.Mapping" Version="3.2.17" />
-    <PackageReference Include="NetFusion.Messaging.Types" Version="3.2.17" />
-    <PackageReference Include="NetFusion.Rest.Resources" Version="3.2.17" />
+    <PackageReference Include="NetFusion.Common" Version="3.2.37" />
+    <PackageReference Include="NetFusion.Base" Version="3.2.37" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.37" />
+    <PackageReference Include="NetFusion.Mapping" Version="3.2.37" />
+    <PackageReference Include="NetFusion.Messaging.Types" Version="3.2.37" />
+    <PackageReference Include="NetFusion.Rest.Resources" Version="3.2.37" />
   </ItemGroup>
 </Project>

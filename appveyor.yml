@@ -5,18 +5,18 @@ pull_requests:
   do_not_increment_build_number: true
 
 before_build:
-  - ps: dotnet restore
+  - ps: dotnet restore ./netfusion/NetFusion.sln
 
 build_script:
-  - ps: msbuild "/t:Restore;Pack" .\NetFusion.sln /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
+  - ps: msbuild "/t:Restore;Pack" .\netfusion\NetFusion.sln /p:VersionPrefix="$env:APPVEYOR_BUILD_VERSION"
   
 test_script:
-  - ps: dotnet test .\test\CommonTests\CommonTests.csproj 
-  - ps: dotnet test .\test\CoreTests\CoreTests.csproj
-  - ps: dotnet test .\test\WebTests\WebTests.csproj
+  - ps: dotnet test .\netfusion\test\CommonTests\CommonTests.csproj 
+  - ps: dotnet test .\netfusion\test\CoreTests\CoreTests.csproj
+  - ps: dotnet test .\netfusion\test\WebTests\WebTests.csproj
   
 artifacts:
-  - path: src\**\*.nupkg
+  - path: netfusion\src\**\*.nupkg
     name: MyGet
     
 deploy:
