@@ -4,8 +4,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
-            "command": "dotnet build",
+            "label": "restore:all",
+            "command": "dotnet restore ${workspaceFolder}/NetFusion.sln",
+            "options": {},
             "type": "shell",
             "group": "build",
             "presentation": {
@@ -14,7 +15,27 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "common-tests",
+            "label": "build:all",
+            "command": "dotnet build ${workspaceFolder}/NetFusion.sln",
+            "options": {},
+            "type": "shell",
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "test:all",
+            "dependsOn": [
+                "test:common",
+                "test:core",
+                "test:web"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "test:common",
             "command": "dotnet test",
             "options": {
                 "cwd": "${workspaceFolder}/test/CommonTests"
@@ -27,7 +48,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "core-tests",
+            "label": "test:core",
             "command": "dotnet test",
             "options": {
                 "cwd": "${workspaceFolder}/test/CoreTests"
@@ -40,7 +61,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "web-tests",
+            "label": "test:web",
             "command": "dotnet test",
             "options": {
                 "cwd": "${workspaceFolder}/test/WebTests"

@@ -83,6 +83,8 @@ namespace NetFusion.Rest.Server.Modules
 
         private (MediaTypeEntry entry, bool ok) GetMediaTypeEntry(string mediaType)
         {
+            if (mediaType == null) throw new ArgumentNullException(nameof(mediaType));
+
             bool isFound = _mediaResourceTypeMeta.TryGetValue(mediaType, out MediaTypeEntry mediaTypeEntry);
             return (mediaTypeEntry, isFound);
         }    
@@ -91,11 +93,15 @@ namespace NetFusion.Rest.Server.Modules
             IHeaderDictionary headers,
             Type resourceType)
         {
+            if (headers == null) throw new ArgumentNullException(nameof(headers));
+   
             if (! headers.TryGetValue(HeaderNames.Accept, out StringValues values))
             {
                 return null;
             }
 
+            // Determine the media type to used by finding the first one, ordered by importance,
+            // for which there is a configure metadata.
             var mediaType = values.Select(v => MediaTypeHeaderValue.Parse(v))
                 .OrderByDescending(mt => mt.Quality)
                 .FirstOrDefault(mt => _mediaResourceTypeMeta.ContainsKey(mt.MediaType.ToString()))?.MediaType;
@@ -105,10 +111,10 @@ namespace NetFusion.Rest.Server.Modules
                 return null;
             }
 
-			var foundEntry = GetMediaTypeEntry(mediaType.ToString());
-			var foundMeta = foundEntry.entry.GetResourceTypeMeta(resourceType);
+			var entryResult = GetMediaTypeEntry(mediaType.ToString());
+			var metaResult = entryResult.entry.GetResourceTypeMeta(resourceType);
 
-            return foundMeta.meta;
+            return metaResult.meta;
         }
 
         public string GetMappedResourceName(Type resourceType)
@@ -125,17 +131,19 @@ namespace NetFusion.Rest.Server.Modules
             if (string.IsNullOrWhiteSpace(mediaType))
                 throw new ArgumentException("Media type not specified.", nameof(mediaType));
 
-            var foundEntry = GetMediaTypeEntry(mediaType);
-            if (foundEntry.ok)
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
+            var entryResult = GetMediaTypeEntry(mediaType);
+            if (entryResult.ok)
             {
-                var foundMeta = foundEntry.entry.GetResourceTypeMeta(context.Resource.GetType());
-                if (!foundMeta.ok)
+                var metaResult = entryResult.entry.GetResourceTypeMeta(context.Resource.GetType());
+                if (!metaResult.ok)
                 {
                     return false;
                 }
 
-                context.Meta = foundMeta.meta;
-                foundEntry.entry.Provider.ApplyResourceMeta(context);
+                context.Meta = metaResult.meta;
+                entryResult.entry.Provider.ApplyResourceMeta(context);
             }
 
             return true;

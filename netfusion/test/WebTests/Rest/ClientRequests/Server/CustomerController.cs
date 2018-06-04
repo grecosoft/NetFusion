@@ -11,11 +11,11 @@ namespace WebTests.Rest.ClientRequests.Server
     public class CustomerController : Controller
     {
         private readonly IMockedService _mockedService;
-        private readonly IHalEmbededResourceContext _resourceContext;
+        private readonly IHalEmbeddedResourceContext _resourceContext;
 
         public CustomerController(
             IMockedService mockedService,
-            IHalEmbededResourceContext resourceContext)
+            IHalEmbeddedResourceContext resourceContext)
         {
             _mockedService = mockedService;
             _resourceContext = resourceContext;

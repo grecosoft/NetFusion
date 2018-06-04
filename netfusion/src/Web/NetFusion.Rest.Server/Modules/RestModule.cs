@@ -21,9 +21,7 @@ namespace NetFusion.Rest.Server.Modules
         }
 
         public string GetControllerSuffix() => _config.ControllerSuffix;    
-        public string GetTypeScriptDirectoryName() => _config.TypeScriptDirectoryName;
-        public string GetControllerDocDirectoryName() => _config.ControllerDocDirectoryName;
-
+        
         public override void RegisterServices(IServiceCollection services)
         {
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
@@ -34,8 +32,7 @@ namespace NetFusion.Rest.Server.Modules
                 return urlFactory.GetUrlHelper(context.ActionContext);
             });
 
-            services.AddSingleton<IHalEmbededResourceContext, HalEmbeddedResourceContext>();
-            services.AddScoped<EnvironmentSettings>();
+            services.AddSingleton<IHalEmbeddedResourceContext, HalEmbeddedResourceContext>();
         }
     }
 }

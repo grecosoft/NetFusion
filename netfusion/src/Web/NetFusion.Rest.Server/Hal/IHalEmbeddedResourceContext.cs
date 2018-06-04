@@ -6,10 +6,10 @@ namespace NetFusion.Rest.Server.Hal
     /// Can be injected by service components responsible for assembling
     /// HAL embedded resources.
     /// </summary>
-    public interface IHalEmbededResourceContext
+    public interface IHalEmbeddedResourceContext
     {
         /// <summary>
-        /// Determines if the client has requested if a given resource type should be embedded.
+        /// Determines if the client has specified the embedded resource types to be returned.
         /// </summary>
         /// <typeparam name="TResource">The type of the embedded resource.</typeparam>
         /// <returns>True if requested by client.  If the client didn't specify, True is returned.

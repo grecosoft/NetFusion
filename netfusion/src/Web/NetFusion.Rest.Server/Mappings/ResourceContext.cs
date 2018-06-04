@@ -15,6 +15,8 @@ namespace NetFusion.Rest.Server.Mappings
     {
         // Instance of a resource and it associated metadata.
         public IResource Resource { get; set; }
+
+        // The metadata associated with the resource.
         public IResourceMeta Meta { get; set; }
 
         // Services that can be utilized when adding the metadata

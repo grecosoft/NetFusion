@@ -61,7 +61,7 @@ namespace NetFusion.Rest.Server.Actions
             if (httpMethods == null) throw new ArgumentNullException(nameof(httpMethods),
                 "HTTP methods cannot be null.");
 
-            var results = controllerMethods.Select(cm => GetActionMethodCallInfo(cm, resourceType)).ToList();
+            var results = controllerMethods.Select(cm => GetActionMethodCallInfo(cm, resourceType)).ToArray();
 
             var filteredResults = results.Where(pi =>
                        (acceptsResourceArg == null || pi.AcceptsResourceArg == acceptsResourceArg)

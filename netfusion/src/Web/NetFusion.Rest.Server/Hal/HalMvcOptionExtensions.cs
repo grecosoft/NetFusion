@@ -13,7 +13,7 @@ namespace NetFusion.Rest.Server.Hal
     public static class HalMvcOptionExtensions
     {
         /// <summary>
-        /// Adds formatter to the pipeline that checks for a resources and determines the
+        /// Adds formatter to the pipeline that checks for resources and determines the
         /// links that should be returned. 
         /// </summary>
         /// <param name="options">The MVC options passed from Web API host.</param>

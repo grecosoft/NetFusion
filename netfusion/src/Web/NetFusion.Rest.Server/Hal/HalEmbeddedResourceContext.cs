@@ -12,7 +12,7 @@ namespace NetFusion.Rest.Server.Hal
     /// If the client didn't specify, the service should return all default embedded resources.  The 
     /// service is not required to support this feature.
     /// </summary>
-    public class HalEmbeddedResourceContext : IHalEmbededResourceContext
+    public class HalEmbeddedResourceContext : IHalEmbeddedResourceContext
     {
         private readonly IActionContextAccessor _contextAccessor;
         private readonly IResourceMediaModule _resourceModule;
@@ -21,8 +21,8 @@ namespace NetFusion.Rest.Server.Hal
             IActionContextAccessor contextAccessor,
             IResourceMediaModule resourceModule)
         {
-            _contextAccessor = contextAccessor;
-            _resourceModule = resourceModule;
+            _contextAccessor = contextAccessor ?? throw new System.ArgumentNullException(nameof(contextAccessor));
+            _resourceModule = resourceModule ?? throw new System.ArgumentNullException(nameof(resourceModule));
         }
 
         public bool IsResourceRequested<TResource>() where TResource : IResource
@@ -51,7 +51,7 @@ namespace NetFusion.Rest.Server.Hal
 
                 if (query.TryGetValue("embed", out StringValues queryValue))
                 {
-                    return queryValue[0].Split(',');
+                    return queryValue[0].Replace(" ", string.Empty).Split(',');
                 }
                 return new string[] { };
             }

@@ -8,8 +8,8 @@ namespace NetFusion.Rest.Server.Modules
 {
     /// <summary>
     /// Module interface defined my the main plug-in module called during the
-    /// bootstrap process to initialize any REST/HAL based information needed during
-    /// application execution.
+    /// bootstrap process to initialize any REST/HAL based information needed 
+    /// during application execution.
     /// </summary>
     public interface IResourceMediaModule : IPluginModuleService
     {     

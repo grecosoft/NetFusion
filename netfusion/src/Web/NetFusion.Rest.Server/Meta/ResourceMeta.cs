@@ -35,7 +35,7 @@ namespace NetFusion.Rest.Server.Meta
         {
             Links = _links.AsReadOnly();
 
-            _resourceMap = resourceMap;
+            _resourceMap = resourceMap ?? throw new ArgumentNullException(nameof(resourceMap));
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace NetFusion.Rest.Server.Meta
             if (meta == null) throw new ArgumentNullException(nameof(meta),
                 "Metadata delegate cannot be null.");
 
-            AsertControllerMeetsConstraints(typeof(TController));
+            AssertControllerMeetsConstraints(typeof(TController));
 
             var resourceLinkMeta = new ResourceLinkMeta<TController, TResource>();
             meta(resourceLinkMeta);
@@ -144,7 +144,7 @@ namespace NetFusion.Rest.Server.Meta
             return resourceMeta;
         }
 
-        private void AsertControllerMeetsConstraints(Type controllerType)
+        private void AssertControllerMeetsConstraints(Type controllerType)
         {
             string[] duplicateActionNames = controllerType.GetActionMethods()
                 .WhereDuplicated(am => am.Name)

@@ -27,7 +27,8 @@ namespace NetFusion.Rest.Server.Hal
     /// </summary>
     public class HalFormatter : JsonOutputFormatter
     {
-        public HalFormatter(JsonSerializerSettings settings, ArrayPool<char> charPool) : base(settings, charPool)
+        public HalFormatter(JsonSerializerSettings settings, ArrayPool<char> charPool) 
+            : base(settings, charPool)
         {
             SupportedMediaTypes.Clear();
             SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(InternetMediaTypes.HalJson));

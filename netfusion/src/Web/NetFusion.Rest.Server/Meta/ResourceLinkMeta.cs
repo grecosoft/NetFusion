@@ -54,7 +54,7 @@ namespace NetFusion.Rest.Server.Meta
         }
 
         /// <summary>
-        /// Create a named link related for a parametrized URI containing place holds based on
+        /// Create a named link related for a parameterized URI containing place holds based on
         /// resource properties to be substituted at link resolution time. 
         /// </summary>
         /// <param name="relName">The relation name.</param>

@@ -66,7 +66,7 @@ namespace NetFusion.Rest.Server.Mappings
         private Link SetLinkUrl(ResourceContext context, ActionUrlLink actionLink)
         {
             string controllerSuffix = context.RestModule.GetControllerSuffix();
-            string controllerName = actionLink.Controller.Replace(controllerSuffix, "");
+            string controllerName = actionLink.Controller.Replace(controllerSuffix, string.Empty);
 
             var routeValues = GetModelRouteValues(context, actionLink);
             var link = new Link

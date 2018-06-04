@@ -6,8 +6,8 @@ namespace NetFusion.Rest.Server.Hal
 {
     /// <summary>
     /// Base class from which application specific resource metadata mappings derive.
-    /// A resource map determine the HAL specific values such as links to be associated
-    /// with the resource.
+    /// A resource map determines the HAL specific values such as links to be associated
+    /// with one or more resources.
     /// </summary>
     public abstract class HalResourceMap : ResourceMap
     {

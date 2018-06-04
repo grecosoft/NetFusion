@@ -28,7 +28,7 @@ namespace NetFusion.Rest.Server.Mappings
         IReadOnlyCollection<IResourceMeta> ResourceMeta { get; }
 
         /// <summary>
-        /// Instructs the resource map to add mappings.  Called by the plug's module 
+        /// Instructs the resource map to add mappings.  Called by plugin module 
         /// during the bootstrap  process to cache all REST metadata.
         /// </summary>
         void BuildMap();
