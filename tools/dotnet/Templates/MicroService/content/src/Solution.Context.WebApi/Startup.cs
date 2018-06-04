@@ -85,8 +85,11 @@ namespace Solution.Context.WebApi
                      {
                          config.EnableRouteMetadata = true;
                          config.UseServices(services);
+                     })
+                     .WithServices(reg =>
+                     {
+                         //  Any additional services or overrides can be registered here.
                      });
-
                 })
                 .Build();
         }

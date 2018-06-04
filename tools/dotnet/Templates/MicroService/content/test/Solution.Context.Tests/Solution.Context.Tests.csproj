@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170628-02" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.2" />
   </ItemGroup>
@@ -21,11 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="3.2.37" />
-    <PackageReference Include="NetFusion.Base" Version="3.2.37" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.37" />
-    <PackageReference Include="NetFusion.Settings" Version="3.2.37" />
-    <PackageReference Include="NetFusion.Test" Version="3.2.37" />
+    <PackageReference Include="NetFusion.Common" Version="3.2.41" />
+    <PackageReference Include="NetFusion.Base" Version="3.2.41" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.41" />
+    <PackageReference Include="NetFusion.Settings" Version="3.2.41" />
+    <PackageReference Include="NetFusion.Test" Version="3.2.41" />
   </ItemGroup>
 
   <ItemGroup>

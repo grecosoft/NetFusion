@@ -12,15 +12,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="3.2.37" />
-    <PackageReference Include="NetFusion.Base" Version="3.2.37" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.37" />
-    <PackageReference Include="NetFusion.Settings" Version="3.2.37" />
-    <PackageReference Include="NetFusion.Messaging" Version="3.2.37" />
+    <PackageReference Include="NetFusion.Common" Version="3.2.41" />
+    <PackageReference Include="NetFusion.Base" Version="3.2.41" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.41" />
+    <PackageReference Include="NetFusion.Settings" Version="3.2.41" />
+    <PackageReference Include="NetFusion.Messaging" Version="3.2.41" />
   </ItemGroup>
 
 </Project>
