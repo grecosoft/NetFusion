@@ -63,15 +63,10 @@ namespace NetFusion.Rest.Client
         /// </summary>
         public string ETag { get; }
 
-        private HttpResponseMessage _responseMsg;
-
         public ApiResponse(HttpRequestMessage requestMsg, HttpResponseMessage responseMsg)
         {
             Request = requestMsg ?? throw new ArgumentNullException(nameof(requestMsg),
                 "Request Message cannot be null.");
-
-            _responseMsg = responseMsg ?? throw new ArgumentNullException(nameof(responseMsg),
-                "Response Message cannot be null.");
             
             IsSuccessStatusCode = responseMsg.IsSuccessStatusCode;
             StatusCode = responseMsg.StatusCode;

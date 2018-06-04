@@ -3,13 +3,13 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using InfrastructureTests.Web.Rest.Setup;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Test.Plugins;
 using WebTests.Rest.LinkGeneration.Client;
 using WebTests.Rest.LinkGeneration.Server;
+using WebTests.Rest.Setup;
 using Xunit;
 
 namespace WebTests.Rest.ClientRequests

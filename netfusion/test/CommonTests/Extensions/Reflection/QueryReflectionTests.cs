@@ -3,6 +3,9 @@ using NetFusion.Common.Extensions.Reflection;
 using Xunit;
 using System.Linq;
 
+// ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedTypeParameter
+// ReSharper disable ArrangeTypeMemberModifiers
 namespace CommonTests.Extensions.Reflection
 {
     public class QueryReflectionTests
@@ -52,15 +55,14 @@ namespace CommonTests.Extensions.Reflection
 
         class TestClass4
         {
-            private object data;
-            public TestClass4(object data) { this.data = data; }
+            public TestClass4(object data) {}
         }
 
         class TestClass5
         {
-            private object data;
+         
             public TestClass5() { }
-            public TestClass5(object data) { this.data = data; }
+            public TestClass5(object data) { }
         }
 
         interface IService { }

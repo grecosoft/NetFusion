@@ -110,7 +110,8 @@ namespace NetFusion.Test.Container
 
             var composite = (IComposite)_container;
             var modules = composite.Application.AllPluginModules
-                .OfType<TModule>();
+                .OfType<TModule>()
+                .ToArray();
 
             if (modules.Empty())
             {
@@ -145,7 +146,7 @@ namespace NetFusion.Test.Container
 
             // When unit-testing... a plug-in and the manifest are the same thing.
             var composite = (IComposite)_container;
-            var plugins = composite.Application.Plugins.Where(p => p.Manifest.GetType() == typeof(TPlugin));
+            var plugins = composite.Application.Plugins.Where(p => p.Manifest.GetType() == typeof(TPlugin)).ToArray();
 
             if (plugins.Count() > 1)
             {

@@ -23,7 +23,7 @@ namespace WebTests.Rest.LinkGeneration.Server
         [HttpGet("resource")]
         public LinkedResource GetResource()
         {
-            var resources = _mockedService.GetResources<LinkedResource>();
+            var resources = _mockedService.GetResources<LinkedResource>().ToArray();
             if (!resources.Any())
             {
                 throw new InvalidOperationException(
@@ -34,14 +34,14 @@ namespace WebTests.Rest.LinkGeneration.Server
 
             // Unit test might make multiple calls after updating the state of the resource
             // to test outcome on link generation - clear any prior added links.
-            resource.Links = new Dictionary<string, Link> { };
+            resource.Links = new Dictionary<string, Link>();
             return resource;
         }
 
         [HttpGet("resource2")]
         public LinkedResource2 GetResource2()
         {
-            var resources = _mockedService.GetResources<LinkedResource2>();
+            var resources = _mockedService.GetResources<LinkedResource2>().ToArray();
             if (!resources.Any())
             {
                 throw new InvalidOperationException(
@@ -52,7 +52,7 @@ namespace WebTests.Rest.LinkGeneration.Server
 
             // Unit test might make multiple calls after updating the state of the resource
             // to test outcome on link generation - clear any prior added links.
-            resource.Links = new Dictionary<string, Link> { };
+            resource.Links = new Dictionary<string, Link>();
             return resource;
         }
 
@@ -84,7 +84,7 @@ namespace WebTests.Rest.LinkGeneration.Server
         [HttpGet("self/return/attribute/{id}")]
         public IActionResult GetResource2Self(int id)
         {
-            var resources = _mockedService.GetResources<LinkedResource>();
+            var resources = _mockedService.GetResources<LinkedResource>().ToArray();
             if (!resources.Any())
             {
                 throw new InvalidOperationException(
@@ -95,7 +95,7 @@ namespace WebTests.Rest.LinkGeneration.Server
 
             // Unit test might make multiple calls after updating the state of the resource
             // to test outcome on link generation - clear any prior added links.
-            resource.Links = new Dictionary<string, Link> { };
+            resource.Links = new Dictionary<string, Link>();
 
             return new ObjectResult(resource);
         }

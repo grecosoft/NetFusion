@@ -1,6 +1,7 @@
 ﻿using NetFusion.Base.Plugins;
 using System;
 
+// ReSharper disable UnusedTypeParameter
 namespace NetFusion.Mapping
 {
     /// <summary>

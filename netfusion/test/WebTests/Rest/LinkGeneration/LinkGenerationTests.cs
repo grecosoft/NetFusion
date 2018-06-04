@@ -1,15 +1,16 @@
-﻿using InfrastructureTests.Web.Rest.Setup;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Test.Plugins;
-using System.Net.Http;
-using System.Threading.Tasks;
 using WebTests.Rest.ClientRequests;
 using WebTests.Rest.LinkGeneration.Client;
 using WebTests.Rest.LinkGeneration.Server;
+using WebTests.Rest.Setup;
 using Xunit;
 
-namespace InfrastructureTests.Web.Rest.LinkGeneration
+#pragma warning disable 1570
+namespace WebTests.Rest.LinkGeneration
 {
     /// <summary>
     /// Unit-tests 

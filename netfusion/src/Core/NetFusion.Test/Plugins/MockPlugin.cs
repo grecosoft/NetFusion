@@ -19,7 +19,7 @@ namespace NetFusion.Test.Plugins
         public MockPlugin()
         {
             PluginId = Guid.NewGuid().ToString();
-            AssemblyName = $"Mock Assembly for Plug-in: {this.Name}";
+            AssemblyName = $"Mock Assembly for Plug-in: {Name}";
             Name = GetType().Name + Guid.NewGuid();
         }
 

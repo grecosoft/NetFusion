@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc.Controllers;
-using NetFusion.Common;
 using System;
 
 namespace NetFusion.Web.Mvc.Metadata.Core

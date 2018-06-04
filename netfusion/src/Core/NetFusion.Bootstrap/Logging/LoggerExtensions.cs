@@ -193,7 +193,7 @@ namespace NetFusion.Bootstrap.Logging
             if (string.IsNullOrWhiteSpace(message)) throw new ArgumentException("Log message not specified.", nameof(message));
             if (details == null) throw new ArgumentNullException(nameof(details), "Log details cannot be null.");
 
-            string msgDetails = details?.ToIndentedJson();
+            string msgDetails = details.ToIndentedJson();
 
             logger.Log(logLevel, eventId,
                 message + $" Details: {msgDetails}",

@@ -2,12 +2,11 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using InfrastructureTests.Web.Rest.ClientRequests.Client;
-using InfrastructureTests.Web.Rest.Setup;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
 using NetFusion.Test.Plugins;
+using WebTests.Rest.ClientRequests.Client;
 using WebTests.Rest.ClientRequests.Server;
 using WebTests.Rest.Setup;
 using Xunit;
@@ -66,13 +65,13 @@ namespace WebTests.Rest.ClientRequests
         [Fact]
         public void AddingHeader_MustHaveAtLeastOneValue()
         {
-            var settings = RequestSettings.Create(config =>
+            RequestSettings.Create(config =>
             {
                 Assert.Throws<ArgumentException>(
                     () => config.Headers.Add("a", null));
 
                 Assert.Throws<ArgumentException>(
-                  () => config.Headers.Add("a", new string[] { }));
+                    () => config.Headers.Add("a", new string[] { }));
 
             });
         }
@@ -84,7 +83,7 @@ namespace WebTests.Rest.ClientRequests
         [Fact]
         public void AddingHeaderWithQuality_MustBeGreaterThanZero()
         {
-            var settings = RequestSettings.Create(config =>
+            RequestSettings.Create(config =>
             {
                 Assert.Throws<ArgumentException>(
                     () => config.Headers.AcceptMediaType("a", -1));

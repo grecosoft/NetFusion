@@ -8,8 +8,6 @@ namespace NetFusion.Base.Exceptions
     /// </summary>
     public class NetFusionException : Exception
     {
-        private const string NetfusionDetailsValue = "NetFusionExDetails";
-
         /// <summary>
         /// Dictionary of key/value pairs containing details of the exception.  This property
         /// can be logged as JSON to provide a detailed description of the exception.

@@ -5,6 +5,7 @@ using NetFusion.Test.Plugins;
 using System.Linq;
 using Xunit;
 
+#pragma warning disable 1570
 namespace CoreTests.Bootstrap
 {
     public class CompositionTests
@@ -20,7 +21,7 @@ namespace CoreTests.Bootstrap
         {
             ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((System.Action<TestTypeResolver>)(r =>
+                fixture.Arrange.Resolver(r =>
                     {
                         // Plug-in type based on the type in the core plug-in.
                         r.AddPlugin<MockAppHostPlugin>()
@@ -31,7 +32,7 @@ namespace CoreTests.Bootstrap
                         r.AddPlugin<MockCorePlugin>()
                             .AddPluginType<MockComposedModule>()
                             .AddPluginType<MockKnownType>();
-                    }))
+                    })
                     .Assert.PluginModule<MockComposedModule>(m =>
                     {
                         m.ImportedTypes.Should().NotBeNull();
@@ -129,7 +130,7 @@ namespace CoreTests.Bootstrap
         {
             ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((System.Action<TestTypeResolver>)(r =>
+                fixture.Arrange.Resolver(r =>
                     {
                         // Plug-in type based on the type in the core plug-in.
                         r.AddPlugin<MockAppHostPlugin>()
@@ -139,7 +140,7 @@ namespace CoreTests.Bootstrap
                         r.AddPlugin<MockCorePlugin>()
                             .AddPluginType<MockKnownType>()
                             .AddPluginType<MockComposedModule>();
-                    }))
+                    })
                     .Assert.CompositeApp(ca =>
                     {
                         // Verifies that the known plug-in type under test was discovered.

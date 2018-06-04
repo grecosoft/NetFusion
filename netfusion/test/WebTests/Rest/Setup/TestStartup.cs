@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Rest.Server.Hal;
 using NetFusion.Test.Plugins;
-using System;
-using WebTests.Rest.Setup;
 
-namespace InfrastructureTests.Web.Rest.Setup.Setup
+namespace WebTests.Rest.Setup
 {
     /// <summary>
     /// Start-Up class for ASP.NET Core used to configure the in-memory

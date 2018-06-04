@@ -23,8 +23,6 @@ namespace CommonTests.Mapping
             {
                 Values = new[] { 30, 5, 88, 33, 83 }
             };
-            
-            TestInvalidMapType testTgtObj = null;
 
             ContainerFixture.Test(fixture =>
             {
@@ -33,7 +31,7 @@ namespace CommonTests.Mapping
                     .Act.OnServices(s =>
                     {
                         var mapper = s.GetService<IObjectMapper>();
-                        testTgtObj = mapper.Map<TestInvalidMapType>(testSrcObj);
+                        mapper.Map<TestInvalidMapType>(testSrcObj);
                     });
 
                 testResult.Assert.Exception<InvalidOperationException>(ex =>
@@ -259,7 +257,7 @@ namespace CommonTests.Mapping
             {
                 return new TestMapTypeOne
                 {
-                    Values = new int[] { target.Min, target.Max, target.Sum }
+                    Values = new[] { target.Min, target.Max, target.Sum }
                 };
             }
         }

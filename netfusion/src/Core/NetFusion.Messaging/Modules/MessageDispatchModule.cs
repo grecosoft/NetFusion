@@ -15,7 +15,6 @@ using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Core;
-using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Types;
 
 namespace NetFusion.Messaging.Modules

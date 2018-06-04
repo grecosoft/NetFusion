@@ -15,6 +15,7 @@ namespace NetFusion.Test.Modules
         /// a set of types.  This can be used to test module functionality where the type of
         /// plug-in is not important.
         /// </summary>
+        /// <param name="configBldr">The configuration builder to be used.</param>
         /// <param name="types">The types to be added to the host plug-in.</param>
         /// <typeparam name="TModule">The type of the module to be created and associated with plug-in.</typeparam>
         /// <returns>Instance of module with a context set to the host plugin.</returns>

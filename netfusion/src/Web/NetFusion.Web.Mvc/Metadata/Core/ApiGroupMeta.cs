@@ -4,7 +4,8 @@ namespace NetFusion.Web.Mvc.Metadata.Core
 {
     /// <summary>
     /// Metadata returned to the client containing information about
-    /// a defined API Group and its associated Action routes. 
+    /// a defined API Group and its associated Action routes.
+    /// </summary> 
     public class ApiGroupMeta
     {
         /// <summary>

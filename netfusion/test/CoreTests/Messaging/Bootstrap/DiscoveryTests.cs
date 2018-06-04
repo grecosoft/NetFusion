@@ -30,7 +30,7 @@ namespace CoreTests.Messaging.Bootstrap
 
                 .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
-                    var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)]?.FirstOrDefault();
+                    var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)].FirstOrDefault();
                     dispatchInfo.Should().NotBeNull(); 
                 });
             });           
@@ -51,7 +51,7 @@ namespace CoreTests.Messaging.Bootstrap
    
                 .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
-                    var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)]?.FirstOrDefault();
+                    var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)].FirstOrDefault();
                     dispatchInfo.Should().NotBeNull();
 
                     dispatchInfo.MessageType.Should().Be(typeof(MockDomainEvent));

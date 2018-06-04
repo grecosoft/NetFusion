@@ -97,6 +97,7 @@ namespace CommonTests.Base.Entity
             entity.Attributes.SetValue("TestValue", 7777, typeof(SampleContext));
 
             var value = entity.Attributes.GetValue<int>("TestValue", typeof(SampleContext));
+            Assert.Equal(7777, value);
         }
 
         [Fact(DisplayName = "Calling Method Name used when name not specified")]

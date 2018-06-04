@@ -89,7 +89,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void LogMatchingAssemblies(IEnumerable searchPatterns, IEnumerable<AssemblyName> matchingAssemblies)
         {
-            _logger.LogDebugDetails(BootstrapLogEvents.BOOTSTRAP_INITIALIZE, "Type Resolver", new {
+            _logger.LogDebugDetails(BootstrapLogEvents.BootstrapInitialize, "Type Resolver", new {
                 SearchPatterns = searchPatterns,
                 MatchingAssemblies = matchingAssemblies.Select(a => a.FullName)
             });

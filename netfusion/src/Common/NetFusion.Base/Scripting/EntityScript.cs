@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Base.Scripting

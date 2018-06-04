@@ -103,7 +103,7 @@ namespace CommonTests.Base.Validation
         {
             var domainEntity = new MockValidatableDomainEntity();
 
-            var children = new MockChildDomainEntity[] {
+            var children = new[] {
                 new MockChildDomainEntity { ValueFour = 5 },
                 new MockChildDomainEntity { ValueFour = 8 }
             };
@@ -186,7 +186,7 @@ namespace CommonTests.Base.Validation
 
             public int ValueInfoOne { get; set; } = 1000;
 
-            public bool EntityValidateInvoked { get; set; } = false;
+            public bool EntityValidateInvoked { get; private set; }
 
             public void SetChild(MockChildDomainEntity child)
             {
@@ -200,12 +200,12 @@ namespace CommonTests.Base.Validation
 
             public void Validate(IObjectValidator validator)
             {
-                validator.Verify(ValueThree > 500, "ValueThreeValidationMessage", ValidationTypes.Error);
+                validator.Verify(ValueThree > 500, "ValueThreeValidationMessage");
                 EntityValidateInvoked = true;
 
-                if (this.Child != null)
+                if (Child != null)
                 {
-                    validator.AddChild(this.Child);
+                    validator.AddChild(Child);
                 }
 
                 Children?.ForEach(c => validator.AddChild(c));

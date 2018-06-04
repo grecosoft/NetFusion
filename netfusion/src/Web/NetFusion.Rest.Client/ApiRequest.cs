@@ -231,7 +231,7 @@ namespace NetFusion.Rest.Client
         /// <param name="names">Names.</param>
         public ApiRequest Embed(params string[] names)
         {
-            EmbeddedNames = string.Join(",", names); ;
+            EmbeddedNames = string.Join(",", names);
             return this;
         }
 

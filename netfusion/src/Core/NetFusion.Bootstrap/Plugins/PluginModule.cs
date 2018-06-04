@@ -14,7 +14,7 @@ namespace NetFusion.Bootstrap.Plugins
     public abstract class PluginModule : IPluginModule,
         IDisposable
     {
-        private bool _disposed = false;
+        private bool _disposed;
 
         protected PluginModule()
         {

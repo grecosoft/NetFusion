@@ -3,6 +3,9 @@ using NetFusion.Common.Extensions.Reflection;
 using System.Linq;
 using Xunit;
 
+// ReSharper disable UnusedParameter.Local
+// ReSharper disable ArrangeTypeMemberModifiers
+
 namespace CommonTests.Extensions.Reflection
 {
     public class CreationTests
@@ -45,7 +48,7 @@ namespace CommonTests.Extensions.Reflection
 
         class TestTypeTwo
         {
-            public TestTypeTwo(int value){}
+            public TestTypeTwo(int value){ }
         }
 
         class TestTypeThree : IRunnable { }

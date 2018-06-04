@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using NetFusion.Common.Extensions.Reflection;
 using System;
-using System.Reflection;
 using Xunit;
 
 namespace CommonTests.Extensions.Reflection
@@ -70,6 +69,7 @@ namespace CommonTests.Extensions.Reflection
         class TestClassWithAttribute
         {
             [Obsolete]
+            // ReSharper disable once UnusedMember.Local
             public string SomeProperty { get; set; }
         }
     }

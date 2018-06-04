@@ -7,10 +7,7 @@ namespace CoreTests.Queries.Mocks
         public TestQueryResult Execute(TestQuery query)
         {
             query.TestLog.Add(nameof(TestConsumer));
-            return new TestQueryResult
-            {
-
-            };
+            return new TestQueryResult();
         }
     }
 
@@ -18,10 +15,7 @@ namespace CoreTests.Queries.Mocks
     {
         public TestQueryResult Execute(TestQuery query)
         {
-            return new TestQueryResult
-            {
-
-            };
+            return new TestQueryResult();
         }
     }
 
@@ -29,10 +23,7 @@ namespace CoreTests.Queries.Mocks
     {
         public TestQueryResult Execute(TestQuery query)
         {
-            return new TestQueryResult
-            {
-
-            };
+            return new TestQueryResult();
         }
     }
 }

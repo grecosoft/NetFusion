@@ -1,10 +1,10 @@
-﻿using NetFusion.Rest.Client;
-using NetFusion.Rest.Client.Resources;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http;
+using NetFusion.Rest.Client;
+using NetFusion.Rest.Client.Resources;
 using Xunit;
 
-namespace InfrastructureTests.Web.Rest
+namespace WebTests.Rest
 {
     public static class ClientResourceTestExtensions
     {

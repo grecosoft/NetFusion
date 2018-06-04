@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -136,12 +135,6 @@ namespace NetFusion.Rest.Server.Actions
 
             return FormattedResourceProps.All(lrp => resourceProps.Any(
                     rp => rp.Name == lrp.Name && rp.PropertyType == lrp.PropertyType));
-        }
-
-        // Copy all link properties to the new link instance for the new resource type.
-        internal override void CopyTo<TNewResourceType>(ActionLink actionLink)
-        {
-            base.CopyTo<TNewResourceType>(actionLink);
         }
 
         // Crates a new instance of the link for a new resource type.  The expression based 

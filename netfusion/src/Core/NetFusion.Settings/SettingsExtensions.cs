@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using NetFusion.Common.Extensions.Reflection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace NetFusion.Settings
 {

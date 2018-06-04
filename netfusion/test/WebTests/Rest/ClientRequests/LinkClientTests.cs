@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using InfrastructureTests.Web.Rest;
-using InfrastructureTests.Web.Rest.ClientRequests.Client;
-using InfrastructureTests.Web.Rest.Setup;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Resources;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Test.Plugins;
+using WebTests.Rest.ClientRequests.Client;
 using WebTests.Rest.ClientRequests.Server;
+using WebTests.Rest.Setup;
 using Xunit;
 
 namespace WebTests.Rest.ClientRequests

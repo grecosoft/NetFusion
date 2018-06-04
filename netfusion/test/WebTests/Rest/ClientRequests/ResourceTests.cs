@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using InfrastructureTests.Web.Rest.ClientRequests.Client;
-using InfrastructureTests.Web.Rest.Setup;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Resources;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Test.Plugins;
+using WebTests.Rest.ClientRequests.Client;
 using WebTests.Rest.ClientRequests.Server;
+using WebTests.Rest.Setup;
 using Xunit;
 
 namespace WebTests.Rest.ClientRequests
@@ -187,7 +188,7 @@ namespace WebTests.Rest.ClientRequests
 
             var mockSrv = new MockUnitTestService
             {
-                Customers = new CustomerResource[] { serverResource }
+                Customers = new[] { serverResource }
             };
 
             // Create the test client and call route returning an embedded resource collection.
@@ -210,7 +211,7 @@ namespace WebTests.Rest.ClientRequests
             // The next line of code will deserialize this generic representation in the C# client side class
             //      matching the server-sided resource collection.
 
-            var embeddedClientResource = response.Content.GetEmbeddedCollection<AddressModel>("addresses");
+            var embeddedClientResource = response.Content.GetEmbeddedCollection<AddressModel>("addresses").ToArray();
             embeddedClientResource.Should().NotBeNull();
             embeddedClientResource.Should().HaveCount(2);
         }
@@ -248,7 +249,7 @@ namespace WebTests.Rest.ClientRequests
 
             var mockSrv = new MockUnitTestService
             {
-                Customers = new CustomerResource[] { serverResource }
+                Customers = new[] { serverResource }
             };
 
             // Create the test client and call route returning an embedded resource collection.

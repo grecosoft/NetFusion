@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using InfrastructureTests.Web.Rest.Setup;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Hal;

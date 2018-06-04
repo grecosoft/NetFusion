@@ -12,7 +12,7 @@ namespace CoreTests.Bootstrap.Mocks
         protected override void Dispose(bool dispose)
         {
             base.Dispose(dispose);
-            this.IsDisposed = true;
+            IsDisposed = true;
         }
 
         public override void StartModule(IServiceProvider services)

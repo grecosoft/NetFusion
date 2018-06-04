@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using InfrastructureTests.Web.Rest.Setup;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources;
 using WebTests.Rest.Setup;
@@ -32,7 +31,7 @@ namespace WebTests.Rest.LinkGeneration.Server
 
             // Unit test might make multiple calls after updating the state of the resource
             // to test outcome on link generation - clear any prior added links.
-            resource.Links = new Dictionary<string, Link> { };
+            resource.Links = new Dictionary<string, Link>();
             return resource;           
         }
 

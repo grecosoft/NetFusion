@@ -72,7 +72,7 @@ namespace NetFusion.Messaging.Modules
 
         public QueryDispatchInfo GetQueryDispatchInfo(Type queryType)
         {
-            if (queryType == null) throw new ArgumentNullException(nameof(queryType)); ;
+            if (queryType == null) throw new ArgumentNullException(nameof(queryType));
 
             if (_queryDispatchers.TryGetValue(queryType, out QueryDispatchInfo dispatchEntry))
             {
@@ -146,7 +146,7 @@ namespace NetFusion.Messaging.Modules
             foreach (MethodInfo handler in queryHandlerMethods)
             {                
                 yield return new QueryDispatchInfo(handler);
-            };
+            }
         }    
     }
 }

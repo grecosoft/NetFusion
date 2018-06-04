@@ -8,7 +8,6 @@ using NetFusion.Messaging.Modules;
 using NetFusion.Messaging.Types;
 using NetFusion.Test.Modules;
 using Xunit;
-using Xunit.Sdk;
 
 namespace CoreTests.Queries.Bootstrap
 {

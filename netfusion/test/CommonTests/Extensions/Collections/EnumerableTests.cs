@@ -19,7 +19,7 @@ namespace CommonTests.Extensions.Collections
             };
 
             var lookup = data.ToLookup(d => d.EventType);
-            var values = lookup.Values();
+            var values = lookup.Values().ToArray();
 
             values.Should().NotBeNull();
             values.Should().HaveCount(3);
@@ -54,7 +54,7 @@ namespace CommonTests.Extensions.Collections
                 new TestData { EventType = "NewOrder", HandlerName = "CheckInventory" }
             };
 
-            var duplicates = data.WhereDuplicated(d => d.EventType);
+            var duplicates = data.WhereDuplicated(d => d.EventType).ToArray();
             duplicates.Should().HaveCount(1);
             duplicates.First().Should().Be("NewCustomer");
             data.WhereDuplicated(d => d.HandlerName).Should().BeEmpty();

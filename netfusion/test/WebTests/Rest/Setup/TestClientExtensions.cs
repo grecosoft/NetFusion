@@ -1,18 +1,16 @@
-﻿using InfrastructureTests.Web.Rest.Setup.Setup;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Core;
+using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
 using NetFusion.Rest.Server.Modules;
 using NetFusion.Test.Plugins;
-using System.Collections.Generic;
-using NetFusion.Rest.Client.Settings;
-using Microsoft.Extensions.Logging;
-using WebTests.Rest.Setup;
 
-namespace InfrastructureTests.Web.Rest.Setup
+namespace WebTests.Rest.Setup
 {
     /// <summary>
     /// Extension methods used to create resource clients from a request settings configuration.
@@ -52,7 +50,7 @@ namespace InfrastructureTests.Web.Rest.Setup
 
                     // This service will be injected by the WebApi controller and
                     // can be used to very the system under test.
-                    services.AddSingleton<IMockedService>(mockService ?? new NullUnitTestService());
+                    services.AddSingleton(mockService ?? new NullUnitTestService());
                 }).UseSetting(WebHostDefaults.ApplicationKey, typeof(TestClientExtensions).Assembly.FullName);
 
            

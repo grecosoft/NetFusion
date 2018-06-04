@@ -54,7 +54,7 @@ namespace NetFusion.Rest.Client.Settings
             {
                 throw new ArgumentException(
                     $"The HTTP Header named: {name} must be set using the specific " + 
-                    $"header method defined on the {this.GetType()} class.", 
+                    $"header method defined on the {GetType()} class.", 
                     nameof(name));
             }
 

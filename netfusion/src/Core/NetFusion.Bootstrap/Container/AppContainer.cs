@@ -39,7 +39,7 @@ namespace NetFusion.Bootstrap.Container
     {
         // Singleton instance of created container:
         private static AppContainer _instance;
-        private bool _disposed = false;
+        private bool _disposed;
 
         // Microsoft Common Abstractions:
         private readonly IServiceCollection _serviceCollection;
@@ -264,7 +264,7 @@ namespace NetFusion.Bootstrap.Container
 
             try
             {
-                using (_logger.LogTraceDuration(BootstrapLogEvents.BOOTSTRAP_BUILD, "Building Container"))
+                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapBuild, "Building Container"))
                 {
                     LoadContainer();
                     ComposeLoadedPlugins();
@@ -301,7 +301,7 @@ namespace NetFusion.Bootstrap.Container
 
             try
             {
-                using (_logger.LogTraceDuration(BootstrapLogEvents.BOOTSTRAP_START, "Starting Container"))
+                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStart, "Starting Container"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
                     _application.StartPluginModules(scope.ServiceProvider);
@@ -309,7 +309,7 @@ namespace NetFusion.Bootstrap.Container
                
                 if (_logger.IsEnabled(LogLevel.Trace))
                 {
-                    _logger.LogTraceDetails(BootstrapLogEvents.BOOTSTRAP_COMPOSITE_LOG, "Composite Log", Log);
+                    _logger.LogTraceDetails(BootstrapLogEvents.BootstrapCompositeLog, "Composite Log", Log);
                 }
             }
             catch (ContainerException ex)
@@ -334,7 +334,7 @@ namespace NetFusion.Bootstrap.Container
 
             try
             {
-                using (_logger.LogTraceDuration(BootstrapLogEvents.BOOTSTRAP_STOP, "Stopping Container"))
+                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStop, "Stopping Container"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
                     _application.StopPluginModules(scope.ServiceProvider);
@@ -444,7 +444,7 @@ namespace NetFusion.Bootstrap.Container
         // are core and provide cross-cutting features to other core and application level plug-ins.
         private void ComposeCorePlugins()
         {
-            var allPluginTypes = _application.GetPluginTypes();
+            var allPluginTypes = _application.GetPluginTypes().ToArray();
 
             _application.CorePlugins.ForEach(p =>
                 ComposePluginModules(p, allPluginTypes));
@@ -455,7 +455,9 @@ namespace NetFusion.Bootstrap.Container
         // never provide functionality to lower level plug-ins.
         private void ComposeAppPlugins()
         {
-            var allAppPluginTypes = _application.GetPluginTypes(PluginTypes.AppComponentPlugin, PluginTypes.AppHostPlugin);
+            var allAppPluginTypes = _application.GetPluginTypes(
+                PluginTypes.AppComponentPlugin, 
+                PluginTypes.AppHostPlugin).ToArray();
 
             _application.AppComponentPlugins.ForEach(p =>
                 ComposePluginModules(p, allAppPluginTypes));
@@ -463,7 +465,7 @@ namespace NetFusion.Bootstrap.Container
             ComposePluginModules(_application.AppHostPlugin, allAppPluginTypes);
         }
 
-        private void ComposePluginModules(Plugin plugin, IEnumerable<PluginType> fromPluginTypes)
+        private void ComposePluginModules(Plugin plugin, PluginType[] fromPluginTypes)
         {
             foreach (IPluginModule module in plugin.Modules)
             {
@@ -536,7 +538,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void RegisterContainerProvidedServices()
         {
-            _serviceCollection.AddSingleton<IConfiguration>(_configuration);
+            _serviceCollection.AddSingleton(_configuration);
             _serviceCollection.AddSingleton<IValidationService, ValidationService>();
             _serviceCollection.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();            
         }
@@ -549,7 +551,7 @@ namespace NetFusion.Bootstrap.Container
         //------------------------------------------Logging------------------------------------------//
         private Exception LogException(Exception ex)
         {
-            _logger.LogErrorDetails(BootstrapLogEvents.BOOTSTRAP_EXCEPTION, ex, "Bootstrap Exception");
+            _logger.LogErrorDetails(BootstrapLogEvents.BootstrapException, ex, "Bootstrap Exception");
             return ex;
         }
 
@@ -560,7 +562,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void LogManifests(ManifestRegistry registry)
         {
-            _logger.LogDebugDetails(BootstrapLogEvents.BOOTSTRAP_EXCEPTION, "Manifests", new
+            _logger.LogDebugDetails(BootstrapLogEvents.BootstrapException, "Manifests", new
             {
                 TypeResolver = _typeResover.GetType().AssemblyQualifiedName,
                 Host = registry.AppHostPluginManifests.First().GetType().AssemblyQualifiedName,
@@ -573,7 +575,7 @@ namespace NetFusion.Bootstrap.Container
         {
             foreach (var plugin in plugins)
             {
-                _logger.LogTraceDetails(BootstrapLogEvents.BOOTSTRAP_PLUGIN_DETAILS, "Plug-in", new
+                _logger.LogTraceDetails(BootstrapLogEvents.BootstrapPluginDetails, "Plug-in", new
                 {
                     plugin.Manifest.Name,
                     plugin.Manifest.PluginId,

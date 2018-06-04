@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NetFusion.Base.Exceptions;
 using NetFusion.Messaging.Core;
-using NetFusion.Messaging.Filters;
 
 namespace NetFusion.Messaging.Exceptions
 {

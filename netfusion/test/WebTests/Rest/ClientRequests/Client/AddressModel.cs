@@ -1,6 +1,6 @@
 ﻿using NetFusion.Rest.Client.Resources;
 
-namespace InfrastructureTests.Web.Rest.ClientRequests.Client
+namespace WebTests.Rest.ClientRequests.Client
 {
     /// <summary>
     /// Client side resource class modeling the corresponding

@@ -6,6 +6,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
+// ReSharper disable UnusedTypeParameter
 namespace NetFusion.Rest.Server.Actions
 {
     /// <summary>

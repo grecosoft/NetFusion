@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
@@ -26,7 +25,7 @@ namespace NetFusion.Rest.Server.Modules
         {
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-            services.AddScoped<IUrlHelper>(sp => {
+            services.AddScoped(sp => {
                 var context = sp.GetRequiredService<IActionContextAccessor>();
                 var urlFactory = sp.GetRequiredService<IUrlHelperFactory>();
                 return urlFactory.GetUrlHelper(context.ActionContext);

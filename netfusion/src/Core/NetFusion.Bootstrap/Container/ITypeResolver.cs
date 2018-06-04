@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Plugins;
-using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Bootstrap.Container

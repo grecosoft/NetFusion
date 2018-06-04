@@ -1,7 +1,6 @@
 ﻿using NetFusion.Base.Exceptions;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Core;
-using NetFusion.Messaging.Enrichers;
 using NetFusion.Messaging.Types;
 using System;
 using System.Collections.Generic;

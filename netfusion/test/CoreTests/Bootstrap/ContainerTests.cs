@@ -308,29 +308,29 @@ namespace CoreTests.Bootstrap
         [Fact(DisplayName = "Types Loaded for Application Component Plugin")]
         public void TypesLoaded_ForAppComponentPlugin()
         {
-            ContainerFixture.Test((Action<ContainerFixture>)(fixture =>
+            ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver((Action<TestTypeResolver>)(r =>
-                {
-                    r.AddPlugin<MockAppHostPlugin>();
+                fixture.Arrange.Resolver(r =>
+                    {
+                        r.AddPlugin<MockAppHostPlugin>();
 
-                    r.AddPlugin<MockAppComponentPlugin>()
-                        .AddPluginType<MockOneType>();
-                }))
-                .Assert.CompositeApp(ca =>
-                {
-                    var appComponentPlugin = ca.AppComponentPlugins.First();
+                        r.AddPlugin<MockAppComponentPlugin>()
+                            .AddPluginType<MockOneType>();
+                    })
+                    .Assert.CompositeApp(ca =>
+                    {
+                        var appComponentPlugin = ca.AppComponentPlugins.First();
 
-                    // Type assignment:
-                    appComponentPlugin.PluginTypes.Should().HaveCount(1);
-                    appComponentPlugin.PluginTypes.Select(pt => pt.Type).Contains(typeof(MockOneType));
+                        // Type assignment:
+                        appComponentPlugin.PluginTypes.Should().HaveCount(1);
+                        appComponentPlugin.PluginTypes.Select(pt => pt.Type).Contains(typeof(MockOneType));
 
-                    // Categorized Types:
-                    ca.GetPluginTypes().Should().HaveCount(1);
-                    ca.GetPluginTypes(PluginTypes.AppComponentPlugin).Should().HaveCount(1);
-                    ca.GetPluginTypes(PluginTypes.CorePlugin, PluginTypes.AppHostPlugin).Should().HaveCount(0);
-                });
-            }));
+                        // Categorized Types:
+                        ca.GetPluginTypes().Should().HaveCount(1);
+                        ca.GetPluginTypes(PluginTypes.AppComponentPlugin).Should().HaveCount(1);
+                        ca.GetPluginTypes(PluginTypes.CorePlugin, PluginTypes.AppHostPlugin).Should().HaveCount(0);
+                    });
+            });
         }
 
         /// <summary>
@@ -413,7 +413,7 @@ namespace CoreTests.Bootstrap
             {
                 fixture.Arrange.Resolver(r =>
                     {
-                        var appHostPlugin = new MockAppHostPlugin { };
+                        var appHostPlugin = new MockAppHostPlugin();
                         r.AddPlugin(appHostPlugin);
                     })
                     .Act.OnNonInitContainer(c =>
@@ -464,7 +464,7 @@ namespace CoreTests.Bootstrap
             {
                 fixture.Arrange.Resolver(r =>
                     {
-                        var appHostPlugin = new MockAppHostPlugin { };
+                        var appHostPlugin = new MockAppHostPlugin();
                         r.AddPlugin(appHostPlugin);
                     })
                     .Act.OnNonInitContainer(c =>
@@ -521,7 +521,7 @@ namespace CoreTests.Bootstrap
                     .Act.OnContainer(c =>
                     {
                         c.Dispose();
-                        var s = c.CreateServiceScope();
+                        c.CreateServiceScope();
                     })
                     .Assert.Exception<ContainerException>(ex =>
                     {

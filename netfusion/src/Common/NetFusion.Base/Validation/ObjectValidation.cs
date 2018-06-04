@@ -1,5 +1,4 @@
-﻿using NetFusion.Common;
-using System.Linq;
+﻿using System.Linq;
 using System;
 
 namespace NetFusion.Base.Validation

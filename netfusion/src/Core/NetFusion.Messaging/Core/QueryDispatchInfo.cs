@@ -105,15 +105,13 @@ namespace NetFusion.Messaging.Core
             {
                 if (IsAsync)
                 {
-                    Task asyncResult = null;
-
                     var invokeParams = new List<object> { consumer, query };
                     if (IsCancellable)
                     {
                         invokeParams.Add(cancellationToken);
                     }
 
-                    asyncResult = (Task)Invoker.DynamicInvoke(invokeParams.ToArray());
+                    var asyncResult = (Task)Invoker.DynamicInvoke(invokeParams.ToArray());
                     await asyncResult;
 
                     object result = ProcessResult(query, asyncResult);
