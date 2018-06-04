@@ -10,7 +10,7 @@
     <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>NetFusion.Mapping</PackageId>
