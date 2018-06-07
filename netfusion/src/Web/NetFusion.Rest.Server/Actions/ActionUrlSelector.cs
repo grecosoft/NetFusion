@@ -44,7 +44,7 @@ namespace NetFusion.Rest.Server.Actions
             _link.Methods = GetHttpMethods(controllerAction.Method);
         }
 
-        private IEnumerable<string> GetHttpMethods(MethodInfo actionMethodInfo)
+        private static IEnumerable<string> GetHttpMethods(MemberInfo actionMethodInfo)
         {
             return actionMethodInfo.GetCustomAttributes<HttpMethodAttribute>(true)
                 .SelectMany(a => a.HttpMethods);

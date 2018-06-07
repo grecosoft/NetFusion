@@ -139,7 +139,7 @@ namespace NetFusion.Rest.Server.Mappings
             link.Templated = link.Href.Contains("{") && link.Href.Contains("}");
         }
 
-        private void SetLinkOptionalDescriptors(ActionLink actionLink, Link link)
+        private static void SetLinkOptionalDescriptors(ActionLink actionLink, Link link)
         {
             link.HrefLang = actionLink.HrefLang;
             link.Name = actionLink.Name;
@@ -160,7 +160,7 @@ namespace NetFusion.Rest.Server.Mappings
             }
         }
            
-        private void MarkOptionalParams(ApiActionMeta actionMeta, Link link)
+        private static void MarkOptionalParams(ApiActionMeta actionMeta, Link link)
         {
             foreach(ApiParameterMeta paramMeta in actionMeta.Parameters.Where(p => p.IsOptional))
             {

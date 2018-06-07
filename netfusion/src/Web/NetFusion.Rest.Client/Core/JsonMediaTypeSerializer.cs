@@ -1,7 +1,9 @@
-﻿using NetFusion.Rest.Client.Settings;
+﻿using System;
+using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
 using Newtonsoft.Json;
 using System.IO;
+using System.Runtime.Serialization.Formatters;
 using System.Text;
 
 namespace NetFusion.Rest.Client.Core
@@ -25,6 +27,15 @@ namespace NetFusion.Rest.Client.Core
             using (var reader = new StreamReader(responseStream))
             {
                 return (T)serializer.Deserialize(reader, typeof(T));
+            }
+        }
+        
+        public object Deserialize(Stream responseStream, Type type)
+        {
+            var serializer = new JsonSerializer();
+            using (var reader = new StreamReader(responseStream))
+            {
+                return serializer.Deserialize(reader, type);
             }
         }
     }

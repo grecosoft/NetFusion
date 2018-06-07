@@ -20,7 +20,7 @@ namespace NetFusion.Rest.Server.Mappings
         public IResourceProvider Provider { get; }
 
         // Metadata for each resource type configured for this media-type.
-        private Dictionary<Type, IResourceMeta> _resourceTypeMeta;
+        private readonly Dictionary<Type, IResourceMeta> _resourceTypeMeta;
 
         public MediaTypeEntry(string mediaType, IResourceProvider provider)
         {

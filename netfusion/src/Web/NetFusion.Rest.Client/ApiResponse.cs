@@ -62,6 +62,11 @@ namespace NetFusion.Rest.Client
         /// Returns the value of the ETag header.
         /// </summary>
         public string ETag { get; }
+        
+        /// <summary>
+        /// The deserialized returned content.
+        /// </summary>
+        public object Content { get; }
 
         public ApiResponse(HttpRequestMessage requestMsg, HttpResponseMessage responseMsg)
         {
@@ -81,6 +86,12 @@ namespace NetFusion.Rest.Client
 
             ETag = responseMsg.Headers.ETag?.Tag;
             Server = responseMsg.Headers.Server?.ToString();
+        }
+
+        public ApiResponse(HttpRequestMessage requestMsg, HttpResponseMessage responseMsg, object content)
+            : this(requestMsg, responseMsg)
+        {
+            Content = content;
         }
 
         /// <summary>
@@ -103,7 +114,7 @@ namespace NetFusion.Rest.Client
 	public class ApiResponse<TContent> : ApiResponse
         where TContent : class
     {
-        public TContent Content { get; }
+        public new TContent Content { get; }
 
         public ApiResponse(HttpRequestMessage requestMsg, HttpResponseMessage responseMsg, TContent content)
             : base(requestMsg, responseMsg)

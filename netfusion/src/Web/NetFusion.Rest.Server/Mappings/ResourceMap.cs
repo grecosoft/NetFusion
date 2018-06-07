@@ -11,7 +11,7 @@ namespace NetFusion.Rest.Server.Mappings
     public abstract class ResourceMap : IResourceMap
     {
         public Type ProviderType { get; private set; }
-        private List<IResourceMeta> _resourceMeta;
+        private readonly List<IResourceMeta> _resourceMeta;
 
         public ResourceMap()
         {

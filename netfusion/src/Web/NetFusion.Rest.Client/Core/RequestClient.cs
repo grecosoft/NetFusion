@@ -18,11 +18,11 @@ namespace NetFusion.Rest.Client.Core
     /// </summary>
     public class RequestClient : IRequestClient
     {
-        private HttpClient _httpClient;
-        private ILogger _logger;
+        private readonly HttpClient _httpClient;
+        private readonly ILogger _logger;
         private string _correlationHeaderName;
-        private IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
-        private IRequestSettings _defaultRequestSettings;
+        private readonly IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
+        private readonly IRequestSettings _defaultRequestSettings;
 
         private IServiceEntryApiProvider _serviceApiProvider;
         private Action<IRequestSettings> _eachRequestAction;
@@ -128,6 +128,24 @@ namespace NetFusion.Rest.Client.Core
             return new ApiResponse<TContent>(requestMsg, responseMsg, resource);
         }
 
+        public async Task<ApiResponse> SendRequest(ApiRequest request, Type contentType, 
+            CancellationToken cancellationToken)
+        {
+            HttpRequestMessage requestMsg = await CreateRequestMessage(request);
+            HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
+
+            object resource = null;
+            if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
+            {
+                resource = DeserializeResource(responseMsg, 
+                    await responseMsg.Content.ReadAsStreamAsync(), 
+                    contentType);
+            }
+
+            return new ApiResponse(requestMsg, responseMsg, resource);
+        }
+
+        
         private async Task<HttpRequestMessage> CreateRequestMessage(ApiRequest request)
         {
             string requestUri = request.RequestUri;
@@ -211,6 +229,16 @@ namespace NetFusion.Rest.Client.Core
             IMediaTypeSerializer serializer = GetMediaTypeSerializer(mediaType);
 
             return serializer.Deserialize<T>(responseStream);
+        }
+        
+        private object DeserializeResource(HttpResponseMessage responseMsg, 
+            Stream responseStream,
+            Type resourceType)
+        {
+            string mediaType = responseMsg.Content.Headers.ContentType.MediaType;
+            IMediaTypeSerializer serializer = GetMediaTypeSerializer(mediaType);
+
+            return serializer.Deserialize(responseStream, resourceType);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using NetFusion.Rest.Client.Resources;
+﻿using System;
+using NetFusion.Rest.Client.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,6 +38,14 @@ namespace NetFusion.Rest.Client
             CancellationToken cancellationToken = default(CancellationToken))
             where TContent : class;
 
-
+        /// <summary>
+        ///  Sends an API request to the server for a response containing content.
+        /// </summary>
+        /// <param name="request">The request to send.</param>
+        /// <param name="contentType">The type of the content of the response.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Future response for sent request containing returned content.</returns>
+        Task<ApiResponse> SendRequest(ApiRequest request, Type contentType,
+            CancellationToken cancellationToken);
     }
 }

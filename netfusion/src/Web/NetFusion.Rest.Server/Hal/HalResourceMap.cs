@@ -13,7 +13,7 @@ namespace NetFusion.Rest.Server.Hal
     {
         public override string MediaType => InternetMediaTypes.HalJson;
 
-        public HalResourceMap()
+        protected HalResourceMap()
         {
             // Specify the provider responsible for applying the metadata
             // to the returned HAL based resources.

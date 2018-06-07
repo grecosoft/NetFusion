@@ -16,7 +16,7 @@ namespace NetFusion.Rest.Server.Meta
     public class ResourceLinkMeta<TResource>
         where TResource : class, IResource
     {
-        private List<ActionLink> _actionLinks = new List<ActionLink>();
+        private readonly List<ActionLink> _actionLinks = new List<ActionLink>();
       
         /// <summary>
         /// Returns the ActionLink instance populated with link metadata.

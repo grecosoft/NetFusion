@@ -108,7 +108,7 @@ namespace NetFusion.Rest.Server.Meta
             return resourceMeta;
         }
 
-        private void AssertControllerMeetsConstraints(Type controllerType)
+        private static void AssertControllerMeetsConstraints(Type controllerType)
         {
             string[] duplicateActionNames = controllerType.GetActionMethods()
                 .WhereDuplicated(am => am.Name)

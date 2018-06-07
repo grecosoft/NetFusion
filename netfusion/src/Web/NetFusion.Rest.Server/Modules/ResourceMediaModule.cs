@@ -25,7 +25,7 @@ namespace NetFusion.Rest.Server.Modules
         private IEnumerable<IResourceMap> ResourceMappings { get; set; }
 
         // MediaTypeName --> Entry
-        private Dictionary<string, MediaTypeEntry> _mediaResourceTypeMeta = new Dictionary<string, MediaTypeEntry>();
+        private readonly Dictionary<string, MediaTypeEntry> _mediaResourceTypeMeta = new Dictionary<string, MediaTypeEntry>();
 
         // ResourceType --> ExternalTypeName
         private Dictionary<Type, string> _namedResourceModels;
