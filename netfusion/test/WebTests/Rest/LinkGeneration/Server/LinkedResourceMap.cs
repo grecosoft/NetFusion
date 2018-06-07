@@ -50,9 +50,6 @@ namespace WebTests.Rest.LinkGeneration.Server
                         .SetTitle("test-title")
                         .SetType("test-type")
                         .SetHrefLang("test-href-lang"));
-
-            Map<LinkedViewResource>()
-                .ApplyLinkMetaFrom<LinkedResource>();
         }
     }
 }

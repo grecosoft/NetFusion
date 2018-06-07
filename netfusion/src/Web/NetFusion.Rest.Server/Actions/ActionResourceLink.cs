@@ -126,50 +126,5 @@ namespace NetFusion.Rest.Server.Actions
             TResource typedResource = (TResource)resource;
             return ResourceUrlFormatFunc(typedResource);
         }
-
-        // The formatted string can be applied to another resource type if it has all the
-        // same properties of the same type contained in the URL format string.
-        internal override bool CanBeAppliedTo(Type resourceType)
-        {
-            var resourceProps = resourceType.GetProperties();
-
-            return FormattedResourceProps.All(lrp => resourceProps.Any(
-                    rp => rp.Name == lrp.Name && rp.PropertyType == lrp.PropertyType));
-        }
-
-        // Crates a new instance of the link for a new resource type.  The expression based 
-        // on the original resource type is recreated for the new resource type. 
-        internal override ActionLink CreateCopyFor<TNewResourceType>()
-        {
-            var formatExpForNewResource = CreateNewExpression<TNewResourceType>();
-            var newResourceLink = new ActionResourceLink<TNewResourceType>(formatExpForNewResource);
-
-            CopyTo<TNewResourceType>(newResourceLink);
-            return newResourceLink;
-        }
-
-        // Uses the information captured from the expression based on the original resource
-        // and creates the same string format expression but for the new resource type.
-        private Expression<Func<TNewResourceType, string>> CreateNewExpression<TNewResourceType>()
-        {
-            ParameterExpression lambdaParam = Expression.Parameter(typeof(TNewResourceType), "resource");
-            IEnumerable<string> currentPropNames = FormattedResourceProps.Select(cp => cp.Name);
-
-            var newResourceProps = typeof(TNewResourceType).GetProperties()
-                .Where(np => currentPropNames.Contains(np.Name));
-
-            var newExpProps = newResourceProps.Select(np => 
-                Expression.Convert(
-                    Expression.MakeMemberAccess(lambdaParam, typeof(TNewResourceType).GetProperty(np.Name)), 
-                    typeof(object)));
-
-            var formatMethod = new Func<string, object[], string>(string.Format).GetMethodInfo();
-            var formatStr = Expression.Constant(FormattedUrl, typeof(string));
-
-            var formatCall = Expression.Call(formatMethod, formatStr,
-                Expression.NewArrayInit(typeof(object), newExpProps));
-
-            return Expression.Lambda<Func<TNewResourceType, string>>(formatCall, lambdaParam);
-        }
     }
 }

@@ -76,42 +76,6 @@ namespace NetFusion.Rest.Server.Meta
             return (TResourceMeta)this;
         }
 
-        /// <summary>
-        /// Applies the link metadata defined for one resource type to another.  This can be used when there
-        /// are multiple representations for a resource type.  This is the case where there is a resource type
-        /// and also different corresponding view-models.  When this is the case, often the links associated
-        /// with the base resource type are also to be specified on the associated view-models.  This also 
-        /// avoids from having to inherit resources and view-models from each other.
-        /// </summary>
-        /// <typeparam name="TFromResource">The type of an already mapped resource.</typeparam>
-        /// <returns>Reference to self for method chaining.</returns>
-        public TResourceMeta ApplyLinkMetaFrom<TFromResource>()
-            where TFromResource: class, IResource
-        {
-            IResourceMeta resourceMeta = GetResourceMeta(typeof(TFromResource));
-            AddValidLinks(resourceMeta);
-
-            return (TResourceMeta)this;
-        }
-
-        // Creates a new resource mapping for a new resource type based on an existing resource type.
-        // Only the links for which the new resource meets the criteria of the original resource type
-        // are copied.  For example of the original link is based on a resource property of FooBarId, 
-        // and the resource to which the link is being copied does not have such a property, the link
-        // will not be assigned to the new resource type.
-        private void AddValidLinks(IResourceMeta resourceMeta)
-        {
-            foreach (ActionLink actionLink in resourceMeta.Links)
-            {
-                if (actionLink.CanBeAppliedTo(typeof(TResource)))
-                {
-                    ActionLink newResourceLink = actionLink.CreateCopyFor<TResource>();
-
-                    AddLink(newResourceLink);
-                }
-            }
-        }
-
         protected void AddLinks(ActionLink[] links)
         {
             if (links == null)
