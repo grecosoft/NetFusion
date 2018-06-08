@@ -98,6 +98,23 @@ namespace NetFusion.Rest.Client.Core
 
             return SendRequest<TContent>(request, cancellationToken);
         }
+        
+        public async Task<ApiResponse> SendAsync(ApiRequest request, Type contentType, 
+            CancellationToken cancellationToken)
+        {
+            HttpRequestMessage requestMsg = await CreateRequestMessage(request);
+            HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
+
+            object resource = null;
+            if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
+            {
+                resource = DeserializeResource(responseMsg, 
+                    await responseMsg.Content.ReadAsStreamAsync(), 
+                    contentType);
+            }
+
+            return new ApiResponse(requestMsg, responseMsg, resource);
+        }
 
         private async Task<ApiResponse> SendRequest(ApiRequest request, CancellationToken cancellationToken)
         {
@@ -127,24 +144,6 @@ namespace NetFusion.Rest.Client.Core
 
             return new ApiResponse<TContent>(requestMsg, responseMsg, resource);
         }
-
-        public async Task<ApiResponse> SendRequest(ApiRequest request, Type contentType, 
-            CancellationToken cancellationToken)
-        {
-            HttpRequestMessage requestMsg = await CreateRequestMessage(request);
-            HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
-
-            object resource = null;
-            if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
-            {
-                resource = DeserializeResource(responseMsg, 
-                    await responseMsg.Content.ReadAsStreamAsync(), 
-                    contentType);
-            }
-
-            return new ApiResponse(requestMsg, responseMsg, resource);
-        }
-
         
         private async Task<HttpRequestMessage> CreateRequestMessage(ApiRequest request)
         {

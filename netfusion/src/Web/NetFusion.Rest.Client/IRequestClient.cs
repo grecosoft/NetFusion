@@ -45,7 +45,7 @@ namespace NetFusion.Rest.Client
         /// <param name="contentType">The type of the content of the response.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Future response for sent request containing returned content.</returns>
-        Task<ApiResponse> SendRequest(ApiRequest request, Type contentType,
-            CancellationToken cancellationToken);
+        Task<ApiResponse> SendAsync(ApiRequest request, Type contentType,
+            CancellationToken cancellationToken = default(CancellationToken));
     }
 }
