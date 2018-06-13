@@ -165,7 +165,7 @@ namespace NetFusion.Rest.Client.Core
 
         private void LogRequest(HttpRequestMessage requestMsg)
         {
-            _logger.LogDebug("Sending request to: {uri} for method: {method})", requestMsg.RequestUri, requestMsg.Method);
+            _logger.LogDebug("Sending request to: {uri} for method: {method}.", requestMsg.RequestUri, requestMsg.Method);
             _logger.LogTrace("Request Message: {request}", JsonConvert.SerializeObject(requestMsg, Formatting.Indented));
         }
 
