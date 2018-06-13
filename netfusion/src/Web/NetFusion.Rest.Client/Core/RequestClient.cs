@@ -99,10 +99,54 @@ namespace NetFusion.Rest.Client.Core
             return SendRequest<TContent>(request, cancellationToken);
         }
         
-        public async Task<ApiResponse> SendAsync(ApiRequest request, Type contentType, 
+        public Task<ApiResponse> SendAsync(ApiRequest request, Type contentType, 
+            CancellationToken cancellationToken)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (contentType == null) throw new ArgumentNullException(nameof(contentType));
+
+            return SendRequest(request, contentType, cancellationToken);
+        }
+
+        private async Task<ApiResponse> SendRequest(ApiRequest request, CancellationToken cancellationToken)
+        {
+            HttpRequestMessage requestMsg = await CreateRequestMessage(request);
+            LogRequest(requestMsg);
+            
+            HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
+
+            var response = new ApiResponse(requestMsg, responseMsg);
+            LogResponse(response);
+
+            return response;
+        }
+
+        private async Task<ApiResponse<TContent>> SendRequest<TContent>(ApiRequest request,  CancellationToken cancellationToken)
+            where TContent : class
+        {
+            HttpRequestMessage requestMsg = await CreateRequestMessage(request);
+            LogRequest(requestMsg);
+            
+            TContent resource = null;
+            HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
+         
+            if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
+            {
+                resource = DeserializeResource<TContent>(responseMsg, await responseMsg.Content.ReadAsStreamAsync());
+            }
+
+            var response = new ApiResponse<TContent>(requestMsg, responseMsg, resource);
+            LogResponse(response);
+
+            return response;
+        }
+        
+        private async Task<ApiResponse> SendRequest(ApiRequest request, Type contentType, 
             CancellationToken cancellationToken)
         {
             HttpRequestMessage requestMsg = await CreateRequestMessage(request);
+
+            LogRequest(requestMsg);
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
 
             object resource = null;
@@ -113,36 +157,36 @@ namespace NetFusion.Rest.Client.Core
                     contentType);
             }
 
-            return new ApiResponse(requestMsg, responseMsg, resource);
-        }
+            var response = new ApiResponse(requestMsg, responseMsg, resource);
+            LogResponse(response);
 
-        private async Task<ApiResponse> SendRequest(ApiRequest request, CancellationToken cancellationToken)
-        {
-            HttpRequestMessage requestMsg = await CreateRequestMessage(request);
-            
-            _logger.LogDebug("Sending request to: {uri} (method)", requestMsg.RequestUri, requestMsg.Method);
-            _logger.LogTrace("Request Message: {request}", JsonConvert.SerializeObject(request, Formatting.Indented));
-
-            HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
-            var response = new ApiResponse(requestMsg, responseMsg);
-
-            _logger.LogTrace("Response Message: {response}", JsonConvert.SerializeObject(response, Formatting.Indented));
             return response;
         }
 
-        private async Task<ApiResponse<TContent>> SendRequest<TContent>(ApiRequest request,  CancellationToken cancellationToken)
-            where TContent : class
+        private void LogRequest(HttpRequestMessage requestMsg)
         {
-            HttpRequestMessage requestMsg = await CreateRequestMessage(request);
-            HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
+            _logger.LogDebug("Sending request to: {uri} for method: {method})", requestMsg.RequestUri, requestMsg.Method);
+            _logger.LogTrace("Request Message: {request}", JsonConvert.SerializeObject(requestMsg, Formatting.Indented));
+        }
 
-            TContent resource = null;
-            if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
+        private void LogResponse(ApiResponse response)
+        {
+            if (!response.IsSuccessStatusCode)
             {
-                resource = DeserializeResource<TContent>(responseMsg, await responseMsg.Content.ReadAsStreamAsync());
+                var request = response.Request;
+                
+                _logger.LogDebug(
+                    "Error sending request to: {uri} for method: {method}. " + 
+                    "Received status code: {statusCode} with reason: {reasonPhase}.",
+                    request.RequestUri, 
+                    request.Method, 
+                    response.StatusCode, 
+                    response.ReasonPhase );
             }
-
-            return new ApiResponse<TContent>(requestMsg, responseMsg, resource);
+            
+            _logger.LogTrace(
+                "Response Message: {response}", 
+                JsonConvert.SerializeObject(response, Formatting.Indented));
         }
         
         private async Task<HttpRequestMessage> CreateRequestMessage(ApiRequest request)
