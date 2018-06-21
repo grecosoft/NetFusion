@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -24,8 +25,10 @@ namespace NetFusion.Rest.Client.Core
         private readonly IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
         private readonly IRequestSettings _defaultRequestSettings;
 
+        // Optional registered services specified using RequestClientBuilder:
         private IServiceEntryApiProvider _serviceApiProvider;
         private Action<IRequestSettings> _eachRequestAction;
+        private IDictionary<HttpStatusCode, Func<ErrorStatusContext, Task<bool>>> _statusHandlers;
 
         /// <summary>
         /// Initializes an instance of the client with its associated HttpClient delegated to 
@@ -42,7 +45,7 @@ namespace NetFusion.Rest.Client.Core
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient), 
                 "HTTP Client cannot be null.");
-
+            
             _logger = logger ?? throw new ArgumentNullException(nameof(httpClient), 
                 "Logger cannot be null.");
 
@@ -76,6 +79,11 @@ namespace NetFusion.Rest.Client.Core
                 throw new ArgumentException("Correlation header name not specified.", nameof(headerName));
 
             _correlationHeaderName = headerName;
+        }
+
+        internal void SetStatusCodeHandlers(IDictionary<HttpStatusCode, Func<ErrorStatusContext, Task<bool>>> handlers)
+        {
+            _statusHandlers = handlers ?? throw new ArgumentNullException(nameof(handlers));
         }
 
         // -----
@@ -114,6 +122,7 @@ namespace NetFusion.Rest.Client.Core
             LogRequest(requestMsg);
             
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
+            responseMsg = await HandleIfErrorStatusCode(request, responseMsg, cancellationToken);
 
             var response = new ApiResponse(requestMsg, responseMsg);
             LogResponse(response);
@@ -129,6 +138,7 @@ namespace NetFusion.Rest.Client.Core
             
             TContent resource = null;
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
+            responseMsg = await HandleIfErrorStatusCode(request, responseMsg, cancellationToken);
          
             if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
             {
@@ -148,6 +158,7 @@ namespace NetFusion.Rest.Client.Core
 
             LogRequest(requestMsg);
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
+            responseMsg = await HandleIfErrorStatusCode(request, responseMsg, cancellationToken);
 
             object resource = null;
             if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
@@ -167,6 +178,44 @@ namespace NetFusion.Rest.Client.Core
         {
             _logger.LogDebug("Sending request to: {uri} for method: {method}.", requestMsg.RequestUri, requestMsg.Method);
             _logger.LogTrace("Request Message: {request}", JsonConvert.SerializeObject(requestMsg, Formatting.Indented));
+        }
+        
+        private async Task<HttpResponseMessage> HandleIfErrorStatusCode(
+            ApiRequest request,
+            HttpResponseMessage responseMsg,
+            CancellationToken cancellationToken)
+        {
+            if (responseMsg.IsSuccessStatusCode || (request.Settings?.SurppressStatusCodeHandlers ?? false))
+            {
+                return responseMsg;
+            }
+
+            // Determine if there is a registered handler for the status code:
+            if (_statusHandlers == null || !_statusHandlers.ContainsKey(responseMsg.StatusCode))
+            {
+                return responseMsg;
+            }
+            
+            _logger.LogDebug($"Handler for response status code: {responseMsg.StatusCode} being called.");
+
+            var handler = _statusHandlers[responseMsg.StatusCode];
+            
+            var context = new ErrorStatusContext(this, responseMsg, 
+                _defaultRequestSettings, 
+                request.Settings);
+
+            // Call the handler assoiated with the status code so it can determine
+            // if the request should be retried:
+            bool retryRequest = await handler(context);
+            if (retryRequest)
+            {
+                _logger.LogDebug($"Attempting to retry request: {request.RequestUri}");
+                
+                HttpRequestMessage requestMsg = await CreateRequestMessage(request);
+                responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
+            }
+
+            return responseMsg;
         }
 
         private void LogResponse(ApiResponse response)
@@ -201,6 +250,7 @@ namespace NetFusion.Rest.Client.Core
             }
 
             var requestSettings = _defaultRequestSettings.GetMerged(request.Settings);
+            request.UsingSettings(requestSettings);
 
             // Check if the request has any embedded names specified.  This allows the client
             // to suggest to the server the subset of resources it needs from the default set

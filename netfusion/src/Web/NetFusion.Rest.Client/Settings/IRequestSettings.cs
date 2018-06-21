@@ -18,6 +18,12 @@ namespace NetFusion.Rest.Client.Settings
         QueryString QueryString { get; }
 
         /// <summary>
+        /// Indicates that any registered status code handlers should
+        /// not be called.
+        /// </summary>
+        bool? SurppressStatusCodeHandlers { get; set; } 
+
+        /// <summary>
         /// Applies the settings to the provided request message.
         /// </summary>
         /// <param name="requestMessage">Request message to apply settings.</param>

@@ -4,7 +4,9 @@ using NetFusion.Rest.Client.Resources;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -22,6 +24,7 @@ namespace NetFusion.Rest.Client
 
         private IRequestSettings _defaultRequestSettings;
         private Action<IRequestSettings> _eachRequestAction;
+        private IDictionary<HttpStatusCode, Func<ErrorStatusContext, Task<bool>>> _statusCodeHandlers;
         private IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
 
         private string _correlationIdHeaderName = "NF_CorrelationId";
@@ -94,7 +97,7 @@ namespace NetFusion.Rest.Client
         /// </summary>
         /// <param name="headerName">The name of the header to use.  If not specified, 
         /// a default value is used.</param>
-        /// <returns></returns>
+        /// <returns>Builder for method chaining.</returns>
         public RequestClientBuilder AddRequestCorrelationId(string headerName = CorrelationHeaderName)
         {
             if (string.IsNullOrWhiteSpace(headerName))
@@ -110,10 +113,31 @@ namespace NetFusion.Rest.Client
         /// Registers a delegate that will be invoked before each request.
         /// </summary>
         /// <param name="settings">Reference to the request settings being used for the current request.</param>
-        /// <returns>Build for method chaining.</returns>
+        /// <returns>Builder for method chaining.</returns>
         public RequestClientBuilder BeforeEachRequest(Action<IRequestSettings> settings)
         {
             _eachRequestAction = settings ?? throw new ArgumentNullException(nameof(settings));
+            return this;
+        }
+
+        /// <summary>
+        /// Registers a handler to be called when a specific HTTP status code is returned.
+        /// </summary>
+        /// <param name="code">The status code to register handler.</param>
+        /// <param name="handler">The handler to call for a HTTP status code.</param>
+        /// <returns>Builder for method chaining.</returns>
+        public RequestClientBuilder OnStatusCode(HttpStatusCode code, Func<ErrorStatusContext, Task<bool>> handler)
+        {
+            _statusCodeHandlers = _statusCodeHandlers ??
+                                 new ConcurrentDictionary<HttpStatusCode, Func<ErrorStatusContext, Task<bool>>>();
+
+            if (_statusCodeHandlers.ContainsKey(code))
+            {
+                throw new InvalidOperationException(
+                    $"The status code: {code} already has a registered handler.");
+            }
+
+            _statusCodeHandlers[code] = handler ?? throw new ArgumentNullException(nameof(handler));
             return this;
         }
 
@@ -143,7 +167,7 @@ namespace NetFusion.Rest.Client
             _mediaTypeSerializers[mediaType] = serializer;
             return this;
         }
-
+  
         /// <summary>
         /// Returns an instance of the request client built using the specified configurations.
         /// </summary>
@@ -179,6 +203,11 @@ namespace NetFusion.Rest.Client
             if (_correlationIdHeaderName != null)
             {
                 requestClient.AddCorrelationId(_correlationIdHeaderName);
+            }
+
+            if (_statusCodeHandlers != null)
+            {
+                requestClient.SetStatusCodeHandlers(_statusCodeHandlers);
             }
 
             return requestClient;

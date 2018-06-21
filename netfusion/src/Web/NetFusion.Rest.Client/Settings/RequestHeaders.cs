@@ -45,7 +45,7 @@ namespace NetFusion.Rest.Client.Settings
         /// <returns>Self reference for method chaining.</returns>
         /// <param name="name">The name of the header value.</param>
         /// <param name="value">The value of the header.</param>
-        public RequestHeaders Add(string name,  params string[] value)
+        public RequestHeaders Add(string name, params string[] value)
         {
 			if (string.IsNullOrWhiteSpace(name))
 				throw new ArgumentException("Header name not specified.", nameof(name));
@@ -94,6 +94,39 @@ namespace NetFusion.Rest.Client.Settings
             ContentType = HeaderValue.WithValue(value);
             return this;
         }
+
+	    /// <summary>
+	    /// Sent the Authorization header to the base64 encoded username and password.
+	    /// </summary>
+	    /// <param name="username">The username.</param>
+	    /// <param name="password">The password.</param>
+	    /// <returns>Self reference for method chaining.</returns>
+	    public RequestHeaders SetBasicAuthHeader(string username, string password)
+	    {
+		    if (username == null) throw new ArgumentNullException(nameof(username));
+		    if (password == null) throw new ArgumentNullException(nameof(password));
+		    
+		    var value = Base64Encode($"{username}:{password}");
+		    return Add("Authorization", $"Basic {value}");
+	    }
+
+	    /// <summary>
+	    /// Set the Authorization Bearer JWT token.
+	    /// </summary>
+	    /// <param name="token">The JWT token value.</param>
+	    /// <returns>Self reference for method changing.</returns>
+	    public RequestHeaders SetAuthBearerToken(string token)
+	    {
+		    if (token == null) throw new ArgumentNullException(nameof(token));
+		    
+		    return Add("Authorization", $"Bearer {token}");
+	    }
+
+	    private static string Base64Encode(string plainText) 
+	    {
+		    var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+		    return Convert.ToBase64String(plainTextBytes);
+	    }
 
 		internal void ApplyHeaders(HttpRequestMessage requestMessage)
 		{
