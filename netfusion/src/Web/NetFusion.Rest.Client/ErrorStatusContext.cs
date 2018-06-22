@@ -37,12 +37,12 @@ namespace NetFusion.Rest.Client
         /// </summary>
         /// <param name="username">The username.</param>
         /// <param name="password">The password.</param>
-        /// <returns></returns>
-        public async Task<bool> AttemptLogin(string username, string password)
+        /// <returns>Result of the authentication.</returns>
+        public async Task<AuthResult> AttemptLogin(string username, string password)
         {
             if (! Response.IsAuthChallenge())
             {
-                return false;
+                return new AuthResult();
             }
 
             // Initialize settings to invoke auth service:
@@ -65,10 +65,27 @@ namespace NetFusion.Rest.Client
             if (response.IsSuccessStatusCode && authToken != null)
             {
                 DefaultSettings.Headers.SetAuthBearerToken(authToken);
-                return true;
+                return new AuthResult(authToken);
             }
 
-            return false;
+            return new AuthResult();
+        }
+    }
+
+    public class AuthResult
+    {
+        public bool IsSuccess { get; }
+        public string Token { get; }
+
+        public AuthResult()
+        {
+            IsSuccess = false;
+        }
+
+        public AuthResult(string token)
+        {
+            IsSuccess = true;
+            Token = token;
         }
     }
 }
