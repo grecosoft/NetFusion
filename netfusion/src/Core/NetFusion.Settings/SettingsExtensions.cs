@@ -18,7 +18,8 @@ namespace NetFusion.Settings
         /// concatenating the section name associated with each attribute.
         /// </summary>
         /// <param name="appSettings">The application setting to determine section path.</param>
-        /// <returns>The section path that can be used to load the settings from the registered providers.</returns>
+        /// <returns>The section path associated with the settings type.  If not found,
+        /// null value will be returned.</returns>
         public static string GetSectionPath(this IAppSettings appSettings)
         {
             if (appSettings == null) throw new ArgumentNullException(nameof(appSettings));
@@ -32,7 +33,8 @@ namespace NetFusion.Settings
         /// concatenating the section name associated with each attribute.
         /// </summary>
         /// <typeparam name="T">The application setting type to determine section path.</typeparam>
-        /// <returns>The section path that can be used to load the settings from the registered providers.</returns>
+        /// <returns>The section path associated with the settings type.  If not found,
+        /// null value will be returned.</returns>
         public static string GetSectionPath<T>()
            where T : IAppSettings
         {
@@ -40,6 +42,12 @@ namespace NetFusion.Settings
             return GetSectionPath(settingsType);
         }
 
+        /// <summary>
+        /// Returns the section path for a given settings type.
+        /// </summary>
+        /// <param name="settingsType">Setting runtime type.</param>
+        /// <returns>The section path associated with the settings type.  If not found,
+        /// null value will be returned.</returns>
         public static string GetSectionPath(Type settingsType)
         {
             return settingsType.GetAttribute<ConfigurationSectionAttribute>()?.SectionName;
@@ -48,19 +56,24 @@ namespace NetFusion.Settings
         /// <summary>
         /// Returns an instance of the specified setting type populated from the configuration
         /// section determined by the ConfigurationSection attributes specified on the setting
-        /// type and it parents.
+        /// type.
         /// </summary>
         /// <typeparam name="T">The derived IAppSettings type.</typeparam>
         /// <param name="configuration">The application's configuration.</param>
-        /// <param name="defaultValue">The optional default value to use if the setting
-        /// with the determined path is not found.</param>
-        /// <returns></returns>
-        public static T GetOption<T>(this IConfiguration configuration, T defaultValue = null)
+        /// <returns>The application settings populated from the configuration.</returns>
+        public static T GetSettings<T>(this IConfiguration configuration)
             where T : class, IAppSettings
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-            return configuration.GetValue(GetSectionPath<T>(), defaultValue);
+            string sectionPath = GetSectionPath<T>();
+            if (sectionPath == null)
+            {
+                throw new InvalidOperationException(
+                    $"The section path for type: {typeof(T)} could not be determined.");
+            }
+
+            return configuration.GetSection(sectionPath).Get<T>();
         }
     }
 }

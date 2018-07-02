@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using NetFusion.Settings;
 using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;
 using System.Collections.Generic;
@@ -58,7 +59,6 @@ namespace CoreTests.Settings
                     .Resolver(r =>
                     {
                         r.AddPluginsUnderTests();
-                        r.AddPlugin<MockCorePlugin>();
                     })
                     .Configuration(AddInMemorySettings)
                     .Assert.Services(s =>
@@ -67,6 +67,26 @@ namespace CoreTests.Settings
 
                         int width = configuration.GetValue<int>("App:MainWindow:Width");
                         width.Should().Be(50);
+                    });
+            });
+        }
+
+        [Fact]
+        public void CanReadSettingsDirectlyFromConfiguration()
+        {
+            ContainerFixture.Test(fixture => {
+                fixture.Arrange
+                    .Resolver(r =>
+                    {
+                        r.AddPluginsUnderTests();
+                    })
+                    .Configuration(AddInMemorySettings)
+                    .Assert.Services(s =>
+                    {
+                        var configuration = s.GetService<IConfiguration>();
+
+                        var settings = configuration.GetSettings<MockSetttings>();
+                        settings.Should().NotBeNull();
                     });
             });
         }
