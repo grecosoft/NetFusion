@@ -2,7 +2,9 @@
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Moq;
 using NetFusion.Settings;
 using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;
@@ -84,8 +86,9 @@ namespace CoreTests.Settings
                     .Assert.Services(s =>
                     {
                         var configuration = s.GetService<IConfiguration>();
+                        var logger = new Mock<ILogger>();
 
-                        var settings = configuration.GetSettings<MockSetttings>();
+                        var settings = configuration.GetSettings<MockSetttings>(logger.Object);
                         settings.Should().NotBeNull();
                     });
             });

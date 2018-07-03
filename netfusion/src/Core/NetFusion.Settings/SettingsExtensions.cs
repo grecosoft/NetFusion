@@ -1,14 +1,17 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using NetFusion.Base.Validation;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions.Reflection;
 using System;
 
 namespace NetFusion.Settings
 {
     /// <summary>
-    /// Extensions for determining a setting classes's section path based on the 
+    /// Extensions for determining a setting class's section path based on the 
     /// found ConfigurationSection attributes specified on the class and its parents.
     /// The concatenation of each name specified by the ConfigurationSetion attribute
-    /// determines the settings classes's complete section path.
+    /// determines the settings class's complete section path.
     /// </summary>
     public static class SettingsExtensions
     {
@@ -60,8 +63,9 @@ namespace NetFusion.Settings
         /// </summary>
         /// <typeparam name="T">The derived IAppSettings type.</typeparam>
         /// <param name="configuration">The application's configuration.</param>
+        /// <param name="logger">The logger to write configuration validation errors.</param>
         /// <returns>The application settings populated from the configuration.</returns>
-        public static T GetSettings<T>(this IConfiguration configuration)
+        public static T GetSettings<T>(this IConfiguration configuration, ILogger logger)
             where T : class, IAppSettings
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
@@ -73,7 +77,33 @@ namespace NetFusion.Settings
                     $"The section path for type: {typeof(T)} could not be determined.");
             }
 
-            return configuration.GetSection(sectionPath).Get<T>();
+            T settings = configuration.GetSection(sectionPath).Get<T>();
+            if (settings == null)
+            {
+                throw new InvalidOperationException(
+                    $"Settings could not be loaded from configuration section path: {sectionPath} " + 
+                    $"for the settings of type: {typeof(T)}.");
+            }
+
+            ValidateSettings(logger, settings);
+            return settings;
+        }
+
+        internal static void ValidateSettings(ILogger logger, object settings)
+        {
+            var validator = new DataAnnotationsValidator(settings);
+            var result = validator.Validate();
+
+            if (result.IsInvalid)
+            {
+                string section = SettingsExtensions.GetSectionPath(settings.GetType());
+
+                logger.LogErrorDetails(
+                    $"Invalid application setting: {settings.GetType().FullName}. " + 
+                    $"With configuration section: {section}.", result.ObjectValidations);
+            }
+
+            result.ThrowIfInvalid();
         }
     }
 }

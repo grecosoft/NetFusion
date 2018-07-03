@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Dependencies;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Reflection;
 using System;
@@ -57,26 +55,9 @@ namespace NetFusion.Settings.Modules
                     dynamic options = sp.GetRequiredService(optionsType);
                     object appSettings = options.Value;
 
-                    ValidateSettings(appSettings);
+                    SettingsExtensions.ValidateSettings(Context.Logger, appSettings);
                     return appSettings;
                 }));
-        }
-
-        private void ValidateSettings(object settings)
-        {
-            var validator = new DataAnnotationsValidator(settings);
-            var result = validator.Validate();
-
-            if (result.IsInvalid)
-            {
-                string section = SettingsExtensions.GetSectionPath(settings.GetType());
-
-                Context.Logger.LogErrorDetails(
-                    $"Invalid application setting: {settings.GetType().FullName}. " + 
-                    $"With configuration section: {section}.", result.ObjectValidations);
-            }
-
-            result.ThrowIfInvalid();
         }
 
         public override void Log(IDictionary<string, object> moduleLog)
