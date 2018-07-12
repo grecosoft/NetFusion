@@ -21,7 +21,7 @@ namespace NetFusion.Rest.Client.Settings
         /// Indicates that any registered status code handlers should
         /// not be called.
         /// </summary>
-        bool? SurppressStatusCodeHandlers { get; set; } 
+        bool? SuppressStatusCodeHandlers { get; set; } 
 
         /// <summary>
         /// Applies the settings to the provided request message.

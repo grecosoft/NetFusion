@@ -48,7 +48,7 @@ namespace NetFusion.Rest.Client
             // Initialize settings to invoke auth service:
             var settings = RequestSettings.Create(config =>
             {
-                config.SurppressStatusCodeHandlers = true;
+                config.SuppressStatusCodeHandlers = true;
                 config.Headers.SetBasicAuthHeader(username, password);
             });
 

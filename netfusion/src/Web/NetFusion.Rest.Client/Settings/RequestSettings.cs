@@ -13,7 +13,7 @@ namespace NetFusion.Rest.Client.Settings
 
         private RequestSettings() {}
 
-        public bool? SurppressStatusCodeHandlers { get; set; }
+        public bool? SuppressStatusCodeHandlers { get; set; }
        
         /// <summary>
         /// Creates a new request settings instance.
@@ -48,7 +48,7 @@ namespace NetFusion.Rest.Client.Settings
                 {
                     Headers = Headers.GetMergedHeaders(requestSettings.Headers),
                     QueryString = QueryString.GetMerged(requestSettings.QueryString),
-                    SurppressStatusCodeHandlers = requestSettings.SurppressStatusCodeHandlers ?? SurppressStatusCodeHandlers ?? false
+                    SuppressStatusCodeHandlers = requestSettings.SuppressStatusCodeHandlers ?? SuppressStatusCodeHandlers ?? false
                 };
             }
 
@@ -56,7 +56,7 @@ namespace NetFusion.Rest.Client.Settings
             {
                 Headers = Headers,
                 QueryString = QueryString,
-                SurppressStatusCodeHandlers = SurppressStatusCodeHandlers ?? false
+                SuppressStatusCodeHandlers = SuppressStatusCodeHandlers ?? false
             };                      
         }
     }

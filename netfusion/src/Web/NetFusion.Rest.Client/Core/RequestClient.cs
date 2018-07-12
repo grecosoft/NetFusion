@@ -119,7 +119,7 @@ namespace NetFusion.Rest.Client.Core
         private async Task<ApiResponse> SendRequest(ApiRequest request, CancellationToken cancellationToken)
         {
             HttpRequestMessage requestMsg = await CreateRequestMessage(request);
-            LogRequest(requestMsg);
+            LogRequest(request);
             
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
             responseMsg = await HandleIfErrorStatusCode(request, responseMsg, cancellationToken);
@@ -134,7 +134,7 @@ namespace NetFusion.Rest.Client.Core
             where TContent : class
         {
             HttpRequestMessage requestMsg = await CreateRequestMessage(request);
-            LogRequest(requestMsg);
+            LogRequest(request);
             
             TContent resource = null;
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
@@ -156,7 +156,7 @@ namespace NetFusion.Rest.Client.Core
         {
             HttpRequestMessage requestMsg = await CreateRequestMessage(request);
 
-            LogRequest(requestMsg);
+            LogRequest(request);
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
             responseMsg = await HandleIfErrorStatusCode(request, responseMsg, cancellationToken);
 
@@ -174,10 +174,16 @@ namespace NetFusion.Rest.Client.Core
             return response;
         }
 
-        private void LogRequest(HttpRequestMessage requestMsg)
+        private void LogRequest(ApiRequest request)
         {
-            _logger.LogDebug("Sending request to: {uri} for method: {method}.", requestMsg.RequestUri, requestMsg.Method);
-            _logger.LogTrace("Request Message: {request}", JsonConvert.SerializeObject(requestMsg, Formatting.Indented));
+            if (! _logger.IsEnabled(LogLevel.Trace))
+            {
+                _logger.LogDebug("Sending request to: {uri} for method: {method}.", request.RequestUri, request.Method);
+                return;
+            }
+           
+            _logger.LogTrace("Sending Request: {request}", 
+                JsonConvert.SerializeObject(request, Formatting.Indented));
         }
         
         private async Task<HttpResponseMessage> HandleIfErrorStatusCode(
@@ -185,7 +191,7 @@ namespace NetFusion.Rest.Client.Core
             HttpResponseMessage responseMsg,
             CancellationToken cancellationToken)
         {
-            if (responseMsg.IsSuccessStatusCode || (request.Settings?.SurppressStatusCodeHandlers ?? false))
+            if (responseMsg.IsSuccessStatusCode || (request.Settings?.SuppressStatusCodeHandlers ?? false))
             {
                 return responseMsg;
             }
@@ -204,7 +210,7 @@ namespace NetFusion.Rest.Client.Core
                 _defaultRequestSettings, 
                 request.Settings);
 
-            // Call the handler assoiated with the status code so it can determine
+            // Call the handler associated with the status code so it can determine
             // if the request should be retried:
             bool retryRequest = await handler(context);
             if (retryRequest)
@@ -220,22 +226,32 @@ namespace NetFusion.Rest.Client.Core
 
         private void LogResponse(ApiResponse response)
         {
-            if (!response.IsSuccessStatusCode)
+            var request = response.Request;
+            
+            if (! _logger.IsEnabled(LogLevel.Trace))
             {
-                var request = response.Request;
-                
                 _logger.LogDebug(
-                    "Error sending request to: {uri} for method: {method}. " + 
+                    "Response received for: {uri} with method: {method}. " + 
                     "Received status code: {statusCode} with reason: {reasonPhase}.",
                     request.RequestUri, 
                     request.Method, 
                     response.StatusCode, 
-                    response.ReasonPhase );
+                    response.ReasonPhase);
+
+                return;
             }
+
+            var headers = JsonConvert.SerializeObject(response.Headers, Formatting.Indented);
             
             _logger.LogTrace(
-                "Response Message: {response}", 
-                JsonConvert.SerializeObject(response, Formatting.Indented));
+                "Response received for: {uri} with method: {method}. " + 
+                "Received status code: {statusCode} with reason: {reasonPhase}. " +
+                "Received headers: {headers}.",
+                request.RequestUri, 
+                request.Method, 
+                response.StatusCode, 
+                response.ReasonPhase,
+                headers);
         }
         
         private async Task<HttpRequestMessage> CreateRequestMessage(ApiRequest request)
