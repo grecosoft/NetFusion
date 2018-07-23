@@ -48,8 +48,9 @@ namespace NetFusion.Base.Validation
         /// <param name="predicate">The expression to assert.</param>
         /// <param name="message">The associated message for the assertion.</param>
         /// <param name="level">The level of the associated message.</param>
+        /// <param name="propertyNames">The name of the properties.</param>
         /// <returns>The result of the predicate.</returns>
-        bool Verify(bool predicate, string message, ValidationTypes level = ValidationTypes.Error);
+        bool Verify(bool predicate, string message, ValidationTypes level = ValidationTypes.Error, params string[] propertyNames);
 
     }
 

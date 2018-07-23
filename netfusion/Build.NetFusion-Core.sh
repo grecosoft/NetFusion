@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ./Build.NetFusion-Plugins.sh -v=7.0.0 -c=test -o=/home/greco/_dev/git/_packages
+# ./Build.NetFusion-core.sh -v=7.0.0 -c=test -o=/home/greco/_dev/git/_packages
 
 # -------------------------------------
 # Command Line Parameters
@@ -18,12 +18,12 @@ dotnet_restore()
 
 dotnet_build()
 {
-	dotnet build "$1" --framework netcoreapp2.0 --no-restore
+	dotnet build "$1" --framework netcoreapp2.1 --no-restore
 }
 
 dotnet_test()
 {
-	dotnet test "$1" --framework netcoreapp2.0 --no-build
+	dotnet test "$1" --framework netcoreapp2.1 --no-build
 }
 
 dotnet_pack()

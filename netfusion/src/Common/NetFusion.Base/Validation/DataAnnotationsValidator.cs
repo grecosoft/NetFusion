@@ -60,14 +60,15 @@ namespace NetFusion.Base.Validation
         }
 
         public bool Verify(bool predicate, string message, 
-            ValidationTypes level = ValidationTypes.Error)
+            ValidationTypes level = ValidationTypes.Error,
+            params string[] propertyNames)
         {
             if (string.IsNullOrWhiteSpace(message)) throw new ArgumentNullException(nameof(message),
                 "Message cannot be null or empty string.");
 
             if (! predicate)
             {
-                _items.Add(new ValidationItem(message, level));
+                _items.Add(new ValidationItem(message, propertyNames, level));
             }
             return predicate;
         }
