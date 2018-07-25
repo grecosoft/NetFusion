@@ -46,13 +46,13 @@ namespace NetFusion.Bootstrap.Configuration
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder), "Configuration builder not specified.");
             
-            builder.AddEnvironmentVariables();
-            
             if (EnvironmentConfig.IsDevelopment)
             {
                 builder.AddAppSettings();    
             }
 
+            builder.AddEnvironmentVariables();
+            
             return builder;
         }
 
