@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="EasyNetQ" Version="3.3.0" />
+    <PackageReference Include="MessagePack" Version="1.7.3.4" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Base\NetFusion.Base.csproj" />
+    <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
+  </ItemGroup>
+</Project>

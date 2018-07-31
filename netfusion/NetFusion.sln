@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
@@ -45,6 +45,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Server", "src\Web\NetFusion.Rest.Server\NetFusion.Rest.Server.csproj", "{83CC98A3-BB7E-413C-B816-638B910B6486}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebTests", "test\WebTests\WebTests.csproj", "{8AC44BB4-5DDD-4678-9E43-5F69AA22D5CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{0A108820-F110-4B36-A5CF-A59FC7C64955}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.RabbitMQ", "src\Integration\NetFusion.RabbitMq\NetFusion.RabbitMQ.csproj", "{CA3EB024-2802-479E-AB1D-E91E610BC737}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -120,6 +124,10 @@ Global
 		{8AC44BB4-5DDD-4678-9E43-5F69AA22D5CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AC44BB4-5DDD-4678-9E43-5F69AA22D5CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AC44BB4-5DDD-4678-9E43-5F69AA22D5CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA3EB024-2802-479E-AB1D-E91E610BC737}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA3EB024-2802-479E-AB1D-E91E610BC737}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA3EB024-2802-479E-AB1D-E91E610BC737}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA3EB024-2802-479E-AB1D-E91E610BC737}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +153,8 @@ Global
 		{314F1B78-EECA-4502-9263-9FE7F9108424} = {1F6BA04E-F6CA-47C1-AB79-CAFED0D805F4}
 		{83CC98A3-BB7E-413C-B816-638B910B6486} = {1F6BA04E-F6CA-47C1-AB79-CAFED0D805F4}
 		{8AC44BB4-5DDD-4678-9E43-5F69AA22D5CD} = {32232913-3E63-4EE3-8DC1-2FCB6717198F}
+		{0A108820-F110-4B36-A5CF-A59FC7C64955} = {DC3424EC-2E9B-4653-AB4C-9BB89637B0EF}
+		{CA3EB024-2802-479E-AB1D-E91E610BC737} = {0A108820-F110-4B36-A5CF-A59FC7C64955}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17556D20-DBFC-4AEB-857D-74B7C1EDEA60}
