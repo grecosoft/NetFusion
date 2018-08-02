@@ -1,6 +1,7 @@
 ﻿using NetFusion.Base.Entity;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace NetFusion.Messaging.Types
 {
@@ -23,6 +24,7 @@ namespace NetFusion.Messaging.Types
         /// <summary>
         /// Dynamic message attributes that can be associated with the command.
         /// </summary>
+        [IgnoreDataMember]
         public IEntityAttributes Attributes { get; }
 
         /// <summary>

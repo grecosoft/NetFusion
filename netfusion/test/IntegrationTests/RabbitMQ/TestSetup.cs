@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using NetFusion.Messaging;
-using NetFusion.RabbitMQ;
-using NetFusion.RabbitMQ.Modules;
 using NetFusion.RabbitMQ.Settings;
 using NetFusion.Test.Plugins;
 

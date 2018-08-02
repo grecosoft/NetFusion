@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Types;

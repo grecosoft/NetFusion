@@ -96,7 +96,7 @@ namespace NetFusion.Settings
 
             if (result.IsInvalid)
             {
-                string section = SettingsExtensions.GetSectionPath(settings.GetType());
+                string section = GetSectionPath(settings.GetType());
 
                 logger.LogErrorDetails(
                     $"Invalid application setting: {settings.GetType().FullName}. " + 

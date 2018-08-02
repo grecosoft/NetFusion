@@ -3,7 +3,6 @@ using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
 using Newtonsoft.Json;
 using System.IO;
-using System.Runtime.Serialization.Formatters;
 using System.Text;
 
 namespace NetFusion.Rest.Client.Core

@@ -139,6 +139,7 @@ namespace NetFusion.RabbitMQ.Publisher
             IsPassive = configuredSettings.Passive;
             AlternateExchangeName = configuredSettings.AlternateExchange;
             CancelRpcRequestAfterMs = configuredSettings.CancelRpcRequestAfterMs;
+            ContentType = configuredSettings.ContentType ?? ContentType;
         }
 
         // Delegate that is called to determine if the message being published

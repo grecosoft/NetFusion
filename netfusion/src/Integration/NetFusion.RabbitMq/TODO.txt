@@ -5,7 +5,8 @@
 - Publisher Confirm???
 - SSL Connection options
 
-- review the JSON serializer.  The custom code was originally added to so private properties are serialized, 
+- review the JSON serializer.  The custom code was originally added to so private properties are serialized.
+- allow default serializtion to be specified via application configuration (also update doc)
 
 --------------------------
 

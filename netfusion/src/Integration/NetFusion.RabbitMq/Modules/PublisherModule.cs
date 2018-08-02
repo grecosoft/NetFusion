@@ -136,7 +136,7 @@ namespace NetFusion.RabbitMQ.Modules
             // The same exchange name can be used as long as associated with different named buses.
             var duplidateExchangeNames = definitions.Where(
                     d => d.ExchangeName != null && !d.IsRpcExchange)
-                .WhereDuplicated(d => new { d.BusName,  d.ExchangeName});
+                .WhereDuplicated(d => new { d.BusName, d.ExchangeName});
             
             if (duplidateExchangeNames.Any())
             {

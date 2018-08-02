@@ -1,6 +1,6 @@
-﻿using MessagePack;
-using NetFusion.Base;
+﻿using NetFusion.Base;
 using System;
+using MessagePack.Resolvers;
 
 namespace NetFusion.RabbitMQ.Serialization
 {
@@ -8,9 +8,14 @@ namespace NetFusion.RabbitMQ.Serialization
     /// Serializer for message pack serialization compact binary format.
     /// http://msgpack.org/index.html
     /// </summary>
-    public class MessagePackBrokerSerializer : IMessageSerializer
+    public class MessagePackSerializer : IMessageSerializer
     {        
         public string ContentType => SerializerTypes.MessagePack;
+
+        public MessagePackSerializer()
+        {
+            MessagePack.MessagePackSerializer.SetDefaultResolver(ContractlessStandardResolver.Instance);
+        }
 
         public object Deserialize(byte[] value, Type valueType)
         {
@@ -19,12 +24,12 @@ namespace NetFusion.RabbitMQ.Serialization
 
         public byte[] Serialize(object value)
         {
-            return MessagePackSerializer.Serialize(value);
+            return MessagePack.MessagePackSerializer.Serialize(value);
         }
 
         public T Deserialize<T>(byte[] value, Type valueType)
         {
-            return (T)MessagePackSerializer.NonGeneric.Deserialize(valueType, value);
+            return (T)MessagePack.MessagePackSerializer.NonGeneric.Deserialize(valueType, value);
         }
     }
 }

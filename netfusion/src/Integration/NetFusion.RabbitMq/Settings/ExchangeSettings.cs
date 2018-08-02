@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using NetFusion.Base.Validation;
 
 namespace NetFusion.RabbitMQ.Settings
@@ -23,6 +22,11 @@ namespace NetFusion.RabbitMQ.Settings
         /// Route messages to this exchange if they cannot be routed.
         /// </summary>
         public string AlternateExchange { get; set; }
+        
+        /// <summary>
+        /// The MIME value indicating how the message should be serialized.
+        /// </summary>
+        public string ContentType { get; set; }
 
         /// <summary>
         /// Number of milliseconds after which a RPC request will timeout
