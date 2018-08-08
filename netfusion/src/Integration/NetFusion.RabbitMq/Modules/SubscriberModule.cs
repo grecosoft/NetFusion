@@ -136,13 +136,17 @@ namespace NetFusion.RabbitMQ.Modules
        
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Queue-Subscriptions"] = _subscribers.Select(s => new {
-                ConsumerType = s.DispatchInfo.ConsumerType.AssemblyQualifiedName,
-                MessageType = s.DispatchInfo.MessageType.AssemblyQualifiedName,
-                HandlerMethod = s.DispatchInfo.MessageHandlerMethod.Name,
-                s.QueueMeta.Exchange,
-                s.QueueMeta
+            moduleLog["Subscriber:Queues"] = _subscribers.Select(s =>
+            {
+                var queueLog = new Dictionary<string, object>();
+                s.QueueMeta.LogProperties(queueLog);
+                queueLog["ConsumerType"] = s.DispatchInfo.ConsumerType.FullName;
+                queueLog["MessageType"] = s.DispatchInfo.MessageType.FullName;
+                queueLog["HandlerMethod"] = s.DispatchInfo.MessageHandlerMethod.Name;
+
+                return queueLog;
             }).ToArray();
+        
         }
     }
 }

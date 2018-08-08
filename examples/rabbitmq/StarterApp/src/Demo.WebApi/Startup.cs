@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
 using System;
-using NetFusion.Bootstrap.Configuration;
 using NetFusion.Messaging.Config;
 using NetFusion.RabbitMQ.Logging;
 using NetFusion.RabbitMQ.Publisher;

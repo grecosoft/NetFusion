@@ -1,4 +1,5 @@
-﻿using NetFusion.Messaging;
+﻿using System;
+using NetFusion.Messaging;
  using NetFusion.RabbitMQ.Subscriber;
  using Demo.Client.Commands;
  using NetFusion.Common.Extensions;
@@ -10,6 +11,7 @@
          [WorkQueue("testBus", "GeneratedAndSendEmail")]
          public void GenerateEmail(SendEmail email)
          {
+             Console.WriteLine(email);
              email.ToIndentedJson();
          }
      }

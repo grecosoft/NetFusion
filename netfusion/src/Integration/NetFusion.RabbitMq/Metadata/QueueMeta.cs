@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NetFusion.RabbitMQ.Settings;
 using NetFusion.RabbitMQ.Subscriber.Internal;
 
@@ -150,8 +151,33 @@ namespace NetFusion.RabbitMQ.Metadata
         /// This is the number of messages that will be delivered by RabbitMQ before an ack is sent by EasyNetQ.
         /// Set to 0 for infinite prefetch (not recommended). Set to 1 for fair work balancing among a farm of consumers.
         /// </summary>
-        public ushort PrefetchCount { get; set; }
+        public ushort PrefetchCount { get; set; } = 50;
 
         public int Priority { get; set; }
+
+        public void LogProperties(IDictionary<string, object> log)
+        {
+            log["Queue"] = GetLogDetails();
+            log["Exchange"] = Exchange.IsDefaultExchange ? "Default-Exchange" : Exchange.GetLogDetails();
+        }
+
+        public object GetLogDetails()
+        {
+            return new
+            {
+                QueueName,
+                ScopedQueueName,
+                IsAutoDelete,
+                IsDurable,
+                IsExclusive,
+                IsPassive,
+                RouteKeys,
+                Priority,
+                MaxPriority,
+                PerQueueMessageTtl,
+                DeadLetterRoutingKey,
+                PrefetchCount
+            };
+        }
     }
 }

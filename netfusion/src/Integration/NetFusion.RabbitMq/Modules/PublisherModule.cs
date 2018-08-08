@@ -216,23 +216,11 @@ namespace NetFusion.RabbitMQ.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Exchanges-Queues"] = _messageExchanges.Values.Select( e => new {
-                MessageType = e.MessageType.ToString(),
-                e.BusName,
-                ExchangeName = e.ExchangeName ?? "(Default-Exchange)",
-                e.QueueMeta?.QueueName,
-                ScriptPredicate = new {
-//                    e.ScriptPredicate?.ScriptName,
-//                    e.ScriptPredicate?.AttributeName
-                },
-                ExchangeConfig = new {
-                    e.ExchangeType,
-                    e.AlternateExchangeName,
-                    e.IsAutoDelete,
-                    e.IsDurable,
-                    e.IsPersistent,
-                    e.ContentType
-                }
+            moduleLog["Publisher:Exchanges"] = _messageExchanges.Values.Select(e =>
+            {
+                var exchangeLog = new Dictionary<string, object>();
+                e.LogProperties(exchangeLog);
+                return exchangeLog;
             }).ToArray();
         }
     }

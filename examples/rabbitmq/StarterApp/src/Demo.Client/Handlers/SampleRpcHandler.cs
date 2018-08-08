@@ -1,4 +1,5 @@
-﻿using Demo.Client.Commands;
+﻿using System;
+using Demo.Client.Commands;
 using NetFusion.Messaging;
 using NetFusion.RabbitMQ.Subscriber;
 
@@ -10,6 +11,8 @@ namespace Demo.Client.Handlers
         [RpcQueue("testBus", "TaxCalculations", "PropertyTax")]
         public TaxCalc CalculatePropertyTax(CalculatePropertyTax command)
         {
+            Console.WriteLine(command);
+            
             return new TaxCalc
             {    
                 Amount = 5000
