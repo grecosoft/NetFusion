@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EasyNetQ;
 using EasyNetQ.Topology;
 using NetFusion.Messaging.Exceptions;
+using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Subscriber.Internal
 {
@@ -14,45 +15,23 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     /// </summary>
     internal class RpcQueueFactory: IQueueFactory
     {
-        public void SetQueueDefaults(QueueDefinition definition)
+        public QueueMeta CreateQueueMeta(SubscriberQueueAttribute attribute)
         {
-            definition.IsPassive = false;
-            definition.IsDurable = false;
-            definition.IsExclusive = false;
-            definition.IsAutoDelete = true;
+            var rpcAttrib = (RpcQueueAttribute)attribute;
+            
+            var exchange = ExchangeMeta.DefineDefault(rpcAttrib.BusName, rpcAttrib.QueueName,
+                config =>
+                {
+                    config.IsAutoDelete = true;
+                    config.IsDurable = false;
+                    config.IsPassive = false;
+                    config.IsExclusive = false;
+                });
 
-            // Append the unique Plugin Id associated with the hosting application
-            // to the queue name.  This will make the name of the queue unique to
-            // the application.
-            definition.AppendHostId = true;
+            exchange.ActionName = rpcAttrib.ActionName;
+            return exchange.QueueMeta;
         }
-
-        public void SetExchangeDefaults(QueueExchangeDefinition definition)
-        {
-            // A direct exchange will be used to receive RPC style messages where
-            // the RouteKey is a value indicating the command.
-            definition.ExchangeType = ExchangeType.Direct;
-            definition.IsPassive = false;
-            definition.IsDurable = false;
-            definition.IsAutoDelete = true;
-        }
-
-        public IQueue CreateQueue(QueueContext context)
-        {
-            IQueue queue = context.CreateQueue();
-
-            // Bind the queue to the exchange for each route-key.
-            Debug.Assert(context.Definition.RouteKeys.Length == 1, 
-                "RPC handler will only be assigned one route key used to identify the action to the consumer.");
-
-            foreach (string routeKey in context.Definition.RouteKeys)
-            {
-                context.Bus.Advanced.Bind(context.Exchange, queue, routeKey);
-            }
-
-            return queue;
-        }
-
+        
         public async Task OnMessageReceived(ConsumeContext context, IMessage message)
         {
             try 

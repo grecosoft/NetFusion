@@ -48,6 +48,11 @@ namespace NetFusion.Messaging.Core
             IEnumerable<MessageDispatchInfo> dispatchers = _messagingModule.InProcessDispatchers
                 .WhereHandlerForMessage(message.GetType())
                 .ToArray();
+            
+            if (! dispatchers.Any())
+            {
+                return Task.CompletedTask;
+            }
 
             LogMessageDespatchInfo(message, dispatchers);
 
@@ -124,22 +129,14 @@ namespace NetFusion.Messaging.Core
                 return;
             }
 
-            if (dispatchers.Count() > 1)
+            if (dispatchers.Length > 1)
             {
                 var dispatcherDetails = GetDispatchLogDetails(dispatchers);
 
                 throw new PublisherException(
                     $"More than one message consumer handler was found for command message type: {command.GetType()}.  " +
-                    $"A command message type can have only one in-process message consumer handler.", 
-                    "DispatcherDetails", dispatcherDetails);
-            }
-
-            if (! dispatchers.Any())
-            {
-                throw new PublisherException(
-                    $"No message consumer handler was found for the command message of type: {command.GetType()}." +
-                    $"Make sure there is a class implementing: {typeof(IMessageConsumer)} with a method decorated with " +
-                    $"the attribute of type: {typeof(InProcessHandlerAttribute)} for the corresponding command type.");
+                     "A command message type can have only one in-process message consumer handler.", 
+                     "DispatcherDetails", dispatcherDetails);
             }
         }
 

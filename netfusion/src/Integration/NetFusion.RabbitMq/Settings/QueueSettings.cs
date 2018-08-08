@@ -21,7 +21,7 @@ namespace NetFusion.RabbitMQ.Settings
         /// <summary>
         /// Do not create the queue if it doesn't exist, instead, throw an exception.
         /// </summary>
-        public bool Passive { get; set; }
+        public bool? Passive { get; set; }
 
         /// <summary>
         /// How long in milliseconds a message should remain on the queue before it is discarded.
@@ -43,9 +43,9 @@ namespace NetFusion.RabbitMQ.Settings
         /// </summary>
         public byte? MaxPriority { get; set; }
 
-        public ushort PrefetchCount { get; set; }
+        public ushort? PrefetchCount { get; set; }
 
-        public int Priority { get; set; }
+        public int? Priority { get; set; }
 
         public void Validate(IObjectValidator validator)
         {

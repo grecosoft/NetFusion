@@ -1,19 +1,21 @@
 ﻿using System.Collections.Generic;
 using NetFusion.Base.Plugins;
+using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Publisher
 {
     /// <summary>
-    /// Defines the contact for a component responsible for returning exchange
-    /// definitions to which published messages should be delivered.
+    /// Interface implemented by application used to define
+    /// the exchanges/queues to which messages can be dispatched.
     /// </summary>
     public interface IExchangeRegistry : IKnownPluginType
     {
         /// <summary>
-        /// The list of configured exchange definitions specifying the exchanges
-        /// to which a given type of message should be delivered when published.
+        /// Called during the bootstrap process to obtain a list of
+        /// exchange metadata describing the exchanges/queues that
+        /// should be created.
         /// </summary>
-        /// <returns>List of exchange defintions.</returns>
-        IEnumerable<ExchangeDefinition> GetDefinitions();
+        /// <returns>List of exchange metadata definitions.</returns>
+        IEnumerable<ExchangeMeta> GetDefinitions();
     }
 }

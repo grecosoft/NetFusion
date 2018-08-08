@@ -12,7 +12,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
     {
         /// <summary>
         /// When called, should determine how a message should be published based
-        /// on the context of the call and the associated exchange defintion.
+        /// on the context of the call and the associated exchange definition.
         /// </summary>
         /// <param name="context">Reference to common services.</param>
         /// <param name="createdExchange">Information about the exchange to which

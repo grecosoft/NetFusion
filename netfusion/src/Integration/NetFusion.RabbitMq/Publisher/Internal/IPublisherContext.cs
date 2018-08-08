@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
+using NetFusion.RabbitMQ.Modules;
 using NetFusion.RabbitMQ.Serialization;
 
 namespace NetFusion.RabbitMQ.Publisher.Internal
@@ -11,7 +12,12 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
     internal interface IPublisherContext
     {
         ILogger Logger { get; }
+        
+        // Modules:
+        IBusModule BusModule { get; }
         IPublisherModule PublisherModule { get; }
+        
+        // Services:
         ISerializationManager Serialization { get; }
         IEntityScriptingService Scripting { get; }
     }

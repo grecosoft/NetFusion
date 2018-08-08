@@ -1,5 +1,6 @@
 using EasyNetQ.Topology;
 using EasyNetQ;
+using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Publisher.Internal
 {
@@ -14,23 +15,23 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         public IBus Bus { get; }
         
         /// <summary>
-        /// Reference to the creaeted exchange.
+        /// Reference to the created exchange.
         /// </summary>
         public IExchange Exchange { get; }
         
         /// <summary>
         /// The definition on which the created exchange was based.
         /// </summary>
-        public ExchangeDefinition Definition { get; }
+        public ExchangeMeta Meta { get; }
 
         public CreatedExchange(
             IBus bus,
             IExchange exchange,
-            ExchangeDefinition defintion)
+            ExchangeMeta defintion)
         {
             Bus = bus ?? throw new System.ArgumentNullException(nameof(bus));
             Exchange = exchange ?? throw new System.ArgumentNullException(nameof(exchange));
-            Definition = defintion ?? throw new System.ArgumentNullException(nameof(defintion));
+            Meta = defintion ?? throw new System.ArgumentNullException(nameof(defintion));
         }
     }
 }

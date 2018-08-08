@@ -12,7 +12,4 @@
     <ProjectReference Include="..\..\..\..\..\netfusion\src\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
     <ProjectReference Include="..\..\..\..\..\netfusion\src\Integration\NetFusion.RabbitMq\NetFusion.RabbitMQ.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands" />
-  </ItemGroup>
 </Project>

@@ -9,16 +9,13 @@ namespace NetFusion.RabbitMQ.Subscriber
     /// </summary>
     public class RpcQueueAttribute : SubscriberQueueAttribute
     {
-        public RpcQueueAttribute(string queueName, string exchangeName, 
-            string actionName) 
+        public string ActionName { get; }
+        
+        public RpcQueueAttribute(string busName, string queueName, string actionName) 
             
-            : base(queueName, exchangeName)
+            : base(busName, queueName, new RpcQueueFactory())
         {
-            if (string.IsNullOrWhiteSpace(actionName))
-                throw new System.ArgumentException("message", nameof(actionName));
-
-            QueueDefinition.SetFactory(new RpcQueueFactory());
-            QueueDefinition.WithRouteKey(actionName);
+            ActionName = actionName;
         }
     }
 }

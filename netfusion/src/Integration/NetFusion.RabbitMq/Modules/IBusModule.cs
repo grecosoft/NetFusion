@@ -1,5 +1,6 @@
 using EasyNetQ;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.RabbitMQ.Metadata;
 using NetFusion.RabbitMQ.Settings;
 
 namespace NetFusion.RabbitMQ.Modules
@@ -18,23 +19,23 @@ namespace NetFusion.RabbitMQ.Modules
         IBus GetBus(string named);
 
         /// <summary>
-        /// Returns exchange configuration settings stored external to the code.
+        /// The identity value of the host application plugin.  This can be
+        /// appended to queue names to make them application specific.
         /// </summary>
-        /// <param name="busName">The name of the bus.</param>
-        /// <param name="exchangeName">The name of the exchange.</param>
-        /// <returns>The exchange settings if found.  Otherwise, null is
-        /// returned.  If a bus configuration cannot be found, an exception
-        /// will be raised.</returns>
-        ExchangeSettings GetExchangeSettings(string busName, string exchangeName);
+        string HostAppId { get; }
+
+        /// <summary>
+        /// Applies any exchange settings stored within application settings.
+        /// These settings override any specified within code.
+        /// </summary>
+        /// <param name="meta">Metadata about an exchange to be created.</param>
+        void ApplyExchangeSettings(ExchangeMeta meta);
         
         /// <summary>
-        /// Returns queue configuration settings stored external to the code.
+        /// Applies any queue settings stored within application settings.
+        /// These settings override any specified within code.
         /// </summary>
-        /// <param name="busName">The name of the bus.</param>
-        /// <param name="queueName">The name of the queue.</param>
-        /// <returns>The queue settings if found.  Otherwise, null is 
-        /// returned.  If a bus configuration cannot be found, an exception
-        /// will be raised.</returns>
-        QueueSettings GetQueueSettings(string busName, string queueName);
+        /// <param name="meta">Metadata about a queue to be created.</param>
+        void ApplyQueueSettings(QueueMeta meta);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using NetFusion.Base.Validation;
 using NetFusion.Common.Extensions.Collections;
+using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Settings
 {
@@ -92,6 +93,7 @@ namespace NetFusion.RabbitMQ.Settings
         /// </summary>
         /// <returns>Collection of queue settings.</returns>
         public QueueSettings[] QueueSettings { get; set; } = Array.Empty<QueueSettings>();
+
 
         public void Validate(IObjectValidator validator)
         {

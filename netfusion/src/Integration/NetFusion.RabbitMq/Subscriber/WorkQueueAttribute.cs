@@ -9,9 +9,11 @@ namespace NetFusion.RabbitMQ.Subscriber
     /// </summary>
     public class WorkQueueAttribute : SubscriberQueueAttribute
     {
-        public WorkQueueAttribute(string queueName) : base(queueName)
+        public WorkQueueAttribute(string busName, string queueName) 
+            
+            : base(busName, queueName, new WorkQueueFactory())
         {
-            QueueDefinition.SetFactory(new WorkQueueFactory());
+            
         }
     }
 }

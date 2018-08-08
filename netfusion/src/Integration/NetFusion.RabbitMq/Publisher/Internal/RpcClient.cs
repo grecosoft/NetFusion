@@ -23,10 +23,10 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         public IBus Bus { get; }
         public string ReplyToQueueName { get; }
 
-        public RpcClient(string busName, string exchangeName, IBus bus)
+        public RpcClient(string busName, string queueName, IBus bus)
         {
-            if (string.IsNullOrWhiteSpace(exchangeName))
-                throw new ArgumentException("Exchange name not specified.", nameof(exchangeName));
+            if (string.IsNullOrWhiteSpace(queueName))
+                throw new ArgumentException("Queue name not specified.", nameof(queueName));
 
             _busName = busName ?? throw new ArgumentNullException(nameof(busName));
             _pendingRpcRequests = new ConcurrentDictionary<string, RpcPendingRequest>();
@@ -35,7 +35,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
 
             // The queue unique to the running host instance on which replies to published
             // commands will be received.
-            ReplyToQueueName = $"RPC_{exchangeName}_{Guid.NewGuid()}";
+            ReplyToQueueName = $"RPC_{queueName}_{Guid.NewGuid()}";
         }
 
         public void SetLogger(ILogger logger)
@@ -51,23 +51,20 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             if (messageBody == null) throw new ArgumentNullException(nameof(messageBody));
             if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken));
 
-            AppendRpcMessageProperties(messageProperties);
+            AppendRpcMessageProperties(messageProperties, createdExchange);
 
             // Create a task that can be completed in the future when the result
             // is received in the reply queue. 
             var futureResult = new TaskCompletionSource<byte[]>();
 
             string correlationId = messageProperties.CorrelationId;
-            int cancelRpcRequestAfterMs = createdExchange.Definition.CancelRpcRequestAfterMs;
+            int cancelRpcRequestAfterMs = createdExchange.Meta.CancelRpcRequestAfterMs;
 
             var rpcPendingRequest = new RpcPendingRequest(futureResult, cancellationToken, cancelRpcRequestAfterMs);
             
             _pendingRpcRequests[correlationId] = rpcPendingRequest;
 
-            // Publish command to the Rpc exchange.  A Direct exchange is being used for RPC messages
-            // where the route key is used to identity the command and used by the consumer to call
-            // the correct handler.
-            string routeKey = createdExchange.Definition.RouteKey;
+            string routeKey = createdExchange.Meta.QueueMeta.QueueName;
 
             // Publish the command to the exchange.
             await createdExchange.Bus.Advanced.PublishAsync(createdExchange.Exchange, 
@@ -109,11 +106,12 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
 
         // Add properties used by the receiving consumer required for sending 
         // the response to the reply queue.
-        private void AppendRpcMessageProperties(MessageProperties msgProps)
+        private void AppendRpcMessageProperties(MessageProperties msgProps, CreatedExchange createdExchange)
         {
             msgProps.ReplyTo = ReplyToQueueName;
             msgProps.CorrelationId = msgProps.CorrelationId ?? Guid.NewGuid().ToString();
             msgProps.SetRpcReplyBusConfigName(_busName);
+            msgProps.SetRpcActionName(createdExchange.Meta.ActionName);
         }
 
         public void CreateAndSubscribeToReplyQueue()

@@ -1,6 +1,7 @@
 using IMessage = NetFusion.Messaging.Types.IMessage;
 using System.Threading.Tasks;
 using EasyNetQ.Topology;
+using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Subscriber.Internal
 {
@@ -9,23 +10,18 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     /// conventions used for a work queues queues.</summary>
     internal class WorkQueueFactory : IQueueFactory
     {
-        public void SetQueueDefaults(QueueDefinition definition)
+        public QueueMeta CreateQueueMeta(SubscriberQueueAttribute attribute)
         {
-            definition.IsPassive = false;
-            definition.IsDurable = true;
-            definition.IsExclusive = false;
-            definition.IsAutoDelete = false;
-        }
+            var exchange = ExchangeMeta.DefineDefault(attribute.BusName, attribute.QueueName,
+                config =>
+                {
+                    config.IsAutoDelete = false;
+                    config.IsDurable = true;
+                    config.IsPassive = false;
+                    config.IsExclusive = false;
+                });
 
-        public void SetExchangeDefaults(QueueExchangeDefinition definition)
-        {
-           // A workqueue does not have an associated exchange.
-        }
-
-        public IQueue CreateQueue(QueueContext context)
-        {
-            IQueue queue = context.CreateQueue();
-            return queue;
+            return exchange.QueueMeta;
         }
 
         public Task OnMessageReceived(ConsumeContext context, IMessage message)

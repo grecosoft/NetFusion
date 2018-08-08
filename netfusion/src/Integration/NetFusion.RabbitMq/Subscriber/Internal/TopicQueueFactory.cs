@@ -1,6 +1,7 @@
 using IMessage = NetFusion.Messaging.Types.IMessage;
 using System.Threading.Tasks;
 using EasyNetQ.Topology;
+using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Subscriber.Internal
 {
@@ -10,36 +11,27 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     /// </summary>
     internal class TopicQueueFactory : IQueueFactory
     {
-        public void SetQueueDefaults(QueueDefinition definition)
+        public QueueMeta CreateQueueMeta(SubscriberQueueAttribute attribute)
         {
-            definition.IsPassive = false;
-            definition.IsDurable = true;
-            definition.IsExclusive = false;
-            definition.IsAutoDelete = false;
-
-            // Append the unique Plugin Id associated with the hosting application
-            // to the queue name.  This will make the name of the queue unique to
-            // the application.
-            definition.AppendHostId = true;
-        }
-
-        public void SetExchangeDefaults(QueueExchangeDefinition definition)
-        {
-            definition.ExchangeType = ExchangeType.Topic;
-            definition.IsPassive = false;
-            definition.IsDurable = true;
-            definition.IsAutoDelete = false;
-        }
-
-        public IQueue CreateQueue(QueueContext context)
-        {           
-            IQueue queue = context.CreateQueue();
-
-            // Bind the queue to the exchange for each route-key.
-            foreach (string routeKey in context.Definition.RouteKeys)
-            {
-                context.Bus.Advanced.Bind(context.Exchange, queue, routeKey);
-            }
+            var exchange = ExchangeMeta.Define(attribute.BusName, attribute.ExchangeName, ExchangeType.Topic,
+                config =>
+                {
+                    config.IsAutoDelete = false;
+                    config.IsDurable = true;
+                    config.IsPersistent = true;
+                    config.IsPassive = false;
+                });
+            
+            var queue = QueueMeta.Define(attribute.QueueName, exchange,
+                config =>
+                {
+                    config.IsAutoDelete = false;
+                    config.IsDurable = true;
+                    config.IsPassive = false;
+                    config.IsExclusive = false;
+                    config.AppendHostId = true;
+                    config.RouteKeys = attribute.RouteKeys;
+                });
 
             return queue;
         }

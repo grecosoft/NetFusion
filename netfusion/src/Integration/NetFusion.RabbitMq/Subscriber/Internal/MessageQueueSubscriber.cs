@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Core;
+using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Subscriber.Internal
 {
@@ -12,29 +13,28 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     public class MessageQueueSubscriber
     {
         public MessageDispatchInfo DispatchInfo { get; }
-        public QueueDefinition QueueDefinition { get; }
-        public QueueExchangeDefinition ExchangeDefinition { get; }
-
-        public MessageQueueSubscriber(MessageDispatchInfo dispatchInfo)
+        public QueueMeta QueueMeta { get; }
+        private string _hostId;
+  
+        public MessageQueueSubscriber(string hostId, MessageDispatchInfo dispatchInfo)
         {
+            if (string.IsNullOrWhiteSpace(hostId))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(hostId));
+            
             if (dispatchInfo == null) throw new ArgumentNullException(nameof(dispatchInfo));
+
+            _hostId = hostId;
             
             // Obtain the subscriber attribute so the definition metadata
             // can be retreived.
             var queueAttrib = dispatchInfo.MessageHandlerMethod
                 .GetCustomAttribute<SubscriberQueueAttribute>();
-            
+
             DispatchInfo = dispatchInfo;
-            QueueDefinition = queueAttrib.QueueDefinition;
-            ExchangeDefinition = queueAttrib.ExchangeDefinition;
-
-            SetDefaultConventions();
-        }
-
-        private void SetDefaultConventions()
-        {
-            QueueDefinition.QueueFactory.SetExchangeDefaults(ExchangeDefinition);
-            QueueDefinition.QueueFactory.SetQueueDefaults(QueueDefinition);
+            QueueMeta = queueAttrib.QueueFactory.CreateQueueMeta(queueAttrib);
+            QueueMeta.QueueFactory = queueAttrib.QueueFactory;
+            
+            ApplyScopedQueueName(QueueMeta);
         }
 
         // Any dispatch corresponding to a method decorated with a derived
@@ -46,5 +46,20 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
 
             return dispatchInfo.MessageHandlerMethod.HasAttribute<SubscriberQueueAttribute>();
         }   
+        
+        private void ApplyScopedQueueName(QueueMeta meta)
+        {
+            if (meta.AppendHostId)
+            {
+                meta.SetScopedNamed($"{meta.QueueName}->({_hostId})");
+            }
+
+            if (meta.AppendUniqueId)
+            {
+                meta.SetScopedNamed($"{meta.QueueName}<-({Guid.NewGuid()})");
+            }
+            
+            
+        }
     }
 }

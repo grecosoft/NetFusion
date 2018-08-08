@@ -9,34 +9,18 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     [AttributeUsage(AttributeTargets.Method, Inherited = false)]
     public abstract class SubscriberQueueAttribute : Attribute
     {
-        internal QueueDefinition QueueDefinition { get; }
-        internal QueueExchangeDefinition ExchangeDefinition { get; }
+        public string BusName { get;  }
+        public string QueueName { get;  }
+        public IQueueFactory QueueFactory { get; }
+        
+        public string ExchangeName { get; protected set; }
+        public string[] RouteKeys { get; protected set; }
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="queueName">The name of the queue.</param>
-        /// <param name="exchangeName">The name of the exchange.  If the queue
-        /// is associated with the default exchange, a value need not be specified.</param>
-        protected SubscriberQueueAttribute(string queueName, string exchangeName = null)
+        protected SubscriberQueueAttribute(string busName, string queueName, IQueueFactory factory)
         {
-            if (string.IsNullOrWhiteSpace(queueName))
-            {
-                throw new ArgumentException("Queue name must be specified.", nameof(queueName));
-            }
-
-            QueueDefinition = new QueueDefinition { QueueName = queueName };
-            ExchangeDefinition = new QueueExchangeDefinition { ExchangeName = exchangeName };
-        }
-
-        /// <summary>
-        /// The name of the bus configured within the application's settings.  If not 
-        /// specified, the default queue named:  message-bus will be used.
-        /// </summary>
-        public string BusName
-        {
-            get => ExchangeDefinition.BusName;
-            set => ExchangeDefinition.BusName = value; 
+            BusName = busName;
+            QueueName = queueName;
+            QueueFactory = factory;
         }
     }
 }

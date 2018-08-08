@@ -16,7 +16,7 @@ namespace NetFusion.RabbitMQ.Settings
         /// <summary>
         /// Do not create an exchange. If the named exchange doesn't exist, throw an exception.
         /// </summary>
-        public bool Passive { get; set; }
+        public bool? Passive { get; set; }
 
         /// <summary>
         /// Route messages to this exchange if they cannot be routed.
@@ -33,7 +33,7 @@ namespace NetFusion.RabbitMQ.Settings
         /// if a response is not received from the message consumer. The
         /// default value is 10 seconds.
         /// </summary>
-        public int CancelRpcRequestAfterMs { get; set; } = SettingDefaults.RpcTimeOutAfterMs;
+        public int? CancelRpcRequestAfterMs { get; set; }
 
         public void Validate(IObjectValidator validator)
         {

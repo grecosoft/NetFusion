@@ -8,15 +8,15 @@ namespace Demo.Client.Handlers
 {
     public class SampleTopicHandler : IMessageConsumer
     {
-        [TopicQueue("GermanAutosSales", "CompletedAutoSales",
-            "VW.*.2017", "BMW.*.2018", BusName = "testBus")]
+        [TopicQueue("testBus", "GermanAutosSales", "CompletedAutoSales",
+            "VW.*.2017", "BMW.*.2018")]
         public void GermanAutoSales(AutoSaleCompleted completedSale)
         {
             Console.WriteLine(completedSale.ToIndentedJson());
         }
 
-        [TopicQueue("AmericanAutosSales", "CompletedAutoSales",
-            "Chevy.*.2017", "Buick.*.2019", BusName = "testBus")]
+        [TopicQueue("testBus", "AmericanAutosSales", "CompletedAutoSales",
+            "Chevy.*.2017", "Buick.*.2019")]
         public void AmericanAutoSales(AutoSaleCompleted completedSale)
         {
             Console.WriteLine(completedSale.ToIndentedJson());

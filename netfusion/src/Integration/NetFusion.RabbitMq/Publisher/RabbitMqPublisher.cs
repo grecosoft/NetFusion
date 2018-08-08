@@ -11,22 +11,27 @@ using NetFusion.RabbitMQ.Serialization;
 using NetFusion.RabbitMQ.Publisher.Internal;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Logging;
+using NetFusion.RabbitMQ.Metadata;
 using NetFusion.RabbitMQ.Settings;
 
 namespace NetFusion.RabbitMQ.Publisher
 {
     /// <summary>
     /// Message publisher implemention that dispatches messages to RabbitMQ having an associated
-    /// exchange.  Responsible for creating associated message exchanges and delivering messages. 
+    /// exchange.  Responsible for creating associated message exchanges and delivering messages
+    /// when published. 
     /// </summary>
     public class RabbitMqPublisher : MessagePublisher,
         IPublisherContext
     {
+        // Dependent Services:
         public ILogger Logger { get; }
-        public IBusModule BusModule { get; }
-        public IPublisherModule PublisherModule { get; }
         public ISerializationManager Serialization { get; }
         public IEntityScriptingService Scripting { get; }
+        
+        // Dependent Modules:
+        public IBusModule BusModule { get; }
+        public IPublisherModule PublisherModule { get; }
 
         public RabbitMqPublisher(ILoggerFactory loggerFactory,
             IBusModule busModule, 
@@ -48,6 +53,8 @@ namespace NetFusion.RabbitMQ.Publisher
 
         public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            
             // Only process messages for which there are defined exchanges.
             Type messageType = message.GetType();
             if (! PublisherModule.IsExchangeMessage(messageType))
@@ -55,54 +62,26 @@ namespace NetFusion.RabbitMQ.Publisher
                 return;
             }
 
-            ExchangeDefinition definition = PublisherModule.GetDefinition(messageType);
+            // Lookup the exchange assocated with the message and the bus
+            // on which it should be created.
+            ExchangeMeta definition = PublisherModule.GetDefinition(messageType);
             IBus bus = BusModule.GetBus(definition.BusName);
+
+            // Create the exchange/queue:
             CreatedExchange createdExchange = await CreateExchange(bus, definition);
 
             LogPublishedMessage(createdExchange, message);
 
+            // Publish the message to the created exchange/queue.
             await definition.PublisherStrategy.Publish(this, createdExchange,
                 message,
                 cancellationToken);
         }
 
-        private async Task<CreatedExchange> CreateExchange(IBus bus, ExchangeDefinition definition)
+        private async Task<CreatedExchange> CreateExchange(IBus bus, ExchangeMeta meta)
         {
-            // Determine if this is a queue that should be created on the default exchange.
-            if (definition.IsDefaultExchangeQueue)
-            {
-                return await CreateQueueOnDefaultExchange(bus, definition);
-            }
-
-            // Otherwise, create the exchange to which messages can be published.
-            IExchange exchange = await bus.Advanced.ExchangeDeclareAsync(definition.ExchangeName, definition.ExchangeType, 
-                durable: definition.IsDurable,
-                autoDelete: definition.IsAutoDelete, 
-                passive: definition.IsPassive,
-                alternateExchange: definition.AlternateExchangeName);
-
-            return new CreatedExchange(bus, exchange, definition);
-        }
-
-        private async Task<CreatedExchange> CreateQueueOnDefaultExchange(IBus bus, ExchangeDefinition definition)
-        {
-            QueueSettings configuredSettings = BusModule.GetQueueSettings(definition.BusName, definition.QueueName);
-            if (configuredSettings != null)
-            {
-                await bus.Advanced.QueueDeclareAsync(definition.QueueName,
-                    configuredSettings.Passive,
-                    perQueueMessageTtl: configuredSettings.PerQueueMessageTtl,
-                    deadLetterExchange: configuredSettings.DeadLetterExchange,
-                    deadLetterRoutingKey: configuredSettings.DeadLetterRoutingKey,
-                    maxPriority: configuredSettings.MaxPriority);        
-            }
-            else
-            {
-                // Use all default conventions"
-                await bus.Advanced.QueueDeclareAsync(definition.QueueName);
-            }
-
-            return new CreatedExchange(bus, Exchange.GetDefault(), definition);
+            IExchange exchange = await bus.Advanced.ExchangeDeclareAsync(meta);
+            return new CreatedExchange(bus, exchange, meta);
         }
 
         private void LogPublishedMessage(CreatedExchange exchange, IMessage message)
@@ -110,10 +89,10 @@ namespace NetFusion.RabbitMQ.Publisher
             Logger.LogTraceDetails(RabbitMqLogEvents.PublisherEvent, 
                 "Message being Published to Message Bus.", 
                 new {
-                    exchange.Definition.BusName,
-                    exchange.Definition.ExchangeName,
-                    exchange.Definition.QueueName,
-                    exchange.Definition.ContentType,
+                    exchange.Meta.BusName,
+                    exchange.Meta.ExchangeName,
+                    exchange.Meta.QueueMeta?.QueueName,
+                    exchange.Meta.ContentType,
                     Message = message
                 });
         }

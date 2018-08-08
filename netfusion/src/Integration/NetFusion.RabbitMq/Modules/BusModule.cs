@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.RabbitMQ.Metadata;
 using NetFusion.RabbitMQ.Serialization;
 using NetFusion.RabbitMQ.Settings;
 using NetFusion.Settings;
@@ -35,6 +36,12 @@ namespace NetFusion.RabbitMQ.Modules
         {
             _busses = new Dictionary<string, IBus>();
         }
+        
+        // Unique value set at development time identifying the host plugin.
+        // The value can be used to tag exchanges and queues so the associated
+        // host can be identified.  This will also make a given queue name 
+        // unique to a given application host.
+        public string HostAppId => Context.AppHost.Manifest.PluginId;
 
         // Creates IBus instances for each configured bus.
         public override void Initialize()
@@ -47,6 +54,8 @@ namespace NetFusion.RabbitMQ.Modules
             }
         }
 
+        // Register the default serialization manager.  The application host can override
+        // this by registering a different instance of the ISerializationManager interface.
         public override void RegisterDefaultServices(IServiceCollection services)
         {
             services.AddSingleton<ISerializationManager, SerializationManager>();
@@ -70,6 +79,7 @@ namespace NetFusion.RabbitMQ.Modules
                     "Check configuration for duplicates.");
             }
 
+            // Create an EasyNetQ connection configuration from settings:
             ConnectionConfiguration connConfig = new ConnectionConfiguration {
                 UserName = conn.UserName,
                 Password = conn.Password,
@@ -86,18 +96,20 @@ namespace NetFusion.RabbitMQ.Modules
 
             SetAdditionalClientProperties(connConfig.ClientProperties);
 
+            // Set associated hosts:
             connConfig.Hosts = conn.Hosts.Select(h => new HostConfiguration {
                 Host = h.HostName,
                 Port = h.Port
 
             }).ToArray();
 
+            // Allow EasyNetQ to validate the connection configuration:
             connConfig.Validate();
     
             _busses[conn.BusName] = BusFactory(connConfig);
         }
 
-        public Func<ConnectionConfiguration, IBus> BusFactory = c => RabbitHutch.CreateBus(c, rs => {});
+        public readonly Func<ConnectionConfiguration, IBus> BusFactory = c => RabbitHutch.CreateBus(c, rs => {});
 
         // Additional client properties assocated with created connections.
         private void SetAdditionalClientProperties(IDictionary<string, object> clientProps)
@@ -126,22 +138,39 @@ namespace NetFusion.RabbitMQ.Modules
             return bus;
         }
 
-        public ExchangeSettings GetExchangeSettings(string busName, string exchangeName)
+        public void ApplyExchangeSettings(ExchangeMeta meta)
         {
-            if (string.IsNullOrWhiteSpace(exchangeName))
-                throw new ArgumentException("Exchange name not specified.", nameof(exchangeName));
-
-            var busConn = GetBusConnection(busName);
-            return busConn.ExchangeSettings.FirstOrDefault(s => s.ExchangeName == exchangeName);
+            ApplyExchangeSettingsInternal(meta);
         }
-
-        public QueueSettings GetQueueSettings(string busName, string queueName)
+        
+        private void ApplyExchangeSettingsInternal(ExchangeMeta meta, bool applyQueueSettings = true)
         {
-            if (string.IsNullOrWhiteSpace(queueName))
-                throw new ArgumentException("Queue name not specified.", nameof(queueName));
-
-            var busConn = GetBusConnection(busName);
-            return busConn.QueueSettings.FirstOrDefault(s => s.QueueName == queueName);
+            // If not the default exchange...
+            if (meta.ExchangeName != null)
+            {
+                var exchangeSettings = GetExchangeSettings(meta.BusName, meta.ExchangeName);
+                if (exchangeSettings != null)
+                {
+                    meta.ApplyOverrides(exchangeSettings);
+                }
+            }
+            
+            if (applyQueueSettings && meta.QueueMeta != null)
+            {
+                ApplyQueueSettings(meta.QueueMeta);
+            }
+        }
+        
+        public void ApplyQueueSettings(QueueMeta meta)
+        {
+            var queueSettings = GetQueueSettings(meta.Exchange.BusName, meta.QueueName);
+            if (queueSettings != null)
+            {
+                meta.ApplyOverrides(queueSettings);
+            }
+            
+            ApplyExchangeSettingsInternal(meta.Exchange, applyQueueSettings: false);
+            
         }
 
         private BusConnection GetBusConnection(string busName)
@@ -157,6 +186,24 @@ namespace NetFusion.RabbitMQ.Modules
             }
 
             return connection;
+        }
+
+        private ExchangeSettings GetExchangeSettings(string busName, string exchangeName)
+        {
+            if (string.IsNullOrWhiteSpace(exchangeName))
+                throw new ArgumentException("Exchange name not specified.", nameof(exchangeName));
+
+            var busConn = GetBusConnection(busName);
+            return busConn.ExchangeSettings.FirstOrDefault(s => s.ExchangeName == exchangeName);
+        }
+        
+        private QueueSettings GetQueueSettings(string busName, string queueName)
+        {
+            if (string.IsNullOrWhiteSpace(queueName))
+                throw new ArgumentException("Queue name not specified.", nameof(queueName));
+
+            var busConn = GetBusConnection(busName);
+            return busConn.QueueSettings.FirstOrDefault(s => s.QueueName == queueName);
         }
 
         protected override void Dispose(bool dispose)

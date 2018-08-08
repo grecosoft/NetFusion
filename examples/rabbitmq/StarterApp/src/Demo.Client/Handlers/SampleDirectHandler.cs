@@ -8,15 +8,15 @@ namespace Demo.Client.Handlers
 {
     public class SampleDirectHandler : IMessageConsumer
     {
-        [DirectQueue("NorthEast", "RealEstate",
-            "CT", "NY", "NH", "ME", BusName = "testBus")]
+        [DirectQueue("testBus", "NorthEast", "RealEstate",
+            "CT", "NY", "NH", "ME")]
         public void NorthEast(PropertySold propertySold)
         {
             Console.WriteLine(propertySold.ToIndentedJson());
         }
 
-        [DirectQueue("SouthEast", "RealEstate",
-            "NC", "SC", "FL", BusName = "testBus")]
+        [DirectQueue("testBus", "SouthEast", "RealEstate",
+            "NC", "SC", "FL")]
         public void SouthEast(PropertySold propertySold)
         {
             Console.WriteLine(propertySold.ToIndentedJson());

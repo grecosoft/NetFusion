@@ -8,9 +8,9 @@ namespace NetFusion.RabbitMQ
     internal static class Extensions
     {
         public const string RpcReplyBusName = "Rpc-reply-bus-name";
+        public const string RpcActionName = "Rpc-action-name";
         public const string RpcHeaderExceptionIndicator = "Rpc-exception-response";
        
-
         /// <summary>
         /// A key value used to identify the message bus to which  the consumer should publish the
         /// reply to the command.  The value will be used to look up the IBus instance configuration
@@ -48,6 +48,31 @@ namespace NetFusion.RabbitMQ
 
             messageProps.Headers = messageProps.Headers ?? new Dictionary<string, object>();
             messageProps.Headers[RpcReplyBusName] = busConfigName;
+        }
+
+        public static string GetRpcActionName(this MessageProperties messageProps)
+        {
+            if (messageProps == null) throw new ArgumentNullException(nameof(messageProps));
+
+            var headers = messageProps.Headers ?? new Dictionary<string, object>();
+            if (! headers.TryGetValue(RpcActionName, out object value))
+            {
+                throw new InvalidOperationException($"A message header value named: {RpcActionName} is not present.");
+            }
+
+            byte[] byteValue = (byte[])value;
+            return Encoding.UTF8.GetString(byteValue);
+        }
+        
+        public static void SetRpcActionName(this MessageProperties messageProps, string actionName)
+        {
+            if (messageProps == null) throw new ArgumentNullException(nameof(messageProps));
+
+            if (string.IsNullOrWhiteSpace(actionName))
+                throw new ArgumentException("Action name not specified.", nameof(actionName));
+
+            messageProps.Headers = messageProps.Headers ?? new Dictionary<string, object>();
+            messageProps.Headers[RpcActionName] = actionName;
         }
 
         /// <summary>

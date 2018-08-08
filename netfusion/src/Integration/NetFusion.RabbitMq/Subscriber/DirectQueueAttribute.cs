@@ -9,13 +9,13 @@ namespace NetFusion.RabbitMQ.Subscriber
     /// </summary>
     public class DirectQueueAttribute : SubscriberQueueAttribute
     {
-        public DirectQueueAttribute(string queueName, string exchangeName, 
+        public DirectQueueAttribute(string busName, string queueName, string exchangeName, 
             params string[] routeKeys) 
             
-            : base(queueName, exchangeName)
+            : base(busName, queueName, new DirectQueueFactory())
         {
-            QueueDefinition.SetFactory(new DirectQueueFactory());
-            QueueDefinition.WithRouteKey(routeKeys);            
+            ExchangeName = exchangeName;
+            RouteKeys = routeKeys;
         }
     }
 }
