@@ -96,7 +96,7 @@ namespace NetFusion.Rest.Client.Settings
         }
 
 	    /// <summary>
-	    /// Sent the Authorization header to the base64 encoded username and password.
+	    /// Sets the Authorization header to the base64 encoded username and password.
 	    /// </summary>
 	    /// <param name="username">The username.</param>
 	    /// <param name="password">The password.</param>
@@ -108,6 +108,22 @@ namespace NetFusion.Rest.Client.Settings
 		    
 		    var value = Base64Encode($"{username}:{password}");
 		    return Add("Authorization", $"Basic {value}");
+	    }
+
+	    /// <summary>
+	    /// Sets the Authroization header to the base64 encoded value created from
+	    /// joining all values with the ':' character.
+	    /// </summary>
+	    /// <param name="scheme">The custom scheme.</param>
+	    /// <param name="values">The values from which the authorization header is built.</param>
+	    /// <returns>Self reference for method chainging.</returns>
+	    public RequestHeaders SetAuthHeader(string scheme, params string[] values)
+	    {
+		    if (string.IsNullOrWhiteSpace(scheme))
+			    throw new ArgumentException("Scheme not specified.", nameof(scheme));
+		    
+		    string authValue =  Base64Encode(string.Join(":", values));
+		    return Add("Authorization", $"{scheme} {authValue}");
 	    }
 
 	    /// <summary>
