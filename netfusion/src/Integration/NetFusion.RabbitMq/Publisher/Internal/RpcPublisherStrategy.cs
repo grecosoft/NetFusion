@@ -24,7 +24,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             byte[] messageBody = context.Serialization.Serialize(command, contentType);
             MessageProperties messageProperties = DefaultPublisherStrategy.GetMessageProperties(context, createdExchange, command);
             
-            messageProperties.SetRpcActionName(createdExchange.Meta.ActionName);
+            messageProperties.SetRpcActionNamespace(createdExchange.Meta.ActionNamespace);
 
             // Get the RPC client associated with the exchange to which the RPC message is being sent.
             IRpcClient client = context.PublisherModule.GetRpcClient(

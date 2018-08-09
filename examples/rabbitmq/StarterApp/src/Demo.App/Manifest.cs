@@ -1,6 +1,6 @@
 using NetFusion.Bootstrap.Manifests;
 
-namespace Demo.Infra
+namespace Demo.App
 {
   public class Manifest : PluginManifestBase,
     IAppComponentPluginManifest

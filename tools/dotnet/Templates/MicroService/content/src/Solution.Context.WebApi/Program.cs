@@ -26,23 +26,6 @@ namespace Solution.Context.WebApi
                 .Build();
         }
 
-        private static void SetupLogging(ILoggingBuilder logging, IConfiguration configuration)
-        {
-            var minLogLevel = GetMinLogLevel(configuration);
-
-            if (!EnvironmentConfig.IsProduction)
-            {
-                logging.ClearProviders()
-                    .AddDebug().SetMinimumLevel(minLogLevel)
-                    .AddConsole().SetMinimumLevel(minLogLevel);
-            }
-            
-            if (EnvironmentConfig.IsProduction || EnvironmentConfig.IsTest)
-            {
-                // TODO: Production & Test Environment Logging
-            }
-        }
-
         private static IConfiguration CreateConfiguration(string[] args)
         {
             var builder = new ConfigurationBuilder();
@@ -55,7 +38,21 @@ namespace Solution.Context.WebApi
 
             return builder.Build();
         }
-        
+
+        private static void SetupLogging(ILoggingBuilder logging, IConfiguration configuration)
+        {
+            var minLogLevel = GetMinLogLevel(configuration);
+            logging.ClearProviders();
+
+            if (EnvironmentConfig.IsDevelopment)
+            {
+                logging.AddDebug().SetMinimumLevel(minLogLevel);
+                logging.AddConsole().SetMinimumLevel(minLogLevel);
+            }
+
+            // Add additional logger specific to non-development environments.
+        }
+
         // Determines the minimum log level that should be used.  First a configuration value used to specify the 
         // minimum log level is checked.  If present, it will be used.  If not found, the minimum log level based 
         // on the application's execution environment is used.

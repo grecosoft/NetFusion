@@ -111,7 +111,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             msgProps.ReplyTo = ReplyToQueueName;
             msgProps.CorrelationId = msgProps.CorrelationId ?? Guid.NewGuid().ToString();
             msgProps.SetRpcReplyBusConfigName(_busName);
-            msgProps.SetRpcActionName(createdExchange.Meta.ActionName);
+            msgProps.SetRpcActionNamespace(createdExchange.Meta.ActionNamespace);
         }
 
         public void CreateAndSubscribeToReplyQueue()

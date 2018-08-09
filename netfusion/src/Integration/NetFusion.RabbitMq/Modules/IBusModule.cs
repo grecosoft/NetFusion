@@ -1,7 +1,6 @@
 using EasyNetQ;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.RabbitMQ.Metadata;
-using NetFusion.RabbitMQ.Settings;
 
 namespace NetFusion.RabbitMQ.Modules
 {

@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
+using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Serialization;
 using NetFusion.RabbitMQ.Subscriber.Internal;
@@ -39,8 +40,8 @@ namespace NetFusion.RabbitMQ.Modules
 
             _subscribers = GetQueueSubscribers(_messagingModule);
             SubscribeToQueues(_busModule, _subscribers);
-        } 
-
+        }
+        
         // Delegates to the core message dispatch module to find all message dispatch
         // handlers and filters the list to only those that should be bound to a queue.
         private MessageQueueSubscriber[] GetQueueSubscribers(IMessageDispatchModule messsageDispatch)
@@ -53,6 +54,33 @@ namespace NetFusion.RabbitMQ.Modules
                 .ToArray();
         }
 
+        // Looks up the dispach information that should be used to handle the RPC style message.
+        private MessageDispatchInfo GetRpcMessageHandler(string queueName, string actionNamespace)
+        {
+            if (queueName == null) throw new ArgumentNullException(nameof(queueName));
+            if (actionNamespace == null) throw new ArgumentNullException(nameof(actionNamespace));
+            
+            var matchingDispatchers = _subscribers.Where(s =>
+                s.QueueMeta.QueueName == queueName &&
+                s.QueueMeta.Exchange.ActionNamespace == actionNamespace).ToArray();
+
+            if (matchingDispatchers.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    $"A RPC command message handler could not be found for Queue: {queueName} with " + 
+                    $"action namespace: {actionNamespace}");
+            }
+
+            if (matchingDispatchers.Length > 1)
+            {
+                throw new InvalidOperationException(
+                    $"More than one RPC command message handler was found for Queue: {queueName} with " + 
+                    $"action namespace: {actionNamespace}");
+            }
+
+            return matchingDispatchers.First().DispatchInfo;
+        }
+        
         // For each message handler identified as being associated with an exchange/queue, create the
         // exchange and queue then bind it to the in-process handler. 
         private void SubscribeToQueues(IBusModule busModule, IEnumerable<MessageQueueSubscriber> subscribers)
@@ -83,16 +111,18 @@ namespace NetFusion.RabbitMQ.Modules
 
                         var consumerContext = new ConsumeContext 
                         {
+                            Logger = Context.LoggerFactory.CreateLogger(definition.QueueFactory.GetType().FullName),
                             MessageProps = msgProps,
                             MessageReceiveInfo = receiveInfo,
                             Subscriber = subscriber,
                             BusModule = _busModule,
                             MessagingModule = _messagingModule,
-                            Serialization = _serializationManager
+                            Serialization = _serializationManager,
+                            GetRpcMessageHandler = GetRpcMessageHandler
                         };
 
                         // Delegate to the queue factory, associated with the definition, and 
-                        // allow it to determine how the received messaged should be processed. 
+                        // allow it to determine how the received message should be dispatched. 
                         return definition.QueueFactory.OnMessageReceived(consumerContext, message);
                     }, 
                     config => 

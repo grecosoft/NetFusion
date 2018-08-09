@@ -40,7 +40,7 @@ namespace NetFusion.RabbitMQ.Modules
         // on the default exchange, to process replies from the consumer containing the response to the original
         // sent command.  A client and replay queue is created for each unique RPC exchange name allowing a single
         // queue to process replies from various RPC commands.  It also allows the application to group common
-        // commands based on concern or processing needs.
+        // commands based on concern or processing distribution needs.
         private readonly IDictionary<string, IRpcClient> _exchangeRpcClients;
 
         public PublisherModule()
@@ -137,6 +137,18 @@ namespace NetFusion.RabbitMQ.Modules
                 throw new ContainerException(
                     "Exchange names must be unique for a given named bus.  The following have been configured " +
                     "more than once.", "duplicate-exchanges", duplidateExchangeNames);
+            }
+            
+            // Validate that all RPC exchanges are unique by bus, queue, and action namespace.
+            var duplidateRpcExchanges = definitions.Where(d => d.IsRpcExchange)
+                .WhereDuplicated(d => new { d.BusName, d.ExchangeName, d.ActionNamespace});
+            
+            if (duplidateRpcExchanges.Any())
+            {
+                throw new ContainerException(
+                    "For RPC exchanges names must be unique for a given named bus, queue, and action namespace.  " +
+                    "The following have been configured more than once.", 
+                    "duplicate-exchanges", duplidateExchangeNames);
             }
         }
         

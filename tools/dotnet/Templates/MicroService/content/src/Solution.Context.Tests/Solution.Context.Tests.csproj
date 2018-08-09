@@ -1,17 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <LangVersion>7</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.1.1" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Components\Solution.Context.Api\Solution.Context.Api.csproj" />
     <ProjectReference Include="..\Components\Solution.Context.App\Solution.Context.App.csproj" />
@@ -19,18 +16,15 @@
     <ProjectReference Include="..\Components\Solution.Context.Domain\Solution.Context.Domain.csproj" />
     <ProjectReference Include="..\Solution.Context.WebApi\Solution.Context.WebApi.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="3.2.41" />
-    <PackageReference Include="NetFusion.Base" Version="3.2.41" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.41" />
-    <PackageReference Include="NetFusion.Settings" Version="3.2.41" />
-    <PackageReference Include="NetFusion.Test" Version="3.2.41" />
+    <PackageReference Include="NetFusion.Common" Version="3.2.64" />
+    <PackageReference Include="NetFusion.Base" Version="3.2.64" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.64" />
+    <PackageReference Include="NetFusion.Settings" Version="3.2.64" />
+    <PackageReference Include="NetFusion.Test" Version="3.2.64" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="xunit" Version="2.3.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
   </ItemGroup>
-
 </Project>

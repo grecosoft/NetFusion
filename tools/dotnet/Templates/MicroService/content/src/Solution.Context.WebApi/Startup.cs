@@ -21,8 +21,8 @@ namespace Solution.Context.WebApi
 
         public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
-            _configuration = configuration;
-            _loggerFactory = loggerFactory;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory)); 
         }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
@@ -37,8 +37,11 @@ namespace Solution.Context.WebApi
                 options.UseHalFormatter();
             });
 
+            // Create and NetFusion application container based on Microsoft's abstractions:
             var builtContainer = CreateAppContainer(services, _configuration, _loggerFactory);
 
+            // Start all modules in the application container and return created service-provider.
+            // If an open-source DI container is needed, this is where it would be populated and returned.
             builtContainer.Start();
             return builtContainer.ServiceProvider;
         }
@@ -64,6 +67,8 @@ namespace Solution.Context.WebApi
                 }
 
                 app.UseDeveloperExceptionPage();
+
+                // https://github.com/grecosoft/NetFusion/wiki/core.logging.composite#accessing-composite-log-rest-api
                 app.UseCompositeQuerying();
             }
         }

@@ -155,8 +155,7 @@ namespace NetFusion.Messaging.Core
             return messageDispatchers
                 .Where(di => di.Key.IsAssignableFrom(messageType))
                 .SelectMany(di => di)
-                .Where(di =>  
-                    (di.IncludeDerivedTypes || di.MessageType == messageType));
+                .Where(di => di.IncludeDerivedTypes || di.MessageType == messageType);
         }
     }
 }

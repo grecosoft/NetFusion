@@ -64,8 +64,9 @@ namespace NetFusion.Settings
         /// <typeparam name="T">The derived IAppSettings type.</typeparam>
         /// <param name="configuration">The application's configuration.</param>
         /// <param name="logger">The logger to write configuration validation errors.</param>
+        /// <param name="defaultValue">the default settings to return if not configured.</param>
         /// <returns>The application settings populated from the configuration.</returns>
-        public static T GetSettings<T>(this IConfiguration configuration, ILogger logger)
+        public static T GetSettings<T>(this IConfiguration configuration, ILogger logger, T defaultValue = null)
             where T : class, IAppSettings
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
@@ -77,7 +78,7 @@ namespace NetFusion.Settings
                     $"The section path for type: {typeof(T)} could not be determined.");
             }
 
-            T settings = configuration.GetSection(sectionPath).Get<T>();
+            T settings = configuration.GetSection(sectionPath).Get<T>() ?? defaultValue;
             if (settings == null)
             {
                 throw new InvalidOperationException(

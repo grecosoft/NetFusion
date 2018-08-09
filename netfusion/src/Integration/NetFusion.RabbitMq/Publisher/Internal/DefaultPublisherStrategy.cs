@@ -4,7 +4,6 @@ using EasyNetQ;
 using System;
 using System.Threading;
 using NetFusion.Messaging.Types;
-using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Publisher.Internal
 {

@@ -1,6 +1,5 @@
 using IMessage = NetFusion.Messaging.Types.IMessage;
 using System.Threading.Tasks;
-using EasyNetQ.Topology;
 using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Subscriber.Internal

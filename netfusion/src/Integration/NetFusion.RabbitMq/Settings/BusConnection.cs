@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using NetFusion.Base.Validation;
 using NetFusion.Common.Extensions.Collections;
-using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Settings
 {

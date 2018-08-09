@@ -9,13 +9,13 @@ namespace NetFusion.RabbitMQ.Subscriber
     /// </summary>
     public class RpcQueueAttribute : SubscriberQueueAttribute
     {
-        public string ActionName { get; }
+        public string ActionNamespace { get; }
         
-        public RpcQueueAttribute(string busName, string queueName, string actionName) 
+        public RpcQueueAttribute(string busName, string queueName, string actionNamespace) 
             
             : base(busName, queueName, new RpcQueueFactory())
         {
-            ActionName = actionName;
+            ActionNamespace = actionNamespace;
         }
     }
 }

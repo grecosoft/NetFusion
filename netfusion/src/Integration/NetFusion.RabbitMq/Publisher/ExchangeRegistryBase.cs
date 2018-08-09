@@ -129,16 +129,16 @@ namespace NetFusion.RabbitMQ.Publisher
         /// can't complete their entire tasks until the reponse is received.
         /// </summary>
         /// <param name="queueName">The name of the queue on which the subscriber will recieve commands.</param>
-        /// <param name="actionName">For a given RPC command, identifies to the subscriber to associated action.</param>
+        /// <param name="actionNamespace">For a given RPC command, identifies to the subscriber to associated action.</param>
         /// <param name="busName">The bus name key used to lookup connection.</param>
         /// <typeparam name="TMessage">The command type associated with the queue.</typeparam>
-        protected void DefineRpcQueue<TMessage>(string queueName, string actionName, 
+        protected void DefineRpcQueue<TMessage>(string queueName, string actionNamespace, 
             string busName)
             
             where TMessage : ICommand
         {
-            if (string.IsNullOrWhiteSpace(actionName))
-                throw new ArgumentException("RPC Action Name not Specified.", nameof(actionName));
+            if (string.IsNullOrWhiteSpace(actionNamespace))
+                throw new ArgumentException("RPC Action Namespace not Specified.", nameof(actionNamespace));
 
             var publisherStrategy = new RpcPublisherStrategy();
             
@@ -152,7 +152,7 @@ namespace NetFusion.RabbitMQ.Publisher
                 });
 
             exchange.IsRpcExchange = true;
-            exchange.ActionName = actionName;
+            exchange.ActionNamespace = actionNamespace;
             exchange.SetPublisherStrategy(publisherStrategy);
             
             _exchanges.Add(exchange);

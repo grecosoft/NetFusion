@@ -1,9 +1,10 @@
 using IMessage = NetFusion.Messaging.Types.IMessage;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using EasyNetQ;
 using EasyNetQ.Topology;
+using Microsoft.Extensions.Logging;
+using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.RabbitMQ.Metadata;
 
@@ -28,16 +29,22 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
                     config.IsExclusive = false;
                 });
 
-            exchange.ActionName = rpcAttrib.ActionName;
+            exchange.ActionNamespace = rpcAttrib.ActionNamespace;
             return exchange.QueueMeta;
         }
         
+        // When a RPC style command message is received, it is dispatched to the in-process handler
+        // having the matching queue name and action.  This is unlike the other message patterns where
+        // a queue is associated with only a single handler.  This allows for several RPC style commands
+        // to use the same queue.  This allows for more efficient use of queues.
         public async Task OnMessageReceived(ConsumeContext context, IMessage message)
         {
+            MessageDispatchInfo rpcCommandHandler = GetDispatchInfoForRpcCommand(context);
+           
             try 
             {
                 object response = await context.MessagingModule.InvokeDispatcherInNewLifetimeScopeAsync(
-                    context.Subscriber.DispatchInfo, 
+                    rpcCommandHandler, 
                     message);
 
                 await ReplyWithResponse(context, response);
@@ -50,6 +57,18 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             {
                 await ReplyWithException(context, ex);
             }
+        }
+
+        private static MessageDispatchInfo GetDispatchInfoForRpcCommand(ConsumeContext context)
+        {
+            string rpcQueueName = context.Subscriber.QueueMeta.QueueName;
+            string rpcActionNamespace = context.Subscriber.QueueMeta.Exchange.ActionNamespace;
+            
+            context.Logger.LogTrace(
+                "RPC command received.  Attempting to dispatch to hander associated with queue named {queueName} and " + 
+                "for action named {actionName}", rpcQueueName, rpcActionNamespace);
+
+            return context.GetRpcMessageHandler(rpcQueueName, rpcActionNamespace);
         }
 
         private static Task ReplyWithResponse(ConsumeContext context, object response)

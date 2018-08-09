@@ -23,14 +23,19 @@ namespace NetFusion.RabbitMQ.Metadata
             if (bus == null) throw new ArgumentNullException(nameof(bus));
             if (meta == null) throw new ArgumentNullException(nameof(meta));
 
-            // If the queue meta is specified on the exhange meta, this indicates that
+            // If the queue meta is specified on the exchange meta, this indicates that
             // a queue should be created on the default exchange.
             if (meta.QueueMeta != null)
             {
                 await bus.QueueDeclareAsync(meta.QueueMeta.ScopedQueueName,
-                    autoDelete: meta.QueueMeta.IsAutoDelete,
                     durable: meta.QueueMeta.IsDurable,
-                    passive: meta.QueueMeta.IsPassive);
+                    autoDelete: meta.QueueMeta.IsAutoDelete,
+                    exclusive: meta.QueueMeta.IsExclusive,
+                    passive: meta.QueueMeta.IsPassive,
+                    maxPriority: meta.QueueMeta.MaxPriority,
+                    deadLetterExchange: meta.QueueMeta.DeadLetterExchange,
+                    deadLetterRoutingKey: meta.QueueMeta.DeadLetterRoutingKey,
+                    perQueueMessageTtl: meta.QueueMeta.PerQueueMessageTtl);
 
                 return Exchange.GetDefault();
             }
@@ -68,8 +73,7 @@ namespace NetFusion.RabbitMQ.Metadata
                     alternateExchange: exchangeMeta.AlternateExchangeName);
             }
             
-            IQueue queue = bus.QueueDeclare(
-                meta.ScopedQueueName, 
+            IQueue queue = bus.QueueDeclare(meta.ScopedQueueName, 
                 durable: meta.IsDurable,
                 autoDelete: meta.IsAutoDelete,
                 exclusive: meta.IsExclusive,
@@ -89,7 +93,7 @@ namespace NetFusion.RabbitMQ.Metadata
                     bus.Bind(exchange, queue, routeKey);
                 }
             }
-            else if (! string.IsNullOrWhiteSpace(exchange.Name))
+            else if (! meta.Exchange.IsDefaultExchange)
             {
                 // Bind queue to exchange if not default-exchange.
                 bus.Bind(exchange, queue, string.Empty);

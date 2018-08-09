@@ -5,10 +5,13 @@ using EasyNetQ;
 
 namespace NetFusion.RabbitMQ
 {
-    internal static class Extensions
+    /// <summary>
+    /// Extensions for setting message properties.
+    /// </summary>
+    internal static class MessagePropertyExtensions
     {
         public const string RpcReplyBusName = "Rpc-reply-bus-name";
-        public const string RpcActionName = "Rpc-action-name";
+        public const string RpcActionNamespace = "Rpc-action-namespace";
         public const string RpcHeaderExceptionIndicator = "Rpc-exception-response";
        
         /// <summary>
@@ -50,29 +53,41 @@ namespace NetFusion.RabbitMQ
             messageProps.Headers[RpcReplyBusName] = busConfigName;
         }
 
-        public static string GetRpcActionName(this MessageProperties messageProps)
+        /// <summary>
+        /// When sending a RPC style message, a string value indicating the action is used
+        /// by the consumer to determine how the command should be processed.
+        /// </summary>
+        /// <param name="messageProps">The message properties being sent with the published message.</param>
+        /// <returns>The namespace associated with message.</returns>
+        public static string GetRpcActionNamespace(this MessageProperties messageProps)
         {
             if (messageProps == null) throw new ArgumentNullException(nameof(messageProps));
 
             var headers = messageProps.Headers ?? new Dictionary<string, object>();
-            if (! headers.TryGetValue(RpcActionName, out object value))
+            if (! headers.TryGetValue(RpcActionNamespace, out object value))
             {
-                throw new InvalidOperationException($"A message header value named: {RpcActionName} is not present.");
+                throw new InvalidOperationException($"A message header value named: {RpcActionNamespace} is not present.");
             }
 
             byte[] byteValue = (byte[])value;
             return Encoding.UTF8.GetString(byteValue);
         }
         
-        public static void SetRpcActionName(this MessageProperties messageProps, string actionName)
+        /// <summary>
+        /// Sets the string value identifying the action namespace associated with the message.  This namespace is
+        /// used by the subscriber to determine how the command should be processed.
+        /// </summary>
+        /// <param name="messageProps">The message properties being sent with the published message.</param>
+        /// <param name="actionNamespace">The namespace associated with message.</param>
+        public static void SetRpcActionNamespace(this MessageProperties messageProps, string actionNamespace)
         {
             if (messageProps == null) throw new ArgumentNullException(nameof(messageProps));
 
-            if (string.IsNullOrWhiteSpace(actionName))
-                throw new ArgumentException("Action name not specified.", nameof(actionName));
+            if (string.IsNullOrWhiteSpace(actionNamespace))
+                throw new ArgumentException("Action name not specified.", nameof(actionNamespace));
 
             messageProps.Headers = messageProps.Headers ?? new Dictionary<string, object>();
-            messageProps.Headers[RpcActionName] = actionName;
+            messageProps.Headers[RpcActionNamespace] = actionNamespace;
         }
 
         /// <summary>

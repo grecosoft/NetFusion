@@ -16,7 +16,7 @@ namespace NetFusion.RabbitMQ.Metadata
         public string QueueName { get; private set; }
         
         /// <summary>
-        /// The name of the queue with with an unique GUID appended or the
+        /// The name of the queue with an unique GUID appended or the
         /// GUID identifying the consuming host application.
         /// </summary>
         public string ScopedQueueName { get; private set; }
@@ -56,7 +56,8 @@ namespace NetFusion.RabbitMQ.Metadata
         /// <param name="scopednamed">The associated scope name.</param>
         internal void SetScopedNamed(string scopednamed)
         {
-            if (string.IsNullOrWhiteSpace(scopednamed)) throw new ArgumentException("Scoped queue name not specified.", nameof(scopednamed));
+            if (string.IsNullOrWhiteSpace(scopednamed))
+                throw new ArgumentException("Scoped queue name not specified.", nameof(scopednamed));
             
             ScopedQueueName = scopednamed;
         }
@@ -121,7 +122,6 @@ namespace NetFusion.RabbitMQ.Metadata
             PerQueueMessageTtl = settings.PerQueueMessageTtl ?? PerQueueMessageTtl;
         }
                 
-        
         /// <summary>
         /// Determines the maximum message priority that the queue should support.
         /// </summary>
@@ -155,12 +155,20 @@ namespace NetFusion.RabbitMQ.Metadata
 
         public int Priority { get; set; }
 
+        /// <summary>
+        /// Adds queue log information to the dictionary of values.
+        /// </summary>
+        /// <param name="log">Dictionary containing log values.</param>
         public void LogProperties(IDictionary<string, object> log)
         {
             log["Queue"] = GetLogDetails();
             log["Exchange"] = Exchange.IsDefaultExchange ? "Default-Exchange" : Exchange.GetLogDetails();
         }
 
+        /// <summary>
+        /// Returns an anymonous type containing the queue properties to be logged.
+        /// </summary>
+        /// <returns>Object with properties to be logged.</returns>
         public object GetLogDetails()
         {
             return new

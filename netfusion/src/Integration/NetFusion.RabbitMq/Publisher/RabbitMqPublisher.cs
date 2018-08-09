@@ -12,7 +12,6 @@ using NetFusion.RabbitMQ.Publisher.Internal;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.RabbitMQ.Metadata;
-using NetFusion.RabbitMQ.Settings;
 
 namespace NetFusion.RabbitMQ.Publisher
 {

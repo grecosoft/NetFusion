@@ -37,16 +37,15 @@ namespace NetFusion.RabbitMQ.Modules
             _busses = new Dictionary<string, IBus>();
         }
         
-        // Unique value set at development time identifying the host plugin.
-        // The value can be used to tag exchanges and queues so the associated
-        // host can be identified.  This will also make a given queue name 
-        // unique to a given application host.
+        // Unique value identifying the host plugin.  The value can be used to tag
+        // exchanges and queues so the associated host can be identified.  This will
+        // also make a given queue name unique to a given application host.
         public string HostAppId => Context.AppHost.Manifest.PluginId;
 
         // Creates IBus instances for each configured bus.
         public override void Initialize()
         {
-            _busSettings = Context.Configuration.GetSettings<BusSettings>(Context.Logger);
+            _busSettings = Context.Configuration.GetSettings(Context.Logger, new BusSettings());
 
             foreach (BusConnection conn in _busSettings.Connections)
             {
@@ -109,6 +108,10 @@ namespace NetFusion.RabbitMQ.Modules
             _busses[conn.BusName] = BusFactory(connConfig);
         }
 
+        /// <summary>
+        /// Factory method used to return an IBus implementation.  Default to EasyNetQ but can also
+        /// be used to provided a mock during unit testing.
+        /// </summary>
         public readonly Func<ConnectionConfiguration, IBus> BusFactory = c => RabbitHutch.CreateBus(c, rs => {});
 
         // Additional client properties assocated with created connections.
@@ -133,7 +136,8 @@ namespace NetFusion.RabbitMQ.Modules
 
             if (! _busses.TryGetValue(named, out IBus bus))
             {
-                throw new InvalidOperationException($"The bus named: {named} has not been configured.");
+                throw new InvalidOperationException(
+                    $"The bus named: {named} has not been configured.  Check application configuration.");
             }
             return bus;
         }
@@ -145,8 +149,10 @@ namespace NetFusion.RabbitMQ.Modules
         
         private void ApplyExchangeSettingsInternal(ExchangeMeta meta, bool applyQueueSettings = true)
         {
+            if (meta == null) throw new ArgumentNullException(nameof(meta));
+            
             // If not the default exchange...
-            if (meta.ExchangeName != null)
+            if (! meta.IsDefaultExchange)
             {
                 var exchangeSettings = GetExchangeSettings(meta.BusName, meta.ExchangeName);
                 if (exchangeSettings != null)

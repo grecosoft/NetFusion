@@ -226,8 +226,12 @@ namespace NetFusion.RabbitMQ.Metadata
         /// Based on the type of exchange, used to identify a named action to the
         /// consumer processing the message.  
         /// </summary>
-        public string ActionName { get; set; }
+        public string ActionNamespace { get; set; }
 
+        /// <summary>
+        /// Adds exchange log information to the dictionary of values.
+        /// </summary>
+        /// <param name="log">Dictionary containing log values.</param>
         public void LogProperties(IDictionary<string, object> log)
         {
             log["Exchange"] = IsDefaultExchange ? "Default-Exchange" : GetLogDetails();
@@ -237,6 +241,10 @@ namespace NetFusion.RabbitMQ.Metadata
             }
         }
 
+        /// <summary>
+        /// Returns an anymonous type containing the exchange properties to be logged.
+        /// </summary>
+        /// <returns>Object with properties to be logged.</returns>
         public object GetLogDetails()
         {
             return new
