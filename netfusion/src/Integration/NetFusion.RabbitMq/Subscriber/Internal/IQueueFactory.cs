@@ -1,4 +1,3 @@
-using IMessage = NetFusion.Messaging.Types.IMessage;
 using System.Threading.Tasks;
 using NetFusion.RabbitMQ.Metadata;
 
@@ -16,8 +15,6 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         /// Called when a message is received on the queue.
         /// </summary>
         /// <param name="context">The context of the received message.</param>
-        /// <param name="message">The received message.</param>
-        Task OnMessageReceived(ConsumeContext context, IMessage message);
-
+        Task OnMessageReceived(ConsumeContext context);
     }
 }

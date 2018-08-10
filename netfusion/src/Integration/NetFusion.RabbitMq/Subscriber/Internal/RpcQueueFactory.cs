@@ -1,4 +1,3 @@
-using IMessage = NetFusion.Messaging.Types.IMessage;
 using System;
 using System.Threading.Tasks;
 using EasyNetQ;
@@ -29,7 +28,8 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
                     config.IsExclusive = false;
                 });
 
-            exchange.ActionNamespace = rpcAttrib.ActionNamespace;
+            exchange.IsRpcExchange = true;
+            exchange.ActionNamespace = rpcAttrib.ActionNamespace;           
             return exchange.QueueMeta;
         }
         
@@ -37,9 +37,12 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         // having the matching queue name and action.  This is unlike the other message patterns where
         // a queue is associated with only a single handler.  This allows for several RPC style commands
         // to use the same queue.  This allows for more efficient use of queues.
-        public async Task OnMessageReceived(ConsumeContext context, IMessage message)
+        public async Task OnMessageReceived(ConsumeContext context)
         {
             MessageDispatchInfo rpcCommandHandler = GetDispatchInfoForRpcCommand(context);
+            var message = context.DeserializeIntoMessage(rpcCommandHandler.MessageType);
+            
+            context.LogReceivedMessage(message);
            
             try 
             {
@@ -62,7 +65,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         private static MessageDispatchInfo GetDispatchInfoForRpcCommand(ConsumeContext context)
         {
             string rpcQueueName = context.Subscriber.QueueMeta.QueueName;
-            string rpcActionNamespace = context.Subscriber.QueueMeta.Exchange.ActionNamespace;
+            string rpcActionNamespace = context.MessageProps.GetRpcActionNamespace();
             
             context.Logger.LogTrace(
                 "RPC command received.  Attempting to dispatch to hander associated with queue named {queueName} and " + 

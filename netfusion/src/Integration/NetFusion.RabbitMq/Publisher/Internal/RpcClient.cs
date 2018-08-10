@@ -25,10 +25,13 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
 
         public RpcClient(string busName, string queueName, IBus bus)
         {
+            if (string.IsNullOrWhiteSpace(busName))
+                throw new ArgumentException("Bus name not specified", nameof(busName));
+
             if (string.IsNullOrWhiteSpace(queueName))
                 throw new ArgumentException("Queue name not specified.", nameof(queueName));
 
-            _busName = busName ?? throw new ArgumentNullException(nameof(busName));
+            _busName = busName;
             _pendingRpcRequests = new ConcurrentDictionary<string, RpcPendingRequest>();
 
             Bus = bus ?? throw new ArgumentNullException(nameof(bus));
@@ -132,6 +135,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                     if (string.IsNullOrWhiteSpace(correlationId))
                     {
                         _logger.LogError("The received reply message does not have a CorrelationId.");
+                        return;
                     }
 
                     if (! _pendingRpcRequests.TryRemove(correlationId, out RpcPendingRequest pendingRequest))

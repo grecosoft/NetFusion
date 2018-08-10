@@ -24,8 +24,8 @@ namespace NetFusion.RabbitMQ.Publisher
         /// specific message type.
         /// </summary>
         /// <param name="messageType">The message type.</param>
-        /// <returns>The exchange metadata or an exception if there are
-        /// no exchanged asociated with the message type.</returns>
+        /// <returns>The exchange metadata or an exception if there is
+        /// no exchange associated with the message type.</returns>
         ExchangeMeta GetDefinition(Type messageType);
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace NetFusion.RabbitMQ.Publisher
         /// </summary>
         /// <param name="busName">The bus name key used to lookup connection.</param>
         /// <param name="queueName">The name of the queue used to submit RPC style messages.</param>
-        /// <returns>The RPC client assocated with the queue on the specified bus.  If not
+        /// <returns>The RPC client associated with the queue on the specified bus.  If not
         /// found, an exception is thrown.</returns>
         IRpcClient GetRpcClient(string busName, string queueName);
     }

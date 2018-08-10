@@ -11,8 +11,7 @@ using NetFusion.Messaging;
          [WorkQueue("testBus", "GeneratedAndSendEmail")]
          public void GenerateEmail(SendEmail email)
          {
-             Console.WriteLine(email);
-             email.ToIndentedJson();
+             Console.WriteLine(email.ToIndentedJson());
          }
      }
  }

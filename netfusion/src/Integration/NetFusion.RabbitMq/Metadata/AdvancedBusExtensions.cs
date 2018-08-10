@@ -64,7 +64,7 @@ namespace NetFusion.RabbitMQ.Metadata
             IExchange exchange = Exchange.GetDefault();
             ExchangeMeta exchangeMeta = meta.Exchange;
             
-            if (meta.Exchange.ExchangeType != null)
+            if (! meta.Exchange.IsDefaultExchange)
             {
                 exchange =  bus.ExchangeDeclare(exchangeMeta.ExchangeName, exchangeMeta.ExchangeType, 
                     durable: exchangeMeta.IsDurable,
@@ -83,6 +83,13 @@ namespace NetFusion.RabbitMQ.Metadata
                 deadLetterRoutingKey: meta.DeadLetterRoutingKey,
                 perQueueMessageTtl: meta.PerQueueMessageTtl);
 
+
+            // Queues defined on the default exchange do not need to be bound.
+            if (exchangeMeta.IsDefaultExchange)
+            {
+                return queue;
+            }
+
             string[] routekeys = meta.RouteKeys ?? new string[] { };
             if (routekeys.Length > 0)
             {
@@ -92,13 +99,12 @@ namespace NetFusion.RabbitMQ.Metadata
                 {
                     bus.Bind(exchange, queue, routeKey);
                 }
-            }
-            else if (! meta.Exchange.IsDefaultExchange)
+            } 
+            else 
             {
-                // Bind queue to exchange if not default-exchange.
                 bus.Bind(exchange, queue, string.Empty);
             }
-           
+            
             return queue;
         }
     }

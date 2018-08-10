@@ -31,7 +31,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// Defines a queue on an exchange.
         /// </summary>
         /// <param name="queueName">The name of the queue.</param>
-        /// <param name="exchange">Reference to the eachange on which it should be created.</param>
+        /// <param name="exchange">Reference to the exchange on which it should be created.</param>
         /// <param name="config">Delegate used to specify additional queue metadata.</param>
         /// <returns>The queue metadata.</returns>
         public static QueueMeta Define(string queueName, ExchangeMeta exchange, Action<QueueMeta> config = null)
@@ -53,7 +53,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// <summary>
         /// Value containing the queue's base name appended with an unique identifier.
         /// </summary>
-        /// <param name="scopednamed">The associated scope name.</param>
+        /// <param name="scopednamed">The associated scoped name.</param>
         internal void SetScopedNamed(string scopednamed)
         {
             if (string.IsNullOrWhiteSpace(scopednamed))
@@ -101,7 +101,6 @@ namespace NetFusion.RabbitMQ.Metadata
         /// Indicates that an unique id should be appended to the name of the queue.
         /// </summary>
         public bool AppendUniqueId { get; set; }
-        
         
         /// <summary>
         /// Applies queue settings specified within the application's configuration
@@ -166,7 +165,7 @@ namespace NetFusion.RabbitMQ.Metadata
         }
 
         /// <summary>
-        /// Returns an anymonous type containing the queue properties to be logged.
+        /// Returns an anonymous type containing the queue properties to be logged.
         /// </summary>
         /// <returns>Object with properties to be logged.</returns>
         public object GetLogDetails()

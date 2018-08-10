@@ -19,7 +19,8 @@ namespace NetFusion.RabbitMQ.Modules
     /// <summary>
     /// The main plugin module providing access to the configured IBus instances used to
     /// communicate with RabbitMQ servers.  Each bus is identified by a name specified 
-    /// within the configuration. 
+    /// within the application's configuration. 
+    /// https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#bootstrapping---modules
     /// </summary>
     public class BusModule : PluginModule,
         IBusModule
@@ -43,6 +44,7 @@ namespace NetFusion.RabbitMQ.Modules
         public string HostAppId => Context.AppHost.Manifest.PluginId;
 
         // Creates IBus instances for each configured bus.
+        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#initialize
         public override void Initialize()
         {
             _busSettings = Context.Configuration.GetSettings(Context.Logger, new BusSettings());
@@ -55,11 +57,13 @@ namespace NetFusion.RabbitMQ.Modules
 
         // Register the default serialization manager.  The application host can override
         // this by registering a different instance of the ISerializationManager interface.
+        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#registerdefaultservices
         public override void RegisterDefaultServices(IServiceCollection services)
         {
             services.AddSingleton<ISerializationManager, SerializationManager>();
         }
-        
+
+        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#startmodule
         public override void StartModule(IServiceProvider services)
         {
             _serializationMgr = services.GetService<ISerializationManager>();
@@ -114,7 +118,7 @@ namespace NetFusion.RabbitMQ.Modules
         /// </summary>
         public readonly Func<ConnectionConfiguration, IBus> BusFactory = c => RabbitHutch.CreateBus(c, rs => {});
 
-        // Additional client properties assocated with created connections.
+        // Additional client properties associated with created connections.
         private void SetAdditionalClientProperties(IDictionary<string, object> clientProps)
         {
             IPluginManifest rabbitPlugin = Context.Plugin.Manifest;
@@ -146,12 +150,24 @@ namespace NetFusion.RabbitMQ.Modules
         {
             ApplyExchangeSettingsInternal(meta);
         }
+
+        public void ApplyQueueSettings(QueueMeta meta)
+        {
+            if (meta == null) throw new ArgumentNullException(nameof(meta));
+
+            var queueSettings = GetQueueSettings(meta.Exchange.BusName, meta.QueueName);
+            if (queueSettings != null)
+            {
+                meta.ApplyOverrides(queueSettings);
+            }
+            
+            ApplyExchangeSettingsInternal(meta.Exchange, applyQueueSettings: false);
+        }
         
         private void ApplyExchangeSettingsInternal(ExchangeMeta meta, bool applyQueueSettings = true)
         {
             if (meta == null) throw new ArgumentNullException(nameof(meta));
             
-            // If not the default exchange...
             if (! meta.IsDefaultExchange)
             {
                 var exchangeSettings = GetExchangeSettings(meta.BusName, meta.ExchangeName);
@@ -165,18 +181,6 @@ namespace NetFusion.RabbitMQ.Modules
             {
                 ApplyQueueSettings(meta.QueueMeta);
             }
-        }
-        
-        public void ApplyQueueSettings(QueueMeta meta)
-        {
-            var queueSettings = GetQueueSettings(meta.Exchange.BusName, meta.QueueName);
-            if (queueSettings != null)
-            {
-                meta.ApplyOverrides(queueSettings);
-            }
-            
-            ApplyExchangeSettingsInternal(meta.Exchange, applyQueueSettings: false);
-            
         }
 
         private BusConnection GetBusConnection(string busName)
@@ -224,6 +228,7 @@ namespace NetFusion.RabbitMQ.Modules
             _disposed = true;
         }
 
+        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#log
         public override void Log(IDictionary<string, object> moduleLog)
         {
             moduleLog["Bus-Connections"] = _busSettings.Connections.Select( c => new {

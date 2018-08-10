@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Demo.App.Commands;
 using Microsoft.AspNetCore.Mvc;
-using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
 
 namespace Demo.WebApi.Controllers
@@ -19,11 +18,15 @@ namespace Demo.WebApi.Controllers
         }
         
         [HttpPost("taxes/property")]
-        public async Task CalculatePropertyTax([FromBody]CalculatePropertyTax command)
+        public async Task<TaxCalc> CalculatePropertyTax([FromBody]CalculatePropertyTax command)
         {
-            var result = await _messaging.SendAsync(command);
-            Console.WriteLine(result.ToIndentedJson());
-            
+            return await _messaging.SendAsync(command);
+        }
+        
+        [HttpPost("taxes/auto")]
+        public async Task<TaxCalc> CalculateAutoTax([FromBody]CalculateAutoTax command)
+        {
+            return await _messaging.SendAsync(command);
         }
     }
 }

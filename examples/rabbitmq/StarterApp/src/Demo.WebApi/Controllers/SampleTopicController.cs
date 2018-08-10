@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Demo.App.DomainEvents;
-using Demo.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Messaging;
+using NetFusion.Messaging.Types;
 
 namespace Demo.WebApi.Controllers
 {
@@ -19,17 +19,13 @@ namespace Demo.WebApi.Controllers
         }
         
         [HttpPost("auto/sales")]
-        public Task RecordAutoSale([FromBody]AutoModel model)
+        public Task RecordAutoSale([FromBody]AutoSaleCompleted salesCompleted)
         {
-            var salesCompleted = new AutoSaleCompleted(
-                model.Make,
-                model.Model,
-                model.Year,
-                model.Color)
-            {
-                IsNew = model.IsNew
-            };
-
+            salesCompleted.SetRouteKey(
+                salesCompleted.Make, 
+                salesCompleted.Model, 
+                salesCompleted.Year);
+            
             return _messaging.PublishAsync(salesCompleted);
         }
     }

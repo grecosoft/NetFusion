@@ -8,11 +8,13 @@ namespace Demo.Infra
     {
         protected override void OnRegister()
         {
+            DefineDirectExchange<PropertySold>("RealEstate", "testBus");   
             DefineTopicExchange<AutoSaleCompleted>("CompletedAutoSales", "testBus");
-            DefineDirectExchange<PropertySold>("RealEstate", "testBus");
-            DefineRpcQueue<CalculatePropertyTax>("TaxCalculations", "PropertyTax", "testBus");
             DefineFanoutExchange<TemperatureReading>("TemperatureReading", "testBus");
+            
             DefineWorkQueue<SendEmail>("GeneratedAndSendEmail", "testBus");
+            DefineRpcQueue<CalculatePropertyTax>("TaxCalculations", "Business.Calcs.Taxes.Property", "testBus");
+            DefineRpcQueue<CalculateAutoTax>("TaxCalculations", "Business.Calcs.Taxes.Auto", "testBus");
         }
     }
 }

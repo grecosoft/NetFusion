@@ -16,7 +16,7 @@
         },
         {
             "label": "build:all",
-            "command": "dotnet build ${workspaceFolder}/NetFusion.sln",
+            "command": "dotnet build ${workspaceFolder}/NetFusion.sln --no-restore",
             "options": {},
             "type": "shell",
             "group": "build",

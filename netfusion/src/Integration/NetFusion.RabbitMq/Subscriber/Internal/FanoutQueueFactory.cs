@@ -33,8 +33,11 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             return queue;
         }
 
-        public Task OnMessageReceived(ConsumeContext context, Messaging.Types.IMessage message)
+        public Task OnMessageReceived(ConsumeContext context)
         {
+            var message = context.DeserializeIntoMessage();
+            context.LogReceivedMessage(message);
+            
             return context.MessagingModule.InvokeDispatcherInNewLifetimeScopeAsync(
                 context.Subscriber.DispatchInfo, 
                 message);

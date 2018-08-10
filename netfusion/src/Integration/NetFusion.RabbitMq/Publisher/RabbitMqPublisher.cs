@@ -19,6 +19,7 @@ namespace NetFusion.RabbitMQ.Publisher
     /// Message publisher implemention that dispatches messages to RabbitMQ having an associated
     /// exchange.  Responsible for creating associated message exchanges and delivering messages
     /// when published. 
+    /// https://github.com/grecosoft/NetFusion/wiki/core.messaging.publishers#messaging---publishers
     /// </summary>
     public class RabbitMqPublisher : MessagePublisher,
         IPublisherContext
@@ -61,7 +62,7 @@ namespace NetFusion.RabbitMQ.Publisher
                 return;
             }
 
-            // Lookup the exchange assocated with the message and the bus
+            // Lookup the exchange associated with the message and the bus
             // on which it should be created.
             ExchangeMeta definition = PublisherModule.GetDefinition(messageType);
             IBus bus = BusModule.GetBus(definition.BusName);

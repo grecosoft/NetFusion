@@ -9,7 +9,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
 {
     /// <summary>
     /// The default strategy containing the implementation used to publish the
-    /// majority of the message types.
+    /// majority of the message exchange types.
     /// </summary>
     internal class DefaultPublisherStrategy : IPublisherStrategy
     {
@@ -17,17 +17,19 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             IMessage message,
             CancellationToken cancellationToken)
         {
+            // Prepare the message and its defining properties to be published.
             byte[] messageBody = context.Serialization.Serialize(message, createdExchange.Meta.ContentType);
             MessageProperties messageProperties = GetMessageProperties(context, createdExchange, message);
             string routeKey = message.GetRouteKey() ?? createdExchange.Meta.RouteKey;
 
-            // Only send the message to the exchange if satifying all constraints
+            // Only send the message to the exchange if satisfying all constraints
             // configured for the exchange.
 //            if (! await Satisfies(context, createdExchange, message))
 //            {
 //                return;
 //            }
 
+            // Delegate to EasyNetQ to publish the message.
             await createdExchange.Bus.Advanced.PublishAsync(createdExchange.Exchange,
                 routeKey ?? string.Empty, 
                 false,
@@ -39,6 +41,10 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             CreatedExchange createdExchange, 
             IMessage message)
         {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+            if (createdExchange == null) throw new ArgumentNullException(nameof(createdExchange));
+            if (message == null) throw new ArgumentNullException(nameof(message));
+
             var definition = createdExchange.Meta;
        
             var props = new MessageProperties 

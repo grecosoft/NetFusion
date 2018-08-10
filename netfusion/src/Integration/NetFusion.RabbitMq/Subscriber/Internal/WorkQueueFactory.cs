@@ -1,4 +1,3 @@
-using IMessage = NetFusion.Messaging.Types.IMessage;
 using System.Threading.Tasks;
 using NetFusion.RabbitMQ.Metadata;
 
@@ -23,8 +22,11 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             return exchange.QueueMeta;
         }
 
-        public Task OnMessageReceived(ConsumeContext context, IMessage message)
+        public Task OnMessageReceived(ConsumeContext context)
         {
+            var message = context.DeserializeIntoMessage();
+            context.LogReceivedMessage(message);
+            
             return context.MessagingModule.InvokeDispatcherInNewLifetimeScopeAsync(
                 context.Subscriber.DispatchInfo, 
                 message);

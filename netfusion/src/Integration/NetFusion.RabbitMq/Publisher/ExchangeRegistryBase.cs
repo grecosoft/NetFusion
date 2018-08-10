@@ -34,7 +34,7 @@ namespace NetFusion.RabbitMQ.Publisher
         /// </summary>
         /// <param name="name">The name of the exchange.</param>
         /// <param name="busName">The bus name key used to lookup connection.</param>
-        /// <typeparam name="TMessage">The domain event assocated with the exchange.</typeparam>
+        /// <typeparam name="TMessage">The domain event associated with the exchange.</typeparam>
         protected void DefineTopicExchange<TMessage>(string name, string busName) 
             where TMessage : IDomainEvent
         {
@@ -56,7 +56,7 @@ namespace NetFusion.RabbitMQ.Publisher
         /// </summary>
         /// <param name="name">The name of the exchange.</param>
         /// <param name="busName">The bus name key used to lookup connection.</param>
-        /// <typeparam name="TMessage">The domain event assocated with the exchange.</typeparam>
+        /// <typeparam name="TMessage">The domain event associated with the exchange.</typeparam>
         protected void DefineDirectExchange<TMessage>(string name, string busName = null) 
             where TMessage : IDomainEvent
         {
@@ -80,7 +80,7 @@ namespace NetFusion.RabbitMQ.Publisher
         /// </summary>
         /// <param name="name">The name of the exchange.</param>
         /// <param name="busName">The bus name key used to lookup connection.</param>
-        /// <typeparam name="TMessage">The domain event assocated with the exchange.</typeparam>
+        /// <typeparam name="TMessage">The domain event associated with the exchange.</typeparam>
         protected void DefineFanoutExchange<TMessage>(string name, string busName) 
             where TMessage : IDomainEvent
         {
@@ -101,10 +101,10 @@ namespace NetFusion.RabbitMQ.Publisher
         /// the consumers subscribing to the queues defined on the exchange.  A work queue is used
         /// to make a request of another service by sending a command to the queue for processing.
         /// The processing is asynchronous and the publisher does not wait for a response.  This
-        /// should be used by a publisher to submit a time consuming task to a specific subscriber
+        /// should be used by a publisher to submit a time consuming task to a specific service
         /// for processing.
         /// </summary>
-        /// <param name="queueName">The name of the queue on which the subscriber will recieve commands.</param>
+        /// <param name="queueName">The name of the queue on which the consuming service will receive commands.</param>
         /// <param name="busName">The bus name key used to lookup connection.</param>
         /// <typeparam name="TMessage">The command type associated with the queue.</typeparam>
         protected void DefineWorkQueue<TMessage>(string queueName, string busName)
@@ -126,10 +126,10 @@ namespace NetFusion.RabbitMQ.Publisher
         /// <summary>
         /// Implements RPC over an asynchronous message bus.  While the publisher does not block
         /// and can complete other unrelated work, the publisher is synchronous in terms that they
-        /// can't complete their entire tasks until the reponse is received.
+        /// can't complete their entire work until the response is received.
         /// </summary>
-        /// <param name="queueName">The name of the queue on which the subscriber will recieve commands.</param>
-        /// <param name="actionNamespace">For a given RPC command, identifies to the subscriber to associated action.</param>
+        /// <param name="queueName">The name of the queue on which the subscriber will receive commands.</param>
+        /// <param name="actionNamespace">For a given RPC command, identifies to the consumer the associated action.</param>
         /// <param name="busName">The bus name key used to lookup connection.</param>
         /// <typeparam name="TMessage">The command type associated with the queue.</typeparam>
         protected void DefineRpcQueue<TMessage>(string queueName, string actionNamespace, 

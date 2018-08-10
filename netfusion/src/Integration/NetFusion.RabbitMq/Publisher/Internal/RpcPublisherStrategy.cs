@@ -21,6 +21,8 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             ICommand command = (ICommand)message;
             string contentType = createdExchange.Meta.ContentType;
 
+            // Serialize the message and get the properties from the default-publisher to be used as 
+            // the initial list of message properties to which RPC specific properties will be added.
             byte[] messageBody = context.Serialization.Serialize(command, contentType);
             MessageProperties messageProperties = DefaultPublisherStrategy.GetMessageProperties(context, createdExchange, command);
             
@@ -40,17 +42,22 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                     messageProperties, 
                     cancellationToken);
 
+                // If a successful reply, deserialize the response message into the
+                // result type associated with the command.
                 var responseObj = context.Serialization.Deserialize(contentType, command.ResultType, resultBytes);
                 command.SetResult(responseObj);
+
                 LogReceivedRpcResponse(context, createdExchange, responseObj);
             }
             catch (RpcReplyException ex)
             {
+                // If the consumer didn't supply details about the exception, then just rethrow.
                 if (ex.ReplayExceptionBody == null)
                 {
                     throw;
                 }
 
+                // TODO:  ...
                 var dispatchEx = context.Serialization.Deserialize<MessageDispatchException>(contentType, ex.ReplayExceptionBody);
                 context.Logger.LogError(RabbitMqLogEvents.PublisherException, dispatchEx, "RPC Exception Reply.");
                 throw dispatchEx;

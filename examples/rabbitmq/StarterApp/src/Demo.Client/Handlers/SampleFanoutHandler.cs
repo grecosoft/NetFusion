@@ -14,4 +14,4 @@ namespace Demo.Client.Handlers
             Console.WriteLine(reading.ToIndentedJson());
         }
     }
-}
+} 

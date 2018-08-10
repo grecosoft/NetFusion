@@ -1,25 +1,33 @@
 ﻿using System;
 using Demo.Client.DomainEvents;
-using NetFusion.Common.Extensions;
+using Microsoft.Extensions.Logging;
 using NetFusion.Messaging;
+using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Subscriber;
 
 namespace Demo.Client.Handlers
 {
     public class SampleDirectHandler : IMessageConsumer
     {
+        private readonly ILogger _logger;
+        
+        public SampleDirectHandler(ILogger<SampleDirectHandler> logger)
+        {
+            _logger = logger;
+        }
+        
         [DirectQueue("testBus", "NorthEast", "RealEstate",
             "CT", "NY", "NH", "ME")]
         public void NorthEast(PropertySold propertySold)
         {
-            Console.WriteLine(propertySold.ToIndentedJson());
+            Console.WriteLine($"Exchange=>RealEstate; Queue=>NorthEast; Route-Key: {propertySold.GetRouteKey()}");
         }
 
         [DirectQueue("testBus", "SouthEast", "RealEstate",
             "NC", "SC", "FL")]
         public void SouthEast(PropertySold propertySold)
         {
-            Console.WriteLine(propertySold.ToIndentedJson());
+            Console.WriteLine($"Exchange=>RealEstate; Queue=>SouthEast; Route-Key: {propertySold.GetRouteKey()}");
         }
     }
 }

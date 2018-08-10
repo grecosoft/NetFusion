@@ -20,6 +20,7 @@ namespace NetFusion.RabbitMQ.Modules
     /// describing the exchanges/queues to which messages can be sent.  This discovered metadata
     /// is then used to create the needed exchanges and queues by delegating to the EasyNetQ
     /// advanced API.
+    /// https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#bootstrapping---modules
     /// </summary>
     public class PublisherModule : PluginModule,
         IPublisherModule
@@ -29,7 +30,8 @@ namespace NetFusion.RabbitMQ.Modules
         
         // Other  plugins (normally application plugins) specify the exchanges 
         // to be created by defining one or more IExchangeRegister derived types.
-        // NOTE:  NetFusion finds and instanciates all IExchangeRegistry types.
+        // NOTE:  NetFusion finds and instantiates all IExchangeRegistry types.
+        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#module-composition
         public IEnumerable<IExchangeRegistry> Registries { get;  protected set; }  
         
         // Records for a given message type the exchange to which the message
@@ -48,6 +50,7 @@ namespace NetFusion.RabbitMQ.Modules
             _exchangeRpcClients = new Dictionary<string, IRpcClient>();
         }
 
+        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#configure
         public override void Configure()
         {
             _busModule = Context.GetPluginModule<IBusModule>();
@@ -62,6 +65,7 @@ namespace NetFusion.RabbitMQ.Modules
             _messageExchanges = definitions.ToDictionary(m => m.MessageType);
         } 
 
+        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#startmodule
         public override void StartModule(IServiceProvider services)
         {
             foreach (IRpcClient client in _exchangeRpcClients.Values)
@@ -127,7 +131,7 @@ namespace NetFusion.RabbitMQ.Modules
         private static void AssertNoDuplicateExchanges(ExchangeMeta[] definitions)
         {
             // All exchange names that are not RPC exchanges must be unique for given named bus.
-            // The same exchange name can be used as long as associated with different named buses.
+            // The same exchange name can be used as long as associated with a different named buses.
             var duplidateExchangeNames = definitions.Where(
                     d => d.ExchangeName != null && !d.IsRpcExchange)
                 .WhereDuplicated(d => new { d.BusName, d.ExchangeName});
@@ -154,7 +158,7 @@ namespace NetFusion.RabbitMQ.Modules
         
         private static void AssertNoDuplicateQueues(ExchangeMeta[] definitions)
         {
-            var duplicateQueueNames = definitions.Where(d => d.QueueMeta?.QueueName != null)
+            var duplicateQueueNames = definitions.Where(d => d.IsDefaultExchange && !d.IsRpcExchange)
                 .WhereDuplicated(d => new { d.BusName, d.QueueMeta.QueueName });
             
             if (duplicateQueueNames.Any())
@@ -183,7 +187,7 @@ namespace NetFusion.RabbitMQ.Modules
         }
 
         // Creates a RPC client for each RPC exchange.  RPC style commands are passed through
-        // this client when sent.  It also minitors the reply queue for commands responses 
+        // this client when sent.  It also monitors the reply queue for commands responses 
         // that are correlated back to the original sent command.
         private void CreateExchangeRpcClients(ExchangeMeta[] definitions)
         {
@@ -226,6 +230,7 @@ namespace NetFusion.RabbitMQ.Modules
             return rpcClient;
         }
 
+        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#log
         public override void Log(IDictionary<string, object> moduleLog)
         {
             moduleLog["Publisher:Exchanges"] = _messageExchanges.Values.Select(e =>

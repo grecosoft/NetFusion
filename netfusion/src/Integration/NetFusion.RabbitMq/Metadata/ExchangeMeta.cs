@@ -62,7 +62,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// <param name="busName">The key specified within the application's settings
         /// specifying the broker connection.</param>
         /// <param name="queueName">The name of the queue to be created.</param>
-        /// <param name="messageType">The message type assocated with queue.</param>
+        /// <param name="messageType">The message type associated with the queue.</param>
         /// <param name="config">Delegate used to specify the queue metadata.</param>
         /// <returns>The exchange metadata.</returns>
         public static ExchangeMeta DefineDefault(string busName, string queueName, Type messageType,
@@ -70,7 +70,9 @@ namespace NetFusion.RabbitMQ.Metadata
         {
             var exchange = DefineDefault(busName, queueName, config);
 
-            exchange.MessageType = messageType;
+            exchange.MessageType = messageType 
+                ?? throw new ArgumentNullException(nameof(messageType));
+
             return exchange;
         }
 
@@ -108,14 +110,15 @@ namespace NetFusion.RabbitMQ.Metadata
         /// specifying the broker connection.</param>
         /// <param name="exchangeName">The name of the exchange.</param>
         /// <param name="exchangeType">The RabbitMQ exchange type specifier.</param>
-        /// <param name="messageType">The message type assocated with the exchange.</param>
+        /// <param name="messageType">The message type associated with the exchange.</param>
         /// <param name="config">Delegate used to specify additional exchange metadata.</param>
         /// <returns>The exchange metadata.</returns>
         public static ExchangeMeta Define(string busName, string exchangeName, string exchangeType, Type messageType,
             Action<ExchangeMeta> config = null)
         {
             var exchange = Define(busName, exchangeName, exchangeType, config);
-            exchange.MessageType = messageType;
+            exchange.MessageType = messageType 
+                ?? throw new ArgumentNullException(nameof(messageType));
 
             return exchange;
         }
@@ -150,7 +153,7 @@ namespace NetFusion.RabbitMQ.Metadata
         }
 
         /// <summary>
-        /// Set a specific publisher strategy to be used.
+        /// Sets a specific publisher strategy to be used.
         /// </summary>
         /// <param name="strategy">Reference to strategy.</param>
         internal void SetPublisherStrategy(IPublisherStrategy strategy)
@@ -223,7 +226,7 @@ namespace NetFusion.RabbitMQ.Metadata
         public int CancelRpcRequestAfterMs { get; set; } = SettingDefaults.RpcTimeOutAfterMs;
 
         /// <summary>
-        /// Based on the type of exchange, used to identify a named action to the
+        /// Based on the type of exchange, used to identify a namespace to the
         /// consumer processing the message.  
         /// </summary>
         public string ActionNamespace { get; set; }
@@ -242,7 +245,7 @@ namespace NetFusion.RabbitMQ.Metadata
         }
 
         /// <summary>
-        /// Returns an anymonous type containing the exchange properties to be logged.
+        /// Returns an anonymous type containing the exchange properties to be logged.
         /// </summary>
         /// <returns>Object with properties to be logged.</returns>
         public object GetLogDetails()
@@ -261,6 +264,7 @@ namespace NetFusion.RabbitMQ.Metadata
                 IsDefaultExchange,
                 RouteKey,
                 ContentType,
+                ActionNamespace = ActionNamespace ?? "n/a",
                 CancelRpcRequestAfterMs = IsRpcExchange ? CancelRpcRequestAfterMs.ToString() : "n/a"
             };
         }
