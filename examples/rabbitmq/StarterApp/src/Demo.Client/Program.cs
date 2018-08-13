@@ -20,7 +20,7 @@ namespace Demo.Client
 
             var loggerFactory = new LoggerFactory();
          
-            loggerFactory.AddConsole(LogLevel.Error);
+            loggerFactory.AddConsole(LogLevel.Warning);
 
             var appContainer = CreateAppContainer(serviceCollection, configuration, loggerFactory);
             appContainer.Start();

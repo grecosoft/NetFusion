@@ -1,6 +1,5 @@
 ﻿using System;
 using Demo.Client.DomainEvents;
-using Microsoft.Extensions.Logging;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Subscriber;
@@ -9,13 +8,6 @@ namespace Demo.Client.Handlers
 {
     public class SampleDirectHandler : IMessageConsumer
     {
-        private readonly ILogger _logger;
-        
-        public SampleDirectHandler(ILogger<SampleDirectHandler> logger)
-        {
-            _logger = logger;
-        }
-        
         [DirectQueue("testBus", "NorthEast", "RealEstate",
             "CT", "NY", "NH", "ME")]
         public void NorthEast(PropertySold propertySold)

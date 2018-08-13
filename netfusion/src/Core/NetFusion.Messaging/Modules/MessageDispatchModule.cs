@@ -57,8 +57,6 @@ namespace NetFusion.Messaging.Modules
             InProcessDispatchers = allDispatchers
                 .Where(d => d.IsInProcessHandler)
                 .ToLookup(k => k.MessageType);
-
-            LogInvalidConsumers();
         }
 
         // Register all of the message publishers that determine how a given
@@ -176,24 +174,6 @@ namespace NetFusion.Messaging.Modules
                     Context.Logger.LogError(MessagingLogEvents.MessagingException, ex, "Message Dispatch Error Details.");
                     throw;
                 }
-            }
-        }
-
-        private void LogInvalidConsumers()
-        {
-            string[] invalidConsumerTypes = Context.AllPluginTypes
-               .SelectMessageHandlers()
-               .Where(h => !h.HasAttribute<InProcessHandlerAttribute>() && h.DeclaringType.IsDerivedFrom<IMessageConsumer>())
-               .Select(h => h.DeclaringType.AssemblyQualifiedName)
-               .Distinct()
-               .ToArray();
-
-            if (invalidConsumerTypes.Any())
-            {
-                Context.Logger.LogWarningDetails(
-                    MessagingLogEvents.MessagingConfiguration,
-                    $"The following classes have in-process event handler methods but do not implement: {typeof(IMessageConsumer)}.",
-                    invalidConsumerTypes);
             }
         }
 
