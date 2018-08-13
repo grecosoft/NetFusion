@@ -4,6 +4,7 @@ using EasyNetQ;
 using System;
 using System.Threading;
 using NetFusion.Messaging.Types;
+using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Publisher.Internal
 {
@@ -24,10 +25,10 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
 
             // Only send the message to the exchange if satisfying all constraints
             // configured for the exchange.
-//            if (! await Satisfies(context, createdExchange, message))
-//            {
-//                return;
-//            }
+            if (! await Satisfies(context, createdExchange, message))
+            {
+                return;
+            }
 
             // Delegate to EasyNetQ to publish the message.
             await createdExchange.Bus.Advanced.PublishAsync(createdExchange.Exchange,
@@ -74,17 +75,17 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             return props;
         }
 
-//        private static async Task<bool> Satisfies(IPublisherContext context, CreatedExchange createdExchange, IMessage message)
-//        {
-//            ExchangeMeta definition = createdExchange.Definition;
-//            bool applies = definition.DelegatePredicate(message);
-//
-//            if (applies && definition.ScriptPredicate != null)
-//            {
-//                return await context.Scripting.SatisfiesPredicateAsync(message, definition.ScriptPredicate);
-//            }
-//
-//            return applies;
-        //}
+       private static async Task<bool> Satisfies(IPublisherContext context, CreatedExchange createdExchange, IMessage message)
+       {
+           ExchangeMeta definition = createdExchange.Meta;
+           bool applies = definition.Applies(message);
+
+           if (applies && definition.ScriptPredicate != null)
+           {
+               return await context.Scripting.SatisfiesPredicateAsync(message, definition.ScriptPredicate);
+           }
+
+           return applies;
+        }
     }
 }

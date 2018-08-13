@@ -34,11 +34,14 @@ namespace NetFusion.RabbitMQ.Publisher
         /// </summary>
         /// <param name="name">The name of the exchange.</param>
         /// <param name="busName">The bus name key used to lookup connection.</param>
+        /// <param name="settings">Optional delegate called allowing caller to set
+        /// additional exchange properties.</param>
         /// <typeparam name="TMessage">The domain event associated with the exchange.</typeparam>
-        protected void DefineTopicExchange<TMessage>(string name, string busName) 
+        protected void DefineTopicExchange<TMessage>(string name, string busName,
+            Action<ExchangeMeta<TMessage>> settings = null) 
             where TMessage : IDomainEvent
         {
-            var exchange = ExchangeMeta.Define(busName, name, ExchangeType.Topic, typeof(TMessage),
+            var exchange = ExchangeMeta.Define<TMessage>(busName, name, ExchangeType.Topic,
                 config =>
             {
                 config.IsAutoDelete = false;
@@ -48,6 +51,7 @@ namespace NetFusion.RabbitMQ.Publisher
             });
             
             _exchanges.Add(exchange);
+            settings?.Invoke(exchange);
         }
 
         /// <summary>
@@ -56,11 +60,14 @@ namespace NetFusion.RabbitMQ.Publisher
         /// </summary>
         /// <param name="name">The name of the exchange.</param>
         /// <param name="busName">The bus name key used to lookup connection.</param>
+        /// <param name="settings">Optional delegate called allowing caller to set
+        /// additional exchange properties.</param>
         /// <typeparam name="TMessage">The domain event associated with the exchange.</typeparam>
-        protected void DefineDirectExchange<TMessage>(string name, string busName = null) 
+        protected void DefineDirectExchange<TMessage>(string name, string busName = null,
+            Action<ExchangeMeta<TMessage>> settings = null)
             where TMessage : IDomainEvent
         {
-            var exchange = ExchangeMeta.Define(busName, name, ExchangeType.Direct, typeof(TMessage),
+            var exchange = ExchangeMeta.Define<TMessage>(busName, name, ExchangeType.Direct,
                 config =>
             {
                 config.IsAutoDelete = false;
@@ -70,6 +77,7 @@ namespace NetFusion.RabbitMQ.Publisher
             });
             
             _exchanges.Add(exchange);
+            settings?.Invoke(exchange);
         }
 
         /// <summary>
@@ -80,11 +88,14 @@ namespace NetFusion.RabbitMQ.Publisher
         /// </summary>
         /// <param name="name">The name of the exchange.</param>
         /// <param name="busName">The bus name key used to lookup connection.</param>
+        /// <param name="settings">Optional delegate called allowing caller to set
+        /// additional exchange properties.</param>
         /// <typeparam name="TMessage">The domain event associated with the exchange.</typeparam>
-        protected void DefineFanoutExchange<TMessage>(string name, string busName) 
+        protected void DefineFanoutExchange<TMessage>(string name, string busName,
+            Action<ExchangeMeta<TMessage>> settings = null) 
             where TMessage : IDomainEvent
         {
-            var exchange = ExchangeMeta.Define(busName, name, ExchangeType.Fanout, typeof(TMessage),
+            var exchange = ExchangeMeta.Define<TMessage>(busName, name, ExchangeType.Fanout,
                 config =>
             {
                 config.IsAutoDelete = true;
@@ -94,6 +105,7 @@ namespace NetFusion.RabbitMQ.Publisher
             });
             
             _exchanges.Add(exchange);
+            settings?.Invoke(exchange);
         }
 
         /// <summary>
@@ -106,11 +118,14 @@ namespace NetFusion.RabbitMQ.Publisher
         /// </summary>
         /// <param name="queueName">The name of the queue on which the consuming service will receive commands.</param>
         /// <param name="busName">The bus name key used to lookup connection.</param>
+        /// <param name="settings">Optional delegate called allowing caller to set
+        /// additional exchange properties.</param>
         /// <typeparam name="TMessage">The command type associated with the queue.</typeparam>
-        protected void DefineWorkQueue<TMessage>(string queueName, string busName)
+        protected void DefineWorkQueue<TMessage>(string queueName, string busName,
+            Action<ExchangeMeta<TMessage>> settings = null) 
             where TMessage : ICommand
         {
-            var exchange = ExchangeMeta.DefineDefault(busName, queueName, typeof(TMessage),
+            var exchange = ExchangeMeta.DefineDefault<TMessage>(busName, queueName,
                 config =>
             {
                 config.IsAutoDelete = false;
@@ -120,7 +135,9 @@ namespace NetFusion.RabbitMQ.Publisher
             });
 
             exchange.RouteKey = queueName;
+
             _exchanges.Add(exchange);
+            settings?.Invoke(exchange);
         }
 
         /// <summary>
@@ -131,10 +148,11 @@ namespace NetFusion.RabbitMQ.Publisher
         /// <param name="queueName">The name of the queue on which the subscriber will receive commands.</param>
         /// <param name="actionNamespace">For a given RPC command, identifies to the consumer the associated action.</param>
         /// <param name="busName">The bus name key used to lookup connection.</param>
+        /// <param name="settings">Optional delegate called allowing caller to set
+        /// additional exchange properties.</param>
         /// <typeparam name="TMessage">The command type associated with the queue.</typeparam>
-        protected void DefineRpcQueue<TMessage>(string queueName, string actionNamespace, 
-            string busName)
-            
+        protected void DefineRpcQueue<TMessage>(string queueName, string actionNamespace, string busName,
+            Action<ExchangeMeta<TMessage>> settings = null)
             where TMessage : ICommand
         {
             if (string.IsNullOrWhiteSpace(actionNamespace))
@@ -142,7 +160,7 @@ namespace NetFusion.RabbitMQ.Publisher
 
             var publisherStrategy = new RpcPublisherStrategy();
             
-            var exchange = ExchangeMeta.DefineDefault(busName, queueName, typeof(TMessage),
+            var exchange = ExchangeMeta.DefineDefault<TMessage>(busName, queueName,
                 config =>
                 {
                     config.IsAutoDelete = true;
@@ -156,6 +174,7 @@ namespace NetFusion.RabbitMQ.Publisher
             exchange.SetPublisherStrategy(publisherStrategy);
             
             _exchanges.Add(exchange);
+            settings?.Invoke(exchange);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using NetFusion.Base;
+using NetFusion.Base.Scripting;
+using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Publisher.Internal;
 using NetFusion.RabbitMQ.Settings;
 
@@ -27,7 +29,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// <summary>
         /// The type of the message associated with the exchange. 
         /// </summary>
-        internal Type MessageType { get; private set; }
+        internal Type MessageType { get; set; }
 
         /// <summary>
         /// The name of the exchange.  The name will be null if corresponding to the default exchange.
@@ -46,11 +48,17 @@ namespace NetFusion.RabbitMQ.Metadata
         public bool IsDefaultExchange => ExchangeName == null && ExchangeType == null;
 
         /// <summary>
+        /// Predicate that can be evaluated at runtime using a dynamic expression
+        /// to determine if the message meets the criteria of the exchange.
+        /// </summary>
+        public ScriptPredicate ScriptPredicate { get; private set; }
+
+        /// <summary>
         /// Responsible for publishing the message based on the exchange type.
         /// </summary>
         internal IPublisherStrategy PublisherStrategy { get; private set; }
 
-        private ExchangeMeta()
+        protected ExchangeMeta()
         {
             // Unless otherwise specified, the default publisher strategy will be used.
             PublisherStrategy = new DefaultPublisherStrategy();
@@ -59,20 +67,28 @@ namespace NetFusion.RabbitMQ.Metadata
         /// <summary>
         /// Defines a queue on the default exchange.
         /// </summary>
+        /// <typeparam name="TMessage">Type of message associated with exchange.</typeparam>
         /// <param name="busName">The key specified within the application's settings
         /// specifying the broker connection.</param>
         /// <param name="queueName">The name of the queue to be created.</param>
-        /// <param name="messageType">The message type associated with the queue.</param>
         /// <param name="config">Delegate used to specify the queue metadata.</param>
         /// <returns>The exchange metadata.</returns>
-        public static ExchangeMeta DefineDefault(string busName, string queueName, Type messageType,
+        public static ExchangeMeta<TMessage> DefineDefault<TMessage>(string busName, string queueName,
             Action<QueueMeta> config = null)
+            where TMessage : IMessage
         {
-            var exchange = DefineDefault(busName, queueName, config);
+            if (string.IsNullOrWhiteSpace(busName))
+                throw new ArgumentException("Bus name not specified.", nameof(busName));
+            if (string.IsNullOrWhiteSpace(queueName))
+                throw new ArgumentException("Queue name not specified.", nameof(queueName));
 
-            exchange.MessageType = messageType 
-                ?? throw new ArgumentNullException(nameof(messageType));
+            var exchange = new ExchangeMeta<TMessage> {
+                BusName = busName
+            };
+            
+            exchange.QueueMeta = QueueMeta.Define(queueName, exchange);
 
+            config?.Invoke(exchange.QueueMeta);
             return exchange;
         }
 
@@ -106,20 +122,33 @@ namespace NetFusion.RabbitMQ.Metadata
         /// <summary>
         /// Defines an exchange.
         /// </summary>
+        /// <typeparam name="TMessage">Type of message associated with exchange.</typeparam>
         /// <param name="busName">The key specified within the application's settings
         /// specifying the broker connection.</param>
         /// <param name="exchangeName">The name of the exchange.</param>
         /// <param name="exchangeType">The RabbitMQ exchange type specifier.</param>
-        /// <param name="messageType">The message type associated with the exchange.</param>
         /// <param name="config">Delegate used to specify additional exchange metadata.</param>
         /// <returns>The exchange metadata.</returns>
-        public static ExchangeMeta Define(string busName, string exchangeName, string exchangeType, Type messageType,
+        public static ExchangeMeta<TMessage> Define<TMessage>(string busName, string exchangeName, 
+            string exchangeType,
             Action<ExchangeMeta> config = null)
+            where TMessage : IMessage
         {
-            var exchange = Define(busName, exchangeName, exchangeType, config);
-            exchange.MessageType = messageType 
-                ?? throw new ArgumentNullException(nameof(messageType));
+            if (string.IsNullOrWhiteSpace(busName))
+                throw new ArgumentException("Bus name not specified.", nameof(busName));
+            if (string.IsNullOrWhiteSpace(exchangeName))
+                throw new ArgumentException("Exchange name not specified.", nameof(exchangeName));
+            if (string.IsNullOrWhiteSpace(exchangeType))
+                throw new ArgumentException("Exchange type not specified", nameof(exchangeType));
 
+            var exchange = new ExchangeMeta<TMessage>()
+            {
+                BusName = busName,
+                ExchangeName = exchangeName,
+                ExchangeType = exchangeType
+            };
+
+            config?.Invoke(exchange);
             return exchange;
         }
 
@@ -159,6 +188,34 @@ namespace NetFusion.RabbitMQ.Metadata
         internal void SetPublisherStrategy(IPublisherStrategy strategy)
         {
             PublisherStrategy = strategy ?? throw new ArgumentNullException(nameof(strategy));
+        }
+
+        /// <summary>
+        /// Determines if the message meets the criteria to be published to the exchange.
+        /// </summary>
+        /// <param name="message">The message being published.</param>
+        /// <returns>True if the message should be published to the exchange.  Otherwise, False.</returns>
+        internal virtual bool Applies(IMessage message) => true;
+
+        /// <summary>
+        /// Specifies a named script that that should be evaluated for the message to determine if
+        /// it applies to the exchange and should be published.
+        /// </summary>
+        /// <param name="scriptName">The name of the script to execute against the message.</param>
+        /// <param name="attributeName">The script predicate attribute to check value of after
+        /// the script's expression has been evaluated.</param>
+        public void SetPredicate(string scriptName, string attributeName)
+        {
+            if (string.IsNullOrWhiteSpace(scriptName))
+                throw new ArgumentException("Script name not specified.", nameof(scriptName));
+            if (string.IsNullOrWhiteSpace(attributeName))
+                throw new ArgumentException("Attribute name not specified.", nameof(attributeName));
+
+            ScriptPredicate = new ScriptPredicate 
+            {
+                ScriptName = scriptName,
+                AttributeName = attributeName
+            };
         }
 
         /// <summary>

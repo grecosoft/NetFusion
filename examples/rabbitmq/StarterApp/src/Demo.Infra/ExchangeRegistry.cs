@@ -8,7 +8,11 @@ namespace Demo.Infra
     {
         protected override void OnRegister()
         {
-            DefineDirectExchange<PropertySold>("RealEstate", "testBus");   
+            DefineDirectExchange<PropertySold>("RealEstate", "testBus", settings =>
+                {
+                    settings.AppliesIf = m => m.City != "Ignore";
+                }); 
+            
             DefineTopicExchange<AutoSaleCompleted>("CompletedAutoSales", "testBus");
             DefineFanoutExchange<TemperatureReading>("TemperatureReading", "testBus");
             
