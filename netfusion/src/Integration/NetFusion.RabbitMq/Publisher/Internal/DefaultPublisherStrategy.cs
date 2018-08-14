@@ -48,19 +48,15 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             if (message == null) throw new ArgumentNullException(nameof(message));
 
             var definition = createdExchange.Meta;
-       
-            var props = new MessageProperties 
+
+            var props = new MessageProperties
             {
                 ContentType = definition.ContentType,
                 AppId = context.BusModule.HostAppId,
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                DeliveryMode = (byte) (definition.IsPersistent ? 2 : 1)
             };
-
-            if (definition.IsPersistent)
-            {
-                props.DeliveryMode = 2; 
-            }
-
+            
             string correlationId = message.GetCorrelationId();
             if (correlationId != null)
             {

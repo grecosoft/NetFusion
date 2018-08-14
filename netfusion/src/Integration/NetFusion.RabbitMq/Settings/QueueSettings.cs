@@ -58,7 +58,7 @@ namespace NetFusion.RabbitMQ.Settings
             
             validator.Verify(Priority == null || 0 < Priority, $"{nameof(Priority)} must be greater then zero.");
 
-            validator.Verify(MaxPriority == null, 
+            validator.Verify(MaxPriority == null || 0 < MaxPriority, 
                 $"{nameof(MaxPriority)} must be greater or equal to zero.");
         }
     }

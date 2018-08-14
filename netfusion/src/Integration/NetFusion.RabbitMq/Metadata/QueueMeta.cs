@@ -117,7 +117,7 @@ namespace NetFusion.RabbitMQ.Metadata
             Priority = settings.Priority ?? Priority;
             
             DeadLetterExchange = settings.DeadLetterExchange ?? DeadLetterExchange;
-            DeadLetterRoutingKey = DeadLetterRoutingKey ?? DeadLetterRoutingKey;
+            DeadLetterRoutingKey = settings.DeadLetterRoutingKey ?? DeadLetterRoutingKey;
             PerQueueMessageTtl = settings.PerQueueMessageTtl ?? PerQueueMessageTtl;
         }
                 

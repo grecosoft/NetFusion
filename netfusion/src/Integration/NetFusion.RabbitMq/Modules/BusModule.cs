@@ -116,7 +116,7 @@ namespace NetFusion.RabbitMQ.Modules
         /// Factory method used to return an IBus implementation.  Default to EasyNetQ but can also
         /// be used to provided a mock during unit testing.
         /// </summary>
-        public readonly Func<ConnectionConfiguration, IBus> BusFactory = c => RabbitHutch.CreateBus(c, rs => {});
+        public Func<ConnectionConfiguration, IBus> BusFactory = c => RabbitHutch.CreateBus(c, rs => {});
 
         // Additional client properties associated with created connections.
         private void SetAdditionalClientProperties(IDictionary<string, object> clientProps)

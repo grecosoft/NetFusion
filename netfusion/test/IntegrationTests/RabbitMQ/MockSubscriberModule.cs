@@ -8,13 +8,15 @@
 //
 //namespace IntegrationTests.RabbitMQ
 //{
+//    using NetFusion.RabbitMQ.Metadata;
+//
 //    public class MockSubscriberModule : SubscriberModule
 //    {
 //        public List<QueueExchangeDefinition> CreatedExchanges { get; } = new EditableList<QueueExchangeDefinition>();
 //        public List<QueueContext> CreatedQueues { get; } = new EditableList<QueueContext>();
 //        public List<MessageQueueSubscriber> Subscribers = new EditableList<MessageQueueSubscriber>();
 //
-//        protected override IExchange CreateExchange(IBus bus, QueueExchangeDefinition definition)
+//        protected override IExchange CreateExchange(IBus bus, ExchangeMeta definition)
 //        {
 //            CreatedExchanges.Add(definition);
 //            
