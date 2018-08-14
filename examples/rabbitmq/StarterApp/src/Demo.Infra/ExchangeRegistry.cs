@@ -1,5 +1,6 @@
 using Demo.App.Commands;
 using Demo.App.DomainEvents;
+using NetFusion.Base;
 using NetFusion.RabbitMQ.Publisher;
 
 namespace Demo.Infra
@@ -9,7 +10,8 @@ namespace Demo.Infra
         protected override void OnRegister()
         {
             DefineDirectExchange<PropertySold>("RealEstate", "testBus", settings =>
-                {
+            {
+                settings.ContentType = ContentTypes.MessagePack;
                     settings.AppliesIf = m => m.City != "Ignore";
                 }); 
             

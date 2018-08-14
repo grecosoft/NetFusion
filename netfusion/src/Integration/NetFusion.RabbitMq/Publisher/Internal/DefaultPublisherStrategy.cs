@@ -23,9 +23,10 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             MessageProperties messageProperties = GetMessageProperties(context, createdExchange, message);
             string routeKey = message.GetRouteKey() ?? createdExchange.Meta.RouteKey;
 
-            // Only send the message to the exchange if satisfying all constraints
-            // configured for the exchange.
-            if (! await Satisfies(context, createdExchange, message))
+            // Only send the message to the exchange if satisfying all constraints configured for the exchange.  
+            // This only applies to domain-events, as commands are more specific in that they are explicitly
+            // requesting a behavior to be taken. 
+            if (message is IDomainEvent && ! await Satisfies(context, createdExchange, message))
             {
                 return;
             }

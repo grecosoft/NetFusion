@@ -198,7 +198,7 @@ namespace NetFusion.RabbitMQ.Metadata
         internal virtual bool Applies(IMessage message) => true;
 
         /// <summary>
-        /// Specifies a named script that that should be evaluated for the message to determine if
+        /// Specifies a named script that should be evaluated for the message to determine if
         /// it applies to the exchange and should be published.
         /// </summary>
         /// <param name="scriptName">The name of the script to execute against the message.</param>
@@ -274,7 +274,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// <summary>
         /// The content type of the serialized message body.
         /// </summary>
-        public string ContentType { get; set; } = SerializerTypes.Json;
+        public string ContentType { get; set; } = ContentTypes.Json;
 
         /// <summary>
         /// Number of milliseconds after which a RPC request will timeout

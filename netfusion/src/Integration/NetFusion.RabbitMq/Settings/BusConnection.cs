@@ -6,12 +6,15 @@ using NetFusion.Common.Extensions.Collections;
 
 namespace NetFusion.RabbitMQ.Settings
 {
+    /// <summary>
+    /// Class representing connection configuration settings for a message broker.
+    /// 
+    /// https://github.com/grecosoft/NetFusion/wiki/common.validation.overview#class-validation
+    /// </summary>
     public class BusConnection : IValidatableType
     {
         /// <summary>
         /// The name of the bus used in code when declaring exchanges and queues.
-        /// If the name of the bus is not specified within the code, the default 
-        /// name of: message-bus is assumed.
         /// </summary>
         [Required(AllowEmptyStrings = false, ErrorMessage = "BrokerName Required")]
         public string BusName { get; set; }
@@ -96,10 +99,9 @@ namespace NetFusion.RabbitMQ.Settings
 
         public void Validate(IObjectValidator validator)
         {
-            validator.AddChild(ExchangeSettings);
-            validator.AddChild(QueueSettings);
-
-            Hosts.ForEach(h => validator.AddChild(h));
+            validator.AddChild(Hosts);
+            validator.AddChildren(ExchangeSettings);
+            validator.AddChildren(QueueSettings);
         }
     }
 }

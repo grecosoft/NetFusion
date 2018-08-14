@@ -40,7 +40,7 @@ namespace NetFusion.RabbitMQ.Modules
         
         // Unique value identifying the host plugin.  The value can be used to tag
         // exchanges and queues so the associated host can be identified.  This will
-        // also make a given queue name unique to a given application host.
+        // make a given queue name unique to a given application host.
         public string HostAppId => Context.AppHost.Manifest.PluginId;
 
         // Creates IBus instances for each configured bus.

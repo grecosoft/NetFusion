@@ -23,8 +23,8 @@ namespace NetFusion.RabbitMQ.Serialization
         byte[] Serialize(object value);
 
         /// <summary>
-        /// Returns a value that has been deserialized.  Used to 
-        /// deserialize a message received on a queue,
+        /// Returns a value that has been deserialized.  Used to deserialize 
+        /// a message received on a queue,
         /// </summary>
         /// <param name="value">Byte array containing serialized value.</param>
         /// <param name="valueType">The type of the value contained within

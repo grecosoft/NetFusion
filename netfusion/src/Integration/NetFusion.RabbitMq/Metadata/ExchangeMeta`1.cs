@@ -4,8 +4,7 @@ using NetFusion.Messaging.Types;
 namespace NetFusion.RabbitMQ.Metadata
 {
     /// <summary>
-    /// ExchangeMeta derived class for a specified type
-    /// of message.
+    /// ExchangeMeta derived class for a specified type of message.
     /// </summary>
     /// <typeparam name="TMessage"></typeparam>
     public class ExchangeMeta<TMessage> : ExchangeMeta

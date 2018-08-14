@@ -43,6 +43,12 @@ namespace NetFusion.Base.Validation
         IObjectValidator AddChild(object childObject);
 
         /// <summary>
+        /// Adds new validators for a list of child objects
+        /// </summary>
+        /// <param name="childObjects">Object to be validated.</param>
+        void AddChildren(IEnumerable<object> childObjects);
+
+        /// <summary>
         /// Verifies that the predicate is true.  If not true, a validation item is added to the list.
         /// </summary>
         /// <param name="predicate">The expression to assert.</param>
@@ -51,7 +57,5 @@ namespace NetFusion.Base.Validation
         /// <param name="propertyNames">The name of the properties.</param>
         /// <returns>The result of the predicate.</returns>
         bool Verify(bool predicate, string message, ValidationTypes level = ValidationTypes.Error, params string[] propertyNames);
-
     }
-
 }

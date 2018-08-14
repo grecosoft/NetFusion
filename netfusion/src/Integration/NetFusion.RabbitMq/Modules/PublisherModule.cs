@@ -133,7 +133,7 @@ namespace NetFusion.RabbitMQ.Modules
             // All exchange names that are not RPC exchanges must be unique for given named bus.
             // The same exchange name can be used as long as associated with a different named buses.
             var duplidateExchangeNames = definitions.Where(
-                    d => d.ExchangeName != null && !d.IsRpcExchange)
+                    d => !d.IsDefaultExchange && !d.IsRpcExchange)
                 .WhereDuplicated(d => new { d.BusName, d.ExchangeName});
             
             if (duplidateExchangeNames.Any())
@@ -145,14 +145,14 @@ namespace NetFusion.RabbitMQ.Modules
             
             // Validate that all RPC exchanges are unique by bus, queue, and action namespace.
             var duplidateRpcExchanges = definitions.Where(d => d.IsRpcExchange)
-                .WhereDuplicated(d => new { d.BusName, d.ExchangeName, d.ActionNamespace});
+                .WhereDuplicated(d => new { d.BusName, d.QueueMeta.QueueName, d.ActionNamespace});
             
             if (duplidateRpcExchanges.Any())
             {
                 throw new ContainerException(
                     "For RPC exchanges names must be unique for a given named bus, queue, and action namespace.  " +
                     "The following have been configured more than once.", 
-                    "duplicate-exchanges", duplidateExchangeNames);
+                    "duplicate-queues", duplidateExchangeNames);
             }
         }
         

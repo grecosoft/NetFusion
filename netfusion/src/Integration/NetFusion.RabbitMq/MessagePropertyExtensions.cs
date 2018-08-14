@@ -15,7 +15,7 @@ namespace NetFusion.RabbitMQ
         public const string RpcHeaderExceptionIndicator = "Rpc-exception-response";
        
         /// <summary>
-        /// A key value used to identify the message bus to which  the consumer should publish the
+        /// A key value used to identify the message bus to which the consumer should publish the
         /// reply to the command.  The value will be used to look up the IBus instance configuration
         /// corresponding the the name when publishing the reply.
         /// </summary>
@@ -36,7 +36,7 @@ namespace NetFusion.RabbitMQ
         }
 
         /// <summary>
-        /// A key value used to identify the message bus to which  the consumer should publish the
+        /// A key value used to identify the message bus to which the consumer should publish the
         /// reply to the command.  The value will be used to look up the IBus instance configuration
         /// corresponding the the name when publishing the reply.
         /// </summary>

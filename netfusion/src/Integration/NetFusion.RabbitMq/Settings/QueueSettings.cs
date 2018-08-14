@@ -5,6 +5,8 @@ namespace NetFusion.RabbitMQ.Settings
     /// <summary>
     /// Queue settings specified within the application configuration.
     /// If specified they override all corresponding settings set in code.
+    /// 
+    /// https://github.com/grecosoft/NetFusion/wiki/common.validation.overview#class-validation
     /// </summary>
     public class QueueSettings : IValidatableType
     {
@@ -54,7 +56,7 @@ namespace NetFusion.RabbitMQ.Settings
             validator.Verify(PerQueueMessageTtl == null || 0 <= PerQueueMessageTtl.Value, 
                 $"{nameof(PerQueueMessageTtl)} must be greater or equal to zero.");
             
-            validator.Verify(0 < Priority, $"{nameof(Priority)} must be greater then zero.");
+            validator.Verify(Priority == null || 0 < Priority, $"{nameof(Priority)} must be greater then zero.");
 
             validator.Verify(MaxPriority == null, 
                 $"{nameof(MaxPriority)} must be greater or equal to zero.");

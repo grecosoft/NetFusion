@@ -9,6 +9,9 @@ namespace NetFusion.RabbitMQ.Settings
 {
     /// <summary>
     /// Configuration settings for defined business used by the application.
+    /// 
+    /// https://github.com/grecosoft/NetFusion/wiki/core.settings.overview#defining-application-settings
+    /// https://github.com/grecosoft/NetFusion/wiki/common.validation.overview#class-validation
     /// </summary>
     [ConfigurationSection("netfusion:rabbitMQ")]
     public class BusSettings : IAppSettings,
@@ -46,7 +49,7 @@ namespace NetFusion.RabbitMQ.Settings
 
         public void Validate(IObjectValidator validator)
         {
-            Connections.ForEach(c => validator.AddChild(c));
+            validator.AddChildren(Connections);
         }
     }
 }

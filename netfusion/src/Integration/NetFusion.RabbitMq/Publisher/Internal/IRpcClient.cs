@@ -6,7 +6,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
 {
     /// <summary>
     /// Describes a component that can send messages to a receiving queue and
-    /// monitor an associated reply queue for the corresponding response.
+    /// monitors an associated reply queue for the corresponding response.
     /// </summary>
     public interface IRpcClient
     {

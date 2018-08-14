@@ -29,7 +29,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             _timeCancelToken = new CancellationTokenSource();
             _timeCancelToken.CancelAfter(cancelRequestAfterMs);
 
-            // Combines time based cancellation token with the caller's cancellation token.
+            // Combines time-based cancellation token with the caller's cancellation token.
             var combinedCancellation = CancellationTokenSource.CreateLinkedTokenSource(
                 _timeCancelToken.Token, 
                 externalCancellationToken);

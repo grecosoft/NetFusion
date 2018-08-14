@@ -10,15 +10,14 @@ using System.Text;
 namespace NetFusion.RabbitMQ.Serialization
 {
     /// <summary>
-    /// Serializes a value to JSON representation.  Called by the
-    /// MessageBroker when serializing and deserializing messages
-    /// to queues.
+    /// Serializes a value to JSON representation.  Extended to allow serialization
+    /// and deserialization of public properties with private setters.
     /// </summary>
-    public class JsonBrokerSerializer : IMessageSerializer
+    public class JsonMessageSerializer : IMessageSerializer
     {
-        private IContractResolver _contractResolver = new CustomContractResolver();
+        private readonly IContractResolver _contractResolver = new CustomContractResolver();
 
-        public string ContentType => SerializerTypes.Json;
+        public string ContentType => ContentTypes.Json;
 
         public byte[] Serialize(object value)
         {
@@ -26,7 +25,7 @@ namespace NetFusion.RabbitMQ.Serialization
 
             var settings = new JsonSerializerSettings {
                 Formatting = Formatting.None,
-                NullValueHandling = NullValueHandling.Ignore,
+                NullValueHandling = NullValueHandling.Include,
                 ContractResolver = _contractResolver
             };
 
@@ -53,20 +52,24 @@ namespace NetFusion.RabbitMQ.Serialization
             return (T)Deserialize(value, valueType);
         }
 
-        // TODO:  Review this code...
         private class CustomContractResolver : DefaultContractResolver
         {
             protected override List<MemberInfo> GetSerializableMembers(Type objectType)
             {
+                // Add to the base set of serializable members those that also have property
+                // setters regardless of access.
                 var membersToSerialize = base.GetSerializableMembers(objectType)
                     .Concat(objectType.GetProperties().Where(p => p.GetSetMethod() != null))
                     .GroupBy(p => p.Name)
                     .Select(g => g.First())
                     .ToList();
 
+                // Don't serialize the Attributes property that is .NET dynamic based.
+                // AttributeValues will be serialized and deserialized instead.
                 return membersToSerialize.Where( m => m.Name != "Attributes").ToList();
             }
 
+            // Allow properties with private setters to be deserialized.
             protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
             {
                 var prop = base.CreateProperty(member, memberSerialization);

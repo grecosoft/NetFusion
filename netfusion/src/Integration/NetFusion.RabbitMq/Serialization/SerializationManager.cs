@@ -24,7 +24,7 @@ namespace NetFusion.RabbitMQ.Serialization
         {
             _serializers = new Dictionary<string, IMessageSerializer>();
 
-            AddSerializer(new JsonBrokerSerializer());
+            AddSerializer(new JsonMessageSerializer());
             AddSerializer(new MessagePackSerializer());
         }
 

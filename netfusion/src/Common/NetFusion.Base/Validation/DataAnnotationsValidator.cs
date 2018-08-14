@@ -85,5 +85,13 @@ namespace NetFusion.Base.Validation
             _children.Add(validator);
             return validator;
         }
+
+        public void AddChildren(IEnumerable<object> childObjects)
+        {
+            foreach (object childObject in childObjects)
+            {
+                AddChild(childObject);
+            }
+        }
     }
 }

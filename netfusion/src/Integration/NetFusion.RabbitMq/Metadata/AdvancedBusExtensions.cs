@@ -66,7 +66,7 @@ namespace NetFusion.RabbitMQ.Metadata
             
             if (! meta.Exchange.IsDefaultExchange)
             {
-                exchange =  bus.ExchangeDeclare(exchangeMeta.ExchangeName, exchangeMeta.ExchangeType, 
+                exchange = bus.ExchangeDeclare(exchangeMeta.ExchangeName, exchangeMeta.ExchangeType, 
                     durable: exchangeMeta.IsDurable,
                     autoDelete: exchangeMeta.IsAutoDelete, 
                     passive: exchangeMeta.IsPassive,
@@ -84,7 +84,7 @@ namespace NetFusion.RabbitMQ.Metadata
                 perQueueMessageTtl: meta.PerQueueMessageTtl);
 
 
-            // Queues defined on the default exchange do not need to be bound.
+            // Queues defined on the default exchange so don't bind.
             if (exchangeMeta.IsDefaultExchange)
             {
                 return queue;

@@ -39,7 +39,7 @@ namespace NetFusion.RabbitMQ.Publisher
             ISerializationManager serializationManager,
             IEntityScriptingService scripting)
         {
-            Logger = loggerFactory.CreateLogger<RabbitAdvancedBus>();
+            Logger = loggerFactory.CreateLogger<RabbitMqPublisher>();
             BusModule = busModule ?? throw new ArgumentNullException(nameof(busModule));    
             PublisherModule = publisherModule ?? throw new ArgumentNullException(nameof(publisherModule));
             Serialization = serializationManager ?? throw new ArgumentNullException(nameof(serializationManager));

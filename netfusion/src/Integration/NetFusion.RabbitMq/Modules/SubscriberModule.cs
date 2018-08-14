@@ -22,7 +22,7 @@ namespace NetFusion.RabbitMQ.Modules
     /// </summary>
     public class SubscriberModule : PluginModule
     {
-        // Dependent modules:
+        // Dependent Modules:
         private IBusModule _busModule;
         private IMessageDispatchModule _messagingModule;
         private ISerializationManager _serializationManager;

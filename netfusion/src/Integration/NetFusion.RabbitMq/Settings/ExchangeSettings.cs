@@ -4,7 +4,9 @@ namespace NetFusion.RabbitMQ.Settings
 {
     /// <summary>
     /// Exchange settings specified within the application configuration.
-    /// If specified they override all corresponding settings set in code.
+    /// If specified they override the corresponding settings set in code.
+    /// 
+    /// https://github.com/grecosoft/NetFusion/wiki/common.validation.overview#class-validation
     /// </summary>
     public class ExchangeSettings : IValidatableType
     {
@@ -38,9 +40,10 @@ namespace NetFusion.RabbitMQ.Settings
         public void Validate(IObjectValidator validator)
         {
             validator.Verify(! string.IsNullOrWhiteSpace(ExchangeName), $"{nameof(ExchangeName)} not specified.");
-            
-            validator.Verify(0 < CancelRpcRequestAfterMs, 
+
+            validator.Verify(CancelRpcRequestAfterMs == null || 0 < CancelRpcRequestAfterMs, 
                 $"{nameof(CancelRpcRequestAfterMs)} must be greater then zero.");
+        
         }
     }
 }

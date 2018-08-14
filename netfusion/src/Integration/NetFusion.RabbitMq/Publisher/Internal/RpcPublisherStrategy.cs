@@ -26,8 +26,6 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             byte[] messageBody = context.Serialization.Serialize(command, contentType);
             MessageProperties messageProperties = DefaultPublisherStrategy.GetMessageProperties(context, createdExchange, command);
             
-            messageProperties.SetRpcActionNamespace(createdExchange.Meta.ActionNamespace);
-
             // Get the RPC client associated with the exchange to which the RPC message is being sent.
             IRpcClient client = context.PublisherModule.GetRpcClient(
                 createdExchange.Meta.BusName,
@@ -57,7 +55,6 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                     throw;
                 }
 
-                // TODO:  ...
                 var dispatchEx = context.Serialization.Deserialize<MessageDispatchException>(contentType, ex.ReplayExceptionBody);
                 context.Logger.LogError(RabbitMqLogEvents.PublisherException, dispatchEx, "RPC Exception Reply.");
                 throw dispatchEx;
@@ -69,7 +66,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             var definition = createdExchange.Meta;
             
             context.Logger.LogTraceDetails(
-                $"Response to RPC message sent to exchange: {definition.ExchangeName} on bus: {definition.BusName}", responseObj);
+                $"Response to RPC message sent to queue: {definition.QueueMeta.QueueName} on bus: {definition.BusName}", responseObj);
         }
     }
 }

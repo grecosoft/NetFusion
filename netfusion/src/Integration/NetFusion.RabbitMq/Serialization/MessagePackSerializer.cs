@@ -10,7 +10,7 @@ namespace NetFusion.RabbitMQ.Serialization
     /// </summary>
     public class MessagePackSerializer : IMessageSerializer
     {        
-        public string ContentType => SerializerTypes.MessagePack;
+        public string ContentType => ContentTypes.MessagePack;
 
         public MessagePackSerializer()
         {
