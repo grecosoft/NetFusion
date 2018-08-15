@@ -74,7 +74,7 @@ namespace NetFusion.RabbitMQ.Modules
                 }
                 
                 var bus = busModule.GetBus(subscriber.QueueMeta.Exchange.BusName);
-                IQueue queue = bus.Advanced.QueueDeclare(subscriber.QueueMeta);
+                IQueue queue = QueueDeclare(bus, subscriber.QueueMeta);
                 
                 ConsumeMessageQueue(bus, queue, subscriber);
                 
@@ -83,6 +83,11 @@ namespace NetFusion.RabbitMQ.Modules
                     boundToRpcQueues.Add(queue.Name);
                 }
             }
+        }
+
+        protected virtual IQueue QueueDeclare(IBus bus, QueueMeta queueMeta)
+        {
+            return bus.Advanced.QueueDeclare(queueMeta);
         }
 
         // Defines a callback function to be called when a message arrives on the queue.

@@ -77,9 +77,13 @@ namespace Demo.WebApi
                 .Build();
         }
 
-        private static void OnShutdown()
+        private void OnShutdown()
         {
+            var logger = _loggerFactory.CreateLogger<Startup>();
+            logger.LogDebug("Container being stopped.");
             AppContainer.Instance.Stop();
+            
+            logger.LogDebug("Container stopped.");
         }
     }
 }

@@ -18,8 +18,8 @@ namespace IntegrationTests.RabbitMQ
             resolver.AddPlugin<MockCorePlugin>()
                 .UseMessagingPlugin()
                 .AddPluginType<MockBusModule>()
-               // .AddPluginType<MockPublisherModule>()
-              //  .AddPluginType<MockSubscriberModule>()
+                .AddPluginType<MockPublisherModule>()
+                .AddPluginType<MockSubscriberModule>()
                 .AddPluginType<BusSettings>();
 
             return resolver;

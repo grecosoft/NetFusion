@@ -169,6 +169,7 @@ namespace NetFusion.RabbitMQ.Publisher
                     config.IsExclusive = false;
                 });
 
+            exchange.IsAutoDelete = true;
             exchange.IsRpcExchange = true;
             exchange.ActionNamespace = actionNamespace;
             exchange.SetPublisherStrategy(publisherStrategy);

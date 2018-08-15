@@ -137,7 +137,7 @@ namespace IntegrationTests.RabbitMQ
                         var exchangeMeta = ExchangeMeta.Define("TestBus1", "TestExchangeName", ExchangeType.Direct);
                         m.ApplyExchangeSettings(exchangeMeta);
 
-                        Assert.Equal(true, exchangeMeta.IsPassive);
+                        Assert.True(exchangeMeta.IsPassive);
                         Assert.Equal("TestAltExchangeName", exchangeMeta.AlternateExchangeName);
                         Assert.Equal("TestContentType", exchangeMeta.ContentType);
                         Assert.Equal(10000, exchangeMeta.CancelRpcRequestAfterMs);
@@ -163,7 +163,7 @@ namespace IntegrationTests.RabbitMQ
                         var queueMeta = ExchangeMeta.DefineDefault("TestBus1", "TestQueueName").QueueMeta;
                         m.ApplyQueueSettings(queueMeta);
                         
-                        Assert.Equal(true, queueMeta.IsPassive);
+                        Assert.True(queueMeta.IsPassive);
                         Assert.Equal(20000, queueMeta.PerQueueMessageTtl);
                         Assert.Equal("TestDeadLetterExchange", queueMeta.DeadLetterExchange);
                         Assert.Equal("TestDeadLetterRoutingKey", queueMeta.DeadLetterRoutingKey);
