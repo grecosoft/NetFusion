@@ -157,5 +157,13 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                     pendingRequest.SetResult(msgBody);
                 });
         }
+        
+        public void Dispose()
+        {
+            foreach (RpcPendingRequest pendingRequest in _pendingRpcRequests.Values)
+            {
+                pendingRequest.Cancel();
+            }
+        }
     }
 }

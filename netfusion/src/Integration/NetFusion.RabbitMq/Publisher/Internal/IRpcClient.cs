@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using EasyNetQ;
@@ -8,7 +9,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
     /// Describes a component that can send messages to a receiving queue and
     /// monitors an associated reply queue for the corresponding response.
     /// </summary>
-    public interface IRpcClient
+    public interface IRpcClient : IDisposable
     {
         /// <summary>
         /// Should publish the message bytes to the exchange and monitor
