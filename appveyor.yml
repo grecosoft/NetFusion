@@ -14,6 +14,7 @@ test_script:
   - ps: dotnet test .\netfusion\test\CommonTests\CommonTests.csproj 
   - ps: dotnet test .\netfusion\test\CoreTests\CoreTests.csproj
   - ps: dotnet test .\netfusion\test\WebTests\WebTests.csproj
+  - ps: dotnet test .\netfusion\test\IntegrationTests\IntegrationTests.csproj
   
 artifacts:
   - path: netfusion\src\**\*.nupkg
