@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7</LangVersion>
@@ -16,4 +17,14 @@
     <ProjectReference Include="..\..\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
     <ProjectReference Include="..\..\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
   </ItemGroup>
+  <PropertyGroup>
+    <PackageId>NetFusion.RabbitMQ</PackageId>
+    <Title>NetFusion RabbitMQ Plug-In</Title>
+    <Description>
+      Plug-in providing message-publisher allowing commands and domain-events to be published to RabbitMQ.
+      Also provides attributes used to binds in-process message handlers to RabbitMq queues to be invoked
+      when messages arrives on queue.
+    </Description>
+    <PackageTags>netfusion;plugin;messaging;inprocess;ddd</PackageTags>
+  </PropertyGroup>
 </Project>
