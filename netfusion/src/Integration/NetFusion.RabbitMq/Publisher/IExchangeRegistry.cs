@@ -5,7 +5,7 @@ using NetFusion.RabbitMQ.Metadata;
 namespace NetFusion.RabbitMQ.Publisher
 {
     /// <summary>
-    /// Interface implemented by application used to define
+    /// Interface implemented by applications used to define
     /// the exchanges/queues to which messages can be dispatched.
     /// </summary>
     public interface IExchangeRegistry : IKnownPluginType

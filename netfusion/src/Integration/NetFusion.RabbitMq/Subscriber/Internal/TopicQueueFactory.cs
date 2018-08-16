@@ -7,6 +7,8 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     /// <summary>
     /// Factory for creating queues on a topic exchange.  Sets the default conventions 
     /// used for a topic exchange and created queues.
+    /// 
+    /// https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-topic
     /// </summary>
     internal class TopicQueueFactory : IQueueFactory
     {

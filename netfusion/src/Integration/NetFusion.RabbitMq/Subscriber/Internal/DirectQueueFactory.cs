@@ -7,6 +7,8 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     /// <summary>
     /// Factory for creating queues on a direct exchange.  Sets the default
     /// conventions used for a direct exchange and created queues.
+    /// 
+    /// https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-direct
     /// </summary>
     internal class DirectQueueFactory : IQueueFactory
     {

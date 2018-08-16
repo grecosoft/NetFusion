@@ -19,7 +19,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             CancellationToken cancellationToken)
         {
             ICommand command = (ICommand)message;
-            string contentType = createdExchange.Meta.ContentType;
+            string contentType = createdExchange.Definition.ContentType;
 
             // Serialize the message and get the properties from the default-publisher to be used as 
             // the initial list of message properties to which RPC specific properties will be added.
@@ -28,8 +28,8 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             
             // Get the RPC client associated with the exchange to which the RPC message is being sent.
             IRpcClient client = context.PublisherModule.GetRpcClient(
-                createdExchange.Meta.BusName,
-                createdExchange.Meta.QueueMeta.QueueName);
+                createdExchange.Definition.BusName,
+                createdExchange.Definition.QueueMeta.QueueName);
 
             // Note:  Consumer replies with same content-type that was used to publish command.
             
@@ -63,7 +63,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
 
         private static void LogReceivedRpcResponse(IPublisherContext context, CreatedExchange createdExchange, object responseObj)
         {
-            var definition = createdExchange.Meta;
+            var definition = createdExchange.Definition;
             
             context.Logger.LogTraceDetails(
                 $"Response to RPC message sent to queue: {definition.QueueMeta.QueueName} on bus: {definition.BusName}", responseObj);

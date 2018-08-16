@@ -6,6 +6,7 @@ namespace NetFusion.RabbitMQ.Serialization
 {
     /// <summary>
     /// Serializer for message pack serialization compact binary format.
+    /// 
     /// http://msgpack.org/index.html
     /// </summary>
     public class MessagePackSerializer : IMessageSerializer

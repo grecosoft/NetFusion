@@ -1,3 +1,4 @@
+using System;
 using NetFusion.RabbitMQ.Subscriber.Internal;
 
 namespace NetFusion.RabbitMQ.Subscriber
@@ -15,6 +16,9 @@ namespace NetFusion.RabbitMQ.Subscriber
             
             : base(busName, queueName, new RpcQueueFactory())
         {
+            if (string.IsNullOrWhiteSpace(actionNamespace))
+                throw new ArgumentException("Action namespace not specified", nameof(actionNamespace));
+
             ActionNamespace = actionNamespace;
         }
     }

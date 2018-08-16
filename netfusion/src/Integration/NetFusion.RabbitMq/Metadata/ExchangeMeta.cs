@@ -49,7 +49,8 @@ namespace NetFusion.RabbitMQ.Metadata
 
         /// <summary>
         /// Predicate that can be evaluated at runtime using a dynamic expression
-        /// to determine if the message meets the criteria of the exchange.
+        /// to determine if the message meets the criteria of the exchange.  This
+        /// allows the logic to be stored external to the application.
         /// </summary>
         public ScriptPredicate ScriptPredicate { get; private set; }
 
@@ -66,6 +67,8 @@ namespace NetFusion.RabbitMQ.Metadata
 
         /// <summary>
         /// Defines a queue on the default exchange.
+        /// 
+        /// https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-default
         /// </summary>
         /// <typeparam name="TMessage">Type of message associated with exchange.</typeparam>
         /// <param name="busName">The key specified within the application's settings
@@ -94,6 +97,8 @@ namespace NetFusion.RabbitMQ.Metadata
 
         /// <summary>
         /// Defines a queue on the default exchange.
+        /// 
+        /// https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-default
         /// </summary>
         /// <param name="busName">The key specified within the application's settings
         /// specifying the broker connection.</param>
@@ -257,8 +262,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// <param name="settings">External stored exchange settings.</param>
         public void ApplyOverrides(ExchangeSettings settings)
         {
-            if (settings == null)
-                throw new ArgumentNullException(nameof(settings));
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
 
             IsPassive = settings.Passive ?? IsPassive;
             ContentType = settings.ContentType ?? ContentType;

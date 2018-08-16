@@ -26,7 +26,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             _hostId = hostId;
             
             // Obtain the subscriber attribute so the definition metadata
-            // can be retreived.
+            // can be retrieved.
             var queueAttrib = dispatchInfo.MessageHandlerMethod
                 .GetCustomAttribute<SubscriberQueueAttribute>();
 

@@ -31,12 +31,14 @@ namespace NetFusion.RabbitMQ.Publisher
         /// Defines a topic exchange.  This type of exchange will route messages
         /// to bound queues matching a pattern based on the message's route-key.
         /// Example:  RouteKey:  VW.GTI.2018  Pattern:  VW.*.2018 
+        /// 
+        /// https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-topic
         /// </summary>
         /// <param name="name">The name of the exchange.</param>
         /// <param name="busName">The bus name key used to lookup connection.</param>
         /// <param name="settings">Optional delegate called allowing caller to set
         /// additional exchange properties.</param>
-        /// <typeparam name="TMessage">The domain event associated with the exchange.</typeparam>
+        /// <typeparam name="TMessage">The domain-event type associated with the exchange.</typeparam>
         protected void DefineTopicExchange<TMessage>(string name, string busName,
             Action<ExchangeMeta<TMessage>> settings = null) 
             where TMessage : IDomainEvent
@@ -57,12 +59,14 @@ namespace NetFusion.RabbitMQ.Publisher
         /// <summary>
         /// Defines a direct exchange.  This type of exchange will route messages
         /// to bound queues matching the message's route-key.
+        /// 
+        /// https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-direct
         /// </summary>
         /// <param name="name">The name of the exchange.</param>
         /// <param name="busName">The bus name key used to lookup connection.</param>
         /// <param name="settings">Optional delegate called allowing caller to set
         /// additional exchange properties.</param>
-        /// <typeparam name="TMessage">The domain event associated with the exchange.</typeparam>
+        /// <typeparam name="TMessage">The domain-event type associated with the exchange.</typeparam>
         protected void DefineDirectExchange<TMessage>(string name, string busName = null,
             Action<ExchangeMeta<TMessage>> settings = null)
             where TMessage : IDomainEvent
@@ -83,14 +87,16 @@ namespace NetFusion.RabbitMQ.Publisher
         /// <summary>
         /// Defines a fanout exchange that will broadcast messages to all bound message queues.
         /// This should be used for notification type messages where the subscriber only cares
-        /// about current occurring messages and does not care about prior missed messages that
-        /// happened when they were offline.
+        /// about current occurring messages and not about prior missed messages that happened
+        /// when they were offline.
+        /// 
+        /// https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-fanout
         /// </summary>
         /// <param name="name">The name of the exchange.</param>
         /// <param name="busName">The bus name key used to lookup connection.</param>
         /// <param name="settings">Optional delegate called allowing caller to set
         /// additional exchange properties.</param>
-        /// <typeparam name="TMessage">The domain event associated with the exchange.</typeparam>
+        /// <typeparam name="TMessage">The domain-event type associated with the exchange.</typeparam>
         protected void DefineFanoutExchange<TMessage>(string name, string busName,
             Action<ExchangeMeta<TMessage>> settings = null) 
             where TMessage : IDomainEvent

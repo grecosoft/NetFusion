@@ -20,6 +20,7 @@ namespace NetFusion.RabbitMQ.Modules
     /// describing the exchanges/queues to which messages can be sent.  This discovered metadata
     /// is then used to create the needed exchanges and queues by delegating to the EasyNetQ
     /// advanced API.
+    /// 
     /// https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#bootstrapping---modules
     /// </summary>
     public class PublisherModule : PluginModule,

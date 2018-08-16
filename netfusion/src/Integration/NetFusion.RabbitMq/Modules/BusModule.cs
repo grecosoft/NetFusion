@@ -20,6 +20,7 @@ namespace NetFusion.RabbitMQ.Modules
     /// The main plugin module providing access to the configured IBus instances used to
     /// communicate with RabbitMQ servers.  Each bus is identified by a name specified 
     /// within the application's configuration. 
+    /// 
     /// https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#bootstrapping---modules
     /// </summary>
     public class BusModule : PluginModule,

@@ -18,9 +18,15 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
 
         protected SubscriberQueueAttribute(string busName, string queueName, IQueueFactory factory)
         {
+            if (string.IsNullOrWhiteSpace(busName))
+                throw new ArgumentException("Bus name not specified.", nameof(busName));
+
+            if (string.IsNullOrWhiteSpace(queueName))
+                throw new ArgumentException("Queue name not specified.", nameof(busName));
+
             BusName = busName;
             QueueName = queueName;
-            QueueFactory = factory;
+            QueueFactory = factory ?? throw new ArgumentNullException(nameof(factory));
         }
     }
 }

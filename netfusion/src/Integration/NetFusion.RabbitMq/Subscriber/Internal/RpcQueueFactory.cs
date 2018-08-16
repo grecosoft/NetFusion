@@ -33,10 +33,10 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             return exchange.QueueMeta;
         }
         
-        // When a RPC style command message is received, it is dispatched to the in-process handler
-        // having the matching queue name and action.  This is unlike the other message patterns where
-        // a queue is associated with only a single handler.  This allows for several RPC style commands
-        // to use the same queue.  This allows for more efficient use of queues.
+        // When a RPC style command message is received, it is dispatched to the in-process handler having the
+        // matching queue name and action-namespace.  This is unlike the other message patterns where a queue 
+        // is associated directly with only a single handler.  This allows for several RPC style commands to
+        // use the same queue.  This allows for more efficient use of queues.
         public async Task OnMessageReceived(ConsumeContext context)
         {
             MessageDispatchInfo rpcCommandHandler = GetDispatchInfoForRpcCommand(context);

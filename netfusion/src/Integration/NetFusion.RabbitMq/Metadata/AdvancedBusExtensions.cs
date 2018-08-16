@@ -8,6 +8,8 @@ namespace NetFusion.RabbitMQ.Metadata
     /// <summary>
     /// Extension methods for the EasyNetQ IAdvancedBus interface based on metadata classes
     /// used to specify exchanges and queues.
+    /// 
+    /// https://github.com/EasyNetQ/EasyNetQ/wiki/The-Advanced-API
     /// </summary>
     public static class AdvancedBusExtensions
     {
@@ -25,6 +27,7 @@ namespace NetFusion.RabbitMQ.Metadata
 
             // If the queue meta is specified on the exchange meta, this indicates that
             // a queue should be created on the default exchange.
+            // https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-default
             if (meta.QueueMeta != null)
             {
                 await bus.QueueDeclareAsync(meta.QueueMeta.ScopedQueueName,
@@ -61,7 +64,7 @@ namespace NetFusion.RabbitMQ.Metadata
             if (bus == null) throw new ArgumentNullException(nameof(bus));
             if (meta == null) throw new ArgumentNullException(nameof(meta));
 
-            IExchange exchange = Exchange.GetDefault();
+            IExchange exchange = Exchange.GetDefault(); //  Assume default exchange.
             ExchangeMeta exchangeMeta = meta.Exchange;
             
             if (! meta.Exchange.IsDefaultExchange)

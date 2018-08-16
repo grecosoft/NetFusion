@@ -18,6 +18,7 @@ namespace NetFusion.RabbitMQ.Modules
     /// Plugin module responsible for determining message handler methods that should be 
     /// subscribed to queues.  Any IMessageConsumer class method decorated with a derived 
     /// SubscriberQueue attribute is considered a handler that should be bound to a queue.
+    /// 
     /// https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#bootstrapping---modules
     /// </summary>
     public class SubscriberModule : PluginModule
@@ -60,7 +61,7 @@ namespace NetFusion.RabbitMQ.Modules
         {
             // Tacks the RPC queue that have been already bound.  For a given named RPC queue, we only
             // want to bind once since the command action namespace is used to determine the actual
-            // handler to be called.
+            // handler to be called (multiple commands are sent on a single queue).
             HashSet<string> boundToRpcQueues = new HashSet<string>();
             
             foreach (var subscriber in subscribers)

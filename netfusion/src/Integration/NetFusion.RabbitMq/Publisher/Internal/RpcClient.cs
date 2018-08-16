@@ -61,13 +61,13 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             var futureResult = new TaskCompletionSource<byte[]>();
 
             string correlationId = messageProperties.CorrelationId;
-            int cancelRpcRequestAfterMs = createdExchange.Meta.CancelRpcRequestAfterMs;
+            int cancelRpcRequestAfterMs = createdExchange.Definition.CancelRpcRequestAfterMs;
 
             var rpcPendingRequest = new RpcPendingRequest(futureResult, cancellationToken, cancelRpcRequestAfterMs);
             
             _pendingRpcRequests[correlationId] = rpcPendingRequest;
 
-            string routeKey = createdExchange.Meta.QueueMeta.QueueName;
+            string routeKey = createdExchange.Definition.QueueMeta.QueueName;
 
             // Publish the command to the exchange.
             await createdExchange.Bus.Advanced.PublishAsync(createdExchange.Exchange, 
@@ -114,11 +114,14 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             msgProps.ReplyTo = ReplyToQueueName;
             msgProps.CorrelationId = msgProps.CorrelationId ?? Guid.NewGuid().ToString();
             msgProps.SetRpcReplyBusConfigName(_busName);
-            msgProps.SetRpcActionNamespace(createdExchange.Meta.ActionNamespace);
+            msgProps.SetRpcActionNamespace(createdExchange.Definition.ActionNamespace);
         }
 
         public void CreateAndSubscribeToReplyQueue()
         {
+            // Creates a reply queue specific for the application on which it will receive
+            // command replies.  This queue is on the default exchange and will be deleted
+            // with the host application terminates.
             var queue = Bus.Advanced.QueueDeclare(ReplyToQueueName,
                 passive: false,
                 durable: false,

@@ -6,7 +6,10 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
 {
     /// <summary>
     /// Factory for creating queues on a fanout exchange.  Sets the default conventions 
-    /// used for a fanout exchange and created queues.</summary>
+    /// used for a fanout exchange and created queues.
+    /// 
+    /// https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-fanout
+    /// </summary>
     internal class FanoutQueueFactory : IQueueFactory
     {
         public QueueMeta CreateQueueMeta(SubscriberQueueAttribute attribute)

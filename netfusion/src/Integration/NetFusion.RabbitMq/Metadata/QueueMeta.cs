@@ -70,7 +70,7 @@ namespace NetFusion.RabbitMQ.Metadata
         internal IQueueFactory QueueFactory { get; set; }
 
         /// <summary>
-        ///  Do not create an exchange. If the named exchange doesn't exist, throw an exception.
+        /// Do not create an exchange. If the named exchange doesn't exist, throw an exception.
         /// </summary>
         public bool IsPassive { get; set; }
 

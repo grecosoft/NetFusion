@@ -8,6 +8,8 @@ namespace NetFusion.RabbitMQ.Logging
     /// Configuration that can be added during application container
     /// bootstrapping to delegate EasyNetQ log messages to Microsoft's
     /// ILogger implementation.
+    /// 
+    /// https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.configuration#bootstrapping---configuration
     /// </summary>
     public class RabbitMqLoggerConfig : IContainerConfig
     {

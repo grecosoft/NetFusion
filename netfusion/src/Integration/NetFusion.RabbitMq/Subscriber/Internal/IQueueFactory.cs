@@ -5,7 +5,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
 {
     /// <summary>
     /// Implementations contain logic for creating and configuring a queue 
-    /// based on its type.
+    /// based on its type and for processing received messages.
     /// </summary>
     public interface IQueueFactory
     {

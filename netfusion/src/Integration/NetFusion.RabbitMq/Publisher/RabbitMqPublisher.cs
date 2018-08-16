@@ -19,6 +19,7 @@ namespace NetFusion.RabbitMQ.Publisher
     /// Message publisher implemention that dispatches messages to RabbitMQ having an associated
     /// exchange.  Responsible for creating associated message exchanges and delivering messages
     /// when published. 
+    /// 
     /// https://github.com/grecosoft/NetFusion/wiki/core.messaging.publishers#messaging---publishers
     /// </summary>
     public class RabbitMqPublisher : MessagePublisher,
@@ -89,10 +90,10 @@ namespace NetFusion.RabbitMQ.Publisher
             Logger.LogTraceDetails(RabbitMqLogEvents.PublisherEvent, 
                 "Message being Published to Message Bus.", 
                 new {
-                    exchange.Meta.BusName,
-                    exchange.Meta.ExchangeName,
-                    exchange.Meta.QueueMeta?.QueueName,
-                    exchange.Meta.ContentType,
+                    exchange.Definition.BusName,
+                    exchange.Definition.ExchangeName,
+                    exchange.Definition.QueueMeta?.QueueName,
+                    exchange.Definition.ContentType,
                     Message = message
                 });
         }

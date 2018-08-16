@@ -19,9 +19,9 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             CancellationToken cancellationToken)
         {
             // Prepare the message and its defining properties to be published.
-            byte[] messageBody = context.Serialization.Serialize(message, createdExchange.Meta.ContentType);
+            byte[] messageBody = context.Serialization.Serialize(message, createdExchange.Definition.ContentType);
             MessageProperties messageProperties = GetMessageProperties(context, createdExchange, message);
-            string routeKey = message.GetRouteKey() ?? createdExchange.Meta.RouteKey;
+            string routeKey = message.GetRouteKey() ?? createdExchange.Definition.RouteKey;
 
             // Only send the message to the exchange if satisfying all constraints configured for the exchange.  
             // This only applies to domain-events, as commands are more specific in that they are explicitly
@@ -47,7 +47,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             if (createdExchange == null) throw new ArgumentNullException(nameof(createdExchange));
             if (message == null) throw new ArgumentNullException(nameof(message));
 
-            var definition = createdExchange.Meta;
+            var definition = createdExchange.Definition;
 
             var props = new MessageProperties
             {
@@ -74,7 +74,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
 
        private static async Task<bool> Satisfies(IPublisherContext context, CreatedExchange createdExchange, IMessage message)
        {
-           ExchangeMeta definition = createdExchange.Meta;
+           ExchangeMeta definition = createdExchange.Definition;
            bool applies = definition.Applies(message);
 
            if (applies && definition.ScriptPredicate != null)
