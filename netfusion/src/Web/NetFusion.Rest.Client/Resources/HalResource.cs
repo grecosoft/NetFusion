@@ -31,6 +31,35 @@ namespace NetFusion.Rest.Client.Resources
         public bool ShouldSerializeLinks() => false;
 
         /// <summary>
+        /// Determines if the resource contains a named link.
+        /// </summary>
+        /// <param name="named">The name identifying the link.</param>
+        /// <returns>True if found.  Otherwise, False.</returns>
+        public bool HasLink(string named)
+        {
+            if (string.IsNullOrWhiteSpace(named))
+                throw new ArgumentException("Name of link not provided.", nameof(named));
+
+            return Links != null && Links.ContainsKey(named);
+        }
+
+        /// <summary>
+        /// Returns a link identified by name assocated with resource.
+        /// </summary>
+        /// <param name="named">The name identifying the link.</param>
+        /// <returns>The link if found.  Otherwise an exception is raised.</returns>
+        public Link GetLink(string named)
+        {
+            if (! HasLink(named))
+            {
+                throw new InvalidOperationException(
+                    $"Link named: {named} for resource type: {GetType().FullName} does not exists.");
+            }
+
+            return Links[named];
+        }
+        
+        /// <summary>
         /// Determines if the resources contains a named embedded resource.
         /// </summary>
         /// <param name="named">The name identifying the embedded resource.</param>
@@ -55,7 +84,7 @@ namespace NetFusion.Rest.Client.Resources
             if (string.IsNullOrWhiteSpace(named))
                 throw new ArgumentException("Name of embedded resource not provided.", nameof(named));
 
-            if (!HasEmbedded(named))
+            if (! HasEmbedded(named))
             {
                 throw new InvalidOperationException(
                     $"Embedded resource named: {named} of parent resource type: {GetType().FullName} does not exist.");

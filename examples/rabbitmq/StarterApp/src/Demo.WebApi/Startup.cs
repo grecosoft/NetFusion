@@ -82,6 +82,7 @@ namespace Demo.WebApi
             var logger = _loggerFactory.CreateLogger<Startup>();
             logger.LogDebug("Container being stopped.");
             AppContainer.Instance.Stop();
+            AppContainer.Instance.Dispose();
             
             logger.LogDebug("Container stopped.");
         }
