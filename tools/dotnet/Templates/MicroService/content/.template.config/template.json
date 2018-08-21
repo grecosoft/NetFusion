@@ -62,6 +62,8 @@
     "sources":[
       { "include": "Solution.Context.sln" },
       { "include": ".vscode/**/*" },
+      { "include": "scripts/**/*" },
+      { "include": "Dockerfile.debug" },
       { "include": "src/Components/Solution.Context.Api/**/*" },
       { "include": "src/Components/Solution.Context.App/**/*" },
       { "include": "src/Components/Solution.Context.Domain/**/*" },

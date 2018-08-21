@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "Build:Solution.Context",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Solution.Context.WebApi/bin/Debug/netcoreapp2.0/Solution.Context.WebApi.dll",
+            "program": "${workspaceFolder}/src/Solution.Context.WebApi/bin/Debug/netcoreapp2.1/Solution.Context.WebApi.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/Solution.Context.WebApi",
             "stopAtEntry": false,
@@ -36,6 +36,29 @@
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
             }
-        }
+        },
+        {
+            "name": "Docker: Solution.Context",
+            "type": "coreclr",
+            "request": "launch",                   
+            "preLaunchTask": "buildForDebug",      
+            "program": "/build/src/Solution.Context.WebApi/out/Solution.Context.WebApi.dll",         
+            "cwd": "/build/src/Solution.Context.WebApi/out",                     
+            "sourceFileMap": {
+                "/build/src": "${workspaceRoot}/src"     
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "pipeTransport": {
+                "pipeProgram": "docker",           
+                "pipeCwd": "${workspaceRoot}",
+                "pipeArgs": [
+                    "exec -i docker.dotnet.debug_1" 
+                ],
+                "quoteArgs": false,
+                "debuggerPath": "/vsdbg/vsdbg"    
+            }
+         }
     ]
 }
