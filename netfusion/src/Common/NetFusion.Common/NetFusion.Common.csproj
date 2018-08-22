@@ -1,24 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\..\build\common.props" />
-
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>7</LangVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.5.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
   </ItemGroup>
-  
   <PropertyGroup>
-  	<PackageId>NetFusion.Common</PackageId>
-	<Title>NetFusion Common</Title>
+    <PackageId>NetFusion.Common</PackageId>
+    <Title>NetFusion Common</Title>
     <Description>Common assembly containing common classes and extensions.</Description>
-	<PackageTags>netfusion;plugin</PackageTags>
+    <PackageTags>netfusion;plugin</PackageTags>
   </PropertyGroup>
 </Project>

@@ -1,28 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\..\build\common.props" />
-
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>7</LangVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\Common\NetFusion.Base\NetFusion.Base.csproj" />
     <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
     <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="2.8.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="2.9.0" />
   </ItemGroup>
-  
   <PropertyGroup>
-  	<PackageId>NetFusion.Roslyn</PackageId>
-	<Title>NetFusion Roslyn Integration Plug-In</Title>
+    <PackageId>NetFusion.Roslyn</PackageId>
+    <Title>NetFusion Roslyn Integration Plug-In</Title>
     <Description>Plug-In providing Roslyn implementations for executing expressions against domain entities.</Description>
-	<PackageTags>netfusion;plugin;domain;roslyn</PackageTags>
+    <PackageTags>netfusion;plugin;domain;roslyn</PackageTags>
   </PropertyGroup>
-
 </Project>
