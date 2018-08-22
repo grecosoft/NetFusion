@@ -22,7 +22,7 @@ namespace NetFusion.MongoDB.Modules
             // NOTE:  Documentation states that the class from which MongoDBClient
             // is thread-safe and is best to register a single instance within
             // a dependency injection container.
-            Context.AllAppPluginTypes.Where(t => t.IsConcreteTypeDerivedFrom<MongoSettings>())
+            Context.AllPluginTypes.Where(t => t.IsConcreteTypeDerivedFrom<MongoSettings>())
                 .ForEach(ms =>
                 {
                     var implementationType = typeof(MongoDbClient<>).MakeGenericType(ms);
