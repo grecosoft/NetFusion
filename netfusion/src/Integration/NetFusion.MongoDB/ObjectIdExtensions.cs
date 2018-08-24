@@ -1,5 +1,4 @@
 ﻿using MongoDB.Bson;
-using NetFusion.Common.Extensions;
 using System;
 
 namespace NetFusion.MongoDB

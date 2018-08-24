@@ -15,7 +15,7 @@ using Xunit;
 namespace WebTests.Rest.ClientRequests
 {
     public class ResultClientTests
-    {
+    {  
         [Fact]
         public async Task IfServerException_ExceptionRaised()
         {
@@ -40,7 +40,7 @@ namespace WebTests.Rest.ClientRequests
         }
 
         [Fact]
-        public async Task IfErrorStatusCode_SuccessStaus_SetCorrectly()
+        public async Task IfErrorStatusCode_SuccessStatus_SetCorrectly()
         {
             // Arrange:
             var hostPlugin = new MockAppHostPlugin();

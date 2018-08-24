@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NetFusion.Base.Validation;
-using NetFusion.Common.Extensions.Collections;
 using NetFusion.Settings;
 
 namespace NetFusion.RabbitMQ.Settings

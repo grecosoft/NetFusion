@@ -9,7 +9,6 @@ using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Dependencies;
 using NetFusion.Bootstrap.Exceptions;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;

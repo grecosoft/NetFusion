@@ -1,5 +1,4 @@
 ﻿using MongoDB.Driver;
-using NetFusion.Bootstrap.Plugins;
 using NetFusion.MongoDB.Modules;
 using System;
 using System.Threading.Tasks;

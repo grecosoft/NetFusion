@@ -21,6 +21,7 @@ namespace NetFusion.Rest.Client
         public const string CorrelationHeaderName = "nf_CorrelationId";
         private readonly string _baseAddressUri;
         private string _entryPointPath;
+        private readonly ClientSettings _clientSettings;
 
         private IRequestSettings _defaultRequestSettings;
         private Action<IRequestSettings> _eachRequestAction;
@@ -32,22 +33,26 @@ namespace NetFusion.Rest.Client
         private ILoggerFactory _loggerFactory;
         private ILogger _logger;
 
-        private RequestClientBuilder(string baseAddressUri)
+        private RequestClientBuilder(string baseAddressUri, ClientSettings clientSettings)
         {
             if (string.IsNullOrWhiteSpace(baseAddressUri))
                 throw new ArgumentException("Base address must be specified.", nameof(baseAddressUri));
 
+            _clientSettings = clientSettings ?? new ClientSettings();
             _baseAddressUri = baseAddressUri;
+
+            InitServicePointManager(baseAddressUri, _clientSettings);
         }
 
         /// <summary>
         /// Creates a new builder for a specific base service Uri.
         /// </summary>
         /// <param name="baseAddressUrl">The base address to which the client will send requests.</param>
+        /// <param name="settings">Settings used to configure underlying HttpClient.</param>
         /// <returns>Instance of the builder class.</returns>
-        public static RequestClientBuilder ForBaseAddress(string baseAddressUrl)
+        public static RequestClientBuilder ForBaseAddress(string baseAddressUrl, ClientSettings settings)
         {
-            return new RequestClientBuilder(baseAddressUrl);
+            return new RequestClientBuilder(baseAddressUrl, settings);
         }
 
         /// <summary>
@@ -182,6 +187,11 @@ namespace NetFusion.Rest.Client
             
             // Create an instance of the RequestClient that delegates to the MS HttpClient.
             var httpClient = new HttpClient { BaseAddress = new Uri(_baseAddressUri) };
+            if (_clientSettings.Timeout != null)
+            {
+                httpClient.Timeout = _clientSettings.Timeout.Value;
+            }
+
             var requestClient = new RequestClient(httpClient, _logger, _mediaTypeSerializers, settings);
 
             // If the configuration specified a service entry point path, configure a delegate to load
@@ -220,10 +230,30 @@ namespace NetFusion.Rest.Client
             {
                 throw new InvalidOperationException(
                     $"The request client with the base address: {_baseAddressUri} does not have " +
-                    $"entry point path specified.");
+                     "entry point path specified.");
             }
 
             return _apiEntryPointLazy.Value;
+        }
+
+        private void InitServicePointManager(string baseAddress, ClientSettings settings) 
+        {
+            var servicePoint = ServicePointManager.FindServicePoint(new Uri(baseAddress));
+
+            if (settings.ConnectionLeaseTimeout != null) 
+            {
+                servicePoint.ConnectionLeaseTimeout = settings.ConnectionLeaseTimeout.Value;
+            }
+
+            if (settings.ConnectionLimit != null) 
+            {
+                servicePoint.ConnectionLimit = settings.ConnectionLimit.Value;
+            }
+
+            if (settings.DnsRefreshTimeout != null)
+            {
+                ServicePointManager.DnsRefreshTimeout = settings.DnsRefreshTimeout.Value;
+            }
         }
 
         // Attempts to load the entry point resource and resets the lazy loaded state if there
