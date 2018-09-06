@@ -50,7 +50,7 @@ namespace NetFusion.Rest.Client
         /// <param name="baseAddressUrl">The base address to which the client will send requests.</param>
         /// <param name="settings">Settings used to configure underlying HttpClient.</param>
         /// <returns>Instance of the builder class.</returns>
-        public static RequestClientBuilder ForBaseAddress(string baseAddressUrl, ClientSettings settings)
+        public static RequestClientBuilder ForBaseAddress(string baseAddressUrl, ClientSettings settings = null)
         {
             return new RequestClientBuilder(baseAddressUrl, settings);
         }
@@ -236,7 +236,7 @@ namespace NetFusion.Rest.Client
             return _apiEntryPointLazy.Value;
         }
 
-        private void InitServicePointManager(string baseAddress, ClientSettings settings) 
+        private static void InitServicePointManager(string baseAddress, ClientSettings settings) 
         {
             var servicePoint = ServicePointManager.FindServicePoint(new Uri(baseAddress));
 

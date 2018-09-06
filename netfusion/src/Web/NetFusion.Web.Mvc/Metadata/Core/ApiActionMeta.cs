@@ -52,7 +52,7 @@ namespace NetFusion.Web.Mvc.Metadata.Core
             if (attrib == null)
             {
                 throw new InvalidOperationException(
-                    $"Action metadata can only be created for controller routes decorated with " +
+                     "Action metadata can only be created for controller routes decorated with " +
                     $"{nameof(ActionMetaAttribute)}.  The route named {actionDescriptor.ActionName} " +
                     $"defined on controller {actionDescriptor.ControllerName} does not have attribute specified");
             }

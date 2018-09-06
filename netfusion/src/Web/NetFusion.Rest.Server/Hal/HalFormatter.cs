@@ -87,7 +87,7 @@ namespace NetFusion.Rest.Server.Hal
             }
         }
 
-        private ResourceContext CreateContext(HttpContext httpContext)
+        private static ResourceContext CreateContext(HttpContext httpContext)
         {
             return new ResourceContext
             {

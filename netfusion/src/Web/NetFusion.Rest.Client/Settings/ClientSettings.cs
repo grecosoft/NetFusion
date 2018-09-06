@@ -1,6 +1,6 @@
 using System;
 
-namespace NetFusion.Rest.Client
+namespace NetFusion.Rest.Client.Settings
 {
     /// <summary>
     /// Contains settings that are associated with a given URL and

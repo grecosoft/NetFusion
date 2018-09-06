@@ -21,10 +21,7 @@ namespace NetFusion.MongoDB
         public string CollectionName { get; set; }
         public Type EntityType => typeof(TClass);
 
-        public BsonClassMap ClassMap
-        {
-            get { return this; }
-        }
+        public BsonClassMap ClassMap => this;
 
         /// <summary>
         /// Maps an entity's ID property specified as a string to an ObjectId.

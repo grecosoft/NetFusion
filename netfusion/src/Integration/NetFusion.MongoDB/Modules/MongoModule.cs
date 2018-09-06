@@ -3,13 +3,12 @@ using NetFusion.Common.Extensions.Reflection;
 using NetFusion.MongoDB.Core;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Common.Extensions.Collections;
+using NetFusion.MongoDB.Settings;
 
 namespace NetFusion.MongoDB.Modules
 {
-    using Microsoft.Extensions.DependencyInjection;
-    using NetFusion.Common.Extensions.Collections;
-    using NetFusion.MongoDB.Settings;
-
     /// <summary>
     /// Called by the base plug-in bootstrapping code.  Registers,
     /// any service component types associated with MongoDB that

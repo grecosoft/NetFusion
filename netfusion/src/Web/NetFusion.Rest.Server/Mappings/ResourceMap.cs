@@ -13,7 +13,7 @@ namespace NetFusion.Rest.Server.Mappings
         public Type ProviderType { get; private set; }
         private readonly List<IResourceMeta> _resourceMeta;
 
-        public ResourceMap()
+        protected ResourceMap()
         {
             _resourceMeta = new List<IResourceMeta>();
             ResourceMeta = _resourceMeta.AsReadOnly();

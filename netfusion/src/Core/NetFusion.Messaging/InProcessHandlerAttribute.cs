@@ -6,7 +6,7 @@ namespace NetFusion.Messaging
     /// Used to specify that a consumer's event handler method should be
     /// invoked by the InProcessMessagePublisher.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Method)]
     public class InProcessHandlerAttribute : Attribute
     {
     }

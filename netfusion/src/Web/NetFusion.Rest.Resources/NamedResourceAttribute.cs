@@ -5,7 +5,7 @@ namespace NetFusion.Rest.Resources
     /// <summary>
     /// Used to map a string name to a given resource implementing the IResource interface.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class NamedResourceAttribute : Attribute
     {
         public string ResourceName { get; }

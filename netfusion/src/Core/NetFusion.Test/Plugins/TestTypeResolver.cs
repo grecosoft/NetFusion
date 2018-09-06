@@ -16,7 +16,7 @@ namespace NetFusion.Test.Plugins
     /// </summary>
     public class TestTypeResolver : ITypeResolver
     {
-        private ITypeResolver _delegateResolver;
+        private readonly ITypeResolver _delegateResolver;
         private readonly List<MockPlugin> _plugins;
         private readonly Assembly _scanAssembly;
 

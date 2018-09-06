@@ -7,7 +7,7 @@ namespace NetFusion.Messaging
     /// should be called when derived messages are published.  This allows a single
     /// handler to be invoked for a several derived message types.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Parameter)]
     public class IncludeDerivedMessagesAttribute : Attribute
     {
     }

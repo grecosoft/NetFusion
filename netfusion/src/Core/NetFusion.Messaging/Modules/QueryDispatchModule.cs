@@ -143,10 +143,7 @@ namespace NetFusion.Messaging.Modules
         public static IEnumerable<QueryDispatchInfo> SelectQueryDispatchInfo(
             this IEnumerable<MethodInfo> queryHandlerMethods)
         {
-            foreach (MethodInfo handler in queryHandlerMethods)
-            {                
-                yield return new QueryDispatchInfo(handler);
-            }
+            return queryHandlerMethods.Select(handler => new QueryDispatchInfo(handler));
         }    
     }
 }

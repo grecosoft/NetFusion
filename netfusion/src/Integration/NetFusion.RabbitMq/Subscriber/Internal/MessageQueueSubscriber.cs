@@ -14,7 +14,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     {
         public MessageDispatchInfo DispatchInfo { get; }
         public QueueMeta QueueMeta { get; }
-        private string _hostId;
+        private readonly string _hostId;
   
         public MessageQueueSubscriber(string hostId, MessageDispatchInfo dispatchInfo)
         {

@@ -16,7 +16,7 @@ namespace NetFusion.Test.Plugins
         private readonly List<Type> _pluginTypes = new List<Type>();
         public IEnumerable<Type> PluginTypes => _pluginTypes;
 
-        public MockPlugin()
+        protected MockPlugin()
         {
             PluginId = Guid.NewGuid().ToString();
             AssemblyName = $"Mock Assembly for Plug-in: {Name}";

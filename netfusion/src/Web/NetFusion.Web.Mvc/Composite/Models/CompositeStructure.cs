@@ -44,7 +44,7 @@ namespace NetFusion.Web.Mvc.Composite.Models
             };
         }
 
-        private static IEnumerable<PluginSummary> GetPlugins(IDictionary logEntries)
+        private static IEnumerable<PluginSummary> GetPlugins(IEnumerable logEntries)
         {
             foreach (DictionaryEntry logEntry in logEntries)
             {

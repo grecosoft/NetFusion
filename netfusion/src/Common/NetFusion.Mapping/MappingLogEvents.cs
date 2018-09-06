@@ -8,7 +8,7 @@ namespace NetFusion.Mapping
     /// </summary>
     public class MappingLogEvents
     {
-        private const int PluginLog = LogEvents.Infrastructure + 100;
+        private const int PluginLog = LogEvents.Common + 100;
         public static EventId MappingException = new EventId(-(PluginLog + 1), "Mapping: Mapping Exception");
         public static EventId MappingApplied = new EventId(PluginLog + 20, "Mapping: Mapping Strategy Applied");
     }

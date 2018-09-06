@@ -13,7 +13,7 @@ namespace NetFusion.MongoDB.Modules
     /// </summary>
     public class MappingModule : PluginModule, IMongoMappingModule
     {
-        private static object _mapLock = new object();
+        private static readonly object _mapLock = new object();
 
         // IMongoMappingModule:
         public IEnumerable<IEntityClassMap> Mappings { get; private set; }

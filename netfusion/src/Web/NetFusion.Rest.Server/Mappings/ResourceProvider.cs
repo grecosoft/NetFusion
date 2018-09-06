@@ -83,7 +83,7 @@ namespace NetFusion.Rest.Server.Mappings
 
         // For each controller action argument execute the cached expression on the resource
         // to get the corresponding resource property value.
-        private Dictionary<string, object> GetModelRouteValues(ResourceContext context, ActionUrlLink halLink)
+        private static Dictionary<string, object> GetModelRouteValues(ResourceContext context, ActionUrlLink halLink)
         {
             var modelRouteValues = new Dictionary<string, object>(halLink.RouteValues.Count);
             foreach (ActionParamValue actionParam in halLink.RouteValues)

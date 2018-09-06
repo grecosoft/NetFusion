@@ -8,7 +8,7 @@ namespace NetFusion.Rest.Server.Resources
     /// Used to specify the resource type for a controller's action method that does not
     /// accept or return a resource type.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method, Inherited = false)]
     public class ResourceTypeAttribute : Attribute
     {
         /// <summary>

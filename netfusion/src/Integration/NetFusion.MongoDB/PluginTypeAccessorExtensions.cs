@@ -1,10 +1,9 @@
 ﻿using NetFusion.Bootstrap.Plugins;
 using NetFusion.MongoDB.Modules;
+using NetFusion.MongoDB.Settings;
 
 namespace NetFusion.MongoDB
 {
-    using NetFusion.MongoDB.Settings;
-
     /// <summary>
     /// Adds the types specific to the MongoDb plug-in.  The extension
     /// methods contained within this class are used only for unit-testing.

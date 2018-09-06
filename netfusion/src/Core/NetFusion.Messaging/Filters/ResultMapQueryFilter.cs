@@ -72,13 +72,8 @@ namespace NetFusion.Messaging.Filters
         }
 
         private static Type GetTargetArrayType(IQuery query)
-        {                   
-            if (! query.DeclaredResultType.IsArray)
-            {
-                return null;
-            }
-
-            return query.DeclaredResultType.GetElementType();           
+        {
+            return query.DeclaredResultType.IsArray ? query.DeclaredResultType.GetElementType() : null;
         }
     }
 }

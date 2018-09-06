@@ -2,11 +2,10 @@
 using NetFusion.MongoDB.Modules;
 using System;
 using System.Threading.Tasks;
+using NetFusion.MongoDB.Settings;
 
 namespace NetFusion.MongoDB.Core
 {
-    using NetFusion.MongoDB.Settings;
-
     /// <summary>
     /// Service component that is registered with the dependency injection 
     /// container used to execute MongoDB commands.  Configures and delegates
@@ -19,20 +18,19 @@ namespace NetFusion.MongoDB.Core
         where TSettings : MongoSettings
     {
         private readonly IMongoMappingModule _mappingModule;
-        private readonly IMongoClient _client;
         private readonly IMongoDatabase _database;
 
         public TSettings DbSettings { get; }
 
         public MongoDbClient(TSettings dbSettings, IMongoMappingModule mappingModule)
-        {            
+        {
             DbSettings = dbSettings ?? throw new ArgumentNullException(nameof(dbSettings));
 
             _mappingModule = mappingModule ?? throw new ArgumentNullException(nameof(mappingModule));
             
-            _client = CreateClient();
+            IMongoClient client = CreateClient();
 
-            _database = _client.GetDatabase(
+            _database = client.GetDatabase(
                 DbSettings.DatabaseName,
                 DbSettings.DatabaseSettings);
         }

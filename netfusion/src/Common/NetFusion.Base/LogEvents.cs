@@ -11,7 +11,7 @@
     {
         public const int Common = 1000;
         public const int Core = 2000;
-        public const int Infrastructure = 3000;
-        public const int Integration = 4000;
+        public const int Integration = 3000;
+        public const int Web = 4000;
     }
 }
