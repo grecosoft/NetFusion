@@ -7,9 +7,9 @@ using EasyNetQ.Topology;
 using NetFusion.Base.Scripting;
 using NetFusion.Messaging.Core;
 using NetFusion.RabbitMQ.Modules;
-using NetFusion.RabbitMQ.Serialization;
 using NetFusion.RabbitMQ.Publisher.Internal;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.RabbitMQ.Metadata;
 

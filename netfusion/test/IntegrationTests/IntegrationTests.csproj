@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <IsPackable>false</IsPackable>
@@ -17,5 +17,6 @@
     <ProjectReference Include="..\..\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Test\NetFusion.Test.csproj" />
     <ProjectReference Include="..\..\src\Integration\NetFusion.RabbitMq\NetFusion.RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\src\Integration\NetFusion.Serialization\NetFusion.Serialization.csproj" />
   </ItemGroup>
 </Project>

@@ -5,17 +5,18 @@ using System.Runtime.CompilerServices;
 using EasyNetQ;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.RabbitMQ.Metadata;
-using NetFusion.RabbitMQ.Serialization;
 using NetFusion.RabbitMQ.Settings;
 using NetFusion.Settings;
 
 [assembly: InternalsVisibleTo("IntegrationTests")]
 namespace NetFusion.RabbitMQ.Modules
 {
+
     /// <summary>
     /// The main plugin module providing access to the configured IBus instances used to
     /// communicate with RabbitMQ servers.  Each bus is identified by a name specified 
@@ -54,14 +55,6 @@ namespace NetFusion.RabbitMQ.Modules
             {
                 CreateBus(conn);
             }
-        }
-
-        // Register the default serialization manager.  The application host can override
-        // this by registering a different instance of the ISerializationManager interface.
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#registerdefaultservices
-        public override void RegisterDefaultServices(IServiceCollection services)
-        {
-            services.AddSingleton<ISerializationManager, SerializationManager>();
         }
 
         // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#startmodule

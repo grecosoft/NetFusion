@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using NetFusion.Base.Serialization;
 
-namespace NetFusion.RabbitMQ.Serialization
+namespace NetFusion.Serialization
 {
     /// <summary>
     /// Encapsulates the logic for serializing messages using a set of serializers registered

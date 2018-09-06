@@ -2,11 +2,11 @@ using IMessage = NetFusion.Messaging.Types.IMessage;
 using System;
 using EasyNetQ;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Modules;
 using NetFusion.RabbitMQ.Modules;
-using NetFusion.RabbitMQ.Serialization;
 
 namespace NetFusion.RabbitMQ.Subscriber.Internal
 {

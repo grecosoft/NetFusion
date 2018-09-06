@@ -1,8 +1,9 @@
-﻿using NetFusion.Base;
-using System;
+﻿using System;
 using MessagePack.Resolvers;
+using NetFusion.Base;
+using NetFusion.Base.Serialization;
 
-namespace NetFusion.RabbitMQ.Serialization
+namespace NetFusion.Serialization
 {
     /// <summary>
     /// Serializer for message pack serialization compact binary format.

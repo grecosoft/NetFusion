@@ -1,13 +1,14 @@
-﻿using NetFusion.Base;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using NetFusion.Base;
+using NetFusion.Base.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
-namespace NetFusion.RabbitMQ.Serialization
+namespace NetFusion.Serialization
 {
     /// <summary>
     /// Serializes a value to JSON representation.  Extended to allow serialization

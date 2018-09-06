@@ -1,8 +1,8 @@
-using NetFusion.Base.Plugins;
 using System;
 using System.Collections.Generic;
+using NetFusion.Base.Plugins;
 
-namespace NetFusion.RabbitMQ.Serialization
+namespace NetFusion.Base.Serialization
 {
     /// <summary>
     /// Implements serialization/deserialization based on a set

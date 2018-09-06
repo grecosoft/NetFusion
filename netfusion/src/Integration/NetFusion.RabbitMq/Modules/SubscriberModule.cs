@@ -4,11 +4,11 @@ using System.Linq;
 using EasyNetQ;
 using EasyNetQ.Topology;
 using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Modules;
-using NetFusion.RabbitMQ.Serialization;
 using NetFusion.RabbitMQ.Subscriber.Internal;
 using NetFusion.RabbitMQ.Metadata;
 

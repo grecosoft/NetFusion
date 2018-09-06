@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
+using NetFusion.Base.Serialization;
 using NetFusion.RabbitMQ.Modules;
-using NetFusion.RabbitMQ.Serialization;
 
 namespace NetFusion.RabbitMQ.Publisher.Internal
 {

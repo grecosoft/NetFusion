@@ -1,7 +1,7 @@
-using NetFusion.Base.Plugins;
 using System;
+using NetFusion.Base.Plugins;
 
-namespace NetFusion.RabbitMQ.Serialization
+namespace NetFusion.Base.Serialization
 {
     /// <summary>
     /// Implementations determine how a value is serialized when
