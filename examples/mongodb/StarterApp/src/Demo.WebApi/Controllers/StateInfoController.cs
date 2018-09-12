@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Demo.App.Repositories;
-using Demo.App.Entities;
-using System.Threading.Tasks;
-using NetFusion.MongoDB;
 using Demo.Infra.Repositories;
+using System.Threading.Tasks;
 
 namespace Demo.WebApi.Controllers
 {

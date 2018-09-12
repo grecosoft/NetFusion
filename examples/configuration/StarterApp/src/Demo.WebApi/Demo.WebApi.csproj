@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.74" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.85" />
   </ItemGroup>
 
   <ItemGroup>

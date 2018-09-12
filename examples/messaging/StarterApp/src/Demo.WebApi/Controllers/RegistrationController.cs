@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Demo.Api.Commands;
-using Demo.Api.Models;
+using Demo.Domain.Commands;
+using Demo.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Messaging;
 
@@ -38,26 +38,27 @@ namespace Demo.WebApi.Controllers
             return Ok(status);
         }
 
-        [HttpPost("auto")]
-        public async Task<IActionResult> RegisterAuto(
-            [FromBody] AutoRegistrationModel model)
-        {
-            // Adapt the HTTP request model into command...
-            var command = new RegisterAutoCommand(
-                model.Make,
-                model.Model,
-                model.Year,
-                model.State);
+	[HttpPost("auto")]
+	public async Task<IActionResult> RegisterAuto(
+		[FromBody] AutoRegistrationModel model)
+	{
+	   // Adapt the HTTP request model into command...
+	   var command = new RegisterAutoCommand(
+	   model.Make,
+           model.Model,
+           model.Year,
+           model.State);
 
-            // Send command to application and adapt result
-            // to the HTTP response:
-            var status = await _messaging.SendAsync(command);
-            if (!status.IsSuccess)
-            {
-                return BadRequest("Registration Failed");
-            }
+	   // Send command to application and adapt result
+           // to the HTTP response:
+           var status = await _messaging.SendAsync(command);
+           if (!status.IsSuccess)
+           {
+              return BadRequest("Registration Failed");
+           }
 
-            return Ok(status);
+           return Ok(status);
         }
+
     }
 }

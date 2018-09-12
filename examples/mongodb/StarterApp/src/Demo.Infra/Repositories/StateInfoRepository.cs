@@ -1,7 +1,5 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Demo.App.Entities;
-using Demo.App.Repositories;
 using MongoDB.Driver;
 using NetFusion.MongoDB;
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
 using System;
 using NetFusion.Bootstrap.Configuration;
+using NetFusion.Messaging.Config;
+using Demo.Infra;
 
 namespace Demo.WebApi
 {
@@ -18,17 +20,22 @@ namespace Demo.WebApi
 
         public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
-            _configuration = configuration;
-            _loggerFactory = loggerFactory;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory)); 
         }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-            services.AddLogging();
+            // Support REST/HAL based API responses.
+            services.AddMvc(options => {
 
+            });
+
+            // Create and NetFusion application container based on Microsoft's abstractions:
             var builtContainer = CreateAppContainer(services, _configuration, _loggerFactory);
 
+            // Start all modules in the application container and return created service-provider.
+            // If an open-source DI container is needed, this is where it would be populated and returned.
             builtContainer.Start();
             return builtContainer.ServiceProvider;
         }
@@ -41,11 +48,7 @@ namespace Demo.WebApi
             // safely stopped.
             applicationLifetime.ApplicationStopping.Register(OnShutdown);
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
+            app.UseAuthentication();
             app.UseMvc();
         }
 
@@ -59,17 +62,26 @@ namespace Demo.WebApi
                 "Demo.WebApi",
                 "Demo.*");
 
-            return services.CreateAppBuilder(
-                    configuration, 
-                    loggerFactory, 
-                    typeResolver)
-            	.Build();
+            return services.CreateAppBuilder(configuration, loggerFactory, typeResolver)
+                .Bootstrap(c => {
+                        c.WithConfig<MessageDispatchConfig>(dc => {
+                        // TODO:  Uncomment for specific examples.
+                        // dc.ClearMessagePublishers();
+                        // dc.AddMessagePublisher<ExamplePublisher>();
+                        // dc.AddMessageEnricher<MachineNameEnricher>();
+                    });
+
+                    c.WithServices(reg =>
+                     {
+                         //  Any additional services or overrides can be registered here.
+                     });
+                })
+                .Build();
         }
 
         private static void OnShutdown()
         {
-            AppContainer.Instance.Stop();
+            AppContainer.Instance.Dispose();
         }
     }
 }
-

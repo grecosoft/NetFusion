@@ -8,8 +8,10 @@ namespace Demo.Infra
         public override void Initialize()
         {
             Context.Logger.LogWarning("Warning from Plugin Module");
-            
-            var namedLogger = Context.LoggerFactory.CreateLogger("NetFusion Examples");
+
+            var namedLogger = Context.LoggerFactory
+                .CreateLogger("NetFusion Examples");
+
             namedLogger.LogError("Just an example.");
         }
     }

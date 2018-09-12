@@ -1,4 +1,3 @@
-
 using NetFusion.Bootstrap.Manifests;
 
 namespace Demo.WebApi

@@ -1,5 +1,4 @@
 using System;
-using Demo.App.Entities;
 using NetFusion.MongoDB;
 
 namespace Demo.Infra.Repositories

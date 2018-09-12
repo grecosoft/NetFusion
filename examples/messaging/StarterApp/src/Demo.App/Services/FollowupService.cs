@@ -1,7 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Demo.App.DomainEvents;
+using Demo.Domain.Events;
+using Demo.Domain.Adapters;
 using Demo.Infra;
 using Microsoft.Extensions.Logging;
 using NetFusion.Common.Extensions;
@@ -9,8 +10,7 @@ using NetFusion.Messaging;
 
 namespace Demo.App.Service
 {
-    public class FollowupService
-        : IMessageConsumer
+    public class FollowupService : IMessageConsumer
     {
         private readonly ILogger _logger;
         private readonly IRegistrationDataAdapter _adapter;

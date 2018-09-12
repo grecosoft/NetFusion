@@ -19,5 +19,5 @@ namespace Demo.WebApi.Controllers
         {
             return Ok(_container.Log);
         }
-    }    
+    }
 }

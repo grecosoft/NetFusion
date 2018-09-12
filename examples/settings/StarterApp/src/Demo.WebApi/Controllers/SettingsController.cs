@@ -10,7 +10,7 @@ namespace Demo.WebApi.Controllers
 
         public SettingsController(ServiceSettings settings)
         {
-            _settings = settings;        
+            _settings = settings;
         }
 
         [HttpGet()]

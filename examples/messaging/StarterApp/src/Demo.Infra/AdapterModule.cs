@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
+using Demo.Domain.Adapters;
 
 namespace Demo.Infra
 {
@@ -9,7 +10,7 @@ namespace Demo.Infra
         {
             services.AddSingleton<IRegistrationDataAdapter,
                  RegistrationDataAdapter>();
-
+                 
             services.AddSingleton<ISalesDataAdapter,
                  SalesDataAdapter>();
         }

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Demo.Api.Models;
-using Demo.Api.Queries;
+using Demo.Domain.Entities;
+using Demo.Domain.Queries;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Messaging;
 

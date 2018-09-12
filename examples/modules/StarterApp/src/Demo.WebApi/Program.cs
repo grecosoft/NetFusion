@@ -6,7 +6,7 @@ using NetFusion.Bootstrap.Configuration;
 
 namespace Demo.WebApi
 {
-    // Initializes the application's configuration and logging then delegates 
+    // Initializes the application's configuration and logging then delegates
     // to the Startup class to initialize HTTP pipeline related settings.
     public class Program
     {
@@ -15,13 +15,13 @@ namespace Demo.WebApi
             BuildWebHost(args).Run();
         }
 
-        private static IWebHost BuildWebHost(string[] args) 
+        private static IWebHost BuildWebHost(string[] args)
         {
             var configuration = CreateConfiguration(args);
 
             return WebHost.CreateDefaultBuilder(args)
                 .UseConfiguration(configuration)
-                .ConfigureLogging((context, logging) => SetupLogging(logging, configuration))            
+                .ConfigureLogging((context, logging) => SetupLogging(logging, configuration))
                 .UseStartup<Startup>()
                 .Build();
         }
@@ -29,7 +29,7 @@ namespace Demo.WebApi
         private static IConfiguration CreateConfiguration(string[] args)
         {
             var builder = new ConfigurationBuilder();
-            builder.AddDockerDefaultSettings();
+            builder.AddAppSettings();
 
             if (EnvironmentConfig.IsDevelopment)
             {

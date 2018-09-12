@@ -73,7 +73,7 @@ namespace Demo.WebApi
 
         private static void OnShutdown()
         {
-            AppContainer.Instance.Stop();
+            AppContainer.Instance.Dispose();
         }
     }
 }

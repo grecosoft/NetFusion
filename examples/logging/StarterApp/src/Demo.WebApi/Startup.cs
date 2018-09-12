@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
 using System;
-using NetFusion.Bootstrap.Configuration;
 using Demo.Infra;
-using NetFusion.Web.Mvc.Composite;
 using NetFusion.Web.Mvc;
+using NetFusion.Web.Mvc.Composite;
 
 namespace Demo.WebApi
 {
@@ -19,18 +18,24 @@ namespace Demo.WebApi
         private readonly IConfiguration _configuration;
         private readonly ILoggerFactory _loggerFactory;
 
-       public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
+        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
-            _configuration = configuration;
-            _loggerFactory = loggerFactory;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory)); 
         }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            // Support REST/HAL based API responses.
+            services.AddMvc(options => {
 
+            });
+
+            // Create and NetFusion application container based on Microsoft's abstractions:
             var builtContainer = CreateAppContainer(services, _configuration, _loggerFactory);
 
+            // Start all modules in the application container and return created service-provider.
+            // If an open-source DI container is needed, this is where it would be populated and returned.
             builtContainer.Start();
             return builtContainer.ServiceProvider;
         }
@@ -45,7 +50,6 @@ namespace Demo.WebApi
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseCompositeQuerying();
             }
 
@@ -54,9 +58,7 @@ namespace Demo.WebApi
 
         // Creates a NetFusion application container used to populate the service-collection 
         // for a set of discovered plug-ins.
-        private IBuiltContainer CreateAppContainer(IServiceCollection services,
-            IConfiguration configuration,
-            ILoggerFactory loggerFactory)
+        private IBuiltContainer CreateAppContainer(IServiceCollection services, IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             // Creates an instance of a type resolver that will look for plug-ins within 
             // the assemblies matching the passed patterns.
@@ -64,25 +66,24 @@ namespace Demo.WebApi
                 "Demo.WebApi",
                 "Demo.*");
 
-            return services
-                .CreateAppBuilder(
-                    configuration, 
-                    loggerFactory, 
-                    typeResolver)
+            return services.CreateAppBuilder(configuration, loggerFactory, typeResolver)
                 .Bootstrap(c => {
                     c.WithConfig<ValidRangeConfig>(rc => rc.SetRange(100, 200));
                     c.WithConfig((WebMvcConfig config) =>
                     {
                         config.UseServices(services);
                     });
+                    c.WithServices(reg =>
+                     {
+                         //  Any additional services or overrides can be registered here.
+                     });
                 })
-            	.Build();
+                .Build();
         }
 
         private static void OnShutdown()
         {
-            AppContainer.Instance.Stop();
+            AppContainer.Instance.Dispose();
         }
     }
 }
-

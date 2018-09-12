@@ -1,8 +1,6 @@
-
 using NetFusion.Bootstrap.Manifests;
-using NetFusion.Settings;
 
-namespace Demo.App
+namespace Demo.Infra
 {
   public class Manifest : PluginManifestBase,
     IAppComponentPluginManifest
@@ -12,5 +10,3 @@ namespace Demo.App
     public string Description => "The plugin containing core services.";
   }
 }
-
-

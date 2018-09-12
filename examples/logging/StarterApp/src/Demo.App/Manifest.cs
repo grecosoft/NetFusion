@@ -6,7 +6,7 @@ namespace Demo.Infra
     IAppComponentPluginManifest
   {
     public string PluginId => "ABF99168-CFD0-4B7E-9704-4094C26FD019";
-    public string Name => "Application Service Component";
-    public string Description => "The plugin containing application services.";
+    public string Name => "Core Infrastructure Services";
+    public string Description => "The plugin containing core services.";
   }
 }

@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Demo.Domain.Adapters;
 
 namespace Demo.Infra
 {
@@ -24,7 +25,7 @@ namespace Demo.Infra
 
             HttpResponseMessage response = await httpClient.GetAsync(
                 @"https://raw.githubusercontent.com/grecosoft/NetFusion/master/examples/data/valid_autos.json");
-                
+
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
 

@@ -1,11 +1,10 @@
-using Demo.App.DomainEvents;
+using Demo.Domain.Events;
 using Microsoft.Extensions.Logging;
 using NetFusion.Messaging;
 
 namespace Demo.App.Service
 {
-    public class FulfillmentService 
-        : IMessageConsumer
+    public class FulfillmentService : IMessageConsumer
     {
         private readonly ILogger _logger;
 

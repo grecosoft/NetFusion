@@ -10,7 +10,7 @@ namespace Demo.Infra
     {
         public IEnumerable<IValueCalculator> Calculators { get; set; }
 
-        public override void RegisterDefaultServices(IServiceCollection services)
+	public override void RegisterDefaultServices(IServiceCollection services)
         {
             services.AddSingleton<ICalculateService, DefaultCalculateService>();
         }

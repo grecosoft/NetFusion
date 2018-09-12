@@ -1,37 +1,45 @@
-using Demo.Infra;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.WebApi.Controllers
 {
-    [Route("api/values")]
-    public class ValuesController: Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ValuesController : ControllerBase
     {
-        private ICalculatorModule _calculator;
-        private ICalculateService _calculateService;
-
-        public ValuesController(
-            ICalculatorModule calculator,
-            ICalculateService calculateService)
+        // GET api/values
+        [HttpGet]
+        public ActionResult<IEnumerable<string>> Get()
         {
-            _calculator = calculator;
-            _calculateService = calculateService;
+            return new string[] { "value1", "value2" };
         }
 
-        [HttpPost("calculate")]
-        public int Calculate([FromBody]ValueModel data)
+        // GET api/values/5
+        [HttpGet("{id}")]
+        public ActionResult<string> Get(int id)
         {
-            return _calculator.CalculateValue(data.Values);
+            return "value";
         }
 
-        [HttpPost("calculate/service")]
-        public int CalculateUsingService([FromBody]ValueModel data)
+        // POST api/values
+        [HttpPost]
+        public void Post([FromBody] string value)
         {
-            return _calculateService.CalculateValue(data.Values);
         }
 
-        public class ValueModel
+        // PUT api/values/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
         {
-            public int[] Values { get; set; }
+        }
+
+        // DELETE api/values/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
         }
     }
 }
