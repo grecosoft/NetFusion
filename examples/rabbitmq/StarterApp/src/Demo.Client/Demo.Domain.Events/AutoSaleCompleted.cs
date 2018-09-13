@@ -1,6 +1,6 @@
-﻿using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types;
 
-namespace Demo.App.DomainEvents
+namespace Demo.Domain.Events
 {
     public class AutoSaleCompleted : DomainEvent
     {
@@ -8,6 +8,7 @@ namespace Demo.App.DomainEvents
         public string Model { get; set; }
         public int Year { get; set; }
         public string Color { get; set; }
-        public bool IsNew { get; set; } 
+        public bool IsNew { get; set; }
     }
 }
+

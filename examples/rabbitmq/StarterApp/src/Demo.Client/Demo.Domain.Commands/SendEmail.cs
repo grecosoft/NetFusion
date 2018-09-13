@@ -1,6 +1,6 @@
-﻿using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types;
 
-namespace Demo.App.Commands
+namespace Demo.Domain.Commands
 {
     public class SendEmail : Command
     {
@@ -10,3 +10,6 @@ namespace Demo.App.Commands
         public string Message { get; set; }
     }
 }
+
+
+

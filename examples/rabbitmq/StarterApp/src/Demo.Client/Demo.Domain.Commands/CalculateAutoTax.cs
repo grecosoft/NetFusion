@@ -1,6 +1,6 @@
-﻿using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types;
 
-namespace Demo.Client.Commands
+namespace Demo.Domain.Commands
 {
     public class CalculateAutoTax : Command<TaxCalc>
     {

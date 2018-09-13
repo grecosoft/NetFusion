@@ -1,7 +1,7 @@
-﻿using System;
-using Demo.Client.DomainEvents;
+using System;
+using Demo.Domain.Events;
+using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
-using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Subscriber;
 
 namespace Demo.Client.Handlers
@@ -12,14 +12,14 @@ namespace Demo.Client.Handlers
             "CT", "NY", "NH", "ME")]
         public void NorthEast(PropertySold propertySold)
         {
-            Console.WriteLine($"Exchange=>RealEstate; Queue=>NorthEast; Route-Key: {propertySold.GetRouteKey()}");
+            Console.WriteLine(propertySold.ToIndentedJson());
         }
 
         [DirectQueue("testBus", "SouthEast", "RealEstate",
             "NC", "SC", "FL")]
         public void SouthEast(PropertySold propertySold)
         {
-            Console.WriteLine($"Exchange=>RealEstate; Queue=>SouthEast; Route-Key: {propertySold.GetRouteKey()}");
+            Console.WriteLine(propertySold.ToIndentedJson());
         }
     }
 }

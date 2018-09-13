@@ -1,6 +1,8 @@
-﻿namespace Demo.WebApi.Models
+using NetFusion.Messaging.Types;
+
+namespace Demo.Domain.Events
 {
-    public class AutoModel
+    public class AutoSaleCompleted : DomainEvent
     {
         public string Make { get; set; }
         public string Model { get; set; }

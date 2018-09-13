@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
-using Demo.App.DomainEvents;
+using Demo.Domain.Events;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Messaging;
 
@@ -10,13 +10,13 @@ namespace Demo.WebApi.Controllers
     public class SampleFanoutController : Controller
     {
         private readonly IMessagingService _messaging;
-        
+
         public SampleFanoutController(
             IMessagingService messaging)
         {
             _messaging = messaging ?? throw new ArgumentNullException(nameof(messaging));
         }
-    
+
         [HttpPost("temp/reading")]
         public Task TempReading([FromBody]TemperatureReading reading)
         {

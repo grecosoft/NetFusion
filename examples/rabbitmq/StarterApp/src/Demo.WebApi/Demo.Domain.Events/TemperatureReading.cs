@@ -1,6 +1,6 @@
-﻿using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types;
 
-namespace Demo.Client.DomainEvents
+namespace Demo.Domain.Events
 {
     public class TemperatureReading : DomainEvent
     {

@@ -3,6 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Configuration;
 using NetFusion.Bootstrap.Container;
+using NetFusion.RabbitMQ.Logging;
+using NetFusion.Base.Serialization;
+using NetFusion.Serialization;
 
 namespace Demo.Client
 {
@@ -35,11 +38,17 @@ namespace Demo.Client
                 "Demo.Client",
                 "Demo.*");
 
-            return services.CreateAppBuilder(
-                    configuration, 
-                    loggerFactory, 
-                    typeResolver)
-            	.Build();
+            return services.CreateAppBuilder(configuration, loggerFactory, typeResolver)
+                .Bootstrap(c => {
+                    c.WithConfig((RabbitMqLoggerConfig config) => {
+                        config.SetLogFactory(loggerFactory);
+                    });
+
+                    c.WithServices(reg => {
+                        reg.AddSingleton<ISerializationManager, SerializationManager>();
+                     });
+                })
+                .Build();
         }
     }
 }

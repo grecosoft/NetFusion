@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
-using Demo.App.Commands;
+using Demo.Domain.Commands;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Messaging;
 

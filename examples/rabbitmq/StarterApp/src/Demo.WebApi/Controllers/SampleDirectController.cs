@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
-using Demo.App.DomainEvents;
+using Demo.Domain.Events;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Types;
@@ -11,13 +11,13 @@ namespace Demo.WebApi.Controllers
     public class SampleDirectController : Controller
     {
         private readonly IMessagingService _messaging;
-        
+
         public SampleDirectController(
             IMessagingService messaging)
         {
             _messaging = messaging ?? throw new ArgumentNullException(nameof(messaging));
         }
-        
+
         [HttpPost("property/sales")]
         public Task RecordPropertySale([FromBody]PropertySold propertyEvent)
         {

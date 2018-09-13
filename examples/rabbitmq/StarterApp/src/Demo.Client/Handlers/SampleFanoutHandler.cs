@@ -1,5 +1,5 @@
-﻿using System;
-using Demo.Client.DomainEvents;
+using System;
+using Demo.Domain.Events;
 using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
 using NetFusion.RabbitMQ.Subscriber;
@@ -14,4 +14,4 @@ namespace Demo.Client.Handlers
             Console.WriteLine(reading.ToIndentedJson());
         }
     }
-} 
+}
