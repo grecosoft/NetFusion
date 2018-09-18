@@ -152,7 +152,7 @@ namespace NetFusion.Messaging.Core
                     }
 
                     var asyncResult = (Task)Invoker.DynamicInvoke(invokeParams.ToArray());
-                    await asyncResult;
+                    await asyncResult.ConfigureAwait(false);
 
                     object result = ProcessResult(message, asyncResult);
                     taskSource.SetResult(result);
@@ -181,7 +181,7 @@ namespace NetFusion.Messaging.Core
                 taskSource.SetException(dispatchEx);
             }
 
-            return await taskSource.Task;
+            return await taskSource.Task.ConfigureAwait(false);
         }
 
         private object ProcessResult(IMessage message, object result)

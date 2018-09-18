@@ -48,7 +48,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             {
                 object response = await context.MessagingModule.InvokeDispatcherInNewLifetimeScopeAsync(
                     rpcCommandHandler, 
-                    message);
+                    message).ConfigureAwait(false);
 
                 await ReplyWithResponse(context, response);
             }

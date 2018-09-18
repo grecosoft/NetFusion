@@ -263,7 +263,7 @@ namespace NetFusion.Rest.Client
             try
             {
                 var request = ApiRequest.Get(_entryPointPath);
-                var response = await requestClient.SendAsync<HalEntryPointResource>(request);
+                var response = await requestClient.SendAsync<HalEntryPointResource>(request).ConfigureAwait(false);
 
                 response.ThrowIfNotSuccessStatusCode();
                 return response.Content;

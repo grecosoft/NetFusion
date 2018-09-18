@@ -92,7 +92,7 @@ namespace NetFusion.Test.Container
                 "Test delegate cannot be null.");
 
             var fixture = CreateFixture();
-            await test(fixture);
+            await test(fixture).ConfigureAwait(false);
 
             fixture._container?.Dispose();
         }

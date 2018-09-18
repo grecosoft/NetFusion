@@ -38,7 +38,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                 // Delegate to the client to send the request and wait for response in reply queue.
                 byte[] resultBytes = await client.Publish(createdExchange, messageBody, 
                     messageProperties, 
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(false);
 
                 // If a successful reply, deserialize the response message into the
                 // result type associated with the command.

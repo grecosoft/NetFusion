@@ -74,7 +74,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                 routeKey, 
                 false,
                 messageProperties,
-                messageBody);
+                messageBody).ConfigureAwait(false);
 
             try
             {

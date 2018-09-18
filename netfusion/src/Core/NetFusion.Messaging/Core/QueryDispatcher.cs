@@ -50,7 +50,7 @@ namespace NetFusion.Messaging.Core
 
             try
             {
-                await InvokeDispatcher(dispatchInfo, query, cancellationToken);
+                await InvokeDispatcher(dispatchInfo, query, cancellationToken).ConfigureAwait(false);
             }
             catch (QueryDispatchException ex)
             {

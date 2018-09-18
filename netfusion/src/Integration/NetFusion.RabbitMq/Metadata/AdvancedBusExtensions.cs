@@ -38,7 +38,7 @@ namespace NetFusion.RabbitMQ.Metadata
                     maxPriority: meta.QueueMeta.MaxPriority,
                     deadLetterExchange: meta.QueueMeta.DeadLetterExchange,
                     deadLetterRoutingKey: meta.QueueMeta.DeadLetterRoutingKey,
-                    perQueueMessageTtl: meta.QueueMeta.PerQueueMessageTtl);
+                    perQueueMessageTtl: meta.QueueMeta.PerQueueMessageTtl).ConfigureAwait(false);
 
                 return Exchange.GetDefault();
             }
@@ -47,7 +47,7 @@ namespace NetFusion.RabbitMQ.Metadata
                 durable: meta.IsDurable,
                 autoDelete: meta.IsAutoDelete, 
                 passive: meta.IsPassive,
-                alternateExchange: meta.AlternateExchangeName);
+                alternateExchange: meta.AlternateExchangeName).ConfigureAwait(false);
         }
 
         /// <summary>

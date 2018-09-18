@@ -166,7 +166,7 @@ namespace NetFusion.Messaging.Modules
                 {
                     // Resolve the component and call the message handler.
                     var consumer = (IMessageConsumer)scope.ServiceProvider.GetRequiredService(dispatcher.ConsumerType);
-                    return await dispatcher.Dispatch(message, consumer, cancellationToken);
+                    return await dispatcher.Dispatch(message, consumer, cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

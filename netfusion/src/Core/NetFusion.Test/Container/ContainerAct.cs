@@ -118,7 +118,7 @@ namespace NetFusion.Test.Container
             try
             {
                 _fixture.InitContainer();
-                await act(_container);
+                await act(_container).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -149,7 +149,7 @@ namespace NetFusion.Test.Container
                 var testScope = _container.CreateServiceScope();
                 TestServiceScope = testScope.ServiceProvider;
 
-                await act(TestServiceScope);
+                await act(TestServiceScope).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

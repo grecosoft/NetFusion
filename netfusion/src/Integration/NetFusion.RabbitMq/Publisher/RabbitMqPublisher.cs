@@ -69,7 +69,7 @@ namespace NetFusion.RabbitMQ.Publisher
             IBus bus = BusModule.GetBus(definition.BusName);
 
             // Create the exchange/queue:
-            CreatedExchange createdExchange = await CreateExchange(bus, definition);
+            CreatedExchange createdExchange = await CreateExchange(bus, definition).ConfigureAwait(false);
 
             LogPublishedMessage(createdExchange, message);
 
@@ -79,7 +79,7 @@ namespace NetFusion.RabbitMQ.Publisher
                 cancellationToken);
         }
 
-        private async Task<CreatedExchange> CreateExchange(IBus bus, ExchangeMeta meta)
+        private static async Task<CreatedExchange> CreateExchange(IBus bus, ExchangeMeta meta)
         {
             IExchange exchange = await bus.Advanced.ExchangeDeclareAsync(meta);
             return new CreatedExchange(bus, exchange, meta);

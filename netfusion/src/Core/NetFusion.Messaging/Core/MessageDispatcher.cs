@@ -45,22 +45,22 @@ namespace NetFusion.Messaging.Core
                 .ToList();
         }
 
-        public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default(CancellationToken),
+        public async Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent), 
                 "Domain event cannot be null.");
 
-            return PublishMessageAsync(domainEvent, integrationType, cancellationToken);
+            await PublishMessageAsync(domainEvent, integrationType, cancellationToken).ConfigureAwait(false);
         }
 
-        public Task SendAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken),
+        public async Task SendAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             if (command == null) throw new ArgumentNullException(nameof(command),
                 "Command cannot be null.");
 
-            return PublishMessageAsync(command, integrationType, cancellationToken);
+            await PublishMessageAsync(command, integrationType, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<TResult> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken),
@@ -69,7 +69,7 @@ namespace NetFusion.Messaging.Core
             if (command == null) throw new ArgumentNullException(nameof(command),
                 "Command cannot be null.");
 
-            await PublishMessageAsync(command, integrationType, cancellationToken);
+            await PublishMessageAsync(command, integrationType, cancellationToken).ConfigureAwait(false);
             return command.Result;
         }
 
@@ -88,7 +88,7 @@ namespace NetFusion.Messaging.Core
             {
                 try
                 {
-                    await PublishMessageAsync(domainEvent, integrationType, cancellationToken);
+                    await PublishMessageAsync(domainEvent, integrationType, cancellationToken).ConfigureAwait(false);
                 }
                 catch (PublisherException ex)
                 {

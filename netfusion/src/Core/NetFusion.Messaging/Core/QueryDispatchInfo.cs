@@ -34,7 +34,7 @@ namespace NetFusion.Messaging.Core
         /// <summary>
         /// Indicates that the consumer's query handler returns an asynchronous result.
         /// </summary>
-        public Boolean IsAsyncWithResult { get; }
+        public bool IsAsyncWithResult { get; }
 
         /// <summary>
         /// Indicates that the consumer's query handler has a defined cancellation token parameter.
@@ -112,7 +112,7 @@ namespace NetFusion.Messaging.Core
                     }
 
                     var asyncResult = (Task)Invoker.DynamicInvoke(invokeParams.ToArray());
-                    await asyncResult;
+                    await asyncResult.ConfigureAwait(false);
 
                     object result = ProcessResult(query, asyncResult);
                     taskSource.SetResult(result);
@@ -141,7 +141,7 @@ namespace NetFusion.Messaging.Core
                 taskSource.SetException(dispatchEx);
             }
 
-            return await taskSource.Task;
+            return await taskSource.Task.ConfigureAwait(false);
         }
 
         private object ProcessResult(IQuery query, object result)

@@ -56,9 +56,9 @@ namespace NetFusion.Rest.Client.Core
                 "Default Request Settings cannot be null.");
         }
 
-        public Task<HalEntryPointResource> GetApiEntry()
+        public async Task<HalEntryPointResource> GetApiEntry()
         {
-            return _serviceApiProvider.GetEntryPointResource();
+            return await _serviceApiProvider.GetEntryPointResource().ConfigureAwait(false);
         }
 
         // Called by builder when creating client...
@@ -88,32 +88,32 @@ namespace NetFusion.Rest.Client.Core
 
         // -----
 
-		public Task<ApiResponse> SendAsync(ApiRequest request,
+		public async Task<ApiResponse> SendAsync(ApiRequest request,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             if (request == null) throw new ArgumentNullException(nameof(request),
                 "Request cannot be null.");
 
-            return SendRequest(request, cancellationToken);
+            return await SendRequest(request, cancellationToken).ConfigureAwait(false);
         }
 
-		public Task<ApiResponse<TContent>> SendAsync<TContent>(ApiRequest request,
+		public async Task<ApiResponse<TContent>> SendAsync<TContent>(ApiRequest request,
             CancellationToken cancellationToken = default(CancellationToken))
             where TContent : class
         {
             if (request == null) throw new ArgumentNullException(nameof(request),
                 "Request cannot be null.");
 
-            return SendRequest<TContent>(request, cancellationToken);
+            return await SendRequest<TContent>(request, cancellationToken).ConfigureAwait(false);
         }
         
-        public Task<ApiResponse> SendAsync(ApiRequest request, Type contentType, 
+        public async Task<ApiResponse> SendAsync(ApiRequest request, Type contentType, 
             CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (contentType == null) throw new ArgumentNullException(nameof(contentType));
 
-            return SendRequest(request, contentType, cancellationToken);
+            return await SendRequest(request, contentType, cancellationToken).ConfigureAwait(false);
         }
 
         private async Task<ApiResponse> SendRequest(ApiRequest request, CancellationToken cancellationToken)

@@ -42,7 +42,7 @@ namespace NetFusion.Messaging.Core
         // in-process before doing so for broker based events.
         public override IntegrationTypes IntegrationType => IntegrationTypes.Internal;
 
-        public override Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
+        public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
             // Determine the dispatchers associated with the message.
             IEnumerable<MessageDispatchInfo> dispatchers = _messagingModule.InProcessDispatchers
@@ -51,13 +51,13 @@ namespace NetFusion.Messaging.Core
             
             if (! dispatchers.Any())
             {
-                return Task.CompletedTask;
+                return;
             }
 
             LogMessageDespatchInfo(message, dispatchers);
 
             // Execute all handlers and return the task for the caller to await.
-            return InvokeMessageDispatchersAsync(message, dispatchers, cancellationToken);
+            await InvokeMessageDispatchersAsync(message, dispatchers, cancellationToken).ConfigureAwait(false);
         }
 
         private async Task InvokeMessageDispatchersAsync(IMessage message,

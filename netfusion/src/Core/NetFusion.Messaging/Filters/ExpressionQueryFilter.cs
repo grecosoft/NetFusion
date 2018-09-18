@@ -30,7 +30,7 @@ namespace NetFusion.Messaging.Filters
         {
             foreach (object resultItem in GetQueryResults(query).Where(IsAttributedResult))
             {
-                await _scriptingService.ExecuteAsync(resultItem, PropertyScriptName);
+                await _scriptingService.ExecuteAsync(resultItem, PropertyScriptName).ConfigureAwait(false);
             }
         }
 
