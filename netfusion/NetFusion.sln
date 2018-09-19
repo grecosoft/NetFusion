@@ -56,6 +56,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Serialization", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Roslyn", "src\Integration\NetFusion.Roslyn\NetFusion.Roslyn.csproj", "{104CCFA1-3911-4FD3-AB1A-5DF45344BE5A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Redis", "src\Integration\NetFusion.Redis\NetFusion.Redis.csproj", "{FA660514-A51B-47E1-8050-942C98154C93}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -146,6 +148,10 @@ Global
 		{104CCFA1-3911-4FD3-AB1A-5DF45344BE5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{104CCFA1-3911-4FD3-AB1A-5DF45344BE5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{104CCFA1-3911-4FD3-AB1A-5DF45344BE5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA660514-A51B-47E1-8050-942C98154C93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA660514-A51B-47E1-8050-942C98154C93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA660514-A51B-47E1-8050-942C98154C93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA660514-A51B-47E1-8050-942C98154C93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -176,6 +182,7 @@ Global
 		{A1DA5027-083F-4458-96BE-090E646029A6} = {0A108820-F110-4B36-A5CF-A59FC7C64955}
 		{960EA3B0-E46C-4B9E-BA7B-479F7CE9ABF7} = {0A108820-F110-4B36-A5CF-A59FC7C64955}
 		{104CCFA1-3911-4FD3-AB1A-5DF45344BE5A} = {0A108820-F110-4B36-A5CF-A59FC7C64955}
+		{FA660514-A51B-47E1-8050-942C98154C93} = {0A108820-F110-4B36-A5CF-A59FC7C64955}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17556D20-DBFC-4AEB-857D-74B7C1EDEA60}

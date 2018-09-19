@@ -1,10 +1,9 @@
 ﻿using MongoDB.Driver;
 using System.Threading.Tasks;
+using NetFusion.MongoDB.Settings;
 
 namespace NetFusion.MongoDB
 {
-    using NetFusion.MongoDB.Settings;
-
     /// <summary>
     /// Interface that is registered in the container used to access MongoDb.
     /// </summary>
