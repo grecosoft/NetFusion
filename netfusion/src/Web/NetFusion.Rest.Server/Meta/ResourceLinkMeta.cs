@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NetFusion.Rest.Common;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Actions;
 using System;
@@ -117,55 +116,6 @@ namespace NetFusion.Rest.Server.Meta
             actionSelector.SetRouteInfo();
 
             return linkDescriptor;
-        }
-
-        /// <summary>
-        /// Based on the specified resource and controller, will determine if a controller action method exists,
-        /// based on conventions, corresponding to the action to be invoked to load the current state of the resource.
-        /// </summary>
-        /// <param name="relName">The relation name to use.  Defaults to Self.</param>
-        /// <returns>Object used to add optional metadata to the created link.</returns>
-		public void AutoMapSelfRelation(string relName = RelationTypes.Self)
-		{
-            var querySelector = new ActionSelfSelector(typeof(TController), typeof(TResource));
-            var actionLink = querySelector.FindSelfResourceAction();
-
-            if (actionLink != null)
-            {
-                actionLink.RelationName = relName;
-                AddActionLink(actionLink);
-            }
-		}
-
-        /// <summary>
-        /// Based on the specified resource and controller, will determine if a controller action methods exist,
-        /// based on conventions, corresponding to the action to be invoked for creating, updating, and deleting
-        /// the resource.
-        /// </summary>
-        public void AutoMapUpdateRelations()
-        {
-            var updatedSelector = new ActionUpdateSelector(typeof(TController), typeof(TResource));
-
-            var actionLink = updatedSelector.FindCreateResourceAction();
-            if (actionLink != null)
-            {
-                actionLink.RelationName = "resource:create";
-                AddActionLink(actionLink);
-            }
-
-            actionLink = updatedSelector.FindUpdateResourceAction();
-            if (actionLink != null)
-            {
-                actionLink.RelationName = "resource:update";
-                AddActionLink(actionLink);
-            }
-
-            actionLink = updatedSelector.FindDeleteResourceAction();
-            if (actionLink != null)
-            {
-                actionLink.RelationName = "resource:delete";
-                AddActionLink(actionLink);
-            }
         }
 
         /// <summary>

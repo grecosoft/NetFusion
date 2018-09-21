@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using NetFusion.Rest.Client.Resources;
 using NetFusion.Rest.Client.Settings;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
