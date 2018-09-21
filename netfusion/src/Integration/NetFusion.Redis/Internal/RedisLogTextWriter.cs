@@ -23,7 +23,7 @@ namespace NetFusion.Redis.Internal
         {
             if (! string.IsNullOrWhiteSpace(value))
             {
-                _logger.LogDebug(RedisLogEvents.ConnectionEvent, value);
+                _logger.LogWarning(RedisLogEvents.ConnectionEvent, value);
             }
         }
     }

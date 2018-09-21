@@ -85,14 +85,7 @@ namespace NetFusion.Messaging.Core
 
         private void LogQueryDispatch(IQuery query, IQueryConsumer consumer)
         {
-            if (_logger.IsEnabled(LogLevel.Trace))
-            {
-                _logger.LogTraceDetails($"Dispatching Query Type: {query.GetType()} to Consumer: {consumer.GetType()}", query);
-            }
-            else
-            {
-                _logger.LogDebug($"Dispatching Query Type: {query.GetType()} to Consumer: {consumer.GetType()}");
-            }
+            _logger.LogTraceDetails($"Dispatching Query Type: {query.GetType()} to Consumer: {consumer.GetType()}", query);
         }
         
         // Executes a list of asynchronous filters and awaits their completion.  Once completed,
@@ -101,7 +94,7 @@ namespace NetFusion.Messaging.Core
         {
             filters = filters.ToArray();
             
-            _logger.LogDebugDetails(MessagingLogEvents.QueryDispatch, "Applying Query Filters",
+            _logger.LogTraceDetails(MessagingLogEvents.QueryDispatch, "Applying Query Filters",
                 new {
                     FilterTypes = filters.Select(f => f.GetType().FullName).ToArray()
                 });

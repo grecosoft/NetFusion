@@ -176,14 +176,7 @@ namespace NetFusion.Rest.Client.Core
 
         private void LogRequest(ApiRequest request)
         {
-            if (! _logger.IsEnabled(LogLevel.Trace))
-            {
-                _logger.LogDebug("Sending request to: {uri} for method: {method}.", request.RequestUri, request.Method);
-                return;
-            }
-           
-            _logger.LogTrace("Sending Request: {request}", 
-                JsonConvert.SerializeObject(request, Formatting.Indented));
+            _logger.LogTrace("Sending request to: {uri} for method: {method}.", request.RequestUri, request.Method);
         }
         
         private async Task<HttpResponseMessage> HandleIfErrorStatusCode(
@@ -228,30 +221,13 @@ namespace NetFusion.Rest.Client.Core
         {
             var request = response.Request;
             
-            if (! _logger.IsEnabled(LogLevel.Trace))
-            {
-                _logger.LogDebug(
-                    "Response received for: {uri} with method: {method}. " + 
-                    "Received status code: {statusCode} with reason: {reasonPhase}.",
-                    request.RequestUri, 
-                    request.Method, 
-                    response.StatusCode, 
-                    response.ReasonPhase);
-
-                return;
-            }
-
-            var headers = JsonConvert.SerializeObject(response.Headers, Formatting.Indented);
-            
             _logger.LogTrace(
                 "Response received for: {uri} with method: {method}. " + 
-                "Received status code: {statusCode} with reason: {reasonPhase}. " +
-                "Received headers: {headers}.",
+                "Received status code: {statusCode} with reason: {reasonPhase}.",
                 request.RequestUri, 
                 request.Method, 
                 response.StatusCode, 
-                response.ReasonPhase,
-                headers);
+                response.ReasonPhase);
         }
         
         private async Task<HttpRequestMessage> CreateRequestMessage(ApiRequest request)

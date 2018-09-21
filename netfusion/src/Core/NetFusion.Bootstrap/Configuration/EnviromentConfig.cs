@@ -65,7 +65,7 @@ namespace NetFusion.Bootstrap.Configuration
         /// - Production: Warning
         /// </summary>
         public static LogLevel EnvironmentMinLogLevel =>
-            IsDevelopment ? LogLevel.Trace
+            IsDevelopment ? LogLevel.Debug
             : IsTest ? LogLevel.Debug
             : IsProduction ? LogLevel.Warning
             : LogLevel.Information;

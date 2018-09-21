@@ -142,7 +142,7 @@ namespace NetFusion.Messaging.Core
 
         private Task InvokeDispatcher(MessageDispatchInfo dispatcher, IMessage message, CancellationToken cancellationToken)
         {
-            _logger.LogDebug(
+            _logger.LogTrace(
                 $"Dispatching message Type: {message.GetType()} to Consumer: { dispatcher.ConsumerType } " +
                 $"Method: { dispatcher.MessageHandlerMethod.Name} ");
 
@@ -166,12 +166,6 @@ namespace NetFusion.Messaging.Core
 
         private void LogMessageDespatchInfo(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
         {
-            if (! _logger.IsEnabled(LogLevel.Trace))
-            {
-                _logger.LogDebug(MessagingLogEvents.MessagingDispatch, $"Message Published: {message.GetType()}");
-                return;
-            }
-
             var dispatcherDetails = GetDispatchLogDetails(dispatchers);
 
             _logger.LogTraceDetails(MessagingLogEvents.MessagingDispatch, $"Message Published: {message.GetType()}",
