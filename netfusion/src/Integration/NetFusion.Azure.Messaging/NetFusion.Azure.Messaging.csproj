@@ -2,6 +2,7 @@
   <Import Project="..\..\..\build\common.props" />
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
@@ -11,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AmqpNetLite" Version="2.1.5" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.1" />
   </ItemGroup>
 

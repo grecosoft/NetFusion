@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <LangVersion>7</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.1.4" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>NetFusion.EntityFramework</PackageId>
+    <Title>NetFusion EntityFramework Plugin</Title>
+    <Description>
+      Assembly containing a NetFusion plugin allowing for bootstrapping of EntityFramework contexts..
+    </Description>
+    <PackageTags>netfusion;entityframework</PackageTags>
+  </PropertyGroup>
+
+</Project>
