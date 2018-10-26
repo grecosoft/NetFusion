@@ -70,7 +70,7 @@ namespace NetFusion.Redis.Modules
                 subscriber.Subscribe(msgSubscriber.Channel, (channel, message) =>
                 {
                     Type messageType = msgSubscriber.DispatchInfo.MessageType;
-                    var messageParts = ChannelMessage.UnPack(message);
+                    var messageParts = ChannelMessageEncoder.UnPack(message);
                     
                     // Deserialize message byte array into domain-event type associated with handler:
                     IDomainEvent domainEvent = (IDomainEvent)_serializationManager.Deserialize(

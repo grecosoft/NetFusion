@@ -66,7 +66,7 @@ namespace NetFusion.Redis.Publisher
                 string channelName = $"{channel.ChannelName}.{eventStateData}";
 
                 LogChannelPublish(domainEvent, channel.DatabaseName, channelName);
-                byte[] messageData = ChannelMessage.Pack(channel.ContentType, messageValue);
+                byte[] messageData = ChannelMessageEncoder.Pack(channel.ContentType, messageValue);
 
                 await database.PublishAsync(channelName, messageData).ConfigureAwait(false);
             }

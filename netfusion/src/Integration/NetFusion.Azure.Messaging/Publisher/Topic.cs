@@ -1,5 +1,4 @@
 ﻿using System;
-using Amqp;
 using NetFusion.Azure.Messaging.Publisher.Internal;
 using NetFusion.Messaging.Types;
 
@@ -18,11 +17,6 @@ namespace NetFusion.Azure.Messaging.Publisher
             : base(namespaceName, name)
         {
             
-        }
-
-        internal override void SetMessageProperties(IMessage message, Message nsMessage)
-        {
-            base.SetMessageProperties(message, nsMessage);
         }
 
         /// <summary>

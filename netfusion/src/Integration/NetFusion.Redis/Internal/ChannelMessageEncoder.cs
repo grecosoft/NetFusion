@@ -18,7 +18,7 @@ namespace NetFusion.Redis.Internal
     /// specified by the publisher - allowing the content-type to change over time without having
     /// to recompile the consumer. 
     /// </summary>
-    public static class ChannelMessage
+    public static class ChannelMessageEncoder
     {
         /// <summary>
         /// Returns byte array containing content type and serialized message.
