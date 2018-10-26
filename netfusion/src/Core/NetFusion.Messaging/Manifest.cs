@@ -2,10 +2,10 @@
 
 namespace NetFusion.Messaging
 {
-    public class MessagingManifest : PluginManifestBase,
+    public class Manifest : PluginManifestBase,
         ICorePluginManifest
     {
-        public MessagingManifest()
+        public Manifest()
         {
             SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/src/Core/NetFusion.Messaging";
             DocUrl = "https://github.com/grecosoft/NetFusion/wiki/core.messaging.overview";

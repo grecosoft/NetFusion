@@ -2,10 +2,10 @@
 
 namespace NetFusion.Rest.Server
 {
-    public class RestServerManifest : PluginManifestBase,
+    public class Manifest : PluginManifestBase,
 		ICorePluginManifest
 	{
-        public RestServerManifest()
+        public Manifest()
         {
             SourceUrl = "https://github.com/grecosoft/NetFusion-Plugins/tree/master/src/Infrastructure/NetFusion.Rest.Server";
             DocUrl = "https://github.com/grecosoft/NetFusion/wiki/infrastructure.web.rest.server.quickstart";

@@ -2,10 +2,10 @@
 
 namespace NetFusion.MongoDB
 {
-    public class MongoDbManifest : PluginManifestBase,
+    public class Manifest : PluginManifestBase,
         ICorePluginManifest
     {
-        public MongoDbManifest()
+        public Manifest()
         {
             SourceUrl = "https://github.com/grecosoft/NetFusion-Plugins/tree/master/src/Infrastructure/NetFusion.MongoDB";
             DocUrl = "https://github.com/grecosoft/NetFusion/wiki/infrastructure.mongodb.overview";

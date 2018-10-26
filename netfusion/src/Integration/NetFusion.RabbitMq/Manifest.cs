@@ -2,7 +2,7 @@ using NetFusion.Bootstrap.Manifests;
 
 namespace NetFusion.RabbitMQ
 {
-    public class RabbitMqManifest : PluginManifestBase,
+    public class Manifest : PluginManifestBase,
         ICorePluginManifest
     {
         public string PluginId => "2B389655-E790-4D30-B19C-C06AB8096C6A";

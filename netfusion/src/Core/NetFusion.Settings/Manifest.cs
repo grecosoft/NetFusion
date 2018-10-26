@@ -2,10 +2,10 @@
 
 namespace NetFusion.Settings
 {
-    public class SettingsManifest : PluginManifestBase,
+    public class Manifest : PluginManifestBase,
         ICorePluginManifest
     {
-        public SettingsManifest()
+        public Manifest()
         {
             SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/src/Core/NetFusion.Settings";
             DocUrl = "https://github.com/grecosoft/NetFusion/wiki/core.settings.overview";

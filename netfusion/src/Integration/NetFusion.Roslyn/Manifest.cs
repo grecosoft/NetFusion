@@ -2,10 +2,10 @@
 
 namespace NetFusion.Roslyn
 {
-    public class RoslynManifest : PluginManifestBase,
+    public class Manifest : PluginManifestBase,
         ICorePluginManifest
     {
-        public RoslynManifest()
+        public Manifest()
         {
             SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/src/Common/NetFusion.Roslyn";
             DocUrl = "https://github.com/grecosoft/NetFusion/wiki/integration.domain.roslyn.overview";

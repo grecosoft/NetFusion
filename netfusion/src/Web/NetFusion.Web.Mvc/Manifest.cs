@@ -2,10 +2,10 @@
 
 namespace NetFusion.Web.Mvc
 {
-    public class WebMvcManifest : PluginManifestBase,
+    public class Manifest : PluginManifestBase,
         ICorePluginManifest
     {
-        public WebMvcManifest()
+        public Manifest()
         {
             SourceUrl = "https://github.com/grecosoft/NetFusion-Plugins/tree/master/src/Infrastructure/NetFusion.Web.Mvc";
             DocUrl = "https://github.com/grecosoft/NetFusion/wiki/infrastructure.web-mvc.overview";
