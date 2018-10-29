@@ -52,7 +52,7 @@ namespace NetFusion.EntityFramework.Modules
                     
                     string contextName = registration.ImplementationType.Name;
                     
-                    var contextSettings = connSettings.ContextSettings.FirstOrDefault(
+                    var contextSettings = connSettings.Contexts.FirstOrDefault(
                         cs => cs.ContextName == contextName);
 
                     if (contextSettings == null)

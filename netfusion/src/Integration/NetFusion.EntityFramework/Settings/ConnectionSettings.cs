@@ -13,11 +13,11 @@ namespace NetFusion.EntityFramework.Settings
         /// <summary>
         /// List of settings used by a specific derived EntityDbContext.
         /// </summary>
-        public ICollection<DbContextSettings> ContextSettings { get; set; }
+        public ICollection<DbContextSettings> Contexts { get; set; }
 
         public ConnectionSettings()
         {
-            ContextSettings = new List<DbContextSettings>();
+            Contexts = new List<DbContextSettings>();
         }
     }
 }
