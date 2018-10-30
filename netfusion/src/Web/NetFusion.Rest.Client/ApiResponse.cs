@@ -67,6 +67,12 @@ namespace NetFusion.Rest.Client
         /// The deserialized returned content.
         /// </summary>
         public object Content { get; }
+        
+        /// <summary>
+        /// The returned content of the response of a string if an error status
+        /// code was returned.
+        /// </summary>
+        public string ErrorContent { get; private set; }
 
         public ApiResponse(HttpRequestMessage requestMsg, HttpResponseMessage responseMsg)
         {
@@ -105,6 +111,15 @@ namespace NetFusion.Rest.Client
                 throw new HttpRequestException(
                     $"Response status code does not indicate success: {(int)StatusCode} ({StatusCode})");
             }
+        }
+
+        /// <summary>
+        /// Sets the response context as a string for response error codes.
+        /// </summary>
+        /// <param name="value"></param>
+        public void SetErrorContext(string value)
+        {
+            ErrorContent = value;
         }
     }
 

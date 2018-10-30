@@ -124,8 +124,9 @@ namespace NetFusion.Rest.Client.Core
             responseMsg = await HandleIfErrorStatusCode(request, responseMsg, cancellationToken);
 
             var response = new ApiResponse(requestMsg, responseMsg);
-            LogResponse(response);
+            await SetErrorContext(responseMsg, response);
 
+            LogResponse(response);
             return response;
         }
 
@@ -145,8 +146,9 @@ namespace NetFusion.Rest.Client.Core
             }
 
             var response = new ApiResponse<TContent>(requestMsg, responseMsg, resource);
+            await SetErrorContext(responseMsg, response);
+            
             LogResponse(response);
-
             return response;
         }
         
@@ -168,14 +170,24 @@ namespace NetFusion.Rest.Client.Core
             }
 
             var response = new ApiResponse(requestMsg, responseMsg, resource);
+            await SetErrorContext(responseMsg, response);
+            
             LogResponse(response);
-
             return response;
         }
 
         private void LogRequest(ApiRequest request)
         {
             _logger.LogTrace("Sending request to: {uri} for method: {method}.", request.RequestUri, request.Method);
+        }
+
+        private static async Task SetErrorContext(HttpResponseMessage responseMsg, ApiResponse response)
+        {
+            if (! responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
+            {
+                var errorBody = await responseMsg.Content.ReadAsStringAsync();
+                response.SetErrorContext(errorBody);
+            }
         }
         
         private async Task<HttpResponseMessage> HandleIfErrorStatusCode(
