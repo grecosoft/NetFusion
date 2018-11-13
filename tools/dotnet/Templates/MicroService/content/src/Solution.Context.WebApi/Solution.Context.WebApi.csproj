@@ -3,25 +3,23 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.6" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Components\Solution.Context.Api\Solution.Context.Api.csproj" />
     <ProjectReference Include="..\Components\Solution.Context.App\Solution.Context.App.csproj" />
     <ProjectReference Include="..\Components\Solution.Context.Domain\Solution.Context.Domain.csproj" />
     <ProjectReference Include="..\Components\Solution.Context.Infra\Solution.Context.Infra.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="3.2.87" />
-    <PackageReference Include="NetFusion.Base" Version="3.2.87" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.87" />
-    <PackageReference Include="NetFusion.Mapping" Version="3.2.87" />
+    <PackageReference Include="NetFusion.Common" Version="3.2.95" />
+    <PackageReference Include="NetFusion.Base" Version="3.2.95" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.95" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Web.Mvc" Version="3.2.87" />
-    <PackageReference Include="NetFusion.Rest.Common" Version="3.2.87" />
-    <PackageReference Include="NetFusion.Rest.Resources" Version="3.2.87" />
-    <PackageReference Include="NetFusion.Rest.Server" Version="3.2.87" />
+    <PackageReference Include="NetFusion.Web.Mvc" Version="3.2.95" />
+    <PackageReference Include="NetFusion.Rest.Common" Version="3.2.95" />
+    <PackageReference Include="NetFusion.Rest.Resources" Version="3.2.95" />
+    <PackageReference Include="NetFusion.Rest.Server" Version="3.2.95" />
   </ItemGroup>
 </Project>

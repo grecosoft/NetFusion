@@ -56,6 +56,8 @@ namespace Solution.Context.WebApi
 
             app.UseAuthentication();
 
+            // Add additional middleware here.
+
             if (env.IsDevelopment())
             {
                 string viewerUrl = _configuration.GetValue<string>("Netfusion:ViewerUrl");
@@ -63,13 +65,11 @@ namespace Solution.Context.WebApi
                 {
                     app.UseCors(builder => builder.WithOrigins(viewerUrl)
                         .AllowAnyMethod()
+                        .WithExposedHeaders("WWW-Authenticate")
                         .AllowAnyHeader());
                 }
 
-                app.UseDeveloperExceptionPage();
-
-                // https://github.com/grecosoft/NetFusion/wiki/core.logging.composite#accessing-composite-log-rest-api
-                app.UseCompositeQuerying();
+                app.UseMvc();
             }
         }
 
@@ -93,7 +93,7 @@ namespace Solution.Context.WebApi
                      })
                      .WithServices(reg =>
                      {
-                         //  Any additional services or overrides can be registered here.
+                         //  Additional services or overrides can be registered here.
                      });
                 })
                 .Build();
@@ -101,7 +101,7 @@ namespace Solution.Context.WebApi
 
         private static void OnShutdown()
         {
-            AppContainer.Instance.Stop();
+            AppContainer.Instance.Dispose();
         }
     }
 }

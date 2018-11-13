@@ -1,0 +1,8 @@
+These are message types published from command-handlers contained within the App project and handled by other application
+service components.  Domain Events are published to notify other application components of an updated resource.
+A domain-vent can have multiple in-process message handlers and can be delivered out of process using the following 
+infrastructure plug-ins:
+
+NetFusion.RabbitMq (Direct, Topic, Fan-out)
+NetFusion.Azure.Messaging (Topics)
+NetFusion.Redis (Channels)
