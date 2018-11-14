@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore;
+﻿using System;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ namespace Solution.Context.WebApi
     // to the Startup class to initialize HTTP pipeline related settings.
     public class Program
     {
+        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.overview#bootstrapping---overview
         public static void Main(string[] args)
         {
             BuildWebHost(args).Run();
@@ -17,37 +19,34 @@ namespace Solution.Context.WebApi
 
         private static IWebHost BuildWebHost(string[] args) 
         {
-            var configuration = CreateConfiguration(args);
-
             return WebHost.CreateDefaultBuilder(args)
-                .UseConfiguration(configuration)
-                .ConfigureLogging((context, logging) => SetupLogging(logging, configuration))            
+                .ConfigureAppConfiguration(SetupConfiguration)
+                .ConfigureLogging(SetupLogging)            
                 .UseStartup<Startup>()
                 .Build();
         }
 
-        private static IConfiguration CreateConfiguration(string[] args)
+        private static void SetupConfiguration(WebHostBuilderContext context, 
+            IConfigurationBuilder builder)
         {
-            var builder = new ConfigurationBuilder();
             builder.AddDockerDefaultSettings();
 
             if (EnvironmentConfig.IsDevelopment)
             {
-                builder.AddCommandLine(args);
+                builder.AddCommandLine(Environment.GetCommandLineArgs());
             }
-
-            return builder.Build();
         }
 
-        private static void SetupLogging(ILoggingBuilder logging, IConfiguration configuration)
+        private static void SetupLogging(WebHostBuilderContext context, 
+            ILoggingBuilder builder)
         {
-            var minLogLevel = GetMinLogLevel(configuration);
-            logging.ClearProviders();
+            var minLogLevel = GetMinLogLevel(context.Configuration);
+            builder.ClearProviders();
 
             if (EnvironmentConfig.IsDevelopment)
             {
-                logging.AddDebug().SetMinimumLevel(minLogLevel);
-                logging.AddConsole().SetMinimumLevel(minLogLevel);
+                builder.AddDebug().SetMinimumLevel(minLogLevel);
+                builder.AddConsole().SetMinimumLevel(minLogLevel);
             }
 
             // Add additional logger specific to non-development environments.

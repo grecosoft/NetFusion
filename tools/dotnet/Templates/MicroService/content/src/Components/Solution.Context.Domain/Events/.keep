@@ -6,3 +6,9 @@ infrastructure plug-ins:
 NetFusion.RabbitMq (Direct, Topic, Fan-out)
 NetFusion.Azure.Messaging (Topics)
 NetFusion.Redis (Channels)
+
+https://github.com/grecosoft/NetFusion/wiki/core.messaging.domain-events#messaging---domain-events
+https://github.com/grecosoft/NetFusion/wiki/integration.rabbitmq.direct#rabbitmq---direct-exchanges
+https://github.com/grecosoft/NetFusion/wiki/integration.rabbitmq.topic#rabbitmq---topic-exchanges
+https://github.com/grecosoft/NetFusion/wiki/integration.rabbitmq.fanout#rabbitmq---fan-out-exchanges
+https://github.com/grecosoft/NetFusion/wiki/integration.redis.overview#redis-overview

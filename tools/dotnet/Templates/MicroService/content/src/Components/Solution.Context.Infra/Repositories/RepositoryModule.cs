@@ -4,6 +4,8 @@ using NetFusion.Bootstrap.Plugins;
 
 namespace Solution.Context.Infra.Repositories
 {
+    // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#bootstrapping---modules
+
     // Convention based registration.
     public class RepositoryModule : PluginModule
     {

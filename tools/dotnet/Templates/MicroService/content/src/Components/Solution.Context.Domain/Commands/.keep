@@ -5,3 +5,7 @@ infrastructure plug-ins:
 
 NetFusion.RabbitMq (WorkQueue, Rpc)
 NetFusion.Azure.Messaging (Queues)
+
+https://github.com/grecosoft/NetFusion/wiki/core.messaging.commands#messaging---commands
+https://github.com/grecosoft/NetFusion/wiki/integration.rabbitmq.workqueue#rabbitmq---work-queues
+https://github.com/grecosoft/NetFusion/wiki/integration.rabbitmq.rpc#rabbitmq---rpc
