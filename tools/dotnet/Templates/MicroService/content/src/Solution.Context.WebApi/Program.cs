@@ -29,6 +29,7 @@ namespace Solution.Context.WebApi
         private static void SetupConfiguration(WebHostBuilderContext context, 
             IConfigurationBuilder builder)
         {
+            builder.Sources.Clear();
             builder.AddDockerDefaultSettings();
 
             if (EnvironmentConfig.IsDevelopment)
