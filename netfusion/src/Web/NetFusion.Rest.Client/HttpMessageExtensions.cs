@@ -19,7 +19,7 @@ namespace NetFusion.Rest.Client
             if (response == null) throw new ArgumentNullException(nameof(response));
             
             return response.StatusCode == HttpStatusCode.Unauthorized && response.Headers
-                       .GetValues("WWW-Authenticate").Any(v => v.StartsWith("realm"));
+                       .GetValues("WWW-Authenticate").Any(v => v.Contains("realm"));
         }
 
         /// <summary>
@@ -38,9 +38,11 @@ namespace NetFusion.Rest.Client
                     "WWW-Authenticate header not found.");
             }
 
-            return response.Headers.GetValues("WWW-Authenticate")
-                .First(v => v.StartsWith("realm"))
-                .Replace("realm=", "");
+            string authValue = response.Headers.GetValues("WWW-Authenticate")
+                .First(v => v.Contains("realm"));
+
+            // return just the URL referenced by the realm header value.
+            return authValue.Substring(authValue.IndexOf("=", StringComparison.OrdinalIgnoreCase)+1);
         }
 
         /// <summary>
