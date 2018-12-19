@@ -4,17 +4,14 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <LangVersion>7</LangVersion>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
     <ProjectReference Include="..\..\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
   </ItemGroup>
-
   <PropertyGroup>
     <PackageId>NetFusion.EntityFramework</PackageId>
     <Title>NetFusion EntityFramework Plugin</Title>
@@ -23,5 +20,4 @@
     </Description>
     <PackageTags>netfusion;entityframework</PackageTags>
   </PropertyGroup>
-
 </Project>
