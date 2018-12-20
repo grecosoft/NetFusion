@@ -44,7 +44,23 @@ namespace NetFusion.Rest.Client
                 return new AuthResult();
             }
 
-            // Initialize settings to invoke auth service:
+            return await AttemptLogin(Response.GetAuthRealmUrl(), username, password);
+        }
+
+        /// <summary>
+        /// Used to login with basic authentication if the response is an
+        /// authentication challenge by calling the returned Realm URL.
+        /// If the login attempt is returned an HTTP 200 status code, the
+        /// JWT authentication token is added to the Settings of the context
+        /// to be used when retrying the request.
+        /// </summary>
+        /// <param name="authUrl">The url to call to authenticate credentials.</param>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>Result of the authentication.</returns>
+        public async Task<AuthResult> AttemptLogin(string authUrl, string username, string password)
+        {
+           // Initialize settings to invoke auth service:
             var settings = RequestSettings.Create(config =>
             {
                 config.SuppressStatusCodeHandlers = true;
@@ -52,8 +68,7 @@ namespace NetFusion.Rest.Client
             });
 
             // Sent a GET request to the Realm URL returned in the HTTP 401 challenge:
-            var request = ApiRequest.Get(Response.GetAuthRealmUrl())
-                .UsingSettings(settings);
+            var request = ApiRequest.Get(authUrl).UsingSettings(settings);
 
             var response = await Client.SendAsync(request);
             var authToken = response.GetAuthToken();
