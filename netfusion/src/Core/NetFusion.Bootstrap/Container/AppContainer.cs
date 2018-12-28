@@ -44,6 +44,7 @@ namespace NetFusion.Bootstrap.Container
         // Microsoft Common Abstractions:
         private readonly IServiceCollection _serviceCollection;
         private Action<IServiceCollection> _registration;
+        private Func<IServiceCollection, IServiceProvider> _providerFactory;
         private readonly IConfiguration _configuration;
         private readonly ILoggerFactory _loggerFactory;
         
@@ -251,6 +252,14 @@ namespace NetFusion.Bootstrap.Container
         {
             _registration = registration ?? throw new ArgumentNullException(nameof(registration), 
                 "Service registration delegate not specified.");
+
+            return this;
+        }
+
+        public IAppContainer WithServices(Func<IServiceCollection, IServiceProvider> factory)
+        {
+            _providerFactory = factory ?? throw new ArgumentNullException(nameof(factory), 
+               "Service provider factory delegate not specified.");
 
             return this;
         }
@@ -514,8 +523,9 @@ namespace NetFusion.Bootstrap.Container
             // services and also an opportunity to override any existing added services. 
             AddServiceRegistrations();
   
-            // Create service provider from populated service collection.
-            _serviceProvider = _serviceCollection.BuildServiceProvider(true);
+            // Create service provider from populated service collection.  First allow
+            // the host application to optionally specify alternative container.
+            _serviceProvider = CreateCustomProvider() ?? _serviceCollection.BuildServiceProvider(true);
         }
 
         private void RegisterAppContainerAsService()
@@ -546,6 +556,11 @@ namespace NetFusion.Bootstrap.Container
         private void AddServiceRegistrations()
         {
             _registration?.Invoke(_serviceCollection);
+        }
+
+        private IServiceProvider CreateCustomProvider()
+        {
+            return _providerFactory?.Invoke(_serviceCollection);
         }
 
         //------------------------------------------Logging------------------------------------------//

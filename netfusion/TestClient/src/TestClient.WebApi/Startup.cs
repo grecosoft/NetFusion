@@ -6,18 +6,24 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Rest.Server.Hal;
 using NetFusion.Web.Mvc;
-using NetFusion.Web.Mvc.Composite;
 using System;
 using NetFusion.Bootstrap.Configuration;
 
 namespace TestClient.WebApi
 {
+    using Autofac;
+    using Autofac.Extensions.DependencyInjection;
+    using TestClient.App.Services;
+    using TestClient.Domain.Services;
+
     // Configures the HTTP request pipeline and bootstraps the NetFusion 
     // application container.
     public class Startup
     {
         private readonly IConfiguration _configuration;
         private readonly ILoggerFactory _loggerFactory;
+        
+        private readonly Autofac.ContainerBuilder _autofacBuilder = new Autofac.ContainerBuilder();
 
         public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
@@ -43,6 +49,11 @@ namespace TestClient.WebApi
             // Start all modules in the application container and return created service-provider.
             // If an open-source DI container is needed, this is where it would be populated and returned.
             builtContainer.Start();
+            
+            var s = AppContainer.Instance.CreateServiceScope();
+            var ts = s.ServiceProvider.GetService<ITestService>();
+            var r = ts.GetValue();
+            
             return builtContainer.ServiceProvider;
         }
 
@@ -91,12 +102,22 @@ namespace TestClient.WebApi
                          config.EnableRouteMetadata = true;
                          config.UseServices(services);
                      })
-                     .WithServices(reg =>
-                     {
-                         //  Additional services or overrides can be registered here.
-                     });
+                     .WithServices(ConfigureAutofac);
                 })
                 .Build();
+        }
+        
+        private IServiceProvider ConfigureAutofac(IServiceCollection services)
+        {
+            _autofacBuilder.Populate(services);
+            _autofacBuilder.RegisterType<TestService>()
+                .As<ITestService>()
+                .SingleInstance();
+            
+            var autoFactContainer = _autofacBuilder.Build();
+            var serviceProvider = new AutofacServiceProvider(autoFactContainer);
+
+            return serviceProvider;
         }
 
         private static void OnShutdown()
