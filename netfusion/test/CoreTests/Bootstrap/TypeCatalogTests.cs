@@ -13,7 +13,7 @@ namespace CoreTests.Bootstrap
             var catalog = CatalogTestFixture.Setup(typeof(ComponentOne), typeof(ComponentTwo));
 
             catalog.AsService<ICommonComponent>(
-                t => t.Name.StartsWith("Component"),
+                t => t.Name.StartsWith("Component", System.StringComparison.Ordinal),
                 ServiceLifetime.Scoped);
             
             Assert.Equal(2, catalog.Services.Count);
@@ -29,7 +29,7 @@ namespace CoreTests.Bootstrap
             var catalog = CatalogTestFixture.Setup(typeof(ComponentOne), typeof(ComponentTwo));
 
             catalog.AsSelf(
-                t => t.Name.StartsWith("Component"),
+                t => t.Name.StartsWith("Component", System.StringComparison.Ordinal),
                 ServiceLifetime.Scoped);
             
             Assert.Equal(2, catalog.Services.Count);
@@ -44,7 +44,7 @@ namespace CoreTests.Bootstrap
             var catalog = CatalogTestFixture.Setup(typeof(ComponentOne), typeof(ComponentTwo));
 
             catalog.AsDescriptor(
-                t => t.Name.StartsWith("Component"),
+                t => t.Name.StartsWith("Component", System.StringComparison.Ordinal),
                 t => ServiceDescriptor.Transient(t, t));
             
             Assert.Equal(2, catalog.Services.Count);
@@ -58,15 +58,13 @@ namespace CoreTests.Bootstrap
         {
             var catalog = CatalogTestFixture.Setup(typeof(ComponentTwo));
 
-            catalog.AsImplementedInterfaces(
+            catalog.AsImplementedInterface(
                 _ => true,
                 ServiceLifetime.Scoped);
             
-            Assert.Equal(2, catalog.Services.Count);
-            Assert.True(catalog.Services.All(s => s.ImplementationType == typeof(ComponentTwo)));
+            Assert.Equal(1, catalog.Services.Count);
             Assert.True(catalog.Services.All(s => s.Lifetime == ServiceLifetime.Scoped));
-            Assert.Contains(catalog.Services, s => s.ServiceType == typeof(ICommonComponent));
-            Assert.Contains(catalog.Services, s => s.ServiceType == typeof(ISpecial));
+            Assert.Contains(catalog.Services, s => s.ServiceType == typeof(IComponentTwo)); 
         }
 
         [Fact]
@@ -74,13 +72,13 @@ namespace CoreTests.Bootstrap
         {
             var catalog = CatalogTestFixture.Setup(typeof(ComponentOne), typeof(ComponentTwo));
 
-            catalog.AsImplementedInterfaces("Two", ServiceLifetime.Scoped);
+            catalog.AsImplementedInterface("Two", ServiceLifetime.Scoped);
             
             Assert.Equal(2, catalog.Services.Count);
             Assert.True(catalog.Services.All(s => s.ImplementationType == typeof(ComponentTwo)));
             Assert.True(catalog.Services.All(s => s.Lifetime == ServiceLifetime.Scoped));
-            Assert.Contains(catalog.Services, s => s.ServiceType == typeof(ICommonComponent));
-            Assert.Contains(catalog.Services, s => s.ServiceType == typeof(ISpecial));
+            Assert.Contains(catalog.Services, s => s.ServiceType == typeof(IComponentOne));
+            Assert.Contains(catalog.Services, s => s.ServiceType == typeof(IComponentTwo));
         }
 
 
@@ -88,13 +86,25 @@ namespace CoreTests.Bootstrap
         {
             
         }
-        
-        public class ComponentOne : ICommonComponent
+
+        public interface IComponentOne
+        {
+
+        }
+
+        public interface IComponentTwo
+        {
+
+        }
+
+        public class ComponentOne : ICommonComponent,
+            IComponentOne
         {
             
         }
 
-        public class ComponentTwo : ICommonComponent, ISpecial
+        public class ComponentTwo : ICommonComponent, ISpecial,
+            IComponentTwo
         {
             
         }

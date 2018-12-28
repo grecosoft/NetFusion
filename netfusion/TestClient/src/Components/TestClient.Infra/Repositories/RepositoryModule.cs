@@ -11,7 +11,7 @@ namespace TestClient.Infra.Repositories
     {
         public override void ScanPlugin(ITypeCatalog catalog)
         {
-            catalog.AsImplementedInterfaces("Repository", ServiceLifetime.Scoped);
+            catalog.AsImplementedInterface("Repository", ServiceLifetime.Scoped);
         }
     }
 }
