@@ -8,43 +8,11 @@ using System;
 namespace NetFusion.Settings
 {
     /// <summary>
-    /// Extensions for determining a setting class's section path based on the 
-    /// found ConfigurationSection attributes specified on the class and its parents.
-    /// The concatenation of each name specified by the ConfigurationSetion attribute
-    /// determines the settings class's complete section path.
+    /// Extensions for determining a setting class's section path and loading IAppSettings
+    /// derived instances.
     /// </summary>
     public static class SettingsExtensions
     {
-        /// <summary>
-        /// Provided a IAppSetting derived instance,  determines the section path by recursively 
-        /// walking the type hierarchy and finding all ConfigurationSection attributes and 
-        /// concatenating the section name associated with each attribute.
-        /// </summary>
-        /// <param name="appSettings">The application setting to determine section path.</param>
-        /// <returns>The section path associated with the settings type.  If not found,
-        /// null value will be returned.</returns>
-        public static string GetSectionPath(this IAppSettings appSettings)
-        {
-            if (appSettings == null) throw new ArgumentNullException(nameof(appSettings));
-
-            return GetSectionPath(appSettings.GetType());
-        }
-
-        /// <summary>
-        /// Provided a IAppSettings derived type, determines the section path by recursively 
-        /// walking the type hierarchy and finding all ConfigurationSection attributes and 
-        /// concatenating the section name associated with each attribute.
-        /// </summary>
-        /// <typeparam name="T">The application setting type to determine section path.</typeparam>
-        /// <returns>The section path associated with the settings type.  If not found,
-        /// null value will be returned.</returns>
-        public static string GetSectionPath<T>()
-           where T : IAppSettings
-        {
-            var settingsType = typeof(T);
-            return GetSectionPath(settingsType);
-        }
-
         /// <summary>
         /// Returns the section path for a given settings type.
         /// </summary>
@@ -54,6 +22,19 @@ namespace NetFusion.Settings
         public static string GetSectionPath(Type settingsType)
         {
             return settingsType.GetAttribute<ConfigurationSectionAttribute>()?.SectionName;
+        }
+        
+        /// <summary>
+        /// Provided a IAppSettings derived type, determines the section path.
+        /// </summary>
+        /// <typeparam name="T">The application setting type to determine section path.</typeparam>
+        /// <returns>The section path associated with the settings type.  If not found,
+        /// null value will be returned.</returns>
+        public static string GetSectionPath<T>()
+           where T : IAppSettings
+        {
+            var settingsType = typeof(T);
+            return GetSectionPath(settingsType);
         }
 
         /// <summary>
