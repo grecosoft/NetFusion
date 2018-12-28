@@ -85,7 +85,7 @@ namespace NetFusion.Bootstrap.Dependencies
                 lifetime);
         }
 
-        private Type GetServiceInterface(Type serviceType)
+        private static Type GetServiceInterface(Type serviceType)
         {
             Type[] serviceInterfaces = serviceType.GetInterfaces();
             if (! serviceInterfaces.Any())
