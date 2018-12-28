@@ -65,13 +65,6 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Returns modules that are not marked as being executed.  This is for use during development 
-        /// to disable a given plug-in module that is currently being developed and not complete.
-        /// </summary>
-        public IEnumerable<IPluginModule> IncludedModules => 
-            Modules.Where(m => !m.IsExcluded).ToArray();
-
-        /// <summary>
         /// The configurations associated with the plug-in.
         /// </summary>
         public IList<IContainerConfig> PluginConfigs { get; internal set; }

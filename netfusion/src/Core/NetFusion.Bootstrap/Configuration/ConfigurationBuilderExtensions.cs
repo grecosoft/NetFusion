@@ -12,8 +12,6 @@ namespace NetFusion.Bootstrap.Configuration
     {
         private const string AppSettingsFileName = "appsettings";
 
-        
-        
         /// <summary>
         /// Configures an ordered list of application JSON files to be searched for settings.
         /// Files are search in following order:  
@@ -37,7 +35,7 @@ namespace NetFusion.Bootstrap.Configuration
         /// <summary>
         /// Configures settings for the preferred defaults when developing applications running in a Docker container.
         /// When executing within a developer environment, the applications settings are first sourced from environment
-        /// variables and then by the sources configured by the AddAppSettingsAndMachine methods.  When the application
+        /// variables and then by the sources configured by the AddAppSettings method.  When the application
         /// is not executing within the development environment, all variables are sourced from environment variables.
         /// </summary>
         /// <param name="builder">The configuration to add setting providers.</param>

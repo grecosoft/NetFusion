@@ -63,7 +63,7 @@ namespace NetFusion.Bootstrap.Plugins
             _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
 
             Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
-            Logger = _compositeApp.LoggerFactory.CreateLogger(module.GetType().FullName);
+            Logger = _compositeApp.LoggerFactory.CreateLogger(module.GetType());
 
             AppHost = compositeApp.AppHostPlugin;
             AllPluginTypes = FilteredTypesByPluginType();
@@ -90,26 +90,6 @@ namespace NetFusion.Bootstrap.Plugins
             return _compositeApp.GetPluginTypes(PluginTypes.AppComponentPlugin, PluginTypes.AppHostPlugin)
                 .Select(pt => pt.Type)
                 .ToList();
-        }
-
-        /// <summary>
-        /// Returns plug-in type for corresponding .NET type.
-        /// </summary>
-        /// <param name="type">The .NET type.</param>
-        /// <returns>Wrapped .NET type as a plug-in type.</returns>
-        public PluginType GetPluginType(Type type)
-        {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-
-            var allPluginTypes = _compositeApp.GetPluginTypes();
-            var pluginType = allPluginTypes.FirstOrDefault(mt => mt.Type == type);
-
-            if (pluginType == null)
-            {
-                throw new ContainerException(
-                    $"A plug-in type could not be found for the corresponding .NET type: {type}.");
-            }
-            return pluginType;
         }
 
         /// <summary>

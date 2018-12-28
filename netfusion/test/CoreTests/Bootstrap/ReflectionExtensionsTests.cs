@@ -10,43 +10,6 @@ namespace CoreTests.Bootstrap
 {
     public class ReflectionExtensionsTests
     {
-        [Fact(DisplayName = nameof(FilterInstances_BasedOnListOfTypes))]
-        public void FilterInstances_BasedOnListOfTypes()
-        {
-            var instances = new ICommon[] { new TypeOne(), new TypeTwo() };
-            instances.CreatedFrom(new[] { typeof(string) })
-                .Should()
-                .HaveCount(0);
-
-            instances.CreatedFrom(new[] { typeof(TypeTwo) })
-               .Should()
-               .HaveCount(1);
-
-            instances.CreatedFrom(new[] { typeof(TypeOne), typeof(TypeTwo), typeof(TypeTwo) })
-              .Should()
-              .HaveCount(2);
-        }
-
-        [Fact(DisplayName = nameof(FilterInstances_BasedOnListOfPluginTypes))]
-        public void FilterInstances_BasedOnListOfPluginTypes()
-        {
-            var instances = new ICommon[] { new TypeOne(), new TypeTwo() };
-            instances.CreatedFrom(new[] { new PluginType(new Plugin(new MockCorePlugin()), typeof(string), "TestAssemblyName") })
-                .Should()
-                .HaveCount(0);
-
-            instances.CreatedFrom(new[] { new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo), "TestAssemblyName") } )
-               .Should()
-               .HaveCount(1);
-
-            instances.CreatedFrom(new[] {
-                new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeOne),  "TestAssemblyName"),
-                new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo),  "TestAssemblyName"),
-                new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo),  "TestAssemblyName") })
-                .Should()
-                .HaveCount(2);
-        }
-
         [Fact(DisplayName = nameof(CreateInstancesOfPluginTypes_MatchingSpecifiedOrBaseType))]
         public void CreateInstancesOfPluginTypes_MatchingSpecifiedOrBaseType()
         {

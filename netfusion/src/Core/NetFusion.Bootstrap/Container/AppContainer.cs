@@ -29,13 +29,13 @@ namespace NetFusion.Bootstrap.Container
     ///     concerns.
     ///     
     /// The application container and bootstrap process is only dependent on Microsoft
-    /// libraries.  Core plug-ins should be written for non  Microsoft open-source
+    /// libraries.  Core plug-ins should be written for non Microsoft open-source
     /// implementations.  This allows the base implementation to have a small footprint
     /// that can be easily extended without requiring changes.
     /// </summary>
     public class AppContainer : IAppContainer,
-        IComposite,
-        IBuiltContainer
+        IComposite,        // Exposes internal container structure.
+        IBuiltContainer    // Contains methods for configuration and running container.
     {
         // Singleton instance of created container:
         private static AppContainer _instance;
@@ -110,7 +110,7 @@ namespace NetFusion.Bootstrap.Container
 
         /// <summary>
         /// Reference to the singleton application container instance.  This should only
-        /// be used when service-locater is necessary from a root component.  If a given
+        /// be used when service-locator is necessary from a root component.  If a given
         /// service implementation is contained within the service collection, it can 
         /// reference the application container by injecting the IAppContainer interface.
         /// </summary>
