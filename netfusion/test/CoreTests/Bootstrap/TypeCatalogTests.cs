@@ -74,10 +74,9 @@ namespace CoreTests.Bootstrap
 
             catalog.AsImplementedInterface("Two", ServiceLifetime.Scoped);
             
-            Assert.Equal(2, catalog.Services.Count);
+            Assert.Equal(1, catalog.Services.Count);
             Assert.True(catalog.Services.All(s => s.ImplementationType == typeof(ComponentTwo)));
             Assert.True(catalog.Services.All(s => s.Lifetime == ServiceLifetime.Scoped));
-            Assert.Contains(catalog.Services, s => s.ServiceType == typeof(IComponentOne));
             Assert.Contains(catalog.Services, s => s.ServiceType == typeof(IComponentTwo));
         }
 
