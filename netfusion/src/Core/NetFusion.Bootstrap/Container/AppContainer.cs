@@ -174,6 +174,7 @@ namespace NetFusion.Bootstrap.Container
             return (IObjectValidator)Activator.CreateInstance(_validationConfig.ValidatorType, obj);
         }
 
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private static void ThrowIfDisposed(AppContainer container)
         {
             if (container._disposed)

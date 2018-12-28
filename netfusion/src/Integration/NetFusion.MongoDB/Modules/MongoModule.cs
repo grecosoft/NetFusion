@@ -18,8 +18,8 @@ namespace NetFusion.MongoDB.Modules
     {
         public override void RegisterDefaultServices(IServiceCollection services)
         {
-            // NOTE:  Documentation states that the class from which MongoDBClient
-            // is thread-safe and is best to register a single instance within
+            // NOTE:  Documentation states that the MongoClient class to which MongoDBClient
+            // delegates is thread-safe and is best to register as single instance within
             // a dependency injection container.
             Context.AllPluginTypes.Where(t => t.IsConcreteTypeDerivedFrom<MongoSettings>())
                 .ForEach(ms =>
