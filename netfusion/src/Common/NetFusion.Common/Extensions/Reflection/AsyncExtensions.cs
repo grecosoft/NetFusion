@@ -35,12 +35,7 @@ namespace NetFusion.Common.Extensions.Reflection
                 "Method information cannot be null.");
 
             bool isAsync = IsAsyncMethod(methodInfo);
-            if (! isAsync)
-            {
-                return false;
-            }
-
-            return methodInfo.ReturnType.GetTypeInfo().IsGenericType;
+            return isAsync && methodInfo.ReturnType.GetTypeInfo().IsGenericType;
         }
 
         /// <summary>

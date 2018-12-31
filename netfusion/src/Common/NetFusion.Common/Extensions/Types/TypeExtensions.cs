@@ -40,9 +40,9 @@ namespace NetFusion.Common.Extensions.Types
 
                 case "DateTime":
                     return "Date";
+                default: 
+                    return "Object";
             }
-
-            return "Object";
         }
     }
 }
