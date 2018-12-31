@@ -4,24 +4,24 @@ using NetFusion.Common.Extensions.Collections;
 
 namespace NetFusion.EntityFramework.Internal
 {
+    using NetFusion.EntityFramework.Settings;
+
     /// <summary>
-    /// Derived instance of the EntityFramework DbContext initialized from information founed by the
+    /// Derived instance of the EntityFramework DbContext initialized from information found by the
     /// plugin when bootstrapped.  Instances of this class can be injected into application specific
     /// components (i.e. Repositories) using the application defined derived IEntityDbContext contract.
     /// </summary>
     public abstract class EntityDbContext : DbContext,
         IEntityDbContext
     {
-        private readonly string _connectionString;
+        private readonly DbContextSettings _contextSettings;
         private readonly IEntityTypeMapping[] _mappings;
 
         public DbContext Context => this;
         
-        protected EntityDbContext(string connectionString, IEntityTypeMapping[] mappings)
+        protected EntityDbContext(DbContextSettings contextSettings, IEntityTypeMapping[] mappings)
         {
-            _connectionString = connectionString ?? 
-                throw new ArgumentNullException(nameof(connectionString));
-
+            _contextSettings = contextSettings ?? throw new ArgumentNullException(nameof(contextSettings));
             _mappings = mappings ?? throw new ArgumentNullException(nameof(mappings));
         }
         
@@ -29,26 +29,23 @@ namespace NetFusion.EntityFramework.Internal
         {
             base.OnConfiguring(optionsBuilder);
 
-            // Implemented by the derived application context class where it can build the
-            // database specific connection object from the provided connection string.
-            ConfigureDbServer(optionsBuilder, _connectionString);
-           
+            // Allow derived class to configure context based on associated settings.
+            ConfigureDbContext(optionsBuilder, _contextSettings);
         }
         
-        // Add the entity-to-database mappings discovered by the plugin to the context.
+        /// <summary>
+        /// Override this method to configure the database (and other options) to be used for this context.
+        /// </summary>
+        /// <param name="optionsBuilder">The builder used to provide context options.</param>
+        /// <param name="contextSettings">The settings associated with the context.</param>
+        protected abstract void ConfigureDbContext(DbContextOptionsBuilder optionsBuilder, DbContextSettings contextSettings);
+        
+        // Adds mappings to the context.
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             _mappings.ForEach(m => m.AddMappings(modelBuilder));
-        }
-
-        /// <summary>
-        /// Implemented by the derived application specific class to build a database specific
-        /// connection object from the provided connection string.
-        /// </summary>
-        /// <param name="optionsBuilder">The builder used to provide cotext options.</param>
-        /// <param name="connectionString">The configuration string assocated with the context.</param>
-        protected abstract void ConfigureDbServer(DbContextOptionsBuilder optionsBuilder, string connectionString);
+        }        
     }
 }
