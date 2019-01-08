@@ -12,6 +12,11 @@ namespace NetFusion.Base.Serialization
         /// The content type (example: application/json).
         /// </summary>
         string ContentType { get; }
+        
+        /// <summary>
+        /// The optional encoding of the serialized data.
+        /// </summary>
+        string EncodingType { get; }
 
         /// <summary>
         /// Returns serialized representation of the object.

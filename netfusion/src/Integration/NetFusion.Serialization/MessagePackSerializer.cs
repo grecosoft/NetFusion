@@ -13,6 +13,7 @@ namespace NetFusion.Serialization
     public class MessagePackSerializer : IMessageSerializer
     {        
         public string ContentType => ContentTypes.MessagePack;
+        public string EncodingType => null;
 
         public MessagePackSerializer()
         {

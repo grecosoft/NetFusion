@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using NetFusion.Base.Serialization;
 
@@ -19,65 +20,91 @@ namespace NetFusion.Serialization
     public class SerializationManager : ISerializationManager
     {
         // Serializer keyed by content-type:
-        private readonly IDictionary<string, IMessageSerializer> _serializers;
+        private readonly List<IMessageSerializer> _serializers;
 
         public SerializationManager()
         {
-            _serializers = new Dictionary<string, IMessageSerializer>();
+            _serializers = new List<IMessageSerializer>();
 
             AddSerializer(new JsonMessageSerializer());
             AddSerializer(new MessagePackSerializer());
         }
 
-        public IEnumerable<IMessageSerializer> Serializers => _serializers.Values;
+        public IEnumerable<IMessageSerializer> Serializers => _serializers;
 
         public void ClearSerializers() => _serializers.Clear();
 
         public void AddSerializer(IMessageSerializer serializer)
         {
             if (serializer == null) throw new ArgumentNullException(nameof(serializer));
-            _serializers[serializer.ContentType] = serializer;
+
+            IMessageSerializer existingSerializer = GetSerializer(serializer.ContentType, serializer.EncodingType);
+            if (existingSerializer != null)
+            {
+                throw new InvalidOperationException(
+                    $"Serializer already exists Content-Type: {serializer.ContentType} " + 
+                    $"Encoding-Type: {serializer.EncodingType ?? ""}.");
+            }
+            
+            _serializers.Add(serializer);
         }
 
-        public byte[] Serialize(object value, string contentType)
+        public byte[] Serialize(object value, string contentType, string encodingType = null)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
 
             if (string.IsNullOrWhiteSpace(contentType))
                 throw new ArgumentException("Content type name must be specified.", nameof(contentType));
 
-            IMessageSerializer serializer = GetSerializer(contentType);
+            IMessageSerializer serializer = GetSerializer(contentType, encodingType);
             return serializer.Serialize(value);
         }
 
-        public object Deserialize(string contentType, Type valueType, byte[] value)
+        public object Deserialize(string contentType, Type valueType, byte[] value, string encodingType = null)
         {
             if (string.IsNullOrWhiteSpace(contentType))
-                throw new ArgumentException("Broker name must be specified.", nameof(contentType));
+                throw new ArgumentException("Content-Type must be specified.", nameof(contentType));
 
             if (valueType == null) throw new ArgumentNullException(nameof(valueType));
             if (value == null) throw new ArgumentNullException(nameof(value));
 
-            IMessageSerializer serializer = GetSerializer(contentType);
+            IMessageSerializer serializer = GetSerializer(contentType, encodingType);
             return serializer.Deserialize(value, valueType);
         }
 
-        public T Deserialize<T>(string contentType, byte[] value)
+        public T Deserialize<T>(string contentType, byte[] value, string encodingType = null)
         {
             if (string.IsNullOrWhiteSpace(contentType))
-                throw new ArgumentException("Broker name must be specified.", nameof(contentType));
+                throw new ArgumentException("Content-Type must be specified.", nameof(contentType));
 
             if (value == null) throw new ArgumentNullException(nameof(value));
 
-            IMessageSerializer serializer = GetSerializer(contentType);
+            IMessageSerializer serializer = GetSerializer(contentType, encodingType);
             return serializer.Deserialize<T>(value, typeof(T));
         }
 
-        private IMessageSerializer GetSerializer(string contentType)
+        private IMessageSerializer GetSerializer(string contentType, string encodingType)
         {
-            if (!_serializers.TryGetValue(contentType, out IMessageSerializer serializer))
+            var matchingSerializers = _serializers.Where(s => s.ContentType == contentType).ToArray();
+            if (string.IsNullOrEmpty(encodingType))
             {
-                throw new InvalidOperationException($"Serializer for Content Type: {contentType} not registered.");
+                if (matchingSerializers.Length > 1)
+                {
+                    throw new InvalidOperationException(
+                        $"Multiple serializers found for Content-Type: {contentType}.");
+                }
+
+                if (matchingSerializers.Length == 1)
+                {
+                    return matchingSerializers.First();
+                }
+            }
+
+            var serializer = matchingSerializers.FirstOrDefault(s => s.EncodingType == encodingType);
+            if (serializer == null)
+            {
+                throw new InvalidOperationException(
+                    $"Serializer for Content-Type: {contentType} Encoding-Type: {encodingType} not registered.");
             }
 
             return serializer;
