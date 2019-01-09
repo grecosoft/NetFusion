@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 
 namespace NetFusion.Rest.Client.Core
 {
+    using System.Collections.Concurrent;
+
     /// <summary>
     /// Client used to make HTTP requests.  
     /// </summary>
@@ -21,7 +23,7 @@ namespace NetFusion.Rest.Client.Core
         private readonly HttpClient _httpClient;
         private readonly ILogger _logger;
         private string _correlationHeaderName;
-        private readonly IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
+        private readonly ConcurrentDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
         private readonly IRequestSettings _defaultRequestSettings;
 
         // Optional registered services specified using RequestClientBuilder:
@@ -48,11 +50,15 @@ namespace NetFusion.Rest.Client.Core
             _logger = logger ?? throw new ArgumentNullException(nameof(httpClient), 
                 "Logger cannot be null.");
 
-            _mediaTypeSerializers = contentSerializers ?? throw new ArgumentNullException(nameof(contentSerializers),
-                "HTTP Context Serializers cannot be null.");
-
             _defaultRequestSettings = requestSettings ?? throw new ArgumentNullException(nameof(requestSettings),
                 "Default Request Settings cannot be null.");
+
+            if (contentSerializers == null)
+            {
+                throw new ArgumentNullException(nameof(contentSerializers), "HTTP Context Serializers cannot be null.");            
+            }
+            
+            _mediaTypeSerializers = new ConcurrentDictionary<string, IMediaTypeSerializer>(contentSerializers);
         }
 
         public async Task<HalEntryPointResource> GetApiEntry()
