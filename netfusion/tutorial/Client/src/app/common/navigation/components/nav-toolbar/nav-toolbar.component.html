@@ -1,0 +1,14 @@
+<mat-toolbar class="nav-toolbar" *ngIf="isDisplayed">
+    <mat-toolbar-row>
+        <mat-icon class="item-icon" 
+            *ngIf="showExtendedToolbar"
+            [svgIcon]="selectedMenuIconName"></mat-icon>
+        <span *ngIf="showExtendedToolbar">{{selectedAreaName}}/</span>
+        <span>{{selectedSectionName}}</span>
+
+        <ng-content select="[left]" ></ng-content>
+        <span class="spacer"></span>
+        <ng-content></ng-content>
+
+      </mat-toolbar-row>
+</mat-toolbar>

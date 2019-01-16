@@ -1,0 +1,77 @@
+<nav-toolbar [isDisplayed]="true"></nav-toolbar>
+<div class="area-content">
+    <div class="plugin-summary">
+        <h1 class="section-header">Plugin Summary</h1>
+        <div class="portal-definition-list">
+            <dl class="version-info">
+                <dt>Nuget Package</dt><dd>{{nugetPackageName}}</dd>
+                <dt>Documentation</dt><dd><a href="{{documentationUrl}}" target="_blank">View</a></dd>
+                <dt>Queue</dt><dd><a href="{{queueUrl}}" target="_blank">GeneratedAndSendEmail</a></dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="plugin-overview">
+        <h1 class="section-header">Overview</h1>
+        <ul>
+            <li>Commands are published to work queues.</li>
+            <li>Unlike the Direct, Topic, and Fan-Out exchanges, where the consumers are not directly known, 
+                the publisher knows of the specific consumer that will process the command.
+            </li>
+            <li>
+                Where the other exchanges are used to allow one microservice to integrate with another by
+                publishing domain-events, a command is used to explicitly tell a microservice to take an action.
+            </li>
+            <li>Commands are sent to work queues to preform longer running tasks that can be completed asynchronously.</li>
+            <li>
+                Given that this style of communication does not define an exchange, the route-key specified as a message 
+                property is used to identify the queue to which it should be published.
+            </li>
+            <li>If multiple consumers are bound to the queue, the command will be delivered round-robin.</li>
+        </ul>
+    </div>
+
+    <div class="plugin-usage">
+        <h1 class="section-header">Usage Summary</h1>
+        <ul>
+            <li>Commands are simple POCO classes.</li>
+            <li>Commands derive from the common base <code-viewer type="net-fusion" name="Core/NetFusion.Messaging.Types/Command.cs">Command</code-viewer> (non-generic version) class used by all NetFusion plugins and components.</li>
+            <li>Publisher defines a derived <code-viewer type="net-fusion" name="Integration/NetFusion.RabbitMq/Publisher/ExchangeRegistryBase.cs">ExchangeRegistryBase</code-viewer> class used to specify to which exchange a domain event should be delivered when published.</li>
+            <li>The common <code-viewer type="net-fusion" name="Core/NetFusion.Messaging/IMessagingService.cs">IMessagingService</code-viewer> implementation routes all domain events with a defined registry entry to RabbitMQ.</li>
+            <li>As with in-process messaging, subscribers associate method handlers to be invoked when a domain event is received.</li>
+            <li>The subscriber decorates a method with the <code-viewer type="net-fusion" name="Integration/NetFusion.RabbitMq/Subscriber/WorkQueueAttribute.cs">WorkQueueAttribute</code-viewer> specifying the name of the queue.</li>
+        </ul>
+    </div>
+
+    <div class="plugin-suggestions">
+        <h1 class="section-header">Suggestions</h1>
+        <ul>
+            <li>Commands represent a request for an action to be completed by the subscriber.</li>
+            <li>Commands should be immutable and defined within a solution's domain project.</li>
+            <li>It is best not to share types representing a command between solutions.</li>
+        </ul>
+    </div>
+    <div class="plugin-examples">
+        <h1 class="section-header">Examples</h1>
+        <p>
+            This example invokes a <code-viewer type="tutorial-webapi" name="Controllers/Integration/RabbitMqController.cs">WebApi controller</code-viewer> sending the 
+            <code-viewer type="tutorial-components" name="Service.Domain/Commands/SendMail.cs">SendMail</code-viewer> representing an email message to be sent.
+            The subscribing console application defines the work queue to process the command within the <code-viewer type="tutorial-client" name="Handlers/SampleWorkQueueHandler.cs">SampleWorkQueueHandler</code-viewer> handler.
+        </p>
+        <div class="plugin-example">
+            <h2 class="section-header">Sending Command</h2>
+            <p>
+                Enter in information representing the command to be sent to a queue for processing.
+            </p>
+            <div class="inputs">
+                <div>
+                    <textarea [(ngModel)]="newCommandBody"></textarea>
+                </div> 
+                <button type="submit" mat-raised-button (click)="onSendCommand()" color="primary">Send</button>
+            </div>
+            <div class="results">
+                <json-viewer [json]="newCommandResult" class="viewer"></json-viewer>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+<nav-toolbar [isDisplayed]="true"></nav-toolbar>
+<div class="area-content">
+    <div class="plugin-summary">
+        <h1 class="section-header">Plugin Summary</h1>
+        <div class="portal-definition-list">
+            <dl class="version-info">
+                <dt>Nuget Package</dt><dd>{{nugetPackageName}}</dd>
+                <dt>Documentation</dt><dd><a href="{{documentationUrl}}" target="_blank">View</a></dd>
+                <dt>Queue</dt><dd><a href="{{queueUrl}}" target="_blank">TaxCalculations</a></dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="plugin-overview">
+        <h1 class="section-header">Overview</h1>
+        <ul>
+            <li>Commands are published to work queues.</li>
+            <li>
+                Unlike the previous discussed exchanges and queues, that are completely asynchronous, the RPC message 
+                style requires the publisher sending the command to wait until the RPC command response is returned.
+            </li>
+            <li>the publisher can preform other non-dependent tasks while waiting for the response.</li>
+            <li>
+                This message pattern is more complex since it utilizes two queues. One queue defined by the consumer 
+                is used to receive command message requests. The other queue is dynamically created by the publisher 
+                and is used to receive replies to sent commands.
+            </li>
+            <li>The service processing the command defines the name of queue on which they will receive commands.</li>
+            <li>The publisher sends a command to the queue by setting the route-key of the command to the name of the queue.</li>
+            <li>
+                The publisher also specifies an action-namespace. An namespace is just a string used to uniquely identify 
+                the action associated with the command within the queue. When defining a RPC command message handler, the
+                subscriber can use the same queue name for multiple command types having different namespaces. This allows
+                the subscriber to group related commands into the same queue. When the request arrives in the queue, the 
+                action-namespace is used to determine which handler should be used to process the command. This allows 
+                for an efficient use of queues since a group of related commands, identified by namespace, can be processed
+                on a single queue.
+            </li>
+            <li>If multiple consumers are bound to the queue, the command will be delivered round-robin.</li>
+        </ul>
+    </div>
+
+    <div class="plugin-usage">
+        <h1 class="section-header">Usage Summary</h1>
+        <ul>
+            <li>The publisher configures the queue and action-namespace for each command on which the subscriber will receive commands.</li>
+            <li>When a command is published, the message is sent to the specified queue and tagged with the namespace.</li>
+            <li>Commands derive from the common base <code-viewer type="net-fusion" name="Core/NetFusion.Messaging.Types/Command.cs">Command</code-viewer> (generic version) class used by all NetFusion plugins and components.</li>
+            <li>Publisher defines a derived <code-viewer type="net-fusion" name="Integration/NetFusion.RabbitMq/Publisher/ExchangeRegistryBase.cs">ExchangeRegistryBase</code-viewer> class used to specify to which queue a RPC command should be delivered when sent.</li>
+            <li>The common <code-viewer type="net-fusion" name="Core/NetFusion.Messaging/IMessagingService.cs">IMessagingService</code-viewer> implementation routes all commands to their corresponding queues.</li>
+            <li>As with in-process messaging, subscribers associate method handlers to be invoked when a RPC command is received.</li>
+            <li>The subscriber decorates a method with the <code-viewer type="net-fusion" name="Integration/NetFusion.RabbitMq/Subscriber/RpcQueueAttribute.cs">RpcQueueAttribute</code-viewer> specifying the name of the queue and the action-namespace.</li>
+        </ul>
+    </div>
+
+    <div class="plugin-suggestions">
+        <h1 class="section-header">Suggestions</h1>
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <div class="plugin-examples">
+        <h1 class="section-header">Examples</h1>
+        <p>
+            Overview... 
+        </p>
+        <div class="plugin-example">
+            <h2 class="section-header">Send Auto Tax Command</h2>
+            <p>
+                Description... 
+            </p>
+            <div class="inputs">
+                <div>
+                    <textarea [(ngModel)]="newAutoCommandBody"></textarea>
+                </div> 
+                <button type="submit" mat-raised-button (click)="onSendAutoCommand()" color="primary">Send</button>
+            </div>
+            <div class="results">
+                <json-viewer [json]="newCommandResult" class="viewer"></json-viewer>
+            </div>
+        </div>
+
+        <div class="plugin-example">
+            <h2 class="section-header">Send Property Tax Command</h2>
+            <p>
+                Description... 
+            </p>
+            <div class="inputs">
+                <div>
+                    <textarea [(ngModel)]="newPropertyCommandBody"></textarea>
+                </div> 
+                <button type="submit" mat-raised-button (click)="onSendPropertyCommand()" color="primary">Send</button>
+            </div>
+            <div class="results">
+                <json-viewer [json]="newCommandResult" class="viewer"></json-viewer>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+  <mat-sidenav-container id="app-container">
+
+    <mat-sidenav class="side-nav"
+      [@.disabled]="true"
+      #sidenav [mode]="'side'"
+      (openedChange)="onSetNavOpenState($event)" 
+      [opened]="portal.isSideNavOpened">
+        
+      <nav-menu 
+        *ngIf="portal.isLoggedIn"
+        [applicationAreas]="portal.applicationAreas"
+        [selected]="portal.selectedArea"
+        (areaChanged)=onAreaSelected($event)>
+       </nav-menu>
+    </mat-sidenav>
+    
+    <mat-sidenav-content class="nav-content" 
+        [class.not-logged-in]="!portal.isLoggedIn" 
+        [class.logged-in]="portal.isLoggedIn">
+        
+        <mat-toolbar class="main-toolbar" color="primary">
+            <mat-toolbar-row>               
+                <button mat-icon-button (click)="sidenav.toggle()">
+                    <mat-icon id="sideToggleIcon" svgIcon="nav_menu_toggle" 
+                    [class.menu-closed]="!portal.isSideNavOpened" 
+                    *ngIf="portal.isLoggedIn">
+                  </mat-icon>
+                </button>
+  
+                <span class="app-title">{{portal.appName}}</span>  
+                <img class="logo" src="assets/imgs/app_icon.png">
+                <span class="toolbar-spacer"></span>
+                
+                <div>
+
+                </div>
+            </mat-toolbar-row>
+        </mat-toolbar>
+  
+        <div class="areas-details" *ngIf="portal.isLoggedIn; else intro">
+          <router-outlet></router-outlet>
+        </div>
+        <ng-template #intro>
+            <div class="boondocks-intro">
+                <img src="assets/imgs/captiveaire_logo.png">
+                <div class="message">Cloud-Based Device Management.</div>
+            </div>
+        </ng-template>
+    </mat-sidenav-content>
+  
+  </mat-sidenav-container>
+
+   

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.App" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Common\NetFusion.Base\NetFusion.Base.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Web\NetFusion.Rest.Common\NetFusion.Rest.Common.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Web\NetFusion.Rest.Resources\NetFusion.Rest.Resources.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Web\NetFusion.Rest.Server\NetFusion.Rest.Server.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Web\NetFusion.Web.Mvc\NetFusion.Web.Mvc.csproj" />
+    <ProjectReference Include="..\Components\Service.App\Service.App.csproj" />
+    <ProjectReference Include="..\Components\Service.Domain\Service.Domain.csproj" />
+    <ProjectReference Include="..\Components\Service.Infra\Service.Infra.csproj" />
+    <Folder Include="Resources" />
+  </ItemGroup>
+</Project>

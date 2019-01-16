@@ -38,8 +38,7 @@ namespace NetFusion.Serialization
         {
             if (serializer == null) throw new ArgumentNullException(nameof(serializer));
 
-            IMessageSerializer existingSerializer = GetSerializer(serializer.ContentType, serializer.EncodingType);
-            if (existingSerializer != null)
+            if (IsSerializerRegistered(serializer.ContentType, serializer.EncodingType))
             {
                 throw new InvalidOperationException(
                     $"Serializer already exists Content-Type: {serializer.ContentType} " + 
@@ -55,7 +54,7 @@ namespace NetFusion.Serialization
 
             if (string.IsNullOrWhiteSpace(contentType))
                 throw new ArgumentException("Content type name must be specified.", nameof(contentType));
-
+            
             IMessageSerializer serializer = GetSerializer(contentType, encodingType);
             return serializer.Serialize(value);
         }
@@ -85,13 +84,15 @@ namespace NetFusion.Serialization
 
         private IMessageSerializer GetSerializer(string contentType, string encodingType)
         {
-            var matchingSerializers = _serializers.Where(s => s.ContentType == contentType).ToArray();
-            if (string.IsNullOrEmpty(encodingType))
+            var types = GetContentTypeAndEncoding(contentType, encodingType);
+            
+            var matchingSerializers = _serializers.Where(s => s.ContentType == types.contentType).ToArray();
+            if (string.IsNullOrEmpty(types.encodingType))
             {
                 if (matchingSerializers.Length > 1)
                 {
                     throw new InvalidOperationException(
-                        $"Multiple serializers found for Content-Type: {contentType}.");
+                        $"Multiple serializers found for Content-Type: {types.contentType}.");
                 }
 
                 if (matchingSerializers.Length == 1)
@@ -100,14 +101,39 @@ namespace NetFusion.Serialization
                 }
             }
 
-            var serializer = matchingSerializers.FirstOrDefault(s => s.EncodingType == encodingType);
+            var serializer = matchingSerializers.FirstOrDefault(s => s.EncodingType == types.encodingType);
             if (serializer == null)
             {
                 throw new InvalidOperationException(
-                    $"Serializer for Content-Type: {contentType} Encoding-Type: {encodingType} not registered.");
+                    $"Serializer for Content-Type: {contentType} Encoding-Type: {types.encodingType} not registered.");
             }
 
             return serializer;
         }
+
+        private bool IsSerializerRegistered(string contentType, string encodingType)
+        {
+            var matchingSerializers = _serializers.Where(s => s.ContentType == contentType);
+            if (!string.IsNullOrEmpty(contentType))
+            {
+                matchingSerializers = matchingSerializers.Where(s => s.EncodingType == encodingType);
+                return matchingSerializers.Any();
+            }
+
+            return matchingSerializers.Any(s => s.EncodingType == null);
+        }
+
+        private (string contentType, string encodingType) GetContentTypeAndEncoding(string contentType, string encodingType)
+        {
+            if (!string.IsNullOrWhiteSpace(encodingType))
+            {
+                return (contentType, encodingType);
+            }
+
+            var value = contentType.Replace(" ", "").Replace(";", "");
+            var parts = value.Split(',');
+            return parts.Length == 2 ? (parts[0], parts[1]) : (contentType, encodingType);
+        }
+   
     }
 }

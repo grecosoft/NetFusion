@@ -1,0 +1,18 @@
+<div class="dialog-header">
+    <mat-icon svgIcon="question_answer"></mat-icon>
+    <span class="title">Confirmation</span>
+</div>
+
+<mat-dialog-content>
+
+    <span class="message">{{confirmInfo.message}}</span>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button type="submit" mat-raised-button (click)="onActionConfirmed()" color="warn">{{confirmInfo.actionName}}</button>
+    <button type="button" mat-raised-button (click)="onCancelAction()">Cancel</button>
+</mat-dialog-actions>
+
+
+

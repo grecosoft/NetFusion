@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
+        
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\src\Common\NetFusion.Base\NetFusion.Base.csproj" />
+      <ProjectReference Include="..\..\..\..\src\Common\NetFusion.Mapping\NetFusion.Mapping.csproj" />
+      <ProjectReference Include="..\..\..\..\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+      <ProjectReference Include="..\..\..\..\src\Integration\NetFusion.RabbitMq\NetFusion.RabbitMQ.csproj" />
+      <ProjectReference Include="..\..\..\..\src\Integration\NetFusion.Redis\NetFusion.Redis.csproj" />
+      <ProjectReference Include="..\..\..\..\src\Integration\NetFusion.Serialization\NetFusion.Serialization.csproj" />
+      <ProjectReference Include="..\Components\Service.Domain\Service.Domain.csproj" />
+    </ItemGroup>
+</Project>
