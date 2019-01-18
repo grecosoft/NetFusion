@@ -15,6 +15,8 @@ namespace NetFusion.Messaging.Types
 
         /// <summary>
         /// The type of the request expected by the query from the consumer.
+        /// This can be used by a query filter to automatically map the actual
+        /// return type into the expected consumer result type.
         /// </summary>
         Type DeclaredResultType { get; }
 

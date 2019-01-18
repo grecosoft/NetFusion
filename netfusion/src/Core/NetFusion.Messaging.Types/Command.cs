@@ -40,6 +40,7 @@ namespace NetFusion.Messaging.Types
 
         public virtual void SetResult(object result)
         {
+            // The result can be null.
             Result = result;
         }
     }

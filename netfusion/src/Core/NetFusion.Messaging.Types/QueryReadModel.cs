@@ -9,14 +9,14 @@ namespace NetFusion.Messaging.Types
     /// by query filters - for example to add calculated properties based on 
     /// expressions evaluated by Roslyn.
     /// </summary>
-    public class AttributedReadModel : IAttributedEntity
+    public class QueryReadModel : IAttributedEntity
     {
         /// <summary>
         /// Set of dynamic properties associated with the model.
         /// </summary>
         public IEntityAttributes Attributes { get; }
         
-        public AttributedReadModel()
+        public QueryReadModel()
         {
             Attributes = new EntityAttributes();
         }
