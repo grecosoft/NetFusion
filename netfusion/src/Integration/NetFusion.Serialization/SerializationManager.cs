@@ -9,7 +9,7 @@ namespace NetFusion.Serialization
     /// Encapsulates the logic for serializing messages using a set of serializers registered
     /// by content-type.  By default, JSON and MessagePack based serializers are  registered.
     /// 
-    /// A consuming application can override these default serializers by instanciating this 
+    /// A consuming application can override these default serializers by instantiating this 
     /// class and calling the AddSerializer method to override the serializer to use for a
     /// specific content-type.  Also, the consuming application can call the ClearSerializers
     /// method to clear all default registrations before adding custom serializers.  
@@ -127,7 +127,6 @@ namespace NetFusion.Serialization
         private static (string contentType, string encodingType) GetContentTypeAndEncoding(
             string contentType, string encodingType)
         {
-          
             encodingType = string.IsNullOrEmpty(encodingType) ? null : encodingType;            
             if (encodingType != null)
             {

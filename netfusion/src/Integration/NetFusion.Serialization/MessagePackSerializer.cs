@@ -27,11 +27,16 @@ namespace NetFusion.Serialization
 
         public byte[] Serialize(object value)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+            
             return MessagePack.MessagePackSerializer.Serialize(value);
         }
 
         public T Deserialize<T>(byte[] value, Type valueType)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+            if (valueType == null) throw new ArgumentNullException(nameof(valueType));
+            
             return (T)MessagePack.MessagePackSerializer.NonGeneric.Deserialize(valueType, value);
         }
     }
