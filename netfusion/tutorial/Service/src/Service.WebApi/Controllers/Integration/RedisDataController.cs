@@ -18,17 +18,20 @@ namespace Service.WebApi.Controllers.Integration
             _database = redisService.GetDatabase("testdb");
         }
         
-        [HttpPost("set/add"), ActionMeta(nameof(SetAddValue))]
-        public Task SetAddValue([FromBody] SetValue setValue)
+        [HttpPost("set/add"), ActionMeta(nameof(AddValue))]
+        public Task AddValue([FromBody] SetValue setValue)
         {
             return _database.SetAddAsync("autos", setValue.Value);
         }
 
-        [HttpGet("set/pop"), ActionMeta(nameof(SetAddValue))]
-        public async Task<string> SetPop()
+        [HttpGet("set/pop"), ActionMeta(nameof(PopValue))]
+        public async Task<SetValue> PopValue()
         {
             var result = await _database.SetPopAsync("autos");
-            return result;
+            return new SetValue
+            {
+                Value = result
+            };
         }
 
         public class SetValue

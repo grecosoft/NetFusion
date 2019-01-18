@@ -4,3 +4,7 @@ export class OrderSubmitted {
     quantity: number;
     neededBy?: Date
 }
+
+export class SetValue {
+    value: string;
+}

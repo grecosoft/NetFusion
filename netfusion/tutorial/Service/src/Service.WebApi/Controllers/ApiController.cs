@@ -76,8 +76,8 @@ namespace Service.WebApi.Controllers
                 })
                 .LinkMeta<RedisDataController>(meta =>
                 {
-                    meta.UrlTemplate<RedisDataController.SetValue, Task>("add-value", c => c.SetAddValue);
-                    meta.UrlTemplate<Task<string>>("set-value", c => c.SetPop);
+                    meta.UrlTemplate<RedisDataController.SetValue, Task>("set-value", c => c.AddValue);
+                    meta.UrlTemplate<Task<RedisDataController.SetValue>>("pop-value", c => c.PopValue);
                 });
         }
     }

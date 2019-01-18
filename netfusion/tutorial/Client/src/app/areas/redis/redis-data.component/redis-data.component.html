@@ -42,10 +42,14 @@
                  
             </p>
             <div class="inputs">
-                <button type="submit" mat-raised-button (click)="loadSettings()" color="primary">Load Configuration</button>
+                <div>
+                    <input type="text" [(ngModel)]="value">
+                </div>
+                <button type="submit" mat-raised-button (click)="setValue()" color="primary">Set Value</button>
             </div>
             <div class="results">
-                <json-viewer [json]="injectedSettings" class="viewer"></json-viewer>
+                <button type="submit" mat-raised-button (click)="popValue()" color="primary">Pop Value</button>
+                <div>{{poppedValue}}</div>
             </div>
         </div>
     </div>
