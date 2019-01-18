@@ -31,10 +31,22 @@ namespace NetFusion.Azure.Messaging.Subscriber.Internal
                 // with the handler to which the message should be dispatched.
                 Type messageType = subscriber.DispatchInfo.MessageType;
                 IMessage message = DeserializeMessage(nsMessage, messageType);
+                
+                SetMessageApplicationProperties(nsMessage, message);
 
-                // Invoke the handler assocated with the message.
+                // Invoke the handler associated with the message.
                 InvokeHandler(receiver, nsMessage, message, subscriber);
             });
+        }
+
+        private static void SetMessageApplicationProperties(Message nsMessage, IMessage message)
+        {
+            if (nsMessage.ApplicationProperties?.Map == null) return;
+            
+            foreach (var item in nsMessage.ApplicationProperties.Map)
+            {
+                message.Attributes.SetValue(item.Key.ToString(), item.Value);
+            }
         }
         
         private void InvokeHandler(
