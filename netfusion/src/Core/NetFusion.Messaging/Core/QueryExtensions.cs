@@ -8,6 +8,10 @@ using NetFusion.Messaging.Types;
 
 namespace NetFusion.Messaging.Core
 {
+    /// <summary>
+    /// Extensions used by the messaging implementation providing methods to 
+    /// filter types for query consumers.
+    /// </summary>
     internal static class QueryExtensions
     {
         // Find all plug-in types that know how to process a query.
@@ -27,6 +31,7 @@ namespace NetFusion.Messaging.Core
         {
             return !methodInfo.IsStatic
                    && methodInfo.IsPublic
+                   && methodInfo.HasAttribute<InProcessHandlerAttribute>()
                    && HasValidParameterTypes(methodInfo);
         }
 

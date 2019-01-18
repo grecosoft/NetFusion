@@ -86,6 +86,7 @@ namespace CoreTests.Queries.Bootstrap
 
         public class QueryConsumerOne : IQueryConsumer
         {
+            [InProcessHandler]
             public Task<int> OnMockQuery(MockQuery query, CancellationToken cancellationToken)
             {
                 Assert.NotNull(query);
@@ -95,6 +96,7 @@ namespace CoreTests.Queries.Bootstrap
         
         public class QueryConsumerTwo : IQueryConsumer
         {
+            [InProcessHandler]
             public Task<int> OnMockQuery(MockQuery query, CancellationToken cancellationToken)
             {
                 Assert.NotNull(query);
