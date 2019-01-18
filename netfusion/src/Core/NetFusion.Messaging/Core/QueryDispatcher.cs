@@ -55,7 +55,7 @@ namespace NetFusion.Messaging.Core
             catch (QueryDispatchException ex)
             {
                 // Log the details of the dispatch exception and rethrow.
-                _logger.LogErrorDetails(MessagingLogEvents.MessagingException, ex, "Excepton dispatching query.");
+                _logger.LogErrorDetails(MessagingLogEvents.MessagingException, ex, "Exception dispatching query.");
                 throw;
             }
             catch (Exception ex)
@@ -78,9 +78,9 @@ namespace NetFusion.Messaging.Core
         
             LogQueryDispatch(query, consumer);
 
-            await ApplyFilters(query, preFilters, (f, q) => (f as IPreQueryFilter).OnPreExecute(q));
+            await ApplyFilters(query, preFilters, (f, q) => ((IPreQueryFilter)f).OnPreExecute(q));
             await dispatcher.Dispatch(query, consumer, cancellationToken);
-            await ApplyFilters(query, postFilters, (f, q) => (f as IPostQueryFilter).OnPostExecute(q));
+            await ApplyFilters(query, postFilters, (f, q) => ((IPostQueryFilter)f).OnPostExecute(q));
         }
 
         private void LogQueryDispatch(IQuery query, IQueryConsumer consumer)

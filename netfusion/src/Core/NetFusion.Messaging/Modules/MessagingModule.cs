@@ -18,7 +18,7 @@ namespace NetFusion.Messaging.Modules
             // The dispatcher delegated to by the MessagingService for sending commands and publishing domain-events.
             services.AddScoped<MessageDispatcher>();
             
-            // The dispatcher delegated to by the MessagingService for dispatching commands.
+            // The dispatcher delegated to by the MessagingService for dispatching queries.
             services.AddScoped<QueryDispatcher>();
         }
     }

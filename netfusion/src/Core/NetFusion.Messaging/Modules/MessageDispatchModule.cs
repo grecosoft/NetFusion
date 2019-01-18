@@ -97,8 +97,8 @@ namespace NetFusion.Messaging.Modules
         {
             foreach (var dispatcher in allDispatchers)
             {
-                var scriptAttrib = dispatcher.MessageHandlerMethod.GetAttribute<ApplyScriptPredicateAttribute>();
-                dispatcher.Predicate = scriptAttrib?.ToPredicate();
+                var scriptAttribute = dispatcher.MessageHandlerMethod.GetAttribute<ApplyScriptPredicateAttribute>();
+                dispatcher.Predicate = scriptAttribute?.ToPredicate();
             }
         }
 

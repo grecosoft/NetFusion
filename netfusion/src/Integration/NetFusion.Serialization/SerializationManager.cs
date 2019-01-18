@@ -87,7 +87,7 @@ namespace NetFusion.Serialization
             var types = GetContentTypeAndEncoding(contentType, encodingType);
             
             var matchingSerializers = _serializers.Where(s => s.ContentType == types.contentType).ToArray();
-            if (string.IsNullOrEmpty(types.encodingType))
+            if (types.encodingType == null)
             {
                 if (matchingSerializers.Length > 1)
                 {
@@ -114,26 +114,37 @@ namespace NetFusion.Serialization
         private bool IsSerializerRegistered(string contentType, string encodingType)
         {
             var matchingSerializers = _serializers.Where(s => s.ContentType == contentType);
-            if (!string.IsNullOrEmpty(contentType))
+            if (! string.IsNullOrEmpty(encodingType))
             {
-                matchingSerializers = matchingSerializers.Where(s => s.EncodingType == encodingType);
-                return matchingSerializers.Any();
+                return matchingSerializers.Any(s => s.EncodingType == encodingType);
             }
 
             return matchingSerializers.Any(s => s.EncodingType == null);
         }
 
-        private (string contentType, string encodingType) GetContentTypeAndEncoding(string contentType, string encodingType)
+        // If the encoding-type is not explicitly specified, determines if the content-type
+        // values specifies the encoding.  Example: application/json; charset=utf-8
+        private static (string contentType, string encodingType) GetContentTypeAndEncoding(
+            string contentType, string encodingType)
         {
-            if (!string.IsNullOrWhiteSpace(encodingType))
+          
+            encodingType = string.IsNullOrEmpty(encodingType) ? null : encodingType;            
+            if (encodingType != null)
             {
                 return (contentType, encodingType);
             }
 
-            var value = contentType.Replace(" ", "").Replace(";", "");
-            var parts = value.Split(',');
-            return parts.Length == 2 ? (parts[0], parts[1]) : (contentType, encodingType);
+            // Parse the encoding type if present in the content-type:
+            var value = contentType.Replace(" ", "");
+            var parts = value.Split(';');
+
+            if (parts.Length != 2)
+            {
+                return (contentType, null);
+            }
+
+            return parts[1].Contains("charset") ? (parts[0], parts[1].Replace("charset=", "")) 
+                : (contentType, null);
         }
-   
     }
 }
