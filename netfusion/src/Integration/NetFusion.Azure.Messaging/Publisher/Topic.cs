@@ -7,7 +7,7 @@ namespace NetFusion.Azure.Messaging.Publisher
     /// <summary>
     /// Metadata for a topic defined on a namespace.
     /// </summary>
-    /// <typeparam name="TDomainEvent">The type of domain-event assocated with topic.</typeparam>
+    /// <typeparam name="TDomainEvent">The type of domain-event associated with topic.</typeparam>
     public class Topic<TDomainEvent> : NamespaceItem<TDomainEvent>
         where TDomainEvent : IDomainEvent
     {

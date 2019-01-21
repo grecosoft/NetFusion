@@ -9,7 +9,7 @@ namespace NetFusion.Azure.Messaging.Modules
     /// </summary>
     public class NamespaceSession
     {
-        // The setting read from the host application:
+        // The settings read from the host application:
         public NamespaceSettings Settings { get; }
         
         public NamespaceSession(NamespaceSettings settings)

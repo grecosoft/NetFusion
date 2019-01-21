@@ -62,8 +62,8 @@ namespace NetFusion.Azure.Messaging.Modules
         // invoked when a message is received.
         private async Task LinkSubscriber(NamespaceItemSubscriber subscriber)
         {
-            Session nsSession = await _connectionModule.GetSession(subscriber.NamespaceAttrib.NamespaceName);
-            ISubscriberLinker linker = subscriber.NamespaceItemAttrib.Linker;
+            Session nsSession = await _connectionModule.GetSession(subscriber.NamespaceAttribute.NamespaceName);
+            ISubscriberLinker linker = subscriber.NamespaceItemAttribute.Linker;
             
             // Set the services used by the linker when messages are received:
             linker.DispatchModule = _dispatchModule;
@@ -71,7 +71,7 @@ namespace NetFusion.Azure.Messaging.Modules
             linker.LoggerFactory = Context.LoggerFactory;
             
             // Delegate to the subscriber linker implementation to handle received messages:
-            subscriber.NamespaceItemAttrib.Linker.LinkSubscriber(nsSession, subscriber);
+            linker.LinkSubscriber(nsSession, subscriber);
         }
         
         protected override void Dispose(bool dispose)

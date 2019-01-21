@@ -25,14 +25,14 @@ namespace NetFusion.Azure.Messaging.Subscriber.Internal
             
             // Start message pump that will be called when a message
             // is published to the topic.  
-            receiverLink.Start(subscriber.NamespaceItemAttrib.LinkCredit, (receiver, nsMessage) => 
+            receiverLink.Start(subscriber.NamespaceItemAttribute.LinkCredit, (receiver, nsMessage) => 
             {
                 // Deserialize the message body into the the .NET types associated
                 // with the handler to which the message should be dispatched.
                 Type messageType = subscriber.DispatchInfo.MessageType;
                 IMessage message = DeserializeMessage(nsMessage, messageType);
 
-                // Invoke the handler assocated with the message.
+                // Invoke the handler associated with the message.
                 InvokeHandler(receiver, nsMessage, message, subscriber);
             });
         }

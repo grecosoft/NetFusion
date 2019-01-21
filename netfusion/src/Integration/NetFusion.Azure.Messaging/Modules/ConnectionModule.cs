@@ -24,13 +24,13 @@ namespace NetFusion.Azure.Messaging.Modules
         private readonly object _senderLock = new object();
        
         // The configured namespace connections and a lookup of the
-        // session assocated with a given namespace.
+        // session associated with a given namespace.
         private ServiceBusSettings _serviceBusSettings;
         private Dictionary<string, NamespaceSession> _sessions;
 
         public ConnectionModule()
         {
-            _sessions = new Dictionary<string, NamespaceSession>();
+            _sessions = new Dictionary<string, NamespaceSession>(); // Namespace Name => Session
         }
         
         public override void Initialize()

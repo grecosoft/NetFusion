@@ -14,19 +14,19 @@ namespace NetFusion.Azure.Messaging.Modules
     /// <summary>
     /// Module when bootstrapped finds all the INamespaceRegistry instances
     /// and stores for a given message type the object defined on the Azure
-    /// namespace to which it should be send.
+    /// namespace to which it should be sent.
     /// </summary>
     public class PublisherModule : PluginModule,
         IPublisherModule
     {
-        private bool _disposed;
+        private bool _disposed;  
         
-        private IEnumerable<INamespaceRegistry> Registeries { get; set; }
-        private Dictionary<Type, INamespaceItem> _messageNamespace;
+        private IEnumerable<INamespaceRegistry> Registries { get; set; }
+        private Dictionary<Type, INamespaceItem> _messageNamespace;  // Message Type => Bus Namespace
         
         public override void Initialize()
         {
-            INamespaceItem[] namespaceItems = Registeries
+            INamespaceItem[] namespaceItems = Registries
                 .SelectMany(r => r.GetItems())
                 .ToArray();
             
@@ -50,7 +50,7 @@ namespace NetFusion.Azure.Messaging.Modules
             if (! HasNamespaceItem(messageType))
             {
                 throw new InvalidOperationException(
-                    $"The message of type: {messageType} does not have an assocated namespace item.");
+                    $"The message of type: {messageType} does not have an associated namespace item.");
             }
 
             return _messageNamespace[messageType];

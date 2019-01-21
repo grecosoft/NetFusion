@@ -6,7 +6,7 @@ namespace NetFusion.Azure.Messaging.Publisher
     /// <summary>
     /// Metadata for a queue defined on a namespace.
     /// </summary>
-    /// <typeparam name="TCommand">The type of command assocated with queue.</typeparam>
+    /// <typeparam name="TCommand">The type of command associated with queue.</typeparam>
     public class Queue<TCommand> : NamespaceItem<TCommand>
         where TCommand : ICommand
     {

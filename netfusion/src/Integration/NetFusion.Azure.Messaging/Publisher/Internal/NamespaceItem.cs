@@ -27,7 +27,7 @@ namespace NetFusion.Azure.Messaging.Publisher.Internal
         public string Name { get; }
 
         /// <summary>
-        /// The type of the message assocated with the namespace object.
+        /// The type of the message associated with the namespace object.
         /// </summary>
         public Type MessageType => typeof(TMessage);
       
@@ -55,7 +55,7 @@ namespace NetFusion.Azure.Messaging.Publisher.Internal
         /// </summary>
         /// <param name="message">The AMQP message being sent.</param>
         /// <param name="nsMessage"></param>
-        internal virtual void SetMessageProperties(IMessage message, Message nsMessage)
+        internal void SetMessageProperties(IMessage message, Message nsMessage)
         {
             nsMessage.Properties = new Properties
             {

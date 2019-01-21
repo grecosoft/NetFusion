@@ -40,8 +40,8 @@ namespace NetFusion.Azure.Messaging.Publisher
 
         /// <summary>
         /// Called when a message is published.  Determines if there is a registration
-        /// associated with the message being plublished.  If a registration if for an
-        /// assocated Queue or Topic, the message will be delivered.
+        /// associated with the message being published.  If a registration if for an
+        /// associated Queue or Topic, the message will be delivered.
         /// </summary>
         /// <param name="message">The message being dispatched.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
@@ -63,7 +63,7 @@ namespace NetFusion.Azure.Messaging.Publisher
             // Assure the sender link has been set used to send messages:
             _connectionModule.SetSenderLink(nsSession, linkedItem);
 
-            // Serialize the message based on its assocated conent-type and delegate to the corresponding
+            // Serialize the message based on its associated content-type and delegate to the corresponding
             // namespace item to create the AMQP message with the message properties correctly set.
             object body = SerializeMessage(nsItem, message);
             Message nsMessage = linkedItem.CreateMessage(message, body);
