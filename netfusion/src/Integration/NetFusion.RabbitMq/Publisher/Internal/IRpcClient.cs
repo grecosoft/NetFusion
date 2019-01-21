@@ -15,7 +15,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         /// Should publish the message bytes to the exchange and monitor
         /// the reply queue for the response.
         /// </summary>
-        /// <param name="createdExchange">Contains the exchange defintion to which
+        /// <param name="createdExchange">Contains the exchange definition to which
         /// the message should be published.</param>
         /// <param name="messageBody">The serialize contents of the message.</param>
         /// <param name="messageProperties">Properties associated with the message.</param>

@@ -17,9 +17,9 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     {
         public QueueMeta CreateQueueMeta(SubscriberQueueAttribute attribute)
         {
-            var rpcAttrib = (RpcQueueAttribute)attribute;
+            var rpcAttribute = (RpcQueueAttribute)attribute;
             
-            var exchange = ExchangeMeta.DefineDefault(rpcAttrib.BusName, rpcAttrib.QueueName,
+            var exchange = ExchangeMeta.DefineDefault(rpcAttribute.BusName, rpcAttribute.QueueName,
                 config =>
                 {
                     config.IsAutoDelete = true;
@@ -29,7 +29,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
                 });
 
             exchange.IsRpcExchange = true;
-            exchange.ActionNamespace = rpcAttrib.ActionNamespace;           
+            exchange.ActionNamespace = rpcAttribute.ActionNamespace;           
             return exchange.QueueMeta;
         }
         
@@ -68,7 +68,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             string rpcActionNamespace = context.MessageProps.GetRpcActionNamespace();
             
             context.Logger.LogTrace(
-                "RPC command received.  Attempting to dispatch to hander associated with queue named {queueName} and " + 
+                "RPC command received.  Attempting to dispatch to handler associated with queue named {queueName} and " + 
                 "for action named {actionName}", rpcQueueName, rpcActionNamespace);
 
             return context.GetRpcMessageHandler(rpcQueueName, rpcActionNamespace);

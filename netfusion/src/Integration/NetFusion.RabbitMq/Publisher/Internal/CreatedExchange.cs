@@ -27,11 +27,11 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         public CreatedExchange(
             IBus bus,
             IExchange exchange,
-            ExchangeMeta defintion)
+            ExchangeMeta definition)
         {
             Bus = bus ?? throw new System.ArgumentNullException(nameof(bus));
             Exchange = exchange ?? throw new System.ArgumentNullException(nameof(exchange));
-            Definition = defintion ?? throw new System.ArgumentNullException(nameof(defintion));
+            Definition = definition ?? throw new System.ArgumentNullException(nameof(definition));
         }
     }
 }

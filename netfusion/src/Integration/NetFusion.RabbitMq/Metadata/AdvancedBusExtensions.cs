@@ -53,7 +53,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// <summary>
         /// Creates a queue and its associated exchange on the message broker.  If the associated
         /// exchange is the RabbitMQ default exchange, only the queue is created.  For a non-default
-        /// exchange, the queue is bound to the exchange.  if the metadata has route-keys specified,
+        /// exchange, the queue is bound to the exchange.  If the metadata has route-keys specified,
         /// the queue is bound the to exchange for each specified key. 
         /// </summary>
         /// <param name="bus">Reference to the advanced bus.</param>
@@ -93,8 +93,8 @@ namespace NetFusion.RabbitMQ.Metadata
                 return queue;
             }
 
-            string[] routekeys = meta.RouteKeys ?? new string[] { };
-            if (routekeys.Length > 0)
+            string[] routeKeys = meta.RouteKeys ?? new string[] { };
+            if (routeKeys.Length > 0)
             {
                 // If route-keys specified, bind the queue to the exchange
                 // for each route-key.
