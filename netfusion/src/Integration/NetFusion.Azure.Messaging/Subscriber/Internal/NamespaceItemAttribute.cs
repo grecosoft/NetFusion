@@ -4,7 +4,7 @@ namespace NetFusion.Azure.Messaging.Subscriber.Internal
 {
     /// <summary>
     /// Base class from which derived attributes used to specify message
-    /// handler methods assocated with a namespace item.
+    /// handler methods associated with a namespace item.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, Inherited = false)]
     public abstract class NamespaceItemAttribute : Attribute

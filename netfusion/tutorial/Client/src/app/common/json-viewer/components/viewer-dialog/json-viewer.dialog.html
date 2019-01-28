@@ -1,0 +1,7 @@
+<h1 mat-dialog-title class="dialog-title">
+    Resource: {{data.sourceName}}
+</h1>
+
+<mat-dialog-content name="json-dialog">
+    <json-viewer [json]="data.json" (itemSelected)="arrayItemSelected($event)" [showNodeNav]="data.showNodeNav" ></json-viewer>
+</mat-dialog-content>

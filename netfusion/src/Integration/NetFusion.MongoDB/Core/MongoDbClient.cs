@@ -31,8 +31,8 @@ namespace NetFusion.MongoDB.Core
             IMongoClient client = CreateClient();
 
             _database = client.GetDatabase(
-                DbSettings.DatabaseName,
-                DbSettings.DatabaseSettings);
+                dbSettings.DatabaseName,
+                dbSettings.DatabaseSettings);
         }
 
         public IMongoCollection<TDocument> GetCollection<TDocument>(string collectionName,
@@ -68,25 +68,25 @@ namespace NetFusion.MongoDB.Core
             if (mapping == null)
             {
                 throw new InvalidOperationException(
-                    $"A MongoDB mapping could not be found for entity type: {entityType}.");
+                    $"A MongoDB mapping could not be found for type: {entityType}.");
             }
             return mapping;
         }
 
-        private string GetEntityCollectionName(IEntityClassMap mapping)
+        private static string GetEntityCollectionName(IEntityClassMap mapping)
         {
             return mapping.CollectionName ?? mapping.EntityType.FullName;
         }
 
         private MongoClient CreateClient()
         {
-            MongoClientSettings clientSettings = CreateClientSettings();
+            MongoClientSettings clientSettings = GetClientSettings();
 
             SetClientCredentials(clientSettings);
             return new MongoClient(clientSettings);
         }
 
-        private MongoClientSettings CreateClientSettings()
+        private MongoClientSettings GetClientSettings()
         {
             MongoClientSettings clientSettings = DbSettings.ClientSettings;
             if (clientSettings == null)

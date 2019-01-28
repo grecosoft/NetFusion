@@ -8,7 +8,7 @@ namespace NetFusion.Bootstrap.Configuration
     /// </summary>
     public class EnvironmentConfig 
     {
-        private static readonly string[] CommonEnviromentNameKeys =
+        private static readonly string[] CommonEnvironmentNameKeys =
         {
             "NETFUSION_ENVIRONMENT", 
             "ASPNETCORE_ENVIRONMENT"
@@ -31,7 +31,7 @@ namespace NetFusion.Bootstrap.Configuration
 
         private static string GetEnvironmentName()
         {
-            foreach (string key in CommonEnviromentNameKeys)
+            foreach (string key in CommonEnvironmentNameKeys)
             {
                 string value = Environment.GetEnvironmentVariable(key);
                 if (! string.IsNullOrWhiteSpace(value))

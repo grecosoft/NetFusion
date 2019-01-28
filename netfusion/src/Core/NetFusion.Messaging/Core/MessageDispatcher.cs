@@ -15,9 +15,8 @@ using NetFusion.Messaging.Types;
 namespace NetFusion.Messaging.Core
 {
     /// <summary>
-    /// Contains methods to publish messages to all registered message 
-    /// publishers.  The message publishers are responsible for determining how
-    /// the event is dispatched.  
+    /// Contains methods to publish messages to all registered message publishers.
+    /// The message publishers are responsible for determining how the event is dispatched.  
     /// </summary>
     public class MessageDispatcher 
     {

@@ -45,11 +45,11 @@ namespace NetFusion.RabbitMQ.Modules
         
         // Delegates to the core message dispatch module to find all message dispatch
         // handlers and filters the list to only those that should be bound to a queue.
-        private MessageQueueSubscriber[] GetQueueSubscribers(IMessageDispatchModule messsageDispatch)
+        private MessageQueueSubscriber[] GetQueueSubscribers(IMessageDispatchModule messageDispatch)
         {
             var hostId = _busModule.HostAppId;
   
-            return messsageDispatch.AllMessageTypeDispatchers
+            return messageDispatch.AllMessageTypeDispatchers
                 .Values().Where(MessageQueueSubscriber.IsSubscriber)
                 .Select(d => new MessageQueueSubscriber(hostId, d))
                 .ToArray();

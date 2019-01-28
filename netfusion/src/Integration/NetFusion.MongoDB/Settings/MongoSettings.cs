@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using NetFusion.Settings;
 
 namespace NetFusion.MongoDB.Settings
@@ -14,7 +13,6 @@ namespace NetFusion.MongoDB.Settings
         /// <summary>
         /// The URL used by the client when connecting to the database.
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "MongoDB URL Required.")]
         public string MongoUrl { get; set; }
 
         /// <summary>

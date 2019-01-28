@@ -54,7 +54,7 @@ namespace NetFusion.Messaging.Core
                 return;
             }
 
-            LogMessageDespatchInfo(message, dispatchers);
+            LogMessageDispatchInfo(message, dispatchers);
 
             // Execute all handlers and return the task for the caller to await.
             await InvokeMessageDispatchersAsync(message, dispatchers, cancellationToken).ConfigureAwait(false);
@@ -113,6 +113,7 @@ namespace NetFusion.Messaging.Core
             ScriptPredicate predicate = dispatchInfo.Predicate;
 
             // Run a dynamic script against the message and check the result of the specified predicate property.
+            // This allow storing rule predicates external from the code.
             if (predicate != null)
             {
                 return await _scriptingSrv.SatisfiesPredicateAsync(message, predicate);
@@ -124,7 +125,8 @@ namespace NetFusion.Messaging.Core
 
         private static void AssertMessageDispatchers(IMessage message, MessageDispatchInfo[] dispatchers)
         {
-            if (!(message is ICommand command))
+            // There are no constrains on the number of handlers for domain-events.
+            if (! (message is ICommand command))
             {
                 return;
             }
@@ -152,7 +154,7 @@ namespace NetFusion.Messaging.Core
 
         private static MessageDispatchException GetDispatchException(TaskListItem<MessageDispatchInfo> taskItem)
         {
-            var sourceEx = taskItem.Task.Exception.InnerException;
+            var sourceEx = taskItem.Task.Exception?.InnerException;
 
             if (sourceEx is MessageDispatchException dispatchEx)
             {
@@ -164,8 +166,10 @@ namespace NetFusion.Messaging.Core
             
         }
 
-        private void LogMessageDespatchInfo(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
+        private void LogMessageDispatchInfo(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
         {
+            if (! _logger.IsEnabled(LogLevel.Trace)) return;
+            
             var dispatcherDetails = GetDispatchLogDetails(dispatchers);
 
             _logger.LogTraceDetails(MessagingLogEvents.MessagingDispatch, $"Message Published: {message.GetType()}",

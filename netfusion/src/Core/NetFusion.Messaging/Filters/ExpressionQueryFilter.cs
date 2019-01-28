@@ -17,7 +17,7 @@ namespace NetFusion.Messaging.Filters
     /// </summary>
     public class ExpressionQueryFilter : IPostQueryFilter
     {
-        private const string PropertyScriptName = "AttributedReadModel";
+        private const string PropertyScriptName = "DynamicQueryReadModel";
 
         private readonly IEntityScriptingService _scriptingService;
 

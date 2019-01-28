@@ -11,7 +11,7 @@ using NetFusion.EntityFramework.Settings;
 namespace NetFusion.EntityFramework.Modules
 {
     /// <summary>
-    /// Plugin module that will discover all EntityFramework derived DbContext classes
+    /// Plugin module that discovers all EntityFramework derived DbContext classes
     /// and automatically configure them in the service-container for injection into
     /// application specific components such as repositories.
     /// </summary>
@@ -21,17 +21,20 @@ namespace NetFusion.EntityFramework.Modules
         private IEnumerable<IEntityTypeMapping> EntityMappings { get; set; }
         
         private EntityDbRegistration[] _registrations;
+        private Dictionary<Type, IEntityTypeMapping[]> _contextMappings;
         
-        public override void Configure()
+        public override void Initialize()
         {
-            // Finds all types meeting the criteria of an EntityFramework 
-            // derived context type that can be automatically configured.
+            // Finds all context derived types:
             _registrations = Context.AllPluginTypes
-                .Where(EntityDbRegistration.IsEntityDbType)
-                .Select(pt => new EntityDbRegistration(pt)).ToArray();
+                .Where(EntityDbRegistration.IsEntityDbContextType)
+                .Select(ct => new EntityDbRegistration(ct, GetContextMappings(ct)))
+                .ToArray();
+
+            _contextMappings = _registrations.ToDictionary(r => r.ImplementationType, r => r.Mappings);
         }
 
-        // Adds each found derived DbContext to the service-collection using
+        // Adds each found derived EntityDbContext to the service-collection using
         // the determined service type under which it should be registered.
         public override void RegisterServices(IServiceCollection services)
         {
@@ -42,40 +45,56 @@ namespace NetFusion.EntityFramework.Modules
                 // instance when injected into a dependent component.
                 services.AddScoped(registration.ServiceType, sp =>
                 {
-                    // Find the connections settings for the context:
                     var connSettings = sp.GetService<ConnectionSettings>();
                     if (connSettings == null)
                     {
                         throw new ContainerException(
                             "Application settings for: netfusion:entityFramework not found.");
                     }
-                    
-                    string contextName = registration.ImplementationType.Name;
-                    
-                    var contextSettings = connSettings.Contexts.FirstOrDefault(
-                        cs => cs.ContextName == contextName);
 
-                    if (contextSettings == null)
-                    {
-                        throw new ContainerException(
-                            $"Connection settings not found for database context type: {contextName}");
-                    }
-
+                    DbContextSettings contextSettings = GetSettingsForContext(connSettings, registration);
+                    IEntityTypeMapping[] contextMappings = _contextMappings[registration.ImplementationType];
+                    
                     // Return instance of a configured context:
-                    IEntityTypeMapping[] contextMappings = GetContextMappings(registration.ImplementationType);
-                    
                     return registration.ImplementationType.CreateInstance(
-                        contextSettings.ConnectionString,
+                        contextSettings,
                         contextMappings);
                 });
             }
+        }
+
+        private static DbContextSettings GetSettingsForContext(ConnectionSettings connSettings, EntityDbRegistration registration)
+        {
+            string contextName = registration.ImplementationType.Name;
+                    
+            var contextSettings = connSettings.Contexts.FirstOrDefault(
+                cs => cs.ContextName == contextName);
+
+            if (contextSettings == null)
+            {
+                throw new ContainerException(
+                    $"Connection settings not found for database context type: {contextName}");
+            }
+
+            return contextSettings;
         }
         
         // Returns only the entity type mappings within the same or child namespace as the context.
         private IEntityTypeMapping[] GetContextMappings(Type contextType)
         {
-            return EntityMappings.Where(map => 
-                    map.GetType().Namespace.StartsWith(contextType?.Namespace ?? "", StringComparison.Ordinal))
+            if (contextType.Namespace == null)
+            {
+                return new IEntityTypeMapping[] {};   
+            }
+
+            return EntityMappings.Select(map => new
+                {
+                    mappingNs = map.GetType().Namespace,
+                    mapping = map
+                })
+                .Where(entityMap =>
+                    entityMap.mappingNs != null && entityMap.mappingNs.StartsWith(contextType.Namespace, StringComparison.Ordinal))
+                .Select(entityMap => entityMap.mapping)
                 .ToArray();
         }
     }

@@ -5,7 +5,7 @@
     /// </summary>
     public static class ContentTypes
     {
-        public const string Json = "application/json; charset=utf-8";
+        public const string Json = "application/json";
         public const string MessagePack = "application/x-msgpack";
     }
 }

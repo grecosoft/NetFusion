@@ -1,0 +1,71 @@
+<nav-toolbar [isDisplayed]="true"></nav-toolbar>
+<div class="area-content">
+    <div class="plugin-summary">
+        <h1 class="section-header">Plugin Summary</h1>
+        <div class="portal-definition-list">
+            <dl class="version-info">
+                <dt>Nuget Package</dt><dd>{{nugetPackageName}}</dd>
+                <dt>Documentation</dt><dd><a href="{{documentationUrl}}" target="_blank">View</a></dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="plugin-overview">
+        <h1 class="section-header">Overview</h1>
+        <ul>
+            <li>Consistent configuration.</li>
+            <li>Provides an implementation of the <code-viewer type="net-fusion" name="Core/NetFusion.Messaging/Core/IMessagePublisher.cs">IMessagePublisher</code-viewer> 
+                interface allowing domain-events to be published to Redis.</li>
+            <li>Domain-events can be published to Redis channels consistently using the <code-viewer type="net-fusion" name="Core/NetFusion.Messaging/IMessagingService.cs">IMessagingService</code-viewer> interface.</li>
+            <li>Implements subscribing in-process domain-event handlers to Redis channels that will be invoked when a message matching the specified channel pattern is published.</li>
+        </ul>
+    </div>
+
+    <div class="plugin-usage">
+        <h1 class="section-header">Usage Summary</h1>
+        <ul>
+            <li>The following is example Redis configuration contained within <code-viewer type="tutorial-webapi" name="appsettings.json">appsettings.json</code-viewer></li>
+            <li>The above indicates that the database named 'testdb' will be associated with the database having an identifier of 1.</li>
+            <li>The consumer defines a derived <code-viewer type="net-fusion" name="Integration/NetFusion.Redis/Publisher/ChannelRegistryBase.cs">ChannelRegistryBase</code-viewer> 
+                class used to specify the Redis channel to which a given domain-event should be published.</li>
+            <li>The subscriber decorates the handler methods for a given domain-event with the <code-viewer type="net-fusion" name="Integration/NetFusion.Redis/Subscriber/ChannelSubscriptionAttribute.cs">ChannelSubscription</code-viewer> attribute.</li>
+            <li>By default, messages published to Redis are serialized as JSON but can be overridden by calling the UseContentType method on the parent ChannelRegistryBase class.</li>
+            <li>If the SetEventData method is called on the parent ChannelRegistryBase class, the returned string based on the domain-event's data will be appended to the channel name. 
+                This value can be used by subscribers to filter which domain-events should be to handled.</li>
+            <li>Also optional is the call the the AppliesWhen method specifying a predicate indicating if the domain-event should be published to the channel.</li>
+        </ul>
+    </div>
+
+    <div class="plugin-examples">
+        <h1 class="section-header">Examples</h1>
+        <p>
+            
+        </p>
+        <div class="plugin-example">
+            <h2 class="section-header">Publishing Domain-Event to Channel</h2>
+            <p>
+                The following <code-viewer type="tutorial-components" name="Service.Domain/Events/OrderSubmitted.cs">OrderSubmitted</code-viewer> domain-event will be published to a channel name Orders on the configured "testdb" database.
+                The <code-viewer type="tutorial-components" name="Service.Infra/ChannelRegistry.cs">ChannelRegistry</code-viewer> class illustrates how the OrderSubmitted domain-event is mapped to the Order channel and how the PartNumber and
+                State are appended to the channel name.  This appended data can be used by subscribers to filter published domain-events.  Only OrderSubmitted
+                domain-event instances with a Quantity greater than 5 will be published to the channel and serialized using the Message Pack serializer.
+                The <code-viewer type="tutorial-webapi" name="Controllers/Integration/RedisController.cs">RedisController</code-viewer> publishes an OrderSubmitted domain-event to Redis.  
+            </p>
+            <p>
+                Subscribers enlist with channels by decorating a handler method with the ChannelSubscription attribute as shown in the <code-viewer type="tutorial-client" name="Handlers/SampleChannelHandler.cs">SampleChannelHandler</code-viewer> class.
+            </p>
+            <p>
+                After running both the Web Api service and client console application, use the following to publish a domain-event.
+            </p>
+            
+            <div class="inputs">
+                <div>
+                    <textarea [(ngModel)]="newDomainEventBody"></textarea>
+                </div> 
+                <button type="submit" mat-raised-button (click)="onPublishDomainEvent()" color="primary">Publish</button>
+            </div>
+            <div class="results">
+                <json-viewer [json]="newDomainEventResult" class="viewer"></json-viewer>
+            </div>
+        </div>
+    </div>
+</div>

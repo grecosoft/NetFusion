@@ -19,6 +19,7 @@ namespace NetFusion.Serialization
         private readonly IContractResolver _contractResolver = new CustomContractResolver();
 
         public string ContentType => ContentTypes.Json;
+        public string EncodingType => Encoding.UTF8.WebName;
 
         public byte[] Serialize(object value)
         {

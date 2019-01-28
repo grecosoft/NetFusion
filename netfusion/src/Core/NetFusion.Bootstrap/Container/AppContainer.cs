@@ -29,13 +29,13 @@ namespace NetFusion.Bootstrap.Container
     ///     concerns.
     ///     
     /// The application container and bootstrap process is only dependent on Microsoft
-    /// libraries.  Core plug-ins should be written for non  Microsoft open-source
+    /// libraries.  Core plug-ins should be written for non Microsoft open-source
     /// implementations.  This allows the base implementation to have a small footprint
     /// that can be easily extended without requiring changes.
     /// </summary>
     public class AppContainer : IAppContainer,
-        IComposite,
-        IBuiltContainer
+        IComposite,        // Exposes internal container structure.
+        IBuiltContainer    // Contains methods for configuration and running container.
     {
         // Singleton instance of created container:
         private static AppContainer _instance;
@@ -44,6 +44,7 @@ namespace NetFusion.Bootstrap.Container
         // Microsoft Common Abstractions:
         private readonly IServiceCollection _serviceCollection;
         private Action<IServiceCollection> _registration;
+        private Func<IServiceCollection, IServiceProvider> _providerFactory;
         private readonly IConfiguration _configuration;
         private readonly ILoggerFactory _loggerFactory;
         
@@ -110,7 +111,7 @@ namespace NetFusion.Bootstrap.Container
 
         /// <summary>
         /// Reference to the singleton application container instance.  This should only
-        /// be used when service-locater is necessary from a root component.  If a given
+        /// be used when service-locator is necessary from a root component.  If a given
         /// service implementation is contained within the service collection, it can 
         /// reference the application container by injecting the IAppContainer interface.
         /// </summary>
@@ -173,6 +174,7 @@ namespace NetFusion.Bootstrap.Container
             return (IObjectValidator)Activator.CreateInstance(_validationConfig.ValidatorType, obj);
         }
 
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private static void ThrowIfDisposed(AppContainer container)
         {
             if (container._disposed)
@@ -251,6 +253,14 @@ namespace NetFusion.Bootstrap.Container
         {
             _registration = registration ?? throw new ArgumentNullException(nameof(registration), 
                 "Service registration delegate not specified.");
+
+            return this;
+        }
+
+        public IAppContainer WithServices(Func<IServiceCollection, IServiceProvider> factory)
+        {
+            _providerFactory = factory ?? throw new ArgumentNullException(nameof(factory), 
+               "Service provider factory delegate not specified.");
 
             return this;
         }
@@ -514,8 +524,9 @@ namespace NetFusion.Bootstrap.Container
             // services and also an opportunity to override any existing added services. 
             AddServiceRegistrations();
   
-            // Create service provider from populated service collection.
-            _serviceProvider = _serviceCollection.BuildServiceProvider(true);
+            // Create service provider from populated service collection.  First allow
+            // the host application to optionally specify alternative container.
+            _serviceProvider = CreateCustomProvider() ?? _serviceCollection.BuildServiceProvider(true);
         }
 
         private void RegisterAppContainerAsService()
@@ -546,6 +557,11 @@ namespace NetFusion.Bootstrap.Container
         private void AddServiceRegistrations()
         {
             _registration?.Invoke(_serviceCollection);
+        }
+
+        private IServiceProvider CreateCustomProvider()
+        {
+            return _providerFactory?.Invoke(_serviceCollection);
         }
 
         //------------------------------------------Logging------------------------------------------//

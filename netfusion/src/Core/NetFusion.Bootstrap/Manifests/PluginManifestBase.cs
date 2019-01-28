@@ -4,7 +4,7 @@
     /// Base implementation containing properties that are set
     /// automatically by the base infrastructure.
     /// </summary>
-    public class PluginManifestBase
+    public abstract class PluginManifestBase
     {
         public string AssemblyName { get; set; }
         public string AssemblyVersion { get; set; }

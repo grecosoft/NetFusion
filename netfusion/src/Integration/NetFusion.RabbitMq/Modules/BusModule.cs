@@ -30,19 +30,20 @@ namespace NetFusion.RabbitMQ.Modules
         private BusSettings _busSettings;
         
         // The bus instances keyed by name created from BusSettings.
-        private readonly Dictionary<string, IBus> _busses;
+        private readonly Dictionary<string, IBus> _buses;
         private ISerializationManager _serializationMgr;
 
         private bool _disposed;
 
         public BusModule()
         {
-            _busses = new Dictionary<string, IBus>();
+            _buses = new Dictionary<string, IBus>();
         }
         
-        // Unique value identifying the host plugin.  The value can be used to tag
-        // exchanges and queues so the associated host can be identified.  This will
-        // make a given queue name unique to a given application host.
+        // Unique value identifying the host plugin.  The value can be used to tag exchanges
+        // and queues so the associated host can be identified.  This will make a given queue
+        // name unique to a given application host allowing for messages to be delivered round
+        // robin among a set of running application instances.
         public string HostAppId => Context.AppHost.Manifest.PluginId;
 
         // Creates IBus instances for each configured bus.
@@ -69,7 +70,7 @@ namespace NetFusion.RabbitMQ.Modules
 
         private void CreateBus(BusConnection conn)
         {
-            if (_busses.ContainsKey(conn.BusName))
+            if (_buses.ContainsKey(conn.BusName))
             {
                 throw new ContainerException(
                     $"A bus has already been created for the bus named: {conn.BusName}." + 
@@ -103,7 +104,7 @@ namespace NetFusion.RabbitMQ.Modules
             // Allow EasyNetQ to validate the connection configuration:
             connConfig.Validate();
     
-            _busses[conn.BusName] = BusFactory(connConfig);
+            _buses[conn.BusName] = BusFactory(connConfig);
         }
 
         /// <summary>
@@ -132,7 +133,7 @@ namespace NetFusion.RabbitMQ.Modules
             if (string.IsNullOrWhiteSpace(named))
                 throw new ArgumentException("Bus name not specified.", nameof(named));
 
-            if (! _busses.TryGetValue(named, out IBus bus))
+            if (! _buses.TryGetValue(named, out IBus bus))
             {
                 throw new InvalidOperationException(
                     $"The bus named: {named} has not been configured.  Check application configuration.");
@@ -214,7 +215,7 @@ namespace NetFusion.RabbitMQ.Modules
         {
             if (! dispose || _disposed) return;
 
-            foreach(IBus bus in _busses.Values)
+            foreach(IBus bus in _buses.Values)
             {
                 bus.Dispose();
             }

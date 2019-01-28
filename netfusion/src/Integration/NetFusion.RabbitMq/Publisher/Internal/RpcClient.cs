@@ -9,14 +9,14 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
 {
     /// <summary>
     /// Manages the publishing of an RPC style message and correlates the response
-    /// received in the reply queue back to the orginating command.
+    /// received in the reply queue back to the originating command.
     /// </summary>
     internal class RpcClient : IRpcClient
     {
         private readonly string _busName;
         private ILogger _logger;
 
-        // Dictionary containing the pending task associated with the orginating 
+        // Dictionary containing the pending task associated with the originating 
         // sent outgoing command keyed by correlation id.  
         private readonly ConcurrentDictionary<string, RpcPendingRequest> _pendingRpcRequests;
 
@@ -129,7 +129,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                 autoDelete: true);
 
             // Consumes the reply queue and determines the pending task associated with the
-            // orginating sent command and sets the result to mark the task completed.
+            // originating sent command and sets the result to mark the task completed.
             Bus.Advanced.Consume(queue, 
                 (msgBody, msgProps, msgReceiveInfo) => {
 

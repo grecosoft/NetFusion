@@ -16,7 +16,7 @@ using NetFusion.RabbitMQ.Metadata;
 namespace NetFusion.RabbitMQ.Publisher
 {
     /// <summary>
-    /// Message publisher implemention that dispatches messages to RabbitMQ having an associated
+    /// Message publisher implementation that dispatches messages to RabbitMQ having an associated
     /// exchange.  Responsible for creating associated message exchanges and delivering messages
     /// when published. 
     /// 

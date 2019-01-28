@@ -6,7 +6,7 @@ using NetFusion.Messaging.Modules;
 namespace NetFusion.Azure.Messaging.Subscriber.Internal
 {
     /// <summary>
-    /// Interface implementined to link a message handler method
+    /// Interface implemented to link a message handler method
     /// to a specific type of namespace item.
     /// </summary>
     public interface ISubscriberLinker

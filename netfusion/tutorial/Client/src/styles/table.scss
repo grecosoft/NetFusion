@@ -1,0 +1,46 @@
+.boondocks-table {
+    width: 100%;
+    border-radius: 50px;
+
+    .mat-header-cell {
+        font-size: 12px;
+        font-weight: bold;
+        color: $definition-header-text;
+        font-style: italic;
+    }
+
+    .mat-header-row {
+        min-height: 32px;
+        .mat-icon-button {
+            height: 32px;
+            line-height: 32px;
+        }
+    }
+
+    .mat-row {
+        min-height: 32px;
+
+        .mat-cell {
+            font-size: 12px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            padding-left: 5px;
+          
+            span.row-nav {
+                text-decoration: underline;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            .mat-icon-button {
+                height: 32px;
+                line-height: 32px;
+            }
+        }
+
+        &.selected-row {
+            background-color: #f0f8ff;
+        }
+    }
+
+}

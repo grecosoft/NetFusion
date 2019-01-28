@@ -31,12 +31,12 @@ namespace NetFusion.RabbitMQ.Settings
         public int? PerQueueMessageTtl { get; set; }
 
          /// <summary>
-        ///  Determines an exchange's name can remain unused before it is automatically deleted by the server.
+        ///  Determines an exchange name can remain unused before it is automatically deleted by the server.
         /// </summary>
         public string DeadLetterExchange { get; set;}
 
         /// <summary>
-        /// Determines an exchange's name can remain unused before it is automatically deleted by the server.
+        /// Determines an exchange name can remain unused before it is automatically deleted by the server.
         /// </summary>
         public string DeadLetterRoutingKey { get; set;}
 

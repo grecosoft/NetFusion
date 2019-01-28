@@ -22,6 +22,8 @@ namespace NetFusion.Messaging.Config
             PublisherTypes = _messagePublisherTypes.AsReadOnly();
             EnricherTypes = _messageEnrichers.AsReadOnly();
             
+            // Default set of message enrichers.  If not desired, the host
+            // application's configuration can clear.
             AddMessageEnricher<CorrelationEnricher>();
             AddMessageEnricher<DateReceivedEnricher>();
         }

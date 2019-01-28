@@ -1,0 +1,32 @@
+<span mat-dialog-title class="dialog-title">{{appName}} Login</span>
+
+<form autocomplete="off" [formGroup]="credentials" (ngSubmit)="onSubmit()">
+    <mat-dialog-content>
+        <mat-form-field>
+            <input formControlName="username" matInput placeholder="User Name">
+            <mat-error *ngIf="isInputInvalid('username')">
+                User Name Required.
+            </mat-error>  
+        </mat-form-field>
+    
+        <mat-form-field>
+            <input type="password" formControlName="password" matInput placeholder="Password">
+            <mat-error *ngIf="isInputInvalid('password')">
+                Password Required.
+            </mat-error>  
+        </mat-form-field>        
+    </mat-dialog-content>
+
+     <span *ngIf="credentials.dirty" class="input-val-message">{{message}}</span>
+
+    <mat-dialog-actions>
+        <button type="submit" mat-raised-button color="primary" [disabled]="!credentials.valid">Login</button>
+        <button type="button" mat-raised-button (click)="onCancel()">Cancel</button>
+    </mat-dialog-actions>
+</form>
+
+
+
+
+
+

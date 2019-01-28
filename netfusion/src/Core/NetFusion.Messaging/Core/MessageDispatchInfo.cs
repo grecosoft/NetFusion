@@ -28,7 +28,7 @@ namespace NetFusion.Messaging.Core
 
         /// <summary>
         /// The component containing the method that can handle the message. All types
-        /// implementing the IMessageConsumer are scanned for message hander methods.
+        /// implementing the IMessageConsumer are scanned for message handler methods.
         /// </summary>
         /// <returns>Message consumer runtime type.</returns>
         public Type ConsumerType { get; set; }
@@ -188,13 +188,13 @@ namespace NetFusion.Messaging.Core
         {
             // If we are processing a result for a command, the result
             // needs to be set.  
-            if (!(message is ICommand command))
+            if (! (message is ICommand command))
             {
                 return null;
             }
            
             // A Task containing a result is being returned so get the result
-            // from the returned task and set it as the commands's result:
+            // from the returned task and set it as the command result:
             if (result != null && IsAsyncWithResult)
             {
                 dynamic resultTask = result;

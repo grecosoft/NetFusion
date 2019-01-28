@@ -3,18 +3,18 @@
 namespace NetFusion.Azure.Messaging.Publisher.Internal
 {
     /// <summary>
-    /// Interface represeting an item (i.e. Queue/Topic) that can be created within \
+    /// Interface representing an item (i.e. Queue/Topic) that can be created within 
     /// an Azure namespace.
     /// </summary>
     public interface INamespaceItem
     {
         /// <summary>
-        /// The namespace one which the object exists.
+        /// The namespace on which the object exists.
         /// </summary>
         string Namespace { get; }
         
         /// <summary>
-        /// The name of the object assocated with the namespace (i.e. Queue/Topic).
+        /// The name of the object associated with the namespace (i.e. Queue/Topic).
         /// </summary>
         string Name { get; }
         

@@ -1,0 +1,71 @@
+version: '3.1'
+services:
+    rabbit:
+        container_name: rabbit-dev
+        hostname: rabbit-dev-host
+        image: rabbitmq:3-management
+        environment:
+            - RABBITMQ_LOGS=/var/log/rabbitmq/rabbit.log
+        volumes:
+            - rabbit_data:/var/lib/rabbitmq
+            - rabbit_logs:/var/log/rabbitmq
+        ports:
+            - 5682:5672
+            - 15682:15672
+
+    redis:
+        container_name: redis-dev
+        hostname: redis-dev-host
+        image: redis
+        command: redis-server --appendonly yes
+        volumes:
+            - redis_data:/data
+        ports:
+            - 6389:6379
+
+    mongodb:
+        container_name: mongo-dev
+        hostname: mongo-dev-host
+        image: mongo:latest
+        environment:
+            - MONGO_DATA_DIR=/data/db
+            - MONGO_LOG_DIR=/data/logs
+        volumes:
+            - mongo_data:/data/db
+            - mongo_logs:/data/logs
+        ports:
+            - 27027:27017
+
+    seq:
+        container_name: seq-dev
+        hostname: seq-dev-host
+        image: datalust/seq:latest
+        volumes:
+            - seq_data:/data
+        environment:
+            - ACCEPT_EULA=Y
+        ports:
+            - 5351:5341
+            - 8051:80
+
+volumes:
+    rabbit_data:
+        external:
+            name: dev-rabbit_data
+    rabbit_logs:
+        external:
+            name: dev-rabbit_logs
+    redis_data:
+        external:
+            name: dev-rabbit_data
+    mongo_data:
+        external:
+            name: dev-mongo_data
+    mongo_logs:
+        external:
+            name: dev-mongo_logs
+    seq_data:
+        external:
+            name: dev-seq_data
+
+

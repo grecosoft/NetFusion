@@ -27,12 +27,12 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             
             // Obtain the subscriber attribute so the definition metadata
             // can be retrieved.
-            var queueAttrib = dispatchInfo.MessageHandlerMethod
+            var queueAttribute = dispatchInfo.MessageHandlerMethod
                 .GetCustomAttribute<SubscriberQueueAttribute>();
 
             DispatchInfo = dispatchInfo;
-            QueueMeta = queueAttrib.QueueFactory.CreateQueueMeta(queueAttrib);
-            QueueMeta.QueueFactory = queueAttrib.QueueFactory;
+            QueueMeta = queueAttribute.QueueFactory.CreateQueueMeta(queueAttribute);
+            QueueMeta.QueueFactory = queueAttribute.QueueFactory;
             
             ApplyScopedQueueName(QueueMeta);
         }
@@ -51,12 +51,12 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         {
             if (meta.AppendHostId)
             {
-                meta.SetScopedNamed($"{meta.QueueName}->({_hostId})");
+                meta.SetScopedName($"{meta.QueueName}->({_hostId})");
             }
 
             if (meta.AppendUniqueId)
             {
-                meta.SetScopedNamed($"{meta.QueueName}<-({Guid.NewGuid()})");
+                meta.SetScopedName($"{meta.QueueName}<-({Guid.NewGuid()})");
             }
             
             

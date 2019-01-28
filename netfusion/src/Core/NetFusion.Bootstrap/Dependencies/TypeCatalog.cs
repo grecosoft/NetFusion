@@ -62,29 +62,60 @@ namespace NetFusion.Bootstrap.Dependencies
             return this;
         }
 
-        public ITypeCatalog AsImplementedInterfaces(Func<Type, bool> filter, ServiceLifetime lifetime)
+        public ITypeCatalog AsImplementedInterface(Func<Type, bool> filter, ServiceLifetime lifetime)
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
 
             foreach (Type matchingType in _types.Where(filter))
             {
-                foreach (Type serviceType in matchingType.GetInterfaces())
-                {
-                    Services.Add(new ServiceDescriptor(serviceType, matchingType, lifetime));
-                }
+                Type serviceType = GetServiceInterface(matchingType);
+                Services.Add(new ServiceDescriptor(serviceType, matchingType, lifetime));
             }
 
             return this;
         }
 
-        public ITypeCatalog AsImplementedInterfaces(string typeSuffix, ServiceLifetime lifetime)
+        public ITypeCatalog AsImplementedInterface(string typeSuffix, ServiceLifetime lifetime)
         {
             if (string.IsNullOrWhiteSpace(typeSuffix))
                 throw new ArgumentException("Type suffix not specified.");
 
-            return AsImplementedInterfaces(
+            return AsImplementedInterface(
                 t => t.Name.EndsWith(typeSuffix, StringComparison.Ordinal),
                 lifetime);
+        }
+
+        private static Type GetServiceInterface(Type serviceType)
+        {
+            Type[] serviceInterfaces = serviceType.GetInterfaces();
+            if (! serviceInterfaces.Any())
+            {
+                throw new InvalidOperationException(
+                    $"Interface for service type {serviceType} could not be determined." + 
+                    "Service does not implement any interfaces.");
+            }
+
+            // If there is only one supported interface, use this as the service interface.
+            if (serviceInterfaces.Length == 1)
+            {
+                return serviceInterfaces.First();
+            }
+
+            // If there are more than on supported interface, select one based on conventions.
+            if (serviceInterfaces.Length >= 1)
+            {
+                Type[] serviceInterfacesByConvention = serviceInterfaces.Where(
+                    t => t.Name.StartsWith("I" + serviceType.Name, StringComparison.Ordinal)).ToArray();
+
+                if (serviceInterfacesByConvention.Length == 1)
+                {
+                    return serviceInterfacesByConvention.First();
+                }
+            }
+
+            throw new InvalidOperationException(
+                $"Interface for service type {serviceType} could not be determined." +
+                "Service implements more than one possible interface.");
         }
     }
 }

@@ -10,8 +10,7 @@ namespace NetFusion.EntityFramework
     public interface IEntityTypeMapping : IKnownPluginType
     {
         /// <summary>
-        /// Called during the module bootstrap process to add
-        /// the mapping to the database context.
+        /// Called during the module bootstrap process to add the mapping to the database context.
         /// </summary>
         /// <param name="modelBuilder">The model builder associated with the context.</param>
         void AddMappings(ModelBuilder modelBuilder);

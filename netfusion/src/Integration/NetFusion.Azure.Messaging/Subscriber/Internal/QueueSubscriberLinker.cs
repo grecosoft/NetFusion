@@ -4,7 +4,7 @@ using Amqp;
 namespace NetFusion.Azure.Messaging.Subscriber.Internal
 {
     /// <summary>
-    /// Implemention specific logic for subscribing to a Namespace defined queue.
+    /// Implementation specific logic for subscribing to a Namespace defined queue.
     /// When a command is received on the corresponding queue, the associated event
     /// handler is invoked.   
     /// </summary>
@@ -13,12 +13,12 @@ namespace NetFusion.Azure.Messaging.Subscriber.Internal
     {
         public void LinkSubscriber(Session session, NamespaceItemSubscriber subscriber)
         {
-            var topicAttrib = (QueueAttribute)subscriber.NamespaceItemAttrib;
+            var topicAttribute = (QueueAttribute)subscriber.NamespaceItemAttribute;
             
             // Create a AMQP receiver link used to register handler method:
             var receiverLink = new ReceiverLink(session, 
                 Guid.NewGuid().ToString(), 
-                topicAttrib.QueueName);
+                topicAttribute.QueueName);
             
             ReceiveMessages(subscriber, receiverLink);
         }

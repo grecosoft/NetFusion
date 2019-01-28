@@ -1,0 +1,62 @@
+<nav-toolbar [isDisplayed]="true"></nav-toolbar>
+<div class="area-content">
+    <div class="plugin-summary">
+        <h1 class="section-header">Plugin Summary</h1>
+        <div class="portal-definition-list">
+            <dl class="version-info">
+                <dt>Nuget Package</dt><dd>{{nugetPackageName}}</dd>
+                <dt>Documentation</dt><dd><a href="{{documentationUrl}}" target="_blank">View</a></dd>
+                <dt>Container Scope</dt><dd>{{containerScope}}</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="plugin-overview">
+        <h1 class="section-header">Overview</h1>
+        <ul>
+            <li>Extends .net Core configuration.</li>
+            <li>Allows for configuration classes to be injected directly into dependent components.</li>
+            <li>Supports validation of loaded configuration values.</li>
+        </ul>
+    </div>
+
+    <div class="plugin-usage">
+        <h1 class="section-header">Usage Summary</h1>
+        <ul>
+            <li>Configuration class implements the <code-viewer type="net-fusion" name="Core/NetFusion.Settings/IAppSettings.cs">IAppSettings</code-viewer> interface.</li>
+            <li>Configuration class decorated with the <code-viewer type="net-fusion" name="Core/NetFusion.Settings/ConfigurationSectionAttribute.cs">ConfigurationSection</code-viewer> attribute.</li>
+            <li>The ConfigurationSection specifies the path to the section in the configuration.</li>
+            <li>The path is a colon separate path.</li>
+            <li>Instance of the settings class can be injected into a dependent component.</li>
+        </ul>
+    </div>
+
+    <div class="plugin-suggestions">
+        <h1 class="section-header">Suggestions</h1>
+        <ul>
+            <li>If the settings is domain-specific, it can be placed in the solution's domain project.</li>
+            <li>If the settings are for configuring a specific technology implementation, it can be placed in the solution's infra project.</li>
+        </ul>
+    </div>
+    <div class="plugin-examples">
+        <h1 class="section-header">Examples</h1>
+        <p>
+            This examples demonstrates the configuration settings being injected into a controller.
+        </p>
+        <div class="plugin-example">
+            <h2 class="section-header">Injecting Configuration Settings</h2>
+            <p>
+                This example defines the class <code-viewer type="tutorial-components" name="Service.Domain/Entities/CalculationSettings.cs">CalculationSettings</code-viewer> 
+                and injects it into the <code-viewer type="tutorial-webapi" name="Controllers/Core/SettingsController.cs">SettingsController</code-viewer> class.  The following
+                is the <code-viewer type="tutorial-webapi" name="appsettings.json">appsettings.json</code-viewer> configuration file used by this example. 
+                 
+            </p>
+            <div class="inputs">
+                <button type="submit" mat-raised-button (click)="loadSettings()" color="primary">Load Configuration</button>
+            </div>
+            <div class="results">
+                <json-viewer [json]="injectedSettings" class="viewer"></json-viewer>
+            </div>
+        </div>
+    </div>
+</div>

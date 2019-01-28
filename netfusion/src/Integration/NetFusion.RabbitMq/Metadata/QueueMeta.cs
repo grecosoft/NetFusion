@@ -53,13 +53,13 @@ namespace NetFusion.RabbitMQ.Metadata
         /// <summary>
         /// Value containing the queue's base name appended with an unique identifier.
         /// </summary>
-        /// <param name="scopednamed">The associated scoped name.</param>
-        internal void SetScopedNamed(string scopednamed)
+        /// <param name="scopedName">The associated scoped name.</param>
+        internal void SetScopedName(string scopedName)
         {
-            if (string.IsNullOrWhiteSpace(scopednamed))
-                throw new ArgumentException("Scoped queue name not specified.", nameof(scopednamed));
+            if (string.IsNullOrWhiteSpace(scopedName))
+                throw new ArgumentException("Scoped queue name not specified.", nameof(scopedName));
             
-            ScopedQueueName = scopednamed;
+            ScopedQueueName = scopedName;
         }
         
         /// <summary>
@@ -132,12 +132,12 @@ namespace NetFusion.RabbitMQ.Metadata
         public int? PerQueueMessageTtl { get; set;}
 
         /// <summary>
-        ///  Determines an exchange's name can remain unused before it is automatically deleted by the server.
+        ///  Determines an exchange name can remain unused before it is automatically deleted by the server.
         /// </summary>
         public string DeadLetterExchange { get; set;}
 
         /// <summary>
-        /// Determines an exchange's name can remain unused before it is automatically deleted by the server.
+        /// Determines an exchange name can remain unused before it is automatically deleted by the server.
         /// </summary>
         public string DeadLetterRoutingKey { get; set;}
 

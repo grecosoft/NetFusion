@@ -27,6 +27,7 @@ namespace NetFusion.Messaging.Types
         /// <param name="result">The consumer's result.</param>
         public virtual void SetResult(object result)
         {
+            // The query result can be null.
             Result = result;
         }
     }

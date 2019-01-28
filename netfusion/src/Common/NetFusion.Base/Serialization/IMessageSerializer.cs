@@ -4,9 +4,7 @@ using NetFusion.Base.Plugins;
 namespace NetFusion.Base.Serialization
 {
     /// <summary>
-    /// Implementations determine how a value is serialized when
-    /// published to an exchange and deserialized when received 
-    /// on a queue bound to the exchange.
+    /// Implementations determine how a value is serialized and deserialized.
     /// </summary>
     public interface IMessageSerializer : IKnownPluginType
     {
@@ -14,17 +12,21 @@ namespace NetFusion.Base.Serialization
         /// The content type (example: application/json).
         /// </summary>
         string ContentType { get; }
+        
+        /// <summary>
+        /// The optional encoding of the serialized data.
+        /// </summary>
+        string EncodingType { get; }
 
         /// <summary>
-        /// Returns a serialized value that can be published to an exchange.
+        /// Returns serialized representation of the object.
         /// </summary>
         /// <param name="value">The value to serialize.</param>
         /// <returns>Serialized value.</returns>
         byte[] Serialize(object value);
 
         /// <summary>
-        /// Returns a value that has been deserialized.  Used to deserialize 
-        /// a message received on a queue,
+        /// Returns a value that has been deserialized from its serialized representation.
         /// </summary>
         /// <param name="value">Byte array containing serialized value.</param>
         /// <param name="valueType">The type of the value contained within
@@ -33,8 +35,7 @@ namespace NetFusion.Base.Serialization
         object Deserialize(byte[] value, Type valueType);
 
         /// <summary>
-        /// Returns a value that has been deserialized.  Used to 
-        /// deserialize a message received on a queue,</summary>
+        /// Returns a value that has been deserialized from its serialized representation.</summary>
         /// <typeparam name="T">The type to case the deserialized result.</typeparam>
         /// <param name="value">Byte array containing serialized value.</param>
         /// <param name="valueType">The type of the value contained within

@@ -7,20 +7,20 @@ namespace NetFusion.Azure.Messaging.Subscriber.Internal
 {
     /// <summary>
     /// Class aggregating the information about a message handler
-    /// and its assocated namespace item to which it should be bound.
+    /// and its associated namespace item to which it should be bound.
     /// </summary>
     public class NamespaceItemSubscriber
     {
         public MessageDispatchInfo DispatchInfo { get; }
-        public NamespaceAttribute NamespaceAttrib { get; }
-        public NamespaceItemAttribute NamespaceItemAttrib { get; }
+        public NamespaceAttribute NamespaceAttribute { get; }
+        public NamespaceItemAttribute NamespaceItemAttribute { get; }
         public IReceiverLink ReceiverLink { get; private set; }
         
         public NamespaceItemSubscriber(MessageDispatchInfo dispatchInfo)
         {
             DispatchInfo = dispatchInfo ?? throw new ArgumentNullException(nameof(dispatchInfo));
-            NamespaceAttrib = dispatchInfo.ConsumerType.GetAttribute<NamespaceAttribute>();
-            NamespaceItemAttrib = dispatchInfo.MessageHandlerMethod.GetAttribute<NamespaceItemAttribute>();
+            NamespaceAttribute = dispatchInfo.ConsumerType.GetAttribute<NamespaceAttribute>();
+            NamespaceItemAttribute = dispatchInfo.MessageHandlerMethod.GetAttribute<NamespaceItemAttribute>();
         }
         
         // Any dispatch corresponding to a method decorated with a derived

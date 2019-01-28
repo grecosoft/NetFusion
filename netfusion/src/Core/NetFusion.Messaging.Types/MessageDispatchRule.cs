@@ -22,7 +22,7 @@ namespace NetFusion.Messaging.Types
         /// Implemented by a derived dispatch rule to determine if the message should be handled.
         /// </summary>
         /// <param name="message">The published message.</param>
-        /// <returns>True if the hander should be invoked.  Otherwise, False.</returns>
+        /// <returns>True if the handler should be invoked.  Otherwise, False.</returns>
         protected abstract bool IsMatch(TMessage message);
     }
 }

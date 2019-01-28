@@ -112,13 +112,13 @@ namespace NetFusion.Bootstrap.Container
         {
             foreach (Plugin plugin in plugins)
             {
-                foreach (IPluginModule module in plugin.IncludedModules)
+                foreach (IPluginModule module in plugin.Modules)
                 {
                     module.Context = new ModuleContext(this, plugin, module);
                     module.Initialize();
                 }
 
-                foreach (IPluginModule module in plugin.IncludedModules)
+                foreach (IPluginModule module in plugin.Modules)
                 {
                     module.Configure();
                 }
@@ -155,7 +155,7 @@ namespace NetFusion.Bootstrap.Container
         private static void ScanPluginForServices(Plugin plugin, IServiceCollection services)
         {
             var typeCatalog = services.CreateCatalog(plugin.PluginTypes);
-            foreach (IPluginModule module in plugin.IncludedModules)
+            foreach (IPluginModule module in plugin.Modules)
             {
                 module.ScanPlugin(typeCatalog);
             }
@@ -165,7 +165,7 @@ namespace NetFusion.Bootstrap.Container
         // any needed service components with the Service Collection.
         private static void RegisterServices(Plugin plugin, IServiceCollection services)
         {
-            foreach (IPluginModule module in plugin.IncludedModules)
+            foreach (IPluginModule module in plugin.Modules)
             {
                 module.RegisterServices(services);
             }
@@ -178,7 +178,7 @@ namespace NetFusion.Bootstrap.Container
              IEnumerable<PluginType> sourceTypes)
         {
             var typeCatalog = services.CreateCatalog(sourceTypes.Except(plugin.PluginTypes));
-            foreach (IPluginModule module in plugin.IncludedModules)
+            foreach (IPluginModule module in plugin.Modules)
             {
                 module.ScanAllOtherPlugins(typeCatalog);
             }
@@ -189,7 +189,7 @@ namespace NetFusion.Bootstrap.Container
             IEnumerable<PluginType> appPluginTypes = GetPluginTypes(PluginTypes.AppComponentPlugin, PluginTypes.AppHostPlugin);
             var typeCatalog = services.CreateCatalog(appPluginTypes);
 
-            foreach (var module in plugin.IncludedModules)
+            foreach (var module in plugin.Modules)
             {
                 module.ScanApplicationPlugins(typeCatalog);
             }
@@ -236,7 +236,7 @@ namespace NetFusion.Bootstrap.Container
 
             // Last phase to allow any modules to execute any processing that
             // might be dependent on another module being started.
-            foreach (IPluginModule module in Plugins.SelectMany(p => p.IncludedModules))
+            foreach (IPluginModule module in AllPluginModules)
             {
                 module.RunModule(services);
             }
@@ -244,7 +244,7 @@ namespace NetFusion.Bootstrap.Container
 
         private static void StartPluginModules(IServiceProvider services, IEnumerable<Plugin> plugins)
         {
-            foreach (IPluginModule module in plugins.SelectMany(p => p.IncludedModules))
+            foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
             {
                 module.StartModule(services);
             }
@@ -267,7 +267,7 @@ namespace NetFusion.Bootstrap.Container
 
         private static void StopPluginModules(IServiceProvider services, IEnumerable<Plugin> plugins)
         {
-            foreach (IPluginModule module in plugins.SelectMany(p => p.IncludedModules))
+            foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
             {
                 module.StopModule(services);
             }

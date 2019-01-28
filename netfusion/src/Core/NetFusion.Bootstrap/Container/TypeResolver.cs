@@ -149,7 +149,9 @@ namespace NetFusion.Bootstrap.Container
             // Create instances of all plugin-modules.  These modules are what will be calling during 
             // the bootstrap process to allow plug-ins to register services and to initialize and cache 
             // any information needed during execution of its services during normal application operation.
-            var pluginModules = pluginTypes.CreateInstancesDerivingFrom<IPluginModule>().ToArray();
+            var pluginModules = pluginTypes.CreateInstancesDerivingFrom<IPluginModule>()
+                .Where(m => ! m.IsExcluded)
+                .ToArray();
 
             plugin.SetPluginResolvedTypes(pluginTypes, pluginModules);
         }
@@ -169,7 +171,7 @@ namespace NetFusion.Bootstrap.Container
             knownTypeProps.ForEach(ktp => SetKnownPropertyInstances(forModule, ktp, fromPluginTypes));
         }
 
-        private IEnumerable<PropertyInfo> GetKnownTypeProperties(IPluginModule module)
+        private static IEnumerable<PropertyInfo> GetKnownTypeProperties(IPluginModule module)
         {
             const BindingFlags bindings = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 

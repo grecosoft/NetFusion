@@ -90,7 +90,7 @@ namespace NetFusion.Base.Entity
             string prefixedNamed = GetPropertyPrefixedName(context, name);
             if (_attributes.ContainsKey(prefixedNamed))
             {
-                return (T)GetValue(name, context);
+                return (T)_attributes[prefixedNamed];
             }
 
             return defaultValue;

@@ -55,7 +55,7 @@ namespace NetFusion.Messaging.Core
             catch (QueryDispatchException ex)
             {
                 // Log the details of the dispatch exception and rethrow.
-                _logger.LogErrorDetails(MessagingLogEvents.MessagingException, ex, "Excepton dispatching query.");
+                _logger.LogErrorDetails(MessagingLogEvents.MessagingException, ex, "Exception dispatching query.");
                 throw;
             }
             catch (Exception ex)
@@ -72,15 +72,15 @@ namespace NetFusion.Messaging.Core
         private async Task InvokeDispatcher(QueryDispatchInfo dispatcher, IQuery query, CancellationToken cancellationToken)
         {
             var consumer = (IQueryConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
-
-            var preFilters = _filterModule.QueryFilterTypes.Select(qf => _services.GetRequiredService(qf)).OfType<IPreQueryFilter>();
-            var postFilters = _filterModule.QueryFilterTypes.Select(qf => _services.GetRequiredService(qf)).OfType<IPostQueryFilter>();
+            var configuredFilters = _filterModule.QueryFilterTypes.Select(ft => _services.GetRequiredService(ft))
+                .Cast<IQueryFilter>()
+                .ToArray();
         
             LogQueryDispatch(query, consumer);
 
-            await ApplyFilters(query, preFilters, (f, q) => (f as IPreQueryFilter).OnPreExecute(q));
+            await ApplyFilters<IPreQueryFilter>(query, configuredFilters, (f, q) => f.OnPreExecute(q));
             await dispatcher.Dispatch(query, consumer, cancellationToken);
-            await ApplyFilters(query, postFilters, (f, q) => (f as IPostQueryFilter).OnPostExecute(q));
+            await ApplyFilters<IPostQueryFilter>(query, configuredFilters, (f, q) => f.OnPostExecute(q));
         }
 
         private void LogQueryDispatch(IQuery query, IQueryConsumer consumer)
@@ -89,28 +89,30 @@ namespace NetFusion.Messaging.Core
         }
         
         // Executes a list of asynchronous filters and awaits their completion.  Once completed,
-        // any task error(s) are checked and raised.
-        private async Task ApplyFilters(IQuery query, IEnumerable<IQueryFilter> filters, Func<IQueryFilter, IQuery, Task> executeFilter)
+        // any task error(s) are checked and raised.  The past list of query filters are filtered
+        // by the specified filter type of T.
+        private async Task ApplyFilters<T>(IQuery query, IEnumerable<IQueryFilter> filters, 
+            Func<T, IQuery, Task> executeFilter) where T : class, IQueryFilter
         {
-            filters = filters.ToArray();
+            var filtersByType = filters.OfType<T>().ToArray();
             
             _logger.LogTraceDetails(MessagingLogEvents.QueryDispatch, "Applying Query Filters",
                 new {
-                    FilterTypes = filters.Select(f => f.GetType().FullName).ToArray()
+                    FilterTypes = filtersByType.Select(f => f.GetType().FullName).ToArray()
                 });
 
-            TaskListItem<IQueryFilter>[] taskList = null;
+            TaskListItem<T>[] taskList = null;
 
             try
             {
-                taskList = filters.Invoke(query, executeFilter);
+                taskList = filtersByType.Invoke(query, executeFilter);
                 await taskList.WhenAll();
             }
             catch (Exception ex)
             {
                 if (taskList != null)
                 {
-                    var filterErrors = taskList.GetExceptions(ti => new QueryFilterException(ti));
+                    var filterErrors = taskList.GetExceptions(ti => new QueryFilterException<T>(ti));
                     if (filterErrors.Any())
                     {
                         throw new QueryDispatchException("Exception when invoking query filters.", filterErrors);

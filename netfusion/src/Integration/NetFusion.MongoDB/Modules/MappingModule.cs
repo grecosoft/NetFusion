@@ -13,7 +13,7 @@ namespace NetFusion.MongoDB.Modules
     /// </summary>
     public class MappingModule : PluginModule, IMongoMappingModule
     {
-        private static readonly object _mapLock = new object();
+        private static readonly object MapLock = new object();
 
         // IMongoMappingModule:
         public IEnumerable<IEntityClassMap> Mappings { get; private set; }
@@ -21,11 +21,11 @@ namespace NetFusion.MongoDB.Modules
         // Configures MongoDB driver with mappings.
         public override void Configure()
         {
-            lock(_mapLock)
+            lock(MapLock)
             {
                 foreach (IEntityClassMap map in Mappings)
                 {
-                    if (!BsonClassMap.IsClassMapRegistered(map.EntityType))
+                    if (! BsonClassMap.IsClassMapRegistered(map.EntityType))
                     {
                         map.AddKnownPluginTypes(Context.AllPluginTypes);
                         BsonClassMap.RegisterClassMap(map.ClassMap);
@@ -56,7 +56,7 @@ namespace NetFusion.MongoDB.Modules
             if (knownType == null)
             {
                 throw new InvalidOperationException(
-                    $"The type of: {knownType.FullName} is not a configured know type of: {mappedEntityType.FullName}");
+                    $"The type of: {knownEntityType.FullName} is not a configured know type of: {mappedEntityType.FullName}");
             }
 
             var knowTypeMap = GetEntityMap(knownType);

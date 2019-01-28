@@ -55,6 +55,16 @@ namespace NetFusion.Bootstrap.Container
         IAppContainer WithServices(Action<IServiceCollection> registration);
 
         /// <summary>
+        /// Allows a delegate to be specified that is called allowing the host to register additional
+        /// services and to optionally return a custom service provider instance such as created from
+        /// Autofac or other open-source DI container with .net core integration.
+        /// </summary>
+        /// <param name="factory">Delegate used to add service registrations and returns the
+        /// customer service provider to be used.</param>
+        /// <returns>The application container.</returns>
+        IAppContainer WithServices(Func<IServiceCollection, IServiceProvider> factory);
+        
+        /// <summary>
         /// Loads and initializes all of the plug-ins but does not start their execution.
         /// </summary>
         /// <returns>Reference to the loaded container that can be started.</returns>

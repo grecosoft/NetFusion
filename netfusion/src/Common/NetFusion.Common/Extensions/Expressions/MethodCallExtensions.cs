@@ -14,17 +14,17 @@ namespace NetFusion.Common.Extensions.Expressions
             UnaryExpression unaryExpression = expression.Body as UnaryExpression;
 
             MethodCallExpression methodCallExpression =
-                 unaryExpression.Operand as MethodCallExpression;
+                 unaryExpression?.Operand as MethodCallExpression;
 
             ConstantExpression constantExpression =
                  methodCallExpression?.Object as ConstantExpression;
 
-            MethodInfo methodInfo;
+            MethodInfo methodInfo = null;
             if (constantExpression != null)
             {
                 methodInfo = constantExpression.Value as MethodInfo;
             }
-            else
+            else if (methodCallExpression != null)
             {
                 constantExpression = methodCallExpression.Arguments
                     .FirstOrDefault(a =>

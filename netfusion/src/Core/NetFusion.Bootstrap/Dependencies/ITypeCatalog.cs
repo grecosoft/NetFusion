@@ -38,21 +38,27 @@ namespace NetFusion.Bootstrap.Dependencies
         ITypeCatalog AsDescriptor(Func<Type, bool> filter, Func<Type, ServiceDescriptor> describedBy);
 
         /// <summary>
-        /// Registers the types matching the provided filters as services based on the
-        /// interfaces implemented by the type.
+        /// Registers the service implementation types matching the provided filter as an interface
+        /// matching a convention.  An exception is raised if the service implementation type supports
+        /// zero interfaces.  If multiple interfaces are supported, one is selected starting with the 
+        /// name of the service implementation type prefixed with "I".  If a single service interface
+        /// type cannot be determined, an exception is thrown. 
         /// </summary>
         /// <param name="filter">The predicate used to find matching types.</param>
         /// <param name="lifetime">The lifetime of the registered service.</param>
         /// <returns>Reference to the type catalog.</returns>
-        ITypeCatalog AsImplementedInterfaces(Func<Type, bool> filter, ServiceLifetime lifetime);
+        ITypeCatalog AsImplementedInterface(Func<Type, bool> filter, ServiceLifetime lifetime);
 
         /// <summary>
-        /// Registers types named with the provided suffix value as services based on the
-        /// interfaces implemented by the type.
+        /// Registers the service implementation types having a name ending in a suffix as an interface
+        /// matching a convention.  An exception is raised if the service implementation type supports
+        /// zero interfaces.  If multiple interfaces are supported, one is selected starting with the 
+        /// name of the service implementation type prefixed with "I".  If a single service interface
+        /// type cannot be determined, an exception is thrown. 
         /// </summary>
         /// <param name="typeSuffix">The suffix type name used to find matching types.</param>
         /// <param name="lifetime">The lifetime of the registered service.</param>
         /// <returns>Reference to the type catalog.</returns>
-        ITypeCatalog AsImplementedInterfaces(string typeSuffix, ServiceLifetime lifetime);
+        ITypeCatalog AsImplementedInterface(string typeSuffix, ServiceLifetime lifetime);
     }
 }
