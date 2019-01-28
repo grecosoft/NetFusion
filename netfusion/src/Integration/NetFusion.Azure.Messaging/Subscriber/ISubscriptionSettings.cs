@@ -21,7 +21,14 @@ namespace NetFusion.Azure.Messaging.Subscriber
         /// <summary>
         /// Called to allow settings to be configured.
         /// </summary>
-        /// <returns>Task</returns>
+        /// <returns>Task.</returns>
         Task ConfigureSettings();
+
+        /// <summary>
+        /// Called to allow settings to be deleted if they should not
+        /// persist between host executions.
+        /// </summary>
+        /// <returns>Task.</returns>
+        Task CleanupSettings();
     }
 }

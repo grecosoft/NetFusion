@@ -30,7 +30,7 @@ namespace NetFusion.Azure.Messaging.Subscriber
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            return Task.CompletedTask;
+            return _subscriptionSettings.CleanupSettings();
         }
     }
 }

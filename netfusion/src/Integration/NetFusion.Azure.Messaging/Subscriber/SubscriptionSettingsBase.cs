@@ -41,6 +41,11 @@ namespace NetFusion.Azure.Messaging.Subscriber
             return Task.CompletedTask;
         }
 
+        public virtual Task CleanupSettings()
+        {
+            return Task.CompletedTask;
+        }
+
         /// <summary>
         /// Adds a mapping for a topic's subscription defined within code to an actual host
         /// specific created subscription.
@@ -97,6 +102,11 @@ namespace NetFusion.Azure.Messaging.Subscriber
         }
 
         public Task ConfigureSettings()
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task CleanupSettings()
         {
             return Task.CompletedTask;
         }
