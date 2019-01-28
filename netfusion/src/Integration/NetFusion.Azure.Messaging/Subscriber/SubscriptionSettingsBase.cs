@@ -13,11 +13,11 @@ namespace NetFusion.Azure.Messaging.Subscriber
     /// </summary>
     public class SubscriptionSettingsBase : ISubscriptionSettings
     {
-        private Dictionary<string, List<SubscriptionMapping>> Mappings { get; }
+        private readonly Dictionary<string, List<SubscriptionMapping>> _mappings;
 
         public SubscriptionSettingsBase()
         {
-            Mappings = new Dictionary<string, List<SubscriptionMapping>>();
+            _mappings = new Dictionary<string, List<SubscriptionMapping>>();
         }
 
         public string GetMappedSubscription(string namespaceName, SubscriptionMapping mapping)
@@ -25,7 +25,7 @@ namespace NetFusion.Azure.Messaging.Subscriber
             if (string.IsNullOrWhiteSpace(namespaceName))
                 throw new ArgumentException("Namespace name not specified.", nameof(namespaceName));
 
-            if (!Mappings.TryGetValue(namespaceName, out List<SubscriptionMapping> nsMappings))
+            if (!_mappings.TryGetValue(namespaceName, out List<SubscriptionMapping> nsMappings))
             {
                 return null;
             }
@@ -47,6 +47,20 @@ namespace NetFusion.Azure.Messaging.Subscriber
         }
 
         /// <summary>
+        /// Executes an action against all defined mappings.
+        /// </summary>
+        /// <param name="action">The action passed a configured mapping.</param>
+        protected void ForeachMapping(Action<SubscriptionMapping> action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+            
+            foreach (SubscriptionMapping mapping in _mappings.Values.SelectMany(m => m))
+            {
+                action(mapping);
+            }
+        }
+
+        /// <summary>
         /// Adds a mapping for a topic's subscription defined within code to an actual host
         /// specific created subscription.
         /// </summary>
@@ -59,10 +73,10 @@ namespace NetFusion.Azure.Messaging.Subscriber
             
             if (mappings == null) throw new ArgumentNullException(nameof(mappings));
             
-            if (! Mappings.TryGetValue(namespaceName, out List<SubscriptionMapping> namespaceMappings))
+            if (! _mappings.TryGetValue(namespaceName, out List<SubscriptionMapping> namespaceMappings))
             {
                 namespaceMappings = new List<SubscriptionMapping>();
-                Mappings.Add(namespaceName, namespaceMappings);
+                _mappings.Add(namespaceName, namespaceMappings);
             }
 
             foreach (var mapping in mappings)
