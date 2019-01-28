@@ -11,7 +11,8 @@ namespace NetFusion.Azure.Messaging.Subscriber.Internal
     public class QueueSubscriberLinker : SubscriberLinkerBase,
         ISubscriberLinker
     {
-        public void LinkSubscriber(Session session, NamespaceItemSubscriber subscriber)
+        public void LinkSubscriber(Session session, NamespaceItemSubscriber subscriber,
+            ISubscriptionSettings subscriptionSettings)
         {
             var topicAttribute = (QueueAttribute)subscriber.NamespaceItemAttribute;
             

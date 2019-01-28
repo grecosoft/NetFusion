@@ -14,7 +14,9 @@ namespace NetFusion.Azure.Messaging.Subscriber
         /// and binds them to their corresponding namespace item and
         /// are invoked when a message arrives.
         /// </summary>
+        /// <param name="subscriptionSettings">The configured subscription settings
+        /// provided by host application.</param>
         /// <returns>Task.</returns>
-        Task LinkHandlersToNamespaces();
+        Task LinkHandlersToNamespaces(ISubscriptionSettings subscriptionSettings);
     }
 }

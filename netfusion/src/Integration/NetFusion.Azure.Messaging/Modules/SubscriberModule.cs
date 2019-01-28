@@ -39,6 +39,11 @@ namespace NetFusion.Azure.Messaging.Modules
             _subscribers = GetNamespaceSubscribers(_dispatchModule);
         }
 
+        public override void RegisterDefaultServices(IServiceCollection services)
+        {
+            services.AddSingleton<ISubscriptionSettings, NullSubscriptionSettings>();
+        }
+
         private static NamespaceItemSubscriber[] GetNamespaceSubscribers(IMessageDispatchModule dispatchModule)
         {
             return dispatchModule.AllMessageTypeDispatchers
@@ -48,11 +53,13 @@ namespace NetFusion.Azure.Messaging.Modules
         }
 
         // Called by an application component such as an Hosted Service.
-        public async Task LinkHandlersToNamespaces()
+        public async Task LinkHandlersToNamespaces(ISubscriptionSettings subscriptionSettings)
         {
+            if (subscriptionSettings == null) throw new ArgumentNullException(nameof(subscriptionSettings));
+            
             foreach (var subscriber in _subscribers)
             {
-                await LinkSubscriber(subscriber);
+                await LinkSubscriber(subscriber, subscriptionSettings);
             }
         }
 
@@ -60,7 +67,7 @@ namespace NetFusion.Azure.Messaging.Modules
         // to the ISubscriberLinker implementation associated with the namespace item (Queue/Topic).
         // The subscriber-linker will bind the message handler to the namespace item so it will be
         // invoked when a message is received.
-        private async Task LinkSubscriber(NamespaceItemSubscriber subscriber)
+        private async Task LinkSubscriber(NamespaceItemSubscriber subscriber, ISubscriptionSettings subscriptionSettings)
         {
             Session nsSession = await _connectionModule.GetSession(subscriber.NamespaceAttribute.NamespaceName);
             ISubscriberLinker linker = subscriber.NamespaceItemAttribute.Linker;
@@ -71,7 +78,7 @@ namespace NetFusion.Azure.Messaging.Modules
             linker.LoggerFactory = Context.LoggerFactory;
             
             // Delegate to the subscriber linker implementation to handle received messages:
-            linker.LinkSubscriber(nsSession, subscriber);
+            linker.LinkSubscriber(nsSession, subscriber, subscriptionSettings);
         }
         
         protected override void Dispose(bool dispose)

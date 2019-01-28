@@ -11,13 +11,23 @@ namespace NetFusion.Azure.Messaging.Subscriber.Internal
     public class TopicSubscriberLinker : SubscriberLinkerBase,
         ISubscriberLinker
     {
-        public void LinkSubscriber(Session session, NamespaceItemSubscriber subscriber)
+        public void LinkSubscriber(Session session, NamespaceItemSubscriber subscriber,
+            ISubscriptionSettings subscriptionSettings)
         {
             var topicAttribute = (TopicAttribute)subscriber.NamespaceItemAttribute;
             
+            // Determine if the host application has provided a specific subscription 
+            // that should be used for the name specified in code.
+
+            string namespaceName = subscriber.NamespaceAttribute.NamespaceName;
+            var mapping = new SubscriptionMapping(topicAttribute.TopicName, topicAttribute.SubscriptionName);
+
+            string subscriptionName = subscriptionSettings.GetMappedSubscription(namespaceName, mapping)
+                                      ?? topicAttribute.SubscriptionName;
+            
             // Create a AMQP receiver link used to register handler method:
             var receiverLink = new ReceiverLink(session, Guid.NewGuid().ToString(), 
-                $"{topicAttribute.TopicName}/Subscriptions/{topicAttribute.SubscriptionName}");
+                $"{topicAttribute.TopicName}/Subscriptions/{subscriptionName}");
             
             ReceiveMessages(subscriber, receiverLink);
         }

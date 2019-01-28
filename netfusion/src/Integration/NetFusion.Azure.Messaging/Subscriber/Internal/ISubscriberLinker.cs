@@ -23,6 +23,9 @@ namespace NetFusion.Azure.Messaging.Subscriber.Internal
         /// <param name="session">The session to subscribe.</param>
         /// <param name="subscriber">Information about the namespace item and
         /// and the handler method to be invoked.</param>
-        void LinkSubscriber(Session session, NamespaceItemSubscriber subscriber);
+        /// <param name="subscriptionSettings">The registered subscription settings that
+        /// determines how subscriptions are mapped to host created subscriptions.</param>
+        void LinkSubscriber(Session session, NamespaceItemSubscriber subscriber, 
+            ISubscriptionSettings subscriptionSettings);
     }
 }

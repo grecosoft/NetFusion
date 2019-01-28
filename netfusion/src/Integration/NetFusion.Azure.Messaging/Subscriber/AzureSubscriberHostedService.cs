@@ -13,15 +13,19 @@ namespace NetFusion.Azure.Messaging.Subscriber
     public class AzureSubscriberHostedService : IHostedService
     {
         private readonly ISubscriberModule _subscriberModule;
+        private readonly ISubscriptionSettings _subscriptionSettings;
         
-        public AzureSubscriberHostedService(ISubscriberModule subscriberModule)
+        public AzureSubscriberHostedService(ISubscriberModule subscriberModule, 
+            ISubscriptionSettings subscriptionSettings)
         {
             _subscriberModule = subscriberModule ?? throw new ArgumentNullException(nameof(subscriberModule));
+            _subscriptionSettings = subscriptionSettings ?? throw new ArgumentNullException(nameof(subscriptionSettings));
         }
         
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
-            return _subscriberModule.LinkHandlersToNamespaces();
+            await _subscriptionSettings.ConfigureSettings();
+            await _subscriberModule.LinkHandlersToNamespaces(_subscriptionSettings);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
