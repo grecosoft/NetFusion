@@ -117,7 +117,7 @@ namespace NetFusion.Azure.Messaging.Modules
         {
             NamespaceSettings settings = nsSession.Settings;
             
-            var address = new Address(settings.Namespace, settings.Port, 
+            var address = new Address(settings.NamespaceAddress, settings.Port, 
                     settings.PolicyName,
                     settings.NamespaceKey);
 

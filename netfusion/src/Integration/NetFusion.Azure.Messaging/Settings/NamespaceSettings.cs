@@ -8,10 +8,16 @@ namespace NetFusion.Azure.Messaging.Settings
     public class NamespaceSettings
     {
         /// <summary>
-        /// The Azure Service Bus defined namespace to which messages are sent.
+        /// An unique name used to reference the namespace in code.
         /// </summary>
         [Required(AllowEmptyStrings = false)]
         public string Namespace { get; set; }
+        
+        /// <summary>
+        /// The Azure Service Bus defined namespace to which messages are sent.
+        /// </summary>
+        [Required(AllowEmptyStrings = false)]
+        public string NamespaceAddress { get; set; }
         
         /// <summary>
         /// The namespace key defined by Azure.
