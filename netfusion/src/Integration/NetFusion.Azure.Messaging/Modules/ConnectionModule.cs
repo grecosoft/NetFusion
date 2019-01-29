@@ -38,7 +38,7 @@ namespace NetFusion.Azure.Messaging.Modules
             _serviceBusSettings = Context.Configuration.GetSettings(Context.Logger, new ServiceBusSettings());
 
             _sessions = _serviceBusSettings.Namespaces.ToDictionary(
-                c => c.Name, 
+                c => c.Namespace, 
                 ns => new NamespaceSession(ns));
         }
         
@@ -79,7 +79,7 @@ namespace NetFusion.Azure.Messaging.Modules
             if (string.IsNullOrWhiteSpace(namespaceName))
                 throw new ArgumentException("Namespace Name not specified.", nameof(namespaceName));
 
-            var nsSettings = _serviceBusSettings.Namespaces.FirstOrDefault(ns => ns.Name == namespaceName);
+            var nsSettings = _serviceBusSettings.Namespaces.FirstOrDefault(ns => ns.Namespace == namespaceName);
             if (nsSettings == null)
             {
                 throw new InvalidOperationException(
