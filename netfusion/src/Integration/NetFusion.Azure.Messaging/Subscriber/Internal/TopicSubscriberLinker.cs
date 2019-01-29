@@ -20,9 +20,11 @@ namespace NetFusion.Azure.Messaging.Subscriber.Internal
             // that should be used for the name specified in code.
 
             string namespaceName = subscriber.NamespaceAttribute.NamespaceName;
-            var mapping = new SubscriptionMapping(topicAttribute.TopicName, topicAttribute.SubscriptionName);
+            
+            var mapping = new SubscriptionMapping(namespaceName, topicAttribute.TopicName, 
+                topicAttribute.SubscriptionName);
 
-            string subscriptionName = subscriptionSettings.GetMappedSubscription(namespaceName, mapping)
+            string subscriptionName = subscriptionSettings.GetMappedSubscription(mapping)
                                       ?? topicAttribute.SubscriptionName;
             
             // Create a AMQP receiver link used to register handler method:

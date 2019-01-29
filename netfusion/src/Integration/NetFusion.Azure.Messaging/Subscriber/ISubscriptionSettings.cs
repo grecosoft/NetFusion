@@ -13,10 +13,9 @@ namespace NetFusion.Azure.Messaging.Subscriber
         /// Implementor should return the name of a mapping topic subscription if
         /// configured.  If not configured, it should return null.
         /// </summary>
-        /// <param name="namespaceName">The namespace defining the topic.</param>
         /// <param name="mapping">The mapping settings.</param>
         /// <returns>The mapped subscription name or null if not found.</returns>
-        string GetMappedSubscription(string namespaceName, SubscriptionMapping mapping);
+        string GetMappedSubscription(SubscriptionMapping mapping);
 
         /// <summary>
         /// Called to allow settings to be configured.

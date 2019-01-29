@@ -1,10 +1,10 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace NetFusion.Azure.Messaging.Subscriber
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Base class from which an application specific class derives to specify
     /// overrides for a Topic's subscriptions that are defined within the code.
@@ -20,12 +20,11 @@ namespace NetFusion.Azure.Messaging.Subscriber
             _mappings = new Dictionary<string, List<SubscriptionMapping>>();
         }
 
-        public string GetMappedSubscription(string namespaceName, SubscriptionMapping mapping)
+        public string GetMappedSubscription(SubscriptionMapping mapping)
         {
-            if (string.IsNullOrWhiteSpace(namespaceName))
-                throw new ArgumentException("Namespace name not specified.", nameof(namespaceName));
+            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
 
-            if (!_mappings.TryGetValue(namespaceName, out List<SubscriptionMapping> nsMappings))
+            if (!_mappings.TryGetValue(mapping.NamespaceName, out List<SubscriptionMapping> nsMappings))
             {
                 return null;
             }
@@ -47,6 +46,11 @@ namespace NetFusion.Azure.Messaging.Subscriber
         }
 
         /// <summary>
+        /// Reference to all of the 
+        /// </summary>
+        protected IEnumerable<SubscriptionMapping> Mappings => _mappings.Values.SelectMany(m => m);
+
+        /// <summary>
         /// Executes an action against all defined mappings.
         /// </summary>
         /// <param name="action">The action passed a configured mapping.</param>
@@ -59,29 +63,39 @@ namespace NetFusion.Azure.Messaging.Subscriber
                 action(mapping);
             }
         }
+        
+        /// <summary>
+        /// Executes an action against all defined mappings.
+        /// </summary>
+        /// <param name="action">The action passed a configured mapping.</param>
+        protected async void ForeachMapping(Func<SubscriptionMapping, Task> action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+            
+            foreach (SubscriptionMapping mapping in _mappings.Values.SelectMany(m => m))
+            {
+                await action(mapping);
+            }
+        }
 
         /// <summary>
         /// Adds a mapping for a topic's subscription defined within code to an actual host
         /// specific created subscription.
         /// </summary>
-        /// <param name="namespaceName">The namespace defining the topic.</param>
         /// <param name="mappings">The mapping settings.</param>
-        public void AddMapping(string namespaceName, params SubscriptionMapping[] mappings)
-        {
-            if (string.IsNullOrWhiteSpace(namespaceName))
-                throw new ArgumentException("Namespace name not specified.", nameof(namespaceName));
-            
+        public void AddMapping(params SubscriptionMapping[] mappings)
+        {            
             if (mappings == null) throw new ArgumentNullException(nameof(mappings));
-            
-            if (! _mappings.TryGetValue(namespaceName, out List<SubscriptionMapping> namespaceMappings))
-            {
-                namespaceMappings = new List<SubscriptionMapping>();
-                _mappings.Add(namespaceName, namespaceMappings);
-            }
 
             foreach (var mapping in mappings)
             {
-                AssertValidMapping(namespaceName, namespaceMappings, mapping);
+                if (! _mappings.TryGetValue(mapping.NamespaceName, out List<SubscriptionMapping> namespaceMappings))
+                {
+                    namespaceMappings = new List<SubscriptionMapping>();
+                    _mappings.Add(mapping.NamespaceName, namespaceMappings);
+                }
+                
+                AssertValidMapping(mapping.NamespaceName, namespaceMappings, mapping);
                 namespaceMappings.Add(mapping);
             }
         }
@@ -107,11 +121,9 @@ namespace NetFusion.Azure.Messaging.Subscriber
     /// </summary>
     internal class NullSubscriptionSettings : ISubscriptionSettings
     {
-        public string GetMappedSubscription(string namespaceName, SubscriptionMapping mapping)
+        public string GetMappedSubscription(SubscriptionMapping mapping)
         {
-            if (string.IsNullOrWhiteSpace(namespaceName))
-                throw new ArgumentException("Namespace name not specified.", nameof(namespaceName));
-            
+            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
             return null;
         }
 
