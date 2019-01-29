@@ -51,34 +51,6 @@ namespace NetFusion.Azure.Messaging.Subscriber
         protected IEnumerable<SubscriptionMapping> Mappings => _mappings.Values.SelectMany(m => m);
 
         /// <summary>
-        /// Executes an action against all defined mappings.
-        /// </summary>
-        /// <param name="action">The action passed a configured mapping.</param>
-        protected void ForeachMapping(Action<SubscriptionMapping> action)
-        {
-            if (action == null) throw new ArgumentNullException(nameof(action));
-            
-            foreach (SubscriptionMapping mapping in _mappings.Values.SelectMany(m => m))
-            {
-                action(mapping);
-            }
-        }
-        
-        /// <summary>
-        /// Executes an action against all defined mappings.
-        /// </summary>
-        /// <param name="action">The action passed a configured mapping.</param>
-        protected async void ForeachMapping(Func<SubscriptionMapping, Task> action)
-        {
-            if (action == null) throw new ArgumentNullException(nameof(action));
-            
-            foreach (SubscriptionMapping mapping in _mappings.Values.SelectMany(m => m))
-            {
-                await action(mapping);
-            }
-        }
-
-        /// <summary>
         /// Adds a mapping for a topic's subscription defined within code to an actual host
         /// specific created subscription.
         /// </summary>

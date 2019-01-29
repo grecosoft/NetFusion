@@ -7,7 +7,7 @@ namespace NetFusion.Azure.Messaging.Settings
     /// <summary>
     /// Settings for the Azure namespaces used by the application.
     /// </summary>
-    [ConfigurationSection("netfusion:azure:servicebus")]
+    [ConfigurationSection("netfusion:azure:messaging")]
     public class ServiceBusSettings : IAppSettings,
         IValidatableType
     {
