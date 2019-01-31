@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
+    <ProjectReference Include="..\NetFusion.Serialization\NetFusion.Serialization.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AmqpNetLite" Version="2.1.5" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PackageId>NetFusion.AMQP</PackageId>
+    <Title>NetFusion AMQP Messaging</Title>
+    <Description>
+      Assembly containing base types used for publishing and subscribing to AMQP Hosts.
+    </Description>
+    <PackageTags>netfusion;messaging;amqp</PackageTags>
+  </PropertyGroup>
+</Project>

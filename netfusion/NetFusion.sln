@@ -58,9 +58,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Roslyn", "src\Int
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Redis", "src\Integration\NetFusion.Redis\NetFusion.Redis.csproj", "{FA660514-A51B-47E1-8050-942C98154C93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Azure.Messaging", "src\Integration\NetFusion.Azure.Messaging\NetFusion.Azure.Messaging.csproj", "{F88A1E79-A44E-4C42-9C43-1163F97BE096}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.EntityFramework", "src\Integration\NetFusion.EntityFramework\NetFusion.EntityFramework.csproj", "{8621F7A2-0D98-4DA3-8053-4931C0582B78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.AMQP", "src\Integration\NetFusion.AMQP\NetFusion.AMQP.csproj", "{A45E8665-9881-4A8D-B69D-E9CD7D3491B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -156,14 +156,14 @@ Global
 		{FA660514-A51B-47E1-8050-942C98154C93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA660514-A51B-47E1-8050-942C98154C93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA660514-A51B-47E1-8050-942C98154C93}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F88A1E79-A44E-4C42-9C43-1163F97BE096}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F88A1E79-A44E-4C42-9C43-1163F97BE096}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F88A1E79-A44E-4C42-9C43-1163F97BE096}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F88A1E79-A44E-4C42-9C43-1163F97BE096}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8621F7A2-0D98-4DA3-8053-4931C0582B78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8621F7A2-0D98-4DA3-8053-4931C0582B78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8621F7A2-0D98-4DA3-8053-4931C0582B78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8621F7A2-0D98-4DA3-8053-4931C0582B78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A45E8665-9881-4A8D-B69D-E9CD7D3491B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A45E8665-9881-4A8D-B69D-E9CD7D3491B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A45E8665-9881-4A8D-B69D-E9CD7D3491B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A45E8665-9881-4A8D-B69D-E9CD7D3491B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -195,8 +195,8 @@ Global
 		{960EA3B0-E46C-4B9E-BA7B-479F7CE9ABF7} = {0A108820-F110-4B36-A5CF-A59FC7C64955}
 		{104CCFA1-3911-4FD3-AB1A-5DF45344BE5A} = {0A108820-F110-4B36-A5CF-A59FC7C64955}
 		{FA660514-A51B-47E1-8050-942C98154C93} = {0A108820-F110-4B36-A5CF-A59FC7C64955}
-		{F88A1E79-A44E-4C42-9C43-1163F97BE096} = {0A108820-F110-4B36-A5CF-A59FC7C64955}
 		{8621F7A2-0D98-4DA3-8053-4931C0582B78} = {0A108820-F110-4B36-A5CF-A59FC7C64955}
+		{A45E8665-9881-4A8D-B69D-E9CD7D3491B0} = {DC3424EC-2E9B-4653-AB4C-9BB89637B0EF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17556D20-DBFC-4AEB-857D-74B7C1EDEA60}
