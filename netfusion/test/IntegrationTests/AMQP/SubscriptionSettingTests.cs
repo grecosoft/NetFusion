@@ -1,9 +1,9 @@
-namespace IntegrationTests.Azure.Messaging
+namespace IntegrationTests.AMQP
 {
     using System;
-    using Xunit;
     using FluentAssertions;
     using NetFusion.AMQP.Subscriber;
+    using Xunit;
 
     public class SubscriptionSettingTests
     {

@@ -22,6 +22,8 @@ namespace NetFusion.Serialization
 
         public object Deserialize(byte[] value, Type valueType)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+            
             return Deserialize<object>(value, valueType);
         }
 

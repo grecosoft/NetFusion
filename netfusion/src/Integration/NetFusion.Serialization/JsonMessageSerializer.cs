@@ -10,6 +10,8 @@ using Newtonsoft.Json.Serialization;
 
 namespace NetFusion.Serialization
 {
+    using NetFusion.Base.Entity;
+
     /// <summary>
     /// Serializes a value to JSON representation.  Extended to allow serialization
     /// and deserialization of public properties with private setters.
@@ -58,17 +60,15 @@ namespace NetFusion.Serialization
         {
             protected override List<MemberInfo> GetSerializableMembers(Type objectType)
             {
-                // Add to the base set of serializable members those that also have property
-                // setters regardless of access.
-                var membersToSerialize = base.GetSerializableMembers(objectType)
-                    .Concat(objectType.GetProperties().Where(p => p.GetSetMethod() != null))
-                    .GroupBy(p => p.Name)
-                    .Select(g => g.First())
-                    .ToList();
+                if (typeof(IAttributedEntity).IsAssignableFrom(objectType))
+                {
+                    // Don't serialize the Attributes property that is .NET dynamic based.
+                    // AttributeValues will be serialized and deserialized instead.
+                    return base.GetSerializableMembers(objectType)
+                        .Where( m => m.Name != "Attributes").ToList();
+                }
 
-                // Don't serialize the Attributes property that is .NET dynamic based.
-                // AttributeValues will be serialized and deserialized instead.
-                return membersToSerialize.Where( m => m.Name != "Attributes").ToList();
+                return base.GetSerializableMembers(objectType);
             }
 
             // Allow properties with private setters to be deserialized.
@@ -76,7 +76,7 @@ namespace NetFusion.Serialization
             {
                 var prop = base.CreateProperty(member, memberSerialization);
 
-                if (!prop.Writable)
+                if (! prop.Writable)
                 {
                     if (member is PropertyInfo property)
                     {

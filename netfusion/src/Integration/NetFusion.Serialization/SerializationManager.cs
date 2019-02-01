@@ -38,11 +38,13 @@ namespace NetFusion.Serialization
         {
             if (serializer == null) throw new ArgumentNullException(nameof(serializer));
 
-            if (IsSerializerRegistered(serializer.ContentType, serializer.EncodingType))
+            var existing = _serializers.FirstOrDefault(s =>
+                s.ContentType == serializer.ContentType && 
+                s.EncodingType == serializer.EncodingType);
+
+            if (existing != null)
             {
-                throw new InvalidOperationException(
-                    $"Serializer already exists Content-Type: {serializer.ContentType} " + 
-                    $"Encoding-Type: {serializer.EncodingType ?? ""}.");
+                _serializers.Remove(existing);
             }
             
             _serializers.Add(serializer);
@@ -82,7 +84,7 @@ namespace NetFusion.Serialization
             return serializer.Deserialize<T>(value, typeof(T));
         }
 
-        private IMessageSerializer GetSerializer(string contentType, string encodingType)
+        public IMessageSerializer GetSerializer(string contentType, string encodingType = null)
         {
             var types = GetContentTypeAndEncoding(contentType, encodingType);
             
@@ -105,21 +107,10 @@ namespace NetFusion.Serialization
             if (serializer == null)
             {
                 throw new InvalidOperationException(
-                    $"Serializer for Content-Type: {contentType} Encoding-Type: {types.encodingType} not registered.");
+                    $"Serializer for Content-Type: {contentType} Encoding-Type: {types.encodingType ?? " Not Set"} not registered.");
             }
 
             return serializer;
-        }
-
-        private bool IsSerializerRegistered(string contentType, string encodingType)
-        {
-            var matchingSerializers = _serializers.Where(s => s.ContentType == contentType);
-            if (! string.IsNullOrEmpty(encodingType))
-            {
-                return matchingSerializers.Any(s => s.EncodingType == encodingType);
-            }
-
-            return matchingSerializers.Any(s => s.EncodingType == null);
         }
 
         // If the encoding-type is not explicitly specified, determines if the content-type

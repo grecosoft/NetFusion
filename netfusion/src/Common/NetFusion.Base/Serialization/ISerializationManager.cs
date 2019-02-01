@@ -17,6 +17,18 @@ namespace NetFusion.Base.Serialization
         IEnumerable<IMessageSerializer> Serializers { get; }
 
         /// <summary>
+        /// Returns the best matching serializer.  If both content-type and
+        /// encoding-type are specified, a serializer with matching values
+        /// must exist.  If encoding type is not specified, the serializer
+        /// matching the specified content-type, regardless of encoding
+        /// type is returned.
+        /// </summary>
+        /// <param name="contentType">The content-type web name.</param>
+        /// <param name="encodingType">The encoding-type web name.</param>
+        /// <returns></returns>
+        IMessageSerializer GetSerializer(string contentType, string encodingType = null);
+
+        /// <summary>
         /// Serializes an object based on the specified content-type.
         /// </summary>
         /// <param name="value">The value to serialize.</param>
