@@ -9,6 +9,7 @@
     <ProjectReference Include="..\..\..\..\..\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
     <ProjectReference Include="..\..\..\..\..\src\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
     <ProjectReference Include="..\..\..\..\..\src\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
+    <ProjectReference Include="..\..\..\..\..\src\Integration\NetFusion.AMQP\NetFusion.AMQP.csproj" />
     <ProjectReference Include="..\..\..\..\..\src\Integration\NetFusion.MongoDB\NetFusion.MongoDB.csproj" />
     <ProjectReference Include="..\..\..\..\..\src\Integration\NetFusion.RabbitMq\NetFusion.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\..\..\..\src\Integration\NetFusion.Redis\NetFusion.Redis.csproj" />
