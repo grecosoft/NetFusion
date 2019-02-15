@@ -66,7 +66,7 @@ namespace NetFusion.AMQP.Modules
             
             foreach (var subscriber in _subscribers)
             {
-                await LinkSubscriber(subscriber, subscriptionSettings);
+                LinkSubscriber(subscriber, subscriptionSettings);
             }
         }
 
@@ -74,9 +74,9 @@ namespace NetFusion.AMQP.Modules
         // to the ISubscriberLinker implementation associated with the host item (Queue/Topic).
         // The subscriber-linker will bind the message handler to the host item so it will be
         // invoked when a message is received.
-        private async Task LinkSubscriber(HostItemSubscriber subscriber, ISubscriptionSettings subscriptionSettings)
+        private void LinkSubscriber(HostItemSubscriber subscriber, ISubscriptionSettings subscriptionSettings)
         {
-            Session session = await _connectionModule.GetSession(subscriber.HostAttribute.HostName);
+            Session session = _connectionModule.CreateSession(subscriber.HostAttribute.HostName);
             ISubscriberLinker linker = subscriber.HostItemAttribute.Linker;
             
             // Set the services used by the linker when messages are received:

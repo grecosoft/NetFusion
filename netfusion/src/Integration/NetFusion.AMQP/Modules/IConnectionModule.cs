@@ -18,15 +18,8 @@ namespace NetFusion.AMQP.Modules
         /// </summary>
         /// <param name="hostName">The host name.</param>
         /// <returns>The session used to communicate with the host.</returns>
-        Task<Session> GetSession(string hostName);
+        Session CreateSession(string hostName);
         
-        /// <summary>
-        /// For a message publisher, sets the AMQP SenderLink instance
-        /// used to send messages to the defined host item.
-        /// </summary>
-        /// <param name="session">The session on which the sender-link will be created.</param>
-        /// <param name="senderHostItem">Reference representing the host item to which
-        /// messages can be sent.</param>
-        void SetSenderLink(Session session, ISenderHostItem senderHostItem);
+        Session GetSenderSession(string hostName);
     }
 }

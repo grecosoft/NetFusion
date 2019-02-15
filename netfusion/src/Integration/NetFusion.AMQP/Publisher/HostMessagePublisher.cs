@@ -58,18 +58,18 @@ namespace NetFusion.AMQP.Publisher
             // Get information associated with the message being published:
             IHostItem hostItem = _publisherModule.GetHostItem(messageType);
             ISenderHostItem senderItem = (ISenderHostItem)hostItem;
-            Session session = await _connectionModule.GetSession(hostItem.HostName);
             
-            // Assure the sender link has been set used to send messages:
-            _connectionModule.SetSenderLink(session, senderItem);
-
+            // Create the sender link used to send messages:
+            Session session = _connectionModule.GetSenderSession(hostItem.HostName);
+            var senderLink = new SenderLink(session, Guid.NewGuid().ToString(), senderItem.Name);
+            
             // Serialize the message based on its associated content-type and delegate to the corresponding
             // host sender item to create the AMQP message with the message properties correctly set.
             object body = SerializeMessage(hostItem, message);
             Message amqpMessage = senderItem.CreateMessage(message, body);
             
             // Send message to the defined host item (i.e. Queue/Topic).
-            await senderItem.SenderLink.SendAsync(amqpMessage);
+            await senderLink.SendAsync(amqpMessage);
         }
 
         public object SerializeMessage(IHostItem hostItem, IMessage message)
