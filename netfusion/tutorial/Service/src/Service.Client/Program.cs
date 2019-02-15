@@ -1,52 +1,82 @@
 ﻿namespace Service.Client
 {
+    using System.Threading.Tasks;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
+    using NetFusion.AMQP.Subscriber;
     using NetFusion.Base.Serialization;
     using NetFusion.Bootstrap.Configuration;
     using NetFusion.Bootstrap.Container;
-    using NetFusion.RabbitMQ.Logging;
     using NetFusion.Serialization;
 
     internal class Program
     {
-        public static void Main()
+       
+        public static async Task Main(string[] args)
         {
-
-
-            var serviceCollection = new ServiceCollection();
-
-            var configBuilder = new ConfigurationBuilder();
-            var configuration = configBuilder.AddAppSettings().Build();
+            await BuildHost().WaitForShutdownAsync();
+        }
+        
+        private static IHost BuildHost()
+        {
+            IBuiltContainer builtContainer = null;          
             
-
-            var loggerFactory = new LoggerFactory();
-         
-            loggerFactory.AddConsole(LogLevel.Warning);
-
-            var appContainer = CreateAppContainer(serviceCollection, configuration, loggerFactory);
-            appContainer.Start();
-
+            var host = new HostBuilder()
+                .ConfigureServices((context, collection) =>
+                {
+                    builtContainer = CreateAppContainer(collection, context.Configuration);
+                })
+                .ConfigureAppConfiguration(SetupConfiguration)
+                .ConfigureLogging(SetupLogging)
+                .Build();
+            
+            builtContainer.Start();
+            host.Start();
+            
+            return host;
         }
 
-        private static IBuiltContainer CreateAppContainer(IServiceCollection services, IConfiguration configuration, ILoggerFactory loggerFactory)
+        private static void SetupConfiguration(HostBuilderContext context, 
+            IConfigurationBuilder builder)
+        {            
+            builder.AddAppSettings();
+        }
+
+        private static void SetupLogging(HostBuilderContext context, 
+            ILoggingBuilder builder)
+        {
+            builder.ClearProviders();
+
+            if (EnvironmentConfig.IsDevelopment)
+            {
+                builder.AddDebug().SetMinimumLevel(LogLevel.Debug);
+                builder.AddConsole().SetMinimumLevel(LogLevel.Debug);
+            }
+
+            // Add additional logger specific to non-development environments.
+        }
+        
+        private static IBuiltContainer CreateAppContainer(IServiceCollection services, IConfiguration configuration)
         {
             // Creates an instance of a type resolver that will look for plug-ins within 
             // the assemblies matching the passed patterns.
             var typeResolver = new TypeResolver(
                 "Service.Client",
                 "Service.*");
+            
+            var loggerFactory = new LoggerFactory();
 
             return services.CreateAppBuilder(configuration, loggerFactory, typeResolver)
                 .Bootstrap(c => {
-                    c.WithConfig((RabbitMqLoggerConfig config) => {
-                        config.SetLogFactory(loggerFactory);
-                    });
 
-                    c.WithServices(reg => {
+                    c.WithServices(reg =>
+                    {
                         reg.AddSingleton<ISerializationManager, SerializationManager>();
-                     });
+                    
+                        //  Additional services or overrides can be registered here.
+                    });
                 })
                 .Build();
         }

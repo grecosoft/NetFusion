@@ -23,15 +23,15 @@ export class Portal {
             new AreaMenuItem("overview-composite-log", "Composite Log", "applications", "areas/core/overview/composite-log"),
         ]));
 
-        menuDefinition.defineArea(new ApplicationArea("settings", "NetFusion.Settings", "device", [
+        menuDefinition.defineArea(new ApplicationArea("settings", "Settings", "device", [
             new AreaMenuItem("settings-example", "Examples", "applications", "areas/core/settings"),
         ]));
 
-        menuDefinition.defineArea(new ApplicationArea("mongodb", "NetFusion.MongoDB", "device", [
+        menuDefinition.defineArea(new ApplicationArea("mongodb", "MongoDB", "device", [
             new AreaMenuItem("mongodb-example", "Examples", "applications", "areas/core/mongodb"),
         ]));
 
-        menuDefinition.defineArea(new ApplicationArea("rabbitmq", "NetFusion.RabbitMQ", "device", [
+        menuDefinition.defineArea(new ApplicationArea("rabbitmq", "RabbitMQ", "device", [
             new AreaMenuItem("rabbitmq-direct", "Direct", "applications", "areas/core/rabbitmq/direct"),
             new AreaMenuItem("rabbitmq-topic", "Topic", "applications", "areas/core/rabbitmq/topic"),
             new AreaMenuItem("rabbitmq-fanout", "Fanout", "applications", "areas/core/rabbitmq/fanout"),
@@ -39,9 +39,19 @@ export class Portal {
             new AreaMenuItem("rabbitmq-rpc", "Rpc", "applications", "areas/core/rabbitmq/rpc")
         ]));
 
-        menuDefinition.defineArea(new ApplicationArea("redis", "NetFusion.Redis", "device", [
+        menuDefinition.defineArea(new ApplicationArea("redis", "Redis", "device", [
             new AreaMenuItem("redis-data", "Data", "applications", "areas/core/redis/data"),
             new AreaMenuItem("redis-channels", "Pub/Sub", "applications", "areas/core/redis/channels")
+        ]));
+
+        menuDefinition.defineArea(new ApplicationArea("baseImp", "Base", "device", [
+            new AreaMenuItem("attrib-entity", "Attributed Entity", "applications", "areas/core/base/attrib-entity"),
+            new AreaMenuItem("entity-expressions", "Entity Expressions", "applications", "areas/core/base/entity-exp")
+        ]));
+
+        menuDefinition.defineArea(new ApplicationArea("qmqp", "AMQP", "device", [
+            new AreaMenuItem("amqp-publisher", "Publisher", "applications", "areas/core/amqp/publisher"),
+            new AreaMenuItem("amqp-consumer", "Consumer", "applications", "areas/core/amqp/consumer")
         ]));
 
         // menuDefinition.defineArea(new ApplicationArea("devices", "NetFusion.Messaging", "device", [

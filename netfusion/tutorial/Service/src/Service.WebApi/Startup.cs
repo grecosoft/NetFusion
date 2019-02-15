@@ -12,6 +12,8 @@ using NetFusion.Bootstrap.Configuration;
 
 namespace Service.WebApi
 {
+    using NetFusion.AMQP.Publisher;
+    using NetFusion.AMQP.Subscriber;
     using NetFusion.Base.Serialization;
     using NetFusion.Messaging.Config;
     using NetFusion.RabbitMQ.Logging;
@@ -98,6 +100,7 @@ namespace Service.WebApi
                      .WithConfig((MessageDispatchConfig mc) => {
                         mc.AddMessagePublisher<RabbitMqPublisher>();
                         mc.AddMessagePublisher<RedisPublisher>();
+                        mc.AddMessagePublisher<HostMessagePublisher>();   
                      })
                      .WithConfig((RabbitMqLoggerConfig config) => {
                         config.SetLogFactory(loggerFactory);

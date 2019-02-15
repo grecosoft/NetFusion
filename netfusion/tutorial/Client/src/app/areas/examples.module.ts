@@ -19,6 +19,10 @@ import { RedisService } from './redis/RedisService';
 import { CompositeLogComponent } from './overview/composite-log/composite-log.component';
 import { OverviewService } from './overview/OverviewService';
 import { RedisChannelsComponent } from './redis/redis-channels.component/redis-channels.component';
+import { AttributedEntityComponent } from './base/attributed-entity.component/attributed-entity.component';
+import { EntityExpressionsComponent } from './base/entity-expressions.component/entity-expressions.component';
+import { AmqpPublisherComponent } from './amqp/amqp-publisher.component/amqp-publisher.component';
+import { AmqpConsumerComponent } from './amqp/amqp-consumer.component/amqp-consumer.component';
 
 const areaRoutes: Routes = [
     { path: 'settings', component: SettingsComponent },
@@ -30,7 +34,11 @@ const areaRoutes: Routes = [
     { path: 'rabbitmq/rpc', component: RabbitMqRpcComponent },
     { path: 'redis/data', component: RedisDataComponent },
     { path: 'redis/channels', component: RedisChannelsComponent },
-    { path: 'overview/composite-log', component: CompositeLogComponent }
+    { path: 'overview/composite-log', component: CompositeLogComponent },
+    { path: 'base/attrib-entity', component: AttributedEntityComponent },
+    { path: 'base/entity-exp', component: EntityExpressionsComponent },
+    { path: 'amqp/publisher', component: AmqpPublisherComponent },
+    { path: 'amqp/consumer', component: AmqpConsumerComponent },
   ];
 
 @NgModule({
@@ -42,6 +50,10 @@ const areaRoutes: Routes = [
     ],
     declarations: [
         CodeViewerComponent,
+        CompositeLogComponent,
+
+        AttributedEntityComponent,
+        EntityExpressionsComponent,
 
         SettingsComponent,
         MongoDbComponent,
@@ -55,11 +67,16 @@ const areaRoutes: Routes = [
         RedisDataComponent,
         RedisChannelsComponent,
 
-        CompositeLogComponent
+        AmqpPublisherComponent,
+        AmqpConsumerComponent
     ],
     entryComponents: [
+        CompositeLogComponent,
         SettingsComponent,
         MongoDbComponent,
+
+        AttributedEntityComponent,
+        EntityExpressionsComponent,
 
         RabbitMqDirectComponent,
         RabbitMqTopicComponent,
@@ -69,8 +86,9 @@ const areaRoutes: Routes = [
 
         RedisDataComponent,
         RedisChannelsComponent,
-        
-        CompositeLogComponent
+
+        AmqpPublisherComponent,
+        AmqpConsumerComponent
     ],
     providers: [
         JsonPipe,

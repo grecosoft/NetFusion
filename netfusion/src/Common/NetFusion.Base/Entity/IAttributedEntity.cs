@@ -9,7 +9,7 @@ namespace NetFusion.Base.Entity
     public interface IAttributedEntity
     {
         /// <summary>
-        /// The interface for maintaining the entity's dynamic attributes.
+        /// Reference to object used to manage an entity's dynamic attributes.
         /// </summary>
         IEntityAttributes Attributes { get; }
 
