@@ -7,19 +7,17 @@ using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Messaging.Modules;
+using NetFusion.AMQP.Subscriber;
+using NetFusion.AMQP.Subscriber.Internal;
 
 namespace NetFusion.AMQP.Modules
 {
-    using NetFusion.AMQP.Subscriber;
-    using NetFusion.AMQP.Subscriber.Internal;
-
     /// <summary>
     /// Plugin module when bootstrapped discovers the message handlers
     /// corresponding to host defined items (i.e. Queues/Topics) to
     /// which they should be subscribed.
     /// </summary>
-    public class SubscriberModule : PluginModule,
-        ISubscriberModule
+    public class SubscriberModule : PluginModule
     {
         private bool _disposed;
         
@@ -28,21 +26,29 @@ namespace NetFusion.AMQP.Modules
         private IMessageDispatchModule _dispatchModule;
         private ISerializationManager _serialization;
         
+        // Host provided service to alter module's default behavior.
+        private ISubscriptionSettings _subscriptionSettings;
+        
         // Message handlers subscribed to host items such as queues and topics.
         private HostItemSubscriber[] _subscribers;
+
+        public override void RegisterDefaultServices(IServiceCollection services)
+        {
+            services.AddSingleton<ISubscriptionSettings, NullSubscriptionSettings>();
+        }
         
         public override void StartModule(IServiceProvider services)
         {
             _connectionModule = services.GetRequiredService<IConnectionModule>();
             _dispatchModule = services.GetRequiredService<IMessageDispatchModule>();
             _serialization = services.GetRequiredService<ISerializationManager>();
+            
+            _subscriptionSettings = services.GetRequiredService<ISubscriptionSettings>();
 
             _subscribers = GetHostSubscribers(_dispatchModule);
-        }
+            _subscriptionSettings.ConfigureSettings();
 
-        public override void RegisterDefaultServices(IServiceCollection services)
-        {
-            services.AddSingleton<ISubscriptionSettings, NullSubscriptionSettings>();
+            LinkHandlersToHostItems(_subscriptionSettings).Wait();
         }
 
         private static HostItemSubscriber[] GetHostSubscribers(IMessageDispatchModule dispatchModule)
@@ -54,7 +60,7 @@ namespace NetFusion.AMQP.Modules
         }
 
         // Called by an service component such as an .NET Core Hosted Service.
-        public async Task LinkHandlersToHostItems(ISubscriptionSettings subscriptionSettings)
+        private async Task LinkHandlersToHostItems(ISubscriptionSettings subscriptionSettings)
         {
             if (subscriptionSettings == null) throw new ArgumentNullException(nameof(subscriptionSettings));
             
@@ -90,6 +96,8 @@ namespace NetFusion.AMQP.Modules
             {
                 itemSubscriber.ReceiverLink?.Close();
             }
+
+            _subscriptionSettings?.CleanupSettings();
 
             _disposed = true;
         }
