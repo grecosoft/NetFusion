@@ -60,8 +60,6 @@
         
         private static IBuiltContainer CreateAppContainer(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddHostedService<AmqpSubscriberHostedService>();
-            
             // Creates an instance of a type resolver that will look for plug-ins within 
             // the assemblies matching the passed patterns.
             var typeResolver = new TypeResolver(

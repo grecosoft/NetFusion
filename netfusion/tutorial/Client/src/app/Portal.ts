@@ -49,6 +49,11 @@ export class Portal {
             new AreaMenuItem("entity-expressions", "Entity Expressions", "applications", "areas/core/base/entity-exp")
         ]));
 
+        menuDefinition.defineArea(new ApplicationArea("qmqp", "AMQP", "device", [
+            new AreaMenuItem("amqp-publisher", "Publisher", "applications", "areas/core/amqp/publisher"),
+            new AreaMenuItem("amqp-consumer", "Consumer", "applications", "areas/core/amqp/consumer")
+        ]));
+
         // menuDefinition.defineArea(new ApplicationArea("devices", "NetFusion.Messaging", "device", [
         //     new AreaMenuItem("applications", "Commands", "applications", "areas/devices/applications"),
 		//     new AreaMenuItem("applications", "Domain Events", "applications", "areas/devices/applications"),

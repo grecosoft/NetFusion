@@ -21,6 +21,8 @@ import { OverviewService } from './overview/OverviewService';
 import { RedisChannelsComponent } from './redis/redis-channels.component/redis-channels.component';
 import { AttributedEntityComponent } from './base/attributed-entity.component/attributed-entity.component';
 import { EntityExpressionsComponent } from './base/entity-expressions.component/entity-expressions.component';
+import { AmqpPublisherComponent } from './amqp/amqp-publisher.component/amqp-publisher.component';
+import { AmqpConsumerComponent } from './amqp/amqp-consumer.component/amqp-consumer.component';
 
 const areaRoutes: Routes = [
     { path: 'settings', component: SettingsComponent },
@@ -34,7 +36,9 @@ const areaRoutes: Routes = [
     { path: 'redis/channels', component: RedisChannelsComponent },
     { path: 'overview/composite-log', component: CompositeLogComponent },
     { path: 'base/attrib-entity', component: AttributedEntityComponent },
-    { path: 'base/entity-exp', component: EntityExpressionsComponent }
+    { path: 'base/entity-exp', component: EntityExpressionsComponent },
+    { path: 'amqp/publisher', component: AmqpPublisherComponent },
+    { path: 'amqp/consumer', component: AmqpConsumerComponent },
   ];
 
 @NgModule({
@@ -61,7 +65,10 @@ const areaRoutes: Routes = [
         RabbitMqRpcComponent,
 
         RedisDataComponent,
-        RedisChannelsComponent
+        RedisChannelsComponent,
+
+        AmqpPublisherComponent,
+        AmqpConsumerComponent
     ],
     entryComponents: [
         CompositeLogComponent,
@@ -78,7 +85,10 @@ const areaRoutes: Routes = [
         RabbitMqRpcComponent,
 
         RedisDataComponent,
-        RedisChannelsComponent
+        RedisChannelsComponent,
+
+        AmqpPublisherComponent,
+        AmqpConsumerComponent
     ],
     providers: [
         JsonPipe,

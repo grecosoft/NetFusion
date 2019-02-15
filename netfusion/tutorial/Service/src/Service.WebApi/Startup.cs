@@ -45,8 +45,6 @@ namespace Service.WebApi
             services.AddMvc(options => {
                 options.UseHalFormatter();
             });
-            
-            services.AddHostedService<AmqpSubscriberHostedService>();
 
             // Create and NetFusion application container based on Microsoft's abstractions:
             var builtContainer = CreateAppContainer(services, _configuration, _loggerFactory);
