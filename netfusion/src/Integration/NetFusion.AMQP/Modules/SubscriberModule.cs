@@ -44,10 +44,8 @@ namespace NetFusion.AMQP.Modules
             _serialization = services.GetRequiredService<ISerializationManager>();
             
             _subscriptionSettings = services.GetRequiredService<ISubscriptionSettings>();
-
             _subscribers = GetHostSubscribers(_dispatchModule);
-            _subscriptionSettings.ConfigureSettings();
-
+            
             LinkHandlersToHostItems(_subscriptionSettings).Wait();
         }
 
@@ -63,6 +61,8 @@ namespace NetFusion.AMQP.Modules
         private async Task LinkHandlersToHostItems(ISubscriptionSettings subscriptionSettings)
         {
             if (subscriptionSettings == null) throw new ArgumentNullException(nameof(subscriptionSettings));
+         
+            await _subscriptionSettings.ConfigureSettings();
             
             foreach (var subscriber in _subscribers)
             {
