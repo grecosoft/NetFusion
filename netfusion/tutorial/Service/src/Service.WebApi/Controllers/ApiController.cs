@@ -1,3 +1,4 @@
+#pragma warning disable 4014
 namespace Service.WebApi.Controllers
 {
     using System;
@@ -78,6 +79,11 @@ namespace Service.WebApi.Controllers
                 {
                     meta.UrlTemplate<RedisDataController.SetValue, Task>("set-value", c => c.AddValue);
                     meta.UrlTemplate<Task<RedisDataController.SetValue>>("pop-value", c => c.PopValue);
+                })
+                .LinkMeta<AmqpController>(meta =>
+                {
+                    meta.Url("amqp-send-command", (c, r) => c.SendClaimSubmission(null));
+                    meta.Url("amqp-publish-event", (c, r) => c.PublishClaimStatus(null));
                 });
         }
     }

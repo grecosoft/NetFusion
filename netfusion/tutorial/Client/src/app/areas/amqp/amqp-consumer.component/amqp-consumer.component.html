@@ -1,1 +1,66 @@
-Consumer
+<nav-toolbar [isDisplayed]="true"></nav-toolbar>
+<div class="area-content">
+    <div class="plugin-summary">
+        <h1 class="section-header">Plugin Summary</h1>
+        <div class="portal-definition-list">
+            <dl class="version-info">
+                <dt>Nuget Package</dt><dd>{{nugetPackageName}}</dd>
+                <dt>Documentation</dt><dd><a href="{{documentationUrl}}" target="_blank">View</a></dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="plugin-overview">
+        <h1 class="section-header">Overview</h1>
+        <ul>
+            <li>Built using the AmqpNetLite open-source library.</li>
+            <li>Extends the existing method attributes used to identity message handlers.</li>
+            <li>When a message handler is decorated with the Queue or Topic message handler attributes,
+                the method is added as a subscription to the corresponding Queue or Topic.
+            </li>
+            <li>When a message is received, the message handler is invoked.</li>
+        </ul>
+    </div>
+
+    <div class="plugin-usage">
+        <h1 class="section-header">Usage Summary</h1>
+        <ul>
+            <li>Create class representing the command/domain-event to be received.</li>
+            <li>Define message handler decorated with the Queue/Topic attributes specifying the broker queue/topic to be subscribed.</li>
+            <li>Decorate the handler class with the Host attribute specifying the host name as configured within the application settings.</li>
+        </ul>
+    </div>
+
+    <div class="plugin-examples">
+        <h1 class="section-header">Subscribing to Messages</h1>
+        <p>
+            The following corresponds to the code contained within Service.Client host responding to Messages
+            as they arrive on the defined queue and topic.  Before message handlers can be subscribed to queues
+            and topics, the application must have the connection information specified within appsettings.json.
+        </p>
+        <ul>
+            <li>Device message handler class implementing the IMessageConsumer marker interface.</li>
+            <li>Decorate the handler class with the Host attribute indicating the name of the host as configured within the application's settings.</li>            
+        </ul>
+        <div class="plugin-example">
+            <h2 class="section-header">Subscribing Command to Queue</h2>
+            <ul>
+                <li>Device command having the structure matching the message that will be sent and serialized to the queue.</li>
+                <li>Define message handler method taking as the parameter of the command type to be handled.</li>
+                <li>Decorate the message handler method with the Queue attribute specifying the name of the queue to 
+                    which the handler method should subscribe.
+                </li>
+            </ul>
+        </div>
+
+        <div class="plugin-example">
+            <h2 class="section-header">Subscribing Domain-Event to Topic</h2>
+            <ul>
+                <li>Device domain-event having the structure matching the message that will be sent and serialized to the topic.</li>
+                <li>Define message handler method taking as the parameter of the domain-event type to be handled.</li>
+                <li>Decorate the message handler method with the Topic attribute specifying the name of the topic and subscription to 
+                    which the handler method should subscribe.</li>
+            </ul>
+        </div>
+    </div>
+</div>
