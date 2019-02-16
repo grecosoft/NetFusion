@@ -49,6 +49,11 @@ namespace NetFusion.AMQP.Modules
             LinkHandlersToHostItems(_subscriptionSettings).Wait();
         }
 
+        public override void StopModule(IServiceProvider services)
+        {
+            _subscriptionSettings?.CleanupSettings().Wait();
+        }
+
         private static HostItemSubscriber[] GetHostSubscribers(IMessageDispatchModule dispatchModule)
         {
             return dispatchModule.AllMessageTypeDispatchers
@@ -97,9 +102,7 @@ namespace NetFusion.AMQP.Modules
                 itemSubscriber.ReceiverLink?.Close();
             }
 
-            _subscriptionSettings?.CleanupSettings();
-
-            _disposed = true;
+  _disposed = true;
         }
     }
 }
