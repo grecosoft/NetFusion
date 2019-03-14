@@ -6,7 +6,8 @@ using NetFusion.Settings;
 
 namespace NetFusion.AMQP.Modules
 {
-    using System.Collections.Concurrent;
+    using System.Linq;
+    using System.Threading.Tasks;
     using NetFusion.AMQP.Settings;
 
     /// <summary>
@@ -22,19 +23,13 @@ namespace NetFusion.AMQP.Modules
         // associated with a given host.
         private AmqpHostSettings _amqpSettings;
         
-        private readonly Dictionary<string, Connection> _senderConnections;     // Host Name => AMQP Connection
-        private readonly ConcurrentDictionary<string, Session> _senderSessions; // Host Name => Session
-        
         private readonly Dictionary<string, Connection> _receiverConnections;   // Host Name => AMQP Connection
         private readonly List<Session> _receiverSessions;        
 
         public ConnectionModule()
         {
             _receiverConnections = new Dictionary<string, Connection>();
-            _senderConnections = new Dictionary<string, Connection>();
-            
             _receiverSessions = new List<Session>();
-            _senderSessions = new ConcurrentDictionary<string, Session>();
         }
         
         public override void Initialize()
@@ -51,23 +46,28 @@ namespace NetFusion.AMQP.Modules
                     host.Username,
                     host.Password);
 
-                _senderConnections[host.HostName] = Connection.Factory.CreateAsync(address).Result;
                 _receiverConnections[host.HostName] = Connection.Factory.CreateAsync(address).Result;
             }
         }
         
-        public Session GetSenderSession(string hostName)
+        public async Task<Session> CreateSenderSession(string hostName)
         {
             if (string.IsNullOrWhiteSpace(hostName))
                 throw new ArgumentException("Host Name not specified.", nameof(hostName));
-            
-            if (! _senderConnections.TryGetValue(hostName, out Connection connection))
+
+            HostSettings host = _amqpSettings.Hosts.FirstOrDefault(h => h.HostName == hostName);
+            if (host == null)
             {
                 throw new InvalidOperationException(
-                    $"Host with the name: {hostName} is not configured and does not have a connection.");
+                    $"Host with the name: {hostName} is not configured.");
             }
             
-            return _senderSessions.GetOrAdd(hostName,  _ => new Session(connection));
+            var address = new Address(host.HostAddress, host.Port, 
+                host.Username,
+                host.Password);
+
+            var connection = await Connection.Factory.CreateAsync(address);
+            return new Session(connection);
         }
 
         public Session CreateReceiverSession(string hostName)
@@ -91,19 +91,9 @@ namespace NetFusion.AMQP.Modules
         {
             if (! dispose || _disposed) return;
 
-            foreach (Session session in _senderSessions.Values)
-            {
-                session.Close();
-            }
-            
             foreach (Session session in _receiverSessions)
             {
                 session.Close();
-            }
-
-            foreach (Connection connection in _senderConnections.Values)
-            {
-                connection.Close();
             }
 
             foreach (Connection connection in _receiverConnections.Values)
