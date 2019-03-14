@@ -76,7 +76,7 @@ namespace NetFusion.AMQP.Modules
         // invoked when a message is received.
         private void LinkSubscriber(HostItemSubscriber subscriber, ISubscriptionSettings subscriptionSettings)
         {
-            Session session = _connectionModule.CreateSession(subscriber.HostAttribute.HostName);
+            Session session = _connectionModule.CreateReceiverSession(subscriber.HostAttribute.HostName);
             ISubscriberLinker linker = subscriber.HostItemAttribute.Linker;
             
             // Set the services used by the linker when messages are received:

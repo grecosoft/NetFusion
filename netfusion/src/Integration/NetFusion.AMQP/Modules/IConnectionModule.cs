@@ -1,11 +1,8 @@
-﻿using System.Threading.Tasks;
-using Amqp;
+﻿using Amqp;
 using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.AMQP.Modules
 {
-    using NetFusion.AMQP.Publisher.Internal;
-
     /// <summary>
     /// Module that manages a set of connections/sessions to the configured
     /// AMQP hosts.  When the host stops and is disposed, the created
@@ -18,7 +15,7 @@ namespace NetFusion.AMQP.Modules
         /// </summary>
         /// <param name="hostName">The host name.</param>
         /// <returns>The session used to communicate with the host.</returns>
-        Session CreateSession(string hostName);
+        Session CreateReceiverSession(string hostName);
         
         Session GetSenderSession(string hostName);
     }
