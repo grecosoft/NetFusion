@@ -9,8 +9,6 @@ using NetFusion.Messaging.Exceptions;
 
 namespace NetFusion.Messaging.Modules
 {
-    using NetFusion.Bootstrap.Exceptions;
-
     /// <summary>
     /// Plug-in module called during the bootstrap process to configure the dispatching of queries to consumers.
     /// </summary>

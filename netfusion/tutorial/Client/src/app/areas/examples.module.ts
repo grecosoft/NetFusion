@@ -23,6 +23,7 @@ import { AttributedEntityComponent } from './base/attributed-entity.component/at
 import { EntityExpressionsComponent } from './base/entity-expressions.component/entity-expressions.component';
 import { AmqpPublisherComponent } from './amqp/amqp-publisher.component/amqp-publisher.component';
 import { AmqpConsumerComponent } from './amqp/amqp-consumer.component/amqp-consumer.component';
+import { AmqpService } from './amqp/AmqpService';
 
 const areaRoutes: Routes = [
     { path: 'settings', component: SettingsComponent },
@@ -95,6 +96,7 @@ const areaRoutes: Routes = [
         SettingsService,
         MongoDbService,
         RabbitMqService,
+        AmqpService,
         GitHubService,
         RedisService,
         OverviewService

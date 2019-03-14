@@ -1,1 +1,73 @@
-Publisher
+<nav-toolbar [isDisplayed]="true"></nav-toolbar>
+<div class="area-content">
+    <div class="plugin-summary">
+        <h1 class="section-header">Plugin Summary</h1>
+        <div class="portal-definition-list">
+            <dl class="version-info">
+                <dt>Nuget Package</dt><dd>{{nugetPackageName}}</dd>
+                <dt>Documentation</dt><dd><a href="{{documentationUrl}}" target="_blank">View</a></dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="plugin-overview">
+        <h1 class="section-header">Overview</h1>
+        <ul>
+            <li>Built using the AmqpNetLite open-source library.</li>
+            <li>Provides an implementation of the IMessagePublisher interface allowing commands and domain-events to be published to an AMQP compliant broker.</li>
+            <li>As with all messaging implementation provided by NetFusion, all messages are sent using the *IMessingService* interface.</li>
+            <li>Commands are sent to Queues.</li>
+            <li>Domain-events are published to Topics.</li>
+        </ul>
+    </div>
+
+    <div class="plugin-usage">
+        <h1 class="section-header">Usage Summary</h1>
+        <ul>
+            <li>Create commands by implementing the ICommand interface or deriving from the Command base implementation.</li>
+            <li>Create domain-events by implementing the IDomainEvent interface or deriving from the DomainEvent base implementation.</li>
+            <li>Add the netfusion:amqp section to the appsettings.json file of the host application.</li>
+            <li>Specify the Queue and Topics to which commands and domain-events should be sent/published by deriving from the HostRegistryBase class.</li>
+        </ul>
+    </div>
+
+    <div class="plugin-examples">
+        <h1 class="section-header">Publisher Example</h1>
+        <p>
+            The following will sends a command to a queue and publishes a domain-event to a topic.  Before running the examples,
+            follow the <a href="https://github.com/grecosoft/NetFusion/wiki/integration.amqp.overview#amqp-overview" target="_blank">instructions</a> 
+            required to define a queue and topic on Microsoft Azure Message Bus.   Before trying the below examples, have the Services.Client executable running.
+        </p>
+        <div class="plugin-example">
+            <h2 class="section-header">Sending Command to Queue</h2>
+            <p>
+              This example will send a command to the defined claim-submissions queue.
+            </p>
+            <div class="inputs">
+                <div>
+                    <textarea [(ngModel)]="newCommandBody"></textarea>
+                </div> 
+                <button type="submit" mat-raised-button (click)="onSendCommand()" color="primary">Send Command</button>
+            </div>
+            <div class="results">
+                <json-viewer [json]="commandResult" class="viewer"></json-viewer>
+            </div>
+        </div>
+
+        <div class="plugin-example">
+            <h2 class="section-header">Publishing Domain-Event to Topic</h2>
+            <p>
+                This example will publish a domain-event to the defined claim-status-notification topic.
+            </p>
+            <div class="inputs">
+                <div>
+                    <textarea [(ngModel)]="newDomainEventBody"></textarea>
+                </div> 
+                <button type="submit" mat-raised-button (click)="onPublishDomainEvent()" color="primary">Publish Domain-Event</button>
+            </div>
+            <div class="results">
+                <json-viewer [json]="domainEventResult" class="viewer"></json-viewer>
+            </div>
+        </div>
+    </div>
+</div>
