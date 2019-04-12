@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using Amqp;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Settings;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Amqp.Framing;
+using Microsoft.Extensions.Logging;
+using NetFusion.AMQP.Settings;
 
 namespace NetFusion.AMQP.Modules
 {
-    using System.Linq;
-    using System.Threading.Tasks;
-    using NetFusion.AMQP.Settings;
 
     /// <summary>
     /// Module when bootstrapped stores metadata about the defined AMQP connections.
@@ -22,13 +25,17 @@ namespace NetFusion.AMQP.Modules
         // The configured host settings and a lookup of the session
         // associated with a given host.
         private AmqpHostSettings _amqpSettings;
-        
+
+        private static readonly SemaphoreSlim SenderConnSemaphore = new SemaphoreSlim(1,1);
+        private readonly Dictionary<string, Connection> _senderConnections;     // Host Name => AMQP connection
         private readonly Dictionary<string, Connection> _receiverConnections;   // Host Name => AMQP Connection
         private readonly List<Session> _receiverSessions;        
 
         public ConnectionModule()
         {
+            _senderConnections = new Dictionary<string, Connection>();
             _receiverConnections = new Dictionary<string, Connection>();
+            
             _receiverSessions = new List<Session>();
         }
         
@@ -37,7 +44,7 @@ namespace NetFusion.AMQP.Modules
             _amqpSettings = Context.Configuration.GetSettings(Context.Logger, new AmqpHostSettings());
         }
 
-        // Create connections to the configured hosts to be used for sending and receiving.
+        // Create connections to the configured hosts to be used for receiving messages.
         public override void StartModule(IServiceProvider services)
         {
             foreach (HostSettings host in _amqpSettings.Hosts)
@@ -46,7 +53,10 @@ namespace NetFusion.AMQP.Modules
                     host.Username,
                     host.Password);
 
-                _receiverConnections[host.HostName] = Connection.Factory.CreateAsync(address).Result;
+                var connection = Connection.Factory.CreateAsync(address).Result;
+                connection.Closed += (sender, error) => { LogItemClosed(error); };
+                
+                _receiverConnections[host.HostName] = connection;
             }
         }
         
@@ -54,7 +64,38 @@ namespace NetFusion.AMQP.Modules
         {
             if (string.IsNullOrWhiteSpace(hostName))
                 throw new ArgumentException("Host Name not specified.", nameof(hostName));
+           
+            if (!HasOpenSenderConnection(hostName))
+            {
+                await SenderConnSemaphore.WaitAsync();
+                try
+                {
+                    if (!HasOpenSenderConnection(hostName))
+                    {
+                        await CreateSenderConnection(hostName);
+                    }
+                }
+                finally
+                {
+                    SenderConnSemaphore.Release();
+                }
+            }
+            
+            return new Session(_senderConnections[hostName]);
+        }
 
+        private bool HasOpenSenderConnection(string hostName)
+        {
+            if (_senderConnections.TryGetValue(hostName, out var hostConn))
+            {
+                return !hostConn.IsClosed;
+            }
+
+            return false;
+        }
+
+        private async Task CreateSenderConnection(string hostName)
+        {
             HostSettings host = _amqpSettings.Hosts.FirstOrDefault(h => h.HostName == hostName);
             if (host == null)
             {
@@ -66,8 +107,10 @@ namespace NetFusion.AMQP.Modules
                 host.Username,
                 host.Password);
 
-            var connection = await Connection.Factory.CreateAsync(address);
-            return new Session(connection);
+            var connection =  await Connection.Factory.CreateAsync(address);
+            connection.Closed += (sender, error) => { LogItemClosed(error); };
+            
+            _senderConnections[hostName] = connection;
         }
 
         public Session CreateReceiverSession(string hostName)
@@ -82,10 +125,24 @@ namespace NetFusion.AMQP.Modules
             }
             
             Session session = new Session(connection);
+            session.Closed += (sender, error) => { LogItemClosed(error); };
             
             _receiverSessions.Add(session);
             return session;
-        }       
+        }
+
+        private void LogItemClosed(Error error)
+        {
+            string errorDesc = error?.Description;
+            if (errorDesc != null)
+            {
+                Context.Logger.LogError("AMQP Item was closed.  Error: {error}", errorDesc);
+            }
+            else
+            {
+                Context.Logger.LogError("AMQP Items was closed.");
+            }
+        }
       
         protected override void Dispose(bool dispose)
         {

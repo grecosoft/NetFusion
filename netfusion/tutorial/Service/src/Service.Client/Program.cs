@@ -17,6 +17,8 @@
         public static async Task Main(string[] args)
         {
             await BuildHost().WaitForShutdownAsync();
+            
+            AppContainer.Instance.Dispose();
         }
         
         private static IHost BuildHost()
@@ -49,11 +51,11 @@
         {
             builder.ClearProviders();
 
-            if (EnvironmentConfig.IsDevelopment)
-            {
-                builder.AddDebug().SetMinimumLevel(LogLevel.Debug);
-                builder.AddConsole().SetMinimumLevel(LogLevel.Debug);
-            }
+//            if (EnvironmentConfig.IsDevelopment)
+//            {
+                builder.AddDebug().SetMinimumLevel(LogLevel.Trace);
+                builder.AddConsole().SetMinimumLevel(LogLevel.Trace);
+//            }
 
             // Add additional logger specific to non-development environments.
         }
@@ -67,7 +69,7 @@
                 "Service.*");
             
             var loggerFactory = new LoggerFactory();
-
+          
             return services.CreateAppBuilder(configuration, loggerFactory, typeResolver)
                 .Bootstrap(c => {
 

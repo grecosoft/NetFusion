@@ -17,7 +17,7 @@ namespace Service.Client.Handlers
             Console.WriteLine(command.ToIndentedJson());
         }
 
-        [Topic("claim-status-notification", "all-notifications")]
+        //[Topic("claim-status-notification", "all-notifications")]
         public void OnClaimStatus(ClaimStatusUpdated domainEvent)
         {
             Console.WriteLine(domainEvent.ToIndentedJson());

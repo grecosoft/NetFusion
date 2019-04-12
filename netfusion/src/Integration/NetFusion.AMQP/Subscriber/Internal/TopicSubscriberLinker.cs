@@ -1,5 +1,6 @@
 ﻿using System;
 using Amqp;
+using Microsoft.Extensions.Logging;
 
 namespace NetFusion.AMQP.Subscriber.Internal
 {
@@ -26,6 +27,13 @@ namespace NetFusion.AMQP.Subscriber.Internal
 
             string subscriptionName = subscriptionSettings.GetMappedSubscription(mapping)
                                       ?? topicAttribute.SubscriptionName;
+            
+            var logger = LoggerFactory.CreateLogger<TopicSubscriberLinker>();
+            
+            logger.LogInformation(
+                "Subscribing to topic {topicName} as subscription {subscriptionName}", 
+                topicAttribute.TopicName,
+                subscriptionName);
             
             // Create a AMQP receiver link used to register handler method:
             var receiverLink = new ReceiverLink(session, Guid.NewGuid().ToString(), 

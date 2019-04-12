@@ -60,10 +60,11 @@ namespace NetFusion.AMQP.Publisher
             ISenderHostItem senderItem = (ISenderHostItem)hostItem;
 
             Session session = await _connectionModule.CreateSenderSession(hostItem.HostName);
+            SenderLink senderLink = null;
             try
             {
                 // Create the sender link used to send messages:
-                var senderLink = new SenderLink(session, Guid.NewGuid().ToString(), senderItem.Name);
+                senderLink = new SenderLink(session, Guid.NewGuid().ToString(), senderItem.Name);
             
                 // Serialize the message based on its associated content-type and delegate to the corresponding
                 // host sender item to create the AMQP message with the message properties correctly set.
@@ -76,7 +77,10 @@ namespace NetFusion.AMQP.Publisher
             finally
             {
                 await session.CloseAsync();
-                await session.Connection.CloseAsync();
+                if (senderLink != null)
+                {
+                    await senderLink.CloseAsync();
+                }
             }
         }
 

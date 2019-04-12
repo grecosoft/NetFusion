@@ -5,6 +5,7 @@ using NetFusion.Base.Serialization;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Modules;
 using NetFusion.Messaging.Types;
+using Amqp.Framing;
 
 namespace NetFusion.AMQP.Subscriber.Internal
 {
@@ -22,6 +23,8 @@ namespace NetFusion.AMQP.Subscriber.Internal
         protected void ReceiveMessages(HostItemSubscriber subscriber, IReceiverLink receiverLink)
         {
             subscriber.SetReceiverLink(receiverLink);
+
+            receiverLink.Closed += (sender, error) => { LogItemClosed(error); };
             
             // Start message pump that will be called when a message
             // is published to the host item.  
@@ -86,6 +89,21 @@ namespace NetFusion.AMQP.Subscriber.Internal
         {
             string contentType = nsMessage.Properties.ContentType;
             return (IMessage)Serialization.Deserialize(contentType, messageType, (byte[])nsMessage.Body);
+        }
+        
+        private void LogItemClosed(Error error)
+        {
+            var logger = LoggerFactory.CreateLogger<SubscriberLinkerBase>();
+            string errorDesc = error?.Description;
+            
+            if (errorDesc != null)
+            {
+                logger.LogError("ReceiverLink was closed.  Error: {error}", errorDesc);
+            }
+            else
+            {
+                logger.LogError("ReceiverLink was closed.");
+            }
         }
     }
 }

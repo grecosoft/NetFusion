@@ -102,7 +102,7 @@ namespace NetFusion.AMQP.Modules
                 itemSubscriber.ReceiverLink?.Close();
             }
 
-  _disposed = true;
+            _disposed = true;
         }
     }
 }
