@@ -54,7 +54,7 @@ namespace NetFusion.AMQP.Modules
                     host.Password);
 
                 var connection = Connection.Factory.CreateAsync(address).Result;
-                connection.Closed += (sender, error) => { LogItemClosed(error); };
+                connection.Closed += (sender, error) => { LogItemClosed("Receiver Connection", error); };
                 
                 _receiverConnections[host.HostName] = connection;
             }
@@ -108,7 +108,7 @@ namespace NetFusion.AMQP.Modules
                 host.Password);
 
             var connection =  await Connection.Factory.CreateAsync(address);
-            connection.Closed += (sender, error) => { LogItemClosed(error); };
+            connection.Closed += (sender, error) => { LogItemClosed("Sender Connection", error); };
             
             _senderConnections[hostName] = connection;
         }
@@ -125,22 +125,22 @@ namespace NetFusion.AMQP.Modules
             }
             
             Session session = new Session(connection);
-            session.Closed += (sender, error) => { LogItemClosed(error); };
+            session.Closed += (sender, error) => { LogItemClosed("Receiver Session", error); };
             
             _receiverSessions.Add(session);
             return session;
         }
 
-        private void LogItemClosed(Error error)
+        private void LogItemClosed(string context, Error error)
         {
             string errorDesc = error?.Description;
             if (errorDesc != null)
             {
-                Context.Logger.LogError("AMQP Item was closed.  Error: {error}", errorDesc);
+                Context.Logger.LogWarning("AMQP Item was closed.  Context: {context}  Error: {error}", context, errorDesc);
             }
             else
             {
-                Context.Logger.LogError("AMQP Items was closed.");
+                Context.Logger.LogWarning("AMQP Items was closed.");
             }
         }
       

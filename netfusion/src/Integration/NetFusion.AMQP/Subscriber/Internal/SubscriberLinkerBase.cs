@@ -98,11 +98,11 @@ namespace NetFusion.AMQP.Subscriber.Internal
             
             if (errorDesc != null)
             {
-                logger.LogError("ReceiverLink was closed.  Error: {error}", errorDesc);
+                logger.LogWarning("ReceiverLink was closed.  Error: {error}", errorDesc);
             }
             else
             {
-                logger.LogError("ReceiverLink was closed.");
+                logger.LogWarning("ReceiverLink was closed.");
             }
         }
     }
