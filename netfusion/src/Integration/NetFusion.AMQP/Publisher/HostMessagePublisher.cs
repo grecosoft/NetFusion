@@ -33,15 +33,15 @@ namespace NetFusion.AMQP.Publisher
         /// <summary>
         /// Indicates that this message publisher will deliver the message to
         /// an external process.  Not directly used by this plug-in but allows
-        /// higher level implementations to, for example, dispatch all in-process
+        /// higher level implementations, for example, to dispatch all in-process
         /// messages before dispatching those that are external.
         /// </summary>
         public override IntegrationTypes IntegrationType => IntegrationTypes.External;
 
         /// <summary>
-        /// Called when a message is published.  Determines if there is a registration
-        /// associated with the message being published.  If a registration is for an
-        /// associated Queue or Topic, the message will be delivered.
+        /// Called when a message is published.  Determines if there is a registration associated with
+        /// the message being published.  If there is a registration for an associated Queue or Topic,
+        /// the message will be delivered.
         /// </summary>
         /// <param name="message">The message being dispatched.</param>
         /// <param name="cancellationToken">Cancellation token.</param>

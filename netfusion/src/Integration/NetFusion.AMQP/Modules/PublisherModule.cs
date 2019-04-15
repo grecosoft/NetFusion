@@ -13,9 +13,8 @@ namespace NetFusion.AMQP.Modules
     using NetFusion.AMQP.Publisher.Internal;
 
     /// <summary>
-    /// Module when bootstrapped finds all the IHostRegistry instances
-    /// and stores for a given message type the object defined on the
-    /// host to which it should be sent.
+    /// Module when bootstrapped finds all the IHostRegistry instances and stores for a given
+    /// message type the object defined on the host (i.e. Queue/Topics) to which it should be sent.
     /// </summary>
     public class PublisherModule : PluginModule,
         IPublisherModule

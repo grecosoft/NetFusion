@@ -19,6 +19,14 @@ namespace NetFusion.AMQP.Subscriber.Internal
         public IMessageDispatchModule DispatchModule { get; set; }
         public ISerializationManager Serialization { get; set; }
         public ILoggerFactory LoggerFactory { get; set; }
+
+        public void SetServices(IMessageDispatchModule dispatchModule, ISerializationManager serialization,
+            ILoggerFactory loggerFactory)
+        {
+            DispatchModule = dispatchModule;
+            Serialization = serialization;
+            LoggerFactory = loggerFactory;
+        }
         
         protected void ReceiveMessages(HostItemSubscriber subscriber, IReceiverLink receiverLink)
         {
@@ -98,11 +106,11 @@ namespace NetFusion.AMQP.Subscriber.Internal
             
             if (errorDesc != null)
             {
-                logger.LogWarning("ReceiverLink was closed.  Error: {error}", errorDesc);
+                logger.LogDebug("ReceiverLink was closed.  Error: {error}", errorDesc);
             }
             else
             {
-                logger.LogWarning("ReceiverLink was closed.");
+                logger.LogDebug("ReceiverLink was closed.");
             }
         }
     }

@@ -22,8 +22,7 @@ namespace NetFusion.AMQP.Modules
     {
         private bool _disposed;
        
-        // The configured host settings and a lookup of the session
-        // associated with a given host.
+        // The configured host settings.
         private AmqpHostSettings _amqpSettings;
 
         private static readonly SemaphoreSlim SenderConnSemaphore = new SemaphoreSlim(1,1);
@@ -65,12 +64,12 @@ namespace NetFusion.AMQP.Modules
             if (string.IsNullOrWhiteSpace(hostName))
                 throw new ArgumentException("Host Name not specified.", nameof(hostName));
            
-            if (!HasOpenSenderConnection(hostName))
+            if (! HasOpenSenderConnection(hostName))
             {
                 await SenderConnSemaphore.WaitAsync();
                 try
                 {
-                    if (!HasOpenSenderConnection(hostName))
+                    if (! HasOpenSenderConnection(hostName))
                     {
                         await CreateSenderConnection(hostName);
                     }
@@ -136,11 +135,11 @@ namespace NetFusion.AMQP.Modules
             string errorDesc = error?.Description;
             if (errorDesc != null)
             {
-                Context.Logger.LogWarning("AMQP Item was closed.  Context: {context}  Error: {error}", context, errorDesc);
+                Context.Logger.LogDebug("AMQP Item was closed.  Context: {context}  Error: {error}", context, errorDesc);
             }
             else
             {
-                Context.Logger.LogWarning("AMQP Items was closed.");
+                Context.Logger.LogDebug("AMQP Items was closed.");
             }
         }
       

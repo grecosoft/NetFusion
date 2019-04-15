@@ -13,9 +13,8 @@ using NetFusion.AMQP.Subscriber.Internal;
 namespace NetFusion.AMQP.Modules
 {
     /// <summary>
-    /// Plugin module when bootstrapped discovers the message handlers
-    /// corresponding to host defined items (i.e. Queues/Topics) to
-    /// which they should be subscribed.
+    /// Plugin module when bootstrapped discovers the message handlers corresponding to
+    /// host defined items (i.e. Queues/Topics) to which they should be subscribed.
     /// </summary>
     public class SubscriberModule : PluginModule
     {
@@ -26,7 +25,9 @@ namespace NetFusion.AMQP.Modules
         private IMessageDispatchModule _dispatchModule;
         private ISerializationManager _serialization;
         
-        // Host provided service to alter module's default behavior.
+        // Host provided service to alter module's default behavior.  For example, the host
+        // can create an unique topic subscription to which it can subscribe - the creation
+        // of topic subscriptions is not part the the AMQP specification.
         private ISubscriptionSettings _subscriptionSettings;
         
         // Message handlers subscribed to host items such as queues and topics.
@@ -56,17 +57,19 @@ namespace NetFusion.AMQP.Modules
 
         private static HostItemSubscriber[] GetHostSubscribers(IMessageDispatchModule dispatchModule)
         {
+            // Finds all message handler methods that subscribe to AMQP Queues and Topics.
             return dispatchModule.AllMessageTypeDispatchers
                 .Values().Where(HostItemSubscriber.IsSubscriber)
                 .Select(d => new HostItemSubscriber(d))
                 .ToArray();
         }
 
-        // Called by an service component such as an .NET Core Hosted Service.
         private async Task LinkHandlersToHostItems(ISubscriptionSettings subscriptionSettings)
         {
             if (subscriptionSettings == null) throw new ArgumentNullException(nameof(subscriptionSettings));
          
+            // Initialize any host provided AMQP settings - i.e. creating host specific
+            // subscriptions to AMQP defined topics.
             await _subscriptionSettings.ConfigureSettings();
             
             foreach (var subscriber in _subscribers)
@@ -84,10 +87,7 @@ namespace NetFusion.AMQP.Modules
             Session session = _connectionModule.CreateReceiverSession(subscriber.HostAttribute.HostName);
             ISubscriberLinker linker = subscriber.HostItemAttribute.Linker;
             
-            // Set the services used by the linker when messages are received:
-            linker.DispatchModule = _dispatchModule;
-            linker.Serialization = _serialization;
-            linker.LoggerFactory = Context.LoggerFactory;
+            linker.SetServices(_dispatchModule, _serialization, Context.LoggerFactory);
             
             // Delegate to the subscriber linker implementation to handle received messages:
             linker.LinkSubscriber(session, subscriber, subscriptionSettings);

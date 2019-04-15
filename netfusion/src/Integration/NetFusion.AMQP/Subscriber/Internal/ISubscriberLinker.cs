@@ -12,10 +12,13 @@ namespace NetFusion.AMQP.Subscriber.Internal
     public interface ISubscriberLinker
     {
         // Dependent Services:
-        IMessageDispatchModule DispatchModule { get; set; }
-        ISerializationManager Serialization { get; set; }
-        ILoggerFactory LoggerFactory { get; set; }
+        IMessageDispatchModule DispatchModule { get; }
+        ISerializationManager Serialization { get; }
+        ILoggerFactory LoggerFactory { get; }
 
+        void SetServices(IMessageDispatchModule dispatchModule, ISerializationManager serialization,
+            ILoggerFactory loggerFactory);
+        
         /// <summary>
         /// Called to link a host item (i.e. Queue/Topic) to an event handler
         /// method that will be called when a message arrives on the item.

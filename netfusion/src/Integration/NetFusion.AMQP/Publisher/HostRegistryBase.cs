@@ -14,7 +14,8 @@ namespace NetFusion.AMQP.Publisher
         private readonly List<IHostItem> _items = new List<IHostItem>();
         
         /// <summary>
-        /// The name of the configured host.
+        /// The name of the configured host specified within the application's
+        /// configuration settings.
         /// </summary>
         public abstract string Namespace { get; }
 
