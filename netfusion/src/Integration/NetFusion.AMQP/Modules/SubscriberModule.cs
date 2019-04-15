@@ -20,6 +20,8 @@ namespace NetFusion.AMQP.Modules
     {
         private bool _disposed;
         
+        private static readonly object ReceiverReConnLock = new object();
+        
         // Dependent Modules:
         private IConnectionModule _connectionModule;
         private IMessageDispatchModule _dispatchModule;
@@ -87,10 +89,36 @@ namespace NetFusion.AMQP.Modules
             Session session = _connectionModule.CreateReceiverSession(subscriber.HostAttribute.HostName);
             ISubscriberLinker linker = subscriber.HostItemAttribute.Linker;
             
+            subscriber.SetReceiverConnection( session.Connection);
+            
             linker.SetServices(_dispatchModule, _serialization, Context.LoggerFactory);
             
             // Delegate to the subscriber linker implementation to handle received messages:
             linker.LinkSubscriber(session, subscriber, subscriptionSettings);
+            
+            MonitorForClosedConnection(session);
+        }
+
+        // Callback invoked when receiver connection is closed.  All the subscribers associated
+        // with this connections must be reestablished. 
+        private void MonitorForClosedConnection(Session session)
+        {
+            session.Connection.Closed += (sender, error) =>
+            {
+                lock (ReceiverReConnLock)
+                {
+                    var closedConn = (Connection) sender;
+                    var closedSubscribers = _subscribers.Where(s => s.ReceiverConnection == closedConn);
+
+                    // Reset any closed receiver connections and resubscribe links.
+                    foreach (HostItemSubscriber subscriber in closedSubscribers)
+                    {
+                        _connectionModule.ReSetReceiverConnection(subscriber.HostAttribute.HostName);
+                        
+                        LinkSubscriber(subscriber, _subscriptionSettings);
+                    }
+                }
+            };
         }
         
         protected override void Dispose(bool dispose)

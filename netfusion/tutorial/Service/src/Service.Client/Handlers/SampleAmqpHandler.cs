@@ -7,14 +7,22 @@ using Service.Domain.Events;
 
 namespace Service.Client.Handlers
 {
+    using NetFusion.AMQP.Modules;
+
     [Host("claims-bus")]
     public class SampleAmqpHandler : IMessageConsumer
     {
+        private readonly IConnectionModule _connectionModule;
 
+        public SampleAmqpHandler(IConnectionModule connectionModule)
+        {
+            _connectionModule = connectionModule;
+        }
+        
         [Queue("claim-submissions")]
         public void OnClaimSubmission(CreateClaimSubmission command)
         {
-            Console.WriteLine(command.ToIndentedJson());
+           Console.WriteLine(command.ToIndentedJson());
         }
 
         //[Topic("claim-status-notification", "all-notifications")]

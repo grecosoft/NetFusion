@@ -25,8 +25,11 @@ namespace NetFusion.AMQP.Modules
         // The configured host settings.
         private AmqpHostSettings _amqpSettings;
 
+        // Sender Settings:
         private static readonly SemaphoreSlim SenderConnSemaphore = new SemaphoreSlim(1,1);
         private readonly Dictionary<string, Connection> _senderConnections;     // Host Name => AMQP connection
+        
+        // Receiver Settings:
         private readonly Dictionary<string, Connection> _receiverConnections;   // Host Name => AMQP Connection
         private readonly List<Session> _receiverSessions;        
 
@@ -48,6 +51,20 @@ namespace NetFusion.AMQP.Modules
         {
             CreateReceiverConnections();
         }
+        
+        private HostSettings GetHostSettings(string hostName)
+        {
+            HostSettings host = _amqpSettings.Hosts.FirstOrDefault(h => h.HostName == hostName);
+            if (host == null)
+            {
+                throw new InvalidOperationException(
+                    $"Host with the name: {hostName} is not configured.");
+            }
+
+            return host;
+        }
+        
+        //-- AMQP Sender Connection Methods:
         
         public async Task<Session> CreateSenderSession(string hostName)
         {
@@ -82,30 +99,10 @@ namespace NetFusion.AMQP.Modules
 
             return false;
         }
-
-        private void CreateReceiverConnections()
-        {
-            foreach (HostSettings host in _amqpSettings.Hosts)
-            {
-                var address = new Address(host.HostAddress, host.Port, 
-                    host.Username,
-                    host.Password);
-
-                var connection = Connection.Factory.CreateAsync(address).Result;
-                connection.Closed += (sender, error) => { LogItemClosed("Receiver Connection", error); };
-                
-                _receiverConnections[host.HostName] = connection;
-            }
-        }
-
+        
         private async Task CreateSenderConnection(string hostName)
         {
-            HostSettings host = _amqpSettings.Hosts.FirstOrDefault(h => h.HostName == hostName);
-            if (host == null)
-            {
-                throw new InvalidOperationException(
-                    $"Host with the name: {hostName} is not configured.");
-            }
+            HostSettings host = GetHostSettings(hostName);
             
             var address = new Address(host.HostAddress, host.Port, 
                 host.Username,
@@ -115,6 +112,30 @@ namespace NetFusion.AMQP.Modules
             connection.Closed += (sender, error) => { LogItemClosed("Sender Connection", error); };
             
             _senderConnections[hostName] = connection;
+        }
+        
+        //-- AMQP Receiver Connection Methods:
+
+        private void CreateReceiverConnections()
+        {
+            foreach (HostSettings host in _amqpSettings.Hosts)
+            {
+                CreateReceiverHostConnection(host.HostName);
+            }
+        }
+
+        private void CreateReceiverHostConnection(string hostName)
+        {
+            HostSettings host = GetHostSettings(hostName);
+            
+            var address = new Address(host.HostAddress, host.Port, 
+                host.Username,
+                host.Password);
+
+            var connection = Connection.Factory.CreateAsync(address).Result;
+            connection.Closed += (sender, error) => { LogItemClosed("Receiver Connection", error); };
+                
+            _receiverConnections[host.HostName] = connection;
         }
 
         public Session CreateReceiverSession(string hostName)
@@ -135,6 +156,14 @@ namespace NetFusion.AMQP.Modules
             return session;
         }
 
+        public void ReSetReceiverConnection(string hostName)
+        {
+            Connection hostConn = _receiverConnections[hostName];
+            
+            _receiverSessions.RemoveAll(rs => rs.Connection == hostConn);
+            CreateReceiverHostConnection(hostName);
+        }
+        
         private void LogItemClosed(string context, Error error)
         {
             string errorDesc = error?.Description;

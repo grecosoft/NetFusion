@@ -14,6 +14,9 @@ namespace NetFusion.AMQP.Subscriber.Internal
         public MessageDispatchInfo DispatchInfo { get; }
         public HostAttribute HostAttribute { get; }
         public HostItemAttribute HostItemAttribute { get; }
+        
+        // AMQP associated objects:
+        public Connection ReceiverConnection { get; private set; }
         public IReceiverLink ReceiverLink { get; private set; }
         
         public HostItemSubscriber(MessageDispatchInfo dispatchInfo)
@@ -33,6 +36,11 @@ namespace NetFusion.AMQP.Subscriber.Internal
             return
                 dispatchInfo.MessageHandlerMethod.HasAttribute<HostItemAttribute>()
                 && dispatchInfo.ConsumerType.HasAttribute<HostAttribute>();
+        }
+
+        public void SetReceiverConnection(Connection connection)
+        {
+            ReceiverConnection = connection;
         }
 
         public void SetReceiverLink(IReceiverLink link)
