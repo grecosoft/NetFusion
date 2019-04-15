@@ -46,17 +46,7 @@ namespace NetFusion.AMQP.Modules
         // Create connections to the configured hosts to be used for receiving messages.
         public override void StartModule(IServiceProvider services)
         {
-            foreach (HostSettings host in _amqpSettings.Hosts)
-            {
-                var address = new Address(host.HostAddress, host.Port, 
-                    host.Username,
-                    host.Password);
-
-                var connection = Connection.Factory.CreateAsync(address).Result;
-                connection.Closed += (sender, error) => { LogItemClosed("Receiver Connection", error); };
-                
-                _receiverConnections[host.HostName] = connection;
-            }
+            CreateReceiverConnections();
         }
         
         public async Task<Session> CreateSenderSession(string hostName)
@@ -91,6 +81,21 @@ namespace NetFusion.AMQP.Modules
             }
 
             return false;
+        }
+
+        private void CreateReceiverConnections()
+        {
+            foreach (HostSettings host in _amqpSettings.Hosts)
+            {
+                var address = new Address(host.HostAddress, host.Port, 
+                    host.Username,
+                    host.Password);
+
+                var connection = Connection.Factory.CreateAsync(address).Result;
+                connection.Closed += (sender, error) => { LogItemClosed("Receiver Connection", error); };
+                
+                _receiverConnections[host.HostName] = connection;
+            }
         }
 
         private async Task CreateSenderConnection(string hostName)
