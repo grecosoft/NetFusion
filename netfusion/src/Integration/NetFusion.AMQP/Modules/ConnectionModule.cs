@@ -181,12 +181,12 @@ namespace NetFusion.AMQP.Modules
         {
             if (! dispose || _disposed) return;
 
-            foreach (Session session in _receiverSessions)
+            foreach (Session session in _receiverSessions.ToArray())
             {
                 session.Close();
             }
 
-            foreach (Connection connection in _receiverConnections.Values)
+            foreach (Connection connection in _receiverConnections.Values.ToArray())
             {
                 connection.Close();
             }
