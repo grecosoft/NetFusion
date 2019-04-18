@@ -20,6 +20,7 @@ namespace NetFusion.AMQP.Modules
     public class ConnectionModule : PluginModule,
         IConnectionModule
     {
+        private bool _disposing;
         private bool _disposed;
        
         // The configured host settings.
@@ -158,6 +159,11 @@ namespace NetFusion.AMQP.Modules
 
         public void ReSetReceiverConnection(string hostName)
         {
+            if (_disposing)
+            {
+                return;
+            }
+            
             Connection hostConn = _receiverConnections[hostName];
             
             _receiverSessions.RemoveAll(rs => rs.Connection == hostConn);
@@ -181,12 +187,14 @@ namespace NetFusion.AMQP.Modules
         {
             if (! dispose || _disposed) return;
 
-            foreach (Session session in _receiverSessions.ToArray())
+            _disposing = true;
+
+            foreach (Session session in _receiverSessions)
             {
                 session.Close();
             }
 
-            foreach (Connection connection in _receiverConnections.Values.ToArray())
+            foreach (Connection connection in _receiverConnections.Values)
             {
                 connection.Close();
             }
