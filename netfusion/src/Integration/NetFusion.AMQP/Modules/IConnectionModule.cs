@@ -1,4 +1,5 @@
-﻿using Amqp;
+﻿using System;
+using Amqp;
 using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.AMQP.Modules
@@ -29,11 +30,11 @@ namespace NetFusion.AMQP.Modules
         Task<Session> CreateSenderSession(string hostName);
 
         /// <summary>
-        /// Creates a new receiver connection for the specified host name.
-        /// Any existing receiver sessions, created on the connection, are
-        /// removed.
+        /// Allows a handler to be set that is invoked when a receiver connection is closed.
         /// </summary>
-        /// <param name="hostName">The name of the host connection to reset.</param>
-        void ReSetReceiverConnection(string hostName);
+        /// <param name="handler">Delegate passed the name of the host that was closed.</param>
+        void SetReceiverConnectionCloseHandler(Action<string> handler);
+
+        void SimulateClose();
     }
 }

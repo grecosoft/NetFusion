@@ -32,7 +32,8 @@ namespace NetFusion.AMQP.Modules
         
         // Receiver Settings:
         private readonly Dictionary<string, Connection> _receiverConnections;   // Host Name => AMQP Connection
-        private readonly List<Session> _receiverSessions;        
+        private readonly List<Session> _receiverSessions;
+        private Action<string> _receiverConnCloseHandler;
 
         public ConnectionModule()
         {
@@ -63,6 +64,11 @@ namespace NetFusion.AMQP.Modules
             }
 
             return host;
+        }
+
+        public void SimulateClose()
+        {
+            _receiverConnections.First().Value.Close();
         }
         
         //-- AMQP Sender Connection Methods:
@@ -134,9 +140,21 @@ namespace NetFusion.AMQP.Modules
                 host.Password);
 
             var connection = Connection.Factory.CreateAsync(address).Result;
-            connection.Closed += (sender, error) => { LogItemClosed("Receiver Connection", error); };
-                
             _receiverConnections[host.HostName] = connection;
+            
+            connection.Closed += (sender, error) =>
+            {
+                LogItemClosed("Receiver Connection", error);
+                
+                ReSetReceiverConnection(hostName);
+                
+                _receiverConnCloseHandler?.Invoke(hostName);
+            };
+        }
+
+        public void SetReceiverConnectionCloseHandler(Action<string> handler)
+        {
+            _receiverConnCloseHandler = handler ?? throw new ArgumentNullException(nameof(handler));
         }
 
         public Session CreateReceiverSession(string hostName)
@@ -157,12 +175,14 @@ namespace NetFusion.AMQP.Modules
             return session;
         }
 
-        public void ReSetReceiverConnection(string hostName)
+        private void ReSetReceiverConnection(string hostName)
         {
             if (_disposing)
             {
                 return;
             }
+            
+            Context.Logger.LogDebug("Connection to {host} is being reset.", hostName);
             
             Connection hostConn = _receiverConnections[hostName];
             

@@ -74,6 +74,8 @@ namespace NetFusion.AMQP.Modules
             // subscriptions to AMQP defined topics.
             await _subscriptionSettings.ConfigureSettings();
             
+            _connectionModule.SetReceiverConnectionCloseHandler(ReSetReceiverLinkOnClosedConn);
+
             foreach (var subscriber in _subscribers)
             {
                 LinkSubscriber(subscriber, subscriptionSettings);
@@ -89,36 +91,23 @@ namespace NetFusion.AMQP.Modules
             Session session = _connectionModule.CreateReceiverSession(subscriber.HostAttribute.HostName);
             ISubscriberLinker linker = subscriber.HostItemAttribute.Linker;
             
-            subscriber.SetReceiverConnection( session.Connection);
-            
             linker.SetServices(_dispatchModule, _serialization, Context.LoggerFactory);
             
             // Delegate to the subscriber linker implementation to handle received messages:
             linker.LinkSubscriber(session, subscriber, subscriptionSettings);
-            
-            MonitorForClosedConnection(session);
         }
 
-        // Callback invoked when receiver connection is closed.  All the subscribers associated
-        // with this connections must be reestablished. 
-        private void MonitorForClosedConnection(Session session)
+        private void ReSetReceiverLinkOnClosedConn(string closedHostName)
         {
-            session.Connection.Closed += (sender, error) =>
+            lock (ReceiverReConnLock)
             {
-                lock (ReceiverReConnLock)
-                {
-                    var closedConn = (Connection) sender;
-                    var closedSubscribers = _subscribers.Where(s => s.ReceiverConnection == closedConn);
+                var closedSubscribers = _subscribers.Where(s => s.HostAttribute.HostName == closedHostName);
 
-                    // Reset any closed receiver connections and resubscribe links.
-                    foreach (HostItemSubscriber subscriber in closedSubscribers)
-                    {
-                        _connectionModule.ReSetReceiverConnection(subscriber.HostAttribute.HostName);
-                        
-                        LinkSubscriber(subscriber, _subscriptionSettings);
-                    }
+                foreach (HostItemSubscriber subscriber in closedSubscribers)
+                {
+                    LinkSubscriber(subscriber, _subscriptionSettings);
                 }
-            };
+            }
         }
         
         protected override void Dispose(bool dispose)

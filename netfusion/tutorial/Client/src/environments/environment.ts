@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiBaseAddress: 'http://localhost:5000',
+  apiBaseAddress: 'http://localhost:5050',
   apiEntryPath: 'api/entry/examples',
   netFusionCodeRootPath: 'https://raw.githubusercontent.com/grecosoft/NetFusion/master/netfusion/src',
   tutorialCodeRootPath: 'https://raw.githubusercontent.com/grecosoft/Sandbox/master/NetFusion-Tutorial'
