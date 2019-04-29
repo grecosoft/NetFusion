@@ -1,10 +1,11 @@
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Messaging.Config;
+using NetFusion.Messaging.Plugin.Configs;
+using NetFusion.Messaging.Plugin.Modules;
 
 namespace NetFusion.Messaging.Plugin
 {
-    public class MessagingPlugin : Bootstrap.Plugins.Plugin
+    public class MessagingPlugin : PluginBase
     {
         public override string PluginId => "4576D809-E216-4C03-BE43-737728047BAA";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;

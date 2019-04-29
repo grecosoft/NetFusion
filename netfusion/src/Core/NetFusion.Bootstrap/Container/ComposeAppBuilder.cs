@@ -40,7 +40,7 @@ namespace NetFusion.Bootstrap.Container
             return sp;
         }
 
-        public T GetConfig<T>() where T : IContainerConfig
+        public T GetConfig<T>() where T : IPluginConfig
         {
             return _container.GetConfig<T>();
         }

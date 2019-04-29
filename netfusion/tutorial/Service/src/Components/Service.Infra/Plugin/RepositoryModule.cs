@@ -16,7 +16,7 @@ namespace Service.Infra.Plugin
             services.AddScoped<ICustomerRepository, CustomerRepository>();
         }
 
-        public override void ScanPlugin(ITypeCatalog catalog)
+        public override void ScanPlugins(ITypeCatalog catalog)
         {
            // catalog.AsImplementedInterface("Repository", ServiceLifetime.Scoped);
         }

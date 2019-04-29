@@ -1,9 +1,10 @@
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Mapping.Plugin.Modules;
 
 namespace NetFusion.Mapping.Plugin
 {
-    public class MappingPlugin : Bootstrap.Plugins.Plugin
+    public class MappingPlugin : PluginBase
     {
         public override string PluginId => "83C90E78-D245-4B0D-A4FC-E74B11227766";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;

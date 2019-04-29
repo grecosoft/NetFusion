@@ -1,10 +1,12 @@
 using System;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Rest.Server.Plugin.Configs;
+using NetFusion.Rest.Server.Plugin.Modules;
 
 namespace NetFusion.Rest.Server.Plugin
 {
-    public class RestPlugin : Bootstrap.Plugins.Plugin
+    public class RestPlugin : PluginBase
     {
         public override string PluginId => "77491AC3-31CC-44EC-B508-30E1ED2311CE";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;

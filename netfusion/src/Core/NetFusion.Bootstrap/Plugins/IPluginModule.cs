@@ -46,7 +46,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// <param name="catalog">Reference to instance used to filter types to be 
         /// registered.  This registration only contains types contained in the plug-in 
         /// associated with the module.</param>
-        void ScanPlugin(ITypeCatalog catalog);
+        void ScanPlugins(ITypeCatalog catalog);
 
         /// <summary>
         /// Allows the plug-in to register specific types as services within the 

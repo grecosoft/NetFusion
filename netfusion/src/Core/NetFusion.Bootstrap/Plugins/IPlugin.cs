@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using NetFusion.Bootstrap.Container;
 
 namespace NetFusion.Bootstrap.Plugins
 {
@@ -18,12 +17,12 @@ namespace NetFusion.Bootstrap.Plugins
         string DocUrl { get; }
         
         IEnumerable<IPluginModule> Modules { get; }
-        IEnumerable<IContainerConfig> Configs { get; }
+        IEnumerable<IPluginConfig> Configs { get; }
         IEnumerable<Type> Types { get; }
 
         void SetPluginMeta(string assemblyName, string assemblyVersion,
             IEnumerable<Type> pluginTypes);
 
-        T GetConfig<T>() where T : IContainerConfig, new();
+        T GetConfig<T>() where T : IPluginConfig, new();
     }
 }

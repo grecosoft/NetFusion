@@ -69,20 +69,5 @@ namespace NetFusion.Bootstrap.Container
             // Set the corresponding property on the module.
             knownTypeProperty.SetValue(forModule, array);
         }
-     
-        
-        
-        
-
-      
-
-       
-
-
-    
-
-      
-
-     
     }
 }

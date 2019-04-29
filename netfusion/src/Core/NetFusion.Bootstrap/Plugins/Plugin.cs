@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NetFusion.Bootstrap.Container;
 
 namespace NetFusion.Bootstrap.Plugins
 {
-    public abstract class Plugin : IPlugin
+    public abstract class PluginBase : IPlugin
     {
         // Properties that must be specified by derived plugins:
         public abstract string PluginId { get; }
@@ -26,19 +25,19 @@ namespace NetFusion.Bootstrap.Plugins
 
         
         private readonly List<IPluginModule> _modules = new List<IPluginModule>();
-        private readonly List<IContainerConfig> _configs = new List<IContainerConfig>();
+        private readonly List<IPluginConfig> _configs = new List<IPluginConfig>();
 
         protected void AddModule<TModule>() where TModule : IPluginModule, new()
         {
             _modules.Add(new TModule());
         }
 
-        protected void AddConfig<TConfig>() where TConfig : IContainerConfig, new()
+        protected void AddConfig<TConfig>() where TConfig : IPluginConfig, new()
         {
             _configs.Add(new TConfig());
         }
 
-        public IEnumerable<IContainerConfig> Configs => _configs;
+        public IEnumerable<IPluginConfig> Configs => _configs;
 
         public void SetPluginMeta(string assemblyName, string assemblyVersion, 
             IEnumerable<Type> pluginTypes)
@@ -48,7 +47,7 @@ namespace NetFusion.Bootstrap.Plugins
             Types = pluginTypes;
         }
         
-        public T GetConfig<T>() where T : IContainerConfig, new()
+        public T GetConfig<T>() where T : IPluginConfig, new()
         {
             var config = _configs.FirstOrDefault(
                 pc => pc.GetType() == typeof(T));

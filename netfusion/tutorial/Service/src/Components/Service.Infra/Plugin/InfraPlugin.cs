@@ -2,7 +2,7 @@ using NetFusion.Bootstrap.Plugins;
 
 namespace Service.Infra.Plugin
 {
-    public class InfraPlugin : NetFusion.Bootstrap.Plugins.Plugin
+    public class InfraPlugin : PluginBase
     {
         public override string PluginId => "6906fce4-0a69-423b-90ad-60547bfef835";
         public override PluginTypes PluginType => PluginTypes.ApplicationPlugin;

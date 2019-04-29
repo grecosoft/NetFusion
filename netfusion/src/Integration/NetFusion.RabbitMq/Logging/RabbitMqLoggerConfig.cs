@@ -1,6 +1,6 @@
 using EasyNetQ.Logging;
 using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.RabbitMQ.Logging
 {
@@ -11,7 +11,7 @@ namespace NetFusion.RabbitMQ.Logging
     /// 
     /// https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.configuration#bootstrapping---configuration
     /// </summary>
-    public class RabbitMqLoggerConfig : IContainerConfig
+    public class RabbitMqLoggerConfig : IPluginConfig
     {
         /// <summary>
         /// Sets the log factory to which the EasyNetQ logs should be delegated.

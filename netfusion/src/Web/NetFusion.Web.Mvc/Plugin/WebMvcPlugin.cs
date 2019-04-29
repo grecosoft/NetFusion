@@ -1,11 +1,12 @@
 using System;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Web.Mvc.Metadata.Modules;
+using NetFusion.Web.Mvc.Plugin.Configs;
+using NetFusion.Web.Mvc.Plugin.Modules;
 
 namespace NetFusion.Web.Mvc.Plugin
 {
-    public class WebMvcPlugin : Bootstrap.Plugins.Plugin
+    public class WebMvcPlugin : PluginBase
     {
         public override string PluginId => "3C757DE1-48E1-452D-959A-01C8961B43D8";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;

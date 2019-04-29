@@ -6,6 +6,6 @@ namespace NetFusion.Bootstrap.Container
     {
         IComposeAppBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new();
         IBuiltContainer Build();
-        T GetConfig<T>() where T : IContainerConfig;
+        T GetConfig<T>() where T : IPluginConfig;
     }
 }

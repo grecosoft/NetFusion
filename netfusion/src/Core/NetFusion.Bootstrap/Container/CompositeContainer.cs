@@ -292,7 +292,7 @@ namespace NetFusion.Bootstrap.Container
             return (IObjectValidator)Activator.CreateInstance(_validationConfig.ValidatorType, obj);
         }
         
-        public T GetConfig<T>() where T : IContainerConfig
+        public T GetConfig<T>() where T : IPluginConfig
         {
             var config = _plugins.SelectMany(p => p.Configs).FirstOrDefault(
                 pc => pc.GetType() == typeof(T));

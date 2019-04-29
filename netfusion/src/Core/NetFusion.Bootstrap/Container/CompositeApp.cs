@@ -121,7 +121,7 @@ namespace NetFusion.Bootstrap.Container
 
                 foreach (IPluginModule module in plugin.Modules)
                 {
-                    module.ScanPlugin(typeCatalog);
+                    module.ScanPlugins(typeCatalog);
                 }
             }
         }

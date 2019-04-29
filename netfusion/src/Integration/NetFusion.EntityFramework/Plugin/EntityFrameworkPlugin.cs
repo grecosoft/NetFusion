@@ -1,9 +1,10 @@
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.EntityFramework.Plugin.Modules;
 
 namespace NetFusion.EntityFramework.Plugin
 {
-    public class EntityFrameworkPlugin : Bootstrap.Plugins.Plugin
+    public class EntityFrameworkPlugin : PluginBase
     {
         public override string PluginId => "4316A9C70-C3AE-4DC2-8DEA-097EBDB342F7";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
