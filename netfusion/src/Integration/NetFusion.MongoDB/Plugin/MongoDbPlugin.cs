@@ -1,11 +1,12 @@
-using NetFusion.Bootstrap.Refactors;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.MongoDB.Plugin
 {
-    public class MongoDbPlugin : PluginDefinition
+    public class MongoDbPlugin : Bootstrap.Plugins.Plugin
     {
         public override string PluginId => "4BE391F9-F687-4E49-90A3-D38300E3A751";
-        public override PluginDefinitionTypes PluginType => PluginDefinitionTypes.CorePlugin;
+        public override PluginTypes PluginType => PluginTypes.CorePlugin;
         public override string Name => "MongoDb Plug-in";
 
         public MongoDbPlugin()

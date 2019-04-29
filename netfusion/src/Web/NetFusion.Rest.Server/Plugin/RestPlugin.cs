@@ -1,13 +1,13 @@
 using System;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using NetFusion.Bootstrap.Refactors;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Rest.Server.Plugin
 {
-    public class RestPlugin : PluginDefinition
+    public class RestPlugin : Bootstrap.Plugins.Plugin
     {
         public override string PluginId => "77491AC3-31CC-44EC-B508-30E1ED2311CE";
-        public override PluginDefinitionTypes PluginType => PluginDefinitionTypes.CorePlugin;
+        public override PluginTypes PluginType => PluginTypes.CorePlugin;
         public override string Name => "REST/HAL Server Implementation";
 
         public RestPlugin()

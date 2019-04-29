@@ -1,10 +1,10 @@
+using System;
+using Microsoft.AspNetCore.Mvc;
+using NetFusion.Web.Mvc.Metadata;
+using Service.Domain.Entities;
+
 namespace Service.WebApi.Controllers.Core
 {
-    using System;
-    using Microsoft.AspNetCore.Mvc;
-    using NetFusion.Web.Mvc.Metadata;
-    using Service.Domain.Entities;
-
     [Route("api/core/settings"),
         GroupMeta(nameof(SettingsController))]
     public class SettingsController : Controller

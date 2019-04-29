@@ -1,11 +1,12 @@
-using NetFusion.Bootstrap.Refactors;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Settings.Plugin
 {
-    public class SettingsPlugin : PluginDefinition
+    public class SettingsPlugin : Bootstrap.Plugins.Plugin
     {
         public override string PluginId => "1FC4C728-83E0-4407-B846-2871B3F0A1B6";
-        public override PluginDefinitionTypes PluginType => PluginDefinitionTypes.CorePlugin;
+        public override PluginTypes PluginType => PluginTypes.CorePlugin;
         public override string Name => "Settings Plug-in";
 
         public SettingsPlugin()

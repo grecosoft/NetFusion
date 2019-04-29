@@ -1,25 +1,21 @@
-﻿using NetFusion.AMQP.Plugin;
-using NetFusion.Bootstrap.Refactors;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NetFusion.AMQP.Plugin;
+using NetFusion.Base.Serialization;
+using NetFusion.Bootstrap.Configuration;
+using NetFusion.Bootstrap.Container;
 using NetFusion.Messaging.Plugin;
 using NetFusion.RabbitMQ.Plugin;
 using NetFusion.Redis.Plugin;
+using NetFusion.Serialization;
 using NetFusion.Settings.Plugin;
 using Service.Client.Plugin;
-using Service.Domain.Plugin;
 
 namespace Service.Client
 {
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
-    using NetFusion.AMQP.Subscriber;
-    using NetFusion.Base.Serialization;
-    using NetFusion.Bootstrap.Configuration;
-    using NetFusion.Bootstrap.Container;
-    using NetFusion.Serialization;
-
     internal class Program
     {
        

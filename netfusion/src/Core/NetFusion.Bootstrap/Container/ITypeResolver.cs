@@ -1,8 +1,6 @@
 ﻿using System;
-using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Plugins;
 using System.Collections.Generic;
-using NetFusion.Bootstrap.Refactors;
 
 namespace NetFusion.Bootstrap.Container
 {
@@ -12,7 +10,7 @@ namespace NetFusion.Bootstrap.Container
     /// </summary>
     public interface ITypeResolver
     {
-        void SetPluginMeta(IPluginDefinition plugin);
-        void ComposePlugin(IPluginDefinition plugin, IEnumerable<Type> fromPluginTypes);
+        void SetPluginMeta(IPlugin plugin);
+        void ComposePlugin(IPlugin plugin, IEnumerable<Type> fromPluginTypes);
     }
 }

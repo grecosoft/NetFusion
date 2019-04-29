@@ -1,6 +1,6 @@
-namespace NetFusion.Bootstrap.Refactors
+namespace NetFusion.Bootstrap.Plugins
 {
-    public enum PluginDefinitionTypes
+    public enum PluginTypes
     {
         HostPlugin = 1,
         ApplicationPlugin = 2,

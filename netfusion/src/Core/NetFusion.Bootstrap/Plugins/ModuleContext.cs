@@ -5,7 +5,6 @@ using NetFusion.Bootstrap.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NetFusion.Bootstrap.Refactors;
 
 namespace NetFusion.Bootstrap.Plugins
 {
@@ -20,12 +19,12 @@ namespace NetFusion.Bootstrap.Plugins
         /// <summary>
         /// The plug-in representing the application host.
         /// </summary>
-        public IPluginDefinition AppHost { get; }
+        public IPlugin AppHost { get; }
 
         /// <summary>
         /// The plug-in where the module is defined.
         /// </summary>
-        public IPluginDefinition Plugin { get; }
+        public IPlugin Plugin { get; }
 
         /// <summary>
         /// The logger factory configured for the application container.
@@ -56,7 +55,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         public IEnumerable<Type> AllAppPluginTypes { get; }
 
-        public ModuleContext(CompositeApp compositeApp, IPluginDefinition plugin, IPluginModule module)
+        public ModuleContext(CompositeApp compositeApp, IPlugin plugin, IPluginModule module)
         {
             _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
 
@@ -72,7 +71,7 @@ namespace NetFusion.Bootstrap.Plugins
         private IEnumerable<Type> FilteredTypesByPluginType()
         {
             // Core plug-in can access types from all other plug-in types.
-            if (Plugin.PluginType == PluginDefinitionTypes.CorePlugin)
+            if (Plugin.PluginType == PluginTypes.CorePlugin)
             {
                 return _compositeApp.GetPluginTypes();
             }
@@ -84,8 +83,8 @@ namespace NetFusion.Bootstrap.Plugins
 
         private IEnumerable<Type> GetAppPluginTypes()
         {
-            return _compositeApp.GetPluginTypes(PluginDefinitionTypes.ApplicationPlugin,
-                PluginDefinitionTypes.HostPlugin);
+            return _compositeApp.GetPluginTypes(PluginTypes.ApplicationPlugin,
+                PluginTypes.HostPlugin);
         }
 
         /// <summary>

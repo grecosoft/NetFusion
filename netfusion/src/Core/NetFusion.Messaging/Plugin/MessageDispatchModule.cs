@@ -10,7 +10,6 @@ using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Dependencies;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Bootstrap.Refactors;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Config;
@@ -161,7 +160,7 @@ namespace NetFusion.Messaging.Plugin
             // is received outside of the normal lifetime scope such as the one associated with the current
             // web request.
 
-            using (var scope = CompositeAppContainer.Instance.CreateServiceScope())
+            using (var scope = CompositeContainer.Instance.CreateServiceScope())
             {
                 try
                 {

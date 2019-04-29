@@ -1,10 +1,10 @@
+using System;
+using NetFusion.Messaging;
+using NetFusion.RabbitMQ.Subscriber;
+using Service.Client.Commands;
+
 namespace Service.Client.Handlers
 {
-    using System;
-    using NetFusion.Messaging;
-    using NetFusion.RabbitMQ.Subscriber;
-    using Service.Client.Commands;
-
     public class SampleRpcHandler : IMessageConsumer
     {
         [RpcQueue("testBus", "TaxCalculations", "Business.Calcs.Taxes.Property")]

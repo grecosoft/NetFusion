@@ -4,22 +4,21 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Dependencies;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 
-namespace NetFusion.Bootstrap.Refactors
+namespace NetFusion.Bootstrap.Container
 {
     public class CompositeApp
     {
         public bool IsStarted { get; private set; }
         
-        public IPluginDefinition[] AllPlugins { get; }
+        public IPlugin[] AllPlugins { get; }
         
-        public IPluginDefinition HostPlugin { get; private set; }
-        public IPluginDefinition[] AppPlugins { get; private set; }
-        public IPluginDefinition[] CorePlugins { get; private set; }
+        public IPlugin HostPlugin { get; private set; }
+        public IPlugin[] AppPlugins { get; private set; }
+        public IPlugin[] CorePlugins { get; private set; }
         
         public ILoggerFactory LoggerFactory { get; }
         public IConfiguration Configuration { get; }
@@ -29,7 +28,7 @@ namespace NetFusion.Bootstrap.Refactors
         public CompositeApp(
             ILoggerFactory loggerFactory,
             IConfiguration configuration,
-            IEnumerable<IPluginDefinition> plugins)
+            IEnumerable<IPlugin> plugins)
         {
             LoggerFactory = loggerFactory;
             Configuration = configuration;
@@ -38,9 +37,9 @@ namespace NetFusion.Bootstrap.Refactors
 
         public void Validate()
         {
-            HostPlugin = AllPlugins.FirstOrDefault(p => p.PluginType == PluginDefinitionTypes.HostPlugin);
-            AppPlugins = AllPlugins.Where(p => p.PluginType == PluginDefinitionTypes.ApplicationPlugin).ToArray();
-            CorePlugins = AllPlugins.Where(p => p.PluginType == PluginDefinitionTypes.CorePlugin).ToArray();
+            HostPlugin = AllPlugins.FirstOrDefault(p => p.PluginType == PluginTypes.HostPlugin);
+            AppPlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.ApplicationPlugin).ToArray();
+            CorePlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.CorePlugin).ToArray();
 
             var validator = new CompositeAppValidation(this);
             validator.Validate();
@@ -51,7 +50,7 @@ namespace NetFusion.Bootstrap.Refactors
         /// </summary>
         /// <param name="pluginTypes">The category of plug-ins to limit the return types.</param>
         /// <returns>List of limited plug in types or all plug-in types if no category is specified.</returns>
-        public IEnumerable<Type> GetPluginTypes(params PluginDefinitionTypes[] pluginTypes)
+        public IEnumerable<Type> GetPluginTypes(params PluginTypes[] pluginTypes)
         {
             if (pluginTypes == null) throw new ArgumentNullException(nameof(pluginTypes),
                 "List of Plug-in types cannot be null.");
@@ -81,7 +80,7 @@ namespace NetFusion.Bootstrap.Refactors
             ConfigureModules(HostPlugin);
         }
 
-        private void ConfigureModules(IPluginDefinition plugin)
+        private void ConfigureModules(IPlugin plugin)
         {
             foreach (IPluginModule module in plugin.Modules)
             {
@@ -115,7 +114,7 @@ namespace NetFusion.Bootstrap.Refactors
         
         private void ScanPluginForServices(IServiceCollection services)
         {
-            foreach (IPluginDefinition plugin in AllPlugins)
+            foreach (IPlugin plugin in AllPlugins)
             {
                 var sourceTypes = FilteredTypesByPluginType(plugin);
                 var typeCatalog = services.CreateCatalog(sourceTypes);
@@ -127,10 +126,10 @@ namespace NetFusion.Bootstrap.Refactors
             }
         }
         
-        private IEnumerable<Type> FilteredTypesByPluginType(IPluginDefinition plugin)
+        private IEnumerable<Type> FilteredTypesByPluginType(IPlugin plugin)
         {
             // Core plug-in can access types from all other plug-in types.
-            if (plugin.PluginType == PluginDefinitionTypes.CorePlugin)
+            if (plugin.PluginType == PluginTypes.CorePlugin)
             {
                 return AllPlugins.SelectMany(p => p.Types);
             }
@@ -167,7 +166,7 @@ namespace NetFusion.Bootstrap.Refactors
             }
         }
 
-        private static void StartPluginModules(IServiceProvider services, IEnumerable<IPluginDefinition> plugins)
+        private static void StartPluginModules(IServiceProvider services, IEnumerable<IPlugin> plugins)
         {
             foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
             {
@@ -188,7 +187,7 @@ namespace NetFusion.Bootstrap.Refactors
             IsStarted = false;
         }
 
-        private static void StopPluginModules(IServiceProvider services, IEnumerable<IPluginDefinition> plugins)
+        private static void StopPluginModules(IServiceProvider services, IEnumerable<IPlugin> plugins)
         {
             foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
             {

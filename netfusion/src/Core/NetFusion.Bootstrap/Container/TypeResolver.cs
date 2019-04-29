@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NetFusion.Bootstrap.Refactors;
 
 namespace NetFusion.Bootstrap.Container
 {
@@ -20,12 +19,7 @@ namespace NetFusion.Bootstrap.Container
     /// </summary>
     public class TypeResolver : ITypeResolver
     {
-        public TypeResolver()
-        {
-            
-        }
-
-        public void SetPluginMeta(IPluginDefinition plugin)
+        public void SetPluginMeta(IPlugin plugin)
         {
             if (plugin == null) throw new ArgumentNullException(nameof(plugin));
             
@@ -37,7 +31,7 @@ namespace NetFusion.Bootstrap.Container
                 assembly.GetExportedTypes());
         }
 
-        public void ComposePlugin(IPluginDefinition plugin, IEnumerable<Type> fromPluginTypes)
+        public void ComposePlugin(IPlugin plugin, IEnumerable<Type> fromPluginTypes)
         {
             if (plugin == null) throw new ArgumentNullException(nameof(plugin));
             if (fromPluginTypes == null) throw new ArgumentNullException(nameof(fromPluginTypes));

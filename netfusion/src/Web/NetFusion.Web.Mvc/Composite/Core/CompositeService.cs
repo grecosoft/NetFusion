@@ -3,7 +3,6 @@ using NetFusion.Web.Mvc.Composite.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NetFusion.Bootstrap.Refactors;
 
 namespace NetFusion.Web.Mvc.Composite.Core
 {
@@ -15,7 +14,7 @@ namespace NetFusion.Web.Mvc.Composite.Core
     {
         private readonly IDictionary<string, object> _componsiteLog;
 
-        public CompositeService(ICompositeAppContainer appContainer)
+        public CompositeService(ICompositeContainer appContainer)
         {
             _componsiteLog = appContainer.Log;
         }

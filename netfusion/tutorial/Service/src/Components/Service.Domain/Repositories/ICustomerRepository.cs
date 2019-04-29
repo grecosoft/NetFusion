@@ -1,8 +1,8 @@
+using System.Threading.Tasks;
+using Service.Domain.Entities;
+
 namespace Service.Domain.Repositories
 {
-    using System.Threading.Tasks;
-    using Service.Domain.Entities;
-
     public interface ICustomerRepository
     {
         Task AddCustomerAsync(Customer customer);

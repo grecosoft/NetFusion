@@ -1,4 +1,4 @@
-namespace Service.WebApi.Controllers.Core.Settings
+namespace Service.WebApi.Controllers.Core
 {
     public class MessagingController
     {

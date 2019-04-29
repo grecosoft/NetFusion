@@ -1,14 +1,14 @@
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using NetFusion.Messaging;
+using NetFusion.Messaging.Types;
+using NetFusion.Web.Mvc.Metadata;
+using Service.Domain.Commands;
+using Service.Domain.Events;
+
 namespace Service.WebApi.Controllers.Integration
 {
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Mvc;
-    using NetFusion.Messaging;
-    using NetFusion.Messaging.Types;
-    using NetFusion.Web.Mvc.Metadata;
-    using Service.Domain.Commands;
-    using Service.Domain.Events;
-
     [Route("api/integration/rabbitmq"),
      GroupMeta(nameof(MongoDbController))]
     public class RabbitMqController : Controller

@@ -98,28 +98,6 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Allows the plug-in module to scan for types within all other plug-ins.
-        /// This registration contains all other plug-in types when called on a
-        /// core plug in.  For an application plug-in, the types are limited to 
-        /// only other application plug ins.
-        /// </summary>
-        /// <param name="catalog">Reference to instance used to filter types to be 
-        /// registered.</param>
-        public virtual void ScanAllOtherPlugins(ITypeCatalog catalog)
-        {
-        }
-
-        /// <summary>
-        /// Allows a core plug-in module to scan for types limited to only application
-        /// centric plug-in types.
-        /// </summary>
-        /// <param name="catalog">Reference to instance used to filter types to 
-        /// be registered.</param>
-        public virtual void ScanApplicationPlugins(ITypeCatalog catalog)
-        {
-        }
-
-        /// <summary>
         /// Method called on the module by the bootstrap process.  Called after
         /// all types have been registered and the container has been created.
         /// </summary>

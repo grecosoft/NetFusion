@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
+using NetFusion.Base.Validation;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Settings;
 
 namespace NetFusion.EntityFramework.Settings
 {
-    using NetFusion.Base.Validation;
-    using NetFusion.Common.Extensions.Collections;
-
     /// <summary>
     /// Application configuration class used to specify connections
     /// for EntityFramework database context classes.

@@ -5,13 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Rest.Server.Hal;
-using NetFusion.Web.Mvc;
-using NetFusion.Web.Mvc.Composite;
 using System;
 using NetFusion.AMQP.Plugin;
 using NetFusion.Bootstrap.Configuration;
-using NetFusion.Bootstrap.Refactors;
-using NetFusion.Messaging;
 using NetFusion.Messaging.Plugin;
 using NetFusion.MongoDB.Plugin;
 using NetFusion.RabbitMQ.Plugin;
@@ -26,13 +22,7 @@ using Service.WebApi.Plugin;
 
 namespace Service.WebApi
 {
-    using NetFusion.AMQP.Publisher;
-    using NetFusion.AMQP.Subscriber;
     using NetFusion.Base.Serialization;
-    using NetFusion.Messaging.Config;
-    using NetFusion.RabbitMQ.Logging;
-    using NetFusion.RabbitMQ.Publisher;
-    using NetFusion.Redis.Publisher;
     using NetFusion.Serialization;
 
     // Configures the HTTP request pipeline and bootstraps the NetFusion 

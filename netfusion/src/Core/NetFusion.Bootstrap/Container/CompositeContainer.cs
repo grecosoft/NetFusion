@@ -3,24 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Bootstrap.Dependencies;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Validation;
-using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Dependencies;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Bootstrap.Validation;
 using NetFusion.Common.Extensions.Reflection;
 
-namespace NetFusion.Bootstrap.Refactors
+namespace NetFusion.Bootstrap.Container
 {
-    public class CompositeAppContainer : ICompositeAppContainer,
+    public class CompositeContainer : ICompositeContainer,
         IBuiltContainer
     {
         // Singleton instance of created container:
-        private static CompositeAppContainer _instance;
+        private static CompositeContainer _instance;
         private bool _disposed;
 
         // Microsoft Common Abstractions:
@@ -30,17 +29,17 @@ namespace NetFusion.Bootstrap.Refactors
        
         // Abstraction implementations:
         private readonly ILogger _logger;
-        private CompositeLog _compositeLog;
+        private CompositeAppLog _compositeLog;
        
         private CompositeApp _compositeApp;
-        private readonly List<IPluginDefinition> _plugins = new List<IPluginDefinition>();
+        private readonly List<IPlugin> _plugins = new List<IPlugin>();
        
         private ValidationConfig _validationConfig;
         
         // Service Provider:
         private IServiceProvider _serviceProvider;
 
-        public CompositeAppContainer(
+        public CompositeContainer(
             IServiceCollection services,
             IConfiguration configuration,
             ILoggerFactory loggerFactory,
@@ -50,7 +49,7 @@ namespace NetFusion.Bootstrap.Refactors
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
             
-            _logger = _loggerFactory.CreateLogger<CompositeAppContainer>();
+            _logger = _loggerFactory.CreateLogger<CompositeContainer>();
             
             if (setGlobalReference)
             {
@@ -74,7 +73,7 @@ namespace NetFusion.Bootstrap.Refactors
         /// service implementation is contained within the service collection, it can 
         /// reference the application container by injecting the IAppContainer interface.
         /// </summary>
-        public static ICompositeAppContainer Instance
+        public static ICompositeContainer Instance
         {
             get
             {
@@ -94,7 +93,7 @@ namespace NetFusion.Bootstrap.Refactors
             }
         }
         
-        internal void AddPlugin(IPluginDefinition plugin)
+        internal void AddPlugin(IPlugin plugin)
         {
             _plugins.Add((plugin));
         }
@@ -111,15 +110,17 @@ namespace NetFusion.Bootstrap.Refactors
             {
                 using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapBuild, "Building Container"))
                 {
-                    _compositeApp.Validate();
-            
                     ResolvePlugins(typeResolver);
+           
+                    _compositeApp.Validate();
+                    
                     ComposeCorePlugins(typeResolver);
                     ComposeApplicationPlugins(typeResolver);
                     
                     LogPlugins(_compositeApp.AllPlugins);
 
                     PopulateServiceCollection();
+                    CreateCompositeLogger();
                 }
             }
             catch (ContainerException ex)
@@ -145,7 +146,7 @@ namespace NetFusion.Bootstrap.Refactors
 
         private void ResolvePlugins(ITypeResolver typeResolver)
         {           
-            foreach (IPluginDefinition plugin in _compositeApp.AllPlugins)
+            foreach (IPlugin plugin in _compositeApp.AllPlugins)
             {
                 typeResolver.SetPluginMeta(plugin);
             }
@@ -164,8 +165,8 @@ namespace NetFusion.Bootstrap.Refactors
         private void ComposeApplicationPlugins(ITypeResolver typeResolver)
         {
             var allAppPluginTypes = _compositeApp.GetPluginTypes(
-                PluginDefinitionTypes.ApplicationPlugin, 
-                PluginDefinitionTypes.HostPlugin).ToArray();
+                PluginTypes.ApplicationPlugin, 
+                PluginTypes.HostPlugin).ToArray();
 
             foreach (var plugin in _compositeApp.AppPlugins)
             {
@@ -188,7 +189,7 @@ namespace NetFusion.Bootstrap.Refactors
         
         private void RegisterAppContainerAsService()
         {
-            _serviceCollection.AddSingleton<ICompositeAppContainer>(this);
+            _serviceCollection.AddSingleton<ICompositeContainer>(this);
         }
         
         private void RegisterPluginModuleServices()
@@ -331,7 +332,8 @@ namespace NetFusion.Bootstrap.Refactors
         
         //------------------------------- Container Disposal ------------------------------------------//
        
-        private static void ThrowIfDisposed(CompositeAppContainer container)
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
+        private static void ThrowIfDisposed(CompositeContainer container)
         {
             if (container._disposed)
             {
@@ -377,7 +379,7 @@ namespace NetFusion.Bootstrap.Refactors
             return ex;
         }
 
-        private void LogPlugins(IEnumerable<IPluginDefinition> plugins)
+        private void LogPlugins(IEnumerable<IPlugin> plugins)
         {
             foreach (var plugin in plugins)
             {
@@ -394,7 +396,7 @@ namespace NetFusion.Bootstrap.Refactors
         
         private void CreateCompositeLogger()
         {
-            //_compositeLog = new CompositeLog(_application, _serviceCollection);
+            _compositeLog = new CompositeAppLog(_compositeApp, _serviceCollection);
         }
     }
 }

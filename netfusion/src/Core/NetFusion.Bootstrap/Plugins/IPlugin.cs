@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Bootstrap.Plugins;
 
-namespace NetFusion.Bootstrap.Refactors
+namespace NetFusion.Bootstrap.Plugins
 {
-    public interface IPluginDefinition
+    public interface IPlugin
     {
         string PluginId { get; }
-        PluginDefinitionTypes PluginType { get; }    
+        PluginTypes PluginType { get; }    
         string Name { get; }
 
         string AssemblyName { get; set; }

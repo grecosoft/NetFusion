@@ -1,8 +1,8 @@
+using NetFusion.MongoDB;
+using Service.Domain.Entities;
+
 namespace Service.Infra.Repositories.Mappings
 {
-    using NetFusion.MongoDB;
-    using Service.Domain.Entities;
-
     public class CustomerMapping : EntityClassMap<Customer>
     {
         public CustomerMapping()

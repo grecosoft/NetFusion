@@ -1,11 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using NetFusion.Common.Extensions.Collections;
+using NetFusion.EntityFramework.Settings;
 
 namespace NetFusion.EntityFramework.Internal
 {
-    using NetFusion.EntityFramework.Settings;
-
     /// <summary>
     /// Derived instance of the EntityFramework DbContext initialized from information found by the
     /// plugin when bootstrapped.  Instances of this class can be injected into application specific

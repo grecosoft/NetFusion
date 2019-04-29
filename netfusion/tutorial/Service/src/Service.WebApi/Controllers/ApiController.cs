@@ -1,27 +1,25 @@
-using NetFusion.Bootstrap.Refactors;
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Server.Hal;
+using NetFusion.Web.Mvc.Metadata;
+using Service.Domain.Commands;
+using Service.Domain.Entities;
+using Service.Domain.Events;
+using Service.WebApi.Controllers.Core;
+using Service.WebApi.Controllers.Integration;
 
 #pragma warning disable 4014
 namespace Service.WebApi.Controllers
 {
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Mvc;
-    using NetFusion.Bootstrap.Container;
-    using NetFusion.Rest.Resources.Hal;
-    using NetFusion.Rest.Server.Hal;
-    using NetFusion.Web.Mvc.Metadata;
-    using Service.Domain.Commands;
-    using Service.Domain.Entities;
-    using Service.Domain.Events;
-    using Service.WebApi.Controllers.Core;
-    using Service.WebApi.Controllers.Integration;
-
     [Route("api/entry"), GroupMeta(nameof(ApiController))]
     public class ApiController : Controller
     {
-        private readonly ICompositeAppContainer _appContainer;
+        private readonly ICompositeContainer _appContainer;
         
-        public ApiController(ICompositeAppContainer appContainer)
+        public ApiController(ICompositeContainer appContainer)
         {
             _appContainer = appContainer ?? throw new ArgumentNullException(nameof(appContainer));
         }

@@ -1,9 +1,9 @@
+using NetFusion.Base;
+using NetFusion.Redis.Publisher;
+using Service.Domain.Events;
+
 namespace Service.Infra
 {
-    using NetFusion.Base;
-    using NetFusion.Redis.Publisher;
-    using Service.Domain.Events;
-
     public class ChannelRegistry : ChannelRegistryBase
     {
         protected override void OnRegister()

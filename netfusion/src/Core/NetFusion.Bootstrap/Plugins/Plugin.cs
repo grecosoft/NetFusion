@@ -2,15 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Bootstrap.Plugins;
 
-namespace NetFusion.Bootstrap.Refactors
+namespace NetFusion.Bootstrap.Plugins
 {
-    public abstract class PluginDefinition : IPluginDefinition
+    public abstract class Plugin : IPlugin
     {
         // Properties that must be specified by derived plugins:
         public abstract string PluginId { get; }
-        public abstract PluginDefinitionTypes PluginType { get; }
+        public abstract PluginTypes PluginType { get; }
         public abstract string Name { get; }
 
         // Optional Properties that can be specified by derived plugins.

@@ -1,11 +1,12 @@
-using NetFusion.Bootstrap.Refactors;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Roslyn.Plugin
 {
-    public class RoslynPlugin : PluginDefinition
+    public class RoslynPlugin : Bootstrap.Plugins.Plugin
     {
         public override string PluginId => "4316A9C70-C3AE-4DC2-8DEA-097EBDB342F7";
-        public override PluginDefinitionTypes PluginType => PluginDefinitionTypes.CorePlugin;
+        public override PluginTypes PluginType => PluginTypes.CorePlugin;
         public override string Name => "NetFusion Roslyn Plug-in";
 
         public RoslynPlugin()

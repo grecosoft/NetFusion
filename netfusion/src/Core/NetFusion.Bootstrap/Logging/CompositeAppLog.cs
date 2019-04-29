@@ -1,11 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NetFusion.Bootstrap.Refactors;
 
 namespace NetFusion.Bootstrap.Logging
 {
@@ -14,12 +12,12 @@ namespace NetFusion.Bootstrap.Logging
     /// and produces a nested dictionary structure representing the application that can
     /// be logged during host application initialization as JSON.
     /// </summary>
-    internal class CompositeLog
+    internal class CompositeAppLog
     {
         private readonly CompositeApp _application;
         private readonly IServiceCollection _services;
 
-        public CompositeLog(CompositeApp application, IServiceCollection services)
+        public CompositeAppLog(CompositeApp application, IServiceCollection services)
         {
             _application = application ?? throw new ArgumentNullException(nameof(application),
                 "Composite Application to log cannot be null.");
@@ -76,7 +74,7 @@ namespace NetFusion.Bootstrap.Logging
             }).ToDictionary(p => p["Plugin:Id"].ToString());
         }
 
-        private void LogPlugin(IPluginDefinition plugin, IDictionary<string, object> log)
+        private void LogPlugin(IPlugin plugin, IDictionary<string, object> log)
         {
             log["Plugin:Name"] = plugin.Name;
             log["Plugin:Id"] = plugin.PluginId;
@@ -89,7 +87,7 @@ namespace NetFusion.Bootstrap.Logging
             // LogPluginRegistrations(plugin, log);
         }
 
-        private static void LogPluginModules(IPluginDefinition plugin, IDictionary<string, object> log)
+        private static void LogPluginModules(IPlugin plugin, IDictionary<string, object> log)
         {
             log["Plugin:Modules"] = plugin.Modules.ToDictionary(
                 m => m.GetType().FullName,

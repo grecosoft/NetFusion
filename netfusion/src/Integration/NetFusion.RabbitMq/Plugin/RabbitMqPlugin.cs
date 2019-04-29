@@ -1,13 +1,14 @@
-using NetFusion.Bootstrap.Refactors;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Plugins;
 using NetFusion.Messaging.Config;
 using NetFusion.RabbitMQ.Publisher;
 
 namespace NetFusion.RabbitMQ.Plugin
 {
-    public class RabbitMqPlugin : PluginDefinition
+    public class RabbitMqPlugin : Bootstrap.Plugins.Plugin
     {
         public override string PluginId => "2B389655-E790-4D30-B19C-C06AB8096C6A";
-        public override PluginDefinitionTypes PluginType => PluginDefinitionTypes.CorePlugin;
+        public override PluginTypes PluginType => PluginTypes.CorePlugin;
         public override string Name => "RabbitMq Plugin based on EasyNetQ library.";
 
         public RabbitMqPlugin()

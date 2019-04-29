@@ -1,13 +1,14 @@
-using NetFusion.Bootstrap.Refactors;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Plugins;
 using NetFusion.Messaging.Config;
 using NetFusion.Redis.Publisher;
 
 namespace NetFusion.Redis.Plugin
 {
-    public class RedisPlugin : PluginDefinition
+    public class RedisPlugin : Bootstrap.Plugins.Plugin
     {
         public override string PluginId => "6A52A70C-719B-41CF-AEFC-7CDFB586627A";
-        public override PluginDefinitionTypes PluginType => PluginDefinitionTypes.CorePlugin;
+        public override PluginTypes PluginType => PluginTypes.CorePlugin;
         public override string Name => "Plugin containing Redis extensions and Pub/Sub messaging.";
 
         public RedisPlugin()

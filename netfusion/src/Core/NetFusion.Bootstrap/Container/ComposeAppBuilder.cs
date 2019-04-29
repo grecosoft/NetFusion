@@ -2,22 +2,22 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Plugins;
 
-namespace NetFusion.Bootstrap.Refactors
+namespace NetFusion.Bootstrap.Container
 {
     public class ComposeAppBuilder : IComposeAppBuilder
     {
-        private readonly CompositeAppContainer _container;
+        private readonly CompositeContainer _container;
         
         public ComposeAppBuilder(IServiceCollection services, 
             ILoggerFactory loggerFactory,
             IConfiguration configuration)
         {
-            _container = new CompositeAppContainer(services, configuration, loggerFactory, true);
+            _container = new CompositeContainer(services, configuration, loggerFactory, true);
         }
         
-        public IComposeAppBuilder AddPlugin<TPlugin>() where TPlugin : IPluginDefinition, new()
+        public IComposeAppBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new()
         {
             var plugin = new TPlugin();
             _container.AddPlugin(plugin);

@@ -1,9 +1,9 @@
-namespace Service.Infra.Exchanges
-{
-    using NetFusion.RabbitMQ.Publisher;
-    using Service.Domain.Commands;
-    using Service.Domain.Events;
+using NetFusion.RabbitMQ.Publisher;
+using Service.Domain.Commands;
+using Service.Domain.Events;
 
+namespace Service.Infra
+{
     public class ExchangeRegistry : ExchangeRegistryBase
     {
         protected override void OnRegister()

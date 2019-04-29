@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Bootstrap.Refactors;
 using NetFusion.RabbitMQ.Metadata;
 using NetFusion.RabbitMQ.Settings;
 using NetFusion.Settings;
@@ -116,8 +115,8 @@ namespace NetFusion.RabbitMQ.Plugin
         // Additional client properties associated with created connections.
         private void SetAdditionalClientProperties(IDictionary<string, object> clientProps)
         {
-            IPluginDefinition rabbitPlugin = Context.Plugin;
-            IPluginDefinition appHostPlugin = Context.AppHost;
+            IPlugin rabbitPlugin = Context.Plugin;
+            IPlugin appHostPlugin = Context.AppHost;
         
             clientProps["Client Assembly"] = rabbitPlugin.AssemblyName;
             clientProps["Client Version"] = rabbitPlugin.AssemblyVersion;

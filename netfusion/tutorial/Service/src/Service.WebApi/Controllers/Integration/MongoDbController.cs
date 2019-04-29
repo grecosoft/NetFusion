@@ -1,12 +1,12 @@
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using NetFusion.Web.Mvc.Metadata;
+using Service.Domain.Entities;
+using Service.Domain.Repositories;
+
 namespace Service.WebApi.Controllers.Integration
 {
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Mvc;
-    using NetFusion.Web.Mvc.Metadata;
-    using Service.Domain.Entities;
-    using Service.Domain.Repositories;
-
     [Route("api/integration/mongodb"),
      GroupMeta(nameof(MongoDbController))]
     public class MongoDbController : Controller

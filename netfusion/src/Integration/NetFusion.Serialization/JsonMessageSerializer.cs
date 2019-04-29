@@ -4,14 +4,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using NetFusion.Base;
+using NetFusion.Base.Entity;
 using NetFusion.Base.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace NetFusion.Serialization
 {
-    using NetFusion.Base.Entity;
-
     /// <summary>
     /// Serializes a value to JSON representation.  Extended to allow serialization
     /// and deserialization of public properties with private setters.

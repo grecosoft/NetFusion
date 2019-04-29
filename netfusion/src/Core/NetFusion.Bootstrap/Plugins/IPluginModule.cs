@@ -14,12 +14,6 @@ namespace NetFusion.Bootstrap.Plugins
     public interface IPluginModule 
     {
         /// <summary>
-        /// Indicates that the module should not be loaded.  This can be used when developing
-        /// plug-in modules that are not ready to be included.
-        /// </summary>
-        bool IsExcluded { get; set; }
-
-        /// <summary>
         /// Contains plug-in information that can be used by the module during bootstrapping.
         /// </summary>
         /// <returns>Contains information that can be used by the module when it is being
@@ -62,24 +56,6 @@ namespace NetFusion.Bootstrap.Plugins
         /// that can be dependency injected as services.
         /// </param>
         void RegisterServices(IServiceCollection services);
-
-        /// <summary>
-        /// Allows the plug-in module to scan for types within all other plug-ins.
-        /// This registration contains all other plug-in types when called on a
-        /// core plug in.  For an application plug-in, the types are limited to 
-        /// only other application plug ins.
-        /// </summary>
-        /// <param name="catalog">Reference to instance used to filter types to be 
-        /// registered.</param>
-        void ScanAllOtherPlugins(ITypeCatalog catalog);
-
-        /// <summary>
-        /// Allows a core plug-in module to scan for types limited to only application
-        /// centric plug-in types.
-        /// </summary>
-        /// <param name="catalog">Reference to instance used to filter types to 
-        /// be registered.</param>
-        void ScanApplicationPlugins(ITypeCatalog catalog);
 
         /// <summary>
         /// Method called on the module by the bootstrap process.  Called after

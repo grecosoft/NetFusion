@@ -14,7 +14,6 @@ namespace Service.Infra.Plugin
         public override void RegisterServices(IServiceCollection services)
         {
             services.AddScoped<ICustomerRepository, CustomerRepository>();
-            ;
         }
 
         public override void ScanPlugin(ITypeCatalog catalog)

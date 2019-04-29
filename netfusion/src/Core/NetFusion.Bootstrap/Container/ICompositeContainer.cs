@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Base.Validation;
-using NetFusion.Bootstrap.Container;
 
-namespace NetFusion.Bootstrap.Refactors
+namespace NetFusion.Bootstrap.Container
 {
-    public interface ICompositeAppContainer
+    public interface ICompositeContainer
     {
         /// <summary>
         /// Loads and initializes all of the plug-ins but does not start their execution.
