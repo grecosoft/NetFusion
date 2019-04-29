@@ -14,22 +14,22 @@ namespace NetFusion.RabbitMQ.Plugin
 
         public RabbitMqPlugin()
         {
-            SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/netfusion/src/Integration/NetFusion.RabbitMq";
-            DocUrl = "https://github.com/grecosoft/NetFusion/wiki/integration.rabbitmq.overview#rabbitmq-overview";
-            
-            // Modules:
             AddModule<BusModule>();
             AddModule<PublisherModule>();
             AddModule<SubscriberModule>();
+            
+            SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/netfusion/src/Integration/NetFusion.RabbitMq";
+            DocUrl = "https://github.com/grecosoft/NetFusion/wiki/integration.rabbitmq.overview#rabbitmq-overview";
         }
     }
     
     public static class CompositeBuilderExtensions
     {
-        public static IComposeAppBuilder AddRabbitMq(this IComposeAppBuilder composite)
+        public static ICompositeContainerBuilder AddRabbitMq(this ICompositeContainerBuilder composite)
         {
             composite.AddPlugin<RabbitMqPlugin>();
 
+            // Augment the base messaging plugin:
             var dispatchConfig = composite.GetConfig<MessageDispatchConfig>();
             dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
             

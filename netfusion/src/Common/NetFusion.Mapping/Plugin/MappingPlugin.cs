@@ -14,7 +14,6 @@ namespace NetFusion.Mapping.Plugin
         {
             AddModule<MappingModule>();
             
-            
             SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/src/Common/NetFusion.Mapping";
             DocUrl = "https://github.com/grecosoft/NetFusion/wiki/infrastructure.mapping.overview";
             
@@ -27,7 +26,7 @@ namespace NetFusion.Mapping.Plugin
     
     public static class CompositeBuilderExtensions
     {
-        public static IComposeAppBuilder AddMapping(this IComposeAppBuilder composite)
+        public static ICompositeContainerBuilder AddMapping(this ICompositeContainerBuilder composite)
         {
             composite.AddPlugin<MappingPlugin>();
             return composite;

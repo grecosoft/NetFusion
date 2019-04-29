@@ -15,6 +15,10 @@ using NetFusion.Common.Extensions.Reflection;
 
 namespace NetFusion.Bootstrap.Container
 {
+    /// <summary>
+    /// Responsible for coordinating the population of a Service Collection
+    /// from a set of plugins.  
+    /// </summary>
     public class CompositeContainer : ICompositeContainer,
         IBuiltContainer
     {
@@ -27,7 +31,7 @@ namespace NetFusion.Bootstrap.Container
         private readonly ILoggerFactory _loggerFactory;
         private readonly IConfiguration _configuration;
        
-        // Abstraction implementations:
+        // Logging implementations:
         private readonly ILogger _logger;
         private CompositeAppLog _compositeLog;
        
@@ -352,10 +356,10 @@ namespace NetFusion.Bootstrap.Container
         {
             if (! disposing || _disposed) return;
 
-            /*if (_application.IsStarted)
+            if (_compositeApp.IsStarted)
             {
                 Stop();
-            }*/
+            }
 
             DisposePluginModules();
 

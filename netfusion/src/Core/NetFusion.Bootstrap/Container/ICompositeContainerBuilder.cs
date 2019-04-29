@@ -2,9 +2,9 @@ using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Bootstrap.Container
 {
-    public interface IComposeAppBuilder
+    public interface ICompositeContainerBuilder
     {
-        IComposeAppBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new();
+        ICompositeContainerBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new();
         IBuiltContainer Build();
         T GetConfig<T>() where T : IPluginConfig;
     }

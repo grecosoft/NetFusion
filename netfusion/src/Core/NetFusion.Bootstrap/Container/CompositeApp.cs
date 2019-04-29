@@ -10,28 +10,40 @@ using NetFusion.Common.Extensions.Collections;
 
 namespace NetFusion.Bootstrap.Container
 {
+    /// <summary>
+    /// Application composed from a set of plugins.  The end result of the composite application
+    /// is a configured .net core Service Collection from which a Service Provider can be built.
+    /// </summary>
     public class CompositeApp
     {
         public bool IsStarted { get; private set; }
         
         public IPlugin[] AllPlugins { get; }
+        public IEnumerable<IPluginModule> AllModules => AllPlugins.SelectMany(p => p.Modules);
         
+        // Reference to the plugin associated with the host executable.
         public IPlugin HostPlugin { get; private set; }
+        
+        // Plugins from which the host application is built.
         public IPlugin[] AppPlugins { get; private set; }
+        
+        // Reusable plugins that can be used across multiple applications.
         public IPlugin[] CorePlugins { get; private set; }
         
+        // Microsoft Abstractions:
         public ILoggerFactory LoggerFactory { get; }
         public IConfiguration Configuration { get; }
-
-        public IEnumerable<IPluginModule> AllModules => AllPlugins.SelectMany(p => p.Modules);
         
         public CompositeApp(
             ILoggerFactory loggerFactory,
             IConfiguration configuration,
             IEnumerable<IPlugin> plugins)
         {
-            LoggerFactory = loggerFactory;
-            Configuration = configuration;
+            LoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            
+            if (plugins == null) throw new ArgumentNullException(nameof(plugins));
+            
             AllPlugins = plugins.ToArray();
         }
 
@@ -68,7 +80,7 @@ namespace NetFusion.Bootstrap.Container
             ConfigurePlugins();
 
             RegisterDefaultPluginServices(services);
-            ScanPluginForServices(services);
+            ScanPluginsForServices(services);
             RegisterPluginServices(services);
         }
 
@@ -80,6 +92,7 @@ namespace NetFusion.Bootstrap.Container
             ConfigureModules(HostPlugin);
         }
 
+        // First Initializes all plugin modules then invokes their Configure method.
         private void ConfigureModules(IPlugin plugin)
         {
             foreach (IPluginModule module in plugin.Modules)
@@ -94,8 +107,8 @@ namespace NetFusion.Bootstrap.Container
             }
         }
         
-        // First allow all plug-ins to register any default services implementations
-        // that can be optionally overridden by other plug-ins.  
+        // Next, allow all plugin modules to register any default services
+        // implementations that can be optionally overridden by other plug-ins.  
         private void RegisterDefaultPluginServices(IServiceCollection services)
         {
             foreach (IPluginModule module in AllPlugins.SelectMany(p => p.Modules))
@@ -103,16 +116,9 @@ namespace NetFusion.Bootstrap.Container
                 module.RegisterDefaultServices(services);
             }
         }
-
-        private void RegisterPluginServices(IServiceCollection services)
-        {
-            foreach (IPluginModule module in AllPlugins.SelectMany(p => p.Modules))
-            {
-                module.RegisterServices(services);
-            }
-        }
         
-        private void ScanPluginForServices(IServiceCollection services)
+        // Allow each plugin module to scan for plugin types.  
+        private void ScanPluginsForServices(IServiceCollection services)
         {
             foreach (IPlugin plugin in AllPlugins)
             {
@@ -123,6 +129,15 @@ namespace NetFusion.Bootstrap.Container
                 {
                     module.ScanPlugins(typeCatalog);
                 }
+            }
+        }
+
+        // Lastly, allow plugin modules to register services specific to their implementation.
+        private void RegisterPluginServices(IServiceCollection services)
+        {
+            foreach (IPluginModule module in AllPlugins.SelectMany(p => p.Modules))
+            {
+                module.RegisterServices(services);
             }
         }
         

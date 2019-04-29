@@ -6,18 +6,18 @@ using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Bootstrap.Container
 {
-    public class ComposeAppBuilder : IComposeAppBuilder
+    public class CompositeContainerBuilder : ICompositeContainerBuilder
     {
         private readonly CompositeContainer _container;
         
-        public ComposeAppBuilder(IServiceCollection services, 
+        public CompositeContainerBuilder(IServiceCollection services, 
             ILoggerFactory loggerFactory,
             IConfiguration configuration)
         {
             _container = new CompositeContainer(services, configuration, loggerFactory, true);
         }
         
-        public IComposeAppBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new()
+        public ICompositeContainerBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new()
         {
             var plugin = new TPlugin();
             _container.AddPlugin(plugin);
@@ -48,11 +48,11 @@ namespace NetFusion.Bootstrap.Container
 
     public static class ServiceCollectionExtensions
     {
-        public static IComposeAppBuilder CompositeAppBuilder(this IServiceCollection services,
+        public static ICompositeContainerBuilder CompositeAppBuilder(this IServiceCollection services,
             ILoggerFactory loggerFactory,
             IConfiguration configuration)
         {
-            return new ComposeAppBuilder(services, loggerFactory, configuration);
+            return new CompositeContainerBuilder(services, loggerFactory, configuration);
         }
     }
 }

@@ -14,22 +14,22 @@ namespace NetFusion.AMQP.Plugin
 
         public AmqpPlugin()
         {
-            SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/netfusion/src/Integration/NetFusion.Azure.Messaging";
-            
-            // Modules:
             AddModule<ConnectionModule>();
             AddModule<PublisherModule>();
             AddModule<SubscriberModule>();
+            
+            SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/netfusion/src/Integration/NetFusion.Azure.Messaging";
         }
     }
     
     public static class CompositeBuilderExtensions
     {
-        public static IComposeAppBuilder AddAmqp(this IComposeAppBuilder composite)
+        public static ICompositeContainerBuilder AddAmqp(this ICompositeContainerBuilder composite)
         {
             var dispatchConfig = composite.GetConfig<MessageDispatchConfig>();
             dispatchConfig.AddMessagePublisher<HostMessagePublisher>();
             
+            // Augment the base messaging plugin:
             composite.AddPlugin<AmqpPlugin>();
             return composite;
         }

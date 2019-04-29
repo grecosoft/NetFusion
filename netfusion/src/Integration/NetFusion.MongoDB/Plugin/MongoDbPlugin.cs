@@ -12,18 +12,17 @@ namespace NetFusion.MongoDB.Plugin
 
         public MongoDbPlugin()
         {
-            SourceUrl = "https://github.com/grecosoft/NetFusion-Plugins/tree/master/src/Infrastructure/NetFusion.MongoDB";
-            DocUrl = "https://github.com/grecosoft/NetFusion/wiki/infrastructure.mongodb.overview";
-            
-            // Modules:
             AddModule<MongoModule>();
             AddModule<MappingModule>();
+            
+            SourceUrl = "https://github.com/grecosoft/NetFusion-Plugins/tree/master/src/Infrastructure/NetFusion.MongoDB";
+            DocUrl = "https://github.com/grecosoft/NetFusion/wiki/infrastructure.mongodb.overview";
         }
     }
     
     public static class CompositeBuilderExtensions
     {
-        public static IComposeAppBuilder AddMongoDb(this IComposeAppBuilder composite)
+        public static ICompositeContainerBuilder AddMongoDb(this ICompositeContainerBuilder composite)
         {
             composite.AddPlugin<MongoDbPlugin>();
             return composite;

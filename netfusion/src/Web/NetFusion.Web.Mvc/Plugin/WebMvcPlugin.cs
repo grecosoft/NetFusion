@@ -14,17 +14,17 @@ namespace NetFusion.Web.Mvc.Plugin
         
         public WebMvcPlugin()
         {
-            SourceUrl = "https://github.com/grecosoft/NetFusion-Plugins/tree/master/src/Infrastructure/NetFusion.Web.Mvc";
-            DocUrl = "https://github.com/grecosoft/NetFusion/wiki/infrastructure.web-mvc.overview";
-            
             AddConfig<WebMvcConfig>();
             AddModule<ApiMetadataModule>();
+            
+            SourceUrl = "https://github.com/grecosoft/NetFusion-Plugins/tree/master/src/Infrastructure/NetFusion.Web.Mvc";
+            DocUrl = "https://github.com/grecosoft/NetFusion/wiki/infrastructure.web-mvc.overview";
         }
     }
     
     public static class CompositeBuilderExtensions
     {
-        public static IComposeAppBuilder AddWebMvc(this IComposeAppBuilder composite, Action<WebMvcConfig> configure = null)
+        public static ICompositeContainerBuilder AddWebMvc(this ICompositeContainerBuilder composite, Action<WebMvcConfig> configure = null)
         {
             composite.AddPlugin<WebMvcPlugin>();
 

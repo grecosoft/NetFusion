@@ -14,8 +14,6 @@ namespace NetFusion.Redis.Plugin
 
         public RedisPlugin()
         {
-            
-            // Modules:
             AddModule<ConnectionModule>();
             AddModule<RedisModule>();
             AddModule<PublisherModule>();
@@ -25,10 +23,11 @@ namespace NetFusion.Redis.Plugin
     
     public static class CompositeBuilderExtensions
     {
-        public static IComposeAppBuilder AddRedis(this IComposeAppBuilder composite)
+        public static ICompositeContainerBuilder AddRedis(this ICompositeContainerBuilder composite)
         {
             composite.AddPlugin<RedisPlugin>();
             
+            // Augment the base messaging plugin:
             var dispatchConfig = composite.GetConfig<MessageDispatchConfig>();
             dispatchConfig.AddMessagePublisher<RedisPublisher>();
             

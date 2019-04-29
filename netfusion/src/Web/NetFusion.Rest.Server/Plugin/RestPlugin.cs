@@ -14,19 +14,19 @@ namespace NetFusion.Rest.Server.Plugin
 
         public RestPlugin()
         {
-            SourceUrl = "https://github.com/grecosoft/NetFusion-Plugins/tree/master/src/Infrastructure/NetFusion.Rest.Server";
-            DocUrl = "https://github.com/grecosoft/NetFusion/wiki/infrastructure.web.rest.server.quickstart";
-            
             AddConfig<RestApiConfig>();
             
             AddModule<ResourceMediaModule>();
             AddModule<RestModule>();
+            
+            SourceUrl = "https://github.com/grecosoft/NetFusion-Plugins/tree/master/src/Infrastructure/NetFusion.Rest.Server";
+            DocUrl = "https://github.com/grecosoft/NetFusion/wiki/infrastructure.web.rest.server.quickstart";
         }
     }
         
     public static class CompositeBuilderExtensions
     {
-        public static IComposeAppBuilder AddRest(this IComposeAppBuilder composite, 
+        public static ICompositeContainerBuilder AddRest(this ICompositeContainerBuilder composite, 
             Action<RestApiConfig> configure = null)
         {
             composite.AddPlugin<RestPlugin>();

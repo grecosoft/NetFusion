@@ -24,7 +24,7 @@ namespace NetFusion.Settings.Plugin
     
     public static class CompositeBuilderExtensions
     {
-        public static IComposeAppBuilder AddSettings(this IComposeAppBuilder composite)
+        public static ICompositeContainerBuilder AddSettings(this ICompositeContainerBuilder composite)
         {
             composite.AddPlugin<SettingsPlugin>();
             return composite;

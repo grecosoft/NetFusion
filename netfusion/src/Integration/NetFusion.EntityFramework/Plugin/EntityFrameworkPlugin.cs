@@ -20,7 +20,7 @@ namespace NetFusion.EntityFramework.Plugin
     
     public static class CompositeBuilderExtensions
     {
-        public static IComposeAppBuilder AddEntityFramework(this IComposeAppBuilder composite)
+        public static ICompositeContainerBuilder AddEntityFramework(this ICompositeContainerBuilder composite)
         {
             composite.AddPlugin<EntityFrameworkPlugin>();
             return composite;
