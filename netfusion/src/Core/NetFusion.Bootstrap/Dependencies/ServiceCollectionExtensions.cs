@@ -39,21 +39,6 @@ namespace NetFusion.Bootstrap.Dependencies
         /// <param name="services">The service collection delegated to by the created catalog.</param>
         /// <param name="pluginTypes">The plugin-in types added to the catalog to be filtered.</param>
         /// <returns>Type catalog instance.</returns>
-        public static ITypeCatalog CreateCatalog(this IServiceCollection services, 
-            IEnumerable<PluginType> pluginTypes)
-        {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-            if (pluginTypes == null) throw new ArgumentNullException(nameof(pluginTypes));
-
-            return new TypeCatalog(services, pluginTypes);
-        }
-
-        /// <summary>
-        /// Creates a new type catalog for a given set of plugin types.
-        /// </summary>
-        /// <param name="services">The service collection delegated to by the created catalog.</param>
-        /// <param name="pluginTypes">The plugin-in types added to the catalog to be filtered.</param>
-        /// <returns>Type catalog instance.</returns>
         public static ITypeCatalog CreateCatalog(this IServiceCollection services,
             IEnumerable<Type> pluginTypes)
         {

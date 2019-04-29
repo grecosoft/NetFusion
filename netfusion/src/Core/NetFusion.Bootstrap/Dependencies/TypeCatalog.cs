@@ -20,12 +20,6 @@ namespace NetFusion.Bootstrap.Dependencies
             Services = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
             _types = types ?? throw new ArgumentNullException(nameof(types));
         }
-
-        public TypeCatalog(IServiceCollection serviceCollection, IEnumerable<PluginType> types) :
-            this(serviceCollection, types?.Select(pt => pt.Type))
-        {
-
-        }
        
         public ITypeCatalog AsService<TService>(Func<Type, bool> filter, ServiceLifetime lifetime)
         {

@@ -78,27 +78,5 @@ namespace Service.Client
             // Add additional logger specific to non-development environments.
         }
         
-        private static IBuiltContainer CreateAppContainer(IServiceCollection services, IConfiguration configuration)
-        {
-            // Creates an instance of a type resolver that will look for plug-ins within 
-            // the assemblies matching the passed patterns.
-            var typeResolver = new TypeResolver(
-                "Service.Client",
-                "Service.*");
-            
-            var loggerFactory = new LoggerFactory();
-          
-            return services.CreateAppBuilder(configuration, loggerFactory, typeResolver)
-                .Bootstrap(c => {
-
-                    c.WithServices(reg =>
-                    {
-                        reg.AddSingleton<ISerializationManager, SerializationManager>();
-                    
-                        //  Additional services or overrides can be registered here.
-                    });
-                })
-                .Build();
-        }
     }
 }

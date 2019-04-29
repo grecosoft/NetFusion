@@ -5,6 +5,7 @@ using NetFusion.Common.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetFusion.Bootstrap.Refactors;
 
 namespace NetFusion.Bootstrap.Logging
 {
@@ -15,10 +16,10 @@ namespace NetFusion.Bootstrap.Logging
     /// </summary>
     internal class CompositeLog
     {
-        private readonly CompositeApplication _application;
+        private readonly CompositeApp _application;
         private readonly IServiceCollection _services;
 
-        public CompositeLog(CompositeApplication application, IServiceCollection services)
+        public CompositeLog(CompositeApp application, IServiceCollection services)
         {
             _application = application ?? throw new ArgumentNullException(nameof(application),
                 "Composite Application to log cannot be null.");
@@ -41,8 +42,8 @@ namespace NetFusion.Bootstrap.Logging
         private void LogFoundPluginAssemblies(IDictionary<string, object> log)
         {
             log["Plugin:Assemblies"] = new Dictionary<string, object> {
-                {"Host:Assembly", _application.AppHostPlugin.AssemblyName },
-                {"Application:Assemblies", _application.AppComponentPlugins.Select(p => p.AssemblyName).ToArray() },
+                {"Host:Assembly", _application.HostPlugin.AssemblyName },
+                {"Application:Assemblies", _application.AppPlugins.Select(p => p.AssemblyName).ToArray() },
                 {"Core:Assemblies", _application.CorePlugins.Select(p => p.AssemblyName).ToArray() }
             };
         }
@@ -52,12 +53,12 @@ namespace NetFusion.Bootstrap.Logging
             var hostLog = new Dictionary<string, object>();
             log["Plugin:Host"] = hostLog;
 
-            LogPlugin(_application.AppHostPlugin, hostLog);
+            LogPlugin(_application.HostPlugin, hostLog);
         }
 
         private void LogAppComponentPlugins(IDictionary<string, object> log)
         {
-            log["Plugins:Application"] = _application.AppComponentPlugins.Select(plugin =>
+            log["Plugins:Application"] = _application.AppPlugins.Select(plugin =>
             {
                 var pluginLog = new Dictionary<string, object>();
                 LogPlugin(plugin, pluginLog);
@@ -75,22 +76,20 @@ namespace NetFusion.Bootstrap.Logging
             }).ToDictionary(p => p["Plugin:Id"].ToString());
         }
 
-        private void LogPlugin(Plugin plugin, IDictionary<string, object> log)
+        private void LogPlugin(IPluginDefinition plugin, IDictionary<string, object> log)
         {
-            log["Plugin:Name"] = plugin.Manifest.Name;
-            log["Plugin:Id"] = plugin.Manifest.PluginId;
-            log["Plugin:Assembly"] = plugin.Manifest.AssemblyName;
-            log["Plugin:Description"] = plugin.Manifest.Description;
-            log["Plugin:SourceUrl"] = plugin.Manifest.SourceUrl;
-            log["Plugin:DocUrl"] = plugin.Manifest.DocUrl;
+            log["Plugin:Name"] = plugin.Name;
+            log["Plugin:Id"] = plugin.PluginId;
+            log["Plugin:Assembly"] = plugin.AssemblyName;
+            log["Plugin:Description"] = plugin.Description;
+            log["Plugin:SourceUrl"] = plugin.SourceUrl;
+            log["Plugin:DocUrl"] = plugin.DocUrl;
 
             LogPluginModules(plugin, log);
-            LogPluginKnownTypeContracts(plugin, log);
-            LogPluginKnownTypeImplementations(plugin, log);
-            LogPluginRegistrations(plugin, log);
+            // LogPluginRegistrations(plugin, log);
         }
 
-        private static void LogPluginModules(Plugin plugin, IDictionary<string, object> log)
+        private static void LogPluginModules(IPluginDefinition plugin, IDictionary<string, object> log)
         {
             log["Plugin:Modules"] = plugin.Modules.ToDictionary(
                 m => m.GetType().FullName,
@@ -102,24 +101,7 @@ namespace NetFusion.Bootstrap.Logging
                 });
         }
 
-        private static void LogPluginKnownTypeContracts(Plugin plugin, IDictionary<string, object> log)
-        {
-            log["Plugin:KnownType:Contracts"] = plugin.PluginTypes
-                .Where(pt => pt.IsKnownTypeContract)
-                .Select(pt => pt.Type.FullName)
-                .ToArray();
-        }
-
-        private static void LogPluginKnownTypeImplementations(Plugin plugin, IDictionary<string, object> log)
-        {
-            log["Plugin:KnownType:Definitions"] = plugin.PluginTypes
-                .Where(pt => pt.IsKnownTypeImplementation)
-                .ToDictionary(
-                    pt => pt.Type.FullName,
-                    pt => pt.DiscoveredByPlugins.Select(dp => dp.Manifest.Name).ToArray());
-        }
-
-        private void LogPluginRegistrations(Plugin plugin, IDictionary<string, object> log)
+        /*private void LogPluginRegistrations(IPluginDefinition plugin, IDictionary<string, object> log)
         {
             var implementationTypes = _services.Select(s => new {
                 s.ServiceType,
@@ -131,6 +113,6 @@ namespace NetFusion.Bootstrap.Logging
             log["Plugin:Service:Registrations"] = implementationTypes
                 .Where(it => !it.IsFactory && plugin.HasType(it.ImplementationType))
                 .Select(it => it.ToDictionary()).ToArray();
-        }
+        }*/
     }
 }

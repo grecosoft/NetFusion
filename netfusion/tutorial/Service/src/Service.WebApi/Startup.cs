@@ -122,41 +122,6 @@ namespace Service.WebApi
             app.UseMvc();
         }
 
-        // Creates a NetFusion application container used to populate the service-collection 
-        // for a set of discovered plug-ins.
-        private IBuiltContainer CreateAppContainer(IServiceCollection services, IConfiguration configuration, ILoggerFactory loggerFactory)
-        {
-            // Creates an instance of a type resolver that will look for plug-ins within 
-            // the assemblies matching the passed patterns.
-            var typeResolver = new TypeResolver(
-                "Service.WebApi",
-                "Service.*");
-
-            return services.CreateAppBuilder(configuration, loggerFactory, typeResolver)
-                .Bootstrap(c => {
-
-                    c.WithConfig((WebMvcConfig config) =>
-                     {
-                         config.EnableRouteMetadata = true;
-                         config.UseServices(services);
-                     })
-                     .WithConfig((MessageDispatchConfig mc) => {
-                        mc.AddMessagePublisher<RabbitMqPublisher>();
-                        mc.AddMessagePublisher<RedisPublisher>();
-                        mc.AddMessagePublisher<HostMessagePublisher>();   
-                     })
-                     .WithConfig((RabbitMqLoggerConfig config) => {
-                        config.SetLogFactory(loggerFactory);
-                     })
-                     .WithServices(reg =>
-                     {
-                         reg.AddSingleton<ISerializationManager, SerializationManager>();
-                         //  Additional services or overrides can be registered here.
-                     });
-                })
-                .Build();
-        }
-
         private static void OnShutdown()
         {
             //AppContainer.Instance.Dispose();

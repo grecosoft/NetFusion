@@ -1,9 +1,9 @@
 ﻿using NetFusion.Bootstrap.Exceptions;
-using NetFusion.Bootstrap.Manifests;
 using NetFusion.Common.Extensions.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetFusion.Bootstrap.Refactors;
 
 namespace NetFusion.Bootstrap.Container
 {
@@ -11,11 +11,11 @@ namespace NetFusion.Bootstrap.Container
     /// Validates that the manifest registry was correctly constructed from
     /// the discovered assemblies representing plug-ins. 
     /// </summary>
-    public class ManifestValidation
+    public class CompositeAppValidation
     {
-        private readonly ManifestRegistry _registry;
+        private readonly CompositeApp _registry;
 
-        public ManifestValidation(ManifestRegistry registry)
+        public CompositeAppValidation(CompositeApp registry)
         {
             _registry = registry ?? throw new ArgumentNullException(nameof(registry),
                 "Manifest Registry cannot be null.");
@@ -23,11 +23,6 @@ namespace NetFusion.Bootstrap.Container
 
         public void Validate()
         {
-            if (_registry.AllManifests == null)
-            {
-                throw new ContainerException("Plug-in manifests not set by type resolver.");
-            }
-
             AssertManifestIds();
             AssertManifestNames();
             AssertLoadedManifests();
@@ -35,7 +30,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void AssertManifestIds()
         {
-            IEnumerable<Type> invalidManifestTypes = _registry.AllManifests
+            IEnumerable<Type> invalidManifestTypes = _registry.AllPlugins
                 .Where(m => string.IsNullOrWhiteSpace(m.PluginId))
                 .Select(m => m.GetType())
                 .ToArray();
@@ -47,7 +42,7 @@ namespace NetFusion.Bootstrap.Container
                     "MissingPluginIds", invalidManifestTypes);
             }
 
-            IEnumerable<string> duplicateManifestIds = _registry.AllManifests
+            IEnumerable<string> duplicateManifestIds = _registry.AllPlugins
                 .WhereDuplicated(m => m.PluginId)
                 .ToArray();
 
@@ -61,7 +56,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void AssertManifestNames()
         {
-            IEnumerable<Type> invalidManifestTypes = _registry.AllManifests
+            IEnumerable<Type> invalidManifestTypes = _registry.AllPlugins
                 .Where(m => string.IsNullOrWhiteSpace(m.AssemblyName) || string.IsNullOrWhiteSpace(m.Name))
                 .Select(m => m.GetType())
                 .ToArray();
@@ -73,7 +68,7 @@ namespace NetFusion.Bootstrap.Container
                     "InvalidManifestTypes", invalidManifestTypes);
             }
 
-            IEnumerable<string> duplicateNames = _registry.AllManifests
+            IEnumerable<string> duplicateNames = _registry.AllPlugins
                 .WhereDuplicated(m => m.Name)
                 .ToArray();
 
@@ -87,26 +82,10 @@ namespace NetFusion.Bootstrap.Container
 
         private void AssertLoadedManifests()
         {
-            if (_registry.AppHostPluginManifests.Empty())
+            if (_registry.HostPlugin == null)
             {
                 throw new ContainerException(
-                    $"A Host Application Plug-In manifest could not be found " +
-                    $"derived from: {typeof(IAppHostPluginManifest)}");
-            }
-
-            if (! _registry.AppHostPluginManifests.IsSingletonSet())
-            {
-                var hostManifests = _registry.AppHostPluginManifests.Select(am => new
-                {
-                    ManifestType = am.GetType().FullName,
-                    am.AssemblyName,
-                    PluginName = am.Name,
-                    am.PluginId
-                }).ToArray();
-
-                throw new ContainerException(
-                    "More than one Host Application Plug-In manifest was found.",
-                    "HostManifests", hostManifests);
+                    $"A Host Application Plug-In manifest could not be found");
             }
         }
     }

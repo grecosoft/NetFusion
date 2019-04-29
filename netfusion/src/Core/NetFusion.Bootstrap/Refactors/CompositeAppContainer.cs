@@ -50,7 +50,7 @@ namespace NetFusion.Bootstrap.Refactors
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
             
-            _logger = _loggerFactory.CreateLogger<AppContainer>();
+            _logger = _loggerFactory.CreateLogger<CompositeAppContainer>();
             
             if (setGlobalReference)
             {
@@ -104,6 +104,7 @@ namespace NetFusion.Bootstrap.Refactors
         public IBuiltContainer Build(ITypeResolver typeResolver)
         {
             ConfigureValidation();
+            
             _compositeApp = new CompositeApp(_loggerFactory, _configuration, _plugins);
             
             try

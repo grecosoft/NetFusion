@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Dependencies;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
@@ -37,9 +38,12 @@ namespace NetFusion.Bootstrap.Refactors
 
         public void Validate()
         {
-            HostPlugin = AllPlugins.First(p => p.PluginType == PluginDefinitionTypes.HostPlugin);
+            HostPlugin = AllPlugins.FirstOrDefault(p => p.PluginType == PluginDefinitionTypes.HostPlugin);
             AppPlugins = AllPlugins.Where(p => p.PluginType == PluginDefinitionTypes.ApplicationPlugin).ToArray();
             CorePlugins = AllPlugins.Where(p => p.PluginType == PluginDefinitionTypes.CorePlugin).ToArray();
+
+            var validator = new CompositeAppValidation(this);
+            validator.Validate();
         }
         
         /// <summary>
