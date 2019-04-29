@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Primitives;
 using NetFusion.Rest.Resources;
-using NetFusion.Rest.Server.Modules;
 using System.Linq;
+using NetFusion.Rest.Server.Plugin;
 
 namespace NetFusion.Rest.Server.Hal
 {

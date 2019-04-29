@@ -2,7 +2,7 @@
 using EasyNetQ;
 using EasyNetQ.Topology;
 using Moq;
-using NetFusion.RabbitMQ.Modules;
+using NetFusion.RabbitMQ.Plugin;
 using NetFusion.RabbitMQ.Subscriber.Internal;
 
 namespace IntegrationTests.RabbitMQ

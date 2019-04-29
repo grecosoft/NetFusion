@@ -1,5 +1,5 @@
 ﻿using System;
-using NetFusion.Redis.Modules;
+using NetFusion.Redis.Plugin;
 using StackExchange.Redis;
 
 namespace NetFusion.Redis.Internal

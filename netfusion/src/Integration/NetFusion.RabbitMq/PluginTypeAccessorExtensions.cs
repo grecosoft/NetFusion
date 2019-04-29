@@ -1,5 +1,5 @@
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.RabbitMQ.Modules;
+using NetFusion.RabbitMQ.Plugin;
 using NetFusion.RabbitMQ.Settings;
 
 namespace NetFusion.RabbitMQ

@@ -1,3 +1,5 @@
+using NetFusion.Bootstrap.Refactors;
+
 #pragma warning disable 4014
 namespace Service.WebApi.Controllers
 {
@@ -17,9 +19,9 @@ namespace Service.WebApi.Controllers
     [Route("api/entry"), GroupMeta(nameof(ApiController))]
     public class ApiController : Controller
     {
-        private readonly IAppContainer _appContainer;
+        private readonly ICompositeAppContainer _appContainer;
         
-        public ApiController(IAppContainer appContainer)
+        public ApiController(ICompositeAppContainer appContainer)
         {
             _appContainer = appContainer ?? throw new ArgumentNullException(nameof(appContainer));
         }

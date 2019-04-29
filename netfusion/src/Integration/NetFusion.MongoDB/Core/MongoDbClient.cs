@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
-using NetFusion.MongoDB.Modules;
 using System;
 using System.Threading.Tasks;
+using NetFusion.MongoDB.Plugin;
 using NetFusion.MongoDB.Settings;
 
 namespace NetFusion.MongoDB.Core

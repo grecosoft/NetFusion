@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Amqp;
-using NetFusion.AMQP.Modules;
+using NetFusion.AMQP.Plugin;
 using NetFusion.AMQP.Publisher.Internal;
 using NetFusion.Base.Serialization;
 using NetFusion.Messaging.Core;

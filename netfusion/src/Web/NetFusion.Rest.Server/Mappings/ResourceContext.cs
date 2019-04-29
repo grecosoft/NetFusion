@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Meta;
-using NetFusion.Rest.Server.Modules;
+using NetFusion.Rest.Server.Plugin;
 using NetFusion.Web.Mvc.Metadata;
 
 namespace NetFusion.Rest.Server.Mappings

@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Enrichers;
-using NetFusion.Messaging.Modules;
+using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Types;
 using NetFusion.Test.Modules;
 using Xunit;

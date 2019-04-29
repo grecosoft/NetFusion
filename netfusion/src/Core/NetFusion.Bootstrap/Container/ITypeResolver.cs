@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Plugins;
 using System.Collections.Generic;
+using NetFusion.Bootstrap.Refactors;
 
 namespace NetFusion.Bootstrap.Container
 {
@@ -10,6 +12,14 @@ namespace NetFusion.Bootstrap.Container
     /// </summary>
     public interface ITypeResolver
     {
+        void SetPluginMeta(IPluginDefinition plugin);
+        void ComposePlugin(IPluginDefinition plugin, IEnumerable<Type> fromPluginTypes);
+        
+        
+        
+        
+        
+        
         /// <summary>
         /// Called by the AppContainer on the passed ITypeResolver instance.
         /// </summary>

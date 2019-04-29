@@ -1,5 +1,5 @@
 ﻿using NetFusion.Bootstrap.Plugins;
-using NetFusion.MongoDB.Modules;
+using NetFusion.MongoDB.Plugin;
 using NetFusion.MongoDB.Settings;
 
 namespace NetFusion.MongoDB

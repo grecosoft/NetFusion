@@ -8,7 +8,6 @@ using NetFusion.Rest.Common;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Mappings;
-using NetFusion.Rest.Server.Modules;
 using NetFusion.Web.Mvc.Extensions;
 using NetFusion.Web.Mvc.Metadata;
 using Newtonsoft.Json;
@@ -18,6 +17,7 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NetFusion.Rest.Server.Plugin;
 
 namespace NetFusion.Rest.Server.Hal
 {

@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Mapping;
 using NetFusion.Mapping.Core;
-using NetFusion.Mapping.Modules;
+using NetFusion.Mapping.Plugin;
 using NetFusion.Test.Modules;
 using Xunit;
 

@@ -7,7 +7,7 @@ using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Types;
 using NetFusion.Redis.Internal;
-using NetFusion.Redis.Modules;
+using NetFusion.Redis.Plugin;
 using StackExchange.Redis;
 
 namespace NetFusion.Redis.Publisher

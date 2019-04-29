@@ -39,8 +39,8 @@ namespace NetFusion.Bootstrap.Container
         {
             if (bootstrap == null) throw new ArgumentNullException(nameof(bootstrap));
 
-            _container = _container ?? new AppContainer(_services, _configuration, _loggerFactory, _typeResolver);
-            bootstrap(_container);
+            //_container = _container ?? new AppContainer(_services, _configuration, _loggerFactory, _typeResolver);
+            //bootstrap(_container);
             return this;
         }
 
@@ -51,10 +51,11 @@ namespace NetFusion.Bootstrap.Container
             _services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
             _services.AddSingleton(typeof(IConfiguration), _configuration);
 
-            var container = _container ?? new AppContainer(_services, _configuration, _loggerFactory, _typeResolver);
+            //var container = _container ?? new AppContainer(_services, _configuration, _loggerFactory, _typeResolver);
             _container = null;
 
-            return container.Build();
+            //return container.Build();
+            return null;
         }
     }
 

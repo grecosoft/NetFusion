@@ -5,7 +5,7 @@ using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging.Types;
 using NetFusion.Redis.Internal;
-using NetFusion.Redis.Modules;
+using NetFusion.Redis.Plugin;
 
 namespace NetFusion.Redis.Subscriber.Internal
 {

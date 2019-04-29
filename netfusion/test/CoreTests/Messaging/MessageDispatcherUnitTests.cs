@@ -9,7 +9,7 @@ using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Enrichers;
 using NetFusion.Messaging.Exceptions;
-using NetFusion.Messaging.Modules;
+using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Types;
 using Xunit;
 

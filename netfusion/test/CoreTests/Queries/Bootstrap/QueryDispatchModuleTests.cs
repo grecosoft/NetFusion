@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Exceptions;
-using NetFusion.Messaging.Modules;
+using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Types;
 using NetFusion.Test.Modules;
 using Xunit;

@@ -1,5 +1,5 @@
 ﻿using NetFusion.Bootstrap.Plugins;
-using NetFusion.Mapping.Modules;
+using NetFusion.Mapping.Plugin;
 
 namespace NetFusion.Mapping
 {

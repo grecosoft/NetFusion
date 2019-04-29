@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using EasyNetQ;
 using NetFusion.Bootstrap.Exceptions;
-using NetFusion.RabbitMQ.Modules;
+using NetFusion.RabbitMQ.Plugin;
 using NetFusion.Test.Container;
 using Xunit;
 

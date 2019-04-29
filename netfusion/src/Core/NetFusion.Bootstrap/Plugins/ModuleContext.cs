@@ -5,6 +5,7 @@ using NetFusion.Bootstrap.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetFusion.Bootstrap.Refactors;
 
 namespace NetFusion.Bootstrap.Plugins
 {
@@ -14,17 +15,17 @@ namespace NetFusion.Bootstrap.Plugins
     /// </summary>
     public class ModuleContext
     {
-        private readonly CompositeApplication _compositeApp;
+        private readonly CompositeApp _compositeApp;
 
         /// <summary>
         /// The plug-in representing the application host.
         /// </summary>
-        public Plugin AppHost { get; }
+        public IPluginDefinition AppHost { get; }
 
         /// <summary>
         /// The plug-in where the module is defined.
         /// </summary>
-        public Plugin Plugin { get; }
+        public IPluginDefinition Plugin { get; }
 
         /// <summary>
         /// The logger factory configured for the application container.
@@ -55,17 +56,15 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         public IEnumerable<Type> AllAppPluginTypes { get; }
 
-        public ModuleContext(
-            CompositeApplication compositeApp, 
-            Plugin plugin,
-            IPluginModule module)
+        public ModuleContext(CompositeApp compositeApp, IPluginDefinition plugin, IPluginModule module)
         {
             _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
 
             Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
+            
+            AppHost = compositeApp.HostPlugin;
             Logger = _compositeApp.LoggerFactory.CreateLogger(module.GetType());
-
-            AppHost = compositeApp.AppHostPlugin;
+            
             AllPluginTypes = FilteredTypesByPluginType();
             AllAppPluginTypes = GetAppPluginTypes();
         }
@@ -73,11 +72,9 @@ namespace NetFusion.Bootstrap.Plugins
         private IEnumerable<Type> FilteredTypesByPluginType()
         {
             // Core plug-in can access types from all other plug-in types.
-            if (Plugin.PluginType == PluginTypes.CorePlugin)
+            if (Plugin.PluginType == PluginDefinitionTypes.CorePlugin)
             {
-                return _compositeApp.GetPluginTypes()
-                    .Select(pt => pt.Type)
-                    .ToList();
+                return _compositeApp.GetPluginTypes();
             }
 
             // Application centric plug-in can only access types contained in
@@ -87,9 +84,8 @@ namespace NetFusion.Bootstrap.Plugins
 
         private IEnumerable<Type> GetAppPluginTypes()
         {
-            return _compositeApp.GetPluginTypes(PluginTypes.AppComponentPlugin, PluginTypes.AppHostPlugin)
-                .Select(pt => pt.Type)
-                .ToList();
+            return _compositeApp.GetPluginTypes(PluginDefinitionTypes.ApplicationPlugin,
+                PluginDefinitionTypes.HostPlugin);
         }
 
         /// <summary>
@@ -100,7 +96,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// only one module is not found, an exception is thrown.</returns>
         public T GetPluginModule<T>() where T : IPluginModuleService
         {
-            var foundModules = _compositeApp.AllPluginModules.OfType<T>().ToArray();
+            var foundModules = _compositeApp.AllPlugins.SelectMany(p => p.Modules).OfType<T>().ToArray();
             if (! foundModules.Any())
             {
                 throw new ContainerException($"Plug-in module of type: {typeof(T)} not found.");

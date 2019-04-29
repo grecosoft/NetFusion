@@ -7,7 +7,7 @@ using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Core;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
-using NetFusion.Rest.Server.Modules;
+using NetFusion.Rest.Server.Plugin;
 using NetFusion.Test.Plugins;
 
 namespace WebTests.Rest.Setup

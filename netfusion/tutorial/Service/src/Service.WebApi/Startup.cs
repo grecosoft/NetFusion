@@ -8,7 +8,21 @@ using NetFusion.Rest.Server.Hal;
 using NetFusion.Web.Mvc;
 using NetFusion.Web.Mvc.Composite;
 using System;
+using NetFusion.AMQP.Plugin;
 using NetFusion.Bootstrap.Configuration;
+using NetFusion.Bootstrap.Refactors;
+using NetFusion.Messaging;
+using NetFusion.Messaging.Plugin;
+using NetFusion.MongoDB.Plugin;
+using NetFusion.RabbitMQ.Plugin;
+using NetFusion.Redis.Plugin;
+using NetFusion.Rest.Server.Plugin;
+using NetFusion.Settings.Plugin;
+using NetFusion.Web.Mvc.Plugin;
+using Service.App.Plugin;
+using Service.Domain.Plugin;
+using Service.Infra.Plugin;
+using Service.WebApi.Plugin;
 
 namespace Service.WebApi
 {
@@ -34,8 +48,37 @@ namespace Service.WebApi
             _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory)); 
         }
 
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddSingleton<ISerializationManager, SerializationManager>();
+            
+            services.CompositeAppBuilder(_loggerFactory, _configuration)
+                .AddSettings()
+                .AddMessaging()
+                .AddMongoDb()
+                .AddRabbitMq()
+                .AddRedis()
+                .AddAmqp()
+                .AddWebMvc(c =>
+                {
+                    c.EnableRouteMetadata = true;
+                    c.UseServices(services);
+                })
+                .AddRest()
+                .AddPlugin<DomainPlugin>()
+                .AddPlugin<AppPlugin>()
+                .AddPlugin<InfraPlugin>()
+                .AddPlugin<WebApiPlugin>()
+                .Build()
+                .Start();
+                
+             
+            
+            
+            
+            
+            
             if (EnvironmentConfig.IsDevelopment)
             {
                 services.AddCors();                
@@ -47,12 +90,12 @@ namespace Service.WebApi
             });
 
             // Create and NetFusion application container based on Microsoft's abstractions:
-            var builtContainer = CreateAppContainer(services, _configuration, _loggerFactory);
+            //var builtContainer = CreateAppContainer(services, _configuration, _loggerFactory);
 
             // Start all modules in the application container and return created service-provider.
             // If an open-source DI container is needed, this is where it would be populated and returned.
-            builtContainer.Start();
-            return builtContainer.ServiceProvider;
+            //builtContainer.Start();
+            //return builtContainer.ServiceProvider;
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
@@ -116,7 +159,7 @@ namespace Service.WebApi
 
         private static void OnShutdown()
         {
-            AppContainer.Instance.Dispose();
+            //AppContainer.Instance.Dispose();
         }
     }
 }

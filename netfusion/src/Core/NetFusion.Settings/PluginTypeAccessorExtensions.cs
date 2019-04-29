@@ -1,5 +1,5 @@
 ﻿using NetFusion.Bootstrap.Plugins;
-using NetFusion.Settings.Modules;
+using NetFusion.Settings.Plugin;
 
 namespace NetFusion.Settings
 {

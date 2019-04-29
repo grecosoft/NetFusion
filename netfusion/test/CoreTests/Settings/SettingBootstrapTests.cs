@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 using NetFusion.Base.Validation;
 using NetFusion.Common.Extensions;
 using NetFusion.Settings;
-using NetFusion.Settings.Modules;
+using NetFusion.Settings.Plugin;
 using NetFusion.Test.Modules;
 using Xunit;
 

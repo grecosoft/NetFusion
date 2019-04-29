@@ -7,6 +7,7 @@ using NetFusion.Common.Extensions;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using NetFusion.Bootstrap.Refactors;
 
 namespace NetFusion.Web.Mvc.Composite
 {
@@ -50,7 +51,7 @@ namespace NetFusion.Web.Mvc.Composite
             {
                 routes.MapGet(baseUrl + "/structure", context =>
                 {
-                    using (var scope = AppContainer.Instance.CreateServiceScope())
+                    using (var scope = CompositeAppContainer.Instance.CreateServiceScope())
                     {
                         var compositeSrv = scope.ServiceProvider.GetRequiredService<ICompositeService>();
                         var compositeModel = compositeSrv.GetStructure();
@@ -63,7 +64,7 @@ namespace NetFusion.Web.Mvc.Composite
                 {
                     var pluginId = context.GetRouteValue("pluginId").ToString();
 
-                    using (var scope = AppContainer.Instance.CreateServiceScope())
+                    using (var scope = CompositeAppContainer.Instance.CreateServiceScope())
                     {
                         var compositeSrv = scope.ServiceProvider.GetRequiredService<ICompositeService>();
                         var pluginDetailModel = compositeSrv.GetPluginDetails(pluginId);

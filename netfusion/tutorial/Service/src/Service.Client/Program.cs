@@ -1,4 +1,13 @@
-﻿namespace Service.Client
+﻿using NetFusion.AMQP.Plugin;
+using NetFusion.Bootstrap.Refactors;
+using NetFusion.Messaging.Plugin;
+using NetFusion.RabbitMQ.Plugin;
+using NetFusion.Redis.Plugin;
+using NetFusion.Settings.Plugin;
+using Service.Client.Plugin;
+using Service.Domain.Plugin;
+
+namespace Service.Client
 {
     using System.Threading.Tasks;
     using Microsoft.Extensions.Configuration;
@@ -18,24 +27,33 @@
         {
             await BuildHost().WaitForShutdownAsync();
             
-            AppContainer.Instance.Dispose();
+          //  AppContainer.Instance.Dispose();
         }
         
         private static IHost BuildHost()
         {
-            IBuiltContainer builtContainer = null;          
-            
             var host = new HostBuilder()
                 .ConfigureServices((context, collection) =>
                 {
-                    builtContainer = CreateAppContainer(collection, context.Configuration);
+                    var loggerFactory = new LoggerFactory();
+                    loggerFactory.AddConsole();
+                    
+                    collection.AddSingleton<ISerializationManager, SerializationManager>();
+                    
+                    collection.CompositeAppBuilder(loggerFactory, context.Configuration)
+                        .AddSettings()
+                        .AddMessaging()
+                        .AddRabbitMq()
+                        .AddAmqp()
+                        .AddRedis()
+
+                        .AddPlugin<ClientPlugin>()
+                        .Build()
+                        .Start();
                 })
                 .ConfigureAppConfiguration(SetupConfiguration)
                 .ConfigureLogging(SetupLogging)
                 .Build();
-            
-            builtContainer.Start();
-            host.Start();
             
             return host;
         }

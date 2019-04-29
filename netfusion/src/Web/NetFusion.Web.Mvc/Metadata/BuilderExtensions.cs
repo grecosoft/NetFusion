@@ -8,6 +8,7 @@ using NetFusion.Web.Mvc.Metadata.Core;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using NetFusion.Bootstrap.Refactors;
 
 namespace NetFusion.Web.Mvc.Metadata
 {
@@ -47,7 +48,7 @@ namespace NetFusion.Web.Mvc.Metadata
             {
                 routes.MapGet(baseUrl + "/groups", context =>
                 {
-                    using (var scope = AppContainer.Instance.CreateServiceScope())
+                    using (var scope = CompositeAppContainer.Instance.CreateServiceScope())
                     {
                         var metadataSrv = scope.ServiceProvider.GetService<IApiMetadataService>();
                         var metadata = metadataSrv.GetApiGroups();
@@ -57,7 +58,7 @@ namespace NetFusion.Web.Mvc.Metadata
 
                 routes.MapGet(baseUrl + "/groups/{groupName}", context =>
                 {
-                    using (var scope = AppContainer.Instance.CreateServiceScope())
+                    using (var scope = CompositeAppContainer.Instance.CreateServiceScope())
                     {
                         var metadataSrv = scope.ServiceProvider.GetService<IApiMetadataService>();
                         var groupName = context.GetRouteValue("groupName").ToString();

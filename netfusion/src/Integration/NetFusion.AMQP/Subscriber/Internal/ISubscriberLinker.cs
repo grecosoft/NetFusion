@@ -1,7 +1,7 @@
 ﻿using Amqp;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Serialization;
-using NetFusion.Messaging.Modules;
+using NetFusion.Messaging.Plugin;
 
 namespace NetFusion.AMQP.Subscriber.Internal
 {

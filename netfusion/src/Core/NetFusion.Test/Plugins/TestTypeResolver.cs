@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using NetFusion.Bootstrap.Refactors;
 
 namespace NetFusion.Test.Plugins
 {
@@ -25,6 +26,16 @@ namespace NetFusion.Test.Plugins
             _plugins = new List<MockPlugin>();
             _delegateResolver = new TypeResolver();
             _scanAssembly = scanTypesAssembly?.GetTypeInfo().Assembly;
+        }
+
+        public void SetPluginMeta(IPluginDefinition plugin)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ComposePlugin(IPluginDefinition plugin, IEnumerable<Type> fromPluginTypes)
+        {
+            throw new NotImplementedException();
         }
 
         public void Initialize(ILoggerFactory loggerFactory)

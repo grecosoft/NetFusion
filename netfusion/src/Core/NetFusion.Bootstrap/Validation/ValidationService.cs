@@ -1,6 +1,7 @@
 ﻿using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Container;
 using System;
+using NetFusion.Bootstrap.Refactors;
 
 namespace NetFusion.Bootstrap.Validation
 {
@@ -10,9 +11,9 @@ namespace NetFusion.Bootstrap.Validation
     /// </summary>
     public class ValidationService : IValidationService
     {
-        private readonly IAppContainer _appContainer;
+        private readonly ICompositeAppContainer _appContainer;
 
-        public ValidationService(IAppContainer appContainer)
+        public ValidationService(ICompositeAppContainer appContainer)
         {
             _appContainer = appContainer ?? throw new ArgumentNullException(nameof(appContainer));
         }

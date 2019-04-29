@@ -5,8 +5,8 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging.Core;
-using NetFusion.Messaging.Modules;
-using NetFusion.RabbitMQ.Modules;
+using NetFusion.Messaging.Plugin;
+using NetFusion.RabbitMQ.Plugin;
 
 namespace NetFusion.RabbitMQ.Subscriber.Internal
 {

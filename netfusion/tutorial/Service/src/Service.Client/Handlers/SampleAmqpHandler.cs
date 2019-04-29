@@ -1,4 +1,5 @@
 using System;
+using NetFusion.AMQP.Plugin;
 using NetFusion.AMQP.Subscriber;
 using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
@@ -7,8 +8,6 @@ using Service.Domain.Events;
 
 namespace Service.Client.Handlers
 {
-    using NetFusion.AMQP.Modules;
-
     [Host("claims-bus")]
     public class SampleAmqpHandler : IMessageConsumer
     {
