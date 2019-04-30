@@ -11,14 +11,9 @@ namespace Service.Infra.Plugin
     // Convention based registration.
     public class RepositoryModule : PluginModule
     {
-        public override void RegisterServices(IServiceCollection services)
-        {
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
-        }
-
         public override void ScanPlugins(ITypeCatalog catalog)
         {
-           // catalog.AsImplementedInterface("Repository", ServiceLifetime.Scoped);
+           catalog.AsImplementedInterface("Repository", ServiceLifetime.Scoped);
         }
     }
 }

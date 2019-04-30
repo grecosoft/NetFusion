@@ -95,7 +95,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// only one module is not found, an exception is thrown.</returns>
         public T GetPluginModule<T>() where T : IPluginModuleService
         {
-            var foundModules = _compositeApp.AllPlugins.SelectMany(p => p.Modules).OfType<T>().ToArray();
+            var foundModules = _compositeApp.AllModules.OfType<T>().ToArray();
             if (! foundModules.Any())
             {
                 throw new ContainerException($"Plug-in module of type: {typeof(T)} not found.");

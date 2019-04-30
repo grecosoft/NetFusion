@@ -59,7 +59,7 @@ namespace NetFusion.Bootstrap.Dependencies
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
 
-            foreach (Type matchingType in _types.Where(filter))
+            foreach (Type matchingType in _types.Where(filter).Where(t => !t.IsAbstract))
             {
                 Type serviceType = GetServiceInterface(matchingType);
                 Services.Add(new ServiceDescriptor(serviceType, matchingType, lifetime));

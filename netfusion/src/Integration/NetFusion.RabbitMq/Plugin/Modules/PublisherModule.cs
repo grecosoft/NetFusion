@@ -59,7 +59,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
             var definitions = Registries.SelectMany(r => r.GetDefinitions()).ToArray();
 
-            CheckRabbitMqPublisherRegistered(definitions);
             ApplyConfiguredOverrides(definitions);
             AssertExchangeDefinitions(definitions);
             CreateExchangeRpcClients(definitions);
@@ -92,25 +91,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                     $"No exchange definition registered for message type: {messageType}");
             }
             return _messageExchanges[messageType];
-        }
-
-        private void CheckRabbitMqPublisherRegistered(ExchangeMeta[] definitions)
-        {
-            // If there are no defined exchange definitions, the application does not
-            // need to have the RabbitMq publisher registered.
-            if (definitions.Length == 0) return;
-
-            var messageModule = Context.GetPluginModule<IMessageDispatchModule>();
-
-            Type publisher = messageModule.DispatchConfig.PublisherTypes
-                .FirstOrDefault(pt => pt == typeof(RabbitMqPublisher));
-
-            if (publisher == null)
-            {
-                Context.Logger.LogWarning(RabbitMqLogEvents.PublisherEvent,
-                    $"Exchanges have been declared but the publisher of type: {typeof(RabbitMqPublisher)} " + 
-                     "has not been registered.  For messages to be published, this class must be registered." );
-            }
         }
 
         // All exchange types:  Direct, Topic, and Fan-out are defined within code with the most common default
