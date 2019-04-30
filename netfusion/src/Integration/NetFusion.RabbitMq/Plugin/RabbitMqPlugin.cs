@@ -1,8 +1,10 @@
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.RabbitMQ.Plugin.Modules;
 using NetFusion.RabbitMQ.Publisher;
+using NetFusion.Settings.Plugin;
 
 namespace NetFusion.RabbitMQ.Plugin
 {
@@ -27,10 +29,16 @@ namespace NetFusion.RabbitMQ.Plugin
     {
         public static ICompositeContainerBuilder AddRabbitMq(this ICompositeContainerBuilder composite)
         {
+            // Add dependent plugins:
+            composite
+                .AddSettings()
+                .AddMessaging();
+            
+            // Add Rabbit MQ Plugin:
             composite.AddPlugin<RabbitMqPlugin>();
 
-            // Augment the base messaging plugin:
-            var dispatchConfig = composite.GetConfig<MessageDispatchConfig>();
+            // Integrate with base messaging plugin:
+            var dispatchConfig = composite.GetPluginConfig<MessageDispatchConfig>();
             dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
             
             return composite;

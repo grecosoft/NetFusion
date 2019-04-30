@@ -23,6 +23,8 @@ namespace NetFusion.Bootstrap.Plugins
         void SetPluginMeta(string assemblyName, string assemblyVersion,
             IEnumerable<Type> pluginTypes);
 
+        bool HasType(Type pluginType);
+
         T GetConfig<T>() where T : IPluginConfig, new();
     }
 }

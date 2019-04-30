@@ -35,10 +35,10 @@ namespace NetFusion.Bootstrap.Container
         private readonly ILogger _logger;
         private CompositeAppLog _compositeLog;
        
+        // Composite Structure:
         private CompositeApp _compositeApp;
         private readonly List<IPlugin> _plugins = new List<IPlugin>();
-       
-        private ValidationConfig _validationConfig;
+        private readonly List<IPluginConfig> _containerConfigs = new List<IPluginConfig>();
         
         // Service Provider:
         private IServiceProvider _serviceProvider;
@@ -59,6 +59,8 @@ namespace NetFusion.Bootstrap.Container
             {
                 _instance = this;
             }
+
+            AddContainerConfigs();
         }
         
         // Log of the composite application structure showing how it was constructed.
@@ -97,17 +99,59 @@ namespace NetFusion.Bootstrap.Container
             }
         }
         
-        internal void AddPlugin(IPlugin plugin)
+        internal void RegisterPlugin<T>() where T : IPlugin, new()
         {
-            _plugins.Add((plugin));
+            if (IsPluginRegistered<T>())
+            {
+                return;
+            }
+            
+            IPlugin plugin = new T();
+            _plugins.Add(plugin);
+        }
+
+        private bool IsPluginRegistered<T>() where T : IPlugin
+        {
+            return _plugins.Any(p => p.GetType() == typeof(T));
+        }
+        
+        //----------------------- Container Configuration ------------------------------------//
+        
+        public T GetPluginConfig<T>() where T : IPluginConfig
+        {
+            var config = _plugins.SelectMany(p => p.Configs).FirstOrDefault(
+                pc => pc.GetType() == typeof(T));
+
+            if (config == null)
+            {
+                throw LogException(new ContainerException(
+                    $"Plugin configuration of type: {typeof(T)} is not registered."));
+            }
+
+            return (T)config;
+        }
+        
+        internal T GetContainerConfig<T>() where T : IPluginConfig
+        {
+            var config = _containerConfigs.FirstOrDefault(pc => pc.GetType() == typeof(T));
+            if (config == null)
+            {
+                throw LogException(new ContainerException(
+                    $"Container configuration of type: {typeof(T)} is not registered."));
+            }
+
+            return (T)config;
+        }
+        
+        private void AddContainerConfigs()
+        {
+            _containerConfigs.Add(new ValidationConfig());
         }
         
         //----------------------- Container Initialization ------------------------------------//
         
-        public IBuiltContainer Build(ITypeResolver typeResolver)
-        {
-            ConfigureValidation();
-            
+        internal IBuiltContainer Build(ITypeResolver typeResolver)
+        {           
             _compositeApp = new CompositeApp(_loggerFactory, _configuration, _plugins);
             
             try
@@ -278,36 +322,16 @@ namespace NetFusion.Bootstrap.Container
             }
         }
         
-        //-------------------------------- Container Services -----------------------------------------//
-        
-        private void ConfigureValidation()
-        {
-            _validationConfig = new ValidationConfig();
-            
-/*            _validationConfig = _configs.Values.OfType<ValidationConfig>()
-                .FirstOrDefault() ?? new ValidationConfig();*/
-        }
-        
+        //-------------------------------- Container Provided Services -----------------------------------------//
+       
         // Creates a validation instance, based on the application configuration, used to validate an object.
         // The host application can specify an implementation using a validation library of choice.
         public IObjectValidator CreateValidator(object obj)
         {
             ThrowIfDisposed(this);
-            return (IObjectValidator)Activator.CreateInstance(_validationConfig.ValidatorType, obj);
-        }
-        
-        public T GetConfig<T>() where T : IPluginConfig
-        {
-            var config = _plugins.SelectMany(p => p.Configs).FirstOrDefault(
-                pc => pc.GetType() == typeof(T));
 
-            if (config == null)
-            {
-               // config = new T();
-               // _configs.Add(config);  //TODO THROW
-            }
-
-            return (T)config;
+            ValidationConfig validationConfig = GetContainerConfig<ValidationConfig>();
+            return (IObjectValidator)Activator.CreateInstance(validationConfig.ValidatorType, obj);
         }
 
         //-------------------------------- Service Provider -------------------------------------------//
@@ -392,7 +416,7 @@ namespace NetFusion.Bootstrap.Container
                     plugin.Name,
                     plugin.PluginId,
                     plugin.AssemblyName,
-                   // Configs = plugin.PluginConfigs.Select(c => c.GetType().FullName),
+                    Configs = plugin.Configs.Select(c => c.GetType().FullName),
                     Modules = plugin.Modules.Select(m => m.GetType().FullName)
                 });
             }

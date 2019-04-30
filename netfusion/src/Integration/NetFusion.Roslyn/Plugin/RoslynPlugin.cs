@@ -29,8 +29,8 @@ namespace NetFusion.Roslyn.Plugin
     {
         public static ICompositeContainerBuilder AddRoslyn(this ICompositeContainerBuilder composite)
         {
-            composite.AddPlugin<RoslynPlugin>();
-            return composite;
+            // Add Roslyn Plugin:
+            return composite.AddPlugin<RoslynPlugin>();
         }
     }
 }

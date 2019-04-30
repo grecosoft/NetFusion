@@ -1,8 +1,10 @@
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.Redis.Plugin.Modules;
 using NetFusion.Redis.Publisher;
+using NetFusion.Settings.Plugin;
 
 namespace NetFusion.Redis.Plugin
 {
@@ -25,10 +27,16 @@ namespace NetFusion.Redis.Plugin
     {
         public static ICompositeContainerBuilder AddRedis(this ICompositeContainerBuilder composite)
         {
+            // Add dependent plugins:
+            composite
+                .AddSettings()
+                .AddMessaging();
+            
+            // Add Redis plugin:
             composite.AddPlugin<RedisPlugin>();
             
-            // Augment the base messaging plugin:
-            var dispatchConfig = composite.GetConfig<MessageDispatchConfig>();
+            // Integrate with base messaging plugin:
+            var dispatchConfig = composite.GetPluginConfig<MessageDispatchConfig>();
             dispatchConfig.AddMessagePublisher<RedisPublisher>();
             
             return composite;

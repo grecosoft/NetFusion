@@ -28,8 +28,8 @@ namespace NetFusion.Mapping.Plugin
     {
         public static ICompositeContainerBuilder AddMapping(this ICompositeContainerBuilder composite)
         {
-            composite.AddPlugin<MappingPlugin>();
-            return composite;
+            // Add mapping plugin:
+            return composite.AddPlugin<MappingPlugin>();
         }
     }
 }

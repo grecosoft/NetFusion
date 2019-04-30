@@ -26,12 +26,13 @@ namespace NetFusion.Web.Mvc.Plugin
     {
         public static ICompositeContainerBuilder AddWebMvc(this ICompositeContainerBuilder composite, Action<WebMvcConfig> configure = null)
         {
+            // Add the MVC Plugin:
             composite.AddPlugin<WebMvcPlugin>();
 
-            
+            // Call configure delegate on configuration if specified.
             if (configure != null)
             {
-                var config = composite.GetConfig<WebMvcConfig>();
+                var config = composite.GetPluginConfig<WebMvcConfig>();
                 configure(config);
             }
             

@@ -3,6 +3,7 @@ using NetFusion.Common.Extensions.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Bootstrap.Container
 {
@@ -12,79 +13,77 @@ namespace NetFusion.Bootstrap.Container
     /// </summary>
     public class CompositeAppValidation
     {
-        private readonly CompositeApp _registry;
+        private readonly CompositeApp _compositeApp;
 
-        public CompositeAppValidation(CompositeApp registry)
+        public CompositeAppValidation(CompositeApp compositeApp)
         {
-            _registry = registry ?? throw new ArgumentNullException(nameof(registry),
-                "Manifest Registry cannot be null.");
+            _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
         }
 
         public void Validate()
         {
-            AssertManifestIds();
-            AssertManifestNames();
-            AssertLoadedManifests();
+            AssertPluginIdentity();
+            AssertPluginMetadata();
+            AssertPluginTypes();
         }
 
-        private void AssertManifestIds()
+        private void AssertPluginIdentity()
         {
-            IEnumerable<Type> invalidManifestTypes = _registry.AllPlugins
-                .Where(m => string.IsNullOrWhiteSpace(m.PluginId))
-                .Select(m => m.GetType())
+            IEnumerable<Type> invalidPluginTypes = _compositeApp.AllPlugins
+                .Where(p => string.IsNullOrWhiteSpace(p.PluginId))
+                .Select(p => p.GetType())
                 .ToArray();
 
-            if (invalidManifestTypes.Any())
+            if (invalidPluginTypes.Any())
             {
                 throw new ContainerException(
-                    "All manifest instances must have a PluginId specified.  See details for invalid manifest types.",
-                    "MissingPluginIds", invalidManifestTypes);
+                    "All plugins must have a PluginId specified.  See details for invalid plugin types.",
+                    "MissingPluginIds", invalidPluginTypes);
             }
 
-            IEnumerable<string> duplicateManifestIds = _registry.AllPlugins
-                .WhereDuplicated(m => m.PluginId)
+            IEnumerable<string> duplicatePluginIds = _compositeApp.AllPlugins
+                .WhereDuplicated(p => p.PluginId)
                 .ToArray();
 
-            if (duplicateManifestIds.Any())
+            if (duplicatePluginIds.Any())
             {
                 throw new ContainerException(
                     "Plug-in identity values must be unique.  See details for duplicated Plug-in Ids.",
-                     "DuplicateManifestIds", duplicateManifestIds);
+                     "DuplicatePluginIds", duplicatePluginIds);
             }
         }
 
-        private void AssertManifestNames()
+        private void AssertPluginMetadata()
         {
-            IEnumerable<Type> invalidManifestTypes = _registry.AllPlugins
-                .Where(m => string.IsNullOrWhiteSpace(m.AssemblyName) || string.IsNullOrWhiteSpace(m.Name))
-                .Select(m => m.GetType())
+            IEnumerable<Type> invalidPluginTypes = _compositeApp.AllPlugins
+                .Where(p => string.IsNullOrWhiteSpace(p.AssemblyName) || string.IsNullOrWhiteSpace(p.Name))
+                .Select(p => p.GetType())
                 .ToArray();
 
-            if (invalidManifestTypes.Any())
+            if (invalidPluginTypes.Any())
             {
                 throw new ContainerException(
-                    "All manifest instances must have AssemblyName and Name values.  See details for invalid manifest types.", 
-                    "InvalidManifestTypes", invalidManifestTypes);
-            }
-
-            IEnumerable<string> duplicateNames = _registry.AllPlugins
-                .WhereDuplicated(m => m.Name)
-                .ToArray();
-
-            if (duplicateNames.Any())
-            {
-                throw new ContainerException(
-                    "Plug-in names must be unique.  See details for duplicated Plug-in names.",
-                    "DuplicateNames", duplicateNames);
+                    "All plugins must have AssemblyName and Name values.  See details for invalid plugin types.", 
+                    "InvalidPluginTypes", invalidPluginTypes);
             }
         }
 
-        private void AssertLoadedManifests()
+        private void AssertPluginTypes()
         {
-            if (_registry.HostPlugin == null)
+            var hostPluginTypes = _compositeApp.AllPlugins
+                .Where(p => p.PluginType == PluginTypes.HostPlugin)
+                .Select(p => p.GetType()).ToArray();
+            
+            if (hostPluginTypes.Empty())
             {
                 throw new ContainerException(
-                    $"A Host Application Plug-In manifest could not be found");
+                    "The composite application must have one host plugin type.");
+            }
+
+            if (hostPluginTypes.Length > 1)
+            {
+                throw new ContainerException("There can only be one host plugin.", 
+                    "HostPluginTypes", hostPluginTypes);
             }
         }
     }

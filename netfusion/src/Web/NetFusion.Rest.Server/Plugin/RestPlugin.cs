@@ -29,11 +29,13 @@ namespace NetFusion.Rest.Server.Plugin
         public static ICompositeContainerBuilder AddRest(this ICompositeContainerBuilder composite, 
             Action<RestApiConfig> configure = null)
         {
+            // Add plugin for Rest API support:
             composite.AddPlugin<RestPlugin>();
 
+            // Call configure delegate on configuration if specified.
             if (configure != null)
             {
-                RestApiConfig config = composite.GetConfig<RestApiConfig>();
+                RestApiConfig config = composite.GetPluginConfig<RestApiConfig>();
                 configure(config);
             }
             

@@ -46,6 +46,11 @@ namespace NetFusion.Bootstrap.Plugins
             AssemblyVersion = assemblyVersion;
             Types = pluginTypes;
         }
+
+        public bool HasType(Type pluginType)
+        {
+            return Types.Any(pt => pt == pluginType);
+        }
         
         public T GetConfig<T>() where T : IPluginConfig, new()
         {

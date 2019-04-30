@@ -1,6 +1,7 @@
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.EntityFramework.Plugin.Modules;
+using NetFusion.Settings.Plugin;
 
 namespace NetFusion.EntityFramework.Plugin
 {
@@ -22,6 +23,10 @@ namespace NetFusion.EntityFramework.Plugin
     {
         public static ICompositeContainerBuilder AddEntityFramework(this ICompositeContainerBuilder composite)
         {
+            // Add dependent plugins:
+            composite.AddSettings();
+            
+            // Add Entity Framework Plugin:
             composite.AddPlugin<EntityFrameworkPlugin>();
             return composite;
         }

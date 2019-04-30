@@ -8,12 +8,6 @@ namespace NetFusion.Bootstrap.Container
     public interface ICompositeContainer
     {
         /// <summary>
-        /// Loads and initializes all of the plug-ins but does not start their execution.
-        /// </summary>
-        /// <returns>Reference to the loaded container that can be started.</returns>
-        IBuiltContainer Build(ITypeResolver typeResolver);
-
-        /// <summary>
         /// Log of the composite application built by the application container.
         /// </summary>
         /// <returns>Dictionary of key/value pairs that can be serialized to JSON.</returns>

@@ -4,6 +4,7 @@ using NetFusion.Bootstrap.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetFusion.Common.Extensions;
 
 namespace NetFusion.Bootstrap.Logging
 {
@@ -84,7 +85,7 @@ namespace NetFusion.Bootstrap.Logging
             log["Plugin:DocUrl"] = plugin.DocUrl;
 
             LogPluginModules(plugin, log);
-            // LogPluginRegistrations(plugin, log);
+            LogPluginRegistrations(plugin, log);
         }
 
         private static void LogPluginModules(IPlugin plugin, IDictionary<string, object> log)
@@ -99,7 +100,7 @@ namespace NetFusion.Bootstrap.Logging
                 });
         }
 
-        /*private void LogPluginRegistrations(IPluginDefinition plugin, IDictionary<string, object> log)
+        private void LogPluginRegistrations(IPlugin plugin, IDictionary<string, object> log)
         {
             var implementationTypes = _services.Select(s => new {
                 s.ServiceType,
@@ -111,6 +112,6 @@ namespace NetFusion.Bootstrap.Logging
             log["Plugin:Service:Registrations"] = implementationTypes
                 .Where(it => !it.IsFactory && plugin.HasType(it.ImplementationType))
                 .Select(it => it.ToDictionary()).ToArray();
-        }*/
+        }
     }
 }

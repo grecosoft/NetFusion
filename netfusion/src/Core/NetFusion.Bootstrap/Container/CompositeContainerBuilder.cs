@@ -19,9 +19,15 @@ namespace NetFusion.Bootstrap.Container
         
         public ICompositeContainerBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new()
         {
-            var plugin = new TPlugin();
-            _container.AddPlugin(plugin);
+            _container.RegisterPlugin<TPlugin>();
+            return this;
+        }
 
+        public ICompositeContainerBuilder InitConfig<T>(Action<T> configure) where T : IPluginConfig
+        {
+            T config = _container.GetContainerConfig<T>();
+            configure(config);
+            
             return this;
         }
 
@@ -40,9 +46,9 @@ namespace NetFusion.Bootstrap.Container
             return sp;
         }
 
-        public T GetConfig<T>() where T : IPluginConfig
+        public T GetPluginConfig<T>() where T : IPluginConfig
         {
-            return _container.GetConfig<T>();
+            return _container.GetPluginConfig<T>();
         }
     }
 

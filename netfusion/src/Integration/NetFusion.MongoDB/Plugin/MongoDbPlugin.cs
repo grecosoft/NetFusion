@@ -1,6 +1,7 @@
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.MongoDB.Plugin.Modules;
+using NetFusion.Settings.Plugin;
 
 namespace NetFusion.MongoDB.Plugin
 {
@@ -24,6 +25,10 @@ namespace NetFusion.MongoDB.Plugin
     {
         public static ICompositeContainerBuilder AddMongoDb(this ICompositeContainerBuilder composite)
         {
+            // Add dependent plugins:
+            composite.AddSettings();
+            
+            // Add MongoDB plugin:
             composite.AddPlugin<MongoDbPlugin>();
             return composite;
         }

@@ -2,7 +2,9 @@ using NetFusion.AMQP.Plugin.Modules;
 using NetFusion.AMQP.Publisher;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Plugin.Configs;
+using NetFusion.Settings.Plugin;
 
 namespace NetFusion.AMQP.Plugin
 {
@@ -26,11 +28,18 @@ namespace NetFusion.AMQP.Plugin
     {
         public static ICompositeContainerBuilder AddAmqp(this ICompositeContainerBuilder composite)
         {
-            var dispatchConfig = composite.GetConfig<MessageDispatchConfig>();
+            // Add dependent plug-ins:
+            composite
+                .AddSettings()
+                .AddMessaging();
+            
+            // Add AMQP plugin:
+            composite.AddPlugin<AmqpPlugin>();
+            
+            // Integrate with base messaging plugin:
+            var dispatchConfig = composite.GetPluginConfig<MessageDispatchConfig>();
             dispatchConfig.AddMessagePublisher<HostMessagePublisher>();
             
-            // Augment the base messaging plugin:
-            composite.AddPlugin<AmqpPlugin>();
             return composite;
         }
     }
