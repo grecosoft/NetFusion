@@ -10,8 +10,7 @@ using NetFusion.Messaging.Types;
 namespace NetFusion.Messaging.Plugin
 {
     /// <summary>
-    /// Services exposed by the messaging module for access by other 
-    /// application modules and services.
+    /// Services exposed by the messaging module for access by other plugin modules.
     /// </summary>
     public interface IMessageDispatchModule : IPluginModuleService
     {

@@ -9,7 +9,7 @@ namespace NetFusion.Messaging.Core
     /// </summary>
     public class MessagingService : IMessagingService
     {
-        // Inner classes delegated to for executing specific types.
+        // Inner classes delegated to for executing specific message types.
         private readonly MessageDispatcher _messageDispatcher;
         private readonly QueryDispatcher _queryDispatcher;
 

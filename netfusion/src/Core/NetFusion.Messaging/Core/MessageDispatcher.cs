@@ -44,7 +44,8 @@ namespace NetFusion.Messaging.Core
                 .ToList();
         }
 
-        public async Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default(CancellationToken),
+        public async Task PublishAsync(IDomainEvent domainEvent, 
+            CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent), 
@@ -62,7 +63,8 @@ namespace NetFusion.Messaging.Core
             await PublishMessageAsync(command, integrationType, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<TResult> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken),
+        public async Task<TResult> SendAsync<TResult>(ICommand<TResult> command, 
+            CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             if (command == null) throw new ArgumentNullException(nameof(command),
@@ -72,7 +74,8 @@ namespace NetFusion.Messaging.Core
             return command.Result;
         }
 
-        public async Task PublishAsync(IEventSource eventSource, CancellationToken cancellationToken = default(CancellationToken),
+        public async Task PublishAsync(IEventSource eventSource, 
+            CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             if (eventSource == null) throw new ArgumentNullException(nameof(eventSource),
@@ -104,7 +107,8 @@ namespace NetFusion.Messaging.Core
 
         // Private method to which all other publish methods delegate to asynchronously apply
         // the enrichers and to invoke all registered message publishers.
-        private async Task PublishMessageAsync(IMessage message, IntegrationTypes integrationType, CancellationToken cancellationToken)
+        private async Task PublishMessageAsync(IMessage message, IntegrationTypes integrationType, 
+            CancellationToken cancellationToken)
         {
             if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken),
                "Cancellation token cannot be null.");

@@ -9,8 +9,12 @@ using NetFusion.Messaging.Exceptions;
 
 namespace NetFusion.Messaging.Plugin.Modules
 {
+    using NetFusion.Bootstrap.Dependencies;
+    using NetFusion.Common.Extensions.Reflection;
+
     /// <summary>
-    /// Plug-in module called during the bootstrap process to configure the dispatching of queries to consumers.
+    /// Plug-in module called during the bootstrap process to configure and cache
+    /// the dispatching of queries to consumers.
     /// </summary>
     public class QueryDispatchModule : PluginModule,
         IQueryDispatchModule
@@ -31,19 +35,12 @@ namespace NetFusion.Messaging.Plugin.Modules
             _queryDispatchers = queryHandlers.ToDictionary(qh => qh.QueryType);
         }       
 
-        // Register all query consumers within the container so they can be resolved 
-        // to handle executed queries within the current lifetime scope.
-        public override void RegisterServices(IServiceCollection services)
+        // Registers all the query consumers within the service collection.
+        public override void ScanPlugins(ITypeCatalog catalog)
         {
-            var queryConsumers = _queryDispatchers.Values
-                .Select(qd => qd.ConsumerType)
-                .Distinct()
-                .ToArray();
-
-            foreach (Type queryConsumer in queryConsumers)
-            {
-                services.AddScoped(queryConsumer);
-            }
+            catalog.AsSelf(
+                t => t.IsConcreteTypeDerivedFrom<IQueryConsumer>(),
+                ServiceLifetime.Scoped);
         }
 
         public static void AssureNoDuplicateHandlers(IEnumerable<QueryDispatchInfo> queryHandlers)

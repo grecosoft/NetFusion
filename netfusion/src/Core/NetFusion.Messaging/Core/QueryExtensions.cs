@@ -45,7 +45,7 @@ namespace NetFusion.Messaging.Core
             }
 
             return paramTypes.Length == 2 && paramTypes[0].CanAssignTo<IQuery>() 
-                   && (paramTypes[1].CanAssignTo<CancellationToken>() && methodInfo.IsAsyncMethod());
+                   && paramTypes[1].CanAssignTo<CancellationToken>() && methodInfo.IsAsyncMethod();
         }
 
         public static IEnumerable<QueryDispatchInfo> SelectQueryDispatchInfo(

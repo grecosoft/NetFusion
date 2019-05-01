@@ -1,4 +1,4 @@
-﻿namespace NetFusion.Messaging.Rules
+﻿namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// Determines how dispatch rules should be evaluated when

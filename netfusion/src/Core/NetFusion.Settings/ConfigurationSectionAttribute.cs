@@ -6,7 +6,7 @@ namespace NetFusion.Settings
     /// Attribute specified on an application setting to indicate the
     /// section name from which the setting instance should be populated.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class ConfigurationSectionAttribute : Attribute
     {
         /// <summary>

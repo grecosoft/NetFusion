@@ -16,17 +16,13 @@ namespace NetFusion.Bootstrap.Plugins
     {
         private bool _disposed;
 
-        protected PluginModule()
-        {
-            IsExcluded = false;
-        }
 
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
+        
         protected virtual void Dispose(bool dispose)
         {
             if (! dispose || _disposed) return;
@@ -35,21 +31,14 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Indicates that the module should not be loaded.  This can be used when developing
-        /// plug-in modules that are not ready to be included.
+        /// Contains plug-in context information that can be used by the module during bootstrapping.
         /// </summary>
-        public bool IsExcluded { get; set; }
-
-        /// <summary>
-        /// Contains plug-in information that can be used by the module during bootstrapping.
-        /// </summary>
-        /// <returns>Contains information that can be used by the module when it is being
-        /// configured.</returns>
+        /// <returns>Contains properties that can be used by the implementation of a plugin module.</returns>
         public ModuleContext Context { get; set; }
 
         /// <summary>
-        /// The first method called on the module.  This method is called on all modules 
-        /// before the Configure method is called.
+        /// The first method called on the module.  This method is called on all modules before the
+        /// Configure method is called.
         /// </summary>
         public virtual void Initialize()
         {
@@ -66,7 +55,8 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// Called first for all plug-in modules to allow default service implementations
-        /// to be registered for use if not overridden by another plug-in module.
+        /// to be registered for use if not overridden by another plug-in module (usually
+        /// at the application level by an application plugin).
         /// </summary>
         /// <param name="services">Service collection used to register services.
         /// </param>
@@ -76,12 +66,12 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Allows the plug-in to scan for types it defines that are to be registered
-        /// with the service collection as services.
+        /// Allows the plug-in to scan for types to be registered with the service collection.
         /// </summary>
-        /// <param name="catalog">Reference to instance used to filter types to be 
-        /// registered.  This registration only contains types contained in the plug-in 
-        /// associated with the module.</param>
+        /// <param name="catalog">Reference to a catalog used to filter types to be registered.
+        /// The types contained within the catalog are based on the plugin's type.  Core plugins,
+        /// can scan types contained within all plugins.  Whereas application centric plugins are
+        /// limited to scanning types contained within application plugins. </param>
         public virtual void ScanPlugins(ITypeCatalog catalog)
         {
         }

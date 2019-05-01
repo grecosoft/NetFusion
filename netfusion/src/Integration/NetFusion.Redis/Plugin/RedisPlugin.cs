@@ -37,7 +37,7 @@ namespace NetFusion.Redis.Plugin
             
             // Integrate with base messaging plugin:
             var dispatchConfig = composite.GetPluginConfig<MessageDispatchConfig>();
-            dispatchConfig.AddMessagePublisher<RedisPublisher>();
+            dispatchConfig.AddPublisher<RedisPublisher>();
             
             return composite;
         }

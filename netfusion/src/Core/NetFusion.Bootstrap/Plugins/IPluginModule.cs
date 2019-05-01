@@ -40,12 +40,12 @@ namespace NetFusion.Bootstrap.Plugins
         void RegisterDefaultServices(IServiceCollection services);
 
         /// <summary>
-        /// Allows the plug-in to scan for types it defines that are to be registered
-        /// with the service collection as services.
+        /// Allows the plug-in to scan for types to be registered with the service collection.
         /// </summary>
-        /// <param name="catalog">Reference to instance used to filter types to be 
-        /// registered.  This registration only contains types contained in the plug-in 
-        /// associated with the module.</param>
+        /// <param name="catalog">Reference to a catalog used to filter types to be registered.
+        /// The types contained within the catalog are based on the plugin's type.  Core plugins,
+        /// can scan types contained within all plugins.  Whereas application centric plugins are
+        /// limited to scanning types contained within application plugins. </param>
         void ScanPlugins(ITypeCatalog catalog);
 
         /// <summary>
@@ -81,8 +81,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// Called after the module is initialized and configured so that it can 
-        /// add module specific logs to the application
-        /// composite log.
+        /// add module specific logs to the application composite log.
         /// </summary>
         /// <param name="moduleLog">Log dictionary to populate.</param>
         void Log(IDictionary<string, object> moduleLog);

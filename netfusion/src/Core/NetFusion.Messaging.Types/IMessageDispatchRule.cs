@@ -18,7 +18,7 @@ namespace NetFusion.Messaging.Types
         /// Determine if the message meets the criteria needed to call the event handler.
         /// </summary>
         /// <param name="message">The message to test.</param>
-        /// <returns>True of the handler should be called.  Otherwise, false.</returns>
+        /// <returns>True if the handler should be called.  Otherwise, false.</returns>
         bool IsMatch(IMessage message);  
     }
 }

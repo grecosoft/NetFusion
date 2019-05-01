@@ -153,7 +153,7 @@ namespace NetFusion.Messaging.Exceptions
         {
             // Get the aggregate inner exception.
             var taskException = taskItem.Task.Exception;
-            return taskException.InnerException;
+            return taskException?.InnerException;
         }
     }
 }

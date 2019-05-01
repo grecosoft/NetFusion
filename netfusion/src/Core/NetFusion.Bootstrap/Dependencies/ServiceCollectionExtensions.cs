@@ -10,21 +10,21 @@ namespace NetFusion.Bootstrap.Dependencies
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Registers a service instance for a sub list of supported interface types.
+        /// Registers a service instance for a list of supported contract types.
         /// </summary>
         /// <param name="services">Reference to service collection.</param>
-        /// <param name="interfaceTypes">The service interface types to register implementation.</param>
+        /// <param name="contractTypes">The service interface types to register implementation.</param>
         /// <param name="implementation">The service's implementation.</param>
         /// <returns>Service collection.</returns>
         public static IServiceCollection AddSingleton(this IServiceCollection services, 
-            IEnumerable<Type> interfaceTypes, 
+            IEnumerable<Type> contractTypes, 
             object implementation)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
-            if (interfaceTypes == null) throw new ArgumentNullException(nameof(interfaceTypes));
+            if (contractTypes == null) throw new ArgumentNullException(nameof(contractTypes));
             if (implementation == null) throw new ArgumentNullException(nameof(implementation));
 
-            foreach (Type interfaceType in interfaceTypes)
+            foreach (Type interfaceType in contractTypes)
             {
                 services.Add(new ServiceDescriptor(interfaceType, implementation));
             }

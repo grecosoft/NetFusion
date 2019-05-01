@@ -3,7 +3,7 @@
 namespace NetFusion.Messaging
 {
     /// <summary>
-    /// Used to specify that a consumer's event handler method should be
+    /// Used to specify that a consumer's message handler method should be
     /// invoked by the InProcessMessagePublisher.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]

@@ -19,9 +19,9 @@ using NetFusion.Messaging.Types;
 namespace NetFusion.Messaging.Plugin.Modules
 {
     /// <summary>
-    /// Plug-in module that finds all message related types and stores a lookup used to determine 
-    /// what consumer component message handlers should be invoked when a message is published
-    /// A message can be either a command or a domain-event.
+    /// Plug-in module that finds and caches all message related types and stores a lookup used
+    /// to determine what consumer component message handlers should be invoked when a message
+    /// is published.  A message can be either a command or a domain-event.
     /// </summary>
     public class MessageDispatchModule : PluginModule, 
         IMessageDispatchModule
@@ -34,8 +34,8 @@ namespace NetFusion.Messaging.Plugin.Modules
         public ILookup<Type, MessageDispatchInfo> AllMessageTypeDispatchers { get; private set; } // MessageType => Dispatcher(s)
         public ILookup<Type, MessageDispatchInfo> InProcessDispatchers { get; private set; } //MessageType => Dispatcher(s)
 
-        // Stores type meta-data for the message consumers that should be notified when
-        // a given message is published. 
+        // Stores type meta-data for the message consumers that
+        // should be notified when a given message is published. 
         public override void Initialize()
         {
             DispatchConfig = Context.Plugin.GetConfig<MessageDispatchConfig>();
@@ -69,6 +69,7 @@ namespace NetFusion.Messaging.Plugin.Modules
             }
         }
 
+        // Registers all the message consumers within the service collection.
         public override void ScanPlugins(ITypeCatalog catalog)
         {
             catalog.AsSelf(
@@ -142,7 +143,8 @@ namespace NetFusion.Messaging.Plugin.Modules
             return dispatchers.First();
         }
 
-        public async Task<object> InvokeDispatcherInNewLifetimeScopeAsync(MessageDispatchInfo dispatcher, IMessage message, 
+        public async Task<object> InvokeDispatcherInNewLifetimeScopeAsync(MessageDispatchInfo dispatcher, 
+            IMessage message, 
             CancellationToken cancellationToken = default(CancellationToken))
         {
             if (dispatcher == null) throw new ArgumentNullException(nameof(dispatcher));

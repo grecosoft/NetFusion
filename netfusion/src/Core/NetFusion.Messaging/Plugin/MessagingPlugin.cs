@@ -33,10 +33,14 @@ namespace NetFusion.Messaging.Plugin
     
     public static class CompositeBuilderExtensions
     {
+        /// <summary>
+        /// Add messaging plugin used for in-process messaging and that can be extended
+        /// by other plugins by registering message-publishers.
+        /// </summary>
+        /// <param name="composite">Reference to the composite container builder.</param>
+        /// <returns>Reference to the composite container builder.</returns>
         public static ICompositeContainerBuilder AddMessaging(this ICompositeContainerBuilder composite)
         {
-            // Add messaging plugin used for in-process messaging and that can be extended
-            // by other plugins by registering message-publishers.
             return composite.AddPlugin<MessagingPlugin>();
         }
     }

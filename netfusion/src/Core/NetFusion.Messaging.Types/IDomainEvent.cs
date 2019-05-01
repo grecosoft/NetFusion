@@ -1,7 +1,10 @@
 ﻿namespace NetFusion.Messaging.Types
 {
     /// <summary>
-    /// Identifies a type as a message that is used to notify consumers that and event has occurred. 
+    /// Message that can be published to notify application consumers of an occurrence.
+    /// Domain-events are used to notify one or more consumers of an occurrence of an event.
+    /// Often, command handler will publish domain-events used to notify interested subscribers
+    /// of state changes made by the handling of the command.
     /// </summary>
     public interface IDomainEvent : IMessage
     {

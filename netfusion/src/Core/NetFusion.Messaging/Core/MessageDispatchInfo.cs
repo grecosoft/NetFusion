@@ -1,5 +1,4 @@
 ﻿using NetFusion.Base.Scripting;
-using NetFusion.Messaging.Rules;
 using NetFusion.Messaging.Types;
 using System;
 using System.Collections.Generic;

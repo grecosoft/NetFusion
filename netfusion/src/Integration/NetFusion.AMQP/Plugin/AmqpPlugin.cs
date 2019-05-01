@@ -38,7 +38,7 @@ namespace NetFusion.AMQP.Plugin
             
             // Integrate with base messaging plugin:
             var dispatchConfig = composite.GetPluginConfig<MessageDispatchConfig>();
-            dispatchConfig.AddMessagePublisher<HostMessagePublisher>();
+            dispatchConfig.AddPublisher<HostMessagePublisher>();
             
             return composite;
         }

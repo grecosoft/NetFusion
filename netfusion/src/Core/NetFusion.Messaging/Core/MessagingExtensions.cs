@@ -1,5 +1,4 @@
 ﻿using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Messaging.Rules;
 using NetFusion.Messaging.Types;
 using System;
 using System.Collections.Generic;
@@ -59,7 +58,7 @@ namespace NetFusion.Messaging.Core
             }
 
             if (paramTypes.Length == 2 && paramTypes[0].CanAssignTo<IMessage>()
-                && (paramTypes[1].CanAssignTo<CancellationToken>() && methodInfo.IsAsyncMethod()))
+                && paramTypes[1].CanAssignTo<CancellationToken>() && methodInfo.IsAsyncMethod())
             {
                 return true;
             }

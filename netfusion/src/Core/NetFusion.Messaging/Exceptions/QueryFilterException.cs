@@ -31,7 +31,7 @@ namespace NetFusion.Messaging.Exceptions
             if (taskItem == null) throw new ArgumentNullException(nameof(taskItem));
 
             var taskException = taskItem.Task.Exception;
-            var sourceException = taskException.InnerException;
+            var sourceException = taskException?.InnerException;
 
             Details = new Dictionary<string, object>
             {

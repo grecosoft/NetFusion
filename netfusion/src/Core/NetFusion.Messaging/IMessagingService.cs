@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 namespace NetFusion.Messaging
 {
     /// <summary>
-    /// Service containing methods to dispatch commands, domain events, and quires 
-    /// to their corresponding consumers.
+    /// Service containing methods to send commands, dispatch queries, and
+    /// publish domain events to their corresponding consumers.
     /// </summary>
     public interface IMessagingService
     {
         /// <summary>
         /// Sends a command to its associated consumer.
         /// </summary>
-        /// <param name="command">The command to be published.</param>
+        /// <param name="command">The command to be sent.</param>
         /// <param name="cancellationToken">Optional cancellation token passed to message handler.</param>
         /// <param name="integrationType">Specifies the scope to which publishers send messages to subscribers.</param>
         /// <returns>Task result.</returns>
@@ -28,7 +28,8 @@ namespace NetFusion.Messaging
         /// <param name="cancellationToken">Optional cancellation token passed to message handler.</param>
         /// <param name="integrationType">Specifies the scope to which publishers send messages to subscribers.</param>
         /// <returns>Task result.</returns>
-        Task<TResult> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default(CancellationToken),
+        Task<TResult> SendAsync<TResult>(ICommand<TResult> command, 
+            CancellationToken cancellationToken = default(CancellationToken),
             IntegrationTypes integrationType = IntegrationTypes.All);
 
         /// <summary>

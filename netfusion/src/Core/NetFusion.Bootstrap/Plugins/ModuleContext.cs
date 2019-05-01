@@ -50,7 +50,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// The plug-in types limited to just those associated with application centric plug-ins.  
-        /// If the module  is within an application centric plug-in, then this list will be the
+        /// If the module is within an application centric plug-in, then this list will be the
         /// same as AllPluginTypes.
         /// </summary>
         public IEnumerable<Type> AllAppPluginTypes { get; }
@@ -101,7 +101,7 @@ namespace NetFusion.Bootstrap.Plugins
                 throw new ContainerException($"Plug-in module of type: {typeof(T)} not found.");
             }
 
-            if (foundModules.Count() > 1)
+            if (foundModules.Length > 1)
             {
                 throw new ContainerException($"Multiple plug-in modules implementing: {typeof(T)} found.");
             }

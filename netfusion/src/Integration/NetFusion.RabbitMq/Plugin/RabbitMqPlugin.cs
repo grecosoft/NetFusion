@@ -39,7 +39,7 @@ namespace NetFusion.RabbitMQ.Plugin
 
             // Integrate with base messaging plugin:
             var dispatchConfig = composite.GetPluginConfig<MessageDispatchConfig>();
-            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
+            dispatchConfig.AddPublisher<RabbitMqPublisher>();
             
             return composite;
         }

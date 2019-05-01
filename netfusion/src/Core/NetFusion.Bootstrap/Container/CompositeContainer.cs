@@ -22,7 +22,7 @@ namespace NetFusion.Bootstrap.Container
     public class CompositeContainer : ICompositeContainer,
         IBuiltContainer
     {
-        // Singleton instance of created container:
+        // Singleton instance of the created container:
         private static CompositeContainer _instance;
         private bool _disposed;
 
@@ -63,7 +63,7 @@ namespace NetFusion.Bootstrap.Container
             AddContainerConfigs();
         }
         
-        // Log of the composite application structure showing how it was constructed.
+        // Log of the composite application structure showing how it was constructed from plugins.
         public IDictionary<string, object> Log
         {
             get
@@ -77,7 +77,7 @@ namespace NetFusion.Bootstrap.Container
         /// Reference to the singleton application container instance.  This should only
         /// be used when service-locator is necessary from a root component.  If a given
         /// service implementation is contained within the service collection, it can 
-        /// reference the application container by injecting the IAppContainer interface.
+        /// reference the application container by injecting the ICompositeContainer interface.
         /// </summary>
         public static ICompositeContainer Instance
         {
@@ -99,6 +99,9 @@ namespace NetFusion.Bootstrap.Container
             }
         }
         
+        // Called by CompositeContainerBuilder to add plugin to the composite container.
+        // If the plugin type is already registered, the request is ignored.  This allows
+        // a plugin to register it's dependent plugins.
         internal void RegisterPlugin<T>() where T : IPlugin, new()
         {
             if (IsPluginRegistered<T>())
@@ -117,23 +120,36 @@ namespace NetFusion.Bootstrap.Container
         
         //----------------------- Container Configuration ------------------------------------//
         
+        // Finds a configuration belonging to one of the registered plugins.  When a plugin
+        // is registered with the container, it can extend the behavior of another plugin by
+        // requesting a configuration from the other plugin and setting information used to
+        // extended the base implementation.
         public T GetPluginConfig<T>() where T : IPluginConfig
         {
-            var config = _plugins.SelectMany(p => p.Configs).FirstOrDefault(
-                pc => pc.GetType() == typeof(T));
+            var configs = _plugins.SelectMany(p => p.Configs)
+                .Where(c => c.GetType() == typeof(T)).ToArray();
 
-            if (config == null)
+            if (configs.Length > 1)
+            {
+                throw LogException(new ContainerException(
+                    $"Plugin configuration of type: {typeof(T)} has been registered by multiple plugins." +
+                     "A configuration can be registered by only one plugin."));
+            }
+
+            if (configs.Length == 0)
             {
                 throw LogException(new ContainerException(
                     $"Plugin configuration of type: {typeof(T)} is not registered."));
             }
 
-            return (T)config;
+            return (T)configs.First();
         }
         
+        // Returns a container level configuration used to configure the runtime behavior
+        // of the built container.
         internal T GetContainerConfig<T>() where T : IPluginConfig
         {
-            var config = _containerConfigs.FirstOrDefault(pc => pc.GetType() == typeof(T));
+            var config = _containerConfigs.FirstOrDefault(c => c.GetType() == typeof(T));
             if (config == null)
             {
                 throw LogException(new ContainerException(
@@ -150,23 +166,31 @@ namespace NetFusion.Bootstrap.Container
         
         //----------------------- Container Initialization ------------------------------------//
         
-        internal IBuiltContainer Build(ITypeResolver typeResolver)
-        {           
+        // Composes the container for the registered plugins and populates the service-collection.
+        internal IBuiltContainer Compose(ITypeResolver typeResolver)
+        {
+            if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
+            
             _compositeApp = new CompositeApp(_loggerFactory, _configuration, _plugins);
             
             try
             {
-                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapBuild, "Building Container"))
+                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapCompose, "Composing Container"))
                 {
                     ResolvePlugins(typeResolver);
            
+                    // Validates that the application was composed for a valid set of plugins.
                     _compositeApp.Validate();
                     
+                    // Allow each plug-in module to compose itself from concrete types, defined
+                    // by other plugins, based on abstract types it defines. 
                     ComposeCorePlugins(typeResolver);
                     ComposeApplicationPlugins(typeResolver);
                     
                     LogPlugins(_compositeApp.AllPlugins);
 
+                    // With all the plugins composed allow each plugin to add its needed
+                    // services to the service-collection.
                     PopulateServiceCollection();
                     CreateCompositeLogger();
                 }
@@ -192,6 +216,8 @@ namespace NetFusion.Bootstrap.Container
             return _serviceProvider;
         }
 
+        // Delegates to the type resolver to populate information and the types associated with each plugin.
+        // This decouples the container from runtime information and makes it easier to test.
         private void ResolvePlugins(ITypeResolver typeResolver)
         {           
             foreach (IPlugin plugin in _compositeApp.AllPlugins)
@@ -200,6 +226,8 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
+        // Core plugins are composed from all other plugin types since they implement
+        // reusable cross-cutting concerns.
         private void ComposeCorePlugins(ITypeResolver typeResolver)
         {
             var allPluginTypes = _compositeApp.GetPluginTypes().ToArray();
@@ -210,6 +238,8 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
+        // Application plugins contain a specific application's implementation
+        // and are composed only from other application specific plugins.
         private void ComposeApplicationPlugins(ITypeResolver typeResolver)
         {
             var allAppPluginTypes = _compositeApp.GetPluginTypes(
@@ -226,6 +256,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void PopulateServiceCollection()
         {
+            // Allows each plugin-module to add services to the collection.
             _compositeApp.PopulateServices(_serviceCollection);
             
             RegisterAppContainerAsService();
@@ -256,6 +287,7 @@ namespace NetFusion.Bootstrap.Container
         private void RegisterDefaultServices()
         {
             _serviceCollection.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();
+            _serviceCollection.AddSingleton<IValidationService, ValidationService>();
         }
         
         // The last step in the bootstrap process allowing plug-in modules to start runtime services.

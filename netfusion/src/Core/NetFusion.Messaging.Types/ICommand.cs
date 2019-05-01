@@ -4,8 +4,8 @@ namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// Represents a message that can have one and only one consumer.  The handling consumer
-    /// can associate a result after processing the command.  This type of message tells the
-    /// a consumer to complete an action.
+    /// can associate a result after processing the message. A command expresses an action that
+    /// is to take place resulting in a change to an application's state.
     /// </summary>
     public interface ICommand : IMessage
     {

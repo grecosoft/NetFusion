@@ -24,8 +24,8 @@ namespace NetFusion.Messaging.Plugin.Configs
             
             // Default set of message enrichers.  If not desired, the host
             // application's configuration can clear.
-            AddMessageEnricher<CorrelationEnricher>();
-            AddMessageEnricher<DateReceivedEnricher>();
+            AddEnricher<CorrelationEnricher>();
+            AddEnricher<DateReceivedEnricher>();
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace NetFusion.Messaging.Plugin.Configs
         /// <summary>
         /// Clears any registered default message publishers.
         /// </summary>
-        public void ClearMessagePublishers()
+        public void ClearPublishers()
         {
             _messagePublisherTypes.Clear();
         }
@@ -49,7 +49,7 @@ namespace NetFusion.Messaging.Plugin.Configs
         /// <summary>
         /// Clears any registered default message enrichers.
         /// </summary>
-        public void ClearMessageEnrichers()
+        public void ClearEnrichers()
         {
             _messageEnrichers.Clear();
         }
@@ -59,7 +59,7 @@ namespace NetFusion.Messaging.Plugin.Configs
         /// By default, the In-Process Message Publisher is registered.
         /// </summary>
         /// <typeparam name="TPublisher">The message publisher type.</typeparam>
-        public void AddMessagePublisher<TPublisher>() where TPublisher: IMessagePublisher
+        public void AddPublisher<TPublisher>() where TPublisher: IMessagePublisher
         {
             Type publisherType = typeof(TPublisher);
             if (_messagePublisherTypes.Contains(publisherType))
@@ -75,7 +75,7 @@ namespace NetFusion.Messaging.Plugin.Configs
         /// Adds message enricher to be executed before a message is published.
         /// </summary>
         /// <typeparam name="TEnricher">The type of the enricher.</typeparam>
-        public void AddMessageEnricher<TEnricher>() where TEnricher : IMessageEnricher
+        public void AddEnricher<TEnricher>() where TEnricher : IMessageEnricher
         {
             Type enricherType = typeof(TEnricher);
             if (_messageEnrichers.Contains(enricherType))

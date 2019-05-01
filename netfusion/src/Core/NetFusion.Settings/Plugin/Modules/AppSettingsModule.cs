@@ -15,7 +15,7 @@ namespace NetFusion.Settings.Plugin.Modules
     /// and automatically registered with the service collection.  Dependent components can 
     /// directly inject instances of the application settings.  When a given settings class
     /// is injected, it delegates to Microsoft's base implementation and loads the settings 
-    /// using the configuration path determined by the ConfigurationSection attributes.  
+    /// using the configuration path determined by the ConfigurationSection attribute.  
     /// The settings are also validated before being returned.
     /// </summary>
     public class AppSettingsModule : PluginModule

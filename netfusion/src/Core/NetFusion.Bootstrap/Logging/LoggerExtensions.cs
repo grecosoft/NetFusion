@@ -68,8 +68,7 @@ namespace NetFusion.Bootstrap.Logging
                 "Name identifying process being logged cannot be null.", nameof(processName));
 
             logger.LogTrace(eventId, 
-                "Start Process: {ProcessName}", 
-                new object[] { processName });
+                "Start Process: {ProcessName}", processName);
 
             return new DurationLogger(logger, processName, logger.LogTrace);
         }

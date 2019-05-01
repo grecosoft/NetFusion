@@ -6,6 +6,10 @@ using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Bootstrap.Container
 {
+    /// <summary>
+    /// Provides an API used by the host application to build a composite application
+    /// from a set of registered plugins.
+    /// </summary>
     public class CompositeContainerBuilder : ICompositeContainerBuilder
     {
         private readonly CompositeContainer _container;
@@ -14,6 +18,10 @@ namespace NetFusion.Bootstrap.Container
             ILoggerFactory loggerFactory,
             IConfiguration configuration)
         {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            
             _container = new CompositeContainer(services, configuration, loggerFactory, true);
         }
         
@@ -35,7 +43,7 @@ namespace NetFusion.Bootstrap.Container
         {
             var resolver = new TypeResolver();
             
-            _container.Build(resolver);
+            _container.Compose(resolver);
             return _container;
         }
 
@@ -49,16 +57,6 @@ namespace NetFusion.Bootstrap.Container
         public T GetPluginConfig<T>() where T : IPluginConfig
         {
             return _container.GetPluginConfig<T>();
-        }
-    }
-
-    public static class ServiceCollectionExtensions
-    {
-        public static ICompositeContainerBuilder CompositeAppBuilder(this IServiceCollection services,
-            ILoggerFactory loggerFactory,
-            IConfiguration configuration)
-        {
-            return new CompositeContainerBuilder(services, loggerFactory, configuration);
         }
     }
 }

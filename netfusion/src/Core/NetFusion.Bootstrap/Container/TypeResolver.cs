@@ -9,12 +9,8 @@ using System.Reflection;
 
 namespace NetFusion.Bootstrap.Container
 {
-    /// <summary>
-    /// Implements the discovery of assemblies containing manifests that represent plug-ins.  
-    /// Also responsible for loading a plug-in's types and modules.  Any assembly containing
-    /// a IPluginManifest derived type signifies that the assembly is a plug-in.
-    /// 
-    /// Having this component load the plug-in types decouples the AppContainer 
+    /// <summary> 
+    /// Having this component load the plug-in types decouples the CompositeContainer 
     /// from .NET assemblies and makes the design easier to unit-test and extend.
     /// </summary>
     public class TypeResolver : ITypeResolver
@@ -31,6 +27,9 @@ namespace NetFusion.Bootstrap.Container
                 assembly.GetExportedTypes());
         }
 
+        // For each plugin module, finds all properties that are an IEnumerable of IKnownPluginType
+        // and populates it from all concrete implementations contained within the list of provided
+        // plugin-types.  Think of this as very simple version of MEF without all the fat.
         public void ComposePlugin(IPlugin plugin, IEnumerable<Type> fromPluginTypes)
         {
             if (plugin == null) throw new ArgumentNullException(nameof(plugin));
@@ -60,8 +59,8 @@ namespace NetFusion.Bootstrap.Container
             var discoveredInstances = fromPluginTypes.CreateInstancesDerivingFrom(knownType).ToArray();
 
             // Create an array based on the known type and populate it from discovered instances.
-            Array array = Array.CreateInstance(knownType, discoveredInstances.Count());
-            for (var i = 0; i < discoveredInstances.Count(); i++)
+            Array array = Array.CreateInstance(knownType, discoveredInstances.Length);
+            for (var i = 0; i < discoveredInstances.Length; i++)
             {
                 array.SetValue(discoveredInstances.ElementAt(i), i);
             }

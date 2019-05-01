@@ -29,7 +29,7 @@ namespace NetFusion.Messaging.Plugin.Configs
         /// the query to the consumer.
         /// </summary>
         /// <typeparam name="TFilter">The type of the filter.</typeparam>
-        public void AddQueryFilter<TFilter>()
+        public void AddFilter<TFilter>()
             where TFilter : IQueryFilter
         {
             if(_queryFilterTypes.Contains(typeof(TFilter)))
