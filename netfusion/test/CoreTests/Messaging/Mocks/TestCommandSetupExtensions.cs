@@ -2,29 +2,33 @@
 using NetFusion.Messaging.Types;
 using NetFusion.Test.Plugins;
 using System.Threading.Tasks;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Messaging.Plugin;
 
 namespace CoreTests.Messaging.Mocks
 {
     public static class TestCommandSetupExtensions
     {
-        public static TestTypeResolver WithHostCommandConsumer(this TestTypeResolver resolver)
+        public static CompositeContainer WithHostCommandConsumer(this CompositeContainer container)
         {
-            resolver.AddPlugin<MockAppHostPlugin>()
-                .AddPluginType<MockCommand>()
-                .AddPluginType<MockCommandConsumer>();
-
-            resolver.AddPlugin<MockCorePlugin>()
-                .UseMessagingPlugin();
-
-            return resolver;
+            var hostPlugin = new MockHostPlugin();
+            hostPlugin.AddPluginType<MockCommandConsumer>();
+            
+            container.RegisterPlugins(hostPlugin);
+            container.RegisterPlugin<MessagingPlugin>();
+            
+            return container;
         }
 
-        public static TestTypeResolver AddMultipleConsumers(this TestTypeResolver resolver)
+        public static CompositeContainer AddMultipleConsumers(this CompositeContainer container)
         {
-            resolver.GetHostPlugin()
-               .AddPluginType<MockInvalidCommandConsumer>();
-
-            return resolver;
+            var appPlugin = new MockApplicationPlugin();
+            appPlugin.AddPluginType<MockInvalidCommandConsumer>();
+            
+            container.RegisterPlugins(appPlugin);
+            container.RegisterPlugin<MessagingPlugin>();
+            
+            return container;
         }
     }
 

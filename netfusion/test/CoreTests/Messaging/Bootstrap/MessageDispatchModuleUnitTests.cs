@@ -1,11 +1,16 @@
 ﻿using System.Linq;
+using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Enrichers;
 using NetFusion.Messaging.Plugin;
+using NetFusion.Messaging.Plugin.Configs;
+using NetFusion.Messaging.Plugin.Modules;
 using NetFusion.Messaging.Types;
-using NetFusion.Test.Modules;
+using NetFusion.Test.Container;
+using NetFusion.Test.Plugins;
 using Xunit;
 
 namespace CoreTests.Messaging.Bootstrap
@@ -15,113 +20,122 @@ namespace CoreTests.Messaging.Bootstrap
         [Fact]
         public void AllMessageConsumers_Discovered()
         {
-            // Arrange
-            var module = ModuleTestFixture.SetupModule<MessageDispatchModule>(
-                typeof(MessageConsumerOne), 
-                typeof(MessageConsumerTwo));
-          
-            // Act
-            module.Initialize();
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange.Container(c =>
+                    {
+                        var hostPlugin = new MockHostPlugin();
+                        hostPlugin.AddPluginType<MessageConsumerOne>();
+                        hostPlugin.AddPluginType<MessageConsumerTwo>();
+                       
+                        c.RegisterPlugins(hostPlugin);
+                        c.RegisterPlugin<MessagingPlugin>();
+                    })
+                    .Assert.PluginModule((MessageDispatchModule m) =>
+                    {
+                        Assert.NotNull(m.AllMessageTypeDispatchers);
+                        Assert.True(m.AllMessageTypeDispatchers.Contains(typeof(MockCommand)));
+                        Assert.True(m.AllMessageTypeDispatchers.Contains(typeof(MockDomainEvent)));
             
-            // Assert
-            Assert.NotNull(module.AllMessageTypeDispatchers);
-            Assert.True(module.AllMessageTypeDispatchers.Contains(typeof(MockCommand)));
-            Assert.True(module.AllMessageTypeDispatchers.Contains(typeof(MockDomainEvent)));
-            
-            Assert.NotNull(module.InProcessDispatchers);
-            Assert.True(module.InProcessDispatchers.Contains(typeof(MockCommand)));
-            Assert.True(module.InProcessDispatchers.Contains(typeof(MockDomainEvent)));
-          
+                        Assert.NotNull(m.InProcessDispatchers);
+                        Assert.True(m.InProcessDispatchers.Contains(typeof(MockCommand)));
+                        Assert.True(m.InProcessDispatchers.Contains(typeof(MockDomainEvent)));
+                    });
+            });
         }
 
         [Fact]
         public void InProcessMessageDispatcher_AddedByDefault()
         {
-            // Arrange
-            var module = ModuleTestFixture.SetupModule<MessageDispatchModule>();
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange.Container(c =>
+                    {
+                        var hostPlugin = new MockHostPlugin();
 
-            // Act
-            module.Initialize();
-            
-            // Assert:
-            Assert.Equal(1, module.DispatchConfig.PublisherTypes.Count);
-            Assert.Equal(typeof(InProcessMessagePublisher), module.DispatchConfig.PublisherTypes.First());
-        }
-
-        [Fact]
-        public void DateRecievedEnricher_AddedByDefault()
-        {
-            // Arrange
-            var module = ModuleTestFixture.SetupModule<MessageDispatchModule>();
-
-            // Act
-            module.Initialize();
-            
-            // Assert
-            Assert.Contains(typeof(DateReceivedEnricher), module.DispatchConfig.EnricherTypes);
-        }
-
-        [Fact]
-        public void CorrelationEnricher_AddedByDefault()
-        {
-            // Arrange
-            var module = ModuleTestFixture.SetupModule<MessageDispatchModule>();
-
-            // Act
-            module.Initialize();
-            
-            // Assert
-            Assert.Contains(typeof(CorrelationEnricher), module.DispatchConfig.EnricherTypes);
+                        c.RegisterPlugins(hostPlugin);
+                        c.RegisterPlugin<MessagingPlugin>();
+                    })
+                    .Assert.Plugin((MessagingPlugin p) =>
+                    {
+                        var config = p.GetConfig<MessageDispatchConfig>();
+                        var publisherType = config.PublisherTypes.FirstOrDefault(
+                            pt => pt == typeof(InProcessMessagePublisher));
+                        
+                        publisherType.Should().NotBeNull();
+                    });
+            });
         }
         
+
+        [Fact]
+        public void DefaultEnrichersAdded()
+        {
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange.Container(c =>
+                    {
+                        var hostPlugin = new MockHostPlugin();
+
+                        c.RegisterPlugins(hostPlugin);
+                        c.RegisterPlugin<MessagingPlugin>();
+                    })
+                    .Assert.Plugin((MessagingPlugin p) =>
+                    {
+                        var config = p.GetConfig<MessageDispatchConfig>();
+
+                        config.EnricherTypes.Should().Contain(typeof(CorrelationEnricher));
+                        config.EnricherTypes.Should().Contain(typeof(DateReceivedEnricher));
+                    });
+            });
+        }
+
         [Fact]
         public void AllMessagePublishes_AddedAsScoped_ToServiceCollection()
         {
-            // Arrange
-            var module = ModuleTestFixture.SetupModule<MessageDispatchModule>();
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange.Container(c =>
+                    {
+                        var hostPlugin = new MockHostPlugin();
 
-            var services = new ServiceCollection();
-            
-            // Act
-            module.Initialize();
-            module.RegisterServices(services);
-            
-            // Assert
-            var dispatchConfig = module.DispatchConfig;
+                        c.RegisterPlugins(hostPlugin);
+                        c.RegisterPlugin<MessagingPlugin>();
+                    })
+                    .Assert.ServiceCollection(s =>
+                    {
+                        var registeredServices = s.Where(sd => 
+                                sd.Lifetime == ServiceLifetime.Scoped &&
+                                sd.ServiceType == typeof(IMessagePublisher))
+                            .ToArray();
 
-            var registeredServices = services.Where(sd => 
-                    dispatchConfig.PublisherTypes.Contains(sd.ImplementationType) && 
-                    sd.Lifetime == ServiceLifetime.Scoped &&
-                    sd.ServiceType == typeof(IMessagePublisher))
-                .ToArray();
-            
-            Assert.Equal(module.DispatchConfig.PublisherTypes.Count, registeredServices.Length);            
+                        registeredServices.Should().HaveCount(1);
+                    });
+            });         
         }
 
         [Fact]
         public void AllMessageConsumers_AddedAsScoped_ToServiceCollection()
         {
-            // Arrange
-            var module = ModuleTestFixture.SetupModule<MessageDispatchModule>();
-            
-            var catalog = CatalogTestFixture.Setup(
-                typeof(MessageConsumerOne), 
-                typeof(MessageConsumerTwo));
-            
-            // Act
-            module.ScanAllOtherPlugins(catalog);
-            
-            // Assert
-            Assert.Equal(2, catalog.Services.Count);
-            Assert.True(catalog.Services.All(sd => sd.Lifetime == ServiceLifetime.Scoped));
-            
-            Assert.Contains(catalog.Services, sd => 
-                sd.ServiceType == typeof(MessageConsumerOne) && 
-                sd.ImplementationType == typeof(MessageConsumerOne));
-            
-            Assert.Contains(catalog.Services, sd => 
-                sd.ServiceType == typeof(MessageConsumerTwo) && 
-                sd.ImplementationType == typeof(MessageConsumerTwo));
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange.Container(c =>
+                    {
+                        var hostPlugin = new MockHostPlugin();
+                        hostPlugin.AddPluginType<MessageConsumerOne>();
+                        hostPlugin.AddPluginType<MessageConsumerTwo>();
+
+                        c.RegisterPlugins(hostPlugin);
+                        c.RegisterPlugin<MessagingPlugin>();
+                    })
+                    .Assert.ServiceCollection(s =>
+                    {
+                        var consumers = s.Where(sd => 
+                            sd.ServiceType.IsConcreteTypeDerivedFrom<IMessageConsumer>() && 
+                            sd.Lifetime == ServiceLifetime.Scoped);
+                        consumers.Should().HaveCount(2);
+                    });
+            });
         }
 
         public class MessageConsumerOne : IMessageConsumer

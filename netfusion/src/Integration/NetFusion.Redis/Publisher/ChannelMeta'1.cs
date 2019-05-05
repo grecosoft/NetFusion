@@ -38,7 +38,7 @@ namespace NetFusion.Redis.Publisher
         
         /// <summary>
         /// Passed a predicate taking the domain-event instance as a parameter and
-        /// returns a boolan value indicating if the domain event should be published.
+        /// returns a boolean value indicating if the domain event should be published.
         /// </summary>
         /// <param name="applies">Predicate passing the domain event returning
         /// a boolean value.</param>

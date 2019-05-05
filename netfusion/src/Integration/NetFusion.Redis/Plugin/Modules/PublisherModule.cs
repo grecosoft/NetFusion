@@ -12,21 +12,17 @@ namespace NetFusion.Redis.Plugin.Modules
     /// Plugin module that scans for all IChannelRegistry instances to 
     /// build a list of metadata used to determine the channels to which
     /// a domain-event should be published.
-    ///
-    /// https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#bootstrapping---modules
     /// </summary>
     public class PublisherModule : PluginModule,
         IPublisherModule
     {
         // Property set during the bootstrap process containing a list of registries 
         // used to determine the channel to which domain-events should be published.
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#module-composition
         private IEnumerable<IChannelRegistry> Registries { get; set; }
         
-        // Maps a domain-event type to a specific channel metadata instance.
+        // Maps a domain-event type to a specific channel instance.
         private Dictionary<Type, ChannelMeta> _channels;
         
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#initialize
         public override void Initialize()
         {
             ChannelMeta[] eventPubChannels = Registries
@@ -78,7 +74,6 @@ namespace NetFusion.Redis.Plugin.Modules
             return _channels[domainEventType];
         }
 
-        // https://github.com/grecosoft/NetFusion/wiki/core.logging.composite#module-logging
         public override void Log(IDictionary<string, object> moduleLog)
         {
             moduleLog["event:channels"] = _channels.Values

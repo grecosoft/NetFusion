@@ -22,8 +22,8 @@ namespace NetFusion.Redis.Publisher
         /// derived classes to register domain-events with a specific channel.
         /// </summary>
         protected abstract void OnRegister();
-        
-        public ChannelMeta<TDomainEvent> AddChannel<TDomainEvent>(string databaseName, string channel)
+
+        protected ChannelMeta<TDomainEvent> AddChannel<TDomainEvent>(string databaseName, string channel)
             where TDomainEvent : IDomainEvent
         {
             var meta = new ChannelMeta<TDomainEvent>(databaseName, channel);

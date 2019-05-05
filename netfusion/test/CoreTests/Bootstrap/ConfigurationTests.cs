@@ -1,4 +1,5 @@
-﻿using CoreTests.Bootstrap.Mocks;
+﻿/*
+using CoreTests.Bootstrap.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
@@ -185,3 +186,4 @@ namespace CoreTests.Bootstrap
         }
     }
 }
+*/

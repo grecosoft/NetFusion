@@ -37,14 +37,14 @@ namespace NetFusion.Redis.Subscriber
             where TDomainEvent : IDomainEvent;
 
         /// <summary>
-        /// Unsubscribes all handlers from the specified channel.
+        /// Unsubscribe all handlers from the specified channel.
         /// </summary>
         /// <param name="database">The name of the configured database.</param>
         /// <param name="channel">The channel to unsubscribe.</param>
         void UnSubscribe(string database, string channel);
 
         /// <summary>
-        /// Unsubscribes all handlers from the specified channel.
+        /// Unsubscribe all handlers from the specified channel.
         /// </summary>
         /// <param name="database">The name of the configured database.</param>
         /// <param name="channel">The channel to unsubscribe.</param>

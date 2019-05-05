@@ -9,6 +9,7 @@ using NetFusion.Settings;
 using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;
 using System.Collections.Generic;
+using NetFusion.Settings.Plugin;
 using Xunit;
 
 namespace CoreTests.Settings
@@ -29,14 +30,17 @@ namespace CoreTests.Settings
         [Fact(DisplayName = "Can inject Settings directly into Consumer")]
         public void CanInjectSettings_DirectlyIntoConsumer()
         {
-            ContainerFixture.Test(fixture => {
-                fixture.Arrange
-                    .Resolver(r =>
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange.Container(c =>
                     {
-                        r.AddPluginsUnderTests();
-                        r.AddPlugin<MockCorePlugin>().AddPluginType<MockSetttings>();
+                        var hostPlugin = new MockHostPlugin();
+                        hostPlugin.AddPluginType<MockSetttings>();
+                  
+                        c.RegisterPlugins(hostPlugin);
+                        c.RegisterPlugin<SettingsPlugin>();
+
                     })
-                    .Configuration(AddInMemorySettings)
                     .Assert.Services(s =>
                     {
                         var settings = s.GetService<MockSetttings>();
@@ -45,7 +49,7 @@ namespace CoreTests.Settings
                         settings.Height.Should().Be(20);
                         settings.Width.Should().Be(50);
                     });
-            });
+            }, AddInMemorySettings);
         }
 
         /// <summary>
@@ -56,42 +60,50 @@ namespace CoreTests.Settings
         [Fact (DisplayName = "Can read specific settings value from configuration")]
         public void CanReadSpecificSettingValue_FromConfiguration()
         {
-            ContainerFixture.Test(fixture => {
-                fixture.Arrange
-                    .Resolver(r =>
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange.Container(c =>
                     {
-                        r.AddPluginsUnderTests();
+                        var hostPlugin = new MockHostPlugin();
+                        hostPlugin.AddPluginType<MockSetttings>();
+                  
+                        c.RegisterPlugins(hostPlugin);
+                        c.RegisterPlugin<SettingsPlugin>();
+
                     })
-                    .Configuration(AddInMemorySettings)
                     .Assert.Services(s =>
                     {
-                        var configuration = s.GetService<IConfiguration>();
+                        var configuration = s.GetService<IConfigurationRoot>();
 
                         int width = configuration.GetValue<int>("App:MainWindow:Width");
                         width.Should().Be(50);
                     });
-            });
+            }, AddInMemorySettings);
         }
 
         [Fact]
         public void CanReadSettingsDirectlyFromConfiguration()
         {
-            ContainerFixture.Test(fixture => {
-                fixture.Arrange
-                    .Resolver(r =>
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange.Container(c =>
                     {
-                        r.AddPluginsUnderTests();
+                        var hostPlugin = new MockHostPlugin();
+                        hostPlugin.AddPluginType<MockSetttings>();
+                  
+                        c.RegisterPlugins(hostPlugin);
+                        c.RegisterPlugin<SettingsPlugin>();
+
                     })
-                    .Configuration(AddInMemorySettings)
                     .Assert.Services(s =>
                     {
-                        var configuration = s.GetService<IConfiguration>();
+                        var configuration = s.GetService<IConfigurationRoot>();
                         var logger = new Mock<ILogger>();
 
                         var settings = configuration.GetSettings<MockSetttings>(logger.Object);
                         settings.Should().NotBeNull();
                     });
-            });
+            }, AddInMemorySettings);
         }
 
         /// <summary>
@@ -103,14 +115,17 @@ namespace CoreTests.Settings
         [Fact(DisplayName = "Can read specific settings object using options")]
         public void CanReadSpecificSettings_UsingOptions()
         {
-            ContainerFixture.Test(fixture => {
-                fixture.Arrange
-                    .Resolver(r =>
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange.Container(c =>
                     {
-                        r.AddPluginsUnderTests();
-                        r.AddPlugin<MockCorePlugin>().AddPluginType<MockSetttings>();
+                        var hostPlugin = new MockHostPlugin();
+                        hostPlugin.AddPluginType<MockSetttings>();
+                  
+                        c.RegisterPlugins(hostPlugin);
+                        c.RegisterPlugin<SettingsPlugin>();
+
                     })
-                    .Configuration(AddInMemorySettings)
                     .Assert.Services(s =>
                     {
                         var options = s.GetService<IOptions<MockSetttings>>();
@@ -122,7 +137,7 @@ namespace CoreTests.Settings
                         settings.Height.Should().Be(20);
                         settings.Width.Should().Be(50);
                     });
-            });
+            }, AddInMemorySettings);
         }
 
         // Test the generation of section for derived setting types.

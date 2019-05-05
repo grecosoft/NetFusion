@@ -23,7 +23,7 @@ namespace CoreTests.Messaging
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithHostEvalBasedConsumer())
+                    .Container(c => c.WithHostEvalBasedConsumer())
                     .Services(s => s.UseMockedEvalService())
                     .Act.OnServices(s =>
                     {
@@ -46,7 +46,7 @@ namespace CoreTests.Messaging
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithHostRuleBasedConsumer())
+                    .Container(c => c.WithHostRuleBasedConsumer())
                     .Act.OnServices(s =>
                     {
                         var mockEvt = new MockRuleDomainEvent { RuleTestValue = 1500 };
@@ -68,7 +68,7 @@ namespace CoreTests.Messaging
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithHostRuleBasedConsumer())
+                    .Container(c => c.WithHostRuleBasedConsumer())
                     .Act.OnServices(s =>
                     {
                         var mockEvt = new MockRuleDomainEvent { RuleTestValue = 3000 };

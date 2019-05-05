@@ -3,7 +3,7 @@ using NetFusion.Bootstrap.Plugins;
 using NetFusion.RabbitMQ.Metadata;
 using NetFusion.RabbitMQ.Publisher.Internal;
 
-namespace NetFusion.RabbitMQ.Publisher
+namespace NetFusion.RabbitMQ.Plugin
 {
     /// <summary>
     /// Specifies the interface for the module responsible for determining the 

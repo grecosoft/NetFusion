@@ -15,8 +15,6 @@ namespace NetFusion.Redis.Publisher
     /// <summary>
     /// Extends to NetFusion base publishing pipeline to allow publishing
     /// domain-events to Redis channels.
-    ///
-    /// https://github.com/grecosoft/NetFusion/wiki/core.messaging.publishers#messaging---publishers
     /// </summary>
     public class RedisPublisher : MessagePublisher
     {

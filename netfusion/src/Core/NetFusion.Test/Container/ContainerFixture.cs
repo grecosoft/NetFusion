@@ -18,7 +18,7 @@ namespace NetFusion.Test.Container
         internal IServiceCollection Services { get; private set; }
         internal IConfigurationBuilder ConfigBuilder { get; private set; }
 
-        private AppContainer _container;
+        private CompositeContainer _container;
         private bool _isInit;
 
         private ContainerFixture() { }
@@ -36,18 +36,17 @@ namespace NetFusion.Test.Container
             };
         }
 
-        public AppContainer ContainerUnderTest
+        public CompositeContainer ContainerUnderTest
         {
             get
             {
                 var configuration = ConfigBuilder.Build();
                 Services.AddSingleton(configuration);
 
-                return _container ?? (_container = new AppContainer(
+                return _container ?? (_container = new CompositeContainer(
                     Services,
                     configuration,
                     new LoggerFactory(),
-                    Resolver,
                     setGlobalReference: false));
             }
         }
@@ -57,7 +56,7 @@ namespace NetFusion.Test.Container
             if (!_isInit)
             {
                 _isInit = true;
-                ContainerUnderTest.Build().Start();
+                ContainerUnderTest.Compose(Resolver).Start();
             }
         }
 
@@ -68,12 +67,13 @@ namespace NetFusion.Test.Container
         /// </summary>
         /// <param name="test">Method specified by the unit-test to execute logic against
         /// a created test-fixture instance.</param>
-        public static void Test(Action<ContainerFixture> test)
+        public static void Test(Action<ContainerFixture> test, Action<IConfigurationBuilder> config = null)
         {
             if (test == null) throw new ArgumentNullException(nameof(test),
                 "Test delegate cannot be null.");
 
             var fixture = CreateFixture();
+            config?.Invoke(fixture.ConfigBuilder);
             test(fixture);
 
             fixture._container?.Dispose();

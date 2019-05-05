@@ -1,7 +1,7 @@
-﻿using NetFusion.Bootstrap.Manifests;
-
-namespace NetFusion.Test.Plugins
+﻿namespace NetFusion.Test.Plugins
 {
+    using NetFusion.Bootstrap.Plugins;
+
     /// <summary>
     /// Mock application component plug-in that can be used for testing.
     /// The application container can have multiple associated application
@@ -9,9 +9,11 @@ namespace NetFusion.Test.Plugins
     /// to the domain of the application.  Domain Entities, Aggregates, 
     /// Services, and Repositories are such examples.
     /// </summary>
-    public class MockAppComponentPlugin : MockPlugin,
-        IAppComponentPluginManifest
+    public class MockApplicationPlugin : MockPlugin
     {
-
+        public MockApplicationPlugin() : base(PluginTypes.ApplicationPlugin)
+        {
+            
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace CoreTests.Messaging
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithHostConsumer())
+                    .Container(c => c.WithHostConsumer())
                     .Act.OnServices(async s =>
                     {
                         var mockEvt = new MockDomainEvent();
@@ -50,7 +50,7 @@ namespace CoreTests.Messaging
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithHost().AddDerivedEventAndConsumer())
+                    .Container(c => c.WithHost().AddDerivedEventAndConsumer())
                     .Act.OnServices(async s =>
                     {
                         var mockEvt = new MockDerivedDomainEvent();
@@ -76,7 +76,7 @@ namespace CoreTests.Messaging
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithHostAsyncConsumer())
+                    .Container(c => c.WithHostAsyncConsumer())
                     .Act.OnServices(async s =>
                     {
                         var messagingSrv = s.GetService<IMessagingService>();                        

@@ -23,6 +23,11 @@ namespace NetFusion.MongoDB.Plugin
     
     public static class CompositeBuilderExtensions
     {
+        /// <summary>
+        /// Adds a plugin to the composite container providing services to query MongoDb.
+        /// </summary>
+        /// <param name="composite">Reference to the composite container builder.</param>
+        /// <returns>Reference to the composite container builder.</returns>
         public static ICompositeContainerBuilder AddMongoDb(this ICompositeContainerBuilder composite)
         {
             // Add dependent plugins:

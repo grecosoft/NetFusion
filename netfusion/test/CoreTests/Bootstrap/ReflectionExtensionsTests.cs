@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using System.Text;
 using FluentAssertions;
-using NetFusion.Bootstrap.Extensions;
-using NetFusion.Bootstrap.Plugins;
-using NetFusion.Test.Plugins;
+using NetFusion.Common.Extensions.Reflection;
 using Xunit;
 
 namespace CoreTests.Bootstrap
@@ -14,10 +12,10 @@ namespace CoreTests.Bootstrap
         public void CreateInstancesOfPluginTypes_MatchingSpecifiedOrBaseType()
         {
             var types = new[] {
-                new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeOne), "TestAssemblyName"),
-                new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo),  "TestAssemblyName"),
-                new PluginType(new Plugin(new MockCorePlugin()), typeof(TypeTwo),  "TestAssemblyName"),
-                new PluginType(new Plugin(new MockCorePlugin()), typeof(StringBuilder),  "TestAssemblyName")
+                typeof(TypeOne),
+                typeof(TypeTwo),
+                typeof(TypeTwo),
+                typeof(StringBuilder)
             };
 
             var objInstances = types.CreateInstancesDerivingFrom(typeof(ICommon)).ToArray();
@@ -43,3 +41,4 @@ namespace CoreTests.Bootstrap
         public class TypeTwo : ICommon { }
     }
 }
+

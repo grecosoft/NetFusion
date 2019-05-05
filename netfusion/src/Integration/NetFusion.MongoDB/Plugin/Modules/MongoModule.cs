@@ -16,18 +16,12 @@ namespace NetFusion.MongoDB.Plugin.Modules
     /// </summary>
     public class MongoModule : PluginModule
     {
-        public override void RegisterDefaultServices(IServiceCollection services)
+        public override void RegisterServices(IServiceCollection services)
         {
             // NOTE:  Documentation states that the MongoClient class to which MongoDBClient
             // delegates is thread-safe and is best to register as single instance within
             // a dependency injection container.
-            Context.AllPluginTypes.Where(t => t.IsConcreteTypeDerivedFrom<MongoSettings>())
-                .ForEach(ms =>
-                {
-                    var implementationType = typeof(MongoDbClient<>).MakeGenericType(ms);
-                    var serviceType = typeof(IMongoDbClient<>).MakeGenericType(ms);
-                    services.AddSingleton(serviceType, implementationType);
-                });
+            services.AddSingleton(typeof(IMongoDbClient<>), typeof(MongoDbClient<>));
         }
 
         public override void Log(IDictionary<string, object> moduleLog)

@@ -1,5 +1,4 @@
 ﻿using NetFusion.Bootstrap.Container;
-using NetFusion.Bootstrap.Manifests;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using System;
@@ -7,6 +6,8 @@ using System.Linq;
 
 namespace NetFusion.Test.Container
 {
+    using Microsoft.Extensions.DependencyInjection;
+
     /// <summary>
     /// Object containing method for asserting the test fixture under test that was
     /// acted on.  There are methods for asserting the container and any of its 
@@ -14,11 +15,11 @@ namespace NetFusion.Test.Container
     /// </summary>
     public class ContainerAssert 
     {
-        private readonly AppContainer _container;
+        private readonly CompositeContainer _container;
         private readonly Exception _resultingException;
         private readonly IServiceProvider _testServiceScope;
 
-        public ContainerAssert(AppContainer container, IServiceProvider serviceProvider, Exception resultingException)
+        public ContainerAssert(CompositeContainer container, IServiceProvider serviceProvider, Exception resultingException)
         {
             _container = container;
             _resultingException = resultingException;
@@ -46,14 +47,14 @@ namespace NetFusion.Test.Container
       
             return this;
         }
-
+        
         /// <summary>
         /// Allows the unit-test to assert the state of the created application container.
         /// </summary>
         /// <param name="assert">The method passed an instance of the application container
         /// to be asserted.</param>
         /// <returns>Self reference.</returns>
-        public ContainerAssert Container(Action<IAppContainer> assert)
+        public ContainerAssert Container(Action<ICompositeContainer> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
                 "Assert method not specified.");
@@ -84,13 +85,23 @@ namespace NetFusion.Test.Container
         /// <param name="assert">The method passed an instance of the composite application
         /// to be asserted.</param>
         /// <returns>Self reference for method chaining.</returns>
-        public ContainerAssert CompositeApp(Action<CompositeApplication> assert)
+        public ContainerAssert CompositeApp(Action<CompositeApp> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
                 "Assert method not specified.");
 
             // dig it out...
-            assert(((IComposite)_container).Application);
+            assert(((IComposite)_container).CompositeApp);
+            return this;
+        }
+        
+        public ContainerAssert ServiceCollection(Action<IServiceCollection> assert)
+        {
+            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+                "Assert method not specified.");
+
+            // dig it out...
+            assert(((IComposite)_container).Services);
             return this;
         }
 
@@ -109,7 +120,7 @@ namespace NetFusion.Test.Container
                 "Assert method not specified.");
 
             var composite = (IComposite)_container;
-            var modules = composite.Application.AllPluginModules
+            var modules = composite.CompositeApp.AllModules
                 .OfType<TModule>()
                 .ToArray();
 
@@ -119,7 +130,7 @@ namespace NetFusion.Test.Container
                     $"Plug-in module of type: {typeof(TModule)} was not found to assert.");
             }
             
-            if (modules.Count() > 1)
+            if (modules.Length > 1)
             {
                 throw new InvalidOperationException(
                     $"Multiple Plug-in modules of type: {typeof(TModule)} were found.");
@@ -138,26 +149,26 @@ namespace NetFusion.Test.Container
         /// underlying plug-in object created.</typeparam>
         /// <param name="assert">The method passed an instance of the plug-in to be asserted.</param>
         /// <returns>Self reference for method chaining.</returns>
-        public ContainerAssert Plugin<TPlugin>(Action<Plugin> assert)
-            where TPlugin : IPluginManifest
+        public ContainerAssert Plugin<TPlugin>(Action<TPlugin> assert)
+            where TPlugin : IPlugin
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
                 "Assert method not specified.");
 
             // When unit-testing... a plug-in and the manifest are the same thing.
             var composite = (IComposite)_container;
-            var plugins = composite.Application.Plugins.Where(p => p.Manifest.GetType() == typeof(TPlugin)).ToArray();
+            var plugins = composite.CompositeApp.AllPlugins.Where(p => p.GetType() == typeof(TPlugin)).ToArray();
 
-            if (plugins.Count() > 1)
+            if (plugins.Length > 1)
             {
                 throw new InvalidOperationException(
-                    $"More than one plug-in of the type: {typeof(TPlugin)} as found.");
+                    $"More than one plug-in of the type: {typeof(TPlugin)} found.");
             }
 
             var plugin = plugins.FirstOrDefault() ??
                 throw new InvalidOperationException($"Plug-in of type: {typeof(TPlugin)} not found.");
 
-            assert(plugin);
+            assert((TPlugin)plugin);
             return this;
         }
 
@@ -169,15 +180,15 @@ namespace NetFusion.Test.Container
         /// <param name="assert">The method passed an instance of the configuration to be asserted.</param>
         /// <returns>Self reference for method chaining.</returns>
         public ContainerAssert Configuration<TConfig>(Action<TConfig> assert)
-            where TConfig : IContainerConfig
+            where TConfig : IPluginConfig
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
                 "Assert method not specified.");
 
             var composite = (IComposite)_container;
 
-            var config = composite.Application
-                .Plugins.SelectMany(p => p.PluginConfigs)
+            var config = composite.CompositeApp
+                .AllPlugins.SelectMany(p => p.Configs)
                 .OfType<TConfig>().FirstOrDefault();
 
             if (config == null)

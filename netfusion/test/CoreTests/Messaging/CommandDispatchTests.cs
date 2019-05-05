@@ -26,7 +26,7 @@ namespace CoreTests.Messaging
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithHostCommandConsumer())
+                    .Container(c => c.WithHostCommandConsumer())
                     .Act.OnServices(async s =>
                     {
                         var messagingSrv = s.GetService<IMessagingService>();
@@ -53,7 +53,7 @@ namespace CoreTests.Messaging
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithHostCommandConsumer())
+                    .Container(c => c.WithHostCommandConsumer())
                     .Act.OnServices(async s =>
                     {
                         var messagingSrv = s.GetService<IMessagingService>();
@@ -77,7 +77,7 @@ namespace CoreTests.Messaging
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Resolver(r => r.WithHostCommandConsumer().AddMultipleConsumers())
+                    .Container(c => c.WithHostCommandConsumer().AddMultipleConsumers())
                     .Act.OnServices(s =>
                     {
                         var messagingSrv = s.GetService<IMessagingService>();

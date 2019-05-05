@@ -10,6 +10,10 @@ using NetFusion.Common.Extensions.Collections;
 
 namespace NetFusion.Bootstrap.Container
 {
+    using System.Reflection;
+    using NetFusion.Bootstrap.Exceptions;
+    using NetFusion.Common.Extensions.Reflection;
+
     /// <summary>
     /// Application composed from a set of plugins.  The end result of the composite application
     /// is a configured .net core Service Collection from which a Service Provider can be built.
@@ -47,7 +51,7 @@ namespace NetFusion.Bootstrap.Container
             AllPlugins = plugins.ToArray();
         }
 
-        public void Validate()
+        public void Initialize()
         {
             HostPlugin = AllPlugins.FirstOrDefault(p => p.PluginType == PluginTypes.HostPlugin);
             AppPlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.ApplicationPlugin).ToArray();
@@ -55,8 +59,12 @@ namespace NetFusion.Bootstrap.Container
 
             var validator = new CompositeAppValidation(this);
             validator.Validate();
+
+            // If the composite structure is valid, compose each plugin module.
+            // This is process each module and set any dependent plugin services.
+            ComposePluginModules();
         }
-        
+
         /// <summary>
         /// Returns types associated with a specific category of plug-in.
         /// </summary>
@@ -70,6 +78,48 @@ namespace NetFusion.Bootstrap.Container
             return pluginTypes.Length == 0 ? AllPlugins.SelectMany(p => p.Types) 
                 : AllPlugins.Where(p => pluginTypes.Contains(p.PluginType)).SelectMany(p => p.Types);
         }
+        
+        //------------------------------------ Plugin Module Services ------------------------------//
+        
+        private void ComposePluginModules()
+        {
+            foreach (IPluginModule module in AllModules)
+            {
+                var dependentServiceProps = GetDependentServiceProperties(module);
+                foreach (PropertyInfo serviceProp in dependentServiceProps)
+                {
+                    IPluginModuleService dependentService = GetModuleSupportingService(serviceProp.PropertyType);
+                    serviceProp.SetValue(module, dependentService);
+                }
+            }
+        }
+        
+        private static IEnumerable<PropertyInfo> GetDependentServiceProperties(IPluginModule module)
+        {
+            const BindingFlags bindings = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+
+            return module.GetType().GetProperties(bindings)
+                .Where(p =>
+                    p.PropertyType.IsDerivedFrom(typeof(IPluginModuleService))
+                    && p.CanWrite);
+        }
+        
+        private IPluginModuleService GetModuleSupportingService(Type serviceType)
+        {
+            var foundModules = AllModules.Where(m => m.GetType().IsDerivedFrom(serviceType)).ToArray();
+            if (!foundModules.Any())
+            {
+                throw new ContainerException($"Plug-in module of type: {serviceType} not found.");
+            }
+            
+            if (foundModules.Length > 1)
+            {
+                throw new ContainerException($"Multiple plug-in modules implementing: {serviceType} found.");
+            }
+
+            return (IPluginModuleService)foundModules.First();
+        }
+        
         
         //------------------------------------ Plugin Service Population ------------------------------//
 

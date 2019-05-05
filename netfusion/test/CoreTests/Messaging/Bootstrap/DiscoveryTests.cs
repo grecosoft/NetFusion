@@ -2,7 +2,7 @@
 using CoreTests.Messaging.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Messaging.Plugin;
+using NetFusion.Messaging.Plugin.Modules;
 using NetFusion.Test.Container;
 using Xunit;
 
@@ -25,8 +25,7 @@ namespace CoreTests.Messaging.Bootstrap
         {
             ContainerFixture.Test(fixture => { fixture
                 .Arrange
-                .Resolver(r => r.WithHostConsumer())
-
+                .Container(c => c.WithHostConsumer())
 
                 .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
@@ -47,7 +46,7 @@ namespace CoreTests.Messaging.Bootstrap
         {
             ContainerFixture.Test(fixture => { fixture
                 .Arrange
-                .Resolver(r => r.WithHostConsumer())
+                .Container(c => c.WithHostConsumer())
    
                 .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
@@ -74,7 +73,7 @@ namespace CoreTests.Messaging.Bootstrap
         {
             ContainerFixture.Test(fixture => { fixture
                 .Arrange
-                .Resolver(r => r.WithHostConsumer())
+                .Container(c => c.WithHostConsumer())
 
                 .Assert.Services(s =>
                 {

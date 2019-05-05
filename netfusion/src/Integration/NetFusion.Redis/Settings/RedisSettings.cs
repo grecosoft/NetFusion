@@ -6,8 +6,6 @@ namespace NetFusion.Redis.Settings
 {
     /// <summary>
     /// Settings used to connect to a named set of Redis servers.
-    ///
-    /// https://github.com/grecosoft/NetFusion/wiki/core.settings.overview#settings---overview
     /// </summary>
     [ConfigurationSection("netfusion:redis")]
     public class RedisSettings : IAppSettings,

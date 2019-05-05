@@ -18,7 +18,7 @@ namespace NetFusion.MongoDB
         IEntityClassMap
     {
         // Additional mapping properties:
-        public string CollectionName { get; set; }
+        public string CollectionName { get; protected set; }
         public Type EntityType => typeof(TClass);
 
         public BsonClassMap ClassMap => this;

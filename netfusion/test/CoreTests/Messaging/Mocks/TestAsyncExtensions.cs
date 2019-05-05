@@ -1,21 +1,22 @@
 ﻿using NetFusion.Test.Plugins;
 using System.Threading.Tasks;
+using NetFusion.Bootstrap.Container;
 using NetFusion.Messaging;
+using NetFusion.Messaging.Plugin;
 
 namespace CoreTests.Messaging.Mocks
 {
     public static class TestAsyncExtensions
     {
-        public static TestTypeResolver WithHostAsyncConsumer(this TestTypeResolver resolver)
+        public static CompositeContainer WithHostAsyncConsumer(this CompositeContainer container)
         {
-            resolver.AddPlugin<MockAppHostPlugin>()
-                .AddPluginType<MockDomainEvent>()
-                .AddPluginType<MockAsyncMessageConsumer>();
+            var hostPlugin = new MockHostPlugin();
+            hostPlugin.AddPluginType<MockAsyncMessageConsumer>();
+            
+            container.RegisterPlugins(hostPlugin);
+            container.RegisterPlugin<MessagingPlugin>();
 
-            resolver.AddPlugin<MockCorePlugin>()
-                .UseMessagingPlugin();
-
-            return resolver;
+            return container;
         }
     }
 

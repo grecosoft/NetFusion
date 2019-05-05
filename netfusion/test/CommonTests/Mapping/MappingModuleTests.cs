@@ -4,7 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Mapping;
 using NetFusion.Mapping.Core;
 using NetFusion.Mapping.Plugin;
-using NetFusion.Test.Modules;
+using NetFusion.Mapping.Plugin.Modules;
+using NetFusion.Test.Container;
+using NetFusion.Test.Plugins;
 using Xunit;
 
 namespace CommonTests.Mapping
@@ -21,31 +23,38 @@ namespace CommonTests.Mapping
         [Fact]
         public void AllMappingStrategyFactories_AreFound()
         {
-            // Arrange:
-            var module = ModuleTestFixture.SetupModule<MappingModule>(
-                typeof(TestMappingStrategyFactory));
-            
-            // Act:
-            module.Configure();
-            
-            // Assert:
-            Assert.NotNull(module.StrategyFactories);
-            Assert.Single(module.StrategyFactories);           
-            Assert.Equal(1, module.SourceTypeMappings.Count);
-            
-            // .. Get the list of possible target types for the source type:
-            Assert.True(module.SourceTypeMappings.Contains(typeof(TestMapTypeOne)));
-            var targetMappings = module.SourceTypeMappings[typeof(TestMapTypeOne)].ToArray();
-            
-            Assert.NotNull(targetMappings);           
-            Assert.Single(targetMappings);
+            var testPlugin = new MockHostPlugin();
+            testPlugin.AddPluginType<TestMappingStrategyFactory>();
 
-            // ... Any strategies returned from a factory are cached:
-            var targetMapping = targetMappings.First();
-            Assert.NotNull(targetMapping.StrategyInstance);
-            
-            Assert.True(targetMapping.SourceType == typeof(TestMapTypeOne));
-            Assert.True(targetMapping.TargetType == typeof(TestMapTypeTwo));
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange
+                    .Container(c =>
+                    {
+                        c.RegisterPlugins(testPlugin);
+                        c.RegisterPlugin<MappingPlugin>();
+                    })
+                    .Assert.PluginModule((MappingModule m) =>
+                    {
+                        Assert.NotNull(m.StrategyFactories);
+                        Assert.Single(m.StrategyFactories);           
+                        Assert.Equal(1, m.SourceTypeMappings.Count);
+                        
+                        // .. Get the list of possible target types for the source type:
+                        Assert.True(m.SourceTypeMappings.Contains(typeof(TestMapTypeOne)));
+                        var targetMappings = m.SourceTypeMappings[typeof(TestMapTypeOne)].ToArray();
+                
+                        Assert.NotNull(targetMappings);           
+                        Assert.Single(targetMappings);
+    
+                        // ... Any strategies returned from a factory are cached:
+                        var targetMapping = targetMappings.First();
+                        Assert.NotNull(targetMapping.StrategyInstance);
+                
+                        Assert.True(targetMapping.SourceType == typeof(TestMapTypeOne));
+                        Assert.True(targetMapping.TargetType == typeof(TestMapTypeTwo));
+                    });
+                });
         }
 
         /// <summary>
@@ -56,65 +65,87 @@ namespace CommonTests.Mapping
         [Fact]
         public void AllMappingStrategies_AreFound()
         {
-            // Arrange:
-            var module = ModuleTestFixture.SetupModule<MappingModule>(
-                typeof(TestMappingStragegyOne));
-            
-            // Act:
-            module.Configure();
-            
-            // Assert:
-            Assert.Equal(1, module.SourceTypeMappings.Count);
-            
-            // .. Get the list of possible target types for the source type:
-            Assert.True(module.SourceTypeMappings.Contains(typeof(TestMapTypeThree)));
-            var targetMappings = module.SourceTypeMappings[typeof(TestMapTypeThree)].ToArray();
-            
-            Assert.NotNull(targetMappings);           
-            Assert.Single(targetMappings);
+            var testPlugin = new MockHostPlugin();
+            testPlugin.AddPluginType<TestMappingStrategyOne>();
 
-            // ... Specific mapping strategies are not created and cached but are
-            // ... instantiated from the service collection.
-            var targetMapping = targetMappings.First();
-            Assert.Null(targetMapping.StrategyInstance);
-            
-            Assert.True(targetMapping.SourceType == typeof(TestMapTypeThree));
-            Assert.True(targetMapping.TargetType == typeof(TestMapTypeOne));
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange
+                    .Container(c =>
+                    {
+                        c.RegisterPlugins(testPlugin);
+                        c.RegisterPlugin<MappingPlugin>();
+                    })
+                    .Assert.PluginModule((MappingModule m) =>
+                    {
+                        Assert.Equal(1, m.SourceTypeMappings.Count);
+
+                        // .. Get the list of possible target types for the source type:
+                        Assert.True(m.SourceTypeMappings.Contains(typeof(TestMapTypeThree)));
+                        var targetMappings = m.SourceTypeMappings[typeof(TestMapTypeThree)].ToArray();
+
+                        Assert.NotNull(targetMappings);
+                        Assert.Single(targetMappings);
+
+                        // ... Specific mapping strategies are not created and cached but are
+                        // ... instantiated from the service collection.
+                        var targetMapping = targetMappings.First();
+                        Assert.Null(targetMapping.StrategyInstance);
+
+                        Assert.True(targetMapping.SourceType == typeof(TestMapTypeThree));
+                        Assert.True(targetMapping.TargetType == typeof(TestMapTypeOne));
+                    });
+            });
         }
 
         [Fact]
         public void AllMappingStrategies_RegisteredAsServices()
         {
-            // Arrange:
-            var module = ModuleTestFixture.SetupModule<MappingModule>(
-                typeof(TestMappingStragegyOne));
+            var testPlugin = new MockHostPlugin();
+            testPlugin.AddPluginType<TestMappingStrategyOne>();
 
-            var services = new ServiceCollection();
-            
-            // Act:
-            module.Configure();
-            module.RegisterServices(services);
-            
-            // Assert:
-            Assert.Single(services);
-            Assert.Equal(ServiceLifetime.Scoped, services.First().Lifetime);
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange
+                    .Container(c =>
+                    {
+                        c.RegisterPlugins(testPlugin);
+                        c.RegisterPlugin<MappingPlugin>();
+                    })
+                    .Assert.ServiceCollection(c =>
+                    {
+                        var registration = c.FirstOrDefault(s => 
+                            s.ImplementationType == typeof(TestMappingStrategyOne));
+
+                        Assert.NotNull(registration);
+                        Assert.Equal(ServiceLifetime.Scoped, registration.Lifetime);
+                    });
+            });    
         }
 
         [Fact]
         public void ObjectMapper_RegisteredAsService()
         {
-            // Arrange:
-            var module = ModuleTestFixture.SetupModule<MappingModule>();
-            var services = new ServiceCollection();
-            
-            // Act:
-            module.RegisterDefaultServices(services);
-            
-            // Assert:
-            Assert.Single(services);
-            Assert.Equal(typeof(IObjectMapper), services.First().ServiceType);
-            Assert.Equal(typeof(ObjectMapper), services.First().ImplementationType);
-            Assert.Equal(ServiceLifetime.Scoped, services.First().Lifetime);
+            var testPlugin = new MockHostPlugin();
+
+            ContainerFixture.Test(fixture =>
+            {
+                fixture.Arrange
+                    .Container(c =>
+                    {
+                        c.RegisterPlugins(testPlugin);
+                        c.RegisterPlugin<MappingPlugin>();
+                    })
+                    .Assert.ServiceCollection(c =>
+                    {
+                        var registration = c.FirstOrDefault(s => s.ServiceType == typeof(IObjectMapper));
+
+                        Assert.NotNull(registration);
+
+                        Assert.Equal(typeof(ObjectMapper), registration.ImplementationType);
+                        Assert.Equal(ServiceLifetime.Scoped, registration.Lifetime);
+                    });
+            });    
         }
 
         public class TestMappingStrategyFactory : IMappingStrategyFactory
@@ -148,7 +179,7 @@ namespace CommonTests.Mapping
             public int[] Values { get; set; }
         }
 
-        public class TestMappingStragegyOne : MappingStrategy<TestMapTypeThree, TestMapTypeOne>
+        public class TestMappingStrategyOne : MappingStrategy<TestMapTypeThree, TestMapTypeOne>
         {
             protected override TestMapTypeOne SourceToTarget(TestMapTypeThree source)
             {

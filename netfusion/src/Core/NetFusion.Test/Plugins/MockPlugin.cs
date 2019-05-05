@@ -1,59 +1,53 @@
-﻿using NetFusion.Bootstrap.Manifests;
-using NetFusion.Bootstrap.Plugins;
+﻿using NetFusion.Bootstrap.Plugins;
 using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Test.Plugins
 {
-    /// <summary>
-    /// Represents a mock plug-in that can be manually added by the host.
-    /// Types can also be added to the plug-in to simulate plug-in types
-    /// that would normally be loaded from the assembly at runtime.
-    /// </summary>
-    public abstract class MockPlugin : IPluginManifest,
-        IPluginTypeAccessor
+    public abstract class MockPlugin : PluginBase
     {
+        private string _pluginId = Guid.NewGuid().ToString();
+        private string _name;
         private readonly List<Type> _pluginTypes = new List<Type>();
-        public IEnumerable<Type> PluginTypes => _pluginTypes;
 
-        protected MockPlugin()
+        public override string PluginId => _pluginId;
+        public override string Name => _name;
+        public override PluginTypes PluginType { get; }
+        
+        protected MockPlugin(PluginTypes pluginType) 
         {
-            PluginId = Guid.NewGuid().ToString();
-            AssemblyName = $"Mock Assembly for Plug-in: {Name}";
-            Name = GetType().Name + Guid.NewGuid();
+            Types = _pluginTypes;
+            PluginType = pluginType;
+
+            _name = GetType().FullName;
+
+            AssemblyName = "unit-test";
+            AssemblyVersion = "unit-test-version";
         }
 
-        public string PluginId { get; set; }
-        public string AssemblyName { get; set; }
-        public string AssemblyVersion { get; set; }
-        public string MachineName { get; set; }
-        public string Name { get; set; }
-        public string Description => "Mock Plug-in";
-        public string SourceUrl => string.Empty;
-        public string DocUrl => string.Empty;
-
-        /// <summary>
-        /// Adds one or more types to the plug-in.
-        /// </summary>
-        /// <param name="types">The type(s) to be added.</param>
-        /// <returns>Reference to self.</returns>
-        public IPluginTypeAccessor AddPluginType(params Type[] types)
-        {
-            if (types == null)throw new ArgumentNullException(nameof(types));
-
-            _pluginTypes.AddRange(types);
-            return this;
-        }
-
-        /// <summary>
-        /// Adds a type to the plug-in.
-        /// </summary>
-        /// <typeparam name="T">The type to be added.</typeparam>
-        /// <returns>Reference to self.</returns>
-        public IPluginTypeAccessor AddPluginType<T>()
+        public void AddPluginType<T>()
         {
             _pluginTypes.Add(typeof(T));
-            return this;
         }
+
+        public new void AddModule<TModule>() where TModule : IPluginModule, new()
+        {
+            base.AddModule<TModule>();
+        }
+
+        public new void AddConfig<TConfig>() where TConfig : IPluginConfig, new()
+        {
+            base.AddConfig<TConfig>();
+        }
+
+        public void SetPluginId(string pluginId)
+        {
+            _pluginId = pluginId;
+        }
+
+        public void SetPluginName(string name)
+        {
+            _name = name;
+        } 
     }
 }

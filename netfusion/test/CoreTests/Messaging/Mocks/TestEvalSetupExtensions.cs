@@ -7,6 +7,8 @@ using NetFusion.Test.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Messaging.Plugin;
 using NetFusion.Roslyn.Core;
 using NetFusion.Roslyn.Testing;
 
@@ -15,16 +17,15 @@ namespace CoreTests.Messaging.Mocks
     public static class TestEvalSetupExtensions
     {
 
-        public static TestTypeResolver WithHostEvalBasedConsumer(this TestTypeResolver resolver)
+        public static CompositeContainer WithHostEvalBasedConsumer(this CompositeContainer container)
         {
-            resolver.AddPlugin<MockAppHostPlugin>()
-                .AddPluginType<MockEvalDomainEvent>()
-                .AddPluginType<MockDomainEventEvalBasedConsumer>();
-
-            resolver.AddPlugin<MockCorePlugin>()
-                .UseMessagingPlugin();
-
-            return resolver;
+            var hostPlugin = new MockHostPlugin();
+            hostPlugin.AddPluginType<MockDomainEventEvalBasedConsumer>();
+            
+            container.RegisterPlugins(hostPlugin);
+            container.RegisterPlugin<MessagingPlugin>();
+            
+            return container;
         }
 
         public static IServiceCollection UseMockedEvalService(this IServiceCollection services)

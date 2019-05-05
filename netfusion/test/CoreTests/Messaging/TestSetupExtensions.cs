@@ -4,6 +4,8 @@ using NetFusion.Messaging.Types;
 using NetFusion.Test.Plugins;
 using System;
 using System.Threading.Tasks;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Messaging.Plugin;
 
 namespace CoreTests.Messaging
 {
@@ -12,44 +14,43 @@ namespace CoreTests.Messaging
     /// </summary>
     public static class TestSetupExtensions
     {
-        public static TestTypeResolver WithHostConsumer(this TestTypeResolver resolver)
+        public static CompositeContainer WithHostConsumer(this CompositeContainer container)
         {
-            resolver.AddPlugin<MockAppHostPlugin>()
-                .AddPluginType<MockDomainEvent>()
-                .AddPluginType<MockDomainEventConsumer>();
+            var hostPlugin = new MockHostPlugin();
+            hostPlugin.AddPluginType<MockDomainEventConsumer>();
+            
+            container.RegisterPlugins(hostPlugin);
+            container.RegisterPlugin<MessagingPlugin>();
 
-            resolver.AddPlugin<MockCorePlugin>()
-                .UseMessagingPlugin();
-
-            return resolver;
+            return container;
         }
 
-        public static TestTypeResolver WithHost(this TestTypeResolver resolver)
+        public static CompositeContainer WithHost(this CompositeContainer container)
         {
-            resolver.AddPlugin<MockAppHostPlugin>();
-
-            resolver.AddPlugin<MockCorePlugin>()
-                .UseMessagingPlugin();
-
-            return resolver;
+            var hostPlugin = new MockHostPlugin();
+            
+            container.RegisterPlugins(hostPlugin);
+            container.RegisterPlugin<MessagingPlugin>();
+            
+            return container;
         }
 
-        public static TestTypeResolver AddDerivedEventAndConsumer(this TestTypeResolver resolver)
+        public static CompositeContainer AddDerivedEventAndConsumer(this CompositeContainer container)
         {
-            resolver.GetHostPlugin()
-                .AddPluginType<MockDerivedDomainEvent>()
-                .AddPluginType<MockBaseMessageConsumer>();
-
-            return resolver;
+            var appPlugin = new MockApplicationPlugin();
+            appPlugin.AddPluginType<MockBaseMessageConsumer>();
+            
+            container.RegisterPlugins(appPlugin);
+            return container;
         }
 
-        public static TestTypeResolver AddEventAndExceptionConsumer(this TestTypeResolver resolver)
+        public static CompositeContainer AddEventAndExceptionConsumer(this CompositeContainer container)
         {
-            resolver.GetHostPlugin()
-              .AddPluginType<MockDomainEvent>()
-              .AddPluginType<MockErrorMessageConsumer>();
-
-            return resolver;
+            var appPlugin = new MockApplicationPlugin();
+            appPlugin.AddPluginType<MockErrorMessageConsumer>();
+            
+            container.RegisterPlugins(appPlugin);
+            return container;
         }
     }
 

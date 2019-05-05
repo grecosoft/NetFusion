@@ -26,7 +26,7 @@ namespace NetFusion.Bootstrap.Plugins
         // Plugin Parts:
         public IEnumerable<IPluginConfig> Configs => _configs;
         public IEnumerable<IPluginModule> Modules => _modules;
-        public IEnumerable<Type> Types { get; private set; }
+        public IEnumerable<Type> Types { get; protected set; } = new List<Type>();
         
         // Assembly Metadata.
         public string AssemblyName { get; set; }

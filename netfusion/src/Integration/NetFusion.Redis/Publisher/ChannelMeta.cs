@@ -32,6 +32,7 @@ namespace NetFusion.Redis.Publisher
         /// </summary>
         public string ContentType { get; protected set; } = ContentTypes.Json;
         
+        // Determines if the message should be sent to the channel.
         internal virtual bool Applies(IDomainEvent domainEvent) => true;
 
         internal abstract string GetEventStateData(IDomainEvent domainEvent);

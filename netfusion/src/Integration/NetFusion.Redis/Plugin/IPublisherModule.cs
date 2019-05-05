@@ -1,7 +1,8 @@
 using System;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Redis.Publisher;
 
-namespace NetFusion.Redis.Publisher
+namespace NetFusion.Redis.Plugin
 {
     /// <summary>
     /// Service module responsible for determining which domain-events

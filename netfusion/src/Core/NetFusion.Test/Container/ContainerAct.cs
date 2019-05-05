@@ -11,7 +11,7 @@ namespace NetFusion.Test.Container
     /// </summary>
     public class ContainerAct
     {
-        private readonly AppContainer _container;
+        private readonly CompositeContainer _container;
         private readonly ContainerFixture _fixture;
         private bool _actedOn;
         private Exception _resultingException;
@@ -30,7 +30,7 @@ namespace NetFusion.Test.Container
         /// <param name="act">Method passed the instance of the container under test to be
         /// acted on by the unit-test.</param>
         /// <returns>Self reference for method chaining.</returns>
-        public ContainerAct OnContainer(Action<IAppContainer> act)
+        public ContainerAct OnContainer(Action<CompositeContainer> act)
         {
             if (_actedOn)
             {
@@ -81,7 +81,7 @@ namespace NetFusion.Test.Container
         /// </summary>
         /// <param name="act">The method passed to act on the created container.</param>
         /// <returns>Self reference.</returns>
-        public ContainerAct OnNonInitContainer(Action<IAppContainer> act)
+        public ContainerAct OnNonInitContainer(Action<CompositeContainer> act)
         {
             if (_actedOn)
             {
@@ -107,7 +107,7 @@ namespace NetFusion.Test.Container
         /// <param name="act">Method passed the instance of the container under test to be
         /// acted on by the unit-test.  The method can invoke an asynchronous method.</param>
         /// <returns>Self reference for method chaining.</returns>
-        public async Task<ContainerAct> OnContainer(Func<IAppContainer, Task> act)
+        public async Task<ContainerAct> OnContainer(Func<ICompositeContainer, Task> act)
         {
             if (_actedOn)
             {

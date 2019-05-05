@@ -15,7 +15,7 @@ namespace NetFusion.MongoDB.Plugin.Modules
     {
         private static readonly object MapLock = new object();
 
-        // IMongoMappingModule:
+        // Discovered Properties:
         public IEnumerable<IEntityClassMap> Mappings { get; private set; }
 
         // Configures MongoDB driver with mappings.
@@ -34,7 +34,6 @@ namespace NetFusion.MongoDB.Plugin.Modules
             }  
         }
 
-        // IMongoMappingModule:
         public string GetEntityDiscriminator(Type mappedEntityType, Type knownEntityType)
         {
             if (mappedEntityType == null) throw new ArgumentNullException(nameof(mappedEntityType), 
@@ -63,7 +62,6 @@ namespace NetFusion.MongoDB.Plugin.Modules
             return knowTypeMap?.ClassMap.Discriminator ?? knownType.Name;
         }
 
-        // IMongoMappingModule:
         public IEntityClassMap GetEntityMap(Type entityType)
         {
             if (entityType == null) throw new ArgumentNullException(nameof(entityType));

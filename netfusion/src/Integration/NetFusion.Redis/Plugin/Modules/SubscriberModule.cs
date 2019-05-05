@@ -19,52 +19,51 @@ namespace NetFusion.Redis.Plugin.Modules
     /// Module that determines all domain-event handlers that should be subscribed to 
     /// a Redis channel.  When a message is received on the channel, the associated
     /// event-handler is invoked with the deserialized domain-event instance.
-    ///
-    /// https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#bootstrapping---modules
     /// </summary>
     public class SubscriberModule : PluginModule
     {
-        // Dependent Modules:
-        private IConnectionModule _connModule;
-        private IMessageDispatchModule _messagingModule;
+        // Dependent Module Services:
+        private IConnectionModule ConnModule { get; set; }
+        private IMessageDispatchModule DispatchModule { get; set; }
+        
+        // Services:
         private ISerializationManager _serializationManager;
         
-        // Message handlers subscribed to channels:
+        // Message handlers subscribed to Redis channels:
         private MessageChannelSubscriber[] _subscribers;
 
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#registerdefaultservices
+        public override void Configure()
+        {
+            _subscribers = GetChannelSubscribers();
+        }
+
         public override void RegisterDefaultServices(IServiceCollection services)
         {
             services.AddSingleton<ISubscriptionService, SubscriptionService>();
         }
 
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#startmodule
         public override void StartModule(IServiceProvider services)
         {
-            // Dependent modules:
-            _connModule = services.GetRequiredService<IConnectionModule>();
-            _messagingModule = services.GetRequiredService<IMessageDispatchModule>();
             _serializationManager = services.GetRequiredService<ISerializationManager>();
 
-            _subscribers = GetChannelSubscribers(_messagingModule);
-            SubscribeToChannels(_connModule, _subscribers);
+            SubscribeToChannels(_subscribers);
         }
         
         // Delegates to the core message dispatch module to find all message dispatch
         // handlers and filters the list to only those that should be bound to a channel.
-        private static MessageChannelSubscriber[] GetChannelSubscribers(IMessageDispatchModule messsageDispatch)
+        private MessageChannelSubscriber[] GetChannelSubscribers()
         {
-            return messsageDispatch.AllMessageTypeDispatchers
+            return DispatchModule.AllMessageTypeDispatchers
                 .Values().Where(MessageChannelSubscriber.IsSubscriber)
                 .Select(d => new MessageChannelSubscriber(d))
                 .ToArray();
         }
         
-        private void SubscribeToChannels(IConnectionModule connModule, IEnumerable<MessageChannelSubscriber> subscribers)
+        private void SubscribeToChannels(IEnumerable<MessageChannelSubscriber> subscribers)
         {
             foreach (var msgSubscriber in subscribers)
             {
-                ISubscriber subscriber = connModule.GetSubscriber(msgSubscriber.DatabaseName);
+                ISubscriber subscriber = ConnModule.GetSubscriber(msgSubscriber.DatabaseName);
                 
                 // Callback invoked when message published to channel:
                 subscriber.Subscribe(msgSubscriber.Channel, (channel, message) =>
@@ -81,7 +80,7 @@ namespace NetFusion.Redis.Plugin.Modules
                     LogReceivedDomainEvent(channel, domainEvent, msgSubscriber);
                     
                     // Invoke the in-process handler:
-                    _messagingModule.InvokeDispatcherInNewLifetimeScopeAsync(
+                    DispatchModule.InvokeDispatcherInNewLifetimeScopeAsync(
                         msgSubscriber.DispatchInfo, 
                         domainEvent).Wait();
                 });
@@ -101,10 +100,9 @@ namespace NetFusion.Redis.Plugin.Modules
                 });
         }
 
-        // https://github.com/grecosoft/NetFusion/wiki/core.logging.composite#module-logging
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            _subscribers.Select(s => new
+            moduleLog["Channel:Subscribers"] = _subscribers.Select(s => new
             {
                 s.Channel,
                 s.DatabaseName,

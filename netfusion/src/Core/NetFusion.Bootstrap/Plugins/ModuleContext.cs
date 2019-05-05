@@ -87,12 +87,8 @@ namespace NetFusion.Bootstrap.Plugins
                 PluginTypes.HostPlugin);
         }
 
-        /// <summary>
-        /// Returns a plug-in module that implements a specific interface.
-        /// </summary>
-        /// <typeparam name="T">The interface of the module to locate.</typeparam>
-        /// <returns>The module implementing the specified interface.  If one and
-        /// only one module is not found, an exception is thrown.</returns>
+        // TODO:  Delete this after code-review for all plugins.  A plugin module now automatically
+        // has any dependent plugin-module services set.
         public T GetPluginModule<T>() where T : IPluginModuleService
         {
             var foundModules = _compositeApp.AllModules.OfType<T>().ToArray();

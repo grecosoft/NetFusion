@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
-using NetFusion.Bootstrap.Container;
 using NetFusion.Test.Container;
-using NetFusion.Test.Plugins;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using CoreTests.Bootstrap.Mocks;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Test.Plugins;
 
 namespace CoreTests.Bootstrap
 {
@@ -25,13 +25,13 @@ namespace CoreTests.Bootstrap
         {
             ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver(r =>
+                fixture.Arrange.Container(c =>
                     {
-                        r.AddPlugin<MockAppHostPlugin>();
+                        c.RegisterPlugin<MockHostPlugin>();
                     })
                     .Assert.Services(s =>
                     {
-                        var appContainer = s.GetService<IAppContainer>();
+                        var appContainer = s.GetService<ICompositeContainer>();
                         appContainer.Should().NotBeNull();
                     });
 
@@ -48,10 +48,12 @@ namespace CoreTests.Bootstrap
         {
             ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Resolver(r =>
+                fixture.Arrange.Container(c =>
                     {
-                        r.AddPlugin<MockAppHostPlugin>()
-                            .AddPluginType<MockPluginOneModule>();
+                        var testPlugin = new MockHostPlugin();
+                        testPlugin.AddModule<MockPluginOneModule>();
+                        
+                        c.RegisterPlugins(testPlugin);
                     })
                     .Assert.Services(s =>
                     {
@@ -64,3 +66,4 @@ namespace CoreTests.Bootstrap
         }
     }
 }
+

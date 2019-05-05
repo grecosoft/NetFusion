@@ -21,7 +21,7 @@ namespace NetFusion.MongoDB.Core
         /// The name of the collection corresponding to the type.
         /// </summary>
         /// <returns>Name of the collection.</returns>
-        string CollectionName { get; set; }
+        string CollectionName { get; }
 
         /// <summary>
         /// The MongoDB class map containing the details of the type mappings.

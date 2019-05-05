@@ -5,11 +5,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NetFusion.Messaging.Config;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Enrichers;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Plugin;
+using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.Messaging.Types;
 using Xunit;
 
@@ -35,8 +35,8 @@ namespace CoreTests.Messaging
 
             var dispatcher = SetupDispatcher(config =>
                 {
-                    config.AddMessageEnricher<MessageEnricherOne>();
-                    config.AddMessagePublisher<MessagePublisherOne>();
+                    config.AddEnricher<MessageEnricherOne>();
+                    config.AddPublisher<MessagePublisherOne>();
                 }, 
                 new[] {enricher},
                 new[] {publisher});
@@ -77,9 +77,9 @@ namespace CoreTests.Messaging
 
             var dispatcher = SetupDispatcher(config =>
                 {
-                    config.AddMessageEnricher<MessageEnricherOne>();
-                    config.AddMessageEnricher<MessageEnricherTwo>();
-                    config.AddMessagePublisher<MessagePublisherOne>();
+                    config.AddEnricher<MessageEnricherOne>();
+                    config.AddEnricher<MessageEnricherTwo>();
+                    config.AddPublisher<MessagePublisherOne>();
                 }, 
                 new[] {enricher1, enricher2},
                 new[] {publisher});
@@ -138,9 +138,9 @@ namespace CoreTests.Messaging
 
             var dispatcher = SetupDispatcher(config =>
                 {
-                    config.AddMessageEnricher<MessageEnricherOne>();
-                    config.AddMessagePublisher<MessagePublisherOne>();
-                    config.AddMessagePublisher<MessagePublisherTwo>();
+                    config.AddEnricher<MessageEnricherOne>();
+                    config.AddPublisher<MessagePublisherOne>();
+                    config.AddPublisher<MessagePublisherTwo>();
                 }, 
                 new[] {enricher},
                 new IMessagePublisher[] {publisher1, publisher2});

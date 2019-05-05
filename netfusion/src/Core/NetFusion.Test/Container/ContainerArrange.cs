@@ -54,7 +54,7 @@ namespace NetFusion.Test.Container
         /// </summary>
         /// <param name="arrange">Method passed the application container under test. </param>
         /// <returns>Self reference for method chaining</returns>
-        public ContainerArrange Container(Action<IAppContainer> arrange)
+        public ContainerArrange Container(Action<CompositeContainer> arrange)
         {
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
 

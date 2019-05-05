@@ -15,8 +15,6 @@ namespace NetFusion.Redis.Plugin.Modules
     /// <summary>
     /// Module responsible for creating and managing the application host's
     /// Redis connections.  Each connection has an associated name.
-    ///
-    /// https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#bootstrapping---modules
     /// </summary>
     public class ConnectionModule : PluginModule,
         IConnectionModule
@@ -32,7 +30,6 @@ namespace NetFusion.Redis.Plugin.Modules
             _connections = new Dictionary<string, CachedConnection>();            
         }
 
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#configure
         public override void Configure()
         {
             _redisSettings = Context.Configuration.GetSettings(Context.Logger, new RedisSettings());
@@ -75,45 +72,45 @@ namespace NetFusion.Redis.Plugin.Modules
             if (duplicateConnNames.Any())
             {
                 throw new ContainerException("Configured database names must be unique.", 
-                    "duplidate-databases", 
+                    "duplicate-connection-names", 
                     duplicateConnNames);
             }
         }
 
-        private CachedConnection GetConnection(string databaseName)
+        private CachedConnection GetConnection(string connectionName)
         {
-            if (string.IsNullOrWhiteSpace(databaseName))
-                throw new ArgumentException("Name of database not specified.", nameof(databaseName));
+            if (string.IsNullOrWhiteSpace(connectionName))
+                throw new ArgumentException("Name of database not specified.", nameof(connectionName));
             
-            if (! _connections.TryGetValue(databaseName, out CachedConnection cachedConn))
+            if (! _connections.TryGetValue(connectionName, out CachedConnection cachedConn))
             {
                 throw new InvalidOperationException(
-                    $"A configured Redis database connection name: {databaseName} is not configured.");
+                    $"A configured Redis database connection name: {connectionName} is not configured.");
             }
             
             if (! cachedConn.Connection.IsConnected)
             {
                 Context.Logger.LogError(RedisLogEvents.ConnException, 
                     "Requested database connection {dbConfigName} is currently in a disconnected state.",
-                    databaseName);
+                    connectionName);
             }
 
             return cachedConn;
         }
 
-        public IDatabase GetDatabase(string name, int? database = null)
+        public IDatabase GetDatabase(string connectionName, int? database = null)
         {
-            CachedConnection cachedConn = GetConnection(name);
-            int? databaseId = database ?? cachedConn.Configration.DefaultDatabase;
+            CachedConnection cachedConn = GetConnection(connectionName);
+            int? databaseId = database ?? cachedConn.Configuration.DefaultDatabase;
 
             return databaseId == null
                 ? cachedConn.Connection.GetDatabase()
                 : cachedConn.Connection.GetDatabase(databaseId.Value);
         }
 
-        public ISubscriber GetSubscriber(string name)
+        public ISubscriber GetSubscriber(string connectionName)
         {
-            CachedConnection cachedConn = GetConnection(name);
+            CachedConnection cachedConn = GetConnection(connectionName);
             return cachedConn.Connection.GetSubscriber();
         }
 

@@ -1,5 +1,6 @@
-﻿using NetFusion.Messaging;
-using NetFusion.Messaging.Rules;
+﻿using NetFusion.Bootstrap.Container;
+using NetFusion.Messaging;
+using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Types;
 using NetFusion.Test.Plugins;
 
@@ -7,18 +8,17 @@ namespace CoreTests.Messaging.Mocks
 {
     public static class TestRuleSetupExtensions
     {
-        public static TestTypeResolver WithHostRuleBasedConsumer(this TestTypeResolver resolver)
+        public static CompositeContainer WithHostRuleBasedConsumer(this CompositeContainer container)
         {
-            resolver.AddPlugin<MockAppHostPlugin>()
-                .AddPluginType<MockRuleDomainEvent>()
-                .AddPluginType<MockDomainEventRuleBasedConsumer>()
-                .AddPluginType<MockRoleMin>()
-                .AddPluginType<MockRoleMax>();
-
-            resolver.AddPlugin<MockCorePlugin>()
-                .UseMessagingPlugin();
-
-            return resolver;
+            var hostPlugin = new MockHostPlugin();
+            hostPlugin.AddPluginType<MockDomainEventRuleBasedConsumer>();
+            hostPlugin.AddPluginType<MockRoleMin>();
+            hostPlugin.AddPluginType<MockRoleMax>();
+            
+            container.RegisterPlugins(hostPlugin);
+            container.RegisterPlugin<MessagingPlugin>();
+            
+            return container;
         }
     }
 

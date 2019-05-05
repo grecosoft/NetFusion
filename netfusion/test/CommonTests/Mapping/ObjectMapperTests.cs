@@ -9,6 +9,8 @@ using Xunit;
 
 namespace CommonTests.Mapping
 {
+    using NetFusion.Mapping.Plugin;
+
     public class ObjectMappingTests
     {
         // The ObjectMapper implementation will search the lookup registry for the mapping strategy that best
@@ -17,7 +19,7 @@ namespace CommonTests.Mapping
         [Fact]
         public void NoMappingStrategyFound_ExceptionIsRaised()
         {
-            var typesUnderTest = new Type[] { };
+            var testPlugin = new MockHostPlugin();
 
             var testSrcObj = new TestMapTypeOne
             {
@@ -27,7 +29,11 @@ namespace CommonTests.Mapping
             ContainerFixture.Test(fixture =>
             {
                 var testResult = fixture.Arrange
-                    .Resolver(r => r.WithMappingConfiguredHost(typesUnderTest))
+                    .Container(c =>
+                    {
+                        c.RegisterPlugins(testPlugin);
+                        c.RegisterPlugin<MappingPlugin>();
+                    })
                     .Act.OnServices(s =>
                     {
                         var mapper = s.GetService<IObjectMapper>();
@@ -46,8 +52,9 @@ namespace CommonTests.Mapping
         [Fact]
         public void StrategyUsedTo_MapSourceToTarget()
         {
-            var typesUnderTest = new[] { typeof(TestMapStrategyOneToTwo) };
-
+            var testPlugin = new MockHostPlugin();
+            testPlugin.AddPluginType<TestMapStrategyOneToTwo>();
+            
             var testSrcObj = new TestMapTypeOne
             {
                 Values = new[] { 30, 5, 88, 33, 83 }
@@ -57,7 +64,11 @@ namespace CommonTests.Mapping
             ContainerFixture.Test(fixture =>
             {
                 var testResult = fixture.Arrange
-                    .Resolver(r => r.WithMappingConfiguredHost(typesUnderTest))
+                    .Container(c =>
+                    {
+                        c.RegisterPlugins(testPlugin);
+                        c.RegisterPlugin<MappingPlugin>();
+                    })
                     .Act.OnServices(s =>
                     {
                         var mapper = s.GetService<IObjectMapper>();
@@ -80,7 +91,8 @@ namespace CommonTests.Mapping
         [Fact]
         public void StrategyUsedTo_MapTargetToSource()
         {
-            var typesUnderTest = new[] { typeof(TestMapStrategyOneToTwo) };
+            var testPlugin = new MockHostPlugin();
+            testPlugin.AddPluginType<TestMapStrategyOneToTwo>();
 
             var testSrcObj = new TestMapTypeTwo
             {
@@ -94,7 +106,11 @@ namespace CommonTests.Mapping
             ContainerFixture.Test(fixture =>
             {
                 var testResult = fixture.Arrange
-                    .Resolver(r => r.WithMappingConfiguredHost(typesUnderTest))
+                    .Container(c =>
+                    {
+                        c.RegisterPlugins(testPlugin);
+                        c.RegisterPlugin<MappingPlugin>();
+                    })
                     .Act.OnServices(s =>
                     {
                         var mapper = s.GetService<IObjectMapper>();
@@ -119,7 +135,8 @@ namespace CommonTests.Mapping
         [Fact(DisplayName = "Can map Source to Derived Target")]
         public void CanMapSourceTo_DerivedTarget()
         {
-            var typesUnderTest = new[] { typeof(TestDerivedStrategyFactory) };
+            var testPlugin = new MockHostPlugin();
+            testPlugin.AddPluginType<TestDerivedStrategyFactory>();
 
             var testSrcObjs = new object[]
             {
@@ -132,7 +149,11 @@ namespace CommonTests.Mapping
             ContainerFixture.Test(fixture =>
             {
                 var testResult = fixture.Arrange
-                    .Resolver(r => r.WithMappingConfiguredHost(typesUnderTest))
+                    .Container(c =>
+                    {
+                        c.RegisterPlugins(testPlugin);
+                        c.RegisterPlugin<MappingPlugin>();
+                    })
                     .Act.OnServices(s =>
                     {
                         var mapper = s.GetService<IObjectMapper>();
@@ -156,7 +177,8 @@ namespace CommonTests.Mapping
         [Fact]
         public void CanMapSourceToTarget_WithFactorySpecifiedStrategy()
         {
-            var typesUnderTest = new[] { typeof(TestMappingStrategyFactory) };
+            var testPlugin = new MockHostPlugin();
+            testPlugin.AddPluginType<TestMappingStrategyFactory>();
 
             var testSrcObj = new TestMapTypeThree
             {
@@ -169,7 +191,11 @@ namespace CommonTests.Mapping
             ContainerFixture.Test(fixture =>
             {
                 var testResult = fixture.Arrange
-                    .Resolver(r => r.WithMappingConfiguredHost(typesUnderTest))
+                    .Container(c =>
+                    {
+                        c.RegisterPlugins(testPlugin);
+                        c.RegisterPlugin<MappingPlugin>();
+                    })
                     .Act.OnServices(s =>
                     {
                         var mapper = s.GetService<IObjectMapper>();
@@ -295,24 +321,5 @@ namespace CommonTests.Mapping
             }
         }
 
-    }
-    
-    public static class TestFixtureExtensions
-    {
-        public static TestTypeResolver WithMappingConfiguredHost(this TestTypeResolver resolver, 
-            params Type[] pluginTypes)
-        {
-            // Configure Core Plugin with messaging and the 
-            // unit -of-work module.
-            resolver.AddPlugin<MockCorePlugin>()
-                .UseMappingPlugin();
-
-            // Add host plugin with the plugin-types to be used
-            // for the unit-test.
-            resolver.AddPlugin<MockAppHostPlugin>()
-                .AddPluginType(pluginTypes);
-
-            return resolver;
-        }
     }
 }

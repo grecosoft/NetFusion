@@ -20,8 +20,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
     /// describing the exchanges/queues to which messages can be sent.  This discovered metadata
     /// is then used to create the needed exchanges and queues by delegating to the EasyNetQ
     /// advanced API.
-    /// 
-    /// https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#bootstrapping---modules
     /// </summary>
     public class PublisherModule : PluginModule,
         IPublisherModule
@@ -34,7 +32,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         // Other  plugins (normally application plugins) specify the exchanges 
         // to be created by defining one or more IExchangeRegister derived types.
         // NOTE:  NetFusion finds and instantiates all IExchangeRegistry types.
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#module-composition
         public IEnumerable<IExchangeRegistry> Registries { get;  protected set; }  
         
         // Records for a given message type the exchange to which the message should be published.
@@ -52,7 +49,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             _exchangeRpcClients = new Dictionary<string, IRpcClient>();
         }
 
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#configure
         public override void Configure()
         {
             _busModule = Context.GetPluginModule<IBusModule>();
@@ -66,7 +62,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             _messageExchanges = definitions.ToDictionary(m => m.MessageType);
         } 
 
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#startmodule
         public override void StartModule(IServiceProvider services)
         {
             foreach (IRpcClient client in _exchangeRpcClients.Values)
@@ -224,7 +219,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             _disposed = true;
         }
 
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#log
         public override void Log(IDictionary<string, object> moduleLog)
         {
             moduleLog["Publisher:Exchanges"] = _messageExchanges.Values.Select(e =>

@@ -9,14 +9,14 @@ namespace NetFusion.Redis.Internal
     /// </summary>
     public class CachedConnection
     {
-        public ConfigurationOptions Configration { get; }
+        public ConfigurationOptions Configuration { get; }
         public ConnectionMultiplexer Connection { get; }
 
         public CachedConnection(
             ConfigurationOptions configuration, 
             ConnectionMultiplexer connection)
         {
-            Configration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             Connection = connection ?? throw new ArgumentNullException(nameof(connection));
         }
     }

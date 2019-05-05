@@ -25,6 +25,13 @@ namespace NetFusion.Redis.Plugin
     
     public static class CompositeBuilderExtensions
     {
+        /// <summary>
+        /// Adds a plugin to the composite container that can be used to communicate with
+        /// a Redis database.  The plugin also allows subscribing domain-events to Redis
+        /// channels.
+        /// </summary>
+        /// <param name="composite">Reference to the composite container builder.</param>
+        /// <returns>Reference to the composite container builder.</returns>
         public static ICompositeContainerBuilder AddRedis(this ICompositeContainerBuilder composite)
         {
             // Add dependent plugins:
