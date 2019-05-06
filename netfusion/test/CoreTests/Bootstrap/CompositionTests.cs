@@ -5,7 +5,6 @@ using NetFusion.Test.Plugins;
 using System.Linq;
 using Xunit;
 
-#pragma warning disable 1570
 namespace CoreTests.Bootstrap
 {
     public class CompositionTests

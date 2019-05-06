@@ -35,7 +35,7 @@ namespace CoreTests.Settings
                 fixture.Arrange.Container(c =>
                     {
                         var hostPlugin = new MockHostPlugin();
-                        hostPlugin.AddPluginType<MockSetttings>();
+                        hostPlugin.AddPluginType<MockSettings>();
                   
                         c.RegisterPlugins(hostPlugin);
                         c.RegisterPlugin<SettingsPlugin>();
@@ -43,7 +43,7 @@ namespace CoreTests.Settings
                     })
                     .Assert.Services(s =>
                     {
-                        var settings = s.GetService<MockSetttings>();
+                        var settings = s.GetService<MockSettings>();
                         settings.Should().NotBeNull();
 
                         settings.Height.Should().Be(20);
@@ -65,7 +65,7 @@ namespace CoreTests.Settings
                 fixture.Arrange.Container(c =>
                     {
                         var hostPlugin = new MockHostPlugin();
-                        hostPlugin.AddPluginType<MockSetttings>();
+                        hostPlugin.AddPluginType<MockSettings>();
                   
                         c.RegisterPlugins(hostPlugin);
                         c.RegisterPlugin<SettingsPlugin>();
@@ -89,7 +89,7 @@ namespace CoreTests.Settings
                 fixture.Arrange.Container(c =>
                     {
                         var hostPlugin = new MockHostPlugin();
-                        hostPlugin.AddPluginType<MockSetttings>();
+                        hostPlugin.AddPluginType<MockSettings>();
                   
                         c.RegisterPlugins(hostPlugin);
                         c.RegisterPlugin<SettingsPlugin>();
@@ -100,7 +100,7 @@ namespace CoreTests.Settings
                         var configuration = s.GetService<IConfigurationRoot>();
                         var logger = new Mock<ILogger>();
 
-                        var settings = configuration.GetSettings<MockSetttings>(logger.Object);
+                        var settings = configuration.GetSettings<MockSettings>(logger.Object);
                         settings.Should().NotBeNull();
                     });
             }, AddInMemorySettings);
@@ -120,7 +120,7 @@ namespace CoreTests.Settings
                 fixture.Arrange.Container(c =>
                     {
                         var hostPlugin = new MockHostPlugin();
-                        hostPlugin.AddPluginType<MockSetttings>();
+                        hostPlugin.AddPluginType<MockSettings>();
                   
                         c.RegisterPlugins(hostPlugin);
                         c.RegisterPlugin<SettingsPlugin>();
@@ -128,7 +128,7 @@ namespace CoreTests.Settings
                     })
                     .Assert.Services(s =>
                     {
-                        var options = s.GetService<IOptions<MockSetttings>>();
+                        var options = s.GetService<IOptions<MockSettings>>();
                         options.Should().NotBeNull();
 
                         var settings = options.Value;
@@ -145,7 +145,7 @@ namespace CoreTests.Settings
         // Test validation by passing catalog and creating service provider and then reading setting.
         // Test logging of settings.
 
-        private void AddInMemorySettings(IConfigurationBuilder builder)
+        private static void AddInMemorySettings(IConfigurationBuilder builder)
         {
             var dict = new Dictionary<string, string>
                 {

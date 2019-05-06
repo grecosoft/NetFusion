@@ -67,11 +67,9 @@ namespace CoreTests.Messaging.Mocks
     {
 
         [InProcessHandler, ApplyScriptPredicate("test-script", "IsImportant")]
-        public void OnEventPredicatePases(MockEvalDomainEvent evt)
+        public void OnEventPredicatePassed(MockEvalDomainEvent evt)
         {
-            AddCalledHandler(nameof(OnEventPredicatePases));
+            AddCalledHandler(nameof(OnEventPredicatePassed));
         }
     }
-
-
 }

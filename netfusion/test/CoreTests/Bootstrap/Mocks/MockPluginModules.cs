@@ -49,10 +49,4 @@ namespace CoreTests.Bootstrap.Mocks
             moduleLog["Log-Msg"] = "Module-Added-Log";
         }
     }
-
-    public class MockComposedModule : MockPluginModule
-    {
-        public IEnumerable<MockKnownType> ImportedTypes { get; set; }
-    }
-
 }

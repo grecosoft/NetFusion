@@ -1,11 +1,11 @@
-﻿using CoreTests.Messaging.Mocks;
+﻿using System;
+using System.Threading.Tasks;
+using CoreTests.Messaging.Mocks;
+using NetFusion.Bootstrap.Container;
 using NetFusion.Messaging;
+using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Types;
 using NetFusion.Test.Plugins;
-using System;
-using System.Threading.Tasks;
-using NetFusion.Bootstrap.Container;
-using NetFusion.Messaging.Plugin;
 
 namespace CoreTests.Messaging
 {

@@ -8,8 +8,8 @@ namespace CoreTests.Bootstrap
 {
     public class ReflectionExtensionsTests
     {
-        [Fact(DisplayName = nameof(CreateInstancesOfPluginTypes_MatchingSpecifiedOrBaseType))]
-        public void CreateInstancesOfPluginTypes_MatchingSpecifiedOrBaseType()
+        [Fact(DisplayName = nameof(CreateInstancesOfTypes_MatchingBaseType))]
+        public void CreateInstancesOfTypes_MatchingBaseType()
         {
             var types = new[] {
                 typeof(TypeOne),
@@ -31,9 +31,6 @@ namespace CoreTests.Bootstrap
             var typeTwoInstances = types.CreateInstancesDerivingFrom<TypeTwo>().ToArray();
             typeTwoInstances.Should().HaveCount(0);
             typeTwoInstances.Should().HaveCount(0);
-
-            var stringInstances = types.CreateInstancesDerivingFrom<string>().ToArray();
-            stringInstances.Should().HaveCount(0);
         }
 
         public interface ICommon { }

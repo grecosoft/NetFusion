@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations;
 namespace CoreTests.Settings.Mocks
 {
     [ConfigurationSection("App:MainWindow")]
-    public class MockSetttings : IAppSettings
+    public class MockSettings : IAppSettings
     {
         public int Height { get; set; } = 1000;
         public int Width { get; set; } = 2000;
     }
 
-    public class MockDerivedSettings: MockSetttings
+    public class MockDerivedSettings: MockSettings
     {
         public Dialog Dialog { get; set; }
     }
@@ -25,7 +25,7 @@ namespace CoreTests.Settings.Mocks
         public string Title { get; set; }
     }
 
-    public class MockInvalidSettings : MockSetttings
+    public class MockInvalidSettings : MockSettings
     {
         [Range(5, 100, ErrorMessage = "Invalid Range")]
         public int ValidatedValue { get; set; }

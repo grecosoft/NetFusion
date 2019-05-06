@@ -9,10 +9,9 @@ using NetFusion.Test.Plugins;
 namespace CoreTests.Bootstrap
 {
     /// <summary>
-    /// Modules when called during the bootstrap process can register components with
+    /// Modules when called during the bootstrap process, can register components with
     /// the dependency injection container.  In addition, specific convention based
-    /// components will also be registered.  the application host can also specify
-    /// components to be registered with the DI container.
+    /// components will also be registered. 
     /// </summary>
     public class RegistrationTests
     {
@@ -21,7 +20,7 @@ namespace CoreTests.Bootstrap
         /// injection container as a service.
         /// </summary>
         [Fact(DisplayName = "Application Container registered as Singleton Service")]
-        public void AppContainer_Registered_AsSingletonService()
+        public void CompositeContainer_Registered_AsSingletonService()
         {
             ContainerFixture.Test(fixture =>
             {

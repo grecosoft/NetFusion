@@ -67,7 +67,6 @@ namespace CoreTests.Messaging.Bootstrap
             });
         }
         
-
         [Fact]
         public void DefaultEnrichersAdded()
         {

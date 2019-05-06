@@ -13,12 +13,12 @@ namespace CoreTests.Messaging
     {
         /// <summary>
         /// An in-process message handler method can be decorated with the ApplyScriptPredicate attribute.  
-        /// This attribute is used to specify a script name associated with the derived message type and 
-        /// the name of a property calculated by the script returning a boolean value  indicating if the
-        /// message handler applies to the published message.
+        /// This attribute is used to specify a script name, associated with the derived message type, and 
+        /// the name of a property calculated by the script returning a boolean value.  The returned value
+        /// indicates if the message handler applies to the published message.
         /// </summary>
-        [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesDispathPredicate))]
-        public Task HandlerCalled_WhenMessagePassesDispathPredicate()
+        [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesDispatchPredicate))]
+        public Task HandlerCalled_WhenMessagePassesDispatchPredicate()
         {
             return ContainerFixture.TestAsync(async fixture =>
             {
@@ -35,8 +35,8 @@ namespace CoreTests.Messaging
                 testResult.Assert.Services(s =>
                 {
                     var consumer = s.GetRequiredService<MockDomainEventEvalBasedConsumer>();
-                    consumer.ExecutedHandlers.Should().Contain("OnEventPredicatePases");
-                });
+                    consumer.ExecutedHandlers.Should().Contain("OnEventPredicatePassed");
+                }); 
             });
         }
         
