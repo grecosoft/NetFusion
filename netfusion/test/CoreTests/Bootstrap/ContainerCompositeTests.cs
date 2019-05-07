@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using CoreTests.Bootstrap.Mocks;
 using FluentAssertions;
-using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;

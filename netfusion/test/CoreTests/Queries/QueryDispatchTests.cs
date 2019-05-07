@@ -10,7 +10,6 @@ using NetFusion.Messaging;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Plugin.Configs;
-using NetFusion.Messaging.Plugin.Modules;
 using NetFusion.Test.Plugins;
 
 namespace CoreTests.Queries

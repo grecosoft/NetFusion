@@ -3,7 +3,7 @@ using EasyNetQ;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NetFusion.Base.Serialization;
-using NetFusion.RabbitMQ.Plugin;
+using NetFusion.RabbitMQ.Plugin.Modules;
 using NetFusion.Serialization;
 
 namespace IntegrationTests.RabbitMQ

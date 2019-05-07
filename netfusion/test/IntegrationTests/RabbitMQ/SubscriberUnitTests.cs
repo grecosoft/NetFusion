@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using EasyNetQ.Topology;
 using NetFusion.Messaging;
-using NetFusion.Messaging.Config;
+using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Publisher;
 using NetFusion.RabbitMQ.Subscriber;
@@ -24,22 +24,17 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Resolver(r => { r.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
+                    .Container(c => { c.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
+                    .PluginConfig((MessageDispatchConfig c) =>
                     {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) =>
-                        {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockSubscriberModule>(m =>
                     {
                         Assert.True(m.CreatedQueues.Count == 5);
                         Assert.True(m.Subscribers.Count == 5);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
 
         [Fact]
@@ -48,16 +43,12 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Resolver(r => { r.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
+                    .Container(c => { c.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
                     .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
+                    .PluginConfig((MessageDispatchConfig c) =>
                     {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) =>
-                        {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockSubscriberModule>(m =>
                     {
                         var queueDef = m.CreatedQueues.FirstOrDefault(q => q.QueueName == "TestDirectQueue");
@@ -93,7 +84,7 @@ namespace IntegrationTests.RabbitMQ
                         
                         Assert.NotNull(subscriber);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
         
         [Fact]
@@ -102,16 +93,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Resolver(r => { r.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
+                    .Container(c => { c.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
+                    .PluginConfig((MessageDispatchConfig c) =>
                     {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) =>
-                        {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockSubscriberModule>(m =>
                     {
                         var queueDef = m.CreatedQueues.FirstOrDefault(q => q.QueueName == "TestTopicQueue");
@@ -147,25 +133,20 @@ namespace IntegrationTests.RabbitMQ
                         
                         Assert.NotNull(subscriber);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
         
         [Fact]
-        public void FanoutQueueCreatedForHandler_WithCorrectConventions()
+        public void FanOutQueueCreatedForHandler_WithCorrectConventions()
         {
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Resolver(r => { r.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
+                    .Container(c => { c.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
+                    .PluginConfig((MessageDispatchConfig c) =>
                     {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) =>
-                        {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockSubscriberModule>(m =>
                     {
 
@@ -201,7 +182,7 @@ namespace IntegrationTests.RabbitMQ
                         
                         Assert.NotNull(subscriber);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
         
         [Fact]
@@ -210,16 +191,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Resolver(r => { r.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
+                    .Container(c => { c.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
+                    .PluginConfig((MessageDispatchConfig c) =>
                     {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) =>
-                        {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockSubscriberModule>(m =>
                     {
                         var queueDef = m.CreatedQueues.FirstOrDefault(q => q.QueueName == "TestWorkQueue");
@@ -240,7 +216,7 @@ namespace IntegrationTests.RabbitMQ
                         
                         Assert.NotNull(subscriber);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
         
         [Fact]
@@ -249,16 +225,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Resolver(r => { r.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
+                    .Container(c => { c.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
+                    .PluginConfig((MessageDispatchConfig c) =>
                     {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) =>
-                        {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockSubscriberModule>(m =>
                     {
                         var queueDef = m.CreatedQueues.FirstOrDefault(q => q.QueueName == "TestRpcQueue");
@@ -288,7 +259,7 @@ namespace IntegrationTests.RabbitMQ
                         
                         Assert.NotNull(subscriber);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
 
         public class MockTestBusConsumer : IMessageConsumer

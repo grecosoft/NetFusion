@@ -1,9 +1,9 @@
-﻿namespace NetFusion.Messaging.Types
-{
-    using System;
-    using System.Linq;
-    using NetFusion.Common.Extensions.Reflection;
+﻿using System;
+using System.Linq;
+using NetFusion.Common.Extensions.Reflection;
 
+namespace NetFusion.Messaging.Types
+{
     /// <summary>
     /// Used to specify rule classes that determine if the handler 
     /// should be called based on the message's state.

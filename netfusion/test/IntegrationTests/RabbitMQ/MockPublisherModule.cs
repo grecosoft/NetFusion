@@ -1,5 +1,5 @@
 using Moq;
-using NetFusion.RabbitMQ.Plugin;
+using NetFusion.RabbitMQ.Plugin.Modules;
 using NetFusion.RabbitMQ.Publisher.Internal;
 
 namespace IntegrationTests.RabbitMQ

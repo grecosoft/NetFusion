@@ -106,7 +106,7 @@ namespace WebTests.Rest.ClientRequests
             var request = new HttpRequestMessage();
             settings.Apply(request);
 
-            request.Headers.ToString().Should().Equals("a: v1, v2\r\nb: v3\r\n");
+            request.Headers.ToString().Should().Be("a: v1, v2\r\nb: v3\r\n");
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace WebTests.Rest.ClientRequests
             settings.Apply(request);
 
             var acceptHeader = request.Headers.Accept.ToString();
-            acceptHeader.Should().Equals("application/hal+json; q=0.5, application/json; q=0.9");
+            acceptHeader.Should().Be("application/hal+json; q=0.5, application/json; q=0.9");
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace WebTests.Rest.ClientRequests
                     .AddParam("p2", "pv2");
             });
 
-            var reqestSpecificSettings = RequestSettings.Create(config => {
+            var requestSpecificSettings = RequestSettings.Create(config => {
                 config.Headers
                     .Add("h1", "rs100")
                     .Add("h3", "rs200");
@@ -158,12 +158,12 @@ namespace WebTests.Rest.ClientRequests
                     .AddParam("p3", "pv400");
             });
 
-            var hostPlugin = new MockAppHostPlugin();
+            var hostPlugin = new MockHostPlugin();
             hostPlugin.AddPluginType<CustomerResourceMap>();
 
             var client = defaultSettings.CreateTestClient(hostPlugin);
 
-            var request = ApiRequest.Get("api/customers/pass-through").UsingSettings(reqestSpecificSettings);
+            var request = ApiRequest.Get("api/customers/pass-through").UsingSettings(requestSpecificSettings);
             var response = await client.SendAsync<CustomerModel>(request);
 
             response.Request.RequestUri.PathAndQuery
@@ -193,7 +193,7 @@ namespace WebTests.Rest.ClientRequests
                 Customers = new[] { new CustomerResource { CustomerId = "ID_1", Age = 47 } }
             };
 
-            var hostPlugin = new MockAppHostPlugin();
+            var hostPlugin = new MockHostPlugin();
             hostPlugin.AddPluginType<CustomerResourceMap>();
 
             var client = settings.CreateTestClient(hostPlugin, mockedSrv);

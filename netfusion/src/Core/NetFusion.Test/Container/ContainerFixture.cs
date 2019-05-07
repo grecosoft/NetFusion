@@ -67,6 +67,7 @@ namespace NetFusion.Test.Container
         /// </summary>
         /// <param name="test">Method specified by the unit-test to execute logic against
         /// a created test-fixture instance.</param>
+        /// <param name="config"></param>
         public static void Test(Action<ContainerFixture> test, Action<IConfigurationBuilder> config = null)
         {
             if (test == null) throw new ArgumentNullException(nameof(test),

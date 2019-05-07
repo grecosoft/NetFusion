@@ -1,5 +1,5 @@
 ﻿using EasyNetQ.Topology;
-using NetFusion.Messaging.Config;
+using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Publisher;
 using NetFusion.Test.Container;
@@ -7,7 +7,6 @@ using Xunit;
 
 namespace IntegrationTests.RabbitMQ
 {
-    using NetFusion.Base;
 
     /// <summary>
     /// Tests to assert the default configuration for each of the
@@ -32,16 +31,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Resolver(r => { r.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
+                    .Container(r => { r.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
+                    .PluginConfig((MessageDispatchConfig c) =>
                     {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) =>
-                        {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
                         var definition = m.GetDefinition(typeof(DirectDomainEvent));
@@ -54,7 +48,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.Equal("DirectExchangeName", definition.ExchangeName);
                         Assert.Null(definition.QueueMeta);
                         Assert.Null(definition.RouteKey);
-                        Assert.Equal(ContentTypes.Json, definition.ContentType);
+                        Assert.Equal("application/json", definition.ContentType);
                         Assert.Equal(ExchangeType.Direct, definition.ExchangeType);
                         Assert.Null(definition.AlternateExchangeName);
                         Assert.Equal(typeof(DirectDomainEvent), definition.MessageType);
@@ -66,7 +60,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.True(definition.IsPersistent);
                         Assert.False(definition.IsRpcExchange);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
         
         /// <summary>
@@ -85,16 +79,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Resolver(r => { r.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
+                    .Container(c => { c.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
+                    .PluginConfig((MessageDispatchConfig c) =>
                     {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) =>
-                        {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
                         var definition = m.GetDefinition(typeof(TopicDomainEvent));
@@ -107,7 +96,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.Equal("TopicExchangeName", definition.ExchangeName);
                         Assert.Null(definition.QueueMeta);
                         Assert.Null(definition.RouteKey);
-                        Assert.Equal(ContentTypes.Json, definition.ContentType);
+                        Assert.Equal("application/json", definition.ContentType);
                         Assert.Equal(ExchangeType.Topic, definition.ExchangeType);
                         Assert.Null(definition.AlternateExchangeName);
                         Assert.Equal(typeof(TopicDomainEvent), definition.MessageType);
@@ -119,7 +108,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.True(definition.IsPersistent);
                         Assert.False(definition.IsRpcExchange);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
         
         /// <summary>
@@ -139,16 +128,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Resolver(r => { r.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
+                    .Container(c => { c.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
+                    .PluginConfig((MessageDispatchConfig c) =>
                     {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) =>
-                        {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
                         var definition = m.GetDefinition(typeof(FanoutDomainEvent));
@@ -161,7 +145,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.Equal("FanoutExchangeName", definition.ExchangeName);
                         Assert.Null(definition.QueueMeta);
                         Assert.Null(definition.RouteKey);
-                        Assert.Equal(ContentTypes.Json, definition.ContentType);
+                        Assert.Equal("application/json", definition.ContentType);
                         Assert.Equal(ExchangeType.Fanout, definition.ExchangeType);
                         Assert.Null(definition.AlternateExchangeName);
                         Assert.Equal(typeof(FanoutDomainEvent), definition.MessageType);
@@ -173,7 +157,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.False(definition.IsPersistent);
                         Assert.False(definition.IsRpcExchange);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
 
         /// <summary>
@@ -188,16 +172,12 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Resolver(r => { r.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
+                    .Container(c => { c.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
                     .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
+                    .PluginConfig((MessageDispatchConfig c) =>
                     {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) =>
-                        {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
                         var definition = m.GetDefinition(typeof(WorkQueueCommand));
@@ -210,7 +190,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.Equal("WorkQueueName", definition.QueueMeta.QueueName);
                         Assert.Null(definition.ExchangeName);
                         Assert.Equal("WorkQueueName", definition.RouteKey);
-                        Assert.Equal(ContentTypes.Json, definition.ContentType);
+                        Assert.Equal("application/json", definition.ContentType);
                         Assert.Null(definition.ExchangeType);
                         Assert.Null(definition.AlternateExchangeName);
                         Assert.Equal(typeof(WorkQueueCommand), definition.MessageType);
@@ -225,7 +205,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.False(definition.IsPersistent);
                         Assert.False(definition.IsRpcExchange);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
 
         /// <summary>
@@ -237,16 +217,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Resolver(r => { r.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
+                    .Container(c => { c.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
+                    .PluginConfig((MessageDispatchConfig c) =>
                     {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) =>
-                        {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
                         var definition = m.GetDefinition(typeof(RpcCommand));
@@ -255,7 +230,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.Equal("TestBus1", definition.BusName);
                         Assert.Equal("RpcExchangeName", definition.QueueMeta.QueueName);
                         Assert.Null(definition.RouteKey);
-                        Assert.Equal(ContentTypes.Json, definition.ContentType);
+                        Assert.Equal("application/json", definition.ContentType);
                         Assert.Null(definition.AlternateExchangeName);
                         Assert.Equal(typeof(RpcCommand), definition.MessageType);
 
@@ -273,7 +248,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.False(definition.QueueMeta.IsDurable);
                         Assert.False(definition.QueueMeta.IsPassive);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
 
         public class ExchangeRegistryUnderTest : ExchangeRegistryBase

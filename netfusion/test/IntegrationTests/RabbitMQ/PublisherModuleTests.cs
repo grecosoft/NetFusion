@@ -1,6 +1,6 @@
 using System;
 using NetFusion.Bootstrap.Exceptions;
-using NetFusion.Messaging.Config;
+using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.Messaging.Types;
 using NetFusion.RabbitMQ.Publisher;
 using NetFusion.Test.Container;
@@ -26,27 +26,22 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Resolver(r => { r.WithRabbitMqHost(typeof(ValidExchangeRegistry)); })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
+                    .Container(c => { c.WithRabbitMqHost(typeof(ValidExchangeRegistry)); })
+                    .PluginConfig((MessageDispatchConfig c) =>
                     {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) =>
-                        {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
                         var isExchangeMsg = m.IsExchangeMessage(typeof(AutoSalesEvent));
                         Assert.True(isExchangeMsg);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
 
         /// <summary>
         /// When publishing a message with an assocated exchange, the exchange definition
-        /// is retreived and used to declare the exchange on the RabbitMQ message bus.
+        /// is retrieved and used to declare the exchange on the RabbitMQ message bus.
         /// </summary>
         [Fact]
         public void CanLookupExchangeDefinition_ForMessageType()
@@ -54,22 +49,17 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Resolver(r => { r.WithRabbitMqHost(typeof(ValidExchangeRegistry)); })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
+                    .Container(c => { c.WithRabbitMqHost(typeof(ValidExchangeRegistry)); })
+                    .PluginConfig((MessageDispatchConfig c) =>
                     {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) =>
-                        {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
                         var definition = m.GetDefinition(typeof(AutoSalesEvent));
                         Assert.NotNull(definition);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
 
         [Fact]
@@ -78,21 +68,16 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Resolver(r => { r.WithRabbitMqHost(typeof(ValidExchangeRegistry)); })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
+                    .Container(c => { c.WithRabbitMqHost(typeof(ValidExchangeRegistry)); })
+                    .PluginConfig((MessageDispatchConfig c) =>
                     {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) =>
-                        {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
                         Assert.Throws<InvalidOperationException>(() => m.GetDefinition(typeof(TestCommand1)));                       
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
         
         /// <summary>
@@ -103,22 +88,20 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver(r =>
+                    .Container(c =>
                     {
-                        r.WithRabbitMqHost(typeof(DuplicateExchangeRegistry));
+                        c.WithRabbitMqHost(typeof(DuplicateExchangeRegistry));
                     })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c => {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) => {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                    .PluginConfig((MessageDispatchConfig c) =>
+                    {
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
                     .Act.BuildAndStartContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
         
         /// <summary>
@@ -129,23 +112,20 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver(r =>
+                    .Container(c =>
                     {
-                        r.WithRabbitMqHost(typeof(ValidDuplicateExchangeRegistry));
+                        c.WithRabbitMqHost(typeof(ValidDuplicateExchangeRegistry));
                     })
-                    .Configuration(TestSetup.AddValidMultipleBusConfig)
-                    .Container(c => {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) => {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                    .PluginConfig((MessageDispatchConfig c) =>
+                    {
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
                         Assert.NotNull(m.GetDefinition(typeof(TestDomainEvent)));
                         Assert.NotNull(m.GetDefinition(typeof(TestDomainEvent2)));
                     });
-            });
+            }, TestSetup.AddValidMultipleBusConfig);
         }
 
         /// <summary>
@@ -156,22 +136,20 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver(r =>
+                    .Container(c =>
                     {
-                        r.WithRabbitMqHost(typeof(DuplicateQueueRegistry));
+                        c.WithRabbitMqHost(typeof(DuplicateQueueRegistry));
                     })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c => {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) => {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                    .PluginConfig((MessageDispatchConfig c) =>
+                    {
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
                     .Act.BuildAndStartContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
         
         [Fact]
@@ -179,23 +157,20 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver(r =>
+                    .Container(c =>
                     {
-                        r.WithRabbitMqHost(typeof(ValidDuplicateQueueRegistry));
+                        c.WithRabbitMqHost(typeof(ValidDuplicateQueueRegistry));
                     })
-                    .Configuration(TestSetup.AddValidMultipleBusConfig)
-                    .Container(c => {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) => {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                    .PluginConfig((MessageDispatchConfig c) =>
+                    {
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
                         Assert.NotNull(m.GetDefinition(typeof(TestCommand1)));
                         Assert.NotNull(m.GetDefinition(typeof(TestCommand2)));
                     });
-            });
+            }, TestSetup.AddValidMultipleBusConfig);
         }
 
         /// <summary>
@@ -215,17 +190,14 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver(r =>
+                    .Container(c =>
                     {
-                        r.WithRabbitMqHost(typeof(RpcExchangeRegistry));
+                        c.WithRabbitMqHost(typeof(RpcExchangeRegistry));
                     })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c => {
-                        c.WithConfig((MessageDispatchConfig dispatchConfig) => {
-                            dispatchConfig.AddMessagePublisher<RabbitMqPublisher>();
-                        });
+                    .PluginConfig((MessageDispatchConfig c) =>
+                    {
+                        c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
                         var calExchangeClient = m.GetRpcClient("TestBus1", "Calculations");
@@ -235,11 +207,14 @@ namespace IntegrationTests.RabbitMQ
                         Assert.NotNull(refExchangeClient);
                         Assert.NotSame(calExchangeClient, refExchangeClient);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
 
 
-        public class ValidExchangeRegistry : ExchangeRegistryBase
+
+
+
+public class ValidExchangeRegistry : ExchangeRegistryBase
         {
             protected override void OnRegister()
             {

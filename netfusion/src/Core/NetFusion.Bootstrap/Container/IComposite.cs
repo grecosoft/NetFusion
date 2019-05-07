@@ -1,8 +1,7 @@
+using Microsoft.Extensions.DependencyInjection;
+
 namespace NetFusion.Bootstrap.Container
 {
-    using System.Dynamic;
-    using Microsoft.Extensions.DependencyInjection;
-
     /// <summary>
     /// An explicit interface implemented by the CompositeContainer
     /// allowing the internal Composite Application to be accessed.

@@ -20,7 +20,7 @@ namespace WebTests.Rest.ClientRequests
         public async Task IfServerException_ExceptionRaised()
         {
             // Arrange:
-            var hostPlugin = new MockAppHostPlugin();
+            var hostPlugin = new MockHostPlugin();
           
             var serviceMock = new MockUnitTestService
             {
@@ -35,6 +35,9 @@ namespace WebTests.Rest.ClientRequests
 
             var exception = await Record.ExceptionAsync (() => client.SendAsync(request));
             exception.Should().NotBeNull();
+
+            if (exception == null) return;
+            
             exception.Should().BeOfType<InvalidOperationException>();
             exception.Message.Should().Be("Test-Exception");
         }
@@ -43,7 +46,7 @@ namespace WebTests.Rest.ClientRequests
         public async Task IfErrorStatusCode_SuccessStatus_SetCorrectly()
         {
             // Arrange:
-            var hostPlugin = new MockAppHostPlugin();
+            var hostPlugin = new MockHostPlugin();
 
             var serviceMock = new MockUnitTestService
             {
@@ -66,7 +69,7 @@ namespace WebTests.Rest.ClientRequests
         public async Task Response_DescriptiveProperties_SetCorrectly()
         {
             // Arrange:
-            var hostPlugin = new MockAppHostPlugin();
+            var hostPlugin = new MockHostPlugin();
             hostPlugin.AddPluginType<LinkedResourceMap>();
 
             var mockResource = new LinkedResource

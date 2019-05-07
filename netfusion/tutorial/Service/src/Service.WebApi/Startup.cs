@@ -42,7 +42,8 @@ namespace Service.WebApi
         {
 
             services.AddSingleton<ISerializationManager, SerializationManager>();
-            
+            services.AddHostedService<TestHostedService>();
+
             services.CompositeAppBuilder(_loggerFactory, _configuration)
                 .AddSettings()
                 .AddMessaging()
@@ -60,8 +61,8 @@ namespace Service.WebApi
                 .AddPlugin<AppPlugin>()
                 .AddPlugin<InfraPlugin>()
                 .AddPlugin<WebApiPlugin>()
-                .Build()
-                .Start();
+                .Build();
+                //.Start();
                 
              
             

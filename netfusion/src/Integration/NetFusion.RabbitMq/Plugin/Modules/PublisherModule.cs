@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
-using NetFusion.Messaging.Plugin;
 using NetFusion.RabbitMQ.Metadata;
 using NetFusion.RabbitMQ.Publisher;
 using NetFusion.RabbitMQ.Publisher.Internal;

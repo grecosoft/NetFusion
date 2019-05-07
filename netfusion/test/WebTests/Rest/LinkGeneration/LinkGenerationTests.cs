@@ -56,7 +56,7 @@ namespace WebTests.Rest.LinkGeneration
         public async Task CanGenerateUrl_FromControllerActionExpression()
         {
             // Arrange:
-			var hostPlugin = new MockAppHostPlugin();
+			var hostPlugin = new MockHostPlugin();
 			hostPlugin.AddPluginType<LinkedResourceMap>();
 
             var mockResource = new LinkedResource
@@ -133,7 +133,7 @@ namespace WebTests.Rest.LinkGeneration
         public async Task CanGenerateUrl_FromHardCodedString()
         {
             // Arrange:
-            var hostPlugin = new MockAppHostPlugin();
+            var hostPlugin = new MockHostPlugin();
             hostPlugin.AddPluginType<LinkedResourceMap>();
 
             var mockResource = new LinkedResource
@@ -180,7 +180,7 @@ namespace WebTests.Rest.LinkGeneration
         public async Task CanGenerateUrl_FromStringInterpolatedResourceUrl()
         {
             // Arrange:
-            var hostPlugin = new MockAppHostPlugin();
+            var hostPlugin = new MockHostPlugin();
             hostPlugin.AddPluginType<LinkedResourceMap>();
 
             var mockResource = new LinkedResource
@@ -220,7 +220,7 @@ namespace WebTests.Rest.LinkGeneration
         {
 
             // Arrange:
-            var hostPlugin = new MockAppHostPlugin();
+            var hostPlugin = new MockHostPlugin();
             hostPlugin.AddPluginType<LinkedResourceMap>();
 
             var mockResource = new LinkedResource

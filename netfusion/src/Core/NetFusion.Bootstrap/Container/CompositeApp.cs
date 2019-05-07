@@ -1,19 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Dependencies;
+using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
+using NetFusion.Common.Extensions.Reflection;
 
 namespace NetFusion.Bootstrap.Container
 {
-    using System.Reflection;
-    using NetFusion.Bootstrap.Exceptions;
-    using NetFusion.Common.Extensions.Reflection;
-
     /// <summary>
     /// Application composed from a set of plugins.  The end result of the composite application
     /// is a configured .net core Service Collection from which a Service Provider can be built.

@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetFusion.Bootstrap.Exceptions;
 
 namespace NetFusion.Bootstrap.Plugins
 {
-    using NetFusion.Bootstrap.Exceptions;
-
     /// <summary>
     /// Base class providing a default implementation of the IPlugin interface.
     /// Each assembly defining a plugin should define a derived type containing

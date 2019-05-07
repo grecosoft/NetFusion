@@ -1,30 +1,39 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-using NetFusion.Messaging;
+using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Base.Serialization;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Plugins;
+using NetFusion.Messaging.Plugin;
 using NetFusion.RabbitMQ.Settings;
+using NetFusion.Serialization;
 using NetFusion.Test.Plugins;
 
 namespace IntegrationTests.RabbitMQ
 {
     public static class TestSetup
     {
-        public static TestTypeResolver WithRabbitMqHost(this TestTypeResolver resolver, 
+        public static CompositeContainer WithRabbitMqHost(this CompositeContainer container, 
             params Type[] hostTypes)
         {
-            resolver.AddPlugin<MockAppHostPlugin>()
-                .AddPluginType(hostTypes);
+            var hostPlugin = new MockHostPlugin();
+            hostPlugin.AddModule<HostModule>();
+            hostPlugin.AddPluginType(hostTypes);
 
-            resolver.AddPlugin<MockCorePlugin>()
-                .UseMessagingPlugin()
-                .AddPluginType<MockBusModule>()
-                .AddPluginType<MockPublisherModule>()
-                .AddPluginType<MockSubscriberModule>()
-                .AddPluginType<BusSettings>();
-
-            return resolver;
+            var corePlugin = new MockCorePlugin();
+            corePlugin.AddPluginType<BusSettings>();
+            corePlugin.AddModule<MockBusModule>();
+            corePlugin.AddModule<MockPublisherModule>();
+            corePlugin.AddModule<MockSubscriberModule>();
+            
+            container.RegisterPlugin<MessagingPlugin>();
+            container.RegisterPlugins(corePlugin);
+            container.RegisterPlugins(hostPlugin);
+          
+            return container;
         }
-
+        
         public static void AddValidBusConfig(IConfigurationBuilder configBuilder)
         {
             var values = GetValidBusConfig(0);
@@ -109,6 +118,13 @@ namespace IntegrationTests.RabbitMQ
             values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:PrefetchCount"] = "5";
             values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:Priority"] = "2";
         }
+    }
 
+    public class HostModule : PluginModule
+    {
+        public override void RegisterServices(IServiceCollection services)
+        {
+            services.AddSingleton<ISerializationManager, SerializationManager>();
+        }
     }
 }

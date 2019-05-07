@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Test.Plugins;
 using System;
+using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Test.Container
 {
@@ -59,6 +60,13 @@ namespace NetFusion.Test.Container
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
 
             arrange(_fixture.ContainerUnderTest);
+            return this;
+        }
+
+        public ContainerArrange PluginConfig<TConfig>(Action<TConfig> arrange) where  TConfig : IPluginConfig
+        {
+            var config =  _fixture.ContainerUnderTest.GetPluginConfig<TConfig>();
+            arrange(config);
             return this;
         }
     

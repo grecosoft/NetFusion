@@ -2,6 +2,7 @@
 using NetFusion.Common.Extensions.Reflection;
 using Xunit;
 using System.Linq;
+// ReSharper disable UnusedParameter.Local
 
 // ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedTypeParameter

@@ -76,7 +76,7 @@ namespace WebTests.Rest.ClientRequests
         [Fact]
         public Task ClientMustPopulate_AllRequiredTemplateTokens()
         {
-            var hostPlugin = new MockAppHostPlugin();
+            var hostPlugin = new MockHostPlugin();
             hostPlugin.AddPluginType<CustomerResourceMap>();
 
             var client = RequestSettings.Create()

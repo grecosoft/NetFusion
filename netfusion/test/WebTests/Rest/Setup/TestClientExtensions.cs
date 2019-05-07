@@ -7,7 +7,6 @@ using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Core;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
-using NetFusion.Rest.Server.Plugin;
 using NetFusion.Test.Plugins;
 
 namespace WebTests.Rest.Setup
@@ -26,7 +25,7 @@ namespace WebTests.Rest.Setup
     public static class TestClientExtensions
     {
         public static IRequestClient CreateTestClient(this IRequestSettings requestSettings,
-            MockAppHostPlugin hostPlugin,
+            MockHostPlugin hostPlugin,
             IMockedService mockService = null)
         {
             requestSettings.UseHalDefaults();
@@ -40,10 +39,6 @@ namespace WebTests.Rest.Setup
             var builder = new WebHostBuilder()
                 .ConfigureServices(services =>
                 {
-                    // Add the needed ResourcePlugin modules since this is
-                    // what the unit tests will be testing.
-                    hostPlugin.UseResourcePlugin();
-
                     // Creates the typical StartUp class used by ASP.NET Core.
                     var startup = new TestStartup(hostPlugin);
                     services.AddSingleton<IStartup>(startup);

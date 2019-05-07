@@ -30,6 +30,11 @@ namespace NetFusion.Test.Plugins
             _pluginTypes.Add(typeof(T));
         }
 
+        public void AddPluginType(params Type[] types)
+        {
+            _pluginTypes.AddRange(types);
+        }
+
         public new void AddModule<TModule>() where TModule : IPluginModule, new()
         {
             base.AddModule<TModule>();

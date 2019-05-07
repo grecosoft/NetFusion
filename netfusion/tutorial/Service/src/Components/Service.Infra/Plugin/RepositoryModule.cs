@@ -1,8 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Dependencies;
 using NetFusion.Bootstrap.Plugins;
-using Service.Domain.Repositories;
-using Service.Infra.Repositories;
 
 namespace Service.Infra.Plugin
 {

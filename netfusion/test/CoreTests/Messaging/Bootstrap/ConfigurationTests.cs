@@ -1,10 +1,8 @@
-﻿using CoreTests.Messaging.Mocks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Plugin.Configs;
-using NetFusion.Messaging.Plugin.Modules;
 using NetFusion.Test.Container;
 using Xunit;
 

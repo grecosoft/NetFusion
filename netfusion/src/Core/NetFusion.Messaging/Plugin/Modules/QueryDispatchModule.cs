@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Bootstrap.Dependencies;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
+using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Exceptions;
 
 namespace NetFusion.Messaging.Plugin.Modules
 {
-    using NetFusion.Bootstrap.Dependencies;
-    using NetFusion.Common.Extensions.Reflection;
-
     /// <summary>
     /// Plug-in module called during the bootstrap process to configure and cache
     /// the dispatching of queries to consumers.

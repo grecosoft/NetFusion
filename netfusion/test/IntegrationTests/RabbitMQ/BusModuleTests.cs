@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using EasyNetQ;
 using NetFusion.Bootstrap.Exceptions;
-using NetFusion.RabbitMQ.Plugin;
+using NetFusion.RabbitMQ.Plugin.Modules;
 using NetFusion.Test.Container;
 using Xunit;
 
@@ -27,17 +27,16 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver(r =>
+                    .Container(c =>
                     {
-                        r.WithRabbitMqHost();
+                        c.WithRabbitMqHost();
                     })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Assert.PluginModule<BusModule>(m =>
+                    .Assert.PluginModule((BusModule m) =>
                     {
                         var bus = m.GetBus("TestBus1");
                         Assert.NotNull(bus);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
 
         /// <summary>
@@ -48,11 +47,10 @@ namespace IntegrationTests.RabbitMQ
         {
              ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver(r =>
+                    .Container(c =>
                     {
-                        r.WithRabbitMqHost();
+                        c.WithRabbitMqHost();
                     })
-                    .Configuration(TestSetup.AddDuplicateBusConfig)
                     .Act.BuildAndStartContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
@@ -60,7 +58,7 @@ namespace IntegrationTests.RabbitMQ
                             "A bus has already been created for the bus named: TestBus1.Check configuration for duplicates.", 
                             ex.Message);
                     });
-            });
+            }, TestSetup.AddDuplicateBusConfig);
         }
 
         /// <summary>
@@ -71,11 +69,10 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver(r =>
+                    .Container(c =>
                     {
-                        r.WithRabbitMqHost();
+                        c.WithRabbitMqHost();
                     })
-                    .Configuration(TestSetup.AddValidBusConfig)
                     .Assert.PluginModule<BusModule>(m =>
                     {
                         var ex = Assert.Throws<InvalidOperationException>(() => m.GetBus("TestBus99"));
@@ -83,7 +80,7 @@ namespace IntegrationTests.RabbitMQ
                             "The bus named: TestBus99 has not been configured.  Check application configuration.", 
                             ex.Message);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
 
         /// <summary>
@@ -95,12 +92,11 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver(r =>
+                    .Container(c =>
                     {
-                        r.WithRabbitMqHost();
+                        c.WithRabbitMqHost();
                     })
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Assert.PluginModule<MockBusModule>(m =>
+                    .Assert.PluginModule((MockBusModule m) =>
                     {
                         Assert.True(m.ConnConfigs.Count() == 1);
                         var busConfig = m.ConnConfigs.First();
@@ -116,7 +112,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.Equal("TestHost", hostConfig.Host);
                         Assert.Equal(2222, hostConfig.Port);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
 
         /// <summary>
@@ -127,11 +123,10 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver(r =>
+                    .Container(c =>
                     {
-                        r.WithRabbitMqHost();
+                        c.WithRabbitMqHost();
                     })
-                    .Configuration(TestSetup.AddValidBusConfigWithExchangeSettings)
                     .Assert.PluginModule<MockBusModule>(m =>
                     {
                         var exchangeMeta = ExchangeMeta.Define("TestBus1", "TestExchangeName", ExchangeType.Direct);
@@ -142,7 +137,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.Equal("TestContentType", exchangeMeta.ContentType);
                         Assert.Equal(10000, exchangeMeta.CancelRpcRequestAfterMs);
                     });
-            });
+            }, TestSetup.AddValidBusConfigWithExchangeSettings);
         }
 
         /// <summary>
@@ -153,11 +148,10 @@ namespace IntegrationTests.RabbitMQ
         {
              ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver(r =>
+                    .Container(c =>
                     {
-                        r.WithRabbitMqHost();
+                        c.WithRabbitMqHost();
                     })
-                    .Configuration(TestSetup.AddValidBusConfigWithQueueSettings)
                     .Assert.PluginModule<MockBusModule>(m =>
                     {
                         var queueMeta = ExchangeMeta.DefineDefault("TestBus1", "TestQueueName").QueueMeta;
@@ -171,7 +165,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.Equal(5, queueMeta.PrefetchCount);
                         Assert.Equal(2, queueMeta.Priority);
                     });
-            });
+            }, TestSetup.AddValidBusConfigWithQueueSettings);
         }
 
         /// <summary>
@@ -185,9 +179,9 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
-                    .Resolver(r =>
+                    .Container(c =>
                     {
-                        r.WithRabbitMqHost();
+                        c.WithRabbitMqHost();
                     })
                     .Configuration(TestSetup.AddValidBusConfig)
                     .Assert.PluginModule<MockBusModule>(m =>
@@ -195,8 +189,8 @@ namespace IntegrationTests.RabbitMQ
                         Assert.True(m.ConnConfigs.Count() == 1);
                         var busConfig = m.ConnConfigs.First();
 
-                        var mockRabbitPlugin = m.Context.Plugin.Manifest;
-                        var mockHostPlugin = m.Context.AppHost.Manifest;
+                        var mockRabbitPlugin = m.Context.Plugin;
+                        var mockHostPlugin = m.Context.AppHost;
 
                         AssertClientProperty(busConfig, "Client Assembly", mockRabbitPlugin.AssemblyName);
                         AssertClientProperty(busConfig, "Client Version", mockRabbitPlugin.AssemblyVersion);
@@ -205,10 +199,11 @@ namespace IntegrationTests.RabbitMQ
                         AssertClientProperty(busConfig, "AppHost Description", mockHostPlugin.Description);
                         AssertClientProperty(busConfig, "Machine Name", Environment.MachineName);
                     });
-            });
+            }, TestSetup.AddValidBusConfig);
         }
 
-        private void AssertClientProperty(ConnectionConfiguration busConfig, string propertyName, object expectedValue)
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
+        private static void AssertClientProperty(ConnectionConfiguration busConfig, string propertyName, object expectedValue)
         {
             busConfig.ClientProperties.TryGetValue(propertyName, out object value);
             Assert.Equal(expectedValue, value);

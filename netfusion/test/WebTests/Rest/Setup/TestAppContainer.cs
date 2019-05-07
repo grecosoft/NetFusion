@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Test.Plugins;
-using NetFusion.Web.Mvc;
 
 namespace WebTests.Rest.Setup
 {
@@ -13,28 +12,21 @@ namespace WebTests.Rest.Setup
     /// </summary>
     public static class TestAppContainer
     {
-        public static IAppContainer Create(MockAppHostPlugin hostPlugin, IServiceCollection services)
+        public static CompositeContainer Create(MockHostPlugin hostPlugin, IServiceCollection services)
         {
-            var resolver = new TestTypeResolver();
             var configuration = new ConfigurationBuilder().Build();
             var loggerFactory = new LoggerFactory();
 
-            resolver.AddPlugin(hostPlugin);
             services.AddOptions();
             services.AddLogging();
 
-            var container = new AppContainer(
+            var container = new CompositeContainer(
                 services,
                 configuration,
                 loggerFactory,
-                resolver, 
                 setGlobalReference: false);
-
-            container.WithConfig((WebMvcConfig config) =>
-            {
-                config.EnableRouteMetadata = true;
-                config.UseServices(services);
-            });
+            
+            container.RegisterPlugins(hostPlugin);
 
             return container;
         }

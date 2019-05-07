@@ -25,7 +25,7 @@ namespace WebTests.Rest.ClientRequests
         public async Task ResourceLinks_NotSerializedWithRequest()
         {
             var mockedSrv = new MockUnitTestService();
-            var hostPlugin = new MockAppHostPlugin();
+            var hostPlugin = new MockHostPlugin();
 
             hostPlugin.AddPluginType<CustomerResourceMap>();
 
@@ -49,6 +49,8 @@ namespace WebTests.Rest.ClientRequests
             var serverReceivedResource = mockedSrv.ServerReceivedResource as CustomerResource;
 
             serverReceivedResource.Should().NotBeNull("Client Resource Deserialized in Server Resource Representation.");
+            if (serverReceivedResource == null) return;
+            
             serverReceivedResource.CustomerId.Should().Be(resource.CustomerId, "Server Side Serialized Resource Matches Client Resource.");
             serverReceivedResource.Links.Should().BeNull("Links Should only be returned from Server.");
         }
@@ -62,7 +64,7 @@ namespace WebTests.Rest.ClientRequests
         {
             var settings = RequestSettings.Create(config => config.UseHalDefaults());
 
-            var hostPlugin = new MockAppHostPlugin();
+            var hostPlugin = new MockHostPlugin();
             hostPlugin.AddPluginType<CustomerResourceMap>();
 
             var mockedSrv = new MockUnitTestService();
@@ -131,7 +133,7 @@ namespace WebTests.Rest.ClientRequests
             };
 
             // Create the test client and call route returning an embedded resource.
-            var hostPlugin = new MockAppHostPlugin();
+            var hostPlugin = new MockHostPlugin();
             hostPlugin.AddPluginType<CustomerResourceMap>();
 
             var client = RequestSettings.Create()
@@ -192,7 +194,7 @@ namespace WebTests.Rest.ClientRequests
             };
 
             // Create the test client and call route returning an embedded resource collection.
-            var hostPlugin = new MockAppHostPlugin();
+            var hostPlugin = new MockHostPlugin();
             hostPlugin.AddPluginType<CustomerResourceMap>();
 
             var client = RequestSettings.Create()
@@ -253,7 +255,7 @@ namespace WebTests.Rest.ClientRequests
             };
 
             // Create the test client and call route returning an embedded resource collection.
-            var hostPlugin = new MockAppHostPlugin();
+            var hostPlugin = new MockHostPlugin();
             hostPlugin.AddPluginType<CustomerResourceMap>();
 
             var client = RequestSettings.Create()

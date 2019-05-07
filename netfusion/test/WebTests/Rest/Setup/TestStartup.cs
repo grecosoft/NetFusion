@@ -4,7 +4,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Rest.Server.Hal;
+using NetFusion.Rest.Server.Plugin.Configs;
+using NetFusion.Rest.Server.Plugin.Modules;
 using NetFusion.Test.Plugins;
+using NetFusion.Web.Mvc.Plugin.Configs;
+using NetFusion.Web.Mvc.Plugin.Modules;
 
 namespace WebTests.Rest.Setup
 {
@@ -14,14 +18,14 @@ namespace WebTests.Rest.Setup
     /// </summary>
     public class TestStartup : IStartup
     {
-        private readonly MockAppHostPlugin _pluginUnderTest;
+        private readonly MockHostPlugin _pluginUnderTest;
 
-        public TestStartup(MockAppHostPlugin pluginUnderTest)
+        public TestStartup(MockHostPlugin pluginUnderTest)
         {
             _pluginUnderTest = pluginUnderTest;
         }
 
-        public IAppContainer AppContainer { get; private set; }
+        public CompositeContainer AppContainer { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
@@ -35,9 +39,22 @@ namespace WebTests.Rest.Setup
 
             // Create, Build, and Start the NetFusion container.
             AppContainer = TestAppContainer.Create(_pluginUnderTest, services);
+            
+            var corePlugin = new MockCorePlugin();
+            corePlugin.AddConfig<WebMvcConfig>();
+            corePlugin.AddConfig<RestApiConfig>();
+            corePlugin.AddModule<ApiMetadataModule>();
+            corePlugin.AddModule<ResourceMediaModule>();
+            corePlugin.AddModule<RestModule>();
+            
+            AppContainer.RegisterPlugins(corePlugin);
 
+            var webMvcConfig = AppContainer.GetPluginConfig<WebMvcConfig>();
+            webMvcConfig.EnableRouteMetadata = true;
+            webMvcConfig.UseServices(services);
+     
             AppContainer
-                .Build()
+                .Compose(new TestTypeResolver())
                 .Start();
 
             // Integrate the NetFusion container.
