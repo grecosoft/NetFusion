@@ -40,7 +40,7 @@ namespace NetFusion.AMQP.Plugin.Modules
             services.AddSingleton<ISubscriptionSettings, NullSubscriptionSettings>();
         }
         
-        public override void StartModule(IServiceProvider services)
+        protected override Task OnStartModuleAsync(IServiceProvider services)
         {
             _connectionModule = services.GetRequiredService<IConnectionModule>();
             _dispatchModule = services.GetRequiredService<IMessageDispatchModule>();
@@ -48,13 +48,18 @@ namespace NetFusion.AMQP.Plugin.Modules
             
             _subscriptionSettings = services.GetRequiredService<ISubscriptionSettings>();
             _subscribers = GetHostSubscribers(_dispatchModule);
-            
-            LinkHandlersToHostItems(_subscriptionSettings).Wait();
+
+            return LinkHandlersToHostItems(_subscriptionSettings);
         }
 
-        public override void StopModule(IServiceProvider services)
+        protected override Task OnStopModuleAsync(IServiceProvider services)
         {
-            _subscriptionSettings?.CleanupSettings().Wait();
+            if (_subscriptionSettings == null)
+            {
+                return base.OnRunModuleAsync(services);
+            }
+            
+             return _subscriptionSettings.CleanupSettings();
         }
 
         private static HostItemSubscriber[] GetHostSubscribers(IMessageDispatchModule dispatchModule)

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -209,7 +210,7 @@ namespace NetFusion.Bootstrap.Container
         /// This is the last step of the bootstrap process.   
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
-        public void StartPluginModules(IServiceProvider services)
+        public async Task StartModulesAsync(IServiceProvider services)
         {
             if (services == null) throw new ArgumentNullException(nameof(services),
                 "Services cannot be null.");
@@ -218,23 +219,30 @@ namespace NetFusion.Bootstrap.Container
             // and ending with the application host modules.
             IsStarted = true;
      
-            StartPluginModules(services, CorePlugins);
-            StartPluginModules(services, AppPlugins);
-            StartPluginModules(services, new[] { HostPlugin });
+            var coreStartTask = StartPluginModules(services, CorePlugins);
+            var appStartTask = StartPluginModules(services, AppPlugins);
+            var hostStartTask = StartPluginModules(services, new[] { HostPlugin });
+
+            await Task.WhenAll(coreStartTask, appStartTask, hostStartTask);
 
             // Last phase to allow any modules to execute any processing that
             // might be dependent on another module being started.
-            foreach (IPluginModule module in AllModules)
-            {
-                module.RunModule(services);
-            }
+            await RunPluginModules(services);
         }
 
-        private static void StartPluginModules(IServiceProvider services, IEnumerable<IPlugin> plugins)
+        private static async Task StartPluginModules(IServiceProvider services, IEnumerable<IPlugin> plugins)
         {
             foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
             {
-                module.StartModule(services);
+                await module.StartModuleAsync(services);
+            }
+        }
+
+        private async Task RunPluginModules(IServiceProvider services)
+        {
+            foreach (IPluginModule module in AllModules)
+            {
+                await module.RunModuleAsync(services);
             }
         }
         
@@ -242,20 +250,22 @@ namespace NetFusion.Bootstrap.Container
         /// Stops all plug-in modules in the reverse order from which they were started.
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
-        public void StopPluginModules(IServiceProvider services)
+        public async Task StopPluginModulesAsync(IServiceProvider services)
         {
-            StopPluginModules(services, new[] { HostPlugin });
-            StopPluginModules(services, AppPlugins);
-            StopPluginModules(services, CorePlugins);
-    
             IsStarted = false;
+            
+            var hostStopTask = StopPluginModules(services, new[] { HostPlugin });
+            var appStopTask = StopPluginModules(services, AppPlugins);
+            var coreStopTask = StopPluginModules(services, CorePlugins);
+
+            await Task.WhenAll(hostStopTask, appStopTask, coreStopTask);
         }
 
-        private static void StopPluginModules(IServiceProvider services, IEnumerable<IPlugin> plugins)
+        private static async Task StopPluginModules(IServiceProvider services, IEnumerable<IPlugin> plugins)
         {
             foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
             {
-                module.StopModule(services);
+                await module.StopModuleAsync(services);
             }
         }
     }

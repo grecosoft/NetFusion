@@ -33,6 +33,11 @@ namespace NetFusion.Rest.Server.Plugin.Modules
             });
 
             services.AddSingleton<IHalEmbeddedResourceContext, HalEmbeddedResourceContext>();
+            
+            // Support REST/HAL based API responses.
+            services.AddMvc(options => {
+                options.UseHalFormatter();
+            });
         }
     }
-}
+}    

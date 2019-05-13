@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,11 +43,13 @@ namespace NetFusion.Redis.Plugin.Modules
             services.AddSingleton<ISubscriptionService, SubscriptionService>();
         }
 
-        public override void StartModule(IServiceProvider services)
+        protected override Task OnStartModuleAsync(IServiceProvider services)
         {
             _serializationManager = services.GetRequiredService<ISerializationManager>();
 
             SubscribeToChannels(_subscribers);
+
+            return base.OnStartModuleAsync(services);
         }
         
         // Delegates to the core message dispatch module to find all message dispatch

@@ -5,6 +5,8 @@ using System.IO;
 
 namespace NetFusion.Bootstrap.Configuration
 {
+    using Microsoft.Extensions.Hosting;
+
     /// <summary>
     /// Extension methods for MS Configuration Extensions.
     /// </summary>
@@ -20,14 +22,16 @@ namespace NetFusion.Bootstrap.Configuration
         ///     appsettings.json
         /// </summary>
         /// <param name="builder">The configuration to add setting providers.</param>
+        /// <param name="environmentName"></param>
         /// <returns>Instance to the configuration builder.</returns>
-        public static IConfigurationBuilder AddAppSettings(this IConfigurationBuilder builder)
+        public static IConfigurationBuilder AddAppSettings(this IConfigurationBuilder builder,
+            string environmentName)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder), "Configuration builder not specified.");
         
             builder.SetBasePath(Directory.GetCurrentDirectory());
             builder.AddJsonFile($"{AppSettingsFileName}.json", optional: true, reloadOnChange: true);
-            builder.AddJsonFile($"{AppSettingsFileName}.{EnvironmentConfig.EnvironmentName}.json", reloadOnChange: true, optional: true);
+            builder.AddJsonFile($"{AppSettingsFileName}.{environmentName}.json", reloadOnChange: true, optional: true);
             builder.AddJsonFile($"{AppSettingsFileName}.{Environment.MachineName}.json", reloadOnChange: true, optional: true);
             return builder;
         }
@@ -39,18 +43,19 @@ namespace NetFusion.Bootstrap.Configuration
         /// is not executing within the development environment, all variables are sourced from environment variables.
         /// </summary>
         /// <param name="builder">The configuration to add setting providers.</param>
+        /// <param name="environmentName"></param>
         /// <returns>Instance of the configuration builder.</returns>
-        public static IConfigurationBuilder AddDockerDefaultSettings(this IConfigurationBuilder builder)
+        public static IConfigurationBuilder AddDockerDefaultSettings(this IConfigurationBuilder builder,
+            string environmentName)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder), "Configuration builder not specified.");
             
-            if (EnvironmentConfig.IsDevelopment)
+            if (environmentName == EnvironmentName.Development)
             {
-                builder.AddAppSettings();    
+                builder.AddAppSettings(environmentName);    
             }
 
             builder.AddEnvironmentVariables();
-            
             return builder;
         }
 

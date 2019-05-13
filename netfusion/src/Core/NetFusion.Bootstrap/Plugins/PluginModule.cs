@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Dependencies;
 using System;
 using System.Collections.Generic;
@@ -87,14 +88,29 @@ namespace NetFusion.Bootstrap.Plugins
         {
         }
 
+        public Task StartModuleAsync(IServiceProvider services)
+        {
+            return OnStartModuleAsync(services);
+        }
+
+        public virtual Task RunModuleAsync(IServiceProvider services)
+        {
+            return OnRunModuleAsync(services);
+        }
+
+        public virtual Task StopModuleAsync(IServiceProvider services)
+        {
+            return OnStopModuleAsync(services);
+        }
+        
         /// <summary>
         /// Method called on the module by the bootstrap process.  Called after
         /// all types have been registered and the container has been created.
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
-        public virtual void StartModule(IServiceProvider services)
+        protected virtual Task OnStartModuleAsync(IServiceProvider services)
         {
-            
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -103,9 +119,9 @@ namespace NetFusion.Bootstrap.Plugins
         /// have already been started.
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
-        public virtual void RunModule(IServiceProvider services)
+        protected virtual Task OnRunModuleAsync(IServiceProvider services)
         {
-            
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -113,9 +129,9 @@ namespace NetFusion.Bootstrap.Plugins
         /// any processing before the container is stopped.
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
-        public virtual void StopModule(IServiceProvider services)
+        protected virtual Task OnStopModuleAsync(IServiceProvider services)
         {
-            
+            return Task.CompletedTask;
         }
 
         /// <summary>

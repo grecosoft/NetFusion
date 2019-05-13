@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using EasyNetQ;
@@ -61,12 +62,14 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             _messageExchanges = definitions.ToDictionary(m => m.MessageType);
         } 
 
-        public override void StartModule(IServiceProvider services)
+        protected override Task OnStartModuleAsync(IServiceProvider services)
         {
             foreach (IRpcClient client in _exchangeRpcClients.Values)
             {
                 client.CreateAndSubscribeToReplyQueue();
             }
+
+            return base.OnStartModuleAsync(services);
         }
 
         public bool IsExchangeMessage(Type messageType)

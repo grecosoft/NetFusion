@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +26,7 @@ namespace NetFusion.Roslyn.Plugin.Modules
             services.AddSingleton<IEntityScriptingService, EntityScriptingService>();
         }
 
-        public override void RunModule(IServiceProvider services)
+        protected override async Task OnRunModuleAsync(IServiceProvider services)
         {
             IEntityScriptMetaRepository expressionRep = services.GetService<IEntityScriptMetaRepository>();
 
@@ -37,7 +38,7 @@ namespace NetFusion.Roslyn.Plugin.Modules
             }
 
             // Read all of the scripts and load them into the scripting service.
-            _scripts = expressionRep.ReadAllAsync().Result;
+            _scripts = await expressionRep.ReadAllAsync();
             var scriptingSrv = services.GetService<IEntityScriptingService>();
 
             scriptingSrv.Load(_scripts);

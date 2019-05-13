@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using EasyNetQ;
@@ -32,7 +33,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         private MessageQueueSubscriber[] _subscribers;
 
         // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#startmodule
-        public override void StartModule(IServiceProvider services)
+        protected override Task OnStartModuleAsync(IServiceProvider services)
         {
             // Dependent modules:
             _busModule = services.GetRequiredService<IBusModule>();
@@ -41,6 +42,8 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
             _subscribers = GetQueueSubscribers(_messagingModule);
             SubscribeToQueues(_busModule, _subscribers);
+
+            return base.OnStartModuleAsync(services);
         }
         
         // Delegates to the core message dispatch module to find all message dispatch

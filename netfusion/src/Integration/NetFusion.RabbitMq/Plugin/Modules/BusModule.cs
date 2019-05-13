@@ -11,11 +11,11 @@ using NetFusion.Bootstrap.Plugins;
 using NetFusion.RabbitMQ.Metadata;
 using NetFusion.RabbitMQ.Settings;
 using NetFusion.Settings;
+using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("IntegrationTests")]
 namespace NetFusion.RabbitMQ.Plugin.Modules
 {
-
     /// <summary>
     /// The main plugin module providing access to the configured IBus instances used to
     /// communicate with RabbitMQ servers.  Each bus is identified by a name specified 
@@ -58,13 +58,15 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         }
 
         // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#startmodule
-        public override void StartModule(IServiceProvider services)
+        protected override Task OnStartModuleAsync(IServiceProvider services)
         {
             _serializationMgr = services.GetService<ISerializationManager>();
             if (_serializationMgr == null)
             {
                 Context.Logger.LogError("A serialization manager has not been registered.");
             }
+
+            return base.OnStartModuleAsync(services);
         }
 
         private void CreateBus(BusConnection conn)
@@ -110,7 +112,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         /// Factory method used to return an IBus implementation.  Default to EasyNetQ but can also
         /// be used to provided a mock during unit testing.
         /// </summary>
-        public Func<ConnectionConfiguration, IBus> BusFactory = c => RabbitHutch.CreateBus(c, rs => {});
+        protected Func<ConnectionConfiguration, IBus> BusFactory = c => RabbitHutch.CreateBus(c, rs => {});
 
         // Additional client properties associated with created connections.
         private void SetAdditionalClientProperties(IDictionary<string, object> clientProps)

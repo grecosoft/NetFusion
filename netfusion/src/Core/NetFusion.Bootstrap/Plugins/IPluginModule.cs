@@ -2,6 +2,7 @@
 using NetFusion.Bootstrap.Dependencies;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NetFusion.Bootstrap.Plugins
 {
@@ -49,8 +50,7 @@ namespace NetFusion.Bootstrap.Plugins
         void ScanPlugins(ITypeCatalog catalog);
 
         /// <summary>
-        /// Allows the plug-in to register specific types as services within the 
-        /// service collection.
+        /// Allows the plug-in to register specific types as services within the service collection.
         /// </summary>
         /// <param name="services">Service collection used to register types 
         /// that can be dependency injected as services.
@@ -62,7 +62,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// all types have been registered and the container has been created.
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
-        void StartModule(IServiceProvider services);
+        Task StartModuleAsync(IServiceProvider services);
 
         /// <summary>
         /// Called after all modules have been started.  This method can contain
@@ -70,14 +70,14 @@ namespace NetFusion.Bootstrap.Plugins
         /// have already been started.
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
-        void RunModule(IServiceProvider services);
+        Task RunModuleAsync(IServiceProvider services);
 
         /// <summary>
         /// Called when the container is stopped.  Allows the module to complete
         /// any processing before the container is stopped.
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
-        void StopModule(IServiceProvider services);
+        Task StopModuleAsync(IServiceProvider services);
 
         /// <summary>
         /// Called after the module is initialized and configured so that it can 

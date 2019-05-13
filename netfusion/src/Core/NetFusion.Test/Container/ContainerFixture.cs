@@ -41,6 +41,7 @@ namespace NetFusion.Test.Container
             get
             {
                 var configuration = ConfigBuilder.Build();
+
                 Services.AddSingleton(configuration);
 
                 return _container ?? (_container = new CompositeContainer(

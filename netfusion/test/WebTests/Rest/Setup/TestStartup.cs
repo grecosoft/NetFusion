@@ -58,7 +58,8 @@ namespace WebTests.Rest.Setup
                 .Start();
 
             // Integrate the NetFusion container.
-            return ((IBuiltContainer)AppContainer).ServiceProvider;
+            IComposite composite = AppContainer;
+            return composite.ServiceProvider;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

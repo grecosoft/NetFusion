@@ -1,4 +1,5 @@
-﻿using NetFusion.Bootstrap.Plugins;
+﻿using System.Threading.Tasks;
+using NetFusion.Bootstrap.Plugins;
 using System.Collections.Generic;
 using System;
 
@@ -15,9 +16,11 @@ namespace CoreTests.Bootstrap.Mocks
             IsDisposed = true;
         }
 
-        public override void StartModule(IServiceProvider services)
+        protected override Task OnStartModuleAsync(IServiceProvider services)
         {
             IsStarted = true;
+
+            return base.OnStartModuleAsync(services);
         }
     }
 

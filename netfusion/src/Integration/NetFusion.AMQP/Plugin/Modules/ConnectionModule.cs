@@ -12,7 +12,6 @@ using NetFusion.Settings;
 
 namespace NetFusion.AMQP.Plugin.Modules
 {
-
     /// <summary>
     /// Module when bootstrapped stores metadata about the defined AMQP connections.
     /// This metadata is used to establish connections and sessions.
@@ -49,9 +48,9 @@ namespace NetFusion.AMQP.Plugin.Modules
         }
 
         // Create connections to the configured hosts to be used for receiving messages.
-        public override void StartModule(IServiceProvider services)
+        protected override Task OnStartModuleAsync(IServiceProvider services)
         {
-            CreateReceiverConnections();
+            return CreateReceiverConnections();
         }
         
         private HostSettings GetHostSettings(string hostName)
@@ -123,15 +122,15 @@ namespace NetFusion.AMQP.Plugin.Modules
         
         //-- AMQP Receiver Connection Methods:
 
-        private void CreateReceiverConnections()
+        private async Task CreateReceiverConnections()
         {
             foreach (HostSettings host in _amqpSettings.Hosts)
             {
-                CreateReceiverHostConnection(host.HostName);
+                await CreateReceiverHostConnection(host.HostName);
             }
         }
 
-        private void CreateReceiverHostConnection(string hostName)
+        private async Task CreateReceiverHostConnection(string hostName)
         {
             HostSettings host = GetHostSettings(hostName);
             
@@ -139,14 +138,14 @@ namespace NetFusion.AMQP.Plugin.Modules
                 host.Username,
                 host.Password);
 
-            var connection = Connection.Factory.CreateAsync(address).Result;
+            var connection = await Connection.Factory.CreateAsync(address);
             _receiverConnections[host.HostName] = connection;
             
-            connection.Closed += (sender, error) =>
+            connection.Closed += async (sender, error) =>
             {
                 LogItemClosed("Receiver Connection", error);
                 
-                ReSetReceiverConnection(hostName);
+                await ReSetReceiverConnection(hostName);
                 
                 _receiverConnCloseHandler?.Invoke(hostName);
             };
@@ -175,11 +174,11 @@ namespace NetFusion.AMQP.Plugin.Modules
             return session;
         }
 
-        private void ReSetReceiverConnection(string hostName)
+        private Task ReSetReceiverConnection(string hostName)
         {
             if (_disposing)
             {
-                return;
+                return Task.CompletedTask;
             }
             
             Context.Logger.LogDebug("Connection to {host} is being reset.", hostName);
@@ -187,7 +186,7 @@ namespace NetFusion.AMQP.Plugin.Modules
             Connection hostConn = _receiverConnections[hostName];
             
             _receiverSessions.RemoveAll(rs => rs.Connection == hostConn);
-            CreateReceiverHostConnection(hostName);
+            return CreateReceiverHostConnection(hostName);
         }
         
         private void LogItemClosed(string context, Error error)

@@ -57,7 +57,7 @@ namespace Service.Client
         private static void SetupConfiguration(HostBuilderContext context, 
             IConfigurationBuilder builder)
         {            
-            builder.AddAppSettings();
+            builder.AddAppSettings(context.HostingEnvironment.EnvironmentName);
         }
 
         private static void SetupLogging(HostBuilderContext context, 

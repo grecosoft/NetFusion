@@ -14,7 +14,7 @@ namespace NetFusion.Bootstrap.Container
     {
         private readonly CompositeContainer _container;
         
-        public CompositeContainerBuilder(IServiceCollection services, 
+        internal CompositeContainerBuilder(IServiceCollection services, 
             ILoggerFactory loggerFactory,
             IConfiguration configuration)
         {
@@ -23,6 +23,12 @@ namespace NetFusion.Bootstrap.Container
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             
             _container = new CompositeContainer(services, configuration, loggerFactory, true);
+        }
+
+        internal void SetProviderFactory(Func<IServiceCollection, IServiceProvider> providerFactory)
+        {
+            if (providerFactory == null) throw new ArgumentNullException(nameof(providerFactory));
+            _container.SetProviderFactory(providerFactory);
         }
         
         public ICompositeContainerBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new()
@@ -33,30 +39,25 @@ namespace NetFusion.Bootstrap.Container
 
         public ICompositeContainerBuilder InitConfig<T>(Action<T> configure) where T : IPluginConfig
         {
+            if (configure == null) throw new ArgumentNullException(nameof(configure));
+            
             T config = _container.GetContainerConfig<T>();
             configure(config);
             
             return this;
         }
+        
+        public T GetPluginConfig<T>() where T : IPluginConfig
+        {
+            return _container.GetPluginConfig<T>();
+        }
 
-        public IBuiltContainer Build()
+        public ICompositeContainer Build()
         {
             var resolver = new TypeResolver();
             
             _container.Compose(resolver);
             return _container;
-        }
-
-        public IServiceProvider Create()
-        {
-            var sp = _container.CreateServiceProvider();
-            ((IBuiltContainer)_container).Start();
-            return sp;
-        }
-
-        public T GetPluginConfig<T>() where T : IPluginConfig
-        {
-            return _container.GetPluginConfig<T>();
         }
     }
 }

@@ -22,9 +22,9 @@ namespace CoreTests.Bootstrap
                     })
                     .Act.OnNonInitContainer(c =>
                     {
-                        var builtContainer = c.Compose(new TestTypeResolver());
-                        builtContainer.Start();
-                        builtContainer.Start();
+                        c.Compose(new TestTypeResolver());
+                        c.Start();
+                        c.Start();
                     })
                     .Assert.Exception<ContainerException>(ex =>
                     {
