@@ -9,9 +9,11 @@ namespace NetFusion.Messaging.Enrichers
     /// </summary>
     public class CorrelationEnricher : MessageEnricher
     {
+        private readonly Guid _scopedCorrelationId = Guid.NewGuid();
+        
         public override Task Enrich(IMessage message)
         {
-            message.SetCorrelationId(Guid.NewGuid().ToString());            
+            message.SetCorrelationId(_scopedCorrelationId.ToString());            
             return base.Enrich(message);
         }
     }

@@ -47,9 +47,7 @@ namespace NetFusion.Redis.Plugin.Modules
         {
             _serializationManager = services.GetRequiredService<ISerializationManager>();
 
-            SubscribeToChannels(_subscribers);
-
-            return base.OnStartModuleAsync(services);
+            return SubscribeToChannels(_subscribers);
         }
         
         // Delegates to the core message dispatch module to find all message dispatch
@@ -62,14 +60,14 @@ namespace NetFusion.Redis.Plugin.Modules
                 .ToArray();
         }
         
-        private void SubscribeToChannels(IEnumerable<MessageChannelSubscriber> subscribers)
+        private async Task SubscribeToChannels(IEnumerable<MessageChannelSubscriber> subscribers)
         {
             foreach (var msgSubscriber in subscribers)
             {
                 ISubscriber subscriber = ConnModule.GetSubscriber(msgSubscriber.DatabaseName);
                 
                 // Callback invoked when message published to channel:
-                subscriber.Subscribe(msgSubscriber.Channel, (channel, message) =>
+                await subscriber.SubscribeAsync(msgSubscriber.Channel, (channel, message) =>
                 {
                     Type messageType = msgSubscriber.DispatchInfo.MessageType;
                     var messageParts = ChannelMessageEncoder.UnPack(message);

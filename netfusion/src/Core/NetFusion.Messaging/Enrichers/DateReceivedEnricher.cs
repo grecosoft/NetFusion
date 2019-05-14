@@ -9,9 +9,11 @@ namespace NetFusion.Messaging.Enrichers
     /// </summary>
     public class DateReceivedEnricher : MessageEnricher
     {
+        private readonly DateTime _scopedDateReceived = DateTime.UtcNow;
+        
         public override Task Enrich(IMessage message)
         {
-            AddMessageProperty(message, "DateReceived", DateTime.UtcNow);
+            AddMessageProperty(message, "DateReceived", _scopedDateReceived);
             return base.Enrich(message);
         }
     }

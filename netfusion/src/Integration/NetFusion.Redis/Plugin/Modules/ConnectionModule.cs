@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
@@ -35,7 +36,10 @@ namespace NetFusion.Redis.Plugin.Modules
             _redisSettings = Context.Configuration.GetSettings(Context.Logger, new RedisSettings());
 
             AssertSettings(_redisSettings);
-            
+        }
+
+        protected override async Task OnStartModuleAsync(IServiceProvider services)
+        {
             foreach (DbConnection connSetting in _redisSettings.Connections)
             {
                 var connOptions = new ConfigurationOptions
@@ -57,7 +61,7 @@ namespace NetFusion.Redis.Plugin.Modules
 
                 // Create and cache the connection.
                 var logger = new RedisLogTextWriter(Context.Logger);
-                var connection = ConnectionMultiplexer.Connect(connOptions, logger);
+                var connection = await ConnectionMultiplexer.ConnectAsync(connOptions, logger);
                 
                 _connections[connSetting.Name] = new CachedConnection(connOptions, connection);
             }
