@@ -54,8 +54,11 @@ namespace Service.WebApi
                 builder.AddDebug().SetMinimumLevel(LogLevel.Debug);
                 builder.AddConsole().SetMinimumLevel(LogLevel.Debug);
             }
+            else
+            {
+                builder.AddConsole().SetMinimumLevel(LogLevel.Warning);
+            }
             
-            builder.AddConsole().SetMinimumLevel(LogLevel.Warning);
         }
     }
 }

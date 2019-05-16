@@ -8,7 +8,6 @@
     <ProjectReference Include="..\..\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
     <ProjectReference Include="..\..\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
     <ProjectReference Include="..\..\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
-    <ProjectReference Include="..\NetFusion.Serialization\NetFusion.Serialization.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AMQPNetLite" Version="2.1.7" />

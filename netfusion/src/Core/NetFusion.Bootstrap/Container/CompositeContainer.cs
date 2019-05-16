@@ -2,11 +2,9 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Base.Scripting;
 using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Dependencies;
 using NetFusion.Bootstrap.Exceptions;
@@ -22,8 +20,7 @@ namespace NetFusion.Bootstrap.Container
     /// Responsible for coordinating the population of a Service Collection
     /// from a set of plugins.  
     /// </summary>
-    public class CompositeContainer : ICompositeContainer,
-        IComposite 
+    public class CompositeContainer : IComposite 
     {
         // Singleton instance of the created container:
         private static CompositeContainer _instance;
@@ -67,7 +64,7 @@ namespace NetFusion.Bootstrap.Container
             AddContainerConfigs();
         }
 
-        internal void SetProviderFactory(Func<IServiceCollection, IServiceProvider> providerFactory)
+        void IComposite.SetProviderFactory(Func<IServiceCollection, IServiceProvider> providerFactory)
         {
             _providerFactory = providerFactory ?? throw new ArgumentNullException(nameof(providerFactory));
         }
@@ -185,7 +182,7 @@ namespace NetFusion.Bootstrap.Container
         //----------------------- Container Initialization ------------------------------------//
         
         // Composes the container for the registered plugins and populates the service-collection.
-        public ICompositeContainer Compose(ITypeResolver typeResolver)
+        public IComposite Compose(ITypeResolver typeResolver)
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
             
@@ -223,6 +220,14 @@ namespace NetFusion.Bootstrap.Container
                 throw LogException(new ContainerException(
                     "Unexpected container error.  See Inner Exception.", ex));
             }
+
+            return this;
+        }
+
+        IComposite IComposite.CreateServiceProvider()
+        {
+            _serviceProvider = _providerFactory?.Invoke(_serviceCollection) 
+                ?? _serviceCollection.BuildServiceProvider(true);
 
             return this;
         }
@@ -272,7 +277,6 @@ namespace NetFusion.Bootstrap.Container
             
             RegisterAppContainerAsService();
             RegisterPluginModuleServices();
-            RegisterDefaultServices();
             
             CreateCompositeLogger();
         }
@@ -293,12 +297,6 @@ namespace NetFusion.Bootstrap.Container
 
                 _serviceCollection.AddSingleton(moduleServiceInterfaces, moduleService);
             }
-        }
-
-        private void RegisterDefaultServices()
-        {
-            _serviceCollection.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();
-            _serviceCollection.AddSingleton<IValidationService, ValidationService>();
         }
         
         public void Start()
@@ -338,8 +336,10 @@ namespace NetFusion.Bootstrap.Container
         // The last step in the bootstrap process allowing plug-in modules to start runtime services.
         public async Task StartAsync()
         {
-            _serviceProvider = _providerFactory?.Invoke(_serviceCollection) 
-                               ?? _serviceCollection.BuildServiceProvider(true);
+            if (_serviceCollection == null)
+            {
+                // TODO throw:
+            }
             
             if (_compositeApp.IsStarted)
             {

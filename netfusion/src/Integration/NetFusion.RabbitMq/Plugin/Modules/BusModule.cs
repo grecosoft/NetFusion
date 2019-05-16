@@ -19,9 +19,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
     /// <summary>
     /// The main plugin module providing access to the configured IBus instances used to
     /// communicate with RabbitMQ servers.  Each bus is identified by a name specified 
-    /// within the application's configuration. 
-    /// 
-    /// https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#bootstrapping---modules
+    /// within the application's configuration.
     /// </summary>
     public class BusModule : PluginModule,
         IBusModule
@@ -46,7 +44,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         public string HostAppId => Context.AppHost.PluginId;
 
         // Creates IBus instances for each configured bus.
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#initialize
         public override void Initialize()
         {
             _busSettings = Context.Configuration.GetSettings(Context.Logger, new BusSettings());
@@ -57,7 +54,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             }
         }
 
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#startmodule
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {
             _serializationMgr = services.GetService<ISerializationManager>();
@@ -224,7 +220,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             _disposed = true;
         }
 
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#log
         public override void Log(IDictionary<string, object> moduleLog)
         {
             moduleLog["Bus-Connections"] = _busSettings.Connections.Select( c => new {

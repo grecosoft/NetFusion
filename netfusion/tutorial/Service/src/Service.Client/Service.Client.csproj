@@ -13,6 +13,7 @@
       <ProjectReference Include="..\..\..\..\src\Common\NetFusion.Base\NetFusion.Base.csproj" />
       <ProjectReference Include="..\..\..\..\src\Common\NetFusion.Mapping\NetFusion.Mapping.csproj" />
       <ProjectReference Include="..\..\..\..\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+      <ProjectReference Include="..\..\..\..\src\Core\NetFusion.Builder\NetFusion.Builder.csproj" />
       <ProjectReference Include="..\..\..\..\src\Integration\NetFusion.AMQP\NetFusion.AMQP.csproj" />
       <ProjectReference Include="..\..\..\..\src\Integration\NetFusion.RabbitMq\NetFusion.RabbitMQ.csproj" />
       <ProjectReference Include="..\..\..\..\src\Integration\NetFusion.Redis\NetFusion.Redis.csproj" />

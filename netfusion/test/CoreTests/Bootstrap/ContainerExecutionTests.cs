@@ -22,7 +22,9 @@ namespace CoreTests.Bootstrap
                     })
                     .Act.OnNonInitContainer(c =>
                     {
-                        c.Compose(new TestTypeResolver());
+                        c.Compose(new TestTypeResolver())
+                            .CreateServiceProvider();
+                        
                         c.Start();
                         c.Start();
                     })

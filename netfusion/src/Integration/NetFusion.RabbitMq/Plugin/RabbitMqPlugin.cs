@@ -29,19 +29,12 @@ namespace NetFusion.RabbitMQ.Plugin
     {
         public static ICompositeContainerBuilder AddRabbitMq(this ICompositeContainerBuilder composite)
         {
-            // Add dependent plugins:
-            composite
+            return composite
                 .AddSettings()
-                .AddMessaging();
-            
-            // Add Rabbit MQ Plugin:
-            composite.AddPlugin<RabbitMqPlugin>();
-
-            // Integrate with base messaging plugin:
-            var dispatchConfig = composite.GetPluginConfig<MessageDispatchConfig>();
-            dispatchConfig.AddPublisher<RabbitMqPublisher>();
-            
-            return composite;
+                .AddMessaging()
+                .AddPlugin<RabbitMqPlugin>()
+                .InitPluginConfig<MessageDispatchConfig>(config => 
+                    config.AddPublisher<RabbitMqPublisher>());
         }
     }
 }

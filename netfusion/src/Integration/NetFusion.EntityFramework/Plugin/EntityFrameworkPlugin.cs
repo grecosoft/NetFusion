@@ -23,12 +23,8 @@ namespace NetFusion.EntityFramework.Plugin
     {
         public static ICompositeContainerBuilder AddEntityFramework(this ICompositeContainerBuilder composite)
         {
-            // Add dependent plugins:
-            composite.AddSettings();
-            
-            // Add Entity Framework Plugin:
-            composite.AddPlugin<EntityFrameworkPlugin>();
-            return composite;
+            return composite.AddSettings()
+                .AddPlugin<EntityFrameworkPlugin>();
         }
     }
 }

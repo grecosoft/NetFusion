@@ -30,12 +30,8 @@ namespace NetFusion.MongoDB.Plugin
         /// <returns>Reference to the composite container builder.</returns>
         public static ICompositeContainerBuilder AddMongoDb(this ICompositeContainerBuilder composite)
         {
-            // Add dependent plugins:
-            composite.AddSettings();
-            
-            // Add MongoDB plugin:
-            composite.AddPlugin<MongoDbPlugin>();
-            return composite;
+            return composite.AddSettings()
+                .AddPlugin<MongoDbPlugin>();
         }
     }
 }

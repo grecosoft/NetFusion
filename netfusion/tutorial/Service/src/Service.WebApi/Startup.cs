@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Container;
 using System;
 using NetFusion.AMQP.Plugin;
 using NetFusion.Messaging.Plugin;
@@ -18,6 +17,7 @@ using Service.Domain.Plugin;
 using Service.Infra.Plugin;
 using Service.WebApi.Plugin;
 using NetFusion.Base.Serialization;
+using NetFusion.Builder;
 using NetFusion.Serialization;
 
 namespace Service.WebApi
@@ -39,8 +39,6 @@ namespace Service.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ISerializationManager, SerializationManager>();
-            
             services.CompositeAppBuilder(_loggerFactory, _configuration)
                 // Add common plugins:
                 .AddSettings()

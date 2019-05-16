@@ -55,6 +55,7 @@ namespace WebTests.Rest.Setup
      
             AppContainer
                 .Compose(new TestTypeResolver())
+                .CreateServiceProvider()
                 .Start();
 
             // Integrate the NetFusion container.

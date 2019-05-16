@@ -76,6 +76,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "test\In
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTests", "test\WebTests\WebTests.csproj", "{CD0DA825-41D9-4BE4-BE16-EB99B910D072}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Builder", "src\Core\NetFusion.Builder\NetFusion.Builder.csproj", "{DB05FC42-29CE-4526-80BC-74745AD152A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -198,6 +200,10 @@ Global
 		{CD0DA825-41D9-4BE4-BE16-EB99B910D072}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD0DA825-41D9-4BE4-BE16-EB99B910D072}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD0DA825-41D9-4BE4-BE16-EB99B910D072}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB05FC42-29CE-4526-80BC-74745AD152A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB05FC42-29CE-4526-80BC-74745AD152A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB05FC42-29CE-4526-80BC-74745AD152A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB05FC42-29CE-4526-80BC-74745AD152A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -237,6 +243,7 @@ Global
 		{E3E7C416-BE01-4D47-BFD3-65BFCDF65B15} = {32232913-3E63-4EE3-8DC1-2FCB6717198F}
 		{292BB442-0DDC-4C88-AEA9-7EA90549933B} = {32232913-3E63-4EE3-8DC1-2FCB6717198F}
 		{CD0DA825-41D9-4BE4-BE16-EB99B910D072} = {32232913-3E63-4EE3-8DC1-2FCB6717198F}
+		{DB05FC42-29CE-4526-80BC-74745AD152A7} = {3B81A3E8-25A7-4473-BDA9-36B6D7FED4D6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17556D20-DBFC-4AEB-857D-74B7C1EDEA60}

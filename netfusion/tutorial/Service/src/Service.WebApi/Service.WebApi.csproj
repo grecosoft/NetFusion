@@ -11,6 +11,7 @@
     <ProjectReference Include="..\..\..\..\src\Common\NetFusion.Base\NetFusion.Base.csproj" />
     <ProjectReference Include="..\..\..\..\src\Common\NetFusion.Common\NetFusion.Common.csproj" />
     <ProjectReference Include="..\..\..\..\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Core\NetFusion.Builder\NetFusion.Builder.csproj" />
     <ProjectReference Include="..\..\..\..\src\Web\NetFusion.Rest.Common\NetFusion.Rest.Common.csproj" />
     <ProjectReference Include="..\..\..\..\src\Web\NetFusion.Rest.Resources\NetFusion.Rest.Resources.csproj" />
     <ProjectReference Include="..\..\..\..\src\Web\NetFusion.Rest.Server\NetFusion.Rest.Server.csproj" />

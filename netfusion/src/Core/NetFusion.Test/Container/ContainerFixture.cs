@@ -5,6 +5,10 @@ using NetFusion.Bootstrap.Container;
 using NetFusion.Test.Plugins;
 using System;
 using System.Threading.Tasks;
+using NetFusion.Base.Scripting;
+using NetFusion.Base.Serialization;
+using NetFusion.Bootstrap.Validation;
+using NetFusion.Serialization;
 
 namespace NetFusion.Test.Container
 {
@@ -43,6 +47,10 @@ namespace NetFusion.Test.Container
                 var configuration = ConfigBuilder.Build();
 
                 Services.AddSingleton(configuration);
+                
+                Services.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();
+                Services.AddSingleton<IValidationService, ValidationService>();
+                Services.AddSingleton<ISerializationManager, SerializationManager>();
 
                 return _container ?? (_container = new CompositeContainer(
                     Services,
@@ -57,7 +65,9 @@ namespace NetFusion.Test.Container
             if (!_isInit)
             {
                 _isInit = true;
-                ContainerUnderTest.Compose(Resolver).Start();
+                ContainerUnderTest.Compose(Resolver)
+                    .CreateServiceProvider()
+                    .Start();
             }
         }
 

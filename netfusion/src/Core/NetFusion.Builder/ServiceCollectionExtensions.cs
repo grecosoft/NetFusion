@@ -2,8 +2,9 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetFusion.Bootstrap.Container;
 
-namespace NetFusion.Bootstrap.Container
+namespace NetFusion.Builder
 {
     public static class ServiceCollectionExtensions
     {

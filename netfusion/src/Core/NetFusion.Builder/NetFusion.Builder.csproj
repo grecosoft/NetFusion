@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\..\build\common.props" />
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Common\NetFusion.Base\NetFusion.Base.csproj" />
+      <ProjectReference Include="..\..\Integration\NetFusion.Serialization\NetFusion.Serialization.csproj" />
+      <ProjectReference Include="..\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <PackageId>NetFusion.Builder</PackageId>
+        <Title>NetFusion Container Builder Classes</Title>
+        <Description>Contains builder class implementation used to construct a composite container.</Description>
+        <PackageTags>netfusion;builder</PackageTags>
+    </PropertyGroup>
+</Project>

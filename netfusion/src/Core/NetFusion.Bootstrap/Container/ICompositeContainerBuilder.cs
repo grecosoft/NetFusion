@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Bootstrap.Container
@@ -22,18 +23,20 @@ namespace NetFusion.Bootstrap.Container
         /// container level configurations.
         /// </summary>
         /// <param name="configure">Delegate passed an instance of the configuration.</param>
-        /// <typeparam name="T">The type of the container to initialize.</typeparam>
+        /// <typeparam name="T">The type of the configuration to initialize.</typeparam>
         /// <returns>Reference to the builder.  If the specified configuration is not
-        /// a registered at the container level, an exception is raised.</returns>
+        /// registered at the container level, an exception is raised.</returns>
         ICompositeContainerBuilder InitConfig<T>(Action<T> configure) where T : IPluginConfig;
-        
+
         /// <summary>
-        /// Returns reference to a plugin specific configuration.
+        /// Can be called by the host when bootstrapping the application to configure
+        /// plugin level configurations.
         /// </summary>
-        /// <typeparam name="T">The type of the plugin configuration to return.</typeparam>
-        /// <returns>Reference to the plugin configuration instance of the specified
-        /// type or an exception if not found.</returns>
-        T GetPluginConfig<T>() where T : IPluginConfig;
+        /// <param name="configure">Delegate passed an instance of the configuration.</param>
+        /// <typeparam name="T">The type of the configuration to initialize.</typeparam>
+        /// <returns>Reference to the builder.  If the specified configuration is not
+        /// registered for one of the added container's plugins, an exception is raised.</returns>
+        ICompositeContainerBuilder InitPluginConfig<T>(Action<T> configure) where T : IPluginConfig;
         
         /// <summary>
         /// Builds a composite container from the set of added plug-ins.  After this method
@@ -41,6 +44,6 @@ namespace NetFusion.Bootstrap.Container
         /// the plugin modules and the instance of the IServiceProvider created.
         /// </summary>
         /// <returns>Reference to the built composite-container that can be started by the host.</returns>
-        ICompositeContainer Build();
+        ICompositeContainer Build(Action<IServiceCollection> services = null);
     }
 }

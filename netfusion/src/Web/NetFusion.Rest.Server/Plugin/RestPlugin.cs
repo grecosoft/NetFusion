@@ -35,8 +35,7 @@ namespace NetFusion.Rest.Server.Plugin
             // Call configure delegate on configuration if specified.
             if (configure != null)
             {
-                RestApiConfig config = composite.GetPluginConfig<RestApiConfig>();
-                configure(config);
+                composite.InitPluginConfig(configure);
             }
             
             return composite;

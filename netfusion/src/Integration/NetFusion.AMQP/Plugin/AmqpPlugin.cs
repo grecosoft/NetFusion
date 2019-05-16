@@ -28,19 +28,12 @@ namespace NetFusion.AMQP.Plugin
     {
         public static ICompositeContainerBuilder AddAmqp(this ICompositeContainerBuilder composite)
         {
-            // Add dependent plug-ins:
-            composite
+            return composite
                 .AddSettings()
-                .AddMessaging();
-            
-            // Add AMQP plugin:
-            composite.AddPlugin<AmqpPlugin>();
-            
-            // Integrate with base messaging plugin:
-            var dispatchConfig = composite.GetPluginConfig<MessageDispatchConfig>();
-            dispatchConfig.AddPublisher<HostMessagePublisher>();
-            
-            return composite;
+                .AddMessaging()
+                .AddPlugin<AmqpPlugin>()
+                .InitPluginConfig<MessageDispatchConfig>(config => 
+                    config.AddPublisher<HostMessagePublisher>());
         }
     }
 }

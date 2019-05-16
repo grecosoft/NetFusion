@@ -34,19 +34,12 @@ namespace NetFusion.Redis.Plugin
         /// <returns>Reference to the composite container builder.</returns>
         public static ICompositeContainerBuilder AddRedis(this ICompositeContainerBuilder composite)
         {
-            // Add dependent plugins:
-            composite
+            return composite
                 .AddSettings()
-                .AddMessaging();
-            
-            // Add Redis plugin:
-            composite.AddPlugin<RedisPlugin>();
-            
-            // Integrate with base messaging plugin:
-            var dispatchConfig = composite.GetPluginConfig<MessageDispatchConfig>();
-            dispatchConfig.AddPublisher<RedisPublisher>();
-            
-            return composite;
+                .AddMessaging()
+                .AddPlugin<RedisPlugin>()
+                .InitPluginConfig<MessageDispatchConfig>(config => 
+                    config.AddPublisher<RedisPublisher>());
         }
     }
 }

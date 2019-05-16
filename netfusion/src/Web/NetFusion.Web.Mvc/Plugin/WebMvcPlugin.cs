@@ -24,7 +24,8 @@ namespace NetFusion.Web.Mvc.Plugin
     
     public static class CompositeBuilderExtensions
     {
-        public static ICompositeContainerBuilder AddWebMvc(this ICompositeContainerBuilder composite, Action<WebMvcConfig> configure = null)
+        public static ICompositeContainerBuilder AddWebMvc(this ICompositeContainerBuilder composite, 
+            Action<WebMvcConfig> configure = null)
         {
             // Add the MVC Plugin:
             composite.AddPlugin<WebMvcPlugin>();
@@ -32,8 +33,7 @@ namespace NetFusion.Web.Mvc.Plugin
             // Call configure delegate on configuration if specified.
             if (configure != null)
             {
-                var config = composite.GetPluginConfig<WebMvcConfig>();
-                configure(config);
+                composite.InitPluginConfig(configure);
             }
             
             return composite;
