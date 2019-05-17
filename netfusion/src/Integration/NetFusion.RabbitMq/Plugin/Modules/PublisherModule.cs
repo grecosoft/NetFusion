@@ -62,14 +62,12 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             _messageExchanges = definitions.ToDictionary(m => m.MessageType);
         } 
 
-        protected override Task OnStartModuleAsync(IServiceProvider services)
+        protected override async Task OnStartModuleAsync(IServiceProvider services)
         {
             foreach (IRpcClient client in _exchangeRpcClients.Values)
             {
-                client.CreateAndSubscribeToReplyQueue();
+                await client.CreateAndSubscribeToReplyQueueAsync();
             }
-
-            return base.OnStartModuleAsync(services);
         }
 
         public bool IsExchangeMessage(Type messageType)

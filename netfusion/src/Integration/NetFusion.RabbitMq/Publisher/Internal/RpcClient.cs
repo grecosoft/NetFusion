@@ -117,12 +117,12 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             msgProps.SetRpcActionNamespace(createdExchange.Definition.ActionNamespace);
         }
 
-        public void CreateAndSubscribeToReplyQueue()
+        public async Task CreateAndSubscribeToReplyQueueAsync()
         {
             // Creates a reply queue specific for the application on which it will receive
             // command replies.  This queue is on the default exchange and will be deleted
             // with the host application terminates.
-            var queue = Bus.Advanced.QueueDeclare(ReplyToQueueName,
+            var queue = await Bus.Advanced.QueueDeclareAsync(ReplyToQueueName,
                 passive: false,
                 durable: false,
                 exclusive: true,

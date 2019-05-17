@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using EasyNetQ;
 using EasyNetQ.Topology;
 using Moq;
@@ -14,12 +15,12 @@ namespace IntegrationTests.RabbitMQ
         public List<QueueMeta> CreatedQueues { get; } = new List<QueueMeta>();
         public List<MessageQueueSubscriber> Subscribers { get; } = new List<MessageQueueSubscriber>();
 
-        protected override IQueue QueueDeclare(IBus bus, QueueMeta queueMeta)
+        protected override Task<IQueue> QueueDeclareAsync(IBus bus, QueueMeta queueMeta)
         {
             CreatedQueues.Add(queueMeta);
             
             var mockQueue = new Mock<IQueue>();
-            return mockQueue.Object;
+            return Task.FromResult(mockQueue.Object);
         }
         
         protected override void ConsumeMessageQueue(IBus bus, IQueue queue, MessageQueueSubscriber subscriber)

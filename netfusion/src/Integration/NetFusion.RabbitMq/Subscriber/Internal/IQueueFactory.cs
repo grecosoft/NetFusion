@@ -15,6 +15,6 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         /// Called when a message is received on the queue.
         /// </summary>
         /// <param name="context">The context of the received message.</param>
-        Task OnMessageReceived(ConsumeContext context);
+        Task OnMessageReceivedAsync(ConsumeContext context);
     }
 }

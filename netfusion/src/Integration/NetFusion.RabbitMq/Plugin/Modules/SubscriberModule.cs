@@ -19,8 +19,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
     /// Plugin module responsible for determining message handler methods that should be 
     /// subscribed to queues.  Any IMessageConsumer class method decorated with a derived 
     /// SubscriberQueue attribute is considered a handler that should be bound to a queue.
-    /// 
-    /// https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#bootstrapping---modules
     /// </summary>
     public class SubscriberModule : PluginModule
     {
@@ -32,7 +30,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         // Message handlers subscribed to queues:
         private MessageQueueSubscriber[] _subscribers;
 
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#startmodule
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {
             // Dependent modules:
@@ -41,9 +38,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             _serializationManager = services.GetRequiredService<ISerializationManager>();
 
             _subscribers = GetQueueSubscribers(_messagingModule);
-            SubscribeToQueues(_busModule, _subscribers);
-
-            return base.OnStartModuleAsync(services);
+            return SubscribeToQueues(_busModule, _subscribers);
         }
         
         // Delegates to the core message dispatch module to find all message dispatch
@@ -60,7 +55,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         
         // For each message handler identified as being associated with an exchange/queue, create the
         // exchange and queue then bind it to the in-process handler. 
-        private void SubscribeToQueues(IBusModule busModule, IEnumerable<MessageQueueSubscriber> subscribers)
+        private async Task SubscribeToQueues(IBusModule busModule, IEnumerable<MessageQueueSubscriber> subscribers)
         {
             // Tacks the RPC queue that have been already bound.  For a given named RPC queue, we only
             // want to bind once since the command action namespace is used to determine the actual
@@ -78,7 +73,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 }
                 
                 var bus = busModule.GetBus(subscriber.QueueMeta.Exchange.BusName);
-                IQueue queue = QueueDeclare(bus, subscriber.QueueMeta);
+                IQueue queue = await QueueDeclareAsync(bus, subscriber.QueueMeta);
                 
                 ConsumeMessageQueue(bus, queue, subscriber);
                 
@@ -89,7 +84,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             }
         }
 
-        protected virtual IQueue QueueDeclare(IBus bus, QueueMeta queueMeta)
+        protected virtual Task<IQueue> QueueDeclareAsync(IBus bus, QueueMeta queueMeta)
         {
             return bus.Advanced.QueueDeclare(queueMeta);
         }
@@ -117,7 +112,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
                         // Delegate to the queue factory, associated with the definition, and 
                         // allow it to determine how the received message should be processed. 
-                        return definition.QueueFactory.OnMessageReceived(consumerContext);
+                        return definition.QueueFactory.OnMessageReceivedAsync(consumerContext);
                     }, 
                     config => 
                     {
@@ -162,7 +157,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             return matchingDispatchers.First().DispatchInfo;
         }
 
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#log
         public override void Log(IDictionary<string, object> moduleLog)
         {
             moduleLog["Subscriber:Queues"] = _subscribers.Select(s =>

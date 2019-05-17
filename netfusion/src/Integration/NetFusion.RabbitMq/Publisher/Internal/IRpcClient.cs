@@ -29,6 +29,6 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         /// Should create a queue on the default exchange to which the consumer of the
         /// command can publish the response.
         /// </summary>
-        void CreateAndSubscribeToReplyQueue();
+        Task CreateAndSubscribeToReplyQueueAsync();
     }
 }

@@ -37,7 +37,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         // matching queue name and action-namespace.  This is unlike the other message patterns where a queue 
         // is associated directly with only a single handler.  This allows for several RPC style commands to
         // use the same queue.  This allows for more efficient use of queues.
-        public async Task OnMessageReceived(ConsumeContext context)
+        public async Task OnMessageReceivedAsync(ConsumeContext context)
         {
             MessageDispatchInfo rpcCommandHandler = GetDispatchInfoForRpcCommand(context);
             var message = context.DeserializeIntoMessage(rpcCommandHandler.MessageType);

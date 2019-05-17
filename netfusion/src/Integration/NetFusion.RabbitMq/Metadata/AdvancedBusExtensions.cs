@@ -59,7 +59,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// <param name="bus">Reference to the advanced bus.</param>
         /// <param name="meta">The metadata describing the queue.</param>
         /// <returns>Reference to the created queue.</returns>
-        public static IQueue QueueDeclare(this IAdvancedBus bus, QueueMeta meta)
+        public static async Task<IQueue> QueueDeclare(this IAdvancedBus bus, QueueMeta meta)
         {
             if (bus == null) throw new ArgumentNullException(nameof(bus));
             if (meta == null) throw new ArgumentNullException(nameof(meta));
@@ -69,14 +69,14 @@ namespace NetFusion.RabbitMQ.Metadata
             
             if (! meta.Exchange.IsDefaultExchange)
             {
-                exchange = bus.ExchangeDeclare(exchangeMeta.ExchangeName, exchangeMeta.ExchangeType, 
+                exchange = await bus.ExchangeDeclareAsync(exchangeMeta.ExchangeName, exchangeMeta.ExchangeType, 
                     durable: exchangeMeta.IsDurable,
                     autoDelete: exchangeMeta.IsAutoDelete, 
                     passive: exchangeMeta.IsPassive,
                     alternateExchange: exchangeMeta.AlternateExchangeName);
             }
             
-            IQueue queue = bus.QueueDeclare(meta.ScopedQueueName, 
+            IQueue queue = await bus.QueueDeclareAsync(meta.ScopedQueueName, 
                 durable: meta.IsDurable,
                 autoDelete: meta.IsAutoDelete,
                 exclusive: meta.IsExclusive,
@@ -105,7 +105,7 @@ namespace NetFusion.RabbitMQ.Metadata
             } 
             else 
             {
-                bus.Bind(exchange, queue, string.Empty);
+                await bus.BindAsync(exchange, queue, string.Empty);
             }
             
             return queue;
