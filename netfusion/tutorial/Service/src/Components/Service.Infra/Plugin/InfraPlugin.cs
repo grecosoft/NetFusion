@@ -1,4 +1,5 @@
 using NetFusion.Bootstrap.Plugins;
+using Service.Infra.Plugin.Modules;
 
 namespace Service.Infra.Plugin
 {

@@ -144,10 +144,13 @@ namespace NetFusion.Messaging.Core
 
         private Task InvokeDispatcher(MessageDispatchInfo dispatcher, IMessage message, CancellationToken cancellationToken)
         {
-            _logger.LogTrace(
-                $"Dispatching message Type: {message.GetType()} to Consumer: { dispatcher.ConsumerType } " +
-                $"Method: { dispatcher.MessageHandlerMethod.Name} ");
-
+            if (!_logger.IsEnabled(LogLevel.Trace))
+            {
+                _logger.LogDebug(
+                    $"Dispatching message Type: {message.GetType()} to Consumer: { dispatcher.ConsumerType } " +
+                    $"Method: { dispatcher.MessageHandlerMethod.Name} ");
+            }
+            
             var consumer = (IMessageConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
             return dispatcher.Dispatch(message, consumer, cancellationToken);
         }

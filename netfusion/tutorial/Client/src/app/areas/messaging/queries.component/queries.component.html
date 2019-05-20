@@ -1,0 +1,65 @@
+<nav-toolbar [isDisplayed]="true"></nav-toolbar>
+<div class="area-content">
+    <div class="plugin-summary">
+        <h1 class="section-header">Plugin Summary</h1>
+        <div class="portal-definition-list">
+            <dl class="version-info">
+                <dt>Nuget Package</dt><dd>{{nugetPackageName}}</dd>
+                <dt>Documentation</dt><dd><a href="{{documentationUrl}}" target="_blank">View</a></dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="plugin-overview">
+        <h1 class="section-header">Overview</h1>
+        <ul>
+            <li>Queries represent  a request for resources managed by an application service.</li>
+            <li>Queries have an associated result.</li>
+            <li>Unlike Commands and Domain Events, queries are always handled in-process.  
+                However, the handler will usually delegate to an external source such as a database.
+            </li>
+            <li>Queries can have only one associated handler.</li>
+            <li>
+                Query handler methods can be synchronous or asynchronous based on the code it 
+                needs to call.  However, from the perspective of the code dispatching the query, 
+                the result is always asynchronous.  This decouples the caller from the handler 
+                and allows the handling code to change overtime without having to refactor any 
+                of the calling code.  
+            </li>
+        </ul>
+    </div>
+
+    <div class="plugin-usage">
+        <h1 class="section-header">Usage Summary</h1>
+        <ul>
+            <li>Queries are defined by implementing the IQuery interface.  The base abstract Query
+                class provided a default implementation from which queries can be derived.
+            </li>
+            <li>It is best for queries to be simple POCOS that are immutable.</li>
+            <li>Queries are dispatched by calling the Dispatch method on the IMessaging service contract.</li>
+            <li>The handling of queries should be streamlined for read access and void of any heavy processing.</li>
+            <li>Often, repositories will directly handle queries if there is no associated business logic.
+                However, if there is associated business logic that needs to be applied to the results, the
+                query can be handled by an application-component which delegates to the repository.
+            </li>
+        </ul>
+    </div>
+
+    <div class="plugin-examples">
+        <h1 class="section-header">Dispatching Queries</h1>
+        <p>
+        
+        </p>
+        <ul>
+            <li></li>
+            <li></li>
+        </ul>
+        <div class="plugin-example">
+            <h2 class="section-header">Subscribing to Queries</h2>
+            <ul>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -52,7 +52,7 @@ namespace NetFusion.Builder
             return this;
         }
 
-        public ICompositeContainerBuilder InitConfig<T>(Action<T> configure) where T : IPluginConfig
+        public ICompositeContainerBuilder InitContainerConfig<T>(Action<T> configure) where T : IPluginConfig
         {
             if (configure == null) throw new ArgumentNullException(nameof(configure));
             

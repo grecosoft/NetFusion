@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>7</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Solution.Context.Domain\Solution.Context.Domain.csproj" />
@@ -11,10 +11,10 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="3.2.95" />
-    <PackageReference Include="NetFusion.Base" Version="3.2.95" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.95" />
-    <PackageReference Include="NetFusion.Settings" Version="3.2.95" />
-    <PackageReference Include="NetFusion.Messaging" Version="3.2.95" />
+    <PackageReference Include="NetFusion.Common" Version="1.0.0" />
+    <PackageReference Include="NetFusion.Base" Version="1.0.0" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="1.0.0" />
+    <PackageReference Include="NetFusion.Settings" Version="1.0.0" />
+    <PackageReference Include="NetFusion.Messaging" Version="1.0.0" />
   </ItemGroup>
 </Project>

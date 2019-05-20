@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Dependencies;
 using NetFusion.Bootstrap.Plugins;
 
-namespace Service.Infra.Plugin
+namespace Service.Infra.Plugin.Modules
 {
     // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.modules#bootstrapping---modules
 

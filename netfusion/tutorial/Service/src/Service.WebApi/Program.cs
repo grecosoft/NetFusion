@@ -51,8 +51,8 @@ namespace Service.WebApi
 
             if (context.HostingEnvironment.IsDevelopment())
             {
-                builder.AddDebug().SetMinimumLevel(LogLevel.Debug);
-                builder.AddConsole().SetMinimumLevel(LogLevel.Debug);
+                builder.AddDebug().SetMinimumLevel(LogLevel.Trace);
+                builder.AddConsole().SetMinimumLevel(LogLevel.Trace);
             }
             else
             {

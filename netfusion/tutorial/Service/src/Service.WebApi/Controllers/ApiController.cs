@@ -10,6 +10,8 @@ using Service.Domain.Entities;
 using Service.Domain.Events;
 using Service.WebApi.Controllers.Core;
 using Service.WebApi.Controllers.Integration;
+using Service.WebApi.Controllers.Messaging;
+using Service.WebApi.Models;
 
 #pragma warning disable 4014
 namespace Service.WebApi.Controllers
@@ -67,8 +69,10 @@ namespace Service.WebApi.Controllers
                     meta.UrlTemplate<AutoSaleCompleted, Task>("rabbit-topic", c => c.RecordAutoSale);
                     meta.UrlTemplate<TemperatureReading, Task>("rabbit-fanout", c => c.TempReading);
                     meta.UrlTemplate<SendEmail, Task>("rabbit-queue", c => c.SendEmail);
+                    
                     meta.UrlTemplate<CalculatePropertyTax, Task<TaxCalc>>("rabbit-rpc-property",
                         c => c.CalculatePropertyTax);
+                    
                     meta.UrlTemplate<CalculateAutoTax, Task<TaxCalc>>("rabbit-rpc-auto", c => c.CalculateAutoTax);
                 })
                 .LinkMeta<RedisPublisherController>(meta =>
@@ -79,6 +83,14 @@ namespace Service.WebApi.Controllers
                 {
                     meta.UrlTemplate<RedisDataController.SetValue, Task>("set-value", c => c.AddValue);
                     meta.UrlTemplate<Task<RedisDataController.SetValue>>("pop-value", c => c.PopValue);
+                })
+                .LinkMeta<CommandController>(meta =>
+                {
+                   meta.UrlTemplate<RangeModel, Task<IActionResult>>("messaging-command", c => c.GetRanges);
+                })
+                .LinkMeta<DomainEventController>(meta =>
+                {
+                    meta.UrlTemplate<AccountModel, Task<IActionResult>>("messaging-domain-event", c => c.CreateAccount);
                 })
                 .LinkMeta<AmqpController>(meta =>
                 {

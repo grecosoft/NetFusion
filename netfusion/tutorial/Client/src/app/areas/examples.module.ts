@@ -24,22 +24,36 @@ import { EntityExpressionsComponent } from './base/entity-expressions.component/
 import { AmqpPublisherComponent } from './amqp/amqp-publisher.component/amqp-publisher.component';
 import { AmqpConsumerComponent } from './amqp/amqp-consumer.component/amqp-consumer.component';
 import { AmqpService } from './amqp/AmqpService';
+import { CommandsComponent } from './messaging/commands.component/commands.component';
+import { DomainEventsComponent } from './messaging/domain-events.component/domain-events.component';
+import { QueriesComponent } from './messaging/queries.component/queries.component';
+import { EnrichersComponent } from './messaging/enrichers/enrichers.component';
+import { MessagingService } from './messaging/MessagingService';
 
 const areaRoutes: Routes = [
+    { path: 'overview/composite-log', component: CompositeLogComponent },
     { path: 'settings', component: SettingsComponent },
     { path: 'mongodb', component: MongoDbComponent },
+
+    { path: 'base/attrib-entity', component: AttributedEntityComponent },
+    { path: 'base/entity-exp', component: EntityExpressionsComponent },
+
+    { path: 'messaging/commands', component: CommandsComponent },
+    { path: 'messaging/domain-events', component: DomainEventsComponent },
+    { path: 'messaging/queries', component: QueriesComponent },
+    { path: 'messaging/enrichers', component: EnrichersComponent },
+
     { path: 'rabbitmq/direct', component: RabbitMqDirectComponent },
     { path: 'rabbitmq/topic', component: RabbitMqTopicComponent },
     { path: 'rabbitmq/fanout', component: RabbitMqFanoutComponent },
     { path: 'rabbitmq/queue', component: RabbitMqQueueComponent },
     { path: 'rabbitmq/rpc', component: RabbitMqRpcComponent },
-    { path: 'redis/data', component: RedisDataComponent },
-    { path: 'redis/channels', component: RedisChannelsComponent },
-    { path: 'overview/composite-log', component: CompositeLogComponent },
-    { path: 'base/attrib-entity', component: AttributedEntityComponent },
-    { path: 'base/entity-exp', component: EntityExpressionsComponent },
+
     { path: 'amqp/publisher', component: AmqpPublisherComponent },
     { path: 'amqp/consumer', component: AmqpConsumerComponent },
+
+    { path: 'redis/data', component: RedisDataComponent },
+    { path: 'redis/channels', component: RedisChannelsComponent },
   ];
 
 @NgModule({
@@ -55,6 +69,11 @@ const areaRoutes: Routes = [
 
         AttributedEntityComponent,
         EntityExpressionsComponent,
+
+        CommandsComponent,
+        DomainEventsComponent,
+        QueriesComponent,
+        EnrichersComponent,
 
         SettingsComponent,
         MongoDbComponent,
@@ -79,6 +98,11 @@ const areaRoutes: Routes = [
         AttributedEntityComponent,
         EntityExpressionsComponent,
 
+        CommandsComponent,
+        DomainEventsComponent,
+        QueriesComponent,
+        EnrichersComponent,
+
         RabbitMqDirectComponent,
         RabbitMqTopicComponent,
         RabbitMqFanoutComponent,
@@ -99,7 +123,8 @@ const areaRoutes: Routes = [
         AmqpService,
         GitHubService,
         RedisService,
-        OverviewService
+        OverviewService,
+        MessagingService
     ]
 })
 export class ExamplesModule {

@@ -26,7 +26,7 @@ namespace NetFusion.Bootstrap.Container
         /// <typeparam name="T">The type of the configuration to initialize.</typeparam>
         /// <returns>Reference to the builder.  If the specified configuration is not
         /// registered at the container level, an exception is raised.</returns>
-        ICompositeContainerBuilder InitConfig<T>(Action<T> configure) where T : IPluginConfig;
+        ICompositeContainerBuilder InitContainerConfig<T>(Action<T> configure) where T : IPluginConfig;
 
         /// <summary>
         /// Can be called by the host when bootstrapping the application to configure

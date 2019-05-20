@@ -49,6 +49,13 @@ export class Portal {
             new AreaMenuItem("entity-expressions", "Entity Expressions", "applications", "areas/core/base/entity-exp")
         ]));
 
+        menuDefinition.defineArea(new ApplicationArea("messaging", "Messaging", "device", [
+            new AreaMenuItem("commands", "Commands", "applications", "areas/core/messaging/commands"),
+            new AreaMenuItem("domain-events", "Domain Events", "applications", "areas/core/messaging/domain-events"),
+            new AreaMenuItem("queries", "Queries", "applications", "areas/core/messaging/queries"),
+            new AreaMenuItem("enrichers", "Enrichers", "applications", "areas/core/messaging/enrichers")
+        ]));
+
         menuDefinition.defineArea(new ApplicationArea("qmqp", "AMQP", "device", [
             new AreaMenuItem("amqp-publisher", "Publisher", "applications", "areas/core/amqp/publisher"),
             new AreaMenuItem("amqp-consumer", "Consumer", "applications", "areas/core/amqp/consumer")
