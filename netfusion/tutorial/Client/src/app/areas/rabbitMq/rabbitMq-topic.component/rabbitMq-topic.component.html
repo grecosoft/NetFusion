@@ -43,7 +43,7 @@
             <li>Publisher defines a derived <code-viewer type="net-fusion" name="Integration/NetFusion.RabbitMq/Publisher/ExchangeRegistryBase.cs">ExchangeRegistryBase</code-viewer> class used to specify to which exchange a domain event should be delivered when published.</li>
             <li>The common <code-viewer type="net-fusion" name="Core/NetFusion.Messaging/IMessagingService.cs">IMessagingService</code-viewer> implementation routes all domain events with a defined registry entry to RabbitMQ.</li>
             <li>As with in-process messaging, subscribers associate method handlers to be invoked when a domain event is received.</li>
-            <li>The subscriber decorates a method with the <code-viewer type="net-fusion" name="Integration/NetFusion.RabbitMq/Subscriber/TopicQueueAttribute.cs">TopicQueueAttribute</code-viewer> specifying the route-key(s) for which messages,with a matching route-key value, should be delivered.</li>
+            <li>The subscriber decorates a method with the <code-viewer type="net-fusion" name="Integration/NetFusion.RabbitMq/Subscriber/TopicQueueAttribute.cs">TopicQueueAttribute</code-viewer> specifying the route-key(s) for which messages, with a matching route-key value, should be delivered.</li>
             <li>The TopicQueueAttribute will create a queue and bind it to the exchange using the specified route-key values.</li>
         </ul>
     </div>
@@ -60,8 +60,11 @@
     <div class="plugin-examples">
         <h1 class="section-header">Examples</h1>
         <p>
-            This example invokes a <code-viewer type="tutorial-webapi" name="Controllers/Integration/RabbitMqController.cs">WebApi controller</code-viewer> that publishes the <code-viewer type="tutorial-components" name="Service.Domain/Events/AutoSaleCompleted.cs">AutoSaleCompleted</code-viewer> domain-event where the Make, Model, and Year properties
-            of the domain event are used as the route-key value.  The subscribing console application, withing the <code-viewer type="tutorial-client" name="Handlers/SampleTopicHandler.cs">SampleTopicHandler</code-viewer> handler defines two queues with the specified patterns:            
+            This example invokes a <code-viewer type="tutorial-webapi" name="Controllers/Integration/RabbitMqController.cs">WebApi controller</code-viewer> that publishes the 
+            <code-viewer type="tutorial-components" name="Service.Domain/Events/AutoSaleCompleted.cs">AutoSaleCompleted</code-viewer> domain-event where the Make, Model, and Year properties
+            of the domain event are used as the route-key value.  The publisher defines a <code-viewer type="tutorial-components" name="Service.Infra/ExchangeRegistry.cs">Registry</code-viewer> used
+            to specify the queue to which the domain-event is associated.  The subscribing console application, withing the <code-viewer type="tutorial-client" name="Handlers/SampleTopicHandler.cs">SampleTopicHandler</code-viewer> 
+            handler defines two queues with the specified patterns:            
         </p>
         <dl>
             <dt>GermanAutoSales</dt><dd>VW.*.2017, Buick.*.2019</dd>

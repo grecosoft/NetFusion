@@ -19,7 +19,7 @@
                 Unlike the previous discussed exchanges and queues, that are completely asynchronous, the RPC message 
                 style requires the publisher sending the command to wait until the RPC command response is returned.
             </li>
-            <li>the publisher can preform other non-dependent tasks while waiting for the response.</li>
+            <li>The publisher can preform other non-dependent tasks while waiting for the response.</li>
             <li>
                 This message pattern is more complex since it utilizes two queues. One queue defined by the consumer 
                 is used to receive command message requests. The other queue is dynamically created by the publisher 
@@ -56,22 +56,25 @@
     <div class="plugin-suggestions">
         <h1 class="section-header">Suggestions</h1>
         <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
+            <li>Commands should be simple POCO classes containing only the properties required by the consumer to handle the request and generate a response.</li>
+            <li>It often best that the publisher and consumer don't share C# types but each define types having the same serializable structures.</li>
+            <li>This messaging pattern couples the publisher to the consumer and its use limited.</li>
         </ul>
     </div>
     <div class="plugin-examples">
         <h1 class="section-header">Examples</h1>
         <p>
-            Overview... 
+            The following two commands used to calculate taxes are both sent to the TaxCalculations queue.
         </p>
+        <ul>
+            <li>The publisher specifies the queue and namespace for the command with the following <code-viewer type="tutorial-components" name="Service.Infra/ExchangeRegistry.cs">Registry</code-viewer>.</li>
+            <li>The subscriber defines the <code-viewer type="tutorial-client" name="Handlers/SampleRpcHandler.cs">SampleRpcHandler</code-viewer>.</li>
+            <li>The publisher sends the commands a <code-viewer type="tutorial-webapi" name="Controllers/Integration/RabbitMqController.cs">WebApi Controller</code-viewer>.</li>
+        </ul>
         <div class="plugin-example">
             <h2 class="section-header">Send Auto Tax Command</h2>
             <p>
-                Description... 
+                When this <code-viewer type="tutorial-components" name="Service.Domain/Commands/CalculateAutoTax.cs">command</code-viewer> is sent, it is tagged with the Business.Calcs.Taxes.Auto namespace.
             </p>
             <div class="inputs">
                 <div>
@@ -79,15 +82,12 @@
                 </div> 
                 <button type="submit" mat-raised-button (click)="onSendAutoCommand()" color="primary">Send</button>
             </div>
-            <div class="results">
-                <json-viewer [json]="newCommandResult" class="viewer"></json-viewer>
-            </div>
         </div>
 
         <div class="plugin-example">
             <h2 class="section-header">Send Property Tax Command</h2>
             <p>
-                Description... 
+                When this <code-viewer type="tutorial-components" name="Service.Domain/Commands/CalculatePropertyTax.cs">command</code-viewer> is sent, it is tagged with the Business.Calcs.Taxes.Property namespace.
             </p>
             <div class="inputs">
                 <div>
@@ -95,9 +95,9 @@
                 </div> 
                 <button type="submit" mat-raised-button (click)="onSendPropertyCommand()" color="primary">Send</button>
             </div>
-            <div class="results">
-                <json-viewer [json]="newCommandResult" class="viewer"></json-viewer>
-            </div>
+        </div>
+        <div class="results">
+            <json-viewer [json]="newCommandResult" class="viewer"></json-viewer>
         </div>
     </div>
 </div>

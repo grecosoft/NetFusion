@@ -57,8 +57,9 @@
         <h1 class="section-header">Examples</h1>
         <p>
             This example invokes a <code-viewer type="tutorial-webapi" name="Controllers/Integration/RabbitMqController.cs">WebApi controller</code-viewer> that 
-            publishes a <code-viewer type="tutorial-components" name="Service.Domain/Events/PropertySold.cs">PropertySold</code-viewer> where the State property
-            of the domain event is used as the route-key value.  The subscribing console application defines two queues for domain events occurring
+            publishes a <code-viewer type="tutorial-components" name="Service.Domain/Events/PropertySold.cs">PropertySold</code-viewer> domain-event where the State property
+            of the domain event is used as the route-key value.  The publisher defines a <code-viewer type="tutorial-components" name="Service.Infra/ExchangeRegistry.cs">Registry</code-viewer> used
+            to specify the queue to which the domain-event is associated.  The subscribing console application defines two queues for domain events occurring
             in the North-East and South-East.  This code is contained within the <code-viewer type="tutorial-client" name="Handlers/SampleDirectHandler.cs">SampleDirectHandler</code-viewer> handler.
         </p>
         <div class="plugin-example">

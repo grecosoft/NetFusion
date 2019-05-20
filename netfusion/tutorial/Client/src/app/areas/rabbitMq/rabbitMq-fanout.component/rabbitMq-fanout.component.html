@@ -57,7 +57,8 @@
         <h1 class="section-header">Examples</h1>
         <p>
             This example invokes a <code-viewer type="tutorial-webapi" name="Controllers/Integration/RabbitMqController.cs">WebApi controller</code-viewer> that 
-            publishes a <code-viewer type="tutorial-components" name="Service.Domain/Events/TemperatureReading.cs">TemperatureReading</code-viewer> representing a temperature reading.  
+            publishes a <code-viewer type="tutorial-components" name="Service.Domain/Events/TemperatureReading.cs">TemperatureReading</code-viewer> representing a temperature reading.
+            The publisher defines a <code-viewer type="tutorial-components" name="Service.Infra/ExchangeRegistry.cs">Registry</code-viewer> used to specify the queue to which the domain-event is associated.  
             The subscribing console application defines a queue within the <code-viewer type="tutorial-client" name="Handlers/SampleFanoutHandler.cs">SampleFanoutHandler</code-viewer> handler.
         </p>
         <div class="plugin-example">
