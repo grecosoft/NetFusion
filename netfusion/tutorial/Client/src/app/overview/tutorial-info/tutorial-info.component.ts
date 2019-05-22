@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
     templateUrl: './tutorial-info.component.html',
-    styleUrls: ['../../area.scss'] 
+    styleUrls: ['../../areas/area.scss'] 
 })
 export class TutorialInfoComponent {
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OverviewService } from '../../../overview/OverviewService';
+import { OverviewService } from '../OverviewService';
 
 @Component({
     templateUrl: './composite-log.component.html',

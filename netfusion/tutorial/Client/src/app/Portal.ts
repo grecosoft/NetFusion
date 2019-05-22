@@ -20,7 +20,7 @@ export class Portal {
 
     public static defineAreas(menuDefinition: MenuDefinitionService) {
         menuDefinition.defineArea(new ApplicationArea("overview", "Overview", "device", [
-            new AreaMenuItem("tutorial-info", "Tutorial", "applications", "areas/core/overview/tutorial-info")
+            new AreaMenuItem("tutorial-info", "Tutorial", "applications", "overview/tutorial-info")
         ]));
 
         menuDefinition.defineArea(new ApplicationArea("bootstrapping", "Bootstrapping", "device", [
@@ -50,25 +50,25 @@ export class Portal {
         ]));
 
         menuDefinition.defineArea(new ApplicationArea("mongodb", "MongoDB", "device", [
-            new AreaMenuItem("mongodb-example", "Examples", "applications", "areas/core/mongodb"),
+            new AreaMenuItem("mongodb-example", "Examples", "applications", "areas/integration/mongodb"),
         ]));
 
         menuDefinition.defineArea(new ApplicationArea("rabbitmq", "RabbitMQ", "device", [
-            new AreaMenuItem("rabbitmq-direct", "Direct", "applications", "areas/core/rabbitmq/direct"),
-            new AreaMenuItem("rabbitmq-topic", "Topic", "applications", "areas/core/rabbitmq/topic"),
-            new AreaMenuItem("rabbitmq-fanout", "Fanout", "applications", "areas/core/rabbitmq/fanout"),
-            new AreaMenuItem("rabbitmq-queue", "Queue", "applications", "areas/core/rabbitmq/queue"),
-            new AreaMenuItem("rabbitmq-rpc", "Rpc", "applications", "areas/core/rabbitmq/rpc")
+            new AreaMenuItem("rabbitmq-direct", "Direct", "applications", "areas/integration/rabbitmq/direct"),
+            new AreaMenuItem("rabbitmq-topic", "Topic", "applications", "areas/integration/rabbitmq/topic"),
+            new AreaMenuItem("rabbitmq-fanout", "Fanout", "applications", "areas/integration/rabbitmq/fanout"),
+            new AreaMenuItem("rabbitmq-queue", "Queue", "applications", "areas/integration/rabbitmq/queue"),
+            new AreaMenuItem("rabbitmq-rpc", "Rpc", "applications", "areas/integration/rabbitmq/rpc")
         ]));
 
         menuDefinition.defineArea(new ApplicationArea("qmqp", "AMQP", "device", [
-            new AreaMenuItem("amqp-publisher", "Publisher", "applications", "areas/core/amqp/publisher"),
-            new AreaMenuItem("amqp-consumer", "Consumer", "applications", "areas/core/amqp/consumer")
+            new AreaMenuItem("amqp-publisher", "Publisher", "applications", "areas/integration/amqp/publisher"),
+            new AreaMenuItem("amqp-consumer", "Consumer", "applications", "areas/integration/amqp/consumer")
         ]));
 
         menuDefinition.defineArea(new ApplicationArea("redis", "Redis", "device", [
-            new AreaMenuItem("redis-data", "Data", "applications", "areas/core/redis/data"),
-            new AreaMenuItem("redis-channels", "Pub/Sub", "applications", "areas/core/redis/channels")
+            new AreaMenuItem("redis-data", "Data", "applications", "areas/integration/redis/data"),
+            new AreaMenuItem("redis-channels", "Pub/Sub", "applications", "areas/integration/redis/channels")
         ]));
 
         

@@ -23,12 +23,17 @@ import { NotificationService } from './common/services/NotificationService';
 import { DialogService } from './common/dialogs/DialogService';
 import { CommonAppModule } from './common/common.app.module';
 import { ServiceApi } from './api/ServiceApi';
+import { TutorialInfoComponent } from './overview/tutorial-info/tutorial-info.component';
 
 
 
 // Routes for the main application areas:
 const areaRoutes: Routes = [
-  { path: 'areas/core', loadChildren: 'src/app/areas/examples.module#ExamplesModule' }
+  { path: 'areas/integration', loadChildren: 'src/app/areas/integration/integration.module#IntegrationModule' },
+  
+  // { path: 'areas/core', loadChildren: 'src/app/areas/examples.module#ExamplesModule' },
+
+   { path: 'overview/tutorial-info', component: TutorialInfoComponent },
 ];
 
 // Bootstraps the application:
@@ -42,7 +47,8 @@ export function bootstrap_app(application: Application,
 // considered singleton services and shared across all application sub modules.
 @NgModule({
   declarations: [
-    PortalComponent
+    PortalComponent,
+    TutorialInfoComponent
   ],
   imports: [
     HttpClientModule,
@@ -56,6 +62,9 @@ export function bootstrap_app(application: Application,
 
     CommonAppModule,
     MaterialModule
+  ],
+  entryComponents: [
+    TutorialInfoComponent,
   ],
   providers: [
     Application,
