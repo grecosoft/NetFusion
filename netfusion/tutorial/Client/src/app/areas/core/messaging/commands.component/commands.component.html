@@ -1,0 +1,103 @@
+<nav-toolbar [isDisplayed]="true"></nav-toolbar>
+<div class="area-content">
+    <div class="plugin-summary">
+        <h1 class="section-header">Plugin Summary</h1>
+        <div class="portal-definition-list">
+            <dl class="version-info">
+                <dt>Nuget Package</dt><dd>{{nugetPackageName}}</dd>
+                <dt>Documentation</dt><dd><a href="{{documentationUrl}}" target="_blank">View</a></dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="plugin-overview">
+        <h1 class="section-header">Overview</h1>
+        <ul>
+            <li>Commands are a request for the execution of an action.</li>
+            <li>Commands update the state of resources managed by an application service.</li>
+            <li>Unlike domain events, commands can have an associated result returned
+                by the command handler.
+            </li>
+            <li>
+                When a command is handled by subscriber, it is common for a domain-event to 
+                be published notifying other application components of the state change.
+            </li>
+            <li>
+                Command handler methods can be synchronous or asynchronous based on the code it 
+                needs to call.  However, from the perspective of the code sending the  command, 
+                the result is always asynchronous.  This decouples the caller from the handler 
+                and allows the handling code to change overtime without having to refactor any 
+                of the calling code.  
+            </li>
+            <li>
+                The base implementation invokes command subscribers that are declared in-process to the
+                code invoking the command.  Other plugins, such as RabbitMQ and AMQP extend this base
+                pipeline allowing commands to be sent to queues and handled by out-of-process subscribers.
+            </li>
+            <li>A command can have only one in-process subscriber.</li>
+            <li>
+                Since other plugins can extend the base messaging pipeline, sending out-of-process 
+                commands are exactly the same as sending in-process commands.  The code sending the
+                command is completely decoupled from how the command is delivered.
+            </li>
+            <li>
+                Likewise, the subscribing to commands is the almost identical regardless of being handled 
+                in-process or out-of-process.  The only difference are attributes specified on command handler 
+                methods defined by the plug-ins extending the pipeline.  The attributes are used to specify, 
+                for example, the queue to which the command handler should be bound.  Also, the plug-ins extending 
+                the base pipeline usually provide a way of mapping a given command type to to an external messaging
+                concept, such as a queue, to which it is delivered when sent. 
+            </li>
+        </ul>
+    </div>
+
+    <div class="plugin-usage">
+        <h1 class="section-header">Usage Summary</h1>
+        <ul>
+            <li>Commands are defined by implementing the <code-viewer type="net-fusion" name="Core/NetFusion.Messaging.Types/ICommand.cs">ICommand</code-viewer> interface.  
+                The base abstract <code-viewer type="net-fusion" name="Core/NetFusion.Messaging.Types/Command.cs">Command</code-viewer> class provides a default implementation
+                from which commands can be derived.
+            </li>
+            <li>It is best for commands to be simple POCOS that are immutable.</li>
+            <li>Commands are often created from a REST Api request by the controller.</li>
+            <li>Commands are sent by calling the Send method on the <code-viewer type="net-fusion" name="Core/NetFusion.Messaging/IMessagingService.cs">IMessagingService</code-viewer>
+                service contract.
+            </li>
+            <li>
+                Commands are handled by component's implementing the <code-viewer type="net-fusion" name="Core/NetFusion.Messaging/IMessageConsumer.cs">IMessageConsumer</code-viewer>
+                marker interface with a method accepting a parameter of the command type to be handled. 
+                The method must also be decorated with the <code-viewer type="net-fusion" name="Core/NetFusion.Messaging/InProcessHandlerAttribute.cs">InProcessHandler</code-viewer> attribute.
+                The handler method can also have a CancellationToken passed as the second parameter. 
+            </li>
+        </ul>
+    </div>
+
+    <div class="plugin-examples">
+        <h1 class="section-header">Examples</h1>
+        <p>
+            This example defines a command containing an array of integers from which the handler calculates the range.
+            The WebApi allows two sets of integers to be passed.  The controller transforms the posted model into two
+            commands - one for each set of values.  The controller sends each command at the same time and awaits their
+            completion.  To involve an asynchronous call, the handler delays for 5 seconds.  If either array of integers
+            contains zero elements, an exception is thrown for the range calculation.
+        </p>
+        <div class="plugin-example">
+            <h2 class="section-header">Sending Command</h2>
+            <ul>
+                <li>The <code-viewer type="tutorial-components" name="Service.Domain/Commands/CalculateRange.cs">CalculateRange</code-viewer> class derives from the base Command class.</li>
+                <li>The CalculateRange class specifies Range as it result class. </li>
+                <li>The <code-viewer type="tutorial-webapi" name="Controllers/Messaging/CommandController.cs">CommandController</code-viewer> sends the command using the IMessagingService contract.</li>
+                <li>The <code-viewer type="tutorial-components" name="Service.App/Handlers/RangeHandler.cs">RangeHandler</code-viewer> class shows an example of the command being handled.</li>
+            </ul>
+            <div class="inputs">
+                    <div>
+                        <textarea [(ngModel)]="newCommandBody"></textarea>
+                    </div> 
+                    <button type="submit" mat-raised-button (click)="onSendCommand()" color="primary">Send</button>
+                </div>
+                <div class="results">
+                    <json-viewer [json]="newCommandResult" class="viewer"></json-viewer>
+                </div>
+        </div>
+    </div>
+</div>

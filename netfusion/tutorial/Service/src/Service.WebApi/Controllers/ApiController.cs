@@ -92,6 +92,10 @@ namespace Service.WebApi.Controllers
                 {
                     meta.UrlTemplate<AccountModel, Task<IActionResult>>("messaging-domain-event", c => c.CreateAccount);
                 })
+                .LinkMeta<QueryController>(meta =>
+                {
+                    meta.UrlTemplate<int, Task<IActionResult>>("messaging-query", c => c.GetCustomerAddresses);
+                })
                 .LinkMeta<AmqpController>(meta =>
                 {
                     meta.Url("amqp-send-command", (c, r) => c.SendClaimSubmission(null));

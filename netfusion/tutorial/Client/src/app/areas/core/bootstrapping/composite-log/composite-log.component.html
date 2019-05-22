@@ -1,0 +1,14 @@
+<nav-toolbar [isDisplayed]="true"></nav-toolbar>
+
+<div class="section-notes">
+    The following shows a composite log associated with the web application to which the tutorial examples communicate.
+    This composite log shows details of all of the plugins from which the web application is composed.  Since the web
+    application proves examples for all the available plugins, there will be several entries in the log.  A business
+    application service will only compose the application from plugins it needs.  The composite log only shows the 
+    details for the plugins used by the host application service.
+</div>
+
+<div class="area-content">
+    <json-viewer [json]="compositeLog" class="viewer"></json-viewer>
+</div>
+

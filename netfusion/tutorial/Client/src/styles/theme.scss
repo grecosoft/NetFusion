@@ -115,6 +115,13 @@ mat-divider {
     color: red;
 }
 
+dl {
+    dt {
+        font-weight: bold;
+        margin-top: 5px;
+    }
+}
+
 h1.section-header {
     font-size: 14px;
     font-weight: bold;
@@ -132,7 +139,7 @@ h2.section-header {
 
 .section-notes {
     font-size: 14px;
-    color: $definition-header-text; 
-    font-style: italic;
+    padding: 12px;
+    color: $definition-header-text;
 
 }

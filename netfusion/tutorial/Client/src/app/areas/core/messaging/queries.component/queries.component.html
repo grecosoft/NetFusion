@@ -1,0 +1,76 @@
+<nav-toolbar [isDisplayed]="true"></nav-toolbar>
+<div class="area-content">
+    <div class="plugin-summary">
+        <h1 class="section-header">Plugin Summary</h1>
+        <div class="portal-definition-list">
+            <dl class="version-info">
+                <dt>Nuget Package</dt><dd>{{nugetPackageName}}</dd>
+                <dt>Documentation</dt><dd><a href="{{documentationUrl}}" target="_blank">View</a></dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="plugin-overview">
+        <h1 class="section-header">Overview</h1>
+        <ul>
+            <li>Queries represent  a request for resources managed by an application service.</li>
+            <li>Queries have an associated result.</li>
+            <li>Unlike Commands and Domain Events, queries are always handled in-process.  
+                However, the handler will usually delegate to an external source such as a database.
+            </li>
+            <li>Queries can have only one associated handler.</li>
+            <li>
+                Query handler methods can be synchronous or asynchronous based on the code it 
+                needs to call.  However, from the perspective of the code dispatching the query, 
+                the result is always asynchronous.  This decouples the caller from the handler 
+                and allows the handling code to change without having to refactor any of the calling code.  
+            </li>
+            <li>
+                Queries are handled by component's implementing the <code-viewer type="net-fusion" name="Core/NetFusion.Messaging/IQueryConsumer.cs">IQueryConsumer</code-viewer>
+                marker interface with a method accepting a parameter of the query type to be handled. 
+                The method must also be decorated with the <code-viewer type="net-fusion" name="Core/NetFusion.Messaging/InProcessHandlerAttribute.cs">InProcessHandler</code-viewer> attribute.
+                The handler method can also have a CancellationToken passed as the second parameter. 
+            </li>
+        </ul>
+    </div>
+
+    <div class="plugin-usage">
+        <h1 class="section-header">Usage Summary</h1>
+        <ul>
+            <li>Queries are defined by implementing the <code-viewer type="net-fusion" name="Core/NetFusion.Messaging.Types/IQuery.cs">IQuery</code-viewer> interface.  
+                The base abstract <code-viewer type="net-fusion" name="Core/NetFusion.Messaging.Types/Query.cs">Query</code-viewer> class provides a default implementation
+                from which queries can be derived.
+            </li>
+            <li>It is best for queries to be simple POCOS that are immutable.</li>
+            <li>Queries are dispatched by calling the Dispatch method on the <code-viewer type="net-fusion" name="Core/NetFusion.Messaging/IMessagingService.cs">IMessagingService</code-viewer> service contract.</li>
+            <li>The handling of queries should be streamlined for read access and void of any heavy processing.</li>
+            <li>Often, repositories will directly handle queries if there is no associated business logic.
+                However, if there is associated business logic that needs to be applied to the results, the
+                query can be handled by an application-component which delegates to the repository.
+            </li>
+        </ul>
+    </div>
+
+    <div class="plugin-examples">
+        <h1 class="section-header">Examples</h1>
+        <p>
+            The following is a simple example of dispatching a query returning an array of in memory objects.  Normally, the handler would call an external 
+            source such as a database or other external data store.
+        </p>
+        <div class="plugin-example">
+            <h2 class="section-header">Dispatching Queries</h2>
+            <ul>
+                <li>The <code-viewer type="tutorial-components" name="Service.Domain/Queries/QueryCustomerAddresses.cs">QueryCustomerAddresses</code-viewer> class derives from the base Query class.</li>
+                <li>The query specifies the result as an array of Addresses. </li>
+                <li>The <code-viewer type="tutorial-webapi" name="Controllers/Messaging/QueryController.cs">QueryController</code-viewer> dispatches the query using the IMessagingService contract.</li>
+                <li>The <code-viewer type="tutorial-components" name="Service.App/Handlers/CustomerContactHandler.cs">CustomerContactHandler</code-viewer> class shows an example of the query being handled.</li>
+            </ul>
+            <div class="inputs">
+                <button type="submit" mat-raised-button (click)="onDispatchQuery()" color="primary">Send</button>
+            </div>
+            <div class="results">
+                <json-viewer [json]="queryResults" class="viewer"></json-viewer>
+            </div>
+        </div>
+    </div>
+</div>

@@ -20,11 +20,33 @@ export class Portal {
 
     public static defineAreas(menuDefinition: MenuDefinitionService) {
         menuDefinition.defineArea(new ApplicationArea("overview", "Overview", "device", [
-            new AreaMenuItem("overview-composite-log", "Composite Log", "applications", "areas/core/overview/composite-log"),
+            new AreaMenuItem("tutorial-info", "Tutorial", "applications", "areas/core/overview/tutorial-info")
+        ]));
+
+        menuDefinition.defineArea(new ApplicationArea("bootstrapping", "Bootstrapping", "device", [
+            new AreaMenuItem("composite-application", "Composite App", "applications", "areas/core/bootstrapping/composite-application"),
+            new AreaMenuItem("composite-builder", "Composite Builder", "applications", "areas/core/bootstrapping/composite-builder"),
+            new AreaMenuItem("composite-log", "Composite Log", "applications", "areas/core/bootstrapping/composite-log"),
         ]));
 
         menuDefinition.defineArea(new ApplicationArea("settings", "Settings", "device", [
             new AreaMenuItem("settings-example", "Examples", "applications", "areas/core/settings"),
+        ]));
+
+        menuDefinition.defineArea(new ApplicationArea("baseImp", "Base", "device", [
+            new AreaMenuItem("attrib-entity", "Attributed Entity", "applications", "areas/core/base/attrib-entity"),
+            new AreaMenuItem("validation", "Validation", "applications", "areas/core/base/validation"),
+            new AreaMenuItem("mapping", "Mapping", "applications", "areas/core/base/mapping"),
+            new AreaMenuItem("roslyn-expressions", "Roslyn Expressions", "applications", "areas/core/base/entity-exp")
+        ]));
+
+        menuDefinition.defineArea(new ApplicationArea("messaging", "Messaging", "device", [
+            new AreaMenuItem("commands", "Commands", "applications", "areas/core/messaging/commands"),
+            new AreaMenuItem("domain-events", "Domain Events", "applications", "areas/core/messaging/domain-events"),
+            new AreaMenuItem("queries", "Queries", "applications", "areas/core/messaging/queries"),
+            new AreaMenuItem("enrichers", "Enrichers", "applications", "areas/core/messaging/enrichers"),
+            new AreaMenuItem("rules", "Rules", "applications", "areas/core/messaging/rules"),
+            new AreaMenuItem("publishers", "Publishers", "applications", "areas/core/messaging/publishers")
         ]));
 
         menuDefinition.defineArea(new ApplicationArea("mongodb", "MongoDB", "device", [
@@ -39,51 +61,19 @@ export class Portal {
             new AreaMenuItem("rabbitmq-rpc", "Rpc", "applications", "areas/core/rabbitmq/rpc")
         ]));
 
-        menuDefinition.defineArea(new ApplicationArea("redis", "Redis", "device", [
-            new AreaMenuItem("redis-data", "Data", "applications", "areas/core/redis/data"),
-            new AreaMenuItem("redis-channels", "Pub/Sub", "applications", "areas/core/redis/channels")
-        ]));
-
-        menuDefinition.defineArea(new ApplicationArea("baseImp", "Base", "device", [
-            new AreaMenuItem("attrib-entity", "Attributed Entity", "applications", "areas/core/base/attrib-entity"),
-            new AreaMenuItem("entity-expressions", "Entity Expressions", "applications", "areas/core/base/entity-exp")
-        ]));
-
-        menuDefinition.defineArea(new ApplicationArea("messaging", "Messaging", "device", [
-            new AreaMenuItem("commands", "Commands", "applications", "areas/core/messaging/commands"),
-            new AreaMenuItem("domain-events", "Domain Events", "applications", "areas/core/messaging/domain-events"),
-            new AreaMenuItem("queries", "Queries", "applications", "areas/core/messaging/queries"),
-            new AreaMenuItem("enrichers", "Enrichers", "applications", "areas/core/messaging/enrichers")
-        ]));
-
         menuDefinition.defineArea(new ApplicationArea("qmqp", "AMQP", "device", [
             new AreaMenuItem("amqp-publisher", "Publisher", "applications", "areas/core/amqp/publisher"),
             new AreaMenuItem("amqp-consumer", "Consumer", "applications", "areas/core/amqp/consumer")
         ]));
 
-        // menuDefinition.defineArea(new ApplicationArea("devices", "NetFusion.Messaging", "device", [
-        //     new AreaMenuItem("applications", "Commands", "applications", "areas/devices/applications"),
-		//     new AreaMenuItem("applications", "Domain Events", "applications", "areas/devices/applications"),
-		// 	new AreaMenuItem("applications", "Queries", "applications", "areas/devices/applications")
-        // ]));  
+        menuDefinition.defineArea(new ApplicationArea("redis", "Redis", "device", [
+            new AreaMenuItem("redis-data", "Data", "applications", "areas/core/redis/data"),
+            new AreaMenuItem("redis-channels", "Pub/Sub", "applications", "areas/core/redis/channels")
+        ]));
 
-        // menuDefinition.defineArea(new ApplicationArea("devices", "NetFusion.Mapping", "device", [
-        //     new AreaMenuItem("applications", "Applications", "applications", "areas/devices/applications"),
-        // ]));
+        
 
-        // menuDefinition.defineArea(new ApplicationArea("devices", "NetFusion.Base", "device", [
-        //     new AreaMenuItem("applications", "Attributed Entity", "applications", "areas/devices/applications"),
-		// 	    new AreaMenuItem("applications", "Validation", "applications", "areas/devices/applications")
-        // ]));
-
-        // menuDefinition.defineArea(new ApplicationArea("devices", "NetFusion.Rolsyn", "device", [
-        //     new AreaMenuItem("applications", "Applications", "applications", "areas/devices/applications"),
-        // ]));
-
-        // menuDefinition.defineArea(new ApplicationArea("devices", "NetFusion.Azure.Messaging", "device", [
-        //     new AreaMenuItem("applications", "Applications", "applications", "areas/devices/applications"),
-        // ]));
-
+        
         // menuDefinition.defineArea(new ApplicationArea("devices", "NetFusion.Rest", "device", [
         //     new AreaMenuItem("applications", "Applications", "applications", "areas/devices/applications"),
         // ]));
@@ -92,6 +82,6 @@ export class Portal {
         //     new AreaMenuItem("applications", "Applications", "applications", "areas/devices/applications"),
         // ]));
         
-        menuDefinition.setDefaultAreaMenuKey("settings", "settings-example");
+        menuDefinition.setDefaultAreaMenuKey("overview", "tutorial-info");
     }
 }

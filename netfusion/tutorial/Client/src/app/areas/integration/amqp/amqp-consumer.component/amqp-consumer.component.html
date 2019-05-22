@@ -1,0 +1,58 @@
+<nav-toolbar [isDisplayed]="true"></nav-toolbar>
+<div class="area-content">
+    <div class="plugin-summary">
+        <h1 class="section-header">Plugin Summary</h1>
+        <div class="portal-definition-list">
+            <dl class="version-info">
+                <dt>Nuget Package</dt><dd>{{nugetPackageName}}</dd>
+                <dt>Documentation</dt><dd><a href="{{documentationUrl}}" target="_blank">View</a></dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="plugin-overview">
+        <h1 class="section-header">Overview</h1>
+        <ul>
+            <li>Built using the <a href="http://azure.github.io/amqpnetlite/" target="_blank">AmqpNetLite</a> open-source library.</li>
+            <li>Extends the existing method attributes used to identity message handlers.</li>
+            <li>When a message handler is decorated with the <code-viewer type="net-fusion" name="Integration/NetFusion.AMQP/Subscriber/QueueAttribute.cs">Queue</code-viewer> or 
+                <code-viewer type="net-fusion" name="Integration/NetFusion.AMQP/Subscriber/TopicAttribute.cs">Topic</code-viewer> message handler attributes, the method is added
+                as a subscription to the corresponding Queue or Topic.
+            </li>
+            <li>When a message is received, the message handler is invoked.</li>
+        </ul>
+    </div>
+
+    <div class="plugin-usage">
+        <h1 class="section-header">Usage Summary</h1>
+        <ul>
+            <li>Create class representing the command/domain-event to be received.</li>
+            <li>
+                Define message handler with a parameter declared as the command or domain-event type and decorate it with the Queue/Topic attributes 
+                specifying the broker queue/topic to be subscribed.
+            </li>
+            <li>
+                As with all message handler classes, the <code-viewer type="net-fusion" name="Core/NetFusion.Messaging/IMessageConsumer.cs">IMessageConsumer</code-viewer>
+                marker interface must be implemented.
+            </li>
+            <li>
+                Decorate the handler class with the <code-viewer type="net-fusion" name="Integration/NetFusion.AMQP/Subscriber/HostAttribute.cs">Host</code-viewer> attribute specifying the host 
+                name as configured within the application settings.
+            </li>
+        </ul>
+    </div>
+
+    <div class="plugin-examples">
+        <h1 class="section-header">Subscribing to Messages</h1>
+        <p>
+            The following corresponds to the code contained within Service.Client host responding to Messages
+            as they arrive on the defined queue and topic.  Before message handlers can be subscribed to queues
+            and topics, the application must have the connection information specified within appsettings.json.
+        </p>
+        <ul>
+            <li>Device message handler class implementing the IMessageConsumer marker interface.</li>
+            <li>Decorate the handler class with the Host attribute indicating the name of the host as configured within the application's settings.</li> 
+            <li>See <code-viewer type="tutorial-client" name="Handlers/SampleAmqpHandler.cs">SampleAmqpHandler</code-viewer> as an example.</li>           
+        </ul>
+    </div>
+</div>
