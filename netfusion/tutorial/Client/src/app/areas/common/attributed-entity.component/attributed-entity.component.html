@@ -13,39 +13,93 @@
     <div class="plugin-overview">
         <h1 class="section-header">Overview</h1>
         <ul>
-            <li></li>
-            <li></li>
+            <li>An attributed-entity allows a set of key/value pairs to be associated with an instance of a class.</li>
+            <li>This allows a set of key/value pairs, not known at runtime, to be associated with any supporting class instance.</li>
+            <li>
+                Base classes such as the Command and DomainEvent support this feature.  This allow key/value pairs such as
+                a Correlation Id and Received Date to be associated with any Command or DomainEvent without having to explicity
+                define corresponding properties.  For example, the NetFusion.Messaging plugin, can have Message Enrichers 
+                configured that are invoked when a message published or received.  These Message Enrichers can add key/value
+                pairs consistently across all messages.  The CorrelationEnricher and DateReceivedEnricher are such examples. 
+            </li>
+            <li>Domain Entities defined by an application can be attributed-entities.</li>
+            <li>
+                An attributed-entity's key/value pairs can be referenced by a string key or off of a .NET Dynamic property
+                exposed by the entity.
+            </li>
         </ul>
     </div>
 
     <div class="plugin-usage">
         <h1 class="section-header">Usage Summary</h1>
         <ul>
-            <li></li>
-            <li></li>
+            <li>
+                An entity can be attributed with additional runtime key/value pairs by implementing the IAttributedEntity 
+                interface or by deriving from the base default AttributedEntity class.
+            </li>
+            <li>
+                Other plugins such as NetFusion.Messaging and NetFusion.Roslyn utilize attributed-entities. 
+            </li>
         </ul>
     </div>
 
+    <div class="plugin-suggestions">
+        <h1 class="section-header">Suggestions</h1>
+        <ul>
+            <li>For serialization purposes it is best that attributed values are limited to .NET base intrinsic types.</li>
+            <li>If the entity is not going to be serialized and sent out-of-process, then more complex custom types can be used.</li>
+        </ul>
+    </div>
     <div class="plugin-examples">
         <h1 class="section-header">Examples</h1>
         <p>
-            
+            The following example returns an attributed based entity and provided additional methods for updating an entity's 
+            associated key/value pairs.
         </p>
         <div class="plugin-example">
-            <h2 class="section-header">Sending Command</h2>
+            <h2 class="section-header">Attributed Entity</h2>
             <ul>
-                <li></li>
-                <li></li>
+                <li>The following example returns an instance of the Sensor attributed-base entity.</li>
+                <li>The controller creates an instance of the Sensor class and add an attribute names "IsFanOn". </li>
             </ul>
-            <!-- <div class="inputs">
-                <div>
-                    <textarea [(ngModel)]="newDomainEventBody"></textarea>
-                </div> 
-                <button type="submit" mat-raised-button (click)="onPublishDomainEvent()" color="primary">Send</button>
+            <div class="inputs">
+                <button type="submit" mat-raised-button (click)="onReadAttributedEntity()" color="primary">Load Attributed Entity</button>
             </div>
             <div class="results">
-                <json-viewer [json]="newDomainEventResult" class="viewer"></json-viewer>
-            </div> -->
+                <json-viewer [json]="attributedEntityResult" class="viewer"></json-viewer>
+            </div>
+        </div>
+
+        <div class="plugin-example">
+            <h2 class="section-header">Updating Attributed Entity</h2>
+            <ul>
+                <li>The following example creates an instance of the Sensor entity as in the prior example.</li>
+                <li>This example accepts a model of key/value pairs to which the controller adds to the entity's attributes.</li>
+                <li>The result entity is returned.</li>
+            </ul>
+            <div class="inputs">
+                <div>
+                    <textarea [(ngModel)]="newAttributesBody"></textarea>
+                </div> 
+                <button type="submit" mat-raised-button (click)="onUpdateAttributedEntity()" color="primary">Update Attributed Entity</button>
+            </div>
+            <div class="results">
+                <json-viewer [json]="updatedAttributedEntityResult" class="viewer"></json-viewer>
+            </div>
+        </div>
+
+        <div class="plugin-example">
+            <h2 class="section-header">Dynamically Access Entity Attributes</h2>
+            <ul>
+                <li>The following example creates an instance of the Sensor entity as in the prior example.</li>
+                <li>The controller shows an example of accessing the entity's attributes dynamically.</li>
+            </ul>
+            <div class="inputs">
+                <button type="submit" mat-raised-button (click)="onReadAttributesDynamically()" color="primary">Read Attributes Dynamically</button>
+            </div>
+            <div class="results">
+                <json-viewer [json]="dynamicAttributeResult" class="viewer"></json-viewer>
+            </div>
         </div>
     </div>
 </div>

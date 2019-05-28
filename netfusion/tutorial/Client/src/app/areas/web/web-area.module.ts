@@ -5,6 +5,7 @@ import { AreaModule } from '../area.module';
 import { JsonPipe } from '@angular/common';
 import { TemplateUrlsComponent } from './rest/templateUrls/templateUrls.component';
 import { ResourceLinkingComponent } from './rest/resourceLinking/resource-linking.component';
+import { RestService } from './rest/RestService';
 
 const areaRoutes: Routes = [
     { path: 'rest/resource-linking', component: ResourceLinkingComponent },
@@ -27,7 +28,8 @@ const areaRoutes: Routes = [
         TemplateUrlsComponent
     ],
     providers: [
-        JsonPipe
+        JsonPipe,
+        RestService
     ]
 })
 export class WebAreaModule {

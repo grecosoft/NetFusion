@@ -17,6 +17,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { AreaModule } from '../area.module';
 import { JsonPipe } from '@angular/common';
 import { EntityFrameworkComponent } from './entityFramework/entityframework.component';
+import { RoslynExpressionsComponent } from './roslyn/roslyn-expressions.component';
+import { RoslynService } from './roslyn/RoslynService';
 
 const areaRoutes: Routes = [
     { path: 'database/mongodb', component: MongoDbComponent },
@@ -33,6 +35,8 @@ const areaRoutes: Routes = [
 
     { path: 'redis/data', component: RedisDataComponent },
     { path: 'redis/channels', component: RedisChannelsComponent },
+
+    { path: 'roslyn/expressions', component: RoslynExpressionsComponent }
 ];
 
 @NgModule({
@@ -56,7 +60,9 @@ const areaRoutes: Routes = [
         RedisChannelsComponent,
 
         AmqpPublisherComponent,
-        AmqpConsumerComponent
+        AmqpConsumerComponent,
+
+        RoslynExpressionsComponent
     ],
     entryComponents: [
         MongoDbComponent,
@@ -72,14 +78,17 @@ const areaRoutes: Routes = [
         RedisChannelsComponent,
 
         AmqpPublisherComponent,
-        AmqpConsumerComponent
+        AmqpConsumerComponent,
+
+        RoslynExpressionsComponent
     ],
     providers: [
         JsonPipe,
         MongoDbService,
         RabbitMqService,
         AmqpService,
-        RedisService
+        RedisService,
+        RoslynService
     ]
 })
 export class IntegrationAreaModule {

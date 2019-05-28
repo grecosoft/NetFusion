@@ -16,9 +16,8 @@ using Service.App.Plugin;
 using Service.Domain.Plugin;
 using Service.Infra.Plugin;
 using Service.WebApi.Plugin;
-using NetFusion.Base.Serialization;
 using NetFusion.Builder;
-using NetFusion.Serialization;
+using Service.App.Services;
 
 namespace Service.WebApi
 {
@@ -39,6 +38,7 @@ namespace Service.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+                     
             services.CompositeAppBuilder(_loggerFactory, _configuration)
                 // Add common plugins:
                 .AddSettings()
@@ -69,6 +69,7 @@ namespace Service.WebApi
             }
 
             services.AddMvc();
+            services.AddSingleton(InMemoryScripting.LoadSensorScript());
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

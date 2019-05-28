@@ -73,14 +73,17 @@ export class Portal {
 
         menuDefinition.defineArea(new ApplicationArea("redis", "Redis", "plugin", [
             new AreaMenuItem("redis-data", "Data", "applications", "areas/integration/redis/data"),
-            new AreaMenuItem("redis-channels", "Pub/Sub", "applications",    "areas/integration/redis/channels")
+            new AreaMenuItem("redis-channels", "Pub/Sub", "applications", "areas/integration/redis/channels")
+        ]));
+
+        menuDefinition.defineArea(new ApplicationArea("roslyn", "Roslyn", "plugin", [
+            new AreaMenuItem("roslyn-expressions", "Roslyn Expressions", "applications", "areas/integration/roslyn/expressions")
         ]));
 
         menuDefinition.defineArea(new ApplicationArea("rest", "REST", "plugin", [
             new AreaMenuItem("resource-linking", "Resource Linking", "applications", "areas/web/rest/resource-linking"),
             new AreaMenuItem("template-urls", "Template Urls", "applications", "areas/web/rest/template-urls")
         ]));
-        
         
         menuDefinition.setDefaultAreaMenuKey("overview", "tutorial-info");
     }

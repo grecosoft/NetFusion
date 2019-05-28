@@ -34,7 +34,8 @@ namespace NetFusion.Roslyn.Testing
             return expressions;
         }
 
-        public static IEntityScriptingService CreateService<TEntity>(this IList<EntityExpression> expressions)
+        public static IEntityScriptingService CreateService<TEntity>(this IList<EntityExpression> expressions,
+            IDictionary<string, object> initialAttributes = null)
             where TEntity : IAttributedEntity
         {
             var es = new EntityScript(
@@ -46,7 +47,11 @@ namespace NetFusion.Roslyn.Testing
             es.ImportedAssemblies = new[] { typeof(Common.Extensions.ObjectExtensions).GetTypeInfo().Assembly.FullName };
             es.ImportedNamespaces = new[] { typeof(Common.Extensions.ObjectExtensions).Namespace };
 
-
+            if (initialAttributes != null)
+            {
+                es.InitialAttributes = initialAttributes;
+            }
+            
             var loggerFactory = new LoggerFactory();
 
             var evalSrv = new EntityScriptingService(loggerFactory);

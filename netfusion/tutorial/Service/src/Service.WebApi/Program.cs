@@ -3,14 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using NetFusion.Bootstrap.Configuration;
 using NetFusion.Bootstrap.Container;
 
 namespace Service.WebApi
 {
-    using System;
-    using Microsoft.Extensions.Hosting;
-    using NetFusion.Bootstrap.Configuration;
-
     // Initializes the application's configuration and logging then delegates 
     // to the Startup class to initialize HTTP pipeline related settings.
     public class Program
@@ -58,7 +55,6 @@ namespace Service.WebApi
             {
                 builder.AddConsole().SetMinimumLevel(LogLevel.Warning);
             }
-            
         }
     }
 }
