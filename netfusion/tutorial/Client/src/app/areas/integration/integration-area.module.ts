@@ -3,7 +3,6 @@ import { AmqpConsumerComponent } from './amqp/amqp-consumer.component/amqp-consu
 import { AmqpPublisherComponent } from './amqp/amqp-publisher.component/amqp-publisher.component';
 import { RedisChannelsComponent } from './redis/redis-channels.component/redis-channels.component';
 import { RedisDataComponent } from './redis/redis-data.component/redis-data.component';
-import { PublishersComponent } from '../core/messaging/publishers/publisher.component';
 import { RabbitMqRpcComponent } from './rabbitMq/rabbitMq-rpc.component/rabbitMq-rpc.component';
 import { RabbitMqQueueComponent } from './rabbitMq/rabbitMq-queue.component/rabbitMq-queue.component';
 import { RabbitMqFanoutComponent } from './rabbitMq/rabbitMq-fanout.component/rabbitMq-fanout.component';
@@ -15,13 +14,14 @@ import { RabbitMqService } from './rabbitMq/RabbitMqService';
 import { AmqpService } from './amqp/AmqpService';
 import { RedisService } from './redis/RedisService';
 import { Routes, RouterModule } from '@angular/router';
-import { AreaCommonModule } from '../area-common.module';
-import { CodeViewerComponent } from '../github/code-viewer/code-viewer.component';
+import { AreaModule } from '../area.module';
 import { JsonPipe } from '@angular/common';
-import { GitHubService } from '../github/GitHubService';
+import { EntityFrameworkComponent } from './entityFramework/entityframework.component';
 
 const areaRoutes: Routes = [
-    { path: 'mongodb', component: MongoDbComponent },
+    { path: 'database/mongodb', component: MongoDbComponent },
+    { path: 'database/entityframework', component: EntityFrameworkComponent },
+
     { path: 'rabbitmq/direct', component: RabbitMqDirectComponent },
     { path: 'rabbitmq/topic', component: RabbitMqTopicComponent },
     { path: 'rabbitmq/fanout', component: RabbitMqFanoutComponent },
@@ -37,21 +37,20 @@ const areaRoutes: Routes = [
 
 @NgModule({
     imports: [
-        AreaCommonModule,
+        AreaModule,
         RouterModule.forChild(
             areaRoutes
           )
     ],
     declarations: [
-        CodeViewerComponent,
         MongoDbComponent,
+        EntityFrameworkComponent,
 
         RabbitMqDirectComponent,
         RabbitMqTopicComponent,
         RabbitMqFanoutComponent,
         RabbitMqQueueComponent,
         RabbitMqRpcComponent,
-        PublishersComponent,
 
         RedisDataComponent,
         RedisChannelsComponent,
@@ -61,6 +60,8 @@ const areaRoutes: Routes = [
     ],
     entryComponents: [
         MongoDbComponent,
+        EntityFrameworkComponent,
+
         RabbitMqDirectComponent,
         RabbitMqTopicComponent,
         RabbitMqFanoutComponent,
@@ -78,11 +79,9 @@ const areaRoutes: Routes = [
         MongoDbService,
         RabbitMqService,
         AmqpService,
-        RedisService,
-
-        GitHubService
+        RedisService
     ]
 })
-export class IntegrationModule {
+export class IntegrationAreaModule {
 
 }

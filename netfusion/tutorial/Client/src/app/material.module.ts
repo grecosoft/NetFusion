@@ -63,35 +63,9 @@ export class MaterialModule {
         private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer) {
 
             this.registerIcons([
-                'add',
-                'agents',
-                'applications',
-                'apply',
-                'commission',
-                'configurations',
-                'delete',
-                'device',
-                'edit',
-                'hosts', 
-                'image_versions',
-                'login',
-                'logout',               
-                'nav_menu_toggle',
-                'ping',
-                'question_answer',
-                'reboot',
-                'restart_agent',
-                'restart_app',
-                'register',
-                'save',
-                'scheduling',
-                'search',
-                'undo',
-                'update_agent',
-                'update_application',
-                'update_device_image',
-                'update_host',
-                'users'
+                'plugin',
+                'topic',
+                'doc'
             ]);
     }
 

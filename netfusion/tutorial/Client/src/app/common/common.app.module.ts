@@ -19,7 +19,10 @@ import { LoginDialogComponent } from './dialogs/login-dialog/login-dialog.compon
 import { NavMenuComponent } from './navigation/components/nav-menu/nav-menu.component';
 import { NavToolbarComponent } from './navigation/components/nav-toolbar/nav-toolbar.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
-import { CodeDialogComponent } from '../areas/github/code-viewer/code-dialog.component';
+import { CodeDialogComponent } from './code-viewer/code-dialog.component';
+import { CodeViewerComponent } from './code-viewer/code-viewer.component';
+import { GitHubService } from './GitHubService';
+
 
 
 // Module importing modules on which common application components are dependent.
@@ -28,8 +31,9 @@ import { CodeDialogComponent } from '../areas/github/code-viewer/code-dialog.com
         NavMenuComponent,
         NavToolbarComponent,
         LoginDialogComponent,
-        CodeDialogComponent,
-        ConfirmDialogComponent
+        ConfirmDialogComponent,
+        CodeViewerComponent,
+        CodeDialogComponent
     ],
     imports: [
         CommonModule,
@@ -50,13 +54,15 @@ import { CodeDialogComponent } from '../areas/github/code-viewer/code-dialog.com
         NavMenuComponent,
         NavToolbarComponent,
         LoginDialogComponent,
-        MatSidenavModule
+        MatSidenavModule,
+        CodeViewerComponent
     ],
     entryComponents: [
         LoginDialogComponent,
-        CodeDialogComponent,
-        ConfirmDialogComponent
-    ]
+        ConfirmDialogComponent,
+        CodeDialogComponent
+    ],
+    providers: [GitHubService]
 })
 export class CommonAppModule {
 

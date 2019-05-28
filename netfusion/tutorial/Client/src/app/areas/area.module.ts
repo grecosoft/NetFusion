@@ -25,6 +25,6 @@ const reExportedModules = [
        
     ]
 })
-export class AreaCommonModule {
+export class AreaModule {
 
 }

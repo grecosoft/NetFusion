@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-    templateUrl: './tutorial-info.component.html',
+    templateUrl: './resources.component.html',
     styleUrls: ['../../areas/area.scss'] 
 })
-export class TutorialInfoComponent {
+export class ResourcesComponent {
 
 }

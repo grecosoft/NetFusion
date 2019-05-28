@@ -9,7 +9,7 @@
 
 <mat-list class="dashboard-nav-menu" style="padding-left:0; padding-right:16px" *ngIf="selected">
     <mat-list-item [class.selected-item]="isSelectedMenu(menuItem)" *ngFor="let menuItem of selected.appArea.menuItems">
-        <mat-icon class="item-icon" [svgIcon]="menuItem.iconName" *ngIf="isMenuEnabled(menuItem)" ></mat-icon>
+        <mat-icon class="item-icon" svgIcon="doc" *ngIf="isMenuEnabled(menuItem)" ></mat-icon>
         <a routerLink='{{menuItem.route}}' *ngIf="isMenuEnabled(menuItem)">{{menuItem.title}}</a>
     </mat-list-item>
 </mat-list>

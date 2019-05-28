@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ServiceApi } from '../../api/ServiceApi';
+import { ServiceApi } from '../api/ServiceApi';
 import { environment } from 'src/environments/environment.prod';
 
 

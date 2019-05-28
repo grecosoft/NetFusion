@@ -23,17 +23,19 @@ import { NotificationService } from './common/services/NotificationService';
 import { DialogService } from './common/dialogs/DialogService';
 import { CommonAppModule } from './common/common.app.module';
 import { ServiceApi } from './api/ServiceApi';
-import { TutorialInfoComponent } from './overview/tutorial-info/tutorial-info.component';
-
+import { TutorialComponent } from './overview/tutorial/tutorial.component';
+import { ResourcesComponent } from './overview/resources/resources.component';
 
 
 // Routes for the main application areas:
 const areaRoutes: Routes = [
-  { path: 'areas/integration', loadChildren: 'src/app/areas/integration/integration.module#IntegrationModule' },
-  
-  // { path: 'areas/core', loadChildren: 'src/app/areas/examples.module#ExamplesModule' },
+  { path: 'overview/tutorial', component: TutorialComponent },
+  { path: 'overview/resources', component: ResourcesComponent },
 
-   { path: 'overview/tutorial-info', component: TutorialInfoComponent },
+  { path: 'areas/common', loadChildren: 'src/app/areas/common/common-area.module#CommonAreaModule' },
+  { path: 'areas/core', loadChildren: 'src/app/areas/core/core-area.module#CoreAreaModule' },
+  { path: 'areas/integration', loadChildren: 'src/app/areas/integration/integration-area.module#IntegrationAreaModule' },
+  { path: 'areas/web', loadChildren: 'src/app/areas/web/web-area.module#WebAreaModule' },
 ];
 
 // Bootstraps the application:
@@ -48,7 +50,9 @@ export function bootstrap_app(application: Application,
 @NgModule({
   declarations: [
     PortalComponent,
-    TutorialInfoComponent
+    TutorialComponent,
+    ResourcesComponent
+
   ],
   imports: [
     HttpClientModule,
@@ -64,7 +68,12 @@ export function bootstrap_app(application: Application,
     MaterialModule
   ],
   entryComponents: [
-    TutorialInfoComponent,
+    TutorialComponent,
+    ResourcesComponent
+
+  ],
+  exports: [
+   
   ],
   providers: [
     Application,
