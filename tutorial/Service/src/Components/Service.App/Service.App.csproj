@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Common\NetFusion.Base\NetFusion.Base.csproj" />
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Integration\NetFusion.Roslyn\NetFusion.Roslyn.csproj" />
+    <ProjectReference Include="..\Service.Domain\Service.Domain.csproj" />
+  </ItemGroup>
+</Project>

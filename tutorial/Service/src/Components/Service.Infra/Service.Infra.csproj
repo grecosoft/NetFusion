@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Common\NetFusion.Base\NetFusion.Base.csproj" />
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Integration\NetFusion.AMQP\NetFusion.AMQP.csproj" />
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Integration\NetFusion.MongoDB\NetFusion.MongoDB.csproj" />
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Integration\NetFusion.RabbitMq\NetFusion.RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Integration\NetFusion.Redis\NetFusion.Redis.csproj" />
+    <ProjectReference Include="..\..\..\..\..\netfusion\src\Integration\NetFusion.Serialization\NetFusion.Serialization.csproj" />
+    <ProjectReference Include="..\Service.Domain\Service.Domain.csproj" />
+    <ProjectReference Include="..\Service.App\Service.App.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+</Project>

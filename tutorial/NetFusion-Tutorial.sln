@@ -10,73 +10,73 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{3B81A3E8-2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{736BE3AC-4F29-4584-822C-93E70561FF4F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Common", "src\Common\NetFusion.Common\NetFusion.Common.csproj", "{9A195923-5D6D-499A-867C-FA3A4EE74CF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Common", "..\netfusion\src\Common\NetFusion.Common\NetFusion.Common.csproj", "{9A195923-5D6D-499A-867C-FA3A4EE74CF5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Base", "src\Common\NetFusion.Base\NetFusion.Base.csproj", "{6ADFCD20-9A03-4BE8-B03A-7353AAEAB154}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Base", "..\netfusion\src\Common\NetFusion.Base\NetFusion.Base.csproj", "{6ADFCD20-9A03-4BE8-B03A-7353AAEAB154}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Bootstrap", "src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj", "{AB615F4E-489A-4F94-ACC8-DA87FF767298}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Bootstrap", "..\netfusion\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj", "{AB615F4E-489A-4F94-ACC8-DA87FF767298}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Settings", "src\Core\NetFusion.Settings\NetFusion.Settings.csproj", "{F0A623E2-E25C-4515-A8C8-31E80A24D0C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Settings", "..\netfusion\src\Core\NetFusion.Settings\NetFusion.Settings.csproj", "{F0A623E2-E25C-4515-A8C8-31E80A24D0C5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Messaging", "src\Core\NetFusion.Messaging\NetFusion.Messaging.csproj", "{9489EB8B-17EB-481B-B2F5-D2D63FA7C5B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Messaging", "..\netfusion\src\Core\NetFusion.Messaging\NetFusion.Messaging.csproj", "{9489EB8B-17EB-481B-B2F5-D2D63FA7C5B7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Messaging.Types", "src\Core\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj", "{F58C6A10-A627-41D0-B1A0-972F12A8F31D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Messaging.Types", "..\netfusion\src\Core\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj", "{F58C6A10-A627-41D0-B1A0-972F12A8F31D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Mapping", "src\Common\NetFusion.Mapping\NetFusion.Mapping.csproj", "{851D5944-2D0C-4682-A5B3-389C4DD7F738}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Mapping", "..\netfusion\src\Common\NetFusion.Mapping\NetFusion.Mapping.csproj", "{851D5944-2D0C-4682-A5B3-389C4DD7F738}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{1F6BA04E-F6CA-47C1-AB79-CAFED0D805F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Web.Mvc", "src\Web\NetFusion.Web.Mvc\NetFusion.Web.Mvc.csproj", "{8C4A761E-37C9-4BFB-8572-DF01BDABD50F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Web.Mvc", "..\netfusion\src\Web\NetFusion.Web.Mvc\NetFusion.Web.Mvc.csproj", "{8C4A761E-37C9-4BFB-8572-DF01BDABD50F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Common", "src\Web\NetFusion.Rest.Common\NetFusion.Rest.Common.csproj", "{64C570B6-C5A2-4B34-B7C4-D3768BCDDD5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Common", "..\netfusion\src\Web\NetFusion.Rest.Common\NetFusion.Rest.Common.csproj", "{64C570B6-C5A2-4B34-B7C4-D3768BCDDD5E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Client", "src\Web\NetFusion.Rest.Client\NetFusion.Rest.Client.csproj", "{5E238740-A08A-449D-80DF-320449D9AD25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Client", "..\netfusion\src\Web\NetFusion.Rest.Client\NetFusion.Rest.Client.csproj", "{5E238740-A08A-449D-80DF-320449D9AD25}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Resources", "src\Web\NetFusion.Rest.Resources\NetFusion.Rest.Resources.csproj", "{314F1B78-EECA-4502-9263-9FE7F9108424}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Resources", "..\netfusion\src\Web\NetFusion.Rest.Resources\NetFusion.Rest.Resources.csproj", "{314F1B78-EECA-4502-9263-9FE7F9108424}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Server", "src\Web\NetFusion.Rest.Server\NetFusion.Rest.Server.csproj", "{83CC98A3-BB7E-413C-B816-638B910B6486}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetFusion.Rest.Server", "..\netfusion\src\Web\NetFusion.Rest.Server\NetFusion.Rest.Server.csproj", "{83CC98A3-BB7E-413C-B816-638B910B6486}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{0A108820-F110-4B36-A5CF-A59FC7C64955}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.RabbitMQ", "src\Integration\NetFusion.RabbitMq\NetFusion.RabbitMQ.csproj", "{CA3EB024-2802-479E-AB1D-E91E610BC737}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.RabbitMQ", "..\netfusion\src\Integration\NetFusion.RabbitMq\NetFusion.RabbitMQ.csproj", "{CA3EB024-2802-479E-AB1D-E91E610BC737}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.MongoDB", "src\Integration\NetFusion.MongoDB\NetFusion.MongoDB.csproj", "{A1DA5027-083F-4458-96BE-090E646029A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.MongoDB", "..\netfusion\src\Integration\NetFusion.MongoDB\NetFusion.MongoDB.csproj", "{A1DA5027-083F-4458-96BE-090E646029A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Serialization", "src\Integration\NetFusion.Serialization\NetFusion.Serialization.csproj", "{960EA3B0-E46C-4B9E-BA7B-479F7CE9ABF7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Serialization", "..\netfusion\src\Integration\NetFusion.Serialization\NetFusion.Serialization.csproj", "{960EA3B0-E46C-4B9E-BA7B-479F7CE9ABF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Roslyn", "src\Integration\NetFusion.Roslyn\NetFusion.Roslyn.csproj", "{104CCFA1-3911-4FD3-AB1A-5DF45344BE5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Roslyn", "..\netfusion\src\Integration\NetFusion.Roslyn\NetFusion.Roslyn.csproj", "{104CCFA1-3911-4FD3-AB1A-5DF45344BE5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Redis", "src\Integration\NetFusion.Redis\NetFusion.Redis.csproj", "{FA660514-A51B-47E1-8050-942C98154C93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Redis", "..\netfusion\src\Integration\NetFusion.Redis\NetFusion.Redis.csproj", "{FA660514-A51B-47E1-8050-942C98154C93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.EntityFramework", "src\Integration\NetFusion.EntityFramework\NetFusion.EntityFramework.csproj", "{8621F7A2-0D98-4DA3-8053-4931C0582B78}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.EntityFramework", "..\netfusion\src\Integration\NetFusion.EntityFramework\NetFusion.EntityFramework.csproj", "{8621F7A2-0D98-4DA3-8053-4931C0582B78}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tutorial", "tutorial", "{C2DA4657-07F5-4F28-B2A0-911F571CF35B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{513D2BFB-B4EF-4249-8D43-227AD0777D6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Domain", "tutorial\Service\src\Components\Service.Domain\Service.Domain.csproj", "{F0CEEBFE-5461-4E76-88D3-94D5D7F7EEDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Domain", "Service\src\Components\Service.Domain\Service.Domain.csproj", "{F0CEEBFE-5461-4E76-88D3-94D5D7F7EEDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.App", "tutorial\Service\src\Components\Service.App\Service.App.csproj", "{AAB61622-3E3F-4937-8049-2F30D8D333EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.App", "Service\src\Components\Service.App\Service.App.csproj", "{AAB61622-3E3F-4937-8049-2F30D8D333EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Infra", "tutorial\Service\src\Components\Service.Infra\Service.Infra.csproj", "{43ABF35D-6800-4651-AB71-52A7F4270098}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Infra", "Service\src\Components\Service.Infra\Service.Infra.csproj", "{43ABF35D-6800-4651-AB71-52A7F4270098}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.WebApi", "tutorial\Service\src\Service.WebApi\Service.WebApi.csproj", "{ED4080B7-A4C6-4E3D-83AD-0178D1235F3B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.WebApi", "Service\src\Service.WebApi\Service.WebApi.csproj", "{ED4080B7-A4C6-4E3D-83AD-0178D1235F3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Client", "tutorial\Service\src\Service.Client\Service.Client.csproj", "{7F13A15B-86B2-4D9D-BD7B-D4EEA8211517}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Client", "Service\src\Service.Client\Service.Client.csproj", "{7F13A15B-86B2-4D9D-BD7B-D4EEA8211517}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.AMQP", "src\Integration\NetFusion.AMQP\NetFusion.AMQP.csproj", "{F9E5EBB9-BBCD-4AFA-AB6E-82FA287D3226}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.AMQP", "..\netfusion\src\Integration\NetFusion.AMQP\NetFusion.AMQP.csproj", "{F9E5EBB9-BBCD-4AFA-AB6E-82FA287D3226}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Test", "src\Core\NetFusion.Test\NetFusion.Test.csproj", "{40E0C381-858D-456B-ACD4-84E2C58584BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Test", "..\netfusion\src\Core\NetFusion.Test\NetFusion.Test.csproj", "{40E0C381-858D-456B-ACD4-84E2C58584BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTests", "test\CommonTests\CommonTests.csproj", "{759C9828-ABEC-4C72-89CD-A01D21848270}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTests", "..\netfusion\test\CommonTests\CommonTests.csproj", "{759C9828-ABEC-4C72-89CD-A01D21848270}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTests", "test\CoreTests\CoreTests.csproj", "{E3E7C416-BE01-4D47-BFD3-65BFCDF65B15}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTests", "..\netfusion\test\CoreTests\CoreTests.csproj", "{E3E7C416-BE01-4D47-BFD3-65BFCDF65B15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "test\IntegrationTests\IntegrationTests.csproj", "{292BB442-0DDC-4C88-AEA9-7EA90549933B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "..\netfusion\test\IntegrationTests\IntegrationTests.csproj", "{292BB442-0DDC-4C88-AEA9-7EA90549933B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTests", "test\WebTests\WebTests.csproj", "{CD0DA825-41D9-4BE4-BE16-EB99B910D072}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTests", "..\netfusion\test\WebTests\WebTests.csproj", "{CD0DA825-41D9-4BE4-BE16-EB99B910D072}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Builder", "src\Core\NetFusion.Builder\NetFusion.Builder.csproj", "{DB05FC42-29CE-4526-80BC-74745AD152A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Builder", "..\netfusion\src\Core\NetFusion.Builder\NetFusion.Builder.csproj", "{DB05FC42-29CE-4526-80BC-74745AD152A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
