@@ -33,8 +33,7 @@ export class Portal {
         menuDefinition.defineArea(new ApplicationArea("baseImp", "Base", "topic", [
             new AreaMenuItem("validation", "Validation", "applications", "areas/common/validation"),
             new AreaMenuItem("mapping", "Mapping", "applications", "areas/common/mapping"),
-            new AreaMenuItem("attrib-entity", "Attributed Entity", "applications", "areas/common/attrib-entity"),
-            new AreaMenuItem("roslyn-expressions", "Roslyn Expressions", "applications", "areas/common/entity-exp")
+            new AreaMenuItem("attrib-entity", "Attributed Entity", "applications", "areas/common/attrib-entity")
         ]));
 
         menuDefinition.defineArea(new ApplicationArea("settings", "Settings", "plugin", [
