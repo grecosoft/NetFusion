@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.4'
 services:
     rabbit:
         container_name: rabbit-dev
@@ -48,6 +48,26 @@ services:
             - 5351:5341
             - 8051:80
 
+    tutorial-WebApi:
+        build:
+            context: .
+            dockerfile: Dockerfile-WebApi
+            network: host
+        image: tutorial-webapi
+        ports:
+            - 8086:80
+        network_mode: host
+        environment:
+            - ASPNETCORE_ENVIRONMENT=DEVELOPMENT
+            
+    tutorial-Subscriber:
+        build:
+            context: .
+            dockerfile: Dockerfile-Subscriber
+            network: host
+        image: tutorial-subscriber
+        network_mode: host
+
 volumes:
     rabbit_data:
         external:
@@ -67,5 +87,9 @@ volumes:
     seq_data:
         external:
             name: dev-seq_data
+
+networks:
+  default:
+
 
 
