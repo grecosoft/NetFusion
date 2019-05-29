@@ -38,7 +38,7 @@ namespace Service.WebApi
         private static void SetupConfiguration(WebHostBuilderContext context, 
             IConfigurationBuilder builder)
         {
-            builder.AddAppSettings(context.HostingEnvironment.EnvironmentName);
+            builder.AddAppSettings(context.HostingEnvironment);
         }
 
         private static void SetupLogging(WebHostBuilderContext context, 

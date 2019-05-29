@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -57,7 +58,8 @@ namespace Service.Client
         private static void SetupConfiguration(HostBuilderContext context, 
             IConfigurationBuilder builder)
         {            
-            builder.AddAppSettings(context.HostingEnvironment.EnvironmentName);
+            builder.SetBasePath(Directory.GetCurrentDirectory());
+            builder.AddJsonFile($"appsettings.json", optional: true, reloadOnChange: true);
         }
 
         private static void SetupLogging(HostBuilderContext context, 

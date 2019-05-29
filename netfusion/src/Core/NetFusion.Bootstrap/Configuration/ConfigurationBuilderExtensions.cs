@@ -2,11 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace NetFusion.Bootstrap.Configuration
 {
-    using Microsoft.Extensions.Hosting;
-
     /// <summary>
     /// Extension methods for MS Configuration Extensions.
     /// </summary>
@@ -22,16 +21,16 @@ namespace NetFusion.Bootstrap.Configuration
         ///     appsettings.json
         /// </summary>
         /// <param name="builder">The configuration to add setting providers.</param>
-        /// <param name="environmentName"></param>
+        /// <param name="hostingEnv">The environment of the host.</param>
         /// <returns>Instance to the configuration builder.</returns>
         public static IConfigurationBuilder AddAppSettings(this IConfigurationBuilder builder,
-            string environmentName)
+            IHostingEnvironment hostingEnv)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder), "Configuration builder not specified.");
         
             builder.SetBasePath(Directory.GetCurrentDirectory());
             builder.AddJsonFile($"{AppSettingsFileName}.json", optional: true, reloadOnChange: true);
-            builder.AddJsonFile($"{AppSettingsFileName}.{environmentName}.json", reloadOnChange: true, optional: true);
+            builder.AddJsonFile($"{AppSettingsFileName}.{hostingEnv.EnvironmentName}.json", reloadOnChange: true, optional: true);
             builder.AddJsonFile($"{AppSettingsFileName}.{Environment.MachineName}.json", reloadOnChange: true, optional: true);
             return builder;
         }
@@ -43,16 +42,16 @@ namespace NetFusion.Bootstrap.Configuration
         /// is not executing within the development environment, all variables are sourced from environment variables.
         /// </summary>
         /// <param name="builder">The configuration to add setting providers.</param>
-        /// <param name="environmentName"></param>
+        /// <param name="hostingEnv">The environment of the host.</param>
         /// <returns>Instance of the configuration builder.</returns>
         public static IConfigurationBuilder AddDockerDefaultSettings(this IConfigurationBuilder builder,
-            string environmentName)
+            IHostingEnvironment hostingEnv)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder), "Configuration builder not specified.");
             
-            if (environmentName == EnvironmentName.Development)
+            if (hostingEnv.IsDevelopment())
             {
-                builder.AddAppSettings(environmentName);    
+                builder.AddAppSettings(hostingEnv);    
             }
 
             builder.AddEnvironmentVariables();
