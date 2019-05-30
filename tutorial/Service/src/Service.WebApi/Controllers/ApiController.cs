@@ -11,7 +11,6 @@ using Service.Domain.Events;
 using Service.WebApi.Controllers.Core;
 using Service.WebApi.Controllers.Integration;
 using Service.WebApi.Controllers.Messaging;
-using Service.WebApi.Controllers.Web;
 using Service.WebApi.Models;
 
 #pragma warning disable 4014

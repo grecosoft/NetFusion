@@ -2,14 +2,10 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Base.Scripting;
-using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Bootstrap.Validation;
 using NetFusion.Messaging.Plugin;
 using NetFusion.RabbitMQ.Settings;
-using NetFusion.Serialization;
 using NetFusion.Test.Plugins;
 
 namespace IntegrationTests.RabbitMQ

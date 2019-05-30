@@ -115,25 +115,25 @@ namespace CoreTests.Domain
         {
             // CanAddCalculatedDynamicAttribute
             var expressions = new List<EntityExpression>();
-            expressions.AddExpression<DynamicEntity>("Value2", "_.Value1 + 100");
+            expressions.AddExpression("Value2", "_.Value1 + 100");
 
            // CanUpdateCalculatedDynamicAttribute
-           expressions.AddExpression<DynamicEntity>("Value4", "_.Value3 + 100");
-           expressions.AddExpression<DynamicEntity>("Value4", "_.Value4 > 200 ? 5 : 10");
+           expressions.AddExpression("Value4", "_.Value3 + 100");
+           expressions.AddExpression("Value4", "_.Value4 > 200 ? 5 : 10");
 
             // ExpressionCanContainEntityStaticProperty
-            expressions.AddExpression<DynamicEntity>("Value5", "Entity.IsActive ? 2000 : 1000");
+            expressions.AddExpression("Value5", "Entity.IsActive ? 2000 : 1000");
 
             // ExpressionCanCombineEntityPropertyAndAttribute
-            expressions.AddExpression<DynamicEntity>("Value7", "Entity.MaxValue + _.Value6");
+            expressions.AddExpression("Value7", "Entity.MaxValue + _.Value6");
 
             // ExpressionCanDependOnPriorCalculatedValues
-            expressions.AddExpression<DynamicEntity>("Entity.MaxValue = ++Entity.MaxValue");
-            expressions.AddExpression<DynamicEntity>("Entity.MinValue = System.Math.Min(_.Value2, Entity.MaxValue)");
+            expressions.AddExpression("Entity.MaxValue = ++Entity.MaxValue");
+            expressions.AddExpression("Entity.MinValue = System.Math.Min(_.Value2, Entity.MaxValue)");
 
-            expressions.AddExpression<DynamicEntity>("_Value8", "ObjectExtensions.ToIndentedJson(Entity.MaxValue)");
+            expressions.AddExpression("_Value8", "ObjectExtensions.ToIndentedJson(Entity.MaxValue)");
 
-            return expressions.CreateService();
+            return expressions.CreateService<DynamicEntity>();
            
         }
     }

@@ -9,6 +9,10 @@
       <ProjectReference Include="..\..\Integration\NetFusion.Serialization\NetFusion.Serialization.csproj" />
       <ProjectReference Include="..\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+    </ItemGroup>
 
     <PropertyGroup>
         <PackageId>NetFusion.Builder</PackageId>

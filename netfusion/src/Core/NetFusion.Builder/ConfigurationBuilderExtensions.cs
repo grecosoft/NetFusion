@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
-namespace NetFusion.Bootstrap.Configuration
+namespace NetFusion.Builder
 {
     /// <summary>
     /// Extension methods for MS Configuration Extensions.

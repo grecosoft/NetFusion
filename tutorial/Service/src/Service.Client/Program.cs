@@ -6,7 +6,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NetFusion.AMQP.Plugin;
 using NetFusion.Base.Serialization;
-using NetFusion.Bootstrap.Configuration;
 using NetFusion.Builder;
 using NetFusion.Messaging.Plugin;
 using NetFusion.RabbitMQ.Plugin;

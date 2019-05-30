@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using NetFusion.Bootstrap.Configuration;
 using NetFusion.Bootstrap.Container;
+using NetFusion.Builder;
 
 namespace Service.WebApi
 {
