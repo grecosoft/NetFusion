@@ -1,0 +1,34 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-16.04'
+
+variables:
+  solution: '**/netfusion/NetFusion.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+  # Restore/Build and run Unit-Tests:
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore Nuget Packages'
+    inputs:
+      command: 'restore'
+      projects: '$(solution)'
+      includeNuGetOrg: true
+
+  # - task: DotNetCoreCLI@2
+  #   displayName: 'Build Solution'
+  #   inputs:
+  #     command: 'build'
+  #     arguments: '--no-restore'
+  #     projects: '$(solution)'
+
+  # - task: DotNetCoreCLI@2
+  #   displayName: 'Run Unit-Tests'
+  #   inputs:
+  #     command: 'test'
+  #     arguments: '--no-build'
+  #     projects: '$(solution)'
+
