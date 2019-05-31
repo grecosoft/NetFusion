@@ -18,12 +18,12 @@ steps:
       projects: '$(solution)'
       includeNuGetOrg: true
 
-  # - task: DotNetCoreCLI@2
-  #   displayName: 'Build Solution'
-  #   inputs:
-  #     command: 'build'
-  #     arguments: '--no-restore'
-  #     projects: '$(solution)'
+  - task: DotNetCoreCLI@2
+    displayName: 'Build Solution'
+    inputs:
+      command: 'build'
+      arguments: '--no-restore'
+      projects: '$(solution)'
 
   # - task: DotNetCoreCLI@2
   #   displayName: 'Run Unit-Tests'
