@@ -32,3 +32,4 @@
 * As with mapping, a structure is provided for object validation.  A simple interface used for specifying custom type validations and a default object validator, based on Microsoft's data annotations, is provided. An open-source specific implementation can be substituted but the overall validation process remains consistent.
 * Provides a simple method for indicating that a typed object should also support dynamic properties at runtime.  Core classes such as the Command, Query, and Domain Event are based on this interface so they can be easily extended.  For example, a message enricher can tag a message with dynamic properties for all sent commands or published domain events.
 * Provides a set of classes for defining scripts that can be evaluated against objects at runtime.  The implementation allows new calculated properties to be set and evaluated on any type supporting the dynamic property interface. 
+ 
