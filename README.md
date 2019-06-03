@@ -16,7 +16,7 @@
 * Introduce new technologies and open-source libraries by extending the core using plugins.
 * Must be very loosely coupled. Only those plug-ins that a given host application needs are referenced.
 * Provide a consistent methodology for unit-testing.
-* Should be based mostly on convention and not configuration.
+* Should be based mostly on convention and not configuration. 
 
 ## Core Implementations
 
