@@ -37,8 +37,11 @@ skip_commits:
     - '**/*.md'
     - 'clients\**\*'
     - 'examples\**\*'
-    - 'tools\**\*'
     - 'img\**\*'
+    - 'packages\**\*'
+    - 'tools\**\*'
+    - 'tutorial\**\*'
+
 
   
 
