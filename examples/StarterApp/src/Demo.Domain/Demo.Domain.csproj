@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.146" />
+    <PackageReference Include="NetFusion.Messaging.Types" Version="3.2.146" />
+  </ItemGroup>
+
+</Project>
