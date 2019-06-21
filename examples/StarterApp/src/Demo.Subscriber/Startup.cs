@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NetFusion.AMQP.Plugin;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Builder;
 using NetFusion.RabbitMQ.Plugin;
@@ -42,6 +43,7 @@ namespace Demo.Subscriber
                 
                 .AddRabbitMq()
                 .AddRedis()
+                .AddAmqp()
 
                 .AddPlugin<WebApiPlugin>()
                 .Build();

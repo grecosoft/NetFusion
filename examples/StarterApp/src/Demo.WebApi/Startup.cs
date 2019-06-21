@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetFusion.AMQP.Plugin;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Validation;
 using NetFusion.Builder;
@@ -50,6 +51,7 @@ namespace Demo.WebApi
                 .AddMapping()
                 .AddMongoDb()
                 .AddRedis()
+                .AddAmqp()
                 
                 // This should be added for the validation example showing how to specify custom validation:
                 //.InitContainerConfig<ValidationConfig>(config =>

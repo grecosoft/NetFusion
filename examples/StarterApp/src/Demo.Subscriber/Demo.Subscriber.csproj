@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="NetFusion.AMQP" Version="3.2.147" />
     <PackageReference Include="NetFusion.Builder" Version="3.2.147" />
     <PackageReference Include="NetFusion.RabbitMQ" Version="3.2.147" />
     <PackageReference Include="NetFusion.Redis" Version="3.2.148" />
