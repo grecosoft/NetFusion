@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="NetFusion.Builder" Version="3.2.147" />
     <PackageReference Include="NetFusion.RabbitMQ" Version="3.2.147" />
+    <PackageReference Include="NetFusion.Redis" Version="3.2.148" />
   </ItemGroup>
 
 </Project>

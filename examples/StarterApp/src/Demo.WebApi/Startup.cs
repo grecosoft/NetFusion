@@ -11,10 +11,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Validation;
 using NetFusion.Builder;
+using NetFusion.Mapping.Plugin;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Plugin.Configs;
+using NetFusion.MongoDB.Plugin;
 using NetFusion.RabbitMQ.Plugin;
+using NetFusion.Redis.Plugin;
 using NetFusion.Settings.Plugin;
 
 namespace Demo.WebApi
@@ -43,6 +47,15 @@ namespace Demo.WebApi
                 .AddSettings()
                 .AddMessaging()     
                 .AddRabbitMq()
+                .AddMapping()
+                .AddMongoDb()
+                .AddRedis()
+                
+                // This should be added for the validation example showing how to specify custom validation:
+                //.InitContainerConfig<ValidationConfig>(config =>
+                //{
+                //    config.UseValidatorType<CustomObjectValidator>();
+                //})
                 
                 // !! THIS SHOULD ONLY BE UNCOMMENTED FOR THE CUSTOM MESSAGE-PUBLISHER OR ENRICHER EXAMPLES. !!
                 //.InitPluginConfig<MessageDispatchConfig>(config =>

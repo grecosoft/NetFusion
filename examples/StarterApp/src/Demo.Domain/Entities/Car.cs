@@ -7,5 +7,9 @@ namespace Demo.Domain.Entities
         public decimal Price { get; set; }
         public string Color { get; set; }
         public int Year { get; set;}
+        
+        // Don't expose theses on the model :)
+        public bool HasSalvageTitle { get; set; }
+        public bool WasSmokerCar { get; set;}
     }
 }

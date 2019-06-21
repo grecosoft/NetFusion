@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Builder;
 using NetFusion.RabbitMQ.Plugin;
+using NetFusion.Redis.Plugin;
 
 namespace Demo.Subscriber
 {
@@ -40,6 +41,7 @@ namespace Demo.Subscriber
             services.CompositeAppBuilder(_loggerFactory, _configuration)
                 
                 .AddRabbitMq()
+                .AddRedis()
 
                 .AddPlugin<WebApiPlugin>()
                 .Build();

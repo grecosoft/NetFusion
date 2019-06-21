@@ -9,7 +9,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="NetFusion.Builder" Version="3.2.146" />
+    <PackageReference Include="NetFusion.Builder" Version="3.2.147" />
+    <PackageReference Include="NetFusion.Mapping" Version="3.2.147" />
+    <PackageReference Include="TinyMapper" Version="3.0.2-beta" />
   </ItemGroup>
 
   <ItemGroup>
