@@ -45,11 +45,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         public override void Initialize()
         {
             _busSettings = Context.Configuration.GetSettings(Context.Logger, new BusSettings());
-
-            foreach (BusConnection conn in _busSettings.Connections)
-            {
-                CreateBus(conn);
-            }
         }
 
         protected override Task OnStartModuleAsync(IServiceProvider services)
@@ -58,6 +53,11 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             if (_serializationMgr == null)
             {
                 Context.Logger.LogError("A serialization manager has not been registered.");
+            }
+            
+            foreach (BusConnection conn in _busSettings.Connections)
+            {
+                CreateBus(conn);
             }
 
             return base.OnStartModuleAsync(services);

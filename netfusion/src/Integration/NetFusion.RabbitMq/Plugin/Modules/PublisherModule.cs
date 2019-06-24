@@ -55,13 +55,14 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
             ApplyConfiguredOverrides(definitions);
             AssertExchangeDefinitions(definitions);
-            CreateExchangeRpcClients(definitions);
 
             _messageExchanges = definitions.ToDictionary(m => m.MessageType);
         } 
 
         protected override async Task OnStartModuleAsync(IServiceProvider services)
         {
+            CreateExchangeRpcClients(_messageExchanges.Values);
+            
             foreach (IRpcClient client in _exchangeRpcClients.Values)
             {
                 await client.CreateAndSubscribeToReplyQueueAsync();
