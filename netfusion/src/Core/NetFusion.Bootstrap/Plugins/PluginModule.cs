@@ -12,25 +12,8 @@ namespace NetFusion.Bootstrap.Plugins
     /// the discovering of known-type implementations, and the execution of any needed
     /// logic upon startup and shutdown.
     /// </summary>
-    public abstract class PluginModule : IPluginModule,
-        IDisposable
+    public abstract class PluginModule : IPluginModule
     {
-        private bool _disposed;
-
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        
-        protected virtual void Dispose(bool dispose)
-        {
-            if (! dispose || _disposed) return;
-
-            _disposed = true;
-        }
-
         /// <summary>
         /// Contains plug-in context information that can be used by the module during bootstrapping.
         /// </summary>

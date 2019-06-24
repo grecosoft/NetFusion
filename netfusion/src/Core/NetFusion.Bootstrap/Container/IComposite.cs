@@ -22,14 +22,6 @@ namespace NetFusion.Bootstrap.Container
         /// </summary>
         IServiceCollection Services { get; }
 
-        /// <summary>
-        /// Allows a delegate to be specified during building of the composite container
-        /// to specify a custom dependency-container to be used.
-        /// </summary>
-        /// <param name="providerFactory">Creates a service provider instance using
-        /// the provided service-collection.</param>
-        void SetProviderFactory(Func<IServiceCollection, IServiceProvider> providerFactory);
-
         IComposite CreateServiceProvider();
         
         /// <summary>

@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -24,26 +25,25 @@ namespace NetFusion.Bootstrap.Container
     {
         // Singleton instance of the created container:
         private static CompositeContainer _instance;
-        private bool _disposed;
 
-        // Microsoft Common Abstractions:
+        // Microsoft Service-Collection populated by Plugin Modules:
         private readonly IServiceCollection _serviceCollection;
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly IConfiguration _configuration;
-       
-        // Logging implementations:
-        private readonly ILogger _logger;
-        private CompositeAppLog _compositeLog;
-       
+        
         // Composite Structure:
         private CompositeApp _compositeApp;
+        private CompositeAppLog _compositeLog;
         private readonly List<IPlugin> _plugins = new List<IPlugin>();
-        private readonly List<IPluginConfig> _containerConfigs = new List<IPluginConfig>();
         
-        // Service Provider:
-        private Func<IServiceCollection, IServiceProvider> _providerFactory;
+        // Container level configurations:
+        private readonly List<IContainerConfig> _containerConfigs = new List<IContainerConfig>();
+        
+        // Service Provider created from populated Service-Collection:
         private IServiceProvider _serviceProvider;
 
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger _logger;
+        
         public CompositeContainer(
             IServiceCollection services,
             IConfiguration configuration,
@@ -63,22 +63,13 @@ namespace NetFusion.Bootstrap.Container
 
             AddContainerConfigs();
         }
-
-        void IComposite.SetProviderFactory(Func<IServiceCollection, IServiceProvider> providerFactory)
-        {
-            _providerFactory = providerFactory ?? throw new ArgumentNullException(nameof(providerFactory));
-        }
-        
-        // Explicit implementation of IComposite interface.  For use when unit-testing the container. 
-        CompositeApp IComposite.CompositeApp => _compositeApp;
-        IServiceCollection IComposite.Services => _serviceCollection;
         
         // Log of the composite application structure showing how it was constructed from plugins.
         public IDictionary<string, object> Log
         {
             get
             {
-                ThrowIfDisposed(this);
+                ThrowIfStopped(this);
                 return _compositeLog?.GetLog() ?? new Dictionary<string, object>();
             }
         }
@@ -89,31 +80,19 @@ namespace NetFusion.Bootstrap.Container
         /// service implementation is contained within the service collection, it can 
         /// reference the application container by injecting the ICompositeContainer interface.
         /// </summary>
-        public static ICompositeContainer Instance
-        {
-            get
-            {
-                ThrowIfDisposed(_instance);
-                return _instance;
-            }
-        }
-        
-        // NOTE:  Developers should not access this property but rather call the CreateServiceScope or
-        // ExecuteInServiceScope methods.
-        IServiceProvider IComposite.ServiceProvider
-        {
-            get
-            {
-                ThrowIfDisposed(this);
-                return _serviceProvider;
-            }
-        }
-        
+        public static ICompositeContainer Instance => _instance;
+
         // Called by CompositeContainerBuilder to add plugin to the composite container.
         // If the plugin type is already registered, the request is ignored.  This allows
         // a plugin to register it's dependent plugins.
-        public void RegisterPlugin<T>() where T : IPlugin, new()  // make internal
+        public void RegisterPlugin<T>() where T : IPlugin, new()  
         {
+            if (_compositeApp?.IsStarted ?? false)
+            {
+                throw LogException(new ContainerException(
+                    "Plugins cannot be registered after the container has been started."));
+            }
+            
             if (IsPluginRegistered<T>())
             {
                 return;
@@ -123,6 +102,7 @@ namespace NetFusion.Bootstrap.Container
             _plugins.Add(plugin);
         }
 
+        // Updated by unit-tests to add a collection of configured mock plugins.
         public void RegisterPlugins(params IPlugin[] plugins)
         {
             plugins.ForEach(_plugins.Add);
@@ -133,7 +113,33 @@ namespace NetFusion.Bootstrap.Container
             return _plugins.Any(p => p.GetType() == typeof(T));
         }
         
+        //-----------------------IComposite Explicate Implementation--------------------------//
+        
+        CompositeApp IComposite.CompositeApp => _compositeApp;
+        IServiceCollection IComposite.Services => _serviceCollection;
+        IServiceProvider IComposite.ServiceProvider => _serviceProvider;
+        
+        IComposite IComposite.CreateServiceProvider()
+        {
+            _serviceProvider = _serviceCollection.BuildServiceProvider(true);
+            return this;
+        }
+        
         //----------------------- Container Configuration ------------------------------------//
+        
+        // Returns a container level configuration used to configure the runtime behavior
+        // of the built container.
+        public T GetContainerConfig<T>() where T : IContainerConfig
+        {
+            var config = _containerConfigs.FirstOrDefault(c => c.GetType() == typeof(T));
+            if (config == null)
+            {
+                throw LogException(new ContainerException(
+                    $"Container configuration of type: {typeof(T)} is not registered."));
+            }
+
+            return (T)config;
+        }
         
         // Finds a configuration belonging to one of the registered plugins.  When a plugin
         // is registered with the container, it can extend the behavior of another plugin by
@@ -159,21 +165,8 @@ namespace NetFusion.Bootstrap.Container
 
             return (T)configs.First();
         }
-        
-        // Returns a container level configuration used to configure the runtime behavior
-        // of the built container.
-        public T GetContainerConfig<T>() where T : IPluginConfig
-        {
-            var config = _containerConfigs.FirstOrDefault(c => c.GetType() == typeof(T));
-            if (config == null)
-            {
-                throw LogException(new ContainerException(
-                    $"Container configuration of type: {typeof(T)} is not registered."));
-            }
-
-            return (T)config;
-        }
-        
+   
+        // Registers container-level configurations.
         private void AddContainerConfigs()
         {
             _containerConfigs.Add(new ValidationConfig());
@@ -181,11 +174,11 @@ namespace NetFusion.Bootstrap.Container
         
         //----------------------- Container Initialization ------------------------------------//
         
-        // Composes the container for the registered plugins and populates the service-collection.
+        // Composes the container form the registered plugins and populates the service-collection.
         public IComposite Compose(ITypeResolver typeResolver)
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
-            
+
             _compositeApp = new CompositeApp(_loggerFactory, _configuration, _plugins);
             
             try
@@ -220,14 +213,6 @@ namespace NetFusion.Bootstrap.Container
                 throw LogException(new ContainerException(
                     "Unexpected container error.  See Inner Exception.", ex));
             }
-
-            return this;
-        }
-
-        IComposite IComposite.CreateServiceProvider()
-        {
-            _serviceProvider = _providerFactory?.Invoke(_serviceCollection) 
-                ?? _serviceCollection.BuildServiceProvider(true);
 
             return this;
         }
@@ -275,6 +260,7 @@ namespace NetFusion.Bootstrap.Container
             // Allows each plugin-module to add services to the collection.
             _compositeApp.PopulateServices(_serviceCollection);
             
+            // Register the container and any plugin-modules providing services.
             RegisterAppContainerAsService();
             RegisterPluginModuleServices();
             
@@ -298,49 +284,10 @@ namespace NetFusion.Bootstrap.Container
                 _serviceCollection.AddSingleton(moduleServiceInterfaces, moduleService);
             }
         }
-        
-        public void Start()
-        {
-            try
-            {
-                StartAsync().GetAwaiter().GetResult();
-            }
-            catch (AggregateException ex)
-            {
-                if (ex.InnerException is ContainerException)
-                {
-                    throw ex.InnerException;
-                }
 
-                throw;
-            }
-        }
-        
-        public void Stop()
-        {
-            try
-            {
-                StopAsync().GetAwaiter().GetResult();
-            }
-            catch (AggregateException ex)
-            {
-                if (ex.InnerException is ContainerException)
-                {
-                    throw ex.InnerException;
-                }
-
-                throw;
-            }
-        }
-        
         // The last step in the bootstrap process allowing plug-in modules to start runtime services.
         public async Task StartAsync()
         {
-            if (_serviceCollection == null)
-            {
-                // TODO throw:
-            }
-            
             if (_compositeApp.IsStarted)
             {
                 throw LogException(new ContainerException(
@@ -349,6 +296,7 @@ namespace NetFusion.Bootstrap.Container
 
             try
             {
+                // Create a service scope in which each plugin can be started:
                 using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStart, "Starting Container"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
@@ -379,16 +327,18 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
+        // Should be called when the application-host is stopped.  Each registered plugin-module
+        // is stopped allowing it to reclaim resources.
         public async Task StopAsync()
         {
-            if (! _compositeApp.IsStarted)
+            if (!_compositeApp.IsStarted)
             {
-                throw LogException(new ContainerException(
-                    "The application container has not been started."));
+                return;
             }
-
+            
             try
             {
+                // Create a service scope in which each plugin can be started:
                 using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStop, "Stopping Container"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
@@ -414,13 +364,50 @@ namespace NetFusion.Bootstrap.Container
             }
         }
         
+        // The last step in the bootstrap process allowing plug-in modules to start runtime services.
+        public void Start()
+        {
+            try
+            {
+                StartAsync().GetAwaiter().GetResult();
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerException is ContainerException)
+                {
+                    throw ex.InnerException;
+                }
+
+                throw;
+            }
+        }
+        
+        // Should be called when the application-host is stopped.  Each registered plugin-module
+        // is stopped allowing it to reclaim resources.
+        public void Stop()
+        {
+            try
+            {            
+                StopAsync().GetAwaiter().GetResult();
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerException is ContainerException)
+                {
+                    throw ex.InnerException;
+                }
+
+                throw;
+            }
+        }
+        
         //-------------------------------- Container Provided Services -----------------------------------------//
        
         // Creates a validation instance, based on the application configuration, used to validate an object.
         // The host application can specify an implementation using a validation library of choice.
         public IObjectValidator CreateValidator(object obj)
         {
-            ThrowIfDisposed(this);
+            ThrowIfStopped(this);
 
             ValidationConfig validationConfig = GetContainerConfig<ValidationConfig>();
             return (IObjectValidator)Activator.CreateInstance(validationConfig.ValidatorType, obj);
@@ -433,48 +420,19 @@ namespace NetFusion.Bootstrap.Container
         // scope is automatically created and disposed.
         public IServiceScope CreateServiceScope()
         {
-            ThrowIfDisposed(this);
+            ThrowIfStopped(this);
             return _serviceProvider.CreateScope();
         }
         
         //------------------------------- Container Disposal ------------------------------------------//
        
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
-        private static void ThrowIfDisposed(CompositeContainer container)
+        private static void ThrowIfStopped(CompositeContainer container)
         {
-            if (container._disposed)
+            if (!container._compositeApp.IsStarted)
             {
                 throw new ContainerException(
-                    "The application container has been disposed and can no longer be accessed.");
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (! disposing || _disposed) return;
-
-            if (_compositeApp.IsStarted)
-            {
-                Stop();
-            }
-
-            DisposePluginModules();
-
-            _loggerFactory?.Dispose();
-            _disposed = true;
-        }
-
-        private void DisposePluginModules()
-        {
-            foreach (var module in _compositeApp.AllPlugins.SelectMany(p => p.Modules))
-            {
-                (module as IDisposable)?.Dispose();
+                    "The application container has been stopped and can no longer be accessed.");
             }
         }
 

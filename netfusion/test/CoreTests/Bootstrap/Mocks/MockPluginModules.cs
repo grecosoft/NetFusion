@@ -7,20 +7,21 @@ namespace CoreTests.Bootstrap.Mocks
 {
     public abstract class MockPluginModule : PluginModule
     {
-        public bool IsDisposed { get; private set; }
         public bool IsStarted { get; private set; }
-
-        protected override void Dispose(bool dispose)
-        {
-            base.Dispose(dispose);
-            IsDisposed = true;
-        }
+        public bool IsStopped { get; private set; }
 
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {
             IsStarted = true;
 
             return base.OnStartModuleAsync(services);
+        }
+
+        protected override Task OnStopModuleAsync(IServiceProvider services)
+        {
+            IsStopped = true;
+
+            return base.OnStopModuleAsync(services);
         }
     }
 

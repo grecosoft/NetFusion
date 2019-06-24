@@ -65,33 +65,12 @@ namespace CoreTests.Bootstrap
             });
         }
 
-        [Fact(DisplayName = "Non-Started Container cannot be Stopped")]
-        public void NonStartedContainer_CannotBeStopped()
-        {
-            ContainerFixture.Test(fixture =>
-            {
-                fixture.Arrange.Container(r =>
-                    {
-                        r.RegisterPlugin<MockHostPlugin>();
-                    })
-                    .Act.OnNonInitContainer(c =>
-                    {
-                        c.Compose(new TypeResolver());
-                        c.Stop();
-                    })
-                    .Assert.Exception<ContainerException>(ex =>
-                    {
-                        ex.Message.Should().Contain("The application container has not been started.");
-                    });
-            });
-        }
-
         /// <summary>
-        /// When the application container is disposed, each plug-in module
-        /// will be disposed.
+        /// When the application container is stopped, each plug-in module
+        /// will be stopped.
         /// </summary>
-        [Fact(DisplayName = "When Container disposed plug-in Modules are disposed")]
-        public void AppContainerDisposed_PluginModules_AreDisposed()
+        [Fact(DisplayName = "When Container stopped plug-in Modules are stopped")]
+        public void AppContainerStopped_PluginModules_AreStopped()
         {
             ContainerFixture.Test(fixture =>
             {
@@ -104,12 +83,12 @@ namespace CoreTests.Bootstrap
                     })
                     .Act.OnContainer(c =>
                     {
-                        c.Dispose();
+                        c.Stop();
                     })
                     .Assert.CompositeApp(ca =>
                     {
                         var pluginModule = (MockPluginModule)ca.HostPlugin.Modules.First();
-                        pluginModule.IsDisposed.Should().BeTrue();
+                        pluginModule.IsStopped.Should().BeTrue();
                     });
             });
         }
@@ -118,8 +97,8 @@ namespace CoreTests.Bootstrap
         /// Once the application container is disposed, the associated service
         /// provider can no longer be accessed.
         /// </summary>
-        [Fact(DisplayName = "Disposed Container cannot have Service Provider accessed")]
-        public void DisposedAppContainer_CannotHave_ServicesAccessed()
+        [Fact(DisplayName = "Stopped Container cannot have Service Provider accessed")]
+        public void StoppedAppContainer_CannotHave_ServicesAccessed()
         {
             ContainerFixture.Test(fixture =>
             {
@@ -129,13 +108,13 @@ namespace CoreTests.Bootstrap
                     })
                     .Act.OnContainer(c =>
                     {
-                        c.Dispose();
+                        c.Stop();
                         c.CreateServiceScope();
                     })
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         ex.Message.Should().Be(
-                            "The application container has been disposed and can no longer be accessed.");
+                            "The application container has been stopped and can no longer be accessed.");
                     });
             });
         }

@@ -1,6 +1,6 @@
 ﻿using NetFusion.Base.Validation;
 using System;
-using NetFusion.Bootstrap.Plugins;
+using NetFusion.Bootstrap.Container;
 
 namespace NetFusion.Bootstrap.Validation
 {
@@ -8,7 +8,7 @@ namespace NetFusion.Bootstrap.Validation
     /// Container configuration used to register the IObjectValidator
     /// implementation that should be used.
     /// </summary>
-    public class ValidationConfig : IPluginConfig
+    public class ValidationConfig : IContainerConfig
     {
         /// <summary>
         /// The type implementing IObjectValidator to be used.  This defaults to 

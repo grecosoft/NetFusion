@@ -22,12 +22,7 @@ namespace NetFusion.Builder
             IConfiguration configuration,
             Func<IServiceCollection, IServiceProvider> providerFactory = null)
         {
-            var builder = new CompositeContainerBuilder(services, loggerFactory, configuration);
-            if (providerFactory != null)
-            {
-                builder.SetProviderFactory(providerFactory);
-            }
-            return builder;
+            return new CompositeContainerBuilder(services, loggerFactory, configuration);
         }
     }
 }

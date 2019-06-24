@@ -74,7 +74,7 @@ namespace NetFusion.Test.Container
         /// <summary>
         /// Creates a new test fixture for testing an application container.  The created
         /// instance is passed to the provided test method used to execute the unit-test.
-        /// Once the test method completes, the test container is disposed.
+        /// Once the test method completes, the test container is stopped.
         /// </summary>
         /// <param name="test">Method specified by the unit-test to execute logic against
         /// a created test-fixture instance.</param>
@@ -88,13 +88,13 @@ namespace NetFusion.Test.Container
             config?.Invoke(fixture.ConfigBuilder);
             test(fixture);
 
-            fixture._container?.Dispose();
+            fixture._container?.Stop();
         }
 
         /// <summary>
         /// Creates a new test fixture for testing an application container.  The created
         /// instance is passed to the provided test method used to execute the unit-test.
-        /// Once the test method completes, the test container is disposed.
+        /// Once the test method completes, the test container is stopped.
         /// </summary>
         /// <param name="test">Method specified by the unit-test to execute logic against
         /// a created test-fixture instance.</param>
@@ -106,7 +106,7 @@ namespace NetFusion.Test.Container
             var fixture = CreateFixture();
             await test(fixture).ConfigureAwait(false);
 
-            fixture._container?.Dispose();
+            fixture._container?.Stop();
         }
 
         /// <summary>

@@ -26,9 +26,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
     {
         // Dependent Modules:
         private IBusModule _busModule;
-        
-        private bool _disposed;
-        
+
         // Other  plugins (normally application plugins) specify the exchanges 
         // to be created by defining one or more IExchangeRegister derived types.
         // NOTE:  NetFusion finds and instantiates all IExchangeRegistry types.
@@ -68,6 +66,16 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             {
                 await client.CreateAndSubscribeToReplyQueueAsync();
             }
+        }
+
+        protected override Task OnStopModuleAsync(IServiceProvider services)
+        {
+            foreach(IRpcClient client in _exchangeRpcClients.Values)
+            {
+                client.Dispose();
+            }
+            
+            return base.OnStopModuleAsync(services);
         }
 
         public bool IsExchangeMessage(Type messageType)
@@ -205,18 +213,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
             rpcClient.SetLogger(logger);
             return rpcClient;
-        }
-        
-        protected override void Dispose(bool dispose)
-        {
-            if (! dispose || _disposed) return;
-
-            foreach(IRpcClient client in _exchangeRpcClients.Values)
-            {
-                client.Dispose();
-            }
-
-            _disposed = true;
         }
 
         public override void Log(IDictionary<string, object> moduleLog)

@@ -38,13 +38,6 @@ namespace NetFusion.Builder
             _container = new CompositeContainer(services, configuration, loggerFactory, true);
             _composite = _container;
         }
-
-        internal void SetProviderFactory(Func<IServiceCollection, IServiceProvider> providerFactory)
-        {
-            if (providerFactory == null) throw new ArgumentNullException(nameof(providerFactory));
-
-            _composite.SetProviderFactory(providerFactory);
-        }
         
         public ICompositeContainerBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new()
         {
@@ -52,7 +45,7 @@ namespace NetFusion.Builder
             return this;
         }
 
-        public ICompositeContainerBuilder InitContainerConfig<T>(Action<T> configure) where T : IPluginConfig
+        public ICompositeContainerBuilder InitContainerConfig<T>(Action<T> configure) where T : IContainerConfig
         {
             if (configure == null) throw new ArgumentNullException(nameof(configure));
             

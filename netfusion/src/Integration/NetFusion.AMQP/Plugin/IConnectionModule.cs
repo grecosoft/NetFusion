@@ -6,9 +6,8 @@ using NetFusion.Bootstrap.Plugins;
 namespace NetFusion.AMQP.Plugin
 {
     /// <summary>
-    /// Module that manages a set of connections/sessions to the configured
-    /// AMQP hosts.  When the host stops and is disposed, the created
-    /// instances are disposed by the module.
+    /// Module that manages a set of connections/sessions to the configured AMQP hosts.
+    /// When the host stops, the created instances are disposed by the module.
     /// </summary>
     public interface IConnectionModule : IPluginModuleService
     {
@@ -33,7 +32,5 @@ namespace NetFusion.AMQP.Plugin
         /// </summary>
         /// <param name="handler">Delegate passed the name of the host that was closed.</param>
         void SetReceiverConnectionCloseHandler(Action<string> handler);
-
-        void SimulateClose();
     }
 }

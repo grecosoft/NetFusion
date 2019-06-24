@@ -92,42 +92,42 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         // Defines a callback function to be called when a message arrives on the queue.
         protected virtual void ConsumeMessageQueue(IBus bus, IQueue queue, MessageQueueSubscriber subscriber)
         {
-                QueueMeta definition = subscriber.QueueMeta;
+            QueueMeta definition = subscriber.QueueMeta;
 
-                bus.Advanced.Consume(queue, 
-                    (bytes, msgProps, receiveInfo) => 
+            bus.Advanced.Consume(queue, 
+                (bytes, msgProps, receiveInfo) => 
+                {
+                    var consumerContext = new ConsumeContext 
                     {
-                        var consumerContext = new ConsumeContext 
-                        {
-                            Logger = Context.LoggerFactory.CreateLogger(definition.QueueFactory.GetType().FullName),
-                            MessageData = bytes,
-                            MessageProps = msgProps,
-                            MessageReceiveInfo = receiveInfo,
-                            Subscriber = subscriber,
-                            BusModule = _busModule,
-                            MessagingModule = _messagingModule,
-                            Serialization = _serializationManager,
-                            GetRpcMessageHandler = GetRpcMessageHandler
-                        };
+                        Logger = Context.LoggerFactory.CreateLogger(definition.QueueFactory.GetType().FullName),
+                        MessageData = bytes,
+                        MessageProps = msgProps,
+                        MessageReceiveInfo = receiveInfo,
+                        Subscriber = subscriber,
+                        BusModule = _busModule,
+                        MessagingModule = _messagingModule,
+                        Serialization = _serializationManager,
+                        GetRpcMessageHandler = GetRpcMessageHandler
+                    };
 
-                        // Delegate to the queue factory, associated with the definition, and 
-                        // allow it to determine how the received message should be processed. 
-                        return definition.QueueFactory.OnMessageReceivedAsync(consumerContext);
-                    }, 
-                    config => 
+                    // Delegate to the queue factory, associated with the definition, and 
+                    // allow it to determine how the received message should be processed. 
+                    return definition.QueueFactory.OnMessageReceivedAsync(consumerContext);
+                }, 
+                config => 
+                {
+                    if (definition.PrefetchCount > 0)
                     {
-                        if (definition.PrefetchCount > 0)
-                        {
-                            config.WithPrefetchCount(definition.PrefetchCount);
-                        }
+                        config.WithPrefetchCount(definition.PrefetchCount);
+                    }
 
-                        if (definition.IsExclusive)
-                        {
-                            config.AsExclusive();
-                        }
+                    if (definition.IsExclusive)
+                    {
+                        config.AsExclusive();
+                    }
 
-                        config.WithPriority(definition.Priority);
-                    });
+                    config.WithPriority(definition.Priority);
+                });
         }
 
         // Looks up the dispatch information that should be used to handle the RPC style message.

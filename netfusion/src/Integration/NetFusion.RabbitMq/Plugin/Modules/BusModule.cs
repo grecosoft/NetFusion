@@ -30,8 +30,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         private readonly Dictionary<string, IBus> _buses;
         private ISerializationManager _serializationMgr;
 
-        private bool _disposed;
-
         public BusModule()
         {
             _buses = new Dictionary<string, IBus>();
@@ -63,6 +61,16 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             }
 
             return base.OnStartModuleAsync(services);
+        }
+
+        protected override Task OnStopModuleAsync(IServiceProvider services)
+        {
+            foreach(IBus bus in _buses.Values)
+            {
+                bus.Dispose();
+            }
+            
+            return base.OnStopModuleAsync(services);
         }
 
         private void CreateBus(BusConnection conn)
@@ -206,18 +214,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
             var busConn = GetBusConnection(busName);
             return busConn.QueueSettings.FirstOrDefault(s => s.QueueName == queueName);
-        }
-
-        protected override void Dispose(bool dispose)
-        {
-            if (! dispose || _disposed) return;
-
-            foreach(IBus bus in _buses.Values)
-            {
-                bus.Dispose();
-            }
-
-            _disposed = true;
         }
 
         public override void Log(IDictionary<string, object> moduleLog)

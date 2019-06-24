@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NetFusion.AMQP.Publisher;
 using NetFusion.AMQP.Publisher.Internal;
 using NetFusion.Bootstrap.Exceptions;
@@ -17,9 +18,7 @@ namespace NetFusion.AMQP.Plugin.Modules
     /// </summary>
     public class PublisherModule : PluginModule,
         IPublisherModule
-    {
-        private bool _disposed;  
-        
+    {       
         private IEnumerable<IHostRegistry> Registries { get; set; }
         private Dictionary<Type, IHostItem> _messageHostItem;  // Message Type => Host Item
         
@@ -32,6 +31,18 @@ namespace NetFusion.AMQP.Plugin.Modules
             AssertHostItems(hostItems);
 
             _messageHostItem = hostItems.ToDictionary(i => i.MessageType);
+        }
+
+        protected override async Task OnStopModuleAsync(IServiceProvider services)
+        {
+            foreach(var hostItem in _messageHostItem.Values)
+            {
+                var senderHostItem = (ISenderHostItem) hostItem;
+                if (senderHostItem.SenderLink != null)
+                {
+                    await senderHostItem.SenderLink.CloseAsync();
+                }
+            }
         }
 
         public bool HasHostItem(Type messageType)
@@ -67,19 +78,6 @@ namespace NetFusion.AMQP.Plugin.Modules
                     "Message types can only be associated with one type of host item (i.e. Queue/Topic).  " + 
                     $"The following message types are invalid: {string.Join(",", invalidMessageTypes)}");    
             }
-        }
-        
-        protected override void Dispose(bool dispose)
-        {
-            if (! dispose || _disposed) return;
-
-            foreach(var hostItem in _messageHostItem.Values)
-            {
-                var senderHostItem = (ISenderHostItem) hostItem;
-                senderHostItem.SenderLink?.Close();
-            }
-
-            _disposed = true;
         }
     }
 }

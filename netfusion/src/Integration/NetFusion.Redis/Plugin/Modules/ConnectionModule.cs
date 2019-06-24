@@ -24,7 +24,6 @@ namespace NetFusion.Redis.Plugin.Modules
         // to the corresponding created connection. 
         private readonly Dictionary<string, CachedConnection> _connections;
         private RedisSettings _redisSettings;
-        private bool _disposed;
 
         public ConnectionModule()
         {
@@ -64,6 +63,14 @@ namespace NetFusion.Redis.Plugin.Modules
                 var connection = await ConnectionMultiplexer.ConnectAsync(connOptions, logger);
                 
                 _connections[connSetting.Name] = new CachedConnection(connOptions, connection);
+            }
+        }
+
+        protected override async Task OnStopModuleAsync(IServiceProvider services)
+        {
+            foreach(CachedConnection cachedConn in _connections.Values)
+            {
+                await cachedConn.Connection.CloseAsync();
             }
         }
 
@@ -116,18 +123,6 @@ namespace NetFusion.Redis.Plugin.Modules
         {
             CachedConnection cachedConn = GetConnection(connectionName);
             return cachedConn.Connection.GetSubscriber();
-        }
-
-        protected override void Dispose(bool dispose)
-        {
-            if (! dispose || _disposed) return;
-
-            foreach(CachedConnection cachedConn in _connections.Values)
-            {
-                cachedConn.Connection.Dispose();
-            }
-
-            _disposed = true;
         }
 
         // https://github.com/grecosoft/NetFusion/wiki/core.logging.composite#module-logging

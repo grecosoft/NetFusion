@@ -19,9 +19,8 @@ namespace NetFusion.AMQP.Plugin.Modules
     public class ConnectionModule : PluginModule,
         IConnectionModule
     {
-        private bool _disposing;
-        private bool _disposed;
-       
+        private bool _isModuleStopped = false;
+        
         // The configured host settings.
         private AmqpHostSettings _amqpSettings;
 
@@ -52,7 +51,22 @@ namespace NetFusion.AMQP.Plugin.Modules
         {
             return CreateReceiverConnections();
         }
-        
+
+        protected override async Task OnStopModuleAsync(IServiceProvider services)
+        {
+            _isModuleStopped = true;
+            
+            foreach (Session session in _receiverSessions)
+            {
+                await session.CloseAsync();
+            }
+
+            foreach (Connection connection in _receiverConnections.Values)
+            {
+                await connection.CloseAsync();
+            }
+        }
+
         private HostSettings GetHostSettings(string hostName)
         {
             HostSettings host = _amqpSettings.Hosts.FirstOrDefault(h => h.HostName == hostName);
@@ -63,11 +77,6 @@ namespace NetFusion.AMQP.Plugin.Modules
             }
 
             return host;
-        }
-
-        public void SimulateClose()
-        {
-            _receiverConnections.First().Value.Close();
         }
         
         //-- AMQP Sender Connection Methods:
@@ -176,7 +185,7 @@ namespace NetFusion.AMQP.Plugin.Modules
 
         private Task ReSetReceiverConnection(string hostName)
         {
-            if (_disposing)
+            if (_isModuleStopped)
             {
                 return Task.CompletedTask;
             }
@@ -200,25 +209,6 @@ namespace NetFusion.AMQP.Plugin.Modules
             {
                 Context.Logger.LogDebug("AMQP Items was closed.");
             }
-        }
-      
-        protected override void Dispose(bool dispose)
-        {
-            if (! dispose || _disposed) return;
-
-            _disposing = true;
-
-            foreach (Session session in _receiverSessions)
-            {
-                session.Close();
-            }
-
-            foreach (Connection connection in _receiverConnections.Values)
-            {
-                connection.Close();
-            }
-            
-            _disposed = true;
         }
     }
 }

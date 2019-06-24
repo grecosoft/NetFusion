@@ -17,9 +17,7 @@ namespace NetFusion.AMQP.Plugin.Modules
     /// host defined items (i.e. Queues/Topics) to which they should be subscribed.
     /// </summary>
     public class SubscriberModule : PluginModule
-    {
-        private bool _disposed;
-        
+    {       
         private static readonly object ReceiverReConnLock = new object();
         
         // Dependent Modules:
@@ -52,14 +50,21 @@ namespace NetFusion.AMQP.Plugin.Modules
             return LinkHandlersToHostItems(_subscriptionSettings);
         }
 
-        protected override Task OnStopModuleAsync(IServiceProvider services)
+        protected override async Task OnStopModuleAsync(IServiceProvider services)
         {
-            if (_subscriptionSettings == null)
-            {
-                return base.OnRunModuleAsync(services);
-            }
             
-             return _subscriptionSettings.CleanupSettings();
+            foreach(var itemSubscriber in _subscribers)
+            {
+                if (itemSubscriber.ReceiverLink != null)
+                {
+                    await itemSubscriber.ReceiverLink.CloseAsync();
+                }
+            }
+
+            if (_subscriptionSettings != null)
+            {
+                await _subscriptionSettings.CleanupSettings();
+            }
         }
 
         private static HostItemSubscriber[] GetHostSubscribers(IMessageDispatchModule dispatchModule)
@@ -113,18 +118,6 @@ namespace NetFusion.AMQP.Plugin.Modules
                     LinkSubscriber(subscriber, _subscriptionSettings);
                 }
             }
-        }
-        
-        protected override void Dispose(bool dispose)
-        {
-            if (! dispose || _disposed) return;
-
-            foreach(var itemSubscriber in _subscribers)
-            {
-                itemSubscriber.ReceiverLink?.Close();
-            }
-
-            _disposed = true;
         }
     }
 }
