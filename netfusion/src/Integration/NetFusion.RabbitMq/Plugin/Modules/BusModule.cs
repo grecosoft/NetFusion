@@ -40,12 +40,20 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         // name unique to a given application host allowing for messages to be delivered round
         // robin among a set of running application instances.
         public string HostAppId => Context.AppHost.PluginId;
+        
+        //------------------------------------------------------
+        //--Plugin Initialization
+        //------------------------------------------------------
 
         // Creates IBus instances for each configured bus.
         public override void Initialize()
         {
             _busSettings = Context.Configuration.GetSettings(Context.Logger, new BusSettings());
         }
+        
+        //------------------------------------------------------
+        //--Plugin Execution
+        //------------------------------------------------------
 
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {
@@ -72,7 +80,42 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             
             return base.OnStopModuleAsync(services);
         }
+        
+        //------------------------------------------------------
+        //--Plugin Services
+        //------------------------------------------------------
 
+        public IBus GetBus(string named)
+        {
+            if (string.IsNullOrWhiteSpace(named))
+                throw new ArgumentException("Bus name not specified.", nameof(named));
+
+            if (! _buses.TryGetValue(named, out IBus bus))
+            {
+                throw new InvalidOperationException(
+                    $"The bus named: {named} has not been configured.  Check application configuration.");
+            }
+            return bus;
+        }
+
+        public void ApplyExchangeSettings(ExchangeMeta meta)
+        {
+            ApplyExchangeSettingsInternal(meta);
+        }
+
+        public void ApplyQueueSettings(QueueMeta meta)
+        {
+            if (meta == null) throw new ArgumentNullException(nameof(meta));
+
+            var queueSettings = GetQueueSettings(meta.Exchange.BusName, meta.QueueName);
+            if (queueSettings != null)
+            {
+                meta.ApplyOverrides(queueSettings);
+            }
+            
+            ApplyExchangeSettingsInternal(meta.Exchange, applyQueueSettings: false);
+        }
+        
         private void CreateBus(BusConnection conn)
         {
             if (_buses.ContainsKey(conn.BusName))
@@ -131,37 +174,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             clientProps["AppHost Version"] = appHostPlugin.AssemblyVersion;
             clientProps["AppHost Description"] = appHostPlugin.Description;
             clientProps["Machine Name"] = Environment.MachineName;          
-        }
-
-        public IBus GetBus(string named)
-        {
-            if (string.IsNullOrWhiteSpace(named))
-                throw new ArgumentException("Bus name not specified.", nameof(named));
-
-            if (! _buses.TryGetValue(named, out IBus bus))
-            {
-                throw new InvalidOperationException(
-                    $"The bus named: {named} has not been configured.  Check application configuration.");
-            }
-            return bus;
-        }
-
-        public void ApplyExchangeSettings(ExchangeMeta meta)
-        {
-            ApplyExchangeSettingsInternal(meta);
-        }
-
-        public void ApplyQueueSettings(QueueMeta meta)
-        {
-            if (meta == null) throw new ArgumentNullException(nameof(meta));
-
-            var queueSettings = GetQueueSettings(meta.Exchange.BusName, meta.QueueName);
-            if (queueSettings != null)
-            {
-                meta.ApplyOverrides(queueSettings);
-            }
-            
-            ApplyExchangeSettingsInternal(meta.Exchange, applyQueueSettings: false);
         }
         
         private void ApplyExchangeSettingsInternal(ExchangeMeta meta, bool applyQueueSettings = true)

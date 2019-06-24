@@ -41,10 +41,18 @@ namespace NetFusion.AMQP.Plugin.Modules
             _receiverSessions = new List<Session>();
         }
         
+        //------------------------------------------------------
+        //--Plugin Initialization
+        //------------------------------------------------------
+        
         public override void Initialize()
         {
             _amqpSettings = Context.Configuration.GetSettings(Context.Logger, new AmqpHostSettings());
         }
+        
+        //------------------------------------------------------
+        //--Plugin Execution
+        //------------------------------------------------------
 
         // Create connections to the configured hosts to be used for receiving messages.
         protected override Task OnStartModuleAsync(IServiceProvider services)
@@ -79,7 +87,9 @@ namespace NetFusion.AMQP.Plugin.Modules
             return host;
         }
         
-        //-- AMQP Sender Connection Methods:
+        //--------------------------------------------------------------------
+        //-- Sender Connection Services:
+        //--------------------------------------------------------------------
         
         public async Task<Session> CreateSenderSession(string hostName)
         {
@@ -129,8 +139,33 @@ namespace NetFusion.AMQP.Plugin.Modules
             _senderConnections[hostName] = connection;
         }
         
-        //-- AMQP Receiver Connection Methods:
+        //--------------------------------------------------------------------
+        //-- Receiver Connection Services:
+        //--------------------------------------------------------------------
 
+        public void SetReceiverConnectionCloseHandler(Action<string> handler)
+        {
+            _receiverConnCloseHandler = handler ?? throw new ArgumentNullException(nameof(handler));
+        }
+
+        public Session CreateReceiverSession(string hostName)
+        {
+            if (string.IsNullOrWhiteSpace(hostName))
+                throw new ArgumentException("Host Name not specified.", nameof(hostName));
+
+            if (! _receiverConnections.TryGetValue(hostName, out Connection connection))
+            {
+                throw new InvalidOperationException(
+                    $"Host with the name: {hostName} is not configured and does not have a connection.");
+            }
+            
+            Session session = new Session(connection);
+            session.Closed += (sender, error) => { LogItemClosed("Receiver Session", error); };
+            
+            _receiverSessions.Add(session);
+            return session;
+        }
+        
         private async Task CreateReceiverConnections()
         {
             foreach (HostSettings host in _amqpSettings.Hosts)
@@ -158,30 +193,7 @@ namespace NetFusion.AMQP.Plugin.Modules
                 
                 _receiverConnCloseHandler?.Invoke(hostName);
             };
-        }
-
-        public void SetReceiverConnectionCloseHandler(Action<string> handler)
-        {
-            _receiverConnCloseHandler = handler ?? throw new ArgumentNullException(nameof(handler));
-        }
-
-        public Session CreateReceiverSession(string hostName)
-        {
-            if (string.IsNullOrWhiteSpace(hostName))
-                throw new ArgumentException("Host Name not specified.", nameof(hostName));
-
-            if (! _receiverConnections.TryGetValue(hostName, out Connection connection))
-            {
-                throw new InvalidOperationException(
-                    $"Host with the name: {hostName} is not configured and does not have a connection.");
-            }
-            
-            Session session = new Session(connection);
-            session.Closed += (sender, error) => { LogItemClosed("Receiver Session", error); };
-            
-            _receiverSessions.Add(session);
-            return session;
-        }
+        }       
 
         private Task ReSetReceiverConnection(string hostName)
         {

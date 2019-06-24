@@ -29,6 +29,10 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
         // Message handlers subscribed to queues:
         private MessageQueueSubscriber[] _subscribers;
+        
+        //------------------------------------------------------
+        //--Plugin Execution
+        //------------------------------------------------------
 
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {

@@ -23,6 +23,10 @@ namespace NetFusion.EntityFramework.Plugin.Modules
         private EntityDbRegistration[] _registrations;
         private Dictionary<Type, IEntityTypeMapping[]> _contextMappings;
         
+        //------------------------------------------------------
+        //--Plugin Initialization
+        //------------------------------------------------------
+        
         public override void Initialize()
         {
             // Finds all context derived types:

@@ -20,6 +20,10 @@ namespace NetFusion.Settings.Plugin.Modules
     /// </summary>
     public class AppSettingsModule : PluginModule
     {
+        //------------------------------------------------------
+        //--Plugin Initialization
+        //------------------------------------------------------
+        
         public override void RegisterServices(IServiceCollection services)
         {
             IEnumerable<Type> appSettingTypes = Context.AllPluginTypes
@@ -59,6 +63,10 @@ namespace NetFusion.Settings.Plugin.Modules
                     return appSettings;
                 }));
         }
+        
+        //------------------------------------------------------
+        //--Plugin Execution
+        //------------------------------------------------------
 
         public override void Log(IDictionary<string, object> moduleLog)
         {

@@ -33,10 +33,18 @@ namespace NetFusion.AMQP.Plugin.Modules
         // Message handlers subscribed to host items such as queues and topics.
         private HostItemSubscriber[] _subscribers;
 
+        //------------------------------------------------------
+        //--Plugin Initialization
+        //------------------------------------------------------
+        
         public override void RegisterDefaultServices(IServiceCollection services)
         {
             services.AddSingleton<ISubscriptionSettings, NullSubscriptionSettings>();
         }
+        
+        //------------------------------------------------------
+        //--Plugin Execution
+        //------------------------------------------------------
         
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {

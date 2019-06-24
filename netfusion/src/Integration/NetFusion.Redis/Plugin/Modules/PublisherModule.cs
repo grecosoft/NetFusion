@@ -23,6 +23,10 @@ namespace NetFusion.Redis.Plugin.Modules
         // Maps a domain-event type to a specific channel instance.
         private Dictionary<Type, ChannelMeta> _channels;
         
+        //------------------------------------------------------
+        //--Plugin Initialization
+        //------------------------------------------------------
+        
         public override void Initialize()
         {
             ChannelMeta[] eventPubChannels = Registries
@@ -54,6 +58,10 @@ namespace NetFusion.Redis.Plugin.Modules
                     "duplicate-events", duplicateEventTypes);
             }
         }
+        
+        //------------------------------------------------------
+        //--Plugin Services
+        //------------------------------------------------------
 
         public bool HasChannel(Type domainEventType)
         {

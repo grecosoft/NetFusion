@@ -22,6 +22,10 @@ namespace NetFusion.AMQP.Plugin.Modules
         private IEnumerable<IHostRegistry> Registries { get; set; }
         private Dictionary<Type, IHostItem> _messageHostItem;  // Message Type => Host Item
         
+        //------------------------------------------------------
+        //--Plugin Initialization
+        //------------------------------------------------------
+        
         public override void Initialize()
         {
             IHostItem[] hostItems = Registries
@@ -32,6 +36,24 @@ namespace NetFusion.AMQP.Plugin.Modules
 
             _messageHostItem = hostItems.ToDictionary(i => i.MessageType);
         }
+
+        private static void AssertHostItems(IEnumerable<IHostItem> hostItems)
+        {
+            var invalidMessageTypes = hostItems.WhereDuplicated(i => i.MessageType)
+                .Select(di => di.FullName)
+                .ToArray();
+
+            if (invalidMessageTypes.Any())
+            {
+                throw new ContainerException(
+                    "Message types can only be associated with one type of host item (i.e. Queue/Topic).  " + 
+                    $"The following message types are invalid: {string.Join(",", invalidMessageTypes)}");    
+            }
+        }
+        
+        //------------------------------------------------------
+        //--Plugin Execution
+        //------------------------------------------------------
 
         protected override async Task OnStopModuleAsync(IServiceProvider services)
         {
@@ -44,6 +66,10 @@ namespace NetFusion.AMQP.Plugin.Modules
                 }
             }
         }
+        
+        //------------------------------------------------------
+        //--Plugin Services
+        //------------------------------------------------------
 
         public bool HasHostItem(Type messageType)
         {
@@ -64,20 +90,6 @@ namespace NetFusion.AMQP.Plugin.Modules
             }
 
             return _messageHostItem[messageType];
-        }
-        
-        private static void AssertHostItems(IEnumerable<IHostItem> hostItems)
-        {
-            var invalidMessageTypes = hostItems.WhereDuplicated(i => i.MessageType)
-                .Select(di => di.FullName)
-                .ToArray();
-
-            if (invalidMessageTypes.Any())
-            {
-                throw new ContainerException(
-                    "Message types can only be associated with one type of host item (i.e. Queue/Topic).  " + 
-                    $"The following message types are invalid: {string.Join(",", invalidMessageTypes)}");    
-            }
         }
     }
 }

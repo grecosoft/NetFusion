@@ -18,6 +18,10 @@ namespace NetFusion.Roslyn.Plugin.Modules
         // The list of scripts that can be applied against entities 
         // of the same matching type.
         private IEnumerable<EntityScript> _scripts;
+        
+        //------------------------------------------------------
+        //--Plugin Initialization
+        //------------------------------------------------------
 
         public override void RegisterServices(IServiceCollection services)
         {
@@ -26,6 +30,10 @@ namespace NetFusion.Roslyn.Plugin.Modules
             services.AddSingleton<IEntityScriptingService, EntityScriptingService>();
         }
 
+        //------------------------------------------------------
+        //--Plugin Execution
+        //------------------------------------------------------
+        
         protected override async Task OnRunModuleAsync(IServiceProvider services)
         {
             IEntityScriptMetaRepository expressionRep = services.GetService<IEntityScriptMetaRepository>();

@@ -20,6 +20,10 @@ namespace NetFusion.Messaging.Plugin.Modules
     {
         private IDictionary<Type, QueryDispatchInfo> _queryDispatchers; // QueryType => DispatchInfo
 
+        //------------------------------------------------------
+        //--Plugin Initialization
+        //------------------------------------------------------
+        
         // Create dictionary used to resolve how a query type is dispatched.  
         public override void Initialize()
         {
@@ -55,6 +59,10 @@ namespace NetFusion.Messaging.Plugin.Modules
                     "A query can only have one consumer.");
             }
         }
+        
+        //------------------------------------------------------
+        //--Plugin Services
+        //------------------------------------------------------
 
         public QueryDispatchInfo GetQueryDispatchInfo(Type queryType)
         {

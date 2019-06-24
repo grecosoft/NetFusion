@@ -29,6 +29,10 @@ namespace NetFusion.Redis.Plugin.Modules
         {
             _connections = new Dictionary<string, CachedConnection>();            
         }
+        
+        //------------------------------------------------------
+        //--Plugin Initialization
+        //------------------------------------------------------
 
         public override void Configure()
         {
@@ -36,6 +40,24 @@ namespace NetFusion.Redis.Plugin.Modules
 
             AssertSettings(_redisSettings);
         }
+        
+        private static void AssertSettings(RedisSettings settings)
+        {
+            var duplicateConnNames = settings.Connections
+                .WhereDuplicated(s => s.Name)
+                .ToArray();
+
+            if (duplicateConnNames.Any())
+            {
+                throw new ContainerException("Configured database names must be unique.", 
+                    "duplicate-connection-names", 
+                    duplicateConnNames);
+            }
+        }
+        
+        //------------------------------------------------------
+        //--Plugin Execution
+        //------------------------------------------------------
 
         protected override async Task OnStartModuleAsync(IServiceProvider services)
         {
@@ -74,20 +96,26 @@ namespace NetFusion.Redis.Plugin.Modules
             }
         }
 
-        private static void AssertSettings(RedisSettings settings)
-        {
-            var duplicateConnNames = settings.Connections
-                .WhereDuplicated(s => s.Name)
-                .ToArray();
+        //------------------------------------------------------
+        //--Plugin Services
+        //------------------------------------------------------
 
-            if (duplicateConnNames.Any())
-            {
-                throw new ContainerException("Configured database names must be unique.", 
-                    "duplicate-connection-names", 
-                    duplicateConnNames);
-            }
+        public IDatabase GetDatabase(string connectionName, int? database = null)
+        {
+            CachedConnection cachedConn = GetConnection(connectionName);
+            int? databaseId = database ?? cachedConn.Configuration.DefaultDatabase;
+
+            return databaseId == null
+                ? cachedConn.Connection.GetDatabase()
+                : cachedConn.Connection.GetDatabase(databaseId.Value);
         }
 
+        public ISubscriber GetSubscriber(string connectionName)
+        {
+            CachedConnection cachedConn = GetConnection(connectionName);
+            return cachedConn.Connection.GetSubscriber();
+        }
+        
         private CachedConnection GetConnection(string connectionName)
         {
             if (string.IsNullOrWhiteSpace(connectionName))
@@ -107,22 +135,6 @@ namespace NetFusion.Redis.Plugin.Modules
             }
 
             return cachedConn;
-        }
-
-        public IDatabase GetDatabase(string connectionName, int? database = null)
-        {
-            CachedConnection cachedConn = GetConnection(connectionName);
-            int? databaseId = database ?? cachedConn.Configuration.DefaultDatabase;
-
-            return databaseId == null
-                ? cachedConn.Connection.GetDatabase()
-                : cachedConn.Connection.GetDatabase(databaseId.Value);
-        }
-
-        public ISubscriber GetSubscriber(string connectionName)
-        {
-            CachedConnection cachedConn = GetConnection(connectionName);
-            return cachedConn.Connection.GetSubscriber();
         }
 
         // https://github.com/grecosoft/NetFusion/wiki/core.logging.composite#module-logging

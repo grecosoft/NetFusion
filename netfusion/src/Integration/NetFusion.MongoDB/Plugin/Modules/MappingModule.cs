@@ -18,6 +18,10 @@ namespace NetFusion.MongoDB.Plugin.Modules
         // Discovered Properties:
         public IEnumerable<IEntityClassMap> Mappings { get; private set; }
 
+        //------------------------------------------------------
+        //--Plugin Initialization
+        //------------------------------------------------------
+        
         // Configures MongoDB driver with mappings.
         public override void Configure()
         {
@@ -33,6 +37,10 @@ namespace NetFusion.MongoDB.Plugin.Modules
                 }
             }  
         }
+        
+        //------------------------------------------------------
+        //--Plugin Services
+        //------------------------------------------------------
 
         public string GetEntityDiscriminator(Type mappedEntityType, Type knownEntityType)
         {

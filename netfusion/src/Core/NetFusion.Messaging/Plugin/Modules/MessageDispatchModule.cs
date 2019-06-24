@@ -34,6 +34,10 @@ namespace NetFusion.Messaging.Plugin.Modules
         public ILookup<Type, MessageDispatchInfo> AllMessageTypeDispatchers { get; private set; } // MessageType => Dispatcher(s)
         public ILookup<Type, MessageDispatchInfo> InProcessDispatchers { get; private set; } //MessageType => Dispatcher(s)
 
+        //------------------------------------------------------
+        //--Plugin Initialization
+        //------------------------------------------------------
+        
         // Stores type meta-data for the message consumers that
         // should be notified when a given message is published. 
         public override void Initialize()
@@ -125,6 +129,10 @@ namespace NetFusion.Messaging.Plugin.Modules
                     "InvalidHandlers", invalidEvtHandlers);
             }
         }
+        
+        //------------------------------------------------------
+        //--Plugin Services
+        //------------------------------------------------------
 
         public MessageDispatchInfo GetInProcessCommandDispatcher(Type commandType)
         {

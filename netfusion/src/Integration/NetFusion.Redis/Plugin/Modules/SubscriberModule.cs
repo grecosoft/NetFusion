@@ -33,21 +33,13 @@ namespace NetFusion.Redis.Plugin.Modules
         // Message handlers subscribed to Redis channels:
         private MessageChannelSubscriber[] _subscribers;
 
+        //------------------------------------------------------
+        //--Plugin Initialization
+        //------------------------------------------------------
+        
         public override void Configure()
         {
             _subscribers = GetChannelSubscribers();
-        }
-
-        public override void RegisterDefaultServices(IServiceCollection services)
-        {
-            services.AddSingleton<ISubscriptionService, SubscriptionService>();
-        }
-
-        protected override Task OnStartModuleAsync(IServiceProvider services)
-        {
-            _serializationManager = services.GetRequiredService<ISerializationManager>();
-
-            return SubscribeToChannels(_subscribers);
         }
         
         // Delegates to the core message dispatch module to find all message dispatch
@@ -58,6 +50,22 @@ namespace NetFusion.Redis.Plugin.Modules
                 .Values().Where(MessageChannelSubscriber.IsSubscriber)
                 .Select(d => new MessageChannelSubscriber(d))
                 .ToArray();
+        }
+
+        public override void RegisterDefaultServices(IServiceCollection services)
+        {
+            services.AddSingleton<ISubscriptionService, SubscriptionService>();
+        }
+        
+        //------------------------------------------------------
+        //--Plugin Execution
+        //------------------------------------------------------
+
+        protected override Task OnStartModuleAsync(IServiceProvider services)
+        {
+            _serializationManager = services.GetRequiredService<ISerializationManager>();
+
+            return SubscribeToChannels(_subscribers);
         }
         
         private async Task SubscribeToChannels(IEnumerable<MessageChannelSubscriber> subscribers)

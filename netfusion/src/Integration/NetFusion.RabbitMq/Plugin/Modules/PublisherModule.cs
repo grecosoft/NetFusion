@@ -46,6 +46,10 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         {
             _exchangeRpcClients = new Dictionary<string, IRpcClient>();
         }
+        
+        //------------------------------------------------------
+        //--Plugin Initialization
+        //------------------------------------------------------
 
         public override void Configure()
         {
@@ -58,45 +62,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
             _messageExchanges = definitions.ToDictionary(m => m.MessageType);
         } 
-
-        protected override async Task OnStartModuleAsync(IServiceProvider services)
-        {
-            CreateExchangeRpcClients(_messageExchanges.Values);
-            
-            foreach (IRpcClient client in _exchangeRpcClients.Values)
-            {
-                await client.CreateAndSubscribeToReplyQueueAsync();
-            }
-        }
-
-        protected override Task OnStopModuleAsync(IServiceProvider services)
-        {
-            foreach(IRpcClient client in _exchangeRpcClients.Values)
-            {
-                client.Dispose();
-            }
-            
-            return base.OnStopModuleAsync(services);
-        }
-
-        public bool IsExchangeMessage(Type messageType)
-        {
-            if (messageType == null) throw new ArgumentNullException(nameof(messageType));
-            return _messageExchanges.ContainsKey(messageType);
-        }
-
-        public ExchangeMeta GetDefinition(Type messageType)
-        {
-            if (messageType == null) throw new ArgumentNullException(nameof(messageType));
-
-            if (! IsExchangeMessage(messageType))
-            {
-                throw new InvalidOperationException(
-                    $"No exchange definition registered for message type: {messageType}");
-            }
-            return _messageExchanges[messageType];
-        }
-
+        
         // All exchange types:  Direct, Topic, and Fan-out are defined within code with the most common default
         // values.  These default values can be overridden by specifying them within the application's configuration.
         private void ApplyConfiguredOverrides(IEnumerable<ExchangeMeta> definitions)
@@ -106,7 +72,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 _busModule.ApplyExchangeSettings(definition);
             }
         }
-
+        
         private static void AssertExchangeDefinitions(ExchangeMeta[] definitions)
         {
             AssertNoDuplicateExchanges(definitions);
@@ -172,6 +138,30 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             } 
         }
 
+        //------------------------------------------------------
+        //--Plugin Execution
+        //------------------------------------------------------
+        
+        protected override async Task OnStartModuleAsync(IServiceProvider services)
+        {
+            CreateExchangeRpcClients(_messageExchanges.Values);
+            
+            foreach (IRpcClient client in _exchangeRpcClients.Values)
+            {
+                await client.CreateAndSubscribeToReplyQueueAsync();
+            }
+        }
+
+        protected override Task OnStopModuleAsync(IServiceProvider services)
+        {
+            foreach(IRpcClient client in _exchangeRpcClients.Values)
+            {
+                client.Dispose();
+            }
+            
+            return base.OnStopModuleAsync(services);
+        }
+        
         // Creates a RPC client for each RPC exchange.  RPC style commands are passed through
         // this client when sent.  It also monitors the reply queue for commands responses 
         // that are correlated back to the original sent command.
@@ -187,7 +177,39 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 }
             }
         }
+        
+        protected virtual IRpcClient CreateRpcClient(ExchangeMeta definition)
+        {
+            IBus bus = _busModule.GetBus(definition.BusName);
+            var rpcClient = new RpcClient(definition.BusName, definition.QueueMeta.QueueName, bus);
+            var logger = Context.LoggerFactory.CreateLogger<RpcClient>();
 
+            rpcClient.SetLogger(logger);
+            return rpcClient;
+        }
+        
+        //------------------------------------------------------
+        //--Plugin Services
+        //------------------------------------------------------
+
+        public bool IsExchangeMessage(Type messageType)
+        {
+            if (messageType == null) throw new ArgumentNullException(nameof(messageType));
+            return _messageExchanges.ContainsKey(messageType);
+        }
+
+        public ExchangeMeta GetDefinition(Type messageType)
+        {
+            if (messageType == null) throw new ArgumentNullException(nameof(messageType));
+
+            if (! IsExchangeMessage(messageType))
+            {
+                throw new InvalidOperationException(
+                    $"No exchange definition registered for message type: {messageType}");
+            }
+            return _messageExchanges[messageType];
+        }
+        
         public IRpcClient GetRpcClient(string busName, string queueName)
         {
             if (string.IsNullOrWhiteSpace(busName))
@@ -204,16 +226,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             }
 
             return client;
-        }
-
-        protected virtual IRpcClient CreateRpcClient(ExchangeMeta definition)
-        {
-            IBus bus = _busModule.GetBus(definition.BusName);
-            var rpcClient = new RpcClient(definition.BusName, definition.QueueMeta.QueueName, bus);
-            var logger = Context.LoggerFactory.CreateLogger<RpcClient>();
-
-            rpcClient.SetLogger(logger);
-            return rpcClient;
         }
 
         public override void Log(IDictionary<string, object> moduleLog)
