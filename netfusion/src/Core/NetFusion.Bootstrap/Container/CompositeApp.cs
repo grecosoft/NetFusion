@@ -41,7 +41,6 @@ namespace NetFusion.Bootstrap.Container
             _builder = builder ?? throw new ArgumentNullException(nameof(builder));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-           
         }
 
   
@@ -93,6 +92,11 @@ namespace NetFusion.Bootstrap.Container
                 throw LogException(new ContainerException(
                     "Error starting container. See Inner Exception.", ex));
             }
+        }
+
+        public void Start()
+        {
+            StartAsync().GetAwaiter().GetResult();
         }
         
         private async Task StartModules(IServiceProvider services)
@@ -170,7 +174,6 @@ namespace NetFusion.Bootstrap.Container
             ValidationConfig validationConfig = _builder.GetContainerConfig<ValidationConfig>();
             return (IObjectValidator)Activator.CreateInstance(validationConfig.ValidatorType, obj);
         }
-
         
         //-----------------------------------------------------
         //--Stopping Composite Application
@@ -211,6 +214,11 @@ namespace NetFusion.Bootstrap.Container
                 throw LogException(new ContainerException(
                     "Error stopping composite-application.  See Inner Exception.", ex));
             }
+        }
+        
+        public void Stop()
+        {
+            StopAsync().GetAwaiter().GetResult();
         }
         
         private async Task StopPluginModulesAsync(IServiceProvider services)

@@ -22,6 +22,11 @@ namespace NetFusion.Bootstrap.Container
         Task StartAsync();
 
         /// <summary>
+        /// Starts each plugin module.
+        /// </summary>
+        void Start();
+
+        /// <summary>
         /// Allows for service-location from a component that is not registered in the container.
         /// </summary>
         /// <returns>Service scope from which services can be resolved.  The scope must be
@@ -41,5 +46,10 @@ namespace NetFusion.Bootstrap.Container
         /// </summary>
         /// <returns>Task that cna be awaited after which all plugin modules will have been stopped.</returns>
         Task StopAsync();
+
+        /// <summary>
+        /// Stops each plugin module.
+        /// </summary>
+        void Stop();
     }
 }

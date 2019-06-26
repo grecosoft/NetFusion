@@ -14,7 +14,6 @@ namespace Service.WebApi
     // to the Startup class to initialize HTTP pipeline related settings.
     public class Program
     {
-        // https://github.com/grecosoft/NetFusion/wiki/core.bootstrap.overview#bootstrapping---overview
         public static async Task Main(string[] args)
         {
             IWebHost webHost = BuildWebHost(args);
@@ -24,7 +23,7 @@ namespace Service.WebApi
 
             lifetime.ApplicationStopping.Register(() =>
             {
-                compositeApp.StopAsync().Wait();
+                compositeApp.Stop();
             });
                   
             await compositeApp.StartAsync();
