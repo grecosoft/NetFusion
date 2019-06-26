@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Bootstrap.Validation;
 using NetFusion.Serialization;
@@ -22,10 +23,9 @@ namespace NetFusion.Builder
         
         internal CompositeContainerBuilder(IServiceCollection serviceCollection, IConfiguration configuration)
         {
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            
             _serviceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
-            
-            RegisterCommonContainerServices(serviceCollection);
-            
             _container = new CompositeContainer(serviceCollection, configuration);
         }
         
@@ -59,39 +59,49 @@ namespace NetFusion.Builder
         {
             var resolver = new TypeResolver();
             
-            _container.Compose(resolver);
-            
-        
-            //LogBuilderConfig(composite.ServiceProvider);
+            RegisterCommonContainerServices();
+
+            try
+            {
+                // Not until the ICompositeApp has been created will the service-provider
+                // be created and the ILogger available.  Until this point, all logs are
+                // written to the IBootstrapLogger.  This is new from .net core 3.0 forward.
+                _container.Compose(resolver);
+                
+                _container.BootstrapLogger.WriteToStandardOut();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+                 _container.BootstrapLogger.WriteToStandardOut();
+            }
         }
 
-        private static void RegisterCommonContainerServices(IServiceCollection services)
+        private void RegisterCommonContainerServices()
         {
-            services.AddSingleton<LoggerFactory>();
-            services.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();
-            services.AddSingleton<IValidationService, ValidationService>();
-            services.AddSingleton<ISerializationManager, SerializationManager>();
+            _container.BootstrapLogger.Add(LogLevel.Information, 
+                "Adding NetFusion Required and Default Services");
+            
+            RegisterDefaultService(typeof(LoggerFactory));
+            RegisterDefaultService(typeof(IEntityScriptingService), typeof(NullEntityScriptingService));
+            RegisterDefaultService(typeof(IValidationService), typeof(ValidationService));
+            RegisterDefaultService(typeof(ISerializationManager), typeof(SerializationManager));
+        }
+        
+        private void RegisterDefaultService(Type implementationType)
+        {
+            _serviceCollection.AddSingleton(implementationType);
+            
+            _container.BootstrapLogger.Add(LogLevel.Information, 
+                $"Implementation: {implementationType} ");
         }
 
-//        private void LogBuilderConfig(IServiceProvider serviceProvider)
-//        {
-//            var serializationMgr = serviceProvider.GetService<ISerializationManager>();
-//
-//            if (serializationMgr == null || !_logger.IsEnabled(LogLevel.Debug))
-//            {
-//                return;
-//            }
-//
-//            var details = new
-//            {
-//                SerializationManager = serializationMgr.GetType().FullName,
-//                Serializers = serializationMgr.Serializers.Select(s => new {
-//                    s.ContentType,
-//                    SerializerType = s.GetType().FullName
-//                }).ToArray()
-//            };
-//
-//            _logger.LogDebug(details.ToIndentedJson());
-//        }
+        private void RegisterDefaultService(Type serviceType, Type implementationType)
+        {
+            _serviceCollection.AddSingleton(serviceType, implementationType);
+            
+            _container.BootstrapLogger.Add(LogLevel.Information, 
+                $"Service: {serviceType}; Implementation: {implementationType} ");
+        }
     }
 }

@@ -47,7 +47,14 @@ namespace NetFusion.AMQP.Plugin.Modules
         
         public override void Initialize()
         {
-            _amqpSettings = Context.Configuration.GetSettings(Context.Logger, new AmqpHostSettings());
+            try
+            {
+                _amqpSettings = Context.Configuration.GetSettings(new AmqpHostSettings());
+            }
+            catch (SettingsValidationException ex)
+            {
+                Context.BootstrapLogger.Add(LogLevel.Error, ex.Message);
+            }   
         }
         
         //------------------------------------------------------

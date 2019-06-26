@@ -31,6 +31,7 @@ namespace NetFusion.Bootstrap.Container
         public IPlugin[] AllPlugins { get; private set; }
         public IPluginModule[] AllModules => AllPlugins.SelectMany(p => p.Modules).ToArray();
         
+        public IBootstrapLogger BootstrapLogger { get; }
         public CompositeAppLog CompositeLog { get; private set; }
         
         public CompositeAppBuilder(IConfiguration configuration)
@@ -38,6 +39,7 @@ namespace NetFusion.Bootstrap.Container
             _containerConfigs = new List<IContainerConfig>();
             
             Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            BootstrapLogger = new BootstrapLogger();
         }
         
         //---------------------------------------------

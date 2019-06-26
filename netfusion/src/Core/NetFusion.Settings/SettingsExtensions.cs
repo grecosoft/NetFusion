@@ -44,10 +44,9 @@ namespace NetFusion.Settings
         /// </summary>
         /// <typeparam name="T">The derived IAppSettings type.</typeparam>
         /// <param name="configuration">The application's configuration.</param>
-        /// <param name="logger">The logger to write configuration validation errors.</param>
         /// <param name="defaultValue">the default settings to return if not configured.</param>
         /// <returns>The application settings populated from the configuration.</returns>
-        public static T GetSettings<T>(this IConfiguration configuration, ILogger logger, T defaultValue = null)
+        public static T GetSettings<T>(this IConfiguration configuration, T defaultValue = null)
             where T : class, IAppSettings
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
@@ -67,13 +66,27 @@ namespace NetFusion.Settings
                     $"for the settings of type: {typeof(T)}.");
             }
 
-            ValidateSettings(logger, settings);
+            ValidateSettings(settings);
             return settings;
+        }
+
+        private static void ValidateSettings(object settings)
+        {
+            IObjectValidator validator = new DataAnnotationsValidator(settings);
+            var result = validator.Validate();
+
+            if (result.IsInvalid)
+            {
+                string section = GetSectionPath(settings.GetType());
+                throw new SettingsValidationException(settings.GetType(), section, result);
+            }
+
+            result.ThrowIfInvalid();
         }
 
         internal static void ValidateSettings(ILogger logger, object settings)
         {
-            var validator = new DataAnnotationsValidator(settings);
+            IObjectValidator validator = new DataAnnotationsValidator(settings);
             var result = validator.Validate();
 
             if (result.IsInvalid)

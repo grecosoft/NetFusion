@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Exceptions;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Bootstrap.Validation;
+using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 
 namespace NetFusion.Bootstrap.Container
@@ -34,6 +37,8 @@ namespace NetFusion.Bootstrap.Container
         // Composite Structure:
         private readonly List<IPlugin> _plugins = new List<IPlugin>();
         private readonly CompositeAppBuilder _compositeAppBuilder;
+
+        public IBootstrapLogger BootstrapLogger => _compositeAppBuilder.BootstrapLogger;
  
         //--------------------------------------------------
         //--Container Initialization
@@ -132,76 +137,49 @@ namespace NetFusion.Bootstrap.Container
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
 
-
-            
             try
             {
-//                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapCompose, "Composing Container"))
-//                {
+                _compositeAppBuilder.ComposeModules(typeResolver, _plugins);
+                _compositeAppBuilder.RegisterServices(_serviceCollection);
+                
+                LogPlugins(_compositeAppBuilder.AllPlugins);
 
-                    _compositeAppBuilder.ComposeModules(typeResolver, _plugins);
-                    _compositeAppBuilder.RegisterServices(_serviceCollection);
-                    
-                    //LogPlugins(_compositeAppBuilder.AllPlugins);
-//                }
             }
             catch (ContainerException ex)
             {
-                //LogException(ex);
+                LogException(ex);
                 throw;
             }
             catch (Exception ex)
             {
-                //throw LogException(new ContainerException(
-                 //   "Unexpected container error.  See Inner Exception.", ex));
+                throw LogException(new ContainerException(
+                    "Unexpected container error.  See Inner Exception.", ex));
             }
         }
-        
-        
-        
-     
 
+        private Exception LogException(Exception ex)
+        {
+            _compositeAppBuilder.BootstrapLogger.Add(LogLevel.Error, 
+                $"Bootstrap Exception: {ex.Message}");
+            return ex;
+        }
 
-        
-
-        
-
-        
-
-         
-
-       
-
-        
-        
-    
-        
-
-       
-
-
-
-//        private Exception LogException(Exception ex)
-//        {
-//            _logger.LogErrorDetails(BootstrapLogEvents.BootstrapException, ex, "Bootstrap Exception");
-//            return ex;
-//        }
-//
-//        private void LogPlugins(IEnumerable<IPlugin> plugins)
-//        {
-//            foreach (var plugin in plugins)
-//            {
-//                _logger.LogTraceDetails(BootstrapLogEvents.BootstrapPluginDetails, "Plug-in", new
-//                {
-//                    plugin.Name,
-//                    plugin.PluginId,
-//                    plugin.AssemblyName,
-//                    Configs = plugin.Configs.Select(c => c.GetType().FullName),
-//                    Modules = plugin.Modules.Select(m => m.GetType().FullName)
-//                });
-//            }
-//        }
-
-        
+        private void LogPlugins(IEnumerable<IPlugin> plugins)
+        {
+            foreach (var plugin in plugins)
+            {
+                var details = new
+                {
+                    plugin.Name,
+                    plugin.PluginId,
+                    plugin.AssemblyName,
+                    Configs = plugin.Configs.Select(c => c.GetType().FullName),
+                    Modules = plugin.Modules.Select(m => m.GetType().FullName)
+                };
+                
+                _compositeAppBuilder.BootstrapLogger.Add(LogLevel.Information,
+                    details.ToIndentedJson());
+            }
+        }
     }
 }

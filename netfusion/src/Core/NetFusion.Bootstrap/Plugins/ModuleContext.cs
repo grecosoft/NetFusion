@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Bootstrap.Logging;
 
 namespace NetFusion.Bootstrap.Plugins
 {
@@ -16,6 +17,7 @@ namespace NetFusion.Bootstrap.Plugins
     public class ModuleContext
     {
         private readonly ICompositeAppBuilder _builder;
+        private ILogger _logger;
 
         /// <summary>
         /// The plug-in representing the application host.
@@ -40,7 +42,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// same as AllPluginTypes.
         /// </summary>
         public IEnumerable<Type> AllAppPluginTypes { get; }
-        
+         
         public ModuleContext(ICompositeAppBuilder builder, IPlugin plugin)
         {
             _builder = builder ?? throw new ArgumentNullException(nameof(builder));
@@ -48,8 +50,8 @@ namespace NetFusion.Bootstrap.Plugins
             Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
             AppHost = builder.HostPlugin;
             
-            AllPluginTypes = FilteredTypesByPluginType();
-            AllAppPluginTypes = GetAppPluginTypes();
+            AllPluginTypes = FilteredTypesByPluginType(builder, plugin);
+            AllAppPluginTypes = GetAppPluginTypes(builder);
         }
 
         /// <summary>
@@ -57,43 +59,74 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         public IConfiguration Configuration => _builder.Configuration;
 
+        /// <summary>
+        /// Logging factory.  Only available after the service-provider has been created.
+        /// Use the BootstrapLogger in code executing before the container is created.
+        /// </summary>
         public ILoggerFactory LoggerFactory { get; private set; }
+
+        /// <summary>
+        /// Logger that can be used to record logs during the bootstrap process
+        /// before the service-provider has been created.
+        /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
+        public IBootstrapLogger BootstrapLogger
+        {
+            get
+            {
+                if (_logger != null)
+                {
+                    throw new InvalidOperationException(
+                        "BootstrapLogger should not be used after the service-provider has been created." + 
+                        "Use Logger instead." );
+                }
+
+                return _builder.BootstrapLogger;
+            }
+        }
         
         /// <summary>
         /// Logger with the name of the plug-in used to identify the log messages.
+        /// Can only be used after the service-provider has been created.
         /// </summary>
-        public ILogger Logger { get; private set; }
+        public ILogger Logger
+        {
+            get
+            {
+                if (_logger == null)
+                {
+                    throw new InvalidOperationException(
+                        "Logger can't be accessed until service-provider created.  Use BootstrapLogger.");
+                }
+
+                return _logger;
+            }
+        }
         
         public void Initialize(IServiceProvider services)
         {
             var scopedLoggerType = typeof(ILogger<>).MakeGenericType(Plugin.GetType());
 
             LoggerFactory = services.GetService<LoggerFactory>();
-            Logger = (ILogger)services.GetService(scopedLoggerType);
+            _logger = (ILogger)services.GetService(scopedLoggerType);
         }
 
-        public void Log(LogLevel logLevel, string message, params object[] args)
-        {
-            
-        }
-
-        private IEnumerable<Type> FilteredTypesByPluginType()
+        private static IEnumerable<Type> FilteredTypesByPluginType(ICompositeAppBuilder builder, IPlugin plugin)
         {
             // Core plug-in can access types from all other plug-in types.
-            if (Plugin.PluginType == PluginTypes.CorePlugin)
+            if (plugin.PluginType == PluginTypes.CorePlugin)
             {
-                return _builder.GetPluginTypes();
+                return builder.GetPluginTypes();
             }
 
             // Application centric plug-in can only access types contained in
             // other application plugs.
-            return GetAppPluginTypes();
+            return GetAppPluginTypes(builder);
         }
 
-        private IEnumerable<Type> GetAppPluginTypes()
+        private static IEnumerable<Type> GetAppPluginTypes(ICompositeAppBuilder builder)
         {
-            return _builder.GetPluginTypes(PluginTypes.ApplicationPlugin,
-                PluginTypes.HostPlugin);
+            return builder.GetPluginTypes(PluginTypes.ApplicationPlugin, PluginTypes.HostPlugin);
         }
 
         // TODO:  Delete this after code-review for all plugins.  A plugin module now automatically

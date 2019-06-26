@@ -28,5 +28,7 @@ namespace NetFusion.Bootstrap.Container
         T GetContainerConfig<T>() where T : IContainerConfig;
         
         CompositeAppLog CompositeLog { get; }
+        
+        IBootstrapLogger BootstrapLogger { get; }
     }
 }

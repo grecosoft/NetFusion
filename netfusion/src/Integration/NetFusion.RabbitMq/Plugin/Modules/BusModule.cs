@@ -48,7 +48,14 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         // Creates IBus instances for each configured bus.
         public override void Initialize()
         {
-            _busSettings = Context.Configuration.GetSettings(Context.Logger, new BusSettings());
+            try
+            {
+                _busSettings = Context.Configuration.GetSettings(new BusSettings());
+            }
+            catch (SettingsValidationException ex)
+            {
+                Context.BootstrapLogger.Add(LogLevel.Error, ex.Message);
+            }
         }
         
         //------------------------------------------------------

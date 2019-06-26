@@ -36,8 +36,15 @@ namespace NetFusion.Redis.Plugin.Modules
 
         public override void Configure()
         {
-            _redisSettings = Context.Configuration.GetSettings(Context.Logger, new RedisSettings());
-
+            try
+            {
+                _redisSettings = Context.Configuration.GetSettings(new RedisSettings());
+            }
+            catch (SettingsValidationException ex)
+            {
+                Context.BootstrapLogger.Add(LogLevel.Error, ex.Message);
+            }
+           
             AssertSettings(_redisSettings);
         }
         

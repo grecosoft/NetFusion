@@ -35,7 +35,7 @@ namespace NetFusion.Settings.Plugin.Modules
 
                 if (string.IsNullOrWhiteSpace(sectionPath))
                 {
-                    Context.Log(LogLevel.Warning,
+                    Context.BootstrapLogger.Add(LogLevel.Warning,
                         $"The section path for setting type: {appSettingType.AssemblyQualifiedName} could " + 
                         $"not be determined. Make sure the attribute: {typeof(ConfigurationSectionAttribute)} is specified.");
                     
