@@ -14,7 +14,7 @@ namespace NetFusion.Bootstrap.Plugins
     /// </summary>
     public class ModuleContext
     {
-        private readonly CompositeAppBuilder _compositeApp;
+        private readonly ICompositeAppBuilder _compositeApp;
 
         /// <summary>
         /// The plug-in representing the application host.
@@ -25,6 +25,40 @@ namespace NetFusion.Bootstrap.Plugins
         /// The plug-in where the module is defined.
         /// </summary>
         public IPlugin Plugin { get; }
+        
+        /// <summary>
+        /// The plug-in types that can be accessed by the module limited to the set based on its type of plug-in.  
+        /// This list will contain all types from all plug-ins if the context is associated with a core plug-in.
+        /// However, for application centric plug-ins, the list is limited to types found in application plug-ins.
+        /// </summary>
+        public IEnumerable<Type> AllPluginTypes { get; }
+        
+        /// <summary>
+        /// The plug-in types limited to just those associated with application centric plug-ins.  
+        /// If the module is within an application centric plug-in, then this list will be the
+        /// same as AllPluginTypes.
+        /// </summary>
+        public IEnumerable<Type> AllAppPluginTypes { get; }
+        
+        
+        public ModuleContext(ICompositeAppBuilder compositeApp, IPlugin plugin, IPluginModule module)
+        {
+            _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
+
+            Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
+            AppHost = compositeApp.HostPlugin;
+            
+            AllPluginTypes = FilteredTypesByPluginType();
+            AllAppPluginTypes = GetAppPluginTypes();
+        }
+        
+        
+        
+        
+        
+        
+        
+        
 
         /// <summary>
         /// The logger factory configured for the application container.
@@ -41,32 +75,11 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         public ILogger Logger { get; }
 
-        /// <summary>
-        /// The plug-in types that can be accessed by the module limited to the set based on its type of plug-in.  
-        /// This list will contain all types from all plug-ins if the context is associated with a core plug-in.
-        /// However, for application centric plug-ins, the list is limited to types found in application plug-ins.
-        /// </summary>
-        public IEnumerable<Type> AllPluginTypes { get; }
 
-        /// <summary>
-        /// The plug-in types limited to just those associated with application centric plug-ins.  
-        /// If the module is within an application centric plug-in, then this list will be the
-        /// same as AllPluginTypes.
-        /// </summary>
-        public IEnumerable<Type> AllAppPluginTypes { get; }
 
-        public ModuleContext(ICompositeAppBuilder compositeApp, IPlugin plugin, IPluginModule module)
-        {
-            _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
 
-            Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
-            
-            AppHost = compositeApp.HostPlugin;
-            Logger = _compositeApp.LoggerFactory.CreateLogger(module.GetType());
-            
-            AllPluginTypes = FilteredTypesByPluginType();
-            AllAppPluginTypes = GetAppPluginTypes();
-        }
+
+        
 
         private IEnumerable<Type> FilteredTypesByPluginType()
         {

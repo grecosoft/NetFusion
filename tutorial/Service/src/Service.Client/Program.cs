@@ -36,7 +36,7 @@ namespace Service.Client
                     
                     collection.AddSingleton<ISerializationManager, SerializationManager>();
 
-                    collection.CompositeContainer()
+                    collection.CompositeContainer(context.Configuration)
                         .AddSettings()
                         .AddMessaging()
                         .AddRabbitMq()

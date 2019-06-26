@@ -26,20 +26,18 @@ namespace Service.WebApi
     public class Startup
     {
         private readonly IConfiguration _configuration;
-        private readonly ILoggerFactory _loggerFactory;
         private readonly IHostingEnvironment _hostingEnv;
 
-        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory, IHostingEnvironment hostingEnv)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnv)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
             _hostingEnv = hostingEnv ?? throw new ArgumentNullException(nameof(hostingEnv));
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
                      
-            services.CompositeContainer()
+            services.CompositeContainer(_configuration)
                 // Add common plugins:
                 .AddSettings()
                 .AddMessaging()

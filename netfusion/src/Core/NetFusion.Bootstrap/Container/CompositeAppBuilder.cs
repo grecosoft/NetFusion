@@ -1,8 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Dependencies;
 using NetFusion.Bootstrap.Exceptions;
@@ -19,7 +19,9 @@ namespace NetFusion.Bootstrap.Container
     /// </summary>
     internal class CompositeAppBuilder : ICompositeAppBuilder
     {
-        private IList<IContainerConfig> _containerConfigs;
+        private readonly IList<IContainerConfig> _containerConfigs;
+        
+        public IConfiguration Configuration { get; }
         
         // Plugins filtered by type:
         public  IPlugin[] AllPlugins { get; }
@@ -31,7 +33,9 @@ namespace NetFusion.Bootstrap.Container
         
         public CompositeAppLog CompositeLog { get; private set; }
         
-        public CompositeAppBuilder(IList<IContainerConfig> containerConfigs, IEnumerable<IPlugin> plugins)
+        public CompositeAppBuilder(IEnumerable<IPlugin> plugins, 
+            IConfiguration configuration,
+            IList<IContainerConfig> containerConfigs)
         {
             _containerConfigs = containerConfigs ?? throw new ArgumentNullException(nameof(containerConfigs));
             
@@ -40,6 +44,8 @@ namespace NetFusion.Bootstrap.Container
             HostPlugin = AllPlugins.FirstOrDefault(p => p.PluginType == PluginTypes.HostPlugin);
             AppPlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.ApplicationPlugin).ToArray();
             CorePlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.CorePlugin).ToArray();
+            
+            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
         
         public void ComposeModules(ITypeResolver typeResolver)

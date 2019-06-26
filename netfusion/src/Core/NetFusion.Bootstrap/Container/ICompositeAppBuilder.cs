@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 
@@ -18,6 +21,8 @@ namespace NetFusion.Bootstrap.Container
         
         CompositeAppLog CompositeLog { get; }
 
+        IConfiguration Configuration { get; }
+        IEnumerable<Type> GetPluginTypes(params PluginTypes[] pluginTypes);
         T GetConfig<T>() where T : IContainerConfig;
     }
 }

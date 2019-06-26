@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
@@ -18,13 +19,13 @@ namespace NetFusion.Builder
         private readonly IServiceCollection _serviceCollection;
         private readonly CompositeContainer _container;
         
-        internal CompositeContainerBuilder(IServiceCollection serviceCollection)
+        internal CompositeContainerBuilder(IServiceCollection serviceCollection, IConfiguration configuration)
         {
             _serviceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
             
             RegisterCommonContainerServices(serviceCollection);
             
-            _container = new CompositeContainer(serviceCollection);
+            _container = new CompositeContainer(serviceCollection, configuration);
         }
         
         public ICompositeContainerBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new()

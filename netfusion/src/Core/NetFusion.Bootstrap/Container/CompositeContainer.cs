@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
@@ -23,6 +24,7 @@ namespace NetFusion.Bootstrap.Container
     {
         // Microsoft Service-Collection populated by Plugin Modules:
         private readonly IServiceCollection _serviceCollection;
+        private readonly IConfiguration _configuration;
         
         // Composite Structure:
         private CompositeAppBuilder _compositeAppBuilder;
@@ -36,9 +38,10 @@ namespace NetFusion.Bootstrap.Container
         //--Container Initialization
         //--------------------------------------------------
         
-        public CompositeContainer(IServiceCollection services)
+        public CompositeContainer(IServiceCollection services, IConfiguration configuration)
         {
             _serviceCollection = services ?? throw new ArgumentNullException(nameof(services));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             
             AddContainerConfigs();
         }
@@ -123,7 +126,7 @@ namespace NetFusion.Bootstrap.Container
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
 
-            _compositeAppBuilder = new CompositeAppBuilder(_containerConfigs, _plugins);
+            _compositeAppBuilder = new CompositeAppBuilder(_plugins, _configuration, _containerConfigs);
             
             try
             {

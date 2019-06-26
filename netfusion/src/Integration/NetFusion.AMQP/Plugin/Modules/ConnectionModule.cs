@@ -19,7 +19,7 @@ namespace NetFusion.AMQP.Plugin.Modules
     public class ConnectionModule : PluginModule,
         IConnectionModule
     {
-        private bool _isModuleStopped = false;
+        private bool _isModuleStopped;
         
         // The configured host settings.
         private AmqpHostSettings _amqpSettings;
