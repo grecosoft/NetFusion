@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore;
+﻿using System;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -19,10 +20,16 @@ namespace Service.WebApi
             IWebHost webHost = BuildWebHost(args);
             
             var compositeApp = webHost.Services.GetService<ICompositeApp>();
-            
+            var lifetime = webHost.Services.GetService<IApplicationLifetime>();
+
+            lifetime.ApplicationStopping.Register(() =>
+            {
+                compositeApp.StopAsync().Wait();
+            });
+                  
             await compositeApp.StartAsync();
-            await webHost.RunAsync();               
-            await compositeApp.StopAsync();
+            await webHost.RunAsync(); 
+            
         }
 
         private static IWebHost BuildWebHost(string[] args) 

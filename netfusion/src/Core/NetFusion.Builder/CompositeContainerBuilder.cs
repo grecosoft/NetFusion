@@ -55,14 +55,12 @@ namespace NetFusion.Builder
             return this;
         }
 
-        public void Compose(Action<IServiceCollection> register = null)
+        public void Compose()
         {
             var resolver = new TypeResolver();
             
             _container.Compose(resolver);
             
-            // Allow the host to override any services:
-            register?.Invoke(_serviceCollection);
         
             //LogBuilderConfig(composite.ServiceProvider);
         }

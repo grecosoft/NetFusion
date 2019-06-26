@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Validation;
@@ -29,14 +28,11 @@ namespace NetFusion.Bootstrap.Container
         private readonly IServiceProvider _serviceProvider;
         private bool _isStarted;
         
-        // Microsoft's configuration and logging abstractions.
-        private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
         
         public CompositeApp(
             ICompositeAppBuilder builder,
             IServiceProvider serviceProvider,
-            IConfiguration configuration,
             ILogger<CompositeApp> logger)
         {
             Instance = this;
@@ -44,7 +40,6 @@ namespace NetFusion.Bootstrap.Container
 
             _builder = builder ?? throw new ArgumentNullException(nameof(builder));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
            
         }
@@ -57,7 +52,8 @@ namespace NetFusion.Bootstrap.Container
         // At this point, the composite-application has been created from all the 
         // registered plugins and all modules have been initialized and services
         // registered.  This is the last call allowing each plugin module to
-        // execute code within the created dependency-injection container.
+        // execute code within the created dependency-injection container before
+        // the host application is started.
         public async Task StartAsync()
         {
             if (_isStarted)
@@ -72,7 +68,7 @@ namespace NetFusion.Bootstrap.Container
                 using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStart, "Starting Container"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
-                    await StartModulesAsync(scope.ServiceProvider);
+                    await StartModules(scope.ServiceProvider);
                 }
                
                 if (_logger.IsEnabled(LogLevel.Trace))
@@ -99,7 +95,7 @@ namespace NetFusion.Bootstrap.Container
             }
         }
         
-        private async Task StartModulesAsync(IServiceProvider services)
+        private async Task StartModules(IServiceProvider services)
         {
             if (services == null) throw new ArgumentNullException(nameof(services),
                 "Services cannot be null.");
@@ -171,7 +167,7 @@ namespace NetFusion.Bootstrap.Container
         {
             ThrowIfStopped();
 
-            ValidationConfig validationConfig = _builder.GetConfig<ValidationConfig>();
+            ValidationConfig validationConfig = _builder.GetContainerConfig<ValidationConfig>();
             return (IObjectValidator)Activator.CreateInstance(validationConfig.ValidatorType, obj);
         }
 
@@ -192,7 +188,7 @@ namespace NetFusion.Bootstrap.Container
             try
             {
                 // Create a service scope in which each plugin can be started:
-                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStop, "Stopping Container"))
+                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStop, "Stopping Composite-Application"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
                     await StopPluginModulesAsync(scope.ServiceProvider);
@@ -207,13 +203,13 @@ namespace NetFusion.Bootstrap.Container
             {
                 var flattenedEx = ex.Flatten();
                 throw LogException(new ContainerException(
-                    "Error stopping container.  See Inner Exception.", flattenedEx));
+                    "Error stopping composite-application.  See Inner Exception.", flattenedEx));
                 
             }
             catch (Exception ex)
             {
                 throw LogException(new ContainerException(
-                    "Error stopping container.  See Inner Exception.", ex));
+                    "Error stopping composite-application.  See Inner Exception.", ex));
             }
         }
         
@@ -238,7 +234,7 @@ namespace NetFusion.Bootstrap.Container
         
         private Exception LogException(Exception ex)
         {
-            _logger.LogErrorDetails(BootstrapLogEvents.BootstrapException, ex, "Bootstrap Exception");
+            _logger.LogErrorDetails(BootstrapLogEvents.BootstrapException, ex, "Composite-Application Exception");
             return ex;
         }
         
@@ -247,7 +243,7 @@ namespace NetFusion.Bootstrap.Container
             if (! _isStarted)
             {
                 throw new ContainerException(
-                    "The application container has been stopped and can no longer be accessed.");
+                    "The composite-application has been stopped and can no longer be accessed.");
             }
         }
     }

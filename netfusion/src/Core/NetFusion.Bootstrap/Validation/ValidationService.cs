@@ -10,11 +10,11 @@ namespace NetFusion.Bootstrap.Validation
     /// </summary>
     public class ValidationService : IValidationService
     {
-        private readonly ICompositeContainer _compositeContainer;
+        private readonly ICompositeApp _compositeApp;
 
-        public ValidationService(ICompositeContainer compositeContainer)
+        public ValidationService(ICompositeApp compositeApp)
         {
-            _compositeContainer = compositeContainer ?? throw new ArgumentNullException(nameof(compositeContainer));
+            _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
         }
 
         public ValidationResultSet Validate(object obj)
@@ -22,7 +22,7 @@ namespace NetFusion.Bootstrap.Validation
             if (obj == null) throw new ArgumentNullException(nameof(obj), 
                 "Object to validate cannot be null.");
 
-            IObjectValidator validator = _compositeContainer.CreateValidator(obj);
+            IObjectValidator validator = _compositeApp.CreateValidator(obj);
             return validator.Validate();
         }
     }

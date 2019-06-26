@@ -1,12 +1,11 @@
 using System;
-using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Provides methods for building a composite application container from
-    /// a set of registered plugins.
+    /// Provides methods for building a composite-application
+    /// from a set of registered plugins.
     /// </summary>
     public interface ICompositeContainerBuilder
     {
@@ -43,6 +42,6 @@ namespace NetFusion.Bootstrap.Container
         /// is invoked, the IServiceCollection will have been populated with services from 
         /// the plugin modules and the instance of the IServiceProvider created.
         /// </summary>
-        void Compose(Action<IServiceCollection> register = null);
+        void Compose();
     }
 }

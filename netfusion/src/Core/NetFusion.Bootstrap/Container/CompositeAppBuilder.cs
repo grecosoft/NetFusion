@@ -24,32 +24,31 @@ namespace NetFusion.Bootstrap.Container
         public IConfiguration Configuration { get; }
         
         // Plugins filtered by type:
-        public  IPlugin[] AllPlugins { get; }
-        public IPlugin HostPlugin { get; }
-        public IPlugin[] AppPlugins { get; }
-        public IPlugin[] CorePlugins { get; }
-
+        public IPlugin HostPlugin { get; private set; }
+        public IPlugin[] AppPlugins { get; private set; }
+        public IPlugin[] CorePlugins { get; private set; }
+        
+        public IPlugin[] AllPlugins { get; private set; }
         public IPluginModule[] AllModules => AllPlugins.SelectMany(p => p.Modules).ToArray();
         
         public CompositeAppLog CompositeLog { get; private set; }
         
-        public CompositeAppBuilder(IEnumerable<IPlugin> plugins, 
-            IConfiguration configuration,
-            IList<IContainerConfig> containerConfigs)
+        public CompositeAppBuilder(IConfiguration configuration)
         {
-            _containerConfigs = containerConfigs ?? throw new ArgumentNullException(nameof(containerConfigs));
-            
-            AllPlugins = plugins.ToArray();
-            
-            HostPlugin = AllPlugins.FirstOrDefault(p => p.PluginType == PluginTypes.HostPlugin);
-            AppPlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.ApplicationPlugin).ToArray();
-            CorePlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.CorePlugin).ToArray();
+            _containerConfigs = new List<IContainerConfig>();
             
             Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
         
-        public void ComposeModules(ITypeResolver typeResolver)
+        //---------------------------------------------
+        //--Initialization
+        //---------------------------------------------
+        
+        public void ComposeModules(ITypeResolver typeResolver, IEnumerable<IPlugin> plugins)
         {
+            if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
+
+            CategorizePlugins(plugins);
             SetPluginAssemblyInfo(typeResolver);
             
             // Before composing the plugin modules, verify the plugins from which 
@@ -67,20 +66,34 @@ namespace NetFusion.Bootstrap.Container
             ConfigurePlugins();
         }
 
-        public T GetConfig<T>() where T : IContainerConfig
+        public void AddContainerConfig(IContainerConfig containerConfig)
+        {
+            _containerConfigs.Add(containerConfig);
+        }
+        
+        public T GetContainerConfig<T>() where T : IContainerConfig
         {
             var config = _containerConfigs.FirstOrDefault(c => c.GetType() == typeof(T));
             if (config == null)
             {
-                throw new InvalidOperationException(
-                    $"Container configuration of type: {typeof(T)} is not found.");
+                throw new ContainerException(
+                    $"Container configuration of type: {typeof(T)} is not registered.");
             }
 
             return (T)config;
         }
+
+        private void CategorizePlugins(IEnumerable<IPlugin> plugins)
+        {
+            AllPlugins = plugins.ToArray();
+            
+            HostPlugin = AllPlugins.FirstOrDefault(p => p.PluginType == PluginTypes.HostPlugin);
+            AppPlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.ApplicationPlugin).ToArray();
+            CorePlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.CorePlugin).ToArray();
+        }
         
         // Delegates to the type resolver to populate information and the types associated with each plugin.
-        // This decouples the container from runtime information and makes it easier to te    st.
+        // This decouples the container from runtime information and makes it easier to test.
         private void SetPluginAssemblyInfo(ITypeResolver typeResolver)
         {           
             foreach (IPlugin plugin in AllPlugins)
@@ -94,8 +107,8 @@ namespace NetFusion.Bootstrap.Container
         //---------------------------------------------
         
         // A plugin module can reference another module by referencing any of its supported interfaces
-        // deriving from IPluginModuleService.  Find all IPluginModuleService derived properties of the
-        // referencing module and set them corresponding module instance.
+        // deriving from IPluginModuleService.  Finds all IPluginModuleService derived properties of the
+        // referencing module and set them corresponding referenced module instance.
         private void ComposeModuleDependencies()
         {
             foreach (IPluginModule module in AllModules)
@@ -205,7 +218,7 @@ namespace NetFusion.Bootstrap.Container
         {
             foreach (IPluginModule module in plugin.Modules)
             {
-                module.Context = new ModuleContext(this, plugin, module);
+                module.Context = new ModuleContext(this, plugin);
                 module.Initialize();
             }
             
@@ -296,6 +309,8 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
+        // Registers the ICompositeApp component in the container representing the
+        // application build for a set of plugins.
         private void RegisterCompositeApplication(IServiceCollection services)
         {
             services.AddSingleton<ICompositeAppBuilder>(this);

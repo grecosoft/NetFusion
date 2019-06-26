@@ -41,7 +41,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         public IEnumerable<Type> AllAppPluginTypes { get; }
         
-        public ModuleContext(ICompositeAppBuilder builder, IPlugin plugin, IPluginModule module)
+        public ModuleContext(ICompositeAppBuilder builder, IPlugin plugin)
         {
             _builder = builder ?? throw new ArgumentNullException(nameof(builder));
 

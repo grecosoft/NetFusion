@@ -31,9 +31,6 @@ namespace Service.Client
             var host = new HostBuilder()
                 .ConfigureServices((context, collection) =>
                 {
-                    var loggerFactory = new LoggerFactory();
-                    loggerFactory.AddConsole();
-                    
                     collection.AddSingleton<ISerializationManager, SerializationManager>();
 
                     collection.CompositeContainer(context.Configuration)

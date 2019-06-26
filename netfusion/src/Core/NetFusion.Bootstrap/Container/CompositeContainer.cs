@@ -11,44 +11,54 @@ using NetFusion.Common.Extensions.Collections;
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Responsible for coordinating the population of a Service-Collection from a set of plugins.
-    /// A ICompositeApp singleton instance is added to the Service-Collection representing the
-    /// application composed from the plugins. The host constructs an instance of this class when
-    /// bootstrapping the application by calling the CompositeContainer extension method on the
-    /// IServiceCollection interface.  The CompositeContainer extension method returns and instance
-    /// of ICompositeContainerBuilder providing an Api for registering plugins, setting container
-    /// and plugin level configurations, and a Compose method that adds the resulting ICompositeApp
-    /// instance to the Service-Collection.  
+    /// Instantiated and delegated to by the IContainerBuilder instance returned by calling the
+    /// CompositeContainer extension method on IServiceCollection.  The methods contained on the
+    /// IContainerBuilder interface are used to initialize the CompositeContainer with a set of
+    /// plugins. The container-builder is used when configuring the Generic Host and allows for
+    /// adding services to the IServiceCollection using a controlled process common across all
+    /// plugins.  A plugin's associated modules are called to register services provided by the
+    /// plugin after the Compose method of IServiceCollection is called.  After  the Compose
+    /// method is called, an ICompositeApp singleton instance is added to the as a service.
+    /// 
+    /// This object represents the resulting built application. After the Generic-Host has been
+    /// created in the application's Main Program method, the ICompositeApp instance can be
+    /// requested using the created IServiceProvider.  Once the composite-application instance
+    /// is obtained, the StartAsync method is called to start all the plugin modules.  After
+    /// the Generic-Host stops, the StopAsync method needs to be called to shutdown all plugins. 
     /// </summary>
     public class CompositeContainer  
     {
         // Microsoft Service-Collection populated by Plugin Modules:
         private readonly IServiceCollection _serviceCollection;
-        private readonly IConfiguration _configuration;
         
         // Composite Structure:
-        private CompositeAppBuilder _compositeAppBuilder;
-
         private readonly List<IPlugin> _plugins = new List<IPlugin>();
-        
-        // Container level configurations:
-        private readonly List<IContainerConfig> _containerConfigs = new List<IContainerConfig>();
+        private readonly CompositeAppBuilder _compositeAppBuilder;
  
         //--------------------------------------------------
         //--Container Initialization
         //--------------------------------------------------
         
+        // Instantiated by CompositeContainerBuilder.
         public CompositeContainer(IServiceCollection services, IConfiguration configuration)
         {
             _serviceCollection = services ?? throw new ArgumentNullException(nameof(services));
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            _compositeAppBuilder = new CompositeAppBuilder(configuration);
             
             AddContainerConfigs();
         }
         
-        // Called by CompositeContainerBuilder to add plugins to the composite container.
-        // If the plugin type is already registered, the request is ignored.  This allows
-        // a plugin to register it's dependent plugins.
+        /// <summary>
+        /// Adds a plugin to the composite-container.  If the plugin type is already registered,
+        /// the request is ignored.  This allows a plugin to register it's dependent plugins.
+        /// </summary>
+        /// <typeparam name="T">The type of the plugin to be added.</typeparam>
         public void RegisterPlugin<T>() where T : IPlugin, new()  
         {
             if (IsPluginRegistered<T>())
@@ -60,7 +70,10 @@ namespace NetFusion.Bootstrap.Container
             _plugins.Add(plugin);
         }
         
-        // Updated by unit-tests to add a collection of configured mock plugins.
+        /// <summary>
+        /// Updated by unit-tests to add a collection of configured mock plugins.
+        /// </summary>
+        /// <param name="plugins">The list of plugins to be added.</param>
         public void RegisterPlugins(params IPlugin[] plugins)
         {
             plugins.ForEach(_plugins.Add);
@@ -72,24 +85,17 @@ namespace NetFusion.Bootstrap.Container
         }
         
         // Add container level configurations that can be updated by the host
-        // to control how the container is initialized.
+        // to control how the composite-application is initialized.
         private void AddContainerConfigs()
         {
-            _containerConfigs.Add(new ValidationConfig());
+            _compositeAppBuilder.AddContainerConfig(new ValidationConfig());
         }
         
         // Returns a container level configuration used to configure the runtime behavior
         // of the built container.
         public T GetContainerConfig<T>() where T : IContainerConfig
         {
-            var config = _containerConfigs.FirstOrDefault(c => c.GetType() == typeof(T));
-            if (config == null)
-            {
-                throw new ContainerException(
-                    $"Container configuration of type: {typeof(T)} is not registered.");
-            }
-
-            return (T)config;
+            return _compositeAppBuilder.GetContainerConfig<T>();
         }
         
         // Finds a configuration belonging to one of the registered plugins.  When a plugin
@@ -126,14 +132,14 @@ namespace NetFusion.Bootstrap.Container
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
 
-            _compositeAppBuilder = new CompositeAppBuilder(_plugins, _configuration, _containerConfigs);
+
             
             try
             {
 //                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapCompose, "Composing Container"))
 //                {
 
-                    _compositeAppBuilder.ComposeModules(typeResolver);
+                    _compositeAppBuilder.ComposeModules(typeResolver, _plugins);
                     _compositeAppBuilder.RegisterServices(_serviceCollection);
                     
                     //LogPlugins(_compositeAppBuilder.AllPlugins);

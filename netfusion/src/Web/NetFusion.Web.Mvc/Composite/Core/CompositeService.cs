@@ -12,22 +12,22 @@ namespace NetFusion.Web.Mvc.Composite.Core
     /// </summary>
     public class CompositeService : ICompositeService
     {
-        private readonly IDictionary<string, object> _componsiteLog;
+        private readonly IDictionary<string, object> _compositeLog;
 
-        public CompositeService(ICompositeContainer appContainer)
+        public CompositeService(ICompositeApp compositeApp)
         {
-            _componsiteLog = appContainer.Log;
+            _compositeLog = compositeApp.Log;
         }
 
         public CompositeStructure GetStructure()
         {
-            if (_componsiteLog == null)
+            if (_compositeLog == null)
             {
                 // This should never be the case.
                 return null;
             }
 
-            return CompositeStructure.FromLog(_componsiteLog);
+            return CompositeStructure.FromLog(_compositeLog);
         }
 
         public PluginDetails GetPluginDetails(string pluginId)
@@ -37,10 +37,10 @@ namespace NetFusion.Web.Mvc.Composite.Core
                 throw new ArgumentException("Plugin identity value not specified.", nameof(pluginId));
             }
 
-            var corePlugins = _componsiteLog["Plugins:Core"] as IDictionary;
-            var appPlugins = _componsiteLog["Plugins:Application"] as IDictionary;
+            var corePlugins = _compositeLog["Plugins:Core"] as IDictionary;
+            var appPlugins = _compositeLog["Plugins:Application"] as IDictionary;
 
-            IDictionary<string, object> hostPlugin = (IDictionary<string, object>)_componsiteLog["Plugin:Host"];
+            IDictionary<string, object> hostPlugin = (IDictionary<string, object>)_compositeLog["Plugin:Host"];
 
             object plugInProperties = null;
             if (hostPlugin["Plugin:Id"].ToString() == pluginId)

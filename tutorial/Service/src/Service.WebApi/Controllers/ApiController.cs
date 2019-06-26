@@ -19,11 +19,11 @@ namespace Service.WebApi.Controllers
     [Route("api/entry"), GroupMeta(nameof(ApiController))]
     public class ApiController : Controller
     {
-        private readonly ICompositeContainer _appContainer;
+        private readonly ICompositeApp _compositeApp;
         
-        public ApiController(ICompositeContainer appContainer)
+        public ApiController(ICompositeApp compositeApp)
         {
-            _appContainer = appContainer ?? throw new ArgumentNullException(nameof(appContainer));
+            _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
         }
         
         [HttpGet("examples")]
@@ -35,7 +35,7 @@ namespace Service.WebApi.Controllers
         [HttpGet("composite-log"), ActionMeta(nameof(GetCompositeLog))]
         public IActionResult GetCompositeLog()
         {
-            return Ok(_appContainer.Log);
+            return Ok(_compositeApp.Log);
         }
     }
 

@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
 using NetFusion.AMQP.Plugin;
+using NetFusion.Bootstrap.Container;
 using NetFusion.Messaging.Plugin;
 using NetFusion.MongoDB.Plugin;
 using NetFusion.RabbitMQ.Plugin;
@@ -35,8 +35,7 @@ namespace Service.WebApi
         }
 
         public void ConfigureServices(IServiceCollection services)
-        {
-                     
+        {         
             services.CompositeContainer(_configuration)
                 // Add common plugins:
                 .AddSettings()
@@ -70,10 +69,10 @@ namespace Service.WebApi
             services.AddSingleton(InMemoryScripting.LoadSensorScript());
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IApplicationLifetime appLifetime, IHostingEnvironment env)
         {
             app.UseAuthentication();
-
+          
             // Add additional middleware here.
             
             string viewerUrl = _configuration.GetValue<string>("Netfusion:ViewerUrl");
