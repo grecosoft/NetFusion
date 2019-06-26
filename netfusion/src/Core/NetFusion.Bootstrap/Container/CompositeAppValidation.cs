@@ -11,13 +11,13 @@ namespace NetFusion.Bootstrap.Container
     /// Validates that the manifest registry was correctly constructed from
     /// the discovered assemblies representing plug-ins. 
     /// </summary>
-    public class CompositeAppValidation
+    internal class CompositeAppValidation
     {
-        private readonly CompositeApp _compositeApp;
+        private readonly IPlugin[] _plugins;
 
-        public CompositeAppValidation(CompositeApp compositeApp)
+        public CompositeAppValidation(IPlugin[] plugins)
         {
-            _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
+            _plugins = plugins ?? throw new ArgumentNullException(nameof(plugins));
         }
 
         public void Validate()
@@ -29,8 +29,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void AssertPluginIdentity()
         {
-            IEnumerable<Type> invalidPluginTypes = _compositeApp.AllPlugins
-                .Where(p => string.IsNullOrWhiteSpace(p.PluginId))
+            IEnumerable<Type> invalidPluginTypes = _plugins.Where(p => string.IsNullOrWhiteSpace(p.PluginId))
                 .Select(p => p.GetType())
                 .ToArray();
 
@@ -41,8 +40,7 @@ namespace NetFusion.Bootstrap.Container
                     "MissingPluginIds", invalidPluginTypes);
             }
 
-            IEnumerable<string> duplicatePluginIds = _compositeApp.AllPlugins
-                .WhereDuplicated(p => p.PluginId)
+            IEnumerable<string> duplicatePluginIds = _plugins.WhereDuplicated(p => p.PluginId)
                 .ToArray();
 
             if (duplicatePluginIds.Any())
@@ -55,8 +53,8 @@ namespace NetFusion.Bootstrap.Container
 
         private void AssertPluginMetadata()
         {
-            IEnumerable<Type> invalidPluginTypes = _compositeApp.AllPlugins
-                .Where(p => string.IsNullOrWhiteSpace(p.AssemblyName) || string.IsNullOrWhiteSpace(p.Name))
+            IEnumerable<Type> invalidPluginTypes = _plugins.Where(p => 
+                    string.IsNullOrWhiteSpace(p.AssemblyName) || string.IsNullOrWhiteSpace(p.Name))
                 .Select(p => p.GetType())
                 .ToArray();
 
@@ -70,8 +68,7 @@ namespace NetFusion.Bootstrap.Container
 
         private void AssertPluginTypes()
         {
-            var hostPluginTypes = _compositeApp.AllPlugins
-                .Where(p => p.PluginType == PluginTypes.HostPlugin)
+            var hostPluginTypes = _plugins.Where(p => p.PluginType == PluginTypes.HostPlugin)
                 .Select(p => p.GetType()).ToArray();
             
             if (hostPluginTypes.Empty())

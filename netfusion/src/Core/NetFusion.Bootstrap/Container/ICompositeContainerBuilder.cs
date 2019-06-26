@@ -43,7 +43,6 @@ namespace NetFusion.Bootstrap.Container
         /// is invoked, the IServiceCollection will have been populated with services from 
         /// the plugin modules and the instance of the IServiceProvider created.
         /// </summary>
-        /// <returns>Reference to the built composite-container that can be started by the host.</returns>
-        ICompositeContainer Build(Action<IServiceCollection> services = null);
+        void Compose(Action<IServiceCollection> register = null);
     }
 }

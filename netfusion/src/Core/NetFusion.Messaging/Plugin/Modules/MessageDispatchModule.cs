@@ -170,7 +170,7 @@ namespace NetFusion.Messaging.Plugin.Modules
             // is received outside of the normal lifetime scope such as the one associated with the current
             // web request.
 
-            using (var scope = CompositeContainer.Instance.CreateServiceScope())
+            using (var scope = CompositeApp.Instance.CreateServiceScope())
             {
                 try
                 {

@@ -85,7 +85,7 @@ namespace NetFusion.Test.Container
         /// <param name="assert">The method passed an instance of the composite application
         /// to be asserted.</param>
         /// <returns>Self reference for method chaining.</returns>
-        public ContainerAssert CompositeApp(Action<CompositeApp> assert)
+        public ContainerAssert CompositeApp(Action<CompositeAppBuilder> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
                 "Assert method not specified.");

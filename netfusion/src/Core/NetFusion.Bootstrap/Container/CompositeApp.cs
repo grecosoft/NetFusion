@@ -1,227 +1,116 @@
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Dependencies;
+using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Exceptions;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions.Collections;
-using NetFusion.Common.Extensions.Reflection;
+using NetFusion.Bootstrap.Validation;
 
 namespace NetFusion.Bootstrap.Container
 {
+    
     /// <summary>
-    /// Application composed from a set of plugins.  The end result of the composite application
-    /// is a configured .net core Service Collection from which a Service Provider can be built.
+    /// Resulting Composite-Application built from a set of plugins.  A reference to a singleton instance
+    /// of this class can be referenced by injecting ICompositeApp into a dependent service component.
+    /// If the dependent component is not registered within the container, the Composite-Application can
+    /// be accessed using the CompositeApp.Instance property.
     /// </summary>
-    public class CompositeApp
+    public class CompositeApp : ICompositeApp
     {
-        public bool IsStarted { get; private set; }
+        // Singleton instance of the composite-application:
+        public static ICompositeApp Instance { get; private set; }
         
-        public IPlugin[] AllPlugins { get; }
-        public IEnumerable<IPluginModule> AllModules => AllPlugins.SelectMany(p => p.Modules);
+        private readonly ICompositeAppBuilder _builder;
+        private readonly IServiceProvider _serviceProvider;
+        private bool _isStarted;
         
-        // Reference to the plugin associated with the host executable.
-        public IPlugin HostPlugin { get; private set; }
-        
-        // Plugins from which the host application is built.
-        public IPlugin[] AppPlugins { get; private set; }
-        
-        // Reusable plugins that can be used across multiple applications.
-        public IPlugin[] CorePlugins { get; private set; }
-        
-        // Microsoft Abstractions:
-        public ILoggerFactory LoggerFactory { get; }
-        public IConfiguration Configuration { get; }
+        // Microsoft's configuration and logging abstractions.
+        private readonly IConfiguration _configuration;
+        private readonly ILogger _logger;
         
         public CompositeApp(
-            ILoggerFactory loggerFactory,
+            ICompositeAppBuilder builder,
+            IServiceProvider serviceProvider,
             IConfiguration configuration,
-            IEnumerable<IPlugin> plugins)
+            ILogger<CompositeApp> logger)
         {
-            LoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
-            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            
-            if (plugins == null) throw new ArgumentNullException(nameof(plugins));
-            
-            AllPlugins = plugins.ToArray();
+            Instance = this;
+            _isStarted = false;
+
+            _builder = builder ?? throw new ArgumentNullException(nameof(builder));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+           
         }
 
-        public void Initialize()
-        {
-            HostPlugin = AllPlugins.FirstOrDefault(p => p.PluginType == PluginTypes.HostPlugin);
-            AppPlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.ApplicationPlugin).ToArray();
-            CorePlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.CorePlugin).ToArray();
-
-            var validator = new CompositeAppValidation(this);
-            validator.Validate();
-
-            // If the composite structure is valid, compose each plugin module.
-            // This is process each module and set any dependent plugin services.
-            ComposePluginModules();
-        }
-
-        /// <summary>
-        /// Returns types associated with a specific category of plug-in.
-        /// </summary>
-        /// <param name="pluginTypes">The category of plug-ins to limit the return types.</param>
-        /// <returns>List of limited plug in types or all plug-in types if no category is specified.</returns>
-        public IEnumerable<Type> GetPluginTypes(params PluginTypes[] pluginTypes)
-        {
-            if (pluginTypes == null) throw new ArgumentNullException(nameof(pluginTypes),
-                "List of Plug-in types cannot be null.");
-
-            return pluginTypes.Length == 0 ? AllPlugins.SelectMany(p => p.Types) 
-                : AllPlugins.Where(p => pluginTypes.Contains(p.PluginType)).SelectMany(p => p.Types);
-        }
+  
+        //-----------------------------------------------------
+        //--Starting Composite Application
+        //-----------------------------------------------------
         
-        //------------------------------------ Plugin Module Services ------------------------------//
-        
-        private void ComposePluginModules()
+        // At this point, the composite-application has been created from all the 
+        // registered plugins and all modules have been initialized and services
+        // registered.  This is the last call allowing each plugin module to
+        // execute code within the created dependency-injection container.
+        public async Task StartAsync()
         {
-            foreach (IPluginModule module in AllModules)
+            if (_isStarted)
             {
-                var dependentServiceProps = GetDependentServiceProperties(module);
-                foreach (PropertyInfo serviceProp in dependentServiceProps)
+                throw LogException(new ContainerException(
+                    "The application container has already been started."));
+            }
+
+            try
+            {
+                // Create a service scope in which each plugin can be started:
+                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStart, "Starting Container"))
+                using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
-                    IPluginModuleService dependentService = GetModuleSupportingService(serviceProp.PropertyType);
-                    serviceProp.SetValue(module, dependentService);
+                    await StartModulesAsync(scope.ServiceProvider);
+                }
+               
+                if (_logger.IsEnabled(LogLevel.Trace))
+                {
+                    _logger.LogTraceDetails(BootstrapLogEvents.BootstrapCompositeLog, "Composite Log", Log);
                 }
             }
-        }
-        
-        private static IEnumerable<PropertyInfo> GetDependentServiceProperties(IPluginModule module)
-        {
-            const BindingFlags bindings = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-
-            return module.GetType().GetProperties(bindings)
-                .Where(p =>
-                    p.PropertyType.IsDerivedFrom(typeof(IPluginModuleService))
-                    && p.CanWrite);
-        }
-        
-        private IPluginModuleService GetModuleSupportingService(Type serviceType)
-        {
-            var foundModules = AllModules.Where(m => m.GetType().IsDerivedFrom(serviceType)).ToArray();
-            if (!foundModules.Any())
+            catch (ContainerException ex)
             {
-                throw new ContainerException($"Plug-in module of type: {serviceType} not found.");
+                LogException(ex);
+                throw;
             }
-            
-            if (foundModules.Length > 1)
+            catch (AggregateException ex)
             {
-                throw new ContainerException($"Multiple plug-in modules implementing: {serviceType} found.");
+                var flattenedEx = ex.Flatten();
+                throw LogException(new ContainerException(
+                    "Error starting container.  See Inner Exception.", flattenedEx));
+                
             }
-
-            return (IPluginModuleService)foundModules.First();
-        }
-        
-        
-        //------------------------------------ Plugin Service Population ------------------------------//
-
-        public void PopulateServices(IServiceCollection services)
-        {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-            
-            ConfigurePlugins();
-
-            RegisterDefaultPluginServices(services);
-            ScanPluginsForServices(services);
-            RegisterPluginServices(services);
-        }
-
-        private void ConfigurePlugins()
-        {
-            CorePlugins.ForEach(ConfigureModules);
-            AppPlugins.ForEach(ConfigureModules);
-            
-            ConfigureModules(HostPlugin);
-        }
-
-        // First Initializes all plugin modules then invokes their Configure method.
-        private void ConfigureModules(IPlugin plugin)
-        {
-            foreach (IPluginModule module in plugin.Modules)
+            catch (Exception ex)
             {
-                module.Context = new ModuleContext(this, plugin, module);
-                module.Initialize();
-            }
-            
-            foreach (IPluginModule module in plugin.Modules)
-            {
-                module.Configure();
+                throw LogException(new ContainerException(
+                    "Error starting container. See Inner Exception.", ex));
             }
         }
         
-        // Next, allow all plugin modules to register any default services
-        // implementations that can be optionally overridden by other plug-ins.  
-        private void RegisterDefaultPluginServices(IServiceCollection services)
-        {
-            foreach (IPluginModule module in AllPlugins.SelectMany(p => p.Modules))
-            {
-                module.RegisterDefaultServices(services);
-            }
-        }
-        
-        // Allow each plugin module to scan for plugin types.  
-        private void ScanPluginsForServices(IServiceCollection services)
-        {
-            foreach (IPlugin plugin in AllPlugins)
-            {
-                var sourceTypes = FilteredTypesByPluginType(plugin);
-                var typeCatalog = services.CreateCatalog(sourceTypes);
-
-                foreach (IPluginModule module in plugin.Modules)
-                {
-                    module.ScanPlugins(typeCatalog);
-                }
-            }
-        }
-
-        // Lastly, allow plugin modules to register services specific to their implementation.
-        private void RegisterPluginServices(IServiceCollection services)
-        {
-            foreach (IPluginModule module in AllPlugins.SelectMany(p => p.Modules))
-            {
-                module.RegisterServices(services);
-            }
-        }
-        
-        private IEnumerable<Type> FilteredTypesByPluginType(IPlugin plugin)
-        {
-            // Core plug-in can access types from all other plug-in types.
-            if (plugin.PluginType == PluginTypes.CorePlugin)
-            {
-                return AllPlugins.SelectMany(p => p.Types);
-            }
-
-            // Application centric plug-in can only access types contained in
-            // other application plugs.
-            return AppPlugins.SelectMany(p => p.Types);
-        }
-        
-        //------------------------------------ Plugin Service Execution ------------------------------//
-        
-        /// <summary>
-        /// This is the last step of the bootstrap process.   
-        /// </summary>
-        /// <param name="services">Scoped service provider.</param>
-        public async Task StartModulesAsync(IServiceProvider services)
+        private async Task StartModulesAsync(IServiceProvider services)
         {
             if (services == null) throw new ArgumentNullException(nameof(services),
                 "Services cannot be null.");
 
             // Start the plug-in modules in dependent order starting with core modules 
             // and ending with the application host modules.
-            IsStarted = true;
+            _isStarted = true;
      
-            var coreStartTask = StartPluginModules(services, CorePlugins);
-            var appStartTask = StartPluginModules(services, AppPlugins);
-            var hostStartTask = StartPluginModules(services, new[] { HostPlugin });
+            var coreStartTask = StartPluginModules(services, _builder.CorePlugins);
+            var appStartTask = StartPluginModules(services, _builder.AppPlugins);
+            var hostStartTask = StartPluginModules(services, new[] { _builder.HostPlugin });
 
             await Task.WhenAll(coreStartTask, appStartTask, hostStartTask);
 
@@ -240,23 +129,94 @@ namespace NetFusion.Bootstrap.Container
 
         private async Task RunPluginModules(IServiceProvider services)
         {
-            foreach (IPluginModule module in AllModules)
+            foreach (IPluginModule module in _builder.AllModules)
             {
                 await module.RunModuleAsync(services);
             }
         }
         
-        /// <summary>
-        /// Stops all plug-in modules in the reverse order from which they were started.
-        /// </summary>
-        /// <param name="services">Scoped service provider.</param>
-        public async Task StopPluginModulesAsync(IServiceProvider services)
+        
+        //-----------------------------------------------------
+        //--Runtime Services
+        //-----------------------------------------------------
+        
+        public IDictionary<string, object> Log
         {
-            IsStarted = false;
+            get
+            {
+                ThrowIfStopped();
+                return _builder.CompositeLog?.GetLog() ?? new Dictionary<string, object>();
+            }
+        }
+        
+        // Returns a new service scope that can be used to instantiate services.  After the scope 
+        // is used, it should be disposed.   When running within a host such as ASP.NET, the service 
+        // scope is automatically created and disposed.
+        public IServiceScope CreateServiceScope()
+        {
+            ThrowIfStopped();
+            return _serviceProvider.CreateScope();
+        }
+        
+        // Creates a validation instance, based on the application configuration, used to validate an object.
+        // The host application can specify an implementation using a validation library of choice.
+        public IObjectValidator CreateValidator(object obj)
+        {
+            ThrowIfStopped();
+
+            ValidationConfig validationConfig = _builder.GetConfig<ValidationConfig>();
+            return (IObjectValidator)Activator.CreateInstance(validationConfig.ValidatorType, obj);
+        }
+
+        
+        //-----------------------------------------------------
+        //--Stopping Composite Application
+        //-----------------------------------------------------
+        
+        // Should be called when the application-host is stopped.  Each registered plugin-module
+        // is stopped allowing it to reclaim resources.
+        public async Task StopAsync()
+        {
+            if (!_isStarted)
+            {
+                return;
+            }
             
-            var hostStopTask = StopPluginModules(services, new[] { HostPlugin });
-            var appStopTask = StopPluginModules(services, AppPlugins);
-            var coreStopTask = StopPluginModules(services, CorePlugins);
+            try
+            {
+                // Create a service scope in which each plugin can be started:
+                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStop, "Stopping Container"))
+                using (IServiceScope scope = _serviceProvider.CreateScope())
+                {
+                    await StopPluginModulesAsync(scope.ServiceProvider);
+                }
+            }
+            catch (ContainerException ex)
+            {
+                LogException(ex);
+                throw;
+            }
+            catch (AggregateException ex)
+            {
+                var flattenedEx = ex.Flatten();
+                throw LogException(new ContainerException(
+                    "Error stopping container.  See Inner Exception.", flattenedEx));
+                
+            }
+            catch (Exception ex)
+            {
+                throw LogException(new ContainerException(
+                    "Error stopping container.  See Inner Exception.", ex));
+            }
+        }
+        
+        private async Task StopPluginModulesAsync(IServiceProvider services)
+        {
+            _isStarted = false;
+            
+            var hostStopTask = StopPluginModules(services, new[] { _builder.HostPlugin });
+            var appStopTask = StopPluginModules(services, _builder.AppPlugins);
+            var coreStopTask = StopPluginModules(services, _builder.CorePlugins);
 
             await Task.WhenAll(hostStopTask, appStopTask, coreStopTask);
         }
@@ -266,6 +226,21 @@ namespace NetFusion.Bootstrap.Container
             foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
             {
                 await module.StopModuleAsync(services);
+            }
+        }
+        
+        private Exception LogException(Exception ex)
+        {
+            _logger.LogErrorDetails(BootstrapLogEvents.BootstrapException, ex, "Bootstrap Exception");
+            return ex;
+        }
+        
+        private void ThrowIfStopped()
+        {
+            if (! _isStarted)
+            {
+                throw new ContainerException(
+                    "The application container has been stopped and can no longer be accessed.");
             }
         }
     }

@@ -47,7 +47,7 @@ namespace NetFusion.Web.Mvc.Metadata
             {
                 routes.MapGet(baseUrl + "/groups", context =>
                 {
-                    using (var scope = CompositeContainer.Instance.CreateServiceScope())
+                    using (var scope = CompositeApp.Instance.CreateServiceScope())
                     {
                         var metadataSrv = scope.ServiceProvider.GetService<IApiMetadataService>();
                         var metadata = metadataSrv.GetApiGroups();
@@ -57,7 +57,7 @@ namespace NetFusion.Web.Mvc.Metadata
 
                 routes.MapGet(baseUrl + "/groups/{groupName}", context =>
                 {
-                    using (var scope = CompositeContainer.Instance.CreateServiceScope())
+                    using (var scope = CompositeApp.Instance.CreateServiceScope())
                     {
                         var metadataSrv = scope.ServiceProvider.GetService<IApiMetadataService>();
                         var groupName = context.GetRouteValue("groupName").ToString();

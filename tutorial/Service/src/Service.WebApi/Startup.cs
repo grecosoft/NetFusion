@@ -39,7 +39,7 @@ namespace Service.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
                      
-            services.CompositeAppBuilder(_loggerFactory, _configuration)
+            services.CompositeContainer()
                 // Add common plugins:
                 .AddSettings()
                 .AddMessaging()
@@ -61,7 +61,7 @@ namespace Service.WebApi
                 .AddPlugin<AppPlugin>()
                 .AddPlugin<InfraPlugin>()
                 .AddPlugin<WebApiPlugin>()
-                .Build();
+                .Compose();
                
             if (_hostingEnv.IsDevelopment())
             {

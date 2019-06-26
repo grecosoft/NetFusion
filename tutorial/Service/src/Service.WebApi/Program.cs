@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Service.WebApi
 {
@@ -16,13 +17,12 @@ namespace Service.WebApi
         public static async Task Main(string[] args)
         {
             IWebHost webHost = BuildWebHost(args);
-
-            // Start all of the plugin modules:
-            await CompositeContainer.Instance.StartAsync();
-            await webHost.RunAsync();
-
-            // Stop all plugin modules:
-            await CompositeContainer.Instance.StopAsync();
+            
+            var compositeApp = webHost.Services.GetService<ICompositeApp>();
+            
+            await compositeApp.StartAsync();
+            await webHost.RunAsync();               
+            await compositeApp.StopAsync();
         }
 
         private static IWebHost BuildWebHost(string[] args) 
@@ -48,8 +48,8 @@ namespace Service.WebApi
 
             if (context.HostingEnvironment.IsDevelopment())
             {
-                builder.AddDebug().SetMinimumLevel(LogLevel.Trace);
-                builder.AddConsole().SetMinimumLevel(LogLevel.Trace);
+                builder.AddDebug().SetMinimumLevel(LogLevel.Warning);
+                builder.AddConsole().SetMinimumLevel(LogLevel.Warning);
             }
             else
             {

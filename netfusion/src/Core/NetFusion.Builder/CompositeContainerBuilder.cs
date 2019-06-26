@@ -1,14 +1,10 @@
 using System;
-using System.Linq;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Bootstrap.Validation;
-using NetFusion.Common.Extensions;
 using NetFusion.Serialization;
 
 namespace NetFusion.Builder
@@ -19,24 +15,16 @@ namespace NetFusion.Builder
     /// </summary>
     public class CompositeContainerBuilder : ICompositeContainerBuilder
     {
+        private readonly IServiceCollection _serviceCollection;
         private readonly CompositeContainer _container;
-        private readonly IComposite _composite;
-        private readonly ILogger _logger;
         
-        internal CompositeContainerBuilder(IServiceCollection services, 
-            ILoggerFactory loggerFactory,
-            IConfiguration configuration)
+        internal CompositeContainerBuilder(IServiceCollection serviceCollection)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
-            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-
-            _logger = loggerFactory.CreateLogger<CompositeContainerBuilder>();
+            _serviceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
             
-            RegisterCommonContainerServices(services);
+            RegisterCommonContainerServices(serviceCollection);
             
-            _container = new CompositeContainer(services, configuration, loggerFactory, true);
-            _composite = _container;
+            _container = new CompositeContainer(serviceCollection);
         }
         
         public ICompositeContainerBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new()
@@ -65,21 +53,16 @@ namespace NetFusion.Builder
             return this;
         }
 
-        public ICompositeContainer Build(Action<IServiceCollection> services = null)
+        public void Compose(Action<IServiceCollection> register = null)
         {
             var resolver = new TypeResolver();
             
-            IComposite composite = _container.Compose(resolver);
+            _container.Compose(resolver);
             
             // Allow the host to override any services:
-            services?.Invoke(_composite.Services);
-            
-            // Create the service provider:
-            composite.CreateServiceProvider();
-
-            LogBuilderConfig(composite.ServiceProvider);
-            
-            return _container;
+            register?.Invoke(_serviceCollection);
+        
+            //LogBuilderConfig(composite.ServiceProvider);
         }
 
         private static void RegisterCommonContainerServices(IServiceCollection services)
@@ -89,25 +72,25 @@ namespace NetFusion.Builder
             services.AddSingleton<ISerializationManager, SerializationManager>();
         }
 
-        private void LogBuilderConfig(IServiceProvider serviceProvider)
-        {
-            var serializationMgr = serviceProvider.GetService<ISerializationManager>();
-
-            if (serializationMgr == null || !_logger.IsEnabled(LogLevel.Debug))
-            {
-                return;
-            }
-
-            var details = new
-            {
-                SerializationManager = serializationMgr.GetType().FullName,
-                Serializers = serializationMgr.Serializers.Select(s => new {
-                    s.ContentType,
-                    SerializerType = s.GetType().FullName
-                }).ToArray()
-            };
-
-            _logger.LogDebug(details.ToIndentedJson());
-        }
+//        private void LogBuilderConfig(IServiceProvider serviceProvider)
+//        {
+//            var serializationMgr = serviceProvider.GetService<ISerializationManager>();
+//
+//            if (serializationMgr == null || !_logger.IsEnabled(LogLevel.Debug))
+//            {
+//                return;
+//            }
+//
+//            var details = new
+//            {
+//                SerializationManager = serializationMgr.GetType().FullName,
+//                Serializers = serializationMgr.Serializers.Select(s => new {
+//                    s.ContentType,
+//                    SerializerType = s.GetType().FullName
+//                }).ToArray()
+//            };
+//
+//            _logger.LogDebug(details.ToIndentedJson());
+//        }
     }
 }

@@ -14,7 +14,7 @@ namespace NetFusion.Bootstrap.Plugins
     /// </summary>
     public class ModuleContext
     {
-        private readonly CompositeApp _compositeApp;
+        private readonly CompositeAppBuilder _compositeApp;
 
         /// <summary>
         /// The plug-in representing the application host.
@@ -55,7 +55,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         public IEnumerable<Type> AllAppPluginTypes { get; }
 
-        public ModuleContext(CompositeApp compositeApp, IPlugin plugin, IPluginModule module)
+        public ModuleContext(ICompositeAppBuilder compositeApp, IPlugin plugin, IPluginModule module)
         {
             _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
 

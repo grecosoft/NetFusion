@@ -35,8 +35,8 @@ namespace Service.Client
                     loggerFactory.AddConsole();
                     
                     collection.AddSingleton<ISerializationManager, SerializationManager>();
-                    
-                    collection.CompositeAppBuilder(loggerFactory, context.Configuration)
+
+                    collection.CompositeContainer()
                         .AddSettings()
                         .AddMessaging()
                         .AddRabbitMq()
@@ -44,8 +44,7 @@ namespace Service.Client
                         .AddRedis()
 
                         .AddPlugin<ClientPlugin>()
-                        .Build()
-                        .Start();
+                        .Compose();
                 })
                 .ConfigureAppConfiguration(SetupConfiguration)
                 .ConfigureLogging(SetupLogging)
