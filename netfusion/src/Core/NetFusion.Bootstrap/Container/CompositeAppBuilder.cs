@@ -196,7 +196,7 @@ namespace NetFusion.Bootstrap.Container
         private void ConfigurePlugins()
         {
             CorePlugins.ForEach(ConfigureModules);
-            AllPlugins.ForEach(ConfigureModules);
+            AppPlugins.ForEach(ConfigureModules);
             
             ConfigureModules(HostPlugin);
         }

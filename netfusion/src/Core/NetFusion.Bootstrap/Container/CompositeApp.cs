@@ -107,6 +107,13 @@ namespace NetFusion.Bootstrap.Container
             // Start the plug-in modules in dependent order starting with core modules 
             // and ending with the application host modules.
             _isStarted = true;
+
+            // Allow each module context to be initialized with services only available
+            // after the service-provider has been created (i.e. logging)
+            foreach (IPluginModule module in _builder.AllModules)
+            {
+                module.Context.Initialize(services);
+            }
      
             var coreStartTask = StartPluginModules(services, _builder.CorePlugins);
             var appStartTask = StartPluginModules(services, _builder.AppPlugins);

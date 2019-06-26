@@ -5,6 +5,7 @@ using NetFusion.Bootstrap.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NetFusion.Bootstrap.Plugins
 {
@@ -14,7 +15,7 @@ namespace NetFusion.Bootstrap.Plugins
     /// </summary>
     public class ModuleContext
     {
-        private readonly ICompositeAppBuilder _compositeApp;
+        private readonly ICompositeAppBuilder _builder;
 
         /// <summary>
         /// The plug-in representing the application host.
@@ -40,53 +41,48 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         public IEnumerable<Type> AllAppPluginTypes { get; }
         
-        
-        public ModuleContext(ICompositeAppBuilder compositeApp, IPlugin plugin, IPluginModule module)
+        public ModuleContext(ICompositeAppBuilder builder, IPlugin plugin, IPluginModule module)
         {
-            _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
+            _builder = builder ?? throw new ArgumentNullException(nameof(builder));
 
             Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
-            AppHost = compositeApp.HostPlugin;
+            AppHost = builder.HostPlugin;
             
             AllPluginTypes = FilteredTypesByPluginType();
             AllAppPluginTypes = GetAppPluginTypes();
         }
-        
-        
-        
-        
-        
-        
-        
-        
-
-        /// <summary>
-        /// The logger factory configured for the application container.
-        /// </summary>
-        public ILoggerFactory LoggerFactory => _compositeApp.LoggerFactory;
 
         /// <summary>
         /// The application configuration configured for the application container.
         /// </summary>
-        public IConfiguration Configuration => _compositeApp.Configuration;
+        public IConfiguration Configuration => _builder.Configuration;
 
+        public ILoggerFactory LoggerFactory { get; private set; }
+        
         /// <summary>
         /// Logger with the name of the plug-in used to identify the log messages.
         /// </summary>
-        public ILogger Logger { get; }
-
-
-
-
-
+        public ILogger Logger { get; private set; }
         
+        public void Initialize(IServiceProvider services)
+        {
+            var scopedLoggerType = typeof(ILogger<>).MakeGenericType(Plugin.GetType());
+
+            LoggerFactory = services.GetService<LoggerFactory>();
+            Logger = (ILogger)services.GetService(scopedLoggerType);
+        }
+
+        public void Log(LogLevel logLevel, string message, params object[] args)
+        {
+            
+        }
 
         private IEnumerable<Type> FilteredTypesByPluginType()
         {
             // Core plug-in can access types from all other plug-in types.
             if (Plugin.PluginType == PluginTypes.CorePlugin)
             {
-                return _compositeApp.GetPluginTypes();
+                return _builder.GetPluginTypes();
             }
 
             // Application centric plug-in can only access types contained in
@@ -96,7 +92,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         private IEnumerable<Type> GetAppPluginTypes()
         {
-            return _compositeApp.GetPluginTypes(PluginTypes.ApplicationPlugin,
+            return _builder.GetPluginTypes(PluginTypes.ApplicationPlugin,
                 PluginTypes.HostPlugin);
         }
 
@@ -104,7 +100,7 @@ namespace NetFusion.Bootstrap.Plugins
         // has any dependent plugin-module services set.
         public T GetPluginModule<T>() where T : IPluginModuleService
         {
-            var foundModules = _compositeApp.AllModules.OfType<T>().ToArray();
+            var foundModules = _builder.AllModules.OfType<T>().ToArray();
             if (! foundModules.Any())
             {
                 throw new ContainerException($"Plug-in module of type: {typeof(T)} not found.");

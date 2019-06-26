@@ -153,7 +153,7 @@ namespace NetFusion.Messaging.Plugin.Modules
 
         public async Task<object> InvokeDispatcherInNewLifetimeScopeAsync(MessageDispatchInfo dispatcher, 
             IMessage message, 
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             if (dispatcher == null) throw new ArgumentNullException(nameof(dispatcher));
             if (message == null) throw new ArgumentNullException(nameof(message));

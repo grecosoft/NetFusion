@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Container;
@@ -68,6 +69,7 @@ namespace NetFusion.Builder
 
         private static void RegisterCommonContainerServices(IServiceCollection services)
         {
+            services.AddSingleton<LoggerFactory>();
             services.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();
             services.AddSingleton<IValidationService, ValidationService>();
             services.AddSingleton<ISerializationManager, SerializationManager>();
