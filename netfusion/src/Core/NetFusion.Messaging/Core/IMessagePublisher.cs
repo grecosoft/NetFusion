@@ -1,5 +1,4 @@
-﻿using NetFusion.Base.Plugins;
-using NetFusion.Messaging.Types;
+﻿using NetFusion.Messaging.Types;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,7 +9,7 @@ namespace NetFusion.Messaging.Core
     /// For example the InProcessMessagePublisher dispatches messages locally while another publisher
     /// could deliver the messages externally to a configured broker such as RabbitMQ.
     /// </summary> 
-    public interface IMessagePublisher : IKnownPluginType
+    public interface IMessagePublisher
     {
         /// <summary>
         /// Specifies the scope to which publishers send messages to subscribers.

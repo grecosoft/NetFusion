@@ -10,7 +10,7 @@ namespace Service.WebApi.Resources
 #pragma warning disable CS4014
     public class SchoolResourceMap : HalResourceMap
     {
-        public override void OnBuildResourceMap()
+        protected override void OnBuildResourceMap()
         {
             Map<SchoolResource>()
                 .LinkMeta<RestController>(meta =>

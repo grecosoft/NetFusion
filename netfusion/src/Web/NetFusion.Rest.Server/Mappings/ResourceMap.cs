@@ -29,7 +29,7 @@ namespace NetFusion.Rest.Server.Mappings
             OnBuildResourceMap();
         }
 
-        public abstract void OnBuildResourceMap();
+        protected abstract void OnBuildResourceMap();
 
         /// <summary>
         /// Add an item containing metadata for a specific resource type.

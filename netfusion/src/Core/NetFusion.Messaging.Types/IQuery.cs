@@ -1,12 +1,11 @@
-﻿using NetFusion.Base.Plugins;
-using System;
+﻿using System;
 
 namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// Represents a query request that can be dispatched to a consumer.
     /// </summary>
-    public interface IQuery : IKnownPluginType
+    public interface IQuery 
     {
         /// <summary>
         /// The result provided by the consumer.

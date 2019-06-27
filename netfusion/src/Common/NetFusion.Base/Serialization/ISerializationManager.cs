@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using NetFusion.Base.Plugins;
 
 namespace NetFusion.Base.Serialization
 {
@@ -9,7 +8,7 @@ namespace NetFusion.Base.Serialization
     /// of IMessageSerializer instances that are each associated
     /// with a specific content-type.
     /// </summary>
-    public interface ISerializationManager : IKnownPluginType
+    public interface ISerializationManager 
     {
         /// <summary>
         /// The list of configured serializers.

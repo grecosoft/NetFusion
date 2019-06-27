@@ -1,5 +1,4 @@
 ﻿using NetFusion.Base.Entity;
-using NetFusion.Base.Plugins;
 
 namespace NetFusion.Messaging.Types
 {
@@ -7,8 +6,7 @@ namespace NetFusion.Messaging.Types
     /// Interface representing communication between a publisher and consumer.
     /// The message can also be attributed with dynamic properties.
     /// </summary>
-    public interface IMessage : IKnownPluginType,
-        IAttributedEntity
+    public interface IMessage : IAttributedEntity
     {
     }
 }

@@ -46,7 +46,7 @@ namespace Service.WebApi.Controllers
 
     public class ApiEntryPointRelations : HalResourceMap
     {
-        public override void OnBuildResourceMap()
+        protected override void OnBuildResourceMap()
         {
             Map<ExampleApiResource>()
                 .LinkMeta<ApiController>(meta =>

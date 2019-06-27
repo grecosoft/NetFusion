@@ -1,12 +1,11 @@
 using System;
-using NetFusion.Base.Plugins;
 
 namespace NetFusion.Base.Serialization
 {
     /// <summary>
     /// Implementations determine how an object is serialized and deserialized.
     /// </summary>
-    public interface IMessageSerializer : IKnownPluginType
+    public interface IMessageSerializer 
     {
         /// <summary>
         /// The content type (example: application/json).

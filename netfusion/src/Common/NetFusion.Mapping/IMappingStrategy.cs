@@ -1,5 +1,4 @@
-﻿using NetFusion.Base.Plugins;
-using System;
+﻿using System;
 
 // ReSharper disable UnusedTypeParameter
 namespace NetFusion.Mapping
@@ -8,7 +7,7 @@ namespace NetFusion.Mapping
     /// Interface defining the contract for a type responsible for mapping an object 
     /// from its source to target type.
     /// </summary>
-    public interface IMappingStrategy : IKnownPluginType
+    public interface IMappingStrategy 
     {
         /// <summary>
         /// The source type associated with the mapping.
