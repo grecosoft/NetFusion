@@ -38,7 +38,7 @@ namespace NetFusion.Messaging.Core
         }
 
         public async Task<TResult> Dispatch<TResult>(IQuery<TResult> query, 
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             if (query == null) throw new ArgumentNullException(nameof(query),
                 "Query to dispatch can't be null.");

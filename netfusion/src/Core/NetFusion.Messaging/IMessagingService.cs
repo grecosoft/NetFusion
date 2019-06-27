@@ -18,7 +18,7 @@ namespace NetFusion.Messaging
         /// <param name="cancellationToken">Optional cancellation token passed to message handler.</param>
         /// <param name="integrationType">Specifies the scope to which publishers send messages to subscribers.</param>
         /// <returns>Task result.</returns>
-        Task SendAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken),
+        Task SendAsync(ICommand command, CancellationToken cancellationToken = default,
             IntegrationTypes integrationType = IntegrationTypes.All);
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace NetFusion.Messaging
         /// <param name="integrationType">Specifies the scope to which publishers send messages to subscribers.</param>
         /// <returns>Task result.</returns>
         Task<TResult> SendAsync<TResult>(ICommand<TResult> command, 
-            CancellationToken cancellationToken = default(CancellationToken),
+            CancellationToken cancellationToken = default,
             IntegrationTypes integrationType = IntegrationTypes.All);
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace NetFusion.Messaging
         /// <param name="integrationType">Specifies the scope to which publishers send messages to subscribers.</param>
         /// <returns>Task result.</returns>
         Task PublishAsync(IDomainEvent domainEvent,
-            CancellationToken cancellationToken = default(CancellationToken),
+            CancellationToken cancellationToken = default,
             IntegrationTypes integrationType = IntegrationTypes.All);
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace NetFusion.Messaging
         /// <param name="integrationType">Specifies the scope to which publishers send messages to subscribers.</param>
         /// <returns>Task result.</returns>
         Task PublishAsync(IEventSource eventSource,
-            CancellationToken cancellationToken = default(CancellationToken),
+            CancellationToken cancellationToken = default,
             IntegrationTypes integrationType = IntegrationTypes.All);
 
         /// <summary>
@@ -64,6 +64,6 @@ namespace NetFusion.Messaging
         /// <param name="cancellationToken">Optional cancellation token used to cancel the asynchronous task.</param>
         /// <returns>Task containing the result of the consumer.</returns>
         Task<TResult> DispatchAsync<TResult>(IQuery<TResult> query,
-           CancellationToken cancellationToken = default(CancellationToken));
+           CancellationToken cancellationToken = default);
     }
 }

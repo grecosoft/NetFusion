@@ -7,7 +7,7 @@ namespace NetFusion.Messaging.Types
 {
     /// <summary>
     /// Default implementation representing message that can have one and only one consumer.
-    /// The handling consumer can associate a result after processing the message. A command
+    /// The handling consumer can associate a result after processing the message.  A command
     /// expresses an action that is to take place resulting in a change to an application's state.
     /// </summary>
     public abstract class Command : ICommand

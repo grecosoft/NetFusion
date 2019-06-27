@@ -26,7 +26,7 @@ namespace NetFusion.Messaging.Core
         public Type MessageType { get; set; }
 
         /// <summary>
-        /// The component containing the method that can handle the message. All types
+        /// The component containing the method that can handle the message.  All types
         /// implementing the IMessageConsumer are scanned for message handler methods.
         /// </summary>
         /// <returns>Message consumer runtime type.</returns>

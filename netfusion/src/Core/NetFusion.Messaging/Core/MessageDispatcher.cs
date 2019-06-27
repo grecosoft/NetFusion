@@ -16,7 +16,8 @@ namespace NetFusion.Messaging.Core
 {
     /// <summary>
     /// Contains methods to publish messages to all registered message publishers.
-    /// The message publishers are responsible for determining how the event is dispatched.  
+    /// The message publishers are responsible for determining how the message is
+    /// dispatched.  
     /// </summary>
     public class MessageDispatcher 
     {
@@ -37,15 +38,15 @@ namespace NetFusion.Messaging.Core
             // but this will make the order known.
             _messageEnrichers = messageEnrichers
                 .OrderByMatchingType(messagingModule.DispatchConfig.EnricherTypes)
-                .ToList();
+                .ToArray();
 
             _messagePublishers = messagePublishers
                 .OrderByMatchingType(messagingModule.DispatchConfig.PublisherTypes)
-                .ToList();
+                .ToArray();
         }
 
         public async Task PublishAsync(IDomainEvent domainEvent, 
-            CancellationToken cancellationToken = default(CancellationToken),
+            CancellationToken cancellationToken = default,
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent), 
@@ -54,7 +55,8 @@ namespace NetFusion.Messaging.Core
             await PublishMessageAsync(domainEvent, integrationType, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task SendAsync(ICommand command, CancellationToken cancellationToken = default(CancellationToken),
+        public async Task SendAsync(ICommand command, 
+            CancellationToken cancellationToken = default,
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             if (command == null) throw new ArgumentNullException(nameof(command),
@@ -64,7 +66,7 @@ namespace NetFusion.Messaging.Core
         }
 
         public async Task<TResult> SendAsync<TResult>(ICommand<TResult> command, 
-            CancellationToken cancellationToken = default(CancellationToken),
+            CancellationToken cancellationToken = default,
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             if (command == null) throw new ArgumentNullException(nameof(command),
@@ -75,7 +77,7 @@ namespace NetFusion.Messaging.Core
         }
 
         public async Task PublishAsync(IEventSource eventSource, 
-            CancellationToken cancellationToken = default(CancellationToken),
+            CancellationToken cancellationToken = default,
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             if (eventSource == null) throw new ArgumentNullException(nameof(eventSource),
@@ -156,7 +158,8 @@ namespace NetFusion.Messaging.Core
             }
         }
 
-        private async Task InvokePublishers(IMessage message, CancellationToken cancellationToken, IntegrationTypes integrationType)
+        private async Task InvokePublishers(IMessage message, CancellationToken cancellationToken, 
+            IntegrationTypes integrationType)
         {
             TaskListItem<IMessagePublisher>[] taskList = null;
 

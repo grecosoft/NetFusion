@@ -30,7 +30,7 @@ namespace NetFusion.Messaging.Types
             message.Attributes.GetMemberValueOrDefault<string>(null, Context);
        
         /// <summary>
-        /// An arbitrary string value assocated with the message.
+        /// An arbitrary string value associated with the message.
         /// </summary>
         /// <param name="message">The message to set route key.  If present, it
         /// will be overriden.</param>

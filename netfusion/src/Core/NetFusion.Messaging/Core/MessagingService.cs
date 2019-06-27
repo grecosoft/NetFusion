@@ -22,35 +22,35 @@ namespace NetFusion.Messaging.Core
         }
 
         public Task PublishAsync(IDomainEvent domainEvent, 
-            CancellationToken cancellationToken = default(CancellationToken), 
+            CancellationToken cancellationToken = default, 
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             return _messageDispatcher.PublishAsync(domainEvent, cancellationToken, integrationType);
         }
 
         public Task PublishAsync(IEventSource eventSource, 
-            CancellationToken cancellationToken = default(CancellationToken), 
+            CancellationToken cancellationToken = default, 
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             return _messageDispatcher.PublishAsync(eventSource, cancellationToken, integrationType);
         }
 
         public Task SendAsync(ICommand command, 
-            CancellationToken cancellationToken = default(CancellationToken),
+            CancellationToken cancellationToken = default,
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             return _messageDispatcher.SendAsync(command, cancellationToken, integrationType);
         }
 
         public Task<TResult> SendAsync<TResult>(ICommand<TResult> command, 
-            CancellationToken cancellationToken = default(CancellationToken),
+            CancellationToken cancellationToken = default,
             IntegrationTypes integrationType = IntegrationTypes.All)
         {
             return _messageDispatcher.SendAsync(command, cancellationToken, integrationType);
         }
 
         public Task<TResult> DispatchAsync<TResult>(IQuery<TResult> query,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             return _queryDispatcher.Dispatch(query, cancellationToken);
         }

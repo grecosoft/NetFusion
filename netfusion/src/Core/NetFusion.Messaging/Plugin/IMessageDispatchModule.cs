@@ -49,7 +49,7 @@ namespace NetFusion.Messaging.Plugin
         /// <returns>The result from the consumer.  If the message is a command and the response
         /// is assignable to its response type, it is automatically set on the command.</returns>
         Task<object> InvokeDispatcherInNewLifetimeScopeAsync(MessageDispatchInfo dispatcher, IMessage message, 
-            CancellationToken cancellationToken = default(CancellationToken));
+            CancellationToken cancellationToken = default);
 
     }
 }

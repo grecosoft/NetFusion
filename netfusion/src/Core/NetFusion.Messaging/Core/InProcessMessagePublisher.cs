@@ -92,7 +92,9 @@ namespace NetFusion.Messaging.Core
             }
         }
 
-        private async Task<MessageDispatchInfo[]> GetMatchingDispatchers(IEnumerable<MessageDispatchInfo> dispatchers, IMessage message)
+        private async Task<MessageDispatchInfo[]> GetMatchingDispatchers(
+            IEnumerable<MessageDispatchInfo> dispatchers, 
+            IMessage message)
         {
             List<MessageDispatchInfo> matchingDispatchers = new List<MessageDispatchInfo>();
 
