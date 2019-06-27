@@ -9,7 +9,7 @@ namespace WebTests.Rest.ClientRequests.Server
     /// </summary>
     public class CustomerResourceMap : HalResourceMap
     {
-        public override void OnBuildResourceMap()
+        protected override void OnBuildResourceMap()
         {
             Map<CustomerResource>()
                 .LinkMeta<CustomerController>(meta => 

@@ -2,9 +2,7 @@
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Moq;
 using NetFusion.Settings;
 using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;

@@ -12,7 +12,7 @@ namespace WebTests.Rest.LinkGeneration.Server
     /// </summary>
     public class LinkedResourceMap : HalResourceMap
     {
-        public override void OnBuildResourceMap()
+        protected override void OnBuildResourceMap()
         {
             // Test link definition specifying link using typed-safe expression selecting
             // a controller's action method.  The generated link will be the URL template

@@ -88,13 +88,13 @@ namespace NetFusion.Test.Container
             return this;
         }
 
-//        /// <summary>
-//        /// Allows the unit-test to assert the state of the composite application associated
-//        /// with the created application container.
-//        /// </summary>
-//        /// <param name="assert">The method passed an instance of the composite application
-//        /// to be asserted.</param>
-//        /// <returns>Self reference for method chaining.</returns>
+        /// <summary>
+        /// Allows the unit-test to assert the state of the composite application associated
+        /// with the created application container.
+        /// </summary>
+        /// <param name="assert">The method passed an instance of the composite application
+        /// to be asserted.</param>
+        /// <returns>Self reference for method chaining.</returns>
         public ContainerAssert CompositeAppBuilder(Action<ICompositeAppBuilder> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
@@ -163,28 +163,31 @@ namespace NetFusion.Test.Container
         /// underlying plug-in object created.</typeparam>
         /// <param name="assert">The method passed an instance of the plug-in to be asserted.</param>
         /// <returns>Self reference for method chaining.</returns>
-//        public ContainerAssert Plugin<TPlugin>(Action<TPlugin> assert)
-//            where TPlugin : IPlugin
-//        {
-//            if (assert == null) throw new ArgumentNullException(nameof(assert), 
-//                "Assert method not specified.");
-//
-//            // When unit-testing... a plug-in and the manifest are the same thing.
-//            var composite = (IComposite)_container;
-//            var plugins = composite.CompositeApp.AllPlugins.Where(p => p.GetType() == typeof(TPlugin)).ToArray();
-//
-//            if (plugins.Length > 1)
-//            {
-//                throw new InvalidOperationException(
-//                    $"More than one plug-in of the type: {typeof(TPlugin)} found.");
-//            }
-//
-//            var plugin = plugins.FirstOrDefault() ??
-//                throw new InvalidOperationException($"Plug-in of type: {typeof(TPlugin)} not found.");
-//
-//            assert((TPlugin)plugin);
-//            return this;
-//        }
+        public ContainerAssert Plugin<TPlugin>(Action<TPlugin> assert)
+            where TPlugin : IPlugin
+        {
+            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+                "Assert method not specified.");
+            
+            _fixture.AssureContainerComposed();
+
+            // When unit-testing... a plug-in and the manifest are the same thing.
+       
+            var plugins = _fixture.ContainerUnderTest.AppBuilder.AllPlugins
+                .Where(p => p.GetType() == typeof(TPlugin)).ToArray();
+
+            if (plugins.Length > 1)
+            {
+                throw new InvalidOperationException(
+                    $"More than one plug-in of the type: {typeof(TPlugin)} found.");
+            }
+
+            var plugin = plugins.FirstOrDefault() ??
+                throw new InvalidOperationException($"Plug-in of type: {typeof(TPlugin)} not found.");
+
+            assert((TPlugin)plugin);
+            return this;
+        }
 
         /// <summary>
         /// Allows the unit-test to assert the state of a plug-in configuration associated with

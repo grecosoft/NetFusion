@@ -28,17 +28,17 @@ namespace WebTests.Rest.Setup
         public CompositeContainer AppContainer { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection serviceCollection)
         {
             
             // Add framework services.
-            services.AddMvc(options =>
+            serviceCollection.AddMvc(options =>
             {
                 options.UseHalFormatter();
             });
 
             // Create, Build, and Start the NetFusion container.
-            AppContainer = TestAppContainer.Create(_pluginUnderTest, services);
+            AppContainer = TestAppContainer.Create(_pluginUnderTest, serviceCollection);
             
             var corePlugin = new MockCorePlugin();
             corePlugin.AddConfig<WebMvcConfig>();
@@ -51,16 +51,15 @@ namespace WebTests.Rest.Setup
 
             var webMvcConfig = AppContainer.GetPluginConfig<WebMvcConfig>();
             webMvcConfig.EnableRouteMetadata = true;
-            webMvcConfig.UseServices(services);
-     
-            AppContainer
-                .Compose(new TestTypeResolver())
-                .CreateServiceProvider()
-                .Start();
+            webMvcConfig.UseServices(serviceCollection);
 
-            // Integrate the NetFusion container.
-            IComposite composite = AppContainer;
-            return composite.ServiceProvider;
+            AppContainer.Compose(new TestTypeResolver());
+
+            var services = AppContainer.AppBuilder.ServiceCollection.BuildServiceProvider();
+            var compositeApp = services.GetService<ICompositeApp>();
+            compositeApp.Start();
+
+            return services;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
