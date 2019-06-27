@@ -61,6 +61,16 @@ namespace NetFusion.Bootstrap.Container
                     "The application container has already been started."));
             }
 
+            // Write the logs that were recorded before the container-provider
+            // was built now that ILogger is available.
+            _builder.BootstrapLogger.WriteToLogger(_logger);
+
+            if (_builder.BootstrapLogger.HasErrors)
+            {
+                throw new ContainerException(
+                    "Errors were recorded when bootstrapping application.  See log for details.");
+            }
+            
             try
             {
                 // Create a service scope in which each plugin can be started:

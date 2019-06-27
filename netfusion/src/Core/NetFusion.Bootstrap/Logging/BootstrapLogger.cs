@@ -15,8 +15,8 @@ namespace NetFusion.Bootstrap.Logging
     public class BootstrapLogger : IBootstrapLogger
     {
         private readonly List<BootstrapLog> _logs = new List<BootstrapLog>();
-        private ConsoleColor DefaultBackgroundColor = Console.BackgroundColor;
-        private ConsoleColor DefaultForegroundColor = Console.ForegroundColor;
+        private readonly ConsoleColor _defaultBackgroundColor = Console.BackgroundColor;
+        private readonly ConsoleColor _defaultForegroundColor = Console.ForegroundColor;
 
         public BootstrapLog[] Logs => _logs.ToArray();
             
@@ -29,6 +29,8 @@ namespace NetFusion.Bootstrap.Logging
             
             _logs.Add(log);
         }
+
+        public bool HasErrors => _logs.Any(l => l.LogLevel == LogLevel.Error);
 
         public void WriteToStandardOut()
         {
@@ -43,9 +45,17 @@ namespace NetFusion.Bootstrap.Logging
             }
         }
 
+        public void WriteToLogger(ILogger logger)
+        {
+            foreach (var log in _logs)
+            {
+                logger.Log(log.LogLevel, log.Message, log.Args);
+            }
+        }
+
         private void WriteLog(BootstrapLog log)
         {
-            Console.BackgroundColor = DefaultBackgroundColor;
+            Console.BackgroundColor = _defaultBackgroundColor;
 
             switch (log.LogLevel)
             {
@@ -59,12 +69,12 @@ namespace NetFusion.Bootstrap.Logging
                     Console.BackgroundColor = ConsoleColor.Yellow;
                     break;
                 default:
-                    Console.ForegroundColor = DefaultBackgroundColor;
+                    Console.ForegroundColor = _defaultBackgroundColor;
                     break;
             }
 
             Console.WriteLine($"{log.LogLevel} ==> {log.Message}");
-            Console.ForegroundColor = DefaultForegroundColor;
+            Console.ForegroundColor = _defaultForegroundColor;
         }
     }
 }

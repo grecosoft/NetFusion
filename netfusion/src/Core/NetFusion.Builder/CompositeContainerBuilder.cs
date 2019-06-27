@@ -67,13 +67,13 @@ namespace NetFusion.Builder
                 // be created and the ILogger available.  Until this point, all logs are
                 // written to the IBootstrapLogger.  This is new from .net core 3.0 forward.
                 _container.Compose(resolver);
-                
-                _container.BootstrapLogger.WriteToStandardOut();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception: {ex.Message}");
-                 _container.BootstrapLogger.WriteToStandardOut();
+                Console.WriteLine($"Exception: {ex}");
+                _container.BootstrapLogger.WriteToStandardOut();
+
+                 throw;
             }
         }
 

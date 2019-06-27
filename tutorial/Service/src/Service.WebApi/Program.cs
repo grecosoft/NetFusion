@@ -54,7 +54,7 @@ namespace Service.WebApi
             if (context.HostingEnvironment.IsDevelopment())
             {
                 builder.AddDebug().SetMinimumLevel(LogLevel.Warning);
-                builder.AddConsole().SetMinimumLevel(LogLevel.Warning);
+                builder.AddConsole().SetMinimumLevel(LogLevel.Information);
             }
             else
             {
