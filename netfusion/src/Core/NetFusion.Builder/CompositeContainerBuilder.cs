@@ -55,6 +55,10 @@ namespace NetFusion.Builder
             return this;
         }
 
+        // Populates the IServiceCollection with services registered by all plugin-modules.
+        // the end result is a populated service-collection with a register ICompositeApp
+        // that can be used for the lifetime of the host.  The associated IServiceProvider
+        // has not yet been created.
         public void Compose()
         {
             var resolver = new TypeResolver();
