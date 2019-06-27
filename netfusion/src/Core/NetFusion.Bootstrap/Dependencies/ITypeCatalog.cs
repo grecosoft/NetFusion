@@ -6,7 +6,7 @@ namespace NetFusion.Bootstrap.Dependencies
     /// <summary>
     /// Allows plug-in types matching a provided filter to be registered with the Microsoft's 
     /// service collection.  A reference to this interface is passed to plug-in modules and 
-    /// used to scan for types to be added to the service collection during the application
+    /// used to scan for types to be added to the service-collection during the application
     /// container's bootstrap process.
     /// </summary>
     public interface ITypeCatalog

@@ -27,7 +27,7 @@ namespace NetFusion.Bootstrap.Plugins
         public IEnumerable<IPluginModule> Modules => _modules;
         public IEnumerable<Type> Types { get; protected set; } = new List<Type>();
         
-        // Assembly Metadata.
+        // Assembly Metadata set by ITypeResolver:
         public string AssemblyName { get; set; }
         public string AssemblyVersion { get; set; }
 

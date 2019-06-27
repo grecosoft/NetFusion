@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace NetFusion.Bootstrap.Plugins
 {
     /// <summary>
-    /// Implemented by one or more plug-in classes allowing the plug-in to be configured.  
+    /// One or more modules are defined by a plugin to organize their implementation. 
     /// This includes the registering of types within the dependency-injection container, 
     /// the discovering of known-type implementations, and the execution of any needed
     /// logic upon startup and shutdown.
@@ -15,14 +15,15 @@ namespace NetFusion.Bootstrap.Plugins
     public abstract class PluginModule : IPluginModule
     {
         /// <summary>
-        /// Contains plug-in context information that can be used by the module during bootstrapping.
+        /// Contains plug-in context information that can be used by the module during
+        /// bootstrapping.
         /// </summary>
-        /// <returns>Contains properties that can be used by the implementation of a plugin module.</returns>
+        /// <returns>Provides context information associated with plugin.</returns>
         public ModuleContext Context { get; set; }
 
         /// <summary>
-        /// The first method called on the module.  This method is called on all modules before the
-        /// Configure method is called.
+        /// The first method called on the module.  This method is called on all modules
+        /// before the Configure method is called.
         /// </summary>
         public virtual void Initialize()
         {
@@ -61,8 +62,7 @@ namespace NetFusion.Bootstrap.Plugins
         }
 
         /// <summary>
-        /// Allows the plug-in to register specific types as services within the 
-        /// service collection.
+        /// Allows the plug-in to register specific types as services within the service collection.
         /// </summary>
         /// <param name="services">Service collection used to register types 
         /// that can be dependency injected as services.
@@ -119,8 +119,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// Called after the module is initialized and configured so that it can 
-        /// add module specific logs to the application
-        /// composite log.
+        /// add module specific logs to the application composite log.
         /// </summary>
         /// <param name="moduleLog">Log dictionary to populate.</param>
         public virtual void Log(IDictionary<string, object> moduleLog)

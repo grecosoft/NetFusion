@@ -8,8 +8,8 @@ using NetFusion.Bootstrap.Plugins;
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Validates that the manifest registry was correctly constructed from
-    /// the discovered assemblies representing plug-ins. 
+    /// Validates that the manifest registry was correctly constructed
+    /// from the registered plug-ins. 
     /// </summary>
     internal class CompositeAppValidation
     {

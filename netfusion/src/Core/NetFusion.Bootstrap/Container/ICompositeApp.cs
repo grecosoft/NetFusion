@@ -6,10 +6,14 @@ using NetFusion.Base.Validation;
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Represents an application composed from a set of plugins.
+    /// Represents an application composed from a set of plugins and available
+    /// for the lifetime of the executing host.
     /// </summary>
     public interface ICompositeApp
     {
+        /// <summary>
+        /// Indicates that the application has been started.
+        /// </summary>
         bool IsStarted { get; }
         
         /// <summary>

@@ -4,8 +4,7 @@ using NetFusion.Bootstrap.Plugins;
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Provides methods for building a composite-application
-    /// from a set of registered plugins.
+    /// Provides methods for building a composite-application from a set of registered plugins.
     /// </summary>
     public interface ICompositeContainerBuilder
     {
@@ -38,9 +37,9 @@ namespace NetFusion.Bootstrap.Container
         ICompositeContainerBuilder InitPluginConfig<T>(Action<T> configure) where T : IPluginConfig;
         
         /// <summary>
-        /// Builds a composite container from the set of added plug-ins.  After this method
-        /// is invoked, the IServiceCollection will have been populated with services from 
-        /// the plugin modules and the instance of the IServiceProvider created.
+        /// Builds a composite-application from the set of registered plug-ins.  After this method
+        /// is invoked, the ICompositeApp will have been added to the IServiceCollection. The host
+        /// can object an instance of the ICompositeApp from the created IServiceProvider.
         /// </summary>
         void Compose();
     }

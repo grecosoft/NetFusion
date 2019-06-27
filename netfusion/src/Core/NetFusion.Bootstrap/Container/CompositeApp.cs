@@ -23,12 +23,16 @@ namespace NetFusion.Bootstrap.Container
     {
         // Singleton instance of the composite-application:
         public static ICompositeApp Instance { get; private set; }
-        
-        private readonly ICompositeAppBuilder _builder;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger _logger;
-        
         public bool IsStarted { get; private set; }
+        
+        // Reference to the builder details that constructed this composite-application.
+        private readonly ICompositeAppBuilder _builder;
+        
+        // The service-provider associated with the application created from the
+        // service-collection populated by the bootstrapped plugin modules.
+        private readonly IServiceProvider _serviceProvider;
+        
+        private readonly ILogger _logger;
         
         public CompositeApp(
             ICompositeAppBuilder builder,
@@ -113,18 +117,15 @@ namespace NetFusion.Bootstrap.Container
         
         private async Task StartModules(IServiceProvider services)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services),
-                "Services cannot be null.");
-
             // Start the plug-in modules in dependent order starting with core modules 
             // and ending with the application host modules.
             IsStarted = true;
 
-            // Allow each module context to be initialized with services only available
-            // after the service-provider has been created (i.e. logging)
+            // Allow each module context to be initialized with the singleton logging
+            // services only available after the service-provider has been created.
             foreach (IPluginModule module in _builder.AllModules)
             {
-                module.Context.Initialize(services);
+                module.Context.InitLogging(services);
             }
      
             var coreStartTask = StartPluginModules(services, _builder.CorePlugins);
@@ -177,7 +178,7 @@ namespace NetFusion.Bootstrap.Container
             return _serviceProvider.CreateScope();
         }
         
-        // Creates a validation instance, based on the application configuration, used to validate an object.
+        // Creates a validation instance, based on the application configuration used to validate an object.
         // The host application can specify an implementation using a validation library of choice.
         public IObjectValidator CreateValidator(object obj)
         {
@@ -191,8 +192,8 @@ namespace NetFusion.Bootstrap.Container
         //--Stopping Composite Application
         //-----------------------------------------------------
         
-        // Should be called when the application-host is stopped.  Each registered plugin-module
-        // is stopped allowing it to reclaim resources.
+        // Should be called when the application-host is stopped.  Each registered
+        // plugin-module is stopped allowing it to reclaim resources.
         public async Task StopAsync()
         {
             if (! IsStarted)
@@ -202,7 +203,7 @@ namespace NetFusion.Bootstrap.Container
             
             try
             {
-                // Create a service scope in which each plugin can be started:
+                // Create a service scope in which each plugin can be stopped:
                 using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStop, "Stopping Composite-Application"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {

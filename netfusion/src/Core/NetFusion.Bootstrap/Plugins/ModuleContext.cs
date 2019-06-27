@@ -17,6 +17,7 @@ namespace NetFusion.Bootstrap.Plugins
     public class ModuleContext
     {
         private readonly ICompositeAppBuilder _builder;
+        private ILoggerFactory _loggerFactory;
         private ILogger _logger;
 
         /// <summary>
@@ -63,7 +64,19 @@ namespace NetFusion.Bootstrap.Plugins
         /// Logging factory.  Only available after the service-provider has been created.
         /// Use the BootstrapLogger in code executing before the container is created.
         /// </summary>
-        public ILoggerFactory LoggerFactory { get; private set; }
+        public ILoggerFactory LoggerFactory
+        {
+            get
+            {
+                if (_loggerFactory == null)
+                {
+                    throw new InvalidOperationException(
+                        "LoggerFactory can't be accessed until service-provider created.  Use BootstrapLogger.");
+                }
+
+                return _loggerFactory;
+            }
+        }
 
         /// <summary>
         /// Logger that can be used to record logs during the bootstrap process
@@ -103,11 +116,11 @@ namespace NetFusion.Bootstrap.Plugins
             }
         }
         
-        public void Initialize(IServiceProvider services)
+        public void InitLogging(IServiceProvider services)
         {
             var scopedLoggerType = typeof(ILogger<>).MakeGenericType(Plugin.GetType());
 
-            LoggerFactory = services.GetService<LoggerFactory>();
+            _loggerFactory = services.GetService<LoggerFactory>();
             _logger = (ILogger)services.GetService(scopedLoggerType);
         }
 

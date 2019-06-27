@@ -10,8 +10,8 @@ namespace NetFusion.Bootstrap.Validation
     public interface IValidationService
     {
         /// <summary>
-        /// Validates the object and all if its children and returns a flattened
-        /// list containing objects with validations.
+        /// Validates the object and all if its children and returns a flattened list
+        /// containing objects with validations.
         /// </summary>
         /// <returns>Result set containing all objects with resulting validations.</returns>
         ValidationResultSet Validate(object obj);

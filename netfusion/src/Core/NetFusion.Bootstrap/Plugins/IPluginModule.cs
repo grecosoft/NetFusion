@@ -17,8 +17,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// <summary>
         /// Contains plug-in information that can be used by the module during bootstrapping.
         /// </summary>
-        /// <returns>Contains information that can be used by the module when it is being
-        /// configured.</returns>
+        /// <returns>Contains context information related to the module.</returns>
         ModuleContext Context { get; set; }
 
         /// <summary>
@@ -52,36 +51,35 @@ namespace NetFusion.Bootstrap.Plugins
         /// <summary>
         /// Allows the plug-in to register specific types as services within the service collection.
         /// </summary>
-        /// <param name="services">Service collection used to register types 
-        /// that can be dependency injected as services.
+        /// <param name="services">Service collection used to register types that can be dependency
+        /// injected as services.
         /// </param>
         void RegisterServices(IServiceCollection services);
 
         /// <summary>
-        /// Method called on the module by the bootstrap process.  Called after
-        /// all types have been registered and the container has been created.
+        /// Method called on the module by the bootstrap process.  Called after all types have been
+        /// registered and the container has been created.
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
         Task StartModuleAsync(IServiceProvider services);
 
         /// <summary>
-        /// Called after all modules have been started.  This method can contain
-        /// logic that requires calling other module provides services that must
-        /// have already been started.
+        /// Called after all modules have been started.  This method can contain logic that requires
+        /// calling other module provides services that must have already been started.
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
         Task RunModuleAsync(IServiceProvider services);
 
         /// <summary>
-        /// Called when the container is stopped.  Allows the module to complete
-        /// any processing before the container is stopped.
+        /// Called when the container is stopped.  Allows the module to complete any processing
+        /// before the container is stopped.
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
         Task StopModuleAsync(IServiceProvider services);
 
         /// <summary>
-        /// Called after the module is initialized and configured so that it can 
-        /// add module specific logs to the application composite log.
+        /// Called after the module is initialized and configured so that it can add module
+        /// specific logs to the application composite log.
         /// </summary>
         /// <param name="moduleLog">Log dictionary to populate.</param>
         void Log(IDictionary<string, object> moduleLog);

@@ -9,9 +9,8 @@ namespace NetFusion.Bootstrap.Plugins
     public interface IPlugin
     {
         /// <summary>
-        /// Unique value identifying the plugin.  Not commonly used but can be
-        /// used to obtain the Id of the Host Plugin used to uniquely identify
-        /// associated items such as Queues.
+        /// Unique value identifying the plugin.  Can be used to obtain the Id of the
+        /// Host Plugin used to uniquely identify associated items such as Queues.
         /// </summary>
         string PluginId { get; }
         
@@ -58,16 +57,19 @@ namespace NetFusion.Bootstrap.Plugins
         /// Optional description of the plugin.
         /// </summary>
         string Description { get; }
-        
-        // Optional URL referencing the plugin's source code.
+
+        /// <summary>
+        /// Optional URL referencing the plugin's source code.
+        /// </summary>
         string SourceUrl { get; }
         
-        // Optional URL referencing the plugin's documentation. 
+        /// <summary>
+        /// Optional URL referencing the plugin's documentation. 
+        /// </summary>
         string DocUrl { get; }       
 
         /// <summary>
-        /// Invoked by the ITypeResolver implementation to specify runtime
-        /// information about a plugin.
+        /// Invoked by the ITypeResolver implementation to specify runtime information about a plugin.
         /// </summary>
         /// <param name="assemblyName">The name of the assembly containing the plugin.</param>
         /// <param name="assemblyVersion">The version of the assembly containing the plugin.</param>

@@ -8,7 +8,7 @@ namespace NetFusion.Bootstrap.Logging
     /// <summary>
     /// Simple logger used during the bootstrap process.  This exists since the
     /// ILogger instance is not available until the Service-Provider has been
-    /// created from the Service-Collection.  However, there are cases were where
+    /// created from the Service-Collection.  However, there are cases where
     /// logging is needed.  This class should not be used outside of the bootstrap
     /// code executing after ILogger is available.  
     /// </summary>
@@ -18,7 +18,7 @@ namespace NetFusion.Bootstrap.Logging
         private readonly ConsoleColor _defaultBackgroundColor = Console.BackgroundColor;
         private readonly ConsoleColor _defaultForegroundColor = Console.ForegroundColor;
 
-        public BootstrapLog[] Logs => _logs.ToArray();
+        public IEnumerable<BootstrapLog> Logs => _logs;
             
         public void Add(LogLevel logLevel, string message, params object[] args)
         {

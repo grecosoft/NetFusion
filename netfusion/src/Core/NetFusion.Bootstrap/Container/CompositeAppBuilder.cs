@@ -28,8 +28,8 @@ namespace NetFusion.Bootstrap.Container
         public IPlugin HostPlugin { get; private set; }
         public IPlugin[] AppPlugins { get; private set; }
         public IPlugin[] CorePlugins { get; private set; }
-        
-        public IPlugin[] AllPlugins { get; private set; }
+
+        public IPlugin[] AllPlugins { get; private set; } = Array.Empty<IPlugin>();
         public IPluginModule[] AllModules => AllPlugins.SelectMany(p => p.Modules).ToArray();
         
         public IBootstrapLogger BootstrapLogger { get; }
@@ -39,8 +39,8 @@ namespace NetFusion.Bootstrap.Container
         {
             _containerConfigs = new List<IContainerConfig>();
             
-            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             ServiceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
+            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             BootstrapLogger = new BootstrapLogger();
         }
         
@@ -51,6 +51,7 @@ namespace NetFusion.Bootstrap.Container
         public void ComposeModules(ITypeResolver typeResolver, IEnumerable<IPlugin> plugins)
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
+            if (plugins == null) throw new ArgumentNullException(nameof(plugins));
 
             CategorizePlugins(plugins);
             SetPluginAssemblyInfo(typeResolver);
@@ -72,6 +73,7 @@ namespace NetFusion.Bootstrap.Container
 
         public void AddContainerConfig(IContainerConfig containerConfig)
         {
+            if (containerConfig == null) throw new ArgumentNullException(nameof(containerConfig));
             _containerConfigs.Add(containerConfig);
         }
         
@@ -139,7 +141,7 @@ namespace NetFusion.Bootstrap.Container
         private IPluginModuleService GetModuleSupportingService(Type serviceType)
         {
             var foundModules = AllModules.Where(m => m.GetType().IsDerivedFrom(serviceType)).ToArray();
-            if (!foundModules.Any())
+            if (! foundModules.Any())
             {
                 throw new ContainerException($"Plug-in module of type: {serviceType} not found.");
             }
@@ -297,7 +299,7 @@ namespace NetFusion.Bootstrap.Container
 
             // Application centric plug-in can only access types contained in
             // other application plugs.
-            return AllPlugins.SelectMany(p => p.Types);
+            return AppPlugins.SelectMany(p => p.Types);
         }
         
         private void RegisterPluginModuleServices(IServiceCollection services)

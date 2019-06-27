@@ -6,7 +6,8 @@ namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
     /// Interface for an implementation responsible for resolving types allowing
-    /// the AppContainer to be independent of runtime information such as assemblies.  
+    /// the composite-application to be independent of runtime information such
+    /// as assemblies.  
     /// </summary>
     public interface ITypeResolver
     {

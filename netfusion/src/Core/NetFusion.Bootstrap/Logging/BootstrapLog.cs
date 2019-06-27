@@ -1,7 +1,12 @@
+using System;
 using Microsoft.Extensions.Logging;
 
 namespace NetFusion.Bootstrap.Logging
 {
+    /// <summary>
+    /// Represents a log entry written by the bootstrap process
+    /// before the ILogger is available. 
+    /// </summary>
     public class BootstrapLog
     {
         public LogLevel LogLevel { get; }
@@ -12,7 +17,7 @@ namespace NetFusion.Bootstrap.Logging
         public BootstrapLog(LogLevel logLevel, string message)
         {
             LogLevel = logLevel;
-            Message = message;
+            Message = message ?? throw new ArgumentNullException(nameof(message));
         }
     }
 }

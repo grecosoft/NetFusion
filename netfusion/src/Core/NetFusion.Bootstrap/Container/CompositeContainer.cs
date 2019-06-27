@@ -14,20 +14,16 @@ using NetFusion.Common.Extensions.Collections;
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Instantiated and delegated to by the IContainerBuilder instance returned by calling the
-    /// CompositeContainer extension method on IServiceCollection.  The methods contained on the
-    /// IContainerBuilder interface are used to initialize the CompositeContainer with a set of
-    /// plugins. The container-builder is used when configuring the Generic Host and allows for
-    /// adding services to the IServiceCollection using a controlled process common across all
-    /// plugins.  A plugin's associated modules are called to register services provided by the
-    /// plugin after the Compose method of IServiceCollection is called.  After  the Compose
-    /// method is called, an ICompositeApp singleton instance is added to the as a service.
-    /// 
-    /// This object represents the resulting built application. After the Generic-Host has been
-    /// created in the application's Main Program method, the ICompositeApp instance can be
-    /// requested using the created IServiceProvider.  Once the composite-application instance
-    /// is obtained, the StartAsync method is called to start all the plugin modules.  After
-    /// the Generic-Host stops, the StopAsync method needs to be called to shutdown all plugins. 
+    /// Instantiated and delegated to by the ICompositeContainerBuilder instance returned by
+    /// calling  the CompositeContainer extension method on IServiceCollection.  The methods
+    /// contained on the IContainerBuilder interface are used to register plugins with the
+    /// CompositeContainer.
+    ///
+    /// The composite-container builder is used when configuring the Generic Host and allows
+    /// for adding services to the IServiceCollection using a controlled process common across
+    /// all plugins.  A plugin's associated modules are called to register services provided by
+    /// the plugin when the Compose method of IContainerBuilder is called.  After the Compose
+    /// method is called, an ICompositeApp singleton instance is added to the service-collection.
     /// </summary>
     public class CompositeContainer 
     {
@@ -36,28 +32,25 @@ namespace NetFusion.Bootstrap.Container
         
         // Composite Structure:
         private readonly List<IPlugin> _plugins = new List<IPlugin>();
-        private readonly CompositeAppBuilder _compositeAppBuilder;
+        private readonly CompositeAppBuilder _builder;
 
         public bool IsComposted { get; private set; }
-        public IBootstrapLogger BootstrapLogger => _compositeAppBuilder.BootstrapLogger;
- 
+
         //--------------------------------------------------
         //--Container Initialization
         //--------------------------------------------------
 
-        public ICompositeAppBuilder AppBuilder => _compositeAppBuilder;
+        public ICompositeAppBuilder AppBuilder => _builder;
+        public IBootstrapLogger BootstrapLogger => _builder.BootstrapLogger;
         
         // Instantiated by CompositeContainerBuilder.
         public CompositeContainer(IServiceCollection services, IConfiguration configuration)
         {
             _serviceCollection = services ?? throw new ArgumentNullException(nameof(services));
 
-            if (configuration == null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
-
-            _compositeAppBuilder = new CompositeAppBuilder(services, configuration);
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            
+            _builder = new CompositeAppBuilder(services, configuration);
             
             AddContainerConfigs();
         }
@@ -96,14 +89,14 @@ namespace NetFusion.Bootstrap.Container
         // to control how the composite-application is initialized.
         private void AddContainerConfigs()
         {
-            _compositeAppBuilder.AddContainerConfig(new ValidationConfig());
+            _builder.AddContainerConfig(new ValidationConfig());
         }
         
         // Returns a container level configuration used to configure the runtime behavior
         // of the built container.
         public T GetContainerConfig<T>() where T : IContainerConfig
         {
-            return _compositeAppBuilder.GetContainerConfig<T>();
+            return _builder.GetContainerConfig<T>();
         }
         
         // Finds a configuration belonging to one of the registered plugins.  When a plugin
@@ -147,10 +140,11 @@ namespace NetFusion.Bootstrap.Container
 
             try
             {
-                _compositeAppBuilder.ComposeModules(typeResolver, _plugins);
-                _compositeAppBuilder.RegisterServices(_serviceCollection);
+                // Delegate to the builder:
+                _builder.ComposeModules(typeResolver, _plugins);
+                _builder.RegisterServices(_serviceCollection);
                 
-                LogPlugins(_compositeAppBuilder.AllPlugins);
+                LogPlugins(_builder.AllPlugins);
 
                 IsComposted = true;
 
@@ -169,8 +163,7 @@ namespace NetFusion.Bootstrap.Container
 
         private Exception LogException(Exception ex)
         {
-            _compositeAppBuilder.BootstrapLogger.Add(LogLevel.Error, 
-                $"Bootstrap Exception: {ex.Message}");
+            _builder.BootstrapLogger.Add(LogLevel.Error, $"Bootstrap Exception: {ex.Message}");
             return ex;
         }
 
@@ -187,8 +180,7 @@ namespace NetFusion.Bootstrap.Container
                     Modules = plugin.Modules.Select(m => m.GetType().FullName)
                 };
                 
-                _compositeAppBuilder.BootstrapLogger.Add(LogLevel.Information,
-                    details.ToIndentedJson());
+                _builder.BootstrapLogger.Add(LogLevel.Information, details.ToIndentedJson());
             }
         }
     }
