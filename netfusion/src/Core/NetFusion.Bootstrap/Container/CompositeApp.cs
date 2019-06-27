@@ -65,6 +65,8 @@ namespace NetFusion.Bootstrap.Container
             // was built now that ILogger is available.
             _builder.BootstrapLogger.WriteToLogger(_logger);
 
+            // If there were any bootstrap errors,  raise an exception to 
+            // abort starting the composite-application.
             if (_builder.BootstrapLogger.HasErrors)
             {
                 throw new ContainerException(

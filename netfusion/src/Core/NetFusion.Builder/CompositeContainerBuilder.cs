@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Bootstrap.Validation;
 using NetFusion.Serialization;
@@ -66,6 +67,16 @@ namespace NetFusion.Builder
                 // be created and the ILogger available.  Until this point, all logs are
                 // written to the IBootstrapLogger.  This is new from .net core 3.0 forward.
                 _container.Compose(resolver);
+                
+                // Account for the case where a message with an Error log level is recorded
+                // for which an exception was not raised.
+                if (_container.BootstrapLogger.HasErrors)
+                {
+                    _container.BootstrapLogger.WriteToStandardOut();
+                    
+                    throw new ContainerException(
+                        "Errors were recorded when bootstrapping application.  See log for details.");
+                }
             }
             catch (Exception ex)
             {
