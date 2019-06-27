@@ -22,6 +22,7 @@ namespace NetFusion.Bootstrap.Container
         private readonly IList<IContainerConfig> _containerConfigs;
         
         public IConfiguration Configuration { get; }
+        public IServiceCollection ServiceCollection { get; }
         
         // Plugins filtered by type:
         public IPlugin HostPlugin { get; private set; }
@@ -34,11 +35,12 @@ namespace NetFusion.Bootstrap.Container
         public IBootstrapLogger BootstrapLogger { get; }
         public CompositeAppLog CompositeLog { get; private set; }
         
-        public CompositeAppBuilder(IConfiguration configuration)
+        public CompositeAppBuilder(IServiceCollection serviceCollection, IConfiguration configuration)
         {
             _containerConfigs = new List<IContainerConfig>();
             
             Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            ServiceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
             BootstrapLogger = new BootstrapLogger();
         }
         

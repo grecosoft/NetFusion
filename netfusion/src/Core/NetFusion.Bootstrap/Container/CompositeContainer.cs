@@ -29,7 +29,7 @@ namespace NetFusion.Bootstrap.Container
     /// is obtained, the StartAsync method is called to start all the plugin modules.  After
     /// the Generic-Host stops, the StopAsync method needs to be called to shutdown all plugins. 
     /// </summary>
-    public class CompositeContainer  
+    public class CompositeContainer 
     {
         // Microsoft Service-Collection populated by Plugin Modules:
         private readonly IServiceCollection _serviceCollection;
@@ -38,11 +38,14 @@ namespace NetFusion.Bootstrap.Container
         private readonly List<IPlugin> _plugins = new List<IPlugin>();
         private readonly CompositeAppBuilder _compositeAppBuilder;
 
+        public bool IsComposted { get; private set; }
         public IBootstrapLogger BootstrapLogger => _compositeAppBuilder.BootstrapLogger;
  
         //--------------------------------------------------
         //--Container Initialization
         //--------------------------------------------------
+
+        public ICompositeAppBuilder AppBuilder => _compositeAppBuilder;
         
         // Instantiated by CompositeContainerBuilder.
         public CompositeContainer(IServiceCollection services, IConfiguration configuration)
@@ -54,7 +57,7 @@ namespace NetFusion.Bootstrap.Container
                 throw new ArgumentNullException(nameof(configuration));
             }
 
-            _compositeAppBuilder = new CompositeAppBuilder(configuration);
+            _compositeAppBuilder = new CompositeAppBuilder(services, configuration);
             
             AddContainerConfigs();
         }
@@ -137,12 +140,19 @@ namespace NetFusion.Bootstrap.Container
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
 
+            if (IsComposted)
+            {
+                throw new ContainerException("Container has already been composed.");
+            }
+
             try
             {
                 _compositeAppBuilder.ComposeModules(typeResolver, _plugins);
                 _compositeAppBuilder.RegisterServices(_serviceCollection);
                 
                 LogPlugins(_compositeAppBuilder.AllPlugins);
+
+                IsComposted = true;
 
             }
             catch (ContainerException ex)

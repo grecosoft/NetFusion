@@ -40,7 +40,6 @@ namespace NetFusion.Test.Container
             _actedOn = true;
             try
             {
-                _fixture.InitContainer();
                 act(_container);
             }
             catch (Exception ex)
@@ -51,63 +50,63 @@ namespace NetFusion.Test.Container
             return this;
         }
 
+//        /// <summary>
+//        /// Builds and starts the container.  This can be used when testing an expected exception
+//        /// thrown when the container is built and/or started.
+//        /// </summary>
+//        /// <returns>Self reference.</returns>
+//        public ContainerAct BuildAndStartContainer()
+//        {
+//            if (_actedOn)
+//            {
+//                throw new InvalidOperationException("The container can only be acted on once.");
+//            }
+//
+//            _actedOn = true;
+//            try
+//            {
+//                _fixture.InitContainer();
+//            }
+//            catch (Exception ex)
+//            {
+//                _resultingException = ex;
+//            }
+//
+//            return this;
+//        }
+
+//        /// <summary>
+//        /// Allows an application container that has not been built or started to be acted on.
+//        /// </summary>
+//        /// <param name="act">The method passed to act on the created container.</param>
+//        /// <returns>Self reference.</returns>
+//        public ContainerAct OnNonInitContainer(Action<CompositeContainer> act)
+//        {
+//            if (_actedOn)
+//            {
+//                throw new InvalidOperationException("The container can only be acted on once.");
+//            }
+//
+//            _actedOn = true;
+//            try
+//            {
+//                act(_container);
+//            }
+//            catch (Exception ex)
+//            {
+//                _resultingException = ex;
+//            }
+//
+//            return this;
+//        }
+
         /// <summary>
-        /// Builds and starts the container.  This can be used when testing an expected exception
-        /// thrown when the container is built and/or started.
+        /// Allows an unit-test to act on the composite-application under test.
         /// </summary>
-        /// <returns>Self reference.</returns>
-        public ContainerAct BuildAndStartContainer()
-        {
-            if (_actedOn)
-            {
-                throw new InvalidOperationException("The container can only be acted on once.");
-            }
-
-            _actedOn = true;
-            try
-            {
-                _fixture.InitContainer();
-            }
-            catch (Exception ex)
-            {
-                _resultingException = ex;
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        /// Allows an application container that has not been built or started to be acted on.
-        /// </summary>
-        /// <param name="act">The method passed to act on the created container.</param>
-        /// <returns>Self reference.</returns>
-        public ContainerAct OnNonInitContainer(Action<CompositeContainer> act)
-        {
-            if (_actedOn)
-            {
-                throw new InvalidOperationException("The container can only be acted on once.");
-            }
-
-            _actedOn = true;
-            try
-            {
-                act(_container);
-            }
-            catch (Exception ex)
-            {
-                _resultingException = ex;
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        /// Allows an unit-test to act on the application container under test.
-        /// </summary>
-        /// <param name="act">Method passed the instance of the container under test to be
+        /// <param name="act">Method passed the instance of the application under test to be
         /// acted on by the unit-test.  The method can invoke an asynchronous method.</param>
         /// <returns>Self reference for method chaining.</returns>
-        public async Task<ContainerAct> OnContainer(Func<ICompositeContainer, Task> act)
+            public async Task<ContainerAct> OnApplication(Func<ICompositeApp, Task> act)
         {
             if (_actedOn)
             {
@@ -117,8 +116,7 @@ namespace NetFusion.Test.Container
             _actedOn = true;
             try
             {
-                _fixture.InitContainer();
-                await act(_container).ConfigureAwait(false);
+                await act(_fixture.AppUnderTest).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -144,9 +142,7 @@ namespace NetFusion.Test.Container
             _actedOn = true;
             try
             {
-                _fixture.InitContainer();
-
-                var testScope = _container.CreateServiceScope();
+                var testScope = _fixture.AppUnderTest.CreateServiceScope();
                 TestServiceScope = testScope.ServiceProvider;
 
                 await act(TestServiceScope).ConfigureAwait(false);
@@ -169,9 +165,7 @@ namespace NetFusion.Test.Container
             _actedOn = true;
             try
             {
-                _fixture.InitContainer();
-
-                var testScope = _container.CreateServiceScope();
+                var testScope = _fixture.AppUnderTest.CreateServiceScope();
                 TestServiceScope = testScope.ServiceProvider;
 
                 act(TestServiceScope);

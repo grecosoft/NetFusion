@@ -20,6 +20,14 @@ namespace NetFusion.Test.Container
         {
             _fixture = fixture;
         }
+        
+        public ContainerArrange Configuration(Action<IConfigurationBuilder> arrange)
+        {
+            if (arrange == null) throw new ArgumentNullException(nameof(arrange));
+
+            arrange(_fixture.ConfigBuilder);
+            return this;
+        }
 
         public ContainerArrange Services(Action<IServiceCollection> arrange)
         {
@@ -28,6 +36,51 @@ namespace NetFusion.Test.Container
             arrange(_fixture.Services);
             return this;
         }
+        
+        public ContainerArrange PluginConfig<TConfig>(Action<TConfig> arrange) where  TConfig : IPluginConfig
+        {
+            var config =  _fixture.ContainerUnderTest.GetPluginConfig<TConfig>();
+            arrange(config);
+            return this;
+        }
+        
+        /// <summary>
+        /// Called by a unit-test to arrange the application container to an expected state.
+        /// </summary>
+        /// <param name="arrange">Method passed the application container under test. </param>
+        /// <returns>Self reference for method chaining</returns>
+        public ContainerArrange Container(Action<CompositeContainer> arrange)
+        {
+            if (arrange == null) throw new ArgumentNullException(nameof(arrange));
+
+            arrange(_fixture.ContainerUnderTest);
+            return this;
+        }
+        
+        /// <summary>
+        /// Allows the unit-test to act on the test-fixture under test.
+        /// </summary>
+        public ContainerAct Act => new ContainerAct(_fixture);
+    
+        /// <summary>
+        /// Allows the unit-test to assert on the state of the acted on test-fixture.
+        /// </summary>
+        public ContainerAssert Assert => new ContainerAssert(_fixture);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
         /// <summary>
         /// Called by a unit-test to arrange the type-resolver to an expected state.
@@ -42,43 +95,13 @@ namespace NetFusion.Test.Container
             return this;
         }
 
-        public ContainerArrange Configuration(Action<IConfigurationBuilder> arrange)
-        {
-            if (arrange == null) throw new ArgumentNullException(nameof(arrange));
+        
 
-            arrange(_fixture.ConfigBuilder);
-            return this;
-        }
+        
 
-        /// <summary>
-        /// Called by a unit-test to arrange the application container to an expected state.
-        /// </summary>
-        /// <param name="arrange">Method passed the application container under test. </param>
-        /// <returns>Self reference for method chaining</returns>
-        public ContainerArrange Container(Action<CompositeContainer> arrange)
-        {
-            if (arrange == null) throw new ArgumentNullException(nameof(arrange));
 
-            arrange(_fixture.ContainerUnderTest);
-            return this;
-        }
-
-        public ContainerArrange PluginConfig<TConfig>(Action<TConfig> arrange) where  TConfig : IPluginConfig
-        {
-            var config =  _fixture.ContainerUnderTest.GetPluginConfig<TConfig>();
-            arrange(config);
-            return this;
-        }
     
-        /// <summary>
-        /// Allows the unit-test to act on the test-fixture under test.
-        /// </summary>
-        public ContainerAct Act => new ContainerAct(_fixture);
-    
-        /// <summary>
-        /// Allows the unit-test to assert on the state of the acted on test-fixture.
-        /// </summary>
-        public ContainerAssert Assert => new ContainerAssert(_fixture);
+      
     }
 }
 

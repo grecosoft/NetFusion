@@ -19,6 +19,8 @@ namespace NetFusion.Test.Container
         private readonly Exception _resultingException;
         private readonly IServiceProvider _testServiceScope;
 
+        private readonly ContainerFixture _fixture;
+
         public ContainerAssert(CompositeContainer container, IServiceProvider serviceProvider, Exception resultingException)
         {
             _container = container;
@@ -29,7 +31,7 @@ namespace NetFusion.Test.Container
         public ContainerAssert(ContainerFixture fixture)
         {
             _container = fixture.ContainerUnderTest;
-           fixture.InitContainer();
+            _fixture = fixture;
         }
 
         /// <summary>
@@ -38,15 +40,15 @@ namespace NetFusion.Test.Container
         /// </summary>
         /// <param name="assert">The assert method.</param>
         /// <returns>Self reference.</returns>
-        public ContainerAssert Services(Action<IServiceProvider> assert)
-        {
-            if (assert == null) throw new ArgumentNullException(nameof(assert));
-            
-            var services = _testServiceScope ?? _container.CreateServiceScope().ServiceProvider;
-            assert(services);
-      
-            return this;
-        }
+//        public ContainerAssert Services(Action<IServiceProvider> assert)
+//        {
+//            if (assert == null) throw new ArgumentNullException(nameof(assert));
+//            
+//            var services = _testServiceScope ?? _container.CreateServiceScope().ServiceProvider;
+//            assert(services);
+//      
+//            return this;
+//        }
         
         /// <summary>
         /// Allows the unit-test to assert the state of the created application container.
@@ -54,12 +56,12 @@ namespace NetFusion.Test.Container
         /// <param name="assert">The method passed an instance of the application container
         /// to be asserted.</param>
         /// <returns>Self reference.</returns>
-        public ContainerAssert Container(Action<ICompositeContainer> assert)
+        public ContainerAssert Application(Action<ICompositeApp> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
                 "Assert method not specified.");
 
-            assert(_container);
+            assert(_fixture.AppUnderTest);
             return this;
         }
 
@@ -78,30 +80,32 @@ namespace NetFusion.Test.Container
             return this;
         }
 
-        /// <summary>
-        /// Allows the unit-test to assert the state of the composite application associated
-        /// with the created application container.
-        /// </summary>
-        /// <param name="assert">The method passed an instance of the composite application
-        /// to be asserted.</param>
-        /// <returns>Self reference for method chaining.</returns>
-        public ContainerAssert CompositeApp(Action<CompositeAppBuilder> assert)
-        {
-            if (assert == null) throw new ArgumentNullException(nameof(assert), 
-                "Assert method not specified.");
-
-            // dig it out...
-            assert(((IComposite)_container).CompositeApp);
-            return this;
-        }
+//        /// <summary>
+//        /// Allows the unit-test to assert the state of the composite application associated
+//        /// with the created application container.
+//        /// </summary>
+//        /// <param name="assert">The method passed an instance of the composite application
+//        /// to be asserted.</param>
+//        /// <returns>Self reference for method chaining.</returns>
+//        public ContainerAssert CompositeApp(Action<CompositeAppBuilder> assert)
+//        {
+//            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+//                "Assert method not specified.");
+//
+//            // dig it out...
+//            assert(((IComposite)_container).CompositeApp);
+//            return this;
+//        }
         
         public ContainerAssert ServiceCollection(Action<IServiceCollection> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
                 "Assert method not specified.");
+            
+            _fixture.AssureContainerComposed();
 
             // dig it out...
-            assert(((IComposite)_container).Services);
+            assert(_fixture.ContainerUnderTest.AppBuilder.ServiceCollection);
             return this;
         }
 
@@ -119,8 +123,9 @@ namespace NetFusion.Test.Container
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
                 "Assert method not specified.");
 
-            var composite = (IComposite)_container;
-            var modules = composite.CompositeApp.AllModules
+            _fixture.AssureContainerComposed();
+                
+            var modules = _fixture.ContainerUnderTest.AppBuilder.AllModules
                 .OfType<TModule>()
                 .ToArray();
 
@@ -149,28 +154,28 @@ namespace NetFusion.Test.Container
         /// underlying plug-in object created.</typeparam>
         /// <param name="assert">The method passed an instance of the plug-in to be asserted.</param>
         /// <returns>Self reference for method chaining.</returns>
-        public ContainerAssert Plugin<TPlugin>(Action<TPlugin> assert)
-            where TPlugin : IPlugin
-        {
-            if (assert == null) throw new ArgumentNullException(nameof(assert), 
-                "Assert method not specified.");
-
-            // When unit-testing... a plug-in and the manifest are the same thing.
-            var composite = (IComposite)_container;
-            var plugins = composite.CompositeApp.AllPlugins.Where(p => p.GetType() == typeof(TPlugin)).ToArray();
-
-            if (plugins.Length > 1)
-            {
-                throw new InvalidOperationException(
-                    $"More than one plug-in of the type: {typeof(TPlugin)} found.");
-            }
-
-            var plugin = plugins.FirstOrDefault() ??
-                throw new InvalidOperationException($"Plug-in of type: {typeof(TPlugin)} not found.");
-
-            assert((TPlugin)plugin);
-            return this;
-        }
+//        public ContainerAssert Plugin<TPlugin>(Action<TPlugin> assert)
+//            where TPlugin : IPlugin
+//        {
+//            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+//                "Assert method not specified.");
+//
+//            // When unit-testing... a plug-in and the manifest are the same thing.
+//            var composite = (IComposite)_container;
+//            var plugins = composite.CompositeApp.AllPlugins.Where(p => p.GetType() == typeof(TPlugin)).ToArray();
+//
+//            if (plugins.Length > 1)
+//            {
+//                throw new InvalidOperationException(
+//                    $"More than one plug-in of the type: {typeof(TPlugin)} found.");
+//            }
+//
+//            var plugin = plugins.FirstOrDefault() ??
+//                throw new InvalidOperationException($"Plug-in of type: {typeof(TPlugin)} not found.");
+//
+//            assert((TPlugin)plugin);
+//            return this;
+//        }
 
         /// <summary>
         /// Allows the unit-test to assert the state of a plug-in configuration associated with
@@ -179,28 +184,28 @@ namespace NetFusion.Test.Container
         /// <typeparam name="TConfig">The type of the configuration to search.</typeparam>
         /// <param name="assert">The method passed an instance of the configuration to be asserted.</param>
         /// <returns>Self reference for method chaining.</returns>
-        public ContainerAssert Configuration<TConfig>(Action<TConfig> assert)
-            where TConfig : IPluginConfig
-        {
-            if (assert == null) throw new ArgumentNullException(nameof(assert), 
-                "Assert method not specified.");
-
-            var composite = (IComposite)_container;
-
-            var config = composite.CompositeApp
-                .AllPlugins.SelectMany(p => p.Configs)
-                .OfType<TConfig>().FirstOrDefault();
-
-            if (config == null)
-            {
-                throw new InvalidOperationException(
-                    $"Plug-in configuration of type: {typeof(TConfig)} was not found to assert.");
-            }
-
-            assert(config);
-
-            return this;
-        }
+//        public ContainerAssert Configuration<TConfig>(Action<TConfig> assert)
+//            where TConfig : IPluginConfig
+//        {
+//            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+//                "Assert method not specified.");
+//
+//            var composite = (IComposite)_container;
+//
+//            var config = composite.CompositeApp
+//                .AllPlugins.SelectMany(p => p.Configs)
+//                .OfType<TConfig>().FirstOrDefault();
+//
+//            if (config == null)
+//            {
+//                throw new InvalidOperationException(
+//                    $"Plug-in configuration of type: {typeof(TConfig)} was not found to assert.");
+//            }
+//
+//            assert(config);
+//
+//            return this;
+//        }
 
         /// <summary>
         /// Allows the unit-test to assert an expected exception that should have been recorded
