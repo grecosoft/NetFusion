@@ -32,7 +32,7 @@ namespace CoreTests.Bootstrap
                         
                         r.RegisterPlugins(testPlugin);
                     })
-                    .Act.BuildAndStartContainer()
+                    .Act.ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
 
@@ -55,7 +55,7 @@ namespace CoreTests.Bootstrap
                         
                         c.RegisterPlugins(hostPlugin, corePlugin);
                     })
-                    .Act.BuildAndStartContainer()
+                    .Act.ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         ex.Message.Should().Contain("Plug-in identity values must be unique.");
@@ -78,7 +78,7 @@ namespace CoreTests.Bootstrap
                         
                         c.RegisterPlugins(hostPlugin);
                     })
-                    .Act.BuildAndStartContainer()
+                    .Act.ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         ex.Message.Should().Contain("All plugins must have AssemblyName and Name values.");
@@ -102,7 +102,7 @@ namespace CoreTests.Bootstrap
                         var testPlugin = new MockHostPlugin {AssemblyName = null};
                         c.RegisterPlugins(testPlugin);
                     })
-                    .Act.BuildAndStartContainer()
+                    .Act.ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         ex.Message.Should().Contain("All plugins must have AssemblyName and Name values.");
@@ -125,7 +125,7 @@ namespace CoreTests.Bootstrap
                         
                         c.RegisterPlugins(hostPlugin1, hostPlugin2);
                     })
-                    .Act.BuildAndStartContainer()
+                    .Act.ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         ex.Message.Should().Contain("There can only be one host plugin.");
@@ -145,7 +145,7 @@ namespace CoreTests.Bootstrap
                     {
 
                     })
-                    .Act.BuildAndStartContainer()
+                    .Act.ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         ex.Message.Should().Contain("he composite application must have one host plugin type.");
@@ -166,7 +166,7 @@ namespace CoreTests.Bootstrap
                     {
                         c.RegisterPlugin<MockHostPlugin>();
                     })
-                    .Assert.CompositeApp(ca =>
+                    .Assert.CompositeAppBuilder(ca =>
                     {
                         ca.HostPlugin.Should().NotBeNull();
                     });
@@ -189,7 +189,7 @@ namespace CoreTests.Bootstrap
                         c.RegisterPlugins(new MockApplicationPlugin());
                         c.RegisterPlugins(new MockApplicationPlugin());
                     })
-                    .Assert.CompositeApp(ca =>
+                    .Assert.CompositeAppBuilder(ca =>
                     {
                         ca.AppPlugins.Should().HaveCount(2);
                     });
@@ -212,7 +212,7 @@ namespace CoreTests.Bootstrap
                         c.RegisterPlugins(new MockCorePlugin());
                         c.RegisterPlugins(new MockCorePlugin());
                     })
-                    .Assert.CompositeApp(ca =>
+                    .Assert.CompositeAppBuilder(ca =>
                     {
                         ca.CorePlugins.Should().HaveCount(2);
                     });
@@ -239,7 +239,7 @@ namespace CoreTests.Bootstrap
                         c.RegisterPlugins(testPlugin);
 
                     })
-                    .Assert.CompositeApp(ca =>
+                    .Assert.CompositeAppBuilder(ca =>
                     {
                         var pluginModules = ca.CorePlugins.First().Modules.ToArray();
                         pluginModules.Should().HaveCount(2);

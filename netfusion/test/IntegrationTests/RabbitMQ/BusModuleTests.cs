@@ -31,6 +31,10 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.WithRabbitMqHost();
                     })
+                    .Act.OnApplication(ca =>
+                    {
+                        ca.Start();
+                    })
                     .Assert.PluginModule((BusModule m) =>
                     {
                         var bus = m.GetBus("TestBus1");
@@ -51,7 +55,10 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.WithRabbitMqHost();
                     })
-                    .Act.BuildAndStartContainer()
+                    .Act.OnApplication(ca =>
+                    {
+                        ca.Start();
+                    })
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         Assert.Equal(
@@ -95,6 +102,10 @@ namespace IntegrationTests.RabbitMQ
                     .Container(c =>
                     {
                         c.WithRabbitMqHost();
+                    })
+                    .Act.OnApplication(ca =>
+                    {
+                        ca.Start();
                     })
                     .Assert.PluginModule((MockBusModule m) =>
                     {
@@ -184,6 +195,10 @@ namespace IntegrationTests.RabbitMQ
                         c.WithRabbitMqHost();
                     })
                     .Configuration(TestSetup.AddValidBusConfig)
+                    .Act.OnApplication(ca =>
+                    {
+                        ca.Start();
+                    })
                     .Assert.PluginModule<MockBusModule>(m =>
                     {
                         Assert.True(m.ConnConfigs.Count() == 1);

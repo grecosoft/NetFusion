@@ -94,8 +94,16 @@ namespace NetFusion.Test.Container
                 
                 var serviceProvider = Services.BuildServiceProvider();
                 _compositeApp = serviceProvider.GetService<ICompositeApp>();
-                _compositeApp.Start();
                 return _compositeApp;
+            }
+        }
+
+        public void AssureCompositeAppStarted()
+        {
+            if (!AppUnderTest.IsStarted)
+            {
+                AssureContainerComposed();
+                AppUnderTest.Start();
             }
         }
 

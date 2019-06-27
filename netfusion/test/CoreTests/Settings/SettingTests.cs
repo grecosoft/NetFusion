@@ -98,9 +98,8 @@ namespace CoreTests.Settings
                     .Assert.Services(s =>
                     {
                         var configuration = s.GetService<IConfigurationRoot>();
-                        var logger = new Mock<ILogger>();
 
-                        var settings = configuration.GetSettings<MockSettings>(logger.Object);
+                        var settings = configuration.GetSettings<MockSettings>();
                         settings.Should().NotBeNull();
                     });
             }, AddInMemorySettings);

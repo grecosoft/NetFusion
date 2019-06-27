@@ -29,6 +29,10 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.AddPublisher<RabbitMqPublisher>();
                     })
+                    .Act.OnApplication(ca =>
+                    {
+                        ca.Start();
+                    })
                     .Assert.PluginModule<MockSubscriberModule>(m =>
                     {
                         Assert.True(m.CreatedQueues.Count == 5);
@@ -48,6 +52,10 @@ namespace IntegrationTests.RabbitMQ
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
                         c.AddPublisher<RabbitMqPublisher>();
+                    })
+                    .Act.OnApplication(ca =>
+                    {
+                        ca.Start();
                     })
                     .Assert.PluginModule<MockSubscriberModule>(m =>
                     {
@@ -98,6 +106,10 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.AddPublisher<RabbitMqPublisher>();
                     })
+                    .Act.OnApplication(ca =>
+                    {
+                        ca.Start();
+                    })
                     .Assert.PluginModule<MockSubscriberModule>(m =>
                     {
                         var queueDef = m.CreatedQueues.FirstOrDefault(q => q.QueueName == "TestTopicQueue");
@@ -146,6 +158,10 @@ namespace IntegrationTests.RabbitMQ
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
                         c.AddPublisher<RabbitMqPublisher>();
+                    })
+                    .Act.OnApplication(ca =>
+                    {
+                        ca.Start();
                     })
                     .Assert.PluginModule<MockSubscriberModule>(m =>
                     {
@@ -196,6 +212,10 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.AddPublisher<RabbitMqPublisher>();
                     })
+                    .Act.OnApplication(ca =>
+                    {
+                        ca.Start();
+                    })
                     .Assert.PluginModule<MockSubscriberModule>(m =>
                     {
                         var queueDef = m.CreatedQueues.FirstOrDefault(q => q.QueueName == "TestWorkQueue");
@@ -229,6 +249,10 @@ namespace IntegrationTests.RabbitMQ
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
                         c.AddPublisher<RabbitMqPublisher>();
+                    })
+                    .Act.OnApplication(ca =>
+                    {
+                        ca.Start();
                     })
                     .Assert.PluginModule<MockSubscriberModule>(m =>
                     {

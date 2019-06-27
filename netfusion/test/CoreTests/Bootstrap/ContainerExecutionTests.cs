@@ -1,7 +1,6 @@
 using System.Linq;
 using CoreTests.Bootstrap.Mocks;
 using FluentAssertions;
-using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;
@@ -20,11 +19,8 @@ namespace CoreTests.Bootstrap
                     {
                         c.RegisterPlugin<MockHostPlugin>();
                     })
-                    .Act.OnNonInitContainer(c =>
+                    .Act.OnApplication(c =>
                     {
-                        c.Compose(new TestTypeResolver())
-                            .CreateServiceProvider();
-                        
                         c.Start();
                         c.Start();
                     })
@@ -57,7 +53,11 @@ namespace CoreTests.Bootstrap
                         
                         c.RegisterPlugins(hostPlugin, corePlugin);
                     })
-                    .Assert.CompositeApp(ca =>
+                    .Act.OnApplication(ca =>
+                    {
+                        ca.Start();
+                    })
+                    .Assert.CompositeAppBuilder(ca =>
                     {
                         ca.AllModules.OfType<MockPluginModule>()
                             .All(m => m.IsStarted).Should().BeTrue();
@@ -81,11 +81,12 @@ namespace CoreTests.Bootstrap
                         
                         c.RegisterPlugins(hostPlugin);
                     })
-                    .Act.OnContainer(c =>
+                    .Act.OnApplication(ca =>
                     {
-                        c.Stop();
+                        ca.Start();
+                        ca.Stop();
                     })
-                    .Assert.CompositeApp(ca =>
+                    .Assert.CompositeAppBuilder(ca =>
                     {
                         var pluginModule = (MockPluginModule)ca.HostPlugin.Modules.First();
                         pluginModule.IsStopped.Should().BeTrue();
@@ -106,15 +107,16 @@ namespace CoreTests.Bootstrap
                     {
                         c.RegisterPlugin<MockHostPlugin>();
                     })
-                    .Act.OnContainer(c =>
+                    .Act.OnApplication(ca =>
                     {
-                        c.Stop();
-                        c.CreateServiceScope();
+                        ca.Start();
+                        ca.Stop();
+                        ca.CreateServiceScope();
                     })
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         ex.Message.Should().Be(
-                            "The application container has been stopped and can no longer be accessed.");
+                            "The composite-application has been stopped and can no longer be accessed.");
                     });
             });
         }

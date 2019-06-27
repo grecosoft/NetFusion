@@ -45,7 +45,7 @@ namespace CoreTests.Queries
                         c.RegisterPlugin<MessagingPlugin>();
                         
                     });
-                    fixture.InitContainer();
+                    fixture.AssureContainerComposed();
                     Assert.True(false, "Expected exception not raised.");
                 }
                 catch (ContainerException ex)

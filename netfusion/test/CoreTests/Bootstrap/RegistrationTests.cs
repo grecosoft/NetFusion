@@ -20,7 +20,7 @@ namespace CoreTests.Bootstrap
         /// injection container as a service.
         /// </summary>
         [Fact(DisplayName = "Application Container registered as Singleton Service")]
-        public void CompositeContainer_Registered_AsSingletonService()
+        public void CompositeApplication_Registered_AsSingletonService()
         {
             ContainerFixture.Test(fixture =>
             {
@@ -30,10 +30,9 @@ namespace CoreTests.Bootstrap
                     })
                     .Assert.Services(s =>
                     {
-                        var appContainer = s.GetService<ICompositeContainer>();
-                        appContainer.Should().NotBeNull();
+                        var compositeApp = s.GetService<ICompositeApp>();
+                        compositeApp.Should().NotBeNull();
                     });
-
             });
         }
 

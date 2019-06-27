@@ -82,7 +82,7 @@ namespace CoreTests.Queries.Bootstrap
                         c.RegisterPlugins(hostPlugin);
                         c.RegisterPlugin<MessagingPlugin>();
                     })
-                    .Act.BuildAndStartContainer()
+                    .Act.ComposeContainer()
                     .Assert.Exception((ContainerException ex) =>
                         {
                             ex.InnerException.Should().BeOfType<QueryDispatchException>();

@@ -96,7 +96,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
+                    .Act.ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         
@@ -144,7 +144,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.BuildAndStartContainer()
+                    .Act.ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         
@@ -197,6 +197,10 @@ namespace IntegrationTests.RabbitMQ
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
                         c.AddPublisher<RabbitMqPublisher>();
+                    })
+                    .Act.OnApplication(ca =>
+                    {
+                        ca.Start();
                     })
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {

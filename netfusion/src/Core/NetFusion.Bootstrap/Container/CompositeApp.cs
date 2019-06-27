@@ -26,9 +26,9 @@ namespace NetFusion.Bootstrap.Container
         
         private readonly ICompositeAppBuilder _builder;
         private readonly IServiceProvider _serviceProvider;
-        private bool _isStarted;
-        
         private readonly ILogger _logger;
+        
+        public bool IsStarted { get; private set; }
         
         public CompositeApp(
             ICompositeAppBuilder builder,
@@ -36,7 +36,7 @@ namespace NetFusion.Bootstrap.Container
             ILogger<CompositeApp> logger)
         {
             Instance = this;
-            _isStarted = false;
+            IsStarted = false;
 
             _builder = builder ?? throw new ArgumentNullException(nameof(builder));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
@@ -55,7 +55,7 @@ namespace NetFusion.Bootstrap.Container
         // the host application is started.
         public async Task StartAsync()
         {
-            if (_isStarted)
+            if (IsStarted)
             {
                 throw LogException(new ContainerException(
                     "The application container has already been started."));
@@ -118,7 +118,7 @@ namespace NetFusion.Bootstrap.Container
 
             // Start the plug-in modules in dependent order starting with core modules 
             // and ending with the application host modules.
-            _isStarted = true;
+            IsStarted = true;
 
             // Allow each module context to be initialized with services only available
             // after the service-provider has been created (i.e. logging)
@@ -195,7 +195,7 @@ namespace NetFusion.Bootstrap.Container
         // is stopped allowing it to reclaim resources.
         public async Task StopAsync()
         {
-            if (!_isStarted)
+            if (! IsStarted)
             {
                 return;
             }
@@ -235,7 +235,7 @@ namespace NetFusion.Bootstrap.Container
         
         private async Task StopPluginModulesAsync(IServiceProvider services)
         {
-            _isStarted = false;
+            IsStarted = false;
             
             var hostStopTask = StopPluginModules(services, new[] { _builder.HostPlugin });
             var appStopTask = StopPluginModules(services, _builder.AppPlugins);
@@ -260,7 +260,7 @@ namespace NetFusion.Bootstrap.Container
         
         private void ThrowIfStopped()
         {
-            if (! _isStarted)
+            if (! IsStarted)
             {
                 throw new ContainerException(
                     "The composite-application has been stopped and can no longer be accessed.");

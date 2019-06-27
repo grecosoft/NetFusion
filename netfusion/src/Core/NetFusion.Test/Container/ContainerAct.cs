@@ -50,6 +50,26 @@ namespace NetFusion.Test.Container
             return this;
         }
 
+        public ContainerAct ComposeContainer()
+        {
+            if (_actedOn)
+            {
+                throw new InvalidOperationException("The container can only be acted on once.");
+            }
+
+            _actedOn = true;
+            try
+            {
+                _fixture.AssureContainerComposed();
+            }
+            catch (Exception ex)
+            {
+                _resultingException = ex;
+            }
+
+            return this;
+        }
+
 //        /// <summary>
 //        /// Builds and starts the container.  This can be used when testing an expected exception
 //        /// thrown when the container is built and/or started.
@@ -106,7 +126,7 @@ namespace NetFusion.Test.Container
         /// <param name="act">Method passed the instance of the application under test to be
         /// acted on by the unit-test.  The method can invoke an asynchronous method.</param>
         /// <returns>Self reference for method chaining.</returns>
-            public async Task<ContainerAct> OnApplication(Func<ICompositeApp, Task> act)
+        public async Task<ContainerAct> OnApplication(Func<ICompositeApp, Task> act)
         {
             if (_actedOn)
             {
@@ -117,6 +137,26 @@ namespace NetFusion.Test.Container
             try
             {
                 await act(_fixture.AppUnderTest).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _resultingException = ex;
+            }
+
+            return this;
+        }
+        
+        public ContainerAct OnApplication(Action<ICompositeApp> act)
+        {
+            if (_actedOn)
+            {
+                throw new InvalidOperationException("The container can only be acted on once.");
+            }
+
+            _actedOn = true;
+            try
+            {
+                act(_fixture.AppUnderTest);
             }
             catch (Exception ex)
             {
@@ -138,7 +178,9 @@ namespace NetFusion.Test.Container
             {
                 throw new InvalidOperationException("The container can only be acted on once.");
             }
-
+            
+            _fixture.AssureCompositeAppStarted();
+            
             _actedOn = true;
             try
             {
@@ -162,6 +204,8 @@ namespace NetFusion.Test.Container
                 throw new InvalidOperationException("The container can only be acted on once.");
             }
 
+            _fixture.AssureCompositeAppStarted();
+            
             _actedOn = true;
             try
             {
@@ -182,6 +226,6 @@ namespace NetFusion.Test.Container
         /// After acting on the container under test, the unit-test can call methods on this
         /// property to assert its state.
         /// </summary>
-        public ContainerAssert Assert => new ContainerAssert(_container, TestServiceScope, _resultingException);
+        public ContainerAssert Assert => new ContainerAssert(_fixture, _container, TestServiceScope, _resultingException);
     }
 }

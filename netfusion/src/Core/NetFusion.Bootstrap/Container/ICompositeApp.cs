@@ -10,6 +10,8 @@ namespace NetFusion.Bootstrap.Container
     /// </summary>
     public interface ICompositeApp
     {
+        bool IsStarted { get; }
+        
         /// <summary>
         /// Log containing details of how the application was composed from plugins.
         /// </summary>
