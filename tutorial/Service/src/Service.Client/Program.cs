@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NetFusion.AMQP.Plugin;
 using NetFusion.Base.Serialization;
+using NetFusion.Bootstrap.Container;
 using NetFusion.Builder;
 using NetFusion.Messaging.Plugin;
 using NetFusion.RabbitMQ.Plugin;
@@ -18,12 +19,20 @@ namespace Service.Client
 {
     internal class Program
     {
-       
         public static async Task Main(string[] args)
         {
-            await BuildHost().WaitForShutdownAsync();
+            IHost host = BuildHost();
             
-          //  AppContainer.Instance.Dispose();
+            var compositeApp = host.Services.GetService<ICompositeApp>();
+            var lifetime = host.Services.GetService<IApplicationLifetime>();
+
+            lifetime.ApplicationStopping.Register(() =>
+            {
+                compositeApp.Stop();
+            });
+
+            await compositeApp.StartAsync();
+            await BuildHost().WaitForShutdownAsync();
         }
         
         private static IHost BuildHost()
@@ -31,8 +40,6 @@ namespace Service.Client
             var host = new HostBuilder()
                 .ConfigureServices((context, collection) =>
                 {
-                    collection.AddSingleton<ISerializationManager, SerializationManager>();
-
                     collection.CompositeContainer(context.Configuration)
                         .AddSettings()
                         .AddMessaging()
@@ -54,7 +61,7 @@ namespace Service.Client
             IConfigurationBuilder builder)
         {            
             builder.SetBasePath(Directory.GetCurrentDirectory());
-            builder.AddJsonFile($"appsettings.json", optional: true, reloadOnChange: true);
+            builder.AddJsonFile($"appsettings.json");
         }
 
         private static void SetupLogging(HostBuilderContext context, 
@@ -62,14 +69,8 @@ namespace Service.Client
         {
             builder.ClearProviders();
 
-//            if (EnvironmentConfig.IsDevelopment)
-//            {
-                builder.AddDebug().SetMinimumLevel(LogLevel.Trace);
-                builder.AddConsole().SetMinimumLevel(LogLevel.Trace);
-//            }
-
-            // Add additional logger specific to non-development environments.
+            builder.AddDebug().SetMinimumLevel(LogLevel.Debug);
+            builder.AddConsole().SetMinimumLevel(LogLevel.Debug);
         }
-        
     }
 }

@@ -26,14 +26,12 @@ namespace Service.WebApi
             });
                   
             await compositeApp.StartAsync();
-            await webHost.RunAsync(); 
-            
+            await webHost.RunAsync();    
         }
 
         private static IWebHost BuildWebHost(string[] args) 
         {
             return WebHost.CreateDefaultBuilder(args)
-                .UseEnvironment(EnvironmentName.Development)
                 .ConfigureAppConfiguration(SetupConfiguration)
                 .ConfigureLogging(SetupLogging)    
                 .UseStartup<Startup>()
@@ -53,8 +51,8 @@ namespace Service.WebApi
 
             if (context.HostingEnvironment.IsDevelopment())
             {
-                builder.AddDebug().SetMinimumLevel(LogLevel.Warning);
-                builder.AddConsole().SetMinimumLevel(LogLevel.Information);
+                builder.AddDebug().SetMinimumLevel(LogLevel.Debug);
+                builder.AddConsole().SetMinimumLevel(LogLevel.Debug);
             }
             else
             {
