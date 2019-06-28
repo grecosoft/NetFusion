@@ -66,42 +66,6 @@ namespace NetFusion.Test.Container
         /// Allows the unit-test to assert on the state of the acted on test-fixture.
         /// </summary>
         public ContainerAssert Assert => new ContainerAssert(_fixture);
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
-        /// <summary>
-        /// Called by a unit-test to arrange the type-resolver to an expected state.
-        /// </summary>
-        /// <param name="arrange">Method passed the type-resolver under test.</param>
-        /// <returns>Self reference for method chaining.</returns>
-        public ContainerArrange Resolver(Action<TestTypeResolver> arrange)
-        {
-            if (arrange == null) throw new ArgumentNullException(nameof(arrange));
-
-            arrange(_fixture.Resolver);
-            return this;
-        }
-
-        
-
-        
-
-
-    
-      
     }
 }
 
