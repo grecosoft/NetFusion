@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace NetFusion.Test.Container
 {
     /// <summary>
-    /// Returns object used to act on the created and arranged application container.
+    /// Returns object used to act on the created and arranged composite-container.
     /// After the container is acted on, the unit-test uses the Assert property to 
     /// test the state of the container or one of its related objects.
     /// </summary>
@@ -22,34 +22,13 @@ namespace NetFusion.Test.Container
             _container = fixture.ContainerUnderTest;
         }
 
-        public IServiceProvider TestServiceScope { get; private set; }
+        private IServiceProvider _testServiceScope;
 
         /// <summary>
-        /// Allows an unit-test to act on the application container under test.
+        /// Bootstraps the composite-container and adds the resulting IContainerApp
+        /// service-collection.
         /// </summary>
-        /// <param name="act">Method passed the instance of the container under test to be
-        /// acted on by the unit-test.</param>
-        /// <returns>Self reference for method chaining.</returns>
-        public ContainerAct OnContainer(Action<CompositeContainer> act)
-        {
-            if (_actedOn)
-            {
-                throw new InvalidOperationException("The container can only be acted on once.");
-            }
-
-            _actedOn = true;
-            try
-            {
-                act(_container);
-            }
-            catch (Exception ex)
-            {
-                _resultingException = ex;
-            }
-
-            return this;
-        }
-
+        /// <returns>Self Reference.</returns>
         public ContainerAct ComposeContainer()
         {
             if (_actedOn)
@@ -70,62 +49,12 @@ namespace NetFusion.Test.Container
             return this;
         }
 
-//        /// <summary>
-//        /// Builds and starts the container.  This can be used when testing an expected exception
-//        /// thrown when the container is built and/or started.
-//        /// </summary>
-//        /// <returns>Self reference.</returns>
-//        public ContainerAct BuildAndStartContainer()
-//        {
-//            if (_actedOn)
-//            {
-//                throw new InvalidOperationException("The container can only be acted on once.");
-//            }
-//
-//            _actedOn = true;
-//            try
-//            {
-//                _fixture.InitContainer();
-//            }
-//            catch (Exception ex)
-//            {
-//                _resultingException = ex;
-//            }
-//
-//            return this;
-//        }
-
-//        /// <summary>
-//        /// Allows an application container that has not been built or started to be acted on.
-//        /// </summary>
-//        /// <param name="act">The method passed to act on the created container.</param>
-//        /// <returns>Self reference.</returns>
-//        public ContainerAct OnNonInitContainer(Action<CompositeContainer> act)
-//        {
-//            if (_actedOn)
-//            {
-//                throw new InvalidOperationException("The container can only be acted on once.");
-//            }
-//
-//            _actedOn = true;
-//            try
-//            {
-//                act(_container);
-//            }
-//            catch (Exception ex)
-//            {
-//                _resultingException = ex;
-//            }
-//
-//            return this;
-//        }
-
         /// <summary>
         /// Allows an unit-test to act on the composite-application under test.
         /// </summary>
         /// <param name="act">Method passed the instance of the application under test to be
         /// acted on by the unit-test.  The method can invoke an asynchronous method.</param>
-        /// <returns>Self reference for method chaining.</returns>
+        /// <returns>Self Reference.</returns>
         public async Task<ContainerAct> OnApplication(Func<ICompositeApp, Task> act)
         {
             if (_actedOn)
@@ -146,6 +75,12 @@ namespace NetFusion.Test.Container
             return this;
         }
         
+        /// <summary>
+        /// Allows an unit-test to act on the composite-application under test.
+        /// </summary>
+        /// <param name="act">Method passed the instance of the application under test to be
+        /// acted on by the unit-test.</param>
+        /// <returns>Self Reference.</returns>
         public ContainerAct OnApplication(Action<ICompositeApp> act)
         {
             if (_actedOn)
@@ -167,11 +102,11 @@ namespace NetFusion.Test.Container
         }
 
         /// <summary>
-        /// Allows an unit-test to act on the server provider created from the bootstrapped
-        /// application container.
+        /// Allows an unit-test to act on the server-provider associated with the
+        /// composite-application.
         /// </summary>
         /// <param name="act">Method called to act on the service provider.</param>
-        /// <returns>Self reference for method chaining.</returns>
+        /// <returns>Self Reference.</returns>
         public async Task<ContainerAct> OnServices(Func<IServiceProvider, Task> act)
         {
             if (_actedOn)
@@ -185,9 +120,9 @@ namespace NetFusion.Test.Container
             try
             {
                 var testScope = _fixture.AppUnderTest.CreateServiceScope();
-                TestServiceScope = testScope.ServiceProvider;
+                _testServiceScope = testScope.ServiceProvider;
 
-                await act(TestServiceScope).ConfigureAwait(false);
+                await act(_testServiceScope).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -197,6 +132,12 @@ namespace NetFusion.Test.Container
             return this;
         }
         
+        /// <summary>
+        /// Allows an unit-test to act on the server-provider associated with the
+        /// composite-application.
+        /// </summary>
+        /// <param name="act">Method called to act on the service provider.</param>
+        /// <returns>Self Reference.</returns>
         public ContainerAct OnServices(Action<IServiceProvider> act)
         {
             if (_actedOn)
@@ -210,9 +151,9 @@ namespace NetFusion.Test.Container
             try
             {
                 var testScope = _fixture.AppUnderTest.CreateServiceScope();
-                TestServiceScope = testScope.ServiceProvider;
+                _testServiceScope = testScope.ServiceProvider;
 
-                act(TestServiceScope);
+                act(_testServiceScope);
             }
             catch (Exception ex)
             {
@@ -226,6 +167,8 @@ namespace NetFusion.Test.Container
         /// After acting on the container under test, the unit-test can call methods on this
         /// property to assert its state.
         /// </summary>
-        public ContainerAssert Assert => new ContainerAssert(_fixture, _container, TestServiceScope, _resultingException);
+        public ContainerAssert Assert => new ContainerAssert(_fixture, _container, 
+            _testServiceScope, 
+            _resultingException);
     }
 }

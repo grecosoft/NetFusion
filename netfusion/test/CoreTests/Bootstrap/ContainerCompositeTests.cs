@@ -25,7 +25,8 @@ namespace CoreTests.Bootstrap
         {
             ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Container(r =>
+                fixture.Arrange
+                    .Container(r =>
                     {
                         var testPlugin = new MockHostPlugin();
                         testPlugin.SetPluginId(null);

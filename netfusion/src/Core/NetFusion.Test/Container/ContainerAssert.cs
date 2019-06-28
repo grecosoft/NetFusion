@@ -9,9 +9,9 @@ namespace NetFusion.Test.Container
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// Object containing method for asserting the test fixture under test that was
-    /// acted on.  There are methods for asserting the container and any of its 
-    /// related objects created by the bootstrap process.
+    /// Object containing methods for asserting the test fixture that was acted on.
+    /// There are methods for asserting the container and any of its associated objects
+    /// under test.
     /// </summary>
     public class ContainerAssert 
     {
@@ -40,11 +40,11 @@ namespace NetFusion.Test.Container
         }
 
         /// <summary>
-        /// Passed reference to the created service provider to be asserted.  The assert method can
-        /// create instances of servers to assert their state.
+        /// Passed reference to the created service provider to be asserted.
+        /// The assert method can create instances of servers to assert their state.
         /// </summary>
         /// <param name="assert">The assert method.</param>
-        /// <returns>Self reference.</returns>
+        /// <returns>Self Reference.</returns>
         public ContainerAssert Services(Action<IServiceProvider> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert));
@@ -54,16 +54,15 @@ namespace NetFusion.Test.Container
             _testServiceScope = _testServiceScope ?? _fixture.AppUnderTest.CreateServiceScope().ServiceProvider;
 
             assert(_testServiceScope);
-      
             return this;
         }
         
         /// <summary>
-        /// Allows the unit-test to assert the state of the created application container.
+        /// Allows the unit-test to assert the state of the created composite-application.
         /// </summary>
-        /// <param name="assert">The method passed an instance of the application container
+        /// <param name="assert">The method is passed an instance of the composite-application
         /// to be asserted.</param>
-        /// <returns>Self reference.</returns>
+        /// <returns>Self Reference.</returns>
         public ContainerAssert Application(Action<ICompositeApp> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
@@ -89,12 +88,12 @@ namespace NetFusion.Test.Container
         }
 
         /// <summary>
-        /// Allows the unit-test to assert the state of the composite application associated
-        /// with the created application container.
+        /// Allows the unit-test to assert the state of the builder that was used
+        /// to construct the ICompositeApp.
         /// </summary>
-        /// <param name="assert">The method passed an instance of the composite application
+        /// <param name="assert">Delegate passed an instance of the composite-application
         /// to be asserted.</param>
-        /// <returns>Self reference for method chaining.</returns>
+        /// <returns>Self Reference.</returns>
         public ContainerAssert CompositeAppBuilder(Action<ICompositeAppBuilder> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
@@ -106,6 +105,11 @@ namespace NetFusion.Test.Container
             return this;
         }
         
+        /// <summary>
+        /// Allows the populated service-collection to be asserted.
+        /// </summary>
+        /// <param name="assert">Delegate passed the service-collection to be asserted.</param>
+        /// <returns></returns>
         public ContainerAssert ServiceCollection(Action<IServiceCollection> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
@@ -113,7 +117,6 @@ namespace NetFusion.Test.Container
             
             _fixture.AssureContainerComposed();
 
-            // dig it out...
             assert(_fixture.ContainerUnderTest.AppBuilder.ServiceCollection);
             return this;
         }

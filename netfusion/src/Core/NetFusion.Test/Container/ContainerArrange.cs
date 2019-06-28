@@ -8,9 +8,7 @@ using NetFusion.Bootstrap.Plugins;
 namespace NetFusion.Test.Container
 {
     /// <summary>
-    /// Contains methods for arranging the type-resolver and application container
-    /// under-test before actions are executed and their results asserted.  The 
-    /// methods on this class allow the unit-test to initialize the expected state.
+    /// Contains methods for arranging the main container objects under test.
     /// </summary>
     public class ContainerArrange
     {
@@ -21,6 +19,13 @@ namespace NetFusion.Test.Container
             _fixture = fixture;
         }
         
+        /// <summary>
+        /// Configures the configuration-builder with settings required for
+        /// the container object under-test.
+        /// </summary>
+        /// <param name="arrange">Delegate passed the configuration builder
+        /// to be initialized.</param>
+        /// <returns>Self Refrence</returns>
         public ContainerArrange Configuration(Action<IConfigurationBuilder> arrange)
         {
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
@@ -29,6 +34,12 @@ namespace NetFusion.Test.Container
             return this;
         }
 
+        /// <summary>
+        /// Configures the service-collection with services required for
+        /// the container objects under test.
+        /// </summary>
+        /// <param name="arrange">Delegate passed the service-collection.</param>
+        /// <returns>Self Reference</returns>
         public ContainerArrange Services(Action<IServiceCollection> arrange)
         {
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
@@ -37,18 +48,29 @@ namespace NetFusion.Test.Container
             return this;
         }
         
-        public ContainerArrange PluginConfig<TConfig>(Action<TConfig> arrange) where  TConfig : IPluginConfig
+        /// <summary>
+        /// Initializes a plugin configuration required for the container
+        /// objects under test. 
+        /// </summary>
+        /// <param name="arrange">Delegate passed the plugin configuration.</param>
+        /// <typeparam name="TConfig"></typeparam>
+        /// <returns>Self Reference</returns>
+        public ContainerArrange PluginConfig<TConfig>(Action<TConfig> arrange)
+            where  TConfig : IPluginConfig
         {
+            if (arrange == null) throw new ArgumentNullException(nameof(arrange));
+            
             var config =  _fixture.ContainerUnderTest.GetPluginConfig<TConfig>();
             arrange(config);
             return this;
         }
         
         /// <summary>
-        /// Called by a unit-test to arrange the application container to an expected state.
+        /// Configures the composite-container with a known set of plugins
+        /// pertaining to the unit-test.
         /// </summary>
-        /// <param name="arrange">Method passed the application container under test. </param>
-        /// <returns>Self reference for method chaining</returns>
+        /// <param name="arrange">Method passed the application container under test.</param>
+        /// <returns>Self Reference</returns>
         public ContainerArrange Container(Action<CompositeContainer> arrange)
         {
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
