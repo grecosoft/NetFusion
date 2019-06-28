@@ -24,7 +24,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Container(c => { c.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
+                    .Configuration(TestSetup.AddValidBusConfig)
+                    .Container(c =>
+                    {
+                        c.WithRabbitMqHost(typeof(MockTestBusConsumer));
+                    })
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
                         c.AddPublisher<RabbitMqPublisher>();
@@ -38,7 +42,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.True(m.CreatedQueues.Count == 5);
                         Assert.True(m.Subscribers.Count == 5);
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
 
         [Fact]
@@ -47,7 +51,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Container(c => { c.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
+                    .Configuration(TestSetup.AddValidBusConfig)
+                    .Container(c =>
+                    {
+                        c.WithRabbitMqHost(typeof(MockTestBusConsumer));
+                    })
                     .Configuration(TestSetup.AddValidBusConfig)
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
@@ -92,7 +100,7 @@ namespace IntegrationTests.RabbitMQ
                         
                         Assert.NotNull(subscriber);
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
         
         [Fact]
@@ -101,7 +109,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Container(c => { c.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
+                    .Configuration(TestSetup.AddValidBusConfig)
+                    .Container(c =>
+                    {
+                        c.WithRabbitMqHost(typeof(MockTestBusConsumer));
+                    })
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
                         c.AddPublisher<RabbitMqPublisher>();
@@ -145,7 +157,7 @@ namespace IntegrationTests.RabbitMQ
                         
                         Assert.NotNull(subscriber);
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
         
         [Fact]
@@ -154,7 +166,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Container(c => { c.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
+                    .Configuration(TestSetup.AddValidBusConfig)
+                    .Container(c =>
+                    {
+                        c.WithRabbitMqHost(typeof(MockTestBusConsumer));
+                    })
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
                         c.AddPublisher<RabbitMqPublisher>();
@@ -198,7 +214,7 @@ namespace IntegrationTests.RabbitMQ
                         
                         Assert.NotNull(subscriber);
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
         
         [Fact]
@@ -207,7 +223,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Container(c => { c.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
+                    .Configuration(TestSetup.AddValidBusConfig)
+                    .Container(c =>
+                    {
+                        c.WithRabbitMqHost(typeof(MockTestBusConsumer));
+                    })
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
                         c.AddPublisher<RabbitMqPublisher>();
@@ -236,7 +256,7 @@ namespace IntegrationTests.RabbitMQ
                         
                         Assert.NotNull(subscriber);
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
         
         [Fact]
@@ -245,7 +265,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Container(c => { c.WithRabbitMqHost(typeof(MockTestBusConsumer)); })
+                    .Configuration(TestSetup.AddValidBusConfig)
+                    .Container(c =>
+                    {
+                        c.WithRabbitMqHost(typeof(MockTestBusConsumer));
+                    })
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
                         c.AddPublisher<RabbitMqPublisher>();
@@ -283,7 +307,7 @@ namespace IntegrationTests.RabbitMQ
                         
                         Assert.NotNull(subscriber);
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
 
         public class MockTestBusConsumer : IMessageConsumer

@@ -146,25 +146,6 @@ namespace NetFusion.Test.Container
         }
         
         /// <summary>
-        /// Executes a test delegate passed an instance of ContainerFixture that
-        /// can be Arranged and Asserted.
-        /// </summary>
-        /// <param name="test">Method specified by the unit-test to execute logic against
-        /// a created test-fixture instance.</param>
-        /// <param name="config"></param>
-        public static void Test(Action<ContainerFixture> test, Action<IConfigurationBuilder> config)
-        {
-            if (test == null) throw new ArgumentNullException(nameof(test),
-                "Test delegate cannot be null.");
-
-            var fixture = CreateFixture();
-            config?.Invoke(fixture.ConfigBuilder);
-            test(fixture);
-
-            fixture._compositeApp?.Stop();
-        }
-        
-        /// <summary>
         /// Creates a new test fixture for testing an application container.  The created
         /// instance is passed to the provided test method used to execute the unit-test.
         /// Once the test method completes, the test container is stopped.

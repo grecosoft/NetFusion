@@ -26,6 +26,7 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
+                    .Configuration(TestSetup.AddValidBusConfig)
                     .Container(c => { c.WithRabbitMqHost(typeof(ValidExchangeRegistry)); })
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
@@ -36,7 +37,7 @@ namespace IntegrationTests.RabbitMQ
                         var isExchangeMsg = m.IsExchangeMessage(typeof(AutoSalesEvent));
                         Assert.True(isExchangeMsg);
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
 
         /// <summary>
@@ -49,6 +50,7 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
+                    .Configuration(TestSetup.AddValidBusConfig)
                     .Container(c => { c.WithRabbitMqHost(typeof(ValidExchangeRegistry)); })
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
@@ -59,7 +61,7 @@ namespace IntegrationTests.RabbitMQ
                         var definition = m.GetDefinition(typeof(AutoSalesEvent));
                         Assert.NotNull(definition);
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
 
         [Fact]
@@ -68,6 +70,7 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
+                    .Configuration(TestSetup.AddValidBusConfig)
                     .Container(c => { c.WithRabbitMqHost(typeof(ValidExchangeRegistry)); })
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
@@ -77,7 +80,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         Assert.Throws<InvalidOperationException>(() => m.GetDefinition(typeof(TestCommand1)));                       
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
         
         /// <summary>
@@ -88,6 +91,7 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
+                    .Configuration(TestSetup.AddValidBusConfig)
                     .Container(c =>
                     {
                         c.WithRabbitMqHost(typeof(DuplicateExchangeRegistry));
@@ -101,7 +105,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
         
         /// <summary>
@@ -112,6 +116,7 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
+                    .Configuration(TestSetup.AddValidMultipleBusConfig)
                     .Container(c =>
                     {
                         c.WithRabbitMqHost(typeof(ValidDuplicateExchangeRegistry));
@@ -125,7 +130,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.NotNull(m.GetDefinition(typeof(TestDomainEvent)));
                         Assert.NotNull(m.GetDefinition(typeof(TestDomainEvent2)));
                     });
-            }, TestSetup.AddValidMultipleBusConfig);
+            });
         }
 
         /// <summary>
@@ -136,6 +141,7 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
+                    .Configuration(TestSetup.AddValidBusConfig)
                     .Container(c =>
                     {
                         c.WithRabbitMqHost(typeof(DuplicateQueueRegistry));
@@ -149,7 +155,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
         
         [Fact]
@@ -157,6 +163,7 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
+                    .Configuration(TestSetup.AddValidMultipleBusConfig)
                     .Container(c =>
                     {
                         c.WithRabbitMqHost(typeof(ValidDuplicateQueueRegistry));
@@ -170,7 +177,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.NotNull(m.GetDefinition(typeof(TestCommand1)));
                         Assert.NotNull(m.GetDefinition(typeof(TestCommand2)));
                     });
-            }, TestSetup.AddValidMultipleBusConfig);
+            });
         }
 
         /// <summary>
@@ -190,6 +197,7 @@ namespace IntegrationTests.RabbitMQ
         {
             ContainerFixture.Test(fixture => {
                 fixture.Arrange
+                    .Configuration(TestSetup.AddValidBusConfig)
                     .Container(c =>
                     {
                         c.WithRabbitMqHost(typeof(RpcExchangeRegistry));
@@ -211,7 +219,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.NotNull(refExchangeClient);
                         Assert.NotSame(calExchangeClient, refExchangeClient);
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
 
 

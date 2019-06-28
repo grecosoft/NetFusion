@@ -31,7 +31,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Container(r => { r.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
+                    .Configuration(TestSetup.AddValidBusConfig)
+                    .Container(r =>
+                    {
+                        r.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest));
+                    })
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
                         c.AddPublisher<RabbitMqPublisher>();
@@ -60,7 +64,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.True(definition.IsPersistent);
                         Assert.False(definition.IsRpcExchange);
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
         
         /// <summary>
@@ -79,7 +83,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Container(c => { c.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
+                    .Configuration(TestSetup.AddValidBusConfig)
+                    .Container(c =>
+                    {
+                        c.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest));
+                    })
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
                         c.AddPublisher<RabbitMqPublisher>();
@@ -108,7 +116,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.True(definition.IsPersistent);
                         Assert.False(definition.IsRpcExchange);
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
         
         /// <summary>
@@ -128,7 +136,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Container(c => { c.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
+                    .Configuration(TestSetup.AddValidBusConfig)
+                    .Container(c =>
+                    {
+                        c.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest));
+                    })
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
                         c.AddPublisher<RabbitMqPublisher>();
@@ -157,7 +169,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.False(definition.IsPersistent);
                         Assert.False(definition.IsRpcExchange);
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
 
         /// <summary>
@@ -172,7 +184,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Container(c => { c.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
+                    .Configuration(TestSetup.AddValidBusConfig)
+                    .Container(c =>
+                    {
+                        c.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest));
+                    })
                     .Configuration(TestSetup.AddValidBusConfig)
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
@@ -205,7 +221,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.False(definition.IsPersistent);
                         Assert.False(definition.IsRpcExchange);
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
 
         /// <summary>
@@ -217,7 +233,11 @@ namespace IntegrationTests.RabbitMQ
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Container(c => { c.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest)); })
+                    .Configuration(TestSetup.AddValidBusConfig)
+                    .Container(c =>
+                    {
+                        c.WithRabbitMqHost(typeof(ExchangeRegistryUnderTest));
+                    })
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
                         c.AddPublisher<RabbitMqPublisher>();
@@ -248,7 +268,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.False(definition.QueueMeta.IsDurable);
                         Assert.False(definition.QueueMeta.IsPassive);
                     });
-            }, TestSetup.AddValidBusConfig);
+            });
         }
 
         public class ExchangeRegistryUnderTest : ExchangeRegistryBase

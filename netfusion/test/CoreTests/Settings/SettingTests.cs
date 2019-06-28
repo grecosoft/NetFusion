@@ -30,7 +30,9 @@ namespace CoreTests.Settings
         {
             ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Container(c =>
+                fixture.Arrange
+                    .Configuration(AddInMemorySettings)
+                    .Container(c =>
                     {
                         var hostPlugin = new MockHostPlugin();
                         hostPlugin.AddPluginType<MockSettings>();
@@ -47,7 +49,7 @@ namespace CoreTests.Settings
                         settings.Height.Should().Be(20);
                         settings.Width.Should().Be(50);
                     });
-            }, AddInMemorySettings);
+            });
         }
 
         /// <summary>
@@ -60,7 +62,9 @@ namespace CoreTests.Settings
         {
             ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Container(c =>
+                fixture.Arrange
+                    .Configuration(AddInMemorySettings)
+                    .Container(c =>
                     {
                         var hostPlugin = new MockHostPlugin();
                         hostPlugin.AddPluginType<MockSettings>();
@@ -76,7 +80,7 @@ namespace CoreTests.Settings
                         int width = configuration.GetValue<int>("App:MainWindow:Width");
                         width.Should().Be(50);
                     });
-            }, AddInMemorySettings);
+            });
         }
 
         [Fact]
@@ -84,7 +88,9 @@ namespace CoreTests.Settings
         {
             ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Container(c =>
+                fixture.Arrange
+                    .Configuration(AddInMemorySettings)
+                    .Container(c =>
                     {
                         var hostPlugin = new MockHostPlugin();
                         hostPlugin.AddPluginType<MockSettings>();
@@ -100,7 +106,7 @@ namespace CoreTests.Settings
                         var settings = configuration.GetSettings<MockSettings>();
                         settings.Should().NotBeNull();
                     });
-            }, AddInMemorySettings);
+            });
         }
 
         /// <summary>
@@ -114,7 +120,9 @@ namespace CoreTests.Settings
         {
             ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Container(c =>
+                fixture.Arrange
+                    .Configuration(AddInMemorySettings)
+                    .Container(c =>
                     {
                         var hostPlugin = new MockHostPlugin();
                         hostPlugin.AddPluginType<MockSettings>();
@@ -134,7 +142,7 @@ namespace CoreTests.Settings
                         settings.Height.Should().Be(20);
                         settings.Width.Should().Be(50);
                     });
-            }, AddInMemorySettings);
+            });
         }
 
         // Test the generation of section for derived setting types.
