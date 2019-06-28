@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.MongoDB.Core;
+using NetFusion.MongoDB.Internal;
 using NetFusion.MongoDB.Settings;
 
 namespace NetFusion.MongoDB.Plugin.Modules

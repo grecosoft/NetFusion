@@ -1,9 +1,9 @@
-﻿using MongoDB.Bson.Serialization;
-using NetFusion.Base.Plugins;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using MongoDB.Bson.Serialization;
+using NetFusion.Base.Plugins;
 
-namespace NetFusion.MongoDB.Core
+namespace NetFusion.MongoDB.Internal
 {
     /// <summary>
     /// Identifies classes that are responsible for mapping types 

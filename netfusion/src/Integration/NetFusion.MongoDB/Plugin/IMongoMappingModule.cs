@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.MongoDB.Core;
+using NetFusion.MongoDB.Internal;
 
 namespace NetFusion.MongoDB.Plugin
 {

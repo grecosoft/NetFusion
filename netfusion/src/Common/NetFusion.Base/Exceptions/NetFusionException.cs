@@ -77,7 +77,7 @@ namespace NetFusion.Base.Exceptions
         /// <param name="details">Object containing details of the application's state
         /// at the time of the exception.</param>
         protected NetFusionException(string message, Exception innerException, string detailKey, object details)
-            : base(message, innerException)
+            : this(message, innerException)
         {
             if (string.IsNullOrWhiteSpace(detailKey)) throw new ArgumentException(
                 "Key to identify exception details not specified.", nameof(detailKey));

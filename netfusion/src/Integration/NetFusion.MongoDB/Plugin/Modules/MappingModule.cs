@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MongoDB.Bson.Serialization;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.MongoDB.Core;
+using NetFusion.MongoDB.Internal;
 
 namespace NetFusion.MongoDB.Plugin.Modules
 {
@@ -90,7 +90,7 @@ namespace NetFusion.MongoDB.Plugin.Modules
                 EntityType = m.EntityType.AssemblyQualifiedName,
                 m.CollectionName,
                 Descriminator = m.ClassMap.Discriminator,
-                KnownTypes = m.ClassMap.KnownTypes.Select( kt => kt.AssemblyQualifiedName)
+                KnownTypes = m.ClassMap.KnownTypes.Select( kt => kt.FullName)
             }).ToArray();
         }
     }

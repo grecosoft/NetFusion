@@ -1,10 +1,10 @@
-﻿using MongoDB.Driver;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using MongoDB.Driver;
 using NetFusion.MongoDB.Plugin;
 using NetFusion.MongoDB.Settings;
 
-namespace NetFusion.MongoDB.Core
+namespace NetFusion.MongoDB.Internal
 {
     /// <summary>
     /// Service component that is registered with the dependency injection 

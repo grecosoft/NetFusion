@@ -2,10 +2,10 @@
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson.Serialization.Serializers;
-using NetFusion.MongoDB.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using NetFusion.MongoDB.Internal;
 
 namespace NetFusion.MongoDB
 {
