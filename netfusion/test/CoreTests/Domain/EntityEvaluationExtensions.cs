@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Entity;
 using NetFusion.Base.Scripting;
-using NetFusion.Roslyn.Core;
+using NetFusion.Roslyn.Internal;
 
 namespace CoreTests.Domain
 {

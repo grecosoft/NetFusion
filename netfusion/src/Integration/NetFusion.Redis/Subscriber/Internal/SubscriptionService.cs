@@ -10,7 +10,7 @@ using NetFusion.Redis.Plugin;
 namespace NetFusion.Redis.Subscriber.Internal
 {
     /// <summary>
-    /// Service that allows subscribing a fuction delegate to a channel that will be
+    /// Service that allows subscribing a function delegate to a channel that will be
     /// invoked when a message is published.
     /// </summary>
     public class SubscriptionService : ISubscriptionService
@@ -93,7 +93,7 @@ namespace NetFusion.Redis.Subscriber.Internal
                 throw new ArgumentException("Channel not specified.", nameof(channel));
 
             _logger.LogTrace(RedisLogEvents.SubscriberEvent, 
-                "Unsubscribing channel named {channel} from database {database}", channel, database);
+                "Unsubscribe channel named {channel} from database {database}", channel, database);
             
             var subscriber = _connModule.GetSubscriber(database);
             subscriber.Unsubscribe(channel);
@@ -105,7 +105,7 @@ namespace NetFusion.Redis.Subscriber.Internal
                 throw new ArgumentException("Channel not specified.", nameof(channel));
                 
             _logger.LogTrace(RedisLogEvents.SubscriberEvent, 
-                "Unsubscribing channel named {channel} from database {database}", channel, database);
+                "Unsubscribe channel named {channel} from database {database}", channel, database);
             
             var subscriber = _connModule.GetSubscriber(database);
             await subscriber.UnsubscribeAsync(channel).ConfigureAwait(false);

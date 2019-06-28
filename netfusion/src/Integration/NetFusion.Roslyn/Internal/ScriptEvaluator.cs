@@ -6,7 +6,7 @@ using NetFusion.Base.Entity;
 using NetFusion.Base.Scripting;
 using NetFusion.Common.Extensions.Reflection;
 
-namespace NetFusion.Roslyn.Core
+namespace NetFusion.Roslyn.Internal
 {
     /// <summary>
     /// Instance of this class is cached by the EntityScriptingService and contains a set of
@@ -46,10 +46,10 @@ namespace NetFusion.Roslyn.Core
             foreach (ExpressionEvaluator evaluator in Evaluators
                 .OrderBy(ev => ev.Expression.Sequence))
             {
-                object result = await evaluator.Executor(entityScope);
+                object result = await evaluator.ScriptRunner(entityScope);
 
                 // Determines if a dynamic calculated attribute and not an assignment to
-                // static domain-entity property.  If so update or add the attribute's value.
+                // static domain-entity property.  If so update or add the attribute value.
                 if (entity is IAttributedEntity attributedEntity && evaluator.Expression.AttributeName != null)
                 {
                     attributedEntity.Attributes.SetValue(evaluator.Expression.AttributeName, result);

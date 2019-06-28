@@ -144,7 +144,6 @@ namespace NetFusion.Redis.Plugin.Modules
             return cachedConn;
         }
 
-        // https://github.com/grecosoft/NetFusion/wiki/core.logging.composite#module-logging
         public override void Log(IDictionary<string, object> moduleLog)
         {
             moduleLog["redis:connections"] = _redisSettings.Connections.Select(c => new

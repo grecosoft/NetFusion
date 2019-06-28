@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Messaging.Plugin;
-using NetFusion.Roslyn.Core;
+using NetFusion.Roslyn.Internal;
 using NetFusion.Roslyn.Testing;
 
 namespace CoreTests.Messaging.Mocks

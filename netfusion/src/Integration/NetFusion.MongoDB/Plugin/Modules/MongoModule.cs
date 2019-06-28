@@ -9,9 +9,8 @@ using NetFusion.MongoDB.Settings;
 namespace NetFusion.MongoDB.Plugin.Modules
 {
     /// <summary>
-    /// Called by the base plug-in bootstrapping code.  Registers,
-    /// any service component types associated with MongoDB that
-    /// will be available as services at runtime.
+    /// Called by the base plug-in bootstrapping code.  Registers, any service component
+    /// types associated with MongoDB that will be available as services at runtime.
     /// </summary>
     public class MongoModule : PluginModule
     {

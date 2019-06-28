@@ -25,6 +25,8 @@ namespace NetFusion.EntityFramework.Settings
 
         public void Validate(IObjectValidator validator)
         {
+            validator.AddChildren(Contexts);
+            
             validator.Verify(
                 Contexts.WhereDuplicated(c => c.ContextName).Empty(), 
                 "Context names must be unique.");

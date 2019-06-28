@@ -2,6 +2,9 @@
 
 namespace NetFusion.Redis
 {
+    /// <summary>
+    /// Service allows access to the configured Redis databases and subscribers.
+    /// </summary>
     public interface IRedisService
     {
         /// <summary>

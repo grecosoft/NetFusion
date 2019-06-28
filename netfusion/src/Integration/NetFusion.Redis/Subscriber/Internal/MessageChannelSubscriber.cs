@@ -7,7 +7,7 @@ namespace NetFusion.Redis.Subscriber.Internal
 {
     /// <summary>
     /// Class associating a Redis channel subscription which the
-    /// dispatch info of the handeling method.
+    /// dispatch info of the handling method.
     /// </summary>
     public class MessageChannelSubscriber
     {

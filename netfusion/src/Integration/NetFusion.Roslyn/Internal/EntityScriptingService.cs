@@ -14,7 +14,7 @@ using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 
-namespace NetFusion.Roslyn.Core
+namespace NetFusion.Roslyn.Internal
 {
     /// <summary>
     /// Uses Roslyn to execute a named script against a domain entity.  A script with the name 'default' is executed

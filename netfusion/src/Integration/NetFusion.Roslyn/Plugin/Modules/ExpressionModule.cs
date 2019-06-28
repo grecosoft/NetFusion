@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Roslyn.Core;
+using NetFusion.Roslyn.Internal;
 
 namespace NetFusion.Roslyn.Plugin.Modules
 {
@@ -26,7 +26,7 @@ namespace NetFusion.Roslyn.Plugin.Modules
         public override void RegisterServices(IServiceCollection services)
         {
             // If this plug-in is being used, override the Null scripting service
-            // that is configured by default by the NetFusion.Domain plug-in.
+            // that is configured by default by ICompositeContainerBuilder.
             services.AddSingleton<IEntityScriptingService, EntityScriptingService>();
         }
 

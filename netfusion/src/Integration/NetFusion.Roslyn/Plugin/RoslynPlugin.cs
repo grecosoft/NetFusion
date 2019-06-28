@@ -8,7 +8,7 @@ namespace NetFusion.Roslyn.Plugin
     {
         public override string PluginId => "4316A9C70-C3AE-4DC2-8DEA-097EBDB342F7";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
-        public override string Name => "NetFusion Roslyn Plug-in";
+        public override string Name => "NetFusion: Roslyn Scripting Plug-in";
 
         public RoslynPlugin()
         {

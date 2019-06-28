@@ -1,7 +1,7 @@
 ﻿using System;
 using NetFusion.Base.Exceptions;
 
-namespace NetFusion.Roslyn.Core
+namespace NetFusion.Roslyn.Internal
 {
     /// <summary>
     /// Exception thrown by script evaluation.

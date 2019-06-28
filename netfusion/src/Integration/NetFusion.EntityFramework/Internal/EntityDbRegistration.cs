@@ -6,7 +6,7 @@ namespace NetFusion.EntityFramework.Internal
 {
     /// <summary>
     /// Class used to manage the metadata associated with database
-    /// context classes found when the plugin bootstrapped.
+    /// context classes found when the plugin is bootstrapped.
     /// </summary>
     public class EntityDbRegistration
     {

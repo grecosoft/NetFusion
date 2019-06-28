@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.Scripting;
 using NetFusion.Base.Scripting;
 
-namespace NetFusion.Roslyn.Core
+namespace NetFusion.Roslyn.Internal
 {
     /// <summary>
     /// The entity expression and the associated compiled script to be executed at runtime.
@@ -11,10 +11,10 @@ namespace NetFusion.Roslyn.Core
     {
         public ExpressionEvaluator(
             EntityExpression expression,
-            ScriptRunner<object> executor)
+            ScriptRunner<object> scriptRunner)
         {
             Expression = expression ?? throw new ArgumentNullException(nameof(expression));
-            Executor = executor ?? throw new ArgumentNullException(nameof(executor));
+            ScriptRunner = scriptRunner ?? throw new ArgumentNullException(nameof(scriptRunner));
         }
 
         /// <summary>
@@ -25,6 +25,6 @@ namespace NetFusion.Roslyn.Core
         /// <summary>
         /// The expression compiled to a delegate to be executed at runtime.
         /// </summary>
-        public ScriptRunner<object> Executor { get; }
+        public ScriptRunner<object> ScriptRunner { get; }
     }
 }

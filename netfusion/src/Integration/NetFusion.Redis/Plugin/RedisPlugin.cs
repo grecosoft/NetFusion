@@ -12,7 +12,7 @@ namespace NetFusion.Redis.Plugin
     {
         public override string PluginId => "6A52A70C-719B-41CF-AEFC-7CDFB586627A";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
-        public override string Name => "Plugin containing Redis extensions and Pub/Sub messaging.";
+        public override string Name => "NetFusion:  Redis Plugin";
 
         public RedisPlugin()
         {
@@ -20,6 +20,8 @@ namespace NetFusion.Redis.Plugin
             AddModule<RedisModule>();
             AddModule<PublisherModule>();
             AddModule<SubscriberModule>();
+
+            Description = "Plugin containing Redis database extensions and Pub/Sub messaging.";
         }
     }
     
@@ -38,6 +40,8 @@ namespace NetFusion.Redis.Plugin
                 .AddSettings()
                 .AddMessaging()
                 .AddPlugin<RedisPlugin>()
+                
+                // Extends core messaging by added the Redis published to the pipeline.
                 .InitPluginConfig<MessageDispatchConfig>(config => 
                     config.AddPublisher<RedisPublisher>());
         }
