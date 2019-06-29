@@ -21,6 +21,8 @@ namespace NetFusion.Bootstrap.Container
     /// </summary>
     public class CompositeApp : ICompositeApp
     {
+        public PluginSummary HostPlugin { get; }
+
         // Singleton instance of the composite-application:
         public static ICompositeApp Instance { get; private set; }
         public bool IsStarted { get; private set; }
@@ -41,6 +43,7 @@ namespace NetFusion.Bootstrap.Container
         {
             Instance = this;
             IsStarted = false;
+            HostPlugin = new PluginSummary(builder.HostPlugin);
 
             _builder = builder ?? throw new ArgumentNullException(nameof(builder));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));

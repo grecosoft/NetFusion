@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Base.Validation;
+using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Bootstrap.Container
 {
@@ -11,6 +12,11 @@ namespace NetFusion.Bootstrap.Container
     /// </summary>
     public interface ICompositeApp
     {
+        /// <summary>
+        /// Summary information for the host plugin that composed the composite application.
+        /// </summary>
+        PluginSummary HostPlugin { get; }
+
         /// <summary>
         /// Indicates that the application has been started.
         /// </summary>
