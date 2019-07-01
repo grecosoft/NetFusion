@@ -4,7 +4,7 @@
         <Product>NetFusion</Product>
 		<PackageProjectUrl>https://github.com/grecosoft/NetFusion/wiki</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/grecosoft/NetFusion</RepositoryUrl>
-		<PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
+		<License>http://www.opensource.org/licenses/mit-license.php</License>
         <RepositoryType>git</RepositoryType>
 		<IncludeSymbols>true</IncludeSymbols>
 		<PackageIconUrl>https://raw.githubusercontent.com/grecosoft/NetFusion-Tools/master/img/netfusion-nuget.png</PackageIconUrl>
