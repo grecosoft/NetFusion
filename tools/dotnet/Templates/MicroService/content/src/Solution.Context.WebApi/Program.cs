@@ -1,66 +1,58 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Configuration;
 using NetFusion.Bootstrap.Container;
+using NetFusion.Builder;
 
 namespace Solution.Context.WebApi
 {
-// Initializes the application's configuration and logging then delegates 
+    // Initializes the application's configuration and logging then delegates 
     // to the Startup class to initialize HTTP pipeline related settings.
     public class Program
     {
-        public static async Task  Main(string[] args)
+        public static async Task Main(string[] args)
         {
             IWebHost webHost = BuildWebHost(args);
+            
+            var compositeApp = webHost.Services.GetService<ICompositeApp>();
+            var lifetime = webHost.Services.GetService<IApplicationLifetime>();
 
-            // Start all of the plugin modules:
-            await CompositeContainer.Instance.StartAsync();
-            await webHost.RunAsync();
-
-            // Stop all plugin modules:
-            await CompositeContainer.Instance.StopAsync();
+            lifetime.ApplicationStopping.Register(() =>
+            {
+                compositeApp.Stop();
+            });
+                  
+            await compositeApp.StartAsync();
+            await webHost.RunAsync();    
         }
-        
-        
+
         private static IWebHost BuildWebHost(string[] args) 
         {
             return WebHost.CreateDefaultBuilder(args)
-              .ConfigureAppConfiguration((context, builder) => { 
-                  
-                  SetupConfiguration(builder, context.HostingEnvironment);
-              })
-              .ConfigureLogging(SetupLogging)
-              .ConfigureServices(services =>
-              {
-
-              })
-              .UseStartup<Startup>()
-              .Build();
+                .ConfigureAppConfiguration(SetupConfiguration)
+                .ConfigureLogging(SetupLogging)    
+                .UseStartup<Startup>()
+                .Build();
         }
 
-        private static void SetupConfiguration(IConfigurationBuilder builder, IHostingEnvironment hostingEnv)
+        private static void SetupConfiguration(WebHostBuilderContext context, 
+            IConfigurationBuilder builder)
         {
-            builder.Sources.Clear();
-            builder.AddDockerDefaultSettings(hostingEnv.EnvironmentName);
-
-            if (hostingEnv.IsDevelopment())
-            {
-                builder.AddCommandLine(Environment.GetCommandLineArgs());
-            }
+            builder.AddAppSettings(context.HostingEnvironment);
         }
 
-        private static void SetupLogging(WebHostBuilderContext context, ILoggingBuilder builder)
+        private static void SetupLogging(WebHostBuilderContext context, 
+            ILoggingBuilder builder)
         {
             builder.ClearProviders();
 
             if (context.HostingEnvironment.IsDevelopment())
             {
-                builder.AddDebug().SetMinimumLevel(LogLevel.Trace);
-                builder.AddConsole().SetMinimumLevel(LogLevel.Trace);
+                builder.AddDebug().SetMinimumLevel(LogLevel.Debug);
+                builder.AddConsole().SetMinimumLevel(LogLevel.Debug);
             }
             else
             {

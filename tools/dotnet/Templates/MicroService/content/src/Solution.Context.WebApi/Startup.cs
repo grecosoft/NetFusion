@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Builder;
+using NetFusion.Messaging.Plugin;
 using NetFusion.Rest.Server.Plugin;
+using NetFusion.Settings.Plugin;
 using NetFusion.Web.Mvc.Plugin;
 using Solution.Context.App.Plugin;
 using Solution.Context.Domain.Plugin;
@@ -19,26 +22,20 @@ namespace Solution.Context.WebApi
     {
         // Microsoft Abstractions:
         private readonly IConfiguration _configuration;
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly IHostingEnvironment _hostingEnv;
 
-        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory, IHostingEnvironment hostingEnv)
+        public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
-            _loggerFactory = loggerFactory;
-            _hostingEnv = hostingEnv;
         }
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddCors();
-        
-            services.CompositeAppBuilder(_loggerFactory, _configuration)
+            services.CompositeContainer(_configuration)
+                .AddSettings()
+                .AddMessaging()
                 .AddWebMvc(config =>
                 {
                     config.EnableRouteMetadata = true;
-                    config.UseServices(services);
                 })
                 .AddRest()
  
@@ -46,7 +43,12 @@ namespace Solution.Context.WebApi
                 .AddPlugin<AppPlugin>()
                 .AddPlugin<DomainPlugin>()
                 .AddPlugin<WebApiPlugin>()
-                .Build();
+                .Compose();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddCors();
+            
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
