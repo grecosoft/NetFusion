@@ -5,13 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NetFusion.AMQP.Plugin;
-using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Builder;
 using NetFusion.Messaging.Plugin;
 using NetFusion.RabbitMQ.Plugin;
 using NetFusion.Redis.Plugin;
-using NetFusion.Serialization;
 using NetFusion.Settings.Plugin;
 using Service.Client.Plugin;
 

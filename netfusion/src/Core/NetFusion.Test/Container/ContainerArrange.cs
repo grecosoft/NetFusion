@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Test.Plugins;
 using System;
 using NetFusion.Bootstrap.Plugins;
 

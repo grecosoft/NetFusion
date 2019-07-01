@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Bootstrap.Exceptions;
-using NetFusion.Bootstrap.Plugins;
+﻿using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Web.Mvc.Plugin.Configs
 {

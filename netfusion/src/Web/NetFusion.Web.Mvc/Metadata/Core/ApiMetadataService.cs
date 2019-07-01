@@ -62,7 +62,9 @@ namespace NetFusion.Web.Mvc.Metadata.Core
 
         private IEnumerable<ApiGroupMeta> PopulateGroupMeta()
         {
-            var groups = _descriptionProvider.ApiDescriptionGroups.Items;
+            var groups = _descriptionProvider.ApiDescriptionGroups.Items
+                .Where(d => d.GroupName != null);
+            
             foreach (ApiDescriptionGroup group in groups)
             {
                 var actions = GetGroupActions(group.Items);
