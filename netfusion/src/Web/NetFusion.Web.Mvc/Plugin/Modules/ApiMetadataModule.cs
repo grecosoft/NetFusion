@@ -17,18 +17,17 @@ namespace NetFusion.Web.Mvc.Plugin.Modules
         public override void Initialize()
         {
             _mvcConfig = Context.Plugin.GetConfig<WebMvcConfig>();
-            _mvcConfig?.Validate();
         }
 
         // Determine if the host application specified the WebMvcConfig configuration
         // indicating that route metadata should be discoverable by clients.
-        public override void Configure()
+        public override void RegisterDefaultServices(IServiceCollection services)
         {
-            if (_mvcConfig != null && _mvcConfig.EnableRouteMetadata)
+            if (_mvcConfig.EnableRouteMetadata)
             {
                 // Add convention used to determine which route methods
                 // are to be contained within the returned metadata.
-                _mvcConfig.Services.AddMvc((options) =>
+                services.AddMvc((options) =>
                 {
                     options.Conventions.Add(new ApiExplorerConvention());
                 });

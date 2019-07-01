@@ -51,7 +51,6 @@ namespace WebTests.Rest.Setup
 
             var webMvcConfig = AppContainer.GetPluginConfig<WebMvcConfig>();
             webMvcConfig.EnableRouteMetadata = true;
-            webMvcConfig.UseServices(serviceCollection);
 
             AppContainer.Compose(new TestTypeResolver());
 

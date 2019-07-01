@@ -48,7 +48,6 @@ namespace Service.WebApi
                 .AddWebMvc(c =>
                 {
                     c.EnableRouteMetadata = true;
-                    c.UseServices(services);
                 })
                 .AddRest()
                 
