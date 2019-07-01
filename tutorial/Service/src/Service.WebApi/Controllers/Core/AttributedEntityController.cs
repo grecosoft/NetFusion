@@ -6,9 +6,9 @@ using Service.WebApi.Models;
 
 namespace Service.WebApi.Controllers.Core
 {
-    [Route("api/base/attributed-entity"),
-     GroupMeta(nameof(AttributedEntityController))]
-    public class AttributedEntityController : Controller
+    [ApiController, Route("api/base/attributed-entity")]
+    [GroupMeta(nameof(AttributedEntityController))]
+    public class AttributedEntityController : ControllerBase
     {
         [HttpGet("read"), ActionMeta(nameof(ReadSensorData))]
         public IActionResult ReadSensorData()

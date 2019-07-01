@@ -6,9 +6,9 @@ namespace Service.WebApi.Controllers.Integration
     using NetFusion.Web.Mvc.Metadata;
     using StackExchange.Redis;
 
-    [Route("api/integration/redis"),
-     GroupMeta(nameof(MongoDbController))]
-    public class RedisDataController : Controller
+    [ApiController, Route("api/integration/redis")]
+    [GroupMeta(nameof(MongoDbController))]
+    public class RedisDataController : ControllerBase
     {
         private readonly IDatabase _database;
         

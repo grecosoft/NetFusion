@@ -16,8 +16,9 @@ using Service.WebApi.Models;
 #pragma warning disable 4014
 namespace Service.WebApi.Controllers
 {
-    [Route("api/entry"), GroupMeta(nameof(ApiController))]
-    public class ApiController : Controller
+    [ApiController, Route("api/entry")]
+    [GroupMeta(nameof(ApiController))]
+    public class ApiController : ControllerBase
     {
         private readonly ICompositeApp _compositeApp;
         

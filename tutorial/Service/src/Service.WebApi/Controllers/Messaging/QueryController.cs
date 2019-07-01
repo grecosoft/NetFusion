@@ -6,9 +6,9 @@ using Service.Domain.Queries;
 
 namespace Service.WebApi.Controllers.Messaging
 {
-    [Route("api/messaging/queries"),
-     GroupMeta(nameof(CommandController))]
-    public class QueryController : Controller
+    [ApiController, Route("api/messaging/queries")]
+    [GroupMeta(nameof(CommandController))]
+    public class QueryController : ControllerBase
     {
         private readonly IMessagingService _messaging;
         

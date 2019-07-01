@@ -6,9 +6,9 @@ using Service.WebApi.Resources;
 
 namespace Service.WebApi.Controllers.Web
 {
-    [Route("api/schools"),
-    GroupMeta(nameof(RestController))]
-    public class RestController : Controller
+    [ApiController, Route("api/schools")]
+    [GroupMeta(nameof(RestController))]
+    public class RestController : ControllerBase
     {
         [HttpGet("{id}")]
         public IActionResult GetSchool(int id)

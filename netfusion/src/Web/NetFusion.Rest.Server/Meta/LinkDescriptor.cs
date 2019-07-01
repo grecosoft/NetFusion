@@ -93,7 +93,7 @@ namespace NetFusion.Rest.Server.Meta
         //---------------- OPTIONAL DEPRECATION LINK PROPERTY GENERATION  ----------------------
 
         public LinkDescriptor<TResource> SetDeprecation<TController>(Expression<Action<TController, TResource>> action)
-            where TController : Controller
+            where TController : ControllerBase
         {
             _actionLink.Deprecation = BuildActionUrlLink(action);
             return new LinkDescriptor<TResource>(_actionLink.Deprecation);
@@ -114,7 +114,7 @@ namespace NetFusion.Rest.Server.Meta
         //---------------- OPTIONAL PROFILE LINK PROPERTY GENERATION  ----------------------
 
         public LinkDescriptor<TResource> SetProfile<TController>(Expression<Action<TController, TResource>> action)
-            where TController : Controller
+            where TController : ControllerBase
         {
             _actionLink.Profile = BuildActionUrlLink(action);
             return new LinkDescriptor<TResource>(_actionLink.Profile);
@@ -136,7 +136,7 @@ namespace NetFusion.Rest.Server.Meta
         //-------------------- COMMON LINK PROPERTY GENERATION METHODS ----------------------
 
         public ActionUrlLink BuildActionUrlLink<TController>(Expression<Action<TController, TResource>> action)
-            where TController : Controller
+            where TController : ControllerBase
         {
             if (action == null) throw new ArgumentNullException(nameof(action), 
                 "Controller Action selector cannot be null.");

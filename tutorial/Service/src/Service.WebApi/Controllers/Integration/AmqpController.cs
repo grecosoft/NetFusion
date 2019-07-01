@@ -8,9 +8,9 @@ using Service.Domain.Events;
 
 namespace Service.WebApi.Controllers.Integration
 {
-    [Route("api/integration/amqp"),
-     GroupMeta(nameof(AmqpController))]
-    public class AmqpController : Controller
+    [ApiController, Route("api/integration/amqp")]
+    [GroupMeta(nameof(AmqpController))]
+    public class AmqpController : ControllerBase
     {
         private readonly IMessagingService _messaging;
         

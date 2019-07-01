@@ -7,9 +7,9 @@ using Service.Domain.Entities;
 
 namespace Service.WebApi.Controllers.Integration
 {
-    [Route("api/integration/roslyn/expressions"),
-     GroupMeta(nameof(RoslynController))]
-    public class RoslynController : Controller
+    [ApiController, Route("api/integration/roslyn/expressions")] 
+    [GroupMeta(nameof(RoslynController))]
+    public class RoslynController : ControllerBase
     {
         private readonly IEntityScriptingService _scripting;
         

@@ -17,7 +17,7 @@ namespace NetFusion.Rest.Server.Actions
     /// <typeparam name="TController">The controller to select action methods from
     /// corresponding to template URLs.</typeparam>
     public class ActionTemplateSelector<TController>
-        where TController : Controller
+        where TController : ControllerBase
     {
         private readonly ActionTemplateLink _link;
         private readonly LambdaExpression _action;

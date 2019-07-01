@@ -17,7 +17,7 @@ namespace NetFusion.Rest.Server.Actions
     /// with the corresponding resource property values.
     /// </summary>
     public class ActionUrlSelector<TController, TResource>
-        where TController : Controller
+        where TController : ControllerBase
         where TResource : class, IResource
     {
         private readonly ActionUrlLink _link;

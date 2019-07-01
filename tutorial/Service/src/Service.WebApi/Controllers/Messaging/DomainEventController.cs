@@ -8,9 +8,9 @@ using Service.WebApi.Models;
 
 namespace Service.WebApi.Controllers.Messaging
 {
-    [Route("api/messaging/domain-events"),
-     GroupMeta(nameof(CommandController))]
-    public class DomainEventController : Controller
+    [ApiController, Route("api/messaging/domain-events")]
+    [GroupMeta(nameof(CommandController))]
+    public class DomainEventController : ControllerBase
     {
         private readonly IMessagingService _messaging;
         private readonly IExampleResultLog _exampleLog;

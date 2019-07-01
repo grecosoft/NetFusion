@@ -5,9 +5,9 @@ using Service.Domain.Entities;
 
 namespace Service.WebApi.Controllers.Core
 {
-    [Route("api/core/settings"),
-        GroupMeta(nameof(SettingsController))]
-    public class SettingsController : Controller
+    [ApiController, Route("api/core/settings")]
+    [GroupMeta(nameof(SettingsController))]
+    public class SettingsController : ControllerBase
     {
         private readonly CalculationSettings _calcSettings;
         

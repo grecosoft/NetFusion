@@ -6,9 +6,9 @@ using Service.Domain.Events;
 
 namespace Service.WebApi.Controllers.Integration
 {
-    [Route("api/integration/redis"),
-     GroupMeta(nameof(MongoDbController))]
-    public class RedisPublisherController : Controller
+    [ApiController, Route("api/integration/redis")]
+    [GroupMeta(nameof(MongoDbController))]
+    public class RedisPublisherController : ControllerBase
     {
         private static IMessagingService _messaging;
 

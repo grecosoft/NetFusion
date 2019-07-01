@@ -9,9 +9,9 @@ using Service.Domain.Events;
 
 namespace Service.WebApi.Controllers.Integration
 {
-    [Route("api/integration/rabbitmq"),
-     GroupMeta(nameof(MongoDbController))]
-    public class RabbitMqController : Controller
+    [ApiController, Route("api/integration/rabbitmq")]
+    [GroupMeta(nameof(MongoDbController))]
+    public class RabbitMqController : ControllerBase
     {
         private readonly IMessagingService _messaging;
 

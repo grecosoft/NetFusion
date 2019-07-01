@@ -45,7 +45,7 @@ namespace NetFusion.Rest.Server.Meta
         /// <param name="meta">Method delegate passed metadata class used to define link metadata.</param>
         /// <returns>Reference to self for method chaining.</returns>
         public TResourceMeta LinkMeta<TController>(Action<ResourceLinkMeta<TController, TResource>> meta)
-            where TController : Controller
+            where TController : ControllerBase
         {
             if (meta == null) throw new ArgumentNullException(nameof(meta),
                 "Metadata delegate cannot be null.");

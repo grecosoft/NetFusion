@@ -7,9 +7,9 @@ using Service.Domain.Repositories;
 
 namespace Service.WebApi.Controllers.Integration
 {
-    [Route("api/integration/mongodb"),
-     GroupMeta(nameof(MongoDbController))]
-    public class MongoDbController : Controller
+    [ApiController, Route("api/integration/mongodb")]
+    [GroupMeta(nameof(MongoDbController))]
+    public class MongoDbController : ControllerBase
     {
         private readonly ICustomerRepository _customerRepo;
         

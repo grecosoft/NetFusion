@@ -87,7 +87,7 @@ namespace NetFusion.Rest.Server.Meta
     /// <typeparam name="TController">The controller type associated with the link metadata.</typeparam>
     /// <typeparam name="TResource">The resource type associated with the link metadata.</typeparam>
     public class ResourceLinkMeta<TController, TResource> : ResourceLinkMeta<TResource>
-        where TController : Controller
+        where TController : ControllerBase
         where TResource: class, IResource
     {
         /// <summary>

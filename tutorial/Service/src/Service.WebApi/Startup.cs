@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Microsoft.AspNetCore.Mvc;
 using NetFusion.AMQP.Plugin;
 using NetFusion.Messaging.Plugin;
 using NetFusion.MongoDB.Plugin;
@@ -63,7 +64,7 @@ namespace Service.WebApi
                 services.AddCors();                
             }
 
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton(InMemoryScripting.LoadSensorScript());
         }
 

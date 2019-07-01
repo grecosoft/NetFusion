@@ -7,9 +7,9 @@ using Service.WebApi.Models;
 
 namespace Service.WebApi.Controllers.Messaging
 {
-    [Route("api/messaging/commands"),
-     GroupMeta(nameof(CommandController))]
-    public class CommandController : Controller
+    [ApiController, Route("api/messaging/commands")]
+    [GroupMeta(nameof(CommandController))]
+    public class CommandController : ControllerBase
     {
         private readonly IMessagingService _messaging;
         
