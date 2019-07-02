@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Catalog;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
@@ -125,17 +126,20 @@ namespace NetFusion.Bootstrap.Container
                     IPluginModuleService dependentService = GetModuleSupportingService(serviceProp.PropertyType);
                     serviceProp.SetValue(module, dependentService);
                 }
+                
+                LogModuleDependencies(module, dependentServiceProps);
             }
         }
         
-        private static IEnumerable<PropertyInfo> GetDependentServiceProperties(IPluginModule module)
+        private static PropertyInfo[] GetDependentServiceProperties(IPluginModule module)
         {
             const BindingFlags bindings = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
             return module.GetType().GetProperties(bindings)
                 .Where(p =>
                     p.PropertyType.IsDerivedFrom(typeof(IPluginModuleService))
-                    && p.CanWrite);
+                    && p.CanWrite)
+                .ToArray();
         }
         
         private IPluginModuleService GetModuleSupportingService(Type serviceType)
@@ -152,6 +156,18 @@ namespace NetFusion.Bootstrap.Container
             }
 
             return (IPluginModuleService)foundModules.First();
+        }
+
+        private void LogModuleDependencies(IPluginModule module, IEnumerable<PropertyInfo> moduleProps)
+        {
+            foreach (PropertyInfo moduleProp in moduleProps)
+            {
+                BootstrapLogger.Add(LogLevel.Trace,
+                    "Module: {moduleName} Property: {propName}:  References Module: {refModuleName}",
+                    module.GetType().FullName,
+                    moduleProp.Name,
+                    moduleProp.PropertyType.FullName);
+            }
         }
         
         
@@ -171,7 +187,7 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        // Application plugins contain a specific application's implementation
+        // Application plugins contain a specific application's implementations
         // and are composed only from other application specific plugins.
         private void ComposeApplicationPlugins(ITypeResolver typeResolver)
         {

@@ -15,7 +15,7 @@ namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
     /// Instantiated and delegated to by the ICompositeContainerBuilder instance returned by
-    /// calling  the CompositeContainer extension method on IServiceCollection.  The methods
+    /// calling the CompositeContainer extension method on IServiceCollection.  The methods
     /// contained on the IContainerBuilder interface are used to register plugins with the
     /// CompositeContainer.
     ///
@@ -163,13 +163,13 @@ namespace NetFusion.Bootstrap.Container
 
         private Exception LogException(Exception ex)
         {
-            _builder.BootstrapLogger.Add(LogLevel.Error, $"Bootstrap Exception: {ex.Message}");
+            _builder.BootstrapLogger.Add(LogLevel.Error, $"Bootstrap Exception: {ex}");
             return ex;
         }
 
         private void LogPlugins(IEnumerable<IPlugin> plugins)
         {
-            foreach (var plugin in plugins)
+            foreach (var plugin in plugins.OrderBy(p => p.PluginType))
             {
                 var details = new
                 {
@@ -180,7 +180,7 @@ namespace NetFusion.Bootstrap.Container
                     Modules = plugin.Modules.Select(m => m.GetType().FullName)
                 };
                 
-                _builder.BootstrapLogger.Add(LogLevel.Information, details.ToIndentedJson());
+                _builder.BootstrapLogger.Add(LogLevel.Debug, details.ToIndentedJson());
             }
         }
     }

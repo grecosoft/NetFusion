@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Scripting;
+using NetFusion.Base.Serialization;
 using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
@@ -65,34 +67,40 @@ namespace NetFusion.Bootstrap.Container
             if (IsStarted)
             {
                 throw LogException(new ContainerException(
-                    "The application container has already been started."));
+                    "The Composite-Application has already been started."));
             }
 
             // Write the logs that were recorded before the container-provider
             // was built now that ILogger is available.
             _builder.BootstrapLogger.WriteToLogger(_logger);
-
+            
             // If there were any bootstrap errors,  raise an exception to 
             // abort starting the composite-application.
             if (_builder.BootstrapLogger.HasErrors)
             {
                 throw new ContainerException(
-                    "Errors were recorded when bootstrapping application.  See log for details.");
+                    "Errors were recorded when bootstrapping Composite-Application.  See log for details.");
             }
             
             try
             {
+                _logger.LogInformation("Composite-Application Starting.");
+               
                 // Create a service scope in which each plugin can be started:
-                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStart, "Starting Container"))
+                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStart, "Starting Modules"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
+                    LogCoreServices(scope.ServiceProvider);
+                    
                     await StartModules(scope.ServiceProvider);
                 }
                
                 if (_logger.IsEnabled(LogLevel.Trace))
                 {
-                    _logger.LogTraceDetails(BootstrapLogEvents.BootstrapCompositeLog, "Composite Log", Log);
+                    _logger.LogTraceDetails(BootstrapLogEvents.BootstrapCompositeLog, "Composite-Log", Log);
                 }
+                
+                _logger.LogInformation("CompositeApplication Started");
             }
             catch (ContainerException ex)
             {
@@ -103,13 +111,13 @@ namespace NetFusion.Bootstrap.Container
             {
                 var flattenedEx = ex.Flatten();
                 throw LogException(new ContainerException(
-                    "Error starting container.  See Inner Exception.", flattenedEx));
+                    "Error starting Composite-Application.  See Inner Exception.", flattenedEx));
                 
             }
             catch (Exception ex)
             {
                 throw LogException(new ContainerException(
-                    "Error starting container. See Inner Exception.", ex));
+                    "Error starting Composite-Application. See Inner Exception.", ex));
             }
         }
 
@@ -142,10 +150,14 @@ namespace NetFusion.Bootstrap.Container
             await RunPluginModules(services);
         }
 
-        private static async Task StartPluginModules(IServiceProvider services, IEnumerable<IPlugin> plugins)
+        private async Task StartPluginModules(IServiceProvider services, IEnumerable<IPlugin> plugins)
         {
             foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
             {
+                _logger.LogDebug("Starting Module: {moduleType} for Plugin: {pluginName}", 
+                    module.GetType().Name, 
+                    module.Context.Plugin.Name);
+                
                 await module.StartModuleAsync(services);
             }
         }
@@ -156,6 +168,40 @@ namespace NetFusion.Bootstrap.Container
             {
                 await module.RunModuleAsync(services);
             }
+        }
+
+        private void LogCoreServices(IServiceProvider provider)
+        {
+            var validationConfig = _builder.GetContainerConfig<ValidationConfig>();
+            var serializerMgr = provider.GetService<ISerializationManager>();
+            var scriptingSrv = provider.GetService<IEntityScriptingService>();
+
+            if (serializerMgr == null)
+            {
+                // This should never happen since the CompositeAppBuilder adds a default implementation:
+                _logger.LogWarning(
+                    "Serializer Manager Service not Registered.");
+            }
+            else
+            {
+                _logger.LogDebug("Registered Serializer Manager: {serializer}", 
+                    serializerMgr.GetType().AssemblyQualifiedName);
+            }
+
+            if (scriptingSrv == null)
+            {
+                // This should never happen since the CompositeAppBuilder adds a default implementation:
+                _logger.LogWarning(
+                    "Scripting Service not Registered.");
+            }
+            else
+            {
+                _logger.LogDebug("Registered Scripting Service: {serializer}", 
+                    scriptingSrv.GetType().AssemblyQualifiedName);
+            }
+            
+            _logger.LogDebug("Registered Object Validator: {validator}",
+                validationConfig.ValidatorType.AssemblyQualifiedName);
         }
         
         
@@ -188,6 +234,7 @@ namespace NetFusion.Bootstrap.Container
             ThrowIfStopped();
 
             ValidationConfig validationConfig = _builder.GetContainerConfig<ValidationConfig>();
+  
             return (IObjectValidator)Activator.CreateInstance(validationConfig.ValidatorType, obj);
         }
         
@@ -206,12 +253,16 @@ namespace NetFusion.Bootstrap.Container
             
             try
             {
+                _logger.LogInformation("Composite Application Stopping.");
+                
                 // Create a service scope in which each plugin can be stopped:
                 using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStop, "Stopping Composite-Application"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
                     await StopPluginModulesAsync(scope.ServiceProvider);
                 }
+                
+                _logger.LogInformation("Composite Application Stopped.");
             }
             catch (ContainerException ex)
             {
@@ -248,10 +299,14 @@ namespace NetFusion.Bootstrap.Container
             await Task.WhenAll(hostStopTask, appStopTask, coreStopTask);
         }
 
-        private static async Task StopPluginModules(IServiceProvider services, IEnumerable<IPlugin> plugins)
+        private async Task StopPluginModules(IServiceProvider services, IEnumerable<IPlugin> plugins)
         {
             foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
             {
+                _logger.LogDebug("Stopping Module: {moduleType} for Plugin: {pluginName}", 
+                    module.GetType().Name, 
+                    module.Context.Plugin.Name);
+                
                 await module.StopModuleAsync(services);
             }
         }

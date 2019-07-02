@@ -26,7 +26,7 @@ namespace CoreTests.Bootstrap
                     })
                     .Assert.Exception<ContainerException>(ex =>
                     {
-                        ex.Message.Should().Contain("The application container has already been started.");
+                        ex.Message.Should().Contain("The Composite-Application has already been started.");
                     });
             });
         }

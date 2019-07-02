@@ -59,11 +59,11 @@ namespace NetFusion.Builder
         // the end result is a populated service-collection with a register ICompositeApp
         // that can be used for the lifetime of the host.  The associated IServiceProvider
         // has not yet been created.
-        public void Compose()
+        public void Compose(Action<IServiceCollection> config = null)
         {
             var resolver = new TypeResolver();
             
-            RegisterCommonContainerServices();
+            RegisterRequiredDefaultServices();
 
             try
             {
@@ -79,22 +79,25 @@ namespace NetFusion.Builder
                     _container.BootstrapLogger.WriteToStandardOut();
                     
                     throw new ContainerException(
-                        "Errors were recorded when bootstrapping application.  See log for details.");
+                        "Errors were recorded when composing application.  See log for details.");
                 }
+                
+                // Allow the host initialization code to specify any last services.
+                config?.Invoke(_serviceCollection);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception: {ex}");
+                _container.BootstrapLogger.Add(LogLevel.Error, ex.ToString());
                 _container.BootstrapLogger.WriteToStandardOut();
 
                  throw;
             }
         }
 
-        private void RegisterCommonContainerServices()
+        private void RegisterRequiredDefaultServices()
         {
-            _container.BootstrapLogger.Add(LogLevel.Information, 
-                "Adding NetFusion Required and Default Services");
+            _container.BootstrapLogger.Add(LogLevel.Debug, 
+                "Adding NetFusion Required Default Services");
             
             RegisterDefaultService(typeof(LoggerFactory));
             RegisterDefaultService(typeof(IEntityScriptingService), typeof(NullEntityScriptingService));
@@ -106,7 +109,7 @@ namespace NetFusion.Builder
         {
             _serviceCollection.AddSingleton(implementationType);
             
-            _container.BootstrapLogger.Add(LogLevel.Information, 
+            _container.BootstrapLogger.Add(LogLevel.Debug, 
                 $"Implementation: {implementationType} ");
         }
 
@@ -114,7 +117,7 @@ namespace NetFusion.Builder
         {
             _serviceCollection.AddSingleton(serviceType, implementationType);
             
-            _container.BootstrapLogger.Add(LogLevel.Information, 
+            _container.BootstrapLogger.Add(LogLevel.Debug, 
                 $"Service: {serviceType}; Implementation: {implementationType} ");
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Bootstrap.Container
@@ -35,12 +36,15 @@ namespace NetFusion.Bootstrap.Container
         /// <returns>Reference to the builder.  If the specified configuration is not
         /// registered for one of the added container's plugins, an exception is raised.</returns>
         ICompositeContainerBuilder InitPluginConfig<T>(Action<T> configure) where T : IPluginConfig;
-        
+
         /// <summary>
         /// Builds a composite-application from the set of registered plug-ins.  After this method
         /// is invoked, the ICompositeApp will have been added to the IServiceCollection. The host
         /// can object an instance of the ICompositeApp from the created IServiceProvider.
         /// </summary>
-        void Compose();
+        /// <param name="config">Delegate passed the service-collection being populated.  This is
+        /// the last place where the host can add services and therefore will override any existing
+        /// registered service.</param>
+        void Compose(Action<IServiceCollection> config = null);
     }
 }
