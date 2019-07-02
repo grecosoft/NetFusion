@@ -57,10 +57,10 @@ namespace NetFusion.Messaging.Internal
             LogMessageDispatchInfo(message, dispatchers);
 
             // Execute all handlers and return the task for the caller to await.
-            await InvokeMessageDispatchersAsync(message, dispatchers, cancellationToken).ConfigureAwait(false);
+            await InvokeMessageDispatchers(message, dispatchers, cancellationToken).ConfigureAwait(false);
         }
 
-        private async Task InvokeMessageDispatchersAsync(IMessage message,
+        private async Task InvokeMessageDispatchers(IMessage message,
             IEnumerable<MessageDispatchInfo> dispatchers,
             CancellationToken cancellationToken)
         {
@@ -180,8 +180,8 @@ namespace NetFusion.Messaging.Internal
             _logger.LogTraceDetails(MessagingLogEvents.MessagingDispatch, $"Message Published: {message.GetType()}",
                 new
                 {
-                    Message = message,
-                    Dispatchers = dispatcherDetails
+                    Dispatchers = dispatcherDetails,
+                    Message = message
                 });
         }
 

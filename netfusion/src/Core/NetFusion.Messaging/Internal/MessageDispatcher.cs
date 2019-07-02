@@ -52,7 +52,7 @@ namespace NetFusion.Messaging.Internal
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent), 
                 "Domain event cannot be null.");
 
-            await PublishMessageAsync(domainEvent, integrationType, cancellationToken).ConfigureAwait(false);
+            await PublishMessage(domainEvent, integrationType, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task SendAsync(ICommand command, 
@@ -62,7 +62,7 @@ namespace NetFusion.Messaging.Internal
             if (command == null) throw new ArgumentNullException(nameof(command),
                 "Command cannot be null.");
 
-            await PublishMessageAsync(command, integrationType, cancellationToken).ConfigureAwait(false);
+            await PublishMessage(command, integrationType, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<TResult> SendAsync<TResult>(ICommand<TResult> command, 
@@ -72,7 +72,7 @@ namespace NetFusion.Messaging.Internal
             if (command == null) throw new ArgumentNullException(nameof(command),
                 "Command cannot be null.");
 
-            await PublishMessageAsync(command, integrationType, cancellationToken).ConfigureAwait(false);
+            await PublishMessage(command, integrationType, cancellationToken).ConfigureAwait(false);
             return command.Result;
         }
 
@@ -92,7 +92,7 @@ namespace NetFusion.Messaging.Internal
             {
                 try
                 {
-                    await PublishMessageAsync(domainEvent, integrationType, cancellationToken).ConfigureAwait(false);
+                    await PublishMessage(domainEvent, integrationType, cancellationToken).ConfigureAwait(false);
                 }
                 catch (PublisherException ex)
                 {
@@ -102,14 +102,13 @@ namespace NetFusion.Messaging.Internal
 
             if (publisherErrors.Any())
             {
-                throw new PublisherException("Exception dispatching event source.",
-                    eventSource, publisherErrors);
+                throw new PublisherException("Exception dispatching event source.", eventSource, publisherErrors);
             }
         }
 
         // Private method to which all other publish methods delegate to asynchronously apply
         // the enrichers and to invoke all registered message publishers.
-        private async Task PublishMessageAsync(IMessage message, IntegrationTypes integrationType, 
+        private async Task PublishMessage(IMessage message, IntegrationTypes integrationType, 
             CancellationToken cancellationToken)
         {
             if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken),
@@ -132,6 +131,8 @@ namespace NetFusion.Messaging.Internal
         {
             TaskListItem<IMessageEnricher>[] taskList = null;
 
+            LogConfiguredEnrichers();
+
             try
             {
                 taskList = _messageEnrichers.Invoke(message,
@@ -152,10 +153,17 @@ namespace NetFusion.Messaging.Internal
                     }
                 }
 
-                throw new PublisherException("Exception when invoking message enrichers.",
-                    message,
-                    ex);
+                throw new PublisherException("Exception when invoking message enrichers.", message, ex);
             }
+        }
+
+        private void LogConfiguredEnrichers()
+        {
+            if (!_logger.IsEnabled(LogLevel.Trace)) return;
+
+            string enricherTypes = string.Join(", ", _messageEnrichers.Select(e => e.GetType().FullName).ToArray());
+            
+            _logger.LogTrace("Enriched By: [{enricherTypes}] ", enricherTypes);
         }
 
         private async Task InvokePublishers(IMessage message, CancellationToken cancellationToken, 
@@ -186,8 +194,7 @@ namespace NetFusion.Messaging.Internal
                     }
                 }
 
-                throw new PublisherException("Exception when invoking message publishers.",
-                    message, ex);
+                throw new PublisherException("Exception when invoking message publishers.", message, ex);
             }
         }
     }

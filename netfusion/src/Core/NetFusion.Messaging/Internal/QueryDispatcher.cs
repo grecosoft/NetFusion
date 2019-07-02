@@ -96,7 +96,8 @@ namespace NetFusion.Messaging.Internal
         {
             var filtersByType = filters.OfType<T>().ToArray();
             
-            _logger.LogTraceDetails(MessagingLogEvents.QueryDispatch, "Applying Query Filters",
+            _logger.LogTraceDetails(MessagingLogEvents.QueryDispatch, 
+                $"Applying ({typeof(T).Name}) Query Filters",
                 new {
                     FilterTypes = filtersByType.Select(f => f.GetType().FullName).ToArray()
                 });
