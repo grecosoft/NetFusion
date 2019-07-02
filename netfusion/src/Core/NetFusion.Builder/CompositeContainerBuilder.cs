@@ -6,6 +6,7 @@ using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Bootstrap.Validation;
 using NetFusion.Serialization;
@@ -61,7 +62,7 @@ namespace NetFusion.Builder
         // has not yet been created.
         public void Compose(Action<IServiceCollection> config = null)
         {
-            var resolver = new TypeResolver();
+            var resolver = new TypeResolver(new BootstrapLogger());
             
             RegisterRequiredDefaultServices();
 

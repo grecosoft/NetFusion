@@ -9,6 +9,7 @@ using NetFusion.Bootstrap.Catalog;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 
@@ -97,6 +98,25 @@ namespace NetFusion.Bootstrap.Container
             HostPlugin = AllPlugins.FirstOrDefault(p => p.PluginType == PluginTypes.HostPlugin);
             AppPlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.ApplicationPlugin).ToArray();
             CorePlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.CorePlugin).ToArray();
+            
+            LogPlugins(AllPlugins);
+        }
+        
+        private void LogPlugins(IEnumerable<IPlugin> plugins)
+        {
+            foreach (var plugin in plugins.OrderBy(p => p.PluginType))
+            {
+                var details = new
+                {
+                    plugin.Name,
+                    plugin.PluginId,
+                    plugin.AssemblyName,
+                    Configs = plugin.Configs.Select(c => c.GetType().FullName),
+                    Modules = plugin.Modules.Select(m => m.GetType().FullName)
+                };
+                
+                BootstrapLogger.Add(LogLevel.Debug, details.ToIndentedJson());
+            }
         }
         
         // Delegates to the type resolver to populate information and the types associated with each plugin.
@@ -118,6 +138,9 @@ namespace NetFusion.Bootstrap.Container
         // referencing module and set them corresponding referenced module instance.
         private void ComposeModuleDependencies()
         {
+            BootstrapLogger.Add(LogLevel.Debug, 
+                "Settings Plugin Module Properties Referencing other Plugin Modules.");
+            
             foreach (IPluginModule module in AllModules)
             {
                 var dependentServiceProps = GetDependentServiceProperties(module);
@@ -159,7 +182,7 @@ namespace NetFusion.Bootstrap.Container
         }
 
         private void LogModuleDependencies(IPluginModule module, IEnumerable<PropertyInfo> moduleProps)
-        {
+        {            
             foreach (PropertyInfo moduleProp in moduleProps)
             {
                 BootstrapLogger.Add(LogLevel.Trace,
@@ -179,6 +202,9 @@ namespace NetFusion.Bootstrap.Container
         // reusable cross-cutting concerns.
         private void ComposeCorePlugins(ITypeResolver typeResolver)
         {
+            BootstrapLogger.Add(LogLevel.Debug, 
+                "Settings Plugin Module Properties Referencing Concrete Implementations.");
+            
             var allPluginTypes = GetPluginTypes().ToArray();
 
             foreach (var plugin in CorePlugins)

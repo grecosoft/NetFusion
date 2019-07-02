@@ -8,7 +8,6 @@ using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Bootstrap.Validation;
-using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 
 namespace NetFusion.Bootstrap.Container
@@ -143,8 +142,6 @@ namespace NetFusion.Bootstrap.Container
                 // Delegate to the builder:
                 _builder.ComposeModules(typeResolver, _plugins);
                 _builder.RegisterServices(_serviceCollection);
-                
-                LogPlugins(_builder.AllPlugins);
 
                 IsComposted = true;
 
@@ -165,23 +162,6 @@ namespace NetFusion.Bootstrap.Container
         {
             _builder.BootstrapLogger.Add(LogLevel.Error, $"Bootstrap Exception: {ex}");
             return ex;
-        }
-
-        private void LogPlugins(IEnumerable<IPlugin> plugins)
-        {
-            foreach (var plugin in plugins.OrderBy(p => p.PluginType))
-            {
-                var details = new
-                {
-                    plugin.Name,
-                    plugin.PluginId,
-                    plugin.AssemblyName,
-                    Configs = plugin.Configs.Select(c => c.GetType().FullName),
-                    Modules = plugin.Modules.Select(m => m.GetType().FullName)
-                };
-                
-                _builder.BootstrapLogger.Add(LogLevel.Debug, details.ToIndentedJson());
-            }
         }
     }
 }

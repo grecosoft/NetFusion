@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
+using NetFusion.Bootstrap.Logging;
 
 namespace NetFusion.Bootstrap.Container
 {
@@ -15,6 +17,13 @@ namespace NetFusion.Bootstrap.Container
     /// </summary>
     public class TypeResolver : ITypeResolver
     {
+        private readonly IBootstrapLogger _logger;
+        
+        public TypeResolver(IBootstrapLogger logger)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+        
         public void SetPluginMeta(IPlugin plugin)
         {
             if (plugin == null) throw new ArgumentNullException(nameof(plugin));
@@ -52,11 +61,13 @@ namespace NetFusion.Bootstrap.Container
                     && p.CanWrite);
         }
         
-        private static void SetKnownPropertyInstances(IPluginModule forModule, PropertyInfo knownTypeProperty,
+        private void SetKnownPropertyInstances(IPluginModule forModule, PropertyInfo knownTypeProperty,
             IEnumerable<Type> fromPluginTypes)
         {
             var knownType = knownTypeProperty.PropertyType.GetGenericArguments().First();
             var discoveredInstances = fromPluginTypes.CreateInstancesDerivingFrom(knownType).ToArray();
+
+            LogPluginKnownTypeInstances(knownTypeProperty, knownType, discoveredInstances);
 
             // Create an array based on the known type and populate it from discovered instances.
             Array array = Array.CreateInstance(knownType, discoveredInstances.Length);
@@ -67,6 +78,21 @@ namespace NetFusion.Bootstrap.Container
 
             // Set the corresponding property on the module.
             knownTypeProperty.SetValue(forModule, array);
+        }
+
+        private void LogPluginKnownTypeInstances(PropertyInfo moduleProp, 
+            Type knownType, 
+            IEnumerable<object> discoveredInstances)
+        {
+            string instanceTypes = string.Join(", ", discoveredInstances.Select(di => 
+                di.GetType().FullName).ToArray());
+            
+            _logger.Add(LogLevel.Trace, 
+                "Module: {moduleName} Property: {moduleProp}:  Type: {knownType} => {instances}", 
+                moduleProp.DeclaringType?.FullName,
+                moduleProp.Name,
+                knownType.FullName, 
+                $"[{instanceTypes}]");
         }
     }
 }

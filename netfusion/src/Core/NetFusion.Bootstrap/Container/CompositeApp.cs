@@ -45,11 +45,12 @@ namespace NetFusion.Bootstrap.Container
         {
             Instance = this;
             IsStarted = false;
-            HostPlugin = new PluginSummary(builder.HostPlugin);
-
+            
             _builder = builder ?? throw new ArgumentNullException(nameof(builder));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            
+            HostPlugin = new PluginSummary(builder.HostPlugin);
         }
 
   
