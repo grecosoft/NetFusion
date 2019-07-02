@@ -15,6 +15,7 @@ namespace NetFusion.Test.Container
     /// </summary>
     public class ContainerAssert 
     {
+        // ReSharper disable once NotAccessedField.Local
         private readonly CompositeContainer _container;
         private readonly Exception _resultingException;
         private IServiceProvider _testServiceScope;
