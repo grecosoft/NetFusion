@@ -1,14 +1,14 @@
-﻿using NetFusion.Base.Scripting;
-using NetFusion.Messaging.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using NetFusion.Base.Scripting;
 using NetFusion.Messaging.Exceptions;
+using NetFusion.Messaging.Types;
 
-namespace NetFusion.Messaging.Core
+namespace NetFusion.Messaging.Internal
 {
     /// <summary>
     /// Contains information used to invoke message handlers for a given message type at runtime.

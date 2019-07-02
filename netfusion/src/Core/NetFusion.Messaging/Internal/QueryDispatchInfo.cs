@@ -9,7 +9,7 @@ using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Types;
 
-namespace NetFusion.Messaging.Core
+namespace NetFusion.Messaging.Internal
 {
     /// <summary>
     /// Contains information used to dispatch a query to its corresponding consumer.

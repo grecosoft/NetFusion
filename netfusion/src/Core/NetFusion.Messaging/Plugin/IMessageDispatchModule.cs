@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.Messaging.Types;
 

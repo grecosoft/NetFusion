@@ -34,11 +34,6 @@ namespace NetFusion.Bootstrap.Logging
 
         public void WriteToStandardOut()
         {
-            Console.BackgroundColor = ConsoleColor.Blue;
-            Console.ForegroundColor = ConsoleColor.White;
-            
-            Console.WriteLine("--------------------Bootstrap Log--------------------");
-
             foreach (BootstrapLog log in _logs)
             {
                 WriteLog(log);
@@ -47,6 +42,8 @@ namespace NetFusion.Bootstrap.Logging
 
         public void WriteToLogger(ILogger logger)
         {
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
+            
             foreach (var log in _logs)
             {
                 logger.Log(log.LogLevel, log.Message, log.Args);

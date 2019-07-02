@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Logging;
-using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Types;
 using NetFusion.Redis.Internal;
 using NetFusion.Redis.Plugin;

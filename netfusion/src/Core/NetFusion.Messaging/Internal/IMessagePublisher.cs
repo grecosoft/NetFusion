@@ -1,8 +1,8 @@
-﻿using NetFusion.Messaging.Types;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using NetFusion.Messaging.Types;
 
-namespace NetFusion.Messaging.Core
+namespace NetFusion.Messaging.Internal
 {
     /// <summary>
     /// Called when a message is published to allow plug-ins to customize the publishing of messages.

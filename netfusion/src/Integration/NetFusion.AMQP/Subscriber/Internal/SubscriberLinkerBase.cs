@@ -2,9 +2,9 @@
 using Amqp;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Serialization;
-using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Types;
 using Amqp.Framing;
+using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Plugin;
 
 namespace NetFusion.AMQP.Subscriber.Internal

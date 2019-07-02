@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Bootstrap.Dependencies;
+using NetFusion.Bootstrap.Catalog;
 using NetFusion.Bootstrap.Plugins;
 
 namespace Service.Infra.Plugin.Modules

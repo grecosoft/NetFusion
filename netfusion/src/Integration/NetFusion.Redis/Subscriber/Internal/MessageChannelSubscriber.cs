@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Internal;
 
 namespace NetFusion.Redis.Subscriber.Internal
 {

@@ -30,7 +30,7 @@ namespace CommonTests.Base.Validation
         }
 
         [Fact]
-        public void ValidatonResultSet_Populated()
+        public void ValidationResultSet_Populated()
         {
             var testObj = new ParentValidateType {PropWithAttribValidation = 500};
 

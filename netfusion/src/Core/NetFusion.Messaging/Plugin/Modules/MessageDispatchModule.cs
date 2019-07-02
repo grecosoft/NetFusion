@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
+using NetFusion.Bootstrap.Catalog;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Bootstrap.Dependencies;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.Messaging.Types;
 

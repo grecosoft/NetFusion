@@ -6,7 +6,7 @@ using System.Threading;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Types;
 
-namespace NetFusion.Messaging.Core
+namespace NetFusion.Messaging.Internal
 {
     /// <summary>
     /// Extensions used by the messaging implementation providing methods to 

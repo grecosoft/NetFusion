@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Bootstrap.Dependencies;
+using NetFusion.Bootstrap.Catalog;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Exceptions;
+using NetFusion.Messaging.Internal;
 
 namespace NetFusion.Messaging.Plugin.Modules
 {

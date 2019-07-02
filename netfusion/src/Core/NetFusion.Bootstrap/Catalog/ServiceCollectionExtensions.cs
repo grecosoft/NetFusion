@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace NetFusion.Bootstrap.Dependencies
+namespace NetFusion.Bootstrap.Catalog
 {
     /// <summary>
     /// Extension methods for IServiceContainer.

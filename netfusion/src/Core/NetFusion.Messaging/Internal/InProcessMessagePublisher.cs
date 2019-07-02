@@ -12,7 +12,7 @@ using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Types;
 
-namespace NetFusion.Messaging.Core
+namespace NetFusion.Messaging.Internal
 {
     /// <summary>
     /// This is the default message publisher that dispatches messages locally

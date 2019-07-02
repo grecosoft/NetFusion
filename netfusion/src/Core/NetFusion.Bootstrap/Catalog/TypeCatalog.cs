@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace NetFusion.Bootstrap.Dependencies
+namespace NetFusion.Bootstrap.Catalog
 {
     /// <summary>
     /// Constructed with a list of types and provides methods for filtering the list
@@ -15,6 +15,12 @@ namespace NetFusion.Bootstrap.Dependencies
         private readonly IEnumerable<Type> _types;
 
         public TypeCatalog(IServiceCollection serviceCollection, IEnumerable<Type> types)
+        {
+            Services = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
+            _types = types ?? throw new ArgumentNullException(nameof(types));
+        }
+        
+        public TypeCatalog(IServiceCollection serviceCollection, params Type[] types)
         {
             Services = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
             _types = types ?? throw new ArgumentNullException(nameof(types));

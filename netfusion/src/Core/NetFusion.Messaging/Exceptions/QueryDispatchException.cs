@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NetFusion.Base.Exceptions;
-using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Internal;
 
 namespace NetFusion.Messaging.Exceptions
 {

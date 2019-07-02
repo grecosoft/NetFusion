@@ -1,4 +1,4 @@
-﻿namespace NetFusion.Messaging.Core
+﻿namespace NetFusion.Messaging.Internal
 {
     /// <summary>
     /// Determines the scope to which a given message publisher

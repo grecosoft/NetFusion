@@ -1,8 +1,8 @@
-﻿using NetFusion.Messaging.Types;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using NetFusion.Messaging.Types;
 
-namespace NetFusion.Messaging.Core
+namespace NetFusion.Messaging.Internal
 {
     /// <summary>
     /// Base implementation for a message publisher that can be added to 

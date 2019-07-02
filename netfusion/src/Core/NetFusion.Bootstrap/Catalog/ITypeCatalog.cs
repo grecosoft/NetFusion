@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace NetFusion.Bootstrap.Dependencies
+namespace NetFusion.Bootstrap.Catalog
 {
     /// <summary>
     /// Allows plug-in types matching a provided filter to be registered with the Microsoft's 

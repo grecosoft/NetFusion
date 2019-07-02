@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Bootstrap.Dependencies;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NetFusion.Bootstrap.Catalog;
 
 namespace NetFusion.Bootstrap.Plugins
 {

@@ -1,8 +1,8 @@
-﻿using NetFusion.Messaging.Types;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using NetFusion.Messaging.Types;
 
-namespace NetFusion.Messaging.Core
+namespace NetFusion.Messaging.Internal
 {
     /// <summary>
     ///  Central service for executing Commands, Domain-Events, and Queries.

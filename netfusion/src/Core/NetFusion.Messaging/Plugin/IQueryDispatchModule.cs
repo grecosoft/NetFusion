@@ -1,6 +1,6 @@
 ﻿using System;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Internal;
 
 namespace NetFusion.Messaging.Plugin
 {

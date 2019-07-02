@@ -5,7 +5,7 @@ using Amqp;
 using NetFusion.AMQP.Plugin;
 using NetFusion.AMQP.Publisher.Internal;
 using NetFusion.Base.Serialization;
-using NetFusion.Messaging.Core;
+using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Types;
 
 namespace NetFusion.AMQP.Publisher

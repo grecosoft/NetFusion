@@ -12,7 +12,7 @@ using NetFusion.Messaging.Filters;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Types;
 
-namespace NetFusion.Messaging.Core
+namespace NetFusion.Messaging.Internal
 {
     /// <summary>
     /// Responsible for dispatching a query to its consumer and invoking

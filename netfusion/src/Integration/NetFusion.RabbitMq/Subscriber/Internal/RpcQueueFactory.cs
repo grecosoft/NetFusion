@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using EasyNetQ;
 using EasyNetQ.Topology;
 using Microsoft.Extensions.Logging;
-using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Exceptions;
+using NetFusion.Messaging.Internal;
 using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Subscriber.Internal

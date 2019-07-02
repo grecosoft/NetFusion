@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Messaging.Core;
 using NetFusion.Messaging.Enrichers;
+using NetFusion.Messaging.Internal;
 
 namespace NetFusion.Messaging.Plugin.Configs
 {
