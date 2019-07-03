@@ -18,9 +18,7 @@ namespace NetFusion.AMQP.Plugin.Modules
     /// </summary>
     public class ConnectionModule : PluginModule,
         IConnectionModule
-    {
-        private bool _isModuleStopped;
-        
+    {        
         // The configured host settings.
         private AmqpHostSettings _amqpSettings;
 
@@ -69,8 +67,8 @@ namespace NetFusion.AMQP.Plugin.Modules
 
         protected override async Task OnStopModuleAsync(IServiceProvider services)
         {
-            _isModuleStopped = true;
-            
+            _receiverConnCloseHandler = null;
+
             foreach (Session session in _receiverSessions)
             {
                 await session.CloseAsync();
@@ -204,7 +202,7 @@ namespace NetFusion.AMQP.Plugin.Modules
 
         private Task ReSetReceiverConnection(string hostName)
         {
-            if (_isModuleStopped)
+            if (_receiverConnCloseHandler == null)
             {
                 return Task.CompletedTask;
             }

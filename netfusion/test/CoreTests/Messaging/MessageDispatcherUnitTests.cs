@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
+using NetFusion.Messaging;
 using NetFusion.Messaging.Enrichers;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Internal;

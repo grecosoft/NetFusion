@@ -42,6 +42,9 @@ namespace NetFusion.Settings.Plugin.Modules
                     continue;
                 }
                 
+                // This is a non-generic version that is automatically called and adds the
+                // configuration-setting to the container. Eliminates having to manually make
+                // call for each setting.
                 services.Configure(appSettingType, Context.Configuration.GetSection(sectionPath));
             }
         }

@@ -1,7 +1,6 @@
 ﻿using NetFusion.Messaging.Types;
 using System.Threading;
 using System.Threading.Tasks;
-using NetFusion.Messaging.Internal;
 
 namespace NetFusion.Messaging
 {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NetFusion.Messaging;
-using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Types;
 
 namespace NetFusion.Test.Messaging
