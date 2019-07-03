@@ -69,6 +69,8 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
 
             string routeKey = createdExchange.Definition.QueueMeta.QueueName;
 
+            LogRpcPublishDetails(createdExchange, correlationId);
+
             // Publish the command to the exchange.
             await createdExchange.Bus.Advanced.PublishAsync(createdExchange.Exchange, 
                 routeKey, 
@@ -107,6 +109,19 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             }
         }
 
+        private void LogRpcPublishDetails(CreatedExchange createdExchange, string correlationId)
+        {
+            string receiverQueue = createdExchange.Definition.QueueMeta.QueueName;
+            string actionNs = createdExchange.Definition.ActionNamespace;
+            
+            _logger.LogDebug("Sending RPC message with Correlation Id: {correlationId} to Receiver Queue: {receiverQueue} " + 
+                             "having Action Namespace: {requestNs}.  Will receive response on Reply Queue: {replyQueueName}.", 
+                correlationId, 
+                receiverQueue, 
+                actionNs,
+                ReplyToQueueName);
+        }
+
         // Add properties used by the receiving consumer required for sending 
         // the response to the reply queue.
         private void AppendRpcMessageProperties(MessageProperties msgProps, CreatedExchange createdExchange)
@@ -134,6 +149,8 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                 (msgBody, msgProps, msgReceiveInfo) => {
 
                     string correlationId = msgProps.CorrelationId;
+                    
+                    _logger.LogDebug("Received Response for Request with Correlation Id:", correlationId);
 
                     if (string.IsNullOrWhiteSpace(correlationId))
                     {

@@ -4,8 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Base.Scripting;
-using NetFusion.Base.Serialization;
 using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
@@ -71,17 +69,7 @@ namespace NetFusion.Bootstrap.Container
                     "The Composite-Application has already been started."));
             }
 
-            // Write the logs that were recorded before the container-provider
-            // was built now that ILogger is available.
-            _builder.BootstrapLogger.WriteToLogger(_logger);
-            
-            // If there were any bootstrap errors,  raise an exception to 
-            // abort starting the composite-application.
-            if (_builder.BootstrapLogger.HasErrors)
-            {
-                throw new ContainerException(
-                    "Errors were recorded when bootstrapping Composite-Application.  See log for details.");
-            }
+            LogCoreServices();
             
             try
             {
@@ -90,12 +78,11 @@ namespace NetFusion.Bootstrap.Container
                 // Create a service scope in which each plugin can be started:
                 using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStart, "Starting Modules"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
-                {
-                    LogCoreServices(scope.ServiceProvider);
-                    
+                {                    
                     await StartModules(scope.ServiceProvider);
                 }
                
+                // If Trace logging is enabled, dump the detailed composite log:
                 if (_logger.IsEnabled(LogLevel.Trace))
                 {
                     _logger.LogTraceDetails(BootstrapLogEvents.BootstrapCompositeLog, "Composite-Log", Log);
@@ -125,6 +112,24 @@ namespace NetFusion.Bootstrap.Container
         public void Start()
         {
             StartAsync().GetAwaiter().GetResult();
+        }
+
+        private void LogCoreServices()
+        {
+            // Write the logs that were recorded before the container-provider
+            // was built now that ILogger is available.
+            _builder.BootstrapLogger.WriteToLogger(_logger);
+            
+            // If there were any bootstrap errors,  raise an exception to 
+            // abort starting the composite-application.
+            if (_builder.BootstrapLogger.HasErrors)
+            {
+                throw new ContainerException(
+                    "Errors were recorded when bootstrapping Composite-Application.  See log for details.");
+            }
+            
+            var coreServiceLog = new CoreServicesLog(_logger, _serviceProvider, _builder);
+            coreServiceLog.Log();
         }
         
         private async Task StartModules(IServiceProvider services)
@@ -171,41 +176,6 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        private void LogCoreServices(IServiceProvider provider)
-        {
-            var validationConfig = _builder.GetContainerConfig<ValidationConfig>();
-            var serializerMgr = provider.GetService<ISerializationManager>();
-            var scriptingSrv = provider.GetService<IEntityScriptingService>();
-
-            if (serializerMgr == null)
-            {
-                // This should never happen since the CompositeAppBuilder adds a default implementation:
-                _logger.LogWarning(
-                    "Serializer Manager Service not Registered.");
-            }
-            else
-            {
-                _logger.LogDebug("Registered Serializer Manager: {serializer}", 
-                    serializerMgr.GetType().AssemblyQualifiedName);
-            }
-
-            if (scriptingSrv == null)
-            {
-                // This should never happen since the CompositeAppBuilder adds a default implementation:
-                _logger.LogWarning(
-                    "Scripting Service not Registered.");
-            }
-            else
-            {
-                _logger.LogDebug("Registered Scripting Service: {serializer}", 
-                    scriptingSrv.GetType().AssemblyQualifiedName);
-            }
-            
-            _logger.LogDebug("Registered Object Validator: {validator}",
-                validationConfig.ValidatorType.AssemblyQualifiedName);
-        }
-        
-        
         //-----------------------------------------------------
         //--Runtime Services
         //-----------------------------------------------------

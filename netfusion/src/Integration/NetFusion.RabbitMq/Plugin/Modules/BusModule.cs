@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using EasyNetQ;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.RabbitMQ.Metadata;
@@ -28,7 +26,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         
         // The bus instances keyed by name created from BusSettings.
         private readonly Dictionary<string, IBus> _buses;
-        private ISerializationManager _serializationMgr;
 
         public BusModule()
         {
@@ -63,13 +60,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         //------------------------------------------------------
 
         protected override Task OnStartModuleAsync(IServiceProvider services)
-        {
-            _serializationMgr = services.GetService<ISerializationManager>();
-            if (_serializationMgr == null)
-            {
-                Context.Logger.LogError("A serialization manager has not been registered.");
-            }
-            
+        {            
             foreach (BusConnection conn in _busSettings.Connections)
             {
                 CreateBus(conn);
@@ -248,14 +239,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 c.PrefetchCount,
                 Hosts = c.Hosts.Select(h => new { h.HostName, h.Port })
             }).ToArray();
-
-            moduleLog["Serialization-Providers"] = new {
-                SerializationManager = _serializationMgr.GetType().FullName,
-                Serializers = _serializationMgr.Serializers.Select(s => new {
-                    s.ContentType,
-                    SerializerType = s.GetType().FullName
-                }).ToArray()
-            };
         }
     }
 }

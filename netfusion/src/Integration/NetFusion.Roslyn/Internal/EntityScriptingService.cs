@@ -91,6 +91,7 @@ namespace NetFusion.Roslyn.Internal
 
                 CompileScript(evaluator);
                 SetDefaultAttributeValues(evaluator.Script, entity);
+                
                 await evaluator.ExecuteAsync(entity);
 
                 durationLogger.Log.LogTraceDetails(ScriptingLogEvents.ScriptPostEvaluation, 

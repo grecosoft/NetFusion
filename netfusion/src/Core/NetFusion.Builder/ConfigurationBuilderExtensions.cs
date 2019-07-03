@@ -15,10 +15,11 @@ namespace NetFusion.Builder
 
         /// <summary>
         /// Configures an ordered list of application JSON files to be searched for settings.
-        /// Files are search in following order:  
-        ///     appsettings.MachineName.json
-        ///     appsettings.EnvironmentName.json
-        ///     appsettings.json
+        /// Files are search in following order.  When a value of a variable is found in multiple
+        /// sources, the value of the last most listed source is used.
+        ///   appsettings.json
+        ///   appsettings.EnvironmentName.json
+        ///   appsettings.MachineName.json
         /// </summary>
         /// <param name="builder">The configuration to add setting providers.</param>
         /// <param name="hostingEnv">The environment of the host.</param>
@@ -29,7 +30,7 @@ namespace NetFusion.Builder
             if (builder == null) throw new ArgumentNullException(nameof(builder), "Configuration builder not specified.");
         
             builder.SetBasePath(Directory.GetCurrentDirectory());
-            builder.AddJsonFile($"{AppSettingsFileName}.json", optional: true, reloadOnChange: true);
+            builder.AddJsonFile($"{AppSettingsFileName}.json", reloadOnChange: true, optional: true);
             builder.AddJsonFile($"{AppSettingsFileName}.{hostingEnv.EnvironmentName}.json", reloadOnChange: true, optional: true);
             builder.AddJsonFile($"{AppSettingsFileName}.{Environment.MachineName}.json", reloadOnChange: true, optional: true);
             return builder;
@@ -37,9 +38,10 @@ namespace NetFusion.Builder
 
         /// <summary>
         /// Configures settings for the preferred defaults when developing applications running in a Docker container.
-        /// When executing within a developer environment, the applications settings are first sourced from environment
-        /// variables and then by the sources configured by the AddAppSettings method.  When the application
-        /// is not executing within the development environment, all variables are sourced from environment variables.
+        /// When executing within a developer environment, the applications settings are first sourced from application
+        /// setting files by calling AddAppSettings which are then overridden by any matching environment variables.
+        /// When the application is not executing within the development environment, all variables are sourced from
+        /// environment variables.
         /// </summary>
         /// <param name="builder">The configuration to add setting providers.</param>
         /// <param name="hostingEnv">The environment of the host.</param>
@@ -59,8 +61,7 @@ namespace NetFusion.Builder
         }
 
         /// <summary>
-        /// Should be called after adding all settings sources to override any existing configured settings with a set
-        /// of in memory values.
+        /// Allows configurations to be sourced form an in-memory dictionary of values.
         /// </summary>
         /// <param name="builder">The configuration to override with set of values.</param>
         /// <param name="values">The values to add to the configuration.</param>

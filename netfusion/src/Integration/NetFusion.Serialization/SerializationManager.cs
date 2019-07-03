@@ -94,7 +94,8 @@ namespace NetFusion.Serialization
                 if (matchingSerializers.Length > 1)
                 {
                     throw new InvalidOperationException(
-                        $"Multiple serializers found for Content-Type: {types.contentType}.");
+                        $"Multiple serializers found for Content-Type: {types.contentType}.  "  +
+                        "Encoding type must be specified.");
                 }
 
                 if (matchingSerializers.Length == 1)
@@ -109,6 +110,8 @@ namespace NetFusion.Serialization
                 throw new InvalidOperationException(
                     $"Serializer for Content-Type: {contentType} Encoding-Type: {types.encodingType ?? " Not Set"} not registered.");
             }
+            
+            
 
             return serializer;
         }
