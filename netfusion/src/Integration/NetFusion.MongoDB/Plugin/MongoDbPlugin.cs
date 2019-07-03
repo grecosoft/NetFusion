@@ -9,7 +9,7 @@ namespace NetFusion.MongoDB.Plugin
     {
         public override string PluginId => "4BE391F9-F687-4E49-90A3-D38300E3A751";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
-        public override string Name => "NetFusion: MongoDb Plug-in";
+        public override string Name => "NetFusion: MongoDB Plugin";
 
         public MongoDbPlugin()
         {

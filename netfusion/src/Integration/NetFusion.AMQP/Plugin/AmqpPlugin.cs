@@ -12,7 +12,7 @@ namespace NetFusion.AMQP.Plugin
     {
         public override string PluginId => "35273B60-72EE-4428-97F1-2EB51A88B32A";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
-        public override string Name => "NetFusion AMQP Messaging Plug-in";
+        public override string Name => "NetFusion AMQP Plugin";
 
         public AmqpPlugin()
         {

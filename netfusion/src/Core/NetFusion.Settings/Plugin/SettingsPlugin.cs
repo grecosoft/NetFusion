@@ -10,7 +10,7 @@ namespace NetFusion.Settings.Plugin
     {
         public override string PluginId => "1FC4C728-83E0-4407-B846-2871B3F0A1B6";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
-        public override string Name => "NetFusion: Settings Plug-in";
+        public override string Name => "NetFusion: Settings Plugin";
 
         public SettingsPlugin()
         {

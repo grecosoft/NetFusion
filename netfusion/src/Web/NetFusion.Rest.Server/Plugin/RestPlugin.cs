@@ -10,7 +10,7 @@ namespace NetFusion.Rest.Server.Plugin
     {
         public override string PluginId => "77491AC3-31CC-44EC-B508-30E1ED2311CE";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
-        public override string Name => "REST/HAL Server Implementation";
+        public override string Name => "NetFusion: REST/HAL Plugin";
 
         public RestPlugin()
         {

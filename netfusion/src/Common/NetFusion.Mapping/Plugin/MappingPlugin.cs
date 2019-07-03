@@ -8,7 +8,7 @@ namespace NetFusion.Mapping.Plugin
     {
         public override string PluginId => "83C90E78-D245-4B0D-A4FC-E74B11227766";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
-        public override string Name => "Mapping Plug-in";
+        public override string Name => "NetFusion: Mapping Plug-n";
 
         public MappingPlugin()
         {

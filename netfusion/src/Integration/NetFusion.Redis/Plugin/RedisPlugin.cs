@@ -12,7 +12,7 @@ namespace NetFusion.Redis.Plugin
     {
         public override string PluginId => "6A52A70C-719B-41CF-AEFC-7CDFB586627A";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
-        public override string Name => "NetFusion:  Redis Plugin";
+        public override string Name => "NetFusion: Redis Plugin";
 
         public RedisPlugin()
         {

@@ -9,7 +9,7 @@ namespace NetFusion.Messaging.Plugin
     {
         public override string PluginId => "4576D809-E216-4C03-BE43-737728047BAA";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
-        public override string Name => "NetFusion: Messaging Plug-in"; 
+        public override string Name => "NetFusion: Messaging Plugin"; 
 
         public MessagingPlugin()
         {
