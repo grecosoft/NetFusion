@@ -1,0 +1,123 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Builder;
+using NetFusion.Test.Plugins;
+
+namespace NetFusion.Test.Hosting
+{
+    public class WebHost
+    {
+        private Type _unitTestType;
+        
+        // Items on which the underlying host-builder uses for configuration 
+        // on which the TestService is built.
+        private IDictionary<string, string> _settings;
+        private Action<IServiceCollection> _servicesConfig;
+        
+        // The resulting service-provider created from the populated service-collection
+        // used to create a lifetime scope for the current request under-test.
+        private IServiceProvider _serviceProvider;
+ 
+        
+        /// <summary>
+        /// Used to initialize and run an integration unit-test on a built
+        /// in-memory web host.
+        /// </summary>
+        /// <param name="webHostTest">Delegate passed an instance of the WebHost that
+        /// can be arranged and actioned on.</param>
+        /// <typeparam name="T">Reference to class contained within the unit-test from
+        /// which controllers will be loaded.</typeparam>
+        /// <returns></returns>
+        public static Task TestAsync<T>(Func<WebHost, Task> webHostTest)
+        {
+            if (webHostTest == null) throw new ArgumentNullException(nameof(webHostTest));
+            
+            var instance = new WebHost
+            {
+                _unitTestType = typeof(T)
+            };
+            return webHostTest(instance);
+        }
+
+        private WebHost() { }
+        
+        /// <summary>
+        /// Application settings to be added to the WebHost on which the unit-test will be executed.
+        /// </summary>
+        /// <param name="settings">Dictionary of settings to be added.</param>
+        /// <returns></returns>
+        public WebHost WithSettings(IDictionary<string, string> settings)
+        {
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            return this;
+        }
+
+        /// <summary>
+        /// Service to be added to the WebHost on which the unit-test will be executed.
+        /// </summary>
+        /// <param name="services">The service-collection to add services.</param>
+        /// <returns></returns>
+        public WebHost WithServices(Action<IServiceCollection> services)
+        {
+            _servicesConfig = services ?? throw new ArgumentNullException(nameof(services));
+            return this;
+        }
+        
+        /// <summary>
+        /// Used to add the plugins form which the WebHost under test should be composed.
+        /// </summary>
+        /// <param name="compose"></param>
+        /// <returns></returns>
+        public WebServerConfig ComposedFrom(Action<ICompositeContainerBuilder> compose)
+        {
+            if (compose == null) throw new ArgumentNullException(nameof(compose));
+            
+            // Following is the typical code that is found within a WebApi project's Main method
+            // of the Program class.
+            var hostBuilder = new WebHostBuilder();
+
+            hostBuilder
+                .ConfigureServices((context, services) =>
+                {
+                    // Create instance used to add plugins to the underlying service-collection.
+                    var compositeBuilder = new CompositeContainerBuilder(services, 
+                        new TestTypeResolver(),
+                        context.Configuration);
+                    
+                    // Allow the unit-test to add the need plugins and call the compose method
+                    // to populate the service-collection.
+                    compose(compositeBuilder);
+                    compositeBuilder.Compose();
+                   
+                    // Allow the unit-test to register needed services.
+                    _servicesConfig?.Invoke(services);
+
+                    // Adds the MVC services to the service-collection and the Controllers from
+                    // the unit-test project.
+                    services.AddMvc().AddApplicationPart(_unitTestType.Assembly);
+                })
+                .ConfigureAppConfiguration(configBdr => { configBdr.AddInMemoryCollection(_settings); })
+                .Configure(builder =>
+                {
+                    _serviceProvider = builder.ApplicationServices;
+                    builder.UseMvc();
+
+                    // At this point, the ASP.NET has created a service-provider from the populated
+                    // service-collection.  Obtain and start the composite-application.
+                    var compositeApp = _serviceProvider.GetRequiredService<ICompositeApp>();
+                    compositeApp.Start();
+                    
+                })
+                .UseSetting(WebHostDefaults.ApplicationKey, typeof(WebHost).Assembly.FullName);
+
+            return new WebServerConfig(new TestServer(hostBuilder), () => _serviceProvider);
+        }
+    }
+}        

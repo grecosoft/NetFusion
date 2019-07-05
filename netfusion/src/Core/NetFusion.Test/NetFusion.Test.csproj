@@ -6,13 +6,17 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Integration\NetFusion.Serialization\NetFusion.Serialization.csproj" />
+    <ProjectReference Include="..\..\Web\NetFusion.Rest.Client\NetFusion.Rest.Client.csproj" />
     <ProjectReference Include="..\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
+    <ProjectReference Include="..\NetFusion.Builder\NetFusion.Builder.csproj" />
     <ProjectReference Include="..\NetFusion.Messaging\NetFusion.Messaging.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.2.0" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>NetFusion.Test</PackageId>

@@ -66,7 +66,7 @@ namespace NetFusion.Rest.Client
         /// <summary>
         /// The deserialized returned content.
         /// </summary>
-        public object Content { get; }
+        public object Content { get; protected set; }
         
         /// <summary>
         /// The returned content of the response of a string if an error status
@@ -134,6 +134,7 @@ namespace NetFusion.Rest.Client
         public ApiResponse(HttpRequestMessage requestMsg, HttpResponseMessage responseMsg, TContent content)
             : base(requestMsg, responseMsg)
         {
+            base.Content = content;
             Content = content;
         }        
     }
