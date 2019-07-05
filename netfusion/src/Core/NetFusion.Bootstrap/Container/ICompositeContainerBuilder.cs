@@ -16,6 +16,14 @@ namespace NetFusion.Bootstrap.Container
         /// <typeparam name="TPlugin">The plugin to be added.</typeparam>
         /// <returns>Reference to builder.</returns>
         ICompositeContainerBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new();
+
+        /// <summary>
+        /// Adds one ore more plugin instances for which modules should be loaded during
+        /// the initialization of the composite-container.
+        /// </summary>
+        /// <param name="plugin">One ore more plugin instances.</param>
+        /// <returns>Reference to builder.</returns>
+        ICompositeContainerBuilder AddPlugin(params IPlugin[] plugin);
         
         /// <summary>
         /// Can be called by the host when bootstrapping the application to configure

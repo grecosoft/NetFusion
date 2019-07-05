@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Logging;
 
 namespace NetFusion.Builder
 {
@@ -15,7 +16,8 @@ namespace NetFusion.Builder
         public static ICompositeContainerBuilder CompositeContainer(this IServiceCollection services,
             IConfiguration configuration)
         {
-            return new CompositeContainerBuilder(services, configuration);
+            var resolver = new TypeResolver(new BootstrapLogger());
+            return new CompositeContainerBuilder(services, resolver, configuration);
         }
     }
 }

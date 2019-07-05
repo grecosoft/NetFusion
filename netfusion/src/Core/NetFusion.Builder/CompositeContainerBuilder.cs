@@ -21,18 +21,29 @@ namespace NetFusion.Builder
     {
         private readonly IServiceCollection _serviceCollection;
         private readonly CompositeContainer _container;
+        private readonly ITypeResolver _typeResolver;
         
-        internal CompositeContainerBuilder(IServiceCollection serviceCollection, IConfiguration configuration)
+        public CompositeContainerBuilder(IServiceCollection serviceCollection, 
+            ITypeResolver typeResolver,
+            IConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             
             _serviceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
+            _typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
             _container = new CompositeContainer(serviceCollection, configuration);
         }
         
         public ICompositeContainerBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new()
         {
             _container.RegisterPlugin<TPlugin>();
+            return this;
+        }
+
+        // This override is used exclusively by unit tests.
+        public ICompositeContainerBuilder AddPlugin(params IPlugin[] plugin)
+        {
+            _container.RegisterPlugins(plugin);
             return this;
         }
 
@@ -62,8 +73,6 @@ namespace NetFusion.Builder
         // has not yet been created.
         public void Compose(Action<IServiceCollection> config = null)
         {
-            var resolver = new TypeResolver(new BootstrapLogger());
-            
             RegisterRequiredDefaultServices();
 
             try
@@ -71,7 +80,7 @@ namespace NetFusion.Builder
                 // Not until the ICompositeApp has been created will the service-provider
                 // be created and the ILogger available.  Until this point, all logs are
                 // written to the IBootstrapLogger.  This is new from .net core 3.0 forward.
-                _container.Compose(resolver);
+                _container.Compose(_typeResolver);
                 
                 // Account for the case where a message with an Error log level is recorded
                 // for which an exception was not raised.
