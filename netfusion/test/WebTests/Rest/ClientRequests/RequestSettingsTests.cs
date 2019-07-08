@@ -204,7 +204,5 @@ namespace WebTests.Rest.ClientRequests
             response.Request.RequestUri.PathAndQuery
                 .Should().Be("/api/customers/24234234234?a=v1&b=v2");
         }
-
-       
     }
 }

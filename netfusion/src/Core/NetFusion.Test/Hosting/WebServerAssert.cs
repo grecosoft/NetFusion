@@ -24,11 +24,10 @@ namespace NetFusion.Test.Hosting
         }
 
         /// <summary>
-        /// 
+        /// Allows the response issued with the HTTPClient to be asserted.
         /// </summary>
-        /// <param name="assert"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <param name="assert">Delegate passed the response to be asserted.</param>
+        /// <returns>Self Reference</returns>
         public WebServerAssert HttpResponse(Action<HttpResponseMessage> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert));
@@ -42,6 +41,11 @@ namespace NetFusion.Test.Hosting
             return this;
         }
         
+        /// <summary>
+        /// Allows the response issued with the IRequestClient to be asserted.
+        /// </summary>
+        /// <param name="assert">Delegate passed the response to be asserted.</param>
+        /// <returns>Self Reference</returns>
         public WebServerAssert ApiResponse(Action<ApiResponse> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert));
@@ -55,6 +59,12 @@ namespace NetFusion.Test.Hosting
             return this;
         }
         
+        /// <summary>
+        /// Allows a registered service instance to be asserted.
+        /// </summary>
+        /// <param name="assert">Delegate passed the service instance to be asserted.</param>
+        /// <typeparam name="TService">The registered service type for the instance to be asserted.</typeparam>
+        /// <returns>Self Reference</returns>
         public WebServerAssert Service<TService>(Action<TService> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert));

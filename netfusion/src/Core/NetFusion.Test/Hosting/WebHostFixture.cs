@@ -12,7 +12,11 @@ using NetFusion.Test.Plugins;
 
 namespace NetFusion.Test.Hosting
 {
-    public class WebHost
+    /// <summary>
+    /// Class used to arrange a composite-container from which a composite-application
+    /// running within a test-server can be tested by issuing HTTP calls.
+    /// </summary>
+    public class WebHostFixture
     {
         private Type _unitTestType;
         
@@ -27,33 +31,32 @@ namespace NetFusion.Test.Hosting
  
         
         /// <summary>
-        /// Used to initialize and run an integration unit-test on a built
-        /// in-memory web host.
+        /// Used to initialize and run an integration unit-test on a built in-memory web host.
         /// </summary>
-        /// <param name="webHostTest">Delegate passed an instance of the WebHost that
-        /// can be arranged and actioned on.</param>
-        /// <typeparam name="T">Reference to class contained within the unit-test from
-        /// which controllers will be loaded.</typeparam>
+        /// <param name="webHostTest">Delegate passed an instance of the WebHost that can be
+        /// arranged and acted on.</param>
+        /// <typeparam name="T">Reference to class contained within the unit-test from which
+        /// controllers will be loaded.</typeparam>
         /// <returns></returns>
-        public static Task TestAsync<T>(Func<WebHost, Task> webHostTest)
+        public static Task TestAsync<T>(Func<WebHostFixture, Task> webHostTest)
         {
             if (webHostTest == null) throw new ArgumentNullException(nameof(webHostTest));
             
-            var instance = new WebHost
+            var instance = new WebHostFixture
             {
                 _unitTestType = typeof(T)
             };
             return webHostTest(instance);
         }
 
-        private WebHost() { }
+        private WebHostFixture() { }
         
         /// <summary>
         /// Application settings to be added to the WebHost on which the unit-test will be executed.
         /// </summary>
         /// <param name="settings">Dictionary of settings to be added.</param>
         /// <returns></returns>
-        public WebHost WithSettings(IDictionary<string, string> settings)
+        public WebHostFixture WithSettings(IDictionary<string, string> settings)
         {
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             return this;
@@ -64,7 +67,7 @@ namespace NetFusion.Test.Hosting
         /// </summary>
         /// <param name="services">The service-collection to add services.</param>
         /// <returns></returns>
-        public WebHost WithServices(Action<IServiceCollection> services)
+        public WebHostFixture WithServices(Action<IServiceCollection> services)
         {
             _servicesConfig = services ?? throw new ArgumentNullException(nameof(services));
             return this;
@@ -103,7 +106,10 @@ namespace NetFusion.Test.Hosting
                     // the unit-test project.
                     services.AddMvc().AddApplicationPart(_unitTestType.Assembly);
                 })
-                .ConfigureAppConfiguration(configBdr => { configBdr.AddInMemoryCollection(_settings); })
+                .ConfigureAppConfiguration(configBdr =>
+                {
+                    configBdr.AddInMemoryCollection(_settings ?? new Dictionary<string, string>());
+                })
                 .Configure(builder =>
                 {
                     _serviceProvider = builder.ApplicationServices;
@@ -115,7 +121,7 @@ namespace NetFusion.Test.Hosting
                     compositeApp.Start();
                     
                 })
-                .UseSetting(WebHostDefaults.ApplicationKey, typeof(WebHost).Assembly.FullName);
+                .UseSetting(WebHostDefaults.ApplicationKey, typeof(WebHostFixture).Assembly.FullName);
 
             return new WebServerConfig(new TestServer(hostBuilder), () => _serviceProvider);
         }
