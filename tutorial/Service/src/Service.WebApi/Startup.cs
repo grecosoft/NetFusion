@@ -28,6 +28,7 @@ namespace Service.WebApi
         private readonly IConfiguration _configuration;
         private readonly IHostingEnvironment _hostingEnv;
 
+        
         public Startup(IConfiguration configuration, IHostingEnvironment hostingEnv)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -45,7 +46,7 @@ namespace Service.WebApi
                 .AddMongoDb()
                 .AddRabbitMq()
                 .AddRedis()
-                .AddAmqp()
+                //.AddAmqp()
                 .AddWebMvc(c =>
                 {
                     c.EnableRouteMetadata = true;

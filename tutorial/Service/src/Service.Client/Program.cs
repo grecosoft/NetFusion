@@ -42,7 +42,7 @@ namespace Service.Client
                         .AddSettings()
                         .AddMessaging()
                         .AddRabbitMq()
-                        .AddAmqp()
+                       // .AddAmqp()
                         .AddRedis()
 
                         .AddPlugin<ClientPlugin>()
