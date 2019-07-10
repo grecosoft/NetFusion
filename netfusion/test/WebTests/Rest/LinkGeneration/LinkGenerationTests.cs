@@ -1,7 +1,10 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Settings;
+using NetFusion.Rest.Server.Plugin;
+using NetFusion.Test.Hosting;
 using NetFusion.Test.Plugins;
 using WebTests.Rest.ClientRequests;
 using WebTests.Rest.LinkGeneration.Client;
@@ -53,12 +56,8 @@ namespace WebTests.Rest.LinkGeneration
         ///             
         /// </example>
         [Fact]
-        public async Task CanGenerateUrl_FromControllerActionExpression()
+        public Task CanGenerateUrl_ActionExpression_AllRouteParamsSupplied()
         {
-            // Arrange:
-			var hostPlugin = new MockHostPlugin();
-			hostPlugin.AddPluginType<LinkedResourceMap>();
-
             var mockResource = new LinkedResource
             {
                 Id = 10,
@@ -67,54 +66,220 @@ namespace WebTests.Rest.LinkGeneration
                 Value3 = 300,
                 Value4 = 400
             };
-
-            var serviceMock = new MockUnitTestService
+            
+            return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                ServerResources = new[] { mockResource }
-            };
+                var response = await host
+                    .ArrangeWithDefaults(mockResource)
+                    .Act.OnRestClient(async client =>
+                    {             
+                        var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
+                        return await client.SendAsync<LinkedResourceModel>(request);
+                    });
 
-            // Act:
-            var client = RequestSettings.Create()
-			   .CreateTestClient(hostPlugin, serviceMock);
-
-            var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
-
-			var resource = (await client.SendAsync<LinkedResourceModel>(request)).Content;
-
-            // Assert:
-            // --------------------------------------------------
-            // Required Route Parameters:
-            resource.AssertLink("scenario-1", HttpMethod.Get, "/api/linked/resource/scenario-1/10");
-            resource.AssertLink("scenario-2", HttpMethod.Get, "/api/linked/resource/scenario-2/10/param-one/value-2");
-
-            // Optional Route Parameter with supplied value:
-            resource.AssertLink("scenario-3", HttpMethod.Get, "/api/linked/resource/scenario-3/10/param-one/300");
-
-            // Optional Route Parameter with no supplied value:
-            mockResource.Value3 = null;
-            resource = (await client.SendAsync<LinkedResourceModel>(request)).Content;
-            resource.AssertLink("scenario-3", HttpMethod.Get, "/api/linked/resource/scenario-3/10/param-one");
-
-            // Multiple Optional Parameters with supplied values.
-            mockResource.Value3 = 600;
-            mockResource.Value2 = "value-2";
-            resource = (await client.SendAsync<LinkedResourceModel>(request)).Content;
-            resource.AssertLink("scenario-4", HttpMethod.Get, "/api/linked/resource/scenario-4/10/param-one/600/value-2");
-
-            // Multiple optional Parameters with no supplied value.
-            mockResource.Value3 = null;
-            mockResource.Value2 = null;
-            resource = (await client.SendAsync<LinkedResourceModel>(request)).Content;
-            resource.AssertLink("scenario-4", HttpMethod.Get, "/api/linked/resource/scenario-4/10/param-one");
-
-            // No route parameters with single parameter populated from posted data.
-            resource = (await client.SendAsync<LinkedResourceModel>(request)).Content;
-            resource.AssertLink("scenario-5", HttpMethod.Post, "/api/linked/resource/scenario-5/create");
-
-            // Single route parameter with additional class based parameter populated from posted data.
-            resource = (await client.SendAsync<LinkedResourceModel>(request)).Content;
-            resource.AssertLink("scenario-6", HttpMethod.Put, "/api/linked/resource/scenario-6/10/update");
+                response.Assert.ApiResponse(apiResponse =>
+                {
+                     var resource = (LinkedResourceModel)apiResponse.Content;
+                     
+                     // Required Route Parameters:
+                     resource.AssertLink("scenario-1", HttpMethod.Get, "/api/linked/resource/scenario-1/10");
+                     resource.AssertLink("scenario-2", HttpMethod.Get, "/api/linked/resource/scenario-2/10/param-one/value-2");
+                });
+            });
         }
+        
+        [Fact]
+        public Task CanGenerateUrl_ActionExpression_WithOptionalSuppliedRouteParam()
+        {
+            var mockResource = new LinkedResource
+            {
+                Id = 10,
+                Value1 = 100,
+                Value2 = "value-2",
+                Value3 = 300,
+                Value4 = 400
+            };
+            
+            return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
+            {
+                var response = await host
+                    .ArrangeWithDefaults(mockResource)
+                    .Act.OnRestClient(async client =>
+                    {             
+                        var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
+                        return await client.SendAsync<LinkedResourceModel>(request);
+                    });
+
+                response.Assert.ApiResponse(apiResponse =>
+                {
+                    var resource = (LinkedResourceModel)apiResponse.Content;
+                     
+                    // Optional Route Parameter with supplied value:
+                    resource.AssertLink("scenario-3", HttpMethod.Get, "/api/linked/resource/scenario-3/10/param-one/300");
+                });
+            });
+        }
+        
+        [Fact]
+        public Task CanGenerateUrl_ActionExpression_WithOptionalNotSuppliedRouteParam()
+        {
+            var mockResource = new LinkedResource
+            {
+                Id = 10,
+                Value1 = 100,
+                Value2 = "value-2",
+                Value3 = null,
+                Value4 = 400
+            };
+            
+            return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
+            {
+                var response = await host
+                    .ArrangeWithDefaults(mockResource)
+                    .Act.OnRestClient(async client =>
+                    {             
+                        var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
+                        return await client.SendAsync<LinkedResourceModel>(request);
+                    });
+
+                response.Assert.ApiResponse(apiResponse =>
+                {
+                    var resource = (LinkedResourceModel)apiResponse.Content;
+                     
+                    // Optional Route Parameter with supplied value:
+                    resource.AssertLink("scenario-3", HttpMethod.Get, "/api/linked/resource/scenario-3/10/param-one");
+                });
+            });
+        }
+        
+        [Fact]
+        public Task CanGenerateUrl_ActionExpression_WithMultipleOptionalSuppliedRouteParams()
+        {
+            var mockResource = new LinkedResource
+            {
+                Id = 10,
+                Value1 = 100,
+                Value2 = "value-2",
+                Value3 = 600,
+                Value4 = 400
+            };
+            
+            return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
+            {
+                var response = await host
+                    .ArrangeWithDefaults(mockResource)
+                    .Act.OnRestClient(async client =>
+                    {             
+                        var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
+                        return await client.SendAsync<LinkedResourceModel>(request);
+                    });
+
+                response.Assert.ApiResponse(apiResponse =>
+                {
+                    var resource = (LinkedResourceModel)apiResponse.Content;
+                     
+                    // Optional Route Parameter with supplied value:
+                    resource.AssertLink("scenario-4", HttpMethod.Get, "/api/linked/resource/scenario-4/10/param-one/600/value-2");
+                });
+            });
+        }
+        
+        [Fact]
+        public Task CanGenerateUrl_ActionExpression_WithMultipleOptionalNotSuppliedRouteParams()
+        {
+            var mockResource = new LinkedResource
+            {
+                Id = 10,
+                Value1 = 100,
+                Value2 = null,
+                Value3 = null,
+                Value4 = 400
+            };
+            
+            return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
+            {
+                var response = await host
+                    .ArrangeWithDefaults(mockResource)
+                    .Act.OnRestClient(async client =>
+                    {             
+                        var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
+                        return await client.SendAsync<LinkedResourceModel>(request);
+                    });
+
+                response.Assert.ApiResponse(apiResponse =>
+                {
+                    var resource = (LinkedResourceModel)apiResponse.Content;
+                     
+                    // Optional Route Parameter with supplied value:
+                    resource.AssertLink("scenario-4", HttpMethod.Get, "/api/linked/resource/scenario-4/10/param-one");
+                });
+            });
+        }
+        
+        [Fact]
+        public Task CanGenerateUrl_ActionExpression_NoRouteParamsWithPostedData()
+        {
+            var mockResource = new LinkedResource
+            {
+                Id = 10,
+                Value1 = 100,
+                Value2 = "value-2",
+                Value3 = 600,
+                Value4 = 400
+            };
+            
+            return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
+            {
+                var response = await host
+                    .ArrangeWithDefaults(mockResource)
+                    .Act.OnRestClient(async client =>
+                    {             
+                        var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
+                        return await client.SendAsync<LinkedResourceModel>(request);
+                    });
+
+                response.Assert.ApiResponse(apiResponse =>
+                {
+                    var resource = (LinkedResourceModel)apiResponse.Content;
+                     
+                    // Optional Route Parameter with supplied value:
+                    resource.AssertLink("scenario-5", HttpMethod.Post, "/api/linked/resource/scenario-5/create");
+                });
+            });
+        }
+        
+        [Fact]
+        public Task CanGenerateUrl_ActionExpression_RouteParamWithPostedData()
+        {
+            var mockResource = new LinkedResource
+            {
+                Id = 10,
+                Value1 = 100,
+                Value2 = "value-2",
+                Value3 = 600,
+                Value4 = 400
+            };
+            
+            return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
+            {
+                var response = await host
+                    .ArrangeWithDefaults(mockResource)
+                    .Act.OnRestClient(async client =>
+                    {             
+                        var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
+                        return await client.SendAsync<LinkedResourceModel>(request);
+                    });
+
+                response.Assert.ApiResponse(apiResponse =>
+                {
+                    var resource = (LinkedResourceModel)apiResponse.Content;
+                     
+                    // Optional Route Parameter with supplied value:
+                    resource.AssertLink("scenario-6", HttpMethod.Put, "/api/linked/resource/scenario-6/10/update");
+                });
+            });
+        }
+        
 
         /// <summary>
         /// This unit test validates that a resource mapping can specify a URL as a hard-coded string.  This 
@@ -130,12 +295,8 @@ namespace WebTests.Rest.LinkGeneration
         ///         
         /// </example>
         [Fact]
-        public async Task CanGenerateUrl_FromHardCodedString()
+        public Task CanGenerateUrl_FromHardCodedString()
         {
-            // Arrange:
-            var hostPlugin = new MockHostPlugin();
-            hostPlugin.AddPluginType<LinkedResourceMap>();
-
             var mockResource = new LinkedResource
             {
                 Id = 10,
@@ -144,21 +305,24 @@ namespace WebTests.Rest.LinkGeneration
                 Value3 = 300,
                 Value4 = 400
             };
-
-            var serviceMock = new MockUnitTestService
+            
+            return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                ServerResources = new[] { mockResource }
-            };
+                var response = await host
+                    .ArrangeWithDefaults(mockResource)
+                    .Act.OnRestClient(async client =>
+                    {             
+                        var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
+                        return await client.SendAsync<LinkedResourceModel>(request);
+                    });
 
-            // Act:
-            var client = RequestSettings.Create()
-               .CreateTestClient(hostPlugin, serviceMock);
-
-            var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
-            var resource = (await client.SendAsync<LinkedResourceModel>(request)).Content;
-
-            // Assert:
-            resource.AssertLink("scenario-20", HttpMethod.Options, "http://external/api/call/info");
+                response.Assert.ApiResponse(apiResponse =>
+                {
+                    var resource = (LinkedResourceModel)apiResponse.Content;
+                     
+                    resource.AssertLink("scenario-20", HttpMethod.Options, "http://external/api/call/info");
+                });
+            });
         }
 
         /// <summary>
@@ -177,12 +341,8 @@ namespace WebTests.Rest.LinkGeneration
         ///         
         /// </example>
         [Fact]
-        public async Task CanGenerateUrl_FromStringInterpolatedResourceUrl()
+        public Task CanGenerateUrl_FromStringInterpolatedResourceUrl()
         {
-            // Arrange:
-            var hostPlugin = new MockHostPlugin();
-            hostPlugin.AddPluginType<LinkedResourceMap>();
-
             var mockResource = new LinkedResource
             {
                 Id = 10,
@@ -191,21 +351,24 @@ namespace WebTests.Rest.LinkGeneration
                 Value3 = 300,
                 Value4 = 400
             };
-
-            var serviceMock = new MockUnitTestService
+            
+            return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                ServerResources = new[] { mockResource }
-            };
+                var response = await host
+                    .ArrangeWithDefaults(mockResource)
+                    .Act.OnRestClient(async client =>
+                    {             
+                        var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
+                        return await client.SendAsync<LinkedResourceModel>(request);
+                    });
 
-            // Act:
-            var client = RequestSettings.Create()
-               .CreateTestClient(hostPlugin, serviceMock);
-
-            var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
-            var resource = (await client.SendAsync<LinkedResourceModel>(request)).Content;
-
-            // Assert:
-            resource.AssertLink("scenario-25", HttpMethod.Options, "http://external/api/call/10/info/value-2");
+                response.Assert.ApiResponse(apiResponse =>
+                {
+                    var resource = (LinkedResourceModel)apiResponse.Content;
+                     
+                    resource.AssertLink("scenario-25", HttpMethod.Options, "http://external/api/call/10/info/value-2");
+                });
+            });
         }
 
         /// <summary>
@@ -216,39 +379,37 @@ namespace WebTests.Rest.LinkGeneration
         ///     - HrefLang
         /// </summary>
         [Fact]
-        public async Task ResourceMap_CanSpecify_AdditionalOptionalLinkProperties()
+        public Task ResourceMap_CanSpecify_AdditionalOptionalLinkProperties()
         {
-
-            // Arrange:
-            var hostPlugin = new MockHostPlugin();
-            hostPlugin.AddPluginType<LinkedResourceMap>();
-
             var mockResource = new LinkedResource
             {
                 Id = 10,
                 Value2 = "value-2"
             };
-
-            var serviceMock = new MockUnitTestService
+            
+            return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                ServerResources = new[] { mockResource }
-            };
+                var response = await host
+                    .ArrangeWithDefaults(mockResource)
+                    .Act.OnRestClient(async client =>
+                    {             
+                        var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
+                        return await client.SendAsync<LinkedResourceModel>(request);
+                    });
 
-            // Act:
-            var client = RequestSettings.Create()
-               .CreateTestClient(hostPlugin, serviceMock);
+                response.Assert.ApiResponse(apiResponse =>
+                {
+                    var resource = (LinkedResourceModel)apiResponse.Content;
+                     
+                    resource.AssertLink("scenario-30", HttpMethod.Options, "http://external/api/call/10/info/value-2");
 
-            var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
-            var resource = (await client.SendAsync<LinkedResourceModel>(request)).Content;
-
-            // Assert:
-            resource.AssertLink("scenario-30", HttpMethod.Options, "http://external/api/call/10/info/value-2");
-
-            var link = resource.Links["scenario-30"];
-            Assert.Equal("test-name", link.Name);
-            Assert.Equal("test-title", link.Title);
-            Assert.Equal("test-type", link.Type);
-            Assert.Equal("test-href-lang", link.HrefLang);
+                    var link = resource.Links["scenario-30"];
+                    Assert.Equal("test-name", link.Name);
+                    Assert.Equal("test-title", link.Title);
+                    Assert.Equal("test-type", link.Type);
+                    Assert.Equal("test-href-lang", link.HrefLang);
+                });
+            });
         } 
     }
 }

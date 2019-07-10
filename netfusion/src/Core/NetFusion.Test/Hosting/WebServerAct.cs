@@ -59,7 +59,9 @@ namespace NetFusion.Test.Hosting
                 { InternetMediaTypes.Json, new JsonMediaTypeSerializer() },
                 { InternetMediaTypes.HalJson, new JsonMediaTypeSerializer() }
             };
-            var restClient = new RequestClient(client, logger, serializers, RequestSettings.Create());
+            var restClient = new RequestClient(client, logger, serializers, 
+                RequestSettings.Create( c => c.UseHalDefaults()));
+
             var apiResponse = await clientAct(restClient);
             
             return new WebServerResponse(_services, apiResponse);

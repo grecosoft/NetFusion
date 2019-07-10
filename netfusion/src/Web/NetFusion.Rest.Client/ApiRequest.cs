@@ -61,7 +61,8 @@ namespace NetFusion.Rest.Client
             {
 				RequestUri = requestUri,
 			    Method = method,
-                IsTemplate = IsTemplateUrl(requestUri)
+                IsTemplate = IsTemplateUrl(requestUri),
+                Settings = RequestSettings.Create()
             };
 
             config?.Invoke(request);

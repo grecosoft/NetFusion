@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
+using NetFusion.Test.Hosting;
 using NetFusion.Test.Plugins;
 using WebTests.Rest.ClientRequests.Client;
 using WebTests.Rest.ClientRequests.Server;
+using WebTests.Rest.LinkGeneration;
 using WebTests.Rest.Setup;
 using Xunit;
 
@@ -131,78 +134,41 @@ namespace WebTests.Rest.ClientRequests
         }
 
         /// <summary>
-        /// When registering a base address, the default settings to be applied for each made request to that
-        /// base address can be specified.  If specific settings are specified for a given request, they are
-        /// merged into the default settings.
-        /// </summary>
-        [Fact]
-        public async Task RequestSpecificSettings_MergedWithBaseAddressDefaultSettings()
-        {
-            var defaultSettings = RequestSettings.Create(config => {
-                config.Headers
-                    .Add("h1", "dv1", "dv2")
-                    .Add("h2", "dv3");
-
-                config.QueryString
-                    .AddParam("p1", "pv1")
-                    .AddParam("p2", "pv2");
-            });
-
-            var requestSpecificSettings = RequestSettings.Create(config => {
-                config.Headers
-                    .Add("h1", "rs100")
-                    .Add("h3", "rs200");
-
-                config.QueryString
-                    .AddParam("p2", "pv300")
-                    .AddParam("p3", "pv400");
-            });
-
-            var hostPlugin = new MockHostPlugin();
-            hostPlugin.AddPluginType<CustomerResourceMap>();
-
-            var client = defaultSettings.CreateTestClient(hostPlugin);
-
-            var request = ApiRequest.Get("api/customers/pass-through").UsingSettings(requestSpecificSettings);
-            var response = await client.SendAsync<CustomerModel>(request);
-
-            response.Request.RequestUri.PathAndQuery
-                .Should().Be("/api/customers/pass-through?p1=pv1&p2=pv300&p3=pv400");
-
-            response.Request.Headers.ToString()
-                .Should().Equals("Accept: application/hal+json, application/json\\r\\nh1: rs100\\r\\nh2: dv3\\r\\nh3: rs200\\r\\nHost: localhost\\r\\n");
-        }
-
-        /// <summary>
         /// Query string parameters to be added to the request URL can be specified.
         /// </summary>
         [Fact]
-        public async Task QueryStringParams_CanBeSpecified()
+        public Task QueryStringParams_CanBeSpecified()
         {
-            var settings = RequestSettings.Create(config =>
+            return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                config.UseHalDefaults();
+                IMockedService mockedSrv = new MockUnitTestService
+                {
+                    Customers = new[] { new CustomerResource { CustomerId = "ID_1", Age = 47 } }
+                };
 
-                config.QueryString
-                    .AddParam("a", "v1")
-                    .AddParam("b", "v2");
+                var response = await host
+                    .ArrangeWithDefaults(mockedSrv)
+                    
+                    .Act.OnRestClient(async client =>
+                    {             
+                        var request = ApiRequest.Create("api/customers/24234234234", HttpMethod.Get,
+                            config =>
+                            {
+                                config.Settings.UseHalDefaults();
+                                config.Settings.QueryString
+                                    .AddParam("a", "v1")
+                                    .AddParam("b", "v2");
+                            });
+                        
+                        return await client.SendAsync<CustomerModel>(request);
+                    });
+
+                response.Assert.ApiResponse(apiResponse =>
+                {  
+                    apiResponse.Request.RequestUri.PathAndQuery
+                        .Should().Be("/api/customers/24234234234?a=v1&b=v2");
+                });
             });
-
-            IMockedService mockedSrv = new MockUnitTestService
-            {
-                Customers = new[] { new CustomerResource { CustomerId = "ID_1", Age = 47 } }
-            };
-
-            var hostPlugin = new MockHostPlugin();
-            hostPlugin.AddPluginType<CustomerResourceMap>();
-
-            var client = settings.CreateTestClient(hostPlugin, mockedSrv);
-
-            var request = ApiRequest.Create("api/customers/24234234234", HttpMethod.Get);
-            var response = await client.SendAsync<CustomerModel>(request);
-
-            response.Request.RequestUri.PathAndQuery
-                .Should().Be("/api/customers/24234234234?a=v1&b=v2");
         }
     }
 }

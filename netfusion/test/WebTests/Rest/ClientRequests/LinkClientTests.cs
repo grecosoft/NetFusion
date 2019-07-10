@@ -71,29 +71,6 @@ namespace WebTests.Rest.ClientRequests
         }
 
         /// <summary>
-        /// All required link template tokens must be supplied a value.
-        /// </summary>
-        [Fact]
-        public Task ClientMustPopulate_AllRequiredTemplateTokens()
-        {
-            var hostPlugin = new MockHostPlugin();
-            hostPlugin.AddPluginType<CustomerResourceMap>();
-
-            var client = RequestSettings.Create()
-               .CreateTestClient(hostPlugin);
-
-            var routeValues = new Dictionary<string, object>
-            {
-                { "state", "wv" },
-            };
-
-            var request = ApiRequest.Get("api/test/url/{state}/{city}/{?region}", config => config.WithRouteValues(routeValues));
-
-            return Assert.ThrowsAsync<InvalidOperationException>(
-                () => client.SendAsync<CustomerModel>(request));
-        }
-
-        /// <summary>
         /// The client when requesting a resource with associated links submit the link
         /// by creating a corresponding ApiRequest object.
         /// </summary>
