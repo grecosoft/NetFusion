@@ -25,7 +25,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         IPublisherModule
     {
         // Dependent Modules:
-        private IBusModule _busModule;
+        protected IBusModule BusModule { get; set; }
 
         // Other  plugins (normally application plugins) specify the exchanges 
         // to be created by defining one or more IExchangeRegister derived types.
@@ -53,8 +53,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
         public override void Configure()
         {
-            _busModule = Context.GetPluginModule<IBusModule>();
-
             var definitions = Registries.SelectMany(r => r.GetDefinitions()).ToArray();
 
             ApplyConfiguredOverrides(definitions);
@@ -69,7 +67,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         {
             foreach (var definition in definitions)
             {
-                _busModule.ApplyExchangeSettings(definition);
+                BusModule.ApplyExchangeSettings(definition);
             }
         }
         
@@ -180,7 +178,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         
         protected virtual IRpcClient CreateRpcClient(ExchangeMeta definition)
         {
-            IBus bus = _busModule.GetBus(definition.BusName);
+            IBus bus = BusModule.GetBus(definition.BusName);
             var rpcClient = new RpcClient(definition.BusName, definition.QueueMeta.QueueName, bus);
             var logger = Context.LoggerFactory.CreateLogger<RpcClient>();
 

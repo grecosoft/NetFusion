@@ -141,23 +141,5 @@ namespace NetFusion.Bootstrap.Plugins
         {
             return builder.GetPluginTypes(PluginTypes.ApplicationPlugin, PluginTypes.HostPlugin);
         }
-
-        // TODO:  Delete this after code-review for all plugins.  A plugin module now automatically
-        // has any dependent plugin-module services set.
-        public T GetPluginModule<T>() where T : IPluginModuleService
-        {
-            var foundModules = _builder.AllModules.OfType<T>().ToArray();
-            if (! foundModules.Any())
-            {
-                throw new ContainerException($"Plug-in module of type: {typeof(T)} not found.");
-            }
-
-            if (foundModules.Length > 1)
-            {
-                throw new ContainerException($"Multiple plug-in modules implementing: {typeof(T)} found.");
-            }
-
-            return foundModules.First();
-        }
     }
 }

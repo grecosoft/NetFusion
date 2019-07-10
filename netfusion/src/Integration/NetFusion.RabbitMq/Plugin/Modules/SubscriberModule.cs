@@ -23,8 +23,9 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
     public class SubscriberModule : PluginModule
     {
         // Dependent Modules:
-        private IBusModule _busModule;
-        private IMessageDispatchModule _messagingModule;
+        protected IBusModule BusModule { get; set; }
+        protected IMessageDispatchModule MessagingModule { get; set; }
+        
         private ISerializationManager _serializationManager;
 
         // Message handlers subscribed to queues:
@@ -37,19 +38,17 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {
             // Dependent modules:
-            _busModule = services.GetRequiredService<IBusModule>();
-            _messagingModule = services.GetRequiredService<IMessageDispatchModule>();
             _serializationManager = services.GetRequiredService<ISerializationManager>();
 
-            _subscribers = GetQueueSubscribers(_messagingModule);
-            return SubscribeToQueues(_busModule, _subscribers);
+            _subscribers = GetQueueSubscribers(MessagingModule);
+            return SubscribeToQueues(BusModule, _subscribers);
         }
         
         // Delegates to the core message dispatch module to find all message dispatch
         // handlers and filters the list to only those that should be bound to a queue.
         private MessageQueueSubscriber[] GetQueueSubscribers(IMessageDispatchModule messageDispatch)
         {
-            var hostId = _busModule.HostAppId;
+            var hostId = BusModule.HostAppId;
   
             return messageDispatch.AllMessageTypeDispatchers
                 .Values().Where(MessageQueueSubscriber.IsSubscriber)
@@ -68,7 +67,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             
             foreach (var subscriber in subscribers)
             {
-                _busModule.ApplyQueueSettings(subscriber.QueueMeta);
+                busModule.ApplyQueueSettings(subscriber.QueueMeta);
  
                 if (subscriber.QueueMeta.Exchange.IsRpcExchange 
                     && boundToRpcQueues.Contains(subscriber.QueueMeta.QueueName))
@@ -108,8 +107,8 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                         MessageProps = msgProps,
                         MessageReceiveInfo = receiveInfo,
                         Subscriber = subscriber,
-                        BusModule = _busModule,
-                        MessagingModule = _messagingModule,
+                        BusModule = BusModule,
+                        MessagingModule = MessagingModule,
                         Serialization = _serializationManager,
                         GetRpcMessageHandler = GetRpcMessageHandler
                     };

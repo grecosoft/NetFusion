@@ -21,8 +21,10 @@ namespace NetFusion.AMQP.Plugin.Modules
         private static readonly object ReceiverReConnLock = new object();
         
         // Dependent Modules:
-        private IConnectionModule _connectionModule;
-        private IMessageDispatchModule _dispatchModule;
+        protected IConnectionModule ConnectionModule { get; set; }
+        protected IMessageDispatchModule DispatchModule { get; set; }
+        
+        // Services:
         private ISerializationManager _serialization;
         
         // Host provided service to alter module's default behavior.  For example, the host
@@ -48,12 +50,10 @@ namespace NetFusion.AMQP.Plugin.Modules
         
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {
-            _connectionModule = services.GetRequiredService<IConnectionModule>();
-            _dispatchModule = services.GetRequiredService<IMessageDispatchModule>();
             _serialization = services.GetRequiredService<ISerializationManager>();
             
             _subscriptionSettings = services.GetRequiredService<ISubscriptionSettings>();
-            _subscribers = GetHostSubscribers(_dispatchModule);
+            _subscribers = GetHostSubscribers(DispatchModule);
 
             return LinkHandlersToHostItems(_subscriptionSettings);
         }
@@ -92,7 +92,7 @@ namespace NetFusion.AMQP.Plugin.Modules
             // subscriptions to AMQP defined topics.
             await _subscriptionSettings.ConfigureSettings();
             
-            _connectionModule.SetReceiverConnectionCloseHandler(ReSetReceiverLinkOnClosedConn);
+            ConnectionModule.SetReceiverConnectionCloseHandler(ReSetReceiverLinkOnClosedConn);
 
             foreach (var subscriber in _subscribers)
             {
@@ -106,10 +106,10 @@ namespace NetFusion.AMQP.Plugin.Modules
         // invoked when a message is received.
         private void LinkSubscriber(HostItemSubscriber subscriber, ISubscriptionSettings subscriptionSettings)
         {
-            Session session = _connectionModule.CreateReceiverSession(subscriber.HostAttribute.HostName);
+            Session session = ConnectionModule.CreateReceiverSession(subscriber.HostAttribute.HostName);
             ISubscriberLinker linker = subscriber.HostItemAttribute.Linker;
             
-            linker.SetServices(_dispatchModule, _serialization, Context.LoggerFactory);
+            linker.SetServices(DispatchModule, _serialization, Context.LoggerFactory);
             
             // Delegate to the subscriber linker implementation to handle received messages:
             linker.LinkSubscriber(session, subscriber, subscriptionSettings);

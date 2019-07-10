@@ -24,8 +24,8 @@ namespace NetFusion.Redis.Plugin.Modules
     public class SubscriberModule : PluginModule
     {
         // Dependent Module Services:
-        private IConnectionModule ConnModule { get; set; }
-        private IMessageDispatchModule DispatchModule { get; set; }
+        protected IConnectionModule ConnModule { get; set; }
+        protected IMessageDispatchModule DispatchModule { get; set; }
         
         // Services:
         private ISerializationManager _serializationManager;
