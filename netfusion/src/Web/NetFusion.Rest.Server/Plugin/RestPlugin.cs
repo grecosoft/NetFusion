@@ -1,7 +1,5 @@
-using System;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Rest.Server.Plugin.Configs;
 using NetFusion.Rest.Server.Plugin.Modules;
 
 namespace NetFusion.Rest.Server.Plugin
@@ -14,8 +12,6 @@ namespace NetFusion.Rest.Server.Plugin
 
         public RestPlugin()
         {
-            AddConfig<RestApiConfig>();
-            
             AddModule<ResourceMediaModule>();
             AddModule<RestModule>();
             
@@ -26,17 +22,10 @@ namespace NetFusion.Rest.Server.Plugin
         
     public static class CompositeBuilderExtensions
     {
-        public static ICompositeContainerBuilder AddRest(this ICompositeContainerBuilder composite, 
-            Action<RestApiConfig> configure = null)
+        public static ICompositeContainerBuilder AddRest(this ICompositeContainerBuilder composite)
         {
             // Add plugin for Rest API support:
             composite.AddPlugin<RestPlugin>();
-
-            // Call configure delegate on configuration if specified.
-            if (configure != null)
-            {
-                composite.InitPluginConfig(configure);
-            }
             
             return composite;
         }

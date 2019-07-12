@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using FluentAssertions;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Resources;
-using NetFusion.Rest.Client.Settings;
 using NetFusion.Test.Hosting;
-using NetFusion.Test.Plugins;
 using WebTests.Rest.ClientRequests.Client;
 using WebTests.Rest.ClientRequests.Server;
 using WebTests.Rest.LinkGeneration;

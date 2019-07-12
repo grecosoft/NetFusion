@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Linq.Expressions;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 using NetFusion.Common.Extensions.Expressions;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Web.Mvc.Metadata;
-using System;
-using System.Linq.Expressions;
-using System.Reflection;
 
 // ReSharper disable UnusedTypeParameter
-namespace NetFusion.Rest.Server.Actions
+namespace NetFusion.Rest.Server.Linking
 {
     /// <summary>
     /// Selects a controller's action method used to find the corresponding route
@@ -16,13 +16,13 @@ namespace NetFusion.Rest.Server.Actions
     /// </summary>
     /// <typeparam name="TController">The controller to select action methods from
     /// corresponding to template URLs.</typeparam>
-    public class ActionTemplateSelector<TController>
+    public class ControllerActionTemplateSelector<TController>
         where TController : ControllerBase
     {
-        private readonly ActionTemplateLink _link;
+        private readonly TemplateUrlLink _link;
         private readonly LambdaExpression _action;
 
-        public ActionTemplateSelector(ActionTemplateLink link, LambdaExpression action)
+        public ControllerActionTemplateSelector(TemplateUrlLink link, LambdaExpression action)
         {
             _action = action;
             _link = link;

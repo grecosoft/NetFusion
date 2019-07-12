@@ -54,7 +54,7 @@ namespace NetFusion.Rest.Resources.Hal
             {
                 throw new InvalidOperationException(
                     $"The embedded name for resource type: {embeddedResource.GetType().FullName} could not be determined.  " +
-                    $"The name was not provided and its type was not decorated with the attribute: {typeof(NamedResourceAttribute).FullName}");
+                    $"The name was not provided and its type was not decorated with the attribute: {typeof(ExposedResourceNameAttribute).FullName}");
             }
 
             Embedded = Embedded ?? new Dictionary<string, IResource>();
@@ -70,7 +70,7 @@ namespace NetFusion.Rest.Resources.Hal
         
         private static string GetResourceEmbeddedName(IResource resource)
         {
-            var namedResource = resource.GetAttribute<NamedResourceAttribute>();
+            var namedResource = resource.GetAttribute<ExposedResourceNameAttribute>();
             return namedResource?.ResourceName;
         }
     }

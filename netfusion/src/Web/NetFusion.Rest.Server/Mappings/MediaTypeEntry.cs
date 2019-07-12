@@ -53,27 +53,13 @@ namespace NetFusion.Rest.Server.Mappings
             if (resourceMeta == null) throw new ArgumentNullException(nameof(resourceMeta),
                 "Resource metadata cannot be null.");
 
-            // TODO:  Add back after refactor.
-            //if (_resourceTypeMeta.ContainsKey(resourceMeta.ResourceType)) 
-            //{
-            //    throw new InvalidOperationException(
-            //        $"Resource metadata already specified for resource type: {resourceMeta.ResourceType.FullName}");
-            //}
+            if (_resourceTypeMeta.ContainsKey(resourceMeta.ResourceType)) 
+            {
+                throw new InvalidOperationException(
+                    $"Resource metadata already specified for resource type: {resourceMeta.ResourceType.FullName}");
+            }
 
             _resourceTypeMeta[resourceMeta.ResourceType] = resourceMeta;
-        }
-
-        /// <summary>
-        /// Determines if there is metadata associated with a resource type.
-        /// </summary>
-        /// <param name="resourceType">The resource type.</param>
-        /// <returns>True if metadata for resource type specified.  Otherwise, False.</returns>
-        public bool ContainsResourceMeta(Type resourceType)
-        {
-			if (resourceType == null) throw new ArgumentNullException(nameof(resourceType),
-                "Resource type cannot be null.");
-            
-            return _resourceTypeMeta.ContainsKey(resourceType);
         }
     }
 }

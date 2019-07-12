@@ -54,7 +54,7 @@ namespace NetFusion.Rest.Server.Hal
             return base.WriteResponseBodyAsync(context, selectedEncoding);
         }
 
-        private void ApplyMetadataToResource(IHalResource resource, ResourceContext resourceContext)
+        private static void ApplyMetadataToResource(IHalResource resource, ResourceContext resourceContext)
         {
             resourceContext.Resource = resource;
             resourceContext.MediaModule.ApplyResourceMeta(InternetMediaTypes.HalJson, resourceContext);
@@ -91,7 +91,6 @@ namespace NetFusion.Rest.Server.Hal
         {
             return new ResourceContext
             {
-                RestModule = httpContext.GetService<IRestModule>(),
                 MediaModule = httpContext.GetService<IResourceMediaModule>(),
                 ApiMetadata = httpContext.GetService<IApiMetadataService>(),
                 UrlHelper = httpContext.GetService<IUrlHelper>(),

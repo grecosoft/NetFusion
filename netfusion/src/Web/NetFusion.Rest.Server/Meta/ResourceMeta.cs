@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Rest.Resources;
-using NetFusion.Rest.Server.Actions;
 using NetFusion.Rest.Server.Mappings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetFusion.Rest.Server.Linking;
 
 namespace NetFusion.Rest.Server.Meta
 {
     /// <summary>
-    /// Base resource metadata associated with resource.
+    /// Metadata associated with resource.
     /// </summary>
     /// <typeparam name="TResourceMeta">Derived metadata class containing specific metadata.  This is the type
     /// returned from the fluent methods.  This allows method chaining to be applied based on the derived type.
@@ -26,12 +26,12 @@ namespace NetFusion.Rest.Server.Meta
         /// Links associated with the resource.  Usually used to navigate 
         /// additional associated resources.
         /// </summary>
-        public IReadOnlyCollection<ActionLink> Links { get; }
+        public IReadOnlyCollection<ResourceLink> Links { get; }
 
-        private readonly List<ActionLink> _links = new List<ActionLink>();
+        private readonly List<ResourceLink> _links = new List<ResourceLink>();
         private readonly IResourceMap _resourceMap;
 
-        public ResourceMeta(IResourceMap resourceMap)
+        protected ResourceMeta(IResourceMap resourceMap)
         {
             Links = _links.AsReadOnly();
 
@@ -55,7 +55,7 @@ namespace NetFusion.Rest.Server.Meta
             var resourceLinkMeta = new ResourceLinkMeta<TController, TResource>();
             meta(resourceLinkMeta);
 
-            AddLinks(resourceLinkMeta.GetActionLinks());
+            AddLinks(resourceLinkMeta.GetResourceLinks());
             return (TResourceMeta)this;
         }
 
@@ -72,11 +72,11 @@ namespace NetFusion.Rest.Server.Meta
             var resourceLinkMeta = new ResourceLinkMeta<TResource>();
             meta(resourceLinkMeta);
 
-            AddLinks(resourceLinkMeta.GetActionLinks());
+            AddLinks(resourceLinkMeta.GetResourceLinks());
             return (TResourceMeta)this;
         }
 
-        protected void AddLinks(ActionLink[] links)
+        protected void AddLinks(ResourceLink[] links)
         {
             if (links == null)
             {
@@ -85,7 +85,7 @@ namespace NetFusion.Rest.Server.Meta
             _links.AddRange(links);
         }
 
-        protected void AddLink(ActionLink link)
+        protected void AddLink(ResourceLink link)
         {
             if (link == null)
             {

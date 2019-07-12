@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources;
-using NetFusion.Rest.Server.Actions;
 using System;
 using System.Linq.Expressions;
 using System.Net.Http;
+using NetFusion.Rest.Server.Linking;
 
 namespace NetFusion.Rest.Server.Meta
 {
@@ -14,11 +14,11 @@ namespace NetFusion.Rest.Server.Meta
     public class LinkDescriptor<TResource>
         where TResource : class, IResource
     {
-        private readonly ActionLink _actionLink;
+        private readonly ResourceLink _resourceLink;
 
-        public LinkDescriptor(ActionLink actionLink)
+        public LinkDescriptor(ResourceLink resourceLink)
         {
-            _actionLink = actionLink ?? throw new ArgumentNullException(nameof(actionLink),
+            _resourceLink = resourceLink ?? throw new ArgumentNullException(nameof(resourceLink),
                 "Action Link cannot be null.");
         }
 
@@ -29,7 +29,7 @@ namespace NetFusion.Rest.Server.Meta
             if (string.IsNullOrWhiteSpace(relName))
                 throw new ArgumentException("Relation Name not specified.", nameof(relName));
 
-            _actionLink.RelationName = relName;
+            _resourceLink.RelationName = relName;
             return this;
         }
 
@@ -38,7 +38,7 @@ namespace NetFusion.Rest.Server.Meta
             if (method == null) throw new ArgumentNullException(nameof(method), 
                 "HTTP Method cannot be null.");
 
-            _actionLink.Methods = new[] { method.Method };
+            _resourceLink.Methods = new[] { method.Method };
 
             return this;
         }
@@ -48,7 +48,7 @@ namespace NetFusion.Rest.Server.Meta
             if (string.IsNullOrWhiteSpace(href))
                 throw new ArgumentException("Href Value not specified.", nameof(href));
 
-            _actionLink.Href = href;
+            _resourceLink.Href = href;
             return this;
         }
 
@@ -59,7 +59,7 @@ namespace NetFusion.Rest.Server.Meta
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Name Value not specified.", nameof(name));
 
-            _actionLink.Name = name;
+            _resourceLink.Name = name;
             return this;
         }
 
@@ -68,7 +68,7 @@ namespace NetFusion.Rest.Server.Meta
             if (string.IsNullOrWhiteSpace(title))
                 throw new ArgumentException("Title Value not specified.", nameof(title));
 
-            _actionLink.Title = title;
+            _resourceLink.Title = title;
             return this;
         }
 
@@ -77,7 +77,7 @@ namespace NetFusion.Rest.Server.Meta
             if (string.IsNullOrWhiteSpace(type))
                 throw new ArgumentException("Type Value not specified.", nameof(type));
 
-            _actionLink.Type = type;
+            _resourceLink.Type = type;
             return this;
         }
 
@@ -86,7 +86,7 @@ namespace NetFusion.Rest.Server.Meta
             if (string.IsNullOrWhiteSpace(hrefLang))
                 throw new ArgumentException("HrefLang Value not specified.", nameof(hrefLang));
 
-            _actionLink.HrefLang = hrefLang;
+            _resourceLink.HrefLang = hrefLang;
             return this;
         }
 
@@ -95,20 +95,20 @@ namespace NetFusion.Rest.Server.Meta
         public LinkDescriptor<TResource> SetDeprecation<TController>(Expression<Action<TController, TResource>> action)
             where TController : ControllerBase
         {
-            _actionLink.Deprecation = BuildActionUrlLink(action);
-            return new LinkDescriptor<TResource>(_actionLink.Deprecation);
+            _resourceLink.Deprecation = BuildActionUrlLink(action);
+            return new LinkDescriptor<TResource>(_resourceLink.Deprecation);
         }
 
         public LinkDescriptor<TResource> SetDeprecation(HttpMethod httpMethod, Expression<Func<TResource, string>> resourceUrl)           
         {
-            _actionLink.Deprecation = BuildResourceUrl(httpMethod, resourceUrl);
-            return new LinkDescriptor<TResource>(_actionLink.Deprecation);
+            _resourceLink.Deprecation = BuildResourceUrl(httpMethod, resourceUrl);
+            return new LinkDescriptor<TResource>(_resourceLink.Deprecation);
         }
 
         public LinkDescriptor<TResource> SetDeprecation(HttpMethod httpMethod, string href)
         {
-            _actionLink.Deprecation = BuildUrl(httpMethod, href);
-            return new LinkDescriptor<TResource>(_actionLink.Deprecation);
+            _resourceLink.Deprecation = BuildUrl(httpMethod, href);
+            return new LinkDescriptor<TResource>(_resourceLink.Deprecation);
         }
 
         //---------------- OPTIONAL PROFILE LINK PROPERTY GENERATION  ----------------------
@@ -116,59 +116,59 @@ namespace NetFusion.Rest.Server.Meta
         public LinkDescriptor<TResource> SetProfile<TController>(Expression<Action<TController, TResource>> action)
             where TController : ControllerBase
         {
-            _actionLink.Profile = BuildActionUrlLink(action);
-            return new LinkDescriptor<TResource>(_actionLink.Profile);
+            _resourceLink.Profile = BuildActionUrlLink(action);
+            return new LinkDescriptor<TResource>(_resourceLink.Profile);
         }
 
         public LinkDescriptor<TResource> SetProfile(HttpMethod httpMethod, Expression<Func<TResource, string>> resourceUrl)
         {
-            _actionLink.Profile = BuildResourceUrl(httpMethod, resourceUrl);
-            return new LinkDescriptor<TResource>(_actionLink.Profile);
+            _resourceLink.Profile = BuildResourceUrl(httpMethod, resourceUrl);
+            return new LinkDescriptor<TResource>(_resourceLink.Profile);
         }
 
         public LinkDescriptor<TResource> SetProfile(HttpMethod httpMethod, string href)
         {
-            _actionLink.Profile = BuildUrl(httpMethod, href);
-            return new LinkDescriptor<TResource>(_actionLink.Profile);
+            _resourceLink.Profile = BuildUrl(httpMethod, href);
+            return new LinkDescriptor<TResource>(_resourceLink.Profile);
         }
 
 
         //-------------------- COMMON LINK PROPERTY GENERATION METHODS ----------------------
 
-        public ActionUrlLink BuildActionUrlLink<TController>(Expression<Action<TController, TResource>> action)
+        public ControllerActionLink BuildActionUrlLink<TController>(Expression<Action<TController, TResource>> action)
             where TController : ControllerBase
         {
             if (action == null) throw new ArgumentNullException(nameof(action), 
                 "Controller Action selector cannot be null.");
 
-            var actionLink = new ActionUrlLink();
-            var actionSelector = new ActionUrlSelector<TController, TResource>(actionLink, action);
+            var resourceLink = new ControllerActionLink();
+            var actionSelector = new ControllerActionRouteSelector<TController, TResource>(resourceLink, action);
 
             actionSelector.SetRouteInfo();
-            return actionLink;
+            return resourceLink;
         }
 
-        public ActionResourceLink<TResource> BuildResourceUrl(HttpMethod httpMethod, Expression<Func<TResource, string>> resourceUrl)
+        public StringFormattedLink<TResource> BuildResourceUrl(HttpMethod httpMethod, Expression<Func<TResource, string>> resourceUrl)
         {
             if (resourceUrl == null) throw new ArgumentNullException(nameof(resourceUrl), "Resource Delegate cannot be null.");
 
-            var actionLink = new ActionResourceLink<TResource>(resourceUrl);
-            var linkDescriptor = new LinkDescriptor<TResource>(actionLink);
+            var resourceLink = new StringFormattedLink<TResource>(resourceUrl);
+            var linkDescriptor = new LinkDescriptor<TResource>(resourceLink);
 
             linkDescriptor.SetMethod(httpMethod);
-            return actionLink;
+            return resourceLink;
         }
 
-        public ActionLink BuildUrl(HttpMethod httpMethod, string href)
+        public ResourceLink BuildUrl(HttpMethod httpMethod, string href)
         {
             if (string.IsNullOrWhiteSpace(href)) throw new ArgumentException("HREF value not specified.", nameof(href));
 
-            var actionLink = new ActionLink();
-            var linkDescriptor = new LinkDescriptor<TResource>(actionLink);
+            var resourceLink = new ResourceLink();
+            var linkDescriptor = new LinkDescriptor<TResource>(resourceLink);
 
             linkDescriptor.SetHref(href);
             linkDescriptor.SetMethod(httpMethod);
-            return actionLink;
+            return resourceLink;
         }
     }
 }

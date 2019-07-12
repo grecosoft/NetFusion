@@ -6,11 +6,11 @@ namespace NetFusion.Rest.Resources
     /// Used to map a string name to a given resource implementing the IResource interface.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class NamedResourceAttribute : Attribute
+    public class ExposedResourceNameAttribute : Attribute
     {
         public string ResourceName { get; }
 
-        public NamedResourceAttribute(string resourceName)
+        public ExposedResourceNameAttribute(string resourceName)
         {
             if (string.IsNullOrWhiteSpace(resourceName))
                 throw new ArgumentException("Resource name not specified.", nameof(resourceName));

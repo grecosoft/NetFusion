@@ -1,6 +1,6 @@
-﻿using NetFusion.Rest.Server.Actions;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using NetFusion.Rest.Server.Linking;
 
 namespace NetFusion.Rest.Server.Meta
 {
@@ -15,8 +15,10 @@ namespace NetFusion.Rest.Server.Meta
         Type ResourceType { get; }
 
         /// <summary>
-        /// The link metadata associated with the resource.
+        /// The link metadata associated with the resource.  Based on how the link is selected or specified,
+        /// one of the derived ResourceLink classes will be added to this collection.  If the link is just a
+        /// hard-coded string, then an instance of the the base ResourceLink class is added.
         /// </summary>
-        IReadOnlyCollection<ActionLink> Links { get; }
+        IReadOnlyCollection<ResourceLink> Links { get; }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources;
-using NetFusion.Rest.Server.Actions;
 using NetFusion.Web.Mvc.Metadata.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetFusion.Rest.Server.Linking;
 
 namespace NetFusion.Rest.Server.Mappings
 {
@@ -14,6 +14,12 @@ namespace NetFusion.Rest.Server.Mappings
     /// </summary>
     public abstract class ResourceProvider : IResourceProvider
     {
+        /// <summary>
+        /// If the resource type being returned supports the ILinkedResource interface,
+        /// the link metadata is used to generate resource specific URLs.  A derived
+        /// provider can override or extended this based implementation.
+        /// </summary>
+        /// <param name="context">The context for the current response.</param>
         public virtual void ApplyResourceMeta(ResourceContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
@@ -26,69 +32,70 @@ namespace NetFusion.Rest.Server.Mappings
 
             linkedResource.Links = linkedResource.Links ?? new Dictionary<string, Link>();
 
-            foreach (ActionLink actionLink in context.Meta.Links)
+            // For each associated link metadata, generate the corresponding URL and
+            // associated it with the resource.
+            foreach (ResourceLink resourceLink in context.Meta.Links)
             {
                 // Note:  Common .NET trick this allows the method to be called based on
                 // the runtime type and not the compile-time type.
-                SetLinkUrl(context, (dynamic)actionLink);
+                SetLinkUrl(context, (dynamic)resourceLink);
             }
         }
 
         // Called for action link consisting of a hard-coded URL value.  
-        private Link SetLinkUrl(ResourceContext context, ActionLink actionLink)
+        private Link SetLinkUrl(ResourceContext context, ResourceLink resourceLink)
         {
             var link = new Link
             {
-                Href = actionLink.Href,
-                Methods = actionLink.Methods.ToArray()
+                Href = resourceLink.Href,
+                Methods = resourceLink.Methods.ToArray()
             };
 
-            UpdateLinkDescriptorsAndResource(context, actionLink, link);
+            UpdateLinkDescriptorsAndResource(context, resourceLink, link);
             return link;
         }
 
         // Called for action link consisting of a string interpolation format based on resource properties.
-        private Link SetLinkUrl(ResourceContext context, ActionResourceLink actionLink)
+        private Link SetLinkUrl(ResourceContext context, StringFormattedLink resourceLink)
         {
             var link = new Link
             {
-                Href = actionLink.FormatUrl(context.Resource),
-                Methods = actionLink.Methods.ToArray()
+                Href = resourceLink.FormatUrl(context.Resource),
+                Methods = resourceLink.Methods.ToArray()
             };
 
-            UpdateLinkDescriptorsAndResource(context, actionLink, link);
+            UpdateLinkDescriptorsAndResource(context, resourceLink, link);
             return link;
         }
 
         // Called for action link containing information based on an expression, specified at compile time, selecting a
         // controller's action method.  The expression also specifies which resource properties should be used for
         // the action's route parameters. 
-        private Link SetLinkUrl(ResourceContext context, ActionUrlLink actionLink)
+        private Link SetLinkUrl(ResourceContext context, ControllerActionLink resourceLink)
         {
-            string controllerSuffix = context.RestModule.GetControllerSuffix();
-            string controllerName = actionLink.Controller.Replace(controllerSuffix, string.Empty);
+            string controllerName = resourceLink.Controller.Replace("Controller", string.Empty);
 
-            var routeValues = GetModelRouteValues(context, actionLink);
+            var routeValues = GetResourceRouteValues(context, resourceLink);
             var link = new Link
             {
                 // Delegate to ASP.NET Core to get the URL corresponding to the route-values.
-                Href = context.UrlHelper.Action(actionLink.Action, controllerName, routeValues),
+                Href = context.UrlHelper.Action(resourceLink.Action, controllerName, routeValues),
                 Templated = false,
-                Methods = actionLink.Methods.ToArray()
+                Methods = resourceLink.Methods.ToArray()
             };
 
-            UpdateLinkDescriptorsAndResource(context, actionLink, link);
+            UpdateLinkDescriptorsAndResource(context, resourceLink, link);
             return link;
         }
 
         // For each controller action argument execute the cached expression on the resource
         // to get the corresponding resource property value.
-        private static Dictionary<string, object> GetModelRouteValues(ResourceContext context, ActionUrlLink halLink)
+        private static Dictionary<string, object> GetResourceRouteValues(ResourceContext context, ControllerActionLink resourceLink)
         {
-            var modelRouteValues = new Dictionary<string, object>(halLink.RouteValues.Count);
-            foreach (ActionParamValue actionParam in halLink.RouteValues)
+            var modelRouteValues = new Dictionary<string, object>(resourceLink.RouteParameters.Count);
+            foreach (RouteParameter routeParam in resourceLink.RouteParameters)
             {
-                modelRouteValues[actionParam.ActionParamName] = actionParam.GetModelPropValue(context.Resource);
+                modelRouteValues[routeParam.ActionParamName] = routeParam.GetPropValue(context.Resource);
             }
             return modelRouteValues;
         }
@@ -96,11 +103,11 @@ namespace NetFusion.Rest.Server.Mappings
         // Called for action link containing information based on an expression, specified at compile time, selecting a
         // controller's action method for which its corresponding URL template is used.  For this type of link, the 
         // consumer is responsible for specifying the route parameter values.
-        private Link SetLinkUrl(ResourceContext context, ActionTemplateLink actionLink)
+        private Link SetLinkUrl(ResourceContext context, TemplateUrlLink resourceLink)
         {
             var apiAction = context.ApiMetadata.GetApiAction(
-                actionLink.GroupTemplateName, 
-                actionLink.ActionTemplateName);
+                resourceLink.GroupTemplateName, 
+                resourceLink.ActionTemplateName);
 
             var link = new Link
             {
@@ -109,26 +116,26 @@ namespace NetFusion.Rest.Server.Mappings
             };
 
             MarkOptionalParams(apiAction, link);
-            UpdateLinkDescriptorsAndResource(context, actionLink, link);
+            UpdateLinkDescriptorsAndResource(context, resourceLink, link);
 
             return link;
         }
 
-        private void UpdateLinkDescriptorsAndResource(ResourceContext context, ActionLink actionLink, Link link)
+        private void UpdateLinkDescriptorsAndResource(ResourceContext context, ResourceLink resourceLink, Link link)
         {
-            SetLinkTemplatedIndicator(link);
-            SetLinkOptionalDescriptors(actionLink, link);
-            SetLinkBasedDescriptors(context, actionLink, link);
+            SetLinkTemplateIndicator(link);
+            SetLinkOptionalDescriptors(resourceLink, link);
+            SetLinkBasedDescriptors(context, resourceLink, link);
 
             // Only generate links with relation-names are added to the resource.
-            if (actionLink.RelationName != null)
+            if (resourceLink.RelationName != null)
             {
                 var linkedResource = (ILinkedResource)context.Resource;
-                linkedResource.Links.Add(actionLink.RelationName, link);
+                linkedResource.Links.Add(resourceLink.RelationName, link);
             }
         }
 
-        private static void SetLinkTemplatedIndicator(Link link)
+        private static void SetLinkTemplateIndicator(Link link)
         {
             // Value has already been determined based on URL link generation.
             if (link.Templated != null)
@@ -139,24 +146,24 @@ namespace NetFusion.Rest.Server.Mappings
             link.Templated = link.Href.Contains("{") && link.Href.Contains("}");
         }
 
-        private static void SetLinkOptionalDescriptors(ActionLink actionLink, Link link)
+        private static void SetLinkOptionalDescriptors(ResourceLink resourceLink, Link link)
         {
-            link.HrefLang = actionLink.HrefLang;
-            link.Name = actionLink.Name;
-            link.Title = actionLink.Title;
-            link.Type = actionLink.Type;
+            link.HrefLang = resourceLink.HrefLang;
+            link.Name = resourceLink.Name;
+            link.Title = resourceLink.Title;
+            link.Type = resourceLink.Type;
         }
 
-        private void SetLinkBasedDescriptors(ResourceContext context, ActionLink actionLink, Link link)
+        private void SetLinkBasedDescriptors(ResourceContext context, ResourceLink resourceLink, Link link)
         {
-            if (actionLink.Deprecation != null)
+            if (resourceLink.Deprecation != null)
             {
-                link.Deprecation = SetLinkUrl(context, (dynamic)actionLink.Deprecation);
+                link.Deprecation = SetLinkUrl(context, (dynamic)resourceLink.Deprecation);
             }
 
-            if (actionLink.Profile != null)
+            if (resourceLink.Profile != null)
             {
-                link.Profile = SetLinkUrl(context, (dynamic)actionLink.Profile);
+                link.Profile = SetLinkUrl(context, (dynamic)resourceLink.Profile);
             }
         }
            

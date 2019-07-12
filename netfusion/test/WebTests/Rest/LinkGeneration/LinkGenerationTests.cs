@@ -1,12 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Rest.Client;
-using NetFusion.Rest.Client.Settings;
-using NetFusion.Rest.Server.Plugin;
 using NetFusion.Test.Hosting;
-using NetFusion.Test.Plugins;
-using WebTests.Rest.ClientRequests;
 using WebTests.Rest.LinkGeneration.Client;
 using WebTests.Rest.LinkGeneration.Server;
 using WebTests.Rest.Setup;

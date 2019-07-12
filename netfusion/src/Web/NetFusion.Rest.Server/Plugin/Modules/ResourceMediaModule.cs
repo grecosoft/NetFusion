@@ -6,39 +6,22 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Mappings;
 using NetFusion.Rest.Server.Meta;
 
 namespace NetFusion.Rest.Server.Plugin.Modules
 {
     /// <summary>
-    /// Module called during the bootstrap process that resolves all resource-metadata associated classes
-    /// and caches the information to be used during application execution.
-    /// 
-    /// http://stateless.co/hal_specification.html
-    /// https://www.iana.org/assignments/link-relations/link-relations.xhtml#link-relations-1
+    /// Module called during the bootstrap process that resolves all resource-metadata associated
+    /// classes and caches the information to be used during application execution.  Based on the
+    /// request specified Accept header, this cached metadata is applied to returned resources.
     /// </summary>
-
     public class ResourceMediaModule : PluginModule, IResourceMediaModule
     {
         private IEnumerable<IResourceMap> ResourceMappings { get; set; }
 
         // MediaTypeName --> Entry
         private readonly Dictionary<string, MediaTypeEntry> _mediaResourceTypeMeta = new Dictionary<string, MediaTypeEntry>();
-
-        // ResourceType --> ExternalTypeName
-        private Dictionary<Type, string> _namedResourceModels;
-
-        // Caches the name associated with all resources decorated with the NamedResource attribute.
-        // This eliminates having to execute reflective code during application execution.
-        public override void Initialize()
-        {          
-            _namedResourceModels = Context.AllPluginTypes
-                .Where(pt => pt.HasAttribute<NamedResourceAttribute>())
-                .ToDictionary(pt => pt, 
-                    pt => pt.GetAttribute<NamedResourceAttribute>().ResourceName);
-        }
 
         // Caches all of the resource-metadata associated with resources for a specific media type.
         public override void Configure()
@@ -60,7 +43,7 @@ namespace NetFusion.Rest.Server.Plugin.Modules
                     _mediaResourceTypeMeta[mediaTypeEntry.MediaType] = mediaTypeEntry;
                 }
 
-                // Build the mapping.
+                // Add the configured resource metadata to the media-type entry.
                 resourceMap.BuildMap();
             
                 foreach (IResourceMeta resourceMeta in resourceMap.ResourceMeta)
@@ -70,7 +53,10 @@ namespace NetFusion.Rest.Server.Plugin.Modules
             }
         }
 
-        private IResourceProvider CreateProvider(IResourceMap resourceMap)
+        // A IResourceProvider implementation is responsible for applying the resource-metadata 
+        // to resources returned when the request has an Accept value (i.e. application/hal+json)
+        // indicating that the returned resource should be augmented.
+        private static IResourceProvider CreateProvider(IResourceMap resourceMap)
         {
             if (resourceMap.ProviderType == null)
             {
@@ -83,12 +69,14 @@ namespace NetFusion.Rest.Server.Plugin.Modules
 
         private (MediaTypeEntry entry, bool ok) GetMediaTypeEntry(string mediaType)
         {
-            if (mediaType == null) throw new ArgumentNullException(nameof(mediaType));
+            if (string.IsNullOrWhiteSpace(mediaType))
+                throw new ArgumentException("Media type not specified.", nameof(mediaType));
 
             bool isFound = _mediaResourceTypeMeta.TryGetValue(mediaType, out MediaTypeEntry mediaTypeEntry);
             return (mediaTypeEntry, isFound);
         }    
 
+        // TODO:  Determine why this is not being called and it should be added back.
         public IResourceMeta GetRequestedResourceMediaMeta(
             IHeaderDictionary headers,
             Type resourceType)
@@ -111,21 +99,15 @@ namespace NetFusion.Rest.Server.Plugin.Modules
                 return null;
             }
 
-			var entryResult = GetMediaTypeEntry(mediaType.ToString());
-			var metaResult = entryResult.entry.GetResourceTypeMeta(resourceType);
+			var (entry, _) = GetMediaTypeEntry(mediaType.ToString());
+			var metaResult = entry.GetResourceTypeMeta(resourceType);
 
             return metaResult.meta;
         }
 
-        public string GetMappedResourceName(Type resourceType)
-        {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType),
-                "Resource type cannot be null.");
-
-            _namedResourceModels.TryGetValue(resourceType, out string resourceName);
-            return resourceName;
-        }
-
+        // Determines if there is metadata associated with the resource being returned
+        // for a given media-type.  If found, the metadata is set on the context and 
+        // passed to the associated provider.
         public bool ApplyResourceMeta(string mediaType, ResourceContext context)
         {
             if (string.IsNullOrWhiteSpace(mediaType))
@@ -133,17 +115,17 @@ namespace NetFusion.Rest.Server.Plugin.Modules
 
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            var entryResult = GetMediaTypeEntry(mediaType);
-            if (entryResult.ok)
+            var (entry, ok) = GetMediaTypeEntry(mediaType);
+            if (ok)
             {
-                var metaResult = entryResult.entry.GetResourceTypeMeta(context.Resource.GetType());
-                if (!metaResult.ok)
+                var (meta, hasMeta) = entry.GetResourceTypeMeta(context.Resource.GetType());
+                if (!hasMeta)
                 {
                     return false;
                 }
 
-                context.Meta = metaResult.meta;
-                entryResult.entry.Provider.ApplyResourceMeta(context);
+                context.Meta = meta;
+                entry.Provider.ApplyResourceMeta(context);
             }
 
             return true;

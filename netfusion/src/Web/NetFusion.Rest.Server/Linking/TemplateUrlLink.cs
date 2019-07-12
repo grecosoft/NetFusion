@@ -1,10 +1,9 @@
-﻿namespace NetFusion.Rest.Server.Actions
+﻿namespace NetFusion.Rest.Server.Linking
 {
     /// <summary>
-    /// Represents a link containing an URL template with tokens 
-    /// to be replaced by the calling client.
+    /// Represents a link containing an URL template with tokens to be replaced by the calling client.
     /// </summary>
-    public class ActionTemplateLink : ActionLink
+    public class TemplateUrlLink : ResourceLink
     {
         /// <summary>
         /// The group name specified on a controller using the GroupMeta attribute.

@@ -6,7 +6,7 @@ namespace WebTests.Rest.ClientRequests.Server
     /// <summary>
     /// Server side resource returned by the API Controller under-test.
     /// </summary>
-    [NamedResource("cust-address")]
+    [ExposedResourceName("cust-address")]
     public class AddressResource : HalResource
     {
         public string AddressId { get; set; }

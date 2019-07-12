@@ -1,31 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources;
-using NetFusion.Rest.Server.Actions;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Net.Http;
+using NetFusion.Rest.Server.Linking;
 
 namespace NetFusion.Rest.Server.Meta
 {
     /// <summary>
-    /// Contains methods creating ActionLink instances and associating metadata.
+    /// Contains methods creating ResourceLink instances and associating metadata.
     /// </summary>
     /// <typeparam name="TResource">The type of resource.</typeparam>
     public class ResourceLinkMeta<TResource>
         where TResource : class, IResource
     {
-        private readonly List<ActionLink> _actionLinks = new List<ActionLink>();
+        private readonly List<ResourceLink> _resourceLinks = new List<ResourceLink>();
       
         /// <summary>
-        /// Returns the ActionLink instance populated with link metadata.
+        /// Returns the ResourceLink instances populated with link metadata.
         /// </summary>
-        /// <returns>Instance of the created ActionLink.</returns>
-        internal ActionLink[] GetActionLinks() => _actionLinks.ToArray();
+        /// <returns>Instance of the created ResourceLinks.</returns>
+        internal ResourceLink[] GetResourceLinks() => _resourceLinks.ToArray();
 
-        protected void AddActionLink(ActionLink actionLink)
+        protected void AddResourceLink(ResourceLink resourceLink)
         {
-            _actionLinks.Add(actionLink);
+            _resourceLinks.Add(resourceLink);
         }
 
         /// <summary>
@@ -40,10 +40,10 @@ namespace NetFusion.Rest.Server.Meta
             if (string.IsNullOrWhiteSpace(relName)) throw new ArgumentException("Relation Name not specified.", nameof(relName));
             if (string.IsNullOrWhiteSpace(href)) throw new ArgumentException("HREF value not specified.", nameof(href));
 
-            var actionLink = new ActionLink();
-            var linkDescriptor = new LinkDescriptor<TResource>(actionLink);
+            var resourceLink = new ResourceLink();
+            var linkDescriptor = new LinkDescriptor<TResource>(resourceLink);
 
-            AddActionLink(actionLink);
+            AddResourceLink(resourceLink);
 
             linkDescriptor.SetRelName(relName);
             linkDescriptor.SetHref(href);
@@ -53,8 +53,7 @@ namespace NetFusion.Rest.Server.Meta
         }
 
         /// <summary>
-        /// Create a named link related for a parameterized URI containing place holds based on
-        /// resource properties to be substituted at link resolution time. 
+        /// Create a named link based on string interpolation based on resource properties. 
         /// </summary>
         /// <param name="relName">The relation name.</param>
         /// <param name="httpMethod">The HTTP method used to invoke URI.</param>
@@ -70,19 +69,22 @@ namespace NetFusion.Rest.Server.Meta
             if (resourceUrl == null) throw new ArgumentNullException(nameof(resourceUrl), 
                 "Resource Delegate cannot be null.");
 
-            var actionLink = new ActionResourceLink<TResource>(resourceUrl);
-            var linkDescriptor = new LinkDescriptor<TResource>(actionLink);
+            var resourceLink = new StringFormattedLink<TResource>(resourceUrl);
+            var linkDescriptor = new LinkDescriptor<TResource>(resourceLink);
 
-            AddActionLink(actionLink);
+            AddResourceLink(resourceLink);
 
             linkDescriptor.SetRelName(relName);
             linkDescriptor.SetMethod(httpMethod);
             return linkDescriptor;
         }
     }
+    
+    
+    
 
     /// <summary>
-    ///  Contains methods for creating ActionLink instances based on expressions for a given controller and resource type.
+    ///  Contains methods for creating ResourceLink instances based on expressions for a given controller and resource type.
     /// </summary>
     /// <typeparam name="TController">The controller type associated with the link metadata.</typeparam>
     /// <typeparam name="TResource">The resource type associated with the link metadata.</typeparam>
@@ -106,18 +108,18 @@ namespace NetFusion.Rest.Server.Meta
             if (action == null) throw new ArgumentNullException(nameof(action),
                 "Controller Action selector cannot be null.");
 
-            var actionLink = new ActionUrlLink();
-            var actionSelector = new ActionUrlSelector<TController, TResource>(actionLink, action);          
-            var linkDescriptor = new LinkDescriptor<TResource>(actionLink);
+            var resourceLink = new ControllerActionLink();
+            var actionSelector = new ControllerActionRouteSelector<TController, TResource>(resourceLink, action);          
+            var linkDescriptor = new LinkDescriptor<TResource>(resourceLink);
 
-            AddActionLink(actionLink);
+            AddResourceLink(resourceLink);
 
             linkDescriptor.SetRelName(relName);
             actionSelector.SetRouteInfo();
 
             return linkDescriptor;
         }
-
+   
         /// <summary>
         /// Used to specify a link template associated with a specified relation name for a controller
         /// action method taking zero arguments.
@@ -231,11 +233,11 @@ namespace NetFusion.Rest.Server.Meta
             if (action == null) throw new ArgumentNullException(nameof(action), 
                 "Controller Action selector cannot be null.");
 
-            var actionLink = new ActionTemplateLink();
-            var actionSelector = new ActionTemplateSelector<TController>(actionLink, action);
-            var linkDescriptor = new LinkDescriptor<TResource>(actionLink);
+            var resourceLink = new TemplateUrlLink();
+            var actionSelector = new ControllerActionTemplateSelector<TController>(resourceLink, action);
+            var linkDescriptor = new LinkDescriptor<TResource>(resourceLink);
 
-            AddActionLink(actionLink);
+            AddResourceLink(resourceLink);
 
             linkDescriptor.SetRelName(relName);
             actionSelector.SetTemplateInfo();

@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Microsoft.AspNetCore.Mvc;
-using NetFusion.AMQP.Plugin;
 using NetFusion.Messaging.Plugin;
 using NetFusion.MongoDB.Plugin;
 using NetFusion.RabbitMQ.Plugin;

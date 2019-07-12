@@ -21,7 +21,6 @@ namespace NetFusion.Rest.Server.Mappings
 
         // Services that can be utilized when adding the metadata
         // to the resource instance.
-        public IRestModule RestModule { get; set; }
         public IResourceMediaModule MediaModule { get; set; }
         public IApiMetadataService ApiMetadata { get; set; }
         public IUrlHelper UrlHelper { get; set; }

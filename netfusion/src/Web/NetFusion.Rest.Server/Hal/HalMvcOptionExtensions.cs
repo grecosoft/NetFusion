@@ -30,7 +30,7 @@ namespace NetFusion.Rest.Server.Hal
                 NullValueHandling = NullValueHandling.Ignore };
 
             // Add the HAL formatter to the MVC pipeline.
-            options.OutputFormatters.Add(new HalFormatter(settings, ArrayPool<Char>.Create()));
+            options.OutputFormatters.Add(new HalFormatter(settings, ArrayPool<char>.Create()));
             return options;
         }
     }

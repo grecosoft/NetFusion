@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Bootstrap.Exceptions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Logging;
 

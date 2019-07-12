@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using NetFusion.Rest.Resources;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
+using NetFusion.Rest.Resources;
 
 // ReSharper disable UnusedTypeParameter
-namespace NetFusion.Rest.Server.Actions
+namespace NetFusion.Rest.Server.Linking
 {
     /// <summary>
     /// Used to select a controller's action method for generating an URL resource related link.
@@ -16,17 +16,17 @@ namespace NetFusion.Rest.Server.Actions
     /// route values.  The resulting URL will be a complete URL with all route parameters replaced
     /// with the corresponding resource property values.
     /// </summary>
-    public class ActionUrlSelector<TController, TResource>
+    public class ControllerActionRouteSelector<TController, TResource>
         where TController : ControllerBase
         where TResource : class, IResource
     {
-        private readonly ActionUrlLink _link;
+        private readonly ControllerActionLink _resourceLink;
         private readonly LambdaExpression _action;
 
-        public ActionUrlSelector(ActionUrlLink link, LambdaExpression action)
+        public ControllerActionRouteSelector(ControllerActionLink resourceLink, LambdaExpression action)
         {
             _action = action;
-            _link = link;
+            _resourceLink = resourceLink;
         }
 
         public void SetRouteInfo()
@@ -39,9 +39,9 @@ namespace NetFusion.Rest.Server.Actions
         {
             var controllerAction = (MethodCallExpression)action.Body;
 
-            _link.Controller = controllerAction.Method.DeclaringType.Name;
-            _link.Action = controllerAction.Method.Name;
-            _link.Methods = GetHttpMethods(controllerAction.Method);
+            _resourceLink.Controller = controllerAction.Method.DeclaringType?.Name;
+            _resourceLink.Action = controllerAction.Method.Name;
+            _resourceLink.Methods = GetHttpMethods(controllerAction.Method);
         }
 
         private static IEnumerable<string> GetHttpMethods(MemberInfo actionMethodInfo)
@@ -61,7 +61,7 @@ namespace NetFusion.Rest.Server.Actions
                                                .OrderBy(p => p.Position)
                                                .ToArray();
 
-            for (int i = 0; i < controllerAction.Arguments.Count(); i++)
+            for (int i = 0; i < controllerAction.Arguments.Count; i++)
             {
                 // The input argument to the action method parameter:
                 var passedArg = controllerAction.Arguments[i];
@@ -70,9 +70,9 @@ namespace NetFusion.Rest.Server.Actions
                 {
                     var propInfo = (PropertyInfo)propExpArg.Member;
                     var actionParam = actionParams[i];
-                    var routeValue = new ActionParamValue(actionParam.Name, propInfo);
+                    var routeValue = new RouteParameter(actionParam.Name, propInfo);
 
-                    _link.AddRouteValue(routeValue);
+                    _resourceLink.AddRouteValue(routeValue);
                     continue;
                 }
 
@@ -82,9 +82,9 @@ namespace NetFusion.Rest.Server.Actions
                     var operand = (MemberExpression)unaryExpArg.Operand;
                     var propInfo = (PropertyInfo)operand.Member;
                     var actionParam = actionParams[i];
-                    var routeValue = new ActionParamValue(actionParam.Name, propInfo);
+                    var routeValue = new RouteParameter(actionParam.Name, propInfo);
 
-                    _link.AddRouteValue(routeValue);
+                    _resourceLink.AddRouteValue(routeValue);
                 }
             }
         }  

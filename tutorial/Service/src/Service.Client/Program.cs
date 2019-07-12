@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NetFusion.AMQP.Plugin;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Builder;
 using NetFusion.Messaging.Plugin;

@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Primitives;
 using NetFusion.Rest.Resources;
 using System.Linq;
-using NetFusion.Rest.Server.Plugin;
+using NetFusion.Rest.Server.Resources;
 
 namespace NetFusion.Rest.Server.Hal
 {
@@ -15,14 +16,10 @@ namespace NetFusion.Rest.Server.Hal
     public class HalEmbeddedResourceContext : IHalEmbeddedResourceContext
     {
         private readonly IActionContextAccessor _contextAccessor;
-        private readonly IResourceMediaModule _resourceModule;
 
-        public HalEmbeddedResourceContext(
-            IActionContextAccessor contextAccessor,
-            IResourceMediaModule resourceModule)
+        public HalEmbeddedResourceContext(IActionContextAccessor contextAccessor)
         {
-            _contextAccessor = contextAccessor ?? throw new System.ArgumentNullException(nameof(contextAccessor));
-            _resourceModule = resourceModule ?? throw new System.ArgumentNullException(nameof(resourceModule));
+            _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
         }
 
         public bool IsResourceRequested<TResource>() where TResource : IResource
@@ -33,8 +30,8 @@ namespace NetFusion.Rest.Server.Hal
                 return true;
             }
 
-            var mappedResourceName = _resourceModule.GetMappedResourceName(typeof(TResource));
-            return RequestedEmbeddedResources.Contains(mappedResourceName);
+            var resourceName = typeof(TResource).GetExposedResourceTypeName();
+            return resourceName != null && RequestedEmbeddedResources.Contains(resourceName);
         }
 
         // The client can specify an embed query-string parameter to indicate to the server
