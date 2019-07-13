@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using System.Reflection;
 using NetFusion.Rest.Resources;
 
 namespace NetFusion.Rest.Server.Linking

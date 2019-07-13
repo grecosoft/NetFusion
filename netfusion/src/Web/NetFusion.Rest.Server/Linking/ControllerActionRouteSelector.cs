@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -25,8 +26,8 @@ namespace NetFusion.Rest.Server.Linking
 
         public ControllerActionRouteSelector(ControllerActionLink resourceLink, LambdaExpression action)
         {
-            _action = action;
-            _resourceLink = resourceLink;
+            _resourceLink = resourceLink ?? throw new ArgumentNullException(nameof(resourceLink));
+            _action = action ?? throw new ArgumentNullException(nameof(action));
         }
 
         public void SetRouteInfo()

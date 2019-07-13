@@ -27,6 +27,8 @@ namespace NetFusion.Rest.Server.Meta
         {
             _resourceLinks.Add(resourceLink);
         }
+        
+        //--------- STRING BASED LINKS ------------------------------------------
 
         /// <summary>
         /// Creates a named link relation for a hard-coded URI value.
@@ -81,6 +83,7 @@ namespace NetFusion.Rest.Server.Meta
     }
     
     
+    //--------- CONTROLLER/ACTION BASED LINKS ------------------------------------------
     
 
     /// <summary>
@@ -119,6 +122,9 @@ namespace NetFusion.Rest.Server.Meta
 
             return linkDescriptor;
         }
+        
+        
+        //--------- CONTROLLER/ACTION TEMPLATE BASED LINKS ------------------------------------------
    
         /// <summary>
         /// Used to specify a link template associated with a specified relation name for a controller

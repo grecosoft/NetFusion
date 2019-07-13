@@ -74,8 +74,8 @@ namespace NetFusion.Rest.Server.Mappings
         private Link SetLinkUrl(ResourceContext context, ControllerActionLink resourceLink)
         {
             string controllerName = resourceLink.Controller.Replace("Controller", string.Empty);
-
             var routeValues = GetResourceRouteValues(context, resourceLink);
+            
             var link = new Link
             {
                 // Delegate to ASP.NET Core to get the URL corresponding to the route-values.
@@ -89,7 +89,7 @@ namespace NetFusion.Rest.Server.Mappings
         }
 
         // For each controller action argument execute the cached expression on the resource
-        // to get the corresponding resource property value.
+        // to get the corresponding resource property value for that route parameter.
         private static Dictionary<string, object> GetResourceRouteValues(ResourceContext context, ControllerActionLink resourceLink)
         {
             var modelRouteValues = new Dictionary<string, object>(resourceLink.RouteParameters.Count);

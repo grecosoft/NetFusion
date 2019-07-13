@@ -118,7 +118,7 @@ namespace NetFusion.Rest.Server.Meta
             {
                 throw new InvalidOperationException(
                     $"Resource linking requires all controller method names to be unique.  Controller: {controllerType.Name} " + 
-                    $"has the following duplicated methods: {String.Join(" | ", duplicateActionNames)}");
+                    $"has the following duplicated methods: {string.Join(" | ", duplicateActionNames)}");
             }
         }
     }

@@ -45,7 +45,7 @@ namespace NetFusion.Rest.Server.Linking
             if (attrib == null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(ActionMetaAttribute)} not specified on action: {action.Name} for controller: {action.DeclaringType.FullName}.");
+                    $"{nameof(ActionMetaAttribute)} not specified on action: {action.Name} for controller: {action.DeclaringType?.FullName}.");
             }
             return attrib.ActionName;
         }
