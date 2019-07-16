@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Validation;
 using NetFusion.Serialization;
 
@@ -23,7 +24,7 @@ namespace NetFusion.Test.Container
         internal IServiceCollection Services { get; private set; }
         internal IConfigurationBuilder ConfigBuilder { get; private set; }
 
-        internal TestTypeResolver Resolver { get; private set; }
+        internal ITypeResolver Resolver { get; private set; }
         
         // Reference to the composite-container in which plugins are registered
         // and is responsible for composing the plugins into a ICompositeApp 
@@ -33,11 +34,11 @@ namespace NetFusion.Test.Container
        
         private ContainerFixture() { }
 
-        private static ContainerFixture CreateFixture()
+        private static ContainerFixture CreateFixture(ITypeResolver resolver)
         {
             return new ContainerFixture
             {
-                Resolver = new TestTypeResolver(),
+                Resolver = resolver,
                 ConfigBuilder = new ConfigurationBuilder(),
 
                 Services = new ServiceCollection()
@@ -139,7 +140,7 @@ namespace NetFusion.Test.Container
             if (test == null) throw new ArgumentNullException(nameof(test),
                 "Test delegate cannot be null.");
 
-            var fixture = CreateFixture();
+            var fixture = CreateFixture(new TestTypeResolver());
             test(fixture);
 
             fixture._compositeApp?.Stop();
@@ -157,10 +158,45 @@ namespace NetFusion.Test.Container
             if (test == null) throw new ArgumentNullException(nameof(test),
                 "Test delegate cannot be null.");
 
-            var fixture = CreateFixture();
+            var fixture = CreateFixture(new TestTypeResolver());
             await test(fixture).ConfigureAwait(false);
 
             fixture._compositeApp?.Stop();
-        }        
+        }      
+        
+        /// <summary>
+        /// Executes a test delegate passed an instance of ContainerFixture that
+        /// can be Arranged and Asserted.
+        /// </summary>
+        /// <param name="test">Method specified by the unit-test to execute logic against
+        /// a created test-fixture instance.</param>
+        public static void Execute(Action<ContainerFixture> test)
+        {
+            if (test == null) throw new ArgumentNullException(nameof(test),
+                "Test delegate cannot be null.");
+
+            var fixture = CreateFixture(new TypeResolver(new BootstrapLogger()));
+            test(fixture);
+
+            fixture._compositeApp?.Stop();
+        }
+        
+        /// <summary>
+        /// Creates a new test fixture for testing an application container.  The created
+        /// instance is passed to the provided test method used to execute the unit-test.
+        /// Once the test method completes, the test container is stopped.
+        /// </summary>
+        /// <param name="test">Method specified by the unit-test to execute logic against
+        /// a created test-fixture instance.</param>
+        public static async Task ExecuteAsync(Func<ContainerFixture, Task> test)
+        {
+            if (test == null) throw new ArgumentNullException(nameof(test),
+                "Test delegate cannot be null.");
+
+            var fixture = CreateFixture(new TypeResolver(new BootstrapLogger()));
+            await test(fixture).ConfigureAwait(false);
+
+            fixture._compositeApp?.Stop();
+        }      
     }
 }
