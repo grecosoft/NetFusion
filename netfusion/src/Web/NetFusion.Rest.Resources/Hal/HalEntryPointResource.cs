@@ -9,12 +9,6 @@
         /// <summary>
         /// Optional version indicator.
         /// </summary>
-        public string Version { get; set; }    
-        
-        /// <summary>
-        /// List of secondary services to which the client requesting
-        /// the entry point address can connect.
-        /// </summary>
-        public HalSecondaryService[] SecondaryServices { get; set; }
+        public string Version { get; set; } 
     }
 }
