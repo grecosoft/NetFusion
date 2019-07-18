@@ -57,6 +57,12 @@
         "replaces": "nf:host-port",
         "datatype":"int",
         "description": "The port used by WebApi host Plugin Component (defaults to 5050)."
+      },
+      "include-example": {
+        "type": "parameter",
+        "defaultValue": "false",
+        "datatype":"bool",
+        "description": "Includes a working example REST Api."
       }
     },
     "sources":[

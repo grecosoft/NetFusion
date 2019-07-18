@@ -1,5 +1,5 @@
 ﻿using NetFusion.Bootstrap.Plugins;
-using Solution.Context.Infra.Repositories;
+using Solution.Context.Infra.Plugin.Modules;
 
 namespace Solution.Context.Infra.Plugin
 {

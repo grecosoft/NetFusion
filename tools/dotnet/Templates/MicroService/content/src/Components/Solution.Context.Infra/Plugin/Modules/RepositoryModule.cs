@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Bootstrap.Dependencies;
+using NetFusion.Bootstrap.Catalog;
 using NetFusion.Bootstrap.Plugins;
 
-namespace Solution.Context.Infra.Repositories
+namespace Solution.Context.Infra.Plugin.Modules
 {
     public class RepositoryModule : PluginModule
     {

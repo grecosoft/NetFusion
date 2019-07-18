@@ -1,2 +1,2 @@
 Contains components response for handling Commands, Domain-Events, and Queries
-by delegating to services and repositories.
+by delegating to domain-entities, services and repositories.

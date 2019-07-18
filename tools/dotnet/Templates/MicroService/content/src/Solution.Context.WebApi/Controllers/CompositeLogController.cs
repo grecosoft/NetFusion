@@ -4,6 +4,10 @@ using NetFusion.Bootstrap.Container;
 
 namespace Solution.Context.WebApi.Controllers
 {
+    /// <summary>
+    /// Example controller returning the a detailed log describing
+    /// the plugins from which the application was composed.
+    /// </summary>
     [ApiController, Route("api/composite")]
     public class CompositeController : ControllerBase
     {
@@ -19,6 +23,5 @@ namespace Solution.Context.WebApi.Controllers
         {
             return Ok(_compositeApp.Log);
         }
-        
     }
 }
