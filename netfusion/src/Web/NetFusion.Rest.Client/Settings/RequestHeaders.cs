@@ -68,6 +68,26 @@ namespace NetFusion.Rest.Client.Settings
         }
 
         /// <summary>
+        /// Removes the header with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the header to be removed.</param>
+        public void Remove(string name)
+        {
+	        if (string.IsNullOrWhiteSpace(name))
+				throw new ArgumentException("Header name not specified.", nameof(name));
+	        
+	        _headers.Remove(name);
+        }
+
+        /// <summary>
+        /// Removes the authentication header.
+        /// </summary>
+        public void RemoveAuthHeader()
+        {
+	        Remove("Authorization");
+        }
+
+        /// <summary>
         /// Sets the Accept media-type header value.  To accept multiple media types,
         /// this method can be called multiple times.
         /// </summary>
@@ -111,7 +131,7 @@ namespace NetFusion.Rest.Client.Settings
 	    }
 
 	    /// <summary>
-	    /// Sets the Authroization header to the base64 encoded value created from
+	    /// Sets the Authorization header to the base64 encoded value created from
 	    /// joining all values with the ':' character.
 	    /// </summary>
 	    /// <param name="scheme">The custom scheme.</param>
