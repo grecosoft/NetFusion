@@ -12,19 +12,19 @@ namespace Demo.App.Plugin.Modules
 
         public override void Initialize()
         {
-            Context.Logger.LogDebug("--Initialize Called--");   
-            Context.Logger.LogDebug(Context.AppHost.Name);
-            Context.Logger.LogDebug(Context.Plugin.Name); 
+            Context.BootstrapLogger.Add(LogLevel.Debug, "--Initialize Called--");   
+            Context.BootstrapLogger.Add(LogLevel.Debug, Context.AppHost.Name);
+            Context.BootstrapLogger.Add(LogLevel.Debug, Context.Plugin.Name); 
 
             if (CalcModule != null) 
             {
-                Context.Logger.LogDebug("Module Reference Set!");
+                Context.BootstrapLogger.Add(LogLevel.Debug, "Module Reference Set!");
             }
         }
 
         public override void Configure()
         {
-            Context.Logger.LogDebug("--Configure Called--");
+            Context.BootstrapLogger.Add(LogLevel.Debug, "--Configure Called--");
         }
         
         protected override Task OnStartModuleAsync(IServiceProvider services)

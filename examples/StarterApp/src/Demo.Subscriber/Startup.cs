@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using NetFusion.AMQP.Plugin;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Builder;
+using NetFusion.Messaging.Plugin;
 using NetFusion.RabbitMQ.Plugin;
 using NetFusion.Redis.Plugin;
 
@@ -23,30 +24,22 @@ namespace Demo.Subscriber
     {
         // Microsoft Abstractions:
         private readonly IConfiguration _configuration;
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly IHostingEnvironment _hostingEnv;
 
-        public Startup(IConfiguration configuration, 
-            ILogger<CompositeContainer> logger, 
-            ILoggerFactory loggerFactory, 
-            IHostingEnvironment hostingEnv)
+        public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
-            _loggerFactory = loggerFactory;
-            _hostingEnv = hostingEnv;
-           
         }
         
         public void ConfigureServices(IServiceCollection services)
         {        
-            services.CompositeAppBuilder(_loggerFactory, _configuration)
+            services.CompositeContainer(_configuration)
                 
                 .AddRabbitMq()
                 .AddRedis()
-                .AddAmqp()
+              //  .AddAmqp()
 
                 .AddPlugin<WebApiPlugin>()
-                .Build();
+                .Compose();
 
             services.AddMvc();
         }

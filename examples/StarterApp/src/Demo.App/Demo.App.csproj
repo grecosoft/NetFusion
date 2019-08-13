@@ -6,9 +6,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.147" />
-    <PackageReference Include="Netfusion.Messaging" Version="3.2.147" />
-    <PackageReference Include="NetFusion.Settings" Version="3.2.147" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.152" />
+    <PackageReference Include="Netfusion.Messaging" Version="3.2.152" />
+    <PackageReference Include="NetFusion.Settings" Version="3.2.152" />
   </ItemGroup>
 
   <PropertyGroup>

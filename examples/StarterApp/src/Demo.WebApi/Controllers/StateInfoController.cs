@@ -7,7 +7,8 @@ using Demo.Domain.Repositories;
 namespace Demo.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class StateInfoController : Controller
+    [ApiController]
+    public class StateInfoController : ControllerBase
     {
         private IStateInfoRepository StateInfoRep { get; }
 

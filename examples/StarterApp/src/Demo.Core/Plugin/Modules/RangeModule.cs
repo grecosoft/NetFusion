@@ -9,8 +9,8 @@ namespace Demo.Core.Plugin.Modules
     {
         public override void Initialize() 
         {
-            var config = this.Context.Plugin.GetConfig<ValidRangeConfig>();
-            Context.Logger.LogDebug(config.ToIndentedJson());
+            var config = Context.Plugin.GetConfig<ValidRangeConfig>();
+            Context.BootstrapLogger.Add(LogLevel.Debug, config.ToIndentedJson());
         }
     }
 }

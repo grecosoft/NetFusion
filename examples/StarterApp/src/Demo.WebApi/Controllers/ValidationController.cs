@@ -1,4 +1,4 @@
-using Demo.App.Entities;
+using Demo.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Validation;

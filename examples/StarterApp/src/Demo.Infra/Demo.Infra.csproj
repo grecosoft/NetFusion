@@ -5,12 +5,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NetFusion.AMQP" Version="3.2.147" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.147" />
-    <PackageReference Include="NetFusion.Messaging" Version="3.2.147" />
-    <PackageReference Include="NetFusion.MongoDb" Version="3.2.147" />
-    <PackageReference Include="NetFusion.RabbitMQ" Version="3.2.147" />
-    <PackageReference Include="NetFusion.Redis" Version="3.2.147" />
+    <PackageReference Include="NetFusion.AMQP" Version="3.2.152" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.152" />
+    <PackageReference Include="NetFusion.Messaging" Version="3.2.152" />
+    <PackageReference Include="NetFusion.MongoDb" Version="3.2.152" />
+    <PackageReference Include="NetFusion.RabbitMQ" Version="3.2.152" />
+    <PackageReference Include="NetFusion.Redis" Version="3.2.152" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -6,7 +6,8 @@ using NetFusion.Messaging;
 namespace Demo.WebApi.Controllers
 {
     [Route("api/publisherexample")]
-    public class RedisExamplePubController : Controller
+    [ApiController]
+    public class RedisExamplePubController : ControllerBase
     {
         private static IMessagingService _messaging;
 

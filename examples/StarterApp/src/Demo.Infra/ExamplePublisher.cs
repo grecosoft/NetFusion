@@ -2,7 +2,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NetFusion.Common.Extensions;
-using NetFusion.Messaging.Core;
+using NetFusion.Messaging;
+using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Types;
 
 namespace Demo.Infra

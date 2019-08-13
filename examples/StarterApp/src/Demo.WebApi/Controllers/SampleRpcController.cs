@@ -8,7 +8,8 @@ using NetFusion.Messaging;
 namespace Demo.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class SampleRpcController : Controller
+    [ApiController]
+    public class SampleRpcController : ControllerBase
     {
         private readonly IMessagingService _messaging;
 

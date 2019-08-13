@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using NetFusion.Base.Validation;
 
-namespace Demo.App.Entities
+namespace Demo.Domain.Entities
 {
     public class Address : IValidatableType
     {

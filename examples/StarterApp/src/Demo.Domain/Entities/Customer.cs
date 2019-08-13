@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using NetFusion.Base.Validation;
 using System.Linq;
+using NetFusion.Base.Validation;
 
-namespace Demo.App.Entities
+namespace Demo.Domain.Entities
 {
     public class Customer : IValidatableType
     {
@@ -23,15 +23,13 @@ namespace Demo.App.Entities
         {
            Addresses.Add(address);
         }
+        
         public void Validate(IObjectValidator validator)
         {
             validator.Verify(FirstName != LastName, "First Name cannot Equal Last Name!");
-            validator.Verify(Addresses.Count() > 0, "Must have at least one address.");
-
-            foreach(Address address in Addresses)
-            {
-                validator.AddChild(address);
-            }
+            validator.Verify(Addresses.Any(), "Must have at least one address.");
+            
+            validator.AddChildren(Addresses);
         }
     }
 }

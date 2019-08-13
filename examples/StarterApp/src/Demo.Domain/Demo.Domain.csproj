@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.147" />
-    <PackageReference Include="NetFusion.Messaging.Types" Version="3.2.147" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.152" />
+    <PackageReference Include="NetFusion.Messaging.Types" Version="3.2.152" />
   </ItemGroup>
 
 </Project>

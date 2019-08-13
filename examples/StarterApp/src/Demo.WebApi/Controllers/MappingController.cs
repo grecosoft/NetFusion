@@ -7,7 +7,8 @@ using System.Linq;
 namespace Demo.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class MappingController : Controller
+    [ApiController]
+    public class MappingController : ControllerBase
     {
         private readonly SampleEntityService _entityService;
         private readonly IObjectMapper _objectMapper;

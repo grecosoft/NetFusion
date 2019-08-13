@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Builder;
@@ -16,16 +14,19 @@ namespace Demo.Subscriber
     {
         public static async Task  Main(string[] args)
         {
-            IWebHost webHost = BuildWebHost(args);
-
-            // Start all of the plugin modules:
-            await CompositeContainer.Instance.StartAsync();
-            await webHost.RunAsync();
-
-            // Stop all plugin modules:
             
-            ((CompositeContainer)CompositeContainer.Instance).Dispose();
-//            await CompositeContainer.Instance.StopAsync();
+            IWebHost webHost = BuildWebHost(args);
+            
+            var compositeApp = webHost.Services.GetService<ICompositeApp>();
+            var lifetime = webHost.Services.GetService<IApplicationLifetime>();
+
+            lifetime.ApplicationStopping.Register(() =>
+            {
+                compositeApp.Stop();
+            });
+                  
+            await compositeApp.StartAsync();
+            await webHost.RunAsync();  
             
             Console.WriteLine("Web Api Services Stopped.");
         }

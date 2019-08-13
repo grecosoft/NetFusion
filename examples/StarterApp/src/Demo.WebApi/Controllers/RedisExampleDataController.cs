@@ -6,7 +6,8 @@ using StackExchange.Redis;
 namespace Demo.WebApi.Controllers 
 {
     [Route("api/databaseexample")]
-    public class RedisExampleDataController : Controller
+    [ApiController]
+    public class RedisExampleDataController : ControllerBase
     {
         private readonly IDatabase _database;
 

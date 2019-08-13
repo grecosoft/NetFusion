@@ -2,7 +2,7 @@ using Demo.Domain.Events;
 using NetFusion.Base;
 using NetFusion.Redis.Publisher;
 
-namespace Demo.WebApi
+namespace Demo.Infra
 {
     public class ChannelRegistry : ChannelRegistryBase
     {

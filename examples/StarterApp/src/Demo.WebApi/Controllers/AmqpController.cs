@@ -8,7 +8,8 @@ using NetFusion.Messaging;
 namespace Demo.WebApi.Controllers
 {
     [Route("api/integration/amqp")]
-    public class AmqpController : Controller
+    [ApiController]
+    public class AmqpController : ControllerBase
     {
         private readonly IMessagingService _messaging;
 
@@ -30,6 +31,5 @@ namespace Demo.WebApi.Controllers
             await _messaging.PublishAsync(status);
             return Ok();
         }
-
     }
 }

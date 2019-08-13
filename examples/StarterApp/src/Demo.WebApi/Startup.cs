@@ -2,25 +2,20 @@ using Demo.App.Plugin;
 using Demo.Core.Plugin;
 using Demo.Core.Plugin.Configs;
 using Demo.Domain.Plugin;
-using Demo.Infra;
 using Demo.Infra.Plugin;
 using Demo.WebApi.Plugin;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using NetFusion.AMQP.Plugin;
-using NetFusion.Bootstrap.Container;
-using NetFusion.Bootstrap.Validation;
 using NetFusion.Builder;
 using NetFusion.Mapping.Plugin;
 using NetFusion.Messaging.Plugin;
-using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.MongoDB.Plugin;
 using NetFusion.RabbitMQ.Plugin;
 using NetFusion.Redis.Plugin;
 using NetFusion.Settings.Plugin;
+using NetFusion.Web.Mvc.Composite;
 
 namespace Demo.WebApi
 {
@@ -29,21 +24,15 @@ namespace Demo.WebApi
     {
         // Microsoft Abstractions:
         private readonly IConfiguration _configuration;
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly IHostingEnvironment _hostingEnv;
 
-        public Startup(IConfiguration configuration, ILogger<CompositeContainer> logger, ILoggerFactory loggerFactory, IHostingEnvironment hostingEnv)
+        public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
-            _loggerFactory = loggerFactory;
-            _hostingEnv = hostingEnv;
-            
-            logger.LogWarning("sfsdfsdf");
         }
         
         public void ConfigureServices(IServiceCollection services)
         {        
-            services.CompositeAppBuilder(_loggerFactory, _configuration)
+            services.CompositeContainer(_configuration)
                 
                 .AddSettings()
                 .AddMessaging()     
@@ -51,7 +40,7 @@ namespace Demo.WebApi
                 .AddMapping()
                 .AddMongoDb()
                 .AddRedis()
-                .AddAmqp()
+                //.AddAmqp()
                 
                 // This should be added for the validation example showing how to specify custom validation:
                 //.InitContainerConfig<ValidationConfig>(config =>
@@ -75,13 +64,18 @@ namespace Demo.WebApi
                 .AddPlugin<AppPlugin>()
                 .AddPlugin<DomainPlugin>()
                 .AddPlugin<WebApiPlugin>()
-                .Build();
+                .Compose();
 
             services.AddMvc();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         { 
+            if (env.IsDevelopment())
+            {
+                app.UseCompositeQuerying();
+            }
+            
             app.UseMvc();
         }
     }
