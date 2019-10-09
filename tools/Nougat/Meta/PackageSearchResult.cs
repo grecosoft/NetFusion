@@ -7,4 +7,4 @@ namespace Nougat.Meta
     {
         public PackageMeta[] Data { get; set; }
     }
-}
+} 
