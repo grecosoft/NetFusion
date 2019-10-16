@@ -12,19 +12,21 @@ namespace NetFusion.Bootstrap.Catalog
     public class TypeCatalog : ITypeCatalog
     {
         public IServiceCollection Services { get; }
-        private readonly IEnumerable<Type> _types;
+        private readonly Type[] _types;
 
         public TypeCatalog(IServiceCollection serviceCollection, IEnumerable<Type> types)
         {
             Services = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
-            _types = types ?? throw new ArgumentNullException(nameof(types));
+            _types = GetNonAbstractTypes(types ?? throw new ArgumentNullException(nameof(types)));
         }
         
         public TypeCatalog(IServiceCollection serviceCollection, params Type[] types)
         {
             Services = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
-            _types = types ?? throw new ArgumentNullException(nameof(types));
+            _types = GetNonAbstractTypes(types ?? throw new ArgumentNullException(nameof(types)));
         }
+
+        private static Type[] GetNonAbstractTypes(IEnumerable<Type> types) => types.Where(t => !t.IsAbstract).ToArray();
        
         public ITypeCatalog AsService<TService>(Func<Type, bool> filter, ServiceLifetime lifetime)
         {
@@ -65,7 +67,7 @@ namespace NetFusion.Bootstrap.Catalog
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
 
-            foreach (Type matchingType in _types.Where(filter).Where(t => !t.IsAbstract))
+            foreach (Type matchingType in _types.Where(filter))
             {
                 Type serviceType = GetServiceInterface(matchingType);
                 Services.Add(new ServiceDescriptor(serviceType, matchingType, lifetime));

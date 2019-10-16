@@ -14,7 +14,8 @@ namespace NetFusion.Bootstrap.Catalog
         /// <summary>
         /// Registers the types matching the provided filter as the specified service type.
         /// </summary>
-        /// <typeparam name="TService">The service registration type.</typeparam>
+        /// <typeparam name="TService">The service registration type.  All concrete
+        /// matching the supplied filter will be registered as TService.</typeparam>
         /// <param name="filter">The predicate used find matching types.</param>
         /// <param name="lifetime">The lifetime of the registered service.</param>
         /// <returns>Reference to type catalog.</returns>

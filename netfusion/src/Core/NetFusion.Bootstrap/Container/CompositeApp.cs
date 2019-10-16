@@ -9,6 +9,7 @@ using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Bootstrap.Validation;
+using NetFusion.Common.Extensions;
 
 namespace NetFusion.Bootstrap.Container
 {
@@ -147,7 +148,7 @@ namespace NetFusion.Bootstrap.Container
      
             var coreStartTask = StartPluginModules(services, _builder.CorePlugins);
             var appStartTask = StartPluginModules(services, _builder.AppPlugins);
-            var hostStartTask = StartPluginModules(services, new[] { _builder.HostPlugin });
+            var hostStartTask = StartPluginModules(services, _builder.HostPlugin);
 
             await Task.WhenAll(coreStartTask, appStartTask, hostStartTask);
 
@@ -156,7 +157,7 @@ namespace NetFusion.Bootstrap.Container
             await RunPluginModules(services);
         }
 
-        private async Task StartPluginModules(IServiceProvider services, IEnumerable<IPlugin> plugins)
+        private async Task StartPluginModules(IServiceProvider services, params IPlugin[] plugins)
         {
             foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
             {
@@ -205,7 +206,6 @@ namespace NetFusion.Bootstrap.Container
             ThrowIfStopped();
 
             ValidationConfig validationConfig = _builder.GetContainerConfig<ValidationConfig>();
-  
             return (IObjectValidator)Activator.CreateInstance(validationConfig.ValidatorType, obj);
         }
         
@@ -263,14 +263,14 @@ namespace NetFusion.Bootstrap.Container
         {
             IsStarted = false;
             
-            var hostStopTask = StopPluginModules(services, new[] { _builder.HostPlugin });
+            var hostStopTask = StopPluginModules(services, _builder.HostPlugin);
             var appStopTask = StopPluginModules(services, _builder.AppPlugins);
             var coreStopTask = StopPluginModules(services, _builder.CorePlugins);
 
             await Task.WhenAll(hostStopTask, appStopTask, coreStopTask);
         }
 
-        private async Task StopPluginModules(IServiceProvider services, IEnumerable<IPlugin> plugins)
+        private async Task StopPluginModules(IServiceProvider services, params IPlugin[] plugins)
         {
             foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
             {
@@ -282,18 +282,25 @@ namespace NetFusion.Bootstrap.Container
             }
         }
         
-        private Exception LogException(Exception ex)
+        private Exception LogException(ContainerException ex)
         {
-            _logger.LogErrorDetails(BootstrapLogEvents.BootstrapException, ex, "Composite-Application Exception");
+            if (ex.Details != null)
+            {
+                _builder.BootstrapLogger.Add(LogLevel.Error, 
+                    $"Composite Application Exception: {ex}; Details: {ex.Details.ToIndentedJson()}");
+                return ex;
+            }
+            
+            _builder.BootstrapLogger.Add(LogLevel.Error, $"Composite Application Exception: {ex}");
             return ex;
         }
-        
+
         private void ThrowIfStopped()
         {
             if (! IsStarted)
             {
                 throw new ContainerException(
-                    "The composite-application has been stopped and can no longer be accessed.");
+                    "The Composite Application has been stopped and can no longer be accessed.");
             }
         }
     }

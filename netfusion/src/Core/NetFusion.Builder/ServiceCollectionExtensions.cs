@@ -16,8 +16,10 @@ namespace NetFusion.Builder
         public static ICompositeContainerBuilder CompositeContainer(this IServiceCollection services,
             IConfiguration configuration)
         {
-            var resolver = new TypeResolver(new BootstrapLogger());
-            return new CompositeContainerBuilder(services, resolver, configuration);
+            var bootstrapLogger = new BootstrapLogger();
+            var resolver = new TypeResolver(bootstrapLogger);
+            
+            return new CompositeContainerBuilder(services, configuration, bootstrapLogger, resolver);
         }
     }
 }

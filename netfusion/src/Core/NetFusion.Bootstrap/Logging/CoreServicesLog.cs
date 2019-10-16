@@ -61,7 +61,6 @@ namespace NetFusion.Bootstrap.Logging
                     serializerMgr.GetType().AssemblyQualifiedName);
                 
                 var serializerDetails = new {
-                    SerializationManager = serializerMgr.GetType().FullName,
                     Serializers = serializerMgr.Serializers.Select(s => new {
                         s.ContentType,
                         SerializerType = s.GetType().FullName

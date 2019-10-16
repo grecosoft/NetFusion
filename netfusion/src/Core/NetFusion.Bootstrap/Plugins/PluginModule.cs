@@ -76,12 +76,12 @@ namespace NetFusion.Bootstrap.Plugins
             return OnStartModuleAsync(services);
         }
 
-        public virtual Task RunModuleAsync(IServiceProvider services)
+        public Task RunModuleAsync(IServiceProvider services)
         {
             return OnRunModuleAsync(services);
         }
 
-        public virtual Task StopModuleAsync(IServiceProvider services)
+        public Task StopModuleAsync(IServiceProvider services)
         {
             return OnStopModuleAsync(services);
         }

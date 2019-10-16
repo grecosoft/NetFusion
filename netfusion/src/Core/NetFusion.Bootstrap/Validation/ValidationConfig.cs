@@ -6,7 +6,7 @@ namespace NetFusion.Bootstrap.Validation
 {
     /// <summary>
     /// Container configuration used to register the IObjectValidator
-    /// implementation that should be used by the build composite-application.
+    /// implementation that should be used by the built composite-application.
     /// </summary>
     public class ValidationConfig : IContainerConfig
     {

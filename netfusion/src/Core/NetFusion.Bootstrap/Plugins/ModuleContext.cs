@@ -116,10 +116,8 @@ namespace NetFusion.Bootstrap.Plugins
         
         public void InitLogging(IServiceProvider services)
         {
-            var scopedLoggerType = typeof(ILogger<>).MakeGenericType(Plugin.GetType());
-
-            _loggerFactory = services.GetService<LoggerFactory>();
-            _logger = (ILogger)services.GetService(scopedLoggerType);
+            _loggerFactory = services.GetService<ILoggerFactory>();
+            _logger = _loggerFactory.CreateLogger(Plugin.GetType()); ;
         }
 
         private static IEnumerable<Type> FilteredTypesByPluginType(ICompositeAppBuilder builder, IPlugin plugin)

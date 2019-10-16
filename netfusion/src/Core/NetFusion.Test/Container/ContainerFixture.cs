@@ -71,7 +71,7 @@ namespace NetFusion.Test.Container
                 Services.AddSingleton<IValidationService, ValidationService>();
                 Services.AddSingleton<ISerializationManager, SerializationManager>();
 
-                _container = new CompositeContainer(Services, configuration);
+                _container = new CompositeContainer(Services, configuration, new BootstrapLogger());
                 return _container;
             }
         }
@@ -84,7 +84,7 @@ namespace NetFusion.Test.Container
         /// </summary>
         public void AssureContainerComposed()
         {
-            if (!ContainerUnderTest.IsComposted)
+            if (!ContainerUnderTest.IsComposed)
             {
                 ContainerUnderTest.Compose(Resolver);
             }

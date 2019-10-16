@@ -25,6 +25,7 @@ namespace NetFusion.Bootstrap.Container
             AssertPluginIdentity();
             AssertPluginMetadata();
             AssertPluginTypes();
+            AssertPluginConfigs();
         }
 
         private void AssertPluginIdentity()
@@ -81,6 +82,19 @@ namespace NetFusion.Bootstrap.Container
             {
                 throw new ContainerException("There can only be one host plugin.", 
                     "HostPluginTypes", hostPluginTypes);
+            }
+        }
+
+        private void AssertPluginConfigs()
+        {
+            var duplicateConfigTypes = _plugins.SelectMany(p => p.Configs)
+                .WhereDuplicated(c => c.GetType())
+                .ToArray();
+
+            if (duplicateConfigTypes.Any())
+            {
+                throw new ContainerException("A plugin configuration can only be registered once.", 
+                    "DuplicateConfigTypes", duplicateConfigTypes);
             }
         }
     }
