@@ -1,6 +1,6 @@
 ![image](./img/netfusionlogo.png)
 
-# Composite Plugin Architecture for .NET Core
+# Composite Plugin Microservice Architecture for .NET Core
 
 [![Build status](https://ci.appveyor.com/api/projects/status/8k6l6lvmuulk2y94?svg=true)](https://ci.appveyor.com/project/grecosoft/netfusion)
 
