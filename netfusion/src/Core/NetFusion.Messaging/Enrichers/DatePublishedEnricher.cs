@@ -13,7 +13,7 @@ namespace NetFusion.Messaging.Enrichers
         
         public override Task Enrich(IMessage message)
         {
-            AddMessageProperty(message, "DateReceived", _scopedDateReceived);
+            AddMessageProperty(message, "DatePublished", _scopedDateReceived);
             return base.Enrich(message);
         }
     }
