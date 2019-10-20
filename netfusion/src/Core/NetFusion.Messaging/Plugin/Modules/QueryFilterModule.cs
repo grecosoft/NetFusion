@@ -30,7 +30,7 @@ namespace NetFusion.Messaging.Plugin.Modules
         {
             foreach (var queryFilterType in QueryFilterTypes)
             {
-                services.AddScoped(queryFilterType);
+                services.AddScoped(typeof(IQueryFilter), queryFilterType);
             }
         }
 

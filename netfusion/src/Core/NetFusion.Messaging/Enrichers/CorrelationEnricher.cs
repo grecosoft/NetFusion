@@ -9,6 +9,8 @@ namespace NetFusion.Messaging.Enrichers
     /// </summary>
     public class CorrelationEnricher : MessageEnricher
     {
+        //The MessageEnricherModule registers all enrichers with a scoped lifetime,
+        // So the below guid value is unique per request.
         private readonly Guid _scopedCorrelationId = Guid.NewGuid();
         
         public override Task Enrich(IMessage message)

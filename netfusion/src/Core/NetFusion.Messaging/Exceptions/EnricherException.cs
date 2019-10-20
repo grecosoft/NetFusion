@@ -20,13 +20,7 @@ namespace NetFusion.Messaging.Exceptions
         {
             if (taskItem == null) throw new NullReferenceException(nameof(taskItem));
 
-            var sourceException = GetSourceException(taskItem);
-    
-            Details = new Dictionary<string, object>
-            {
-                { "Exception", sourceException?.ToString() },
-                { "Enricher", taskItem.Invoker.GetType().FullName }
-            };
+            Details["Enricher"] = taskItem.Invoker.GetType().FullName; 
         }
 
         private static Exception GetSourceException(TaskListItem<IMessageEnricher> taskItem)

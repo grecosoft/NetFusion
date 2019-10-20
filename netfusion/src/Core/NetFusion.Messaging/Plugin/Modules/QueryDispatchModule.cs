@@ -12,7 +12,7 @@ using NetFusion.Messaging.Internal;
 namespace NetFusion.Messaging.Plugin.Modules
 {
     /// <summary>
-    /// Plug-in module called during the bootstrap process to configure and cache
+    /// Plug-in module called during the bootstrap process to configure 
     /// the dispatching of queries to consumers.
     /// </summary>
     public class QueryDispatchModule : PluginModule,
@@ -80,17 +80,16 @@ namespace NetFusion.Messaging.Plugin.Modules
         public override void Log(IDictionary<string, object> moduleLog)
         {
             var messagingDispatchLog = new Dictionary<string, object>();
-            moduleLog["Query:Consumers"] = messagingDispatchLog;
+            moduleLog["Query_Consumers"] = messagingDispatchLog;
 
             foreach (var queryDispatcherRegistration in _queryDispatchers)
             {
                 var queryType = queryDispatcherRegistration.Key;
                 var queryDispatcher = queryDispatcherRegistration.Value;
-                var queryTypeName = queryType.FullName;
 
-                if (queryTypeName == null) continue;
+                if (queryType.FullName == null) continue;
                 
-                messagingDispatchLog[queryTypeName] = new {
+                messagingDispatchLog[queryType.FullName] = new {
                     Consumer = queryDispatcher.ConsumerType.FullName,
                     Method = queryDispatcher.HandlerMethod.Name,
                     queryDispatcher.IsAsync

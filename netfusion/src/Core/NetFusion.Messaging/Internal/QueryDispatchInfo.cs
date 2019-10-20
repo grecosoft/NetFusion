@@ -151,7 +151,7 @@ namespace NetFusion.Messaging.Internal
             if (result != null && IsAsyncWithResult)
             {
                 dynamic resultTask = result;
-                var resultValue = resultTask.Result;
+                var resultValue = (object)resultTask.Result;
                 
                 query.SetResult(resultValue);
                 return resultValue;

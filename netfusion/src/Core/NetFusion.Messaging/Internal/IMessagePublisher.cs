@@ -12,7 +12,7 @@ namespace NetFusion.Messaging.Internal
     public interface IMessagePublisher
     {
         /// <summary>
-        /// Specifies the scope to which publishers send messages to subscribers.
+        /// Specifies the scope to which publisher sends messages to subscribers.
         /// </summary>
         IntegrationTypes IntegrationType { get; }
 

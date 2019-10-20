@@ -50,8 +50,11 @@ namespace NetFusion.Messaging.Plugin.Modules
                 .SelectMessageDispatchInfo()
                 .ToArray();
 
+            // Associate optional rules with the dispatchers that 
+            // determine if handler applies to a published message.
             SetDispatchRules(allDispatchers);
             SetDispatchPredicateScripts(allDispatchers);
+            
             AssertDispatchRules(allDispatchers);
 
             AllMessageTypeDispatchers = allDispatchers
@@ -64,7 +67,7 @@ namespace NetFusion.Messaging.Plugin.Modules
 
         // Register all of the message publishers that determine how a given
         // message is delivered.  This is how the message dispatch pipeline
-        // is extended.
+        // is extended.  
         public override void RegisterServices(IServiceCollection services)
         {
             foreach (Type publisherType in DispatchConfig.PublisherTypes)
@@ -81,20 +84,18 @@ namespace NetFusion.Messaging.Plugin.Modules
                 ServiceLifetime.Scoped);
         }
 
-        private void SetDispatchRules(IEnumerable<MessageDispatchInfo> allDispatchers)
-        {
-            allDispatchers.ForEach(SetDispatchRule);
-        }
-
         // Lookup the dispatch rules specified on the message consumer handler and
         // store a reference to the associated rule object.
-        private void SetDispatchRule(MessageDispatchInfo dispatchInfo)
+        private void SetDispatchRules(IEnumerable<MessageDispatchInfo> allDispatchers)
         {
-            dispatchInfo.DispatchRules = DispatchRules
-                .Where(r => dispatchInfo.DispatchRuleTypes.Contains(r.GetType()))
-                .ToArray(); 
+            foreach (var dispatcher in allDispatchers)
+            {
+                dispatcher.DispatchRules = DispatchRules
+                    .Where(r => dispatcher.DispatchRuleTypes.Contains(r.GetType()))
+                    .ToArray(); 
+            }
         }
-
+        
         // Check all message consumer handlers having the ApplyScriptPredicate attribute and
         // store a reference to a ScriptPredicate instance indicating the script to be executed
         // at runtime to determine if the message handler should be invoked.
@@ -133,24 +134,8 @@ namespace NetFusion.Messaging.Plugin.Modules
         //------------------------------------------------------
         //--Plugin Services
         //------------------------------------------------------
-
-        public MessageDispatchInfo GetInProcessCommandDispatcher(Type commandType)
-        {
-            if (commandType == null) throw new ArgumentNullException(nameof(commandType));
-
-            if (! commandType.IsDerivedFrom<ICommand>())
-                throw new ArgumentException("Must be of command type.", nameof(commandType));
-
-            IEnumerable<MessageDispatchInfo> dispatchers = InProcessDispatchers.WhereHandlerForMessage(commandType).ToArray();
-            if (dispatchers.Empty())
-            {
-                throw new InvalidOperationException(
-                    $"Message dispatcher could not be found for command type: {commandType}");
-            }
-
-            return dispatchers.First();
-        }
-
+        
+        // For a given dispatcher, creates the associated consumer and invokes it with message.
         public async Task<object> InvokeDispatcherInNewLifetimeScopeAsync(MessageDispatchInfo dispatcher, 
             IMessage message, 
             CancellationToken cancellationToken = default)
@@ -197,22 +182,20 @@ namespace NetFusion.Messaging.Plugin.Modules
         private void LogMessagesAndDispatchInfo(IDictionary<string, object> moduleLog)
         {
             var messagingDispatchLog = new Dictionary<string, object>();
-            moduleLog["Messaging:InProcess:Dispatchers"] = messagingDispatchLog;
+            moduleLog["Messaging_InProcess_Dispatchers"] = messagingDispatchLog;
 
             foreach (var messageTypeDispatcher in InProcessDispatchers)
             {
                 var messageType = messageTypeDispatcher.Key;
                 var messageDispatchers = InProcessDispatchers.WhereHandlerForMessage(messageType);
-                var messageTypeName = messageType.FullName;
 
-                if (messageTypeName == null) continue;
+                if (messageType.FullName == null) continue;
 
-                messagingDispatchLog[messageTypeName] = messageDispatchers.Select(
+                messagingDispatchLog[messageType.FullName] = messageDispatchers.Select(
                     ed => new
                     {
                         Consumer = ed.ConsumerType.FullName,
                         Method = ed.MessageHandlerMethod.Name,
-                        MessageType = ed.MessageType.FullName,
                         ed.IsAsync,
                         IncludedDerivedTypes = ed.IncludeDerivedTypes,
                         DispatchRules = ed.DispatchRuleTypes.Select(dr => dr.FullName).ToArray(),
@@ -223,7 +206,7 @@ namespace NetFusion.Messaging.Plugin.Modules
 
         private void LogMessagePublishers(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Message:Publishers"] = Context.AllPluginTypes
+            moduleLog["Message_Publishers"] = Context.AllPluginTypes
                 .Where(pt => pt.IsConcreteTypeDerivedFrom<IMessagePublisher>())
                 .Select(t => new
                 {

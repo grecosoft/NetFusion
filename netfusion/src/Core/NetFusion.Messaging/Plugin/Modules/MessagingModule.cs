@@ -5,12 +5,11 @@ using NetFusion.Messaging.Internal;
 namespace NetFusion.Messaging.Plugin.Modules
 {
     /// <summary>
-    /// The root messaging module that registering the MessagingService that delegates
+    /// The root messaging module registering the MessagingService that delegates
     /// to specific inner classes responsible for implementing the CQRS design pattern.
     /// </summary>
     public class MessagingModule : PluginModule
     {
-        // Registers a common service used to invoke the corresponding CQRS components.
         public override void RegisterDefaultServices(IServiceCollection services)
         {
             services.AddScoped<IMessagingService, MessagingService>();

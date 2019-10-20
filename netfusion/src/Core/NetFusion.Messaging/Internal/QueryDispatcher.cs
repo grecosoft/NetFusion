@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Logging;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Filters;
@@ -22,19 +23,21 @@ namespace NetFusion.Messaging.Internal
     {
         private readonly ILogger<QueryDispatcher> _logger;
         private readonly IServiceProvider _services;
+        private readonly IEnumerable<IQueryFilter> _queryFilters;
         
         // Dependent modules.
         private readonly IQueryDispatchModule _dispatchModule;
-        private readonly IQueryFilterModule _filterModule;
 
-        public QueryDispatcher(ILogger<QueryDispatcher> logger, IServiceProvider services, 
+        public QueryDispatcher(ILogger<QueryDispatcher> logger,
+            IServiceProvider services,
             IQueryDispatchModule dispatchModule,
-            IQueryFilterModule filterModule)
+            IQueryFilterModule filterModule,
+            IEnumerable<IQueryFilter> queryFilters)
         {
             _logger = logger;
             _services = services;
             _dispatchModule = dispatchModule;
-            _filterModule = filterModule;
+            _queryFilters = queryFilters.OrderByMatchingType(filterModule.QueryFilterTypes);
         }
 
         public async Task<TResult> Dispatch<TResult>(IQuery<TResult> query, 
@@ -72,15 +75,12 @@ namespace NetFusion.Messaging.Internal
         private async Task InvokeDispatcher(QueryDispatchInfo dispatcher, IQuery query, CancellationToken cancellationToken)
         {
             var consumer = (IQueryConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
-            var configuredFilters = _filterModule.QueryFilterTypes.Select(ft => _services.GetRequiredService(ft))
-                .Cast<IQueryFilter>()
-                .ToArray();
         
             LogQueryDispatch(query, consumer);
 
-            await ApplyFilters<IPreQueryFilter>(query, configuredFilters, (f, q) => f.OnPreExecute(q));
+            await ApplyFilters<IPreQueryFilter>(query, _queryFilters, (f, q) => f.OnPreExecute(q));
             await dispatcher.Dispatch(query, consumer, cancellationToken);
-            await ApplyFilters<IPostQueryFilter>(query, configuredFilters, (f, q) => f.OnPostExecute(q));
+            await ApplyFilters<IPostQueryFilter>(query, _queryFilters, (f, q) => f.OnPostExecute(q));
         }
 
         private void LogQueryDispatch(IQuery query, IQueryConsumer consumer)

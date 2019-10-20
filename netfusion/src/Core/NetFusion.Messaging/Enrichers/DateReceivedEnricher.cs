@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace NetFusion.Messaging.Enrichers
 {
     /// <summary>
-    /// Adds the current date and time to the mess if not already present.
+    /// Adds the current date and time to the message if not already present.
     /// </summary>
     public class DateReceivedEnricher : MessageEnricher
     {

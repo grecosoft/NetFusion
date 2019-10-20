@@ -31,23 +31,16 @@ namespace NetFusion.Messaging.Plugin
         /// marked with the InProcessHandler attribute.
         /// </summary>
         ILookup<Type, MessageDispatchInfo> InProcessDispatchers { get; }
-
+        
         /// <summary>
-        /// Returns the in-process dispatcher associated with the specified command type.
-        /// </summary>
-        /// <param name="commandType">The type of the command to find associated dispatcher.</param>
-        /// <returns>Command message dispatcher metadata information.</returns>
-        MessageDispatchInfo GetInProcessCommandDispatcher(Type commandType);
-
-        /// <summary>
-        /// Invokes the consumer with the message handler defined by the dispatcher instance.
+        /// Creates the consumer, associated with the dispatcher, within a new lifetime scope.
+        /// Then invokes the handler corresponding the message on the created consumer.
         /// </summary>
         /// <param name="dispatcher">The dispatcher containing information on how the message
         /// is to be dispatched.</param>
-        /// <param name="message">The command to dispatch to the consumer.</param>
+        /// <param name="message">The message to dispatch to the consumer.</param>
         /// <param name="cancellationToken">Optional task cancellation token.</param>
-        /// <returns>The result from the consumer.  If the message is a command and the response
-        /// is assignable to its response type, it is automatically set on the command.</returns>
+        /// <returns>The result from the consumer.</returns>
         Task<object> InvokeDispatcherInNewLifetimeScopeAsync(MessageDispatchInfo dispatcher, IMessage message, 
             CancellationToken cancellationToken = default);
 
