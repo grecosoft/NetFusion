@@ -60,7 +60,7 @@ namespace NetFusion.Settings.Plugin.Modules
                     Type optionsType = typeof(IOptions<>).MakeGenericType(st);
 
                     dynamic options = sp.GetRequiredService(optionsType);
-                    object appSettings = options.Value;
+                    IAppSettings appSettings = options.Value;
 
                     SettingsExtensions.ValidateSettings(Context.Logger, appSettings);
                     return appSettings;

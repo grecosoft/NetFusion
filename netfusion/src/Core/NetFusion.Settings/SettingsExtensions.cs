@@ -70,7 +70,7 @@ namespace NetFusion.Settings
             return settings;
         }
 
-        private static void ValidateSettings(object settings)
+        private static void ValidateSettings(IAppSettings settings)
         {
             IObjectValidator validator = new DataAnnotationsValidator(settings);
             var result = validator.Validate();
@@ -80,12 +80,13 @@ namespace NetFusion.Settings
                 string section = GetSectionPath(settings.GetType());
                 throw new SettingsValidationException(settings.GetType(), section, result);
             }
-
-            result.ThrowIfInvalid();
         }
 
-        internal static void ValidateSettings(ILogger logger, object settings)
+        internal static void ValidateSettings(ILogger logger, IAppSettings settings)
         {
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+            
             IObjectValidator validator = new DataAnnotationsValidator(settings);
             var result = validator.Validate();
 
