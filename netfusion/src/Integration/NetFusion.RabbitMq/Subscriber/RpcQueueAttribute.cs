@@ -14,7 +14,7 @@ namespace NetFusion.RabbitMQ.Subscriber
         
         public RpcQueueAttribute(string busName, string queueName, string actionNamespace) 
             
-            : base(busName, queueName, new RpcQueueFactory())
+            : base(busName, queueName, new RpcQueueStrategy())
         {
             if (string.IsNullOrWhiteSpace(actionNamespace))
                 throw new ArgumentException("Action namespace not specified", nameof(actionNamespace));

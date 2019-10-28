@@ -6,7 +6,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     /// <summary>
     /// Factory for creating work queues on the default exchange.  Sets the default
     /// conventions used for a work queues queues.</summary>
-    internal class WorkQueueFactory : IQueueFactory
+    internal class WorkQueueStrategy : IQueueStrategy
     {
         public QueueMeta CreateQueueMeta(SubscriberQueueAttribute attribute)
         {

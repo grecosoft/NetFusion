@@ -12,7 +12,7 @@ namespace NetFusion.RabbitMQ.Subscriber
     {
         public FanoutQueueAttribute(string busName, string exchangeName) 
             
-            : base(busName, exchangeName, new FanoutQueueFactory())
+            : base(busName, exchangeName, new FanoutQueueStrategy())
         {
             ExchangeName = exchangeName;
         }

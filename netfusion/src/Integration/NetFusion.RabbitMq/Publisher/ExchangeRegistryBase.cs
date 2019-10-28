@@ -9,7 +9,8 @@ namespace NetFusion.RabbitMQ.Publisher
 {
     /// <summary>
     /// Base implementation of the IExchangeRegistry containing known message
-    /// exchange patterns that can be derived from.
+    /// exchange patterns.  Applications derive from this class to specify the
+    /// Exchange/Queue to which a given message type should be published.
     /// </summary>
     public abstract class ExchangeRegistryBase : IExchangeRegistry
     {

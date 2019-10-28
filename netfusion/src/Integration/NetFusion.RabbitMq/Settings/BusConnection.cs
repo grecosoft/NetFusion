@@ -7,8 +7,6 @@ namespace NetFusion.RabbitMQ.Settings
 {
     /// <summary>
     /// Class representing connection configuration settings for a message broker.
-    /// 
-    /// https://github.com/grecosoft/NetFusion/wiki/common.validation.overview#class-validation
     /// </summary>
     public class BusConnection : IValidatableType
     {

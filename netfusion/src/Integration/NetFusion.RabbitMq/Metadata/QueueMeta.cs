@@ -63,11 +63,11 @@ namespace NetFusion.RabbitMQ.Metadata
         }
         
         /// <summary>
-        /// Reference to class specified on the subscribing side used to determine how
+        /// Reference to class specified on the subscribing side used to determine 
         /// the metadata for a specific queue type and how a message received on the
         /// queue should be processed.
         /// </summary>
-        internal IQueueFactory QueueFactory { get; set; }
+        internal IQueueStrategy QueueStrategy { get; set; }
 
         /// <summary>
         /// Do not create an exchange. If the named exchange doesn't exist, throw an exception.

@@ -127,7 +127,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         private void AppendRpcMessageProperties(MessageProperties msgProps, CreatedExchange createdExchange)
         {
             msgProps.ReplyTo = ReplyToQueueName;
-            msgProps.CorrelationId = msgProps.CorrelationId ?? Guid.NewGuid().ToString();
+            msgProps.CorrelationId ??= Guid.NewGuid().ToString();
             msgProps.SetRpcReplyBusConfigName(_busName);
             msgProps.SetRpcActionNamespace(createdExchange.Definition.ActionNamespace);
         }

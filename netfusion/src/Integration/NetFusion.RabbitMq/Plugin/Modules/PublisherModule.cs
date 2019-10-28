@@ -29,7 +29,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
         // Other  plugins (normally application plugins) specify the exchanges 
         // to be created by defining one or more IExchangeRegister derived types.
-        // NOTE:  NetFusion finds and instantiates all IExchangeRegistry types.
         public IEnumerable<IExchangeRegistry> Registries { get;  protected set; }  
         
         // Records for a given message type the exchange to which the message should be published.
@@ -81,7 +80,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         private static void AssertNoDuplicateExchanges(ExchangeMeta[] definitions)
         {
             // All exchange names that are not RPC exchanges must be unique for given named bus.
-            // The same exchange name can be used as long as associated with a different named buses.
+            // Default exchanges are excluded since they don't have names.
             var duplicateExchangeNames = definitions.Where(
                     d => !d.IsDefaultExchange && !d.IsRpcExchange)
                 .WhereDuplicated(d => new { d.BusName, d.ExchangeName});
@@ -114,7 +113,8 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             if (duplicateQueueNames.Any())
             {
                 throw new ContainerException(
-                    "Queue names must be unique for a given named bus.  The following have been configured more than once.", 
+                    "Queue names, defined on the default exchange, must be unique for a given named bus.  "  +
+                    "The following have been configured more than once.", 
                     "duplicate-queues", duplicateQueueNames);
             } 
         }
@@ -125,7 +125,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 .Where(g => g.Count() > 1)
                 .Select(g => new {
                     MessageType = g.Key,
-                    Definition = g.Select(d => $"Exchange: {d.ExchangeName}, Queue: {d.QueueMeta?.QueueName}")
+                    Definitions = g.Select(d => $"Exchange: {d.ExchangeName}, Queue: {d.QueueMeta?.QueueName}")
                 }).ToArray();
 
             if (duplicateMessages.Any())
@@ -190,12 +190,14 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         //--Plugin Services
         //------------------------------------------------------
 
+        // Determines if the specified message should be delivered to an exchange.
         public bool IsExchangeMessage(Type messageType)
         {
             if (messageType == null) throw new ArgumentNullException(nameof(messageType));
             return _messageExchanges.ContainsKey(messageType);
         }
 
+        // Returns information about the exchange to which a given type of message should be delivered.
         public ExchangeMeta GetDefinition(Type messageType)
         {
             if (messageType == null) throw new ArgumentNullException(nameof(messageType));
@@ -208,6 +210,8 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             return _messageExchanges[messageType];
         }
         
+        // Returns the RPC Client used to deliver a message to a consumer for which a response
+        // will be received on a corresponding queue and returned to the sender of the command.
         public IRpcClient GetRpcClient(string busName, string queueName)
         {
             if (string.IsNullOrWhiteSpace(busName))

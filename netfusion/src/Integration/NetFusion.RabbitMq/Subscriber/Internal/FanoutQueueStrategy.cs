@@ -10,7 +10,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     /// 
     /// https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-fanout
     /// </summary>
-    internal class FanoutQueueFactory : IQueueFactory
+    internal class FanoutQueueStrategy : IQueueStrategy
     {
         public QueueMeta CreateQueueMeta(SubscriberQueueAttribute attribute)
         {

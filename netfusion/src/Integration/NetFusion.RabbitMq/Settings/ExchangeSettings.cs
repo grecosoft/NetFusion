@@ -5,8 +5,6 @@ namespace NetFusion.RabbitMQ.Settings
     /// <summary>
     /// Exchange settings specified within the application configuration.
     /// If specified they override the corresponding settings set in code.
-    /// 
-    /// https://github.com/grecosoft/NetFusion/wiki/common.validation.overview#class-validation
     /// </summary>
     public class ExchangeSettings : IValidatableType
     {

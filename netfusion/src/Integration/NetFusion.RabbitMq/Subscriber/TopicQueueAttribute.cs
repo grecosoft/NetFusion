@@ -13,7 +13,7 @@ namespace NetFusion.RabbitMQ.Subscriber
         public TopicQueueAttribute(string busName, string queueName, string exchangeName, 
             params string[] routeKeys) 
             
-            : base(busName, queueName, new TopicQueueFactory())
+            : base(busName, queueName, new TopicQueueStrategy())
         {
             if (string.IsNullOrWhiteSpace(exchangeName))
                 throw new System.ArgumentException("Exchange name not specified.", nameof(exchangeName));

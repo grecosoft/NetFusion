@@ -13,7 +13,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     /// Factory for creating queues for publishing RPC style messages and consuming their
     /// corresponding responds on an associated reply queue.
     /// </summary>
-    internal class RpcQueueFactory: IQueueFactory
+    internal class RpcQueueStrategy: IQueueStrategy
     {
         public QueueMeta CreateQueueMeta(SubscriberQueueAttribute attribute)
         {

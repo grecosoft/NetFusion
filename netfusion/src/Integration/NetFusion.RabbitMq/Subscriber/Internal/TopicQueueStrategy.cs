@@ -10,7 +10,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     /// 
     /// https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-topic
     /// </summary>
-    internal class TopicQueueFactory : IQueueFactory
+    internal class TopicQueueStrategy : IQueueStrategy
     {
         public QueueMeta CreateQueueMeta(SubscriberQueueAttribute attribute)
         {

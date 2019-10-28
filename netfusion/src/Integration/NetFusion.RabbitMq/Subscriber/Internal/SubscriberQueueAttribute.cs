@@ -11,12 +11,12 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     {
         public string BusName { get;  }
         public string QueueName { get;  }
-        public IQueueFactory QueueFactory { get; }
+        public IQueueStrategy QueueStrategy { get; }
         
         public string ExchangeName { get; protected set; }
         public string[] RouteKeys { get; protected set; }
 
-        protected SubscriberQueueAttribute(string busName, string queueName, IQueueFactory factory)
+        protected SubscriberQueueAttribute(string busName, string queueName, IQueueStrategy strategy)
         {
             if (string.IsNullOrWhiteSpace(busName))
                 throw new ArgumentException("Bus name not specified.", nameof(busName));
@@ -26,7 +26,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
 
             BusName = busName;
             QueueName = queueName;
-            QueueFactory = factory ?? throw new ArgumentNullException(nameof(factory));
+            QueueStrategy = strategy ?? throw new ArgumentNullException(nameof(strategy));
         }
     }
 }

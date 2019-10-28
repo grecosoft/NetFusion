@@ -49,7 +49,7 @@ namespace NetFusion.RabbitMQ
             if (string.IsNullOrWhiteSpace(busConfigName))
                 throw new ArgumentException("Bus name not specified.", nameof(busConfigName));
 
-            messageProps.Headers = messageProps.Headers ?? new Dictionary<string, object>();
+            messageProps.Headers ??= new Dictionary<string, object>();
             messageProps.Headers[RpcReplyBusName] = busConfigName;
         }
 
@@ -86,7 +86,7 @@ namespace NetFusion.RabbitMQ
             if (string.IsNullOrWhiteSpace(actionNamespace))
                 throw new ArgumentException("Action name not specified.", nameof(actionNamespace));
 
-            messageProps.Headers = messageProps.Headers ?? new Dictionary<string, object>();
+            messageProps.Headers ??= new Dictionary<string, object>();
             messageProps.Headers[RpcActionNamespace] = actionNamespace;
         }
 
@@ -116,7 +116,7 @@ namespace NetFusion.RabbitMQ
         {
             if (messageProps == null) throw new ArgumentNullException(nameof(messageProps));
 
-            messageProps.Headers = messageProps.Headers ?? new Dictionary<string, object>();
+            messageProps.Headers ??= new Dictionary<string, object>();
             messageProps.Headers[RpcHeaderExceptionIndicator] = value;
         }
     }

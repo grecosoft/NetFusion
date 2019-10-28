@@ -13,7 +13,7 @@ namespace NetFusion.RabbitMQ.Subscriber
         public DirectQueueAttribute(string busName, string queueName, string exchangeName, 
             params string[] routeKeys) 
             
-            : base(busName, queueName, new DirectQueueFactory())
+            : base(busName, queueName, new DirectQueueStrategy())
         {
             if (string.IsNullOrWhiteSpace(exchangeName))
                 throw new System.ArgumentException("Exchange name not specified.", nameof(exchangeName));
