@@ -62,7 +62,7 @@ namespace NetFusion.Base.Entity
         /// <param name="defaultValue">The value to return if not present.</param>
         /// <param name="context">Identifies the context associated with the attribute.</param>
         /// <returns>The current value or the specified default if not present.</returns>
-        T GetValueOrDefault<T>(string name, T defaultValue = default(T), Type context = null );
+        T GetValueOrDefault<T>(string name, T defaultValue = default, Type context = null );
 
         /// <summary>
         /// Determines the entity has an associated attribute.
