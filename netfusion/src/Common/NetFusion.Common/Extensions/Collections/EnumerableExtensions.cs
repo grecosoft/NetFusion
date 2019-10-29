@@ -16,15 +16,15 @@ namespace NetFusion.Common.Extensions.Collections
         /// <param name="valueAction"></param>
         /// <returns></returns>
         [DebuggerStepThrough]
-        public static IList<T> ForEach<T>(this IEnumerable<T> source, Action<T> valueAction)
+        public static IList<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            if (valueAction == null) throw new ArgumentNullException(nameof(valueAction));
+            if (action == null) throw new ArgumentNullException(nameof(action));
 
             var list = source as IList<T> ?? source.ToList();
             foreach (var value in list)
             {
-                valueAction(value);
+                action(value);
             }
 
             return list;
@@ -56,20 +56,7 @@ namespace NetFusion.Common.Extensions.Collections
             if (source == null) throw new ArgumentNullException(nameof(source));
             return !source.Any();
         }
-
-        /// <summary>
-        /// Determines if the enumerable contains one and only one item.
-        /// </summary>
-        /// <typeparam name="T">The element type.</typeparam>
-        /// <param name="source">The source enumerable.</param>
-        /// <returns>True if and only if one item.  Otherwise, false.</returns>
-        [DebuggerStepThrough]
-        public static bool IsSingletonSet<T>(this IEnumerable<T> source)
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            return source.Count() == 1;
-        } 
-
+        
         /// <summary>
         /// Checks if a given property of an enumerable element contains duplicate values.
         /// </summary>
@@ -110,22 +97,6 @@ namespace NetFusion.Common.Extensions.Collections
                     yield return item;
                 }
             }
-        }
-
-        /// <summary>
-        /// Determines if an enumeration of class instances contains exactly one item.  
-        /// </summary>
-        /// <typeparam name="T">The type of the class instances.</typeparam>
-        /// <param name="source">The enumeration to check.</param>
-        /// <returns>The value contained in the enumeration if there is
-        /// exactly one instance.  Otherwise, null is returned.</returns>
-        public static T OneAndOnlyOne<T>(this IEnumerable<T> source)
-            where T : class
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            
-            source = source as T[] ?? source.ToArray();
-            return source.Count() == 1 ? source.ElementAt(0) : null;
         }
     }
 }

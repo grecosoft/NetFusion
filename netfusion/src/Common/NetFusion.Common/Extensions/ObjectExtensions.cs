@@ -35,7 +35,10 @@ namespace NetFusion.Common.Extensions
         public static string ToIndentedJson(this object value)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
-            return JsonConvert.SerializeObject(value, Formatting.Indented);
+            return JsonConvert.SerializeObject(value, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
         }
 
         /// <summary>

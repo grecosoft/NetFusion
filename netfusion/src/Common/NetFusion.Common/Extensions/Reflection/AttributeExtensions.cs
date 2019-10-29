@@ -55,7 +55,7 @@ namespace NetFusion.Common.Extensions.Reflection
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 
-            return source.GetTypeInfo().GetCustomAttributes(typeof(T), true).Any();
+            return source.GetTypeInfo().GetCustomAttributes<T>(true).Any();
         }
 
         /// <summary>
