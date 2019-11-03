@@ -1,5 +1,5 @@
-PACKAGES_DIR=../../../../packages
-VERSION=9.0.0
+PACKAGES_DIR=../../_packages
+VERSION=9.2.0
 
 # dotnet build NetFusion.sln
 dotnet pack ./src/Common/NetFusion.Common/NetFusion.Common.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
@@ -19,7 +19,7 @@ dotnet pack ./src/Integration/NetFusion.EntityFramework/NetFusion.EntityFramewor
 dotnet pack ./src/Integration/NetFusion.MongoDB/NetFusion.MongoDB.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Integration/NetFusion.Redis/NetFusion.Redis.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Integration/NetFusion.AMQP/NetFusion.AMQP.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
-dotnet pack ./src/Integration/NetFusion.RabbitMq/NetFusion.RabbitMq.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
+dotnet pack ./src/Integration/NetFusion.RabbitMq/NetFusion.RabbitMQ.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 
 dotnet pack ./src/Web/NetFusion.Web.Mvc/NetFusion.Web.Mvc.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Web/NetFusion.Rest.Common/NetFusion.Rest.Common.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
