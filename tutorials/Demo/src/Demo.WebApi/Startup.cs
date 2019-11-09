@@ -10,6 +10,8 @@ using NetFusion.Rest.Server.Plugin;
 using NetFusion.Settings.Plugin;
 using NetFusion.Web.Mvc.Plugin;
 using Demo.App.Plugin;
+using Demo.Core.Plugin;
+using Demo.Core.Plugin.Configs;
 using Demo.Domain.Plugin;
 using Demo.Infra;
 using Demo.Infra.Plugin;
@@ -57,6 +59,11 @@ namespace Demo.WebApi
                 {
                     c.AddFilter<TimeQueryFilter>();
                 })
+
+                .AddPlugin<CorePlugin>()
+                .InitPluginConfig<ValidRangeConfig>(
+                   range => range.SetRange(1000, 5000))
+                
                 
                 .AddPlugin<InfraPlugin>()
                 .AddPlugin<AppPlugin>()

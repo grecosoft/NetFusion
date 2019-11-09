@@ -12,6 +12,7 @@ namespace Demo.App.Plugin
         public AppPlugin()
         {
             AddModule<ServiceModule>();
+            AddModule<LifeCycleModule>();
 
             Description = "Plugin component containing the Microservice's application services.";
         }   
