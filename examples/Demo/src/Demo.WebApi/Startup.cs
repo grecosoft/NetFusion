@@ -20,6 +20,7 @@ using NetFusion.MongoDB.Plugin;
 using NetFusion.Redis.Plugin;
 using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.RabbitMQ.Plugin;
+using NetFusion.Mapping.Plugin;
 
 namespace Demo.WebApi
 {
@@ -38,6 +39,7 @@ namespace Demo.WebApi
         {
             services.CompositeContainer(_configuration)
                 .AddSettings()
+                .AddMapping()
                 .AddMessaging()
                 .AddRabbitMq()
                 .AddRedis()

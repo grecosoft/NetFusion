@@ -8,16 +8,16 @@
     <ProjectReference Include="..\Demo.App\Demo.App.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.MongoDB" Version="9.2.0" />
-    <PackageReference Include="NetFusion.RabbitMQ" Version="9.2.0" />
-    <PackageReference Include="NetFusion.Redis" Version="9.2.0" />
+    <PackageReference Include="NetFusion.MongoDB" Version="9.6.0" />
+    <PackageReference Include="NetFusion.RabbitMQ" Version="9.6.0" />
+    <PackageReference Include="NetFusion.Redis" Version="9.6.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="9.2.0" />
-    <PackageReference Include="NetFusion.Base" Version="9.2.0" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="9.2.0" />
-    <PackageReference Include="NetFusion.Settings" Version="9.2.0" />
-    <PackageReference Include="NetFusion.Messaging" Version="9.2.0" />
+    <PackageReference Include="NetFusion.Common" Version="9.6.0" />
+    <PackageReference Include="NetFusion.Base" Version="9.6.0" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="9.6.0" />
+    <PackageReference Include="NetFusion.Settings" Version="9.6.0" />
+    <PackageReference Include="NetFusion.Messaging" Version="9.6.0" />
   </ItemGroup>
 </Project>
