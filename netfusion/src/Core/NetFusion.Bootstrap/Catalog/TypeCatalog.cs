@@ -70,7 +70,10 @@ namespace NetFusion.Bootstrap.Catalog
             foreach (Type matchingType in _types.Where(filter))
             {
                 Type serviceType = GetServiceInterface(matchingType);
-                Services.Add(new ServiceDescriptor(serviceType, matchingType, lifetime));
+                if (serviceType != null)
+                {
+                    Services.Add(new ServiceDescriptor(serviceType, matchingType, lifetime));
+                }
             }
 
             return this;
@@ -91,32 +94,18 @@ namespace NetFusion.Bootstrap.Catalog
             Type[] serviceInterfaces = serviceType.GetInterfaces();
             if (! serviceInterfaces.Any())
             {
-                throw new InvalidOperationException(
-                    $"Interface for service type {serviceType} could not be determined." + 
-                    "Service does not implement any interfaces.");
+                return null;
             }
 
-            // If there is only one supported interface, use this as the service interface.
-            if (serviceInterfaces.Length == 1)
+            Type[] serviceInterfacesByConvention = serviceInterfaces.Where(
+                t => t.Name.Equals("I" + serviceType.Name, StringComparison.Ordinal)).ToArray();
+
+            if (serviceInterfacesByConvention.Length == 1)
             {
-                return serviceInterfaces.First();
+                return serviceInterfacesByConvention.First();
             }
-
-            // If there are more than on supported interface, select one based on conventions.
-            if (serviceInterfaces.Length >= 1)
-            {
-                Type[] serviceInterfacesByConvention = serviceInterfaces.Where(
-                    t => t.Name.StartsWith("I" + serviceType.Name, StringComparison.Ordinal)).ToArray();
-
-                if (serviceInterfacesByConvention.Length == 1)
-                {
-                    return serviceInterfacesByConvention.First();
-                }
-            }
-
-            throw new InvalidOperationException(
-                $"Interface for service type {serviceType} could not be determined." +
-                "Service implements more than one possible interface.");
+        
+            return null;
         }
     }
 }

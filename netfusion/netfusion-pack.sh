@@ -1,5 +1,5 @@
 PACKAGES_DIR=../../_packages
-VERSION=9.3.0
+VERSION=9.6.0
 
 # dotnet build NetFusion.sln
 dotnet pack ./src/Common/NetFusion.Common/NetFusion.Common.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
