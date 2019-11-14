@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using NetFusion.Common.Extensions.Reflection;
 
 namespace NetFusion.Messaging.Types
 {
@@ -37,11 +38,20 @@ namespace NetFusion.Messaging.Types
             set => Attributes.SetValues(value);
         }
 
-        Type ICommand.ResultType => null;
+        public Type ResultType { get; protected set; }
 
         public virtual void SetResult(object result)
         {
-            // The result can be null.
+            // The command result can be null.
+            if (result == null) return;
+            
+            if (! result.GetType().CanAssignTo(ResultType))
+            {
+                throw new InvalidOperationException(
+                    $"The handler for the command of type: {GetType()} returned a result of type: {result.GetType()} " + 
+                    $"and is not assignable to the command's declared result type of: {ResultType}.");
+            }
+            
             Result = result;
         }
     }
@@ -55,10 +65,9 @@ namespace NetFusion.Messaging.Types
     {
         protected Command()
         {
+            ResultType = typeof(TResult);
             base.Result = default(TResult);
         }
-
-        Type ICommand.ResultType => typeof(TResult);
 
         /// <summary>
         /// The result of executing the command.

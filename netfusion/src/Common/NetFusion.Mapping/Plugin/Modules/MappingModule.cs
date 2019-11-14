@@ -11,7 +11,7 @@ namespace NetFusion.Mapping.Plugin.Modules
 {
     /// <summary>
     /// Plug-in module responsible for finding the mapping strategies to be applied at
-    /// runtime to map a source objects to their corresponding target types.
+    /// runtime to map source objects to their corresponding target types.
     /// </summary>
     public class MappingModule : PluginModule,
         IMappingModule

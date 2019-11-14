@@ -19,29 +19,53 @@ namespace NetFusion.Mapping.Core
         private readonly IServiceProvider _services;
 
         public ObjectMapper(
-            ILoggerFactory loggerFactory,
+            ILogger<ObjectMapper> logger,
             IMappingModule mappingModule,
             IServiceProvider services)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
             if (mappingModule == null) throw new ArgumentNullException(nameof(mappingModule));
             
-            _logger = loggerFactory.CreateLogger<ObjectMapper>();
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _services = services ?? throw new ArgumentNullException(nameof(services));
+            
             _sourceTypeMappings = mappingModule.SourceTypeMappings;
         }
 
-        // Maps source object to the specified target or derived target object type.
         public TTarget Map<TTarget>(object source) where TTarget : class
         {
-            if (source == null) throw new ArgumentNullException(nameof(source), 
-                "Source object to map cannot be null.");
+            if (! TryMap(source, out TTarget mappedResult))
+            {
+                throw new InvalidOperationException(
+                    $"Mapping strategy not found.  Source: { source.GetType().FullName} Target: {typeof(TTarget).FullName}");
+            }
 
-            object mappedObj = Map(source, typeof(TTarget));
-            return (TTarget)mappedObj;           
+            return mappedResult;
+        }
+        
+        public bool TryMap<TTarget>(object source, out TTarget mappedResult)
+        {
+            if (TryMap(source, typeof(TTarget), out object result))
+            {
+                mappedResult = (TTarget)result;
+                return true;
+            }
+
+            mappedResult = default;
+            return false;
         }
 
         public object Map(object source, Type targetType)
+        {
+            if (! TryMap(source, targetType, out object mappedResult))
+            {
+                throw new InvalidOperationException(
+                    $"Mapping strategy not found.  Source: { source.GetType().FullName} Target: {targetType.FullName}");
+            }
+
+            return mappedResult;
+        }
+        
+        public bool TryMap(object source, Type targetType, out object mappedResult)
         {
             if (source == null) throw new ArgumentNullException(nameof(source),
                 "Source object to map cannot be null.");
@@ -59,18 +83,27 @@ namespace NetFusion.Mapping.Core
 
             if (targetMap == null)
             {
-                throw new InvalidOperationException(
-                   $"Mapping strategy not found.  Source: { source.GetType().FullName} Target: {targetType.FullName}");
+                mappedResult = null;
+                return false;
             }
 
             // If the mapping strategy instance was originally created by a IMappingStrategyFactory, 
             // return the cached instance.  Otherwise, create an instance of the custom mapping strategy
-            // using the service provider..
+            // using the service provider.
             var strategy = targetMap.StrategyInstance ?? 
                            (IMappingStrategy)_services.GetRequiredService(targetMap.StrategyType);
 
             LogFoundMapping(targetMap);
-            return strategy.Map(this, source);
+            
+            mappedResult = strategy.Map(this, source);
+            if (mappedResult == null)
+            {
+                _logger.LogDebug(
+                    "The mapping strategy for source: {sourceType} and target: {targetType} type returned null " + 
+                    " for the mapped result.", source.GetType(), targetType);
+            }
+            
+            return mappedResult != null;
         }
 
         // Determines if there is a mapping strategy matching the exact target type.  

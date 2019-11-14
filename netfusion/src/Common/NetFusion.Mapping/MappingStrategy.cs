@@ -20,7 +20,7 @@ namespace NetFusion.Mapping
     }
 
     /// <summary>
-    /// Base class used to define mapping strategies between source and target types.
+    /// Base generic class used to define mapping strategies between source and target types.
     /// </summary>
     public abstract class MappingStrategy<TSource, TTarget> : MappingStrategy,
         IMappingStrategy<TSource, TTarget>
@@ -50,13 +50,13 @@ namespace NetFusion.Mapping
         /// </summary>
         /// <param name="source">The source object to be mapped.</param>
         /// <returns>Instance of the target object.</returns>
-        protected virtual TTarget SourceToTarget(TSource source) => default(TTarget);
+        protected virtual TTarget SourceToTarget(TSource source) => default;
 
         /// <summary>
         /// Overridden by a derived mapping strategy to map target to source object.
         /// </summary>
         /// <param name="target">The target object to be mapped.</param>
         /// <returns>Instance of the source object.</returns>
-        protected virtual TSource TargetToSource(TTarget target) => default(TSource);
+        protected virtual TSource TargetToSource(TTarget target) => default;
     }
 }
