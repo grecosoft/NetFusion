@@ -15,9 +15,7 @@ namespace Demo.WebApi.Mappings
 
         public IEnumerable<IMappingStrategy> GetStrategies()
         {
-            return new IMappingStrategy[] {
-                new MappingDelegate<Car, CarSummary>(TinyMapper.Map<CarSummary>)
-            };
+            yield return DelegateMap.Map((Car c) => TinyMapper.Map<CarSummary>(c));
         }
     }
 }
