@@ -292,18 +292,19 @@ namespace CommonTests.Mapping
         {
             public IEnumerable<IMappingStrategy> GetStrategies()
             {
-                yield return new MappingDelegate<Customer, CustomerSummary>(
-                    source => new CustomerSummary {
-                        Description = $"{source.FirstName}-{source.LastName}",
-                        FirstName = source.FirstName,
-                        LastName = source.LastName
+                yield return DelegateMap.Map((Customer s) => new CustomerSummary
+                    {
+                        Description = $"{s.FirstName}-{s.LastName}",
+                        FirstName = s.FirstName,
+                        LastName = s.LastName
                     });
                 
-                yield return new MappingDelegate<Car, CarSummary>(
-                    source => new CarSummary {
-                        Description = $"{source.Make}-{source.Model}",
-                        Make = source.Make,
-                        Model = source.Model
+                yield return DelegateMap.Map((Car s) =>
+                
+                    new CarSummary {
+                        Description = $"{s.Make}-{s.Model}",
+                        Make = s.Make,
+                        Model = s.Model
                     });
             }
         }
@@ -312,12 +313,12 @@ namespace CommonTests.Mapping
         {
             public IEnumerable<IMappingStrategy> GetStrategies()
             {
-                yield return new MappingDelegate<TestMapTypeThree, TestMapTypeTwo>(
-                    source => new TestMapTypeTwo {
-                        Sum = source.Values.Where(v => v <= source.MaxAllowedValue).Sum(),
-                        Min =  source.Values.Where(v => v <= source.MaxAllowedValue).Min(),
-                        Max = source.Values.Where(v => v <= source.MaxAllowedValue).Max()
-                    });
+                yield return DelegateMap.Map((TestMapTypeThree s) => new TestMapTypeTwo
+                {
+                    Sum = s.Values.Where(v => v <= s.MaxAllowedValue).Sum(),
+                    Min =  s.Values.Where(v => v <= s.MaxAllowedValue).Min(),
+                    Max = s.Values.Where(v => v <= s.MaxAllowedValue).Max()
+                });
             }
         }
 
