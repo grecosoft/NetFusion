@@ -165,7 +165,7 @@ namespace CommonTests.Base.Validation
 
         private ValidationResultSet Validate(object obj)
         {
-            var validator = new DataAnnotationsValidator(obj);
+            var validator = new DefaultObjectValidator(obj);
             return validator.Validate();
         }
 

@@ -84,16 +84,6 @@ namespace NetFusion.Base.Validation
             };
         }
 
-        public static ValidationResultSet ErrorResult(object rootObject)
-        {
-            return new ValidationResultSet
-            {
-                RootObject = rootObject ?? throw new ArgumentNullException(nameof(rootObject)),
-                ValidationType = ValidationTypes.Error,
-                ObjectValidations = new ObjectValidation[] { }
-            };
-        }
-
         /// <summary>
         /// Determines if any of the object validation items are of the specified validation level.
         /// </summary>

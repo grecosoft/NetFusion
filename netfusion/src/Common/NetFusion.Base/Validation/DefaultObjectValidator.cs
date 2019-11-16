@@ -9,14 +9,14 @@ namespace NetFusion.Base.Validation
     /// Validation based on Microsoft DataAnnotations.  This is the IObjectValidator implementation
     /// used by default if not overridden when bootstrapping the application container.
     /// </summary>
-    public class DataAnnotationsValidator : IObjectValidator
+    public class DefaultObjectValidator : IObjectValidator
     {
         private readonly List<ValidationItem> _items;
         private readonly List<IObjectValidator> _children;
 
         public object Object { get; }
 
-        public DataAnnotationsValidator(object obj)
+        public DefaultObjectValidator(object obj)
         {            
             Object = obj ?? throw new ArgumentNullException(nameof(obj));
 
@@ -53,7 +53,7 @@ namespace NetFusion.Base.Validation
 
             // If the object being validated is valid and it supports custom
             // validation, invoke the Validate method on the object.
-            if (IsValid && Object is IValidatableType validatable)
+            if (validationItems.Length == 0 && Object is IValidatableType validatable)
             {
                 validatable.Validate(this);
             }
@@ -79,7 +79,7 @@ namespace NetFusion.Base.Validation
             if (childObject == null) throw new ArgumentNullException(nameof(childObject), 
                 "Child object to validate cannot be null.");
 
-            var validator = new DataAnnotationsValidator(childObject);
+            var validator = new DefaultObjectValidator(childObject);
             validator.ValidateObject();
 
             _children.Add(validator);
@@ -87,6 +87,14 @@ namespace NetFusion.Base.Validation
         }
 
         public void AddChildren(IEnumerable<object> childObjects)
+        {
+            foreach (object childObject in childObjects)
+            {
+                AddChild(childObject);
+            }
+        }
+        
+        public void AddChildren(params object[] childObjects)
         {
             foreach (object childObject in childObjects)
             {
