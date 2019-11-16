@@ -4,11 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
+using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Bootstrap.Validation;
 using NetFusion.Serialization;
 
 namespace NetFusion.Builder
@@ -113,9 +113,9 @@ namespace NetFusion.Builder
             RegisterDefaultService(typeof(ILoggerFactory), typeof(LoggerFactory));  
             
             // These services can be overridden by the host.
-            RegisterDefaultService(typeof(IEntityScriptingService), typeof(NullEntityScriptingService));
             RegisterDefaultService(typeof(IValidationService), typeof(ValidationService));
             RegisterDefaultService(typeof(ISerializationManager), typeof(SerializationManager));
+            RegisterDefaultService(typeof(IEntityScriptingService), typeof(NullEntityScriptingService));
         }
         
         private void RegisterDefaultService(Type serviceType, Type implementationType)

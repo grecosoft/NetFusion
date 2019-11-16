@@ -6,8 +6,8 @@ using System;
 using System.Threading.Tasks;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
+using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Logging;
-using NetFusion.Bootstrap.Validation;
 using NetFusion.Serialization;
 
 namespace NetFusion.Test.Container

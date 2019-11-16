@@ -1,6 +1,4 @@
-﻿using NetFusion.Base.Validation;
-
-namespace NetFusion.Bootstrap.Validation
+﻿namespace NetFusion.Base.Validation
 {
     /// <summary>
     /// Service for validating objects using the host provided IObjectValidator instance.

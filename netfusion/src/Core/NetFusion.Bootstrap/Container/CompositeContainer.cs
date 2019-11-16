@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Bootstrap.Validation;
 using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 
@@ -45,8 +44,6 @@ namespace NetFusion.Bootstrap.Container
 
             _serviceCollection = services ?? throw new ArgumentNullException(nameof(services));
             _builder = new CompositeAppBuilder(services, configuration, bootstrapLogger);
-            
-            AddContainerConfigs();
         }
         
         /// <summary>
@@ -78,14 +75,7 @@ namespace NetFusion.Bootstrap.Container
         {
             return _plugins.Any(p => p.GetType() == typeof(T));
         }
-        
-        // Add container level configurations that can be updated by the host
-        // to control how the composite-application is initialized.
-        private void AddContainerConfigs()
-        {
-            _builder.AddContainerConfig(new ValidationConfig());
-        }
-        
+
         // Returns a container level configuration used to configure the runtime behavior
         // of the built container.
         public T GetContainerConfig<T>() where T : IContainerConfig

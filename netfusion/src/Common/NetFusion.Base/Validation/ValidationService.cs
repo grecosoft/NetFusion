@@ -1,8 +1,6 @@
-﻿using NetFusion.Base.Validation;
-using NetFusion.Bootstrap.Container;
-using System;
+﻿using System;
 
-namespace NetFusion.Bootstrap.Validation
+namespace NetFusion.Base.Validation
 {
     /// <summary>
     /// Service that delegates to ICompositeApp to create an instance 
@@ -10,19 +8,12 @@ namespace NetFusion.Bootstrap.Validation
     /// </summary>
     public class ValidationService : IValidationService
     {
-        private readonly ICompositeApp _compositeApp;
-
-        public ValidationService(ICompositeApp compositeApp)
-        {
-            _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
-        }
-
         public ValidationResultSet Validate(object obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj), 
                 "Object to validate cannot be null.");
-
-            IObjectValidator validator = _compositeApp.CreateValidator(obj);
+            
+            IObjectValidator validator = new DefaultObjectValidator(obj);
             return validator.Validate();
         }
     }

@@ -8,7 +8,6 @@ using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Bootstrap.Validation;
 using NetFusion.Common.Extensions;
 
 namespace NetFusion.Bootstrap.Container
@@ -198,17 +197,7 @@ namespace NetFusion.Bootstrap.Container
             ThrowIfStopped();
             return _serviceProvider.CreateScope();
         }
-        
-        // Creates a validation instance, based on the application configuration used to validate an object.
-        // The host application can specify an implementation using a validation library of choice.
-        public IObjectValidator CreateValidator(object obj)
-        {
-            ThrowIfStopped();
 
-            ValidationConfig validationConfig = _builder.GetContainerConfig<ValidationConfig>();
-            return (IObjectValidator)Activator.CreateInstance(validationConfig.ValidatorType, obj);
-        }
-        
         //-----------------------------------------------------
         //--Stopping Composite Application
         //-----------------------------------------------------
