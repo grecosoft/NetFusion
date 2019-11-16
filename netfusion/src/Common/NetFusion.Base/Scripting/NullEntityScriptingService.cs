@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 namespace NetFusion.Base.Scripting
 {
     /// <summary>
-    /// If a host uses a plug-in that is dependent on the IEntityScriptingSerivce, but doesn't 
-    /// need to utilize its provided functionality, an singleton instance of this NULL implementation 
-    /// can be registered.
+    /// By default, this NULL implementation is registered by the composite-container.
+    /// Some core NetFusion plugins such as NetFusion.Messaging and others support the
+    /// user of predicates.  However, if the host application wants to utilize dynamic
+    /// evaluated expresses, they must register an implementation.  Such as provided 
+    /// by the NetFusion.Roslyn plugin.
     /// </summary>
     public class NullEntityScriptingService : IEntityScriptingService
     {
