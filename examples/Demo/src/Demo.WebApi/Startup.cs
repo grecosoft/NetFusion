@@ -16,6 +16,7 @@ using Demo.Domain.Plugin;
 using Demo.Infra;
 using Demo.Infra.Plugin;
 using Demo.WebApi.Plugin;
+using NetFusion.Bootstrap.Validation;
 using NetFusion.MongoDB.Plugin;
 using NetFusion.Redis.Plugin;
 using NetFusion.Messaging.Plugin.Configs;
@@ -65,13 +66,15 @@ namespace Demo.WebApi
                 .AddPlugin<CorePlugin>()
                 .InitPluginConfig<ValidRangeConfig>(
                    range => range.SetRange(1000, 5000))
-                
-                
+
                 .AddPlugin<InfraPlugin>()
                 .AddPlugin<AppPlugin>()
                 .AddPlugin<DomainPlugin>()
                 .AddPlugin<WebApiPlugin>()
-                .Compose();
+                .Compose(config =>
+                {
+                    // config.AddSingleton<IValidationService, CustomValidationService>();
+                });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddCors();
