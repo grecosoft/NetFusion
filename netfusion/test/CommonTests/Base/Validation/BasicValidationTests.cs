@@ -12,7 +12,7 @@ namespace CommonTests.Base.Validation
         {
             var testObj = new ParentValidateType {PropWithAttribValidation = 500};
 
-            var validator = new DefaultObjectValidator(testObj);
+            var validator = new ObjectValidator(testObj);
             validator.Validate();
             
             Assert.False(testObj.WasValidationMethodInvoked);
@@ -23,7 +23,7 @@ namespace CommonTests.Base.Validation
         {
             var testObj = new ParentValidateType {PropWithAttribValidation = 50};
 
-            var validator = new DefaultObjectValidator(testObj);
+            var validator = new ObjectValidator(testObj);
             validator.Validate();
             
             Assert.True(testObj.WasValidationMethodInvoked);
@@ -34,7 +34,7 @@ namespace CommonTests.Base.Validation
         {
             var testObj = new ParentValidateType {PropWithAttribValidation = 500};
 
-            var validator = new DefaultObjectValidator(testObj);
+            var validator = new ObjectValidator(testObj);
             var resultSet = validator.Validate();
 
             Assert.NotNull(resultSet.ObjectValidations);
@@ -61,7 +61,7 @@ namespace CommonTests.Base.Validation
                 AddPredicateValidation = true
             };
 
-            var validator = new DefaultObjectValidator(testObj);
+            var validator = new ObjectValidator(testObj);
             var resultSet = validator.Validate();
             
             Assert.True(resultSet.IsInvalid);
@@ -89,7 +89,7 @@ namespace CommonTests.Base.Validation
                 }
             };
 
-            var validator = new DefaultObjectValidator(testObj);
+            var validator = new ObjectValidator(testObj);
             var resultSet = validator.Validate();
 
             Assert.True(resultSet.IsInvalid);
@@ -119,7 +119,7 @@ namespace CommonTests.Base.Validation
                 }
             };
 
-            var validator = new DefaultObjectValidator(testObj);
+            var validator = new ObjectValidator(testObj);
             var resultSet = validator.Validate();
             
             Assert.Equal(testObj, resultSet.RootObject);
@@ -145,7 +145,7 @@ namespace CommonTests.Base.Validation
                 }
             };
 
-            var validator = new DefaultObjectValidator(testObj);
+            var validator = new ObjectValidator(testObj);
             var resultSet = validator.Validate();
             
             Assert.Equal(ValidationTypes.Warning, resultSet.ValidationType);
@@ -171,7 +171,7 @@ namespace CommonTests.Base.Validation
                 }
             };
 
-            var validator = new DefaultObjectValidator(testObj);
+            var validator = new ObjectValidator(testObj);
             var resultSet = validator.Validate();
             
             Assert.True(resultSet.IsValid);
@@ -198,7 +198,7 @@ namespace CommonTests.Base.Validation
                 }
             };
 
-            var validator = new DefaultObjectValidator(testObj);
+            var validator = new ObjectValidator(testObj);
             var resultSet = validator.Validate();
             
             Assert.Single(resultSet.GetValidationsOfType(ValidationTypes.Info));
@@ -210,7 +210,7 @@ namespace CommonTests.Base.Validation
         {
             var testObj = new ParentValidateType {PropWithAttribValidation = 500};
 
-            var validator = new DefaultObjectValidator(testObj);
+            var validator = new ObjectValidator(testObj);
             var resultSet = validator.Validate();
 
             Assert.Throws<ValidationResultException>(() => resultSet.ThrowIfInvalid());

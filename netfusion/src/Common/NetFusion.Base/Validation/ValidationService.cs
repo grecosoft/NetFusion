@@ -13,7 +13,7 @@ namespace NetFusion.Base.Validation
             if (obj == null) throw new ArgumentNullException(nameof(obj), 
                 "Object to validate cannot be null.");
             
-            IObjectValidator validator = new DefaultObjectValidator(obj);
+            IObjectValidator validator = new ObjectValidator(obj);
             return validator.Validate();
         }
     }

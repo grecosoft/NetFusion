@@ -71,7 +71,7 @@ namespace NetFusion.Settings
 
         public static void ValidateSettings(IAppSettings settings)
         {
-            IObjectValidator validator = new DefaultObjectValidator(settings);
+            IObjectValidator validator = new ObjectValidator(settings);
             var result = validator.Validate();
 
             if (result.IsInvalid)
