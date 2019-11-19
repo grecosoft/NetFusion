@@ -49,7 +49,7 @@ namespace CoreTests.Messaging.Mocks
                 new ReadOnlyCollection<EntityExpression>(expressions));
 
             var loggerFactory = new LoggerFactory();
-            var evalSrv = new EntityScriptingService(loggerFactory);
+            var evalSrv = new EntityScriptingService(loggerFactory.CreateLogger<EntityScriptingService>());
 
             evalSrv.Load(new[] { es });
             return evalSrv;
