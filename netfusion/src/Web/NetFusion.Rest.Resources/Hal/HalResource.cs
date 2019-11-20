@@ -1,6 +1,7 @@
 ﻿using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NetFusion.Rest.Resources.Hal
 {
@@ -33,6 +34,22 @@ namespace NetFusion.Rest.Resources.Hal
 		}
 
 		/// <summary>
+		/// Embeds an object within parent resource.
+		/// </summary>
+		/// <param name="value">The object to embed.</param>
+		/// <param name="named">The name used to identify the embedded object.</param>
+		public void Embed(object value, string named)
+		{
+			if (value == null) throw new ArgumentNullException(nameof(value),
+				"Value to embed cannot be null.");
+			
+			if (string.IsNullOrWhiteSpace(named))
+				throw new ArgumentException("Name cannot be null or whitespace.", nameof(named));
+
+			EmbedResource(new ObjectResource(value), named);
+		}
+
+		/// <summary>
 		/// Embeds a collection of resources.
 		/// </summary>
 		/// <typeparam name="T">The type of each resource in the collection.</typeparam>
@@ -47,6 +64,23 @@ namespace NetFusion.Rest.Resources.Hal
 			EmbedResource(new ResourceCollection<T>(embeddedResources), named);
 		}
 
+		/// <summary>
+		/// Embeds a collection of objects.
+		/// </summary>
+		/// <param name="values">The objects to be embedded.</param>
+		/// <param name="named">Name used to identify the embedded objects.</param>
+		public void Embed(IEnumerable<object> values, string named)
+		{
+			if (values == null) throw new ArgumentNullException(nameof(values));
+			
+			if (string.IsNullOrWhiteSpace(named))
+				throw new ArgumentException("Name cannot be null or whitespace.", nameof(named));
+			
+			var wrappedObjs = values.Select(v => new ObjectResource(v));
+			
+			EmbedResource(new ResourceCollection<ObjectResource>(wrappedObjs), named);
+		}
+
 		private void EmbedResource(IResource embeddedResource, string named = null)
 		{
             string embeddedName = named ?? GetResourceEmbeddedName(embeddedResource);
@@ -57,7 +91,7 @@ namespace NetFusion.Rest.Resources.Hal
                     $"The name was not provided and its type was not decorated with the attribute: {typeof(ExposedResourceNameAttribute).FullName}");
             }
 
-            Embedded = Embedded ?? new Dictionary<string, IResource>();
+            Embedded ??= new Dictionary<string, IResource>();
 
             if (Embedded.ContainsKey(embeddedName))
             {
@@ -67,11 +101,8 @@ namespace NetFusion.Rest.Resources.Hal
 
             Embedded[embeddedName] = embeddedResource;
 		}
-        
-        private static string GetResourceEmbeddedName(IResource resource)
-        {
-            var namedResource = resource.GetAttribute<ExposedResourceNameAttribute>();
-            return namedResource?.ResourceName;
-        }
+
+		private static string GetResourceEmbeddedName(IResource resource) =>
+			resource.GetAttribute<ExposedResourceNameAttribute>()?.ResourceName;
     }
 }
