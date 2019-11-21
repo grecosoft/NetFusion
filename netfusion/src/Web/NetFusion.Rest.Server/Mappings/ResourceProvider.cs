@@ -30,7 +30,7 @@ namespace NetFusion.Rest.Server.Mappings
                 return;
             }
 
-            linkedResource.Links = linkedResource.Links ?? new Dictionary<string, Link>();
+            linkedResource.Links ??= new Dictionary<string, Link>();
 
             // For each associated link metadata, generate the corresponding URL and
             // associated it with the resource.
@@ -127,7 +127,9 @@ namespace NetFusion.Rest.Server.Mappings
             SetLinkOptionalDescriptors(resourceLink, link);
             SetLinkBasedDescriptors(context, resourceLink, link);
 
-            // Only generate links with relation-names are added to the resource.
+            // Only generate links with relation-names added to the resource.
+            // The RelationName will be null for the case of known links types
+            // such as Deprecation and Provide (see below).
             if (resourceLink.RelationName != null)
             {
                 var linkedResource = (ILinkedResource)context.Resource;

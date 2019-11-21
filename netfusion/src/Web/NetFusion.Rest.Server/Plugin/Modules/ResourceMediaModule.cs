@@ -43,7 +43,8 @@ namespace NetFusion.Rest.Server.Plugin.Modules
                     _mediaResourceTypeMeta[mediaTypeEntry.MediaType] = mediaTypeEntry;
                 }
 
-                // Add the configured resource metadata to the media-type entry.
+                // Add the configured resource metadata to the media-type entry
+                // after first having it built.
                 resourceMap.BuildMap();
             
                 foreach (IResourceMeta resourceMeta in resourceMap.ResourceMeta)

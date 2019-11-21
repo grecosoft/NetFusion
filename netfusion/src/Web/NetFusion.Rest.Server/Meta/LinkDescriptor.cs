@@ -161,7 +161,8 @@ namespace NetFusion.Rest.Server.Meta
 
         public ResourceLink BuildUrl(HttpMethod httpMethod, string href)
         {
-            if (string.IsNullOrWhiteSpace(href)) throw new ArgumentException("HREF value not specified.", nameof(href));
+            if (string.IsNullOrWhiteSpace(href))
+                throw new ArgumentException("HREF value not specified.", nameof(href));
 
             var resourceLink = new ResourceLink();
             var linkDescriptor = new LinkDescriptor<TResource>(resourceLink);

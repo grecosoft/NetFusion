@@ -25,7 +25,7 @@ namespace NetFusion.Rest.Server.Hal
                 "Options reference not specified.");
 
             // Use default settings if not specified by caller.
-            settings = settings ?? new JsonSerializerSettings {
+            settings ??= new JsonSerializerSettings {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 NullValueHandling = NullValueHandling.Ignore };
 
