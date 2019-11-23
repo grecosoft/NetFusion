@@ -48,11 +48,12 @@ namespace Demo.WebApi
                 .AddRoslyn()
                 .AddMongoDb()
 
+                .AddRest()
                 .AddWebMvc(config =>
                 {
                     config.EnableRouteMetadata = true;
                 })
-                .AddRest()
+
 
 //                Enable for the Messaging-Publisher/Enricher examples ONLY                
 //                .InitPluginConfig<MessageDispatchConfig>(config =>
