@@ -29,13 +29,10 @@ namespace NetFusion.Rest.Server.Meta
         public IReadOnlyCollection<ResourceLink> Links { get; }
 
         private readonly List<ResourceLink> _links = new List<ResourceLink>();
-        private readonly IResourceMap _resourceMap;
 
-        protected ResourceMeta(IResourceMap resourceMap)
+        protected ResourceMeta()
         {
             Links = _links.AsReadOnly();
-
-            _resourceMap = resourceMap ?? throw new ArgumentNullException(nameof(resourceMap));
         }
 
         /// <summary>
@@ -92,20 +89,6 @@ namespace NetFusion.Rest.Server.Meta
                 throw new ArgumentNullException(nameof(link), "Reference to link cannot be null.");
             }
             _links.Add(link);
-        }
-
-        protected IResourceMeta GetResourceMeta(Type resourceType)
-        {
-            IResourceMeta resourceMeta = _resourceMap.ResourceMeta
-                .FirstOrDefault(m => m.ResourceType == resourceType);
-
-            if (resourceMeta == null)
-            {
-                throw new InvalidOperationException(
-                    $"Resource Metadata has not yet been added for resource type: {resourceType.AssemblyQualifiedName} " + 
-                    $"to the mapping of type: {_resourceMap.GetType().AssemblyQualifiedName}.");
-            }
-            return resourceMeta;
         }
 
         private static void AssertControllerMeetsConstraints(Type controllerType)

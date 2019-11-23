@@ -33,7 +33,7 @@ namespace NetFusion.Rest.Server.Mappings
             linkedResource.Links ??= new Dictionary<string, Link>();
 
             // For each associated link metadata, generate the corresponding URL and
-            // associated it with the resource.
+            // associate it with the resource.
             foreach (ResourceLink resourceLink in context.Meta.Links)
             {
                 // Note:  Common .NET trick this allows the method to be called based on

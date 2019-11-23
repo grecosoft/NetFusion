@@ -10,12 +10,7 @@ namespace NetFusion.Rest.Server.Hal
     /// <typeparam name="TResource">The type of resource.</typeparam>
     public class HalResourceMeta<TResource> : ResourceMeta<HalResourceMeta<TResource>, TResource>
         where TResource : class, IHalResource
-    {       
-        public HalResourceMeta(IResourceMap resourceMap) : base(resourceMap)
-        {
-
-        }
-
+    {
         // ** Addition needed HAL specific methods to record any metadata can be added.
         // ** Currently, this class derives from ResourceMeta which allows adding links
         // ** to the specified resource type. 

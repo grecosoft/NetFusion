@@ -76,36 +76,7 @@ namespace NetFusion.Rest.Server.Plugin.Modules
             bool isFound = _mediaResourceTypeMeta.TryGetValue(mediaType, out MediaTypeEntry mediaTypeEntry);
             return (mediaTypeEntry, isFound);
         }    
-
-        // TODO:  Determine why this is not being called and it should be added back.
-        public IResourceMeta GetRequestedResourceMediaMeta(
-            IHeaderDictionary headers,
-            Type resourceType)
-        {
-            if (headers == null) throw new ArgumentNullException(nameof(headers));
-   
-            if (! headers.TryGetValue(HeaderNames.Accept, out StringValues values))
-            {
-                return null;
-            }
-
-            // Determine the media type to used by finding the first one, ordered by importance,
-            // for which there is a configure metadata.
-            var mediaType = values.Select(v => MediaTypeHeaderValue.Parse(v))
-                .OrderByDescending(mt => mt.Quality)
-                .FirstOrDefault(mt => _mediaResourceTypeMeta.ContainsKey(mt.MediaType.ToString()))?.MediaType;
-
-            if (mediaType == null)
-            {
-                return null;
-            }
-
-			var (entry, _) = GetMediaTypeEntry(mediaType.ToString());
-			var metaResult = entry.GetResourceTypeMeta(resourceType);
-
-            return metaResult.meta;
-        }
-
+        
         // Determines if there is metadata associated with the resource being returned
         // for a given media-type.  If found, the metadata is set on the context and 
         // passed to the associated provider.

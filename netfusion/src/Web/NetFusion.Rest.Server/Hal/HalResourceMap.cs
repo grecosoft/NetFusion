@@ -30,7 +30,7 @@ namespace NetFusion.Rest.Server.Hal
         protected HalResourceMeta<TResource> Map<TResource>()
             where TResource : class, IHalResource
         {
-            var resourceMeta = new HalResourceMeta<TResource>(this);
+            var resourceMeta = new HalResourceMeta<TResource>();
             AddResourceMeta(resourceMeta);
             return resourceMeta;
         }
