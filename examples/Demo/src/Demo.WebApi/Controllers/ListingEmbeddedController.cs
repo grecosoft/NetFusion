@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Demo.WebApi.Resources;
+using NetFusion.Rest.Resources.Hal;
 
 namespace Demo.WebApi.Controllers
 {
@@ -34,9 +36,9 @@ namespace Demo.WebApi.Controllers
             return Task.FromResult(listing);
         }
 
-        private PriceHistoryResource[] GetPricingHistory()
+        private static IEnumerable<PriceHistoryResource> GetPricingHistory()
         {
-            return new PriceHistoryResource[] {
+            return new[] {
                 new PriceHistoryResource {
                     ListingId = 1000,
                     DateOfEvent = DateTime.Parse("5/5/2016"),

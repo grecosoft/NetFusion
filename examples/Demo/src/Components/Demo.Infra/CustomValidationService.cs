@@ -1,6 +1,5 @@
 using System;
 using NetFusion.Base.Validation;
-using NetFusion.Bootstrap.Validation;
 
 namespace Demo.Infra
 {

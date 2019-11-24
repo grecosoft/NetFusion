@@ -9,8 +9,8 @@ namespace Demo.Infra
         public object Object { get; }
         public bool IsValid { get; private set; }
 
-        private List<ValidationItem> _validations = new List<ValidationItem>();
-        private List<IObjectValidator> _children = new List<IObjectValidator>();
+        private readonly List<ValidationItem> _validations = new List<ValidationItem>();
+        private readonly List<IObjectValidator> _children = new List<IObjectValidator>();
 
         public CustomObjectValidator(object obj)
         {
@@ -35,7 +35,12 @@ namespace Demo.Infra
                 AddChild(childObj);
             }
         }
-        
+
+        public void AddChildren(params object[] childObjects)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public ValidationResultSet Validate()
         {
             var objProperties = Object.GetType().GetProperties();

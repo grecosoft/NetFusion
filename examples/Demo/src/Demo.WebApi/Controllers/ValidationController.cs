@@ -1,14 +1,13 @@
 using Demo.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Base.Validation;
-using NetFusion.Bootstrap.Validation;
 
 namespace Demo.WebApi.Controllers
 {
     [Route("api/[controller]")]
     public class ValidationController : Controller
     {
-        private IValidationService _validationSrv;
+        private readonly IValidationService _validationSrv;
 
         public ValidationController(IValidationService validationSrv)
         {
