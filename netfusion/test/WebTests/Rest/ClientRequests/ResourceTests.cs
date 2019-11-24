@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Resources;
+using NetFusion.Rest.Resources.Hal;
 using NetFusion.Test.Hosting;
 using WebTests.Rest.ClientRequests.Client;
 using WebTests.Rest.ClientRequests.Server;

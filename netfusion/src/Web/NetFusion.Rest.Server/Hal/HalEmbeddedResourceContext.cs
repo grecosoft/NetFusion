@@ -22,7 +22,7 @@ namespace NetFusion.Rest.Server.Hal
             _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
         }
 
-        public bool IsResourceRequested<TResource>() where TResource : IResource
+        public bool IsRequested<TResource>() where TResource : IResource
         { 
             // If not specified by the caller, all resources are considered requested.
             if (! EmbeddedResourcesRequested)
@@ -32,6 +32,14 @@ namespace NetFusion.Rest.Server.Hal
 
             var resourceName = typeof(TResource).GetExposedResourceTypeName();
             return resourceName != null && RequestedEmbeddedResources.Contains(resourceName);
+        }
+
+        public bool IsRequested(string resourceName)
+        {
+            if (string.IsNullOrWhiteSpace(resourceName))
+                throw new ArgumentException("Resource key name must be specified.", nameof(resourceName));
+            
+            return RequestedEmbeddedResources.Contains(resourceName);
         }
 
         // The client can specify an embed query-string parameter to indicate to the server

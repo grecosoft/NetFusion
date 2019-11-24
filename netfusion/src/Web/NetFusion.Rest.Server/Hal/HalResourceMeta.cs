@@ -1,5 +1,4 @@
 ﻿using NetFusion.Rest.Resources.Hal;
-using NetFusion.Rest.Server.Mappings;
 using NetFusion.Rest.Server.Meta;
 
 namespace NetFusion.Rest.Server.Hal
@@ -12,7 +11,7 @@ namespace NetFusion.Rest.Server.Hal
         where TResource : class, IHalResource
     {
         // ** Addition needed HAL specific methods to record any metadata can be added.
-        // ** Currently, this class derives from ResourceMeta which allows adding links
-        // ** to the specified resource type. 
+        // ** This class derives from ResourceMeta which allows adding links to the
+        // ** specified resource type. 
     }
 }

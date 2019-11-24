@@ -23,7 +23,7 @@ namespace NetFusion.Rest.Server.Hal
 {
     /// <summary>
     /// Output formatter that checks if the response object is of type IHalResource and
-    /// adds the resource metadata.
+    /// adds the HAL resource metadata.  Then the resulting resource is formatted as JSON.
     /// </summary>
     public class HalFormatter : JsonOutputFormatter
     {

@@ -10,7 +10,7 @@ namespace NetFusion.Rest.Server.Linking
     /// 
     /// Example = $"http://services.customer/{resource.CustomerId}"
     /// </summary>
-    public abstract class StringFormattedLink : ResourceLink
+    public abstract class InterpolatedLink : ResourceLink
     {
         /// <summary>
         /// Returns the populated format string using the state of the specified resource.
@@ -24,7 +24,7 @@ namespace NetFusion.Rest.Server.Linking
     /// String value that is interpolated with resource property values.
     /// </summary>
     /// <typeparam name="TResource">The type of resource being interpolated.</typeparam>
-    public class StringFormattedLink<TResource> : StringFormattedLink
+    public class InterpolatedLink<TResource> : InterpolatedLink
         where TResource : class, IResource
     {
         /// <summary>
@@ -32,7 +32,7 @@ namespace NetFusion.Rest.Server.Linking
         /// </summary>
         public Func<TResource, string> ResourceUrlFormatFunc { get; }
 
-        public StringFormattedLink(Expression<Func<TResource, string>> resourceUrl)
+        public InterpolatedLink(Expression<Func<TResource, string>> resourceUrl)
         {
             if (resourceUrl == null)throw new ArgumentNullException(nameof(resourceUrl),
                 "Resource URL cannot be null.");

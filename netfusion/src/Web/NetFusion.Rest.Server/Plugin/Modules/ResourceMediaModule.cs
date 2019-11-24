@@ -12,9 +12,9 @@ using NetFusion.Rest.Server.Meta;
 namespace NetFusion.Rest.Server.Plugin.Modules
 {
     /// <summary>
-    /// Module called during the bootstrap process that resolves all resource-metadata associated
-    /// classes and caches the information to be used during application execution.  Based on the
-    /// request specified Accept header, this cached metadata is applied to returned resources.
+    /// Module called during the bootstrap process that resolves all resource-metadata associated classes
+    /// and caches the information to be used during application execution.  Based on the request specified
+    /// Accept header, this cached metadata is used by the associated IOutputFormatter.
     /// </summary>
     public class ResourceMediaModule : PluginModule, IResourceMediaModule
     {
@@ -43,8 +43,7 @@ namespace NetFusion.Rest.Server.Plugin.Modules
                     _mediaResourceTypeMeta[mediaTypeEntry.MediaType] = mediaTypeEntry;
                 }
 
-                // Add the configured resource metadata to the media-type entry
-                // after first having it built.
+                // Build and add the configured resource metadata to the media-type entry.
                 resourceMap.BuildMap();
             
                 foreach (IResourceMeta resourceMeta in resourceMap.ResourceMeta)

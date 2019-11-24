@@ -5,11 +5,11 @@ namespace NetFusion.Rest.Resources
     /// <summary>
     /// List based implementation for a resource collection.
     /// </summary>
-    /// <typeparam name="TResouce">The type of resource contained within the collection.</typeparam>
-    public class ResourceCollection<TResouce> : List<TResouce>,
-		IResourceCollection<TResouce> where TResouce : class, IResource
+    /// <typeparam name="TResource">The type of resource contained within the collection.</typeparam>
+    public class ResourceCollection<TResource> : List<TResource>,
+		IResourceCollection<TResource> where TResource : class, IResource
 	{
-		public ResourceCollection(IEnumerable<TResouce> resources)
+		public ResourceCollection(IEnumerable<TResource> resources)
 			: base(resources)
 		{
 
