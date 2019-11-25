@@ -9,9 +9,9 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
-    <PackageReference Include="NetFusion.Builder" Version="9.8.0" />
-    <PackageReference Include="NetFusion.RabbitMQ" Version="9.8.0" />
-    <PackageReference Include="NetFusion.Redis" Version="9.8.0" />
+    <PackageReference Include="NetFusion.Builder" Version="3.2.155" />
+    <PackageReference Include="NetFusion.RabbitMQ" Version="3.2.155" />
+    <PackageReference Include="NetFusion.Redis" Version="3.2.155" />
   </ItemGroup>
 
 </Project>
