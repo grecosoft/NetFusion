@@ -14,7 +14,28 @@
     "sourceName": "Solution.Context", 
     "preferNameDirectory": true,
     "symbols":{
-     
+      "port": {
+        "type": "parameter",
+        "replaces": "nf:host-port",
+        "datatype":"int",
+        "isRequired": true,
+        "description": "The port used when running local or from within Docker."
+      },
+      "service-name": {
+        "type": "parameter",
+        "datatype":"string",
+        "isRequired": true,
+        "description": "The name of the service used in docker-compose."
+      },
+      "docker-image-name":{
+        "type": "generated",
+        "generator": "casing",
+        "parameters": {
+          "source":"service-name",
+          "toLower": true
+        },
+        "replaces":"nf:docker-image-name"
+      },
       "app-id": {
         "type": "generated",
         "generator": "guid",
@@ -50,19 +71,6 @@
         "parameters": {
           "format": "D"
         }
-      },
-      "port": {
-        "type": "parameter",
-        "defaultValue": "5050",
-        "replaces": "nf:host-port",
-        "datatype":"int",
-        "description": "The port used by WebApi host Plugin Component (defaults to 5050)."
-      },
-      "include-example": {
-        "type": "parameter",
-        "defaultValue": "false",
-        "datatype":"bool",
-        "description": "Includes a working example REST Api."
       }
     },
     "sources":[
@@ -70,6 +78,8 @@
       { "include": ".vscode/**/*" },
       { "include": "scripts/**/*" },
       { "include": "Dockerfile.debug" },
+      { "include": "Dockerfile"},
+      { "include": "docker-compose.yml"},
       { "include": "src/Components/Solution.Context.Api/**/*" },
       { "include": "src/Components/Solution.Context.App/**/*" },
       { "include": "src/Components/Solution.Context.Domain/**/*" },

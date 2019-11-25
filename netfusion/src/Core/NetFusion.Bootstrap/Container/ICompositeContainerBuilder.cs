@@ -19,7 +19,7 @@ namespace NetFusion.Bootstrap.Container
 
         /// <summary>
         /// Adds one ore more plugin instances for which modules should be loaded during
-        /// the initialization of the composite-container.
+        /// the initialization of the composite-container.  This method is used for testing.
         /// </summary>
         /// <param name="plugin">One ore more plugin instances.</param>
         /// <returns>Reference to builder.</returns>

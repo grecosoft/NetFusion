@@ -3,7 +3,8 @@
 namespace NetFusion.Base.Validation
 {
     /// <summary>
-    /// Object responsible for validating an object using a specific validation library.
+    /// Object responsible for validating an object using a specific validation library
+    /// or the simple implementation provided by NetFusion.
     /// </summary>
     public interface IObjectValidator
     {
@@ -14,7 +15,7 @@ namespace NetFusion.Base.Validation
 
         /// <summary>
         /// Indicates if the object is valid.  If any validations are the level Error, 
-        /// the object should be consider invalid.
+        /// the object is consider invalid.
         /// </summary>
         bool IsValid { get; }
 
@@ -47,6 +48,12 @@ namespace NetFusion.Base.Validation
         /// </summary>
         /// <param name="childObjects">Object to be validated.</param>
         void AddChildren(IEnumerable<object> childObjects);
+        
+        /// <summary>
+        /// Adds new validators for a list of child objects.
+        /// </summary>
+        /// <param name="childObjects">Object(s) to be validated.</param>
+        void AddChildren(params object[] childObjects);
 
         /// <summary>
         /// Verifies that the predicate is true.  If not true, a validation item is added to the list.

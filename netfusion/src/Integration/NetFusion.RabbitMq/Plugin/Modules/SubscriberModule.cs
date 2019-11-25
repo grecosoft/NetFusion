@@ -102,7 +102,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 {
                     var consumerContext = new ConsumeContext 
                     {
-                        Logger = Context.LoggerFactory.CreateLogger(definition.QueueFactory.GetType().FullName),
+                        Logger = Context.LoggerFactory.CreateLogger(definition.QueueStrategy.GetType().FullName),
                         MessageData = bytes,
                         MessageProps = msgProps,
                         MessageReceiveInfo = receiveInfo,
@@ -115,7 +115,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
                     // Delegate to the queue factory, associated with the definition, and 
                     // allow it to determine how the received message should be processed. 
-                    return definition.QueueFactory.OnMessageReceivedAsync(consumerContext);
+                    return definition.QueueStrategy.OnMessageReceivedAsync(consumerContext);
                 }, 
                 config => 
                 {

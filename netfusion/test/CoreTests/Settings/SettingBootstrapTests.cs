@@ -43,7 +43,7 @@ namespace CoreTests.Settings
                     .Assert.ServiceCollection(sc =>
                     {
                         var serviceTypes = sc.Select(s => s.ServiceType).ToArray();
-            
+                        
                         Assert.Contains(typeof(IOptionsChangeTokenSource<TestSettingsOne>), serviceTypes);
                         Assert.Contains(typeof(IConfigureOptions<TestSettingsOne>), serviceTypes);
                         Assert.Contains(typeof(IOptionsChangeTokenSource<TestSettingsTwo>), serviceTypes);
@@ -148,7 +148,7 @@ namespace CoreTests.Settings
                     })
                     .Assert.Exception(ex =>
                     {
-                        ex.Should().BeOfType<ValidationResultException>();
+                        ex.Should().BeOfType<SettingsValidationException>();
                     });
             });           
         }

@@ -71,7 +71,7 @@ namespace NetFusion.Rest.Server.Meta
             if (resourceUrl == null) throw new ArgumentNullException(nameof(resourceUrl), 
                 "Resource Delegate cannot be null.");
 
-            var resourceLink = new StringFormattedLink<TResource>(resourceUrl);
+            var resourceLink = new InterpolatedLink<TResource>(resourceUrl);
             var linkDescriptor = new LinkDescriptor<TResource>(resourceLink);
 
             AddResourceLink(resourceLink);

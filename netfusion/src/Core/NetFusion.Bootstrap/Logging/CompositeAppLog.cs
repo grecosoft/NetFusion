@@ -31,58 +31,48 @@ namespace NetFusion.Bootstrap.Logging
         {
             var log = new Dictionary<string, object>();
 
-            LogFoundPluginAssemblies(log);
             LogHostApp(log);
             LogAppComponentPlugins(log);
             LogCorePlugins(log);
             return log;
         }
 
-        private void LogFoundPluginAssemblies(IDictionary<string, object> log)
-        {
-            log["Plugin:Assemblies"] = new Dictionary<string, object> {
-                {"Host:Assembly", _application.HostPlugin.AssemblyName },
-                {"Application:Assemblies", _application.AppPlugins.Select(p => p.AssemblyName).ToArray() },
-                {"Core:Assemblies", _application.CorePlugins.Select(p => p.AssemblyName).ToArray() }
-            };
-        }
-
         private void LogHostApp(IDictionary<string, object> log)
         {
             var hostLog = new Dictionary<string, object>();
-            log["Plugin:Host"] = hostLog;
+            log["HostPlugin"] = hostLog;
 
             LogPlugin(_application.HostPlugin, hostLog);
         }
 
         private void LogAppComponentPlugins(IDictionary<string, object> log)
         {
-            log["Plugins:Application"] = _application.AppPlugins.Select(plugin =>
+            log["ApplicationPlugins"] = _application.AppPlugins.Select(plugin =>
             {
                 var pluginLog = new Dictionary<string, object>();
                 LogPlugin(plugin, pluginLog);
                 return pluginLog;
-            }).ToDictionary(p => p["Plugin:Id"].ToString());
+            }).ToDictionary(p => p["PluginId"].ToString());
         }
 
         private void LogCorePlugins(IDictionary<string, object> log)
         {
-            log["Plugins:Core"] = _application.CorePlugins.Select(plugin =>
+            log["CorePlugins"] = _application.CorePlugins.Select(plugin =>
             {
                 var pluginLog = new Dictionary<string, object>();
                 LogPlugin(plugin, pluginLog);
                 return pluginLog;
-            }).ToDictionary(p => p["Plugin:Id"].ToString());
+            }).ToDictionary(p => p["PluginId"].ToString());
         }
 
         private void LogPlugin(IPlugin plugin, IDictionary<string, object> log)
         {
-            log["Plugin:Name"] = plugin.Name;
-            log["Plugin:Id"] = plugin.PluginId;
-            log["Plugin:Assembly"] = plugin.AssemblyName;
-            log["Plugin:Description"] = plugin.Description;
-            log["Plugin:SourceUrl"] = plugin.SourceUrl;
-            log["Plugin:DocUrl"] = plugin.DocUrl;
+            log["PluginName"] = plugin.Name;
+            log["PluginId"] = plugin.PluginId;
+            log["PluginAssembly"] = plugin.AssemblyName;
+            log["PluginDescription"] = plugin.Description;
+            log["PluginSourceUrl"] = plugin.SourceUrl;
+            log["PluginDocUrl"] = plugin.DocUrl;
 
             LogPluginModules(plugin, log);
             LogPluginRegistrations(plugin, log);
@@ -90,7 +80,7 @@ namespace NetFusion.Bootstrap.Logging
 
         private static void LogPluginModules(IPlugin plugin, IDictionary<string, object> log)
         {
-            log["Plugin:Modules"] = plugin.Modules.ToDictionary(
+            log["PluginModules"] = plugin.Modules.ToDictionary(
                 m => m.GetType().FullName,
                 pm =>
                 {
@@ -109,7 +99,7 @@ namespace NetFusion.Bootstrap.Logging
                 IsFactory = s.ImplementationFactory != null
             });
 
-            log["Plugin:Service:Registrations"] = implementationTypes
+            log["ServiceRegistrations"] = implementationTypes
                 .Where(it => !it.IsFactory && plugin.HasType(it.ImplementationType))
                 .Select(it => it.ToDictionary()).ToArray();
         }

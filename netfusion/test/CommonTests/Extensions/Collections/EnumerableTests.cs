@@ -34,17 +34,6 @@ namespace CommonTests.Extensions.Collections
             list.Empty().Should().BeTrue();
         }
 
-        [Fact(DisplayName = nameof(GivenEnumerable_TestForSingleElement))]
-        public void GivenEnumerable_TestForSingleElement()
-        {
-            var list = new List<int> { 5 };
-            list.IsSingletonSet().Should().BeTrue();
-            list.Add(10);
-            list.IsSingletonSet().Should().BeFalse();
-            list.Clear();
-            list.IsSingletonSet().Should().BeFalse();
-        }
-
         [Fact(DisplayName = nameof(GivenEnumerable_FindForDuplicateElementPropertyValues))]
         public void GivenEnumerable_FindForDuplicateElementPropertyValues()
         {

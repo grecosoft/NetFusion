@@ -3,6 +3,7 @@ using NetFusion.Messaging.Types;
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using NetFusion.Common.Extensions.Reflection;
 
 namespace NetFusion.Messaging.Filters
 {
@@ -24,8 +25,9 @@ namespace NetFusion.Messaging.Filters
 
         public Task OnPostExecute(IQuery query)
         {
-            if (QueryResultMatchesConsumerReturnType(query))
+            if (QueryResultCompatible(query))
             {
+                // No mapping necessary.
                 return Task.CompletedTask;
             }
 
@@ -33,15 +35,18 @@ namespace NetFusion.Messaging.Filters
             return Task.CompletedTask;
         }
 
-        private static bool QueryResultMatchesConsumerReturnType(IQuery query)
+        private static bool QueryResultCompatible(IQuery query)
         {
-            // This is the case if the result type is .NET dynamic.
+            // This is the case if the result type of the query is .NET dynamic
+            // or the object type.
             if (query.DeclaredResultType == typeof(object))
             {
                 return true;
             }
 
-            return query.Result.GetType() == query.DeclaredResultType;
+            // Check if the type of the returned result is compatible with
+            // the return type of the query.
+            return query.Result.GetType().CanAssignTo(query.DeclaredResultType);
         }
 
         private void MapConsumerReturnObjectToQueryType(IQuery query)
@@ -51,7 +56,13 @@ namespace NetFusion.Messaging.Filters
             // The query consumer didn't return an array of items so map single object.
             if (itemTargetType == null)
             {
-                object mappedResult = _objectMapper.Map(query.Result, query.DeclaredResultType);
+                if (! _objectMapper.TryMap(query.Result, query.DeclaredResultType, out object mappedResult))
+                {
+                    throw new InvalidOperationException(
+                        $"For query of type: {query.GetType()} the result of type: {query.Result.GetType()} " +
+                         $" could not be mapped to the query declared result type of: {query.DeclaredResultType} or derived type.");
+                }
+
                 query.SetResult(mappedResult);
                 return;
             }
@@ -63,7 +74,14 @@ namespace NetFusion.Messaging.Filters
             int i = 0;
             foreach (object result in results)
             {
-                object mappedResult = _objectMapper.Map(result, itemTargetType);
+                if (! _objectMapper.TryMap(result, itemTargetType, out object mappedResult))
+                {
+                    throw new InvalidOperationException(
+                        $"For query of type: {query.GetType()} the result type: {result.GetType()} " +
+                        $"at element position: {i} could not be mapped to the query declared result type of: {itemTargetType} " +
+                        "or derived type.");
+                }
+                
                 mappedResults.SetValue(mappedResult, i++);
             }
             

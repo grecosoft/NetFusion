@@ -1,4 +1,5 @@
 ﻿using System;
+using NetFusion.Common.Extensions.Reflection;
 
 namespace NetFusion.Messaging.Types
 {
@@ -19,7 +20,7 @@ namespace NetFusion.Messaging.Types
 
         // The type of the result declared by the query.  Base abstract
         // class does not have a declared result type.
-        Type IQuery.DeclaredResultType => throw new NotImplementedException();
+        public Type DeclaredResultType { get; protected set; }
 
         /// <summary>
         /// Called with the result returned from the consumer.
@@ -28,6 +29,15 @@ namespace NetFusion.Messaging.Types
         public virtual void SetResult(object result)
         {
             // The query result can be null.
+            if (result == null) return;
+            
+            if (! result.GetType().CanAssignTo(DeclaredResultType))
+            {
+                throw new InvalidOperationException(
+                    $"The handler for the query of type: {GetType()} returned a result of type: {result.GetType()} " + 
+                    $"and is not assignable to the query's declared result type of: {DeclaredResultType}.");
+            }
+
             Result = result;
         }
     }
@@ -41,6 +51,7 @@ namespace NetFusion.Messaging.Types
     {
         protected Query()
         {
+            DeclaredResultType = typeof(TResult);
             base.Result = default(TResult);
         }
 

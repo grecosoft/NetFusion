@@ -116,7 +116,7 @@ namespace CoreTests.Bootstrap
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         ex.Message.Should().Be(
-                            "The composite-application has been stopped and can no longer be accessed.");
+                            "The Composite Application has been stopped and can no longer be accessed.");
                     });
             });
         }

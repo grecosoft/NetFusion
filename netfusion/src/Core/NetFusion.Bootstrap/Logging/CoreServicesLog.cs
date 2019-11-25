@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Bootstrap.Validation;
 
 namespace NetFusion.Bootstrap.Logging
 {
@@ -33,19 +32,10 @@ namespace NetFusion.Bootstrap.Logging
 
         public void Log()
         {
-            LogContainerConfigs();
             LogSerializationManager();
             LogScriptingService();
         }
 
-        private void LogContainerConfigs()
-        {
-            var validationConfig = _builder.GetContainerConfig<ValidationConfig>();
-            
-            _logger.LogDebug("Registered Object Validator: {validator}",
-                validationConfig.ValidatorType.AssemblyQualifiedName);
-        }
-        
         private void LogSerializationManager()
         {
             var serializerMgr = _services.GetService<ISerializationManager>();
@@ -61,7 +51,6 @@ namespace NetFusion.Bootstrap.Logging
                     serializerMgr.GetType().AssemblyQualifiedName);
                 
                 var serializerDetails = new {
-                    SerializationManager = serializerMgr.GetType().FullName,
                     Serializers = serializerMgr.Serializers.Select(s => new {
                         s.ContentType,
                         SerializerType = s.GetType().FullName

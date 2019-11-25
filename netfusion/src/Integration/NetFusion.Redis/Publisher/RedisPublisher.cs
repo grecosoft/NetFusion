@@ -62,7 +62,12 @@ namespace NetFusion.Redis.Publisher
                 // Build the name of the channel to publish to by combining the static channel
                 // name with the optional event state data.
                 string eventStateData = channel.GetEventStateData(domainEvent);
-                string channelName = $"{channel.ChannelName}.{eventStateData}";
+                string channelName = channel.ChannelName;
+
+                if (eventStateData != string.Empty)
+                {
+                    channelName += $".{eventStateData}";
+                }
 
                 LogChannelPublish(domainEvent, channel.DatabaseName, channelName);
                 byte[] messageData = ChannelMessageEncoder.Pack(channel.ContentType, messageValue);

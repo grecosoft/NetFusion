@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "Build:Solution.Context",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Solution.Context.WebApi/bin/Debug/netcoreapp2.1/Solution.Context.WebApi.dll",
+            "program": "${workspaceFolder}/src/Solution.Context.WebApi/bin/Debug/netcoreapp2.2/Solution.Context.WebApi.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/Solution.Context.WebApi",
             "stopAtEntry": false,

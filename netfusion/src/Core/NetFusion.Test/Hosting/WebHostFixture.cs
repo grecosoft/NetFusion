@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Builder;
 using NetFusion.Test.Plugins;
 
@@ -91,8 +92,9 @@ namespace NetFusion.Test.Hosting
                 {
                     // Create instance used to add plugins to the underlying service-collection.
                     var compositeBuilder = new CompositeContainerBuilder(services, 
-                        new TestTypeResolver(),
-                        context.Configuration);
+                        context.Configuration,
+                        new BootstrapLogger(),
+                        new TestTypeResolver());
                     
                     // Allow the unit-test to add the need plugins and call the compose method
                     // to populate the service-collection.

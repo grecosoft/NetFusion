@@ -23,15 +23,14 @@ namespace NetFusion.Roslyn.Internal
     /// </summary>
     public class EntityScriptingService : IEntityScriptingService
     {
-        private readonly ILogger<EntityScriptingService> _logger;
+        private readonly ILogger _logger;
 
         // Map between a domain entity and its related set of named scripts.
         private ILookup<Type, ScriptEvaluator> _scriptEvaluators;
 
-        public EntityScriptingService(ILoggerFactory logger)
+        public EntityScriptingService(ILogger<EntityScriptingService> logger)
         {
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
-            _logger = logger.CreateLogger<EntityScriptingService>();
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         // Initialize the script evaluators that should be invoked for a
@@ -157,7 +156,7 @@ namespace NetFusion.Roslyn.Internal
 
         // Used to create a cached delegate that can be used to execute a script
         // against a domain model and a set of dynamic attributes.  
-        private ScriptRunner<object> CreateScriptRunner(EntityScript script, string expression)
+        private static ScriptRunner<object> CreateScriptRunner(EntityScript script, string expression)
         {
             var scopeType = typeof(EntityScriptScope<>).MakeGenericType(script.EntityType);
             var options = GetScriptOptions(script);
@@ -188,6 +187,7 @@ namespace NetFusion.Roslyn.Internal
             };
 
             var importedAssemblies = GetImportedAssemblies(script, defaultTypes);
+            
             var options = ScriptOptions.Default.AddReferences(importedAssemblies)
                 .AddImports(script.ImportedNamespaces ?? new string[] { });
 

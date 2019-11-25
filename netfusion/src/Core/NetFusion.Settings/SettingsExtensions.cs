@@ -33,8 +33,7 @@ namespace NetFusion.Settings
         public static string GetSectionPath<T>()
            where T : IAppSettings
         {
-            var settingsType = typeof(T);
-            return GetSectionPath(settingsType);
+            return GetSectionPath(typeof(T));
         }
 
         /// <summary>
@@ -70,9 +69,9 @@ namespace NetFusion.Settings
             return settings;
         }
 
-        private static void ValidateSettings(object settings)
+        public static void ValidateSettings(IAppSettings settings)
         {
-            IObjectValidator validator = new DataAnnotationsValidator(settings);
+            IObjectValidator validator = new ObjectValidator(settings);
             var result = validator.Validate();
 
             if (result.IsInvalid)
@@ -80,25 +79,6 @@ namespace NetFusion.Settings
                 string section = GetSectionPath(settings.GetType());
                 throw new SettingsValidationException(settings.GetType(), section, result);
             }
-
-            result.ThrowIfInvalid();
-        }
-
-        internal static void ValidateSettings(ILogger logger, object settings)
-        {
-            IObjectValidator validator = new DataAnnotationsValidator(settings);
-            var result = validator.Validate();
-
-            if (result.IsInvalid)
-            {
-                string section = GetSectionPath(settings.GetType());
-
-                logger.LogErrorDetails(
-                    $"Invalid application setting: {settings.GetType().FullName}. " + 
-                    $"With configuration section: {section}.", result.ObjectValidations);
-            }
-
-            result.ThrowIfInvalid();
         }
     }
 }

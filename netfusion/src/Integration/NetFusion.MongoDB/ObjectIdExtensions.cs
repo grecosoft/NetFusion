@@ -13,7 +13,8 @@ namespace NetFusion.MongoDB
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new InvalidOperationException("MongoDB ObjectId string representation can't be null.");
+                throw new InvalidOperationException(
+                    "MongoDB ObjectId string representation can't be null or whitespace.");
             }
 
             if (!ObjectId.TryParse(value, out ObjectId _))

@@ -19,7 +19,7 @@ namespace NetFusion.Serialization
     /// </summary>
     public class SerializationManager : ISerializationManager
     {
-        // Serializer keyed by content-type:
+        // Serializer searched by content-type and encoding-type:
         private readonly List<IMessageSerializer> _serializers;
 
         public SerializationManager()
@@ -111,8 +111,6 @@ namespace NetFusion.Serialization
                     $"Serializer for Content-Type: {contentType} Encoding-Type: {types.encodingType ?? " Not Set"} not registered.");
             }
             
-            
-
             return serializer;
         }
 

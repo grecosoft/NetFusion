@@ -1,0 +1,6 @@
+version: '3'
+services:
+  nf:docker-image-name:
+    build: .
+    ports:
+      - "nf:host-port:80"

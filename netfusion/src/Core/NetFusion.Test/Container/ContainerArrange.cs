@@ -30,6 +30,12 @@ namespace NetFusion.Test.Container
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
 
             arrange(_fixture.ConfigBuilder);
+
+            // The HostBuilder and WebHostBuilder automatically add IConfiguration
+            // to the container.
+            IConfiguration configuration = _fixture.ConfigBuilder.Build();
+            _fixture.Services.AddSingleton(configuration);
+            
             return this;
         }
 

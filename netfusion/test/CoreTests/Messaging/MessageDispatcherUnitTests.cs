@@ -102,9 +102,9 @@ namespace CoreTests.Messaging
                 
                 // ... Each enricher exception will have an inner-exception referencing the actual
                 // ... exception thrown by the enricher:
-                Assert.True(ex.ExceptionDetails.All(dEx => dEx.InnerException.GetType() == typeof(InvalidOperationException)));
+                Assert.True(ex.ExceptionDetails.All(dEx => dEx.InnerException?.GetType() == typeof(InvalidOperationException)));
                
-                var messages = ex.ExceptionDetails.Select(dEx => dEx.InnerException.Message).ToArray();
+                var messages = ex.ExceptionDetails.Select(dEx => dEx.InnerException?.Message).ToArray();
                 Assert.Contains("ENRICHER_MESSAGE_1", messages);
                 Assert.Contains("ENRICHER_MESSAGE_2", messages);
 
@@ -163,9 +163,9 @@ namespace CoreTests.Messaging
                 
                 // ... Each publisher exception will have an inner-exception referencing the actual
                 // ... exception thrown by the publisher:
-                Assert.True(ex.ExceptionDetails.All(dEx => dEx.InnerException.GetType() == typeof(InvalidOperationException)));
+                Assert.True(ex.ExceptionDetails.All(dEx => dEx.InnerException?.GetType() == typeof(InvalidOperationException)));
                
-                var messages = ex.ExceptionDetails.Select(dEx => dEx.InnerException.Message).ToArray();
+                var messages = ex.ExceptionDetails.Select(dEx => dEx.InnerException?.Message).ToArray();
                 Assert.Contains("PUBLISHER_MESSAGE_1", messages);
                 Assert.Contains("PUBLISHER_MESSAGE_2", messages);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -44,7 +45,7 @@ namespace NetFusion.Settings.Plugin.Modules
                 
                 // This is a non-generic version that is automatically called and adds the
                 // configuration-setting to the container. Eliminates having to manually make
-                // call for each setting.
+                // call for each setting.  This is what enables IOptions and IOptionsSnapshot etc.
                 services.Configure(appSettingType, Context.Configuration.GetSection(sectionPath));
             }
         }
@@ -56,14 +57,18 @@ namespace NetFusion.Settings.Plugin.Modules
         {
             catalog.AsDescriptor(
                 t => t.IsConcreteTypeDerivedFrom<IAppSettings>(), 
-                st => ServiceDescriptor.Singleton(st, sp => {
-                    Type optionsType = typeof(IOptions<>).MakeGenericType(st);
+                st => ServiceDescriptor.Singleton(st, sp =>
+                {
+                    // Note IConfiguration is not being used so the setting that is directly
+                    // injected will equal the value if IOption<T> is injected.
+                    var optionType = typeof(IOptions<>).MakeGenericType(st);
+                    
+                    dynamic option = sp.GetRequiredService(optionType);
+                    IAppSettings settings = option.Value;
+                    
+                    SettingsExtensions.ValidateSettings(settings);
 
-                    dynamic options = sp.GetRequiredService(optionsType);
-                    object appSettings = options.Value;
-
-                    SettingsExtensions.ValidateSettings(Context.Logger, appSettings);
-                    return appSettings;
+                    return settings;
                 }));
         }
         

@@ -26,6 +26,7 @@ namespace NetFusion.RabbitMQ.Plugin
     
     public static class CompositeBuilderExtensions
     {
+        // Adds the RabbitMQ plugin to the composite application.
         public static ICompositeContainerBuilder AddRabbitMq(this ICompositeContainerBuilder composite)
         {
             return composite

@@ -10,6 +10,9 @@ using NetFusion.RabbitMQ.Metadata;
 using NetFusion.RabbitMQ.Settings;
 using NetFusion.Settings;
 using System.Threading.Tasks;
+using EasyNetQ.Logging;
+using NetFusion.RabbitMQ.Logging;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 [assembly: InternalsVisibleTo("IntegrationTests")]
 namespace NetFusion.RabbitMQ.Plugin.Modules
@@ -52,6 +55,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             catch (SettingsValidationException ex)
             {
                 Context.BootstrapLogger.Add(LogLevel.Error, ex.Message);
+                throw;
             }
         }
         
@@ -60,7 +64,9 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         //------------------------------------------------------
 
         protected override Task OnStartModuleAsync(IServiceProvider services)
-        {            
+        {
+            ConfigureLogging();
+            
             foreach (BusConnection conn in _busSettings.Connections)
             {
                 CreateBus(conn);
@@ -96,11 +102,13 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             return bus;
         }
 
+        // Applies any settings stored within the application configure to the exchange.
         public void ApplyExchangeSettings(ExchangeMeta meta)
         {
             ApplyExchangeSettingsInternal(meta);
         }
 
+        // Applies any settings stored within the application configure to the queue.
         public void ApplyQueueSettings(QueueMeta meta)
         {
             if (meta == null) throw new ArgumentNullException(nameof(meta));
@@ -113,6 +121,14 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             
             ApplyExchangeSettingsInternal(meta.Exchange, applyQueueSettings: false);
         }
+
+        // Delegates any EasyNetQ logs to a Microsoft logger instance.
+        private void ConfigureLogging()
+        {
+            ILogger logger = Context.LoggerFactory.CreateLogger("EasyNetQ");
+
+            LogProvider.SetCurrentLogProvider(new RabbitMqLogProvider(logger));
+        }
         
         private void CreateBus(BusConnection conn)
         {
@@ -123,7 +139,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                     "Check configuration for duplicates.");
             }
 
-            // Create an EasyNetQ connection configuration from settings:
+            // Create an EasyNetQ connection configuration from application settings:
             ConnectionConfiguration connConfig = new ConnectionConfiguration {
                 UserName = conn.UserName,
                 Password = conn.Password,
@@ -144,7 +160,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             connConfig.Hosts = conn.Hosts.Select(h => new HostConfiguration {
                 Host = h.HostName,
                 Port = h.Port
-
             }).ToArray();
 
             // Allow EasyNetQ to validate the connection configuration:
@@ -193,7 +208,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             }
         }
 
-        private BusConnection GetBusConnection(string busName)
+        private BusConnection GetBusConnectionSettings(string busName)
         {
             if (string.IsNullOrWhiteSpace(busName))
                 throw new ArgumentException("Bus name not specified.", nameof(busName));
@@ -213,7 +228,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             if (string.IsNullOrWhiteSpace(exchangeName))
                 throw new ArgumentException("Exchange name not specified.", nameof(exchangeName));
 
-            var busConn = GetBusConnection(busName);
+            var busConn = GetBusConnectionSettings(busName);
             return busConn.ExchangeSettings.FirstOrDefault(s => s.ExchangeName == exchangeName);
         }
         
@@ -222,7 +237,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             if (string.IsNullOrWhiteSpace(queueName))
                 throw new ArgumentException("Queue name not specified.", nameof(queueName));
 
-            var busConn = GetBusConnection(busName);
+            var busConn = GetBusConnectionSettings(busName);
             return busConn.QueueSettings.FirstOrDefault(s => s.QueueName == queueName);
         }
 

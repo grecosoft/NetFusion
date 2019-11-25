@@ -56,7 +56,8 @@ namespace NetFusion.Rest.Server.Mappings
             if (_resourceTypeMeta.ContainsKey(resourceMeta.ResourceType)) 
             {
                 throw new InvalidOperationException(
-                    $"Resource metadata already specified for resource type: {resourceMeta.ResourceType.FullName}");
+                    $"Resource metadata already specified for resource type: {resourceMeta.ResourceType.FullName} " + 
+                    $"For media-type: {MediaType}");
             }
 
             _resourceTypeMeta[resourceMeta.ResourceType] = resourceMeta;

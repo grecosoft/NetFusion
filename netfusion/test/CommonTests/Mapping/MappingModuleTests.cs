@@ -152,12 +152,12 @@ namespace CommonTests.Mapping
         {
             public IEnumerable<IMappingStrategy> GetStrategies()
             {
-                yield return new MappingDelegate<TestMapTypeOne, TestMapTypeTwo>(
-                    source => new TestMapTypeTwo {
-                        Sum = source.Values.Sum(),
-                        Min =  source.Values.Min(),
-                        Max = source.Values.Max()
-                    });
+                yield return DelegateMap.Map((TestMapTypeOne s) => new TestMapTypeTwo
+                {
+                    Sum = s.Values.Sum(),
+                    Min =  s.Values.Min(),
+                    Max = s.Values.Max()
+                });
             }
         }
 

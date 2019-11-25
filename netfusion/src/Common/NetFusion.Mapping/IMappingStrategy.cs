@@ -5,7 +5,7 @@ namespace NetFusion.Mapping
 {
     /// <summary>
     /// Interface defining the contract for a type responsible for mapping an object 
-    /// from its source to target type.
+    /// between its source to target types.
     /// </summary>
     public interface IMappingStrategy 
     {
@@ -24,13 +24,13 @@ namespace NetFusion.Mapping
         /// </summary>
         /// <param name="mapper">Reference to the IObjectMapper service.</param>
         /// <param name="obj">The source object to be mapped.</param>
-        /// <returns>The resulting target type instance.</returns>
+        /// <returns>Resulting instance mapped to the target type.</returns>
         object Map(IObjectMapper mapper, object obj);
     }
 
     /// <summary>
-    /// Interface defining the contract for a type responsible for mapping from
-    /// an object from its source to target type.
+    /// Interface defining the contract for a type responsible for mapping an object 
+    /// between its source to target types.
     /// </summary>
     /// <typeparam name="TSource">The source type associated with the mapping.</typeparam>
     /// <typeparam name="TTarget">The target type to which the source type will be mapped.</typeparam>

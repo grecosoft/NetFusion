@@ -29,7 +29,7 @@ namespace NetFusion.Builder
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder), "Configuration builder not specified.");
         
-            builder.SetBasePath(Directory.GetCurrentDirectory());
+            builder.SetBasePath(Directory.GetCurrentDirectory()); 
             builder.AddJsonFile($"{AppSettingsFileName}.json", reloadOnChange: true, optional: true);
             builder.AddJsonFile($"{AppSettingsFileName}.{hostingEnv.EnvironmentName}.json", reloadOnChange: true, optional: true);
             builder.AddJsonFile($"{AppSettingsFileName}.{Environment.MachineName}.json", reloadOnChange: true, optional: true);

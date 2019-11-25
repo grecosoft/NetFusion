@@ -6,7 +6,7 @@ namespace NetFusion.Base.Scripting
     /// Attribute that can be attached to classes or methods for specifying an
     /// associated script variable representing a predicate.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class ApplyScriptPredicateAttribute : Attribute
     {
         /// <summary>

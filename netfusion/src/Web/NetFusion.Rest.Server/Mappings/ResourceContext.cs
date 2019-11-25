@@ -13,7 +13,7 @@ namespace NetFusion.Rest.Server.Mappings
     /// </summary>
     public class ResourceContext
     {
-        // Instance of a resource and it associated metadata.
+        // Instance of a resource being returned.
         public IResource Resource { get; set; }
 
         // The metadata associated with the resource.

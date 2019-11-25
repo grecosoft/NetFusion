@@ -31,8 +31,8 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
                 .GetCustomAttribute<SubscriberQueueAttribute>();
 
             DispatchInfo = dispatchInfo;
-            QueueMeta = queueAttribute.QueueFactory.CreateQueueMeta(queueAttribute);
-            QueueMeta.QueueFactory = queueAttribute.QueueFactory;
+            QueueMeta = queueAttribute.QueueStrategy.CreateQueueMeta(queueAttribute);
+            QueueMeta.QueueStrategy = queueAttribute.QueueStrategy;
             
             ApplyScopedQueueName(QueueMeta);
         }
@@ -58,8 +58,6 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             {
                 meta.SetScopedName($"{meta.QueueName}<-({Guid.NewGuid()})");
             }
-            
-            
         }
     }
 }

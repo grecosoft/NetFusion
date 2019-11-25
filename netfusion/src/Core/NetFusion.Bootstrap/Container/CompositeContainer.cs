@@ -7,22 +7,15 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Bootstrap.Validation;
+using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Instantiated and delegated to by the ICompositeContainerBuilder instance returned by
-    /// calling the CompositeContainer extension method on IServiceCollection.  The methods
-    /// contained on the IContainerBuilder interface are used to register plugins with the
-    /// CompositeContainer.
-    ///
-    /// The composite-container builder is used when configuring the Generic Host and allows
-    /// for adding services to the IServiceCollection using a controlled process common across
-    /// all plugins.  A plugin's associated modules are called to register services provided by
-    /// the plugin when the Compose method of IContainerBuilder is called.  After the Compose
-    /// method is called, an ICompositeApp singleton instance is added to the service-collection.
+    /// Manages a collection of plugins and initializes an instance of ICompositeAppBuilder
+    /// delegated to for creating an instance of ICompositeApp bootstrapped from the set of
+    /// plugins.
     /// </summary>
     public class CompositeContainer 
     {
@@ -33,25 +26,24 @@ namespace NetFusion.Bootstrap.Container
         private readonly List<IPlugin> _plugins = new List<IPlugin>();
         private readonly CompositeAppBuilder _builder;
 
-        public bool IsComposted { get; private set; }
+        public bool IsComposed { get; private set; }
 
         //--------------------------------------------------
         //--Container Initialization
         //--------------------------------------------------
 
         public ICompositeAppBuilder AppBuilder => _builder;
-        public IBootstrapLogger BootstrapLogger => _builder.BootstrapLogger;
         
         // Instantiated by CompositeContainerBuilder.
-        public CompositeContainer(IServiceCollection services, IConfiguration configuration)
+        public CompositeContainer(IServiceCollection services, 
+            IConfiguration configuration,
+            IBootstrapLogger bootstrapLogger)
         {
-            _serviceCollection = services ?? throw new ArgumentNullException(nameof(services));
-
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            
-            _builder = new CompositeAppBuilder(services, configuration);
-            
-            AddContainerConfigs();
+            if (bootstrapLogger == null) throw new ArgumentNullException(nameof(bootstrapLogger));
+
+            _serviceCollection = services ?? throw new ArgumentNullException(nameof(services));
+            _builder = new CompositeAppBuilder(services, configuration, bootstrapLogger);
         }
         
         /// <summary>
@@ -71,7 +63,7 @@ namespace NetFusion.Bootstrap.Container
         }
         
         /// <summary>
-        /// Updated by unit-tests to add a collection of configured mock plugins.
+        /// Called by unit-tests to add a collection of configured mock plugins.
         /// </summary>
         /// <param name="plugins">The list of plugins to be added.</param>
         public void RegisterPlugins(params IPlugin[] plugins)
@@ -83,14 +75,7 @@ namespace NetFusion.Bootstrap.Container
         {
             return _plugins.Any(p => p.GetType() == typeof(T));
         }
-        
-        // Add container level configurations that can be updated by the host
-        // to control how the composite-application is initialized.
-        private void AddContainerConfigs()
-        {
-            _builder.AddContainerConfig(new ValidationConfig());
-        }
-        
+
         // Returns a container level configuration used to configure the runtime behavior
         // of the built container.
         public T GetContainerConfig<T>() where T : IContainerConfig
@@ -104,23 +89,16 @@ namespace NetFusion.Bootstrap.Container
         // extended the base implementation.
         public T GetPluginConfig<T>() where T : IPluginConfig
         {
-            var configs = _plugins.SelectMany(p => p.Configs)
-                .Where(c => c.GetType() == typeof(T)).ToArray();
-
-            if (configs.Length > 1)
-            {
-                throw new ContainerException(
-                    $"Plugin configuration of type: {typeof(T)} has been registered by multiple plugins." +
-                    "A configuration can be registered by only one plugin.");
-            }
-
-            if (configs.Length == 0)
+            var pluginConfig = _plugins.SelectMany(p => p.Configs)
+                .FirstOrDefault(c => c.GetType() == typeof(T));
+            
+            if (pluginConfig == null)
             {
                 throw new ContainerException(
                     $"Plugin configuration of type: {typeof(T)} is not registered.");
             }
 
-            return (T)configs.First();
+            return (T) pluginConfig;
         }
         
         
@@ -131,19 +109,19 @@ namespace NetFusion.Bootstrap.Container
         public void Compose(ITypeResolver typeResolver)
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
-
-            if (IsComposted)
-            {
-                throw new ContainerException("Container has already been composed.");
-            }
-
+            
             try
             {
+                if (IsComposed)
+                {
+                    throw new ContainerException("Container has already been composed.");
+                }
+                
                 // Delegate to the builder:
                 _builder.ComposeModules(typeResolver, _plugins);
                 _builder.RegisterServices(_serviceCollection);
 
-                IsComposted = true;
+                IsComposed = true;
 
             }
             catch (ContainerException ex)
@@ -158,8 +136,15 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        private Exception LogException(Exception ex)
+        private Exception LogException(ContainerException ex)
         {
+            if (ex.Details != null)
+            {
+                _builder.BootstrapLogger.Add(LogLevel.Error, 
+                    $"Bootstrap Exception: {ex}; Details: {ex.Details.ToIndentedJson()}");
+                return ex;
+            }
+            
             _builder.BootstrapLogger.Add(LogLevel.Error, $"Bootstrap Exception: {ex}");
             return ex;
         }

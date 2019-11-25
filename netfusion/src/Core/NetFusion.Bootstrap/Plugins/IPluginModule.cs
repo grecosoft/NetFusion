@@ -7,7 +7,7 @@ using NetFusion.Bootstrap.Catalog;
 namespace NetFusion.Bootstrap.Plugins
 {
     /// <summary>
-    /// Implemented by one or more plug-in classes allowing the plug-in to be configured.  
+    /// Implemented by one or more classes within a plugin allowing the plug-in to be configured.  
     /// This includes the registering of types within the dependency-injection container, 
     /// the discovering of known-type implementations, and the execution of any needed
     /// logic upon startup and shutdown.
@@ -33,7 +33,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// Called first for all plug-in modules to allow default service implementations
-        /// to be registered for use if not overridden by another plug-in module.
+        /// to be registered for use if not overridden by another plugin module.
         /// </summary>
         /// <param name="services">Service collection used to register services.
         /// </param>
@@ -58,21 +58,21 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// Method called on the module by the bootstrap process.  Called after all types have been
-        /// registered and the container has been created.
+        /// registered and the composite application has been created.
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
         Task StartModuleAsync(IServiceProvider services);
 
         /// <summary>
         /// Called after all modules have been started.  This method can contain logic that requires
-        /// calling other module provides services that must have already been started.
+        /// calling other module provided services that must have already been started.
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
         Task RunModuleAsync(IServiceProvider services);
 
         /// <summary>
-        /// Called when the container is stopped.  Allows the module to complete any processing
-        /// before the container is stopped.
+        /// Called when the composite application is stopped.  Allows the module to complete any processing
+        /// before the composite application is stopped.
         /// </summary>
         /// <param name="services">Scoped service provider.</param>
         Task StopModuleAsync(IServiceProvider services);

@@ -100,7 +100,7 @@ namespace NetFusion.RabbitMQ.Metadata
                 // for each route-key.
                 foreach (string routeKey in meta.RouteKeys ?? new string[] {})
                 {
-                    bus.Bind(exchange, queue, routeKey);
+                    await bus.BindAsync(exchange, queue, routeKey);
                 }
             } 
             else 

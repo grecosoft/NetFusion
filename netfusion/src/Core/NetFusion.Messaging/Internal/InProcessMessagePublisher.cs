@@ -20,20 +20,20 @@ namespace NetFusion.Messaging.Internal
     /// </summary>
     public class InProcessMessagePublisher : MessagePublisher
     {
-        private readonly IServiceProvider _services;
         private readonly ILogger _logger;
+        private readonly IServiceProvider _services;
         private readonly IMessageDispatchModule _messagingModule;
         private readonly IEntityScriptingService _scriptingSrv;
 
         public InProcessMessagePublisher(
-            IServiceProvider services,
             ILogger<InProcessMessagePublisher> logger,
-            IMessageDispatchModule eventingModule,
+            IServiceProvider services,
+            IMessageDispatchModule messagingModule,
             IEntityScriptingService scriptingSrv)
         {
-            _services = services ?? throw new ArgumentNullException(nameof(services));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _messagingModule = eventingModule ?? throw new ArgumentNullException(nameof(eventingModule));
+            _services = services ?? throw new ArgumentNullException(nameof(services));
+            _messagingModule = messagingModule ?? throw new ArgumentNullException(nameof(messagingModule));
             _scriptingSrv = scriptingSrv ?? throw new ArgumentNullException(nameof(scriptingSrv));
         }
 
@@ -92,6 +92,8 @@ namespace NetFusion.Messaging.Internal
             }
         }
 
+        // Evaluates any specified handler dispatch rules to determine if the message
+        // meets the criteria required by the handler.
         private async Task<MessageDispatchInfo[]> GetMatchingDispatchers(
             IEnumerable<MessageDispatchInfo> dispatchers, 
             IMessage message)
@@ -127,7 +129,7 @@ namespace NetFusion.Messaging.Internal
 
         private static void AssertMessageDispatchers(IMessage message, MessageDispatchInfo[] dispatchers)
         {
-            // There are no constrains on the number of handlers for domain-events.
+            // There are no constraints on the number of handlers for domain-events.
             if (! (message is ICommand command))
             {
                 return;

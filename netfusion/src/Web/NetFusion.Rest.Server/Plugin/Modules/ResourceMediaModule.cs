@@ -12,9 +12,9 @@ using NetFusion.Rest.Server.Meta;
 namespace NetFusion.Rest.Server.Plugin.Modules
 {
     /// <summary>
-    /// Module called during the bootstrap process that resolves all resource-metadata associated
-    /// classes and caches the information to be used during application execution.  Based on the
-    /// request specified Accept header, this cached metadata is applied to returned resources.
+    /// Module called during the bootstrap process that resolves all resource-metadata associated classes
+    /// and caches the information to be used during application execution.  Based on the request specified
+    /// Accept header, this cached metadata is used by the associated IOutputFormatter.
     /// </summary>
     public class ResourceMediaModule : PluginModule, IResourceMediaModule
     {
@@ -43,7 +43,7 @@ namespace NetFusion.Rest.Server.Plugin.Modules
                     _mediaResourceTypeMeta[mediaTypeEntry.MediaType] = mediaTypeEntry;
                 }
 
-                // Add the configured resource metadata to the media-type entry.
+                // Build and add the configured resource metadata to the media-type entry.
                 resourceMap.BuildMap();
             
                 foreach (IResourceMeta resourceMeta in resourceMap.ResourceMeta)
@@ -75,36 +75,7 @@ namespace NetFusion.Rest.Server.Plugin.Modules
             bool isFound = _mediaResourceTypeMeta.TryGetValue(mediaType, out MediaTypeEntry mediaTypeEntry);
             return (mediaTypeEntry, isFound);
         }    
-
-        // TODO:  Determine why this is not being called and it should be added back.
-        public IResourceMeta GetRequestedResourceMediaMeta(
-            IHeaderDictionary headers,
-            Type resourceType)
-        {
-            if (headers == null) throw new ArgumentNullException(nameof(headers));
-   
-            if (! headers.TryGetValue(HeaderNames.Accept, out StringValues values))
-            {
-                return null;
-            }
-
-            // Determine the media type to used by finding the first one, ordered by importance,
-            // for which there is a configure metadata.
-            var mediaType = values.Select(v => MediaTypeHeaderValue.Parse(v))
-                .OrderByDescending(mt => mt.Quality)
-                .FirstOrDefault(mt => _mediaResourceTypeMeta.ContainsKey(mt.MediaType.ToString()))?.MediaType;
-
-            if (mediaType == null)
-            {
-                return null;
-            }
-
-			var (entry, _) = GetMediaTypeEntry(mediaType.ToString());
-			var metaResult = entry.GetResourceTypeMeta(resourceType);
-
-            return metaResult.meta;
-        }
-
+        
         // Determines if there is metadata associated with the resource being returned
         // for a given media-type.  If found, the metadata is set on the context and 
         // passed to the associated provider.

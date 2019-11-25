@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Bootstrap.Container
@@ -45,14 +44,6 @@ namespace NetFusion.Bootstrap.Container
         /// disposed after use.</returns>
         IServiceScope CreateServiceScope();
 
-        /// <summary>
-        /// Creates and object-validator used to validate an object based on the
-        /// validation implementation specified when bootstrapping the application.
-        /// </summary>
-        /// <param name="obj">The object for which the validator is created.</param>
-        /// <returns>Validate used to validate a specific entity.</returns>
-        IObjectValidator CreateValidator(object obj);
-        
         /// <summary>
         /// Stops each plugin module.
         /// </summary>

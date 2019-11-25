@@ -9,12 +9,6 @@ namespace NetFusion.Base.Validation
     public class ValidationResultException : NetFusionException
     {
         /// <summary>
-        /// Reference to the object that failed validation.
-        /// </summary>
-        /// <returns>The object that failed validation.</returns>
-        public object InvalidObject { get; private set; }
-
-        /// <summary>
         /// Indicates if the client who made the request should be notified of the
         /// validation exception.  This should only be set if the validations can
         /// can be viewed by the client.
@@ -42,9 +36,7 @@ namespace NetFusion.Base.Validation
                 "Validations", 
                 GetValidationDetails(invalidObject, result))
         {
-            InvalidObject = invalidObject ?? throw new ArgumentNullException(nameof(invalidObject));
             Result = result ?? throw new ArgumentNullException(nameof(result));
-
             NotifyClient = notifyClient;
         }
 
