@@ -9,6 +9,8 @@ services:
         volumes:
             - rabbit_data:/var/lib/rabbitmq
             - rabbit_logs:/var/log/rabbitmq
+            - ./rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
+            - ./definitions.json:/etc/rabbitmq/definitions.json:ro
         ports:
             - 5682:5672
             - 15682:15672
@@ -47,26 +49,6 @@ services:
         ports:
             - 5351:5341
             - 8051:80
-
-#    tutorial-WebApi:
-#        build:
-#            context: .
-#            dockerfile: Dockerfile-WebApi
-#            network: host
-#        image: tutorial-webapi
-#        ports:
-#            - 8086:80
-#        network_mode: host
-#        environment:
-#            - ASPNETCORE_ENVIRONMENT=DEVELOPMENT
-#            
-#    tutorial-Subscriber:
-#        build:
-#            context: .
-#            dockerfile: Dockerfile-Subscriber
-#            network: host
-#        image: tutorial-subscriber
-#        network_mode: host
 
 volumes:
     rabbit_data:
