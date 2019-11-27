@@ -1,3 +1,5 @@
+#!/bin/bash
+
 docker-compose down
 
 docker volume rm dev-rabbit_data
