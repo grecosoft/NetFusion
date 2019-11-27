@@ -9,8 +9,8 @@ services:
         volumes:
             - rabbit_data:/var/lib/rabbitmq
             - rabbit_logs:/var/log/rabbitmq
-            - ./rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
-            - ./definitions.json:/etc/rabbitmq/definitions.json:ro
+            - ./rabbit/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
+            - ./rabbit/definitions.json:/etc/rabbitmq/definitions.json:ro
         ports:
             - 5682:5672
             - 15682:15672
@@ -37,6 +37,18 @@ services:
             - mongo_logs:/data/logs
         ports:
             - 27027:27017
+
+    sql-server:
+        container_name: sql-server-dev
+        hostname: sql-ser_dev-host
+        image: sql-server-dev
+        build:
+            context: ./sql-server
+            dockerfile: Dockerfile
+        ports:
+            - "1443:1433"
+        volumes:
+            - sql_server_data:/var/opt/mssql
 
     seq:
         container_name: seq-dev
@@ -66,6 +78,9 @@ volumes:
     mongo_logs:
         external:
             name: dev-mongo_logs
+    sql_server_data:
+        external:
+            name: dev-sql-server_data
     seq_data:
         external:
             name: dev-seq_data
