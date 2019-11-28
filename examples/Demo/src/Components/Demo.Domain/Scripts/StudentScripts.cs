@@ -21,15 +21,7 @@ namespace Demo.Domain.Scripts
             {
                 new EntityExpression("$\"{Entity.FirstName} - {Entity.LastName}\"", 0, "DisplayName")
             };
-
-            var displayScript = new EntityScript(
-                setIdentityValue ? "38F9560F-A8E4-4A64-81A6-77C66FA927C9" : null,
-                "default",
-                typeof(Student).AssemblyQualifiedName,
-                displayScriptExpressions.AsReadOnly());
-
-            displayScript.ImportedNamespaces.Add("System");
-
+            
             var calcScript = new EntityScript(
                 setIdentityValue ? "B83FD639-4AAC-4CBC-AA17-645DEAC4147B" : null,
                 "scoreCalcs",
@@ -41,7 +33,7 @@ namespace Demo.Domain.Scripts
             calcScript.ImportedNamespaces.Add("System");
             calcScript.ImportedNamespaces.Add("System.Linq");
 
-            return new[] { calcScript, displayScript };
+            return new[] { calcScript };
         }
     }
 }
