@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 using NetFusion.Rest.Client;
-using NetFusion.Test.Hosting;
+using WebTests.Hosting;
 using WebTests.Rest.LinkGeneration.Client;
 using WebTests.Rest.LinkGeneration.Server;
 using WebTests.Rest.Setup;

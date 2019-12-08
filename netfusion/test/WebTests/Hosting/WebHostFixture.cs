@@ -11,7 +11,7 @@ using NetFusion.Bootstrap.Logging;
 using NetFusion.Builder;
 using NetFusion.Test.Plugins;
 
-namespace NetFusion.Test.Hosting
+namespace WebTests.Hosting
 {
     /// <summary>
     /// Class used to arrange a composite-container from which a composite-application

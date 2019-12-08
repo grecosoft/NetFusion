@@ -5,7 +5,7 @@ using FluentAssertions;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
-using NetFusion.Test.Hosting;
+using WebTests.Hosting;
 using WebTests.Rest.ClientRequests.Client;
 using WebTests.Rest.ClientRequests.Server;
 using WebTests.Rest.LinkGeneration;

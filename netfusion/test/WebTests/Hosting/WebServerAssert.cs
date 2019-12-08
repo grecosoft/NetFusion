@@ -3,7 +3,7 @@ using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Rest.Client;
 
-namespace NetFusion.Test.Hosting
+namespace WebTests.Hosting
 {
     /// <summary>
     /// Provides methods for asserting the request made to the TestServer.

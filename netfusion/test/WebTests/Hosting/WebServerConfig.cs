@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.TestHost;
 
-namespace NetFusion.Test.Hosting
+namespace WebTests.Hosting
 {   
     /// <summary>
     /// Allows the configuration of the built TestServer that can be acted on.

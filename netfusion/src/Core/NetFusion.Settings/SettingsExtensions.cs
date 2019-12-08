@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using NetFusion.Base.Validation;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions.Reflection;
 using System;
 

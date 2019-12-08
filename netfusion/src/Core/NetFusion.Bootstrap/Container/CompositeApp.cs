@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
@@ -128,7 +127,7 @@ namespace NetFusion.Bootstrap.Container
                     "Errors were recorded when bootstrapping Composite-Application.  See log for details.");
             }
             
-            var coreServiceLog = new CoreServicesLog(_logger, _serviceProvider, _builder);
+            var coreServiceLog = new CoreServicesLog(_logger, _serviceProvider);
             coreServiceLog.Log();
         }
         

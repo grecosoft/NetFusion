@@ -10,7 +10,6 @@ using NetFusion.Bootstrap.Catalog;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Plugin.Configs;

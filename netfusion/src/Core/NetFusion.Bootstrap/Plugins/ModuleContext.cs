@@ -117,7 +117,7 @@ namespace NetFusion.Bootstrap.Plugins
         public void InitLogging(IServiceProvider services)
         {
             _loggerFactory = services.GetService<ILoggerFactory>();
-            _logger = _loggerFactory.CreateLogger(Plugin.GetType()); ;
+            _logger = _loggerFactory.CreateLogger(Plugin.GetType());
         }
 
         private static IEnumerable<Type> FilteredTypesByPluginType(ICompositeAppBuilder builder, IPlugin plugin)

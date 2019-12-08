@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Core;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
 
-namespace NetFusion.Test.Hosting
+namespace WebTests.Hosting
 {
     /// <summary>
     /// Provides method used to act on the create TestServer by executing web-requests.

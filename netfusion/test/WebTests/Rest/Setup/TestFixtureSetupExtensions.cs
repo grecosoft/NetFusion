@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Rest.Server.Plugin;
-using NetFusion.Test.Hosting;
+using WebTests.Hosting;
 using NetFusion.Test.Plugins;
 using WebTests.Rest.ClientRequests;
 using WebTests.Rest.ClientRequests.Server;

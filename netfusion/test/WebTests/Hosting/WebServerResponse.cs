@@ -2,7 +2,7 @@ using System;
 using System.Net.Http;
 using NetFusion.Rest.Client;
 
-namespace NetFusion.Test.Hosting
+namespace WebTests.Hosting
 {
     /// <summary>
     /// The response returned by sending an HttpRequest to the TestServer that can be asserted.

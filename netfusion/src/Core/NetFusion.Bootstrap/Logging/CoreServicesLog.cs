@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
-using NetFusion.Bootstrap.Container;
 
 namespace NetFusion.Bootstrap.Logging
 {
@@ -19,15 +18,11 @@ namespace NetFusion.Bootstrap.Logging
     {
         private readonly ILogger _logger;
         private readonly IServiceProvider _services;
-        private readonly ICompositeAppBuilder _builder;
-        
-        public CoreServicesLog(ILogger logger, 
-            IServiceProvider services,
-            ICompositeAppBuilder builder)
+
+        public CoreServicesLog(ILogger logger, IServiceProvider services)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _services = services ?? throw new ArgumentNullException(nameof(services));
-            _builder = builder ?? throw new ArgumentNullException(nameof(builder));
         }
 
         public void Log()

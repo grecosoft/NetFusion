@@ -13,7 +13,7 @@ namespace NetFusion.Common.Extensions.Collections
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
-        /// <param name="valueAction"></param>
+        /// <param name="action"></param>
         /// <returns></returns>
         [DebuggerStepThrough]
         public static IList<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
