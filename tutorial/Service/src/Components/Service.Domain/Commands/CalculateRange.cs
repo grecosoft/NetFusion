@@ -2,7 +2,7 @@ using NetFusion.Messaging.Types;
 
 namespace Service.Domain.Commands
 {
-    public class CalculateRange : Command<Range>
+    public class CalculateRange : Command<ValueRange>
     {
         public string MessageTemplate { get; }
         public int[] Values { get; }
@@ -14,13 +14,13 @@ namespace Service.Domain.Commands
         }
     }
 
-    public class Range
+    public class ValueRange
     {
         public int Min { get; }
         public int Max { get; }
         public string Message { get; set; }
 
-        public Range(int min, int max)
+        public ValueRange(int min, int max)
         {
             Min = min;
             Max = max;

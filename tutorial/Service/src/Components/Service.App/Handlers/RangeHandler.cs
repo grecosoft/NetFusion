@@ -9,14 +9,14 @@ namespace Service.App.Handlers
     public class RangeHandler : IMessageConsumer
     {
         [InProcessHandler]
-        public async Task<Range> DetermineRange(CalculateRange command)
+        public async Task<ValueRange> DetermineRange(CalculateRange command)
         {
             if (command.Values.Length == 0)
             {
                 throw new InvalidOperationException("The range can't be calculated.");
             }
             
-            var range = new Range(command.Values.Min(), command.Values.Max());
+            var range = new ValueRange(command.Values.Min(), command.Values.Max());
             
             range.Message = command.MessageTemplate
                 .Replace("{min}", range.Min.ToString())

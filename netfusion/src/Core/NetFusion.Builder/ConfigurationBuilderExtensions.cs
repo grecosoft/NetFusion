@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace NetFusion.Builder
 {
@@ -25,7 +25,7 @@ namespace NetFusion.Builder
         /// <param name="hostingEnv">The environment of the host.</param>
         /// <returns>Instance to the configuration builder.</returns>
         public static IConfigurationBuilder AddAppSettings(this IConfigurationBuilder builder,
-            IHostingEnvironment hostingEnv)
+            IHostEnvironment hostingEnv)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder), "Configuration builder not specified.");
         
@@ -47,7 +47,7 @@ namespace NetFusion.Builder
         /// <param name="hostingEnv">The environment of the host.</param>
         /// <returns>Instance of the configuration builder.</returns>
         public static IConfigurationBuilder AddDockerDefaultSettings(this IConfigurationBuilder builder,
-            IHostingEnvironment hostingEnv)
+            IHostEnvironment hostingEnv)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder), "Configuration builder not specified.");
             

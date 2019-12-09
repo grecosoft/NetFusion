@@ -21,7 +21,7 @@ namespace Service.Client
             IHost host = BuildHost();
             
             var compositeApp = host.Services.GetService<ICompositeApp>();
-            var lifetime = host.Services.GetService<IApplicationLifetime>();
+            var lifetime = host.Services.GetService<IHostApplicationLifetime>();
 
             lifetime.ApplicationStopping.Register(() =>
             {

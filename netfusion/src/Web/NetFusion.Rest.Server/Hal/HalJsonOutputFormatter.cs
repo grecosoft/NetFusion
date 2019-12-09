@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
@@ -8,16 +14,9 @@ using NetFusion.Rest.Common;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Mappings;
+using NetFusion.Rest.Server.Plugin;
 using NetFusion.Web.Mvc.Extensions;
 using NetFusion.Web.Mvc.Metadata;
-using Newtonsoft.Json;
-using System;
-using System.Buffers;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NetFusion.Rest.Server.Plugin;
 
 namespace NetFusion.Rest.Server.Hal
 {
@@ -25,23 +24,29 @@ namespace NetFusion.Rest.Server.Hal
     /// Output formatter that checks if the response object is of type IHalResource and
     /// adds the HAL resource metadata.  Then the resulting resource is formatted as JSON.
     /// </summary>
-    public class HalFormatter : JsonOutputFormatter
+    public class HalJsonOutputFormatter : TextOutputFormatter
     {
-        public HalFormatter(JsonSerializerSettings settings, ArrayPool<char> charPool) 
-            : base(settings, charPool)
+        public JsonSerializerOptions SerializerOptions { get; }
+
+        public HalJsonOutputFormatter(JsonSerializerOptions jsonSerializerOptions)
         {
+            SerializerOptions = jsonSerializerOptions 
+                ?? throw new ArgumentNullException(nameof(jsonSerializerOptions));
+
             SupportedMediaTypes.Clear();
             SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(InternetMediaTypes.HalJson));
             SupportedEncodings.Add(Encoding.UTF8);
             SupportedEncodings.Add(Encoding.Unicode);
         }
 
+
         protected override bool CanWriteType(Type type)
         {
             return type.CanAssignTo<IHalResource>();
         }
 
-        public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
+        public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context,
+            Encoding selectedEncoding)
         {
             if (context.Object is IHalResource resource)
             {
@@ -49,11 +54,14 @@ namespace NetFusion.Rest.Server.Hal
                 ApplyMetadataToResource(resource, resourceContext);
             }
 
-            // Delegate to the base implementation to serialize the updated response object as JSON
-            // returning HAL-JSON representation.
-            return base.WriteResponseBodyAsync(context, selectedEncoding);
+            var objectType = context.Object?.GetType() ?? context.ObjectType;
+            
+            await JsonSerializer.SerializeAsync(context.HttpContext.Response.Body, 
+                context.Object, 
+                objectType,
+                SerializerOptions);
         }
-
+        
         private static void ApplyMetadataToResource(IHalResource resource, ResourceContext resourceContext)
         {
             resourceContext.Resource = resource;
@@ -94,7 +102,7 @@ namespace NetFusion.Rest.Server.Hal
                 MediaModule = httpContext.GetService<IResourceMediaModule>(),
                 ApiMetadata = httpContext.GetService<IApiMetadataService>(),
                 UrlHelper = httpContext.GetService<IUrlHelper>(),
-                Logger = httpContext.GetService<ILogger<HalFormatter>>()
+                Logger = httpContext.GetService<ILogger<HalJsonOutputFormatter>>()
             };
         }
     }

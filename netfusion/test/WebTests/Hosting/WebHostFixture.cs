@@ -106,7 +106,7 @@ namespace WebTests.Hosting
 
                     // Adds the MVC services to the service-collection and the Controllers from
                     // the unit-test project.
-                    services.AddMvc().AddApplicationPart(_unitTestType.Assembly);
+                    services.AddControllers().AddApplicationPart(_unitTestType.Assembly);
                 })
                 .ConfigureAppConfiguration(configBdr =>
                 {
@@ -115,7 +115,13 @@ namespace WebTests.Hosting
                 .Configure(builder =>
                 {
                     _serviceProvider = builder.ApplicationServices;
-                    builder.UseMvc();
+                    builder.UseHttpsRedirection();
+                    builder.UseRouting();
+                    builder.UseAuthorization();
+                    builder.UseEndpoints(endpoints =>
+                    {
+                        endpoints.MapControllers();
+                    });
 
                     // At this point, the ASP.NET has created a service-provider from the populated
                     // service-collection.  Obtain and start the composite-application.

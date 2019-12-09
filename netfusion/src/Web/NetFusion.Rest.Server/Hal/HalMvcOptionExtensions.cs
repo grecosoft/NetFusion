@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Buffers;
+using System.Text.Json;
 
 namespace NetFusion.Rest.Server.Hal
 {
@@ -16,22 +17,23 @@ namespace NetFusion.Rest.Server.Hal
         /// Adds formatter to the pipeline that checks for resources and determines the
         /// links that should be returned. 
         /// </summary>
-        /// <param name="options">The MVC options passed from Web API host.</param>
-        /// <param name="settings">The optional JSON serialization settings to use.</param>
+        /// <param name="mvcOptions">The MVC options passed from Web API host.</param>
+        /// <param name="options">The optional JSON serialization settings to use.</param>
         /// <returns></returns>
-        public static MvcOptions UseHalFormatter(this MvcOptions options, JsonSerializerSettings settings = null)
+        public static MvcOptions UseHalFormatter(this MvcOptions mvcOptions, JsonSerializerOptions options = null)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options), 
+            if (mvcOptions == null) throw new ArgumentNullException(nameof(mvcOptions), 
                 "Options reference not specified.");
 
             // Use default settings if not specified by caller.
-            settings ??= new JsonSerializerSettings {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                NullValueHandling = NullValueHandling.Ignore };
+            options ??= new JsonSerializerOptions
+            {
+                
+            };
 
             // Add the HAL formatter to the MVC pipeline.
-            options.OutputFormatters.Add(new HalFormatter(settings, ArrayPool<char>.Create()));
-            return options;
+            mvcOptions.OutputFormatters.Add(new HalJsonOutputFormatter(options));
+            return mvcOptions;
         }
     }
 }

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using NetFusion.Messaging.Plugin;
-using NetFusion.MongoDB.Plugin;
+using NetFusion.MongoDB.Plugin;    
 using NetFusion.RabbitMQ.Plugin;
 using NetFusion.Redis.Plugin;
 using NetFusion.Rest.Server.Plugin;
@@ -25,17 +25,18 @@ namespace Service.WebApi
     public class Startup
     {
         private readonly IConfiguration _configuration;
-        private readonly IHostingEnvironment _hostingEnv;
+        private readonly IWebHostEnvironment _hostingEnv;
 
         
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnv)
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnv)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _hostingEnv = hostingEnv ?? throw new ArgumentNullException(nameof(hostingEnv));
         }
 
         public void ConfigureServices(IServiceCollection services)
-        {         
+        {
+
             services.CompositeContainer(_configuration)
                 // Add common plugins:
                 .AddSettings()
@@ -54,7 +55,7 @@ namespace Service.WebApi
                 
                 // Add application centric plugins:
                 .AddPlugin<DomainPlugin>()
-                .AddPlugin<AppPlugin>()
+                .AddPlugin<AppPlugin>()    
                 .AddPlugin<InfraPlugin>()
                 .AddPlugin<WebApiPlugin>()
                 .Compose();
@@ -64,16 +65,12 @@ namespace Service.WebApi
                 services.AddCors();                
             }
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllers();  
             services.AddSingleton(InMemoryScripting.LoadSensorScript());
         }
 
-        public void Configure(IApplicationBuilder app, IApplicationLifetime appLifetime, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime, IWebHostEnvironment env)
         {
-            app.UseAuthentication();
-          
-            // Add additional middleware here.
-            
             string viewerUrl = _configuration.GetValue<string>("Netfusion:ViewerUrl");
             if (! string.IsNullOrWhiteSpace(viewerUrl))
             {
@@ -82,8 +79,14 @@ namespace Service.WebApi
                     .WithExposedHeaders("WWW-Authenticate")
                     .AllowAnyHeader());
             }
-           
-            app.UseMvc();
+            
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }
