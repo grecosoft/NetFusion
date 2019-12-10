@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace NetFusion.Rest.Resources.Hal
 {
@@ -10,11 +11,13 @@ namespace NetFusion.Rest.Resources.Hal
         /// <summary>
         /// List of links populated based on the configured resource metadata.
         /// </summary>
+        [JsonPropertyName("_links")]
         public IDictionary<string, Link> Links { get; set; }
-
+    
         /// <summary>
         /// Named embedded resources.
         /// </summary>
+        [JsonPropertyName("_embedded")]
         public IDictionary<string, IResource> Embedded { get; set; }
     }
 }
