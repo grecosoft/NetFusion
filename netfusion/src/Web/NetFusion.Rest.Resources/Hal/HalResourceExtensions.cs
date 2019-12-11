@@ -36,7 +36,7 @@ namespace NetFusion.Rest.Resources.Hal
 			if (string.IsNullOrWhiteSpace(named))
 				throw new ArgumentException("Name cannot be null or whitespace.", nameof(named));
 
-			EmbedResource(resource, new ObjectResource(value), named);
+			EmbedResource(resource, value, named);
 		}
 
 		/// <summary>
@@ -67,13 +67,11 @@ namespace NetFusion.Rest.Resources.Hal
 			
 			if (string.IsNullOrWhiteSpace(named))
 				throw new ArgumentException("Name cannot be null or whitespace.", nameof(named));
-			
-			var wrappedObjs = values.Select(v => new ObjectResource(v));
-			
-			EmbedResource(resource, new ResourceCollection<ObjectResource>(wrappedObjs), named);
+
+			EmbedResource(resource, values, named);
 		}
 
-		private static void EmbedResource(IHalResource resource, IResource embeddedResource, string named = null)
+		private static void EmbedResource(IHalResource resource, object embeddedResource, string named = null)
 		{
 			if (resource == null) throw new ArgumentNullException(nameof(resource));
 			
@@ -88,7 +86,7 @@ namespace NetFusion.Rest.Resources.Hal
                     $"The name was not provided and its type was not decorated with the attribute: {typeof(ExposedResourceNameAttribute).FullName}");
             }
 
-            resource.Embedded ??= new Dictionary<string, IResource>();
+            resource.Embedded ??= new Dictionary<string, object>();
 
             if (resource.Embedded.ContainsKey(embeddedName))
             {
@@ -99,7 +97,7 @@ namespace NetFusion.Rest.Resources.Hal
             resource.Embedded[embeddedName] = embeddedResource;
 		}
 
-		private static string GetResourceEmbeddedName(IResource resource) =>
+		private static string GetResourceEmbeddedName(object resource) =>
 			resource.GetAttribute<ExposedResourceNameAttribute>()?.ResourceName;
     }
 }

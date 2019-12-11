@@ -17,6 +17,6 @@ namespace NetFusion.Rest.Resources.Hal
         /// <summary>
         /// Dictionary of named embedded resources.
         /// </summary>
-        IDictionary<string, IResource> Embedded { get; set; }
+        IDictionary<string, object> Embedded { get; set; }
     }
 }

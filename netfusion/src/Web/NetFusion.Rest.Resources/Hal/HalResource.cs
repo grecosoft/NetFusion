@@ -18,6 +18,6 @@ namespace NetFusion.Rest.Resources.Hal
         /// Named embedded resources.
         /// </summary>
         [JsonPropertyName("_embedded")]
-        public IDictionary<string, IResource> Embedded { get; set; }
+        public IDictionary<string, object> Embedded { get; set; }
     }
 }
