@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
-using System.Buffers;
 using System.Text.Json;
 
 namespace NetFusion.Rest.Server.Hal

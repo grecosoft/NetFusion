@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using NetFusion.Common.Extensions.Reflection;
 
 namespace NetFusion.Rest.Resources.Hal
