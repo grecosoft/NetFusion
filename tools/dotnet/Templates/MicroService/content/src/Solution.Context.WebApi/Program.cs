@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Builder;
@@ -15,10 +15,10 @@ namespace Solution.Context.WebApi
     {
         public static async Task Main(string[] args)
         {
-            IWebHost webHost = BuildWebHost(args);
+            IHost webHost = BuildWebHost(args);
             
             var compositeApp = webHost.Services.GetService<ICompositeApp>();
-            var lifetime = webHost.Services.GetService<IApplicationLifetime>();
+            var lifetime = webHost.Services.GetService<IHostApplicationLifetime>();
 
             lifetime.ApplicationStopping.Register(() =>
             {
@@ -29,22 +29,25 @@ namespace Solution.Context.WebApi
             await webHost.RunAsync();    
         }
 
-        private static IWebHost BuildWebHost(string[] args) 
+        private static IHost BuildWebHost(string[] args) 
         {
-            return WebHost.CreateDefaultBuilder(args)
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                })
                 .ConfigureAppConfiguration(SetupConfiguration)
-                .ConfigureLogging(SetupLogging)    
-                .UseStartup<Startup>()
+                .ConfigureLogging(SetupLogging)
                 .Build();
         }
 
-        private static void SetupConfiguration(WebHostBuilderContext context, 
+        private static void SetupConfiguration(HostBuilderContext context, 
             IConfigurationBuilder builder)
         {
             builder.AddAppSettings(context.HostingEnvironment);
         }
 
-        private static void SetupLogging(WebHostBuilderContext context, 
+        private static void SetupLogging(HostBuilderContext context, 
             ILoggingBuilder builder)
         {
             builder.ClearProviders();

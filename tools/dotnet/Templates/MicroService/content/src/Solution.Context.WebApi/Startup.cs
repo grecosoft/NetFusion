@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Builder;
@@ -44,15 +42,20 @@ namespace Solution.Context.WebApi
                 .AddPlugin<WebApiPlugin>()
                 .Compose();
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddCors();
-            
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllers();    
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         { 
-            app.UseAuthentication();
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             string viewerUrl = _configuration.GetValue<string>("Netfusion:ViewerUrl");
             if (! string.IsNullOrWhiteSpace(viewerUrl))
@@ -63,8 +66,6 @@ namespace Solution.Context.WebApi
                     .WithExposedHeaders("WWW-Authenticate","resource-404")
                     .AllowAnyHeader());
             }
-
-            app.UseMvc();
         }
     }
 }
