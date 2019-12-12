@@ -22,9 +22,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Validation" />
-  </ItemGroup>
   <PropertyGroup>
     <PackageId>NetFusion.Bootstrap</PackageId>
     <Title>NetFusion Bootstrap</Title>
