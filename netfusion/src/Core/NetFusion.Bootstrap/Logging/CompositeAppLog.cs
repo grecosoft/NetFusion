@@ -99,9 +99,16 @@ namespace NetFusion.Bootstrap.Logging
                 IsFactory = s.ImplementationFactory != null
             });
 
+            // Logs the service implementations defined within the plugin registered
+            // for a given service type.
             log["ServiceRegistrations"] = implementationTypes
                 .Where(it => !it.IsFactory && plugin.HasType(it.ImplementationType))
-                .Select(it => it.ToDictionary()).ToArray();
+                .Select(rt => new
+                {
+                    ServiceType = rt.ServiceType.FullName,
+                    ImplementationType = rt.ImplementationType.FullName,
+                    rt.LifeTime
+                }).OrderBy(rt => rt.ServiceType).ToArray();
         }
     }
 }
