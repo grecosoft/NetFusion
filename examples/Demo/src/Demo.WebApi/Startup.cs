@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Builder;
@@ -53,7 +51,6 @@ namespace Demo.WebApi
                     config.EnableRouteMetadata = true;
                 })
 
-
 //                Enable for the Messaging-Publisher/Enricher examples ONLY                
 //                .InitPluginConfig<MessageDispatchConfig>(config =>
 //                    config.AddPublisher<ExamplePublisher>();
@@ -77,16 +74,21 @@ namespace Demo.WebApi
                 {
                     // config.AddSingleton<IValidationService, CustomValidationService>();
                 });
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddCors();
             
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddCors();
+            services.AddControllers();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         { 
-            app.UseAuthentication();
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             string viewerUrl = _configuration.GetValue<string>("Netfusion:ViewerUrl");
             if (! string.IsNullOrWhiteSpace(viewerUrl))
@@ -97,8 +99,6 @@ namespace Demo.WebApi
                     .WithExposedHeaders("WWW-Authenticate","resource-404")
                     .AllowAnyHeader());
             }
-
-            app.UseMvc();
         }
     }
 }

@@ -9,14 +9,13 @@ using NetFusion.Builder;
 using NetFusion.RabbitMQ.Plugin;
 using NetFusion.Redis.Plugin;
 
-
 namespace Demo.Subscriber
 {
     public class Program
     {
         public static async Task Main(string[] args)
         {
-            var host = new HostBuilder()
+            IHost host = new HostBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.CompositeContainer(hostContext.Configuration)
@@ -37,7 +36,7 @@ namespace Demo.Subscriber
                 .Build();
             
             var compositeApp = host.Services.GetRequiredService<ICompositeApp>();
-            var lifetime = host.Services.GetRequiredService<IApplicationLifetime>();
+            var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
             
             lifetime.ApplicationStopping.Register(() =>
             {
