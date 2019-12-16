@@ -4,7 +4,6 @@ using NetFusion.Bootstrap.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NetFusion.Common.Extensions;
 
 namespace NetFusion.Bootstrap.Logging
 {
