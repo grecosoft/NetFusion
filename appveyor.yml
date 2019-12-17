@@ -41,7 +41,3 @@ skip_commits:
     - 'packages\**\*'
     - 'tools\**\*'
     - 'tutorial\**\*'
-
-
-  
-
