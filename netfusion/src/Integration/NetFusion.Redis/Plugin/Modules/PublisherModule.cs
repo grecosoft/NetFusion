@@ -84,7 +84,7 @@ namespace NetFusion.Redis.Plugin.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["event:channels"] = _channels.Values
+            moduleLog["EventChannels"] = _channels.Values
                 .Select(c => new
                 {
                     EventType = c.DomainEventType.FullName,

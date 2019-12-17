@@ -147,7 +147,7 @@ namespace NetFusion.Redis.Plugin.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["redis:connections"] = _redisSettings.Connections.Select(c => new
+            moduleLog["RedisConnections"] = _redisSettings.Connections.Select(c => new
             {
                 DatabaseName = c.Name,
                 EndPoints = c.EndPoints.Select(ep => new

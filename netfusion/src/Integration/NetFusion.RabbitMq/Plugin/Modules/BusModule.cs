@@ -243,7 +243,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Bus-Connections"] = _busSettings.Connections.Select( c => new {
+            moduleLog["BusConnections"] = _busSettings.Connections.Select( c => new {
                 c.BusName,
                 c.UserName,
                 c.VHostName,

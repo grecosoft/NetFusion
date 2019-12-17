@@ -181,7 +181,7 @@ namespace NetFusion.Messaging.Plugin.Modules
         private void LogMessagesAndDispatchInfo(IDictionary<string, object> moduleLog)
         {
             var messagingDispatchLog = new Dictionary<string, object>();
-            moduleLog["Messaging_InProcess_Dispatchers"] = messagingDispatchLog;
+            moduleLog["InProcessDispatchers"] = messagingDispatchLog;
 
             foreach (var messageTypeDispatcher in InProcessDispatchers)
             {
@@ -205,7 +205,7 @@ namespace NetFusion.Messaging.Plugin.Modules
 
         private void LogMessagePublishers(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Message_Publishers"] = Context.AllPluginTypes
+            moduleLog["MessagePublishers"] = Context.AllPluginTypes
                 .Where(pt => pt.IsConcreteTypeDerivedFrom<IMessagePublisher>())
                 .Select(t => new
                 {

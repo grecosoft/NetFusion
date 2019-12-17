@@ -232,7 +232,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Publisher:Exchanges"] = _messageExchanges.Values.Select(e =>
+            moduleLog["PublisherExchanges"] = _messageExchanges.Values.Select(e =>
             {
                 var exchangeLog = new Dictionary<string, object>();
                 e.LogProperties(exchangeLog);

@@ -80,7 +80,7 @@ namespace NetFusion.Messaging.Plugin.Modules
         public override void Log(IDictionary<string, object> moduleLog)
         {
             var messagingDispatchLog = new Dictionary<string, object>();
-            moduleLog["Query_Consumers"] = messagingDispatchLog;
+            moduleLog["QueryConsumers"] = messagingDispatchLog;
 
             foreach (var queryDispatcherRegistration in _queryDispatchers)
             {

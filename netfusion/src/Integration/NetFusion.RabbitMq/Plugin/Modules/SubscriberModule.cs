@@ -162,7 +162,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Subscriber:Queues"] = _subscribers.Select(s =>
+            moduleLog["SubscriberQueues"] = _subscribers.Select(s =>
             {
                 var queueLog = new Dictionary<string, object>();
                 s.QueueMeta.LogProperties(queueLog);

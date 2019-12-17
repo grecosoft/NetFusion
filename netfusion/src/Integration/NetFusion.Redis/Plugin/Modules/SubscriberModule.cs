@@ -111,7 +111,7 @@ namespace NetFusion.Redis.Plugin.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["Channel:Subscribers"] = _subscribers.Select(s => new
+            moduleLog["ChannelSubscribers"] = _subscribers.Select(s => new
             {
                 s.Channel,
                 s.DatabaseName,

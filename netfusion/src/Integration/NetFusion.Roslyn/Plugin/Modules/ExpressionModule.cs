@@ -54,17 +54,20 @@ namespace NetFusion.Roslyn.Plugin.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-           moduleLog["Entity:Scripts"] = _scripts.ToDictionary(s => s.EntityType, s =>
-           {
-               return _scripts.Where(e => e.EntityType == s.EntityType)
-                .ToDictionary(e => e.Name, es => new {
+            // For each entity type, store its associated list of scripts:
+            var scriptsByEntity = _scripts.ToLookup(s => s.EntityType.FullName,
+                es => new
+                {
+                    es.Name,
                     es.InitialAttributes,
                     es.ImportedAssemblies,
                     es.ImportedNamespaces,
                     Expressions = es.Expressions.OrderBy(e => e.Sequence)
                         .Select(e => new { e.AttributeName, e.Expression })
                 });
-           });
+
+            // Store the log as a dictionary for best serialization.
+            moduleLog["EntityScripts"] = scriptsByEntity.ToDictionary(es => es.Key, es => es.Select(s => s));
         }
     }
 }
