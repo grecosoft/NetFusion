@@ -26,7 +26,7 @@ RUN dotnet restore /build
 COPY ./src ./
 RUN dotnet build /build 
 RUN dotnet test ./Solution.Context.Tests/ --no-build
-RUN dotnet publish ./Solution.Context.WebApi/Solution.Context.WebApi.csproj --output ../../out --no-build
+RUN dotnet publish ./Solution.Context.WebApi/Solution.Context.WebApi.csproj --output ../out --no-build
 
 # --------------------------------------
 # CREATE IMAGE FOR CONTAINER CREATION
