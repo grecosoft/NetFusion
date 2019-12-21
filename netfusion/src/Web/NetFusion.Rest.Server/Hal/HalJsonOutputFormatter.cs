@@ -38,8 +38,7 @@ namespace NetFusion.Rest.Server.Hal
             SupportedEncodings.Add(Encoding.UTF8);
             SupportedEncodings.Add(Encoding.Unicode);
         }
-
-
+        
         protected override bool CanWriteType(Type type)
         {
             return type.CanAssignTo<IHalResource>();
@@ -65,6 +64,7 @@ namespace NetFusion.Rest.Server.Hal
         private static void ApplyMetadataToResource(IHalResource resource, ResourceContext resourceContext)
         {
             resourceContext.Resource = resource;
+            resourceContext.State = resource.State;
             resourceContext.MediaModule.ApplyResourceMeta(InternetMediaTypes.HalJson, resourceContext);
 
             // Add metadata to each embedded resource if present.

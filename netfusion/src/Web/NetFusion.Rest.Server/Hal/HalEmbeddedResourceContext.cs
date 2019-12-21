@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Primitives;
-using NetFusion.Rest.Resources;
 using System.Linq;
 using NetFusion.Rest.Server.Resources;
 
@@ -22,7 +21,7 @@ namespace NetFusion.Rest.Server.Hal
             _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
         }
 
-        public bool IsRequested<TResource>() where TResource : IResource
+        public bool IsRequested<TResource>()
         { 
             // If not specified by the caller, all resources are considered requested.
             if (! EmbeddedResourcesRequested)

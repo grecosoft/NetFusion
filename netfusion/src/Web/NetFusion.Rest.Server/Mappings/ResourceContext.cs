@@ -16,6 +16,11 @@ namespace NetFusion.Rest.Server.Mappings
         // Instance of a resource being returned.
         public IResource Resource { get; set; }
 
+        // Optional reference to the state associated with the resource.
+        // Based on the type of output formatter requested, this value
+        // may not be set.
+        public object State { get; set; }
+
         // The metadata associated with the resource.
         public IResourceMeta Meta { get; set; }
 

@@ -46,16 +46,16 @@ namespace WebTests.Rest.ClientRequests
                         return await client.SendAsync<CustomerModel>(request);
                     });
 
-                response.Assert.Service<IMockedService>(mockedSrv =>
-                {
-                    var serverReceivedResource = mockedSrv.ServerReceivedResource as CustomerResource;
-                     
-                    serverReceivedResource.Should().NotBeNull("Client Resource Deserialized in Server Resource Representation.");
-                    if (serverReceivedResource == null) return;
-            
-                    serverReceivedResource.CustomerId.Should().Be(resource.CustomerId, "Server Side Serialized Resource Matches Client Resource.");
-                    serverReceivedResource.Links.Should().BeNull("Links Should only be returned from Server.");
-                });
+//                response.Assert.Service<IMockedService>(mockedSrv =>
+//                {
+//                    var serverReceivedResource = mockedSrv.ServerReceivedResource as CustomerResource;
+//                     
+//                    serverReceivedResource.Should().NotBeNull("Client Resource Deserialized in Server Resource Representation.");
+//                    if (serverReceivedResource == null) return;
+//            
+//                    serverReceivedResource.CustomerId.Should().Be(resource.CustomerId, "Server Side Serialized Resource Matches Client Resource.");
+//                    serverReceivedResource.Links.Should().BeNull("Links Should only be returned from Server.");
+//                });
             });
         }
 
@@ -100,11 +100,11 @@ namespace WebTests.Rest.ClientRequests
 
                 response.Assert.Service<IMockedService>(mockedSrv =>
                 {
-                    var serverReceivedResource = mockedSrv.ServerReceivedResource as CustomerResource;
-
-                    serverReceivedResource.Should().NotBeNull("Client Resource Deserialized in Server Resource Representation.");
-                    serverReceivedResource.CustomerId.Should().Be(resource.CustomerId, "Server Side Serialized Resource Matches Client Resource.");
-                    serverReceivedResource.Embedded.Should().BeNull("Embedded Resources Should only be returned from Server.");
+//                    var serverReceivedResource = mockedSrv.ServerReceivedResource as CustomerResource;
+//
+//                    serverReceivedResource.Should().NotBeNull("Client Resource Deserialized in Server Resource Representation.");
+//                    serverReceivedResource.CustomerId.Should().Be(resource.CustomerId, "Server Side Serialized Resource Matches Client Resource.");
+//                    serverReceivedResource.Embedded.Should().BeNull("Embedded Resources Should only be returned from Server.");
                 });
             });
         }
@@ -131,7 +131,7 @@ namespace WebTests.Rest.ClientRequests
                 CustomerId = serverResource.CustomerId
             };
 
-            serverResource.Embed(embeddedServerResource, "primary-address");
+          //  serverResource.Embed(embeddedServerResource, "primary-address");
             
             // Configure the backend test-service to return the resource.
             var mockSrv = new MockUnitTestService {
@@ -189,10 +189,10 @@ namespace WebTests.Rest.ClientRequests
             };
 
             // Embed to child resources.
-            serverResource.Embed(new[] { 
-                new AddressResource { AddressId = Guid.NewGuid().ToString(), CustomerId = serverResource.CustomerId },
-                new AddressResource { AddressId = Guid.NewGuid().ToString(), CustomerId = serverResource.CustomerId }
-            }, "addresses");
+//            serverResource.Embed(new[] { 
+//                new AddressResource { AddressId = Guid.NewGuid().ToString(), CustomerId = serverResource.CustomerId },
+//                new AddressResource { AddressId = Guid.NewGuid().ToString(), CustomerId = serverResource.CustomerId }
+//            }, "addresses");
 
             // Configure the mock service to return the resource.
             var mockSrv = new MockUnitTestService

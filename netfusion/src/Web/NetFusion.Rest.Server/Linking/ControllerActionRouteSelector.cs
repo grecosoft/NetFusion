@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
-using NetFusion.Rest.Resources;
 
 // ReSharper disable UnusedTypeParameter
 namespace NetFusion.Rest.Server.Linking
@@ -19,7 +18,7 @@ namespace NetFusion.Rest.Server.Linking
     /// </summary>
     public class ControllerActionRouteSelector<TController, TResource>
         where TController : ControllerBase
-        where TResource : class, IResource
+        where TResource : class
     {
         private readonly ControllerActionLink _resourceLink;
         private readonly LambdaExpression _action;

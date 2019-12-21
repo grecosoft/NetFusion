@@ -20,8 +20,5 @@ namespace NetFusion.Rest.Server.Linking
         internal string Name { get; set; }
         internal string Title { get; set; }
         internal string Type { get; set; }
-
-        internal ResourceLink Deprecation { get; set; }
-        internal ResourceLink Profile { get; set; }
     }
 }

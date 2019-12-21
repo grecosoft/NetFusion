@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NetFusion.Common.Extensions.Collections;
-using NetFusion.Rest.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,7 @@ namespace NetFusion.Rest.Server.Meta
     /// </typeparam>
     /// <typeparam name="TResource">The type of resource associated with the metadata.</typeparam>
     public class ResourceMeta<TResourceMeta, TResource> : IResourceMeta
-	    where TResource : class, IResource
+	    where TResource : class
 		where TResourceMeta : ResourceMeta<TResourceMeta, TResource>
     {
         public Type ResourceType => typeof(TResource);

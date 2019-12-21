@@ -1,8 +1,6 @@
-﻿using NetFusion.Rest.Resources.Hal;
-
-namespace WebTests.Rest.LinkGeneration.Server
+﻿namespace WebTests.Rest.LinkGeneration.Server
 {
-    public class LinkedViewResource : HalResource
+    public class LinkedViewResource 
     {
         // For testing want to test all the link scenarios to the view resource
         // will define all the same properties as its base resource.  But this

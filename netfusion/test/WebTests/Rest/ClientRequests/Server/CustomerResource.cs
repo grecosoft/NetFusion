@@ -1,11 +1,9 @@
-﻿using NetFusion.Rest.Resources.Hal;
-
-namespace WebTests.Rest.ClientRequests.Server
+﻿namespace WebTests.Rest.ClientRequests.Server
 {
     /// <summary>
     /// Server side resource returned by the API Controller under-test.
     /// </summary>
-    public class CustomerResource : HalResource
+    public class CustomerResource 
     {
         public string CustomerId { get; set; }
         public string FirstName { get; set; }

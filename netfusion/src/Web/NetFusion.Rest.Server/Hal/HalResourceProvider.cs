@@ -44,7 +44,7 @@ namespace NetFusion.Rest.Server.Hal
         }
 
         // Called for action link consisting of a hard-coded URL value.  
-        private Link SetLinkUrl(ResourceContext context, ResourceLink resourceLink)
+        private static Link SetLinkUrl(ResourceContext context, ResourceLink resourceLink)
         {
             var link = new Link
             {
@@ -57,11 +57,11 @@ namespace NetFusion.Rest.Server.Hal
         }
 
         // Called for action link consisting of a string interpolation format based on resource properties.
-        private Link SetLinkUrl(ResourceContext context, InterpolatedLink resourceLink)
+        private static Link SetLinkUrl(ResourceContext context, InterpolatedLink resourceLink)
         {
             var link = new Link
             {
-                Href = resourceLink.FormatUrl(context.Resource),
+                Href = resourceLink.FormatUrl(context.State),
                 Methods = resourceLink.Methods.ToArray()
             };
 
@@ -72,7 +72,7 @@ namespace NetFusion.Rest.Server.Hal
         // Called for action link containing information based on an expression, specified at compile time, selecting a
         // controller's action method.  The expression also specifies which resource properties should be used for
         // the action's route parameters. 
-        private Link SetLinkUrl(ResourceContext context, ControllerActionLink resourceLink)
+        private static Link SetLinkUrl(ResourceContext context, ControllerActionLink resourceLink)
         {
             string controllerName = resourceLink.Controller.Replace("Controller", string.Empty);
             var routeValues = GetResourceRouteValues(context, resourceLink);
@@ -96,7 +96,7 @@ namespace NetFusion.Rest.Server.Hal
             var modelRouteValues = new Dictionary<string, object>(resourceLink.RouteParameters.Count);
             foreach (RouteParameter routeParam in resourceLink.RouteParameters)
             {
-                modelRouteValues[routeParam.ActionParamName] = routeParam.GetPropValue(context.Resource);
+                modelRouteValues[routeParam.ActionParamName] = routeParam.GetPropValue(context.State);
             }
             return modelRouteValues;
         }
@@ -127,8 +127,8 @@ namespace NetFusion.Rest.Server.Hal
             SetLinkTemplateIndicator(link);
             SetLinkOptionalDescriptors(resourceLink, link);
 
-            var linkedResource = (IHalResource)context.Resource;
-            linkedResource.Links.Add(resourceLink.RelationName, link);
+            var halResource = (IHalResource)context.Resource;
+            halResource.Links.Add(resourceLink.RelationName, link);
         }
 
         private static void SetLinkTemplateIndicator(Link link)

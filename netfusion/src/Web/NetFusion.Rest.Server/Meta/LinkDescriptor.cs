@@ -1,5 +1,4 @@
-﻿using NetFusion.Rest.Resources;
-using System;
+﻿using System;
 using System.Net.Http;
 using NetFusion.Rest.Server.Linking;
 
@@ -10,7 +9,7 @@ namespace NetFusion.Rest.Server.Meta
     /// </summary>
     /// <typeparam name="TResource">The resource associated with the metadata.</typeparam>
     public class LinkDescriptor<TResource>
-        where TResource : class, IResource
+        where TResource : class
     {
         private readonly ResourceLink _resourceLink;
 

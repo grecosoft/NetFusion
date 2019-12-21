@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using NetFusion.Rest.Resources;
 
 namespace NetFusion.Rest.Server.Linking
 {
@@ -17,7 +16,7 @@ namespace NetFusion.Rest.Server.Linking
         /// </summary>
         /// <param name="resource">The resource used to populate the formatted string.</param>
         /// <returns>The formatted string.</returns>
-        public abstract string FormatUrl(IResource resource);
+        public abstract string FormatUrl(object resource);
     }
 
     /// <summary>
@@ -25,7 +24,7 @@ namespace NetFusion.Rest.Server.Linking
     /// </summary>
     /// <typeparam name="TResource">The type of resource being interpolated.</typeparam>
     public class InterpolatedLink<TResource> : InterpolatedLink
-        where TResource : class, IResource
+        where TResource : class
     {
         /// <summary>
         /// The function delegate used to invoke the string interpolation specified at compile time.
@@ -47,7 +46,7 @@ namespace NetFusion.Rest.Server.Linking
         /// </summary>
         /// <param name="resource">The resource used to format string.</param>
         /// <returns>The formatted string populated with resource property values.</returns>
-        public override string FormatUrl(IResource resource)
+        public override string FormatUrl(object resource)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource), 
                 "Resource cannot be null.");

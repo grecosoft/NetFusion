@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NetFusion.Rest.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -13,7 +12,7 @@ namespace NetFusion.Rest.Server.Meta
     /// </summary>
     /// <typeparam name="TResource">The type of resource.</typeparam>
     public class ResourceLinkMeta<TResource>
-        where TResource : class, IResource
+        where TResource : class
     {
         private readonly List<ResourceLink> _resourceLinks = new List<ResourceLink>();
       
@@ -93,7 +92,7 @@ namespace NetFusion.Rest.Server.Meta
     /// <typeparam name="TResource">The resource type associated with the link metadata.</typeparam>
     public class ResourceLinkMeta<TController, TResource> : ResourceLinkMeta<TResource>
         where TController : ControllerBase
-        where TResource: class, IResource
+        where TResource: class
     {
         /// <summary>
         /// Used to specify a fully populated link associated with a specified relation name. 

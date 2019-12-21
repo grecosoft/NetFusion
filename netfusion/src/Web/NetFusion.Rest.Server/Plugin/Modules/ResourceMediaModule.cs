@@ -85,7 +85,10 @@ namespace NetFusion.Rest.Server.Plugin.Modules
             var (entry, ok) = GetMediaTypeEntry(mediaType);
             if (ok)
             {
-                var (meta, hasMeta) = entry.GetResourceTypeMeta(context.Resource.GetType());
+                // Determines the type of the object on which the metadata is based.
+                var metaSourceType = (context.State ?? context.Resource).GetType();
+                
+                var (meta, hasMeta) = entry.GetResourceTypeMeta(metaSourceType);
                 if (!hasMeta)
                 {
                     return false;

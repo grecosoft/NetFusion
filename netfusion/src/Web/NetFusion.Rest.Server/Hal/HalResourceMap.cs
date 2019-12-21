@@ -1,5 +1,4 @@
 ﻿using NetFusion.Rest.Common;
-using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Mappings;
 
 namespace NetFusion.Rest.Server.Hal
@@ -28,11 +27,11 @@ namespace NetFusion.Rest.Server.Hal
         /// <typeparam name="TResource">The type of resource to create mapping.</typeparam>
         /// <returns>The mapping for the specified resource.</returns>
         protected HalResourceMeta<TResource> Map<TResource>()
-            where TResource : class, IHalResource
+            where TResource : class
         {
             var resourceMeta = new HalResourceMeta<TResource>();
             AddResourceMeta(resourceMeta);
             return resourceMeta;
         }
     }
-}
+} 

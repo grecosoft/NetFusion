@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Hal;
@@ -29,47 +30,49 @@ namespace WebTests.Rest.ClientRequests.Server
         [HttpPost("pass-through")]
         public CustomerResource PostPassThrough([FromBody]CustomerResource resource)
         {
-            _mockedService.ServerReceivedResource = resource;
+            _mockedService.ServerReceivedResource = new HalResource(resource);
             return new CustomerResource();
         }
 
         [HttpGet("{id}")]
-        public CustomerResource GetCustomer(string id)
+        public HalResource GetCustomer(string id)
         {
-            return _mockedService.Customers.First();
+            var model = _mockedService.Customers.First();
+            return new HalResource(model);
         }
 
         [HttpGet("embedded/resource")]
-        public CustomerResource GetEmbeddedCustomer(string id)
+        public HalResource GetEmbeddedCustomer(string id)
         {
-            if (_resourceContext.RequestedEmbeddedResources.Length == 0)
-            {
-                return _mockedService.Customers.First();
-            }
-
-            var customer = _mockedService.Customers.First();
-            var resource =  new CustomerResource
-            {
-                CustomerId = customer.CustomerId,
-                Age = customer.Age,
-                FirstName = customer.FirstName,
-                LastName = customer.LastName,
-            };
-
-            foreach (var embeddedResource in customer.Embedded)
-            {
-                if (_resourceContext.RequestedEmbeddedResources.Contains(embeddedResource.Key))
-                {
-                    var halResource = embeddedResource.Value as IHalResource;
-                    if (halResource != null)
-                    {
-
-                    }
-                    resource.Embed(halResource, embeddedResource.Key);
-                }
-            }
-
-            return resource;
+//            if (_resourceContext.RequestedEmbeddedResources.Length == 0)
+//            {
+//                return new HalResource(_mockedService.Customers.First());
+//            }
+//
+//            var customer = _mockedService.Customers.First();
+//            var resource =  new CustomerResource
+//            {
+//                CustomerId = customer.CustomerId,
+//                Age = customer.Age,
+//                FirstName = customer.FirstName,
+//                LastName = customer.LastName,
+//            };
+//
+//            foreach (var embeddedResource in customer.Embedded)
+//            {
+//                if (_resourceContext.RequestedEmbeddedResources.Contains(embeddedResource.Key))
+//                {
+//                    var halResource = embeddedResource.Value as IHalResource;
+//                    if (halResource != null)
+//                    {
+//
+//                    }
+//                    resource.Embed(halResource, embeddedResource.Key);
+//                }
+//            }
+//
+//            return resource;
+                throw new NotImplementedException();
         }
     }
 }
