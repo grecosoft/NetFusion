@@ -18,24 +18,24 @@ namespace NetFusion.Rest.Resources.Hal
 		/// <param name="named">Optional name used to identity the embedded resource.</param>
 		public static void Embed(this IHalResource resource, IHalResource embeddedResource, string named = null)
 		{
-			EmbedResource(resource, embeddedResource, named);
+			EmbedValue(resource, embeddedResource, named);
 		}
 
         /// <summary>
-        /// Embeds an object within parent resource.
+        /// Embeds a model within parent resource.
         /// </summary>
         /// <param name="resource">Resource supporting IHalResource.</param>
-        /// <param name="value">The object to embed.</param>
+        /// <param name="model">The object to embed.</param>
         /// <param name="named">The name used to identify the embedded object.</param>
-        public static void Embed(this IHalResource resource, object value, string named)
+        public static void Embed(this IHalResource resource, object model, string named)
 		{
-			if (value == null) throw new ArgumentNullException(nameof(value),
+			if (model == null) throw new ArgumentNullException(nameof(model),
 				"Value to embed cannot be null.");
 			
 			if (string.IsNullOrWhiteSpace(named))
 				throw new ArgumentException("Name cannot be null or whitespace.", nameof(named));
 
-			EmbedResource(resource, value, named);
+			EmbedValue(resource, model, named);
 		}
 
 		/// <summary>
@@ -51,37 +51,37 @@ namespace NetFusion.Rest.Resources.Hal
             if (embeddedResources == null) throw new ArgumentNullException(nameof(embeddedResources),
                 "Enumeration of resources cannot be null.");
 
-			EmbedResource(resource, new ResourceCollection<T>(embeddedResources), named);
+			EmbedValue(resource, new ResourceCollection<T>(embeddedResources), named);
 		}
 
 		/// <summary>
-		/// Embeds a collection of objects within parent resource.
+		/// Embeds a collection of models within parent resource.
 		/// </summary>
 		/// <param name="resource">Resource supporting IHalResource.</param>
-		/// <param name="values">The objects to be embedded.</param>
+		/// <param name="models">The objects to be embedded.</param>
 		/// <param name="named">Name used to identify the embedded objects.</param>
-		public static void Embed(this IHalResource resource, IEnumerable<object> values, string named)
+		public static void Embed(this IHalResource resource, IEnumerable<object> models, string named)
 		{
-			if (values == null) throw new ArgumentNullException(nameof(values));
+			if (models == null) throw new ArgumentNullException(nameof(models));
 			
 			if (string.IsNullOrWhiteSpace(named))
 				throw new ArgumentException("Name cannot be null or whitespace.", nameof(named));
 
-			EmbedResource(resource, values, named);
+			EmbedValue(resource, models, named);
 		}
 
-		private static void EmbedResource(IHalResource resource, object embeddedResource, string named = null)
+		private static void EmbedValue(IHalResource resource, object value, string named = null)
 		{
 			if (resource == null) throw new ArgumentNullException(nameof(resource));
 			
-			if (embeddedResource == null) throw new ArgumentNullException(nameof(embeddedResource), 
-				"Resource to embed cannot be null.");
+			if (value == null) throw new ArgumentNullException(nameof(value), 
+				"Value to embed cannot be null.");
 			
-			string embeddedName = named ?? GetResourceEmbeddedName(embeddedResource);
+			string embeddedName = named ?? GetResourceEmbeddedName(value);
             if (embeddedName == null)
             {
                 throw new InvalidOperationException(
-                    $"The embedded name for resource type: {embeddedResource.GetType().FullName} could not be determined.  " +
+                    $"The embedded name for type: {value.GetType().FullName} could not be determined.  " +
                     $"The name was not provided and its type was not decorated with the attribute: {typeof(ExposedResourceNameAttribute).FullName}");
             }
 
@@ -90,10 +90,10 @@ namespace NetFusion.Rest.Resources.Hal
             if (resource.Embedded.ContainsKey(embeddedName))
             {
                 throw new InvalidOperationException(
-                    $"The resource of type: {resource.GetType().FullName} already has an embedded resource named: {embeddedName}.");
+                    $"The resource already has an embedded value named: {embeddedName}.");
             }
 
-            resource.Embedded[embeddedName] = embeddedResource;
+            resource.Embedded[embeddedName] = value;
 		}
 
 		private static string GetResourceEmbeddedName(object resource) =>

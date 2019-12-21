@@ -16,9 +16,9 @@ namespace NetFusion.Rest.Server.Linking
     /// route values.  The resulting URL will be a complete URL with all route parameters replaced
     /// with the corresponding resource property values.
     /// </summary>
-    public class ControllerActionRouteSelector<TController, TResource>
+    public class ControllerActionRouteSelector<TController, TModel>
         where TController : ControllerBase
-        where TResource : class
+        where TModel : class
     {
         private readonly ControllerActionLink _resourceLink;
         private readonly LambdaExpression _action;

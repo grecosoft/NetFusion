@@ -10,9 +10,9 @@ namespace NetFusion.Rest.Server.Meta
     /// <summary>
     /// Contains methods creating ResourceLink instances and associating metadata.
     /// </summary>
-    /// <typeparam name="TResource">The type of resource.</typeparam>
-    public class ResourceLinkMeta<TResource>
-        where TResource : class
+    /// <typeparam name="TSource">The type of resource.</typeparam>
+    public class ResourceLinkMeta<TSource>
+        where TSource : class
     {
         private readonly List<ResourceLink> _resourceLinks = new List<ResourceLink>();
       
@@ -36,13 +36,13 @@ namespace NetFusion.Rest.Server.Meta
         /// <param name="href">The URI associated with the relation.</param>
         /// <param name="httpMethod">The HTTP method used to invoke the URI.</param>
         /// <returns>Object used to add optional metadata to the created link.</returns>
-        public LinkDescriptor<TResource> Href(string relName, HttpMethod httpMethod, string href)
+        public LinkDescriptor<TSource> Href(string relName, HttpMethod httpMethod, string href)
         {
             if (string.IsNullOrWhiteSpace(relName)) throw new ArgumentException("Relation Name not specified.", nameof(relName));
             if (string.IsNullOrWhiteSpace(href)) throw new ArgumentException("HREF value not specified.", nameof(href));
 
             var resourceLink = new ResourceLink();
-            var linkDescriptor = new LinkDescriptor<TResource>(resourceLink);
+            var linkDescriptor = new LinkDescriptor<TSource>(resourceLink);
 
             AddResourceLink(resourceLink);
 
@@ -62,7 +62,7 @@ namespace NetFusion.Rest.Server.Meta
         /// returns a populated URI or partial populated URI (i.e. Template) based on the properties
         /// of the passed resourced.</param>
         /// <returns>Object used to add optional metadata to the created link.</returns>
-        public LinkDescriptor<TResource> Href(string relName, HttpMethod httpMethod, Expression<Func<TResource, string>> resourceUrl)
+        public LinkDescriptor<TSource> Href(string relName, HttpMethod httpMethod, Expression<Func<TSource, string>> resourceUrl)
         {
             if (string.IsNullOrWhiteSpace(relName)) throw new ArgumentException(
                 "Relation Name not specified.", nameof(relName));
@@ -70,8 +70,8 @@ namespace NetFusion.Rest.Server.Meta
             if (resourceUrl == null) throw new ArgumentNullException(nameof(resourceUrl), 
                 "Resource Delegate cannot be null.");
 
-            var resourceLink = new InterpolatedLink<TResource>(resourceUrl);
-            var linkDescriptor = new LinkDescriptor<TResource>(resourceLink);
+            var resourceLink = new InterpolatedLink<TSource>(resourceUrl);
+            var linkDescriptor = new LinkDescriptor<TSource>(resourceLink);
 
             AddResourceLink(resourceLink);
 

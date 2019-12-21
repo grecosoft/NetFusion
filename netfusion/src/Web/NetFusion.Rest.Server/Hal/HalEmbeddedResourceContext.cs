@@ -8,8 +8,8 @@ using NetFusion.Rest.Server.Resources;
 namespace NetFusion.Rest.Server.Hal
 {
     /// <summary>
-    /// Can be used by service components to determine the embedded resources requested by the client.  
-    /// If the client didn't specify, the service should return all default embedded resources.  The 
+    /// Can be used by service components to determine the embedded resource models requested by the client.  
+    /// If the client didn't specify, the service should return all default embedded resources models.  The 
     /// service is not required to support this feature.
     /// </summary>
     public class HalEmbeddedResourceContext : IHalEmbeddedResourceContext
@@ -21,7 +21,7 @@ namespace NetFusion.Rest.Server.Hal
             _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
         }
 
-        public bool IsRequested<TResource>()
+        public bool IsRequested<TModel>()
         { 
             // If not specified by the caller, all resources are considered requested.
             if (! EmbeddedResourcesRequested)
@@ -29,25 +29,25 @@ namespace NetFusion.Rest.Server.Hal
                 return true;
             }
 
-            var resourceName = typeof(TResource).GetExposedResourceTypeName();
-            return resourceName != null && RequestedEmbeddedResources.Contains(resourceName);
+            var resourceName = typeof(TModel).GetExposedResourceTypeName();
+            return resourceName != null && RequestedEmbeddedModels.Contains(resourceName);
         }
 
-        public bool IsRequested(string resourceName)
+        public bool IsRequested(string modelName)
         {
-            if (string.IsNullOrWhiteSpace(resourceName))
-                throw new ArgumentException("Resource key name must be specified.", nameof(resourceName));
+            if (string.IsNullOrWhiteSpace(modelName))
+                throw new ArgumentException("Model name must be specified.", nameof(modelName));
             
-            return RequestedEmbeddedResources.Contains(resourceName);
+            return RequestedEmbeddedModels.Contains(modelName);
         }
 
-        // The client can specify an embed query-string parameter to indicate to the server
-        // the embedded resources they are interested in.  This is optional but can be used
-        // by the client and the server to reduce network traffic.
+        // The client can specify the embed query-string parameter to indicate to the server
+        // the embedded resource models they are interested in.  This is optional but can be
+        // used by the client and the server to reduce network traffic.
         private bool EmbeddedResourcesRequested => _contextAccessor.ActionContext
             .HttpContext.Request.Query.ContainsKey("embed");
 
-        public string[] RequestedEmbeddedResources
+        public string[] RequestedEmbeddedModels
         {
             get
             {

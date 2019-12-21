@@ -10,11 +10,11 @@ namespace NetFusion.Rest.Resources.Hal
     public interface IHalResource : IResource
     {
         /// <summary>
-        /// The object containing the data associated with the resource.
+        /// The model containing the data associated with the resource.
         /// This is separate from the Links and Embedded information so
-        /// the client can easily access the state to send back to server.
+        /// the client can easily access the model to send back to server.
         /// </summary>
-        object State { get; }
+        object Model { get; }
         
         /// <summary>
         /// The links associated with the resource.

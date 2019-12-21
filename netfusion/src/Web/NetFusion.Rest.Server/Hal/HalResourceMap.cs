@@ -20,16 +20,16 @@ namespace NetFusion.Rest.Server.Hal
         }
 
         /// <summary>
-        /// Returns meta-data class for a specific resource type used to
+        /// Returns resource meta-data class for a specific model type used to
         /// provided mappings on how the resource should be augmented with 
         /// REST/HAL information.
         /// </summary>
-        /// <typeparam name="TResource">The type of resource to create mapping.</typeparam>
-        /// <returns>The mapping for the specified resource.</returns>
-        protected HalResourceMeta<TResource> Map<TResource>()
-            where TResource : class
+        /// <typeparam name="TModel">The type of model associated with the resource.</typeparam>
+        /// <returns>The created resource mapping.</returns>
+        protected HalResourceMeta<TModel> Map<TModel>()
+            where TModel : class
         {
-            var resourceMeta = new HalResourceMeta<TResource>();
+            var resourceMeta = new HalResourceMeta<TModel>();
             AddResourceMeta(resourceMeta);
             return resourceMeta;
         }

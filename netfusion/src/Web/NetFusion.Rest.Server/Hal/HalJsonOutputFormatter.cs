@@ -64,7 +64,7 @@ namespace NetFusion.Rest.Server.Hal
         private static void ApplyMetadataToResource(IHalResource resource, ResourceContext resourceContext)
         {
             resourceContext.Resource = resource;
-            resourceContext.State = resource.State;
+            resourceContext.Model = resource.Model;
             resourceContext.MediaModule.ApplyResourceMeta(InternetMediaTypes.HalJson, resourceContext);
 
             // Add metadata to each embedded resource if present.

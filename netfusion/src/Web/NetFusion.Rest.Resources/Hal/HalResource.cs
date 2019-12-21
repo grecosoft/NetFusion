@@ -5,14 +5,15 @@ using System.Text.Json.Serialization;
 namespace NetFusion.Rest.Resources.Hal
 {
     /// <summary>
-    /// Base class implementing the IHalResource interface from which resources can be derived.
+    /// Provides an implementation of the IHalResource wrapping a model used to
+    /// associate links and embedded resources.
     /// </summary>
     public class HalResource : IHalResource
     {
         /// <summary>
-        /// The state associated with the resource.
+        /// The model associated with the resource.
         /// </summary>
-        public object State { get; }
+        public object Model { get; }
 
         protected HalResource()
         {
@@ -20,12 +21,12 @@ namespace NetFusion.Rest.Resources.Hal
         }
         
         /// <summary>
-        /// Constructor to wrap model state with HAL resource information.
+        /// Constructor to wrap model with HAL resource information.
         /// </summary>
-        /// <param name="state">The model state.</param>
-        public HalResource(object state)
+        /// <param name="model">The model state.</param>
+        public HalResource(object model)
         {
-            State = state ?? throw new ArgumentNullException(nameof(state));
+            Model = model ?? throw new ArgumentNullException(nameof(model));
         }
         
         /// <summary>

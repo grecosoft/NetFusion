@@ -3,11 +3,11 @@
 namespace NetFusion.Rest.Server.Hal
 {
     /// <summary>
-    /// HAL resource metadata for a given resource type.  
+    /// HAL resource metadata for a given model type.  
     /// </summary>
-    /// <typeparam name="TResource">The type of resource.</typeparam>
-    public class HalResourceMeta<TResource> : ResourceMeta<HalResourceMeta<TResource>, TResource>
-        where TResource : class
+    /// <typeparam name="TModel">The type of model associated with resource.</typeparam>
+    public class HalResourceMeta<TModel> : ResourceMeta<HalResourceMeta<TModel>, TModel>
+        where TModel : class
     {
         // ** Addition needed HAL specific methods to record any metadata can be added.
         // ** This class derives from ResourceMeta which allows adding links to the

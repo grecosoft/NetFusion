@@ -19,9 +19,9 @@ namespace NetFusion.Rest.Server.Mappings
         // Optional reference to the state associated with the resource.
         // Based on the type of output formatter requested, this value
         // may not be set.
-        public object State { get; set; }
+        public object Model { get; set; }
 
-        // The metadata associated with the resource.
+        // The metadata associated with the source type..
         public IResourceMeta Meta { get; set; }
 
         // Services that can be utilized when adding the metadata

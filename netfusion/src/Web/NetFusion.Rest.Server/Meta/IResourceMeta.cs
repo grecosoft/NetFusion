@@ -10,9 +10,9 @@ namespace NetFusion.Rest.Server.Meta
     public interface IResourceMeta
     {
         /// <summary>
-        /// The resource type associated with the metadata.
+        /// The source type associated with the metadata.
         /// </summary>
-        Type ResourceType { get; }
+        Type SourceType { get; }
 
         /// <summary>
         /// The link metadata associated with the resource.  Based on how the link is selected or specified,

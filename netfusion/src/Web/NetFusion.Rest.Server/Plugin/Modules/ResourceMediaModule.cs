@@ -86,7 +86,7 @@ namespace NetFusion.Rest.Server.Plugin.Modules
             if (ok)
             {
                 // Determines the type of the object on which the metadata is based.
-                var metaSourceType = (context.State ?? context.Resource).GetType();
+                var metaSourceType = (context.Model ?? context.Resource).GetType();
                 
                 var (meta, hasMeta) = entry.GetResourceTypeMeta(metaSourceType);
                 if (!hasMeta)
