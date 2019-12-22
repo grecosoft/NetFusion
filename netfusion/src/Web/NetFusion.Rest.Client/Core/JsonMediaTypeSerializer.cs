@@ -13,8 +13,16 @@ namespace NetFusion.Rest.Client.Core
     /// </summary>
     public class JsonMediaTypeSerializer : IMediaTypeSerializer
     {
-        public string MediaType => InternetMediaTypes.Json;
+        private JsonSerializerOptions _serializerOptions;
+        
+        public void Initialize(ClientSettings settings)
+        {
+            _serializerOptions = settings.SerializerOptions;
+        }
 
+        public string MediaType => InternetMediaTypes.Json;
+        
+        
         public byte[] Serialize(object value)
         {
             string json = JsonSerializer.Serialize(value);
@@ -24,18 +32,12 @@ namespace NetFusion.Rest.Client.Core
 
         public Task<T> Deserialize<T>(Stream responseStream)
         {
-            return JsonSerializer.DeserializeAsync<T>(responseStream, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            }).AsTask();
+            return JsonSerializer.DeserializeAsync<T>(responseStream, _serializerOptions).AsTask();
         }
         
         public Task<object> Deserialize(Stream responseStream, Type type)
         {
-            return JsonSerializer.DeserializeAsync(responseStream, type, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            }).AsTask();
+            return JsonSerializer.DeserializeAsync(responseStream, type, _serializerOptions).AsTask();
         }
     }
 }

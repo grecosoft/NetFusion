@@ -10,6 +10,8 @@ namespace NetFusion.Rest.Client.Settings
     /// </summary>
     public interface IMediaTypeSerializer
     {
+        void Initialize(ClientSettings settings);
+        
         /// <summary>
         /// The media type supported by the serializer.
         /// </summary>

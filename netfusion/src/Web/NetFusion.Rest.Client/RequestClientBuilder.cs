@@ -133,8 +133,7 @@ namespace NetFusion.Rest.Client
         /// <returns>Builder for method chaining.</returns>
         public RequestClientBuilder OnStatusCode(HttpStatusCode code, Func<ErrorStatusContext, Task<bool>> handler)
         {
-            _statusCodeHandlers = _statusCodeHandlers ??
-                                 new ConcurrentDictionary<HttpStatusCode, Func<ErrorStatusContext, Task<bool>>>();
+            _statusCodeHandlers ??= new ConcurrentDictionary<HttpStatusCode, Func<ErrorStatusContext, Task<bool>>>();
 
             if (_statusCodeHandlers.ContainsKey(code))
             {
@@ -155,10 +154,11 @@ namespace NetFusion.Rest.Client
         public RequestClientBuilder UsingMediaTypeSerializer<T>(string mediaType = null)
             where T : IMediaTypeSerializer, new()
         {
-            _mediaTypeSerializers = _mediaTypeSerializers ?? new Dictionary<string, IMediaTypeSerializer>();
+            _mediaTypeSerializers ??= new Dictionary<string, IMediaTypeSerializer>();
 
             var serializer = new T();
-            mediaType = mediaType ?? serializer.MediaType;
+            serializer.Initialize(_clientSettings);
+            mediaType ??= serializer.MediaType;
 
             if (string.IsNullOrWhiteSpace(mediaType))
                 throw new ArgumentException("Client base address not specified.", nameof(mediaType));

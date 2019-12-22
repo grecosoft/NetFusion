@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,10 +55,22 @@ namespace WebTests.Hosting
             var client = _testServer.CreateClient();
             var logger = _services.GetService<ILogger<WebServerAct>>();
 
+            var settings = new ClientSettings
+            {
+                SerializerOptions = new JsonSerializerOptions
+                {
+                    IgnoreNullValues = true, 
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                }
+            };
+            
+            var jsonSerializer = new JsonMediaTypeSerializer();
+            jsonSerializer.Initialize(settings);
+
             var serializers = new Dictionary<string, IMediaTypeSerializer>
             {
-                { InternetMediaTypes.Json, new JsonMediaTypeSerializer() },
-                { InternetMediaTypes.HalJson, new JsonMediaTypeSerializer() }
+                { InternetMediaTypes.Json, jsonSerializer },
+                { InternetMediaTypes.HalJson, jsonSerializer }
             };
             var restClient = new RequestClient(client, logger, serializers, 
                 RequestSettings.Create( c => c.UseHalDefaults()));
