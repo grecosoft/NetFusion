@@ -44,25 +44,6 @@
 		/// expected when dereferencing the target resource (Optional).
 		/// </summary>
 		public string Type { get; set; }
-
-        /// <summary>
-        /// Its presence indicates that the link is to be deprecated (i.e removed) 
-        /// at a future date.  Its value is a URL that SHOULD provide further information 
-        /// about the deprecation.
-
-        /// A client SHOULD provide some notification (for example, by logging a
-        /// warning message) whenever it traverses over a link that has this
-        /// property.The notification SHOULD include the deprecation property's
-        /// value so that a client maintainer can easily find information about
-        /// the deprecation (Optional).
-        /// </summary>
-        public Link Deprecation { get; set; }
-
-        /// <summary>
-        /// Its value is a string which is a URI that hints about the profile (as
-        /// defined by[I - D.wilde - profile - link]) of the target resource (Optional).
-        /// </summary>
-        public Link Profile { get; set; }        
     }
 }
 

@@ -72,19 +72,5 @@ namespace WebTests.Rest.LinkGeneration.Server
         {
             return null;
         }
-
-        [HttpGet("view")]
-        public HalResource GetViewResource()
-        {
-            var models = _mockedService.GetResources<LinkedResource>().ToArray();
-            if (!models.Any())
-            {
-                throw new InvalidOperationException(
-                    "Unit test didn't provided mocked server resource.");
-            }
-
-            var model = new LinkedViewResource(models.First());
-            return new HalResource(model);
-        }
     }
 }

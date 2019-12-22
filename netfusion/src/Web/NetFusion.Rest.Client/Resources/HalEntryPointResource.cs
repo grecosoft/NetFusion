@@ -5,11 +5,13 @@
     /// This resource will contain URLs (usually template URLs) that
     /// can be used to load initial resources that can be navigated.
     /// </summary>
-    public class HalEntryPointResource : HalResource
+    public class HalEntryPointResource : HalResource<EntryPointModel>
     {
-        /// <summary>
-        /// Optional value indicating the version of the service API.
-        /// </summary>
+    
+    }
+
+    public class EntryPointModel
+    {
         public string Version { get; set; }
     }
 }

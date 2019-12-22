@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using NetFusion.Rest.Client;
+using NetFusion.Rest.Client.Resources;
 using WebTests.Hosting;
 using WebTests.Rest.LinkGeneration;
 using WebTests.Rest.Setup;
