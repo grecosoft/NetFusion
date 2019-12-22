@@ -11,7 +11,7 @@ namespace WebTests.Rest.ClientRequests.Server
     {
         protected override void OnBuildResourceMap()
         {
-            Map<CustomerResource>()
+            Map<CustomerModel>()
                 .LinkMeta<CustomerController>(meta => 
                     meta.Url(RelationTypes.Self, (c, r) => c.GetCustomer(r.CustomerId)));
         }

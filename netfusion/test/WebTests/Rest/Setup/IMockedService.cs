@@ -8,7 +8,7 @@ namespace WebTests.Rest.Setup
     {
         HalResource ServerReceivedResource { get; set; }
 
-        IEnumerable<CustomerResource> Customers { get; set; }
+        IEnumerable<CustomerModel> Customers { get; set; }
 
         IEnumerable<T> GetResources<T>();
 

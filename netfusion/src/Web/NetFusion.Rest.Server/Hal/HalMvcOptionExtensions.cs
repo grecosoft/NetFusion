@@ -25,7 +25,8 @@ namespace NetFusion.Rest.Server.Hal
             // Use default settings if not specified by caller.
             options ??= new JsonSerializerOptions
             {
-                IgnoreNullValues = true
+                IgnoreNullValues = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
 
             // Add the HAL formatter to the MVC pipeline.

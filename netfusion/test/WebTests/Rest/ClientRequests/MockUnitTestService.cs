@@ -23,9 +23,9 @@ namespace WebTests.Rest.ClientRequests
 
         public MockUnitTestService()
         {
-            Customers = new CustomerResource[] { };
+            Customers = new CustomerModel[] { };
         }
 
-        public IEnumerable<CustomerResource> Customers { get; set; }
+        public IEnumerable<CustomerModel> Customers { get; set; }
     }
 }

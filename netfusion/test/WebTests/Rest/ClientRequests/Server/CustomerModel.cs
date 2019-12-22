@@ -3,7 +3,7 @@
     /// <summary>
     /// Server side resource returned by the API Controller under-test.
     /// </summary>
-    public class CustomerResource 
+    public class CustomerModel 
     {
         public string CustomerId { get; set; }
         public string FirstName { get; set; }

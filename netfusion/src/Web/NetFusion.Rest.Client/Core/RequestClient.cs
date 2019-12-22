@@ -94,7 +94,7 @@ namespace NetFusion.Rest.Client.Core
         // -----
 
 		public async Task<ApiResponse> SendAsync(ApiRequest request,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request),
                 "Request cannot be null.");
@@ -103,7 +103,7 @@ namespace NetFusion.Rest.Client.Core
         }
 
 		public async Task<ApiResponse<TContent>> SendAsync<TContent>(ApiRequest request,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
             where TContent : class
         {
             if (request == null) throw new ArgumentNullException(nameof(request),
@@ -142,13 +142,13 @@ namespace NetFusion.Rest.Client.Core
             HttpRequestMessage requestMsg = await CreateRequestMessage(request);
             LogRequest(request);
             
-            TContent resource = null;
+            HalResource<TContent> resource = null;
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
             responseMsg = await HandleIfErrorStatusCode(request, responseMsg, cancellationToken);
-         
+
             if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
             {
-                resource = DeserializeResource<TContent>(responseMsg, await responseMsg.Content.ReadAsStreamAsync());
+                resource = await DeserializeResource<HalResource<TContent>>(responseMsg, await responseMsg.Content.ReadAsStreamAsync());
             }
 
             var response = new ApiResponse<TContent>(requestMsg, responseMsg, resource);
@@ -324,7 +324,7 @@ namespace NetFusion.Rest.Client.Core
             return contentSerializer;
         }
 
-        private T DeserializeResource<T>(HttpResponseMessage responseMsg, Stream responseStream)
+        private Task<T> DeserializeResource<T>(HttpResponseMessage responseMsg, Stream responseStream)
             where T : class
         {
             string mediaType = responseMsg.Content.Headers.ContentType.MediaType;

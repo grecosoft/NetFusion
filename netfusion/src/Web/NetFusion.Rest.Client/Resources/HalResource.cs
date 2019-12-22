@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace NetFusion.Rest.Client.Resources
 {
@@ -15,21 +16,15 @@ namespace NetFusion.Rest.Client.Resources
         /// <summary>
         /// Embedded related named resources.
         /// </summary>
-        [JsonProperty(PropertyName = "_embedded")]
+        [JsonPropertyName("_embedded")]
 		public Dictionary<string, object> Embedded { get; set; }
 
         /// <summary>
         /// The links associated with the resource.
         /// </summary>
-        [JsonProperty(PropertyName = "_links")]
+        [JsonPropertyName("_links")]
         public Dictionary<string, Link> Links { get; set; }
-
-        // When submitting resources back to the server for updating or other 
-        // use-cases, the embedded resources and links should not be serialized.
-        // (these properties are used by Newtonsoft).
-        public bool ShouldSerializeEmbedded() => false;
-        public bool ShouldSerializeLinks() => false;
-
+        
         /// <summary>
         /// Determines if the resource contains a named link.
         /// </summary>
@@ -44,7 +39,7 @@ namespace NetFusion.Rest.Client.Resources
         }
 
         /// <summary>
-        /// Returns a link identified by name assocated with resource.
+        /// Returns a link identified by name associated with resource.
         /// </summary>
         /// <param name="named">The name identifying the link.</param>
         /// <returns>The link if found.  Otherwise an exception is raised.</returns>
@@ -78,8 +73,7 @@ namespace NetFusion.Rest.Client.Resources
         /// <typeparam name="TResource">The type of the embedded resource.</typeparam>
         /// <param name="named">The name identifying the embedded resource.</param>
         /// <returns>Instance of the populated nested type.</returns>
-        public TResource GetEmbedded<TResource>(string named)
-            where TResource : HalResource
+        public HalResource<TModel> GetEmbedded<TModel>(string named)
         {
             if (string.IsNullOrWhiteSpace(named))
                 throw new ArgumentException("Name of embedded resource not provided.", nameof(named));
@@ -89,25 +83,18 @@ namespace NetFusion.Rest.Client.Resources
                 throw new InvalidOperationException(
                     $"Embedded resource named: {named} of parent resource type: {GetType().FullName} does not exist.");
             }
-
-            // Note:  The server side Web REST/HAL implementation of the Embedded property returns a simple dictionary 
-            // with the value based on a common interface.  This means that the exact type of the embedded resource is 
-            // not known when the Embedded property is being deserialized on this side.  Since this is the case, 
-            // the value for each item in the dictionary will be of type JObject.  The consuming developer will know
-            // the embedded type structure and have defined a matching class.  This approach keeps the server and the
-            // client code less complex by not having to define typed classes for the Embedded property and allows 
-            // resources to be combined to create new resource types.
-
+            
             // Check if the embedded resource has been deserialized from the base JObject representation and return it.
-            if (Embedded[named] is TResource embededItem)
+            if (Embedded[named] is HalResource<TModel> embededItem)
             {
                 return embededItem;
             }
 
             // Deserialize the embedded JObject into a type object instance.
-            if (Embedded[named] is JObject embededJObj)
+            if (Embedded[named] is JsonElement embeddedJObj)
             {
-                embededItem = embededJObj.ToObject<TResource>();
+                embededItem = JsonSerializer.Deserialize<HalResource<TModel>>(embeddedJObj.GetRawText(), 
+                    new JsonSerializerOptions{PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
                 Embedded[named] = embededItem; // Override the JObject reference.
                 return embededItem;
             }
@@ -149,5 +136,10 @@ namespace NetFusion.Rest.Client.Resources
             throw new InvalidCastException(
                 $"The named embedded array value of: {named} does not contain a JArray.");
         }
+    }
+    
+    public class HalResource<TModel> : HalResource
+    {
+        public TModel Model { get; set; }
     }
 }

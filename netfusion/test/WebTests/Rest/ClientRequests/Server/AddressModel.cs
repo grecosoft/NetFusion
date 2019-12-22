@@ -1,5 +1,4 @@
 ﻿using NetFusion.Rest.Resources;
-using NetFusion.Rest.Resources.Hal;
 
 namespace WebTests.Rest.ClientRequests.Server
 {
@@ -7,12 +6,13 @@ namespace WebTests.Rest.ClientRequests.Server
     /// Server side resource returned by the API Controller under-test.
     /// </summary>
     [ExposedResourceName("cust-address")]
-    public class AddressResource : HalResource
+    public class AddressModel 
     {
         public string AddressId { get; set; }
         public string CustomerId { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
+        public string State { get; set; }
         public string ZipCode { get; set; }
     }
 }

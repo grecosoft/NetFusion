@@ -1,12 +1,10 @@
-﻿using NetFusion.Rest.Client.Resources;
-
-namespace WebTests.Rest.ClientRequests.Client
+﻿namespace WebTests.Rest.ClientRequests.Client
 {
     /// <summary>
     /// Client side resource class modeling the corresponding
     /// server side returned resource.
     /// </summary>
-    public class AddressModel : HalResource
+    public class AddressModel 
     {
         public string AddressId { get; set; }
         public string CustomerId { get; set; }

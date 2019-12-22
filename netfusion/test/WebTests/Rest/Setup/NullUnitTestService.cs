@@ -7,7 +7,7 @@ namespace WebTests.Rest.Setup
 {
     public class NullUnitTestService : IMockedService
     {
-        public IEnumerable<CustomerResource> Customers { get; set; } = new CustomerResource[] { };
+        public IEnumerable<CustomerModel> Customers { get; set; } = new CustomerModel[] { };
 
         public HalResource ServerReceivedResource { get; set; }
 

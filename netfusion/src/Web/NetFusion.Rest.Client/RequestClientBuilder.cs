@@ -198,8 +198,8 @@ namespace NetFusion.Rest.Client
             // the resource of first successful response.
             if (_entryPointPath != null)
             {
-                _apiEntryPointLazy = new Lazy<Task<HalEntryPointResource>>(
-                    () => GetEntryPointResource(requestClient), true);
+//                _apiEntryPointLazy = new Lazy<Task<HalEntryPointResource>>(
+//                    () => GetEntryPointResource(requestClient), true);
 
                 requestClient.SetApiServiceProvider(this);
             }
@@ -258,23 +258,23 @@ namespace NetFusion.Rest.Client
 
         // Attempts to load the entry point resource and resets the lazy loaded state if there
         // is an exception so future attempts can be made.
-        private async Task<HalEntryPointResource> GetEntryPointResource(IRequestClient requestClient)
-        {
-            try
-            {
-                var request = ApiRequest.Get(_entryPointPath);
-                var response = await requestClient.SendAsync<HalEntryPointResource>(request).ConfigureAwait(false);
-
-                response.ThrowIfNotSuccessStatusCode();
-                return response.Content;
-            }
-            catch (Exception ex) 
-            {
-                _logger.LogError(ex, "Error loading service entry resource");
-                _apiEntryPointLazy = new Lazy<Task<HalEntryPointResource>>(() => GetEntryPointResource(requestClient), true);
-                throw;
-            }
-        }
+//        private async Task<HalEntryPointResource> GetEntryPointResource(IRequestClient requestClient)
+//        {
+//            try
+//            {
+//                var request = ApiRequest.Get(_entryPointPath);
+//                var response = await requestClient.SendAsync<HalEntryPointResource>(request).ConfigureAwait(false);
+//
+//                response.ThrowIfNotSuccessStatusCode();
+//                return response.Content;
+//            }
+//            catch (Exception ex) 
+//            {
+//                _logger.LogError(ex, "Error loading service entry resource");
+//                _apiEntryPointLazy = new Lazy<Task<HalEntryPointResource>>(() => GetEntryPointResource(requestClient), true);
+//                throw;
+//            }
+//        }
 
         private void AssureDefaultSerializers()
         {

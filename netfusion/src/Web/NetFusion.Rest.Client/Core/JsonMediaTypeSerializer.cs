@@ -1,9 +1,10 @@
 ﻿using System;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
-using Newtonsoft.Json;
 using System.IO;
 using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace NetFusion.Rest.Client.Core
 {
@@ -16,26 +17,25 @@ namespace NetFusion.Rest.Client.Core
 
         public byte[] Serialize(object value)
         {
-            string json = JsonConvert.SerializeObject(value);
+            string json = JsonSerializer.Serialize(value);
             return Encoding.UTF8.GetBytes(json);
+
         }
 
-        public T Deserialize<T>(Stream responseStream)
+        public Task<T> Deserialize<T>(Stream responseStream)
         {
-            var serializer = new JsonSerializer();
-            using (var reader = new StreamReader(responseStream))
+            return JsonSerializer.DeserializeAsync<T>(responseStream, new JsonSerializerOptions
             {
-                return (T)serializer.Deserialize(reader, typeof(T));
-            }
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            }).AsTask();
         }
         
-        public object Deserialize(Stream responseStream, Type type)
+        public Task<object> Deserialize(Stream responseStream, Type type)
         {
-            var serializer = new JsonSerializer();
-            using (var reader = new StreamReader(responseStream))
+            return JsonSerializer.DeserializeAsync(responseStream, type, new JsonSerializerOptions
             {
-                return serializer.Deserialize(reader, type);
-            }
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            }).AsTask();
         }
     }
 }

@@ -11,6 +11,7 @@ using WebTests.Rest.ClientRequests.Server;
 using WebTests.Rest.LinkGeneration;
 using WebTests.Rest.Setup;
 using Xunit;
+using CustomerModel = WebTests.Rest.ClientRequests.Server.CustomerModel;
 
 namespace WebTests.Rest.ClientRequests
 {
@@ -141,7 +142,7 @@ namespace WebTests.Rest.ClientRequests
             {
                 IMockedService mockedSrv = new MockUnitTestService
                 {
-                    Customers = new[] { new CustomerResource { CustomerId = "ID_1", Age = 47 } }
+                    Customers = new[] { new CustomerModel { CustomerId = "ID_1", Age = 47 } }
                 };
 
                 var response = await host
@@ -158,7 +159,7 @@ namespace WebTests.Rest.ClientRequests
                                     .AddParam("b", "v2");
                             });
                         
-                        return await client.SendAsync<CustomerModel>(request);
+                        return await client.SendAsync<Client.CustomerModel>(request);
                     });
 
                 response.Assert.ApiResponse(apiResponse =>
