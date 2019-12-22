@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Newtonsoft.Json.Linq;
 
 namespace NetFusion.Rest.Client.Resources
 {
@@ -70,7 +69,7 @@ namespace NetFusion.Rest.Client.Resources
         /// <summary>
         /// Returns an instance of an embedded resource.
         /// </summary>
-        /// <typeparam name="TResource">The type of the embedded resource.</typeparam>
+        /// <typeparam name="TModel">The type of the embedded resource.</typeparam>
         /// <param name="named">The name identifying the embedded resource.</param>
         /// <returns>Instance of the populated nested type.</returns>
         public HalResource<TModel> GetEmbedded<TModel>(string named)
@@ -106,11 +105,11 @@ namespace NetFusion.Rest.Client.Resources
         /// <summary>
         /// Returns an instance of an embedded collection resource.
         /// </summary>
-        /// <typeparam name="TResource">The type of the embedded resource array item.</typeparam>
+        /// <typeparam name="TModel">The type of the embedded resource array item.</typeparam>
         /// <param name="named">The name identifying the embedded resource.</param>
         /// <returns>Instance of the populated nested array type.</returns>
-        public IEnumerable<TResource> GetEmbeddedCollection<TResource>(string named)
-            where TResource : HalResource
+        public IEnumerable<HalResource<TModel>> GetEmbeddedCollection<TModel>(string named)
+      
         {
             if (string.IsNullOrWhiteSpace(named))
                 throw new ArgumentException("Name of embedded resource not provided.", nameof(named));
@@ -121,14 +120,15 @@ namespace NetFusion.Rest.Client.Resources
                     $"Embedded resource array named: {named} of parent resource type: {GetType().FullName} does not exist.");
             }
 
-            if (Embedded[named] is List<TResource> embededItem)
+            if (Embedded[named] is List<HalResource<TModel>> embededItem)
             {
                 return embededItem;
             }
 
-            if (Embedded[named] is JArray embededJArray)
+            if (Embedded[named] is JsonElement embedJArray)
             {
-                embededItem = embededJArray.ToObject<List<TResource>>();
+                embededItem = JsonSerializer.Deserialize<List<HalResource<TModel>>>(embedJArray.GetRawText(), 
+                    new JsonSerializerOptions{PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
                 Embedded[named] = embededItem;
                 return embededItem;
             }

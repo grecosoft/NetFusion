@@ -64,7 +64,7 @@ namespace WebTests.Rest.LinkGeneration
             
             return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                var response = await host
+                var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
                     .Act.OnRestClient(async client =>
                     {             
@@ -72,13 +72,13 @@ namespace WebTests.Rest.LinkGeneration
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
-                response.Assert.ApiResponse(apiResponse =>
+                webResponse.Assert.ApiResponse(response =>
                 {
-                     var resource = (LinkedResourceModel)apiResponse.Content;
+                     var apiResponse = (ApiResponse<LinkedResourceModel>)response;
                      
                      // Required Route Parameters:
-                     resource.AssertLink("scenario-1", HttpMethod.Get, "/api/linked/resource/scenario-1/10");
-                     resource.AssertLink("scenario-2", HttpMethod.Get, "/api/linked/resource/scenario-2/10/param-one/value-2");
+                     apiResponse.Resource.AssertLink("scenario-1", HttpMethod.Get, "/api/linked/resource/scenario-1/10");
+                     apiResponse.Resource.AssertLink("scenario-2", HttpMethod.Get, "/api/linked/resource/scenario-2/10/param-one/value-2");
                 });
             });
         }
@@ -97,7 +97,7 @@ namespace WebTests.Rest.LinkGeneration
             
             return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                var response = await host
+                var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
                     .Act.OnRestClient(async client =>
                     {             
@@ -105,12 +105,12 @@ namespace WebTests.Rest.LinkGeneration
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
-                response.Assert.ApiResponse(apiResponse =>
+                webResponse.Assert.ApiResponse(response =>
                 {
-                    var resource = (LinkedResourceModel)apiResponse.Content;
+                    var apiResponse = (ApiResponse<LinkedResourceModel>)response;
                      
                     // Optional Route Parameter with supplied value:
-                    resource.AssertLink("scenario-3", HttpMethod.Get, "/api/linked/resource/scenario-3/10/param-one/300");
+                    apiResponse.Resource.AssertLink("scenario-3", HttpMethod.Get, "/api/linked/resource/scenario-3/10/param-one/300");
                 });
             });
         }
@@ -129,7 +129,7 @@ namespace WebTests.Rest.LinkGeneration
             
             return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                var response = await host
+                var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
                     .Act.OnRestClient(async client =>
                     {             
@@ -137,12 +137,12 @@ namespace WebTests.Rest.LinkGeneration
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
-                response.Assert.ApiResponse(apiResponse =>
+                webResponse.Assert.ApiResponse(response =>
                 {
-                    var resource = (LinkedResourceModel)apiResponse.Content;
+                    var apiResponse = (ApiResponse<LinkedResourceModel>)response;
                      
                     // Optional Route Parameter with supplied value:
-                    resource.AssertLink("scenario-3", HttpMethod.Get, "/api/linked/resource/scenario-3/10/param-one");
+                    apiResponse.Resource.AssertLink("scenario-3", HttpMethod.Get, "/api/linked/resource/scenario-3/10/param-one");
                 });
             });
         }
@@ -161,7 +161,7 @@ namespace WebTests.Rest.LinkGeneration
             
             return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                var response = await host
+                var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
                     .Act.OnRestClient(async client =>
                     {             
@@ -169,12 +169,12 @@ namespace WebTests.Rest.LinkGeneration
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
-                response.Assert.ApiResponse(apiResponse =>
+                webResponse.Assert.ApiResponse(response =>
                 {
-                    var resource = (LinkedResourceModel)apiResponse.Content;
+                    var apiResponse = (ApiResponse<LinkedResourceModel>)response;
                      
                     // Optional Route Parameter with supplied value:
-                    resource.AssertLink("scenario-4", HttpMethod.Get, "/api/linked/resource/scenario-4/10/param-one/600/value-2");
+                    apiResponse.Resource.AssertLink("scenario-4", HttpMethod.Get, "/api/linked/resource/scenario-4/10/param-one/600/value-2");
                 });
             });
         }
@@ -193,7 +193,7 @@ namespace WebTests.Rest.LinkGeneration
             
             return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                var response = await host
+                var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
                     .Act.OnRestClient(async client =>
                     {             
@@ -201,12 +201,12 @@ namespace WebTests.Rest.LinkGeneration
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
-                response.Assert.ApiResponse(apiResponse =>
+                webResponse.Assert.ApiResponse(response =>
                 {
-                    var resource = (LinkedResourceModel)apiResponse.Content;
+                    var apiResponse = (ApiResponse<LinkedResourceModel>)response;
                      
                     // Optional Route Parameter with supplied value:
-                    resource.AssertLink("scenario-4", HttpMethod.Get, "/api/linked/resource/scenario-4/10/param-one");
+                    apiResponse.Resource.AssertLink("scenario-4", HttpMethod.Get, "/api/linked/resource/scenario-4/10/param-one");
                 });
             });
         }
@@ -225,7 +225,7 @@ namespace WebTests.Rest.LinkGeneration
             
             return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                var response = await host
+                var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
                     .Act.OnRestClient(async client =>
                     {             
@@ -233,12 +233,12 @@ namespace WebTests.Rest.LinkGeneration
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
-                response.Assert.ApiResponse(apiResponse =>
+                webResponse.Assert.ApiResponse(response =>
                 {
-                    var resource = (LinkedResourceModel)apiResponse.Content;
+                    var apiResponse = (ApiResponse<LinkedResourceModel>)response;
                      
                     // Optional Route Parameter with supplied value:
-                    resource.AssertLink("scenario-5", HttpMethod.Post, "/api/linked/resource/scenario-5/create");
+                    apiResponse.Resource.AssertLink("scenario-5", HttpMethod.Post, "/api/linked/resource/scenario-5/create");
                 });
             });
         }
@@ -257,7 +257,7 @@ namespace WebTests.Rest.LinkGeneration
             
             return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                var response = await host
+                var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
                     .Act.OnRestClient(async client =>
                     {             
@@ -265,12 +265,12 @@ namespace WebTests.Rest.LinkGeneration
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
-                response.Assert.ApiResponse(apiResponse =>
+                webResponse.Assert.ApiResponse(response =>
                 {
-                    var resource = (LinkedResourceModel)apiResponse.Content;
+                    var apiResponse = (ApiResponse<LinkedResourceModel>)response;
                      
                     // Optional Route Parameter with supplied value:
-                    resource.AssertLink("scenario-6", HttpMethod.Put, "/api/linked/resource/scenario-6/10/update");
+                    apiResponse.Resource.AssertLink("scenario-6", HttpMethod.Put, "/api/linked/resource/scenario-6/10/update");
                 });
             });
         }
@@ -303,7 +303,7 @@ namespace WebTests.Rest.LinkGeneration
             
             return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                var response = await host
+                var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
                     .Act.OnRestClient(async client =>
                     {             
@@ -311,11 +311,11 @@ namespace WebTests.Rest.LinkGeneration
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
-                response.Assert.ApiResponse(apiResponse =>
+                webResponse.Assert.ApiResponse(response =>
                 {
-                    var resource = (LinkedResourceModel)apiResponse.Content;
+                    var apiResponse = (ApiResponse<LinkedResourceModel>)response;
                      
-                    resource.AssertLink("scenario-20", HttpMethod.Options, "http://external/api/call/info");
+                    apiResponse.Resource.AssertLink("scenario-20", HttpMethod.Options, "http://external/api/call/info");
                 });
             });
         }
@@ -349,7 +349,7 @@ namespace WebTests.Rest.LinkGeneration
             
             return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                var response = await host
+                var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
                     .Act.OnRestClient(async client =>
                     {             
@@ -357,11 +357,11 @@ namespace WebTests.Rest.LinkGeneration
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
-                response.Assert.ApiResponse(apiResponse =>
+                webResponse.Assert.ApiResponse(response =>
                 {
-                    var resource = (LinkedResourceModel)apiResponse.Content;
+                    var apiResponse = (ApiResponse<LinkedResourceModel>)response;
                      
-                    resource.AssertLink("scenario-25", HttpMethod.Options, "http://external/api/call/10/info/value-2");
+                    apiResponse.Resource.AssertLink("scenario-25", HttpMethod.Options, "http://external/api/call/10/info/value-2");
                 });
             });
         }
@@ -384,7 +384,7 @@ namespace WebTests.Rest.LinkGeneration
             
             return WebHostFixture.TestAsync<LinkGenerationTests>(async host =>
             {
-                var response = await host
+                var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
                     .Act.OnRestClient(async client =>
                     {             
@@ -392,13 +392,13 @@ namespace WebTests.Rest.LinkGeneration
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
-                response.Assert.ApiResponse(apiResponse =>
+                webResponse.Assert.ApiResponse(response =>
                 {
-                    var resource = (LinkedResourceModel)apiResponse.Content;
+                    var apiResponse = (ApiResponse<LinkedResourceModel>)response;
                      
-                    resource.AssertLink("scenario-30", HttpMethod.Options, "http://external/api/call/10/info/value-2");
+                    apiResponse.Resource.AssertLink("scenario-30", HttpMethod.Options, "http://external/api/call/10/info/value-2");
 
-                    var link = resource.Links["scenario-30"];
+                    var link = apiResponse.Resource.Links["scenario-30"];
                     Assert.Equal("test-name", link.Name);
                     Assert.Equal("test-title", link.Title);
                     Assert.Equal("test-type", link.Type);

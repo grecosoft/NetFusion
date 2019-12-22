@@ -130,13 +130,13 @@ namespace NetFusion.Rest.Client
 	public class ApiResponse<TModel> : ApiResponse
         where TModel : class
     {
-        public new HalResource<TModel> Content { get; }
+        public HalResource<TModel> Resource { get; }
 
         public ApiResponse(HttpRequestMessage requestMsg, HttpResponseMessage responseMsg, HalResource<TModel> content)
             : base(requestMsg, responseMsg)
         {
-            base.Content = content;
             Content = content;
+            Resource = content;
         }        
     }
 }
