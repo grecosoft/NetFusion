@@ -10,12 +10,12 @@ namespace NetFusion.Rest.Resources.Hal
     public interface IHalResource : IResource
     {
         /// <summary>
-        /// The model containing the data associated with the resource.
-        /// This is separate from the Links and Embedded information so
-        /// the client can easily access the model to send back to server.
+        /// Untyped reference to the resource's model.  Only set
+        /// when a server-side resource is created.  Will be null
+        /// on the client.
         /// </summary>
-        object Model { get; }
-        
+        object ModelValue { get; }
+
         /// <summary>
         /// The links associated with the resource.
         /// </summary>
@@ -25,5 +25,22 @@ namespace NetFusion.Rest.Resources.Hal
         /// Dictionary of named embedded resources.
         /// </summary>
         IDictionary<string, object> Embedded { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a resource model having an associated set of links
+    /// used to navigate to related resources and a set of related
+    /// embedded resources.
+    /// </summary>
+    /// <typeparam name="TModel">The model associated with the resource.</typeparam>
+    public interface IHalResource<out TModel> : IHalResource
+        where TModel: class
+    {
+        /// <summary>
+        /// The model containing the data associated with the resource.
+        /// This is separate from the Links and Embedded information so
+        /// the client can easily access the model to send back to server.
+        /// </summary>
+        TModel Model { get; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using NetFusion.Rest.Resources;
 
-namespace NetFusion.Rest.Resources
+namespace NetFusion.Rest.Server.Resources
 {
     /// <summary>
     /// List based implementation for a resource collection.

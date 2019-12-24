@@ -1,5 +1,7 @@
 ﻿// ReSharper disable UnusedTypeParameter
-namespace NetFusion.Rest.Resources
+using NetFusion.Rest.Resources;
+
+namespace NetFusion.Rest.Server.Resources
 {
     /// <summary>
     /// Represents a collection of resources.  A collection of resources

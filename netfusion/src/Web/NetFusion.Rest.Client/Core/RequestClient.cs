@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using NetFusion.Rest.Client.Resources;
 using NetFusion.Rest.Client.Settings;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using NetFusion.Rest.Resources.Hal;
 
 namespace NetFusion.Rest.Client.Core
 {

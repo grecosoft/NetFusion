@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using NetFusion.Rest.Client.Resources;
+using NetFusion.Rest.Resources.Hal;
 
 namespace NetFusion.Rest.Client
 {

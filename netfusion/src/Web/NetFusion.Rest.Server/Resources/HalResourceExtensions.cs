@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using NetFusion.Common.Extensions.Reflection;
+using NetFusion.Rest.Resources;
+using NetFusion.Rest.Resources.Hal;
 
-namespace NetFusion.Rest.Resources.Hal
+namespace NetFusion.Rest.Server.Resources
 {
 	/// <summary>
 	/// Extension methods that can be invoked on a resource supporting

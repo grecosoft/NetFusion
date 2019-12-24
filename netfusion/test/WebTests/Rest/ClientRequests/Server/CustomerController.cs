@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Server.Resources;
 
 namespace WebTests.Rest.ClientRequests.Server
 {
@@ -17,7 +18,7 @@ namespace WebTests.Rest.ClientRequests.Server
                 LastName = "Twain"
             };
             
-            return new HalResource(customer);
+            return HalResource.ForModel(customer);
         }
 
         [HttpGet("embedded/resource")]
@@ -40,8 +41,8 @@ namespace WebTests.Rest.ClientRequests.Server
                 
             };
 
-            var resource = new HalResource(customer);
-            resource.Embed(new HalResource(address), "primary-address");
+            var resource = HalResource.ForModel(customer);
+            resource.Embed(HalResource.ForModel(address), "primary-address");
             return resource;
         }
         
@@ -73,11 +74,11 @@ namespace WebTests.Rest.ClientRequests.Server
                 ZipCode = "27517"
             };
 
-            var resource = new HalResource(customer);
+            var resource = HalResource.ForModel(customer);
             resource.Embed(new[]
             {
-                new HalResource(firstAddress), 
-                new HalResource(secondAddress)
+                HalResource.ForModel(firstAddress), 
+                HalResource.ForModel(secondAddress)
             },  "addresses");
             
             return resource;

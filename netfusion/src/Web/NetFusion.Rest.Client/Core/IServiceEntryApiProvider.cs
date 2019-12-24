@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using NetFusion.Rest.Client.Resources;
+using NetFusion.Rest.Resources.Hal;
 
 namespace NetFusion.Rest.Client.Core
 {

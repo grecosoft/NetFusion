@@ -1,7 +1,7 @@
 ﻿using System;
-using NetFusion.Rest.Client.Resources;
 using System.Threading;
 using System.Threading.Tasks;
+using NetFusion.Rest.Resources.Hal;
 
 namespace NetFusion.Rest.Client
 {

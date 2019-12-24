@@ -29,7 +29,7 @@ namespace WebTests.Rest.LinkGeneration.Server
             }
 
             var model = resources.First();
-            var resource = new HalResource(model);
+            var resource = HalResource.ForModel(model);
 
             // Unit test might make multiple calls after updating the state of the resource
             // to test outcome on link generation - clear any prior added links.

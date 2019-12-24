@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetFusion.Rest.Common\NetFusion.Rest.Common.csproj" />
+    <ProjectReference Include="..\NetFusion.Rest.Resources\NetFusion.Rest.Resources.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\" />

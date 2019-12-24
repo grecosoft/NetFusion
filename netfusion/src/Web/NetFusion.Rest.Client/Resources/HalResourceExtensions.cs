@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using NetFusion.Rest.Resources;
+using NetFusion.Rest.Resources.Hal;
 
 namespace NetFusion.Rest.Client.Resources
 {
@@ -59,6 +61,7 @@ namespace NetFusion.Rest.Client.Resources
         /// <param name="named">The name identifying the embedded resource.</param>
         /// <returns>Instance of the populated nested type.</returns>
         public static HalResource<TChildModel> GetEmbedded<TChildModel>(this IHalResource resource, string named)
+            where TChildModel: class
         {
             if (string.IsNullOrWhiteSpace(named))
                 throw new ArgumentException("Name of embedded resource not provided.", nameof(named));
@@ -96,7 +99,7 @@ namespace NetFusion.Rest.Client.Resources
         /// <param name="named">The name identifying the embedded resource.</param>
         /// <returns>Instance of the populated nested array type.</returns>
         public static IEnumerable<HalResource<TChildModel>> GetEmbeddedCollection<TChildModel>(this IHalResource resource, string named)
-      
+            where TChildModel: class
         {
             if (string.IsNullOrWhiteSpace(named))
                 throw new ArgumentException("Name of embedded resource not provided.", nameof(named));

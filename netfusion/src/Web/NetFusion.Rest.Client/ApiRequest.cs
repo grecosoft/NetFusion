@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
-using NetFusion.Rest.Client.Resources;
+using NetFusion.Rest.Resources;
 
 namespace NetFusion.Rest.Client
 {
@@ -149,7 +149,7 @@ namespace NetFusion.Rest.Client
             // Note: The href of the Link must not be set to the URL after replacing tokens since
             // template links need to be able to be reused.
             string href = link.Href;
-            if (link.Templated)
+            if (link.Templated ?? false)
             {
                 href = ReplaceTemplateTokensWithValues(href, tokens);
             }
