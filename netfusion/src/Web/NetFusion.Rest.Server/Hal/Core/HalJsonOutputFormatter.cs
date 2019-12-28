@@ -18,7 +18,7 @@ using NetFusion.Rest.Server.Plugin;
 using NetFusion.Web.Mvc.Extensions;
 using NetFusion.Web.Mvc.Metadata;
 
-namespace NetFusion.Rest.Server.Hal
+namespace NetFusion.Rest.Server.Hal.Core
 {
     /// <summary>
     /// Output formatter that checks if the response object is of type IHalResource and
@@ -52,12 +52,10 @@ namespace NetFusion.Rest.Server.Hal
                 ResourceContext resourceContext = CreateContext(context.HttpContext);
                 ApplyMetadataToResource(resource, resourceContext);
             }
-
-            var objectType = context.Object?.GetType() ?? context.ObjectType;
             
             await JsonSerializer.SerializeAsync(context.HttpContext.Response.Body, 
                 context.Object, 
-                objectType,
+                context.Object.GetType(),
                 SerializerOptions);
         }
         
@@ -65,6 +63,7 @@ namespace NetFusion.Rest.Server.Hal
         {
             resourceContext.Resource = resource;
             resourceContext.Model = resource.ModelValue;
+            
             resourceContext.MediaModule.ApplyResourceMeta(InternetMediaTypes.HalJson, resourceContext);
 
             // Add metadata to each embedded resource if present.

@@ -3,16 +3,16 @@
 namespace NetFusion.Rest.Resources.Hal
 {
     /// <summary>
-    /// Represents a resource model having an associated set of links
-    /// used to navigate to related resources and a set of related
-    /// embedded resources.
+    /// A HAL based resource adds information to normal API models returned to the client.
+    /// The resource contains the model state, links for navigating to released resources,
+    /// and/or links to take action on the current resource.  Sets of related resources 
+    /// can also be returned by embedding related resources into parent resources.
     /// </summary>
     public interface IHalResource : IResource
     {
         /// <summary>
-        /// Untyped reference to the resource's model.  Only set
-        /// when a server-side resource is created.  Will be null
-        /// on the client.
+        /// Untyped reference to the resource's model.  Only set when a server-side
+        /// resource is created.  Will be null on the client.
         /// </summary>
         object ModelValue { get; }
 
@@ -28,9 +28,7 @@ namespace NetFusion.Rest.Resources.Hal
     }
 
     /// <summary>
-    /// Represents a resource model having an associated set of links
-    /// used to navigate to related resources and a set of related
-    /// embedded resources.
+    /// Represents a resource HAL resource with a typed model.
     /// </summary>
     /// <typeparam name="TModel">The model associated with the resource.</typeparam>
     public interface IHalResource<out TModel> : IHalResource

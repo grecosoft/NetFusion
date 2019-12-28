@@ -1,8 +1,10 @@
 ﻿namespace NetFusion.Rest.Resources.Hal
 {
     /// <summary>
-    /// Resource returned from an API service containing Links to root resources at which the client 
-    /// can begin navigation.  The links  will often be templates at the root level.
+    /// Resource returned from an API service containing Links to root resources
+    /// the client uses to begin navigation.  The links  will often be templates
+    /// at the root level.  After the root resources are loaded, the links directly
+    /// related with subsequent the resources are usually used.
     /// </summary>
     public class HalEntryPointResource : HalResource<EntryPointModel>
     {
@@ -18,5 +20,6 @@
     public class EntryPointModel
     {
         public string Version { get; set; }
+        public string ApiDocUrl { get; set; }
     }
 }

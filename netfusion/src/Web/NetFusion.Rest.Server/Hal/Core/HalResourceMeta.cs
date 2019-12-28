@@ -1,6 +1,6 @@
 ﻿using NetFusion.Rest.Server.Meta;
 
-namespace NetFusion.Rest.Server.Hal
+namespace NetFusion.Rest.Server.Hal.Core
 {
     /// <summary>
     /// HAL resource metadata for a given model type.  

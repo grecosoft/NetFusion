@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources.Hal;
-using NetFusion.Rest.Server.Resources;
+using NetFusion.Rest.Server.Hal;
 
 namespace WebTests.Rest.ClientRequests.Server
 {
@@ -9,7 +9,7 @@ namespace WebTests.Rest.ClientRequests.Server
     public class CustomerController : Controller
     {
         [HttpGet("{id}")]
-        public HalResource GetCustomer(string id)
+        public IHalResource GetCustomer(string id)
         {
             var customer = new CustomerModel
             {
@@ -17,12 +17,12 @@ namespace WebTests.Rest.ClientRequests.Server
                 FirstName = "Mark",
                 LastName = "Twain"
             };
-            
-            return HalResource.ForModel(customer);
+
+            return customer.AsResource();
         }
 
         [HttpGet("embedded/resource")]
-        public HalResource GetEmbeddedAddress(string id)
+        public IHalResource GetEmbeddedAddress(string id)
         {
             var customer = new CustomerModel
             {
@@ -41,13 +41,13 @@ namespace WebTests.Rest.ClientRequests.Server
                 
             };
 
-            var resource = HalResource.ForModel(customer);
-            resource.Embed(HalResource.ForModel(address), "primary-address");
+            var resource = customer.AsResource();
+            resource.Embed(address.AsResource(), "primary-address");
             return resource;
         }
         
         [HttpGet("embedded/collection")]
-        public HalResource GetEmbeddedAddresses(string id)
+        public IHalResource GetEmbeddedAddresses(string id)
         {
             var customer = new CustomerModel
             {
@@ -74,11 +74,11 @@ namespace WebTests.Rest.ClientRequests.Server
                 ZipCode = "27517"
             };
 
-            var resource = HalResource.ForModel(customer);
+            var resource = customer.AsResource();
             resource.Embed(new[]
             {
-                HalResource.ForModel(firstAddress), 
-                HalResource.ForModel(secondAddress)
+                firstAddress.AsResource(), 
+                secondAddress.AsResource()
             },  "addresses");
             
             return resource;

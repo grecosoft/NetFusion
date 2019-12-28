@@ -1,5 +1,4 @@
 ﻿using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Rest.Resources;
 using System;
 
 namespace NetFusion.Rest.Server.Resources

@@ -1,4 +1,5 @@
 ﻿using NetFusion.Rest.Common;
+using NetFusion.Rest.Server.Hal.Core;
 using NetFusion.Rest.Server.Mappings;
 
 namespace NetFusion.Rest.Server.Hal

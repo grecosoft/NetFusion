@@ -16,9 +16,9 @@ namespace NetFusion.Rest.Server.Linking
     /// route values.  The resulting URL will be a complete URL with all route parameters replaced
     /// with the corresponding resource property values.
     /// </summary>
-    public class ControllerActionRouteSelector<TController, TModel>
+    public class ControllerActionRouteSelector<TController, TSource>
         where TController : ControllerBase
-        where TModel : class
+        where TSource : class
     {
         private readonly ControllerActionLink _resourceLink;
         private readonly LambdaExpression _action;
@@ -50,7 +50,7 @@ namespace NetFusion.Rest.Server.Linking
                 .SelectMany(a => a.HttpMethods);
         }
 
-        // Associates the action method argument to the corresponding resource property
+        // Associates the action method argument to the corresponding resource state property
         // used to populate the argument.  This is used when sending the route-info to
         // ASP.NET Core to resolve the corresponding URL.
         private void SetRouteValues(LambdaExpression expression)

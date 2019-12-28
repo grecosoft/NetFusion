@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace NetFusion.Rest.Resources
+namespace NetFusion.Rest.Server.Resources
 {
     /// <summary>
-    /// Used to map a string name to a given resource implementing the IResource interface.
+    /// Used to map a string name to a given resource model.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class ExposedResourceNameAttribute : Attribute

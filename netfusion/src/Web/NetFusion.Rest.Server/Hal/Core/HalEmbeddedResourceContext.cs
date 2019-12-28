@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Primitives;
-using System.Linq;
 using NetFusion.Rest.Server.Resources;
 
-namespace NetFusion.Rest.Server.Hal
+namespace NetFusion.Rest.Server.Hal.Core
 {
     /// <summary>
     /// Can be used by service components to determine the embedded resource models requested by the client.  
@@ -21,24 +21,26 @@ namespace NetFusion.Rest.Server.Hal
             _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
         }
 
-        public bool IsRequested<TModel>()
-        { 
-            // If not specified by the caller, all resources are considered requested.
-            if (! EmbeddedResourcesRequested)
+        public bool IsRequested<TModel>() where TModel: class
+        {
+            var resourceName = typeof(TModel).GetExposedResourceTypeName();
+            if (resourceName == null)
             {
-                return true;
+                throw new InvalidOperationException(
+                    "The resource name associated with the model could not be determined. The model of type: " + 
+                    $"{typeof(TModel)} is not marked with the attribute: {typeof(ExposedResourceNameAttribute)}.");
             }
 
-            var resourceName = typeof(TModel).GetExposedResourceTypeName();
-            return resourceName != null && RequestedEmbeddedModels.Contains(resourceName);
+            return IsRequested(resourceName);
         }
 
-        public bool IsRequested(string modelName)
+        public bool IsRequested(string resourceName)
         {
-            if (string.IsNullOrWhiteSpace(modelName))
-                throw new ArgumentException("Model name must be specified.", nameof(modelName));
+            if (string.IsNullOrWhiteSpace(resourceName))
+                throw new ArgumentException("Resource name must be specified.", nameof(resourceName));
             
-            return RequestedEmbeddedModels.Contains(modelName);
+            // If not specified by the caller, all resources are considered requested.
+            return !EmbeddedResourcesRequested || RequestedEmbeddedModels.Contains(resourceName);
         }
 
         // The client can specify the embed query-string parameter to indicate to the server

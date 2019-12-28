@@ -7,7 +7,7 @@ namespace NetFusion.Rest.Server.Meta
     /// <summary>
     /// Instance of class used to specify required and optional link metadata properties.
     /// </summary>
-    /// <typeparam name="TSource">The resource associated with the metadata.</typeparam>
+    /// <typeparam name="TSource">The source type associated with the metadata.</typeparam>
     public class LinkDescriptor<TSource>
         where TSource : class
     {
@@ -16,7 +16,7 @@ namespace NetFusion.Rest.Server.Meta
         public LinkDescriptor(ResourceLink resourceLink)
         {
             _resourceLink = resourceLink ?? throw new ArgumentNullException(nameof(resourceLink),
-                "Action Link cannot be null.");
+                "Resource Link cannot be null.");
         }
 
         //---------------- REQUIRED LINK PROPERTIES SET BY LINK METADATA METHODS ----------------------

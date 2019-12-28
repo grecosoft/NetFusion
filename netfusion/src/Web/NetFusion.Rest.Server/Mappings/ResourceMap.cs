@@ -32,7 +32,7 @@ namespace NetFusion.Rest.Server.Mappings
         protected abstract void OnBuildResourceMap();
 
         /// <summary>
-        /// Add an item containing metadata for a specific resource type.
+        /// Add an item containing metadata for a specific source type.
         /// </summary>
         /// <param name="resourceMeta">The resource metadata configured by derived map.</param>
         protected void AddResourceMeta(IResourceMeta resourceMeta)

@@ -1,4 +1,4 @@
-﻿using NetFusion.Rest.Resources;
+﻿using NetFusion.Rest.Server.Resources;
 
 namespace WebTests.Rest.ClientRequests.Server
 {

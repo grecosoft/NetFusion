@@ -96,9 +96,10 @@ namespace NetFusion.Rest.Server.Plugin.Modules
 
                 context.Meta = meta;
                 entry.Provider.ApplyResourceMeta(context);
+                return true;
             }
 
-            return true;
+            return false;
         }
     }
 }

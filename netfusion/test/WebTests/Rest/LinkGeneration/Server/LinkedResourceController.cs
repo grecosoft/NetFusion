@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Server.Hal;
 using WebTests.Rest.Setup;
 
 namespace WebTests.Rest.LinkGeneration.Server
@@ -19,7 +20,7 @@ namespace WebTests.Rest.LinkGeneration.Server
         }
 
         [HttpGet]
-        public HalResource GetResource()
+        public IHalResource GetResource()
         {
             var resources = _mockedService.GetResources<LinkedResource>().ToArray();          
             if (!resources.Any())
@@ -29,8 +30,7 @@ namespace WebTests.Rest.LinkGeneration.Server
             }
 
             var model = resources.First();
-            var resource = HalResource.ForModel(model);
-
+            var resource = model.AsResource();
             // Unit test might make multiple calls after updating the state of the resource
             // to test outcome on link generation - clear any prior added links.
             resource.Links = new Dictionary<string, Link>();

@@ -22,16 +22,16 @@ namespace NetFusion.Rest.Server.Linking
     /// <summary>
     /// String value that is interpolated with a resource model's property values.
     /// </summary>
-    /// <typeparam name="TModel">The type of resource being interpolated.</typeparam>
-    public class InterpolatedLink<TModel> : InterpolatedLink
-        where TModel : class
+    /// <typeparam name="TSource">The type of resource being interpolated.</typeparam>
+    public class InterpolatedLink<TSource> : InterpolatedLink
+        where TSource : class
     {
         /// <summary>
         /// The function delegate used to invoke the string interpolation specified at compile time.
         /// </summary>
-        public Func<TModel, string> ResourceUrlFormatFunc { get; }
+        public Func<TSource, string> ResourceUrlFormatFunc { get; }
 
-        public InterpolatedLink(Expression<Func<TModel, string>> resourceUrl)
+        public InterpolatedLink(Expression<Func<TSource, string>> resourceUrl)
         {
             if (resourceUrl == null)throw new ArgumentNullException(nameof(resourceUrl),
                 "Resource URL cannot be null.");
@@ -51,7 +51,7 @@ namespace NetFusion.Rest.Server.Linking
             if (model == null) throw new ArgumentNullException(nameof(model), 
                 "Model cannot be null.");
 
-            TModel typedModel = (TModel)model;
+            TSource typedModel = (TSource)model;
             return ResourceUrlFormatFunc(typedModel);
         }
     }

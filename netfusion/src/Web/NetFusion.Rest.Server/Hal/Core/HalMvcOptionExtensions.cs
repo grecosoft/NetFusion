@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 
-namespace NetFusion.Rest.Server.Hal
+namespace NetFusion.Rest.Server.Hal.Core
 {
     /// <summary>
     /// Contains extension methods that can be used when initializing a MVC.NET Core
@@ -11,8 +11,8 @@ namespace NetFusion.Rest.Server.Hal
     public static class HalMvcOptionExtensions
     {
         /// <summary>
-        /// Adds formatter to the pipeline that checks for resources and determines the
-        /// links that should be returned. 
+        /// Adds formatter to the pipeline that checks for HAL based resources and
+        /// determines the links that should be returned. 
         /// </summary>
         /// <param name="mvcOptions">The MVC options passed from Web API host.</param>
         /// <param name="options">The optional JSON serialization settings to use.</param>

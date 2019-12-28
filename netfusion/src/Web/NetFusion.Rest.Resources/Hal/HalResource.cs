@@ -5,13 +5,13 @@ using System.Text.Json.Serialization;
 namespace NetFusion.Rest.Resources.Hal
 {
     /// <summary>
-    /// 
+    /// Implements the IHalResource interface containing a non-type model.
     /// </summary>
-    public class HalResource : IHalResource
+    public abstract class HalResource : IHalResource
     {
         /// <summary>
-        /// Untyped reference to the model.  Only set on
-        /// the server.  Will be null on the client.
+        /// Untyped reference to the model.  Only set on the server.
+        /// Will be null on the client.
         /// </summary>
         public object ModelValue { get; private set; }
 
@@ -29,33 +29,29 @@ namespace NetFusion.Rest.Resources.Hal
         /// <param name="modelValue">The untyped model associated with the resource.</param>
         protected HalResource(object modelValue)
         {
-            ModelValue = modelValue;
+            ModelValue = modelValue ?? throw new ArgumentNullException(nameof(modelValue));
         }
         
         /// <summary>
-        /// List of links populated based on the configured resource metadata.
+        /// Links associated with the resource used to take actions on the resource or
+        /// navigate to other related resources.
         /// </summary>
         [JsonPropertyName("_links")]
         public IDictionary<string, Link> Links { get; set; }
     
         /// <summary>
-        /// Named embedded resources.
+        /// Associated resources that are embedded by the server and returned
+        /// to the client.  Each embedded resources is identified by key.
         /// </summary>
         [JsonPropertyName("_embedded")]
         public IDictionary<string, object> Embedded { get; set; }
-
-        public static HalResource<TModel> ForModel<TModel>(TModel model)
-            where TModel: class
-        {
-            return new HalResource<TModel>(model);
-        }
     }
     
     /// <summary>
-    /// Provides an implementation of the IHalResource wrapping a model used to
-    /// associate links and embedded resources.
+    /// Provides an implementation of the IHalResource wrapping a typed model
+    /// used to associate links and embedded resources.
     /// </summary>
-    public class HalResource<TModel> : HalResource
+    public class HalResource<TModel> : HalResource, IHalResource<TModel>
         where TModel: class
     {
         /// <summary>
@@ -80,5 +76,4 @@ namespace NetFusion.Rest.Resources.Hal
             Model = model ?? throw new ArgumentNullException(nameof(model));
         }
     }
-
 }

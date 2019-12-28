@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using NetFusion.Rest.Resources;
-using NetFusion.Web.Mvc.Metadata.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Linking;
 using NetFusion.Rest.Server.Mappings;
+using NetFusion.Web.Mvc.Metadata.Core;
 
-namespace NetFusion.Rest.Server.Hal
+namespace NetFusion.Rest.Server.Hal.Core
 {
     /// <summary>
     /// HAL provider that processes IHalResource based resources and applies
@@ -44,7 +44,7 @@ namespace NetFusion.Rest.Server.Hal
         }
 
         // Called for action link consisting of a hard-coded URL value.  
-        private static Link SetLinkUrl(ResourceContext context, ResourceLink resourceLink)
+        private static void SetLinkUrl(ResourceContext context, ResourceLink resourceLink)
         {
             var link = new Link
             {
@@ -53,11 +53,10 @@ namespace NetFusion.Rest.Server.Hal
             };
 
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
-            return link;
         }
 
         // Called for action link consisting of a string interpolation format based on resource properties.
-        private static Link SetLinkUrl(ResourceContext context, InterpolatedLink resourceLink)
+        private static void SetLinkUrl(ResourceContext context, InterpolatedLink resourceLink)
         {
             var link = new Link
             {
@@ -66,13 +65,12 @@ namespace NetFusion.Rest.Server.Hal
             };
 
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
-            return link;
         }
 
         // Called for action link containing information based on an expression, specified at compile time,
         // selecting a controller's action method.  The expression also specifies which model properties used
         // for the action's route parameters. 
-        private static Link SetLinkUrl(ResourceContext context, ControllerActionLink resourceLink)
+        private static void SetLinkUrl(ResourceContext context, ControllerActionLink resourceLink)
         {
             string controllerName = resourceLink.Controller.Replace("Controller", string.Empty);
             var routeValues = GetModelRouteValues(context, resourceLink);
@@ -86,7 +84,6 @@ namespace NetFusion.Rest.Server.Hal
             };
 
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
-            return link;
         }
 
         // For each controller action argument executes the cached expression on the model
@@ -96,7 +93,7 @@ namespace NetFusion.Rest.Server.Hal
             var modelRouteValues = new Dictionary<string, object>(resourceLink.RouteParameters.Count);
             foreach (RouteParameter routeParam in resourceLink.RouteParameters)
             {
-                modelRouteValues[routeParam.ActionParamName] = routeParam.GetModelPropValue(context.Model);
+                modelRouteValues[routeParam.ActionParamName] = routeParam.GetSourcePropValue(context.Model);
             }
             return modelRouteValues;
         }
@@ -104,7 +101,7 @@ namespace NetFusion.Rest.Server.Hal
         // Called for action link containing information based on an expression, specified at compile time, selecting a
         // controller's action method for which its corresponding URL template is used.  For this type of link, the 
         // consumer is responsible for specifying the route parameter values.
-        private static Link SetLinkUrl(ResourceContext context, TemplateUrlLink resourceLink)
+        private static void SetLinkUrl(ResourceContext context, TemplateUrlLink resourceLink)
         {
             var apiAction = context.ApiMetadata.GetApiAction(
                 resourceLink.GroupTemplateName, 
@@ -118,8 +115,6 @@ namespace NetFusion.Rest.Server.Hal
 
             MarkOptionalParams(apiAction, link);
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
-
-            return link;
         }
 
         private static void UpdateLinkDescriptorsAndResource(ResourceContext context, ResourceLink resourceLink, Link link)
