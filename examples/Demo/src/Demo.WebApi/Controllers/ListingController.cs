@@ -14,16 +14,18 @@ namespace Demo.WebApi.Controllers
         [HttpGet("entry")]
         public HalEntryPointResource GetEntryPoint()
         {
-            return new HalEntryPointResource
+            var model = new EntryPointModel
             {
                 Version = GetType().Assembly.GetName().Version.ToString()
             };
+            
+            return new HalEntryPointResource(model);
         }
         
         [HttpGet("{id}"), ActionMeta("GetListing")]
-        public Task<ListingResource> GetListing(int id)
+        public Task<IActionResult> GetListing(int id)
         {
-            var listing = new ListingResource
+            var listingModel = new ListingModel
             {
                 ListingId = id,
                 AcresLot = 3,
@@ -37,14 +39,16 @@ namespace Demo.WebApi.Controllers
                 NumberFullBaths = 3,
                 NumberHalfBaths = 2,
                 SquareFeet = 2500,
-                YearBuild = 1986,
+                YearBuild = 1986
             };
 
-            return Task.FromResult(listing);
+            var resource = listingModel.AsResource();
+            return Task.FromResult<IActionResult>(Ok(resource));
+
         }
 
         [HttpPut("{id}")]
-        public Task<ListingResource> UpdateListing(int id, ListingResource listing)
+        public Task<ListingModel> UpdateListing(int id, ListingModel listing)
         {
             listing.ListingId = id;
             return Task.FromResult(listing);

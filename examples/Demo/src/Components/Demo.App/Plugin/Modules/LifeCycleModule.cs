@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Demo.Core;
+using Demo.Core.Plugin;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Plugins;
 

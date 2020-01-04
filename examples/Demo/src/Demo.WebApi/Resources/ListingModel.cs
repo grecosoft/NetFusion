@@ -1,9 +1,8 @@
-using NetFusion.Rest.Resources.Hal;
 using System;
 
 namespace Demo.WebApi.Resources
 {
-    public class ListingResource : HalResource
+    public class ListingModel
     {
         public int ListingId { get; set; }
         public DateTime DateListed { get; set; }

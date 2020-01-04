@@ -1,9 +1,8 @@
-using NetFusion.Rest.Resources.Hal;
 using System;
 
 namespace Demo.WebApi.Resources
 {
-    public class PriceHistoryResource : HalResource
+    public class PriceHistoryModel
     {
         public int PriceHistoryId { get; set; }
         public int ListingId { get; set; }

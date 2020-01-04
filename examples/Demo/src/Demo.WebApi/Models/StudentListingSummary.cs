@@ -1,4 +1,3 @@
-using System;
 namespace Demo.WebApi.Models
 {
    public class StudentListingSummary

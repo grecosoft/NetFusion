@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Demo.WebApi.Resources;
 using NetFusion.Rest.Resources.Hal;
@@ -11,9 +12,9 @@ namespace Demo.WebApi.Controllers
     public class ListingEmbeddedController : Controller
     {
         [HttpGet("{id}")]
-        public Task<ListingResource> GetListing(int id)
+        public Task<IActionResult> GetListing(int id)
         {
-            var listing = new ListingResource
+            var listingModel = new ListingModel
             {
                 ListingId = id,
                 AcresLot = 3,
@@ -30,16 +31,18 @@ namespace Demo.WebApi.Controllers
                 YearBuild = 1986,
             };
 
-            var priceHistory = GetPricingHistory();
-            listing.Embed(priceHistory, "price-history");
+            var pricingModel = GetPricingHistory().Select(m => m.AsResource()).ToArray();
+            
+            var listingResource = listingModel.AsResource();
+            listingResource.Embed(pricingModel, "price-history");
 
-            return Task.FromResult(listing);
+            return Task.FromResult<IActionResult>(Ok(listingResource));
         }
 
-        private static IEnumerable<PriceHistoryResource> GetPricingHistory()
+        private static IEnumerable<PriceHistoryModel> GetPricingHistory()
         {
             return new[] {
-                new PriceHistoryResource {
+                new PriceHistoryModel {
                     ListingId = 1000,
                     DateOfEvent = DateTime.Parse("5/5/2016"),
                     PriceHistoryId = 2000,
@@ -47,7 +50,7 @@ namespace Demo.WebApi.Controllers
                     Price = 300_000,
                     Source = "SMARTMLS" },
 
-                new PriceHistoryResource {
+                new PriceHistoryModel {
                     ListingId = 1000,
                     DateOfEvent = DateTime.Parse("7/6/2016"),
                     PriceHistoryId = 2001,

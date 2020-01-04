@@ -2,6 +2,7 @@ using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Hal;
 using System.Threading.Tasks;
 using Demo.WebApi.Controllers;
+using Microsoft.AspNetCore.Mvc;
 
 #pragma warning disable CS4014
 namespace Demo.WebApi.Resources
@@ -14,11 +15,11 @@ namespace Demo.WebApi.Resources
                 .LinkMeta<ListingController>(meta =>
                 {
 
-                    meta.UrlTemplate<int, Task<ListingResource>>("listing:entry", c => c.GetListing);
+                    meta.UrlTemplate<int, Task<IActionResult>>("listing:entry", c => c.GetListing);
                 })
                 .LinkMeta<PriceHistoryController>(meta =>
                 {
-                    meta.UrlTemplate<int, Task<PriceHistoryResource>>("history:entry", c => c.GetPriceHistory);
+                    meta.UrlTemplate<int, Task<PriceHistoryModel>>("history:entry", c => c.GetPriceHistory);
                 });
         }
     }

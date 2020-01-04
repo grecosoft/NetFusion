@@ -4,7 +4,7 @@ using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
 using NetFusion.RabbitMQ.Subscriber;
 
-namespace Demo.Handlers
+namespace Demo.Subscriber
 {
     public class SampleTopicHandler : IMessageConsumer
     {

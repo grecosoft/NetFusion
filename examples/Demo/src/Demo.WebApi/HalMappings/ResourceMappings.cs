@@ -1,6 +1,10 @@
+using System.Net.Http;
+using System.Threading.Tasks;
 using Demo.WebApi.Controllers;
 using Demo.WebApi.Resources;
+using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Common;
+using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Hal;
 
 namespace Demo.WebApi.HalMappings
@@ -13,9 +17,8 @@ namespace Demo.WebApi.HalMappings
             protected override void OnBuildResourceMap()
             {
                 // *** Uncomment for the expression example ***
-                
                 /*
-                   Map<ListingResource>()
+                   Map<ListingModel>()    
                     .LinkMeta<ListingController>(meta =>
                     {
                         meta.Url(RelationTypes.Self, (c, r) => c.GetListing(r.ListingId));
@@ -31,38 +34,41 @@ namespace Demo.WebApi.HalMappings
                 // -----------------------------------------------------------------------------------------------
                 
                 // *** Uncomment for the hard-coded URL example ***
-                
                 /*
-                 Map<ListingResource>()
+                
+                 Map<ListingModel>()
                     .LinkMeta(meta => meta.Href("conn", HttpMethod.Get, "https://www.realtor.com/propertyrecord-search/Connecticut"))
                     .LinkMeta(meta => meta.Href("conn-cheshire", HttpMethod.Get, "https://www.realtor.com/realestateandhomes-search/Cheshire_CT"));
+                
                 */
                 
                 // -----------------------------------------------------------------------------------------------
                 
                 // *** Uncomment for the resource string interpolated example ***
-                
                 /*
-                 Map<ListingResource>()
+                
+                 Map<ListingModel>()
                     .LinkMeta(meta => meta.Href(RelationTypes.Alternate, HttpMethod.Get, r => $"http://www.homes.com/for/sale/{r.ListingId}"));
+                
                 */
                 
                 // -----------------------------------------------------------------------------------------------
                
                 // *** Uncomment for the template URL example ***
-                
                 /*
-                 Map<ListingResource>()
-                    .LinkMeta<PriceHistoryController>(meta => meta.UrlTemplate<int, Task<HalResource>>(
+                
+                 Map<ListingModel>()
+                    .LinkMeta<PriceHistoryController>(meta => meta.UrlTemplate<int, Task<IActionResult>>(
                         "listing:prices", c => c.GetPriceHistoryEvents));
+                
                 */
 
                 // -----------------------------------------------------------------------------------------------
                 
                 // *** Uncomment for embedded resource example ***
                 
-                 /*
-                  Map<ListingResource>()
+                 
+                  Map<ListingModel>()
                     .LinkMeta<ListingController>(meta =>
                     {
                         meta.Url(RelationTypes.Self, (c, r) => c.GetListing(r.ListingId));
@@ -70,13 +76,13 @@ namespace Demo.WebApi.HalMappings
                         meta.Url("listing:delete", (c, r) => c.DeleteListing(r.ListingId));
                     });
                 
-                Map<PriceHistoryResource>()
+                Map<PriceHistoryModel>()
                     .LinkMeta<PriceHistoryController>(meta =>
                     {
                         meta.Url(RelationTypes.Self, (c, r) => c.GetPriceHistory(r.PriceHistoryId));
                         meta.Url("Events", (c, r) => c.GetPriceHistoryEvents(r.ListingId));
                     });
-                */
+                
             }
         }
     }

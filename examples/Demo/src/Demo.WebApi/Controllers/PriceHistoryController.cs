@@ -13,26 +13,27 @@ namespace Demo.WebApi.Controllers
     public class PriceHistoryController : ControllerBase
     {
         [HttpGet("{id}"), ActionMeta("PriceHistory")]
-        public Task<PriceHistoryResource> GetPriceHistory(int id)
+        public Task<PriceHistoryModel> GetPriceHistory(int id)
         {
             var history = GetPricingHistory().FirstOrDefault(h => h.PriceHistoryId == id);
             return Task.FromResult(history);
         }
 
         [HttpGet("{listingId}/events"), ActionMeta("PriceHistoryEvents")]
-        public Task<HalResource> GetPriceHistoryEvents(int listingId)
+        public Task<IActionResult> GetPriceHistoryEvents(int listingId)
         {
-            var items = GetPricingHistory().Where(h => h.ListingId == listingId);
-            var historyResource = new HalResource();
-            historyResource.Embed(items, "price-history");
+            var historyResources = GetPricingHistory().Where(h => h.ListingId == listingId)
+                .Select(h => h.AsResource());
+            
+             var resource = HalResource.New(r => r.Embed(historyResources, "price-history"));
 
-            return Task.FromResult(historyResource);
+            return Task.FromResult<IActionResult>(Ok(resource));
         }
 
-        private static PriceHistoryResource[] GetPricingHistory()
+        private static PriceHistoryModel[] GetPricingHistory()
         {
-            return new PriceHistoryResource[] {
-                new PriceHistoryResource {
+            return new[] {
+                new PriceHistoryModel {
                     ListingId = 1000,
                     DateOfEvent = DateTime.Parse("5/5/2016"),
                     PriceHistoryId = 2000,
@@ -40,7 +41,7 @@ namespace Demo.WebApi.Controllers
                     Price = 300_000,
                     Source = "SMARTMLS" },
 
-                new PriceHistoryResource {
+                new PriceHistoryModel {
                     ListingId = 1000,
                     DateOfEvent = DateTime.Parse("7/6/2016"),
                     PriceHistoryId = 2001,
