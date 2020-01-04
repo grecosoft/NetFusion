@@ -7,12 +7,13 @@ namespace NetFusion.Rest.Resources.Hal
     /// <summary>
     /// Implements the IHalResource interface containing a non-type model.
     /// </summary>
-    public abstract class HalResource : IHalResource
+    public class HalResource : IHalResource
     {
         /// <summary>
         /// Untyped reference to the model.  Only set on the server.
         /// Will be null on the client.
         /// </summary>
+        [JsonIgnore]
         public object ModelValue { get; private set; }
 
         /// <summary>
@@ -31,7 +32,37 @@ namespace NetFusion.Rest.Resources.Hal
         {
             ModelValue = modelValue ?? throw new ArgumentNullException(nameof(modelValue));
         }
-        
+
+        /// <summary>
+        /// Creates a new HAL Resource with no associated state to which other
+        /// resources and response models can be embedded.
+        /// <param name="instance">Delegate passed instance of created resource.</param>
+        /// <returns>The created resource without an associated model.</returns>
+        /// </summary>
+        public static HalResource New(Action<HalResource> instance = null)
+        {
+            var resource = new HalResource();
+            instance?.Invoke(resource);
+
+            return resource;
+        }
+
+        /// <summary>
+        /// Creates a new HAL Resource warping a model.
+        /// </summary>
+        /// <param name="model">The model to be wrapped inside resource.</param>
+        /// <param name="instance">The instance of the created resource.</param>
+        /// <typeparam name="TModel">The the of the associated model.</typeparam>
+        /// <returns>The created resource wrapping the model.</returns>
+        public static HalResource<TModel> New<TModel>(TModel model, Action<HalResource<TModel>> instance = null)
+            where TModel : class
+        {
+            var resource = new HalResource<TModel>(model);
+            instance?.Invoke(resource);
+
+            return resource;
+        }
+
         /// <summary>
         /// Links associated with the resource used to take actions on the resource or
         /// navigate to other related resources.

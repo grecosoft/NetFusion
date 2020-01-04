@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using NetFusion.Rest.Client;
-using NetFusion.Rest.Client.Resources;
+using NetFusion.Rest.Resources.Hal;
 using WebTests.Hosting;
 using WebTests.Rest.LinkGeneration;
 using WebTests.Rest.Setup;
@@ -43,7 +43,7 @@ namespace WebTests.Rest.ClientRequests
                     resource.Embedded.Keys.Should().HaveCount(1);
                     resource.Embedded.ContainsKey("primary-address").Should().BeTrue();
 
-                    var embeddedClientResource = resource.GetEmbedded<Client.AddressModel>("primary-address");
+                    var embeddedClientResource = resource.GetEmbeddedResource<Client.AddressModel>("primary-address");
                     embeddedClientResource.Should().NotBeNull();
                     embeddedClientResource.Model.AddressId.Should().NotBeNull();
                 });
@@ -81,7 +81,7 @@ namespace WebTests.Rest.ClientRequests
                     resource.Embedded.Keys.Should().HaveCount(1);
                     resource.Embedded.ContainsKey("addresses").Should().BeTrue();
 
-                    var embeddedClientResource = resource.GetEmbeddedCollection<Client.AddressModel>("addresses").ToArray();
+                    var embeddedClientResource = resource.GetEmbeddedResources<Client.AddressModel>("addresses").ToArray();
                     embeddedClientResource.Should().NotBeNull();
                     embeddedClientResource.Should().HaveCount(2);
                     

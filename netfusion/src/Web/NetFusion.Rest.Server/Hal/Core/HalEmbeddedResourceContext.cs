@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Primitives;
-using NetFusion.Rest.Server.Resources;
+using NetFusion.Rest.Resources;
 
 namespace NetFusion.Rest.Server.Hal.Core
 {

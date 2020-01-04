@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Rest.Common;
-using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Mappings;
 using NetFusion.Rest.Server.Plugin;
@@ -72,7 +71,7 @@ namespace NetFusion.Rest.Server.Hal.Core
                 return;
             }
 
-            foreach (IResource embeddedResource in resource.Embedded.Values)
+            foreach (object embeddedResource in resource.Embedded.Values)
             {
                 // Check if the embedded resource is a collection of resources and if so
                 // apply the metadata to each contained resource.

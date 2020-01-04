@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetFusion.Rest.Server.Resources
+namespace NetFusion.Rest.Resources
 {
     /// <summary>
     /// Used to map a string name to a given resource model.

@@ -1,7 +1,7 @@
-﻿using NetFusion.Common.Extensions.Reflection;
-using System;
+﻿using System;
+using NetFusion.Common.Extensions.Reflection;
 
-namespace NetFusion.Rest.Server.Resources
+namespace NetFusion.Rest.Resources
 {
     public static class ResourceExtensions
     {
