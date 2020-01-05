@@ -7,10 +7,10 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="9.9.12" />
-    <PackageReference Include="NetFusion.Base" Version="9.9.12" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="9.9.12" />
-    <PackageReference Include="NetFusion.Settings" Version="9.9.12" />
-    <PackageReference Include="NetFusion.Messaging.Types" Version="9.9.12" />
+    <PackageReference Include="NetFusion.Common" Version="9.9.18" />
+    <PackageReference Include="NetFusion.Base" Version="9.9.18" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="9.9.18" />
+    <PackageReference Include="NetFusion.Settings" Version="9.9.18" />
+    <PackageReference Include="NetFusion.Messaging.Types" Version="9.9.18" />
   </ItemGroup>
 </Project>

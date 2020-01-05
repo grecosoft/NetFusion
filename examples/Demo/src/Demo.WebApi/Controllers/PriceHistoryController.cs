@@ -25,8 +25,8 @@ namespace Demo.WebApi.Controllers
             var historyResources = GetPricingHistory().Where(h => h.ListingId == listingId)
                 .Select(h => h.AsResource());
             
-             var resource = HalResource.New(r => r.Embed(historyResources, "price-history"));
-
+            var resource = HalResource.New(r => r.EmbedResources(historyResources, "price-history"));
+             
             return Task.FromResult<IActionResult>(Ok(resource));
         }
 

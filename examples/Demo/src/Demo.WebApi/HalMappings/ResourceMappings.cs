@@ -35,12 +35,11 @@ namespace Demo.WebApi.HalMappings
                 
                 // *** Uncomment for the hard-coded URL example ***
                 /*
-                
                  Map<ListingModel>()
                     .LinkMeta(meta => meta.Href("conn", HttpMethod.Get, "https://www.realtor.com/propertyrecord-search/Connecticut"))
                     .LinkMeta(meta => meta.Href("conn-cheshire", HttpMethod.Get, "https://www.realtor.com/realestateandhomes-search/Cheshire_CT"));
-                
                 */
+                
                 
                 // -----------------------------------------------------------------------------------------------
                 
@@ -60,13 +59,13 @@ namespace Demo.WebApi.HalMappings
                  Map<ListingModel>()
                     .LinkMeta<PriceHistoryController>(meta => meta.UrlTemplate<int, Task<IActionResult>>(
                         "listing:prices", c => c.GetPriceHistoryEvents));
-                
                 */
+                
 
                 // -----------------------------------------------------------------------------------------------
                 
                 // *** Uncomment for embedded resource example ***
-                
+                /*
                  
                   Map<ListingModel>()
                     .LinkMeta<ListingController>(meta =>
@@ -80,9 +79,9 @@ namespace Demo.WebApi.HalMappings
                     .LinkMeta<PriceHistoryController>(meta =>
                     {
                         meta.Url(RelationTypes.Self, (c, r) => c.GetPriceHistory(r.PriceHistoryId));
-                        meta.Url("Events", (c, r) => c.GetPriceHistoryEvents(r.ListingId));
+                        meta.Url("events", (c, r) => c.GetPriceHistoryEvents(r.ListingId));
                     });
-                
+                */
             }
         }
     }

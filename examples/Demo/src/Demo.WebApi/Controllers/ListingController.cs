@@ -12,14 +12,14 @@ namespace Demo.WebApi.Controllers
     public class ListingController : ControllerBase
     {
         [HttpGet("entry")]
-        public HalEntryPointResource GetEntryPoint()
+        public IActionResult GetEntryPoint()
         {
             var model = new EntryPointModel
             {
                 Version = GetType().Assembly.GetName().Version.ToString()
             };
-            
-            return new HalEntryPointResource(model);
+
+            return Ok(model.AsResource());
         }
         
         [HttpGet("{id}"), ActionMeta("GetListing")]

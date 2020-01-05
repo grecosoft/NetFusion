@@ -31,10 +31,17 @@ namespace Demo.WebApi.Controllers
                 YearBuild = 1986,
             };
 
-            var pricingModel = GetPricingHistory().Select(m => m.AsResource()).ToArray();
-            
             var listingResource = listingModel.AsResource();
-            listingResource.Embed(pricingModel, "price-history");
+            if (id == 1000)
+            {
+                var pricingResources = GetPricingHistory().Select(m => m.AsResource()).ToArray();
+                listingResource.EmbedResources(pricingResources, "price-history");
+            }
+            else
+            {
+                var pricingResources = GetPricingHistory().ToArray();
+                listingResource.EmbedModels(pricingResources, "price-history");
+            }
 
             return Task.FromResult<IActionResult>(Ok(listingResource));
         }
