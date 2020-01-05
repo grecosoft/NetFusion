@@ -44,7 +44,7 @@ namespace NetFusion.Rest.Resources.Hal
 		/// /// <param name="resource">Parent resource supporting IHalResource.</param>
 		/// <param name="embeddedResource">The resource to embed.</param>
 		/// <param name="named">Optional name used to identity the embedded resource.</param>
-		public static void Embed(this HalResource resource, HalResource embeddedResource, string named = null)
+		public static void EmbedResource(this HalResource resource, HalResource embeddedResource, string named = null)
 		{
 			named ??= embeddedResource.ModelValue.GetType().GetExposedResourceTypeName();
 			EmbedValue(resource, embeddedResource, named);
@@ -56,7 +56,8 @@ namespace NetFusion.Rest.Resources.Hal
         /// <param name="resource">Parent resource supporting IHalResource.</param>
         /// <param name="model">The object to embed.</param>
         /// <param name="named">The name used to identify the embedded object.</param>
-        public static void Embed(this HalResource resource, object model, string named = null)
+        public static void EmbedModel<TModel>(this HalResource resource, TModel model, string named = null)
+			where TModel: class
 		{
 			named ??= model.GetType().GetExposedResourceTypeName();
 			EmbedValue(resource, model, named);
@@ -65,16 +66,14 @@ namespace NetFusion.Rest.Resources.Hal
 		/// <summary>
 		/// Embeds a collection of resources within parent resource.
 		/// </summary>
-		/// <typeparam name="T">The type of each resource in the collection.</typeparam>
+		/// <typeparam name="TModel">The type of each resource in the collection.</typeparam>
 		/// <param name="resource">Parent resource supporting IHalResource.</param>
 		/// <param name="embeddedResources">The collection of resources to embed.</param>
 		/// <param name="named">Optional name used to identity the embedded resource.</param>
-		public static void Embed<T>(this HalResource resource, T[] embeddedResources, string named)
-			where T : HalResource
+		public static void EmbedResources<TModel>(this HalResource resource, IEnumerable<HalResource<TModel>> embeddedResources, string named = null)
+			where TModel : class
 		{
-			if (named == null) throw new ArgumentNullException(nameof(named), 
-				"The name associated with the embedded resource collection must be specified");
-			
+			named ??= typeof(TModel).GetExposedResourceTypeName();
 			EmbedValue(resource, embeddedResources, named);
 		}
 
@@ -84,11 +83,10 @@ namespace NetFusion.Rest.Resources.Hal
 		/// <param name="resource">Parent resource supporting IHalResource.</param>
 		/// <param name="models">The objects to be embedded.</param>
 		/// <param name="named">Name used to identify the embedded objects.</param>
-		public static void Embed(this HalResource resource, IEnumerable<object> models, string named)
+		public static void EmbedModels<TModel>(this HalResource resource, IEnumerable<TModel> models, string named = null)
+			where TModel: class
 		{
-			if (named == null) throw new ArgumentNullException(nameof(named), 
-				"The name associated with the embedded resource collection must be specified");
-			
+			named ??= typeof(TModel).GetExposedResourceTypeName();
 			EmbedValue(resource, models, named);
 		}
 
@@ -105,7 +103,7 @@ namespace NetFusion.Rest.Resources.Hal
                 throw new InvalidOperationException(
                     $"The embedded name for type: {value.GetType().FullName} could not be determined.  " +
                     "The name was not explicitly provided and the model type was not decorated with the attribute: " + 
-                    $"{typeof(ExposedResourceNameAttribute).FullName}");
+                    $"{typeof(ExposedNameAttribute).FullName}");
             }
 
             resource.Embedded ??= new Dictionary<string, object>();

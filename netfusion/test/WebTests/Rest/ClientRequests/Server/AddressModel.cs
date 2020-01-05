@@ -5,7 +5,7 @@ namespace WebTests.Rest.ClientRequests.Server
     /// <summary>
     /// Server side resource returned by the API Controller under-test.
     /// </summary>
-    [ExposedResourceName("cust-address")]
+    [ExposedName("cust-address")]
     public class AddressModel 
     {
         public string AddressId { get; set; }

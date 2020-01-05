@@ -28,7 +28,7 @@ namespace NetFusion.Rest.Server.Hal.Core
             {
                 throw new InvalidOperationException(
                     "The resource name associated with the model could not be determined. The model of type: " + 
-                    $"{typeof(TModel)} is not marked with the attribute: {typeof(ExposedResourceNameAttribute)}.");
+                    $"{typeof(TModel)} is not marked with the attribute: {typeof(ExposedNameAttribute)}.");
             }
 
             return IsRequested(resourceName);

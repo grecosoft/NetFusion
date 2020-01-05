@@ -67,7 +67,7 @@ namespace WebTests.Rest.Resources
                 { "reset", new Link { Name = "reset", Href = "http://sensor/stats/reset"}}
             };
             
-            resource.Embed(embeddedResource, "stats");
+            resource.EmbedModel(embeddedResource, "stats");
             
             var json = JsonSerializer.Serialize(resource, SerializerOptions);
             
@@ -111,7 +111,7 @@ namespace WebTests.Rest.Resources
                 };
             }
             
-            resource.Embed(embeddedResources, "stats");
+            resource.EmbedModel(embeddedResources, "stats");
             
             var json = JsonSerializer.Serialize(resource, SerializerOptions);
             
@@ -146,7 +146,7 @@ namespace WebTests.Rest.Resources
                 NumberReads = 499
             };
             
-            resource.Embed(stats, "model");
+            resource.EmbedModel(stats, "model");
             
             var json = JsonSerializer.Serialize(resource, SerializerOptions);
             
@@ -174,7 +174,7 @@ namespace WebTests.Rest.Resources
                 new Stats { DateStarted = DateTime.Now, NumberReads = 555 }
             };
             
-            resource.Embed(stats, "models");
+            resource.EmbedModel(stats, "models");
             
             var json = JsonSerializer.Serialize(resource, SerializerOptions);
             

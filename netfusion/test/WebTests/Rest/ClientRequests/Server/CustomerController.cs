@@ -41,7 +41,7 @@ namespace WebTests.Rest.ClientRequests.Server
             };
 
             var resource = customer.AsResource();
-            resource.Embed(address.AsResource(), "primary-address");
+            resource.EmbedModel(address.AsResource(), "primary-address");
             return resource;
         }
         
@@ -74,7 +74,7 @@ namespace WebTests.Rest.ClientRequests.Server
             };
 
             var resource = customer.AsResource();
-            resource.Embed(new[]
+            resource.EmbedModel(new[]
             {
                 firstAddress.AsResource(), 
                 secondAddress.AsResource()
