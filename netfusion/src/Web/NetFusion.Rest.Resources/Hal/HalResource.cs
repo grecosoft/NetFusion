@@ -19,7 +19,7 @@ namespace NetFusion.Rest.Resources.Hal
         /// <summary>
         /// Required for Deserialization on the Client.
         /// </summary>
-        protected HalResource()
+        public HalResource()
         {
             
         }
@@ -52,7 +52,7 @@ namespace NetFusion.Rest.Resources.Hal
         /// </summary>
         /// <param name="model">The model to be wrapped inside resource.</param>
         /// <param name="instance">The instance of the created resource.</param>
-        /// <typeparam name="TModel">The the of the associated model.</typeparam>
+        /// <typeparam name="TModel">The type of the associated model.</typeparam>
         /// <returns>The created resource wrapping the model.</returns>
         public static HalResource<TModel> New<TModel>(TModel model, Action<HalResource<TModel>> instance = null)
             where TModel : class

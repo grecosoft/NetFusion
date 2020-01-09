@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
 
 namespace NetFusion.Rest.Client.Core
@@ -61,10 +62,11 @@ namespace NetFusion.Rest.Client.Core
             _mediaTypeSerializers = new ConcurrentDictionary<string, IMediaTypeSerializer>(contentSerializers);
         }
 
-        public async Task<HalEntryPointResource> GetApiEntry()
-        {
-            return await _serviceApiProvider.GetEntryPointResource().ConfigureAwait(false);
-        }
+//        public async Task<HalResource<TEntry>> GetApiEntry<TEntry>()
+//            where TEntry: EntryPointModel
+//        {
+//            return await _serviceApiProvider.GetEntryPointResource().ConfigureAwait(false);
+//        }
 
         // Called by builder when creating client...
         // ---------------------------------------------

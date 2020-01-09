@@ -4,13 +4,22 @@ using System.Text.Json;
 
 namespace NetFusion.Rest.Resources.Hal
 {
+    /// <summary>
+    /// Extension methods used by a .NET WebApi client used to obtain links
+    /// and embedded resources.
+    /// </summary>
     public static class HalResourceClientExtensions
     {
-        private static JsonSerializerOptions DefaultOptions { get; } = new JsonSerializerOptions
+        static HalResourceClientExtensions()
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        };
+            DefaultOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+        }
         
+        private static JsonSerializerOptions DefaultOptions { get; } 
+
         /// <summary>
         /// Determines if the resource contains a named links.
         /// </summary>
@@ -106,7 +115,7 @@ namespace NetFusion.Rest.Resources.Hal
         /// Returns an instance of an embedded resource.
         /// </summary>
         /// <typeparam name="TChildModel">The type of the embedded resource's model.</typeparam>
-        /// <param name="resource">The resource with embedded resources.</param>
+        /// <param name="resource">The parent resource with embedded resources.</param>
         /// <param name="named">The name identifying the embedded resource.</param>
         /// <returns>Instance of the populated nested type.</returns>
         public static HalResource<TChildModel> GetEmbeddedResource<TChildModel>(this IHalResource resource, string named)
@@ -147,16 +156,16 @@ namespace NetFusion.Rest.Resources.Hal
         /// Returns an instance of an embedded collection resource.
         /// </summary>
         /// <typeparam name="TChildModel">The type of the embedded resource array associated model.</typeparam>
-        /// <param name="resource">The resource with embedded resources.</param>
+        /// <param name="resource">The parent resource with embedded resources.</param>
         /// <param name="named">The name identifying the embedded resource.</param>
-        /// <returns>Instance of the populated nested array type.</returns>
+        /// <returns>List of embedded collection of resources.</returns>
         public static IEnumerable<HalResource<TChildModel>> GetEmbeddedResources<TChildModel>(this IHalResource resource, string named)
             where TChildModel: class
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
             
             if (string.IsNullOrWhiteSpace(named))
-                throw new ArgumentException("Name of embedded resource not provided.", nameof(named));
+                throw new ArgumentException("Name of embedded resource collection not provided.", nameof(named));
 
             if (! resource.HasEmbedded(named))
             {
@@ -186,9 +195,9 @@ namespace NetFusion.Rest.Resources.Hal
         /// <summary>
         /// Returns an instance of an embedded collection of models.
         /// </summary>
-        /// <param name="resource">The resource with embedded resources.</param>
+        /// <param name="resource">The parent resource with embedded resources.</param>
         /// <param name="named">The name identifying the embedded resource.</param>
-        /// <typeparam name="TChildModel">The type of the embedded model array associated model.</typeparam>
+        /// <typeparam name="TChildModel">The type of the embedded model array associated.</typeparam>
         /// <returns>Instance of the populated nested array type.</returns>
         public static IEnumerable<TChildModel> GetEmbeddedModels<TChildModel>(this IHalResource resource, string named)
             where TChildModel: class
@@ -196,7 +205,7 @@ namespace NetFusion.Rest.Resources.Hal
             if (resource == null) throw new ArgumentNullException(nameof(resource));
             
             if (string.IsNullOrWhiteSpace(named))
-                throw new ArgumentException("Name of embedded model not provided.", nameof(named));
+                throw new ArgumentException("Name of embedded model collection not provided.", nameof(named));
 
             if (! resource.HasEmbedded(named))
             {

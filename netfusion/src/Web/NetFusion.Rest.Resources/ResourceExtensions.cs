@@ -6,18 +6,18 @@ namespace NetFusion.Rest.Resources
     public static class ResourceExtensions
     {
         /// <summary>
-        /// Returns the embedded name associated with a given resource type used to
-        /// identity the resource to clients.
+        /// Returns the embedded name associated with a given model type
+        /// used to identity embedded resources and models..
         /// </summary>
-        /// <param name="resourceType">The resource type.</param>
-        /// <returns>The embedded name specified by the NamedResource attribute.  If the
-        /// attribute is not present, null is returned.</returns>
-        public static string GetExposedResourceTypeName(this Type resourceType)
+        /// <param name="modelType">The model type.</param>
+        /// <returns>The embedded name specified by the NamedResource attribute.
+        /// If the attribute is not present, null is returned.</returns>
+        public static string GetExposedResourceTypeName(this Type modelType)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType),
-                "Resource Type cannot be null.");
+            if (modelType == null) throw new ArgumentNullException(nameof(modelType),
+                "Model Type cannot be null.");
 
-            return resourceType.GetAttribute<ExposedNameAttribute>()?.ResourceName;
+            return modelType.GetAttribute<ExposedNameAttribute>()?.ResourceName;
         }
     }
 }

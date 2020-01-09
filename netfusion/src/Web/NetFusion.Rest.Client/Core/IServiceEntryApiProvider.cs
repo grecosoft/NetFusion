@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
 
 namespace NetFusion.Rest.Client.Core
@@ -15,6 +16,7 @@ namespace NetFusion.Rest.Client.Core
         /// instance is returned after the first successful load.
         /// </summary>
         /// <returns>Entry point resource.</returns>
-        Task<HalEntryPointResource> GetEntryPointResource();
+        Task<HalResource<TEntry>> GetEntryPointResource<TEntry>()
+            where TEntry : EntryPointModel;
     }
 }

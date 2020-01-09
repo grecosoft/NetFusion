@@ -16,7 +16,7 @@ namespace NetFusion.Rest.Client
     /// Class used to build an instance of a IRequestClient based on a set
     /// of configurations.
     /// </summary>
-    public class RequestClientBuilder : IServiceEntryApiProvider
+    public class RequestClientBuilder // : IServiceEntryApiProvider
     {
         public const string CorrelationHeaderName = "nf_CorrelationId";
         private readonly string _baseAddressUri;
@@ -29,7 +29,7 @@ namespace NetFusion.Rest.Client
         private IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
 
         private string _correlationIdHeaderName = "NF_CorrelationId";
-        private Lazy<Task<HalEntryPointResource>> _apiEntryPointLazy;
+        //private Lazy<Task<HalEntryPointResource>> _apiEntryPointLazy;
         private ILoggerFactory _loggerFactory;
         private ILogger _logger;
 
@@ -201,7 +201,7 @@ namespace NetFusion.Rest.Client
 //                _apiEntryPointLazy = new Lazy<Task<HalEntryPointResource>>(
 //                    () => GetEntryPointResource(requestClient), true);
 
-                requestClient.SetApiServiceProvider(this);
+              //  requestClient.SetApiServiceProvider(this);
             }
 
             // If the configuration specified a method to invoke before each request, pass it on to the client.
@@ -223,18 +223,18 @@ namespace NetFusion.Rest.Client
             return requestClient;
         }
 
-        // Invoked by the created request client when the entry point is requested.
-        Task<HalEntryPointResource> IServiceEntryApiProvider.GetEntryPointResource()
-        {
-            if (_apiEntryPointLazy == null)
-            {
-                throw new InvalidOperationException(
-                    $"The request client with the base address: {_baseAddressUri} does not have " +
-                     "entry point path specified.");
-            }
-
-            return _apiEntryPointLazy.Value;
-        }
+//        // Invoked by the created request client when the entry point is requested.
+//        Task<HalEntryPointResource> IServiceEntryApiProvider.GetEntryPointResource()
+//        {
+//            if (_apiEntryPointLazy == null)
+//            {
+//                throw new InvalidOperationException(
+//                    $"The request client with the base address: {_baseAddressUri} does not have " +
+//                     "entry point path specified.");
+//            }
+//
+//            return _apiEntryPointLazy.Value;
+//        }
 
         private static void InitServicePointManager(string baseAddress, ClientSettings settings) 
         {
