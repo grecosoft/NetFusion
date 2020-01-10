@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace NetFusion.Rest.Server.Mappings
 {
     /// <summary>
-    /// Used to store metadata associated with resources for a specific media type.
+    /// Used to store metadata associated with resources for a specific media-type.
     /// </summary>
     public class MediaTypeEntry 
     {

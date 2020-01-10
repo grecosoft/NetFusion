@@ -78,6 +78,7 @@ namespace NetFusion.Rest.Server.Hal.Core
             var link = new Link
             {
                 // Delegate to ASP.NET Core to get the URL corresponding to the route-values.
+                // This is known as the out-going URL in ASP.NET.
                 Href = context.UrlHelper.Action(resourceLink.Action, controllerName, routeValues),
                 Templated = false,
                 Methods = resourceLink.Methods.ToArray()

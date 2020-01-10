@@ -10,7 +10,7 @@ namespace NetFusion.Rest.Server.Meta
     /// <summary>
     /// Contains methods creating ResourceLink instances and associating metadata.
     /// </summary>
-    /// <typeparam name="TSource">The source type associated with resource.</typeparam>
+    /// <typeparam name="TSource">The source type associated with metadata.</typeparam>
     public class ResourceLinkMeta<TSource>
         where TSource : class
     {
@@ -24,6 +24,8 @@ namespace NetFusion.Rest.Server.Meta
 
         protected void AddResourceLink(ResourceLink resourceLink)
         {
+            if (resourceLink == null) throw new ArgumentNullException(nameof(resourceLink));
+            
             _resourceLinks.Add(resourceLink);
         }
         
@@ -60,7 +62,7 @@ namespace NetFusion.Rest.Server.Meta
         /// <param name="httpMethod">The HTTP method used to invoke URI.</param>
         /// <param name="resourceUrl">Function delegate passed the model during link resolution and
         /// returns a populated URI or partial populated URI (i.e. Template) based on the properties
-        /// of the passed resourced.</param>
+        /// of the passed resource.</param>
         /// <returns>Object used to add optional metadata to the created link.</returns>
         public LinkDescriptor<TSource> Href(string relName, HttpMethod httpMethod, Expression<Func<TSource, string>> resourceUrl)
         {
@@ -68,7 +70,7 @@ namespace NetFusion.Rest.Server.Meta
                 "Relation Name not specified.", nameof(relName));
 
             if (resourceUrl == null) throw new ArgumentNullException(nameof(resourceUrl), 
-                "Source Delegate cannot be null.");
+                "Resource Url Delegate cannot be null.");
 
             var resourceLink = new InterpolatedLink<TSource>(resourceUrl);
             var linkDescriptor = new LinkDescriptor<TSource>(resourceLink);

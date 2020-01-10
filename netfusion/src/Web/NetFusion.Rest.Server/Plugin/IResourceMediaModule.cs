@@ -11,7 +11,7 @@ namespace NetFusion.Rest.Server.Plugin
     public interface IResourceMediaModule : IPluginModuleService
     {
         /// <summary>
-        /// Applies the resource metadata to a specific resource for a given media-type.
+        /// Applies the resource metadata for a given media-type.
         /// </summary>
         /// <returns>True if the resource metadata was applied.  Otherwise, False is returned.</returns>
         /// <param name="mediaType">The media type of the metadata to be applied to the resource.</param>

@@ -16,7 +16,7 @@ namespace NetFusion.Rest.Server.Hal.Core
         /// </summary>
         /// <param name="mvcOptions">The MVC options passed from Web API host.</param>
         /// <param name="options">The optional JSON serialization settings to use.</param>
-        /// <returns></returns>
+        /// <returns>MVC options.</returns>
         public static MvcOptions UseHalFormatter(this MvcOptions mvcOptions, JsonSerializerOptions options = null)
         {
             if (mvcOptions == null) throw new ArgumentNullException(nameof(mvcOptions), 

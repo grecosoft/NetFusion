@@ -9,7 +9,8 @@ namespace NetFusion.Rest.Server.Mappings
 {
     /// <summary>
     /// Context class containing information for the resource and services
-    /// used by a provider when mapping resources.
+    /// used by a provider when applying media-type specific information to
+    /// returned resources.
     /// </summary>
     public class ResourceContext
     {

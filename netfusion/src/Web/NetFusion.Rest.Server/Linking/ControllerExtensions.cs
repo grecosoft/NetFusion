@@ -20,7 +20,7 @@ namespace NetFusion.Rest.Server.Linking
 		public static IEnumerable<MethodInfo> GetActionMethods(this Type controller)
 		{
             if (controller == null) throw new ArgumentNullException(nameof(controller),
-                "Type cannot be null.");
+                "Controller type cannot be null.");
 
 			return controller.GetMethods(
 				BindingFlags.DeclaredOnly |

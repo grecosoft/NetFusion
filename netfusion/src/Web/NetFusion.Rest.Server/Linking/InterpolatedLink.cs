@@ -7,7 +7,7 @@ namespace NetFusion.Rest.Server.Linking
     /// Resource link for which the URI is expressed as an interpolated string using
     /// property values of the resource to substitute URI values at runtime.
     /// 
-    /// Example = $"http://services.customer/{resource.CustomerId}"
+    /// Example = $"http://services.customer/{model.CustomerId}"
     /// </summary>
     public abstract class InterpolatedLink : ResourceLink
     {

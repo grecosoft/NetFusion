@@ -5,8 +5,8 @@ namespace NetFusion.Rest.Server.Linking
 {
     /// <summary>
     /// This class maps the action method parameter name to the corresponding state named property.
-    /// This mapping is executed at runtime to obtain the resource's state property value to be used
-    /// as the corresponding route-value.
+    /// This mapping is executed at runtime to obtain the resource's state property values to be used
+    /// as the corresponding route-values.
     /// </summary>
     public class RouteParameter
     {

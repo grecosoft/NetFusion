@@ -26,7 +26,7 @@ namespace NetFusion.Rest.Server.Hal
         /// REST/HAL information.
         /// </summary>
         /// <typeparam name="TModel">The type of model associated with the resource.</typeparam>
-        /// <returns>The created resource mapping.</returns>
+        /// <returns>The created resource metadata.</returns>
         protected HalResourceMeta<TModel> Map<TModel>()
             where TModel : class
         {

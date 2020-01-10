@@ -10,13 +10,15 @@ namespace NetFusion.Rest.Server.Plugin.Modules
     /// <summary>
     /// Module called during the bootstrap process that resolves all resource-metadata associated classes
     /// and caches the information to be used during application execution.  Based on the request specified
-    /// Accept header, this cached metadata is used by the associated IOutputFormatter.
+    /// Accept header, this cached metadata is used by the associated IOutputFormatter to add information to
+    /// returned resources.
     /// </summary>
-    public class ResourceMediaModule : PluginModule, IResourceMediaModule
+    public class ResourceMetaModule : PluginModule, IResourceMediaModule
     {
+        // IKnownPluginType - set by NetFusion bootstrapper.  
         private IEnumerable<IResourceMap> ResourceMappings { get; set; }
 
-        // MediaTypeName --> Entry
+        // MediaTypeName (i.e. HAL) --> Entry
         private readonly Dictionary<string, MediaTypeEntry> _mediaResourceTypeMeta = new Dictionary<string, MediaTypeEntry>();
 
         // Caches all of the resource-metadata associated with resources for a specific media type.
@@ -72,8 +74,8 @@ namespace NetFusion.Rest.Server.Plugin.Modules
             return (mediaTypeEntry, isFound);
         }    
         
-        // Determines if there is metadata associated with the resource being returned
-        // for a given media-type.  If found, the metadata is set on the context and 
+        // Determines if there is metadata associated with the resource for a 
+        // given media-type.  If found, the metadata is set on the context and 
         // passed to the associated provider.
         public bool ApplyResourceMeta(string mediaType, ResourceContext context)
         {

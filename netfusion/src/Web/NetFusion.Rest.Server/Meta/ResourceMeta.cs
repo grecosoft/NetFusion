@@ -21,8 +21,8 @@ namespace NetFusion.Rest.Server.Meta
         public Type SourceType => typeof(TSource);
        
         /// <summary>
-        /// Links associated with the resource.  Usually used to navigate 
-        /// additional associated resources.
+        /// Links associated with the resource.  Usually used to navigate additional
+        /// associated resources or invoke action on current resource.
         /// </summary>
         public IReadOnlyCollection<ResourceLink> Links { get; }
 
@@ -55,9 +55,9 @@ namespace NetFusion.Rest.Server.Meta
         }
 
         /// <summary>
-        /// Returns like metadata class used to specify URIs not associated with a specific controller method.
+        /// Returns link metadata class used to specify URIs not associated with a specific controller method.
         /// </summary>
-        /// <param name="meta">Method delegate passed metadata class used to define like metadata.</param>
+        /// <param name="meta">Method delegate passed metadata class used to define link metadata.</param>
         /// <returns>Reference to self for method chaining.</returns>
         public TResourceMeta LinkMeta(Action<ResourceLinkMeta<TSource>> meta)
         {
