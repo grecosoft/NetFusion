@@ -5,10 +5,10 @@ using System.Linq;
 namespace NetFusion.Rest.Resources.Hal
 {
 	/// <summary>
-	/// Extension HalResource methods used on server side of an WebApi service.
+	/// HalResource extension methods used on server side of an WebApi implementation.
 	/// The methods are used to wrap API response models into new HalResource or
 	/// HalResource collections.  Also provides methods for embedding child resources
-	/// and models into parent resources.
+	/// and models into parent resource.
 	/// </summary>
     public static class HalResourceServerExtensions
     {
@@ -49,11 +49,11 @@ namespace NetFusion.Rest.Resources.Hal
 	        string named = null) where TModel: class
 		{
 			named ??= typeof(TModel).GetExposedResourceTypeName();
-			EmbedValue(resource, embeddedResource, named);
+			EmbedValue<TModel>(resource, embeddedResource, named);
 		}
 
         /// <summary>
-        /// Embeds a non-resource object within parent resource.
+        /// Embeds a model within parent resource.
         /// </summary>
         /// <param name="resource">Parent resource to embed child model.</param>
         /// <param name="model">The model to embed.</param>
@@ -62,7 +62,7 @@ namespace NetFusion.Rest.Resources.Hal
 			where TModel: class
 		{
 			named ??= typeof(TModel).GetExposedResourceTypeName();
-			EmbedValue(resource, model, named);
+			EmbedValue<TModel>(resource, model, named);
 		}
 
 		/// <summary>
@@ -77,24 +77,24 @@ namespace NetFusion.Rest.Resources.Hal
 			string named = null) where TModel : class
 		{
 			named ??= typeof(TModel).GetExposedResourceTypeName();
-			EmbedValue(resource, embeddedResources, named);
+			EmbedValue<TModel>(resource, embeddedResources, named);
 		}
 
 		/// <summary>
 		/// Embeds a collection of models within parent resource.
 		/// </summary>
 		/// <param name="resource">Parent resource s.</param>
-		/// <param name="models">The objects to be embedded.</param>
-		/// <param name="named">Name used to identify the embedded objects.</param>
+		/// <param name="models">The model to be embedded.</param>
+		/// <param name="named">Name used to identify the embedded models.</param>
 		public static void EmbedModels<TModel>(this HalResource resource, 
 			IEnumerable<TModel> models, 
 			string named = null) where TModel: class
 		{
 			named ??= typeof(TModel).GetExposedResourceTypeName();
-			EmbedValue(resource, models, named);
+			EmbedValue<TModel>(resource, models, named);
 		}
 
-		private static void EmbedValue(HalResource resource, object value, string named)
+		private static void EmbedValue<TModel>(HalResource resource, object value, string named)
 		{
 			if (resource == null) throw new ArgumentNullException(nameof(resource), 
 				"The parent HAL resource to embed child cannot be null.");
@@ -105,7 +105,7 @@ namespace NetFusion.Rest.Resources.Hal
 			if (named == null)
             {
                 throw new InvalidOperationException(
-                    $"The embedded name for type: {value.GetType().FullName} could not be determined.  " +
+                    $"The embedded name for type: {typeof(TModel).FullName} could not be determined.  " +
                     "The name was not explicitly provided and the model type was not decorated with the attribute: " + 
                     $"{typeof(ExposedNameAttribute).FullName}");
             }
