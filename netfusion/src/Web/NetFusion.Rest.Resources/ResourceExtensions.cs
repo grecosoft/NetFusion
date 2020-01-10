@@ -7,7 +7,7 @@ namespace NetFusion.Rest.Resources
     {
         /// <summary>
         /// Returns the embedded name associated with a given model type
-        /// used to identity embedded resources and models..
+        /// used to identity embedded resources and models.
         /// </summary>
         /// <param name="modelType">The model type.</param>
         /// <returns>The embedded name specified by the NamedResource attribute.

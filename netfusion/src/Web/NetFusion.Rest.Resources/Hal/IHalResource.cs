@@ -6,7 +6,7 @@ namespace NetFusion.Rest.Resources.Hal
     /// A HAL based resource adds information to normal API models returned to the client.
     /// The resource contains the model state, links for navigating to related resources,
     /// and/or links to take action on the current resource.  Sets of related resources 
-    /// can also be returned by embedding related resources and models  into parent resources.
+    /// can also be returned by embedding related resources and models into parent resources.
     /// </summary>
     public interface IHalResource : IResource
     {

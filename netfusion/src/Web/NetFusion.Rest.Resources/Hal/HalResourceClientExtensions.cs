@@ -6,7 +6,7 @@ namespace NetFusion.Rest.Resources.Hal
 {
     /// <summary>
     /// Extension methods used by a .NET WebApi client used to obtain links
-    /// and embedded resources.
+    /// and embedded resources and models
     /// </summary>
     public static class HalResourceClientExtensions
     {
@@ -21,7 +21,7 @@ namespace NetFusion.Rest.Resources.Hal
         private static JsonSerializerOptions DefaultOptions { get; } 
 
         /// <summary>
-        /// Determines if the resource contains a named links.
+        /// Determines if the resource contains a named link.
         /// </summary>
         /// <param name="resource">The resource with associated links.</param>
         /// <param name="named">The name identifying the link.</param>
@@ -55,10 +55,10 @@ namespace NetFusion.Rest.Resources.Hal
         }
         
         /// <summary>
-        /// Determines if the resources contains a named embedded resource.
+        /// Determines if the resource contains a named embedded resource/model.
         /// </summary>
         /// <param name="resource">The resource with embedded resources.</param>
-        /// <param name="named">The name identifying the embedded resource.</param>
+        /// <param name="named">The name identifying the embedded resource/model.</param>
         /// <returns>True if found.  Otherwise, False.</returns>
         public static bool HasEmbedded(this IHalResource resource, string named)
         {
@@ -76,7 +76,7 @@ namespace NetFusion.Rest.Resources.Hal
         /// <param name="resource">The parent resource containing the embedded model.</param>
         /// <param name="named">The name identifying the embedded resource.</param>
         /// <typeparam name="TChildModel">The type of the embedded model.</typeparam>
-        /// <returns></returns>
+        /// <returns>Reference to the deserialized model or an exception if not present.</returns>
         public static TChildModel GetEmbeddedModel<TChildModel>(this IHalResource resource, string named)
             where TChildModel: class
         {
@@ -88,7 +88,7 @@ namespace NetFusion.Rest.Resources.Hal
             if (! resource.HasEmbedded(named))
             {
                 throw new InvalidOperationException(
-                    $"Embedded model named: {named} of parent resource type does not exist.");
+                    $"Embedded model named: {named} of parent resource does not exist.");
             }
             
             // Check if the embedded resource has been deserialized from the base JsonElement representation and return it.
@@ -108,7 +108,7 @@ namespace NetFusion.Rest.Resources.Hal
                 return embeddedItem;
             }
 
-            throw new InvalidCastException("The named embedded value of: {named} does not contain a JsonElement.");   
+            throw new InvalidCastException("The named embedded model: {named} does not contain a JsonElement.");   
         }
         
         /// <summary>
@@ -117,7 +117,7 @@ namespace NetFusion.Rest.Resources.Hal
         /// <typeparam name="TChildModel">The type of the embedded resource's model.</typeparam>
         /// <param name="resource">The parent resource with embedded resources.</param>
         /// <param name="named">The name identifying the embedded resource.</param>
-        /// <returns>Instance of the populated nested type.</returns>
+        /// <returns>Instance of the populated embedded resource.</returns>
         public static HalResource<TChildModel> GetEmbeddedResource<TChildModel>(this IHalResource resource, string named)
             where TChildModel: class
         {
@@ -129,7 +129,7 @@ namespace NetFusion.Rest.Resources.Hal
             if (! resource.HasEmbedded(named))
             {
                 throw new InvalidOperationException(
-                    $"Embedded resource named: {named} of parent resource type does not exist.");
+                    $"Embedded resource named: {named} of parent resource does not exist.");
             }
             
             // Check if the embedded resource has been deserialized from the base JsonElement representation and return it.
@@ -149,15 +149,15 @@ namespace NetFusion.Rest.Resources.Hal
                 return embeddedItem;
             }
 
-            throw new InvalidCastException("The named embedded value of: {named} does not contain a JsonElement.");
+            throw new InvalidCastException("The named embedded resource: {named} does not contain a JsonElement.");
         }
         
         /// <summary>
-        /// Returns an instance of an embedded collection resource.
+        /// Returns an instance of an embedded resource collection.
         /// </summary>
-        /// <typeparam name="TChildModel">The type of the embedded resource array associated model.</typeparam>
+        /// <typeparam name="TChildModel">The type of the embedded resource model.</typeparam>
         /// <param name="resource">The parent resource with embedded resources.</param>
-        /// <param name="named">The name identifying the embedded resource.</param>
+        /// <param name="named">The name identifying the embedded resource collection.</param>
         /// <returns>List of embedded collection of resources.</returns>
         public static IEnumerable<HalResource<TChildModel>> GetEmbeddedResources<TChildModel>(this IHalResource resource, string named)
             where TChildModel: class
@@ -170,7 +170,7 @@ namespace NetFusion.Rest.Resources.Hal
             if (! resource.HasEmbedded(named))
             {
                 throw new InvalidOperationException(
-                    $"Embedded resource array named: {named} of parent resource type does not exist.");
+                    $"Embedded resource collection named: {named} of parent resource does not exist.");
             }
 
             if (resource.Embedded[named] is List<HalResource<TChildModel>> embeddedItem)
@@ -189,7 +189,7 @@ namespace NetFusion.Rest.Resources.Hal
             }
 
             throw new InvalidCastException(
-                $"The named embedded array value of: {named} does not contain a JsonElement of type array.");
+                $"The named embedded collection: {named} does not contain a JsonElement of type array.");
         }
         
         /// <summary>
@@ -197,8 +197,8 @@ namespace NetFusion.Rest.Resources.Hal
         /// </summary>
         /// <param name="resource">The parent resource with embedded resources.</param>
         /// <param name="named">The name identifying the embedded resource.</param>
-        /// <typeparam name="TChildModel">The type of the embedded model array associated.</typeparam>
-        /// <returns>Instance of the populated nested array type.</returns>
+        /// <typeparam name="TChildModel">The type of the embedded model.</typeparam>
+        /// <returns>Instance of the embedded collection of models..</returns>
         public static IEnumerable<TChildModel> GetEmbeddedModels<TChildModel>(this IHalResource resource, string named)
             where TChildModel: class
         {
@@ -210,7 +210,7 @@ namespace NetFusion.Rest.Resources.Hal
             if (! resource.HasEmbedded(named))
             {
                 throw new InvalidOperationException(
-                    $"Embedded model array named: {named} of parent resource type does not exist.");
+                    $"Embedded model collection named: {named} of parent resource does not exist.");
             }
 
             if (resource.Embedded[named] is List<TChildModel> embeddedItem)
@@ -229,7 +229,7 @@ namespace NetFusion.Rest.Resources.Hal
             }
 
             throw new InvalidCastException(
-                $"The named embedded array value of: {named} does not contain a JsonElement of type array.");
+                $"The named embedded collection: {named} does not contain a JsonElement of type array.");
         }
     }
 }

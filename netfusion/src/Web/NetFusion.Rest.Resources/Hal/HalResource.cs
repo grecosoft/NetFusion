@@ -6,6 +6,8 @@ namespace NetFusion.Rest.Resources.Hal
 {
     /// <summary>
     /// Implements the IHalResource interface containing a non-type model.
+    /// This interface is used internally when attaching the HAL specific
+    /// information to a returned HAL Resource.
     /// </summary>
     public class HalResource : IHalResource
     {
@@ -71,8 +73,8 @@ namespace NetFusion.Rest.Resources.Hal
         public IDictionary<string, Link> Links { get; set; }
     
         /// <summary>
-        /// Associated resources that are embedded by the server and returned
-        /// to the client.  Each embedded resources is identified by key.
+        /// Associated resources and/or models that are embedded by the server and
+        /// returned to the client.  Each embedded member is identified by key.
         /// </summary>
         [JsonPropertyName("_embedded")]
         public IDictionary<string, object> Embedded { get; set; }
