@@ -8,8 +8,8 @@ using WebTests.Rest.Setup;
 
 namespace WebTests.Rest.LinkGeneration.Server
 {
-    [Route("api/linked/resource")]
-    public class LinkedResourceController : Controller
+    [ApiController, Route("api/linked/resource")]
+    public class LinkedResourceController : ControllerBase
     {
         private readonly IMockedService _mockedService;
 

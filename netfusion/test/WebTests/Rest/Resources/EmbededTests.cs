@@ -157,7 +157,7 @@ namespace WebTests.Rest.Resources
             public DateTime DateSubmitted { get; set; }
         }
 
-        public void Test()
+        private void Test()
         {
             var customerModel = new Customer
             {

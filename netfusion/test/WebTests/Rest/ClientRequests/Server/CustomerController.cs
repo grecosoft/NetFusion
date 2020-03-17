@@ -4,8 +4,8 @@ using NetFusion.Rest.Resources.Hal;
 
 namespace WebTests.Rest.ClientRequests.Server
 {
-    [Route("api/customers")]
-    public class CustomerController : Controller
+    [ApiController, Route("api/customers")]
+    public class CustomerController : ControllerBase
     {
         [HttpGet("{id}")]
         public IHalResource GetCustomer(string id)
