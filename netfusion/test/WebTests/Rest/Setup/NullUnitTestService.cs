@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Rest.Resources.Hal;
-using WebTests.Rest.ClientRequests.Server;
+using TestClasses.ClientRequests;
+using TestClasses.ClientRequests.Server;
 
 namespace WebTests.Rest.Setup
 {

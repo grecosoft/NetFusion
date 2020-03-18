@@ -1,4 +1,4 @@
-﻿namespace WebTests.Rest.ClientRequests.Client
+﻿namespace TestClasses.ClientRequests.Client
 {
     /// <summary>
     /// Client side resource class modeling the corresponding

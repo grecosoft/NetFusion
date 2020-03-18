@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using NetFusion.Rest.Resources.Hal;
 
 namespace NetFusion.Rest.Client
 {

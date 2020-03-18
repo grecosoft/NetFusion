@@ -1,4 +1,4 @@
-﻿namespace WebTests.Rest.LinkGeneration.Server
+﻿namespace TestClasses.LinkGeneration.Server
 {
     /// <summary>
     /// Server returned resource used to test server-side link generation.

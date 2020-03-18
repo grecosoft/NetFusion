@@ -1,9 +1,8 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebTests.Rest.Setup;
 
-namespace WebTests.Rest.ClientRequests.Server
+namespace TestClasses.ClientRequests.Server
 {
     [ApiController, Route("api/error")]
     public class ErrorController : ControllerBase

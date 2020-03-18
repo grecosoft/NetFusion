@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using NetFusion.Rest.Server.Hal;
 
-namespace WebTests.Rest.LinkGeneration.Server
+namespace TestClasses.LinkGeneration.Server
 {
     /// <summary>
     /// Resource map file used by the link-generation unit-tests.

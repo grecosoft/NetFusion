@@ -2,10 +2,9 @@
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Rest.Resources.Hal;
-using WebTests.Rest.ClientRequests.Server;
-using WebTests.Rest.Setup;
+using TestClasses.ClientRequests.Server;
 
-namespace WebTests.Rest.ClientRequests
+namespace TestClasses.ClientRequests
 {
     public class MockUnitTestService : IMockedService
     {

@@ -4,9 +4,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
-using WebTests.Rest.Setup;
+using TestClasses.ClientRequests;
 
-namespace WebTests.Rest.LinkGeneration.Server
+namespace TestClasses.LinkGeneration.Server
 {
     [ApiController, Route("api/linked/resource")]
     public class LinkedResourceController : ControllerBase

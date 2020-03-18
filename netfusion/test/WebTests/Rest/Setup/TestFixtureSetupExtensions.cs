@@ -2,9 +2,9 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Rest.Server.Plugin;
 using WebTests.Hosting;
 using NetFusion.Test.Plugins;
-using WebTests.Rest.ClientRequests;
-using WebTests.Rest.ClientRequests.Server;
-using WebTests.Rest.LinkGeneration.Server;
+using TestClasses.ClientRequests;
+using TestClasses.ClientRequests.Server;
+using TestClasses.LinkGeneration.Server;
 
 namespace WebTests.Rest.Setup
 {

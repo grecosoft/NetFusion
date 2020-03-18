@@ -9,7 +9,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
 
 namespace NetFusion.Rest.Client.Core

@@ -157,22 +157,22 @@ namespace WebTests.Rest.Resources
             public DateTime DateSubmitted { get; set; }
         }
 
-        private void Test()
-        {
-            var customerModel = new Customer
-            {
-                FirstName = "Mark",
-                LastName = "Twain"
-            };
-
-            var ratings = new[]
-            {
-                new Rating { Value = 90, DateSubmitted = DateTime.UtcNow },
-                new Rating { Value = 78, DateSubmitted = DateTime.UtcNow }
-            }.AsResources();
-
-            var resource = HalResource.New(customerModel,r => r.EmbedResources(ratings));
-            
-        }
+//        private void Test()
+//        {
+//            var customerModel = new Customer
+//            {
+//                FirstName = "Mark",
+//                LastName = "Twain"
+//            };
+//
+//            var ratings = new[]
+//            {
+//                new Rating { Value = 90, DateSubmitted = DateTime.UtcNow },
+//                new Rating { Value = 78, DateSubmitted = DateTime.UtcNow }
+//            }.AsResources();
+//
+//            var resource = HalResource.New(customerModel,r => r.EmbedResources(ratings));
+//            
+//        }
     }
 }

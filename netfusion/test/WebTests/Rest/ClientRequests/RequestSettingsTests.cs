@@ -5,11 +5,12 @@ using FluentAssertions;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
+using TestClasses.ClientRequests;
 using WebTests.Hosting;
 using WebTests.Rest.LinkGeneration;
 using WebTests.Rest.Setup;
 using Xunit;
-using CustomerModel = WebTests.Rest.ClientRequests.Server.CustomerModel;
+using CustomerModel = TestClasses.ClientRequests.Server.CustomerModel;
 
 namespace WebTests.Rest.ClientRequests
 {
@@ -157,7 +158,7 @@ namespace WebTests.Rest.ClientRequests
                                     .AddParam("b", "v2");
                             });
                         
-                        return await client.SendAsync<Client.CustomerModel>(request);
+                        return await client.SendAsync<TestClasses.ClientRequests.Client.CustomerModel>(request);
                     });
 
                 response.Assert.ApiResponse(apiResponse =>
