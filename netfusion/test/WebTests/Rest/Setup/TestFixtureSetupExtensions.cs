@@ -2,9 +2,11 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Rest.Server.Plugin;
 using WebTests.Hosting;
 using NetFusion.Test.Plugins;
-using TestClasses.ClientRequests;
-using TestClasses.ClientRequests.Server;
-using TestClasses.LinkGeneration.Server;
+using CustomerResourceMap = WebTests.Rest.ClientRequests.Server.CustomerResourceMap;
+using IMockedService = WebTests.Rest.ClientRequests.IMockedService;
+using LinkedResource = WebTests.Rest.LinkGeneration.Server.LinkedResource;
+using LinkedResourceMap = WebTests.Rest.LinkGeneration.Server.LinkedResourceMap;
+using MockUnitTestService = WebTests.Rest.ClientRequests.MockUnitTestService;
 
 namespace WebTests.Rest.Setup
 {

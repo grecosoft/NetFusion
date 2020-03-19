@@ -1,12 +1,12 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 using NetFusion.Rest.Client;
-using TestClasses;
-using TestClasses.LinkGeneration.Client;
-using TestClasses.LinkGeneration.Server;
 using WebTests.Hosting;
+using WebTests.Rest.LinkGeneration.Server;
 using WebTests.Rest.Setup;
 using Xunit;
+using LinkedResource = WebTests.Rest.LinkGeneration.Server.LinkedResource;
+using LinkedResourceModel = WebTests.Rest.LinkGeneration.Client.LinkedResourceModel;
 
 #pragma warning disable 1570
 namespace WebTests.Rest.LinkGeneration
@@ -63,7 +63,7 @@ namespace WebTests.Rest.LinkGeneration
                 Value4 = 400
             };
             
-            return WebHostFixture.TestAsync<SourceControllers>(async host =>
+            return WebHostFixture.TestAsync<LinkedResourceController>(async host =>
             {
                 var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
@@ -96,7 +96,7 @@ namespace WebTests.Rest.LinkGeneration
                 Value4 = 400
             };
             
-            return WebHostFixture.TestAsync<SourceControllers>(async host =>
+            return WebHostFixture.TestAsync<LinkedResourceController>(async host =>
             {
                 var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
@@ -128,7 +128,7 @@ namespace WebTests.Rest.LinkGeneration
                 Value4 = 400
             };
             
-            return WebHostFixture.TestAsync<SourceControllers>(async host =>
+            return WebHostFixture.TestAsync<LinkedResourceController>(async host =>
             {
                 var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
@@ -160,7 +160,7 @@ namespace WebTests.Rest.LinkGeneration
                 Value4 = 400
             };
             
-            return WebHostFixture.TestAsync<SourceControllers>(async host =>
+            return WebHostFixture.TestAsync<LinkedResourceController>(async host =>
             {
                 var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
@@ -192,7 +192,7 @@ namespace WebTests.Rest.LinkGeneration
                 Value4 = 400
             };
             
-            return WebHostFixture.TestAsync<SourceControllers>(async host =>
+            return WebHostFixture.TestAsync<LinkedResourceController>(async host =>
             {
                 var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
@@ -224,7 +224,7 @@ namespace WebTests.Rest.LinkGeneration
                 Value4 = 400
             };
             
-            return WebHostFixture.TestAsync<SourceControllers>(async host =>
+            return WebHostFixture.TestAsync<LinkedResourceController>(async host =>
             {
                 var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
@@ -256,7 +256,7 @@ namespace WebTests.Rest.LinkGeneration
                 Value4 = 400
             };
             
-            return WebHostFixture.TestAsync<SourceControllers>(async host =>
+            return WebHostFixture.TestAsync<LinkedResourceController>(async host =>
             {
                 var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
@@ -302,7 +302,7 @@ namespace WebTests.Rest.LinkGeneration
                 Value4 = 400
             };
             
-            return WebHostFixture.TestAsync<SourceControllers>(async host =>
+            return WebHostFixture.TestAsync<LinkedResourceController>(async host =>
             {
                 var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
@@ -348,7 +348,7 @@ namespace WebTests.Rest.LinkGeneration
                 Value4 = 400
             };
             
-            return WebHostFixture.TestAsync<SourceControllers>(async host =>
+            return WebHostFixture.TestAsync<LinkedResourceController>(async host =>
             {
                 var webResponse = await host
                     .ArrangeWithDefaults(mockResource)
@@ -383,7 +383,7 @@ namespace WebTests.Rest.LinkGeneration
                 Value2 = "value-2"
             };
             
-            return WebHostFixture.TestAsync<SourceControllers>(async host =>
+            return WebHostFixture.TestAsync<LinkedResourceController>(async host =>
             {
                 var webResponse = await host
                     .ArrangeWithDefaults(mockResource)

@@ -21,6 +21,5 @@
     <ProjectReference Include="..\..\src\Web\NetFusion.Rest.Resources\NetFusion.Rest.Resources.csproj" />
     <ProjectReference Include="..\..\src\Web\NetFusion.Rest.Server\NetFusion.Rest.Server.csproj" />
     <ProjectReference Include="..\..\src\Web\NetFusion.Web.Mvc\NetFusion.Web.Mvc.csproj" />
-    <ProjectReference Include="..\TestClasses\TestClasses.csproj" />
   </ItemGroup>
 </Project>

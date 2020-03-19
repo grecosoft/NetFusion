@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Resources.Hal;
-using TestClasses;
-using TestClasses.ClientRequests.Client;
 using WebTests.Hosting;
-using WebTests.Rest.LinkGeneration;
+using WebTests.Rest.ClientRequests.Server;
 using WebTests.Rest.Setup;
 using Xunit;
+using AddressModel = WebTests.Rest.ClientRequests.Client.AddressModel;
+using CustomerModel = WebTests.Rest.ClientRequests.Client.CustomerModel;
 
 namespace WebTests.Rest.ClientRequests
 {
@@ -23,7 +23,7 @@ namespace WebTests.Rest.ClientRequests
         [Fact]
         public Task ClientCan_ReceiveEmbeddedResource()
         {
-            return WebHostFixture.TestAsync<SourceControllers>(async host =>
+            return WebHostFixture.TestAsync<CustomerController>(async host =>
             {
                 var response = await host
                     .ArrangeWithDefaults()
@@ -61,7 +61,7 @@ namespace WebTests.Rest.ClientRequests
         [Fact]
         public Task ClientCan_ReceiveEmbeddedResourceCollection()
         {
-            return WebHostFixture.TestAsync<SourceControllers>(async host =>
+            return WebHostFixture.TestAsync<CustomerController>(async host =>
             {
                 var response = await host
                     .ArrangeWithDefaults()

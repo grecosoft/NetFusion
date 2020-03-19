@@ -1,4 +1,4 @@
-﻿namespace TestClasses.LinkGeneration.Client
+﻿namespace WebTests.Rest.LinkGeneration.Client
 {
     public class LinkedResourceModel 
     {

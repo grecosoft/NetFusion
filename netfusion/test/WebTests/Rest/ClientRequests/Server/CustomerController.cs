@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources.Hal;
 
-namespace TestClasses.ClientRequests.Server
+namespace WebTests.Rest.ClientRequests.Server
 {
     [ApiController, Route("api/customers")]
     public class CustomerController : ControllerBase

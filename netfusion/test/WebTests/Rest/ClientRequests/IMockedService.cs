@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using NetFusion.Rest.Resources.Hal;
-using TestClasses.ClientRequests.Server;
+using CustomerModel = WebTests.Rest.ClientRequests.Server.CustomerModel;
 
-namespace TestClasses.ClientRequests
+namespace WebTests.Rest.ClientRequests
 {
     public interface IMockedService
     {

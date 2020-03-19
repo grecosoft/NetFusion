@@ -1,4 +1,4 @@
-﻿namespace TestClasses.ClientRequests.Server
+﻿namespace WebTests.Rest.ClientRequests.Server
 {
     /// <summary>
     /// Server side resource returned by the API Controller under-test.

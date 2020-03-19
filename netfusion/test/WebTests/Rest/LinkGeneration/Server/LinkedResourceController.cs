@@ -4,9 +4,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
-using TestClasses.ClientRequests;
+using IMockedService = WebTests.Rest.ClientRequests.IMockedService;
 
-namespace TestClasses.LinkGeneration.Server
+namespace WebTests.Rest.LinkGeneration.Server
 {
     [ApiController, Route("api/linked/resource")]
     public class LinkedResourceController : ControllerBase

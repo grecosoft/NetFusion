@@ -64,8 +64,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.AMQP", "src\Integ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Builder", "src\Core\NetFusion.Builder\NetFusion.Builder.csproj", "{471A4AFA-4DB0-41C3-BA33-51666B4E5E01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClasses", "test\TestClasses\TestClasses.csproj", "{82D6932B-DDD5-42F1-A67F-CACAF8F13E5E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -172,10 +170,6 @@ Global
 		{471A4AFA-4DB0-41C3-BA33-51666B4E5E01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{471A4AFA-4DB0-41C3-BA33-51666B4E5E01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{471A4AFA-4DB0-41C3-BA33-51666B4E5E01}.Release|Any CPU.Build.0 = Release|Any CPU
-		{82D6932B-DDD5-42F1-A67F-CACAF8F13E5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{82D6932B-DDD5-42F1-A67F-CACAF8F13E5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{82D6932B-DDD5-42F1-A67F-CACAF8F13E5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{82D6932B-DDD5-42F1-A67F-CACAF8F13E5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -210,7 +204,6 @@ Global
 		{8621F7A2-0D98-4DA3-8053-4931C0582B78} = {0A108820-F110-4B36-A5CF-A59FC7C64955}
 		{A45E8665-9881-4A8D-B69D-E9CD7D3491B0} = {0A108820-F110-4B36-A5CF-A59FC7C64955}
 		{471A4AFA-4DB0-41C3-BA33-51666B4E5E01} = {3B81A3E8-25A7-4473-BDA9-36B6D7FED4D6}
-		{82D6932B-DDD5-42F1-A67F-CACAF8F13E5E} = {32232913-3E63-4EE3-8DC1-2FCB6717198F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17556D20-DBFC-4AEB-857D-74B7C1EDEA60}
