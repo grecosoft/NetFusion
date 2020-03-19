@@ -48,14 +48,6 @@ namespace Solution.Context.WebApi
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseRouting();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
             string viewerUrl = _configuration.GetValue<string>("Netfusion:ViewerUrl");
             if (! string.IsNullOrWhiteSpace(viewerUrl))
             {
@@ -65,6 +57,14 @@ namespace Solution.Context.WebApi
                     .WithExposedHeaders("WWW-Authenticate","resource-404")
                     .AllowAnyHeader());
             }
+            
+            app.UseRouting();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }
