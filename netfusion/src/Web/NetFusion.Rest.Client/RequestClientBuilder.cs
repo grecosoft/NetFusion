@@ -15,34 +15,20 @@ namespace NetFusion.Rest.Client
     /// Class used to build an instance of a IRequestClient based on a set
     /// of configurations.
     /// </summary>
-    public class RequestClientBuilder // : IServiceEntryApiProvider
+    public class RequestClientBuilder 
     {
-        public const string CorrelationHeaderName = "nf_CorrelationId";
         private readonly string _baseAddressUri;
-        private string _entryPointPath;
         private readonly ClientSettings _clientSettings;
-
         private IRequestSettings _defaultRequestSettings;
-        private Action<IRequestSettings> _eachRequestAction;
-        private IDictionary<HttpStatusCode, Func<ErrorStatusContext, Task<bool>>> _statusCodeHandlers;
         private IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
-
+        
         private string _correlationIdHeaderName = "NF_CorrelationId";
-        //private Lazy<Task<HalEntryPointResource>> _apiEntryPointLazy;
+        private Action<IRequestSettings> _eachRequestAction;
+
         private ILoggerFactory _loggerFactory;
         private ILogger _logger;
 
-        private RequestClientBuilder(string baseAddressUri, ClientSettings clientSettings)
-        {
-            if (string.IsNullOrWhiteSpace(baseAddressUri))
-                throw new ArgumentException("Base address must be specified.", nameof(baseAddressUri));
-
-            _clientSettings = clientSettings ?? new ClientSettings();
-            _baseAddressUri = baseAddressUri;
-
-            InitServicePointManager(baseAddressUri, _clientSettings);
-        }
-
+        
         /// <summary>
         /// Creates a new builder for a specific base service Uri.
         /// </summary>
@@ -53,23 +39,38 @@ namespace NetFusion.Rest.Client
         {
             return new RequestClientBuilder(baseAddressUrl, settings);
         }
-
-        /// <summary>
-        /// Sets a child path of the base address that is to be invoked to load the 
-        /// root service API methods to which the client can communicated.  All other
-        /// URLs are obtained from returned resources.
-        /// </summary>
-        /// <param name="entryPointPath">Child path of bass address (Optional).</param>
-        /// <returns>Builder for method chaining.</returns>
-        public RequestClientBuilder ForEntryPoint(string entryPointPath)
+        
+        private RequestClientBuilder(string baseAddressUri, ClientSettings clientSettings)
         {
-            if (string.IsNullOrWhiteSpace(entryPointPath))
-                throw new ArgumentException("Service Api Entry point must be specified", nameof(entryPointPath));
-            
-            _entryPointPath = entryPointPath;
-            return this;
-        }
+            if (string.IsNullOrWhiteSpace(baseAddressUri))
+                throw new ArgumentException("Base address must be specified.", nameof(baseAddressUri));
 
+            _clientSettings = clientSettings ?? new ClientSettings();
+            _baseAddressUri = baseAddressUri;
+
+            InitServicePointManager(baseAddressUri, _clientSettings);
+        }
+        
+        private static void InitServicePointManager(string baseAddress, ClientSettings settings) 
+        {
+            var servicePoint = ServicePointManager.FindServicePoint(new Uri(baseAddress));
+
+            if (settings.ConnectionLeaseTimeout != null) 
+            {
+                servicePoint.ConnectionLeaseTimeout = settings.ConnectionLeaseTimeout.Value;
+            }
+
+            if (settings.ConnectionLimit != null) 
+            {
+                servicePoint.ConnectionLimit = settings.ConnectionLimit.Value;
+            }
+
+            if (settings.DnsRefreshTimeout != null)
+            {
+                ServicePointManager.DnsRefreshTimeout = settings.DnsRefreshTimeout.Value;
+            }
+        }
+        
         /// <summary>
         /// Specifies the default settings that should be used for each request.  Any request specific settings,
         /// if specified, will be merged into the default settings.  If not specified, the default settings are
@@ -95,14 +96,14 @@ namespace NetFusion.Rest.Client
                 throw new ArgumentNullException(nameof(factory));
             return this;
         }
-
+        
         /// <summary>
         /// Indicates that a header should be added containing a correlation id value.
         /// </summary>
         /// <param name="headerName">The name of the header to use.  If not specified, 
         /// a default value is used.</param>
         /// <returns>Builder for method chaining.</returns>
-        public RequestClientBuilder AddRequestCorrelationId(string headerName = CorrelationHeaderName)
+        public RequestClientBuilder AddRequestCorrelationId(string headerName)
         {
             if (string.IsNullOrWhiteSpace(headerName))
             {
@@ -121,26 +122,6 @@ namespace NetFusion.Rest.Client
         public RequestClientBuilder BeforeEachRequest(Action<IRequestSettings> settings)
         {
             _eachRequestAction = settings ?? throw new ArgumentNullException(nameof(settings));
-            return this;
-        }
-
-        /// <summary>
-        /// Registers a handler to be called when a specific HTTP status code is returned.
-        /// </summary>
-        /// <param name="code">The status code to register handler.</param>
-        /// <param name="handler">The handler to call for a HTTP status code.</param>
-        /// <returns>Builder for method chaining.</returns>
-        public RequestClientBuilder OnStatusCode(HttpStatusCode code, Func<ErrorStatusContext, Task<bool>> handler)
-        {
-            _statusCodeHandlers ??= new ConcurrentDictionary<HttpStatusCode, Func<ErrorStatusContext, Task<bool>>>();
-
-            if (_statusCodeHandlers.ContainsKey(code))
-            {
-                throw new InvalidOperationException(
-                    $"The status code: {code} already has a registered handler.");
-            }
-
-            _statusCodeHandlers[code] = handler ?? throw new ArgumentNullException(nameof(handler));
             return this;
         }
 
@@ -192,16 +173,7 @@ namespace NetFusion.Rest.Client
             }
 
             var requestClient = new RequestClient(httpClient, _logger, _mediaTypeSerializers, settings);
-
-            // If the configuration specified a service entry point path, configure a delegate to load
-            // the resource of first successful response.
-            if (_entryPointPath != null)
-            {
-//                _apiEntryPointLazy = new Lazy<Task<HalEntryPointResource>>(
-//                    () => GetEntryPointResource(requestClient), true);
-
-              //  requestClient.SetApiServiceProvider(this);
-            }
+            
 
             // If the configuration specified a method to invoke before each request, pass it on to the client.
             if (_eachRequestAction != null)
@@ -213,68 +185,11 @@ namespace NetFusion.Rest.Client
             {
                 requestClient.AddCorrelationId(_correlationIdHeaderName);
             }
-
-            if (_statusCodeHandlers != null)
-            {
-                requestClient.SetStatusCodeHandlers(_statusCodeHandlers);
-            }
+            
 
             return requestClient;
         }
-
-//        // Invoked by the created request client when the entry point is requested.
-//        Task<HalEntryPointResource> IServiceEntryApiProvider.GetEntryPointResource()
-//        {
-//            if (_apiEntryPointLazy == null)
-//            {
-//                throw new InvalidOperationException(
-//                    $"The request client with the base address: {_baseAddressUri} does not have " +
-//                     "entry point path specified.");
-//            }
-//
-//            return _apiEntryPointLazy.Value;
-//        }
-
-        private static void InitServicePointManager(string baseAddress, ClientSettings settings) 
-        {
-            var servicePoint = ServicePointManager.FindServicePoint(new Uri(baseAddress));
-
-            if (settings.ConnectionLeaseTimeout != null) 
-            {
-                servicePoint.ConnectionLeaseTimeout = settings.ConnectionLeaseTimeout.Value;
-            }
-
-            if (settings.ConnectionLimit != null) 
-            {
-                servicePoint.ConnectionLimit = settings.ConnectionLimit.Value;
-            }
-
-            if (settings.DnsRefreshTimeout != null)
-            {
-                ServicePointManager.DnsRefreshTimeout = settings.DnsRefreshTimeout.Value;
-            }
-        }
-
-        // Attempts to load the entry point resource and resets the lazy loaded state if there
-        // is an exception so future attempts can be made.
-//        private async Task<HalEntryPointResource> GetEntryPointResource(IRequestClient requestClient)
-//        {
-//            try
-//            {
-//                var request = ApiRequest.Get(_entryPointPath);
-//                var response = await requestClient.SendAsync<HalEntryPointResource>(request).ConfigureAwait(false);
-//
-//                response.ThrowIfNotSuccessStatusCode();
-//                return response.Content;
-//            }
-//            catch (Exception ex) 
-//            {
-//                _logger.LogError(ex, "Error loading service entry resource");
-//                _apiEntryPointLazy = new Lazy<Task<HalEntryPointResource>>(() => GetEntryPointResource(requestClient), true);
-//                throw;
-//            }
-//        }
-
+        
         private void AssureDefaultSerializers()
         {
             if (_mediaTypeSerializers != null) return;

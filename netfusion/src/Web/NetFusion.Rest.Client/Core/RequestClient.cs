@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -27,9 +26,7 @@ namespace NetFusion.Rest.Client.Core
         private readonly IRequestSettings _defaultRequestSettings;
 
         // Optional registered services specified using RequestClientBuilder:
-        private IServiceEntryApiProvider _serviceApiProvider;
         private Action<IRequestSettings> _eachRequestAction;
-        private IDictionary<HttpStatusCode, Func<ErrorStatusContext, Task<bool>>> _statusHandlers;
 
         /// <summary>
         /// Initializes an instance of the client with its associated HttpClient delegated to 
@@ -60,20 +57,10 @@ namespace NetFusion.Rest.Client.Core
             
             _mediaTypeSerializers = new ConcurrentDictionary<string, IMediaTypeSerializer>(contentSerializers);
         }
-
-//        public async Task<HalResource<TEntry>> GetApiEntry<TEntry>()
-//            where TEntry: EntryPointModel
-//        {
-//            return await _serviceApiProvider.GetEntryPointResource().ConfigureAwait(false);
-//        }
+        
 
         // Called by builder when creating client...
         // ---------------------------------------------
-        internal void SetApiServiceProvider(IServiceEntryApiProvider provider)
-        {
-            _serviceApiProvider = provider ?? throw new ArgumentNullException(nameof(provider));
-        }
-
         internal void SetEachRequestAction(Action<IRequestSettings> config)
         {
             _eachRequestAction = config ?? throw new ArgumentNullException(nameof(config));
@@ -86,11 +73,7 @@ namespace NetFusion.Rest.Client.Core
 
             _correlationHeaderName = headerName;
         }
-
-        internal void SetStatusCodeHandlers(IDictionary<HttpStatusCode, Func<ErrorStatusContext, Task<bool>>> handlers)
-        {
-            _statusHandlers = handlers ?? throw new ArgumentNullException(nameof(handlers));
-        }
+        
 
         // -----
 
@@ -128,7 +111,6 @@ namespace NetFusion.Rest.Client.Core
             LogRequest(request);
             
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
-            responseMsg = await HandleIfErrorStatusCode(request, responseMsg, cancellationToken);
 
             var response = new ApiResponse(requestMsg, responseMsg);
             await SetErrorContext(responseMsg, response);
@@ -145,7 +127,6 @@ namespace NetFusion.Rest.Client.Core
             
             HalResource<TContent> resource = null;
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
-            responseMsg = await HandleIfErrorStatusCode(request, responseMsg, cancellationToken);
 
             if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
             {
@@ -166,7 +147,6 @@ namespace NetFusion.Rest.Client.Core
 
             LogRequest(request);
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
-            responseMsg = await HandleIfErrorStatusCode(request, responseMsg, cancellationToken);
 
             object resource = null;
             if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
@@ -195,44 +175,6 @@ namespace NetFusion.Rest.Client.Core
                 var errorBody = await responseMsg.Content.ReadAsStringAsync();
                 response.SetErrorContext(errorBody);
             }
-        }
-        
-        private async Task<HttpResponseMessage> HandleIfErrorStatusCode(
-            ApiRequest request,
-            HttpResponseMessage responseMsg,
-            CancellationToken cancellationToken)
-        {
-            if (responseMsg.IsSuccessStatusCode || (request.Settings?.SuppressStatusCodeHandlers ?? false))
-            {
-                return responseMsg;
-            }
-
-            // Determine if there is a registered handler for the status code:
-            if (_statusHandlers == null || !_statusHandlers.ContainsKey(responseMsg.StatusCode))
-            {
-                return responseMsg;
-            }
-            
-            _logger.LogDebug($"Handler for response status code: {responseMsg.StatusCode} being called.");
-
-            var handler = _statusHandlers[responseMsg.StatusCode];
-            
-            var context = new ErrorStatusContext(this, responseMsg, 
-                _defaultRequestSettings, 
-                request.Settings);
-
-            // Call the handler associated with the status code so it can determine
-            // if the request should be retried:
-            bool retryRequest = await handler(context);
-            if (retryRequest)
-            {
-                _logger.LogDebug($"Attempting to retry request: {request.RequestUri}");
-                
-                HttpRequestMessage requestMsg = await CreateRequestMessage(request);
-                responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
-            }
-
-            return responseMsg;
         }
 
         private void LogResponse(ApiResponse response)
