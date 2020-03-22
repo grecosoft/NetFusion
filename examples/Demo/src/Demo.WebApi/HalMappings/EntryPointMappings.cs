@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Demo.WebApi.Controllers;
 using Demo.WebApi.Resources;
 using Microsoft.AspNetCore.Mvc;
+using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Hal;
 
