@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using NetFusion.Rest.Resources.Hal;
-using CustomerModel = WebTests.Rest.ClientRequests.Server.CustomerModel;
+using WebTests.Rest.ClientRequests.Server;
 
 namespace WebTests.Rest.ClientRequests
 {

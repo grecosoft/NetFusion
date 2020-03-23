@@ -2,11 +2,10 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Rest.Server.Plugin;
 using WebTests.Hosting;
 using NetFusion.Test.Plugins;
-using CustomerResourceMap = WebTests.Rest.ClientRequests.Server.CustomerResourceMap;
-using IMockedService = WebTests.Rest.ClientRequests.IMockedService;
-using LinkedResource = WebTests.Rest.LinkGeneration.Server.LinkedResource;
-using LinkedResourceMap = WebTests.Rest.LinkGeneration.Server.LinkedResourceMap;
-using MockUnitTestService = WebTests.Rest.ClientRequests.MockUnitTestService;
+using WebTests.Rest.ClientRequests;
+using WebTests.Rest.ClientRequests.Server;
+using WebTests.Rest.LinkGeneration.Server;
+
 
 namespace WebTests.Rest.Setup
 {
@@ -20,7 +19,7 @@ namespace WebTests.Rest.Setup
                     {
                         ServerResources = new[] {mockResource}
                     };
-
+                    
                     services.AddSingleton<IMockedService>(serviceMock);
                 })
                 .ComposedFrom(compose =>

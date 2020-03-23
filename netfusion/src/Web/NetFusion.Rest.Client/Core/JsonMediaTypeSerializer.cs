@@ -13,14 +13,21 @@ namespace NetFusion.Rest.Client.Core
     /// </summary>
     public class JsonMediaTypeSerializer : IMediaTypeSerializer
     {
-        private JsonSerializerOptions _serializerOptions;
-        
-        public void Initialize(ClientSettings settings)
+        private readonly JsonSerializerOptions _serializerOptions;
+
+        public JsonMediaTypeSerializer(JsonSerializerOptions options)
         {
-            _serializerOptions = settings.SerializerOptions;
+            MediaType = InternetMediaTypes.Json;
+            _serializerOptions = options;
+        }
+        
+        public JsonMediaTypeSerializer(string mediaType, JsonSerializerOptions options)
+        {
+            MediaType = mediaType;
+            _serializerOptions = options;
         }
 
-        public string MediaType => InternetMediaTypes.Json;
+        public string MediaType { get; private set; }
         
         
         public byte[] Serialize(object value)

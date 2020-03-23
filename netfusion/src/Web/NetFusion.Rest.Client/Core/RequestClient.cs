@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using NetFusion.Rest.Client.Settings;
+﻿using NetFusion.Rest.Client.Settings;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using NetFusion.Rest.Resources.Hal;
 
 namespace NetFusion.Rest.Client.Core
@@ -21,34 +21,24 @@ namespace NetFusion.Rest.Client.Core
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger _logger;
-        private string _correlationHeaderName;
-        private readonly ConcurrentDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
-        private readonly IRequestSettings _defaultRequestSettings;
+        private readonly IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
 
-        // Optional registered services specified using RequestClientBuilder:
-        private Action<IRequestSettings> _eachRequestAction;
 
         /// <summary>
         /// Initializes an instance of the client with its associated HttpClient delegated to 
         /// for making network requests.
         /// </summary>
-        /// <param name="httpClient">Reference to a HttpClient instance.</param>
         /// <param name="logger">The logger to use for log messages.</param>
+        /// <param name="httpClient">Reference to a HttpClient instance.</param>
         /// <param name="contentSerializers">Dictionary of serializers keyed by media-type.</param>
-        /// <param name="requestSettings">The default request settings to be used for each request.</param>
-        public RequestClient(HttpClient httpClient, 
-            ILogger logger,
-            IDictionary<string, IMediaTypeSerializer> contentSerializers, 
-            IRequestSettings requestSettings)
+        public RequestClient(ILogger logger,
+            HttpClient httpClient,
+            IDictionary<string, IMediaTypeSerializer> contentSerializers)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient), 
                 "HTTP Client cannot be null.");
-            
-            _logger = logger ?? throw new ArgumentNullException(nameof(httpClient), 
-                "Logger cannot be null.");
 
-            _defaultRequestSettings = requestSettings ?? throw new ArgumentNullException(nameof(requestSettings),
-                "Default Request Settings cannot be null.");
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             if (contentSerializers == null)
             {
@@ -58,24 +48,6 @@ namespace NetFusion.Rest.Client.Core
             _mediaTypeSerializers = new ConcurrentDictionary<string, IMediaTypeSerializer>(contentSerializers);
         }
         
-
-        // Called by builder when creating client...
-        // ---------------------------------------------
-        internal void SetEachRequestAction(Action<IRequestSettings> config)
-        {
-            _eachRequestAction = config ?? throw new ArgumentNullException(nameof(config));
-        }
-
-        internal void AddCorrelationId(string headerName)
-        {
-            if (string.IsNullOrWhiteSpace(headerName))
-                throw new ArgumentException("Correlation header name not specified.", nameof(headerName));
-
-            _correlationHeaderName = headerName;
-        }
-        
-
-        // -----
 
 		public async Task<ApiResponse> SendAsync(ApiRequest request,
             CancellationToken cancellationToken = default)
@@ -201,7 +173,8 @@ namespace NetFusion.Rest.Client.Core
                     $"before making request to server.");
             }
 
-            var requestSettings = _defaultRequestSettings.GetMerged(request.Settings);
+            //var requestSettings = _defaultRequestSettings.GetMerged(request.Settings);
+            var requestSettings = request.Settings;
             request.UsingSettings(requestSettings);
 
             // Check if the request has any embedded names specified.  This allows the client
@@ -211,15 +184,6 @@ namespace NetFusion.Rest.Client.Core
             {
                 requestSettings.QueryString.AddParam("embed", request.EmbeddedNames);
             }
-
-            // Add correlation value to request if configured.
-            if (_correlationHeaderName != null)
-            {
-                var correlationId = Guid.NewGuid().ToString();
-                requestSettings.Headers.Add(_correlationHeaderName, correlationId);
-            }
-
-            _eachRequestAction?.Invoke(requestSettings);
 
             // Build the query string and append to request URL.
             if (requestSettings.QueryString.Params.Any())

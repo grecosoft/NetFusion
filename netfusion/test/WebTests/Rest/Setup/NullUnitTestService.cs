@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Rest.Resources.Hal;
-using CustomerModel = WebTests.Rest.ClientRequests.Server.CustomerModel;
-using IMockedService = WebTests.Rest.ClientRequests.IMockedService;
+using WebTests.Rest.ClientRequests;
+using WebTests.Rest.ClientRequests.Server;
+
 
 namespace WebTests.Rest.Setup
 {

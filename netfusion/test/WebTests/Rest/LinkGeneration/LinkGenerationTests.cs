@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using NetFusion.Rest.Client;
 using WebTests.Hosting;
+using WebTests.Rest.LinkGeneration.Client;
 using WebTests.Rest.LinkGeneration.Server;
 using WebTests.Rest.Setup;
 using Xunit;
-using LinkedResource = WebTests.Rest.LinkGeneration.Server.LinkedResource;
-using LinkedResourceModel = WebTests.Rest.LinkGeneration.Client.LinkedResourceModel;
+
 
 #pragma warning disable 1570
 namespace WebTests.Rest.LinkGeneration

@@ -7,8 +7,6 @@ using WebTests.Hosting;
 using WebTests.Rest.ClientRequests.Server;
 using WebTests.Rest.Setup;
 using Xunit;
-using AddressModel = WebTests.Rest.ClientRequests.Client.AddressModel;
-using CustomerModel = WebTests.Rest.ClientRequests.Client.CustomerModel;
 
 namespace WebTests.Rest.ClientRequests
 {

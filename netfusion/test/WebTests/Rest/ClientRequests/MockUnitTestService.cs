@@ -2,7 +2,8 @@
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Rest.Resources.Hal;
-using CustomerModel = WebTests.Rest.ClientRequests.Server.CustomerModel;
+using WebTests.Rest.ClientRequests.Server;
+
 
 namespace WebTests.Rest.ClientRequests
 {

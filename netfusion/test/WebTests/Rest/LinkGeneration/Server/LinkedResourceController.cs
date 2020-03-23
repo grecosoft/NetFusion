@@ -4,7 +4,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
-using IMockedService = WebTests.Rest.ClientRequests.IMockedService;
+using WebTests.Rest.ClientRequests;
+
 
 namespace WebTests.Rest.LinkGeneration.Server
 {

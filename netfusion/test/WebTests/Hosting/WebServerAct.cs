@@ -54,27 +54,22 @@ namespace WebTests.Hosting
             
             var client = _testServer.CreateClient();
             var logger = _services.GetService<ILogger<WebServerAct>>();
-
-            var settings = new ClientSettings
+            
+            var options = new JsonSerializerOptions
             {
-                SerializerOptions = new JsonSerializerOptions
-                {
-                    IgnoreNullValues = true, 
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                }
+                IgnoreNullValues = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
             
-            var jsonSerializer = new JsonMediaTypeSerializer();
-            jsonSerializer.Initialize(settings);
+            var jsonSerializer = new JsonMediaTypeSerializer(options);
 
             var serializers = new Dictionary<string, IMediaTypeSerializer>
             {
                 { InternetMediaTypes.Json, jsonSerializer },
                 { InternetMediaTypes.HalJson, jsonSerializer }
             };
-            var restClient = new RequestClient(client, logger, serializers, 
-                RequestSettings.Create( c => c.UseHalDefaults()));
-
+            
+            var restClient = new RequestClient(logger, client, serializers);
             var apiResponse = await clientAct(restClient);
             
             return new WebServerResponse(_services, apiResponse);
