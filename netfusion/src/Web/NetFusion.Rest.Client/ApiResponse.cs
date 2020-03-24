@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using NetFusion.Rest.Resources.Hal;
 
 namespace NetFusion.Rest.Client
 {
@@ -126,16 +127,16 @@ namespace NetFusion.Rest.Client
 	/// <summary>
     /// Contains result properties for a submitted request and the response content returned from the server.
 	/// </summary>
-	public class ApiResponse<TContent> : ApiResponse
-        where TContent : class
+	public class ApiResponse<TModel> : ApiResponse
+        where TModel : class
     {
-        public new TContent Content { get; }
+        public HalResource<TModel> Resource { get; }
 
-        public ApiResponse(HttpRequestMessage requestMsg, HttpResponseMessage responseMsg, TContent content)
+        public ApiResponse(HttpRequestMessage requestMsg, HttpResponseMessage responseMsg, HalResource<TModel> content)
             : base(requestMsg, responseMsg)
         {
-            base.Content = content;
             Content = content;
+            Resource = content;
         }        
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NetFusion.Rest.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -11,9 +10,9 @@ namespace NetFusion.Rest.Server.Meta
     /// <summary>
     /// Contains methods creating ResourceLink instances and associating metadata.
     /// </summary>
-    /// <typeparam name="TResource">The type of resource.</typeparam>
-    public class ResourceLinkMeta<TResource>
-        where TResource : class, IResource
+    /// <typeparam name="TSource">The source type associated with metadata.</typeparam>
+    public class ResourceLinkMeta<TSource>
+        where TSource : class
     {
         private readonly List<ResourceLink> _resourceLinks = new List<ResourceLink>();
       
@@ -25,6 +24,8 @@ namespace NetFusion.Rest.Server.Meta
 
         protected void AddResourceLink(ResourceLink resourceLink)
         {
+            if (resourceLink == null) throw new ArgumentNullException(nameof(resourceLink));
+            
             _resourceLinks.Add(resourceLink);
         }
         
@@ -37,13 +38,13 @@ namespace NetFusion.Rest.Server.Meta
         /// <param name="href">The URI associated with the relation.</param>
         /// <param name="httpMethod">The HTTP method used to invoke the URI.</param>
         /// <returns>Object used to add optional metadata to the created link.</returns>
-        public LinkDescriptor<TResource> Href(string relName, HttpMethod httpMethod, string href)
+        public LinkDescriptor<TSource> Href(string relName, HttpMethod httpMethod, string href)
         {
             if (string.IsNullOrWhiteSpace(relName)) throw new ArgumentException("Relation Name not specified.", nameof(relName));
             if (string.IsNullOrWhiteSpace(href)) throw new ArgumentException("HREF value not specified.", nameof(href));
 
             var resourceLink = new ResourceLink();
-            var linkDescriptor = new LinkDescriptor<TResource>(resourceLink);
+            var linkDescriptor = new LinkDescriptor<TSource>(resourceLink);
 
             AddResourceLink(resourceLink);
 
@@ -55,24 +56,24 @@ namespace NetFusion.Rest.Server.Meta
         }
 
         /// <summary>
-        /// Create a named link based on string interpolation based on resource properties. 
+        /// Create a named link based on string interpolation based on a resource's model properties. 
         /// </summary>
         /// <param name="relName">The relation name.</param>
         /// <param name="httpMethod">The HTTP method used to invoke URI.</param>
-        /// <param name="resourceUrl">Function delegate passed the resource during link resolution and
+        /// <param name="resourceUrl">Function delegate passed the model during link resolution and
         /// returns a populated URI or partial populated URI (i.e. Template) based on the properties
-        /// of the passed resourced.</param>
+        /// of the passed resource.</param>
         /// <returns>Object used to add optional metadata to the created link.</returns>
-        public LinkDescriptor<TResource> Href(string relName, HttpMethod httpMethod, Expression<Func<TResource, string>> resourceUrl)
+        public LinkDescriptor<TSource> Href(string relName, HttpMethod httpMethod, Expression<Func<TSource, string>> resourceUrl)
         {
             if (string.IsNullOrWhiteSpace(relName)) throw new ArgumentException(
                 "Relation Name not specified.", nameof(relName));
 
             if (resourceUrl == null) throw new ArgumentNullException(nameof(resourceUrl), 
-                "Resource Delegate cannot be null.");
+                "Resource Url Delegate cannot be null.");
 
-            var resourceLink = new InterpolatedLink<TResource>(resourceUrl);
-            var linkDescriptor = new LinkDescriptor<TResource>(resourceLink);
+            var resourceLink = new InterpolatedLink<TSource>(resourceUrl);
+            var linkDescriptor = new LinkDescriptor<TSource>(resourceLink);
 
             AddResourceLink(resourceLink);
 
@@ -87,23 +88,24 @@ namespace NetFusion.Rest.Server.Meta
     
 
     /// <summary>
-    ///  Contains methods for creating ResourceLink instances based on expressions for a given controller and resource type.
+    ///  Contains methods for creating ResourceLink instances based on expressions for a given
+    /// controller and resource's associated model type.
     /// </summary>
     /// <typeparam name="TController">The controller type associated with the link metadata.</typeparam>
-    /// <typeparam name="TResource">The resource type associated with the link metadata.</typeparam>
-    public class ResourceLinkMeta<TController, TResource> : ResourceLinkMeta<TResource>
+    /// <typeparam name="TSource">The source type associated with the link metadata.</typeparam>
+    public class ResourceLinkMeta<TController, TSource> : ResourceLinkMeta<TSource>
         where TController : ControllerBase
-        where TResource: class, IResource
+        where TSource: class
     {
         /// <summary>
         /// Used to specify a fully populated link associated with a specified relation name. 
         /// </summary>
         /// <param name="relName">The relation name.</param>
-        /// <param name="action">Controller type metadata used to select a controller's action method and 
-        /// the resource properties that should be mapped to the action method arguments used during link resolution.</param>
+        /// <param name="action">Controller type metadata used to select a controller's action method and the
+        /// model's properties that should be mapped to the action method arguments used during link resolution.</param>
         /// <returns>Object used to add optional metadata to the created link.</returns>
-        public LinkDescriptor<TResource> Url(string relName,
-            Expression<Action<TController, TResource>> action)
+        public LinkDescriptor<TSource> Url(string relName,
+            Expression<Action<TController, TSource>> action)
         {
             if (string.IsNullOrWhiteSpace(relName)) throw new ArgumentException(
                 "Relation Name not specified.", nameof(relName));
@@ -112,8 +114,8 @@ namespace NetFusion.Rest.Server.Meta
                 "Controller Action selector cannot be null.");
 
             var resourceLink = new ControllerActionLink();
-            var actionSelector = new ControllerActionRouteSelector<TController, TResource>(resourceLink, action);          
-            var linkDescriptor = new LinkDescriptor<TResource>(resourceLink);
+            var actionSelector = new ControllerActionRouteSelector<TController, TSource>(resourceLink, action);          
+            var linkDescriptor = new LinkDescriptor<TSource>(resourceLink);
 
             AddResourceLink(resourceLink);
 
@@ -135,7 +137,7 @@ namespace NetFusion.Rest.Server.Meta
         /// <param name="action">Controller type metadata used to select a controller's action method containing
         /// URI route tokens to be populated by the consuming client.</param>
         /// <returns>Object used to add optional metadata to the created link.</returns>
-        public LinkDescriptor<TResource> UrlTemplate<TResponse>(string relName, 
+        public LinkDescriptor<TSource> UrlTemplate<TResponse>(string relName, 
             Expression<Func<TController, Func<TResponse>>> action)
         {
             return SetUrlTemplateMetadata(relName, action);
@@ -151,7 +153,7 @@ namespace NetFusion.Rest.Server.Meta
         /// <param name="action">Controller type metadata used to select a controller's action method containing
         /// URI route tokens to be populated by the consuming client.</param>
         /// <returns>Object used to add optional metadata to the created link.</returns>
-        public LinkDescriptor<TResource> UrlTemplate<T1, TResponse>(string relName, 
+        public LinkDescriptor<TSource> UrlTemplate<T1, TResponse>(string relName, 
             Expression<Func<TController, Func<T1, TResponse>>> action)
         {
             return SetUrlTemplateMetadata(relName, action);
@@ -168,7 +170,7 @@ namespace NetFusion.Rest.Server.Meta
         /// <param name="action">Controller type metadata used to select a controller's action method containing
         /// URI route tokens to be populated by the consuming client.</param>
         /// <returns>Object used to add optional metadata to the created link.</returns>
-        public LinkDescriptor<TResource> UrlTemplate<T1, T2, TResponse>(string relName, 
+        public LinkDescriptor<TSource> UrlTemplate<T1, T2, TResponse>(string relName, 
             Expression<Func<TController, Func<T1, T2, TResponse>>> action)
         {
             return SetUrlTemplateMetadata(relName, action);
@@ -186,7 +188,7 @@ namespace NetFusion.Rest.Server.Meta
         /// <param name="action">Controller type metadata used to select a controller's action method containing
         /// URI route tokens to be populated by the consuming client.</param>
         /// <returns>Object used to add optional metadata to the created link.</returns>
-        public LinkDescriptor<TResource> UrlTemplate<T1, T2, T3, TResponse>(string relName, 
+        public LinkDescriptor<TSource> UrlTemplate<T1, T2, T3, TResponse>(string relName, 
             Expression<Func<TController, Func<T1, T2, T3, TResponse>>> action)
         {
             return SetUrlTemplateMetadata(relName, action);
@@ -205,7 +207,7 @@ namespace NetFusion.Rest.Server.Meta
         /// <param name="action">Controller type metadata used to select a controller's action method containing
         /// URI route tokens to be populated by the consuming client.</param>
         /// <returns>Object used to add optional metadata to the created link.</returns>
-        public LinkDescriptor<TResource> UrlTemplate<T1, T2, T3, T4, TResponse>(string relName, 
+        public LinkDescriptor<TSource> UrlTemplate<T1, T2, T3, T4, TResponse>(string relName, 
             Expression<Func<TController, Func<T1, T2, T3, T4, TResponse>>> action)
         {
             return SetUrlTemplateMetadata(relName, action);
@@ -225,13 +227,13 @@ namespace NetFusion.Rest.Server.Meta
         /// <param name="action">Controller type metadata used to select a controller's action method containing
         /// URI route tokens to be populated by the consuming client.</param>
         /// <returns>Object used to add optional metadata to the created link.</returns>
-        public LinkDescriptor<TResource> UrlTemplate<T1, T2, T3, T4, T5, TResponse>(string relName, 
+        public LinkDescriptor<TSource> UrlTemplate<T1, T2, T3, T4, T5, TResponse>(string relName, 
             Expression<Func<TController, Func<T1, T2, T3, T4, T5, TResponse>>> action)
         {
             return SetUrlTemplateMetadata(relName, action);
         }
 
-        private LinkDescriptor<TResource> SetUrlTemplateMetadata(string relName, LambdaExpression action)
+        private LinkDescriptor<TSource> SetUrlTemplateMetadata(string relName, LambdaExpression action)
         {
             if (string.IsNullOrWhiteSpace(relName)) throw new ArgumentException(
                 "Relation Name not specified.", nameof(relName));
@@ -241,7 +243,7 @@ namespace NetFusion.Rest.Server.Meta
 
             var resourceLink = new TemplateUrlLink();
             var actionSelector = new ControllerActionTemplateSelector<TController>(resourceLink, action);
-            var linkDescriptor = new LinkDescriptor<TResource>(resourceLink);
+            var linkDescriptor = new LinkDescriptor<TSource>(resourceLink);
 
             AddResourceLink(resourceLink);
 

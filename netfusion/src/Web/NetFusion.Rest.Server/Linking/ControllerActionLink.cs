@@ -24,7 +24,7 @@ namespace NetFusion.Rest.Server.Linking
 
         /// <summary>
         /// The controller's action route parameters and the corresponding
-        /// resource properties from which they are populated.
+        /// resource state properties from which they are populated.
         /// </summary>
         public IReadOnlyCollection<RouteParameter> RouteParameters { get; private set; }
 
@@ -36,9 +36,9 @@ namespace NetFusion.Rest.Server.Linking
         private readonly List<RouteParameter> _routeValues = new List<RouteParameter>();
 
         /// <summary>
-        /// Adds a mapping indicating the resource property corresponding to an action parameter.
+        /// Adds a mapping indicating the resource's state properties corresponding to an action parameter.
         /// </summary>
-        /// <param name="routeParam">Mapping between action parameter and corresponding resource property.</param>
+        /// <param name="routeParam">Mapping between action parameter and corresponding resource's state property.</param>
         public void AddRouteValue(RouteParameter routeParam)
         {
             if (routeParam == null) throw new ArgumentNullException(nameof(routeParam),

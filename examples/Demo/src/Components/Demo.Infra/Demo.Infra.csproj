@@ -8,17 +8,17 @@
     <ProjectReference Include="..\Demo.App\Demo.App.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.MongoDB" Version="3.2.157" />
-    <PackageReference Include="NetFusion.RabbitMQ" Version="3.2.157" />
-    <PackageReference Include="NetFusion.Redis" Version="3.2.157" />
-    <PackageReference Include="NetFusion.Roslyn" Version="3.2.157" />
+    <PackageReference Include="NetFusion.MongoDB" Version="9.9.21" />
+    <PackageReference Include="NetFusion.RabbitMQ" Version="9.9.21" />
+    <PackageReference Include="NetFusion.Redis" Version="9.9.21" />
+    <PackageReference Include="NetFusion.Roslyn" Version="9.9.21" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="3.2.157" />
-    <PackageReference Include="NetFusion.Base" Version="3.2.157" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.157" />
-    <PackageReference Include="NetFusion.Settings" Version="3.2.157" />
-    <PackageReference Include="NetFusion.Messaging" Version="3.2.157" />
+    <PackageReference Include="NetFusion.Common" Version="9.9.21" />
+    <PackageReference Include="NetFusion.Base" Version="9.9.21" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="9.9.21" />
+    <PackageReference Include="NetFusion.Settings" Version="9.9.21" />
+    <PackageReference Include="NetFusion.Messaging" Version="9.9.21" />
   </ItemGroup>
 </Project>

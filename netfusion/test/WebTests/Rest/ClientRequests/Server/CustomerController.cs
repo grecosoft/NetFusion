@@ -1,74 +1,85 @@
-﻿using System.Linq;
+﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources.Hal;
-using NetFusion.Rest.Server.Hal;
-using WebTests.Rest.Setup;
 
 namespace WebTests.Rest.ClientRequests.Server
 {
-    [Route("api/customers")]
-    public class CustomerController : Controller
+    [ApiController, Route("api/customers")]
+    public class CustomerController : ControllerBase
     {
-        private readonly IMockedService _mockedService;
-        private readonly IHalEmbeddedResourceContext _resourceContext;
-
-        public CustomerController(
-            IMockedService mockedService,
-            IHalEmbeddedResourceContext resourceContext)
-        {
-            _mockedService = mockedService;
-            _resourceContext = resourceContext;
-        }
-
-        [HttpGet("pass-through")]
-        public CustomerResource GetPassThrough()
-        {
-            return new CustomerResource();
-        }       
-
-        [HttpPost("pass-through")]
-        public CustomerResource PostPassThrough([FromBody]CustomerResource resource)
-        {
-            _mockedService.ServerReceivedResource = resource;
-            return new CustomerResource();
-        }
-
         [HttpGet("{id}")]
-        public CustomerResource GetCustomer(string id)
+        public IHalResource GetCustomer(string id)
         {
-            return _mockedService.Customers.First();
+            var customer = new CustomerModel
+            {
+                CustomerId = Guid.NewGuid().ToString(),
+                FirstName = "Mark",
+                LastName = "Twain"
+            };
+
+            return customer.AsResource();
         }
 
         [HttpGet("embedded/resource")]
-        public CustomerResource GetEmbeddedCustomer(string id)
+        public IHalResource GetEmbeddedAddress(string id)
         {
-            if (_resourceContext.RequestedEmbeddedResources.Length == 0)
+            var customer = new CustomerModel
             {
-                return _mockedService.Customers.First();
-            }
-
-            var customer = _mockedService.Customers.First();
-            var resource =  new CustomerResource
-            {
-                CustomerId = customer.CustomerId,
-                Age = customer.Age,
-                FirstName = customer.FirstName,
-                LastName = customer.LastName,
+                CustomerId = id,
+                FirstName = "Mark",
+                LastName = "Twain"
             };
 
-            foreach (var embeddedResource in customer.Embedded)
+            var address = new AddressModel
             {
-                if (_resourceContext.RequestedEmbeddedResources.Contains(embeddedResource.Key))
-                {
-                    var halResource = embeddedResource.Value as IHalResource;
-                    if (halResource != null)
-                    {
+                AddressId = Guid.NewGuid().ToString(),
+                Street = "111 West Hill Drive",
+                City = "Chapel Hill",
+                State = "NC",
+                ZipCode = "27517"
+                
+            };
 
-                    }
-                    resource.Embed(halResource, embeddedResource.Key);
-                }
-            }
+            var resource = customer.AsResource();
+            resource.EmbedModel(address.AsResource(), "primary-address");
+            return resource;
+        }
+        
+        [HttpGet("embedded/collection")]
+        public IHalResource GetEmbeddedAddresses(string id)
+        {
+            var customer = new CustomerModel
+            {
+                CustomerId = id,
+                FirstName = "Mark",
+                LastName = "Twain"
+            };
 
+            var firstAddress = new AddressModel
+            {
+                AddressId = Guid.NewGuid().ToString(),
+                Street = "111 West Hill Drive",
+                City = "Chapel Hill",
+                State = "NC",
+                ZipCode = "27517"
+            };
+            
+            var secondAddress = new AddressModel
+            {
+                AddressId = Guid.NewGuid().ToString(),
+                Street = "55 Linux Drive",
+                City = "DurhamNd",
+                State = "NC",
+                ZipCode = "27517"
+            };
+
+            var resource = customer.AsResource();
+            resource.EmbedModel(new[]
+            {
+                firstAddress.AsResource(), 
+                secondAddress.AsResource()
+            },  "addresses");
+            
             return resource;
         }
     }

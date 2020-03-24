@@ -1,9 +1,10 @@
 ﻿using System;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
-using Newtonsoft.Json;
 using System.IO;
 using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace NetFusion.Rest.Client.Core
 {
@@ -12,30 +13,38 @@ namespace NetFusion.Rest.Client.Core
     /// </summary>
     public class JsonMediaTypeSerializer : IMediaTypeSerializer
     {
-        public string MediaType => InternetMediaTypes.Json;
+        private readonly JsonSerializerOptions _serializerOptions;
 
-        public byte[] Serialize(object value)
+        public JsonMediaTypeSerializer(JsonSerializerOptions options)
         {
-            string json = JsonConvert.SerializeObject(value);
-            return Encoding.UTF8.GetBytes(json);
-        }
-
-        public T Deserialize<T>(Stream responseStream)
-        {
-            var serializer = new JsonSerializer();
-            using (var reader = new StreamReader(responseStream))
-            {
-                return (T)serializer.Deserialize(reader, typeof(T));
-            }
+            MediaType = InternetMediaTypes.Json;
+            _serializerOptions = options;
         }
         
-        public object Deserialize(Stream responseStream, Type type)
+        public JsonMediaTypeSerializer(string mediaType, JsonSerializerOptions options)
         {
-            var serializer = new JsonSerializer();
-            using (var reader = new StreamReader(responseStream))
-            {
-                return serializer.Deserialize(reader, type);
-            }
+            MediaType = mediaType;
+            _serializerOptions = options;
+        }
+
+        public string MediaType { get; private set; }
+        
+        
+        public byte[] Serialize(object value)
+        {
+            string json = JsonSerializer.Serialize(value);
+            return Encoding.UTF8.GetBytes(json);
+
+        }
+
+        public Task<T> Deserialize<T>(Stream responseStream)
+        {
+            return JsonSerializer.DeserializeAsync<T>(responseStream, _serializerOptions).AsTask();
+        }
+        
+        public Task<object> Deserialize(Stream responseStream, Type type)
+        {
+            return JsonSerializer.DeserializeAsync(responseStream, type, _serializerOptions).AsTask();
         }
     }
 }

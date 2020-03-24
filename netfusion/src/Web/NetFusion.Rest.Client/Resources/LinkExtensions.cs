@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NetFusion.Rest.Resources;
 
 namespace NetFusion.Rest.Client.Resources
 {

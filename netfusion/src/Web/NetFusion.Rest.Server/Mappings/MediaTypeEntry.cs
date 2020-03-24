@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace NetFusion.Rest.Server.Mappings
 {
     /// <summary>
-    /// Used to store metadata associated with resources for a specific media type.
+    /// Used to store metadata associated with resources for a specific media-type.
     /// </summary>
     public class MediaTypeEntry 
     {
@@ -31,21 +31,21 @@ namespace NetFusion.Rest.Server.Mappings
         }
 
         /// <summary>
-        /// Returns the metadata associated with a resource.
+        /// Returns the metadata associated with a source type.
         /// </summary>
         /// <returns>The resource metadata and boolean flag if found.</returns>
-        /// <param name="resourceType">The resource type.</param>
-        public (IResourceMeta meta, bool ok) GetResourceTypeMeta(Type resourceType)
+        /// <param name="sourceType">The type to determine if there is associated metadata.</param>
+        public (IResourceMeta meta, bool ok) GetResourceTypeMeta(Type sourceType)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType),
-                "Resource type not specified.");
+            if (sourceType == null) throw new ArgumentNullException(nameof(sourceType),
+                "Source type not specified.");
 
-            bool isFound = _resourceTypeMeta.TryGetValue(resourceType, out IResourceMeta resourceMeta);
+            bool isFound = _resourceTypeMeta.TryGetValue(sourceType, out IResourceMeta resourceMeta);
             return (resourceMeta, isFound);
         }
 
         /// <summary>
-        /// Adds the resource metadata associated with a specific resource type.
+        /// Adds the resource metadata associated with a source type.
         /// </summary>
         /// <param name="resourceMeta">The resource metadata.</param>
         public void AddResourceMeta(IResourceMeta resourceMeta)
@@ -53,14 +53,14 @@ namespace NetFusion.Rest.Server.Mappings
             if (resourceMeta == null) throw new ArgumentNullException(nameof(resourceMeta),
                 "Resource metadata cannot be null.");
 
-            if (_resourceTypeMeta.ContainsKey(resourceMeta.ResourceType)) 
+            if (_resourceTypeMeta.ContainsKey(resourceMeta.SourceType)) 
             {
                 throw new InvalidOperationException(
-                    $"Resource metadata already specified for resource type: {resourceMeta.ResourceType.FullName} " + 
+                    $"Resource metadata already specified for source type: {resourceMeta.SourceType.FullName} " + 
                     $"For media-type: {MediaType}");
             }
 
-            _resourceTypeMeta[resourceMeta.ResourceType] = resourceMeta;
+            _resourceTypeMeta[resourceMeta.SourceType] = resourceMeta;
         }
     }
 }

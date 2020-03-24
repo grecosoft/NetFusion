@@ -1,4 +1,5 @@
 using System.Linq;
+using Demo.Core.Plugin;
 
 namespace Demo.Core
 {

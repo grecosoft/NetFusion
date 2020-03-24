@@ -4,9 +4,9 @@ using System.Reflection;
 namespace NetFusion.Rest.Server.Linking
 {
     /// <summary>
-    /// This class maps the action method parameter name to the corresponding resource's named property.
-    /// This mapping is executed at runtime to obtain the resource's property value to be used as the 
-    /// corresponding route-value.
+    /// This class maps the action method parameter name to the corresponding state named property.
+    /// This mapping is executed at runtime to obtain the resource's state property values to be used
+    /// as the corresponding route-values.
     /// </summary>
     public class RouteParameter
     {
@@ -16,44 +16,44 @@ namespace NetFusion.Rest.Server.Linking
         public string ActionParamName { get; }
 
         /// <summary>
-        /// The property on the resource corresponding to the ActionParamName.  When generating links,
-        /// the value of this property on the resource is used as the corresponding route-value.
+        /// The property on resource's state corresponding to the ActionParamName.  When generating
+        /// links, the value of this property on the sate is used as the corresponding route-value.
         /// </summary>
-        public string ResourcePropName { get; }
+        public string SourcePropName { get; }
 
         /// <summary>
-        /// Information for the property on the resource corresponding to the ResourcePropName.
+        /// Information for the property on the resource's state corresponding to the ModelPropName.
         /// </summary>
-        public PropertyInfo ResourcePropInfo { get; }
+        public PropertyInfo SourcePropInfo { get; }
 
         /// <summary>
-        /// The method to be called to obtain the resource property value corresponding to the
+        /// The method to be called to obtain the state's property value corresponding to the
         /// controller's action method route-value.
         /// </summary>
-        public MethodInfo ResourceMethodInfo { get;  }
+        public MethodInfo SourceMethodInfo { get;  }
 
-        public RouteParameter(string actionParamName, PropertyInfo resourcePropInfo)
+        public RouteParameter(string actionParamName, PropertyInfo statePropInfo)
         {
             if (string.IsNullOrWhiteSpace(actionParamName))
                 throw new ArgumentException("Action parameter name not specified.", nameof(actionParamName));
 
-            if (resourcePropInfo == null) throw new ArgumentNullException(nameof(resourcePropInfo),
-                "Resource property cannot be null.");
+            if (statePropInfo == null) throw new ArgumentNullException(nameof(statePropInfo),
+                "State property cannot be null.");
 
             ActionParamName = actionParamName;
-            ResourcePropName = resourcePropInfo.Name;
-            ResourcePropInfo = resourcePropInfo;
-            ResourceMethodInfo = resourcePropInfo.GetGetMethod();
+            SourcePropName = statePropInfo.Name;
+            SourcePropInfo = statePropInfo;
+            SourceMethodInfo = statePropInfo.GetGetMethod();
         }
 
-        // Called at runtime to receive the value of the resource property corresponding
+        // Called at runtime to receive the value of the state's property corresponding
         // to the action method's route parameter.
-        public object GetPropValue(object resource)
+        public object GetSourcePropValue(object source)
         {
-            if (resource == null)throw new ArgumentNullException(nameof(resource), 
-                "Resource not specified.");
+            if (source == null)throw new ArgumentNullException(nameof(source), 
+                "Source not specified.");
 
-            return ResourceMethodInfo.Invoke(resource, null);
+            return SourceMethodInfo.Invoke(source, null);
         }
     }
 }

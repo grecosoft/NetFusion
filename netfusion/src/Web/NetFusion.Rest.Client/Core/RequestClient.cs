@@ -1,15 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
-using NetFusion.Rest.Client.Resources;
-using NetFusion.Rest.Client.Settings;
+﻿using NetFusion.Rest.Client.Settings;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using NetFusion.Rest.Resources.Hal;
 
 namespace NetFusion.Rest.Client.Core
 {
@@ -22,36 +21,24 @@ namespace NetFusion.Rest.Client.Core
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger _logger;
-        private string _correlationHeaderName;
-        private readonly ConcurrentDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
-        private readonly IRequestSettings _defaultRequestSettings;
+        private readonly IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
 
-        // Optional registered services specified using RequestClientBuilder:
-        private IServiceEntryApiProvider _serviceApiProvider;
-        private Action<IRequestSettings> _eachRequestAction;
-        private IDictionary<HttpStatusCode, Func<ErrorStatusContext, Task<bool>>> _statusHandlers;
 
         /// <summary>
         /// Initializes an instance of the client with its associated HttpClient delegated to 
         /// for making network requests.
         /// </summary>
-        /// <param name="httpClient">Reference to a HttpClient instance.</param>
         /// <param name="logger">The logger to use for log messages.</param>
+        /// <param name="httpClient">Reference to a HttpClient instance.</param>
         /// <param name="contentSerializers">Dictionary of serializers keyed by media-type.</param>
-        /// <param name="requestSettings">The default request settings to be used for each request.</param>
-        public RequestClient(HttpClient httpClient, 
-            ILogger logger,
-            IDictionary<string, IMediaTypeSerializer> contentSerializers, 
-            IRequestSettings requestSettings)
+        public RequestClient(ILogger logger,
+            HttpClient httpClient,
+            IDictionary<string, IMediaTypeSerializer> contentSerializers)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient), 
                 "HTTP Client cannot be null.");
-            
-            _logger = logger ?? throw new ArgumentNullException(nameof(httpClient), 
-                "Logger cannot be null.");
 
-            _defaultRequestSettings = requestSettings ?? throw new ArgumentNullException(nameof(requestSettings),
-                "Default Request Settings cannot be null.");
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             if (contentSerializers == null)
             {
@@ -60,41 +47,10 @@ namespace NetFusion.Rest.Client.Core
             
             _mediaTypeSerializers = new ConcurrentDictionary<string, IMediaTypeSerializer>(contentSerializers);
         }
-
-        public async Task<HalEntryPointResource> GetApiEntry()
-        {
-            return await _serviceApiProvider.GetEntryPointResource().ConfigureAwait(false);
-        }
-
-        // Called by builder when creating client...
-        // ---------------------------------------------
-        internal void SetApiServiceProvider(IServiceEntryApiProvider provider)
-        {
-            _serviceApiProvider = provider ?? throw new ArgumentNullException(nameof(provider));
-        }
-
-        internal void SetEachRequestAction(Action<IRequestSettings> config)
-        {
-            _eachRequestAction = config ?? throw new ArgumentNullException(nameof(config));
-        }
-
-        internal void AddCorrelationId(string headerName)
-        {
-            if (string.IsNullOrWhiteSpace(headerName))
-                throw new ArgumentException("Correlation header name not specified.", nameof(headerName));
-
-            _correlationHeaderName = headerName;
-        }
-
-        internal void SetStatusCodeHandlers(IDictionary<HttpStatusCode, Func<ErrorStatusContext, Task<bool>>> handlers)
-        {
-            _statusHandlers = handlers ?? throw new ArgumentNullException(nameof(handlers));
-        }
-
-        // -----
+        
 
 		public async Task<ApiResponse> SendAsync(ApiRequest request,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request),
                 "Request cannot be null.");
@@ -103,7 +59,7 @@ namespace NetFusion.Rest.Client.Core
         }
 
 		public async Task<ApiResponse<TContent>> SendAsync<TContent>(ApiRequest request,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
             where TContent : class
         {
             if (request == null) throw new ArgumentNullException(nameof(request),
@@ -127,7 +83,6 @@ namespace NetFusion.Rest.Client.Core
             LogRequest(request);
             
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
-            responseMsg = await HandleIfErrorStatusCode(request, responseMsg, cancellationToken);
 
             var response = new ApiResponse(requestMsg, responseMsg);
             await SetErrorContext(responseMsg, response);
@@ -142,13 +97,12 @@ namespace NetFusion.Rest.Client.Core
             HttpRequestMessage requestMsg = await CreateRequestMessage(request);
             LogRequest(request);
             
-            TContent resource = null;
+            HalResource<TContent> resource = null;
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
-            responseMsg = await HandleIfErrorStatusCode(request, responseMsg, cancellationToken);
-         
+
             if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
             {
-                resource = DeserializeResource<TContent>(responseMsg, await responseMsg.Content.ReadAsStreamAsync());
+                resource = await DeserializeResource<HalResource<TContent>>(responseMsg, await responseMsg.Content.ReadAsStreamAsync());
             }
 
             var response = new ApiResponse<TContent>(requestMsg, responseMsg, resource);
@@ -165,7 +119,6 @@ namespace NetFusion.Rest.Client.Core
 
             LogRequest(request);
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
-            responseMsg = await HandleIfErrorStatusCode(request, responseMsg, cancellationToken);
 
             object resource = null;
             if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
@@ -195,44 +148,6 @@ namespace NetFusion.Rest.Client.Core
                 response.SetErrorContext(errorBody);
             }
         }
-        
-        private async Task<HttpResponseMessage> HandleIfErrorStatusCode(
-            ApiRequest request,
-            HttpResponseMessage responseMsg,
-            CancellationToken cancellationToken)
-        {
-            if (responseMsg.IsSuccessStatusCode || (request.Settings?.SuppressStatusCodeHandlers ?? false))
-            {
-                return responseMsg;
-            }
-
-            // Determine if there is a registered handler for the status code:
-            if (_statusHandlers == null || !_statusHandlers.ContainsKey(responseMsg.StatusCode))
-            {
-                return responseMsg;
-            }
-            
-            _logger.LogDebug($"Handler for response status code: {responseMsg.StatusCode} being called.");
-
-            var handler = _statusHandlers[responseMsg.StatusCode];
-            
-            var context = new ErrorStatusContext(this, responseMsg, 
-                _defaultRequestSettings, 
-                request.Settings);
-
-            // Call the handler associated with the status code so it can determine
-            // if the request should be retried:
-            bool retryRequest = await handler(context);
-            if (retryRequest)
-            {
-                _logger.LogDebug($"Attempting to retry request: {request.RequestUri}");
-                
-                HttpRequestMessage requestMsg = await CreateRequestMessage(request);
-                responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
-            }
-
-            return responseMsg;
-        }
 
         private void LogResponse(ApiResponse response)
         {
@@ -258,7 +173,8 @@ namespace NetFusion.Rest.Client.Core
                     $"before making request to server.");
             }
 
-            var requestSettings = _defaultRequestSettings.GetMerged(request.Settings);
+            //var requestSettings = _defaultRequestSettings.GetMerged(request.Settings);
+            var requestSettings = request.Settings;
             request.UsingSettings(requestSettings);
 
             // Check if the request has any embedded names specified.  This allows the client
@@ -268,15 +184,6 @@ namespace NetFusion.Rest.Client.Core
             {
                 requestSettings.QueryString.AddParam("embed", request.EmbeddedNames);
             }
-
-            // Add correlation value to request if configured.
-            if (_correlationHeaderName != null)
-            {
-                var correlationId = Guid.NewGuid().ToString();
-                requestSettings.Headers.Add(_correlationHeaderName, correlationId);
-            }
-
-            _eachRequestAction?.Invoke(requestSettings);
 
             // Build the query string and append to request URL.
             if (requestSettings.QueryString.Params.Any())
@@ -324,7 +231,7 @@ namespace NetFusion.Rest.Client.Core
             return contentSerializer;
         }
 
-        private T DeserializeResource<T>(HttpResponseMessage responseMsg, Stream responseStream)
+        private Task<T> DeserializeResource<T>(HttpResponseMessage responseMsg, Stream responseStream)
             where T : class
         {
             string mediaType = responseMsg.Content.Headers.ContentType.MediaType;

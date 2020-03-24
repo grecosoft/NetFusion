@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace NetFusion.Rest.Client.Settings
 {
@@ -27,7 +28,7 @@ namespace NetFusion.Rest.Client.Settings
         /// <typeparam name="T">The type of the object to be created from stream.</typeparam>
         /// <param name="responseStream">The stream containing the serialized contents.</param>
         /// <returns>Instance of object created from serialized stream contents.</returns>
-        T Deserialize<T>(Stream responseStream);
+        Task<T> Deserialize<T>(Stream responseStream);
 
         /// <summary>
         /// Deserializes stream into an object instance.
@@ -35,6 +36,6 @@ namespace NetFusion.Rest.Client.Settings
         /// <param name="responseStream">The stream containing the serialized contents.</param>
         /// <param name="type">he type of the object to be created from stream.</param>
         /// <returns>Instance of object created from serialized stream contents.</returns>
-        object Deserialize(Stream responseStream, Type type);
+        Task<object> Deserialize(Stream responseStream, Type type);
     }
 }

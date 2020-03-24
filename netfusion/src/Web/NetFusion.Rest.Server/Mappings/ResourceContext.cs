@@ -9,14 +9,19 @@ namespace NetFusion.Rest.Server.Mappings
 {
     /// <summary>
     /// Context class containing information for the resource and services
-    /// used by a provider when mapping resources.
+    /// used by a provider when applying media-type specific information to
+    /// returned resources.
     /// </summary>
     public class ResourceContext
     {
         // Instance of a resource being returned.
         public IResource Resource { get; set; }
 
-        // The metadata associated with the resource.
+        // Optional reference to the state associated with the resource.
+        // Based on the media-type, this value may not be set.
+        public object Model { get; set; }
+
+        // The metadata associated with the source type.
         public IResourceMeta Meta { get; set; }
 
         // Services that can be utilized when adding the metadata

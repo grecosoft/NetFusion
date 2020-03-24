@@ -1,12 +1,11 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebTests.Rest.Setup;
 
 namespace WebTests.Rest.ClientRequests.Server
 {
-    [Route("api/error")]
-    public class ErrorController : Controller
+    [ApiController, Route("api/error")]
+    public class ErrorController : ControllerBase
     {
         private readonly IMockedService _mockedService;
 

@@ -6,6 +6,7 @@ using WebTests.Rest.ClientRequests;
 using WebTests.Rest.ClientRequests.Server;
 using WebTests.Rest.LinkGeneration.Server;
 
+
 namespace WebTests.Rest.Setup
 {
     public static class TestFixtureSetupExtensions
@@ -18,7 +19,7 @@ namespace WebTests.Rest.Setup
                     {
                         ServerResources = new[] {mockResource}
                     };
-
+                    
                     services.AddSingleton<IMockedService>(serviceMock);
                 })
                 .ComposedFrom(compose =>

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using NetFusion.Common.Extensions.Expressions;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Web.Mvc.Metadata;
+// ReSharper disable SuggestBaseTypeForParameter
 
 // ReSharper disable UnusedTypeParameter
 namespace NetFusion.Rest.Server.Linking

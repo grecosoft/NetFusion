@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NetFusion.Common.Extensions.Collections;
-using NetFusion.Rest.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +13,16 @@ namespace NetFusion.Rest.Server.Meta
     /// <typeparam name="TResourceMeta">Derived metadata class containing specific metadata.  This is the type
     /// returned from the fluent methods.  This allows method chaining to be applied based on the derived type.
     /// </typeparam>
-    /// <typeparam name="TResource">The type of resource associated with the metadata.</typeparam>
-    public class ResourceMeta<TResourceMeta, TResource> : IResourceMeta
-	    where TResource : class, IResource
-		where TResourceMeta : ResourceMeta<TResourceMeta, TResource>
+    /// <typeparam name="TSource">The type of resource associated with the metadata.</typeparam>
+    public class ResourceMeta<TResourceMeta, TSource> : IResourceMeta
+	    where TSource : class
+		where TResourceMeta : ResourceMeta<TResourceMeta, TSource>
     {
-        public Type ResourceType => typeof(TResource);
+        public Type SourceType => typeof(TSource);
        
         /// <summary>
-        /// Links associated with the resource.  Usually used to navigate 
-        /// additional associated resources.
+        /// Links associated with the resource.  Usually used to navigate additional
+        /// associated resources or invoke action on current resource.
         /// </summary>
         public IReadOnlyCollection<ResourceLink> Links { get; }
 
@@ -40,7 +39,7 @@ namespace NetFusion.Rest.Server.Meta
         /// <typeparam name="TController">The controller type so select action method from.</typeparam>
         /// <param name="meta">Method delegate passed metadata class used to define link metadata.</param>
         /// <returns>Reference to self for method chaining.</returns>
-        public TResourceMeta LinkMeta<TController>(Action<ResourceLinkMeta<TController, TResource>> meta)
+        public TResourceMeta LinkMeta<TController>(Action<ResourceLinkMeta<TController, TSource>> meta)
             where TController : ControllerBase
         {
             if (meta == null) throw new ArgumentNullException(nameof(meta),
@@ -48,7 +47,7 @@ namespace NetFusion.Rest.Server.Meta
 
             AssertControllerMeetsConstraints(typeof(TController));
 
-            var resourceLinkMeta = new ResourceLinkMeta<TController, TResource>();
+            var resourceLinkMeta = new ResourceLinkMeta<TController, TSource>();
             meta(resourceLinkMeta);
 
             AddLinks(resourceLinkMeta.GetResourceLinks());
@@ -56,16 +55,16 @@ namespace NetFusion.Rest.Server.Meta
         }
 
         /// <summary>
-        /// Returns like metadata class used to specify URIs not associated with a specific controller method.
+        /// Returns link metadata class used to specify URIs not associated with a specific controller method.
         /// </summary>
-        /// <param name="meta">Method delegate passed metadata class used to define like metadata.</param>
+        /// <param name="meta">Method delegate passed metadata class used to define link metadata.</param>
         /// <returns>Reference to self for method chaining.</returns>
-        public TResourceMeta LinkMeta(Action<ResourceLinkMeta<TResource>> meta)
+        public TResourceMeta LinkMeta(Action<ResourceLinkMeta<TSource>> meta)
         {
             if (meta == null) throw new ArgumentNullException(nameof(meta),
                 "Metadata delegate not specified.");
 
-            var resourceLinkMeta = new ResourceLinkMeta<TResource>();
+            var resourceLinkMeta = new ResourceLinkMeta<TSource>();
             meta(resourceLinkMeta);
 
             AddLinks(resourceLinkMeta.GetResourceLinks());

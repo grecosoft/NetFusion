@@ -1,5 +1,6 @@
 using System.Linq;
 using Demo.Core;
+using Demo.Core.Plugin;
 
 namespace Demo.App
 {
