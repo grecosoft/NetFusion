@@ -7,9 +7,9 @@ namespace Service.WebApi.Controllers.Web
     [ApiController, Route("api/http/client")]
     public class HttpClientController : ControllerBase
     {
-        private static IRequestClientFactory _requestClientFactory;
+        private static IRestClientFactory _requestClientFactory;
 
-        public HttpClientController(IRequestClientFactory requestClientFactory)
+        public HttpClientController(IRestClientFactory requestClientFactory)
         {
             _requestClientFactory = requestClientFactory;
         }

@@ -48,7 +48,7 @@ namespace WebTests.Hosting
         /// <param name="clientAct">Delegate passed the IRequestClient to be acted on.</param>
         /// <returns>The WebServer response to be asserted.</returns>
         public async Task<WebServerResponse> OnRestClient( 
-            Func<IRequestClient, Task<ApiResponse>> clientAct)
+            Func<IRestClient, Task<ApiResponse>> clientAct)
         {
             if (clientAct == null) throw new ArgumentNullException(nameof(clientAct));
             
@@ -69,7 +69,7 @@ namespace WebTests.Hosting
                 { InternetMediaTypes.HalJson, jsonSerializer }
             };
             
-            var restClient = new RequestClient(logger, client, serializers);
+            var restClient = new RestClient(logger, client, serializers);
             var apiResponse = await clientAct(restClient);
             
             return new WebServerResponse(_services, apiResponse);

@@ -107,7 +107,7 @@ namespace NetFusion.Rest.Client
         /// </summary>
         public void ThrowIfNotSuccessStatusCode()
         {
-            if (!IsSuccessStatusCode)
+            if (! IsSuccessStatusCode)
             {
                 throw new HttpRequestException(
                     $"Response status code does not indicate success: {(int)StatusCode} ({StatusCode})");

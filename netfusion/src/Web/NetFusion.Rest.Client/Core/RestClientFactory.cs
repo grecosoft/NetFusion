@@ -8,14 +8,18 @@ using NetFusion.Rest.Client.Settings;
 
 namespace NetFusion.Rest.Client.Core
 {
-    public class RequestClientFactory : IRequestClientFactory
+    /// <summary>
+    /// Implements a factory for creating RestClient instances.  The created instance
+    /// wraps the HttpClient and adds additional features.
+    /// </summary>
+    public class RestClientFactory : IRestClientFactory
     {
         private readonly ILoggerFactory _loggerFactory;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
 
         
-        public RequestClientFactory(
+        public RestClientFactory(
             ILoggerFactory loggerFactory,
             IHttpClientFactory httpClientFactory,
             IEnumerable<IMediaTypeSerializer> mediaTypeSerializers)
@@ -28,27 +32,32 @@ namespace NetFusion.Rest.Client.Core
             _mediaTypeSerializers = CreateSerializerLookup(mediaTypeSerializers.ToArray());
         }
 
-        public IRequestClient CreateClient(string name)
+        public IRestClient CreateClient(string name)
         {
-            ILogger logger = _loggerFactory.CreateLogger<RequestClient>();
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Name of configured API not specified.", nameof(name));
             
+            ILogger logger = _loggerFactory.CreateLogger<RestClient>();
+            
+            // Create instance of HttpClient and wrap it within a RestClient instance.
             HttpClient innerClient = _httpClientFactory.CreateClient(name);
-            IRequestClient client = new RequestClient(logger, innerClient, _mediaTypeSerializers);
+            IRestClient client = new RestClient(logger, innerClient, _mediaTypeSerializers);
 
             return client;
         }
-
+        
         private static IDictionary<string, IMediaTypeSerializer> CreateSerializerLookup(
             IMediaTypeSerializer[] serializers)
         {
-            var duplicated = serializers.WhereDuplicated(s => s.MediaType);
+            var duplicated = serializers.WhereDuplicated(s => s.MediaType).ToArray();
             if (duplicated.Any())
             {
-                
+                throw new InvalidOperationException(
+                    $"More than one {typeof(IMediaTypeSerializer)} is registered for the " + 
+                    $"following media-types: {string.Join(',', duplicated)}.");
             }
 
             return serializers.ToDictionary(s => s.MediaType);
-
         }
     }
 }

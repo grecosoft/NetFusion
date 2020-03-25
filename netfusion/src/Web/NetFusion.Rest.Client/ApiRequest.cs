@@ -9,7 +9,8 @@ using NetFusion.Rest.Resources;
 namespace NetFusion.Rest.Client
 {
     /// <summary>
-    /// Represents a request that can be submitted to the server.
+    /// Represents a request that can be submitted to the server using
+    /// the IRestClient.
     /// </summary>
     public class ApiRequest
     {
@@ -104,7 +105,7 @@ namespace NetFusion.Rest.Client
         /// <returns>Created API request.</returns>
         public static ApiRequest Put(string requestUri, Action<ApiRequest> config = null)
         {
-            return Create(requestUri, HttpMethod.Put);
+            return Create(requestUri, HttpMethod.Put, config);
         }
 
         /// <summary>
@@ -284,12 +285,12 @@ namespace NetFusion.Rest.Client
 
 		private static void AssertLink(Link link)
 		{
-			if (!link.Methods.Any())
+			if (! link.Methods.Any())
 			{
 				throw new InvalidOperationException($"Link Method value not specified for Href: {link.Href}.");
 			}
 
-			if (link.Methods.Count() > 1)
+			if (link.Methods.Length > 1)
 			{
 				throw new InvalidOperationException(
 					$"More then one Link Method value specified for Href: {link.Href}.");
@@ -299,14 +300,14 @@ namespace NetFusion.Rest.Client
         // ----------------- TEMPLATE POPULATION --------------------
         private static string ReplaceTemplateTokensWithValues(string urlTemplate, IDictionary<string, object> routeValues)
         {
-            foreach (var routeValue in routeValues)
+            foreach (var (key, value) in routeValues)
             {
-                string routeKey = routeValue.Key;
+                string routeKey = key;
 
-                urlTemplate = ReplaceRouteTokens(urlTemplate, routeKey, routeValue.Value);
+                urlTemplate = ReplaceRouteTokens(urlTemplate, routeKey, value);
 
                 routeKey = routeKey[0].ToString().ToLower() + routeKey.Substring(1, routeKey.Length - 1);
-                urlTemplate = ReplaceRouteTokens(urlTemplate, routeKey, routeValue.Value);
+                urlTemplate = ReplaceRouteTokens(urlTemplate, routeKey, value);
             }
 
             return RemoveOptionalRouteTokens(urlTemplate);
