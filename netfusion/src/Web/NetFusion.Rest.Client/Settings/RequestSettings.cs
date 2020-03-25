@@ -13,8 +13,6 @@ namespace NetFusion.Rest.Client.Settings
 
         private RequestSettings() {}
 
-        public bool? SuppressStatusCodeHandlers { get; set; }
-       
         /// <summary>
         /// Creates a new request settings instance.
         /// </summary>
@@ -42,22 +40,13 @@ namespace NetFusion.Rest.Client.Settings
 
         public IRequestSettings GetMerged(IRequestSettings requestSettings)
         {
-            if (requestSettings != null)
-            {
-                return new RequestSettings
-                {
-                    Headers = Headers.GetMergedHeaders(requestSettings.Headers),
-                    QueryString = QueryString.GetMerged(requestSettings.QueryString),
-                    SuppressStatusCodeHandlers = requestSettings.SuppressStatusCodeHandlers ?? SuppressStatusCodeHandlers ?? false
-                };
-            }
+            if (requestSettings == null) throw new ArgumentNullException(nameof(requestSettings));
 
             return new RequestSettings
             {
-                Headers = Headers,
-                QueryString = QueryString,
-                SuppressStatusCodeHandlers = SuppressStatusCodeHandlers ?? false
-            };                      
+                Headers = Headers.GetMergedHeaders(requestSettings.Headers),
+                QueryString = QueryString.GetMerged(requestSettings.QueryString)
+            };
         }
     }
 }
