@@ -26,7 +26,7 @@ namespace NetFusion.Rest.Resources.Hal
         /// <param name="resource">The resource with associated links.</param>
         /// <param name="named">The name identifying the link.</param>
         /// <returns>True if found.  Otherwise, False.</returns>
-        public static bool HasLink(this IHalResource resource, string named)
+        public static bool HasLink(this HalResource resource, string named)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
             
@@ -42,7 +42,7 @@ namespace NetFusion.Rest.Resources.Hal
         /// <param name="resource">The resource with associated links.</param>
         /// <param name="named">The name identifying the link.</param>
         /// <returns>The link if found.  Otherwise an exception is raised.</returns>
-        public static Link GetLink(this IHalResource resource, string named)
+        public static Link GetLink(this HalResource resource, string named)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
             
@@ -60,7 +60,7 @@ namespace NetFusion.Rest.Resources.Hal
         /// <param name="resource">The resource with embedded resources.</param>
         /// <param name="named">The name identifying the embedded resource/model.</param>
         /// <returns>True if found.  Otherwise, False.</returns>
-        public static bool HasEmbedded(this IHalResource resource, string named)
+        public static bool HasEmbedded(this HalResource resource, string named)
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
             
@@ -77,7 +77,7 @@ namespace NetFusion.Rest.Resources.Hal
         /// <param name="named">The name identifying the embedded resource.</param>
         /// <typeparam name="TChildModel">The type of the embedded model.</typeparam>
         /// <returns>Reference to the deserialized model or an exception if not present.</returns>
-        public static TChildModel GetEmbeddedModel<TChildModel>(this IHalResource resource, string named)
+        public static TChildModel GetEmbeddedModel<TChildModel>(this HalResource resource, string named)
             where TChildModel: class
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -118,7 +118,7 @@ namespace NetFusion.Rest.Resources.Hal
         /// <param name="resource">The parent resource with embedded resources.</param>
         /// <param name="named">The name identifying the embedded resource.</param>
         /// <returns>Instance of the populated embedded resource.</returns>
-        public static HalResource<TChildModel> GetEmbeddedResource<TChildModel>(this IHalResource resource, string named)
+        public static HalResource<TChildModel> GetEmbeddedResource<TChildModel>(this HalResource resource, string named)
             where TChildModel: class
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -159,7 +159,8 @@ namespace NetFusion.Rest.Resources.Hal
         /// <param name="resource">The parent resource with embedded resources.</param>
         /// <param name="named">The name identifying the embedded resource collection.</param>
         /// <returns>List of embedded collection of resources.</returns>
-        public static IEnumerable<HalResource<TChildModel>> GetEmbeddedResources<TChildModel>(this IHalResource resource, string named)
+        public static IEnumerable<HalResource<TChildModel>> GetEmbeddedResources<TChildModel>(
+            this HalResource resource, string named)
             where TChildModel: class
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));
@@ -199,7 +200,7 @@ namespace NetFusion.Rest.Resources.Hal
         /// <param name="named">The name identifying the embedded resource.</param>
         /// <typeparam name="TChildModel">The type of the embedded model.</typeparam>
         /// <returns>Instance of the embedded collection of models..</returns>
-        public static IEnumerable<TChildModel> GetEmbeddedModels<TChildModel>(this IHalResource resource, string named)
+        public static IEnumerable<TChildModel> GetEmbeddedModels<TChildModel>(this HalResource resource, string named)
             where TChildModel: class
         {
             if (resource == null) throw new ArgumentNullException(nameof(resource));

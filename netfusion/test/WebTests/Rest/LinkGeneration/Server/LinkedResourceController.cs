@@ -20,7 +20,7 @@ namespace WebTests.Rest.LinkGeneration.Server
         }
 
         [HttpGet]
-        public IHalResource GetResource()
+        public HalResource GetResource()
         {
             var resources = _mockedService.GetResources<LinkedResource>().ToArray();          
             if (!resources.Any())

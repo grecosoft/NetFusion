@@ -8,7 +8,7 @@ namespace WebTests.Rest
 {
     public static class ClientResourceTestExtensions
     {
-        public static void AssertLink(this IHalResource resource,
+        public static void AssertLink(this HalResource resource,
             string relName,
             HttpMethod expectedMethod,
             string expectedValue)

@@ -9,7 +9,7 @@ namespace NetFusion.Rest.Resources.Hal
     /// This interface is used internally when attaching the HAL specific
     /// information to a returned HAL Resource.
     /// </summary>
-    public class HalResource : IHalResource
+    public class HalResource : IResource
     {
         /// <summary>
         /// Untyped reference to the model.  Only set on the server.
@@ -84,7 +84,7 @@ namespace NetFusion.Rest.Resources.Hal
     /// Provides an implementation of the IHalResource wrapping a typed model
     /// used to associate links and embedded resources.
     /// </summary>
-    public class HalResource<TModel> : HalResource, IHalResource<TModel>
+    public class HalResource<TModel> : HalResource
         where TModel: class
     {
         /// <summary>

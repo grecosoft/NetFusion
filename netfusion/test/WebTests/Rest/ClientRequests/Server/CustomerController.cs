@@ -8,7 +8,7 @@ namespace WebTests.Rest.ClientRequests.Server
     public class CustomerController : ControllerBase
     {
         [HttpGet("{id}")]
-        public IHalResource GetCustomer(string id)
+        public HalResource GetCustomer(string id)
         {
             var customer = new CustomerModel
             {
@@ -21,7 +21,7 @@ namespace WebTests.Rest.ClientRequests.Server
         }
 
         [HttpGet("embedded/resource")]
-        public IHalResource GetEmbeddedAddress(string id)
+        public HalResource GetEmbeddedAddress(string id)
         {
             var customer = new CustomerModel
             {
@@ -46,7 +46,7 @@ namespace WebTests.Rest.ClientRequests.Server
         }
         
         [HttpGet("embedded/collection")]
-        public IHalResource GetEmbeddedAddresses(string id)
+        public HalResource GetEmbeddedAddresses(string id)
         {
             var customer = new CustomerModel
             {

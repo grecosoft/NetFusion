@@ -25,8 +25,7 @@ namespace NetFusion.Rest.Server.Hal.Core
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            var halResource = context.Resource as IHalResource;
-            if (halResource == null || context.Meta.Links.Count == 0)
+            if ( !(context.Resource is HalResource halResource) || context.Meta.Links.Count == 0)
             {
                 return;
             }
@@ -123,7 +122,7 @@ namespace NetFusion.Rest.Server.Hal.Core
             SetLinkTemplateIndicator(link);
             SetLinkOptionalDescriptors(resourceLink, link);
 
-            var halResource = (IHalResource)context.Resource;
+            var halResource = (HalResource)context.Resource;
             halResource.Links.Add(resourceLink.RelationName, link);
         }
 

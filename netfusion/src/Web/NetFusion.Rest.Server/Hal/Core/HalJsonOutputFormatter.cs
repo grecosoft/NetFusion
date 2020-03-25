@@ -40,13 +40,13 @@ namespace NetFusion.Rest.Server.Hal.Core
         
         protected override bool CanWriteType(Type type)
         {
-            return type.CanAssignTo<IHalResource>();
+            return type.CanAssignTo<HalResource>();
         }
 
         public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context,
             Encoding selectedEncoding)
         {
-            if (context.Object is IHalResource resource)
+            if (context.Object is HalResource resource)
             {
                 ResourceContext resourceContext = CreateContext(context.HttpContext);
                 ApplyMetadataToResource(resource, resourceContext);
@@ -58,7 +58,7 @@ namespace NetFusion.Rest.Server.Hal.Core
                 SerializerOptions);
         }
         
-        private static void ApplyMetadataToResource(IHalResource resource, ResourceContext resourceContext)
+        private static void ApplyMetadataToResource(HalResource resource, ResourceContext resourceContext)
         {
             resourceContext.Resource = resource;
             resourceContext.Model = resource.ModelValue;
@@ -77,7 +77,7 @@ namespace NetFusion.Rest.Server.Hal.Core
                 // apply the metadata to each contained resource.
                 if (embeddedResource is IEnumerable resourceColl)
                 {
-                    foreach (IHalResource childResource in resourceColl.OfType<IHalResource>())
+                    foreach (HalResource childResource in resourceColl.OfType<HalResource>())
                     {
                         ApplyMetadataToResource(childResource, resourceContext);
                     }
@@ -86,7 +86,7 @@ namespace NetFusion.Rest.Server.Hal.Core
                 }
 
                 // Add metadata to single embedded resource.
-                if (embeddedResource is IHalResource halResource)
+                if (embeddedResource is HalResource halResource)
                 {
                     ApplyMetadataToResource(halResource, resourceContext);
                 }
