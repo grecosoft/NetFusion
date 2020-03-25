@@ -69,7 +69,7 @@ namespace Service.WebApi
             services.AddControllers();  
             services.AddSingleton(InMemoryScripting.LoadSensorScript());
 
-            services.AddRequestFactory();
+            services.AddRestClientFactory();
             services.AddDefaultMediaSerializers();
             RegisterHttpClients(services);
         }

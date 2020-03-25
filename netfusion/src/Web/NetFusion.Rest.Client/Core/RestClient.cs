@@ -12,17 +12,14 @@ using NetFusion.Rest.Resources.Hal;
 
 namespace NetFusion.Rest.Client.Core
 {
-    using System.Collections.Concurrent;
-
     /// <summary>
     /// Client used to make HTTP requests.  
     /// </summary>
-    public class RequestClient : IRequestClient
+    public class RestClient : IRestClient
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger _logger;
         private readonly IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
-
 
         /// <summary>
         /// Initializes an instance of the client with its associated HttpClient delegated to 
@@ -31,21 +28,14 @@ namespace NetFusion.Rest.Client.Core
         /// <param name="logger">The logger to use for log messages.</param>
         /// <param name="httpClient">Reference to a HttpClient instance.</param>
         /// <param name="contentSerializers">Dictionary of serializers keyed by media-type.</param>
-        public RequestClient(ILogger logger,
+        public RestClient(ILogger logger,
             HttpClient httpClient,
             IDictionary<string, IMediaTypeSerializer> contentSerializers)
         {
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient), 
-                "HTTP Client cannot be null.");
-
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
-            if (contentSerializers == null)
-            {
-                throw new ArgumentNullException(nameof(contentSerializers), "HTTP Context Serializers cannot be null.");            
-            }
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             
-            _mediaTypeSerializers = new ConcurrentDictionary<string, IMediaTypeSerializer>(contentSerializers);
+            _mediaTypeSerializers = contentSerializers ?? throw new ArgumentNullException(nameof(contentSerializers));
         }
         
 
@@ -102,7 +92,8 @@ namespace NetFusion.Rest.Client.Core
 
             if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
             {
-                resource = await DeserializeResource<HalResource<TContent>>(responseMsg, await responseMsg.Content.ReadAsStreamAsync());
+                resource = await DeserializeResource<HalResource<TContent>>(responseMsg, 
+                    await responseMsg.Content.ReadAsStreamAsync());
             }
 
             var response = new ApiResponse<TContent>(requestMsg, responseMsg, resource);
@@ -172,15 +163,13 @@ namespace NetFusion.Rest.Client.Core
                     $"Request URI: {request.RequestUri}.  Templates must have all route-tokens populated " + 
                     $"before making request to server.");
             }
-
-            //var requestSettings = _defaultRequestSettings.GetMerged(request.Settings);
+            
             var requestSettings = request.Settings;
-            request.UsingSettings(requestSettings);
 
             // Check if the request has any embedded names specified.  This allows the client
             // to suggest to the server the subset of resources it needs from the default set
             // of embedded resources normally returned from the server API.
-            if (!string.IsNullOrWhiteSpace(request.EmbeddedNames))
+            if (! string.IsNullOrWhiteSpace(request.EmbeddedNames))
             {
                 requestSettings.QueryString.AddParam("embed", request.EmbeddedNames);
             }
@@ -195,12 +184,13 @@ namespace NetFusion.Rest.Client.Core
             var requestMsg = new HttpRequestMessage(request.Method, requestUri);
             requestSettings.Apply(requestMsg);
 
+            // Serialize the body of the request based on its content-type.
 			if (request.Content != null)
 			{
                 if (requestSettings.Headers.ContentType == null)
                 {
                     throw new InvalidOperationException(
-                        $"The request for:  {requestUri} contains content without having the Content-Type header specified.");
+                        $"The request for: {requestUri} contains content without having the Content-Type header specified.");
                 }
 
 				requestMsg.Content = CreateContentForMediaType(requestSettings.Headers.ContentType, request.Content);
@@ -222,7 +212,7 @@ namespace NetFusion.Rest.Client.Core
         private IMediaTypeSerializer GetMediaTypeSerializer(string mediaType)
         {
 
-            if (!_mediaTypeSerializers.TryGetValue(mediaType, out IMediaTypeSerializer contentSerializer))
+            if (! _mediaTypeSerializers.TryGetValue(mediaType, out IMediaTypeSerializer contentSerializer))
             {
                 throw new InvalidOperationException(
                     $"Content Serializer not registered for media type: {mediaType}.");

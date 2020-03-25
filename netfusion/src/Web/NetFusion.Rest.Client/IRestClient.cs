@@ -7,7 +7,7 @@ namespace NetFusion.Rest.Client
     /// <summary>
     /// Contract for a client used to make REST based Web API requests.
     /// </summary>
-    public interface IRequestClient
+    public interface IRestClient
     {
         /// <summary>
         /// Sends an API request to the server.

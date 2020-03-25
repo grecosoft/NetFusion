@@ -13,7 +13,7 @@ namespace NetFusion.Rest.Client
         /// realm URL for authentication.
         /// </summary>
         /// <param name="response">The response from a HTTP call.</param>
-        /// <returns>True if an authentication challenge.  Othersize, False.</returns>
+        /// <returns>True if an authentication challenge.  Otherwise, False.</returns>
         public static bool IsAuthChallenge(this HttpResponseMessage response)
         {
             if (response == null) throw new ArgumentNullException(nameof(response));
