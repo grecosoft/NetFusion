@@ -17,8 +17,8 @@ namespace NetFusion.Rest.Server.Hal.Core
     public class HalResourceProvider : IResourceProvider
     {
         /// <summary>
-        /// If the resource type being returned supports the IHalResource interface,
-        /// the link metadata is used to generate resource specific URLs. 
+        /// If the resource type being returned is of type HalResource the,
+        /// link metadata is used to generate resource specific URLs. 
         /// </summary>
         /// <param name="context">The context for the current response.</param>
         public virtual void ApplyResourceMeta(ResourceContext context)
