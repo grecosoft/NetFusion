@@ -10,7 +10,7 @@
     <ProjectReference Include="..\..\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AMQPNetLite" Version="2.3.0" />
+    <PackageReference Include="AMQPNetLite" Version="2.4.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
   </ItemGroup>

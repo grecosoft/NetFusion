@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace NetFusion.Rest.Server.Mappings
 {
     /// <summary>
-    /// Base class from which REST specific mapping classes can derive.
+    /// Base class from which media-type specific mapping classes can derive.
     /// Maintains a list of resource metadata added by the derived class.
     /// </summary>
     public abstract class ResourceMap : IResourceMap
@@ -32,7 +32,7 @@ namespace NetFusion.Rest.Server.Mappings
         protected abstract void OnBuildResourceMap();
 
         /// <summary>
-        /// Add an item containing metadata for a specific resource type.
+        /// Add an item containing metadata for a specific source type.
         /// </summary>
         /// <param name="resourceMeta">The resource metadata configured by derived map.</param>
         protected void AddResourceMeta(IResourceMeta resourceMeta)

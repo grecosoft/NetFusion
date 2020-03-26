@@ -81,15 +81,6 @@ namespace Demo.WebApi
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         { 
-            app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
             string viewerUrl = _configuration.GetValue<string>("Netfusion:ViewerUrl");
             if (! string.IsNullOrWhiteSpace(viewerUrl))
             {
@@ -99,6 +90,17 @@ namespace Demo.WebApi
                     .WithExposedHeaders("WWW-Authenticate","resource-404")
                     .AllowAnyHeader());
             }
+            
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
+            
         }
     }
 }

@@ -4,7 +4,7 @@
  namespace Demo.Infra.Repositories
  {
     [ConfigurationSection("netfusion:mongoDB:geographicDB")]
-    public class GeographicDB : MongoSettings
+    public class GeographicDb : MongoSettings
     {
 
     }

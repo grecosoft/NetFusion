@@ -9,15 +9,15 @@
     <ProjectReference Include="..\Components\Solution.Context.Infra\Solution.Context.Infra.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="3.2.157" />
-    <PackageReference Include="NetFusion.Base" Version="3.2.157" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.157" />
-    <PackageReference Include="NetFusion.Builder" Version="3.2.157" />
+    <PackageReference Include="NetFusion.Common" Version="9.9.24" />
+    <PackageReference Include="NetFusion.Base" Version="9.9.24" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="9.9.24" />
+    <PackageReference Include="NetFusion.Builder" Version="9.9.24" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Web.Mvc" Version="3.2.157" />
-    <PackageReference Include="NetFusion.Rest.Common" Version="3.2.157" />
-    <PackageReference Include="NetFusion.Rest.Resources" Version="3.2.157" />
-    <PackageReference Include="NetFusion.Rest.Server" Version="3.2.157" />
+    <PackageReference Include="NetFusion.Web.Mvc" Version="9.9.24" />
+    <PackageReference Include="NetFusion.Rest.Common" Version="9.9.24" />
+    <PackageReference Include="NetFusion.Rest.Resources" Version="9.9.24" />
+    <PackageReference Include="NetFusion.Rest.Server" Version="9.9.24" />
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Rest.Resources.Hal;
 using WebTests.Rest.ClientRequests.Server;
-using WebTests.Rest.Setup;
+
 
 namespace WebTests.Rest.ClientRequests
 {
@@ -23,9 +23,9 @@ namespace WebTests.Rest.ClientRequests
 
         public MockUnitTestService()
         {
-            Customers = new CustomerResource[] { };
+            Customers = new CustomerModel[] { };
         }
 
-        public IEnumerable<CustomerResource> Customers { get; set; }
+        public IEnumerable<CustomerModel> Customers { get; set; }
     }
 }

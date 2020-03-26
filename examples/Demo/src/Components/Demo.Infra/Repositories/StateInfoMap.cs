@@ -1,6 +1,5 @@
-using System;
-using NetFusion.MongoDB;
 using Demo.Domain.Entities;
+using NetFusion.MongoDB;
 
 namespace Demo.Infra.Repositories
 {

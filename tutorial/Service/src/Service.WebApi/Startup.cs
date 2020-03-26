@@ -16,6 +16,7 @@ using Service.Domain.Plugin;
 using Service.Infra.Plugin;
 using Service.WebApi.Plugin;
 using NetFusion.Builder;
+using NetFusion.Rest.Client;
 using Service.App.Services;
 
 namespace Service.WebApi
@@ -67,7 +68,12 @@ namespace Service.WebApi
 
             services.AddControllers();  
             services.AddSingleton(InMemoryScripting.LoadSensorScript());
+
+            services.AddRestClientFactory();
+            services.AddDefaultMediaSerializers();
+            RegisterHttpClients(services);
         }
+        
 
         public void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime, IWebHostEnvironment env)
         {
@@ -86,6 +92,15 @@ namespace Service.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        private static void RegisterHttpClients(IServiceCollection services)
+        {
+            services.AddHttpClient("test", c =>
+            {
+                c.BaseAddress = new Uri("http://localhost:6400");
+                c.DefaultRequestHeaders.Add("Accept", "application/hal+json");
             });
         }
     }

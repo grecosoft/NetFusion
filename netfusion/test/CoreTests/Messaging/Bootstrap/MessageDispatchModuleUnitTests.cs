@@ -84,7 +84,7 @@ namespace CoreTests.Messaging.Bootstrap
                         var config = p.GetConfig<MessageDispatchConfig>();
 
                         config.EnricherTypes.Should().Contain(typeof(CorrelationEnricher));
-                        config.EnricherTypes.Should().Contain(typeof(DateReceivedEnricher));
+                        config.EnricherTypes.Should().Contain(typeof(DateOccurredEnricher));
                     });
             });
         }

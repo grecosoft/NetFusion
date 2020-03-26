@@ -1,8 +1,8 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Demo.Domain.Entities;
 using MongoDB.Driver;
 using NetFusion.MongoDB;
-using Demo.Domain.Entities;
 using Demo.Domain.Repositories;
 
 namespace Demo.Infra.Repositories
@@ -11,7 +11,7 @@ namespace Demo.Infra.Repositories
     {
         private IMongoCollection<StateInfo> StateInfoColl { get; }
 
-        public StateInfoRepository(IMongoDbClient<GeographicDB> geographicDb)
+        public StateInfoRepository(IMongoDbClient<GeographicDb> geographicDb)
         {
             this.StateInfoColl = geographicDb.GetCollection<StateInfo>();
         }

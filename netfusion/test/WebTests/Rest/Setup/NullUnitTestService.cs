@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Rest.Resources.Hal;
+using WebTests.Rest.ClientRequests;
 using WebTests.Rest.ClientRequests.Server;
+
 
 namespace WebTests.Rest.Setup
 {
     public class NullUnitTestService : IMockedService
     {
-        public IEnumerable<CustomerResource> Customers { get; set; } = new CustomerResource[] { };
+        public IEnumerable<CustomerModel> Customers { get; set; } = new CustomerModel[] { };
 
         public HalResource ServerReceivedResource { get; set; }
 

@@ -19,16 +19,16 @@ namespace Service.WebApi.Controllers.Web
                 Name = "Not There Elementary School",
                 YearEstablished = 1982,
                 NumberTeachers = 80
-            };
+            }.AsResource();
             
-            school.Embed(new AddressResource
+            school.EmbedResource(new AddressResource
             {
                 Id = Guid.NewGuid(),
                 AddressLine1 = "Dead End Road",
                 City = "Centralia",
                 State = "PA",
                 ZipCode = "17920"
-            }, "address");
+            }.AsResource(), "address");
 
             return Ok(school);
         }
@@ -36,8 +36,8 @@ namespace Service.WebApi.Controllers.Web
         [HttpGet("{id}/students")]
         public IActionResult GetStudents(int id)
         {
-            var parentResource = new HalResource();
-            parentResource.Embed(new []
+            var parentResource = new HalResource().AsResource();
+            parentResource.EmbedResources(new []
             {
                 new StudentResource
                 {
@@ -45,14 +45,14 @@ namespace Service.WebApi.Controllers.Web
                     FirstName = "Alex",
                     LastName = "Green",
                     Age = 6
-                },
+                }.AsResource(),
                 new StudentResource
                 {
                     Id = Guid.NewGuid(),
                     FirstName = "Jojo",
                     LastName = "Banana",
                     Age = 4
-                }
+                }.AsResource()
             }, "results");
 
             return Ok(parentResource);

@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources;
-using WebTests.Rest.Setup;
+using NetFusion.Rest.Resources.Hal;
+using WebTests.Rest.ClientRequests;
+
 
 namespace WebTests.Rest.LinkGeneration.Server
 {
-    [Route("api/linked/resource")]
-    public class LinkedResourceController : Controller
+    [ApiController, Route("api/linked/resource")]
+    public class LinkedResourceController : ControllerBase
     {
         private readonly IMockedService _mockedService;
 
@@ -18,7 +20,7 @@ namespace WebTests.Rest.LinkGeneration.Server
         }
 
         [HttpGet]
-        public LinkedResource GetResource()
+        public HalResource GetResource()
         {
             var resources = _mockedService.GetResources<LinkedResource>().ToArray();          
             if (!resources.Any())
@@ -27,8 +29,8 @@ namespace WebTests.Rest.LinkGeneration.Server
                     "Unit test didn't provided mocked server resource.");
             }
 
-            var resource = resources.First();
-
+            var model = resources.First();
+            var resource = model.AsResource();
             // Unit test might make multiple calls after updating the state of the resource
             // to test outcome on link generation - clear any prior added links.
             resource.Links = new Dictionary<string, Link>();
@@ -36,7 +38,7 @@ namespace WebTests.Rest.LinkGeneration.Server
         }
 
         [HttpGet("scenario-1/{id}")]
-        public LinkedResource GetById(int id)
+        public HalResource GetById(int id)
         {
             return null;
         }
@@ -60,28 +62,15 @@ namespace WebTests.Rest.LinkGeneration.Server
         }
 
         [HttpPost("scenario-5/create")]
-        public LinkedResource Create([FromBody]LinkedResource resource)
+        public HalResource Create([FromBody]LinkedResource resource)
         {
             return null;
         }
 
         [HttpPut("scenario-6/{id}/update")]
-        public LinkedResource Update(int id, [FromBody]LinkedResource resource)
+        public HalResource Update(int id, [FromBody]LinkedResource resource)
         {
             return null;
-        }
-
-        [HttpGet("view")]
-        public LinkedViewResource GetViewResource()
-        {
-            var resources = _mockedService.GetResources<LinkedResource>().ToArray();
-            if (!resources.Any())
-            {
-                throw new InvalidOperationException(
-                    "Unit test didn't provided mocked server resource.");
-            }
-
-            return new LinkedViewResource(resources.First());
         }
     }
 }

@@ -1,4 +1,3 @@
-using NetFusion.Messaging;
 using NetFusion.Messaging.Types;
 using Demo.Domain.Entities;
 

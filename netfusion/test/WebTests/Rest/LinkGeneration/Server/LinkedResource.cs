@@ -1,11 +1,9 @@
-﻿using NetFusion.Rest.Resources.Hal;
-
-namespace WebTests.Rest.LinkGeneration.Server
+﻿namespace WebTests.Rest.LinkGeneration.Server
 {
     /// <summary>
     /// Server returned resource used to test server-side link generation.
     /// </summary>
-    public class LinkedResource : HalResource
+    public class LinkedResource 
     {
         // Resource properties used within resource mappings when
         // specifying resource associated links.

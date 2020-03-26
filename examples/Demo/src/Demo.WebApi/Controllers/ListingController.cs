@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Demo.WebApi.Resources;
+using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
 using NetFusion.Web.Mvc.Metadata;
 
@@ -12,18 +13,20 @@ namespace Demo.WebApi.Controllers
     public class ListingController : ControllerBase
     {
         [HttpGet("entry")]
-        public HalEntryPointResource GetEntryPoint()
+        public IActionResult GetEntryPoint()
         {
-            return new HalEntryPointResource
+            var model = new EntryPointModel
             {
                 Version = GetType().Assembly.GetName().Version.ToString()
             };
+
+            return Ok(model.AsResource());
         }
         
         [HttpGet("{id}"), ActionMeta("GetListing")]
-        public Task<ListingResource> GetListing(int id)
+        public Task<IActionResult> GetListing(int id)
         {
-            var listing = new ListingResource
+            var listingModel = new ListingModel
             {
                 ListingId = id,
                 AcresLot = 3,
@@ -37,14 +40,16 @@ namespace Demo.WebApi.Controllers
                 NumberFullBaths = 3,
                 NumberHalfBaths = 2,
                 SquareFeet = 2500,
-                YearBuild = 1986,
+                YearBuild = 1986
             };
 
-            return Task.FromResult(listing);
+            var resource = listingModel.AsResource();
+            return Task.FromResult<IActionResult>(Ok(resource));
+
         }
 
         [HttpPut("{id}")]
-        public Task<ListingResource> UpdateListing(int id, ListingResource listing)
+        public Task<ListingModel> UpdateListing(int id, ListingModel listing)
         {
             listing.ListingId = id;
             return Task.FromResult(listing);

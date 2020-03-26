@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Rest.Server.Hal;
+using NetFusion.Rest.Server.Hal.Core;
 
 namespace NetFusion.Rest.Server.Plugin.Modules
 {

@@ -1,5 +1,4 @@
-﻿using NetFusion.Rest.Resources;
-using System;
+﻿using System;
 using System.Net.Http;
 using NetFusion.Rest.Server.Linking;
 
@@ -8,21 +7,21 @@ namespace NetFusion.Rest.Server.Meta
     /// <summary>
     /// Instance of class used to specify required and optional link metadata properties.
     /// </summary>
-    /// <typeparam name="TResource">The resource associated with the metadata.</typeparam>
-    public class LinkDescriptor<TResource>
-        where TResource : class, IResource
+    /// <typeparam name="TSource">The source type associated with the metadata.</typeparam>
+    public class LinkDescriptor<TSource>
+        where TSource : class
     {
         private readonly ResourceLink _resourceLink;
 
         public LinkDescriptor(ResourceLink resourceLink)
         {
             _resourceLink = resourceLink ?? throw new ArgumentNullException(nameof(resourceLink),
-                "Action Link cannot be null.");
+                "Resource Link cannot be null.");
         }
 
         //---------------- REQUIRED LINK PROPERTIES SET BY LINK METADATA METHODS ----------------------
 
-        internal LinkDescriptor<TResource> SetRelName(string relName)
+        internal LinkDescriptor<TSource> SetRelName(string relName)
         {
             if (string.IsNullOrWhiteSpace(relName))
                 throw new ArgumentException("Relation Name not specified.", nameof(relName));
@@ -31,7 +30,7 @@ namespace NetFusion.Rest.Server.Meta
             return this;
         }
 
-        internal LinkDescriptor<TResource> SetMethod(HttpMethod method)
+        internal LinkDescriptor<TSource> SetMethod(HttpMethod method)
         {
             if (method == null) throw new ArgumentNullException(nameof(method), 
                 "HTTP Method cannot be null.");
@@ -41,7 +40,7 @@ namespace NetFusion.Rest.Server.Meta
             return this;
         }
 
-        internal LinkDescriptor<TResource> SetHref(string href)
+        internal LinkDescriptor<TSource> SetHref(string href)
         {
             if (string.IsNullOrWhiteSpace(href))
                 throw new ArgumentException("Href Value not specified.", nameof(href));
@@ -52,7 +51,7 @@ namespace NetFusion.Rest.Server.Meta
 
         //---------------- OPTIONAL LINK PROPERTIES SET BY RESOURCE MAPPINGS ----------------------
 
-        public LinkDescriptor<TResource> SetName(string name)
+        public LinkDescriptor<TSource> SetName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Name Value not specified.", nameof(name));
@@ -61,7 +60,7 @@ namespace NetFusion.Rest.Server.Meta
             return this;
         }
 
-        public LinkDescriptor<TResource> SetTitle(string title)
+        public LinkDescriptor<TSource> SetTitle(string title)
         {
             if (string.IsNullOrWhiteSpace(title))
                 throw new ArgumentException("Title Value not specified.", nameof(title));
@@ -70,7 +69,7 @@ namespace NetFusion.Rest.Server.Meta
             return this;
         }
 
-        public LinkDescriptor<TResource> SetType(string type)
+        public LinkDescriptor<TSource> SetType(string type)
         {
             if (string.IsNullOrWhiteSpace(type))
                 throw new ArgumentException("Type Value not specified.", nameof(type));
@@ -79,7 +78,7 @@ namespace NetFusion.Rest.Server.Meta
             return this;
         }
 
-        public LinkDescriptor<TResource> SetHrefLang(string hrefLang)
+        public LinkDescriptor<TSource> SetHrefLang(string hrefLang)
         {
             if (string.IsNullOrWhiteSpace(hrefLang))
                 throw new ArgumentException("HrefLang Value not specified.", nameof(hrefLang));

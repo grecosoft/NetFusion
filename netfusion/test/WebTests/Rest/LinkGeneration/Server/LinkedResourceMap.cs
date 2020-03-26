@@ -32,10 +32,10 @@ namespace WebTests.Rest.LinkGeneration.Server
                     meta => meta.Url("scenario-4", (c, r) => c.GetByIdWithMultipleOptionalParams(r.Id, r.Value3, r.Value2)))
 
                 .LinkMeta<LinkedResourceController>(
-                    meta => meta.Url("scenario-5", (c, r) => c.Create(default(LinkedResource))))
+                    meta => meta.Url("scenario-5", (c, r) => c.Create(default(WebTests.Rest.LinkGeneration.Server.LinkedResource))))
 
                 .LinkMeta<LinkedResourceController>(
-                    meta => meta.Url("scenario-6", (c, r) => c.Update(r.Id, default(LinkedResource))))
+                    meta => meta.Url("scenario-6", (c, r) => c.Update(r.Id, default(WebTests.Rest.LinkGeneration.Server.LinkedResource))))
 
 
                 .LinkMeta<LinkedResourceController>(

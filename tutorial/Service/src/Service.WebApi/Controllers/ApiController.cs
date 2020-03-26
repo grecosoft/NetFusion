@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Bootstrap.Container;
+using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Hal;
 using NetFusion.Web.Mvc.Metadata;
@@ -28,9 +29,10 @@ namespace Service.WebApi.Controllers
         }
         
         [HttpGet("examples")]
-        public ExampleApiResource GetApiEntry()
+        public IActionResult GetApiEntry()
         {
-            return new ExampleApiResource();
+            var entryPoint = new EntryPointModel();
+            return Ok(entryPoint.AsResource());
         }
 
         [HttpGet("composite-log"), ActionMeta(nameof(GetCompositeLog))]
@@ -40,16 +42,12 @@ namespace Service.WebApi.Controllers
         }
     }
 
-    public class ExampleApiResource : HalEntryPointResource
-    {
-        
-    }
 
     public class ApiEntryPointRelations : HalResourceMap
     {
         protected override void OnBuildResourceMap()
         {
-            Map<ExampleApiResource>()
+            Map<EntryPointModel>()
                 .LinkMeta<ApiController>(meta =>
                 {
                     meta.UrlTemplate<IActionResult>("composite-log", c => c.GetCompositeLog);
