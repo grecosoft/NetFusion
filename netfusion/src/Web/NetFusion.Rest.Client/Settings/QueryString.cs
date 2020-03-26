@@ -45,15 +45,15 @@ namespace NetFusion.Rest.Client.Settings
             var mergedQuery = new QueryString();
 
 			// Add all the parameters from this query object to the new merged version.
-			foreach (var param in Params)
+			foreach (var (key, value) in Params)
 			{
-				mergedQuery._params[param.Key] = param.Value;
+				mergedQuery._params[key] = value;
 			}
 
             // Override or add any parameter values being merged.
-            foreach (var param in queryString.Params)
+            foreach (var (key, value) in queryString.Params)
 			{
-				mergedQuery._params[param.Key] = param.Value;
+				mergedQuery._params[key] = value;
 			}
 
             return mergedQuery;

@@ -71,7 +71,7 @@ namespace WebTests.Rest.LinkGeneration
                     .Act.OnRestClient(async client =>
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
-                        request.Settings.UseHalDefaults();
+                        request.UseHalDefaults();
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
@@ -105,7 +105,7 @@ namespace WebTests.Rest.LinkGeneration
                     .Act.OnRestClient(async client =>
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
-                        request.Settings.UseHalDefaults();
+                        request.UseHalDefaults();
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
@@ -138,7 +138,7 @@ namespace WebTests.Rest.LinkGeneration
                     .Act.OnRestClient(async client =>
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
-                        request.Settings.UseHalDefaults();
+                        request.UseHalDefaults();
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
@@ -171,7 +171,7 @@ namespace WebTests.Rest.LinkGeneration
                     .Act.OnRestClient(async client =>
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
-                        request.Settings.UseHalDefaults();
+                        request.UseHalDefaults();
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
@@ -204,7 +204,7 @@ namespace WebTests.Rest.LinkGeneration
                     .Act.OnRestClient(async client =>
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
-                        request.Settings.UseHalDefaults();
+                        request.UseHalDefaults();
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
@@ -237,7 +237,7 @@ namespace WebTests.Rest.LinkGeneration
                     .Act.OnRestClient(async client =>
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
-                        request.Settings.UseHalDefaults();
+                        request.UseHalDefaults();
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
@@ -270,7 +270,7 @@ namespace WebTests.Rest.LinkGeneration
                     .Act.OnRestClient(async client =>
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
-                        request.Settings.UseHalDefaults();
+                        request.UseHalDefaults();
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
@@ -317,7 +317,7 @@ namespace WebTests.Rest.LinkGeneration
                     .Act.OnRestClient(async client =>
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
-                        request.Settings.UseHalDefaults();
+                        request.UseHalDefaults();
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
@@ -364,7 +364,7 @@ namespace WebTests.Rest.LinkGeneration
                     .Act.OnRestClient(async client =>
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
-                        request.Settings.UseHalDefaults();
+                        request.UseHalDefaults();
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 
@@ -400,7 +400,7 @@ namespace WebTests.Rest.LinkGeneration
                     .Act.OnRestClient(async client =>
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
-                        request.Settings.UseHalDefaults();
+                        request.UseHalDefaults();
                         return await client.SendAsync<LinkedResourceModel>(request);
                     });
 

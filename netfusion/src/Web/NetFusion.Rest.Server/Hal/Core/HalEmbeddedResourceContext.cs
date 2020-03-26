@@ -53,7 +53,7 @@ namespace NetFusion.Rest.Server.Hal.Core
         {
             get
             {
-                IQueryCollection query =_contextAccessor.ActionContext.HttpContext.Request.Query;
+                IQueryCollection query = _contextAccessor.ActionContext.HttpContext.Request.Query;
 
                 if (query.TryGetValue("embed", out StringValues queryValue))
                 {

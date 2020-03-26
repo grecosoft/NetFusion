@@ -85,23 +85,23 @@ namespace NetFusion.Rest.Server.Plugin.Modules
             if (context == null) throw new ArgumentNullException(nameof(context));
 
             var (entry, ok) = GetMediaTypeEntry(mediaType);
-            if (ok)
+            if (! ok)
             {
-                // Determines the type of the object on which the metadata is based.
-                var metaSourceType = (context.Model ?? context.Resource).GetType();
-                
-                var (meta, hasMeta) = entry.GetResourceTypeMeta(metaSourceType);
-                if (!hasMeta)
-                {
-                    return false;
-                }
-
-                context.Meta = meta;
-                entry.Provider.ApplyResourceMeta(context);
-                return true;
+                return false;
+            }
+            
+            // Determines the type of the object on which the metadata is based.
+            var metaSourceType = (context.Model ?? context.Resource).GetType();
+            
+            var (meta, hasMeta) = entry.GetResourceTypeMeta(metaSourceType);
+            if (! hasMeta)
+            {
+                return false;
             }
 
-            return false;
+            context.Meta = meta;
+            entry.Provider.ApplyResourceMeta(context);
+            return true;
         }
     }
 }

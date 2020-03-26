@@ -31,5 +31,16 @@ namespace NetFusion.Rest.Client.Settings
             }
             return requestSettings;
         }
+        
+        /// <summary>
+        /// Applies the settings commonly used when submitting and consuming
+        /// REST/HAL based requests.
+        /// </summary>
+        /// <param name="apiRequest">The request to configure.</param>
+        /// <returns>Reference to the settings being configured.</returns>
+        public static IRequestSettings UseHalDefaults(this ApiRequest apiRequest)
+        {
+            return UseHalDefaults(apiRequest.Settings);
+        }
     }
 }

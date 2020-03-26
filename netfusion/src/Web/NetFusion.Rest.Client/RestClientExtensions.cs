@@ -9,11 +9,11 @@ namespace NetFusion.Rest.Client
 {
     public static class RestClientExtensions
     {
-        private static JsonSerializerOptions _defaultOptions;
+        private static readonly JsonSerializerOptions DefaultOptions;
         
         static RestClientExtensions()
         {
-            _defaultOptions = new JsonSerializerOptions
+            DefaultOptions = new JsonSerializerOptions
             {
                 IgnoreNullValues = true,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -48,7 +48,7 @@ namespace NetFusion.Rest.Client
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
             
-            options ??= _defaultOptions;
+            options ??= DefaultOptions;
             
             services.AddSingleton<IMediaTypeSerializer>(_ => new JsonMediaTypeSerializer(options));
             services.AddSingleton<IMediaTypeSerializer>(_ => new JsonMediaTypeSerializer(InternetMediaTypes.HalJson, options));

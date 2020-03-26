@@ -136,7 +136,7 @@ namespace NetFusion.Rest.Client.Settings
 	    /// </summary>
 	    /// <param name="scheme">The custom scheme.</param>
 	    /// <param name="values">The values from which the authorization header is built.</param>
-	    /// <returns>Self reference for method chainging.</returns>
+	    /// <returns>Self reference for method changing.</returns>
 	    public RequestHeaders SetAuthHeader(string scheme, params string[] values)
 	    {
 		    if (string.IsNullOrWhiteSpace(scheme))
@@ -180,15 +180,15 @@ namespace NetFusion.Rest.Client.Settings
                 }
 			}
 
-			foreach (var header in Headers)
+			foreach (var (key, value) in Headers)
 			{
-                requestMessage.Headers.Add(header.Key, header.Value.Value);
+                requestMessage.Headers.Add(key, value.Value);
 			}
 		}
 
 		internal RequestHeaders GetMergedHeaders(RequestHeaders requestSettings)
 		{
-			// Check of any of the known header values have been overridden.
+			// Check if any of the known header values have been overridden.
 			var mergedHeaders = new RequestHeaders
 			{
 				Accept = requestSettings.Accept ?? Accept ?? new[] { HeaderValue.WithValue (InternetMediaTypes.Json) },
@@ -196,15 +196,15 @@ namespace NetFusion.Rest.Client.Settings
             };
 
 			// Add all the headers from this settings object to the new merged version.
-			foreach (var header in Headers)
+			foreach (var (key, value) in Headers)
 			{
-                mergedHeaders._headers[header.Key] = header.Value;
+                mergedHeaders._headers[key] = value;
 			}
 
 			// Override or add any header values being merged.
-			foreach (var header in requestSettings.Headers)
+			foreach (var (key, value) in requestSettings.Headers)
 			{
-				mergedHeaders._headers[header.Key] = header.Value;
+				mergedHeaders._headers[key] = value;
 			}
 
 			return mergedHeaders;

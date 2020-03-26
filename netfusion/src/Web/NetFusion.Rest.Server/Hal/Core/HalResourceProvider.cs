@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Linking;
@@ -17,16 +18,15 @@ namespace NetFusion.Rest.Server.Hal.Core
     public class HalResourceProvider : IResourceProvider
     {
         /// <summary>
-        /// If the resource type being returned supports the IHalResource interface,
-        /// the link metadata is used to generate resource specific URLs. 
+        /// If the resource type being returned is of type HalResource the,
+        /// link metadata is used to generate resource specific URLs. 
         /// </summary>
         /// <param name="context">The context for the current response.</param>
         public virtual void ApplyResourceMeta(ResourceContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            var halResource = context.Resource as IHalResource;
-            if (halResource == null || context.Meta.Links.Count == 0)
+            if ( !(context.Resource is HalResource halResource) || context.Meta.Links.Count == 0)
             {
                 return;
             }
@@ -120,10 +120,18 @@ namespace NetFusion.Rest.Server.Hal.Core
 
         private static void UpdateLinkDescriptorsAndResource(ResourceContext context, ResourceLink resourceLink, Link link)
         {
+            if (string.IsNullOrWhiteSpace(link.Href))
+            {    
+                context.Logger.LogError(
+                    "The Href value for the link '{named}' for resource '{resourceName}' was not set.", 
+                    resourceLink.RelationName, (context.Model ?? context.Resource).GetType());
+                return;
+            }
+            
             SetLinkTemplateIndicator(link);
             SetLinkOptionalDescriptors(resourceLink, link);
 
-            var halResource = (IHalResource)context.Resource;
+            var halResource = (HalResource)context.Resource;
             halResource.Links.Add(resourceLink.RelationName, link);
         }
 
