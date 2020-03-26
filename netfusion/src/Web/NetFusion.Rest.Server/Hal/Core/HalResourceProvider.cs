@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Linking;
@@ -119,6 +120,14 @@ namespace NetFusion.Rest.Server.Hal.Core
 
         private static void UpdateLinkDescriptorsAndResource(ResourceContext context, ResourceLink resourceLink, Link link)
         {
+            if (string.IsNullOrWhiteSpace(link.Href))
+            {    
+                context.Logger.LogError(
+                    "The Href value for the link '{named}' for resource '{resourceName}' was not set.", 
+                    resourceLink.RelationName, (context.Model ?? context.Resource).GetType());
+                return;
+            }
+            
             SetLinkTemplateIndicator(link);
             SetLinkOptionalDescriptors(resourceLink, link);
 

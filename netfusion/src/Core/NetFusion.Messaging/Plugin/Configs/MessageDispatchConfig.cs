@@ -25,7 +25,7 @@ namespace NetFusion.Messaging.Plugin.Configs
             // Default set of message enrichers.  If not desired, the host
             // application's configuration can clear.
             AddEnricher<CorrelationEnricher>();
-            AddEnricher<DateReceivedEnricher>();
+            AddEnricher<DateOccurredEnricher>();
         }
 
         /// <summary>
