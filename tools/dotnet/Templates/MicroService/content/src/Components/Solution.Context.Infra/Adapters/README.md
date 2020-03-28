@@ -1,0 +1,1 @@
+Contains components that load domain-entities from external sources.

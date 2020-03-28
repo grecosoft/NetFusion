@@ -13,28 +13,6 @@
             "group": {
                 "kind": "build", "isDefault": true
             }
-        },
-        {
-            "label": "buildForDebug",
-            "command": "/bin/bash",
-            "options": {
-                "cwd": "${workspaceRoot}"
-            },
-
-            "args": [
-                "-c",
-                "./scripts/dockerTask.sh buildForDebug"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "cleanup",
-            "command": "/bin/bash",
-            "args": [
-                "-c",
-                "./scripts/dockerTask.sh cleanup"
-            ],
-            "problemMatcher": []
         }
     ]
 }
