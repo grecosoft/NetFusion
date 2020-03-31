@@ -4,6 +4,7 @@ using Amqp;
 using Amqp.Framing;
 using NetFusion.Base;
 using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.AMQP.Publisher.Internal
 {

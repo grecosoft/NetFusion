@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetFusion.Messaging.Types
+namespace NetFusion.Messaging.Types.Contracts
 {
     /// <summary>
     /// Represents a query request that can be dispatched to a consumer.

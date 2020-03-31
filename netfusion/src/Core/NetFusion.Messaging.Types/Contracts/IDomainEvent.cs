@@ -1,4 +1,4 @@
-﻿namespace NetFusion.Messaging.Types
+﻿namespace NetFusion.Messaging.Types.Contracts
 {
     /// <summary>
     /// Message that can be published to notify application consumers of an occurrence.

@@ -1,5 +1,6 @@
 ﻿using System;
 using NetFusion.Common.Extensions.Reflection;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Types
 {

@@ -10,7 +10,7 @@ using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Enrichers;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Plugin;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Internal
 {

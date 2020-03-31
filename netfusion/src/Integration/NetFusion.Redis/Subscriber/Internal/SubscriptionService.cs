@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Logging;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 using NetFusion.Redis.Internal;
 using NetFusion.Redis.Plugin;
 

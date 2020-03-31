@@ -1,7 +1,7 @@
-﻿using NetFusion.Base.Plugins;
-using System;
+﻿using System;
+using NetFusion.Base.Plugins;
 
-namespace NetFusion.Messaging.Types
+namespace NetFusion.Messaging.Types.Contracts
 {
     /// <summary>
     /// Implemented by a class that determines if a given consumer's message 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Types
 {

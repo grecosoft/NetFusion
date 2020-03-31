@@ -1,4 +1,4 @@
-using IMessage = NetFusion.Messaging.Types.IMessage;
+using IMessage = NetFusion.Messaging.Types.Contracts.IMessage;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

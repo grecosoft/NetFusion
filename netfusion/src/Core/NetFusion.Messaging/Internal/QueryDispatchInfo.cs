@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Exceptions;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Internal
 {

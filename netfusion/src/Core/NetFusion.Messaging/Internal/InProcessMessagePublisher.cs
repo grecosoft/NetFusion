@@ -7,10 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Logging;
+using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Exceptions;
+using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Internal
 {
@@ -24,17 +26,20 @@ namespace NetFusion.Messaging.Internal
         private readonly IServiceProvider _services;
         private readonly IMessageDispatchModule _messagingModule;
         private readonly IEntityScriptingService _scriptingSrv;
+        private readonly IMessageLogger _messageLogger;
 
         public InProcessMessagePublisher(
             ILogger<InProcessMessagePublisher> logger,
             IServiceProvider services,
             IMessageDispatchModule messagingModule,
-            IEntityScriptingService scriptingSrv)
+            IEntityScriptingService scriptingSrv,
+            IMessageLogger messageLogger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _messagingModule = messagingModule ?? throw new ArgumentNullException(nameof(messagingModule));
             _scriptingSrv = scriptingSrv ?? throw new ArgumentNullException(nameof(scriptingSrv));
+            _messageLogger = messageLogger ?? throw new ArgumentNullException(nameof(messageLogger));
         }
 
         // Not used by the implementation, but other plug-ins can use the integration type to apply
@@ -44,22 +49,38 @@ namespace NetFusion.Messaging.Internal
 
         public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
+            var msgLog = new MessageLog(message, LogContextType.PublishedMessage);
+            
             // Determine the dispatchers associated with the message.
-            IEnumerable<MessageDispatchInfo> dispatchers = _messagingModule.InProcessDispatchers
+            MessageDispatchInfo[] dispatchers = _messagingModule.InProcessDispatchers
                 .WhereHandlerForMessage(message.GetType())
                 .ToArray();
+
+            AddDispatchersToLog(msgLog, dispatchers);
+            LogMessageDispatchInfo(message, dispatchers);
             
             if (! dispatchers.Any())
             {
+                await _messageLogger.LogAsync(msgLog);
                 return;
             }
-
-            LogMessageDispatchInfo(message, dispatchers);
-
+            
             // Execute all handlers and return the task for the caller to await.
-            await InvokeMessageDispatchers(message, dispatchers, cancellationToken).ConfigureAwait(false);
+            try
+            {
+                await InvokeMessageDispatchers(message, dispatchers, cancellationToken).ConfigureAwait(false);
+            }
+            catch (MessageDispatchException ex)
+            {
+                AddErrorsToLog(msgLog, ex);
+                throw;
+            }
+            finally
+            {
+                await _messageLogger.LogAsync(msgLog);
+            }
         }
-
+        
         private async Task InvokeMessageDispatchers(IMessage message,
             IEnumerable<MessageDispatchInfo> dispatchers,
             CancellationToken cancellationToken)
@@ -195,6 +216,31 @@ namespace NetFusion.Messaging.Internal
                 Method = d.MessageHandlerMethod.Name
             })
             .ToArray();
+        }
+        
+        private void AddDispatchersToLog(MessageLog msgLog, MessageDispatchInfo[] dispatchers)
+        {
+            if (! _messageLogger.IsLoggingEnabled) return;
+            
+            if (! dispatchers.Any())
+            {
+                msgLog.AddLogDetail("No in-process message dispatchers for message.");
+            }
+
+            msgLog.AddLogDetail("In-process message dispatchers for message.");
+            foreach (MessageDispatchInfo dispatcher in dispatchers)
+            {
+               msgLog.AddLogDetail($"Handler Class: {dispatcher.ConsumerType.FullName}; " + 
+                                   $"Handler Method: {dispatcher.MessageHandlerMethod.Name}");
+            }
+        }
+
+        private void AddErrorsToLog(MessageLog msgLog, MessageDispatchException ex)
+        {
+            if (_messageLogger.IsLoggingEnabled)
+            {
+                msgLog.AddLogError(ex.Details.ToIndentedJson());
+            }
         }
     }
 }

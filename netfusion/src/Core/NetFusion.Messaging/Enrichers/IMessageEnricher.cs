@@ -1,5 +1,5 @@
-﻿using NetFusion.Messaging.Types;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Enrichers
 {

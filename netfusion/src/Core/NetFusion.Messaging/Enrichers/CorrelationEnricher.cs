@@ -1,6 +1,7 @@
 ﻿using NetFusion.Messaging.Types;
 using System;
 using System.Threading.Tasks;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Enrichers
 {

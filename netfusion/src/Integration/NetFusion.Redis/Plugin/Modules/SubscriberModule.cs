@@ -8,7 +8,7 @@ using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Messaging.Plugin;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 using NetFusion.Redis.Internal;
 using NetFusion.Redis.Subscriber;
 using NetFusion.Redis.Subscriber.Internal;

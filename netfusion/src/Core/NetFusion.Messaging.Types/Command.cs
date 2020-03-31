@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using NetFusion.Common.Extensions.Reflection;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Types
 {
@@ -27,6 +29,7 @@ namespace NetFusion.Messaging.Types
         /// Dynamic message attributes that can be associated with the command.
         /// </summary>
         [IgnoreDataMember]
+        [JsonIgnore]
         public IEntityAttributes Attributes { get; }
 
         /// <summary>

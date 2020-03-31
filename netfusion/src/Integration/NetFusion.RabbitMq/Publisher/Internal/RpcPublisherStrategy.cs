@@ -1,11 +1,11 @@
-using IMessage = NetFusion.Messaging.Types.IMessage;
+using IMessage = NetFusion.Messaging.Types.Contracts.IMessage;
 using System.Threading.Tasks;
 using EasyNetQ;
-using NetFusion.Messaging.Types;
 using System.Threading;
 using NetFusion.Messaging.Exceptions;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Logging;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.RabbitMQ.Publisher.Internal
 {

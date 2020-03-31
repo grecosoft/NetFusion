@@ -6,7 +6,7 @@ using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Internal;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 using NetFusion.Redis.Internal;
 using NetFusion.Redis.Plugin;
 using StackExchange.Redis;

@@ -1,10 +1,10 @@
 ﻿using NetFusion.Base.Exceptions;
 using NetFusion.Common.Extensions.Tasks;
-using NetFusion.Messaging.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using NetFusion.Messaging.Internal;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Exceptions
 {

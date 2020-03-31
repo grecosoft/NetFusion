@@ -1,6 +1,6 @@
 ﻿using NetFusion.Base.Entity;
 
-namespace NetFusion.Messaging.Types
+namespace NetFusion.Messaging.Types.Contracts
 {
     /// <summary>
     /// Interface representing communication between a publisher and consumer.

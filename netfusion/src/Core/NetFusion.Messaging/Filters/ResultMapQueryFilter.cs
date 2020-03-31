@@ -1,9 +1,9 @@
 ﻿using NetFusion.Mapping;
-using NetFusion.Messaging.Types;
 using System;
 using System.Collections;
 using System.Threading.Tasks;
 using NetFusion.Common.Extensions.Reflection;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Filters
 {

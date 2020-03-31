@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Plugin.Configs;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Plugin
 {

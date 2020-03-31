@@ -1,6 +1,8 @@
 ﻿using NetFusion.Base.Entity;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Types
 {
@@ -21,6 +23,7 @@ namespace NetFusion.Messaging.Types
         /// Dynamic message attributes that can be associated with the domain-event.
         /// </summary>
         [IgnoreDataMember]
+        [JsonIgnore]
         public IEntityAttributes Attributes { get; }
 
         /// <summary>

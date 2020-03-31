@@ -1,9 +1,10 @@
-using IMessage = NetFusion.Messaging.Types.IMessage;
+using IMessage = NetFusion.Messaging.Types.Contracts.IMessage;
 using System.Threading.Tasks;
 using EasyNetQ;
 using System;
 using System.Threading;
 using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Publisher.Internal
