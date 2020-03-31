@@ -50,6 +50,7 @@ namespace NetFusion.Messaging.Internal
         public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
             var msgLog = new MessageLog(message, LogContextType.PublishedMessage);
+            msgLog.SentHint("in-process");
             
             // Determine the dispatchers associated with the message.
             MessageDispatchInfo[] dispatchers = _messagingModule.InProcessDispatchers

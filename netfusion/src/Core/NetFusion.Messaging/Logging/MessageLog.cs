@@ -44,6 +44,11 @@ namespace NetFusion.Messaging.Logging
         /// Errors written by the publisher or receiver of the message.
         /// </summary>
         public IReadOnlyCollection<string> LogErrors { get; }
+        
+        /// <summary>
+        /// String value that can be used by consumer.
+        /// </summary>
+        public string Hint { get; private set; }
 
         public MessageLog(IMessage message, LogContextType logContext)
         {
@@ -66,6 +71,16 @@ namespace NetFusion.Messaging.Logging
         /// </summary>
         /// <param name="message">The error message to be logged.</param>
         public void AddLogError(string message) => _logErrors.Add(message);
+
+        /// <summary>
+        /// Sets a value that can be used by the consumer.  If the consumer is a web-client,
+        /// this value can be used to determine an icon to be displayed for the log.
+        /// </summary>
+        /// <param name="value"></param>
+        public void SentHint(string value)
+        {
+            Hint = value;
+        }
         
         private readonly List<string> _logDetails = new List<string>();
         private readonly List<string> _logErrors = new List<string>();
