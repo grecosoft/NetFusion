@@ -18,7 +18,7 @@ namespace NetFusion.Messaging.Logging
         /// <summary>
         /// The date and time the log was recorded.
         /// </summary>
-        public DateTime LogDate { get; internal set; }
+        public DateTime DateLogged { get; internal set; }
         
         /// <summary>
         /// The message that was either published or received.

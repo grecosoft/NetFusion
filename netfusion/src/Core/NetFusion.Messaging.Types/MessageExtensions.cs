@@ -12,7 +12,7 @@ namespace NetFusion.Messaging.Types
     /// </summary>
     public static class MessageExtensions
     {
-        private static readonly Type Context = typeof(MessageExtensions);
+        private static readonly Type Context = typeof(MessagingContext);
 
         /// <summary>
         /// Set a value used to identify the message if not already set.

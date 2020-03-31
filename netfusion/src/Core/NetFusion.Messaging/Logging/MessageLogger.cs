@@ -28,7 +28,7 @@ namespace NetFusion.Messaging.Logging
                 return;
             }
             
-            messageLog.LogDate = DateTime.UtcNow;
+            messageLog.DateLogged = DateTime.UtcNow;
             
             foreach (var sink in _messageLogSinks)
             {
