@@ -16,8 +16,10 @@ using Service.Domain.Plugin;
 using Service.Infra.Plugin;
 using Service.WebApi.Plugin;
 using NetFusion.Builder;
+using NetFusion.Messaging.Logging;
 using NetFusion.Rest.Client;
 using Service.App.Services;
+using Service.WebApi.Hubs;
 
 namespace Service.WebApi
 {
@@ -60,14 +62,12 @@ namespace Service.WebApi
                 .AddPlugin<InfraPlugin>()
                 .AddPlugin<WebApiPlugin>()
                 .Compose();
-               
-            if (_hostingEnv.IsDevelopment())
-            {
-                services.AddCors();                
-            }
-
+            
+            services.AddCors();
             services.AddControllers();  
+            services.AddSignalR();
             services.AddSingleton(InMemoryScripting.LoadSensorScript());
+            services.AddMessageLogSink<HubMessageLogSink>();
 
             services.AddRestClientFactory();
             services.AddDefaultMediaSerializers();
@@ -82,6 +82,7 @@ namespace Service.WebApi
             {
                 app.UseCors(builder => builder.WithOrigins(viewerUrl)
                     .AllowAnyMethod()
+                    .AllowCredentials()
                     .WithExposedHeaders("WWW-Authenticate")
                     .AllowAnyHeader());
             }
@@ -89,9 +90,15 @@ namespace Service.WebApi
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+            
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<MessageLogHub>("/api/message/log");
             });
         }
 
