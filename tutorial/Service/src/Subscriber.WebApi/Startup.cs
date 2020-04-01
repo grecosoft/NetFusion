@@ -7,10 +7,11 @@ using Microsoft.Extensions.Hosting;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Settings.Plugin;
 using NetFusion.Builder;
+using NetFusion.Messaging.Logging;
 using NetFusion.RabbitMQ.Plugin;
 using NetFusion.Redis.Plugin;
+using Subscriber.WebApi.Hubs;
 using Subscriber.WebApi.Plugin;
-
 
 namespace Subscriber.WebApi
 {
@@ -43,7 +44,7 @@ namespace Subscriber.WebApi
             services.AddCors();
             services.AddControllers();  
             services.AddSignalR();
-         //   services.AddMessageLogSink<HubMessageLogSink>();
+            services.AddMessageLogSink<HubMessageLogSink>();
         }
         
 
@@ -70,7 +71,7 @@ namespace Subscriber.WebApi
             
             app.UseEndpoints(endpoints =>
             {
-          //      endpoints.MapHub<MessageLogHub>("/api/message/log");
+                endpoints.MapHub<MessageLogHub>("/api/message/log");
             });
         }
     }
