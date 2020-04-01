@@ -49,22 +49,21 @@ namespace NetFusion.Messaging.Internal
 
         public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
-            var msgLog = new MessageLog(message, LogContextType.PublishedMessage);
-            msgLog.SentHint("in-process");
-            
             // Determine the dispatchers associated with the message.
             MessageDispatchInfo[] dispatchers = _messagingModule.InProcessDispatchers
                 .WhereHandlerForMessage(message.GetType())
                 .ToArray();
 
-            AddDispatchersToLog(msgLog, dispatchers);
-            LogMessageDispatchInfo(message, dispatchers);
-            
             if (! dispatchers.Any())
             {
-                await _messageLogger.LogAsync(msgLog);
                 return;
             }
+            
+            var msgLog = new MessageLog(message, LogContextType.PublishedMessage);
+            msgLog.SentHint("in-process");
+            
+            LogMessageDispatchInfo(message, dispatchers);
+            AddDispatchersToLog(msgLog, dispatchers);
             
             // Execute all handlers and return the task for the caller to await.
             try
@@ -223,11 +222,6 @@ namespace NetFusion.Messaging.Internal
         {
             if (! _messageLogger.IsLoggingEnabled) return;
             
-            if (! dispatchers.Any())
-            {
-                msgLog.AddLogDetail("No in-process message dispatchers for message.");
-            }
-
             msgLog.AddLogDetail("In-process message dispatchers for message.");
             foreach (MessageDispatchInfo dispatcher in dispatchers)
             {
