@@ -2,9 +2,9 @@ using System;
 using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
 using NetFusion.RabbitMQ.Subscriber;
-using Service.Client.Commands;
+using Subscriber.WebApi.Commands;
 
-namespace Service.Client.Handlers
+namespace Subscriber.WebApi.Handlers
 {
     public class SampleWorkQueueHandler : IMessageConsumer
     {

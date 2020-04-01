@@ -1,7 +1,7 @@
 using System;
 using NetFusion.Messaging.Types;
 
-namespace Service.Client.Events
+namespace Subscriber.WebApi.Events
 {
     public class ClaimStatusUpdated : DomainEvent
     {

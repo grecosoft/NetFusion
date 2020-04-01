@@ -1,9 +1,9 @@
 using System;
 using NetFusion.Messaging;
 using NetFusion.RabbitMQ.Subscriber;
-using Service.Client.Commands;
+using Subscriber.WebApi.Commands;
 
-namespace Service.Client.Handlers
+namespace Subscriber.WebApi.Handlers
 {
     public class SampleRpcHandler : IMessageConsumer
     {

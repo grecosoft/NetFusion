@@ -1,7 +1,7 @@
-namespace Service.Client.Events
-{
-    using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types;
 
+namespace Subscriber.WebApi.Events
+{
     public class PropertySold : DomainEvent
     {
         public string Address { get; set; }

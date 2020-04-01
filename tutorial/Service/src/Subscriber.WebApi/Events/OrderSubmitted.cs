@@ -1,8 +1,8 @@
-namespace Service.Client.Events
-{
-    using System;
-    using NetFusion.Messaging.Types;
+using System;
+using NetFusion.Messaging.Types;
 
+namespace Subscriber.WebApi.Events
+{
     public class OrderSubmitted : DomainEvent
     {
         public string PartNumber { get; set; }

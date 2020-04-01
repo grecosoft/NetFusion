@@ -1,6 +1,6 @@
 using NetFusion.Bootstrap.Plugins;
 
-namespace Service.Client.Plugin
+namespace Subscriber.WebApi.Plugin
 {
     public class ClientPlugin : PluginBase
     {

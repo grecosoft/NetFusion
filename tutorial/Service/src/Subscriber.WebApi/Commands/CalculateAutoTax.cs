@@ -1,7 +1,7 @@
-namespace Service.Client.Commands
-{
-    using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types;
 
+namespace Subscriber.WebApi.Commands
+{
     public class CalculateAutoTax : Command<TaxCalc>
     {
         public string Vin { get; set; }

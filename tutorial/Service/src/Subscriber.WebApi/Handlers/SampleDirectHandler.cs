@@ -2,9 +2,9 @@ using System;
 using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
 using NetFusion.RabbitMQ.Subscriber;
-using Service.Client.Events;
+using Subscriber.WebApi.Events;
 
-namespace Service.Client.Handlers
+namespace Subscriber.WebApi.Handlers
 {
     public class SampleDirectHandler : IMessageConsumer
     {

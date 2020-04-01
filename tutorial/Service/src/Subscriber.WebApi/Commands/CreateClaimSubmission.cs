@@ -1,6 +1,6 @@
 using NetFusion.Messaging.Types;
 
-namespace Service.Client.Commands
+namespace Subscriber.WebApi.Commands
 {
     public class CreateClaimSubmission : Command
     {

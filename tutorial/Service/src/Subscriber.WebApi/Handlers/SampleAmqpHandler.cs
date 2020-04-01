@@ -2,10 +2,10 @@ using System;
 using NetFusion.AMQP.Subscriber;
 using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
-using Service.Domain.Commands;
-using Service.Domain.Events;
+using Subscriber.WebApi.Commands;
+using Subscriber.WebApi.Events;
 
-namespace Service.Client.Handlers
+namespace Subscriber.WebApi.Handlers
 {
     [Host("claims-bus")]
     public class SampleAmqpHandler : IMessageConsumer
