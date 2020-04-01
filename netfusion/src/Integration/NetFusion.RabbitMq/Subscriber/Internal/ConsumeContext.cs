@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging.Internal;
+using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin;
 using NetFusion.RabbitMQ.Plugin;
 
@@ -29,6 +30,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         public IBusModule BusModule { get; internal set; }
         public IMessageDispatchModule MessagingModule { get; internal set; }
         public ISerializationManager Serialization { get; internal set; }
+        public IMessageLogger MessageLogger { get; internal set; }
 
         public Func<string, string, MessageDispatchInfo> GetRpcMessageHandler { get; internal set; }
         
@@ -65,6 +67,8 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         /// <param name="message">The received message.</param>
         public void LogReceivedMessage(IMessage message)
         {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            
             Logger.LogTraceDetails(RabbitMqLogEvents.SubscriberEvent, 
                 "Message Received from Message Bus.", 
                 new {
@@ -76,6 +80,18 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
                     Handler = Subscriber.DispatchInfo.MessageHandlerMethod.Name,
                     Message = message
                 });
+        }
+
+        public void AddMessageContextToLog(MessageLog msgLog)
+        {
+            if (msgLog == null) throw new ArgumentNullException(nameof(msgLog));
+            
+            msgLog.AddLogDetail($"Exchange Name: {Subscriber.QueueMeta.Exchange.ExchangeName}");
+            msgLog.AddLogDetail($"Exchange Type: {Subscriber.QueueMeta.Exchange.ExchangeType}");
+            msgLog.AddLogDetail($"Queue Name: {Subscriber.QueueMeta.QueueName}");
+            msgLog.AddLogDetail($"Content Type: {MessageProps.ContentType}");
+            msgLog.AddLogDetail($"Handler Class: {Subscriber.DispatchInfo.ConsumerType.Name}");
+            msgLog.AddLogDetail($"Handler Method: {Subscriber.DispatchInfo.MessageHandlerMethod.Name}");
         }
     }
 }

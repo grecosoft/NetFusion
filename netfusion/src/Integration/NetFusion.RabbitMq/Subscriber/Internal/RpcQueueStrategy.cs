@@ -5,6 +5,7 @@ using EasyNetQ.Topology;
 using Microsoft.Extensions.Logging;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Internal;
+using NetFusion.Messaging.Logging;
 using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Subscriber.Internal
@@ -42,24 +43,31 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             MessageDispatchInfo rpcCommandHandler = GetDispatchInfoForRpcCommand(context);
             var message = context.DeserializeIntoMessage(rpcCommandHandler.MessageType);
             
+            var msgLog = new MessageLog(message, LogContextType.ReceivedMessage);
+            msgLog.SentHint("subscribe-rabbitmq-rpc");
+            
             context.LogReceivedMessage(message);
-           
-            try 
+            context.AddMessageContextToLog(msgLog);
+
+            try
             {
                 object response = await context.MessagingModule.InvokeDispatcherInNewLifetimeScopeAsync(
-                    rpcCommandHandler, 
+                    rpcCommandHandler,
                     message).ConfigureAwait(false);
 
                 await ReplyWithResponse(context, response);
             }
             catch (AggregateException ex)
             {
+                msgLog.AddLogError(ex.Message);
                 await ReplyWithException(context, ex.InnerException);
             }
             catch (Exception ex)
             {
+                msgLog.AddLogError(ex.Message);
                 await ReplyWithException(context, ex);
             }
+            finally { await context.MessageLogger.LogAsync(msgLog); }
         }
 
         private static MessageDispatchInfo GetDispatchInfoForRpcCommand(ConsumeContext context)

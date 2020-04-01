@@ -7,6 +7,7 @@ using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
+using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Types.Contracts;
 using NetFusion.Redis.Internal;
@@ -29,6 +30,7 @@ namespace NetFusion.Redis.Plugin.Modules
         
         // Services:
         private ISerializationManager _serializationManager;
+        private IMessageLogger _messageLogger;
         
         // Message handlers subscribed to Redis channels:
         private MessageChannelSubscriber[] _subscribers;
@@ -64,6 +66,7 @@ namespace NetFusion.Redis.Plugin.Modules
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {
             _serializationManager = services.GetRequiredService<ISerializationManager>();
+            _messageLogger = services.GetRequiredService<IMessageLogger>();
 
             return SubscribeToChannels(_subscribers);
         }
@@ -75,7 +78,7 @@ namespace NetFusion.Redis.Plugin.Modules
                 ISubscriber subscriber = ConnModule.GetSubscriber(msgSubscriber.DatabaseName);
                 
                 // Callback invoked when message published to channel:
-                await subscriber.SubscribeAsync(msgSubscriber.Channel, (channel, message) =>
+                await subscriber.SubscribeAsync(msgSubscriber.Channel, async (channel, message) =>
                 {
                     Type messageType = msgSubscriber.DispatchInfo.MessageType;
                     var messageParts = ChannelMessageEncoder.UnPack(message);
@@ -86,12 +89,25 @@ namespace NetFusion.Redis.Plugin.Modules
                         messageType, 
                         messageParts.messageData);
 
-                    LogReceivedDomainEvent(channel, domainEvent, msgSubscriber);
+                    var msgLog = new MessageLog(domainEvent, LogContextType.ReceivedMessage);
                     
-                    // Invoke the in-process handler:
-                    DispatchModule.InvokeDispatcherInNewLifetimeScopeAsync(
-                        msgSubscriber.DispatchInfo, 
-                        domainEvent).Wait();
+                    LogReceivedDomainEvent(channel, domainEvent, msgSubscriber);
+                    AddMessageLogDetails(msgLog, channel, msgSubscriber);
+
+                    try
+                    {
+                        // Invoke the in-process handler:
+                        DispatchModule.InvokeDispatcherInNewLifetimeScopeAsync(
+                            msgSubscriber.DispatchInfo, 
+                            domainEvent).Wait();
+                    }
+                    catch (Exception ex)
+                    {
+                        msgLog.AddLogError(ex.Message);
+                        throw;
+                    }
+                    finally
+                    { await _messageLogger.LogAsync(msgLog); }
                 });
             }
         }
@@ -107,6 +123,17 @@ namespace NetFusion.Redis.Plugin.Modules
                     Subscription = subscriber.Channel,
                     DomainEvent = domainEvent
                 });
+        }
+
+        private void AddMessageLogDetails(MessageLog msgLog, string channel, MessageChannelSubscriber subscriber)
+        {
+            if (! _messageLogger.IsLoggingEnabled) return;
+            
+            msgLog.SentHint("redis-subscriber");
+            msgLog.AddLogDetail($"Channel: {channel}");
+            msgLog.AddLogDetail($"Subscription: {subscriber.Channel}");
+            msgLog.AddLogDetail($"Handler Type: {subscriber.DispatchInfo.ConsumerType.FullName}");
+            msgLog.AddLogDetail($"Handler Method: {subscriber.DispatchInfo.MessageHandlerMethod.Name}");
         }
 
         public override void Log(IDictionary<string, object> moduleLog)

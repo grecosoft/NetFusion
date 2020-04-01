@@ -9,6 +9,7 @@ using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Messaging.Internal;
+using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin;
 using NetFusion.RabbitMQ.Metadata;
 using NetFusion.RabbitMQ.Subscriber.Internal;
@@ -27,6 +28,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         protected IMessageDispatchModule MessagingModule { get; set; }
         
         private ISerializationManager _serializationManager;
+        private IMessageLogger _messageLogger;
 
         // Message handlers subscribed to queues:
         private MessageQueueSubscriber[] _subscribers;
@@ -37,8 +39,9 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {
-            // Dependent modules:
+            // Dependent Services:
             _serializationManager = services.GetRequiredService<ISerializationManager>();
+            _messageLogger = services.GetRequiredService<IMessageLogger>();
 
             _subscribers = GetQueueSubscribers(MessagingModule);
             return SubscribeToQueues(BusModule, _subscribers);
@@ -110,6 +113,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                         BusModule = BusModule,
                         MessagingModule = MessagingModule,
                         Serialization = _serializationManager,
+                        MessageLogger = _messageLogger,
                         GetRpcMessageHandler = GetRpcMessageHandler
                     };
 

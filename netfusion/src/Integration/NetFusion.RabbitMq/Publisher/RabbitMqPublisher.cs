@@ -67,6 +67,7 @@ namespace NetFusion.RabbitMQ.Publisher
             }
 
             var msgLog = new MessageLog(message, LogContextType.PublishedMessage);
+            msgLog.SentHint("publish-rabbitmq");
             
             // Lookup the exchange associated with the message and the bus
             // on which it should be created.
@@ -112,7 +113,8 @@ namespace NetFusion.RabbitMQ.Publisher
             
             if (definition.IsDefaultExchange)
             {
-                
+                msgLog.AddLogDetail("Exchange: Default Exchange");
+                msgLog.AddLogDetail($"Queue Name: {definition.QueueMeta.QueueName}");
             }
             else
             {
