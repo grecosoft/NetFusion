@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using NetFusion.Builder;
+using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Rest.Server.Plugin;
 using NetFusion.Settings.Plugin;
@@ -10,6 +12,7 @@ using NetFusion.Web.Mvc.Plugin;
 using Solution.Context.App.Plugin;
 using Solution.Context.Domain.Plugin;
 using Solution.Context.Infra.Plugin;
+using Solution.Context.WebApi.Hubs;
 using Solution.Context.WebApi.Plugin;
 
 namespace Solution.Context.WebApi
@@ -19,10 +22,12 @@ namespace Solution.Context.WebApi
     {
         // Microsoft Abstractions:
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _hostingEnv;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnv)
         {
             _configuration = configuration;
+            _hostingEnv = hostingEnv;
         }
         
         public void ConfigureServices(IServiceCollection services)
@@ -43,7 +48,15 @@ namespace Solution.Context.WebApi
                 .Compose();
 
             services.AddCors();
-            services.AddControllers();    
+            services.AddControllers();
+
+            // Adds SignalR and a message log sink that delegates
+            // all received messages to a SignalR Hub.
+            if (_hostingEnv.IsDevelopment())
+            {
+                services.AddSignalR();
+                services.AddMessageLogSink<HubMessageLogSink>();
+            }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -64,6 +77,13 @@ namespace Solution.Context.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                // Register the SignalR Hub that a development tool can connect
+                // for receiving logs of published and received messages.
+                if (env.IsDevelopment())
+                {
+                    endpoints.MapHub<MessageLogHub>("/api/message/log");
+                }
             });
         }
     }
