@@ -42,9 +42,13 @@ namespace Subscriber.WebApi
                 .Compose();
             
             services.AddCors();
-            services.AddControllers();  
-            services.AddSignalR();
-            services.AddMessageLogSink<HubMessageLogSink>();
+            services.AddControllers();
+
+            if (_hostingEnv.IsDevelopment())
+            {
+                services.AddSignalR();
+                services.AddMessageLogSink<HubMessageLogSink>();
+            }
         }
         
 
@@ -67,11 +71,11 @@ namespace Subscriber.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-            
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHub<MessageLogHub>("/api/message/log");
+                
+                if (env.IsDevelopment())
+                {
+                    endpoints.MapHub<MessageLogHub>("/api/message/log");
+                }
             });
         }
     }

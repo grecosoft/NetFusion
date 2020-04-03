@@ -64,16 +64,19 @@ namespace Service.WebApi
                 .Compose();
             
             services.AddCors();
-            services.AddControllers();  
-            services.AddSignalR();
+            services.AddControllers();
             services.AddSingleton(InMemoryScripting.LoadSensorScript());
-            services.AddMessageLogSink<HubMessageLogSink>();
-
+            
             services.AddRestClientFactory();
             services.AddDefaultMediaSerializers();
             RegisterHttpClients(services);
+
+            if (_hostingEnv.IsDevelopment())
+            {
+                services.AddSignalR();
+                services.AddMessageLogSink<HubMessageLogSink>();
+            }
         }
-        
 
         public void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime, IWebHostEnvironment env)
         {
@@ -94,11 +97,11 @@ namespace Service.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-            
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHub<MessageLogHub>("/api/message/log");
+
+                if (env.IsDevelopment())
+                {
+                    endpoints.MapHub<MessageLogHub>("/api/message/log");
+                }
             });
         }
 
