@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using NetFusion.Messaging.Types.Attributes;
 using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Enrichers
@@ -13,7 +14,7 @@ namespace NetFusion.Messaging.Enrichers
         
         public override Task Enrich(IMessage message)
         {
-            AddMessageProperty(message, "DateOccurred", _scopedDateReceived);
+            message.SetDateOccurred(_scopedDateReceived);
             return base.Enrich(message);
         }
     }

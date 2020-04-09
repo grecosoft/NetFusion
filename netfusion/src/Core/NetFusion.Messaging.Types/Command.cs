@@ -1,8 +1,5 @@
-﻿using NetFusion.Base.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Types.Contracts;
 
@@ -17,30 +14,19 @@ namespace NetFusion.Messaging.Types
     {
         protected Command()
         {
-            Attributes = new EntityAttributes();
+            Attributes = new Dictionary<string, string>();
         }
 
         /// <summary>
         /// The optional result of executing the command.
         /// </summary>
         public object Result { get; protected set; }
-
+        
         /// <summary>
-        /// Dynamic message attributes that can be associated with the command.
+        /// List of arbitrary key value pairs associated with the message. 
         /// </summary>
-        [IgnoreDataMember]
-        [JsonIgnore]
-        public IEntityAttributes Attributes { get; }
-
-        /// <summary>
-        /// Dynamic message attribute values.
-        /// </summary>
-        public IDictionary<string, object> AttributeValues
-        {
-            get => Attributes.GetValues();
-            set => Attributes.SetValues(value);
-        }
-
+        public IDictionary<string, string> Attributes { get; set; }
+        
         public Type ResultType { get; protected set; }
 
         public virtual void SetResult(object result)

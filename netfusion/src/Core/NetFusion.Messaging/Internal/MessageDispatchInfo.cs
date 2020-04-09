@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using NetFusion.Base.Scripting;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Types;
 using NetFusion.Messaging.Types.Contracts;
@@ -98,13 +97,6 @@ namespace NetFusion.Messaging.Internal
         /// message handler to be called.
         /// </summary>
         public RuleApplyTypes RuleApplyType { get; set; }
-
-        /// <summary>
-        /// Identifies an externally stored script that is executed against the
-        /// message to determine if it matches the criteria of the handler.  
-        /// If the message has matching criteria, the handler is called.
-        /// </summary>
-        public ScriptPredicate Predicate { get; set; }
 
         /// <summary>
         /// Determines if the message handler applies based on the assigned dispatcher

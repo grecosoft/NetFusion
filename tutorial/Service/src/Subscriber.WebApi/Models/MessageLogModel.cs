@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using NetFusion.Messaging.Logging;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Attributes;
 
 namespace Subscriber.WebApi.Models
 {
@@ -33,8 +33,9 @@ namespace Subscriber.WebApi.Models
                 
                 CorrelationId = messageLog.Message.GetCorrelationId(),
                 
-                DateOccurred = messageLog.Message.Attributes.GetValueOrDefault("DateOccurred", 
-                    messageLog.DateLogged, typeof(MessagingContext))
+                DateOccurred = messageLog.Message.Attributes.GetDateTimeValue(
+                    AttributeExtensions.GetPluginScopedName("DateOccurred"),
+                    messageLog.DateLogged)
             };
         }
     }

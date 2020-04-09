@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Messaging;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Attributes;
 using NetFusion.Web.Mvc.Metadata;
 using Service.Domain.Commands;
 using Service.Domain.Events;

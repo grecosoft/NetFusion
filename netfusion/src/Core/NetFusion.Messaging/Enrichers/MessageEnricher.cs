@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Attributes;
 using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Enrichers
@@ -32,7 +32,8 @@ namespace NetFusion.Messaging.Enrichers
             if (message == null) throw new ArgumentNullException(nameof(message));
             if (name == null) throw new ArgumentNullException(nameof(name));
 
-            message.Attributes.SetValue(name, value, typeof(MessagingContext), overrideIfPresent: false);
+            message.Attributes.SetStringValue(AttributeExtensions.GetPluginScopedName(name), 
+                value.ToString(), false);
         }
     }
 }

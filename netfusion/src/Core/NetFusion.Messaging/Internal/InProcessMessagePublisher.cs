@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Tasks;
@@ -25,20 +24,17 @@ namespace NetFusion.Messaging.Internal
         private readonly ILogger _logger;
         private readonly IServiceProvider _services;
         private readonly IMessageDispatchModule _messagingModule;
-        private readonly IEntityScriptingService _scriptingSrv;
         private readonly IMessageLogger _messageLogger;
 
         public InProcessMessagePublisher(
             ILogger<InProcessMessagePublisher> logger,
             IServiceProvider services,
             IMessageDispatchModule messagingModule,
-            IEntityScriptingService scriptingSrv,
             IMessageLogger messageLogger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _messagingModule = messagingModule ?? throw new ArgumentNullException(nameof(messagingModule));
-            _scriptingSrv = scriptingSrv ?? throw new ArgumentNullException(nameof(scriptingSrv));
             _messageLogger = messageLogger ?? throw new ArgumentNullException(nameof(messageLogger));
         }
 
@@ -89,7 +85,7 @@ namespace NetFusion.Messaging.Internal
 
             try
             {
-                MessageDispatchInfo[] matchingDispatchers = await GetMatchingDispatchers(dispatchers, message);
+                MessageDispatchInfo[] matchingDispatchers = GetMatchingDispatchers(dispatchers, message);
                 AssertMessageDispatchers(message, matchingDispatchers);
 
                 taskList = matchingDispatchers.Invoke(message, InvokeDispatcher, cancellationToken);
@@ -115,7 +111,7 @@ namespace NetFusion.Messaging.Internal
 
         // Evaluates any specified handler dispatch rules to determine if the message
         // meets the criteria required by the handler.
-        private async Task<MessageDispatchInfo[]> GetMatchingDispatchers(
+        private MessageDispatchInfo[] GetMatchingDispatchers(
             IEnumerable<MessageDispatchInfo> dispatchers, 
             IMessage message)
         {
@@ -123,29 +119,12 @@ namespace NetFusion.Messaging.Internal
 
             foreach (MessageDispatchInfo dispatchInfo in dispatchers)
             {
-                if (await PassesDispatchCriteria(dispatchInfo, message))
+                if (dispatchInfo.IsMatch(message))
                 {
                     matchingDispatchers.Add(dispatchInfo);
                 }
             }
             return matchingDispatchers.ToArray();
-        }
-
-        // Determines message dispatchers that apply to the message being published.  This is optional and
-        // specified by decorating the message handler method with attributes.
-        private async Task<bool> PassesDispatchCriteria(MessageDispatchInfo dispatchInfo, IMessage message)
-        {
-            ScriptPredicate predicate = dispatchInfo.Predicate;
-
-            // Run a dynamic script against the message and check the result of the specified predicate property.
-            // This allow storing rule predicates external from the code.
-            if (predicate != null)
-            {
-                return await _scriptingSrv.SatisfiesPredicateAsync(message, predicate);
-            }
-
-            // Check static rules to determine if message meets criteria.
-            return dispatchInfo.IsMatch(message);
         }
 
         private static void AssertMessageDispatchers(IMessage message, MessageDispatchInfo[] dispatchers)

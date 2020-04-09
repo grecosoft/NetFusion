@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using EasyNetQ;
 using System;
 using System.Threading;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Attributes;
 using NetFusion.Messaging.Types.Contracts;
 using NetFusion.RabbitMQ.Metadata;
 

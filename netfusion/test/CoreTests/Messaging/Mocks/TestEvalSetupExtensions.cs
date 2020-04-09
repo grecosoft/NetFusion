@@ -66,10 +66,10 @@ namespace CoreTests.Messaging.Mocks
         IMessageConsumer
     {
 
-        [InProcessHandler, ApplyScriptPredicate("test-script", "IsImportant")]
-        public void OnEventPredicatePassed(MockEvalDomainEvent evt)
-        {
-            AddCalledHandler(nameof(OnEventPredicatePassed));
-        }
+//        [InProcessHandler, ApplyScriptPredicate("test-script", "IsImportant")]
+//        public void OnEventPredicatePassed(MockEvalDomainEvent evt)
+//        {
+//            AddCalledHandler(nameof(OnEventPredicatePassed));
+//        }
     }
 }

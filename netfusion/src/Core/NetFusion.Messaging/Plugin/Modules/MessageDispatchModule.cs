@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Catalog;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Exceptions;
@@ -52,8 +51,7 @@ namespace NetFusion.Messaging.Plugin.Modules
             // Associate optional rules with the dispatchers that 
             // determine if handler applies to a published message.
             SetDispatchRules(allDispatchers);
-            SetDispatchPredicateScripts(allDispatchers);
-            
+
             AssertDispatchRules(allDispatchers);
 
             AllMessageTypeDispatchers = allDispatchers
@@ -92,18 +90,6 @@ namespace NetFusion.Messaging.Plugin.Modules
                 dispatcher.DispatchRules = DispatchRules
                     .Where(r => dispatcher.DispatchRuleTypes.Contains(r.GetType()))
                     .ToArray(); 
-            }
-        }
-        
-        // Check all message consumer handlers having the ApplyScriptPredicate attribute and
-        // store a reference to a ScriptPredicate instance indicating the script to be executed
-        // at runtime to determine if the message handler should be invoked.
-        private static void SetDispatchPredicateScripts(IEnumerable<MessageDispatchInfo> allDispatchers)
-        {
-            foreach (var dispatcher in allDispatchers)
-            {
-                var scriptAttribute = dispatcher.MessageHandlerMethod.GetAttribute<ApplyScriptPredicateAttribute>();
-                dispatcher.Predicate = scriptAttribute?.ToPredicate();
             }
         }
 

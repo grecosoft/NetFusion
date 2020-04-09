@@ -1,4 +1,4 @@
-﻿using NetFusion.Base.Entity;
+﻿using System.Collections.Generic;
 
 namespace NetFusion.Messaging.Types.Contracts
 {
@@ -6,7 +6,8 @@ namespace NetFusion.Messaging.Types.Contracts
     /// Interface representing communication between a publisher and consumer.
     /// The message can also be attributed with dynamic properties.
     /// </summary>
-    public interface IMessage : IAttributedEntity
+    public interface IMessage 
     {
+        IDictionary<string, string> Attributes { get; set; }
     }
 }
