@@ -17,7 +17,7 @@ namespace NetFusion.Messaging.Types.Attributes
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Name not specified", nameof(name));
             
-            return $"NetFusion.Messaging.{name}";
+            return $"net-fusion.messaging.{name}";
         }
 
         /// <summary>

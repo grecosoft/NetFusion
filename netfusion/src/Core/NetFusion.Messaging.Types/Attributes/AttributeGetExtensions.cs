@@ -60,22 +60,6 @@ namespace NetFusion.Messaging.Types.Attributes
             return parsedValue;
         }
         
-        public static uint GetUIntValue(this IDictionary<string, string> attributes, string name)
-        {
-            string value = GetValue(attributes, name);
-            if (value == null)
-            {
-                throw new InvalidOperationException($"Attribute named: {name} not found.");
-            }
-
-            if (!uint.TryParse(value, out uint parsedValue))
-            {
-                throw new InvalidOperationException(
-                    $"Attribute named: {name} with value: {value} could not be parsed as an UInit.");
-            }
-
-            return parsedValue;
-        }
         
         public static int[] GetIntArrayValue(this IDictionary<string, string> attributes, string name)
         {
@@ -100,6 +84,25 @@ namespace NetFusion.Messaging.Types.Attributes
                     yield return parsedValue;
                 }
             }
+        }
+        
+        //--  UInt
+        
+        public static uint GetUIntValue(this IDictionary<string, string> attributes, string name)
+        {
+            string value = GetValue(attributes, name);
+            if (value == null)
+            {
+                throw new InvalidOperationException($"Attribute named: {name} not found.");
+            }
+
+            if (!uint.TryParse(value, out uint parsedValue))
+            {
+                throw new InvalidOperationException(
+                    $"Attribute named: {name} with value: {value} could not be parsed as an UInit.");
+            }
+
+            return parsedValue;
         }
         
         //--  Byte
@@ -281,6 +284,40 @@ namespace NetFusion.Messaging.Types.Attributes
             }
 
             return parsedValue;
+        }
+        
+        public static DateTime GetUtcDateTimeValue(this IDictionary<string, string> attributes, string name)
+        {
+            string value = GetValue(attributes, name);
+            if (value == null)
+            {
+                throw new InvalidOperationException($"Attribute named: {name} not found.");
+            }
+
+            if (!DateTime.TryParse(value, out DateTime parsedValue))
+            {
+                throw new InvalidOperationException(
+                    $"Attribute named: {name} with value: {value} could not be parsed as a DateTime.");
+            }
+
+            return parsedValue.ToUniversalTime();
+        }        
+        
+        public static DateTime GetUtcDateTimeValue(this IDictionary<string, string> attributes, string name, DateTime defaultValue)
+        {
+            string value = GetValue(attributes, name);
+            if (value == null)
+            {
+                return defaultValue.Kind == DateTimeKind.Local ? defaultValue.ToUniversalTime() : defaultValue;
+            }
+
+            if (!DateTime.TryParse(value, out DateTime parsedValue))
+            {
+                throw new InvalidOperationException(
+                    $"Attribute named: {name} with value: {value} could not be parsed as a DateTime.");
+            }
+
+            return parsedValue.ToUniversalTime();
         }
         
         //--  Boolean

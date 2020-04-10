@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Types
@@ -13,7 +14,7 @@ namespace NetFusion.Messaging.Types
     {
         protected DomainEvent()
         {
-            Attributes = new Dictionary<string, string>();
+            Attributes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>

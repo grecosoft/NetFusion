@@ -100,7 +100,7 @@ namespace NetFusion.Messaging.Types.Attributes
             string name, DateTime value, 
             bool overrideIfPresent = true)
         {
-            return SetAttribute(attributes, name, value.ToString(CultureInfo.InvariantCulture), overrideIfPresent);
+            return SetAttribute(attributes, name, value.ToString("o"), overrideIfPresent);
         }
         
         //--  UInt

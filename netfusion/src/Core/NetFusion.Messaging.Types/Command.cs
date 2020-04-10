@@ -14,7 +14,7 @@ namespace NetFusion.Messaging.Types
     {
         protected Command()
         {
-            Attributes = new Dictionary<string, string>();
+            Attributes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
