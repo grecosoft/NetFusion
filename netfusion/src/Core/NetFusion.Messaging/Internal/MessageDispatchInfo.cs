@@ -180,10 +180,11 @@ namespace NetFusion.Messaging.Internal
         {
             // If we are processing a result for a command, the result
             // needs to be set.  
-            if (! (message is ICommand command))
+            if (! (message is ICommandResultState resultState))
             {
                 return null;
             }
+            
            
             // A Task containing a result is being returned so get the result
             // from the returned task and set it as the command result:
@@ -192,14 +193,14 @@ namespace NetFusion.Messaging.Internal
                 dynamic resultTask = result;
                 var resultValue = (object)resultTask.Result;
 
-                command.SetResult(resultValue);
+                resultState.SetResult(resultValue);
                 return resultValue;
             }
 
             // The handler was not asynchronous set the result of the command:
             if (result != null && !IsAsync)
             {
-                command.SetResult(result);
+                resultState.SetResult(result);
                 return result;
             }
 

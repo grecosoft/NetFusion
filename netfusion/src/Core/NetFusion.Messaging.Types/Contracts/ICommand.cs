@@ -9,21 +9,7 @@ namespace NetFusion.Messaging.Types.Contracts
     /// </summary>
     public interface ICommand : IMessage
     {
-        /// <summary>
-        /// The optional result of the command.
-        /// </summary>
-        object Result { get; }
-
-        /// <summary>
-        /// The type of the result associated with the command.
-        /// </summary>
-        Type ResultType { get; }
-         
-        /// <summary>
-        /// Sets the optional result associated with the message.
-        /// </summary>
-        /// <param name="result">Associated result.</param>
-        void SetResult(object result);
+        
     }
 
     /// <summary>
@@ -34,6 +20,6 @@ namespace NetFusion.Messaging.Types.Contracts
     /// <typeparam name="TResult">The response set by the consumer that processed the message.</typeparam>
     public interface ICommand<out TResult> : ICommand
     {
-        new TResult Result { get; }
+        TResult Result { get; }
     }
 }

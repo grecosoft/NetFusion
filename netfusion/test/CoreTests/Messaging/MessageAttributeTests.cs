@@ -138,13 +138,21 @@ namespace CoreTests.Messaging
         [Fact]
         public void ExistingAttributeOverriden_ByDefault()
         {
-            
+            var domainEvent = new TestDomainEvent();
+            domainEvent.Attributes.SetIntValue("TestValue", 5);
+            domainEvent.Attributes.SetIntValue("TestValue", 2);
+
+            domainEvent.Attributes.GetIntValue("TestValue").Should().Be(2);
         }
 
         [Fact]
         public void ExistingAttribute_CanBePreserved()
         {
-            
+            var domainEvent = new TestDomainEvent();
+            domainEvent.Attributes.SetIntValue("TestValue", 5);
+            domainEvent.Attributes.SetIntValue("TestValue", 10, false);
+
+            domainEvent.Attributes.GetIntValue("TestValue").Should().Be(5);
         }
 
         private class TestDomainEvent : DomainEvent
