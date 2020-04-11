@@ -3,6 +3,7 @@ using FluentAssertions;
 using NetFusion.Messaging.Types;
 using Xunit;
 using NetFusion.Messaging.Types.Attributes;
+using NetFusion.Serialization;
 
 namespace CoreTests.Messaging
 {
@@ -62,16 +63,43 @@ namespace CoreTests.Messaging
         [Fact]
         public void DomainEvent_UsingMessagePack_SerializesCorrectly()
         {
+            var serializer = new MessagePackSerializer();
+            var domainEvent = new TestDomainEvent(500)
+            {
+                TestProp1 = "Test Value1"
+            };
 
+            domainEvent.Attributes.SetIntValue("TestAttrib1", 60);
+            
+            byte[] data = serializer.Serialize(domainEvent);
+            var newDomainEvent = serializer.Deserialize<TestDomainEvent>(data, typeof(TestDomainEvent));
+
+            newDomainEvent.TestProp1.Should().Be(domainEvent.TestProp1);
+            newDomainEvent.TestProp2.Should().Be(newDomainEvent.TestProp2);
+            newDomainEvent.Attributes.GetIntValue("TestAttrib1").Should().Be(60);
         }
 
         [Fact]
         public void Command_UsingMessagePack_SerializesCorrectly()
         {
+            var serializer = new MessagePackSerializer();
+            var command = new TestCommand(500)
+            {
+                TestProp1 = "Test Value1"
+            };
 
+            command.Attributes.SetIntValue("TestAttrib1", 60);
+
+
+            var data = serializer.Serialize(command);
+            var newCommand = serializer.Deserialize<TestCommand>(data, typeof(TestCommand));
+
+            newCommand.TestProp1.Should().Be(command.TestProp1);
+            command.TestProp2.Should().Be(newCommand.TestProp2);
+            newCommand.Attributes.GetIntValue("TestAttrib1").Should().Be(60);
         }
 
-        private class TestDomainEvent : DomainEvent
+        public class TestDomainEvent : DomainEvent
         {
             public string TestProp1 { get; set; }
             public int TestProp2 { get; private set; }
@@ -84,7 +112,7 @@ namespace CoreTests.Messaging
             }
         }
 
-        private class TestCommand : Command<TestResult>
+        public class TestCommand : Command<TestResult>
         {
             public string TestProp1 { get; set; }
             public int TestProp2 { get; private set; }
@@ -97,7 +125,7 @@ namespace CoreTests.Messaging
             }
         }
 
-        private class TestResult
+        public class TestResult
         {
         }
         
