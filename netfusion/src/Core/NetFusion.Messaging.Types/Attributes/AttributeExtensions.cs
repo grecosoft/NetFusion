@@ -17,7 +17,7 @@ namespace NetFusion.Messaging.Types.Attributes
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Name not specified", nameof(name));
             
-            return $"net-fusion.messaging.{name}";
+            return $"NetFusion.Messaging.{name}";
         }
 
         /// <summary>
@@ -37,7 +37,8 @@ namespace NetFusion.Messaging.Types.Attributes
             message.Attributes.GetStringValue(GetPluginScopedName("CorrelationId"), null);
        
         /// <summary>
-        /// An arbitrary string value associated with the message.
+        /// An arbitrary string value associated with the message.  Used to specify key
+        /// used to determine which queues a message should be routed.
         /// </summary>
         /// <param name="message">The message to set route key.  If present, it
         /// will be overriden.</param>
@@ -47,8 +48,9 @@ namespace NetFusion.Messaging.Types.Attributes
         
 
         /// <summary>
-        /// Given an array of values, set the route key to the corresponding string
-        /// values concatenated with period character.
+        /// Given an array of values, sets the route key to the corresponding string
+        /// values concatenated with period character.  Used to specify key used
+        /// to determine which queues a message should be routed. 
         /// </summary>
         /// <param name="message">The message to set route key.  If present, it
         /// will be overriden.</param>
@@ -58,7 +60,7 @@ namespace NetFusion.Messaging.Types.Attributes
             string[] routeKeys = values.Where(v => v != null)
                 .Select(v => v.ToString()).ToArray();
 
-            message.Attributes.SetStringValue(GetPluginScopedName("RouteKey"), routeKeys);
+            message.Attributes.SetStringValue(GetPluginScopedName("RouteKey"), string.Join(".", routeKeys));
         }
 
         /// <summary>
@@ -94,67 +96,154 @@ namespace NetFusion.Messaging.Types.Attributes
             return null;
         }
         
-        public static void SetDateOccurred(this IMessage message, DateTime value) =>
-            message.Attributes.SetDateValue(GetPluginScopedName("DateOccurred"), value, false);
+        /// <summary>
+        /// The date and time the action represented by the message occurred.
+        /// </summary>
+        /// <param name="message">The message to set occurred date.</param>
+        /// <param name="value">The date an time of the message.  If a value
+        /// is already set, it will not be overriden.</param>
+        public static void SetUtcDateOccurred(this IMessage message, DateTime value) =>
+            message.Attributes.SetUtcDateValue(GetPluginScopedName("DateOccurred"), value, false);
 
-        public static DateTime SetDateOccurred(this IMessage message) =>
-            message.Attributes.GetDateTimeValue(GetPluginScopedName("DateOccurred"));
+        /// <summary>
+        /// The date and time the action represented by the message occurred.
+        /// </summary>
+        /// <param name="message">The message to retrieve the occured date.</param>
+        /// <returns></returns>
+        public static DateTime GetUtcDateOccurred(this IMessage message) =>
+            message.Attributes.GetUtcDateTimeValue(GetPluginScopedName("DateOccurred"));
         
+        
+        /// <summary>
+        /// Secondary value to identity the message.
+        /// </summary>
+        /// <param name="message">The message to set identity value.</param>
+        /// <param name="value">A value used to identity the message.</param>
         public static void SetMessageId(this IMessage message, string value) =>
             message.Attributes.SetStringValue(value, GetPluginScopedName("MessageId"), false);
       
 
+        /// <summary>
+        /// Returns secondary value to identity the message.
+        /// </summary>
+        /// <param name="message">The message to retrieve identity value.</param>
+        /// <returns>Value identifying the message.</returns>
         public static string GetMessageId(this IMessage message) =>
             message.Attributes.GetStringValue(GetPluginScopedName("MessageId"), null);
         
+        
+        /// <summary>
+        /// Message value that can be used to determine how a message is routed.
+        /// </summary>
+        /// <param name="message">The message to set attribute value.</param>
+        /// <param name="value">The current subject value.</param>
         public static void SetSubject(this IMessage message, string value) =>
-            message.Attributes.SetStringValue(value, GetPluginScopedName("Subject"), false);
+            message.Attributes.SetStringValue(value, GetPluginScopedName("Subject"));
       
 
+        /// <summary>
+        /// Returns message value used to determine how a message is routed.
+        /// </summary>
+        /// <param name="message">The message to retrieve the attribute value.</param>
+        /// <returns></returns>
         public static string GetSubject(this IMessage message) =>
             message.Attributes.GetStringValue(GetPluginScopedName("Subject"), null);
         
+        
+        /// <summary>
+        /// Message value indicating where the subscriber can replay to a received message.
+        /// </summary>
+        /// <param name="message">The message to set attribute value.</param>
+        /// <param name="value"></param>
         public static void SetReplyTo(this IMessage message, string value) =>
-            message.Attributes.SetStringValue(value, GetPluginScopedName("ReplyTo"), false);
+            message.Attributes.SetStringValue(value, GetPluginScopedName("ReplyTo"));
       
 
+        /// <summary>
+        /// Returns value indicating where the subscriber can replay to a received message.
+        /// </summary>
+        /// <param name="message">The message to retrieve attribute value.</param>
+        /// <returns>The replay to value.</returns>
         public static string GetReplyTo(this IMessage message) =>
             message.Attributes.GetStringValue(GetPluginScopedName("ReplyTo"), null);
         
+        /// <summary>
+        /// Message value use to specify a destination for the message.
+        /// </summary>
+        /// <param name="message">The message to set attribute value.</param>
+        /// <param name="value">The destination value.</param>
         public static void SetTo(this IMessage message, string value) =>
-            message.Attributes.SetStringValue(value, GetPluginScopedName("To"), false);
+            message.Attributes.SetStringValue(value, GetPluginScopedName("To"));
       
 
+        /// <summary>
+        /// Returns message value used to specify a destination for the message.
+        /// </summary>
+        /// <param name="message">The message to retrieve attribute value.</param>
+        /// <returns>Destination value.</returns>
         public static string GetTo(this IMessage message) =>
             message.Attributes.GetStringValue(GetPluginScopedName("To"), null);
 
             
+        /// <summary>
+        /// Sets value used to identity a user associated with the message.
+        /// </summary>
+        /// <param name="message">The message to set attribute value.</param>
+        /// <param name="value">Value identity an user.</param>
         public static void SetUserId(this IMessage message, string value) =>
             message.Attributes.SetStringValue(value, GetPluginScopedName("UserId"), false);
       
 
+        /// <summary>
+        /// Gets value used to identity user associated with the message.
+        /// </summary>
+        /// <param name="message">The message to retrieve attribute value.</param>
+        /// <returns>Value identifying an user.</returns>
         public static string GetUserId(this IMessage message) =>
             message.Attributes.GetStringValue(GetPluginScopedName("UserId"), null);
         
+        
+        /// <summary>
+        /// Sets date and time used to indicate after which the message should
+        /// no longer be considered current and processed.
+        /// </summary>
+        /// <param name="message">The message to set attribute value.</param>
+        /// <param name="value">The expire date value.  The specified date will
+        /// be converted to UTC is a local date is specified.</param>
+        public static void SetUtcAbsoluteExpiryTime(this IMessage message, DateTime value) =>
+            message.Attributes.SetUtcDateValue(GetPluginScopedName("AbsoluteExpiryTime"), value);
 
-        public static void SetAbsoluteExpiryTime(this IMessage message, DateTime value) =>
-            message.Attributes.SetDateValue(GetPluginScopedName("AbsoluteExpiryTime"), value);
 
-
-        public static DateTime? GetAbsoluteExpiryTime(this IMessage message)
+        /// <summary>
+        /// Get date an time used to indicate after which the message should
+        /// no longer be considered current and processed.
+        /// </summary>
+        /// <param name="message">The message to retrieve attribute value.</param>
+        /// <returns>The expiry date and time.</returns>
+        public static DateTime? GetUtcAbsoluteExpiryTime(this IMessage message)
         {
             if (message.Attributes.HasValue(GetPluginScopedName("AbsoluteExpiryTime")))
             {
-                return message.Attributes.GetDateTimeValue(GetPluginScopedName("AbsoluteExpiryTime"));
+                return message.Attributes.GetUtcDateTimeValue(GetPluginScopedName("AbsoluteExpiryTime"));
             }
 
             return null;
         }
         
+        /// <summary>
+        /// Sets token value for Transport Layer Security.
+        /// </summary>
+        /// <param name="message">The message to set attribute value.</param>
+        /// <param name="value">The security TLS token.</param>
         public static void SetTls(this IMessage message, uint value) =>
             message.Attributes.SetUIntValue(GetPluginScopedName("Tls"), value);
 
 
+        /// <summary>
+        /// Returns token value for Transport Layer Security.
+        /// </summary>
+        /// <param name="message">The message to retrieve attribute value.</param>
+        /// <returns>The security TLS token.</returns>
         public static uint? GetTls(this IMessage message)
         {
             if (message.Attributes.HasValue(GetPluginScopedName("Tls")))

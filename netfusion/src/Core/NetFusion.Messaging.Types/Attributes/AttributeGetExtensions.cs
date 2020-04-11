@@ -34,10 +34,10 @@ namespace NetFusion.Messaging.Types.Attributes
                 throw new InvalidOperationException($"Attribute named: {name} not found.");
             }
 
-            if (!int.TryParse(value, out int parsedValue))
+            if (! int.TryParse(value, out int parsedValue))
             {
                 throw new InvalidOperationException(
-                    $"Attribute named: {name} with value: {value} could not be parsed as an integer.");
+                    $"Attribute named: {name} with value: {value} could not be parsed as an Integer.");
             }
 
             return parsedValue;
@@ -51,10 +51,10 @@ namespace NetFusion.Messaging.Types.Attributes
                 return defaultValue;
             }
 
-            if (!int.TryParse(value, out int parsedValue))
+            if (! int.TryParse(value, out int parsedValue))
             {
                 throw new InvalidOperationException(
-                    $"Attribute named: {name} with value: {value} could not be parsed as an integer.");
+                    $"Attribute named: {name} with value: {value} could not be parsed as an Integer.");
             }
 
             return parsedValue;
@@ -73,13 +73,13 @@ namespace NetFusion.Messaging.Types.Attributes
 
             IEnumerable<int> ParseValues()
             {
-                string[] items = values.Split("^");
+                string[] items = values.Split(AttributeSetExtensions.ArraySeparator);
                 foreach (string itemValue in items)
                 {
-                    if (!int.TryParse(itemValue, out int parsedValue))
+                    if (! int.TryParse(itemValue, out int parsedValue))
                     {
                         throw new InvalidOperationException(
-                            $"Attribute named: {name} with value: {parsedValue} could not be parsed as an integer.");
+                            $"Attribute named: {name} with value: {parsedValue} could not be parsed as an Integer.");
                     }
                     yield return parsedValue;
                 }
@@ -96,7 +96,7 @@ namespace NetFusion.Messaging.Types.Attributes
                 throw new InvalidOperationException($"Attribute named: {name} not found.");
             }
 
-            if (!uint.TryParse(value, out uint parsedValue))
+            if (! uint.TryParse(value, out uint parsedValue))
             {
                 throw new InvalidOperationException(
                     $"Attribute named: {name} with value: {value} could not be parsed as an UInit.");
@@ -115,10 +115,10 @@ namespace NetFusion.Messaging.Types.Attributes
                 throw new InvalidOperationException($"Attribute named: {name} not found.");
             }
 
-            if (!int.TryParse(value, out int parsedValue))
+            if (! int.TryParse(value, out int parsedValue))
             {
                 throw new InvalidOperationException(
-                    $"Attribute named: {name} with value: {value} could not be parsed as byte.");
+                    $"Attribute named: {name} with value: {value} could not be parsed as Byte.");
             }
 
             return parsedValue;
@@ -134,10 +134,10 @@ namespace NetFusion.Messaging.Types.Attributes
                 throw new InvalidOperationException($"Attribute named: {name} not found.");
             }
 
-            if (!decimal.TryParse(value, out decimal parsedValue))
+            if (! decimal.TryParse(value, out decimal parsedValue))
             {
                 throw new InvalidOperationException(
-                    $"Attribute named: {name} with value: {value} could not be parsed as a decimal.");
+                    $"Attribute named: {name} with value: {value} could not be parsed as a Decimal.");
             }
 
             return parsedValue;
@@ -151,10 +151,10 @@ namespace NetFusion.Messaging.Types.Attributes
                 return defaultValue;
             }
 
-            if (!decimal.TryParse(value, out decimal parsedValue))
+            if (! decimal.TryParse(value, out decimal parsedValue))
             {
                 throw new InvalidOperationException(
-                    $"Attribute named: {name} with value: {value} could not be parsed as a decimal.");
+                    $"Attribute named: {name} with value: {value} could not be parsed as a Decimal.");
             }
 
             return parsedValue;
@@ -172,13 +172,13 @@ namespace NetFusion.Messaging.Types.Attributes
 
             IEnumerable<decimal> ParseValues()
             {
-                string[] items = values.Split("^");
+                string[] items = values.Split(AttributeSetExtensions.ArraySeparator);
                 foreach (string itemValue in items)
                 {
-                    if (!decimal.TryParse(itemValue, out decimal parsedValue))
+                    if (! decimal.TryParse(itemValue, out decimal parsedValue))
                     {
                         throw new InvalidOperationException(
-                            $"Attribute named: {name} with value: {parsedValue} could not be parsed as a decimal.");
+                            $"Attribute named: {name} with value: {parsedValue} could not be parsed as a Decimal.");
                     }
                     yield return parsedValue;
                 }
@@ -211,7 +211,7 @@ namespace NetFusion.Messaging.Types.Attributes
                 throw new InvalidOperationException($"Attribute named: {name} not found.");
             }
 
-            return values.Split("^");
+            return values.Split(AttributeSetExtensions.ArraySeparator);
         }
         
         //--  Guid
@@ -224,7 +224,7 @@ namespace NetFusion.Messaging.Types.Attributes
                 throw new InvalidOperationException($"Attribute named: {name} not found.");
             }
 
-            if (!Guid.TryParse(value, out Guid parsedValue))
+            if (! Guid.TryParse(value, out Guid parsedValue))
             {
                 throw new InvalidOperationException(
                     $"Attribute named: {name} with value: {value} could not be parsed as a Guid.");
@@ -241,7 +241,7 @@ namespace NetFusion.Messaging.Types.Attributes
                 return defaultValue;
             }
 
-            if (!Guid.TryParse(value, out Guid parsedValue))
+            if (! Guid.TryParse(value, out Guid parsedValue))
             {
                 throw new InvalidOperationException(
                     $"Attribute named: {name} with value: {value} could not be parsed as a Guid.");
@@ -260,7 +260,7 @@ namespace NetFusion.Messaging.Types.Attributes
                 throw new InvalidOperationException($"Attribute named: {name} not found.");
             }
 
-            if (!DateTime.TryParse(value, out DateTime parsedValue))
+            if (! DateTime.TryParse(value, out DateTime parsedValue))
             {
                 throw new InvalidOperationException(
                     $"Attribute named: {name} with value: {value} could not be parsed as a DateTime.");
@@ -277,7 +277,7 @@ namespace NetFusion.Messaging.Types.Attributes
                 return defaultValue;
             }
 
-            if (!DateTime.TryParse(value, out DateTime parsedValue))
+            if (! DateTime.TryParse(value, out DateTime parsedValue))
             {
                 throw new InvalidOperationException(
                     $"Attribute named: {name} with value: {value} could not be parsed as a DateTime.");
@@ -294,7 +294,7 @@ namespace NetFusion.Messaging.Types.Attributes
                 throw new InvalidOperationException($"Attribute named: {name} not found.");
             }
 
-            if (!DateTime.TryParse(value, out DateTime parsedValue))
+            if (! DateTime.TryParse(value, out DateTime parsedValue))
             {
                 throw new InvalidOperationException(
                     $"Attribute named: {name} with value: {value} could not be parsed as a DateTime.");
@@ -311,7 +311,7 @@ namespace NetFusion.Messaging.Types.Attributes
                 return defaultValue.Kind == DateTimeKind.Local ? defaultValue.ToUniversalTime() : defaultValue;
             }
 
-            if (!DateTime.TryParse(value, out DateTime parsedValue))
+            if (! DateTime.TryParse(value, out DateTime parsedValue))
             {
                 throw new InvalidOperationException(
                     $"Attribute named: {name} with value: {value} could not be parsed as a DateTime.");
@@ -330,10 +330,10 @@ namespace NetFusion.Messaging.Types.Attributes
                 throw new InvalidOperationException($"Attribute named: {name} not found.");
             }
 
-            if (!bool.TryParse(value, out bool parsedValue))
+            if (! bool.TryParse(value, out bool parsedValue))
             {
                 throw new InvalidOperationException(
-                    $"Attribute named: {name} with value: {value} could not be parsed as a bool.");
+                    $"Attribute named: {name} with value: {value} could not be parsed as a Bool.");
             }
 
             return parsedValue;
@@ -347,10 +347,10 @@ namespace NetFusion.Messaging.Types.Attributes
                 return defaultValue;
             }
 
-            if (!bool.TryParse(value, out bool parsedValue))
+            if (! bool.TryParse(value, out bool parsedValue))
             {
                 throw new InvalidOperationException(
-                    $"Attribute named: {name} with value: {value} could not be parsed as an integer.");
+                    $"Attribute named: {name} with value: {value} could not be parsed as a Bool.");
             }
 
             return parsedValue;
@@ -359,7 +359,7 @@ namespace NetFusion.Messaging.Types.Attributes
         private static string GetValue(IDictionary<string, string> attributes, string name)
         {
             if (attributes == null) throw new ArgumentNullException(nameof(attributes));
-            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name not specified.", nameof(name));
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Attribute Name not specified.", nameof(name));
 
             attributes.TryGetValue(name, out string value);
             return value;

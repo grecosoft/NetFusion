@@ -16,6 +16,8 @@ namespace NetFusion.Messaging.Types.Attributes
     /// </summary>
     public static class AttributeSetExtensions
     {
+        public const string ArraySeparator = "^|";
+        
         //--  Integer
         
         public static IDictionary<string, string> SetIntValue(this IDictionary<string, string> attributes, 
@@ -26,18 +28,17 @@ namespace NetFusion.Messaging.Types.Attributes
         }
 
         public static IDictionary<string, string> SetIntValue(this IDictionary<string, string> attributes, 
-            string name, 
-            int[] values, 
+            string name, IEnumerable<int> values, 
             bool overrideIfPresent = true)
         {
             var value = values.Select(v => v.ToString()).ToArray();
-            return SetAttribute(attributes, name, string.Join('^', value), overrideIfPresent);
+            return SetAttribute(attributes, name, string.Join(ArraySeparator, value), overrideIfPresent);
         }
      
         //--  Byte
         
         public static IDictionary<string, string> SetByteValue(this IDictionary<string, string> attributes, 
-            string name, int value, 
+            string name, byte value, 
             bool overrideIfPresent = true)
         {
             return SetAttribute(attributes, name, value.ToString(), overrideIfPresent);
@@ -53,11 +54,11 @@ namespace NetFusion.Messaging.Types.Attributes
         }
         
         public static IDictionary<string, string> SetDecimalValue(this IDictionary<string, string> attributes,
-            string name, decimal[] values, 
+            string name, IEnumerable<decimal> values, 
             bool overrideIfPresent = true)
         {
             var value = values.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToArray();
-            return SetAttribute(attributes, name, string.Join('^', value), overrideIfPresent);
+            return SetAttribute(attributes, name, string.Join(ArraySeparator, value), overrideIfPresent);
         }
         
         //--  String
@@ -70,10 +71,10 @@ namespace NetFusion.Messaging.Types.Attributes
         }
 
         public static IDictionary<string, string> SetStringValue(this IDictionary<string, string> attributes, 
-            string name, string[] values, 
+            string name, IEnumerable<string> values, 
             bool overrideIfPresent = true)
         {
-            return SetAttribute(attributes, name, string.Join('^', values), overrideIfPresent);
+            return SetAttribute(attributes, name, string.Join(ArraySeparator, values), overrideIfPresent);
         }
         
         //--  Boolean
@@ -103,6 +104,14 @@ namespace NetFusion.Messaging.Types.Attributes
             return SetAttribute(attributes, name, value.ToString("o"), overrideIfPresent);
         }
         
+        public static IDictionary<string, string> SetUtcDateValue(this IDictionary<string, string> attributes, 
+            string name, DateTime value, 
+            bool overrideIfPresent = true)
+        {
+            value = value.Kind == DateTimeKind.Local ? value.ToUniversalTime() : value;
+            return SetAttribute(attributes, name, value.ToString("o"), overrideIfPresent);
+        }
+        
         //--  UInt
         
         public static IDictionary<string, string> SetUIntValue(this IDictionary<string, string> attributes, 
@@ -113,10 +122,14 @@ namespace NetFusion.Messaging.Types.Attributes
         }
         
         private static IDictionary<string, string> SetAttribute(IDictionary<string, string> attributes,
-            string name, string value, bool overrideIfPresent)
+            string name, string value, 
+            bool overrideIfPresent)
         {
             if (attributes == null) throw new ArgumentNullException(nameof(attributes));
             
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("Value must be specified.", nameof(value));
+
 
             if (attributes.ContainsKey(name) && !overrideIfPresent)
             {

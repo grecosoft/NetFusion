@@ -107,7 +107,7 @@ namespace NetFusion.AMQP.Publisher.Internal
                 nsMessage.Properties.UserId = Encoding.UTF8.GetBytes(userId);
             }
 
-            var absExpiryTime = message.GetAbsoluteExpiryTime();
+            var absExpiryTime = message.GetUtcAbsoluteExpiryTime();
             if (absExpiryTime != null)
             {
                 nsMessage.Properties.AbsoluteExpiryTime = absExpiryTime.Value;

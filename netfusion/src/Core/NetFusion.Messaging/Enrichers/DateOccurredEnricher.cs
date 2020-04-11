@@ -14,7 +14,7 @@ namespace NetFusion.Messaging.Enrichers
         
         public override Task Enrich(IMessage message)
         {
-            message.SetDateOccurred(_scopedDateReceived);
+            message.SetUtcDateOccurred(_scopedDateReceived);
             return base.Enrich(message);
         }
     }
