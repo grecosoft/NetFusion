@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NetFusion.Messaging.Types.Contracts
+﻿namespace NetFusion.Messaging.Types.Contracts
 {
     /// <summary>
     /// Represents a message that can have one and only one consumer.  The handling consumer
