@@ -59,12 +59,12 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             }
             catch (AggregateException ex)
             {
-                msgLog.AddLogError(ex.Message);
+                msgLog.AddLogError(ex);
                 await ReplyWithException(context, ex.InnerException);
             }
             catch (Exception ex)
             {
-                msgLog.AddLogError(ex.Message);
+                msgLog.AddLogError(ex);
                 await ReplyWithException(context, ex);
             }
             finally { await context.MessageLogger.LogAsync(msgLog); }

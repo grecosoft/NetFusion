@@ -86,7 +86,7 @@ namespace NetFusion.Redis.Publisher
                 }
                 catch (Exception ex)
                 {
-                    msgLog.AddLogError(ex.Message);
+                    msgLog.AddLogError(ex);
                     throw;
                 }
                 finally { await _messageLogger.LogAsync(msgLog); }

@@ -103,7 +103,7 @@ namespace NetFusion.Redis.Plugin.Modules
                     }
                     catch (Exception ex)
                     {
-                        msgLog.AddLogError(ex.Message);
+                        msgLog.AddLogError(ex);
                         throw;
                     }
                     finally

@@ -73,6 +73,12 @@ namespace NetFusion.Messaging.Logging
         public void AddLogError(string message) => _logErrors.Add(message);
 
         /// <summary>
+        /// Adds exception as a log error message.
+        /// </summary>
+        /// <param name="exception">The exception to be logged.</param>
+        public void AddLogError(Exception exception) => _logDetails.Add(exception?.ToString());
+
+        /// <summary>
         /// Sets a value that can be used by the consumer.  If the consumer is a web-client,
         /// this value can be used to determine an icon to be displayed for the log.
         /// </summary>

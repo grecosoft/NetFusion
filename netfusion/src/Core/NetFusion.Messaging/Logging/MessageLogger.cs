@@ -23,6 +23,8 @@ namespace NetFusion.Messaging.Logging
 
         public async Task LogAsync(MessageLog messageLog)
         {
+            if (messageLog == null) throw new ArgumentNullException(nameof(messageLog));
+            
             if (! IsLoggingEnabled)
             {
                 return;

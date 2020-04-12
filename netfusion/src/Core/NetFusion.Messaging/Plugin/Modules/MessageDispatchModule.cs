@@ -140,19 +140,17 @@ namespace NetFusion.Messaging.Plugin.Modules
             // is received outside of the normal lifetime scope such as the one associated with the current
             // web request.
 
-            using (var scope = CompositeApp.Instance.CreateServiceScope())
+            using var scope = CompositeApp.Instance.CreateServiceScope();
+            try
             {
-                try
-                {
-                    // Resolve the component and call the message handler.
-                    var consumer = (IMessageConsumer)scope.ServiceProvider.GetRequiredService(dispatcher.ConsumerType);
-                    return await dispatcher.Dispatch(message, consumer, cancellationToken).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    Context.Logger.LogError(MessagingLogEvents.MessagingException, ex, "Message Dispatch Error Details.");
-                    throw;
-                }
+                // Resolve the component and call the message handler.
+                var consumer = (IMessageConsumer)scope.ServiceProvider.GetRequiredService(dispatcher.ConsumerType);
+                return await dispatcher.Dispatch(message, consumer, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Context.Logger.LogError(MessagingLogEvents.MessagingException, ex, "Message Dispatch Error Details.");
+                throw;
             }
         }
 

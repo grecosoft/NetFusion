@@ -42,7 +42,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             }
             catch (Exception ex)
             {
-                msgLog.AddLogError(ex.Message);
+                msgLog.AddLogError(ex);
                 throw;
             }
             finally { await context.MessageLogger.LogAsync(msgLog); }

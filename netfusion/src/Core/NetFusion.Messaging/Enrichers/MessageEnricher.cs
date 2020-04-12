@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using NetFusion.Messaging.Types.Attributes;
+﻿using System.Threading.Tasks;
 using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Enrichers
@@ -18,22 +16,6 @@ namespace NetFusion.Messaging.Enrichers
         public virtual Task Enrich(IMessage message)
         {
             return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Utility method that will add a key/value to the message if not already
-        /// present.  The type of the derived enricher is used as the context.
-        /// </summary>
-        /// <param name="message">The message to add key/value.</param>
-        /// <param name="name">The name of the property.</param>
-        /// <param name="value">The value of the property.</param>
-        protected void AddMessageProperty(IMessage message, string name, object value)
-        {
-            if (message == null) throw new ArgumentNullException(nameof(message));
-            if (name == null) throw new ArgumentNullException(nameof(name));
-
-            message.Attributes.SetStringValue(AttributeExtensions.GetPluginScopedName(name), 
-                value.ToString(), false);
         }
     }
 }
