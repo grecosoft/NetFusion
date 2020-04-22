@@ -1,7 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using NetFusion.Messaging.Types;
 using NetFusion.Messaging.Enrichers;
+using NetFusion.Messaging.Types.Attributes;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace Demo.Infra
 {
@@ -9,7 +10,7 @@ namespace Demo.Infra
     {
         public override Task Enrich(IMessage message)
         {
-            AddMessageProperty(message, "MachineName", Environment.MachineName);
+            message.Attributes.SetStringValue("MachineName", Environment.MachineName);
             return base.Enrich(message);
         }
     }

@@ -4,7 +4,8 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Common.Extensions;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Internal;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Attributes;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace Demo.Infra
 {

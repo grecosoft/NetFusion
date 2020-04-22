@@ -16,11 +16,11 @@
     <ProjectReference Include="..\Demo.WebApi\Demo.WebApi.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="3.2.158" />
-    <PackageReference Include="NetFusion.Base" Version="3.2.158" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.158" />
-    <PackageReference Include="NetFusion.Settings" Version="3.2.158" />
-    <PackageReference Include="NetFusion.Test" Version="3.2.158" />
+    <PackageReference Include="NetFusion.Common" Version="3.2.159" />
+    <PackageReference Include="NetFusion.Base" Version="3.2.159" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.159" />
+    <PackageReference Include="NetFusion.Settings" Version="3.2.159" />
+    <PackageReference Include="NetFusion.Test" Version="3.2.159" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="xunit" Version="2.4.1" />
