@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Demo.Domain.Events;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Messaging;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Attributes;
 
 namespace Demo.WebApi.Controllers
 {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Demo.Domain.Queries;
 using NetFusion.Base.Entity;
 using NetFusion.Messaging.Filters;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace Demo.Infra
 {
