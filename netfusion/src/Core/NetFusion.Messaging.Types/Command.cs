@@ -1,8 +1,7 @@
-﻿using NetFusion.Base.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using NetFusion.Common.Extensions.Reflection;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Types
 {
@@ -11,48 +10,42 @@ namespace NetFusion.Messaging.Types
     /// The handling consumer can associate a result after processing the message.  A command
     /// expresses an action that is to take place resulting in a change to an application's state.
     /// </summary>
-    public abstract class Command : ICommand
+    public abstract class Command : ICommand, ICommandResultState
     {
         protected Command()
         {
-            Attributes = new EntityAttributes();
+            Attributes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
-
+        
         /// <summary>
-        /// The optional result of executing the command.
+        /// List of arbitrary key value pairs associated with the message. 
         /// </summary>
-        public object Result { get; protected set; }
+        public IDictionary<string, string> Attributes { get; set; }
 
-        /// <summary>
-        /// Dynamic message attributes that can be associated with the command.
-        /// </summary>
-        [IgnoreDataMember]
-        public IEntityAttributes Attributes { get; }
-
-        /// <summary>
-        /// Dynamic message attribute values.
-        /// </summary>
-        public IDictionary<string, object> AttributeValues
-        {
-            get => Attributes.GetValues();
-            set => Attributes.SetValues(value);
-        }
-
-        public Type ResultType { get; protected set; }
-
-        public virtual void SetResult(object result)
+      
+        // Used by this class and the derived generic command class to access
+        // the result state of the command.
+        protected ICommandResultState ResultState => this;
+        
+        
+        //-- Explicit implementation of ICommandState used to access the command's result state.
+        object ICommandResultState.Result { get; set; }
+        Type ICommandResultState.ResultType { get; set; }
+        
+        
+        void ICommandResultState.SetResult(object result)
         {
             // The command result can be null.
             if (result == null) return;
             
-            if (! result.GetType().CanAssignTo(ResultType))
+            if (! result.GetType().CanAssignTo(ResultState.ResultType))
             {
                 throw new InvalidOperationException(
                     $"The handler for the command of type: {GetType()} returned a result of type: {result.GetType()} " + 
-                    $"and is not assignable to the command's declared result type of: {ResultType}.");
+                    $"and is not assignable to the command's declared result type of: {ResultState.ResultType}.");
             }
             
-            Result = result;
+            ResultState.Result = result;
         }
     }
 
@@ -65,13 +58,13 @@ namespace NetFusion.Messaging.Types
     {
         protected Command()
         {
-            ResultType = typeof(TResult);
-            base.Result = default(TResult);
+            ResultState.ResultType = typeof(TResult);
+            ResultState.Result = default(TResult);
         }
 
         /// <summary>
         /// The result of executing the command.
         /// </summary>
-        public new TResult Result => (TResult)base.Result;
+        public TResult Result => (TResult)ResultState.Result;
     }
 }

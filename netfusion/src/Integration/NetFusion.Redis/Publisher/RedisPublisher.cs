@@ -6,7 +6,8 @@ using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Internal;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Logging;
+using NetFusion.Messaging.Types.Contracts;
 using NetFusion.Redis.Internal;
 using NetFusion.Redis.Plugin;
 using StackExchange.Redis;
@@ -27,6 +28,7 @@ namespace NetFusion.Redis.Publisher
 
         private readonly ILogger _logger;
         private readonly ISerializationManager _serialization;
+        private readonly IMessageLogger _messageLogger;
         
         /// <summary>
         /// Indicates that the publisher delivers messages out-of-process.
@@ -35,12 +37,14 @@ namespace NetFusion.Redis.Publisher
         
         public RedisPublisher(IConnectionModule connModule, IPublisherModule pubModule,
             ILogger<RedisPublisher> logger,
-            ISerializationManager serialization)
+            ISerializationManager serialization,
+            IMessageLogger messageLogger)
         {
             _connModule = connModule ?? throw new ArgumentNullException(nameof(connModule));
             _pubModule = pubModule ?? throw new ArgumentNullException(nameof(pubModule));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _serialization = serialization ?? throw new ArgumentNullException(nameof(serialization));
+            _messageLogger = messageLogger ?? throw new ArgumentNullException(nameof(messageLogger));
         }
         
         public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
@@ -68,11 +72,24 @@ namespace NetFusion.Redis.Publisher
                 {
                     channelName += $".{eventStateData}";
                 }
+                
+                var msgLog = new MessageLog(domainEvent, LogContextType.PublishedMessage);
 
                 LogChannelPublish(domainEvent, channel.DatabaseName, channelName);
+                AddMessageDetails(msgLog, channel.DatabaseName, channelName);
+                
                 byte[] messageData = ChannelMessageEncoder.Pack(channel.ContentType, messageValue);
 
-                await database.PublishAsync(channelName, messageData).ConfigureAwait(false);
+                try
+                {
+                    await database.PublishAsync(channelName, messageData).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    msgLog.AddLogError(ex);
+                    throw;
+                }
+                finally { await _messageLogger.LogAsync(msgLog); }
             }
         }
         
@@ -85,6 +102,13 @@ namespace NetFusion.Redis.Publisher
                     ChannelName = channelName,
                     DomainEvent = domainEvent
                 });
+        }
+
+        private static void AddMessageDetails(MessageLog msgLog, string databaseName, string channelName)
+        {
+            msgLog.SentHint("redis-publisher");
+            msgLog.AddLogDetail($"Database Name: {databaseName}");
+            msgLog.AddLogDetail($"Channel Name: {channelName}");
         }
     }
 }

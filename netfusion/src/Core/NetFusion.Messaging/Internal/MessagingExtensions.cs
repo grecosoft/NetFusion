@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Internal
 {

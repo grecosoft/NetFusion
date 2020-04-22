@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using NetFusion.Base.Scripting;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Internal
 {
@@ -99,13 +99,6 @@ namespace NetFusion.Messaging.Internal
         public RuleApplyTypes RuleApplyType { get; set; }
 
         /// <summary>
-        /// Identifies an externally stored script that is executed against the
-        /// message to determine if it matches the criteria of the handler.  
-        /// If the message has matching criteria, the handler is called.
-        /// </summary>
-        public ScriptPredicate Predicate { get; set; }
-
-        /// <summary>
         /// Determines if the message handler applies based on the assigned dispatcher
         /// rules and the dispatcher rule type.  
         /// </summary>
@@ -187,10 +180,11 @@ namespace NetFusion.Messaging.Internal
         {
             // If we are processing a result for a command, the result
             // needs to be set.  
-            if (! (message is ICommand command))
+            if (! (message is ICommandResultState resultState))
             {
                 return null;
             }
+            
            
             // A Task containing a result is being returned so get the result
             // from the returned task and set it as the command result:
@@ -199,14 +193,14 @@ namespace NetFusion.Messaging.Internal
                 dynamic resultTask = result;
                 var resultValue = (object)resultTask.Result;
 
-                command.SetResult(resultValue);
+                resultState.SetResult(resultValue);
                 return resultValue;
             }
 
             // The handler was not asynchronous set the result of the command:
             if (result != null && !IsAsync)
             {
-                command.SetResult(result);
+                resultState.SetResult(result);
                 return result;
             }
 

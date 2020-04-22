@@ -2,11 +2,11 @@
 using NetFusion.Base.Entity;
 using NetFusion.Base.Scripting;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Messaging.Types;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Filters
 {

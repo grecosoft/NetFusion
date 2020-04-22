@@ -1,4 +1,5 @@
 ﻿using System;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Types
 {

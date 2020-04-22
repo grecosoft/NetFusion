@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NetFusion.Base;
 using NetFusion.Base.Scripting;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 using NetFusion.RabbitMQ.Publisher.Internal;
 using NetFusion.RabbitMQ.Settings;
 

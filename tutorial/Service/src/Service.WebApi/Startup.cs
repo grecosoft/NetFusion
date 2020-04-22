@@ -16,8 +16,10 @@ using Service.Domain.Plugin;
 using Service.Infra.Plugin;
 using Service.WebApi.Plugin;
 using NetFusion.Builder;
+using NetFusion.Messaging.Logging;
 using NetFusion.Rest.Client;
 using Service.App.Services;
+using Service.WebApi.Hubs;
 
 namespace Service.WebApi
 {
@@ -60,20 +62,21 @@ namespace Service.WebApi
                 .AddPlugin<InfraPlugin>()
                 .AddPlugin<WebApiPlugin>()
                 .Compose();
-               
-            if (_hostingEnv.IsDevelopment())
-            {
-                services.AddCors();                
-            }
-
-            services.AddControllers();  
+            
+            services.AddCors();
+            services.AddControllers();
             services.AddSingleton(InMemoryScripting.LoadSensorScript());
-
+            
             services.AddRestClientFactory();
             services.AddDefaultMediaSerializers();
             RegisterHttpClients(services);
+
+            if (_hostingEnv.IsDevelopment())
+            {
+                services.AddSignalR();
+                services.AddMessageLogSink<HubMessageLogSink>();
+            }
         }
-        
 
         public void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime, IWebHostEnvironment env)
         {
@@ -82,6 +85,7 @@ namespace Service.WebApi
             {
                 app.UseCors(builder => builder.WithOrigins(viewerUrl)
                     .AllowAnyMethod()
+                    .AllowCredentials()
                     .WithExposedHeaders("WWW-Authenticate")
                     .AllowAnyHeader());
             }
@@ -89,9 +93,15 @@ namespace Service.WebApi
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                if (env.IsDevelopment())
+                {
+                    endpoints.MapHub<MessageLogHub>("/api/message/log");
+                }
             });
         }
 
