@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using NetFusion.Messaging.Logging;
 using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Subscriber.Internal
@@ -22,14 +24,28 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             return exchange.QueueMeta;
         }
 
-        public Task OnMessageReceivedAsync(ConsumeContext context)
+        public async Task OnMessageReceivedAsync(ConsumeContext context)
         {
             var message = context.DeserializeIntoMessage();
-            context.LogReceivedMessage(message);
             
-            return context.MessagingModule.InvokeDispatcherInNewLifetimeScopeAsync(
-                context.Subscriber.DispatchInfo, 
-                message);
+            var msgLog = new MessageLog(message, LogContextType.ReceivedMessage);
+            msgLog.SentHint("subscribe-rabbitmq-workqueue");
+            
+            context.LogReceivedMessage(message);
+            context.AddMessageContextToLog(msgLog);
+            
+            try
+            {
+                await context.MessagingModule.InvokeDispatcherInNewLifetimeScopeAsync(
+                    context.Subscriber.DispatchInfo, 
+                    message);
+            }
+            catch (Exception ex)
+            {
+                msgLog.AddLogError(ex);
+                throw;
+            }
+            finally { await context.MessageLogger.LogAsync(msgLog); }
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
+
 // ReSharper disable FieldCanBeMadeReadOnly.Global
 
 namespace NetFusion.RabbitMQ.Metadata

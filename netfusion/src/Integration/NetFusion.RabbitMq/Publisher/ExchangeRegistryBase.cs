@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EasyNetQ.Topology;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 using NetFusion.RabbitMQ.Metadata;
 using NetFusion.RabbitMQ.Publisher.Internal;
 

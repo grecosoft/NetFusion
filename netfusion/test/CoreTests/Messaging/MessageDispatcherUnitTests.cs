@@ -12,6 +12,7 @@ using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 using Xunit;
 
 namespace CoreTests.Messaging

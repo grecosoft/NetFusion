@@ -1,5 +1,5 @@
 ﻿using Amqp;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.AMQP.Publisher.Internal
 {

@@ -3,7 +3,8 @@ using System.Text;
 using Amqp;
 using Amqp.Framing;
 using NetFusion.Base;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Attributes;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.AMQP.Publisher.Internal
 {
@@ -95,24 +96,24 @@ namespace NetFusion.AMQP.Publisher.Internal
         private static void SetPropsFromMessageAttributes(IMessage message, Message nsMessage)
         {
             nsMessage.Properties.CorrelationId = message.GetCorrelationId();
-            nsMessage.Properties.MessageId = message.Attributes.GetValueOrDefault<string>("MessageId", null, typeof(AmqpPropContext));
-            nsMessage.Properties.Subject = message.Attributes.GetValueOrDefault<string>("Subject", null, typeof(AmqpPropContext));
-            nsMessage.Properties.To = message.Attributes.GetValueOrDefault<string>("To", null, typeof(AmqpPropContext));
-            nsMessage.Properties.ReplyTo = message.Attributes.GetValueOrDefault<string>("ReplyTo", null, typeof(AmqpPropContext));
-            
-            var userId = message.Attributes.GetValueOrDefault<string>("MessageId", null, typeof(AmqpPropContext));
+            nsMessage.Properties.MessageId = message.GetMessageId();
+            nsMessage.Properties.Subject = message.GetSubject();
+            nsMessage.Properties.To = message.GetTo();
+            nsMessage.Properties.ReplyTo = message.GetReplyTo();
+
+            var userId = message.GetUserId();
             if (userId != null)
             {
-                nsMessage.Properties.UserId =  Encoding.UTF8.GetBytes(userId);
+                nsMessage.Properties.UserId = Encoding.UTF8.GetBytes(userId);
             }
-            
-            var absExpiryTime = message.Attributes.GetValueOrDefault<DateTime?>("AbsoluteExpiryTime", null, typeof(AmqpPropContext));
+
+            var absExpiryTime = message.GetUtcAbsoluteExpiryTime();
             if (absExpiryTime != null)
             {
                 nsMessage.Properties.AbsoluteExpiryTime = absExpiryTime.Value;
             }
-            
-            var ttl = message.Attributes.GetValueOrDefault<uint?>("Ttl", null, typeof(AmqpPropContext));
+
+            var ttl = message.GetTls();
             if (ttl != null)
             {
                 nsMessage.Header.Ttl = ttl.Value;

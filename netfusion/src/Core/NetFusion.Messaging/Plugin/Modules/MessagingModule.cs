@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Messaging.Internal;
+using NetFusion.Messaging.Logging;
 
 namespace NetFusion.Messaging.Plugin.Modules
 {
@@ -19,6 +20,9 @@ namespace NetFusion.Messaging.Plugin.Modules
             
             // The dispatcher delegated to by the MessagingService for dispatching queries.
             services.AddScoped<QueryDispatcher>();
+
+            // Called to allow host to provide additional logging functionality.
+            services.AddSingleton<IMessageLogger, MessageLogger>();
         }
     }
 }

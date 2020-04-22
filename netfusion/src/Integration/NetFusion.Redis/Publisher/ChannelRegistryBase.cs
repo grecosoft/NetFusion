@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Redis.Publisher
 {

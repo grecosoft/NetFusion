@@ -2,10 +2,11 @@
 using Amqp;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Serialization;
-using NetFusion.Messaging.Types;
 using Amqp.Framing;
 using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Plugin;
+using NetFusion.Messaging.Types.Attributes;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.AMQP.Subscriber.Internal
 {
@@ -56,7 +57,7 @@ namespace NetFusion.AMQP.Subscriber.Internal
             
             foreach (var item in amqpMessage.ApplicationProperties.Map)
             {
-                message.Attributes.SetValue(item.Key.ToString(), item.Value);
+                message.Attributes.SetStringValue(item.Key.ToString(), item.Value.ToString());
             }
         }
         

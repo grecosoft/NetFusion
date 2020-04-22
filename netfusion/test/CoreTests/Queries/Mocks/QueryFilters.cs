@@ -1,6 +1,6 @@
 ﻿using NetFusion.Messaging.Filters;
-using NetFusion.Messaging.Types;
 using System.Threading.Tasks;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace CoreTests.Queries.Mocks
 {

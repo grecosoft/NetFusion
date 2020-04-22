@@ -1,4 +1,4 @@
-using IMessage = NetFusion.Messaging.Types.IMessage;
+using IMessage = NetFusion.Messaging.Types.Contracts.IMessage;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +11,7 @@ using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Internal;
+using NetFusion.Messaging.Logging;
 using NetFusion.RabbitMQ.Metadata;
 using NetFusion.RabbitMQ.Plugin;
 
@@ -32,18 +33,23 @@ namespace NetFusion.RabbitMQ.Publisher
         // Dependent Modules:
         public IBusModule BusModule { get; }
         public IPublisherModule PublisherModule { get; }
+        
+        private readonly IMessageLogger _messageLogger;
 
         public RabbitMqPublisher(ILoggerFactory loggerFactory,
             IBusModule busModule, 
             IPublisherModule publisherModule,
             ISerializationManager serializationManager,
-            IEntityScriptingService scripting)
+            IEntityScriptingService scripting,
+            IMessageLogger messageLogger)
         {
             Logger = loggerFactory.CreateLogger<RabbitMqPublisher>();
             BusModule = busModule ?? throw new ArgumentNullException(nameof(busModule));    
             PublisherModule = publisherModule ?? throw new ArgumentNullException(nameof(publisherModule));
             Serialization = serializationManager ?? throw new ArgumentNullException(nameof(serializationManager));
             Scripting = scripting ?? throw new ArgumentNullException(nameof(scripting));
+
+            _messageLogger = messageLogger ?? throw new ArgumentNullException(nameof(messageLogger));
         }
 
         // Indicate that this publisher will deliver messages outside of the running process.
@@ -53,8 +59,6 @@ namespace NetFusion.RabbitMQ.Publisher
 
         public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
-            if (message == null) throw new ArgumentNullException(nameof(message));
-            
             // Only process messages for which there are defined exchanges.
             Type messageType = message.GetType();
             if (! PublisherModule.IsExchangeMessage(messageType))
@@ -62,20 +66,26 @@ namespace NetFusion.RabbitMQ.Publisher
                 return;
             }
 
+            var msgLog = new MessageLog(message, LogContextType.PublishedMessage);
+            msgLog.SentHint("publish-rabbitmq");
+            
             // Lookup the exchange associated with the message and the bus
             // on which it should be created.
             ExchangeMeta definition = PublisherModule.GetDefinition(messageType);
             IBus bus = BusModule.GetBus(definition.BusName);
-
+            
             // Create the exchange/queue:
             CreatedExchange createdExchange = await CreateExchange(bus, definition).ConfigureAwait(false);
 
             LogPublishedMessage(createdExchange, message);
+            AddExchangeMetaToLog(msgLog, definition);
 
             // Publish the message to the created exchange/queue.
             await definition.PublisherStrategy.Publish(this, createdExchange,
                 message,
                 cancellationToken);
+
+            await _messageLogger.LogAsync(msgLog);
         }
 
         private static async Task<CreatedExchange> CreateExchange(IBus bus, ExchangeMeta meta)
@@ -95,6 +105,28 @@ namespace NetFusion.RabbitMQ.Publisher
                     exchange.Definition.ContentType,
                     Message = message
                 });
+        }
+        
+        private void AddExchangeMetaToLog(MessageLog msgLog, ExchangeMeta definition)
+        {
+            if (!_messageLogger.IsLoggingEnabled) return;
+            
+            if (definition.IsDefaultExchange)
+            {
+                msgLog.AddLogDetail("Exchange: Default Exchange");
+                msgLog.AddLogDetail($"Queue Name: {definition.QueueMeta.QueueName}");
+            }
+            else
+            {
+                msgLog.AddLogDetail($"Exchange Name: {definition.ExchangeName}");
+                msgLog.AddLogDetail($"Exchange Type: {definition.ExchangeType}");
+                msgLog.AddLogDetail($"Route Key: {definition.RouteKey}");
+                msgLog.AddLogDetail($"Content Type: {definition.ContentType}");
+            
+                msgLog.AddLogDetail($"Is Durable: {definition.IsDurable}");
+                msgLog.AddLogDetail($"Is Auto Delete: {definition.IsAutoDelete}");
+                msgLog.AddLogDetail($"Is Persistent: {definition.IsPersistent}");
+            }
         }
     }
 }
