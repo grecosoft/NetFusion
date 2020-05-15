@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Types.Attributes;
@@ -14,8 +15,8 @@ namespace Service.WebApi.Models
         public string MessageType { get; private set; }
         
         public object Message { get; private set; }
-        public string[] Details { get; private set; }
-        public string[] Errors { get; private set; }
+        public IReadOnlyDictionary<string, string> Details { get; private set; }
+        public IReadOnlyDictionary<string, string> Errors { get; private set; }
         public string Hint { get; private set; }
         public bool HasErrors => Errors.Any();
 
@@ -27,8 +28,8 @@ namespace Service.WebApi.Models
                 Message = messageLog.Message,
                 MessageType = messageLog.MessageType,
                 Context = messageLog.LogContext.ToString(),
-                Details = messageLog.LogDetails.ToArray(),
-                Errors = messageLog.LogErrors.ToArray(),
+                Details = messageLog.LogDetails,
+                Errors = messageLog.LogErrors,
                 Hint = messageLog.Hint,
                 
                 CorrelationId = messageLog.Message.GetCorrelationId(),

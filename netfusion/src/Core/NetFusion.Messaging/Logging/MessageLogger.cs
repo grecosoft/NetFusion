@@ -16,6 +16,9 @@ namespace NetFusion.Messaging.Logging
         
         public MessageLogger(IEnumerable<IMessageLogSink> messageLogSinks)
         {
+            if (messageLogSinks == null) throw new ArgumentNullException(nameof(messageLogSinks));
+            
+
             _messageLogSinks = messageLogSinks.ToArray();
         }
 

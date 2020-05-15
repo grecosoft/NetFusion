@@ -86,12 +86,12 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         {
             if (msgLog == null) throw new ArgumentNullException(nameof(msgLog));
             
-            msgLog.AddLogDetail($"Exchange Name: {Subscriber.QueueMeta.Exchange.ExchangeName}");
-            msgLog.AddLogDetail($"Exchange Type: {Subscriber.QueueMeta.Exchange.ExchangeType}");
-            msgLog.AddLogDetail($"Queue Name: {Subscriber.QueueMeta.QueueName}");
-            msgLog.AddLogDetail($"Content Type: {MessageProps.ContentType}");
-            msgLog.AddLogDetail($"Handler Class: {Subscriber.DispatchInfo.ConsumerType.Name}");
-            msgLog.AddLogDetail($"Handler Method: {Subscriber.DispatchInfo.MessageHandlerMethod.Name}");
+            msgLog.AddLogDetail("Exchange Name", Subscriber.QueueMeta.Exchange.ExchangeName);
+            msgLog.AddLogDetail("Exchange Type", Subscriber.QueueMeta.Exchange.ExchangeType);
+            msgLog.AddLogDetail("Queue Name", Subscriber.QueueMeta.QueueName);
+            msgLog.AddLogDetail("Content Type", MessageProps.ContentType);
+            msgLog.AddLogDetail("Handler Class", Subscriber.DispatchInfo.ConsumerType.Name);
+            msgLog.AddLogDetail("Handler Method", Subscriber.DispatchInfo.MessageHandlerMethod.Name);
         }
     }
 }

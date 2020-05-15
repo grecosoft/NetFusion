@@ -113,19 +113,19 @@ namespace NetFusion.RabbitMQ.Publisher
             
             if (definition.IsDefaultExchange)
             {
-                msgLog.AddLogDetail("Exchange: Default Exchange");
-                msgLog.AddLogDetail($"Queue Name: {definition.QueueMeta.QueueName}");
+                msgLog.AddLogDetail("Exchange Type", "Default");
+                msgLog.AddLogDetail("Queue Name", definition.QueueMeta.QueueName);
             }
             else
             {
-                msgLog.AddLogDetail($"Exchange Name: {definition.ExchangeName}");
-                msgLog.AddLogDetail($"Exchange Type: {definition.ExchangeType}");
-                msgLog.AddLogDetail($"Route Key: {definition.RouteKey}");
-                msgLog.AddLogDetail($"Content Type: {definition.ContentType}");
+                msgLog.AddLogDetail("Exchange Name", definition.ExchangeName);
+                msgLog.AddLogDetail("Exchange Type", definition.ExchangeType);
+                msgLog.AddLogDetail("Route Key", definition.RouteKey);
+                msgLog.AddLogDetail("Content Type", definition.ContentType);
             
-                msgLog.AddLogDetail($"Is Durable: {definition.IsDurable}");
-                msgLog.AddLogDetail($"Is Auto Delete: {definition.IsAutoDelete}");
-                msgLog.AddLogDetail($"Is Persistent: {definition.IsPersistent}");
+                msgLog.AddLogDetail("Is Durable", definition.IsDurable.ToString());
+                msgLog.AddLogDetail("Is Auto Delete", definition.IsAutoDelete.ToString());
+                msgLog.AddLogDetail("Is Persistent", definition.IsPersistent.ToString());
             }
         }
     }
