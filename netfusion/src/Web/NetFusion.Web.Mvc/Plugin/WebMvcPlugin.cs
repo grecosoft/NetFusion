@@ -17,8 +17,7 @@ namespace NetFusion.Web.Mvc.Plugin
             AddConfig<WebMvcConfig>();
             
             AddModule<ApiMetadataModule>();
-            AddModule<CompositeModule>();
-            
+
             SourceUrl = "https://github.com/grecosoft/NetFusion-Plugins/tree/master/src/Infrastructure/NetFusion.Web.Mvc";
             DocUrl = "https://github.com/grecosoft/NetFusion/wiki/infrastructure.web-mvc.overview";
         }
