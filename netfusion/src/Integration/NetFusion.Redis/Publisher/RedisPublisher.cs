@@ -86,7 +86,7 @@ namespace NetFusion.Redis.Publisher
                 }
                 catch (Exception ex)
                 {
-                    msgLog.AddLogError(ex);
+                    msgLog.AddLogError("Redis Publisher", ex);
                     throw;
                 }
                 finally { await _messageLogger.LogAsync(msgLog); }
@@ -106,9 +106,9 @@ namespace NetFusion.Redis.Publisher
 
         private static void AddMessageDetails(MessageLog msgLog, string databaseName, string channelName)
         {
-            msgLog.SentHint("redis-publisher");
-            msgLog.AddLogDetail($"Database Name: {databaseName}");
-            msgLog.AddLogDetail($"Channel Name: {channelName}");
+            msgLog.SentHint("publish-redis");
+            msgLog.AddLogDetail("Database Name", databaseName);
+            msgLog.AddLogDetail("Channel Name", channelName);
         }
     }
 }

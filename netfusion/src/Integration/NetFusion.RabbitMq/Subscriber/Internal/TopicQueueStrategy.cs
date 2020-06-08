@@ -44,7 +44,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             var message = context.DeserializeIntoMessage();
             
             var msgLog = new MessageLog(message, LogContextType.ReceivedMessage);
-            msgLog.SentHint("subscribe-rabbitmq-topic");
+            msgLog.SentHint("subscribe-rabbitmq");
             
             context.LogReceivedMessage(message);
             context.AddMessageContextToLog(msgLog);
@@ -56,7 +56,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
                     message);
             }
             catch (Exception ex)
-            {    msgLog.AddLogError(ex);
+            {    msgLog.AddLogError("Queue Subscription", ex);
                 throw;
             }
             finally { await context.MessageLogger.LogAsync(msgLog); }

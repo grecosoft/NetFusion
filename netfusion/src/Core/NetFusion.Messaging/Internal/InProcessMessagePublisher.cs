@@ -56,7 +56,7 @@ namespace NetFusion.Messaging.Internal
             }
             
             var msgLog = new MessageLog(message, LogContextType.PublishedMessage);
-            msgLog.SentHint("in-process");
+            msgLog.SentHint("publish-inprocess");
             
             LogMessageDispatchInfo(message, dispatchers);
             AddDispatchersToLog(msgLog, dispatchers);
@@ -201,11 +201,11 @@ namespace NetFusion.Messaging.Internal
         {
             if (! _messageLogger.IsLoggingEnabled) return;
             
-            msgLog.AddLogDetail("In-process message dispatchers for message.");
+            msgLog.AddLogDetail("In-Process", "Message dispatchers for message.");
             foreach (MessageDispatchInfo dispatcher in dispatchers)
             {
-               msgLog.AddLogDetail($"Handler Class: {dispatcher.ConsumerType.FullName}; " + 
-                                   $"Handler Method: {dispatcher.MessageHandlerMethod.Name}");
+                msgLog.AddLogDetail("Handler Class", dispatcher.ConsumerType.FullName);
+                msgLog.AddLogDetail("Handler Method", dispatcher.MessageHandlerMethod.Name);
             }
         }
 
@@ -213,7 +213,7 @@ namespace NetFusion.Messaging.Internal
         {
             if (_messageLogger.IsLoggingEnabled)
             {
-                msgLog.AddLogError(ex.Details.ToIndentedJson());
+                msgLog.AddLogError("In-Process Error", ex.Details.ToIndentedJson());
             }
         }
     }

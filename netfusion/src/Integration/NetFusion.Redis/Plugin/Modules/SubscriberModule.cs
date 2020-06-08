@@ -103,11 +103,10 @@ namespace NetFusion.Redis.Plugin.Modules
                     }
                     catch (Exception ex)
                     {
-                        msgLog.AddLogError(ex);
+                        msgLog.AddLogError("Channel Subscription", ex);
                         throw;
                     }
-                    finally
-                    { await _messageLogger.LogAsync(msgLog); }
+                    finally { await _messageLogger.LogAsync(msgLog); }
                 });
             }
         }
@@ -129,11 +128,11 @@ namespace NetFusion.Redis.Plugin.Modules
         {
             if (! _messageLogger.IsLoggingEnabled) return;
             
-            msgLog.SentHint("redis-subscriber");
-            msgLog.AddLogDetail($"Channel: {channel}");
-            msgLog.AddLogDetail($"Subscription: {subscriber.Channel}");
-            msgLog.AddLogDetail($"Handler Type: {subscriber.DispatchInfo.ConsumerType.FullName}");
-            msgLog.AddLogDetail($"Handler Method: {subscriber.DispatchInfo.MessageHandlerMethod.Name}");
+            msgLog.SentHint("subscribe-redis");
+            msgLog.AddLogDetail("Channel", channel);
+            msgLog.AddLogDetail("Subscription", subscriber.Channel);
+            msgLog.AddLogDetail("Handler Type", subscriber.DispatchInfo.ConsumerType.FullName);
+            msgLog.AddLogDetail("Handler Method", subscriber.DispatchInfo.MessageHandlerMethod.Name);
         }
 
         public override void Log(IDictionary<string, object> moduleLog)
