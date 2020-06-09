@@ -72,5 +72,11 @@ namespace WebTests.Rest.LinkGeneration.Server
         {
             return null;
         }
+        
+        [HttpPost("scenario-33/{id}/comment")]
+        public IActionResult AppendComment(int id, [FromQuery]string comment)
+        {
+            return null;
+        }
     }
 }

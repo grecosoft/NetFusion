@@ -31,17 +31,20 @@ namespace NetFusion.Rest.Server.Linking
 
         public void SetRouteInfo()
         {
-            SetControllerAndAction(_action);
+            SetControllerAction(_action);
             SetRouteValues(_action);
         }
 
-        private void SetControllerAndAction(LambdaExpression action)
+        private void SetControllerAction(LambdaExpression action)
         {
             var controllerAction = (MethodCallExpression)action.Body;
 
+            _resourceLink.ActionMethodInfo = controllerAction.Method;
+            _resourceLink.Methods = GetHttpMethods(controllerAction.Method);
+            
+            // TODO: Remove after refactor:
             _resourceLink.Controller = controllerAction.Method.DeclaringType?.Name;
             _resourceLink.Action = controllerAction.Method.Name;
-            _resourceLink.Methods = GetHttpMethods(controllerAction.Method);
         }
 
         private static IEnumerable<string> GetHttpMethods(MemberInfo actionMethodInfo)

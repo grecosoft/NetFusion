@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace NetFusion.Rest.Server.Linking
 {
@@ -21,6 +22,8 @@ namespace NetFusion.Rest.Server.Linking
         /// The name of the controller's action used to determine the URL.
         /// </summary>
         public string Action { get; internal set; }
+        
+        public MethodInfo ActionMethodInfo { get; internal set; }
 
         /// <summary>
         /// The controller's action route parameters and the corresponding

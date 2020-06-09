@@ -1,13 +1,9 @@
-﻿using System;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Common.Extensions.Expressions;
-using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Web.Mvc.Metadata;
-// ReSharper disable SuggestBaseTypeForParameter
 
-// ReSharper disable UnusedTypeParameter
 namespace NetFusion.Rest.Server.Linking
 {
     /// <summary>
@@ -17,6 +13,7 @@ namespace NetFusion.Rest.Server.Linking
     /// </summary>
     /// <typeparam name="TController">The controller to select action methods from
     /// corresponding to template URLs.</typeparam>
+    [SuppressMessage("ReSharper", "UnusedTypeParameter")]
     public class ControllerActionTemplateSelector<TController>
         where TController : ControllerBase
     {
@@ -28,38 +25,11 @@ namespace NetFusion.Rest.Server.Linking
             _action = action;
             _link = link;
         }
-
-        // Gets the method-info for the expression identifying a controller's action method.
-        // The metadata attributes for the corresponding action and its defining controller
-        // and found.  The names associated with these two attributes are used to determine
-        // the value of the URL template when returning the resource by the formatter.
+        
         public void SetTemplateInfo()
         {          
             MethodInfo action = _action.GetCallMethodInfo();
-            _link.ActionTemplateName = GetActionMetaName(action);
-            _link.GroupTemplateName = GetControllerMetaName(action.DeclaringType);
-        }
-
-        private string GetActionMetaName(MethodInfo action)
-        {
-            var attrib = action.GetAttribute<ActionMetaAttribute>();
-            if (attrib == null)
-            {
-                throw new InvalidOperationException(
-                    $"{nameof(ActionMetaAttribute)} not specified on action: {action.Name} for controller: {action.DeclaringType?.FullName}.");
-            }
-            return attrib.ActionName;
-        }
-
-        private string GetControllerMetaName(Type controllerType)
-        {
-            var attrib = controllerType.GetAttribute<GroupMetaAttribute>();
-            if (attrib == null)
-            {
-                throw new InvalidOperationException(
-                    $"{nameof(GroupMetaAttribute)} not specified on controller: {controllerType.FullName}.");
-            }
-            return attrib.GroupName;                          
+            _link.ActionMethodInfo = action;
         }
     }
 }

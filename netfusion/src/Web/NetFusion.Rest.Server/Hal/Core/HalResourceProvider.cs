@@ -72,6 +72,8 @@ namespace NetFusion.Rest.Server.Hal.Core
         // for the action's route parameters. 
         private static void SetLinkUrl(ResourceContext context, ControllerActionLink resourceLink)
         {
+            ApiActionMeta actionDescriptor = context.ApiMetadata.GetActionDescriptor(resourceLink.ActionMethodInfo);
+            
             string controllerName = resourceLink.Controller.Replace("Controller", string.Empty);
             var routeValues = GetModelRouteValues(context, resourceLink);
             
@@ -104,17 +106,15 @@ namespace NetFusion.Rest.Server.Hal.Core
         // consumer is responsible for specifying the route parameter values.
         private static void SetLinkUrl(ResourceContext context, TemplateUrlLink resourceLink)
         {
-            var apiAction = context.ApiMetadata.GetApiAction(
-                resourceLink.GroupTemplateName, 
-                resourceLink.ActionTemplateName);
-
+            ApiActionMeta apiMeta = context.ApiMetadata.GetActionDescriptor(resourceLink.ActionMethodInfo);
+            
             var link = new Link
             {
-                Href = apiAction.RelativePath,
-                Methods = new[] { apiAction.HttpMethod }
+                Href = apiMeta.RelativePath,
+                Methods = new[] { apiMeta.HttpMethod }
             };
 
-            MarkOptionalParams(apiAction, link);
+            MarkOptionalParams(apiMeta, link);
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
         }
 
