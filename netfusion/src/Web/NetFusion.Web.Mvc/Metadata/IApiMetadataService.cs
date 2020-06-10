@@ -15,6 +15,6 @@ namespace NetFusion.Web.Mvc.Metadata
         /// <param name="methodInfo">The runtime information for a controller's action
         /// method.</param>
         /// <returns>The associated description or an exception of not found.</returns>
-        ApiActionMeta GetActionDescriptor(MethodInfo methodInfo);
+        ApiActionMeta GetActionMeta(MethodInfo methodInfo);
     }
 }

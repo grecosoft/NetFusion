@@ -41,10 +41,6 @@ namespace NetFusion.Rest.Server.Linking
 
             _resourceLink.ActionMethodInfo = controllerAction.Method;
             _resourceLink.Methods = GetHttpMethods(controllerAction.Method);
-            
-            // TODO: Remove after refactor:
-            _resourceLink.Controller = controllerAction.Method.DeclaringType?.Name;
-            _resourceLink.Action = controllerAction.Method.Name;
         }
 
         private static IEnumerable<string> GetHttpMethods(MemberInfo actionMethodInfo)

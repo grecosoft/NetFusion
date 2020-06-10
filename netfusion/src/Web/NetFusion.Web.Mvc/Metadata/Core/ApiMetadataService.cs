@@ -25,7 +25,7 @@ namespace NetFusion.Web.Mvc.Metadata.Core
                 .ToArray();
         }
         
-        public ApiActionMeta GetActionDescriptor(MethodInfo methodInfo)
+        public ApiActionMeta GetActionMeta(MethodInfo methodInfo)
         {
             var actionDescriptor = _apiActionMeta.FirstOrDefault(ad => ad.ActionMethodInfo == methodInfo);
             if (actionDescriptor == null)
