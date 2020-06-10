@@ -7,9 +7,6 @@ namespace NetFusion.Web.Mvc.Plugin.Configs
     /// </summary>
     public class WebMvcConfig : IPluginConfig
     {
-        /// <summary>
-        /// Determines if route metadata can be queried by consumers.
-        /// </summary>
-        public bool EnableRouteMetadata { get; set; }    
+   
     }
 }

@@ -1,13 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Messaging;
-using NetFusion.Web.Mvc.Metadata;
 using Service.Domain.Queries;
 
 namespace Service.WebApi.Controllers.Messaging
 {
     [ApiController, Route("api/messaging/queries")]
-    [GroupMeta(nameof(CommandController))]
     public class QueryController : ControllerBase
     {
         private readonly IMessagingService _messaging;
@@ -17,7 +15,7 @@ namespace Service.WebApi.Controllers.Messaging
             _messaging = messaging;
         }
 
-        [HttpGet("customers/{customerId}/addresses"), ActionMeta(nameof(GetCustomerAddresses))]
+        [HttpGet("customers/{customerId}/addresses")]
         public async Task<IActionResult> GetCustomerAddresses(int customerId)
         {
             var query = new QueryCustomerAddresses(customerId);

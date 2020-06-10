@@ -1,3 +1,4 @@
+using System.Reflection;
 using NetFusion.Web.Mvc.Metadata.Core;
 
 namespace NetFusion.Web.Mvc.Metadata
@@ -8,25 +9,12 @@ namespace NetFusion.Web.Mvc.Metadata
     public interface IApiMetadataService
     {
         /// <summary>
-        /// Returns route metadata for all defined groups.
+        /// Returns the description metadata populated by ASP.NET WebApi corresponding
+        /// to a controller action method.
         /// </summary>
-        /// <returns>Metadata describing API groups and actions.</returns>
-        ApiGroupMeta[] GetApiGroups();
-
-        /// <summary>
-        /// Returns route metadata for a given API group.
-        /// </summary>
-        /// <param name="groupName">Name of the group.</param>
-        /// <returns>Metadata describing API group and actions.</returns>
-        ApiGroupMeta[] GetApiGroup(string groupName);
-
-        /// <summary>
-        /// Returns the route meta for a specific API group and action.
-        /// </summary>
-        /// <param name="groupName">Name of the group.</param>
-        /// <param name="actionName">Name of the action.</param>
-        /// <returns>The route metadata for the action.  If not found,
-        /// an exception is thrown.</returns>
-        ApiActionMeta GetApiAction(string groupName, string actionName);
+        /// <param name="methodInfo">The runtime information for a controller's action
+        /// method.</param>
+        /// <returns>The associated description or an exception of not found.</returns>
+        ApiActionMeta GetActionMeta(MethodInfo methodInfo);
     }
 }

@@ -418,5 +418,34 @@ namespace WebTests.Rest.LinkGeneration
                 });
             });
         } 
+        
+        [Fact]
+        public Task ResourceMap_CanSpecify_TemplateUrls()
+        {
+            var mockResource = new LinkedResource
+            {
+                Id = 10,
+                Value2 = "value-2"
+            };
+            
+            return WebHostFixture.TestAsync<LinkedResourceController>(async host =>
+            {
+                var webResponse = await host
+                    .ArrangeWithDefaults(mockResource)
+                    .Act.OnRestClient(async client =>
+                    {             
+                        var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
+                        request.UseHalDefaults();
+                        return await client.SendAsync<LinkedResourceModel>(request);
+                    });
+
+                webResponse.Assert.ApiResponse(response =>
+                {
+                    var apiResponse = (ApiResponse<LinkedResourceModel>)response;
+                     
+                    apiResponse.Resource.AssertLink("scenario-31", HttpMethod.Post, "api/linked/resource/scenario-33/{id}/comment");
+                });
+            });
+        } 
     }
 }

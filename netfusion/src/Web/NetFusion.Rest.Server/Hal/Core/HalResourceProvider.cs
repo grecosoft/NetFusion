@@ -72,14 +72,19 @@ namespace NetFusion.Rest.Server.Hal.Core
         // for the action's route parameters. 
         private static void SetLinkUrl(ResourceContext context, ControllerActionLink resourceLink)
         {
-            string controllerName = resourceLink.Controller.Replace("Controller", string.Empty);
+            ApiActionMeta actionMeta = context.ApiMetadata.GetActionMeta(resourceLink.ActionMethodInfo);
+            
             var routeValues = GetModelRouteValues(context, resourceLink);
             
             var link = new Link
             {
                 // Delegate to ASP.NET Core to get the URL corresponding to the route-values.
                 // This is known as the out-going URL in ASP.NET.
-                Href = context.UrlHelper.Action(resourceLink.Action, controllerName, routeValues),
+                Href = context.UrlHelper.Action(
+                    actionMeta.ActionName, 
+                    actionMeta.ControllerName, 
+                    routeValues),
+                
                 Templated = false,
                 Methods = resourceLink.Methods.ToArray()
             };
@@ -104,17 +109,15 @@ namespace NetFusion.Rest.Server.Hal.Core
         // consumer is responsible for specifying the route parameter values.
         private static void SetLinkUrl(ResourceContext context, TemplateUrlLink resourceLink)
         {
-            var apiAction = context.ApiMetadata.GetApiAction(
-                resourceLink.GroupTemplateName, 
-                resourceLink.ActionTemplateName);
-
+            ApiActionMeta actionMeta = context.ApiMetadata.GetActionMeta(resourceLink.ActionMethodInfo);
+            
             var link = new Link
             {
-                Href = apiAction.RelativePath,
-                Methods = new[] { apiAction.HttpMethod }
+                Href = actionMeta.RelativePath,
+                Methods = new[] { actionMeta.HttpMethod }
             };
 
-            MarkOptionalParams(apiAction, link);
+            MarkOptionalParams(actionMeta, link);
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace NetFusion.Rest.Server.Linking
 {
@@ -13,14 +14,9 @@ namespace NetFusion.Rest.Server.Linking
     public class ControllerActionLink : ResourceLink
     {
         /// <summary>
-        /// The name of the controller used to determine the URL.
+        /// The runtime information associated with a selected controller's action.
         /// </summary>
-        public string Controller { get; internal set; }
-
-        /// <summary>
-        /// The name of the controller's action used to determine the URL.
-        /// </summary>
-        public string Action { get; internal set; }
+        public MethodInfo ActionMethodInfo { get; internal set; }
 
         /// <summary>
         /// The controller's action route parameters and the corresponding

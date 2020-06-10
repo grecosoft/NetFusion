@@ -2,6 +2,7 @@ using System;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Rest.Server.Plugin.Modules;
+using NetFusion.Web.Mvc.Plugin;
 
 namespace NetFusion.Rest.Server.Plugin
 {
@@ -29,6 +30,9 @@ namespace NetFusion.Rest.Server.Plugin
         public static ICompositeContainerBuilder AddRest(this ICompositeContainerBuilder composite)
         {
             if (composite == null) throw new ArgumentNullException(nameof(composite));
+            
+            // Add dependent plugins:
+            composite.AddWebMvc();
             
             // Add plugin for Rest API support:
             composite.AddPlugin<RestPlugin>();

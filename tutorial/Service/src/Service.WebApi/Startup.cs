@@ -10,7 +10,6 @@ using NetFusion.RabbitMQ.Plugin;
 using NetFusion.Redis.Plugin;
 using NetFusion.Rest.Server.Plugin;
 using NetFusion.Settings.Plugin;
-using NetFusion.Web.Mvc.Plugin;
 using Service.App.Plugin;
 using Service.Domain.Plugin;
 using Service.Infra.Plugin;
@@ -50,10 +49,6 @@ namespace Service.WebApi
                 .AddRabbitMq()
                 .AddRedis()
                 //.AddAmqp()
-                .AddWebMvc(c =>
-                {
-                    c.EnableRouteMetadata = true;
-                })
                 .AddRest()
                 
                 // Add application centric plugins:

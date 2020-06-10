@@ -1,14 +1,12 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using NetFusion.Web.Mvc.Metadata;
 using Service.Domain.Entities;
 using Service.Domain.Repositories;
 
 namespace Service.WebApi.Controllers.Integration
 {
     [ApiController, Route("api/integration/mongodb")]
-    [GroupMeta(nameof(MongoDbController))]
     public class MongoDbController : ControllerBase
     {
         private readonly ICustomerRepository _customerRepo;
@@ -19,21 +17,21 @@ namespace Service.WebApi.Controllers.Integration
             _customerRepo = customerRepo ?? throw new ArgumentNullException(nameof(customerRepo));
         }
         
-        [HttpPost("customers"), ActionMeta(nameof(AddCustomer))]
+        [HttpPost("customers")]
         public async Task<IActionResult> AddCustomer([FromBody]Customer customer)
         {
             await _customerRepo.AddCustomerAsync(customer);
             return Ok(customer);
         }
 
-        [HttpGet("customers/{customerId}"), ActionMeta(nameof(ReadCustomer))]
+        [HttpGet("customers/{customerId}")]
         public async Task<IActionResult> ReadCustomer(string customerId)
         {
             var customer = await _customerRepo.ReadCustomerAsync(customerId);
             return Ok(customer);
         }
         
-        [HttpPost("customers/{customerId}"), ActionMeta(nameof(UpdateCustomer))]
+        [HttpPost("customers/{customerId}")]
         public async Task<IActionResult> UpdateCustomer(string customerId, [FromBody]Customer customer)
         {
             customer.CustomerId = customerId;

@@ -1,13 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Messaging;
-using NetFusion.Web.Mvc.Metadata;
 using Service.Domain.Events;
 
 namespace Service.WebApi.Controllers.Integration
 {
     [ApiController, Route("api/integration/redis")]
-    [GroupMeta(nameof(MongoDbController))]
     public class RedisPublisherController : ControllerBase
     {
         private static IMessagingService _messaging;
@@ -18,7 +16,7 @@ namespace Service.WebApi.Controllers.Integration
             _messaging = messaging;
         }
 
-        [HttpPost("order/submitted"), ActionMeta(nameof(SubmitOrder))]
+        [HttpPost("order/submitted")]
         public Task SubmitOrder([FromBody] OrderSubmitted order)
         {
             return _messaging.PublishAsync(order);

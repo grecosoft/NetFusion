@@ -23,15 +23,7 @@ namespace NetFusion.Web.Mvc.Plugin.Modules
         // indicating that route metadata should be discoverable by clients.
         public override void RegisterDefaultServices(IServiceCollection services)
         {
-            if (_mvcConfig.EnableRouteMetadata)
-            {
-                // Add convention used to determine which route methods
-                // are to be contained within the returned metadata.
-                services.AddMvc((options) =>
-                {
-                    options.Conventions.Add(new ApiExplorerConvention());
-                });
-            }
+            services.AddMvc();
         }
 
         public override void RegisterServices(IServiceCollection services)

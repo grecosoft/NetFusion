@@ -1,4 +1,6 @@
-﻿namespace NetFusion.Rest.Server.Linking
+﻿using System.Reflection;
+
+namespace NetFusion.Rest.Server.Linking
 {
     /// <summary>
     /// Represents a link containing an URL template with tokens to be replaced by the calling client.
@@ -6,13 +8,8 @@
     public class TemplateUrlLink : ResourceLink
     {
         /// <summary>
-        /// The group name specified on a controller using the GroupMeta attribute.
+        /// The runtime information associated with a selected controller's action.
         /// </summary>
-        public string GroupTemplateName { get; internal set; }
-
-        /// <summary>
-        /// The action name specified on a controller's method using the ActionMeta attribute.
-        /// </summary>
-        public string ActionTemplateName { get; internal set; }
+        public MethodInfo ActionMethodInfo { get; internal set; }
     }
 }

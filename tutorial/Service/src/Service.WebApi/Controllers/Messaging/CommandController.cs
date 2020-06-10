@@ -1,14 +1,12 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Messaging;
-using NetFusion.Web.Mvc.Metadata;
 using Service.Domain.Commands;
 using Service.WebApi.Models;
 
 namespace Service.WebApi.Controllers.Messaging
 {
     [ApiController, Route("api/messaging/commands")]
-    [GroupMeta(nameof(CommandController))]
     public class CommandController : ControllerBase
     {
         private readonly IMessagingService _messaging;
@@ -18,7 +16,7 @@ namespace Service.WebApi.Controllers.Messaging
             _messaging = messaging;
         }
 
-        [HttpPost("range"), ActionMeta(nameof(GetRanges))]
+        [HttpPost("range")]
         public async Task<IActionResult> GetRanges([FromBody]RangeModel model)
         {
             var firstRange = new CalculateRange(model.Template, model.SetOne);
