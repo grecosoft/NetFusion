@@ -73,8 +73,8 @@ namespace NetFusion.Rest.Server.Hal.Core
         private static void SetLinkUrl(ResourceContext context, ControllerActionLink resourceLink)
         {
             ApiActionMeta actionDescriptor = context.ApiMetadata.GetActionDescriptor(resourceLink.ActionMethodInfo);
-            
-            string controllerName = resourceLink.Controller.Replace("Controller", string.Empty);
+
+            string controllerName = actionDescriptor.ControllerName;
             var routeValues = GetModelRouteValues(context, resourceLink);
             
             var link = new Link
