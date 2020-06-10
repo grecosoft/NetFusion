@@ -18,8 +18,8 @@ namespace NetFusion.Web.Mvc.Plugin
             
             AddModule<ApiMetadataModule>();
 
-            SourceUrl = "https://github.com/grecosoft/NetFusion-Plugins/tree/master/src/Infrastructure/NetFusion.Web.Mvc";
-            DocUrl = "https://github.com/grecosoft/NetFusion/wiki/infrastructure.web-mvc.overview";
+            SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/netfusion/src/Web/NetFusion.Web.Mvc";
+            DocUrl = "https://github.com/grecosoft/NetFusion/wiki";
         }
     }
     
