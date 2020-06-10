@@ -1,13 +1,11 @@
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using NetFusion.Redis;
+using StackExchange.Redis;
+
 namespace Service.WebApi.Controllers.Integration
 {
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Mvc;
-    using NetFusion.Redis;
-    using NetFusion.Web.Mvc.Metadata;
-    using StackExchange.Redis;
-
     [ApiController, Route("api/integration/redis")]
-    [GroupMeta(nameof(MongoDbController))]
     public class RedisDataController : ControllerBase
     {
         private readonly IDatabase _database;
@@ -18,13 +16,13 @@ namespace Service.WebApi.Controllers.Integration
             _database = redisService.GetDatabase("testdb");
         }
         
-        [HttpPost("set/add"), ActionMeta(nameof(AddValue))]
+        [HttpPost("set/add")]
         public Task AddValue([FromBody] SetValue setValue)
         {
             return _database.SetAddAsync("autos", setValue.Value);
         }
 
-        [HttpGet("set/pop"), ActionMeta(nameof(PopValue))]
+        [HttpGet("set/pop")]
         public async Task<SetValue> PopValue()
         {
             var result = await _database.SetPopAsync("autos");

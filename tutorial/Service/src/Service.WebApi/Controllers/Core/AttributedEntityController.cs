@@ -1,16 +1,14 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using NetFusion.Web.Mvc.Metadata;
 using Service.Domain.Entities;
 using Service.WebApi.Models;
 
 namespace Service.WebApi.Controllers.Core
 {
     [ApiController, Route("api/base/attributed-entity")]
-    [GroupMeta(nameof(AttributedEntityController))]
     public class AttributedEntityController : ControllerBase
     {
-        [HttpGet("read"), ActionMeta(nameof(ReadSensorData))]
+        [HttpGet("read")]
         public IActionResult ReadSensorData()
         {
             var sensor = new Sensor(Guid.NewGuid(), "Living Room Temp", 73.04M);
@@ -19,7 +17,7 @@ namespace Service.WebApi.Controllers.Core
             return Ok(sensor);
         }
 
-        [HttpPatch("set/attributes"), ActionMeta(nameof(AddAttributes))]
+        [HttpPatch("set/attributes")]
         public IActionResult AddAttributes([FromBody]AttributeModel model)
         {
             var sensor = new Sensor(Guid.NewGuid(), "Dinning Room Temp", 73.04M);
@@ -31,7 +29,7 @@ namespace Service.WebApi.Controllers.Core
             return Ok(sensor);
         }
 
-        [HttpGet("get/dynamically"), ActionMeta(nameof(AccessDynamically))]
+        [HttpGet("get/dynamically")]
         public IActionResult AccessDynamically()
         {
             var sensor = new Sensor(Guid.NewGuid(), "Living Room Temp", 73.04M);

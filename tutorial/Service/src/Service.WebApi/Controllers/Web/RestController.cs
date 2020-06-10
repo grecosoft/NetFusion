@@ -1,13 +1,11 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources.Hal;
-using NetFusion.Web.Mvc.Metadata;
 using Service.WebApi.Resources;
 
 namespace Service.WebApi.Controllers.Web
 {
     [ApiController, Route("api/schools")]
-    [GroupMeta(nameof(RestController))]
     public class RestController : ControllerBase
     {
         [HttpGet("{id}")]
@@ -58,8 +56,7 @@ namespace Service.WebApi.Controllers.Web
             return Ok(parentResource);
         }
 
-        [HttpGet("students/{studentId}/address"),
-            ActionMeta(nameof(GetStudentAddress))]
+        [HttpGet("students/{studentId}/address")]
         public IActionResult GetStudentAddress(Guid studentId)
         {
             return Ok(new AddressResource

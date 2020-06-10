@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Messaging;
-using NetFusion.Web.Mvc.Metadata;
 using Service.Domain.Events;
 using Service.Domain.Services;
 using Service.WebApi.Models;
@@ -9,7 +8,6 @@ using Service.WebApi.Models;
 namespace Service.WebApi.Controllers.Messaging
 {
     [ApiController, Route("api/messaging/domain-events")]
-    [GroupMeta(nameof(CommandController))]
     public class DomainEventController : ControllerBase
     {
         private readonly IMessagingService _messaging;
@@ -23,7 +21,7 @@ namespace Service.WebApi.Controllers.Messaging
             _exampleLog = exampleLog;
         }
 
-        [HttpPost("account"), ActionMeta(nameof(CreateAccount))]
+        [HttpPost("account")]
         public async Task<IActionResult> CreateAccount([FromBody]AccountModel model)
         {
             var domainEvent = new NewAccountCreated(

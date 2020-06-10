@@ -2,14 +2,12 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Messaging;
-using NetFusion.Web.Mvc.Metadata;
 using Service.Domain.Commands;
 using Service.Domain.Events;
 
 namespace Service.WebApi.Controllers.Integration
 {
     [ApiController, Route("api/integration/amqp")]
-    [GroupMeta(nameof(AmqpController))]
     public class AmqpController : ControllerBase
     {
         private readonly IMessagingService _messaging;

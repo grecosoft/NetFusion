@@ -2,13 +2,11 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Base.Scripting;
-using NetFusion.Web.Mvc.Metadata;
 using Service.Domain.Entities;
 
 namespace Service.WebApi.Controllers.Integration
 {
-    [ApiController, Route("api/integration/roslyn/expressions")] 
-    [GroupMeta(nameof(RoslynController))]
+    [ApiController, Route("api/integration/roslyn/expressions")]
     public class RoslynController : ControllerBase
     {
         private readonly IEntityScriptingService _scripting;
@@ -18,7 +16,7 @@ namespace Service.WebApi.Controllers.Integration
             _scripting = scriptingService;
         }
 
-        [HttpPatch("sensor/evaluate"), ActionMeta(nameof(EvaluateSensor))]
+        [HttpPatch("sensor/evaluate")]
         public async Task<IActionResult> EvaluateSensor([FromBody]Sensor sensor)
         {
             sensor.SensorId = Guid.NewGuid();
