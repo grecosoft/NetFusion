@@ -1,5 +1,6 @@
+using System;
 using System.Reflection;
-using NetFusion.Web.Mvc.Metadata.Core;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetFusion.Web.Mvc.Metadata
 {
@@ -16,5 +17,8 @@ namespace NetFusion.Web.Mvc.Metadata
         /// method.</param>
         /// <returns>The associated description or an exception of not found.</returns>
         ApiActionMeta GetActionMeta(MethodInfo methodInfo);
+
+        ApiActionMeta GetActionMeta<T>(string actionName, params Type[] paramTypes)
+            where T : ControllerBase;
     }
 }

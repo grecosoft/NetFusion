@@ -7,7 +7,7 @@ using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Linking;
 using NetFusion.Rest.Server.Mappings;
-using NetFusion.Web.Mvc.Metadata.Core;
+using NetFusion.Web.Mvc.Metadata;
 
 namespace NetFusion.Rest.Server.Hal.Core
 {
@@ -159,7 +159,7 @@ namespace NetFusion.Rest.Server.Hal.Core
 
         private static void MarkOptionalParams(ApiActionMeta actionMeta, Link link)
         {
-            foreach(ApiParameterMeta paramMeta in actionMeta.Parameters.Where(p => p.IsOptional))
+            foreach(ApiParameterMeta paramMeta in actionMeta.RouteParameters.Where(p => p.IsOptional))
             {
                 link.Href = link.Href.Replace(
                     "{" + paramMeta.ParameterName + "}", 

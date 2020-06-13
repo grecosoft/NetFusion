@@ -40,8 +40,7 @@ namespace WebTests.Rest.LinkGeneration.Server
                 .LinkMeta<LinkedResourceController>(
                     meta => meta.Url("scenario-6",
                         (c, r) => c.Update(r.Id, default(WebTests.Rest.LinkGeneration.Server.LinkedResource))))
-
-
+                
                 .LinkMeta<LinkedResourceController>(
                     meta => meta.Href("scenario-20", HttpMethod.Options, "http://external/api/call/info"))
 
@@ -59,8 +58,6 @@ namespace WebTests.Rest.LinkGeneration.Server
 
                 .LinkMeta<LinkedResourceController>(meta =>
                     meta.UrlTemplate<int, string, IActionResult>("scenario-31", c => c.AppendComment));
-
-
         }
     }
 }

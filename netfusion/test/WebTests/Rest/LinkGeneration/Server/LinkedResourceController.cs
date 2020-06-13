@@ -4,8 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Resources.Hal;
-using WebTests.Rest.ClientRequests;
-
+using WebTests.Mocks;
 
 namespace WebTests.Rest.LinkGeneration.Server
 {

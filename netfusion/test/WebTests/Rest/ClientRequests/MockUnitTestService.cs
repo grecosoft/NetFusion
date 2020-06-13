@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Rest.Resources.Hal;
+using WebTests.Mocks;
 using WebTests.Rest.ClientRequests.Server;
 
 

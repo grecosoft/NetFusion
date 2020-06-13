@@ -2,6 +2,8 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Rest.Server.Plugin;
 using WebTests.Hosting;
 using NetFusion.Test.Plugins;
+using WebTests.Mocks;
+using WebTests.Rest.ApiMetadata.Server;
 using WebTests.Rest.ClientRequests;
 using WebTests.Rest.ClientRequests.Server;
 using WebTests.Rest.LinkGeneration.Server;
@@ -11,7 +13,8 @@ namespace WebTests.Rest.Setup
 {
     public static class TestFixtureSetupExtensions
     {
-        public static WebServerConfig ArrangeWithDefaults(this WebHostFixture fixture, LinkedResource mockResource)
+        public static WebServerConfig ArrangeWithDefaults<T>(this WebHostFixture fixture, T mockResource)
+            where T : class
         {
             return fixture.WithServices(services =>
                 {
@@ -28,6 +31,7 @@ namespace WebTests.Rest.Setup
 
                     var hostPlugin = new MockHostPlugin();
                     hostPlugin.AddPluginType<LinkedResourceMap>();
+                    hostPlugin.AddPluginType<MetaResourceMap>();
 
                     compose.AddPlugin(hostPlugin);
                 });

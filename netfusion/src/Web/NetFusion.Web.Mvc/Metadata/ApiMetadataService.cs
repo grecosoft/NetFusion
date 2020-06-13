@@ -1,8 +1,10 @@
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using System;
 using System.Linq;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
-namespace NetFusion.Web.Mvc.Metadata.Core
+namespace NetFusion.Web.Mvc.Metadata
 {
     /// <summary>
     /// Service returning metadata for an MVC applications defined
@@ -34,6 +36,12 @@ namespace NetFusion.Web.Mvc.Metadata.Core
             }
 
             return actionDescriptor;
+        }
+
+        public ApiActionMeta GetActionMeta<T>(string actionName, params Type[] paramTypes) where T : ControllerBase
+        {
+            MethodInfo method = typeof(T).GetMethod(actionName, paramTypes);
+            return GetActionMeta(method);
         }
     }
 }

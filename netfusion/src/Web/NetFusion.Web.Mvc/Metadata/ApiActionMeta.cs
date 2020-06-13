@@ -1,11 +1,12 @@
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using System;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace NetFusion.Web.Mvc.Metadata.Core
+namespace NetFusion.Web.Mvc.Metadata
 {
     /// <summary>
     /// Metadata containing information for controller routes
@@ -41,7 +42,12 @@ namespace NetFusion.Web.Mvc.Metadata.Core
         /// <summary>
         /// Metadata about the route template parameters.
         /// </summary>
-        public ApiParameterMeta[] Parameters { get; }
+        public ApiParameterMeta[] RouteParameters { get; }
+        
+        /// <summary>
+        /// Metadata about the headers accepted by the action.
+        /// </summary>
+        public ApiParameterMeta[] HeaderParameters { get; }
 
         
         public ApiActionMeta(ApiDescription description)
@@ -50,7 +56,8 @@ namespace NetFusion.Web.Mvc.Metadata.Core
             
             RelativePath = description.RelativePath;
             HttpMethod  = description.HttpMethod;
-            Parameters = GetActionParameters(description.ActionDescriptor);
+            RouteParameters = GetActionParameters(description.ActionDescriptor, BindingSource.Path);
+            HeaderParameters = GetActionParameters(description.ActionDescriptor, BindingSource.Header);
 
             SetActionDescriptions(description);
         }
@@ -63,21 +70,10 @@ namespace NetFusion.Web.Mvc.Metadata.Core
             ControllerName = actionDescriptor.ControllerName;
         }
 
-        public ApiActionMeta(
-            ApiDescription description,
-            ControllerActionDescriptor actionDescriptor)
-        {
-            if (description == null) throw new ArgumentNullException(nameof(description));
-            if (actionDescriptor == null) throw new ArgumentNullException(nameof(actionDescriptor));
-            
-            RelativePath = description.RelativePath;
-            HttpMethod  = description.HttpMethod;
-            Parameters = GetActionParameters(actionDescriptor);
-        }
-        
-        private static ApiParameterMeta[] GetActionParameters(ActionDescriptor actionDescriptor) 
+        private static ApiParameterMeta[] GetActionParameters(ActionDescriptor actionDescriptor, BindingSource source) 
         {
             return actionDescriptor.Parameters.OfType<ControllerParameterDescriptor>()
+                .Where(p => p.BindingInfo.BindingSource == source)
                 .Select(p => new ApiParameterMeta(p))
                 .ToArray(); 
         }

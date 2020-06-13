@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using NetFusion.Rest.Resources.Hal;
-using WebTests.Rest.ClientRequests.Server;
 
-namespace WebTests.Rest.ClientRequests
+namespace WebTests.Mocks
 {
     public interface IMockedService
     {
         HalResource ServerReceivedResource { get; set; }
-
-        IEnumerable<CustomerModel> Customers { get; set; }
 
         IEnumerable<T> GetResources<T>();
 
