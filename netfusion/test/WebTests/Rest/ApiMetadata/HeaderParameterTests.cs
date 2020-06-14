@@ -1,7 +1,5 @@
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using FluentAssertions;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Web.Mvc.Metadata;
@@ -13,7 +11,7 @@ using Xunit;
 namespace WebTests.Rest.ApiMetadata
 {
     /// <summary>
-    /// Validates the population of route parameter metadata from the underlying
+    /// Validates the population of header parameter metadata from the underlying
     /// parameter descriptions discovered by the ASP.NET runtime.
     /// </summary>
     public class HeaderParameterTests
@@ -37,6 +35,8 @@ namespace WebTests.Rest.ApiMetadata
                 webResponse.Assert.Service((IApiMetadataService service) =>
                 {
                     RequiredHeaderParams(service);
+                    OptionalHeaderParams(service);
+                    OptionalHeaderParamsWithDefaults(service);
                 });
             });
         }
@@ -44,29 +44,28 @@ namespace WebTests.Rest.ApiMetadata
         private static void RequiredHeaderParams(IApiMetadataService apiMetadata)
         {
             var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
-                "RequiredHeaderParams", typeof(int));
+                "RequiredHeaderParams", typeof(int), typeof(string));
 
-      
+            actionMetadata.HeaderParameters.AssertParamMeta<int>("header-value1");
+            actionMetadata.HeaderParameters.AssertParamMeta<string>("header-value2");
         }
-
         
-            
-       
-        private static void AssertParam<T>(ApiActionMeta actionMeta, string name, 
-            bool isOptional = false, 
-            object defaultValue = null)
+        private static void OptionalHeaderParams(IApiMetadataService apiMetadata)
         {
-            actionMeta.Should().NotBeNull();
-                
-            var paramMeta = actionMeta.RouteParameters.Single(p => p.ParameterName == name);
-            paramMeta.Should().NotBeNull();
-            paramMeta.IsOptional.Should().Be(isOptional);
-            paramMeta.ParameterType.Should().Be(typeof(T));
+            var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
+                "OptionalHeaderParams", typeof(int), typeof(string));
 
-            if (defaultValue != null)
-            {
-                paramMeta.DefaultValue.Should().Be(defaultValue);
-            }
-        } 
+            actionMetadata.HeaderParameters.AssertParamMeta<int?>("header-value1", true);
+            actionMetadata.HeaderParameters.AssertParamMeta<string>("header-value2", true);
+        }
+        
+        private static void OptionalHeaderParamsWithDefaults(IApiMetadataService apiMetadata)
+        {
+            var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
+                "OptionalHeaderParamsWithDefaults", typeof(int), typeof(string));
+
+            actionMetadata.HeaderParameters.AssertParamMeta<int?>("header-value1", true, 100);
+            actionMetadata.HeaderParameters.AssertParamMeta<string>("header-value2", true, "abc");
+        }
     }
 }

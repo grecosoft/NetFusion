@@ -1,7 +1,5 @@
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using FluentAssertions;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Web.Mvc.Metadata;
@@ -47,9 +45,9 @@ namespace WebTests.Rest.ApiMetadata
         {
             var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
                 "RequiredRouteParams", typeof(int), typeof(string));
-
-            AssertParam<int>(actionMetadata, "id");
-            AssertParam<string>(actionMetadata, "v1");
+            
+            actionMetadata.RouteParameters.AssertParamMeta<int>("id");
+            actionMetadata.RouteParameters.AssertParamMeta<string>("v1");
         }
 
         private static void OptionalRouteParams(IApiMetadataService apiMetadata)
@@ -57,9 +55,9 @@ namespace WebTests.Rest.ApiMetadata
             var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
                 "OptionalRouteParams", typeof(int), typeof(int?), typeof(string));
                 
-            AssertParam<int>(actionMetadata, "id");
-            AssertParam<int?>(actionMetadata, "v1", true);
-            AssertParam<string>(actionMetadata, "v2", true);
+            actionMetadata.RouteParameters.AssertParamMeta<int>("id");
+            actionMetadata.RouteParameters.AssertParamMeta<int?>("v1", true);
+            actionMetadata.RouteParameters.AssertParamMeta<string>("v2", true);
         }
             
         private static void OptionalRouteParamsWithDefaults(IApiMetadataService apiMetadata)
@@ -67,26 +65,9 @@ namespace WebTests.Rest.ApiMetadata
             var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
                 "OptionalRouteParamsWithDefaults", typeof(int), typeof(int?), typeof(string));
                 
-            AssertParam<int>(actionMetadata, "id");
-            AssertParam<int?>(actionMetadata, "v1", true, 100);
-            AssertParam<string>(actionMetadata, "v2", true, "abc");
+            actionMetadata.RouteParameters.AssertParamMeta<int>("id");
+            actionMetadata.RouteParameters.AssertParamMeta<int?>("v1", true, 100);
+            actionMetadata.RouteParameters.AssertParamMeta<string>("v2", true, "abc");
         }
-
-        private static void AssertParam<T>(ApiActionMeta actionMeta, string name, 
-            bool isOptional = false, 
-            object defaultValue = null)
-        {
-            actionMeta.Should().NotBeNull();
-                
-            var paramMeta = actionMeta.RouteParameters.Single(p => p.ParameterName == name);
-            paramMeta.Should().NotBeNull();
-            paramMeta.IsOptional.Should().Be(isOptional);
-            paramMeta.ParameterType.Should().Be(typeof(T));
-
-            if (defaultValue != null)
-            {
-                paramMeta.DefaultValue.Should().Be(defaultValue);
-            }
-        } 
     }
 }

@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace NetFusion.Web.Mvc.Metadata
@@ -48,8 +51,14 @@ namespace NetFusion.Web.Mvc.Metadata
         /// Metadata about the headers accepted by the action.
         /// </summary>
         public ApiParameterMeta[] HeaderParameters { get; }
-
         
+        /// <summary>
+        /// Metadata about the query parameters accepted by the action.
+        /// </summary>
+        public ApiParameterMeta[] QueryParameters { get; }
+        
+        public ApiResponseMeta[] ResponseMeta { get; private set; }
+
         public ApiActionMeta(ApiDescription description)
         {
             if (description == null) throw new ArgumentNullException(nameof(description));
@@ -58,16 +67,39 @@ namespace NetFusion.Web.Mvc.Metadata
             HttpMethod  = description.HttpMethod;
             RouteParameters = GetActionParameters(description.ActionDescriptor, BindingSource.Path);
             HeaderParameters = GetActionParameters(description.ActionDescriptor, BindingSource.Header);
+            QueryParameters = GetActionParameters(description.ActionDescriptor, BindingSource.Query);
 
-            SetActionDescriptions(description);
+            SetActionMeta(description);
+            SetActionResponseMeta(description);
+            
+            var actionDescriptor = (ControllerActionDescriptor)description.ActionDescriptor;
         }
 
-        private void SetActionDescriptions(ApiDescription apiDescription)
+        private void SetActionMeta(ApiDescription apiDescription)
         {
             var actionDescriptor = (ControllerActionDescriptor)apiDescription.ActionDescriptor;
             ActionMethodInfo = actionDescriptor.MethodInfo;
             ActionName = actionDescriptor.ActionName;
             ControllerName = actionDescriptor.ControllerName;
+        }
+
+        // Looks for all ProducesResponseType attributes describing the results that can be
+        // produced by the action method.
+        private void SetActionResponseMeta(ApiDescription apiDescription)
+        {
+            ResponseMeta = GetFilterMetadata<ProducesResponseTypeAttribute>(apiDescription)
+                .GroupBy(f => f.Type)
+                .Select(tg => new ApiResponseMeta(tg.Select(i => i.StatusCode), tg.Key)).ToArray();
+            
+            // Next, determine if the action method as the ProducesDefaultResponseType attribute
+            // specified to determine the response type to use if not specified.
+            var defaultType = GetFilterMetadata<ProducesDefaultResponseTypeAttribute>(apiDescription).FirstOrDefault();
+            if (defaultType == null) return;
+
+            foreach (ApiResponseMeta meta in ResponseMeta.Where(rm => rm.ModelType == null))
+            {
+                meta.ModelType = defaultType.Type;
+            }
         }
 
         private static ApiParameterMeta[] GetActionParameters(ActionDescriptor actionDescriptor, BindingSource source) 
@@ -76,6 +108,13 @@ namespace NetFusion.Web.Mvc.Metadata
                 .Where(p => p.BindingInfo.BindingSource == source)
                 .Select(p => new ApiParameterMeta(p))
                 .ToArray(); 
+        }
+
+        private IEnumerable<T> GetFilterMetadata<T>(ApiDescription apiDescription)
+            where T: IFilterMetadata
+        {
+            var actionDescriptor = (ControllerActionDescriptor)apiDescription.ActionDescriptor;
+            return actionDescriptor.FilterDescriptors.Select(fd => fd.Filter).OfType<T>();
         }
     }
 }
