@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Web.Mvc.Metadata;
+using NetFusion.Web.Mvc.Metadata.Core;
 using NetFusion.Web.Mvc.Plugin.Configs;
 
 namespace NetFusion.Web.Mvc.Plugin.Modules

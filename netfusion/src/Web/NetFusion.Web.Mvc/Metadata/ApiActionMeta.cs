@@ -71,8 +71,6 @@ namespace NetFusion.Web.Mvc.Metadata
 
             SetActionMeta(description);
             SetActionResponseMeta(description);
-            
-            var actionDescriptor = (ControllerActionDescriptor)description.ActionDescriptor;
         }
 
         private void SetActionMeta(ApiDescription apiDescription)
@@ -110,7 +108,7 @@ namespace NetFusion.Web.Mvc.Metadata
                 .ToArray(); 
         }
 
-        private IEnumerable<T> GetFilterMetadata<T>(ApiDescription apiDescription)
+        private static IEnumerable<T> GetFilterMetadata<T>(ApiDescription apiDescription)
             where T: IFilterMetadata
         {
             var actionDescriptor = (ControllerActionDescriptor)apiDescription.ActionDescriptor;

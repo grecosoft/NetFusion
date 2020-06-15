@@ -17,6 +17,7 @@ namespace NetFusion.Rest.Docs.Models
         public ApiParameterDoc[] QueryParameters { get; set; } 
         public ApiParameterMeta[] HeaderParams { get; set; }
         
+        public ApiEmbeddedDoc[] EmbeddedResources { get; set; }
         public ApiResponseMeta Response { get; set; }
     }
 }
