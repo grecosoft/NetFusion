@@ -8,9 +8,9 @@ namespace NetFusion.Rest.Docs.Plugin
 {
     public class DocsPlugin : PluginBase
     {
-        public override string PluginId => "77491AC3-31CC-44EC-B508-30E1ED2311CE";
+        public override string PluginId => "B792D448-278B-439E-B3B5-35F2AECC2232";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
-        public override string Name => "NetFusion: REST Plugin";
+        public override string Name => "NetFusion: REST Doc Plugin";
 
         public DocsPlugin()
         {

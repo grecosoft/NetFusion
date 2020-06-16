@@ -4,14 +4,12 @@ namespace NetFusion.Rest.Docs.Models
 {
     public class ApiParameterDoc
     {
-        public string Description { get; }
-        public string Type { get; }
-        public ApiParameterMeta Meta { get; }
-
-        public ApiParameterDoc(string description, ApiParameterMeta meta)
-        {
-            Description = description;
-            Meta = meta;
-        }
+ 
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public object DefaultValue { get; set; }
+        public bool IsOptions { get; set; }
+        public string Description { get; set; }
+        
     }
 }

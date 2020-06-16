@@ -42,7 +42,12 @@ namespace NetFusion.Web.Mvc.Metadata
             ParameterType = descriptor.ParameterType;
             BindingName = descriptor.BindingInfo.BinderModelName ?? ParameterName;
             IsOptional = descriptor.ParameterInfo.IsOptional;
-            DefaultValue = descriptor.ParameterInfo.DefaultValue;
+
+            object defaultValue = descriptor.ParameterInfo.DefaultValue ?? DBNull.Value;
+            if (defaultValue.GetType() != typeof(DBNull))
+            {
+                DefaultValue = descriptor.ParameterInfo.DefaultValue;
+            }
         }
     }
 }

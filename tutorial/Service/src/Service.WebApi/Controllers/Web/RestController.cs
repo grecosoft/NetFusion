@@ -8,6 +8,11 @@ namespace Service.WebApi.Controllers.Web
     [ApiController, Route("api/schools")]
     public class RestController : ControllerBase
     {
+        /// <summary>
+        /// Queries a school resource.
+        /// </summary>
+        /// <param name="id">Value identifying the school.</param>
+        /// <returns>School resource.</returns>
         [HttpGet("{id}")]
         public IActionResult GetSchool(int id)
         {

@@ -78,6 +78,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTests", "..\netfusion\te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subscriber.WebApi", "Service\src\Subscriber.WebApi\Subscriber.WebApi.csproj", "{8F3E1656-0221-4D15-B689-5F925FE03EA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Rest.Docs", "..\netfusion\src\Web\NetFusion.Rest.Docs\NetFusion.Rest.Docs.csproj", "{EFB042B1-5DAD-4795-8F18-F0F7411D2012}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -204,6 +206,10 @@ Global
 		{8F3E1656-0221-4D15-B689-5F925FE03EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F3E1656-0221-4D15-B689-5F925FE03EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F3E1656-0221-4D15-B689-5F925FE03EA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFB042B1-5DAD-4795-8F18-F0F7411D2012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFB042B1-5DAD-4795-8F18-F0F7411D2012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFB042B1-5DAD-4795-8F18-F0F7411D2012}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFB042B1-5DAD-4795-8F18-F0F7411D2012}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -244,6 +250,7 @@ Global
 		{9D5A2F38-538D-4932-BF6E-1ACBAE6AE2C0} = {32232913-3E63-4EE3-8DC1-2FCB6717198F}
 		{CFFD18A0-412E-45D9-991E-5A69980C5E65} = {32232913-3E63-4EE3-8DC1-2FCB6717198F}
 		{8F3E1656-0221-4D15-B689-5F925FE03EA5} = {C2DA4657-07F5-4F28-B2A0-911F571CF35B}
+		{EFB042B1-5DAD-4795-8F18-F0F7411D2012} = {1F6BA04E-F6CA-47C1-AB79-CAFED0D805F4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17556D20-DBFC-4AEB-857D-74B7C1EDEA60}
