@@ -4,8 +4,8 @@ using NetFusion.Web.Mvc.Metadata;
 
 namespace NetFusion.Rest.Docs.Descriptions
 {
-    public interface IActionDescription : IDocDescription
+    public interface IParamDescription : IDocDescription
     {
-        void Describe(ApiActionDoc actionDoc, ApiActionMeta actionMeta);
+        void Describe(ApiParameterDoc paramDoc, ApiParameterMeta paramMeta);
     }
 }

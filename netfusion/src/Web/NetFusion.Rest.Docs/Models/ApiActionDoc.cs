@@ -22,6 +22,6 @@ namespace NetFusion.Rest.Docs.Models
         public ICollection<ApiParameterDoc> HeaderParams { get; } = new List<ApiParameterDoc>();
         
         public ApiEmbeddedDoc[] EmbeddedResources { get; set; }
-        public ApiResponseMeta Response { get; set; }
+        public ICollection<ApiResponseDoc> ResponseDocs { get; set; } = new List<ApiResponseDoc>();
     }
 }

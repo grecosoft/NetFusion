@@ -35,7 +35,7 @@ namespace Service.WebApi.Controllers.Web
 
             return Ok(school);
         }
-        
+
         [HttpGet("{id}/students")]
         public IActionResult GetStudents(int id)
         {
