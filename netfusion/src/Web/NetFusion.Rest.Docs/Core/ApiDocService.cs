@@ -1,9 +1,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using NetFusion.Common.Extensions.Collections;
-using NetFusion.Rest.Docs.Descriptions;
+using NetFusion.Common.Extensions.Types;
+using NetFusion.Rest.Docs.Core.Description;
 using NetFusion.Rest.Docs.Models;
 using NetFusion.Rest.Docs.Plugin;
 using NetFusion.Web.Mvc.Metadata;
@@ -42,20 +42,22 @@ namespace NetFusion.Rest.Docs.Core
 
         private ApiActionDoc BuildActionDoc(ApiActionMeta actionMeta)
         {
-            var actionDoc = new ApiActionDoc(null, actionMeta.RelativePath, actionMeta.HttpMethod);
+            var context = new Dictionary<string, object>();
+            var actionDoc = new ApiActionDoc(actionMeta.RelativePath, actionMeta.HttpMethod);
 
-            _docModule.ApplyDescriptions<IActionDescription>(desc => desc.Describe(actionDoc, actionMeta));
+            _docModule.ApplyDescriptions<IActionDescription>(context, desc => desc.Describe(actionDoc, actionMeta));
             
-            AssembleParamDocs(actionMeta.RouteParameters, actionDoc.RouteParams);
-            AssembleParamDocs(actionMeta.QueryParameters, actionDoc.QueryParams);
-            AssembleParamDocs(actionMeta.HeaderParameters, actionDoc.HeaderParams);
+            AssembleParamDocs(context, actionMeta.RouteParameters, actionDoc.RouteParams);
+            AssembleParamDocs(context, actionMeta.QueryParameters, actionDoc.QueryParams);
+            AssembleParamDocs(context, actionMeta.HeaderParameters, actionDoc.HeaderParams);
         
-            AssembleResponseDocs(actionDoc, actionMeta);
+            AssembleResponseDocs(context, actionDoc, actionMeta);
 
             return actionDoc;
         }
 
-        private void AssembleParamDocs(IEnumerable<ApiParameterMeta> paramsMetaItems,
+        private void AssembleParamDocs(IDictionary<string, object> context,
+            IEnumerable<ApiParameterMeta> paramsMetaItems,
             ICollection<ApiParameterDoc> paramDocs)
         {
             paramsMetaItems.ForEach(paramMeta =>
@@ -64,24 +66,28 @@ namespace NetFusion.Rest.Docs.Core
                 {
                     Name = paramMeta.BindingName,
                     IsOptions = paramMeta.IsOptional,
-                    DefaultValue = paramMeta.DefaultValue
+                    DefaultValue = paramMeta.DefaultValue,
+                    Type = paramMeta.ParameterType.GetJsTypeName()
                 };
                 
-                _docModule.ApplyDescriptions<IParamDescription>(desc => desc.Describe(paramDoc, paramMeta));
+                _docModule.ApplyDescriptions<IParamDescription>(context, desc => desc.Describe(paramDoc, paramMeta));
                 paramDocs.Add(paramDoc);
             });
         }
 
-        private void AssembleResponseDocs(ApiActionDoc actionDoc, ApiActionMeta actionMeta)
+        private void AssembleResponseDocs(IDictionary<string, object> context,
+            ApiActionDoc actionDoc,
+            ApiActionMeta actionMeta)
         {
             actionMeta.ResponseMeta.ForEach(meta =>
             {
                 var responseDoc = new ApiResponseDoc
                 {
-
+                    Statuses = meta.Statuses
                 };
 
-                _docModule.ApplyDescriptions<IResponseDescription>(desc => desc.Describe(responseDoc, meta));
+                _docModule.ApplyDescriptions<IResponseDescription>(context, desc => desc.Describe(responseDoc, meta));
+                actionDoc.ResponseDocs.Add(responseDoc);
             });
         }
     }

@@ -1,10 +1,9 @@
-using NetFusion.Web.Mvc.Metadata;
-
 namespace NetFusion.Rest.Docs.Models
 {
     public class ApiResponseDoc
     {
         public string Description { get; set; }
+        public int[] Statuses { get; set; }
 
         
         // The description will be the description of the returns element.

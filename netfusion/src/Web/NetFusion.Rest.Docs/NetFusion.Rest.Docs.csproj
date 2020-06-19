@@ -20,6 +20,9 @@
     <ProjectReference Include="..\NetFusion.Rest.Resources\NetFusion.Rest.Resources.csproj" />
     <ProjectReference Include="..\NetFusion.Web.Mvc\NetFusion.Web.Mvc.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Descriptions" />
+  </ItemGroup>
   <PropertyGroup>
     <PackageId>NetFusion.Rest.Docs</PackageId>
     <Title>NetFusion REST/HAL Documentation.</Title>

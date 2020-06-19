@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Rest.Docs.Core;
-using NetFusion.Rest.Docs.Descriptions.Comments;
+using NetFusion.Rest.Docs.Core.Description;
+using NetFusion.Rest.Docs.XmlComments;
 
 namespace NetFusion.Rest.Docs.Plugin.Configs
 {
@@ -13,7 +13,10 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
         {
             _descriptions = new List<IDocDescription>
             {
-                new XmlClassComments(),
+                // TODO:  Make list of types and create new instances to reduce
+                // chance of multiple threads using context regardless if call
+                // being initiated from a Lazy evaluation.
+                new XmlActionComments(),
                 new XmlParamComments(),
                 new XmlResultComments()
             };

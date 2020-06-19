@@ -1,10 +1,14 @@
 using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources.Hal;
 using Service.WebApi.Resources;
 
 namespace Service.WebApi.Controllers.Web
 {
+    /// <summary>
+    /// Controller comment.
+    /// </summary>
     [ApiController, Route("api/schools")]
     public class RestController : ControllerBase
     {
@@ -12,9 +16,10 @@ namespace Service.WebApi.Controllers.Web
         /// Queries a school resource.
         /// </summary>
         /// <param name="id">Value identifying the school.</param>
+        /// <param name="criteria">Query value used to specify a specific grade.</param>
         /// <returns>School resource.</returns>
-        [HttpGet("{id}")]
-        public IActionResult GetSchool(int id)
+        [HttpGet("{id}"), ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetSchool(int id, [FromQuery]string criteria = "all-grades")
         {
             var school = new SchoolResource
             {
