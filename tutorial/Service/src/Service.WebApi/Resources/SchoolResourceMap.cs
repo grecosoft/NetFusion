@@ -1,7 +1,6 @@
 using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
-using NetFusion.Rest.Common;
 using NetFusion.Rest.Server.Hal;
 using Service.WebApi.Controllers.Web;
 

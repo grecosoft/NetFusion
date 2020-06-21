@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Rest.Docs.Core;
 using NetFusion.Rest.Docs.Core.Description;
 using NetFusion.Rest.Docs.Plugin.Configs;
@@ -18,27 +17,22 @@ namespace NetFusion.Rest.Docs.Plugin.Modules
         {
             DescriptionConfig = Context.Plugin.GetConfig<DocDescriptionConfig>();
         }
-        
-        public void ApplyDescriptions<T>(IDictionary<string, object> context, Action<T> description)
-            where T : class, IDocDescription
+
+        public IEnumerable<IDocDescription> GetDocDescriptions()
         {
-            foreach(T instance in DescriptionConfig.Descriptions.OfType<T>())
-            {
-                instance.Context = context;
-                description.Invoke(instance);
-            }
+            return DescriptionConfig.DescriptionTypes.CreateInstancesDerivingFrom<IDocDescription>();
         }
 
         public override void RegisterDefaultServices(IServiceCollection services)
         {
-            services.AddSingleton<IApiDocService, ApiDocService>();
+            services.AddScoped<IApiDocService, ApiDocService>();
         }
 
         public override void RegisterServices(IServiceCollection services)
         {
             services.AddControllers(config =>
             {
-                config.Filters.Add<ApiDocFilter>();
+            
             });
         }
     }

@@ -1,5 +1,6 @@
-using System.Collections.Concurrent;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Types;
@@ -12,40 +13,49 @@ namespace NetFusion.Rest.Docs.Core
 {
     public class ApiDocService : IApiDocService
     {
-        private readonly ConcurrentDictionary<MethodInfo, ApiActionDoc> _apiMethodDocs;
-        
         private readonly IApiMetadataService _apiMetadata;
-        private readonly IDocModule _docModule;
+        private readonly IDocDescription[] _docDescriptions;
         
         public ApiDocService(
             IApiMetadataService apiMetadata,
             IDocModule docModule)
         {
-            _apiMethodDocs = new ConcurrentDictionary<MethodInfo, ApiActionDoc>();
-            
             _apiMetadata = apiMetadata;
-            _docModule = docModule;
+            _docDescriptions = docModule.GetDocDescriptions().ToArray();
         }
 
         public bool TryGetActionDoc(MethodInfo actionMethodInfo, out ApiActionDoc actionDoc)
         {
-            actionDoc = _apiMethodDocs.GetOrAdd(actionMethodInfo, LoadActionDoc);
-            return actionDoc != null;
+            actionDoc = null;      
+            
+            if (_apiMetadata.TryGetActionMeta(actionMethodInfo, out ApiActionMeta actionMeta))
+            {
+                actionDoc = BuildActionDoc(actionMeta);
+                return true;
+            }
+
+            return false;
         }
 
-        private ApiActionDoc LoadActionDoc(MethodInfo actionMethodInfo)
+        public bool TryGetActionDoc(string relativePath, out ApiActionDoc actionDoc)
         {
-            return _apiMetadata.TryGetActionMeta(actionMethodInfo, out ApiActionMeta actionMeta)
-                ? BuildActionDoc(actionMeta)
-                : null;
-        }
+            actionDoc = null;      
+            
+            if (_apiMetadata.TryGetActionMeta(relativePath, out ApiActionMeta actionMeta))
+            {
+                actionDoc = BuildActionDoc(actionMeta);
+                return true;
+            }
 
+            return false;
+        }
+        
         private ApiActionDoc BuildActionDoc(ApiActionMeta actionMeta)
         {
             var context = new Dictionary<string, object>();
             var actionDoc = new ApiActionDoc(actionMeta.RelativePath, actionMeta.HttpMethod);
 
-            _docModule.ApplyDescriptions<IActionDescription>(context, desc => desc.Describe(actionDoc, actionMeta));
+            ApplyDescriptions<IActionDescription>(context, desc => desc.Describe(actionDoc, actionMeta));
             
             AssembleParamDocs(context, actionMeta.RouteParameters, actionDoc.RouteParams);
             AssembleParamDocs(context, actionMeta.QueryParameters, actionDoc.QueryParams);
@@ -70,7 +80,7 @@ namespace NetFusion.Rest.Docs.Core
                     Type = paramMeta.ParameterType.GetJsTypeName()
                 };
                 
-                _docModule.ApplyDescriptions<IParamDescription>(context, desc => desc.Describe(paramDoc, paramMeta));
+                ApplyDescriptions<IParamDescription>(context, desc => desc.Describe(paramDoc, paramMeta));
                 paramDocs.Add(paramDoc);
             });
         }
@@ -86,9 +96,19 @@ namespace NetFusion.Rest.Docs.Core
                     Statuses = meta.Statuses
                 };
 
-                _docModule.ApplyDescriptions<IResponseDescription>(context, desc => desc.Describe(responseDoc, meta));
+                ApplyDescriptions<IResponseDescription>(context, desc => desc.Describe(responseDoc, meta));
                 actionDoc.ResponseDocs.Add(responseDoc);
             });
+        }
+        
+        private void ApplyDescriptions<T>(IDictionary<string, object> context, Action<T> description)
+            where T : class, IDocDescription
+        {
+            foreach(T instance in _docDescriptions.OfType<T>())
+            {
+                instance.Context = context;
+                description.Invoke(instance);
+            }
         }
     }
 }

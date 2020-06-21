@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Rest.Docs.Core.Description;
@@ -7,23 +8,25 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
 {
     public class DocDescriptionConfig : IPluginConfig
     {
-        private readonly List<IDocDescription> _descriptions;
+        private readonly List<Type> _descriptionTypes = new List<Type>();
 
         public DocDescriptionConfig()
         {
-            _descriptions = new List<IDocDescription>
-            {
-                // TODO:  Make list of types and create new instances to reduce
-                // chance of multiple threads using context regardless if call
-                // being initiated from a Lazy evaluation.
-                new XmlActionComments(),
-                new XmlParamComments(),
-                new XmlResultComments()
-            };
+            AddDocDescription<XmlActionComments>();
+            AddDocDescription<XmlParamComments>();
+            AddDocDescription<XmlResultComments>();
+
+            DescriptionTypes = _descriptionTypes.AsReadOnly();
+        }
+
+        public void AddDocDescription<T>()
+            where T : IDocDescription
+        {
+            if (_descriptionTypes.Contains(typeof(T))) return;
             
-            Descriptions = _descriptions.AsReadOnly();
+            _descriptionTypes.Add(typeof(T));
         }
         
-        public IReadOnlyCollection<IDocDescription> Descriptions { get; }
+        public IReadOnlyCollection<Type> DescriptionTypes { get; }
     }
 }

@@ -33,6 +33,12 @@ namespace NetFusion.Web.Mvc.Metadata.Core
             return actionMeta != null;
         }
 
+        public bool TryGetActionMeta(string relativePath, out ApiActionMeta actionMeta)
+        {
+            actionMeta = _apiActionMeta.FirstOrDefault(ad => ad.RelativePath == relativePath);
+            return actionMeta != null;
+        }
+
         public ApiActionMeta GetActionMeta(MethodInfo methodInfo)
         {
             if (TryGetActionMeta(methodInfo, out ApiActionMeta actionMeta)) return actionMeta;
