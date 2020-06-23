@@ -4,6 +4,7 @@ namespace NetFusion.Rest.Docs.Models
     {
         public string Description { get; set; }
         public int[] Statuses { get; set; }
+        public ApiResourceDoc[] Resources { get; set; }
 
         
         // The description will be the description of the returns element.

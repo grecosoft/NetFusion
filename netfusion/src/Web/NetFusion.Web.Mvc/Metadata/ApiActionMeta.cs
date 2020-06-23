@@ -59,9 +59,11 @@ namespace NetFusion.Web.Mvc.Metadata
         
         public ApiResponseMeta[] ResponseMeta { get; private set; }
 
+        private readonly ApiDescription _apiDescription;
+
         public ApiActionMeta(ApiDescription description)
         {
-            if (description == null) throw new ArgumentNullException(nameof(description));
+            _apiDescription = description ?? throw new ArgumentNullException(nameof(description));
             
             RelativePath = description.RelativePath;
             HttpMethod  = description.HttpMethod;
@@ -71,6 +73,11 @@ namespace NetFusion.Web.Mvc.Metadata
 
             SetActionMeta(description);
             SetActionResponseMeta(description);
+        }
+
+        public IEnumerable<T> GetFilterMetadata<T>()
+        {
+            return _apiDescription.ActionDescriptor.FilterDescriptors.Select(fd => fd.Filter).OfType<T>();
         }
 
         private void SetActionMeta(ApiDescription apiDescription)

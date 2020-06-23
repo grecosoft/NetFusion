@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Types;
 using NetFusion.Rest.Docs.Core.Description;
@@ -13,13 +14,16 @@ namespace NetFusion.Rest.Docs.Core
 {
     public class ApiDocService : IApiDocService
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly IApiMetadataService _apiMetadata;
         private readonly IDocDescription[] _docDescriptions;
         
         public ApiDocService(
-            IApiMetadataService apiMetadata,
-            IDocModule docModule)
+            IServiceProvider serviceProvider,
+            IDocModule docModule,
+            IApiMetadataService apiMetadata)
         {
+            _serviceProvider = serviceProvider;
             _apiMetadata = apiMetadata;
             _docDescriptions = docModule.GetDocDescriptions().ToArray();
         }
@@ -52,7 +56,7 @@ namespace NetFusion.Rest.Docs.Core
         
         private ApiActionDoc BuildActionDoc(ApiActionMeta actionMeta)
         {
-            var context = new Dictionary<string, object>();
+            var context = new DescriptionContext(_serviceProvider.GetRequiredService<ITypeCommentService>());
             var actionDoc = new ApiActionDoc(actionMeta.RelativePath, actionMeta.HttpMethod);
 
             ApplyDescriptions<IActionDescription>(context, desc => desc.Describe(actionDoc, actionMeta));
@@ -66,7 +70,7 @@ namespace NetFusion.Rest.Docs.Core
             return actionDoc;
         }
 
-        private void AssembleParamDocs(IDictionary<string, object> context,
+        private void AssembleParamDocs(DescriptionContext context,
             IEnumerable<ApiParameterMeta> paramsMetaItems,
             ICollection<ApiParameterDoc> paramDocs)
         {
@@ -75,7 +79,7 @@ namespace NetFusion.Rest.Docs.Core
                 var paramDoc = new ApiParameterDoc
                 {
                     Name = paramMeta.BindingName,
-                    IsOptions = paramMeta.IsOptional,
+                    IsOptional = paramMeta.IsOptional,
                     DefaultValue = paramMeta.DefaultValue,
                     Type = paramMeta.ParameterType.GetJsTypeName()
                 };
@@ -85,7 +89,7 @@ namespace NetFusion.Rest.Docs.Core
             });
         }
 
-        private void AssembleResponseDocs(IDictionary<string, object> context,
+        private void AssembleResponseDocs(DescriptionContext context,
             ApiActionDoc actionDoc,
             ApiActionMeta actionMeta)
         {
@@ -93,15 +97,19 @@ namespace NetFusion.Rest.Docs.Core
             {
                 var responseDoc = new ApiResponseDoc
                 {
-                    Statuses = meta.Statuses
+                    Statuses = meta.Statuses,
                 };
 
-                ApplyDescriptions<IResponseDescription>(context, desc => desc.Describe(responseDoc, meta));
+                if (meta.ModelType != null)
+                {
+                    ApplyDescriptions<IResponseDescription>(context, desc => desc.Describe(responseDoc, meta));
+                }
+                
                 actionDoc.ResponseDocs.Add(responseDoc);
             });
         }
         
-        private void ApplyDescriptions<T>(IDictionary<string, object> context, Action<T> description)
+        private void ApplyDescriptions<T>(DescriptionContext context, Action<T> description)
             where T : class, IDocDescription
         {
             foreach(T instance in _docDescriptions.OfType<T>())

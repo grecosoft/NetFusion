@@ -17,7 +17,7 @@ using Service.WebApi.Plugin;
 using NetFusion.Builder;
 using NetFusion.Messaging.Logging;
 using NetFusion.Rest.Client;
-using NetFusion.Rest.Docs.Core;
+using NetFusion.Rest.Docs;
 using NetFusion.Rest.Docs.Plugin;
 using Service.App.Services;
 using Service.WebApi.Hubs;
@@ -88,7 +88,7 @@ namespace Service.WebApi
                     .AllowAnyHeader());
             }
 
-            app.UseMiddleware<ApiDocMiddleware>();
+            app.UseRestDocs();
             
             app.UseHttpsRedirection();
             app.UseRouting();

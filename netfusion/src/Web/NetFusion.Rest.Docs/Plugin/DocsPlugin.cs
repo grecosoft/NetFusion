@@ -15,7 +15,7 @@ namespace NetFusion.Rest.Docs.Plugin
 
         public DocsPlugin()
         {
-            AddConfig<DocDescriptionConfig>();
+            AddConfig<RestDocConfig>();
             AddModule<DocModule>();
 
             Description = "Plugin implementing management and querying of REST/HAL API documentation";

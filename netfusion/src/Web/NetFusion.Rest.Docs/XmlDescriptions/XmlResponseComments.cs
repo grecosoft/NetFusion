@@ -1,17 +1,16 @@
-using System.Collections.Generic;
 using NetFusion.Rest.Docs.Core.Description;
 using NetFusion.Rest.Docs.Models;
 using NetFusion.Web.Mvc.Metadata;
 
-namespace NetFusion.Rest.Docs.XmlComments
+namespace NetFusion.Rest.Docs.XmlDescriptions
 {
-    public class XmlResultComments : IResponseDescription
+    public class XmlResponseComments : IResponseDescription
     {
-        public IDictionary<string, object> Context { get; set; }
+        public DescriptionContext Context { get; set; }
         
         public void Describe(ApiResponseDoc responseDoc, ApiResponseMeta responseMeta)
         {
-            
+            Context.TypeComments.GetResourceDoc(responseMeta.ModelType);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace NetFusion.Rest.Docs.Core.Description
     {
         public static T GetContextItem<T>(this IDocDescription description, string name)
         {
-            if (description.Context.TryGetValue(name, out object value) && value is T item)
+            if (description.Context.Properties.TryGetValue(name, out object value) && value is T item)
             {
                 return item;
             }

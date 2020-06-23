@@ -5,16 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Rest.Common;
 using NetFusion.Rest.Docs.Models;
+using NetFusion.Rest.Docs.Plugin;
 
 namespace NetFusion.Rest.Docs.Core
 {
     public class ApiDocMiddleware
     {
         private readonly RequestDelegate _next;
-
-        public ApiDocMiddleware(RequestDelegate next)
+        private readonly IDocModule _docModule;
+        
+        
+        public ApiDocMiddleware(RequestDelegate next, IDocModule docModule)
         {
             _next = next;
+            _docModule = docModule;
         }
         
         public async Task Invoke(HttpContext httpContext, IApiDocService apiDocService)
@@ -39,12 +43,12 @@ namespace NetFusion.Rest.Docs.Core
             await _next(httpContext);
         }
         
-        private static bool IsDocumentationRequest(HttpContext context, out string relativeDocPath)
+        private bool IsDocumentationRequest(HttpContext context, out string relativeDocPath)
         {
             relativeDocPath = null;
             
             string path = context.Request.Path.Value;
-            if (! path.Equals("/api/net-fusion/rest", StringComparison.OrdinalIgnoreCase))
+            if (! path.Equals(_docModule.RestDocConfig.EndpointUrl, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -58,12 +62,14 @@ namespace NetFusion.Rest.Docs.Core
             return !string.IsNullOrWhiteSpace(relativeDocPath);
         }
 
-        private static async Task RespondWithApiDoc(HttpResponse response, ApiActionDoc actionDoc)
+        private async Task RespondWithApiDoc(HttpResponse response, ApiActionDoc actionDoc)
         {
             response.StatusCode = StatusCodes.Status200OK;
             response.ContentType = InternetMediaTypes.Json;
 
-            await response.WriteAsync(JsonSerializer.Serialize(actionDoc), Encoding.UTF8);
+            await response.WriteAsync(JsonSerializer.Serialize(
+                actionDoc, 
+                _docModule.RestDocConfig.SerializerOptions ), Encoding.UTF8);
         }
     }
 }

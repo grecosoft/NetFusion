@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Rest.Docs.Models
@@ -21,5 +22,7 @@ namespace NetFusion.Rest.Docs.Models
         
         public ApiEmbeddedDoc[] EmbeddedResources { get; set; }
         public ICollection<ApiResponseDoc> ResponseDocs { get; set; } = new List<ApiResponseDoc>();
+        
+        internal Type[] EmbeddedTypes { get; set; }
     }
 }
