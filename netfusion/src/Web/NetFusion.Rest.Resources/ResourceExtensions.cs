@@ -12,7 +12,7 @@ namespace NetFusion.Rest.Resources
         /// <param name="modelType">The model type.</param>
         /// <returns>The embedded name specified by the NamedResource attribute.
         /// If the attribute is not present, null is returned.</returns>
-        public static string GetExposedResourceTypeName(this Type modelType)
+        public static string GetExposedResourceName(this Type modelType)
         {
             if (modelType == null) throw new ArgumentNullException(nameof(modelType),
                 "Model Type cannot be null.");

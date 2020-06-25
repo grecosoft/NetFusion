@@ -48,7 +48,7 @@ namespace NetFusion.Rest.Resources.Hal
 	        HalResource<TModel> embeddedResource, 
 	        string named = null) where TModel: class
 		{
-			named ??= typeof(TModel).GetExposedResourceTypeName();
+			named ??= typeof(TModel).GetExposedResourceName();
 			EmbedValue<TModel>(resource, embeddedResource, named);
 		}
 
@@ -61,7 +61,7 @@ namespace NetFusion.Rest.Resources.Hal
         public static void EmbedModel<TModel>(this HalResource resource, TModel model, string named = null)
 			where TModel: class
 		{
-			named ??= typeof(TModel).GetExposedResourceTypeName();
+			named ??= typeof(TModel).GetExposedResourceName();
 			EmbedValue<TModel>(resource, model, named);
 		}
 
@@ -76,7 +76,7 @@ namespace NetFusion.Rest.Resources.Hal
 			IEnumerable<HalResource<TModel>> embeddedResources, 
 			string named = null) where TModel : class
 		{
-			named ??= typeof(TModel).GetExposedResourceTypeName();
+			named ??= typeof(TModel).GetExposedResourceName();
 			EmbedValue<TModel>(resource, embeddedResources, named);
 		}
 
@@ -90,7 +90,7 @@ namespace NetFusion.Rest.Resources.Hal
 			IEnumerable<TModel> models, 
 			string named = null) where TModel: class
 		{
-			named ??= typeof(TModel).GetExposedResourceTypeName();
+			named ??= typeof(TModel).GetExposedResourceName();
 			EmbedValue<TModel>(resource, models, named);
 		}
 

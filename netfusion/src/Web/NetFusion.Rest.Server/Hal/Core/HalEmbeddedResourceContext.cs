@@ -23,7 +23,7 @@ namespace NetFusion.Rest.Server.Hal.Core
 
         public bool IsRequested<TModel>() where TModel: class
         {
-            var resourceName = typeof(TModel).GetExposedResourceTypeName();
+            var resourceName = typeof(TModel).GetExposedResourceName();
             if (resourceName == null)
             {
                 throw new InvalidOperationException(
