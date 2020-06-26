@@ -22,7 +22,7 @@ namespace Service.WebApi.Controllers.Web
         /// <returns>School resource.</returns>
         [HttpGet("{id}"), 
          ProducesResponseType(typeof(AccountModel), StatusCodes.Status200OK), 
-         EmbeddedResource(typeof(AccountModel), typeof(RangeModel))]
+         EmbeddedResource("current-account", typeof(AccountModel))]
         public IActionResult GetSchool(int id, [FromQuery]string criteria = "all-grades")
         {
             var school = new SchoolResource

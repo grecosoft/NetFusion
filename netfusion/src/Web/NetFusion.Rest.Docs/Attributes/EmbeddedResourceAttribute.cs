@@ -3,14 +3,16 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace NetFusion.Rest.Docs.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class EmbeddedResourceAttribute : Attribute, IFilterMetadata
     {
-        public Type[] EmbeddedTypes { get; }
+        public string EmbeddedName { get; set; }
+        public Type EmbeddedType { get; set; }
         
-        public EmbeddedResourceAttribute(params Type[] embeddedTypes)
+        public EmbeddedResourceAttribute(string embeddedName, Type embeddedType)
         {
-            EmbeddedTypes = embeddedTypes;
+            EmbeddedName = embeddedName;
+            EmbeddedType = embeddedType;
         }
     }
 }

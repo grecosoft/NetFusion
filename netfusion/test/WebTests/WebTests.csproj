@@ -22,4 +22,7 @@
     <ProjectReference Include="..\..\src\Web\NetFusion.Rest.Server\NetFusion.Rest.Server.csproj" />
     <ProjectReference Include="..\..\src\Web\NetFusion.Web.Mvc\NetFusion.Web.Mvc.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Rest\DocGeneration\" />
+  </ItemGroup>
 </Project>
