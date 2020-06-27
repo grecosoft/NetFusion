@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NetFusion.Rest.Docs.Attributes;
+using NetFusion.Rest.Docs;
 using NetFusion.Rest.Resources.Hal;
 using Service.WebApi.Models;
 using Service.WebApi.Resources;

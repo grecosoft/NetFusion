@@ -4,8 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.XPath;
 using NetFusion.Common.Extensions.Types;
-using NetFusion.Rest.Docs.Core.Description;
+using NetFusion.Rest.Docs.Core;
 using NetFusion.Rest.Docs.Models;
+using NetFusion.Rest.Docs.Plugin;
 using NetFusion.Rest.Resources;
 
 namespace NetFusion.Rest.Docs.XmlDescriptions
@@ -14,12 +15,26 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
     {
         private const string TypeMemberSummaryXPath = "/doc/members/member[@name='{0}']/summary";
         private static Type[] PrimitiveTypes { get; } = {typeof(string), typeof(DateTime)};
-        
+
+        private readonly IDocModule _docModule;
+
+        public XmlTypeCommentService(IDocModule docModule)
+        {
+            _docModule = docModule;
+        }
+
+        // move to another location since this is xml specific - should
+        // not be on ITypeCommentService.
+        public XPathNavigator GetXmlCommentsForTypesAssembly(Type containedType)
+        {
+            Assembly typesAssembly = containedType.Assembly;
+            return typesAssembly.GetXmlCommentDoc(_docModule.RestDocConfig.DescriptionDirectory);
+        }
+
         public ApiResourceDoc GetResourceDoc(Type resourceType)
         {
-            Assembly declaringAssembly = resourceType.Assembly;
-            XPathNavigator xmlCommentDoc = declaringAssembly.GetXmlCommentDoc(AppContext.BaseDirectory);
-            
+            XPathNavigator xmlCommentDoc = GetXmlCommentsForTypesAssembly(resourceType);
+
             return xmlCommentDoc == null ? null : BuildResourceDoc(xmlCommentDoc, resourceType);
         }
 
@@ -45,7 +60,7 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             {
                 Description = GetTypeComment(xmlCommentDoc, resourceType),
                 ResourceName = resourceType.GetExposedResourceName()
-        };
+            };
 
             foreach (PropertyInfo propInfo in GetDescribableProperties(resourceType))
             {

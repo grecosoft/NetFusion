@@ -1,13 +1,12 @@
 using System.Linq;
-using NetFusion.Rest.Docs.Attributes;
 using NetFusion.Rest.Docs.Core.Description;
 using NetFusion.Rest.Docs.Models;
 using NetFusion.Web.Mvc.Metadata;
 
-namespace NetFusion.Rest.Docs.AttributeDescriptions
+namespace NetFusion.Rest.Docs.Metadata
 {
 
-    public class EmbeddedActionAttributes : IActionDescription
+    public class EmbeddedResourceMeta : IActionDescription
     {
         public DescriptionContext Context { get; set; }
         public void Describe(ApiActionDoc actionDoc, ApiActionMeta actionMeta)

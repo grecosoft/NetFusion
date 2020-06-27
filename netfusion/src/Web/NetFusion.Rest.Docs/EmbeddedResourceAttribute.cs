@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace NetFusion.Rest.Docs.Attributes
+namespace NetFusion.Rest.Docs
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class EmbeddedResourceAttribute : Attribute, IFilterMetadata
