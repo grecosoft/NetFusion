@@ -12,13 +12,18 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         private const string SummaryTag = "summary";
 
         public DescriptionContext Context { get; set; }
+        private readonly IXmlCommentService _xmlComments;
+
+        public XmlActionComments(IXmlCommentService xmlComments)
+        {
+            _xmlComments = xmlComments;
+        }
 
         public void Describe(ApiActionDoc actionDoc, ApiActionMeta actionMeta)
         {
             Type controllerType = actionMeta.ActionMethodInfo.DeclaringType;
 
-            XPathNavigator xmlCommentDoc = Context.TypeComments
-                .GetXmlCommentsForTypesAssembly(controllerType);
+            XPathNavigator xmlCommentDoc =  _xmlComments.GetXmlCommentsForTypesAssembly(controllerType);
 
             SetActionDescription(xmlCommentDoc, actionDoc, actionMeta);
         }

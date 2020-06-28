@@ -6,13 +6,16 @@ namespace NetFusion.Rest.Docs
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class EmbeddedResourceAttribute : Attribute, IFilterMetadata
     {
+        public Type ParentModelType { get; set; }
         public string EmbeddedName { get; set; }
-        public Type EmbeddedType { get; set; }
+        public Type ChildModelType { get; set; }
         
-        public EmbeddedResourceAttribute(string embeddedName, Type embeddedType)
+        public EmbeddedResourceAttribute(Type parentModelType, Type childModelType, string embeddedName)
         {
+            ParentModelType = parentModelType;
+            ChildModelType = childModelType;
+
             EmbeddedName = embeddedName;
-            EmbeddedType = embeddedType;
         }
     }
 }

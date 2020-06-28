@@ -1,18 +1,19 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace NetFusion.Rest.Docs.Core.Description
 {
     public class EmbeddedType
     {
-        public Type ModelType { get; }
-        public string[] Names { get; }
+        public Type ParentModelType { get; }
+        public Type ChildModelType { get; }
 
-        public EmbeddedType(Type modelType, IEnumerable<string> names)
+        public string EmbeddedName { get; }
+
+        public EmbeddedType(Type parentModelType, Type childModelType, string embeddedName)
         {
-            ModelType = modelType;
-            Names = names.ToArray();
+            ParentModelType = parentModelType;
+            ChildModelType = childModelType;
+            EmbeddedName = embeddedName;
         }
     }
 }

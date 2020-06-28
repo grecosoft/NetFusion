@@ -6,7 +6,6 @@ using System.Xml.XPath;
 using NetFusion.Common.Extensions.Types;
 using NetFusion.Rest.Docs.Core;
 using NetFusion.Rest.Docs.Models;
-using NetFusion.Rest.Docs.Plugin;
 using NetFusion.Rest.Resources;
 
 namespace NetFusion.Rest.Docs.XmlDescriptions
@@ -16,24 +15,16 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         private const string TypeMemberSummaryXPath = "/doc/members/member[@name='{0}']/summary";
         private static Type[] PrimitiveTypes { get; } = {typeof(string), typeof(DateTime)};
 
-        private readonly IDocModule _docModule;
+        private readonly IXmlCommentService _xmlComments;
 
-        public XmlTypeCommentService(IDocModule docModule)
+        public XmlTypeCommentService(IXmlCommentService xmlComments)
         {
-            _docModule = docModule;
-        }
-
-        // move to another location since this is xml specific - should
-        // not be on ITypeCommentService.
-        public XPathNavigator GetXmlCommentsForTypesAssembly(Type containedType)
-        {
-            Assembly typesAssembly = containedType.Assembly;
-            return typesAssembly.GetXmlCommentDoc(_docModule.RestDocConfig.DescriptionDirectory);
+            _xmlComments = xmlComments;
         }
 
         public ApiResourceDoc GetResourceDoc(Type resourceType)
         {
-            XPathNavigator xmlCommentDoc = GetXmlCommentsForTypesAssembly(resourceType);
+            XPathNavigator xmlCommentDoc = _xmlComments.GetXmlCommentsForTypesAssembly(resourceType);
 
             return xmlCommentDoc == null ? null : BuildResourceDoc(xmlCommentDoc, resourceType);
         }

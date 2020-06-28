@@ -21,8 +21,9 @@ namespace Service.WebApi.Controllers.Web
         /// <param name="criteria">Query value used to specify a specific grade.</param>
         /// <returns>School resource.</returns>
         [HttpGet("{id}"), 
-         ProducesResponseType(typeof(AccountModel), StatusCodes.Status200OK), 
-         EmbeddedResource("current-account", typeof(AccountModel))]
+         ProducesResponseType(typeof(AccountModel), StatusCodes.Status200OK),
+         ProducesResponseType(typeof(SchoolResource), StatusCodes.Status201Created),
+         EmbeddedResource(typeof(SchoolResource), typeof(AccountModel), "current-account")]
         public IActionResult GetSchool(int id, [FromQuery]string criteria = "all-grades")
         {
             var school = new SchoolResource

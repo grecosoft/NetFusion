@@ -1,7 +1,6 @@
-using System.Collections.Generic;
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Rest.Docs.Core;
 using NetFusion.Rest.Docs.Core.Description;
 using NetFusion.Rest.Docs.Plugin.Configs;
@@ -19,19 +18,24 @@ namespace NetFusion.Rest.Docs.Plugin.Modules
             RestDocConfig = Context.Plugin.GetConfig<RestDocConfig>();
         }
 
-        public IEnumerable<IDocDescription> GetDocDescriptions()
-        {
-            return RestDocConfig.DescriptionTypes.CreateInstancesDerivingFrom<IDocDescription>();
-        }
 
         public override void RegisterDefaultServices(IServiceCollection services)
         {
+            services.AddSingleton<IXmlCommentService, XmlCommentService>();
+            services.AddSingleton<ITypeCommentService, XmlTypeCommentService>();
+
             services.AddScoped<IApiDocService, ApiDocService>();
-            services.AddScoped<ITypeCommentService, XmlTypeCommentService>();
         }
 
         public override void RegisterServices(IServiceCollection services)
         {
+            // Registers the configured document description implementations
+            // with the dependency-injection container.
+            foreach (Type descriptionType in RestDocConfig.DescriptionTypes)
+            {
+                services.AddScoped(typeof(IDocDescription), descriptionType);
+            }
+
             services.AddControllers(config =>
             {
             

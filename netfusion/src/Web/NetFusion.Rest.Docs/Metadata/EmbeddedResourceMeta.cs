@@ -17,14 +17,10 @@ namespace NetFusion.Rest.Docs.Metadata
                 return;
             }
 
-            // (example:  'payment-type' could be embeeded for resource names:
-            // 'last-payment' and 'average-payment'.
-            actionDoc.EmbeddedTypes = attributes.GroupBy(ea => ea.EmbeddedType)
-                .Select(et =>
-                    new EmbeddedType(
-                        et.Key,
-                        et.Select(ea => ea.EmbeddedName)))
-                .ToArray();
+            actionDoc.EmbeddedTypes = attributes.Select(a => new EmbeddedType(
+                a.ParentModelType,
+                a.ChildModelType,
+                a.EmbeddedName)).ToArray();
 
         }
     }
