@@ -90,6 +90,8 @@ namespace NetFusion.Rest.Docs.Core
             // Apply documentation for the possible action responses.
             AssembleResponseDocs(context, actionDoc, actionMeta);
 
+            ApplyDescriptions<IEmbeddedDescription>(context, desc => desc.Describe(actionDoc, actionMeta));
+
             return actionDoc;
         }
 

@@ -28,6 +28,7 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
             AddDocDescription<XmlActionComments>();
             AddDocDescription<XmlParamComments>();
             AddDocDescription<XmlResponseComments>();
+            AddDocDescription<XmlEmbeddedComments>();
 
             DescriptionTypes = _descriptionTypes.AsReadOnly();
         }

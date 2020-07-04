@@ -9,16 +9,16 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
     {
         public DescriptionContext Context { get; set; }
 
-        private readonly ITypeCommentService _typecomments;
+        private readonly ITypeCommentService _typeComments;
 
         public XmlResponseComments(ITypeCommentService typeComments)
         {
-            _typecomments = typeComments;
+            _typeComments = typeComments;
         }
         
         public void Describe(ApiResponseDoc responseDoc, ApiResponseMeta responseMeta)
         {
-            ApiResourceDoc resourceDoc = _typecomments.GetResourceDoc(responseMeta.ModelType);
+            ApiResourceDoc resourceDoc = _typeComments.GetResourceDoc(responseMeta.ModelType);
             responseDoc.ResourceDocs.Add(resourceDoc);
         }
     }

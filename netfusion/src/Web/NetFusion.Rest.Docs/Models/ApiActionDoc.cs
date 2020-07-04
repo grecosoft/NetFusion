@@ -46,13 +46,6 @@ namespace NetFusion.Rest.Docs.Models
         public ICollection<ApiParameterDoc> HeaderParams { get; } = new List<ApiParameterDoc>();
 
         /// <summary>
-        /// When returning a resource, the action can embedded additional resources into the
-        /// resource being returned or any of the child embedded resources.  This collection
-        /// contains documentation for all the possible embedded resource types.
-        /// </summary>
-        public ApiEmbeddedDoc[] EmbeddedResources { get; set; }
-
-        /// <summary>
         /// Contains documention for each of the possible HTTP status codes and the
         /// associated resource returned for the status.
         /// </summary>

@@ -8,11 +8,11 @@ namespace NetFusion.Rest.Docs.Models
         /// type of the embedded resource) but the embedded name could be
         /// 'last-payment'.
         /// </summary>
-        public string[] EmbeddedNames { get; set; }
+        public string EmbeddedName { get; set; }
 
         /// <summary>
         /// Documentation associated with the embedded resource.
         /// </summary>
-        public ApiResponseDoc ResponseDoc { get; set; } 
+        public ApiResourceDoc ResponseDoc { get; set; } 
     }      
 }
