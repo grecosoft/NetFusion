@@ -21,7 +21,6 @@ namespace NetFusion.Rest.Docs.Metadata
                 a.ParentModelType,
                 a.ChildModelType,
                 a.EmbeddedName)).ToArray();
-
         }
     }
 }

@@ -23,12 +23,18 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
-            
+
+            // Called first to added additional metadata used when
+            // applying comments contained within XML.
             AddDocDescription<EmbeddedResourceMeta>();
+
             AddDocDescription<XmlActionComments>();
             AddDocDescription<XmlParamComments>();
             AddDocDescription<XmlResponseComments>();
+
+            // Called last to apply additional XML comments.
             AddDocDescription<XmlEmbeddedComments>();
+            AddDocDescription<XmlRelationComments>();
 
             DescriptionTypes = _descriptionTypes.AsReadOnly();
         }

@@ -19,6 +19,7 @@
     <ProjectReference Include="..\NetFusion.Rest.Common\NetFusion.Rest.Common.csproj" />
     <ProjectReference Include="..\NetFusion.Rest.Resources\NetFusion.Rest.Resources.csproj" />
     <ProjectReference Include="..\NetFusion.Web.Mvc\NetFusion.Web.Mvc.csproj" />
+    <ProjectReference Include="..\NetFusion.Rest.Server\NetFusion.Rest.Server.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>NetFusion.Rest.Docs</PackageId>

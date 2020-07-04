@@ -50,7 +50,8 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             var resourceDoc = new ApiResourceDoc
             {
                 Description = GetTypeComment(xmlCommentDoc, resourceType),
-                ResourceName = resourceType.GetExposedResourceName()
+                ResourceName = resourceType.GetExposedResourceName(),
+                ResourceType = resourceType
             };
 
             foreach (PropertyInfo propInfo in GetDescribableProperties(resourceType))

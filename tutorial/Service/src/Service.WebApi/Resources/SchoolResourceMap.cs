@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
+using NetFusion.Rest.Common;
 using NetFusion.Rest.Server.Hal;
 using Service.WebApi.Controllers.Web;
 
@@ -14,8 +15,8 @@ namespace Service.WebApi.Resources
             Map<SchoolResource>()
                 .LinkMeta<RestController>(meta =>
                 {
-                    // meta.Url(RelationTypes.Self, (c, r) => c.GetSchool(r.Id));
-                    // meta.Url("students", (c, r) => c.GetStudents(r.Id));
+                     meta.Url(RelationTypes.Self, (c, r) => c.GetSchool(r.Id, default(string)));
+                     meta.Url("students", (c, r) => c.GetStudents(r.Id));
                 });
 
             Map<StudentResource>()

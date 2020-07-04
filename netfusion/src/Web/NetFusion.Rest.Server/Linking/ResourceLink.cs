@@ -12,13 +12,13 @@ namespace NetFusion.Rest.Server.Linking
     /// </summary>
     public class ResourceLink
     {
-        internal string RelationName { get; set; }       
-        internal string Href { get; set; }
-        internal string HrefLang { get; set; }
-        internal IEnumerable<string> Methods { get; set; }
+        public string RelationName { get; set; }       
+        public string Href { get; set; }
+        public string HrefLang { get; set; }
+        public IEnumerable<string> Methods { get; set; }
 
-        internal string Name { get; set; }
-        internal string Title { get; set; }
-        internal string Type { get; set; }
+        public string Name { get; set; }
+        public string Title { get; set; }
+        public string Type { get; set; }
     }
 }

@@ -91,6 +91,7 @@ namespace NetFusion.Rest.Docs.Core
             AssembleResponseDocs(context, actionDoc, actionMeta);
 
             ApplyDescriptions<IEmbeddedDescription>(context, desc => desc.Describe(actionDoc, actionMeta));
+            ApplyDescriptions<ILinkedDescription>(context, desc => desc.Describe(actionDoc, actionMeta));
 
             return actionDoc;
         }

@@ -65,7 +65,7 @@ namespace NetFusion.Rest.Server.Plugin.Modules
             return (IResourceProvider)resourceMap.ProviderType.CreateInstance();
         }
 
-        private (MediaTypeEntry entry, bool ok) GetMediaTypeEntry(string mediaType)
+        public (MediaTypeEntry entry, bool ok) GetMediaTypeEntry(string mediaType)
         {
             if (string.IsNullOrWhiteSpace(mediaType))
                 throw new ArgumentException("Media type not specified.", nameof(mediaType));

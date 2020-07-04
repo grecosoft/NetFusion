@@ -4,6 +4,7 @@ using NetFusion.Bootstrap.Plugins;
 using NetFusion.Rest.Docs.Plugin.Configs;
 using NetFusion.Rest.Docs.Plugin.Modules;
 using NetFusion.Web.Mvc.Plugin;
+using NetFusion.Rest.Server.Plugin;
 
 namespace NetFusion.Rest.Docs.Plugin
 {
@@ -33,6 +34,7 @@ namespace NetFusion.Rest.Docs.Plugin
 
             // Add dependent plugins:
             composite.AddWebMvc();
+            composite.AddRest();
             
             // Add plugin for Rest API support:
             composite.AddPlugin<DocsPlugin>();

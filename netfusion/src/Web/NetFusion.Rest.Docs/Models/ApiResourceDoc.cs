@@ -1,11 +1,10 @@
+using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Rest.Docs.Models
 {
     public class ApiResourceDoc
     {
-        // Add links descriptions? ...
-
         /// <summary>
         /// Description of the resource.
         /// </summary>
@@ -27,5 +26,12 @@ namespace NetFusion.Rest.Docs.Models
         /// contains documentation for all the possible embedded resource types.
         /// </summary>
         public ApiEmbeddedDoc[] EmbeddedResources { get; set; }
+
+        public ApiRelationDoc[] RelationDocs { get; set; }
+
+        /// <summary>
+        /// The model type for which the documentation is associated.
+        /// </summary>
+        internal Type ResourceType { get; set; }
     }
 }
