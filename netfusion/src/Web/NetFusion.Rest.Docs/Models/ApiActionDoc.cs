@@ -4,8 +4,7 @@ using NetFusion.Rest.Docs.Core.Description;
 namespace NetFusion.Rest.Docs.Models
 {
     /// <summary>
-    /// Model representing documentation for a specific
-    /// Web Api method.
+    /// Model representing documentation for a specific Web Api method.
     /// </summary>
     public class ApiActionDoc
     {
@@ -21,6 +20,16 @@ namespace NetFusion.Rest.Docs.Models
         
         public ApiActionDoc(string relativePath, string httpMethod)
         {
+            if (string.IsNullOrWhiteSpace(relativePath))
+            {
+                throw new System.ArgumentException("Value must be specified.", nameof(relativePath));
+            }
+
+            if (string.IsNullOrWhiteSpace(httpMethod))
+            {
+                throw new System.ArgumentException("Value must be specified.", nameof(httpMethod));
+            }
+
             RelativePath = relativePath;
             HttpMethod = httpMethod;
         }
@@ -47,7 +56,7 @@ namespace NetFusion.Rest.Docs.Models
 
         /// <summary>
         /// Contains documention for each of the possible HTTP status codes and the
-        /// associated resource returned for the status.
+        /// associated optional resource returned for the status.
         /// </summary>
         public ICollection<ApiResponseDoc> ResponseDocs { get; } = new List<ApiResponseDoc>();
 

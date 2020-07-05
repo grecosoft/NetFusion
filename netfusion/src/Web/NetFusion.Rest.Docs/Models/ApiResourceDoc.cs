@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace NetFusion.Rest.Docs.Models
 {
+    /// <summary>
+    /// Model describing a resource returned from a Web Api method.
+    /// </summary>
     public class ApiResourceDoc
     {
         /// <summary>
@@ -16,17 +19,18 @@ namespace NetFusion.Rest.Docs.Models
         public string ResourceName { get; set; }
 
         /// <summary>
-        /// Document for the resources properties.
+        /// Documentation for the resources properties.
         /// </summary>
         public ICollection<ApiPropertyDoc> Properties { get; } = new List<ApiPropertyDoc>();
 
         /// <summary>
-        /// When returning a resource, the action can embedded additional resources into the
-        /// resource being returned or any of the child embedded resources.  This collection
-        /// contains documentation for all the possible embedded resource types.
+        /// Documentation for child embedded named resources.
         /// </summary>
         public ApiEmbeddedDoc[] EmbeddedResources { get; set; }
 
+        /// <summary>
+        /// Documentation for an link relations assocated with the resource.
+        /// </summary>
         public ApiRelationDoc[] RelationDocs { get; set; }
 
         /// <summary>

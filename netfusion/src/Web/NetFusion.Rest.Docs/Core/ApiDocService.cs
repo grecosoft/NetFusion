@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NetFusion.Common.Extensions.Collections;
-using NetFusion.Common.Extensions.Types;
 using NetFusion.Rest.Docs.Core.Description;
 using NetFusion.Rest.Docs.Models;
 using NetFusion.Rest.Docs.Plugin;
@@ -25,6 +24,11 @@ namespace NetFusion.Rest.Docs.Core
             IApiMetadataService apiMetadata,
             IEnumerable<IDocDescription> docDescriptions)
         {
+            if (docModule is null)
+            {
+                throw new ArgumentNullException(nameof(docModule));
+            }
+
             _apiMetadata = apiMetadata ?? throw new ArgumentNullException(nameof(apiMetadata));
 
             // Instances of the IDocDescription implementations are to be executed
@@ -44,7 +48,7 @@ namespace NetFusion.Rest.Docs.Core
             actionDoc = null;      
 
             // Determines if there is metadata associated with the action method.
-            // If metadata is found, builds an action document model.
+            // If metadata is found, builds an action document model from the meatadata.
             if (_apiMetadata.TryGetActionMeta(actionMethodInfo, out ApiActionMeta actionMeta))
             {
                 actionDoc = BuildActionDoc(actionMeta);
@@ -59,7 +63,7 @@ namespace NetFusion.Rest.Docs.Core
             actionDoc = null;
 
             // Determines if there is metadata associated with the action method.
-            // If metadata is found, builds an action document model.
+            // If metadata is found, builds an action document model from the metadata.
             if (_apiMetadata.TryGetActionMeta(relativePath, out ApiActionMeta actionMeta))
             {
                 actionDoc = BuildActionDoc(actionMeta);
@@ -74,52 +78,41 @@ namespace NetFusion.Rest.Docs.Core
         // by the derived IDocDescriptions registerations.
         private ApiActionDoc BuildActionDoc(ApiActionMeta actionMeta)
         {
-            var context = new DescriptionContext();
-
             // Create the root document associated with the action metadata.
             var actionDoc = new ApiActionDoc(actionMeta.RelativePath, actionMeta.HttpMethod);
 
-            // Apply all action description registered implementations.
-            ApplyDescriptions<IActionDescription>(context, desc => desc.Describe(actionDoc, actionMeta));
+            SetEmbeddedResourceMeta(actionDoc, actionMeta);
 
-            // Apply all parameter description registered implemenations.
-            AssembleParamDocs(context, actionMeta.RouteParameters, actionDoc.RouteParams);
-            AssembleParamDocs(context, actionMeta.QueryParameters, actionDoc.QueryParams);
-            AssembleParamDocs(context, actionMeta.HeaderParameters, actionDoc.HeaderParams);
+            // Apply all action description registered implementations.
+            ApplyDescriptions<IActionDescription>(desc => desc.Describe(actionDoc, actionMeta));
 
             // Apply documentation for the possible action responses.
-            AssembleResponseDocs(context, actionDoc, actionMeta);
+            AssembleResponseDocs(actionDoc, actionMeta);
 
-            ApplyDescriptions<IEmbeddedDescription>(context, desc => desc.Describe(actionDoc, actionMeta));
-            ApplyDescriptions<ILinkedDescription>(context, desc => desc.Describe(actionDoc, actionMeta));
+            // Describe all embedded resources and relations within the populated action document.
+            ApplyDescriptions<IEmbeddedDescription>(desc => desc.Describe(actionDoc, actionMeta));
+            ApplyDescriptions<ILinkedDescription>(desc => desc.Describe(actionDoc, actionMeta));
 
             return actionDoc;
         }
 
-        private void AssembleParamDocs(DescriptionContext context,
-            IEnumerable<ApiParameterMeta> paramsMetaItems,
-            ICollection<ApiParameterDoc> paramDocs)
+        private static void SetEmbeddedResourceMeta(ApiActionDoc actionDoc, ApiActionMeta actionMeta)
         {
-            paramsMetaItems.ForEach(paramMeta =>
+            var attributes = actionMeta.GetFilterMetadata<EmbeddedResourceAttribute>();
+            if (! attributes.Any())
             {
-                var paramDoc = new ApiParameterDoc
-                {
-                    Name = paramMeta.BindingName,
-                    IsOptional = paramMeta.IsOptional,
-                    DefaultValue = paramMeta.DefaultValue,
-                    Type = paramMeta.ParameterType.GetJsTypeName()
-                };
-                
-                ApplyDescriptions<IParamDescription>(context, desc => desc.Describe(paramDoc, paramMeta));
-                paramDocs.Add(paramDoc);
-            });
+                return;
+            }
+
+            actionDoc.EmbeddedTypes = attributes.Select(a => new EmbeddedType(
+                a.ParentModelType,
+                a.ChildModelType,
+                a.EmbeddedName)).ToArray();
         }
 
-        private void AssembleResponseDocs(DescriptionContext context,
-            ApiActionDoc actionDoc,
-            ApiActionMeta actionMeta)
+        private void AssembleResponseDocs(ApiActionDoc actionDoc, ApiActionMeta actionMeta)
         {
-            actionMeta.ResponseMeta.ForEach(meta =>
+            foreach(ApiResponseMeta meta in actionMeta.ResponseMeta)
             {
                 var responseDoc = new ApiResponseDoc
                 {
@@ -130,19 +123,18 @@ namespace NetFusion.Rest.Docs.Core
                 // code, add documentation for the resource type. 
                 if (meta.ModelType != null)
                 {
-                    ApplyDescriptions<IResponseDescription>(context, desc => desc.Describe(responseDoc, meta));
+                    ApplyDescriptions<IResponseDescription>(desc => desc.Describe(responseDoc, meta));
                 }
-                
+
                 actionDoc.ResponseDocs.Add(responseDoc);
-            });
+            }
         }
         
-        private void ApplyDescriptions<T>(DescriptionContext context, Action<T> description)
+        private void ApplyDescriptions<T>(Action<T> description)
             where T : class, IDocDescription
         {
             foreach(T instance in _docDescriptions.OfType<T>())
             {
-                instance.Context = context;
                 description.Invoke(instance);
             }
         }

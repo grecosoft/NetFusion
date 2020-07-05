@@ -1,12 +1,12 @@
 namespace NetFusion.Rest.Docs.Models
 {
+    /// <summary>
+    /// Model describing a named resource embedded within a parent resource.
+    /// </summary>
     public class ApiEmbeddedDoc
     {
         /// <summary>
-        /// The name further describing what the embeeded resource represents.
-        /// For example, the resource's name may be payment (identifyin the
-        /// type of the embedded resource) but the embedded name could be
-        /// 'last-payment'.
+        /// The name further describing what the embedded resource represents.
         /// </summary>
         public string EmbeddedName { get; set; }
 

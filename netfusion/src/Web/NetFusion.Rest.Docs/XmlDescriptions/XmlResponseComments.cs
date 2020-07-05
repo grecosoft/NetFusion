@@ -7,8 +7,6 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
 {
     public class XmlResponseComments : IResponseDescription
     {
-        public DescriptionContext Context { get; set; }
-
         private readonly ITypeCommentService _typeComments;
 
         public XmlResponseComments(ITypeCommentService typeComments)

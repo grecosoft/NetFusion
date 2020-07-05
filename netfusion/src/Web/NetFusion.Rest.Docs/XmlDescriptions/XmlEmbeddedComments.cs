@@ -15,7 +15,6 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
     public class XmlEmbeddedComments : IEmbeddedDescription
     {
         private readonly ITypeCommentService _typeComments;
-        public DescriptionContext Context { get; set; }
 
         public XmlEmbeddedComments(ITypeCommentService typeComments)
         {
@@ -50,7 +49,7 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         {
             // Find any embedded types specified for the resource type.
             var resourceEmbeddedTypes = embeddedTypes.Where(et =>
-                et.ParentModelType.GetExposedResourceName() == parentResourceDoc.ResourceName);
+                et.ParentResourceType.GetExposedResourceName() == parentResourceDoc.ResourceName);
 
             // For each embedded resource type, create an embedded resource document
             // with the documentation for each child embedded resource.
@@ -59,11 +58,11 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                 var embeddedResourceDoc = new ApiEmbeddedDoc
                 {
                     EmbeddedName = resourceEmbeddedType.EmbeddedName,
-                    ResponseDoc = _typeComments.GetResourceDoc(resourceEmbeddedType.ChildModelType)
+                    ResponseDoc = _typeComments.GetResourceDoc(resourceEmbeddedType.ChildResourceType)
                 };
 
                 embeddedResourceDoc.ResponseDoc.ResourceName = resourceEmbeddedType
-                    .ChildModelType.GetExposedResourceName();
+                    .ChildResourceType.GetExposedResourceName();
 
                 yield return embeddedResourceDoc;
             }

@@ -1,17 +1,17 @@
-using System;
-using System.Xml.XPath;
+using System.Collections.Generic;
 using NetFusion.Rest.Docs.Core.Description;
 using NetFusion.Rest.Docs.Models;
 using NetFusion.Web.Mvc.Metadata;
+using NetFusion.Common.Extensions.Types;
+using System.Xml.XPath;
 
 namespace NetFusion.Rest.Docs.XmlDescriptions
 {
+    /// <summary>
+    /// Sets the comments associated with a given Web Controller's action method.
+    /// </summary>
     public class XmlActionComments : IActionDescription
     {
-        private const string MemberXPath = "/doc/members/member[@name='{0}']";
-        private const string SummaryTag = "summary";
-
-        public DescriptionContext Context { get; set; }
         private readonly IXmlCommentService _xmlComments;
 
         public XmlActionComments(IXmlCommentService xmlComments)
@@ -21,29 +21,37 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
 
         public void Describe(ApiActionDoc actionDoc, ApiActionMeta actionMeta)
         {
-            Type controllerType = actionMeta.ActionMethodInfo.DeclaringType;
+            actionDoc.Description = _xmlComments.GetMethodSummary(actionMeta.ActionMethodInfo);
 
-            XPathNavigator xmlCommentDoc =  _xmlComments.GetXmlCommentsForTypesAssembly(controllerType);
+            XPathNavigator methodNode = _xmlComments.GetMethodNode(actionMeta.ActionMethodInfo);
+            if (methodNode == null)
+            {
+                return;
+            }
 
-            SetActionDescription(xmlCommentDoc, actionDoc, actionMeta);
+            ApplyParamDocs(methodNode, actionDoc.RouteParams, actionMeta.RouteParameters);
+            ApplyParamDocs(methodNode, actionDoc.HeaderParams, actionMeta.HeaderParameters);
+            ApplyParamDocs(methodNode, actionDoc.QueryParams, actionMeta.QueryParameters);
         }
 
-        private void SetActionDescription(XPathNavigator xmlCommentDoc, ApiActionDoc actionDoc, ApiActionMeta actionMeta)
+        private void ApplyParamDocs(
+            XPathNavigator methodNode,
+            ICollection<ApiParameterDoc> paramDocs,
+            IEnumerable<ApiParameterMeta> paramsMetaItems)
         {
-            string methodMemberName = UtilsXmlComment.GetMemberNameForMethod(actionMeta.ActionMethodInfo);
+            foreach (ApiParameterMeta paramMeta in paramsMetaItems)
+            {
+                var paramDoc = new ApiParameterDoc
+                {
+                    Name = paramMeta.BindingName,
+                    IsOptional = paramMeta.IsOptional,
+                    DefaultValue = paramMeta.DefaultValue,
+                    Type = paramMeta.ParameterType.GetJsTypeName(),
+                    Description = _xmlComments.GetMethodParamComment(methodNode, paramMeta.ParameterName)
+                };
 
-            // Determine if there are XML comments for the action method:
-            XPathNavigator memberNode = xmlCommentDoc.SelectSingleNode(string.Format(MemberXPath, methodMemberName));
-            if (memberNode == null) return;
-
-            // Store for reference by other description implementations.
-            Context.Properties["xml-member-node"] = memberNode;
-
-            // Determine if the action method has a summary:
-            var summaryNode = memberNode.SelectSingleNode(SummaryTag);
-
-            actionDoc.Description = summaryNode != null ? UtilsXmlCommentText.Humanize(summaryNode.InnerXml)
-                : string.Empty;
+                paramDocs.Add(paramDoc);
+            }
         }
     }
 }

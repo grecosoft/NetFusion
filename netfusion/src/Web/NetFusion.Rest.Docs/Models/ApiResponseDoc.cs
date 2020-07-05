@@ -2,16 +2,20 @@ using System.Collections.Generic;
 
 namespace NetFusion.Rest.Docs.Models
 {
+    /// <summary>
+    /// Model representing the possible status codes returned from a
+    /// Web Api method and their optional associated response resources.
+    /// </summary>
     public class ApiResponseDoc
     {
-        public string Description { get; set; }
+        /// <summary>
+        /// The possible set of HTTP response status codes.
+        /// </summary>
         public int[] Statuses { get; set; }
-        public ICollection<ApiResourceDoc> ResourceDocs { get; } = new List<ApiResourceDoc>();
 
-
-        // The description will be the description of the returns element.
-        // Will also want to use comment tags for each property on the response type.
-
-       
+        /// <summary>
+        /// 
+        /// </summary>
+        public ICollection<ApiResourceDoc> ResourceDocs { get; } = new List<ApiResourceDoc>();       
     }
 }

@@ -12,15 +12,17 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
 {
     public class XmlRelationComments : ILinkedDescription
     {
-        public DescriptionContext Context { get; set; }
-
         private readonly IResourceMediaModule _resourceMediaModule;
         private readonly IApiMetadataService _metadataService;
+        private readonly IXmlCommentService _xmlComments;
 
-        public XmlRelationComments(IResourceMediaModule resourceMediaModule, IApiMetadataService metadataService)
+        public XmlRelationComments(IResourceMediaModule resourceMediaModule,
+            IApiMetadataService metadataService,
+            IXmlCommentService xmlComments)
         {
             _resourceMediaModule = resourceMediaModule;
             _metadataService = metadataService;
+            _xmlComments = xmlComments;
         }
 
         public void Describe(ApiActionDoc actionDoc, ApiActionMeta actionMeta)
@@ -81,11 +83,13 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         private void SetRelationInfo(ApiRelationDoc relationDoc, ControllerActionLink resourceLink)
         {
             relationDoc.HRef = _metadataService.GetActionMeta(resourceLink.ActionMethodInfo).RelativePath;
+            relationDoc.Description = _xmlComments.GetMethodSummary(resourceLink.ActionMethodInfo);
         }
 
         private void SetRelationInfo(ApiRelationDoc relationDoc, TemplateUrlLink resourceLink)
         {
             relationDoc.HRef = _metadataService.GetActionMeta(resourceLink.ActionMethodInfo).RelativePath;
+            relationDoc.Description = _xmlComments.GetMethodSummary(resourceLink.ActionMethodInfo);
         }
     }
 }
