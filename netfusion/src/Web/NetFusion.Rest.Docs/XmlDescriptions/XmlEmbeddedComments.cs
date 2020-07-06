@@ -9,8 +9,9 @@ using NetFusion.Rest.Docs.Core;
 namespace NetFusion.Rest.Docs.XmlDescriptions
 {
     /// <summary>
-    /// Recursively processes all resource response documents specified for a given
-    /// Api Response document.  
+    /// Recursively processes all resource response documents specified for a given Api
+    /// Response document.  For each possible response resource, a check is determined 
+    /// if there are any documented embedded resources.
     /// </summary>
     public class XmlEmbeddedComments : IEmbeddedDescription
     {
@@ -38,7 +39,8 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
 
             // Next recursively process any embedded documents to determine if they
             // have any embedded children resources.
-            foreach(ApiResourceDoc embeddedResourceDoc in resourceDoc.EmbeddedResources.Select(er => er.ResponseDoc))
+            foreach(ApiResourceDoc embeddedResourceDoc in resourceDoc.EmbeddedResources
+                .Select(er => er.ResponseDoc))
             {
                 ApplyEmbeddedResourceDocs(embeddedResourceDoc, embeddedTypes);
             }

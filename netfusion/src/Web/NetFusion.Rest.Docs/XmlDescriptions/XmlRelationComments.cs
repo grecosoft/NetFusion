@@ -10,6 +10,11 @@ using NetFusion.Web.Mvc.Metadata;
 
 namespace NetFusion.Rest.Docs.XmlDescriptions
 {
+    /// <summary>
+    /// Determines if there are any resource links associated with the
+    /// resources returned from the WebApi.  If so, documentation of
+    /// the relations are added to the resource's document.
+    /// </summary>
     public class XmlRelationComments : ILinkedDescription
     {
         private readonly IResourceMediaModule _resourceMediaModule;
@@ -63,7 +68,9 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                 resourceDoc.RelationDocs = relationDocs.ToArray();
             }
 
-            foreach (ApiResourceDoc embeddedResourceDoc in resourceDoc.EmbeddedResources.Select(er => er.ResponseDoc))
+            // Next check any embedded resources:
+            foreach (ApiResourceDoc embeddedResourceDoc in resourceDoc.EmbeddedResources
+                .Select(er => er.ResponseDoc))
             {
                 ApplyRelationDocs(embeddedResourceDoc, mediaTypeEntry);
             }
@@ -83,13 +90,13 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         private void SetRelationInfo(ApiRelationDoc relationDoc, ControllerActionLink resourceLink)
         {
             relationDoc.HRef = _metadataService.GetActionMeta(resourceLink.ActionMethodInfo).RelativePath;
-            relationDoc.Description = _xmlComments.GetMethodSummary(resourceLink.ActionMethodInfo);
+            relationDoc.Description = _xmlComments.GetMethodComments(resourceLink.ActionMethodInfo);
         }
 
         private void SetRelationInfo(ApiRelationDoc relationDoc, TemplateUrlLink resourceLink)
         {
             relationDoc.HRef = _metadataService.GetActionMeta(resourceLink.ActionMethodInfo).RelativePath;
-            relationDoc.Description = _xmlComments.GetMethodSummary(resourceLink.ActionMethodInfo);
+            relationDoc.Description = _xmlComments.GetMethodComments(resourceLink.ActionMethodInfo);
         }
     }
 }

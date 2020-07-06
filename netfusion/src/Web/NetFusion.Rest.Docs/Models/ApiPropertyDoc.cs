@@ -16,6 +16,11 @@ namespace NetFusion.Rest.Docs.Models
         public string Description { get; set; }
 
         /// <summary>
+        /// Indicates that the type of the property is an object.
+        /// </summary>
+        public bool IsObject { get; set; }
+
+        /// <summary>
         /// Indicates that the type of property is an array.
         /// </summary>
         public bool IsArray { get; set; }

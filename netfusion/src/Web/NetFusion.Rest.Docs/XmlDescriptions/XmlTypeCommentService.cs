@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Xml.XPath;
@@ -12,7 +14,6 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
 {
     public class XmlTypeCommentService : ITypeCommentService
     {
-        private const string TypeMemberSummaryXPath = "/doc/members/member[@name='{0}']/summary";
         private static Type[] PrimitiveTypes { get; } = {typeof(string), typeof(DateTime)};
 
         private readonly IXmlCommentService _xmlComments;
@@ -29,27 +30,11 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             return xmlCommentDoc == null ? null : BuildResourceDoc(xmlCommentDoc, resourceType);
         }
 
-        private static string GetTypeComment(XPathNavigator xmlCommentDoc, Type resourceType)
-        {
-            string typeMemberName = UtilsXmlComment.GetMemberNameForType(resourceType);
-            
-            XPathNavigator memberNode = xmlCommentDoc.SelectSingleNode(string.Format(TypeMemberSummaryXPath, typeMemberName));
-            return memberNode == null ? string.Empty : UtilsXmlCommentText.Humanize(memberNode.InnerXml);
-        }
-
-        private static string GetTypeMemberComment(XPathNavigator xmlCommentDoc, MemberInfo propertyInfo)
-        {
-            string propMemberName = UtilsXmlComment.GetMemberNameForFieldOrProperty(propertyInfo);
-            
-            XPathNavigator memberNode = xmlCommentDoc.SelectSingleNode(string.Format(TypeMemberSummaryXPath, propMemberName));
-            return memberNode == null ? string.Empty : UtilsXmlCommentText.Humanize(memberNode.InnerXml);
-        }
-
         private ApiResourceDoc BuildResourceDoc(XPathNavigator xmlCommentDoc, Type resourceType)
         {
             var resourceDoc = new ApiResourceDoc
             {
-                Description = GetTypeComment(xmlCommentDoc, resourceType),
+                Description = _xmlComments.GetTypeComments(resourceType),
                 ResourceName = resourceType.GetExposedResourceName(),
                 ResourceType = resourceType
             };
@@ -59,17 +44,33 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                 var propDoc = new ApiPropertyDoc
                 {
                     Name = propInfo.Name,
-                    Description = GetTypeMemberComment(xmlCommentDoc, propInfo)
-                    
+                    IsRequired = IsMarkedRequired(propInfo) || !IsNullableProperty(propInfo),
+                    Description = _xmlComments.GetTypeMemberComments(propInfo)
                 };
                 
-                if (IsPrimitiveType(propInfo))
+                if (IsPrimitiveProperty(propInfo))
                 {
                     propDoc.Type = propInfo.PropertyType.GetJsTypeName();
                     
                 }
+                else if (IsEnumerableProperty(propInfo))
+                {
+                    propDoc.IsArray = true;
+
+                    Type itemType = GetEnumerableType(propInfo);
+                    if (IsPrimitiveType(itemType))
+                    {
+                        propDoc.Type = itemType.GetJsTypeName();
+                    }
+                    else
+                    {
+                        propDoc.Type = BuildResourceDoc(xmlCommentDoc, itemType);
+                        propDoc.IsObject = true;
+                    }
+                }
                 else if (propInfo.PropertyType.IsClass)
                 {
+                    propDoc.IsObject = true;
                     propDoc.Type = BuildResourceDoc(xmlCommentDoc, propInfo.PropertyType);
                 }
                 
@@ -79,11 +80,60 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             return resourceDoc;
         }
 
-        private static IEnumerable<PropertyInfo> GetDescribableProperties(Type type) => 
-            type.GetProperties()
-            .Where(p => p.CanRead);
 
-        private static bool IsPrimitiveType(PropertyInfo propertyInfo) => 
-            propertyInfo.PropertyType.IsPrimitive || PrimitiveTypes.Contains(propertyInfo.PropertyType);
+        private static IEnumerable<PropertyInfo> GetDescribableProperties(Type type) => 
+            type.GetProperties().Where(p => p.CanRead);
+
+
+        private static bool IsPrimitiveProperty(PropertyInfo propertyInfo)
+        {
+            Type propType = propertyInfo.PropertyType;
+
+            return propType.IsPrimitive || PrimitiveTypes.Contains(propType);
+        }
+
+        private static bool IsPrimitiveType(Type type)
+        {
+            return type.IsPrimitive || PrimitiveTypes.Contains(type);
+        }
+
+        private static bool IsNullableProperty(PropertyInfo propertyInfo)
+        {
+            Type propType = propertyInfo.PropertyType;
+
+            return propType.IsClass ||
+                (propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(Nullable<>));
+        }
+
+
+        private static bool IsMarkedRequired(PropertyInfo propertyInfo) =>
+            propertyInfo.GetCustomAttribute<RequiredAttribute>() != null;
+
+
+        private static bool IsEnumerableProperty(PropertyInfo propertyInfo)
+        {
+            Type propType = propertyInfo.PropertyType;
+
+            return propType.IsArray || propType.IsSubclassOf(typeof(IEnumerable));
+        }
+
+        private static Type GetEnumerableType(PropertyInfo propertyInfo)
+        {
+            Type propType = propertyInfo.PropertyType;
+            
+
+            if (propType.IsArray)
+            {
+                return propType.GetElementType();
+            }
+
+            if (propType.IsSubclassOf(typeof(IEnumerable<>)))
+            {
+                return propType.GetGenericArguments()[0];
+            }
+
+            return null;
+         
+        }
     }
 }

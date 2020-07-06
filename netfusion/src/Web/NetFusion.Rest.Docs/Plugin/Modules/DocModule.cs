@@ -8,6 +8,9 @@ using NetFusion.Rest.Docs.XmlDescriptions;
 
 namespace NetFusion.Rest.Docs.Plugin.Modules
 {
+    /// <summary>
+    /// The main plugin module registering documentation related services.
+    /// </summary>
     public class DocModule : PluginModule,
         IDocModule
     {
@@ -17,7 +20,6 @@ namespace NetFusion.Rest.Docs.Plugin.Modules
         {
             RestDocConfig = Context.Plugin.GetConfig<RestDocConfig>();
         }
-
 
         public override void RegisterDefaultServices(IServiceCollection services)
         {

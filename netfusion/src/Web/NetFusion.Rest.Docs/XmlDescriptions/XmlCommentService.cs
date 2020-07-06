@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Reflection;
 using System.Xml.XPath;
 using NetFusion.Rest.Docs.Plugin;
@@ -10,7 +11,6 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
     {
         private const string MemberXPath = "/doc/members/member[@name='{0}']";
         private const string ParamXPath = "param[@name='{0}']";
-        private const string SummaryTag = "summary";
 
         private readonly IDocModule _docModule;
         private readonly ConcurrentDictionary<Assembly, XPathNavigator> _xmlAssemblyComments;
@@ -31,8 +31,35 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             Assembly typesAssembly = containedType.Assembly;
 
             return _xmlAssemblyComments.GetOrAdd(typesAssembly, assembly =>
-                 typesAssembly.GetXmlCommentDoc(_docModule.RestDocConfig.DescriptionDirectory)
+                 GetXmlCommentDoc(typesAssembly, _docModule.RestDocConfig.DescriptionDirectory)
             );
+        }
+
+        private static XPathNavigator GetXmlCommentDoc(Assembly assembly, string basePath)
+        {
+            string fileName = Path.Join(basePath, $"{assembly.GetName().Name}.xml");
+            return File.Exists(fileName) ? new XPathDocument(fileName).CreateNavigator() : null;
+        }
+
+        public XPathNavigator GetTypeNode(Type classType)
+        {
+            if (classType is null)
+            {
+                throw new ArgumentNullException(nameof(classType));
+            }
+
+            XPathNavigator xmlCommentsDoc = GetXmlCommentsForTypesAssembly(classType);
+
+            string typeMemberName = UtilsXmlComment.GetMemberNameForType(classType);
+            return xmlCommentsDoc?.SelectSingleNode(string.Format(MemberXPath, typeMemberName));
+        }
+
+        public string GetTypeComments(Type classType)
+        {
+            XPathNavigator memberNode = GetTypeNode(classType);
+
+            var summaryNode = memberNode?.SelectSingleNode("summary");
+            return summaryNode != null ? UtilsXmlCommentText.Humanize(summaryNode.InnerXml) : string.Empty;
         }
 
         public XPathNavigator GetMethodNode(MethodInfo methodInfo)
@@ -45,19 +72,25 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             XPathNavigator xmlCommentsDoc = GetXmlCommentsForTypesAssembly(methodInfo.DeclaringType);
 
             string methodMemberName = UtilsXmlComment.GetMemberNameForMethod(methodInfo);
-            return xmlCommentsDoc.SelectSingleNode(string.Format(MemberXPath, methodMemberName));
+            return xmlCommentsDoc?.SelectSingleNode(string.Format(MemberXPath, methodMemberName));
         }
 
-        public string GetMethodSummary(MethodInfo methodInfo)
+        public string GetMethodComments(MethodInfo methodInfo)
         {
-            if (methodInfo is null)
-            {
-                throw new ArgumentNullException(nameof(methodInfo));
-            }
-
             XPathNavigator memberNode = GetMethodNode(methodInfo);
 
-            var summaryNode = memberNode?.SelectSingleNode(SummaryTag);
+            var summaryNode = memberNode?.SelectSingleNode("summary");
+            return summaryNode != null ? UtilsXmlCommentText.Humanize(summaryNode.InnerXml) : string.Empty;
+        }
+
+        public string GetTypeMemberComments(MemberInfo memberInfo)
+        {
+            XPathNavigator xmlCommentsDoc = GetXmlCommentsForTypesAssembly(memberInfo.DeclaringType);
+
+            string memberName = UtilsXmlComment.GetMemberNameForFieldOrProperty(memberInfo);
+            XPathNavigator memberNode = xmlCommentsDoc?.SelectSingleNode(string.Format(MemberXPath, memberName));
+
+            var summaryNode = memberNode?.SelectSingleNode("summary");
             return summaryNode != null ? UtilsXmlCommentText.Humanize(summaryNode.InnerXml) : string.Empty;
         }
 

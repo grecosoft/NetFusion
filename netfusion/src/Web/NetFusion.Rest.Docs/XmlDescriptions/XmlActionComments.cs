@@ -16,12 +16,12 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
 
         public XmlActionComments(IXmlCommentService xmlComments)
         {
-            _xmlComments = xmlComments;
+            _xmlComments = xmlComments ?? throw new System.ArgumentNullException(nameof(xmlComments));
         }
 
         public void Describe(ApiActionDoc actionDoc, ApiActionMeta actionMeta)
         {
-            actionDoc.Description = _xmlComments.GetMethodSummary(actionMeta.ActionMethodInfo);
+            actionDoc.Description = _xmlComments.GetMethodComments(actionMeta.ActionMethodInfo);
 
             XPathNavigator methodNode = _xmlComments.GetMethodNode(actionMeta.ActionMethodInfo);
             if (methodNode == null)
