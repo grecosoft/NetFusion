@@ -1,13 +1,30 @@
-﻿using Xunit;
+﻿using System.Threading.Tasks;
+using WebTests.Hosting;
+using WebTests.Rest.DocGeneration.Server;
+using Xunit;
+using FluentAssertions;
 
 namespace WebTests.Rest.DocGeneration
 {
     public class DocGenerationTests
     {
         [Fact]
-        public void DocsForWebApiMethodReturned()
+        public Task DocsForWebApiMethodReturned()
         {
+            return WebHostFixture.TestAsync<DocController>(async host =>
+            {
+                var webResponse = await host
+                    .ArrangeForRestDocs()
+                    .Act.OnClient( client => client.GetAsync("/api/net-fusion/rest?doc=api/doc/tests/action/comments"));
 
+                webResponse.Assert.HttpResponse(async response =>
+                {
+                    var actionDoc = await response.AsApiActionDocAsync();
+
+                    actionDoc.Description.Should().NotBeNullOrWhiteSpace()
+                        .And.Should().Be("This is an example comment for a controller's action method.");
+                });
+            });
         }
 
         [Fact]

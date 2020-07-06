@@ -28,5 +28,6 @@
   <ItemGroup>
     <Folder Include="Rest\DocGeneration\" />
     <Folder Include="Rest\DocGeneration\Mocks\" />
+    <Folder Include="Rest\DocGeneration\Server\" />
   </ItemGroup>
 </Project>
