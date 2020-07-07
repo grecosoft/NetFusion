@@ -24,10 +24,6 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             actionDoc.Description = _xmlComments.GetMethodComments(actionMeta.ActionMethodInfo);
 
             XPathNavigator methodNode = _xmlComments.GetMethodNode(actionMeta.ActionMethodInfo);
-            if (methodNode == null)
-            {
-                return;
-            }
 
             ApplyParamDocs(methodNode, actionDoc.RouteParams, actionMeta.RouteParameters);
             ApplyParamDocs(methodNode, actionDoc.HeaderParams, actionMeta.HeaderParameters);
@@ -45,10 +41,14 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                 {
                     Name = paramMeta.BindingName,
                     IsOptional = paramMeta.IsOptional,
-                    DefaultValue = paramMeta.DefaultValue,
-                    Type = paramMeta.ParameterType.GetJsTypeName(),
-                    Description = _xmlComments.GetMethodParamComment(methodNode, paramMeta.ParameterName)
+                    DefaultValue = paramMeta.DefaultValue?.ToString(),
+                    Type = paramMeta.ParameterType.GetJsTypeName()
                 };
+
+                if (methodNode != null)
+                {
+                    paramDoc.Description = _xmlComments.GetMethodParamComment(methodNode, paramMeta.ParameterName);
+                }
 
                 paramDocs.Add(paramDoc);
             }

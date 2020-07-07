@@ -25,8 +25,8 @@ namespace WebTests.Rest.DocGeneration.Server
         public IActionResult TestActionRouteParamComments(string p1, int p2) => Ok();
 
 
-        [HttpGet("action/route-param/{p1?}")]
-        public IActionResult TestActionDefaultRouteParamValue(int? p1 = 100) => Ok();
+        [HttpGet("action/route-param/{p1?}/default")]
+        public IActionResult TestActionDefaultRouteParamValue([FromRoute]int? p1 = 100) => Ok();
 
 
         [HttpGet("action/multiple/statuses"),

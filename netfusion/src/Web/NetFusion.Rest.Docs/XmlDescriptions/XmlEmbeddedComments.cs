@@ -26,6 +26,7 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         {
             // Process all resource documents accross all response documents.
             foreach (ApiResourceDoc resourceDoc in actionDoc.ResponseDocs
+                .Where(d => d.ResourceDoc != null)
                 .Select(d => d.ResourceDoc))
             {
                 ApplyEmbeddedResourceDocs(resourceDoc, actionDoc.EmbeddedResourceAttribs);

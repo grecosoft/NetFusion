@@ -22,12 +22,12 @@ namespace WebTests.Rest.DocGeneration
                     .ArrangeForRestDocs()
                     .Act.OnClient( client => client.GetAsync("api/doc/tests/action/comments".GetDocUrl()));
 
-                webResponse.Assert.HttpResponse(async response =>
+                await webResponse.Assert.HttpResponseAsync(async response =>
                 {
                     var actionDoc = await response.AsApiActionDocAsync();
 
-                    actionDoc.Description.Should().NotBeNullOrWhiteSpace()
-                        .And.Should().Be("This is an example comment for a controller's action method.");
+                    actionDoc.Description.Should().NotBeNullOrWhiteSpace();
+                    actionDoc.Description.Should().Be("This is an example comment for a controller's action method.");
                 });
             });
         }
@@ -43,7 +43,7 @@ namespace WebTests.Rest.DocGeneration
                     .ArrangeForRestDocs()
                     .Act.OnClient(client => client.GetAsync("api/doc/tests/action/route-param/{p1}/comments/{p2}".GetDocUrl()));
 
-                webResponse.Assert.HttpResponse(async response =>
+                await webResponse.Assert.HttpResponseAsync(async response =>
                 {
                     var actionDoc = await response.AsApiActionDocAsync();
 
@@ -53,13 +53,12 @@ namespace WebTests.Rest.DocGeneration
                     var firstParm = actionDoc.RouteParams.ElementAt(0);
                     firstParm.Name.Should().Be("p1");
                     firstParm.Type.Should().Be("String");
-                    firstParm.DefaultValue.Should().Be("First parameter comment.");
+                    firstParm.Description.Should().Be("First parameter comment.");
 
-                    var secondParm = actionDoc.RouteParams.ElementAt(0);
+                    var secondParm = actionDoc.RouteParams.ElementAt(1);
                     secondParm.Name.Should().Be("p2");
                     secondParm.Type.Should().Be("Number");
-                    secondParm.DefaultValue.Should().Be("Second parameter comment.");
-
+                    secondParm.Description.Should().Be("Second parameter comment.");
                 });
             });
         }
@@ -75,17 +74,17 @@ namespace WebTests.Rest.DocGeneration
                     .ArrangeForRestDocs()
                     .Act.OnClient(client => client.GetAsync("api/doc/tests/action/route-param/{p1}/default".GetDocUrl()));
 
-                webResponse.Assert.HttpResponse(async response =>
+                await webResponse.Assert.HttpResponseAsync(async response =>
                 {
                     var actionDoc = await response.AsApiActionDocAsync();
 
                     actionDoc.RouteParams.Should().NotBeNull()
                         .And.Subject.Should().HaveCount(1);
 
-                    var paramWithDefault = actionDoc.HeaderParams.FirstOrDefault(p => p.Name == "p1");
+                    var paramWithDefault = actionDoc.RouteParams.FirstOrDefault(p => p.Name == "p1");
                     paramWithDefault.Should().NotBeNull();
                     paramWithDefault.IsOptional.Should().BeTrue();
-                    paramWithDefault.DefaultValue.Should().Be(100);
+                    paramWithDefault.DefaultValue.Should().Be("100");
                 });
             });
         }
@@ -143,9 +142,9 @@ namespace WebTests.Rest.DocGeneration
             {
                 var webResponse = await host
                     .ArrangeForRestDocs()
-                    .Act.OnClient(client => client.GetAsync("action/multiple/statuses".GetDocUrl()));
+                    .Act.OnClient(client => client.GetAsync("api/doc/tests/action/multiple/statuses".GetDocUrl()));
 
-                webResponse.Assert.HttpResponse(async response =>
+                await webResponse.Assert.HttpResponseAsync(async response =>
                 {
                     var actionDoc = await response.AsApiActionDocAsync();
 
@@ -185,9 +184,9 @@ namespace WebTests.Rest.DocGeneration
             {
                 var webResponse = await host
                     .ArrangeForRestDocs()
-                    .Act.OnClient(client => client.GetAsync("action/multiple/response/types".GetDocUrl()));
+                    .Act.OnClient(client => client.GetAsync("api/doc/tests/action/multiple/response/types".GetDocUrl()));
 
-                webResponse.Assert.HttpResponse(async response =>
+                await webResponse.Assert.HttpResponseAsync(async response =>
                 {
                     var actionDoc = await response.AsApiActionDocAsync();
                     actionDoc.ResponseDocs.Should().HaveCount(2);
@@ -198,7 +197,7 @@ namespace WebTests.Rest.DocGeneration
                     firstRespDoc.Status.Should().Be(StatusCodes.Status200OK);
 
                     var secondRespDoc = actionDoc.ResponseDocs
-                        .FirstOrDefault(rd => rd.ResourceDoc.ResourceName == typeof(TestResponseModel).GetExposedResourceName());
+                        .FirstOrDefault(rd => rd.ResourceDoc.ResourceName == typeof(TestCreatedResponseModel).GetExposedResourceName());
 
                     secondRespDoc.Status.Should().Be(StatusCodes.Status201Created);
                 });
@@ -214,7 +213,7 @@ namespace WebTests.Rest.DocGeneration
             {
                 var webResponse = await host
                     .ArrangeForRestDocs()
-                    .Act.OnClient(client => client.GetAsync("action/embedded/resource".GetDocUrl()));
+                    .Act.OnClient(client => client.GetAsync("api/doc/tests/action/embedded/resource".GetDocUrl()));
 
                 webResponse.Assert.HttpResponse(async response =>
                 {
@@ -244,9 +243,9 @@ namespace WebTests.Rest.DocGeneration
             {
                 var webResponse = await host
                     .ArrangeForRestDocs()
-                    .Act.OnClient(client => client.GetAsync("api/doc/tests/action/comments".GetDocUrl()));
+                    .Act.OnClient(client => client.GetAsync("api/doc/tests/action/embedded/resource/collection".GetDocUrl()));
 
-                webResponse.Assert.HttpResponse(async response =>
+                await webResponse.Assert.HttpResponseAsync(async response =>
                 {
                     var actionDoc = await response.AsApiActionDocAsync();
                     var responseDoc = actionDoc.ResponseDocs.First();

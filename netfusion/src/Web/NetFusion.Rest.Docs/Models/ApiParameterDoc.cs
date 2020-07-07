@@ -19,7 +19,7 @@ namespace NetFusion.Rest.Docs.Models
         /// <summary>
         /// The default value of the parameter if not specified.
         /// </summary>
-        public object DefaultValue { get; set; }
+        public string DefaultValue { get; set; }
 
         /// <summary>
         /// Indicates if the parameter is optional or must be specified.

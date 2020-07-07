@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using NetFusion.Rest.Docs.Models;
@@ -18,16 +19,17 @@ namespace WebTests.Rest.DocGeneration
             {
 
             })
-                .ComposedFrom(compose =>
-                {
-                    compose.AddRest();
-                    compose.AddRestDocs();
+            .UsingAppSerivces(appServices => appServices.UseRestDocs())
+            .ComposedFrom(compose =>
+            {
+                compose.AddRest();
+                compose.AddRestDocs();
 
-                    var hostPlugin = new MockHostPlugin();
-                    // hostPlugin.AddPluginType<LinkedResourceMap>();
+                var hostPlugin = new MockHostPlugin();
+                // hostPlugin.AddPluginType<LinkedResourceMap>();
 
-                    compose.AddPlugin(hostPlugin);
-                });
+                compose.AddPlugin(hostPlugin);
+            });
         }
 
         public static string GetDocUrl(this string actionUrl) =>
@@ -35,7 +37,18 @@ namespace WebTests.Rest.DocGeneration
 
         public static async Task<ApiActionDoc> AsApiActionDocAsync(this HttpResponseMessage response)
         {
-            return JsonSerializer.Deserialize<ApiActionDoc>(await response.Content.ReadAsStringAsync());
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new InvalidOperationException(
+                    $"Http Request was not Successful: {response.StatusCode}");
+            }
+
+            return JsonSerializer.Deserialize<ApiActionDoc>(await response.Content.ReadAsStringAsync(), options);
         }
     }
 }

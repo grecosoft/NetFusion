@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Builder;
-using NetFusion.Rest.Docs.Plugin;
 using NetFusion.Test.Plugins;
 
 namespace WebTests.Hosting
@@ -26,6 +25,7 @@ namespace WebTests.Hosting
         // on which the TestService is built.
         private IDictionary<string, string> _settings;
         private Action<IServiceCollection> _servicesConfig;
+        private Action<IApplicationBuilder> _appServicesConfig;
         
         // The resulting service-provider created from the populated service-collection
         // used to create a lifetime scope for the current request under-test.
@@ -74,6 +74,12 @@ namespace WebTests.Hosting
             _servicesConfig = services ?? throw new ArgumentNullException(nameof(services));
             return this;
         }
+
+        public WebHostFixture UsingAppSerivces(Action<IApplicationBuilder> appServices)
+        {
+            _appServicesConfig = appServices ?? throw new ArgumentNullException(nameof(appServices));
+            return this;
+        }
         
         /// <summary>
         /// Used to add the plugins form which the WebHost under test should be composed.
@@ -119,11 +125,12 @@ namespace WebTests.Hosting
                     builder.UseHttpsRedirection();
                     builder.UseRouting();
                     builder.UseAuthorization();
-                    builder.UseRestDocs();
                     builder.UseEndpoints(endpoints =>
                     {
                         endpoints.MapControllers();
                     });
+
+                    _appServicesConfig?.Invoke(builder);
 
                     // At this point, the ASP.NET has created a service-provider from the populated
                     // service-collection.  Obtain and start the composite-application.
