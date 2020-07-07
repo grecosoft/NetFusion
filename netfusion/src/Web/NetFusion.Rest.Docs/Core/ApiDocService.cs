@@ -99,15 +99,7 @@ namespace NetFusion.Rest.Docs.Core
         private static void SetEmbeddedResourceMeta(ApiActionDoc actionDoc, ApiActionMeta actionMeta)
         {
             var attributes = actionMeta.GetFilterMetadata<EmbeddedResourceAttribute>();
-            if (! attributes.Any())
-            {
-                return;
-            }
-
-            actionDoc.EmbeddedTypes = attributes.Select(a => new EmbeddedType(
-                a.ParentModelType,
-                a.ChildModelType,
-                a.EmbeddedName)).ToArray();
+            actionDoc.EmbeddedResourceAttribs = attributes.ToArray();
         }
 
         private void AssembleResponseDocs(ApiActionDoc actionDoc, ApiActionMeta actionMeta)
@@ -116,7 +108,7 @@ namespace NetFusion.Rest.Docs.Core
             {
                 var responseDoc = new ApiResponseDoc
                 {
-                    Statuses = meta.Statuses,
+                    Status = meta.Status,
                 };
 
                 // If there is response resource associated with the response status

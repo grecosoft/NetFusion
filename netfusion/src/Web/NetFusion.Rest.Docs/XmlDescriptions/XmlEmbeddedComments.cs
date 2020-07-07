@@ -26,44 +26,45 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         {
             // Process all resource documents accross all response documents.
             foreach (ApiResourceDoc resourceDoc in actionDoc.ResponseDocs
-                .SelectMany(d => d.ResourceDocs))
+                .Select(d => d.ResourceDoc))
             {
-                ApplyEmbeddedResourceDocs(resourceDoc, actionDoc.EmbeddedTypes);
+                ApplyEmbeddedResourceDocs(resourceDoc, actionDoc.EmbeddedResourceAttribs);
             }
         }
 
         private void ApplyEmbeddedResourceDocs(ApiResourceDoc resourceDoc,
-            EmbeddedType[] embeddedTypes)
+            EmbeddedResourceAttribute[] embeddedResources)
         {
-            resourceDoc.EmbeddedResources = GetEmbeddedResourceDocs(resourceDoc, embeddedTypes).ToArray();
+            resourceDoc.EmbeddedResources = GetEmbeddedResourceDocs(resourceDoc, embeddedResources).ToArray();
 
             // Next recursively process any embedded documents to determine if they
             // have any embedded children resources.
             foreach(ApiResourceDoc embeddedResourceDoc in resourceDoc.EmbeddedResources
-                .Select(er => er.ResponseDoc))
+                .Select(er => er.ResourceDoc))
             {
-                ApplyEmbeddedResourceDocs(embeddedResourceDoc, embeddedTypes);
+                ApplyEmbeddedResourceDocs(embeddedResourceDoc, embeddedResources);
             }
         }
 
         private IEnumerable<ApiEmbeddedDoc> GetEmbeddedResourceDocs(ApiResourceDoc parentResourceDoc,
-            EmbeddedType[] embeddedTypes)
+            EmbeddedResourceAttribute[] embeddedResources)
         {
             // Find any embedded types specified for the resource type.
-            var resourceEmbeddedTypes = embeddedTypes.Where(et =>
+            var resourceEmbeddedTypes = embeddedResources.Where(et =>
                 et.ParentResourceType.GetExposedResourceName() == parentResourceDoc.ResourceName);
 
             // For each embedded resource type, create an embedded resource document
             // with the documentation for each child embedded resource.
-            foreach (EmbeddedType resourceEmbeddedType in resourceEmbeddedTypes)
+            foreach (EmbeddedResourceAttribute resourceEmbeddedType in resourceEmbeddedTypes)
             {
                 var embeddedResourceDoc = new ApiEmbeddedDoc
                 {
                     EmbeddedName = resourceEmbeddedType.EmbeddedName,
-                    ResponseDoc = _typeComments.GetResourceDoc(resourceEmbeddedType.ChildResourceType)
+                    IsCollection = resourceEmbeddedType.IsCollection,
+                    ResourceDoc = _typeComments.GetResourceDoc(resourceEmbeddedType.ChildResourceType)
                 };
 
-                embeddedResourceDoc.ResponseDoc.ResourceName = resourceEmbeddedType
+                embeddedResourceDoc.ResourceDoc.ResourceName = resourceEmbeddedType
                     .ChildResourceType.GetExposedResourceName();
 
                 yield return embeddedResourceDoc;

@@ -84,7 +84,6 @@ namespace WebTests.Rest.ApiMetadata
                 {
                     var actionMeta = service.GetActionMeta<MetadataController>("ActionWithResponseTypeAndStatus");
                     actionMeta.ResponseMeta.AssertResponseMeta(StatusCodes.Status200OK, typeof(ResponseModel));
-                    actionMeta.ResponseMeta.AssertResponseMeta(StatusCodes.Status404NotFound);
                 }
 
                 static void AssertMultipleStatusCodes(IApiMetadataService service)
@@ -99,7 +98,7 @@ namespace WebTests.Rest.ApiMetadata
                     var actionMeta = service.GetActionMeta<MetadataController>(
                         "ActionWithStatusCodesWithSameResponseType");
 
-                    actionMeta.ResponseMeta.Should().HaveCount(1);
+                    actionMeta.ResponseMeta.Should().HaveCount(2);
                     
                     actionMeta.ResponseMeta.AssertResponseMeta(StatusCodes.Status200OK, typeof(ResponseModel));
                     actionMeta.ResponseMeta.AssertResponseMeta(StatusCodes.Status418ImATeapot, typeof(ResponseModel));

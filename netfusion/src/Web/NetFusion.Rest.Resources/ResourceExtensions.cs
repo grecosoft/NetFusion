@@ -17,7 +17,7 @@ namespace NetFusion.Rest.Resources
             if (modelType == null) throw new ArgumentNullException(nameof(modelType),
                 "Model Type cannot be null.");
 
-            return modelType.GetAttribute<ExposedNameAttribute>()?.ResourceName;
+            return modelType.GetAttribute<ExposedNameAttribute>()?.ResourceName ?? modelType.FullName;
         }
     }
 }

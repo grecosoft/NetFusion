@@ -38,9 +38,8 @@ namespace NetFusion.Rest.Docs.Core
                 await RespondWithApiDoc(httpContext.Response, actionDoc);
                 return;
             }
-            
-            // Not a documentation specific request, call next middleware component.
-            await _next(httpContext);
+
+            httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
         }
         
         private bool IsDocumentationRequest(HttpContext context, out string relativeDocPath)

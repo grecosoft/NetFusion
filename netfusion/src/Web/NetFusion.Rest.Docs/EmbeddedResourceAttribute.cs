@@ -10,21 +10,25 @@ namespace NetFusion.Rest.Docs
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class EmbeddedResourceAttribute : Attribute, IFilterMetadata
     {
-        public Type ParentModelType { get; set; }
+        public Type ParentResourceType { get; set; }
         public string EmbeddedName { get; set; }
-        public Type ChildModelType { get; set; }
-        
-        public EmbeddedResourceAttribute(Type parentModelType, Type childModelType, string embeddedName)
+        public Type ChildResourceType { get; set; }
+        public bool IsCollection { get; set; }
+
+        public EmbeddedResourceAttribute(Type parentResourceType, Type childResourceType,
+            string embeddedName,
+            bool isCollection = false)
         {
             if (string.IsNullOrWhiteSpace(embeddedName))
             {
                 throw new ArgumentException("Embedded Name must be specified.", nameof(embeddedName));
             }
 
-            ParentModelType = parentModelType ?? throw new ArgumentNullException(nameof(parentModelType));
-            ChildModelType = childModelType ?? throw new ArgumentNullException(nameof(childModelType));
+            ParentResourceType = parentResourceType ?? throw new ArgumentNullException(nameof(parentResourceType));
+            ChildResourceType = childResourceType ?? throw new ArgumentNullException(nameof(childResourceType));
 
             EmbeddedName = embeddedName;
+            IsCollection = isCollection;
         }
     }
 }

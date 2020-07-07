@@ -4,6 +4,8 @@ using WebTests.Rest.DocGeneration.Server;
 using Xunit;
 using System.Linq;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using NetFusion.Rest.Resources;
 
 namespace WebTests.Rest.DocGeneration
 {
@@ -62,6 +64,8 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
+        // If a route parameter is optional and a default value is specified, the returned
+        // parameter document will include the default value.
         [Fact]
         public Task DocForRouteParam_IncludesDefaultValue()
         {
@@ -86,47 +90,211 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
+        // The API documentation contains the headers accepted by the REST method.
         [Fact]
         public void DocsForEachHeaderParamReturned()
         {
 
         }
 
+        // The API header documentation indicates if the header value has a default
+        // value that will be used if not specified.
+        [Fact]
+        public void DocForEachHeaderParam_IncludesDefaultValue()
+        {
+
+        }
+
+        // The API header documentation indicates if the header is optional.
+        [Fact]
+        public void DocForEachHeaderParam_IncludesIfOptional()
+        {
+
+        }
+
+        // The API documentation contains the query parameters accepted by the REST method.
         [Fact]
         public void DocsForEachQueryParamReturned()
         {
 
         }
 
+        // The API query parameter documentation indicates if the query value has
+        // a default value that will be used if not specified.
         [Fact]
-        public void DocsForEachPossibleStatusCodeReturned()
+        public void DocForEachQueryParam_IncludesDefaultValue()
         {
 
         }
 
+        // The API query parameter documentation inidcates if the query is options.
         [Fact]
-        public void DocsForEachResponseResourceReturned()
+        public void DocForEachQueryParam_IncludesIfOptional()
         {
 
         }
 
+        // The response documentation will include the possible status types
+        // returned from the WebApi action method.
         [Fact]
-        public void DocsForEmbeddedResourcesReturned()
+        public Task DocsForEachPossibleStatusCodeReturned()
+        {
+            return WebHostFixture.TestAsync<DocController>(async host =>
+            {
+                var webResponse = await host
+                    .ArrangeForRestDocs()
+                    .Act.OnClient(client => client.GetAsync("action/multiple/statuses".GetDocUrl()));
+
+                webResponse.Assert.HttpResponse(async response =>
+                {
+                    var actionDoc = await response.AsApiActionDocAsync();
+
+                    actionDoc.ResponseDocs.Should().HaveCount(2);
+                    actionDoc.ResponseDocs.Where(r => r.Status == StatusCodes.Status200OK).Should().HaveCount(1);
+                    actionDoc.ResponseDocs.Where(r => r.Status == StatusCodes.Status201Created).Should().HaveCount(1);
+                });
+            });
+        }
+
+        // Response models returned from an API can specify a name used to identity
+        // the response type to external consumers.   
+        [Fact]
+        public void ApiModelType_CanSpecifyExposedName()
+        {
+            typeof(ModelWithExposedName).GetExposedResourceName()
+                .Should().Be("api.sample.model");
+        }
+
+        // If a response model does not explicitly specify an external type name,
+        // the class name including the namespace is used.  The prior approach is
+        // best since the name is hard-coded and will not change if the internal
+        // class name is modified.
+        [Fact]
+        public void ApiModelTypeAndNamespace_IfNoExposedName()
+        {
+            typeof(ModelWithoutExposedName).GetExposedResourceName()
+                .Should().Be(typeof(ModelWithoutExposedName).FullName);
+        }
+
+        // If an API method specifies the response type and status code, both
+        // will be contained within the response document.
+        [Fact]
+        public Task DocsForEachResponseResourceReturned()
+        {
+            return WebHostFixture.TestAsync<DocController>(async host =>
+            {
+                var webResponse = await host
+                    .ArrangeForRestDocs()
+                    .Act.OnClient(client => client.GetAsync("action/multiple/response/types".GetDocUrl()));
+
+                webResponse.Assert.HttpResponse(async response =>
+                {
+                    var actionDoc = await response.AsApiActionDocAsync();
+                    actionDoc.ResponseDocs.Should().HaveCount(2);
+
+                    var firstRespDoc = actionDoc.ResponseDocs
+                        .FirstOrDefault(rd => rd.ResourceDoc.ResourceName == typeof(TestResponseModel).GetExposedResourceName());
+
+                    firstRespDoc.Status.Should().Be(StatusCodes.Status200OK);
+
+                    var secondRespDoc = actionDoc.ResponseDocs
+                        .FirstOrDefault(rd => rd.ResourceDoc.ResourceName == typeof(TestResponseModel).GetExposedResourceName());
+
+                    secondRespDoc.Status.Should().Be(StatusCodes.Status201Created);
+                });
+            });
+        }
+
+        // An API can specify which resources will be embeeded within a parent resource.  When a resource
+        // has an embeddedresource, the resource document will have its embedded-resources collection populated.
+        [Fact]
+        public Task DocsForEmbeddedResourceReturned()
+        {
+            return WebHostFixture.TestAsync<DocController>(async host =>
+            {
+                var webResponse = await host
+                    .ArrangeForRestDocs()
+                    .Act.OnClient(client => client.GetAsync("action/embedded/resource".GetDocUrl()));
+
+                webResponse.Assert.HttpResponse(async response =>
+                {
+                    var actionDoc = await response.AsApiActionDocAsync();
+
+                    var responseDoc = actionDoc.ResponseDocs.FirstOrDefault();
+                    responseDoc.Should().NotBeNull();
+                    responseDoc.ResourceDoc.ResourceName.Should().Be(typeof(RootResponseModel).GetExposedResourceName());
+                    responseDoc.ResourceDoc.EmbeddedResources.Should().HaveCount(1);
+
+                    var embeddedResDoc = responseDoc.ResourceDoc.EmbeddedResources.FirstOrDefault();
+                    embeddedResDoc.Should().NotBeNull();
+                    embeddedResDoc.EmbeddedName.Should().Be("embedded-model");
+                    embeddedResDoc.IsCollection.Should().BeFalse();
+                    embeddedResDoc.ResourceDoc.Should().NotBeNull();
+                    embeddedResDoc.ResourceDoc.ResourceName.Should().Be(typeof(EmbeddedChildModel).GetExposedResourceName());
+                });
+            });
+        }
+
+        // An API can specify which resources will have an embedded collection of resources.  When a collection of
+        // resources is embedded, the IsCollection property will be set to true.
+        [Fact]
+        public Task DocsForEmbeddedResourceCollectionReturned()
+        {
+            return WebHostFixture.TestAsync<DocController>(async host =>
+            {
+                var webResponse = await host
+                    .ArrangeForRestDocs()
+                    .Act.OnClient(client => client.GetAsync("api/doc/tests/action/comments".GetDocUrl()));
+
+                webResponse.Assert.HttpResponse(async response =>
+                {
+                    var actionDoc = await response.AsApiActionDocAsync();
+                    var responseDoc = actionDoc.ResponseDocs.First();
+
+                    var embeddedResDoc = responseDoc.ResourceDoc.EmbeddedResources.FirstOrDefault();
+                    embeddedResDoc.Should().NotBeNull();
+                    embeddedResDoc.EmbeddedName.Should().Be("embedded-models");
+                    embeddedResDoc.IsCollection.Should().BeTrue();
+                    embeddedResDoc.ResourceDoc.Should().NotBeNull();
+                    embeddedResDoc.ResourceDoc.ResourceName.Should().Be(typeof(EmbeddedChildModel).GetExposedResourceName());
+
+                });
+            });
+        }
+
+        // Resources can be embedded to any nested level.  To keep APIs simple, it is best to limit the depth.
+        // Nevertheless, the following validates that a resource within an embedded collection containing another
+        // embedded single resource is correctly documented.
+        [Fact]
+        public void DocsForEmbeddedResources_RecursivelySet()
         {
 
         }
 
+        // When the documentation for a resource is built, a check is made to determine if the resource has
+        // any associated linked relations.  If so, documentation is returned for each relation.
         [Fact]
         public void DocsForResourceRelationsReturned()
         {
 
         }
 
+        // If an API Web Url is specified for which the documentation could
+        // not be determined, an HTTP 404 is returned.
         [Fact]
-        public void IfNowDocumentFound_Http404Returned()
+        public Task IfNoApiDocumentFound_Http404Returned()
         {
+            return WebHostFixture.TestAsync<DocController>(async host =>
+            {
+                var webResponse = await host
+                    .ArrangeForRestDocs()
+                    .Act.OnClient(client => client.GetAsync("api/covid/19/sucks".GetDocUrl()));
 
+                webResponse.Assert.HttpResponse(response =>
+                {
+                    response.StatusCode.Should().Be(StatusCodes.Status404NotFound);
+                });
+            });
         }
-
     }
 }

@@ -38,7 +38,7 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                 return;
             }
 
-            foreach(ApiResourceDoc resourceDoc in actionDoc.ResponseDocs.SelectMany(rd => rd.ResourceDocs))
+            foreach(ApiResourceDoc resourceDoc in actionDoc.ResponseDocs.Select(rd => rd.ResourceDoc))
             {
                 ApplyRelationDocs(resourceDoc, entry);
             }
@@ -70,7 +70,7 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
 
             // Next check any embedded resources:
             foreach (ApiResourceDoc embeddedResourceDoc in resourceDoc.EmbeddedResources
-                .Select(er => er.ResponseDoc))
+                .Select(er => er.ResourceDoc))
             {
                 ApplyRelationDocs(embeddedResourceDoc, mediaTypeEntry);
             }

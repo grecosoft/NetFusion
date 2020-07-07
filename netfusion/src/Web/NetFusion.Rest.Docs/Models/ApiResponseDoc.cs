@@ -11,11 +11,11 @@ namespace NetFusion.Rest.Docs.Models
         /// <summary>
         /// The possible set of HTTP response status codes.
         /// </summary>
-        public int[] Statuses { get; set; }
+        public int Status { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public ICollection<ApiResourceDoc> ResourceDocs { get; } = new List<ApiResourceDoc>();       
+        public ApiResourceDoc ResourceDoc { get; set; } 
     }
 }

@@ -11,8 +11,13 @@ namespace NetFusion.Rest.Docs.Models
         public string EmbeddedName { get; set; }
 
         /// <summary>
+        /// Indicates that a collection of resources are embedded.
+        /// </summary>
+        public bool IsCollection { get; set; }
+
+        /// <summary>
         /// Documentation associated with the embedded resource.
         /// </summary>
-        public ApiResourceDoc ResponseDoc { get; set; } 
+        public ApiResourceDoc ResourceDoc { get; set; } 
     }      
 }

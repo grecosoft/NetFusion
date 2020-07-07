@@ -79,8 +79,16 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         {
             XPathNavigator memberNode = GetMethodNode(methodInfo);
 
-            var summaryNode = memberNode?.SelectSingleNode("summary");
-            return summaryNode != null ? UtilsXmlCommentText.Humanize(summaryNode.InnerXml) : string.Empty;
+            if (memberNode == null)
+            {
+                return string.Empty;
+            }
+
+            var summaryNode = memberNode.SelectSingleNode("summary");
+            var returnsNode = memberNode.SelectSingleNode("returns");
+
+            string comments = summaryNode?.InnerXml ?? String.Empty + " " + returnsNode?.InnerXml ?? String.Empty;
+            return string.IsNullOrWhiteSpace(comments) ? string.Empty : UtilsXmlCommentText.Humanize(comments);
         }
 
         public string GetTypeMemberComments(MemberInfo memberInfo)

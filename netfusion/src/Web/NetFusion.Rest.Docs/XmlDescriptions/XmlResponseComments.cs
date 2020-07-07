@@ -19,18 +19,8 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         
         public void Describe(ApiResponseDoc responseDoc, ApiResponseMeta responseMeta)
         {
-            if (responseDoc is null)
-            {
-                throw new System.ArgumentNullException(nameof(responseDoc));
-            }
 
-            if (responseMeta is null)
-            {
-                throw new System.ArgumentNullException(nameof(responseMeta));
-            }
-
-            ApiResourceDoc resourceDoc = _typeComments.GetResourceDoc(responseMeta.ModelType);
-            responseDoc.ResourceDocs.Add(resourceDoc);
+            responseDoc.ResourceDoc = _typeComments.GetResourceDoc(responseMeta.ModelType);
         }
     }
 }

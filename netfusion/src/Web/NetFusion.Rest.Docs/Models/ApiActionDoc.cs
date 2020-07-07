@@ -8,15 +8,20 @@ namespace NetFusion.Rest.Docs.Models
     /// </summary>
     public class ApiActionDoc
     {
+        public ApiActionDoc()
+        {
+
+        }
+
         /// <summary>
         /// The relative path based on the host.
         /// </summary>
-        public string RelativePath { get; }
+        public string RelativePath { get; set; }
 
         /// <summary>
         /// The method used to invoke the action.
         /// </summary>
-        public string HttpMethod { get; }
+        public string HttpMethod { get; set; }
         
         public ApiActionDoc(string relativePath, string httpMethod)
         {
@@ -42,24 +47,24 @@ namespace NetFusion.Rest.Docs.Models
         /// <summary>
         /// Description of the route parameters accepted by the action method.
         /// </summary>
-        public ICollection<ApiParameterDoc> RouteParams { get; } = new List<ApiParameterDoc>();
+        public ICollection<ApiParameterDoc> RouteParams { get; set; } = new List<ApiParameterDoc>();
 
         /// <summary>
         /// Description of the query string parameters accepted by the action method.
         /// </summary>
-        public ICollection<ApiParameterDoc> QueryParams { get; } = new List<ApiParameterDoc>();
+        public ICollection<ApiParameterDoc> QueryParams { get; set; } = new List<ApiParameterDoc>();
 
         /// <summary>
         /// Description of the header parameters accepted by the action method.
         /// </summary>
-        public ICollection<ApiParameterDoc> HeaderParams { get; } = new List<ApiParameterDoc>();
+        public ICollection<ApiParameterDoc> HeaderParams { get; set; } = new List<ApiParameterDoc>();
 
         /// <summary>
         /// Contains documention for each of the possible HTTP status codes and the
         /// associated optional resource returned for the status.
         /// </summary>
-        public ICollection<ApiResponseDoc> ResponseDocs { get; } = new List<ApiResponseDoc>();
+        public ICollection<ApiResponseDoc> ResponseDocs { get; set; } = new List<ApiResponseDoc>();
 
-        internal EmbeddedType[] EmbeddedTypes { get; set; }
+        internal EmbeddedResourceAttribute[] EmbeddedResourceAttribs { get; set; }
     }
 }

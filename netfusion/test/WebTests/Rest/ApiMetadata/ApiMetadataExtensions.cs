@@ -26,13 +26,7 @@ namespace WebTests.Rest.ApiMetadata
         public static void AssertResponseMeta(this IEnumerable<ApiResponseMeta> responseMeta, int statusCode,
             Type responseType = null)
         {
-            if (responseType == null)
-            {
-                responseMeta.SelectMany(m => m.Statuses).Should().NotBeEmpty();
-                return;
-            }
-
-            responseMeta.Where(m => m.Statuses.Contains(statusCode) && m.ModelType == responseType)
+            responseMeta.Where(m => m.Status == statusCode && m.ModelType == responseType)
                 .Should().HaveCount(1);
 
         }

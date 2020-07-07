@@ -38,12 +38,9 @@ namespace WebTests.Rest.Resources
                 FirstName = "Chris",
                 LastName = "Smith"
             }.AsResource();
-            
-           var ex = Assert.Throws<InvalidOperationException>(
-               () => customerRes.EmbedModel(new { value = "100" }));
 
-           ex.Message.Should()
-               .Contain("The name was not explicitly provided and the model type was not decorated with the attribute");
+            customerRes.EmbedModel(new Note());
+            customerRes.Embedded.Should().ContainKey(typeof(Note).FullName);
         }
 
         [Fact]
@@ -150,29 +147,16 @@ namespace WebTests.Rest.Resources
             public DateTime DateSubmitted { get; set; }
         }
 
+        public class Note
+        {
+
+        }
+
         [ExposedName("customer-rating")]
         public class Rating
         {
             public int Value { get; set; }
             public DateTime DateSubmitted { get; set; }
         }
-
-//        private void Test()
-//        {
-//            var customerModel = new Customer
-//            {
-//                FirstName = "Mark",
-//                LastName = "Twain"
-//            };
-//
-//            var ratings = new[]
-//            {
-//                new Rating { Value = 90, DateSubmitted = DateTime.UtcNow },
-//                new Rating { Value = 78, DateSubmitted = DateTime.UtcNow }
-//            }.AsResources();
-//
-//            var resource = HalResource.New(customerModel,r => r.EmbedResources(ratings));
-//            
-//        }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Builder;
+using NetFusion.Rest.Docs.Plugin;
 using NetFusion.Test.Plugins;
 
 namespace WebTests.Hosting
@@ -118,6 +119,7 @@ namespace WebTests.Hosting
                     builder.UseHttpsRedirection();
                     builder.UseRouting();
                     builder.UseAuthorization();
+                    builder.UseRestDocs();
                     builder.UseEndpoints(endpoints =>
                     {
                         endpoints.MapControllers();

@@ -93,8 +93,8 @@ namespace NetFusion.Web.Mvc.Metadata
         private void SetActionResponseMeta(ApiDescription apiDescription)
         {
             ResponseMeta = GetFilterMetadata<ProducesResponseTypeAttribute>(apiDescription)
-                .GroupBy(f => f.Type)
-                .Select(tg => new ApiResponseMeta(tg.Select(i => i.StatusCode), tg.Key)).ToArray();
+                .Select(p => new ApiResponseMeta(p.StatusCode, p.Type))
+                .ToArray();
             
             // Next, determine if the action method as the ProducesDefaultResponseType attribute
             // specified to determine the response type to use if not specified.
