@@ -215,7 +215,7 @@ namespace WebTests.Rest.DocGeneration
                     .ArrangeForRestDocs()
                     .Act.OnClient(client => client.GetAsync("api/doc/tests/action/embedded/resource".GetDocUrl()));
 
-                webResponse.Assert.HttpResponse(async response =>
+                await webResponse.Assert.HttpResponseAsync(async response =>
                 {
                     var actionDoc = await response.AsApiActionDocAsync();
 
