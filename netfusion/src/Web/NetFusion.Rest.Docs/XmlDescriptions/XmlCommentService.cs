@@ -84,11 +84,11 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                 return string.Empty;
             }
 
-            var summaryNode = memberNode.SelectSingleNode("summary");
-            var returnsNode = memberNode.SelectSingleNode("returns");
+            var summaryInnerXml = memberNode.SelectSingleNode("summary")?.InnerXml;
+            var returnsInnerXml = memberNode.SelectSingleNode("returns")?.InnerXml;
 
-            string comments = summaryNode?.InnerXml ?? String.Empty + " " + returnsNode?.InnerXml ?? String.Empty;
-            return string.IsNullOrWhiteSpace(comments) ? string.Empty : UtilsXmlCommentText.Humanize(comments);
+            return (UtilsXmlCommentText.Humanize(summaryInnerXml ?? String.Empty)
+                + " " + UtilsXmlCommentText.Humanize(returnsInnerXml ?? String.Empty)).Trim();
         }
 
         public string GetTypeMemberComments(MemberInfo memberInfo)

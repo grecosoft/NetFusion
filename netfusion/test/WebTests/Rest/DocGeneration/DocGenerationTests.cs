@@ -27,7 +27,7 @@ namespace WebTests.Rest.DocGeneration
                     var actionDoc = await response.AsApiActionDocAsync();
 
                     actionDoc.Description.Should().NotBeNullOrWhiteSpace();
-                    actionDoc.Description.Should().Be("This is an example comment for a controller's action method.");
+                    actionDoc.Description.Should().Be("This is an example comment for a controller's action method. Returns a resource.");
                 });
             });
         }
