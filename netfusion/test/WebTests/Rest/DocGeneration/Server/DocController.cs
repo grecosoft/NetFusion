@@ -12,6 +12,20 @@ namespace WebTests.Rest.DocGeneration.Server
         /// </summary>
         /// <returns></returns>
         [HttpGet("action/comments")]
-        public Task<IActionResult> TestActionComments() => Task.FromResult<IActionResult>(Ok());
+        public IActionResult TestActionComments() => Ok();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p1">First parameter comment.</param>
+        /// <param name="p2">Second parameter comment.</param>
+        /// <returns></returns>
+        [HttpGet("action/route-param/{p1}/comments/{p2}")]
+        public IActionResult TestActionRouteParamComments(string p1, int p2) => Ok();
+
+        [HttpGet("action/route-param/{p1?}")]
+        public IActionResult TestActionDefaultRouteParamValue(int? p1 = 100) => Ok();
+
+        
     }
 }
