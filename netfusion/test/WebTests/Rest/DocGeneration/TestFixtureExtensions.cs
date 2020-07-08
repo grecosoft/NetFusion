@@ -8,6 +8,7 @@ using NetFusion.Rest.Docs.Plugin.Configs;
 using NetFusion.Rest.Server.Plugin;
 using NetFusion.Test.Plugins;
 using WebTests.Hosting;
+using WebTests.Rest.DocGeneration.Server;
 
 namespace WebTests.Rest.DocGeneration
 {
@@ -26,7 +27,7 @@ namespace WebTests.Rest.DocGeneration
                 compose.AddRestDocs();
 
                 var hostPlugin = new MockHostPlugin();
-                // hostPlugin.AddPluginType<LinkedResourceMap>();
+                hostPlugin.AddPluginType<DocResourceMap>();
 
                 compose.AddPlugin(hostPlugin);
             });

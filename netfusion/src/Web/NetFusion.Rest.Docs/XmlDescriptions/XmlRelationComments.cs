@@ -38,7 +38,9 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                 return;
             }
 
-            foreach(ApiResourceDoc resourceDoc in actionDoc.ResponseDocs.Select(rd => rd.ResourceDoc))
+            foreach(ApiResourceDoc resourceDoc in actionDoc.ResponseDocs
+                .Where(rd => rd.ResourceDoc != null)
+                .Select(rd => rd.ResourceDoc))
             {
                 ApplyRelationDocs(resourceDoc, entry);
             }

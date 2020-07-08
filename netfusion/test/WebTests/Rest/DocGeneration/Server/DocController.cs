@@ -51,5 +51,37 @@ namespace WebTests.Rest.DocGeneration.Server
             ProducesResponseType(typeof(RootResponseModel), StatusCodes.Status200OK),
             EmbeddedResource(typeof(RootResponseModel), typeof(EmbeddedChildModel), "embedded-models", isCollection: true)]
         public IActionResult TestEmbeddedResourceCollection() => Ok();
+
+
+        [HttpGet("action/resource/links"),
+            ProducesResponseType(typeof(ModelWithResourceLinks), StatusCodes.Status200OK),
+            EmbeddedResource(typeof(ModelWithResourceLinks), typeof(EmbeddedModelWithResourceLinks), "child-with-links")]
+        public IActionResult TestResourceWithLinks() => Ok();
+
+
+        [HttpGet("action/embedded/resource/links"),
+            ProducesResponseType(typeof(ModelWithResourceLinks), StatusCodes.Status200OK),
+            EmbeddedResource(typeof(ModelWithResourceLinks), typeof(EmbeddedModelWithResourceLinks), "child-with-links")]
+        public IActionResult TestEmbeddedResourceWithLinks() => Ok();
+
+
+        /// <summary>
+        /// Returns details for an associated resource.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="versionNumber"></param>
+        /// <returns></returns>
+        [HttpGet("action/resource/{id}/details/{versionNumber}")]
+        public IActionResult GetResourceDetails(string id, int versionNumber) => Ok();
+
+
+        /// <summary>
+        /// Returns details for an embedded associated resource.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("action/embedded/{id}/details")]
+        public IActionResult GetEmbeddedResourceDetails(string id) => Ok();
+
     }
 }

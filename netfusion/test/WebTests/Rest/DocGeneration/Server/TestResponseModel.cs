@@ -33,4 +33,15 @@ namespace WebTests.Rest.DocGeneration.Server
     {
 
     }
+
+    public class ModelWithResourceLinks
+    {
+        public string ModelId { get; set; }
+        public int VersionNumber { get; set; }
+    }
+
+    public class EmbeddedModelWithResourceLinks
+    {
+        public string ModelId { get; set; }
+    }
 }

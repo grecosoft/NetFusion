@@ -261,21 +261,66 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
+        // When the documentation for a resource is built, a check is made to determine if the resource has
+        // any associated linked relations.  If so, documentation is returned for each relation.
+        [Fact]
+        public Task DocsForResourceRelationsReturned()
+        {
+            return WebHostFixture.TestAsync<DocController>(async host =>
+            {
+                var webResponse = await host
+                    .ArrangeForRestDocs()
+                    .Act.OnClient(client => client.GetAsync("api/doc/tests/action/resource/links".GetDocUrl()));
+
+                await webResponse.Assert.HttpResponseAsync(async response =>
+                {
+                    var actionDoc = await response.AsApiActionDocAsync();
+                    actionDoc.ResponseDocs.Should().NotBeNullOrEmpty();
+                    actionDoc.ResponseDocs.Should().HaveCount(1);
+
+                    var responseDoc = actionDoc.ResponseDocs.First().ResourceDoc;
+                    responseDoc.Should().NotBeNull();
+                    responseDoc.RelationDocs.Should().NotBeNullOrEmpty();
+                    responseDoc.RelationDocs.Should().HaveCount(1);
+
+                    var relationDoc = responseDoc.RelationDocs.First();
+                    relationDoc.Name.Should().Be("relation-1");
+                    relationDoc.HRef.Should().Be("api/doc/tests/action/resource/{id}/details/{versionNumber}");
+                    relationDoc.Description.Should().Be("Returns details for an associated resource.");
+                });
+            });
+        }
+
         // Resources can be embedded to any nested level.  To keep APIs simple, it is best to limit the depth.
         // Nevertheless, the following validates that a resource within an embedded collection containing another
         // embedded single resource is correctly documented.
         [Fact]
-        public void DocsForEmbeddedResources_RecursivelySet()
+        public Task DocsForEmbeddedResources_RecursivelySet()
         {
+            return WebHostFixture.TestAsync<DocController>(async host =>
+            {
+                var webResponse = await host
+                    .ArrangeForRestDocs()
+                    .Act.OnClient(client => client.GetAsync("api/doc/tests/action/embedded/resource/links".GetDocUrl()));
 
-        }
+                await webResponse.Assert.HttpResponseAsync(async response =>
+                {
+                    var actionDoc = await response.AsApiActionDocAsync();
+                    var embeddedRelationDoc = actionDoc.ResponseDocs.FirstOrDefault()?
+                        .ResourceDoc?
+                        .EmbeddedResources?
+                        .FirstOrDefault()?
+                        .ResourceDoc?
+                        .RelationDocs?
+                        .FirstOrDefault();
 
-        // When the documentation for a resource is built, a check is made to determine if the resource has
-        // any associated linked relations.  If so, documentation is returned for each relation.
-        [Fact]
-        public void DocsForResourceRelationsReturned()
-        {
+                    embeddedRelationDoc.Should().NotBeNull();
 
+                    embeddedRelationDoc.Name.Should().Be("relation-2");
+                    embeddedRelationDoc.HRef.Should().Be("api/doc/tests/action/embedded/{id}/details");
+                    embeddedRelationDoc.Description.Should().Be("Returns details for an embedded associated resource.");
+                });
+            });
         }
 
         // If an API Web Url is specified for which the documentation could
