@@ -97,6 +97,7 @@ namespace NetFusion.Rest.Server.Hal.Core
         {
             return new ResourceContext
             {
+                HttpContext = httpContext,
                 MediaModule = httpContext.GetService<IResourceMediaModule>(),
                 ApiMetadata = httpContext.GetService<IApiMetadataService>(),
                 UrlHelper = httpContext.GetService<IUrlHelper>(),

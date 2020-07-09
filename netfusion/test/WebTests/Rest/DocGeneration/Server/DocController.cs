@@ -83,5 +83,22 @@ namespace WebTests.Rest.DocGeneration.Server
         [HttpGet("action/embedded/{id}/details")]
         public IActionResult GetEmbeddedResourceDetails(string id) => Ok();
 
+
+        [HttpGet("action/headers")]
+        public IActionResult TestWithHeaders([FromHeader]int id, [FromHeader]string version) => Ok();
+
+
+        [HttpGet("action/headers/default")]
+        public IActionResult TestWithHeaderDefaultValue([FromHeader]string version = "1.0.0") => Ok();
+
+
+        [HttpGet("action/queries")]
+        public IActionResult TestWithQuery([FromQuery] int key, [FromQuery] string unit) => Ok();
+
+
+        [HttpGet("action/queries/default")]
+        public IActionResult TestWithQueryDefaultValue(
+            [FromQuery] int? rating, [FromQuery] string version = "9.0.0") => Ok();
+     
     }
 }

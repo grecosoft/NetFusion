@@ -91,47 +91,124 @@ namespace WebTests.Rest.DocGeneration
 
         // The API documentation contains the headers accepted by the REST method.
         [Fact]
-        public void DocsForEachHeaderParamReturned()
+        public Task DocsForEachHeaderParamReturned()
         {
+            return WebHostFixture.TestAsync<DocController>(async host =>
+            {
+                var webResponse = await host
+                    .ArrangeForRestDocs()
+                    .Act.OnClient(client => client.GetAsync("api/doc/tests/action/headers".GetDocUrl()));
 
+                await webResponse.Assert.HttpResponseAsync(async response =>
+                {
+                    var actionDoc = await response.AsApiActionDocAsync();
+
+                    actionDoc.HeaderParams.Should().NotBeEmpty();
+                    actionDoc.HeaderParams.Should().HaveCount(2);
+
+                    var firstHeaderDoc = actionDoc.HeaderParams.FirstOrDefault(p => p.Name == "id");
+                    firstHeaderDoc.Should().NotBeNull();
+                    firstHeaderDoc.Type.Should().Be("Number");
+                    firstHeaderDoc.IsOptional.Should().BeFalse();
+
+                    var secondHeaderDoc = actionDoc.HeaderParams.FirstOrDefault(p => p.Name == "version");
+                    secondHeaderDoc.Should().NotBeNull();
+                    secondHeaderDoc.Type.Should().Be("String");
+                    secondHeaderDoc.IsOptional.Should().BeFalse();
+
+                });
+            });
         }
 
         // The API header documentation indicates if the header value has a default
         // value that will be used if not specified.
         [Fact]
-        public void DocForEachHeaderParam_IncludesDefaultValue()
+        public Task DocForEachHeaderParam_IncludesDefaultValue()
         {
+            return WebHostFixture.TestAsync<DocController>(async host =>
+            {
+                var webResponse = await host
+                    .ArrangeForRestDocs()
+                    .Act.OnClient(client => client.GetAsync("api/doc/tests/action/headers/default".GetDocUrl()));
 
-        }
+                await webResponse.Assert.HttpResponseAsync(async response =>
+                {
+                    var actionDoc = await response.AsApiActionDocAsync();
 
-        // The API header documentation indicates if the header is optional.
-        [Fact]
-        public void DocForEachHeaderParam_IncludesIfOptional()
-        {
+                    actionDoc.HeaderParams.Should().NotBeEmpty();
+                    actionDoc.HeaderParams.Should().HaveCount(1);
 
+                    var headerParmDoc = actionDoc.HeaderParams.FirstOrDefault(p => p.Name == "version");
+                    headerParmDoc.Should().NotBeNull();
+                    headerParmDoc.Type.Should().Be("String");
+                    headerParmDoc.IsOptional.Should().BeTrue();
+                    headerParmDoc.DefaultValue.Should().Be("1.0.0");
+                });
+            });
         }
 
         // The API documentation contains the query parameters accepted by the REST method.
         [Fact]
-        public void DocsForEachQueryParamReturned()
+        public Task DocsForEachQueryParamReturned()
         {
+            return WebHostFixture.TestAsync<DocController>(async host =>
+            {
+                var webResponse = await host
+                    .ArrangeForRestDocs()
+                    .Act.OnClient(client => client.GetAsync("api/doc/tests/action/queries".GetDocUrl()));
 
+                await webResponse.Assert.HttpResponseAsync(async response =>
+                {
+                    var actionDoc = await response.AsApiActionDocAsync();
+
+                    actionDoc.QueryParams.Should().NotBeEmpty();
+                    actionDoc.QueryParams.Should().HaveCount(2);
+
+                    var firstQueryDoc = actionDoc.QueryParams.FirstOrDefault(p => p.Name == "key");
+                    firstQueryDoc.Should().NotBeNull();
+                    firstQueryDoc.Type.Should().Be("Number");
+                    firstQueryDoc.IsOptional.Should().BeFalse();
+
+                    var secondQueryDoc = actionDoc.QueryParams.FirstOrDefault(p => p.Name == "unit");
+                    secondQueryDoc.Should().NotBeNull();
+                    secondQueryDoc.Type.Should().Be("String");
+                    secondQueryDoc.IsOptional.Should().BeFalse();
+
+                });
+            });
         }
 
         // The API query parameter documentation indicates if the query value has
         // a default value that will be used if not specified.
         [Fact]
-        public void DocForEachQueryParam_IncludesDefaultValue()
+        public Task DocForEachQueryParam_IncludesDefaultValue()
         {
+            return WebHostFixture.TestAsync<DocController>(async host =>
+            {
+                var webResponse = await host
+                    .ArrangeForRestDocs()
+                    .Act.OnClient(client => client.GetAsync("api/doc/tests/action/queries/default".GetDocUrl()));
 
+                await webResponse.Assert.HttpResponseAsync(async response =>
+                {
+                    var actionDoc = await response.AsApiActionDocAsync();
+
+                    actionDoc.QueryParams.Should().NotBeEmpty();
+    
+                    var firstQueryDoc = actionDoc.QueryParams.FirstOrDefault(p => p.Name == "version");
+                    firstQueryDoc.Should().NotBeNull();
+                    firstQueryDoc.Type.Should().Be("String");
+                    firstQueryDoc.IsOptional.Should().BeTrue();
+                    firstQueryDoc.DefaultValue.Should().Be("9.0.0");
+
+                    var secondQueryDoc = actionDoc.QueryParams.FirstOrDefault(p => p.Name == "rating");
+                    secondQueryDoc.Should().NotBeNull();
+                    secondQueryDoc.Type.Should().Be("Number");
+                    firstQueryDoc.IsOptional.Should().BeTrue();
+                });
+            });
         }
 
-        // The API query parameter documentation inidcates if the query is options.
-        [Fact]
-        public void DocForEachQueryParam_IncludesIfOptional()
-        {
-
-        }
 
         // The response documentation will include the possible status types
         // returned from the WebApi action method.

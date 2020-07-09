@@ -90,6 +90,7 @@ namespace NetFusion.Rest.Server.Hal.Core
             };
 
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
+            SetRouteForDocQuery(context, actionMeta, link);
         }
 
         // For each controller action argument executes the cached expression on the model
@@ -119,6 +120,7 @@ namespace NetFusion.Rest.Server.Hal.Core
 
             MarkOptionalParams(actionMeta, link);
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
+            SetRouteForDocQuery(context, actionMeta, link);
         }
 
         private static void UpdateLinkDescriptorsAndResource(ResourceContext context, ResourceLink resourceLink, Link link)
@@ -164,6 +166,19 @@ namespace NetFusion.Rest.Server.Hal.Core
                 link.Href = link.Href.Replace(
                     "{" + paramMeta.ParameterName + "}", 
                     "{?" + paramMeta.ParameterName + "}");
+            }
+        }
+
+        // Indicates if the request has a header value indicating that the URL template
+        // should be added to the returned Links.  The URL template is used to query
+        // the associated documentation for the corresponding controller action.
+        private static void SetRouteForDocQuery(ResourceContext context, ApiActionMeta actionMeta, Link link)
+        {
+            var headers = context.HttpContext.Request.Headers;
+
+            if (headers.TryGetValue("include-url-for-doc-query", out var values) && values.Contains("yes"))
+            {
+                link.DocQuery = actionMeta.RelativePath;
             }
         }
     }
