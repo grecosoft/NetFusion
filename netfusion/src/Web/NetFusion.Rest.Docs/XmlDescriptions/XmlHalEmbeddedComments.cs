@@ -13,18 +13,19 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
     /// Response document.  For each possible response resource, a check is determined 
     /// if there are any documented embedded resources.
     /// </summary>
-    public class XmlEmbeddedComments : IEmbeddedDescription
+    public class XmlHalEmbeddedComments : IEmbeddedDescription
     {
         private readonly ITypeCommentService _typeComments;
 
-        public XmlEmbeddedComments(ITypeCommentService typeComments)
+        public XmlHalEmbeddedComments(ITypeCommentService typeComments)
         {
             _typeComments = typeComments ?? throw new System.ArgumentNullException(nameof(typeComments));
         }
 
         public void Describe(ApiActionDoc actionDoc, ApiActionMeta actionMeta)
         {
-            // Process all resource documents accross all response documents.
+            // Process all resource documents across all response documents
+            // having an associated resource.
             foreach (ApiResourceDoc resourceDoc in actionDoc.ResponseDocs
                 .Where(d => d.ResourceDoc != null)
                 .Select(d => d.ResourceDoc))

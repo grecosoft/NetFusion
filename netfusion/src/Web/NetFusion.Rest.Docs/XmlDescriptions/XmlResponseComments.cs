@@ -19,7 +19,6 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         
         public void Describe(ApiResponseDoc responseDoc, ApiResponseMeta responseMeta)
         {
-
             responseDoc.ResourceDoc = _typeComments.GetResourceDoc(responseMeta.ModelType);
         }
     }

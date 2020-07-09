@@ -12,21 +12,27 @@ using NetFusion.Rest.Resources;
 
 namespace NetFusion.Rest.Docs.XmlDescriptions
 {
+    /// <summary>
+    /// Provides an implementation of the ITypeCommentService used to document types
+    /// based on XML comment files.
+    /// </summary>
     public class XmlTypeCommentService : ITypeCommentService
     {
+        // A list of type that are considered primitive event if they are class/object based.
         private static Type[] PrimitiveTypes { get; } = {typeof(string), typeof(DateTime)};
 
         private readonly IXmlCommentService _xmlComments;
 
         public XmlTypeCommentService(IXmlCommentService xmlComments)
         {
-            _xmlComments = xmlComments;
+            _xmlComments = xmlComments ?? throw new ArgumentNullException(nameof(xmlComments));
         }
 
         public ApiResourceDoc GetResourceDoc(Type resourceType)
         {
+            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            
             XPathNavigator xmlCommentDoc = _xmlComments.GetXmlCommentsForTypesAssembly(resourceType);
-
             return xmlCommentDoc == null ? null : BuildResourceDoc(resourceType);
         }
 
@@ -38,8 +44,14 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                 ResourceName = resourceType.GetExposedResourceName(),
                 ResourceType = resourceType
             };
+            
+            AddPropertyComments(resourceDoc);
+            return resourceDoc;
+        }
 
-            foreach (PropertyInfo propInfo in GetDescribableProperties(resourceType))
+        private void AddPropertyComments(ApiResourceDoc resourceDoc)
+        {
+            foreach (PropertyInfo propInfo in GetDescribableProperties(resourceDoc.ResourceType))
             {
                 var propDoc = new ApiPropertyDoc
                 {
@@ -51,7 +63,6 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                 if (IsPrimitiveProperty(propInfo))
                 {
                     propDoc.Type = propInfo.PropertyType.GetJsTypeName();
-                    
                 }
                 else if (IsEnumerableProperty(propInfo))
                 {
@@ -76,11 +87,8 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                 
                 resourceDoc.Properties.Add(propDoc);
             }
-
-            return resourceDoc;
         }
-
-
+        
         private static IEnumerable<PropertyInfo> GetDescribableProperties(Type type) => 
             type.GetProperties().Where(p => p.CanRead);
 
@@ -102,12 +110,12 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             Type propType = propertyInfo.PropertyType;
 
             return propType.IsClass ||
-                (propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(Nullable<>));
+                propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
 
-        private static bool IsMarkedRequired(PropertyInfo propertyInfo) =>
-            propertyInfo.GetCustomAttribute<RequiredAttribute>() != null;
+        private static bool IsMarkedRequired(MemberInfo memberInfo) =>
+            memberInfo.GetCustomAttribute<RequiredAttribute>() != null;
 
 
         private static bool IsEnumerableProperty(PropertyInfo propertyInfo)
@@ -120,8 +128,6 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         private static Type GetEnumerableType(PropertyInfo propertyInfo)
         {
             Type propType = propertyInfo.PropertyType;
-            
-
             if (propType.IsArray)
             {
                 return propType.GetElementType();
@@ -133,7 +139,6 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             }
 
             return null;
-         
         }
     }
 }

@@ -52,8 +52,8 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
             AddDocDescription<XmlResponseComments>();
 
             // Called last to apply additional XML comments.
-            AddDocDescription<XmlEmbeddedComments>();
-            AddDocDescription<XmlRelationComments>();
+            AddDocDescription<XmlHalEmbeddedComments>();
+            AddDocDescription<XmlHalRelationComments>();
         }
 
         /// <summary>

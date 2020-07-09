@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NetFusion.Rest.Common;
 using NetFusion.Rest.Docs.Core.Description;
@@ -11,23 +12,23 @@ using NetFusion.Web.Mvc.Metadata;
 namespace NetFusion.Rest.Docs.XmlDescriptions
 {
     /// <summary>
-    /// Determines if there are any resource links associated with the
-    /// resources returned from the WebApi.  If so, documentation of
-    /// the relations are added to the resource's document.
+    /// Determines if there are any link relations associated with the resources returned from
+    /// the WebApi. If so, documentation of the relations are added to the resource's document.
     /// </summary>
-    public class XmlRelationComments : ILinkedDescription
+    public class XmlHalRelationComments : ILinkedDescription
     {
         private readonly IResourceMediaModule _resourceMediaModule;
         private readonly IApiMetadataService _metadataService;
         private readonly IXmlCommentService _xmlComments;
 
-        public XmlRelationComments(IResourceMediaModule resourceMediaModule,
+        public XmlHalRelationComments(
+            IResourceMediaModule resourceMediaModule,
             IApiMetadataService metadataService,
             IXmlCommentService xmlComments)
         {
-            _resourceMediaModule = resourceMediaModule;
-            _metadataService = metadataService;
-            _xmlComments = xmlComments;
+            _resourceMediaModule = resourceMediaModule ?? throw new ArgumentNullException(nameof(resourceMediaModule));
+            _metadataService = metadataService ?? throw new ArgumentNullException(nameof(metadataService));
+            _xmlComments = xmlComments ?? throw new ArgumentNullException(nameof(xmlComments));
         }
 
         public void Describe(ApiActionDoc actionDoc, ApiActionMeta actionMeta)
@@ -46,7 +47,6 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             }
         }
 
-
         private void ApplyRelationDocs(ApiResourceDoc resourceDoc, MediaTypeEntry mediaTypeEntry)
         {
             var (meta, ok) = mediaTypeEntry.GetResourceTypeMeta(resourceDoc.ResourceType);
@@ -64,7 +64,6 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
 
                     SetRelationInfo(relationDoc, (dynamic)resourceLink);
                     relationDocs.Add(relationDoc);
-
                 }
 
                 resourceDoc.RelationDocs = relationDocs.ToArray();

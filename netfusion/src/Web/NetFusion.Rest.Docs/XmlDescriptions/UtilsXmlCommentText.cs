@@ -7,17 +7,22 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
 {
     public static class UtilsXmlCommentText
     {
-        private static readonly Regex RefTagPattern = new Regex(@"<(see|paramref) (name|cref)=""([TPF]{1}:)?(?<display>.+?)"" ?/>");
+        private static readonly Regex RefTagPattern = new Regex(
+            @"<(see|paramref) (name|cref)=""([TPF]{1}:)?(?<display>.+?)"" ?/>");
+        
         private static readonly Regex CodeTagPattern = new Regex(@"<c>(?<display>.+?)</c>");
-        private static readonly Regex ParaTagPattern = new Regex(@"<para>(?<display>.+?)</para>", RegexOptions.Singleline);
+        
+        private static readonly Regex ParaTagPattern = new Regex(
+            @"<para>(?<display>.+?)</para>", RegexOptions.Singleline);
 
         public static string Humanize(string text)
         {
             if (text == null)
+            {
                 throw new ArgumentNullException(nameof(text));
-
-            //Call DecodeXml at last to avoid entities like &lt and &gt to break valid xml          
-
+            }
+            
+            // Call DecodeXml at last to avoid entities like &lt and &gt to break valid xml          
             return text
                 .NormalizeIndentation()
                 .HumanizeRefTags()
@@ -52,18 +57,24 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         private static string GetCommonLeadingWhitespace(string[] lines)
         {
             if (null == lines)
+            {
                 throw new ArgumentException("lines");
+            }
 
             if (lines.Length == 0)
+            {
                 return null;
-
+            }
+            
             string[] nonEmptyLines = lines
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .ToArray();
 
             if (nonEmptyLines.Length < 1)
+            {
                 return null;
-
+            }
+            
             int padLen = 0;
 
             // use the first line as a seed, and see what is shared over all nonEmptyLines
@@ -71,18 +82,19 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             for (int i = 0, l = seed.Length; i < l; ++i)
             {
                 if (!char.IsWhiteSpace(seed, i))
+                {
                     break;
+                }
 
                 if (nonEmptyLines.Any(line => line[i] != seed[i]))
+                {
                     break;
+                }
 
                 ++padLen;
             }
 
-            if (padLen > 0)
-                return seed.Substring(0, padLen);
-
-            return null;
+            return padLen > 0 ? seed.Substring(0, padLen) : null;
         }
 
         private static string HumanizeRefTags(this string text)
@@ -104,6 +116,5 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         {
             return WebUtility.HtmlDecode(text);
         }
-
     }
 }

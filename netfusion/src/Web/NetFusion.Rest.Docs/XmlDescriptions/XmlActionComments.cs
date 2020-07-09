@@ -25,15 +25,17 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
 
             XPathNavigator methodNode = _xmlComments.GetMethodNode(actionMeta.ActionMethodInfo);
 
-            ApplyParamDocs(methodNode, actionDoc.RouteParams, actionMeta.RouteParameters);
-            ApplyParamDocs(methodNode, actionDoc.HeaderParams, actionMeta.HeaderParameters);
-            ApplyParamDocs(methodNode, actionDoc.QueryParams, actionMeta.QueryParameters);
+            ApplyParamDocs(actionDoc.RouteParams, actionMeta.RouteParameters, methodNode);
+            ApplyParamDocs(actionDoc.HeaderParams, actionMeta.HeaderParameters, methodNode);
+            ApplyParamDocs(actionDoc.QueryParams, actionMeta.QueryParameters, methodNode);
         }
 
-        private void ApplyParamDocs(
-            XPathNavigator methodNode,
-            ICollection<ApiParameterDoc> paramDocs,
-            IEnumerable<ApiParameterMeta> paramsMetaItems)
+        // Creates and adds parameter documentation for a method's parameters. If no XML node
+        // was found for the method, the passed methodNode will be null.  In this case, all
+        // information is added besides any XML comments.
+        private void ApplyParamDocs(ICollection<ApiParameterDoc> paramDocs,
+            IEnumerable<ApiParameterMeta> paramsMetaItems, 
+            XPathNavigator methodNode = null)
         {
             foreach (ApiParameterMeta paramMeta in paramsMetaItems)
             {
@@ -44,7 +46,7 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                     DefaultValue = paramMeta.DefaultValue?.ToString(),
                     Type = paramMeta.ParameterType.GetJsTypeName()
                 };
-
+                
                 if (methodNode != null)
                 {
                     paramDoc.Description = _xmlComments.GetMethodParamComment(methodNode, paramMeta.ParameterName);

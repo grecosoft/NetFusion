@@ -35,7 +35,7 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         string GetTypeComments(Type classType);
 
         /// <summary>
-        /// REturns the comments for a member of a type.
+        /// Returns the comments for a member of a type.
         /// </summary>
         /// <param name="memberInfo">The type member.</param>
         /// <returns>The comments associated with the type member.  If not found,
@@ -61,11 +61,10 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         /// <summary>
         /// Returns the description for a method's parameter.
         /// </summary>
-        /// <param name="methodNode">The XML comment note for the method.</param>
-        /// <param name="paramName">The paramater name.</param>
-        /// <returns>The comments assocated with the method's parameter.  If not
+        /// <param name="methodNode">The XML comment node for the method.</param>
+        /// <param name="paramName">The parameter name.</param>
+        /// <returns>The comments associated with the method's parameter.  If not
         /// found, an empty string is returned.</returns>
         string GetMethodParamComment(XPathNavigator methodNode, string paramName);
-
     }
 }
