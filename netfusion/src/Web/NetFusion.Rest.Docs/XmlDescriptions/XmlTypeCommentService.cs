@@ -27,10 +27,10 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         {
             XPathNavigator xmlCommentDoc = _xmlComments.GetXmlCommentsForTypesAssembly(resourceType);
 
-            return xmlCommentDoc == null ? null : BuildResourceDoc(xmlCommentDoc, resourceType);
+            return xmlCommentDoc == null ? null : BuildResourceDoc(resourceType);
         }
 
-        private ApiResourceDoc BuildResourceDoc(XPathNavigator xmlCommentDoc, Type resourceType)
+        private ApiResourceDoc BuildResourceDoc(Type resourceType)
         {
             var resourceDoc = new ApiResourceDoc
             {
@@ -64,14 +64,14 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                     }
                     else
                     {
-                        propDoc.Type = BuildResourceDoc(xmlCommentDoc, itemType);
+                        propDoc.Type = BuildResourceDoc(itemType);
                         propDoc.IsObject = true;
                     }
                 }
                 else if (propInfo.PropertyType.IsClass)
                 {
                     propDoc.IsObject = true;
-                    propDoc.Type = BuildResourceDoc(xmlCommentDoc, propInfo.PropertyType);
+                    propDoc.Type = BuildResourceDoc(propInfo.PropertyType);
                 }
                 
                 resourceDoc.Properties.Add(propDoc);

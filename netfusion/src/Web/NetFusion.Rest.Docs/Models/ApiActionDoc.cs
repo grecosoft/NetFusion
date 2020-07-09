@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using NetFusion.Rest.Docs.Core.Description;
 
 namespace NetFusion.Rest.Docs.Models
 {
@@ -8,10 +7,9 @@ namespace NetFusion.Rest.Docs.Models
     /// </summary>
     public class ApiActionDoc
     {
-        public ApiActionDoc()
-        {
-
-        }
+        // Required for deserialization if consumed by .Net Client such
+        // as the unit-tests.  The client will most often be JS based.
+        public ApiActionDoc() { }
 
         /// <summary>
         /// The relative path based on the host.
@@ -60,7 +58,7 @@ namespace NetFusion.Rest.Docs.Models
         public ICollection<ApiParameterDoc> HeaderParams { get; set; } = new List<ApiParameterDoc>();
 
         /// <summary>
-        /// Contains documention for each of the possible HTTP status codes and the
+        /// Contains documentation for each of the possible HTTP status code and the
         /// associated optional resource returned for the status.
         /// </summary>
         public ICollection<ApiResponseDoc> ResponseDocs { get; set; } = new List<ApiResponseDoc>();

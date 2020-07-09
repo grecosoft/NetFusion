@@ -4,7 +4,8 @@ using NetFusion.Rest.Docs.Plugin.Configs;
 namespace NetFusion.Rest.Docs.Plugin
 {
     /// <summary>
-    /// Plugin service providing access to REST Documentation.
+    /// Plugin module responsible for configuring and registering
+    /// services required to provide REST Api documentation.
     /// </summary>
     public interface IDocModule : IPluginModuleService
     {

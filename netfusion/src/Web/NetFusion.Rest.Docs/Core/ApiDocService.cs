@@ -12,7 +12,7 @@ namespace NetFusion.Rest.Docs.Core
 {
     /// <summary>
     /// Main entry point service responsible for returning documentation
-    /// for a given controller's action method. 
+    /// for controller's action methods.
     /// </summary>
     public class ApiDocService : IApiDocService
     {
@@ -33,6 +33,7 @@ namespace NetFusion.Rest.Docs.Core
 
             // Instances of the IDocDescription implementations are to be executed
             // based on the order of their types registered within RestDocConfig.
+            // These classes are what add the documentation to the APIs metadata.
             _docDescriptions = docDescriptions.OrderByMatchingType (
                 docModule.RestDocConfig.DescriptionTypes
             ).ToArray();
@@ -48,14 +49,13 @@ namespace NetFusion.Rest.Docs.Core
             actionDoc = null;      
 
             // Determines if there is metadata associated with the action method.
-            // If metadata is found, builds an action document model from the meatadata.
+            // If metadata is found, build an action document model from the metadata.
             if (_apiMetadata.TryGetActionMeta(actionMethodInfo, out ApiActionMeta actionMeta))
             {
                 actionDoc = BuildActionDoc(actionMeta);
-                return true;
             }
 
-            return false;
+            return actionDoc != null;
         }
 
         public bool TryGetActionDoc(string relativePath, out ApiActionDoc actionDoc)
@@ -67,15 +67,14 @@ namespace NetFusion.Rest.Docs.Core
             if (_apiMetadata.TryGetActionMeta(relativePath, out ApiActionMeta actionMeta))
             {
                 actionDoc = BuildActionDoc(actionMeta);
-                return true;
             }
 
-            return false;
+            return actionDoc != null;
         }
 
         // Provided the controller action metadata, generates an action document by
         // combining the metadata with additional documentation sources implemented
-        // by the derived IDocDescriptions registerations.
+        // by the derived IDocDescriptions registered classes.
         private ApiActionDoc BuildActionDoc(ApiActionMeta actionMeta)
         {
             // Create the root document associated with the action metadata.
@@ -89,7 +88,7 @@ namespace NetFusion.Rest.Docs.Core
             // Apply documentation for the possible action responses.
             AssembleResponseDocs(actionDoc, actionMeta);
 
-            // Describe all embedded resources and relations within the populated action document.
+            // Document all embedded resources and relations within the populated action document.
             ApplyDescriptions<IEmbeddedDescription>(desc => desc.Describe(actionDoc, actionMeta));
             ApplyDescriptions<ILinkedDescription>(desc => desc.Describe(actionDoc, actionMeta));
 

@@ -6,7 +6,7 @@ namespace NetFusion.Rest.Docs.Models
     public class ApiEmbeddedDoc
     {
         /// <summary>
-        /// The name further describing what the embedded resource represents.
+        /// The name describing what the embedded resource represents.
         /// </summary>
         public string EmbeddedName { get; set; }
 

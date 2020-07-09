@@ -13,13 +13,13 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
     public class RestDocConfig : IPluginConfig
     {
         /// <summary>
-        /// The directory in files containing documentation are located.
+        /// The directory containing any needed documentation source files.
         /// </summary>
-        public string DescriptionDirectory { get; set; } = AppContext.BaseDirectory;
+        public string DescriptionDirectory { get; private set; } = AppContext.BaseDirectory;
 
         /// <summary>
-        /// The end point that can be called to request documentation
-        /// for a WebApi action method.
+        /// The end point that can be called to request documentation for a WebApi action method.
+        /// If not specified, the endpoint will be: /api/net-fusion/rest
         /// </summary>
         public string EndpointUrl { get; private set; }
 
@@ -40,18 +40,24 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
 
+            AddDefaultDescriptions();
+            DescriptionTypes = _descriptionTypes.AsReadOnly();
+        }
+
+        // These are the default registered classes responsible for applying 
+        // documentation associated with a controller's action metadata.
+        private void AddDefaultDescriptions()
+        {
             AddDocDescription<XmlActionComments>();
             AddDocDescription<XmlResponseComments>();
 
             // Called last to apply additional XML comments.
             AddDocDescription<XmlEmbeddedComments>();
             AddDocDescription<XmlRelationComments>();
-
-            DescriptionTypes = _descriptionTypes.AsReadOnly();
         }
 
         /// <summary>
-        /// Used to specify the directory containing additional documention
+        /// Used to specify the directory containing additional documentation
         /// files used to describe WebApi action methods.
         /// </summary>
         /// <param name="directory">The directory to use.  If not specified,
@@ -81,6 +87,7 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
                 throw new ArgumentException("Endpoint must be specified.", nameof(endpoint));
             }
 
+            EndpointUrl = endpoint;
             return this;
         }
 
@@ -100,8 +107,8 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
         /// to the returned Api Action documentation model.  These classes are
         /// invoked in the order in which they are registered.
         /// </summary>
-        /// <typeparam name="T">The type implementing the lookup of additional
-        /// documentation.
+        /// <paramtype name="T">The type implementing the lookup of additional
+        /// documentation.</paramtype>
         /// <returns>The configuration.</returns>
         public RestDocConfig AddDocDescription<T>()
             where T : IDocDescription

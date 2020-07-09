@@ -71,24 +71,18 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             }
 
             // Next check any embedded resources:
-            foreach (ApiResourceDoc embeddedResourceDoc in resourceDoc.EmbeddedResources
+            foreach (ApiResourceDoc embeddedResourceDoc in resourceDoc.EmbeddedResourceDocs
                 .Select(er => er.ResourceDoc))
             {
                 ApplyRelationDocs(embeddedResourceDoc, mediaTypeEntry);
             }
         }
-
-
+        
         private static void SetRelationInfo(ApiRelationDoc relationDoc, ResourceLink resourceLink)
         {
             relationDoc.HRef = resourceLink.Href;
         }
-
-        private static void SetRelationInfo(ApiRelationDoc relationDoc, InterpolatedLink resourceLink)
-        {
-           
-        }
-
+        
         private void SetRelationInfo(ApiRelationDoc relationDoc, ControllerActionLink resourceLink)
         {
             relationDoc.HRef = _metadataService.GetActionMeta(resourceLink.ActionMethodInfo).RelativePath;

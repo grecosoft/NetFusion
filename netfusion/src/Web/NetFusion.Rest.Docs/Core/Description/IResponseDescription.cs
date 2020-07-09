@@ -5,7 +5,7 @@ namespace NetFusion.Rest.Docs.Core.Description
 {
     /// <summary>
     /// Interface implemented by a class responsible for describing
-    /// a controller's action response.
+    /// a controller's action responses.
     /// </summary>
     public interface IResponseDescription : IDocDescription
     {

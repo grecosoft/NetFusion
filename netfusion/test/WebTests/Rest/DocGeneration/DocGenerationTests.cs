@@ -299,9 +299,9 @@ namespace WebTests.Rest.DocGeneration
                     var responseDoc = actionDoc.ResponseDocs.FirstOrDefault();
                     responseDoc.Should().NotBeNull();
                     responseDoc.ResourceDoc.ResourceName.Should().Be(typeof(RootResponseModel).GetExposedResourceName());
-                    responseDoc.ResourceDoc.EmbeddedResources.Should().HaveCount(1);
+                    responseDoc.ResourceDoc.EmbeddedResourceDocs.Should().HaveCount(1);
 
-                    var embeddedResDoc = responseDoc.ResourceDoc.EmbeddedResources.FirstOrDefault();
+                    var embeddedResDoc = responseDoc.ResourceDoc.EmbeddedResourceDocs.FirstOrDefault();
                     embeddedResDoc.Should().NotBeNull();
                     embeddedResDoc.EmbeddedName.Should().Be("embedded-model");
                     embeddedResDoc.IsCollection.Should().BeFalse();
@@ -327,7 +327,7 @@ namespace WebTests.Rest.DocGeneration
                     var actionDoc = await response.AsApiActionDocAsync();
                     var responseDoc = actionDoc.ResponseDocs.First();
 
-                    var embeddedResDoc = responseDoc.ResourceDoc.EmbeddedResources.FirstOrDefault();
+                    var embeddedResDoc = responseDoc.ResourceDoc.EmbeddedResourceDocs.FirstOrDefault();
                     embeddedResDoc.Should().NotBeNull();
                     embeddedResDoc.EmbeddedName.Should().Be("embedded-models");
                     embeddedResDoc.IsCollection.Should().BeTrue();
@@ -385,7 +385,7 @@ namespace WebTests.Rest.DocGeneration
                     var actionDoc = await response.AsApiActionDocAsync();
                     var embeddedRelationDoc = actionDoc.ResponseDocs.FirstOrDefault()?
                         .ResourceDoc?
-                        .EmbeddedResources?
+                        .EmbeddedResourceDocs?
                         .FirstOrDefault()?
                         .ResourceDoc?
                         .RelationDocs?

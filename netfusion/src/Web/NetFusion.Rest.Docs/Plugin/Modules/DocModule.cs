@@ -37,11 +37,6 @@ namespace NetFusion.Rest.Docs.Plugin.Modules
             {
                 services.AddScoped(typeof(IDocDescription), descriptionType);
             }
-
-            services.AddControllers(config =>
-            {
-            
-            });
         }
     }
 }

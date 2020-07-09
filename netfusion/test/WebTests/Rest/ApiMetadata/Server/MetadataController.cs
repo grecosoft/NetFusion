@@ -1,19 +1,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebTests.Mocks;
 
 namespace WebTests.Rest.ApiMetadata.Server
 {
     [ApiController, Route("api/documented/actions")]
     public class MetadataController : ControllerBase
     {
-        private readonly IMockedService _mockedService;
-        
-        public MetadataController(IMockedService mockedService)
-        {
-            _mockedService = mockedService;
-        }
-
         [HttpGet("metadata/{id}")]
         public IActionResult ActionDetails(int id) => Ok();
         

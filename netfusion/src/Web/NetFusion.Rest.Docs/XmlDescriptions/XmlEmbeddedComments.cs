@@ -36,11 +36,11 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         private void ApplyEmbeddedResourceDocs(ApiResourceDoc resourceDoc,
             EmbeddedResourceAttribute[] embeddedResources)
         {
-            resourceDoc.EmbeddedResources = GetEmbeddedResourceDocs(resourceDoc, embeddedResources).ToArray();
+            resourceDoc.EmbeddedResourceDocs = GetEmbeddedResourceDocs(resourceDoc, embeddedResources).ToArray();
 
             // Next recursively process any embedded documents to determine if they
             // have any embedded children resources.
-            foreach(ApiResourceDoc embeddedResourceDoc in resourceDoc.EmbeddedResources
+            foreach(ApiResourceDoc embeddedResourceDoc in resourceDoc.EmbeddedResourceDocs
                 .Select(er => er.ResourceDoc))
             {
                 ApplyEmbeddedResourceDocs(embeddedResourceDoc, embeddedResources);

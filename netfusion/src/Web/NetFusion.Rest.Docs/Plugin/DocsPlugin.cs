@@ -28,6 +28,11 @@ namespace NetFusion.Rest.Docs.Plugin
         
     public static class CompositeBuilderExtensions
     {
+        /// <summary>
+        /// Adds the REST Documentation Plugin to the composite application container.
+        /// </summary>
+        /// <param name="composite">The composite container builder.</param>
+        /// <returns>Reference to the composite container builder.</returns>
         public static ICompositeContainerBuilder AddRestDocs(this ICompositeContainerBuilder composite)
         {
             if (composite == null) throw new ArgumentNullException(nameof(composite));
@@ -36,7 +41,7 @@ namespace NetFusion.Rest.Docs.Plugin
             composite.AddWebMvc();
             composite.AddRest();
             
-            // Add plugin for Rest API support:
+            // Add plugin for Rest API Documentation support:
             composite.AddPlugin<DocsPlugin>();
             
             return composite;

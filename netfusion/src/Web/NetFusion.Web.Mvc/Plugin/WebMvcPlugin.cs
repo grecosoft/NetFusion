@@ -1,7 +1,5 @@
-using System;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Web.Mvc.Plugin.Configs;
 using NetFusion.Web.Mvc.Plugin.Modules;
 
 namespace NetFusion.Web.Mvc.Plugin
@@ -14,8 +12,6 @@ namespace NetFusion.Web.Mvc.Plugin
         
         public WebMvcPlugin()
         {
-            AddConfig<WebMvcConfig>();
-            
             AddModule<ApiMetadataModule>();
 
             SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/netfusion/src/Web/NetFusion.Web.Mvc";
@@ -25,18 +21,10 @@ namespace NetFusion.Web.Mvc.Plugin
     
     public static class CompositeBuilderExtensions
     {
-        public static ICompositeContainerBuilder AddWebMvc(this ICompositeContainerBuilder composite, 
-            Action<WebMvcConfig> configure = null)
+        public static ICompositeContainerBuilder AddWebMvc(this ICompositeContainerBuilder composite)
         {
             // Add the MVC Plugin:
             composite.AddPlugin<WebMvcPlugin>();
-
-            // Call configure delegate on configuration if specified.
-            if (configure != null)
-            {
-                composite.InitPluginConfig(configure);
-            }
-            
             return composite;
         }
     }

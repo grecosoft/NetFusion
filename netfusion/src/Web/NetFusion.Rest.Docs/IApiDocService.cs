@@ -4,8 +4,7 @@ using NetFusion.Rest.Docs.Models;
 namespace NetFusion.Rest.Docs
 {
     /// <summary>
-    /// The main service for returning documentation for a specific
-    /// WebApi method.
+    /// The main service for returning documentation for a specific WebApi method.
     /// </summary>
     public interface IApiDocService
     {
@@ -22,7 +21,7 @@ namespace NetFusion.Rest.Docs
         /// </summary>
         /// <param name="relativePath">The URL associated with the WebApi method.</param>
         /// <param name="actionDoc">The documentation if found.</param>
-        /// <returns>True if documentation could be found.  Otherwise, False.</param>
+        /// <returns>True if documentation could be found.  Otherwise, False.</returns>
         bool TryGetActionDoc(string relativePath, out ApiActionDoc actionDoc);
     }
 }

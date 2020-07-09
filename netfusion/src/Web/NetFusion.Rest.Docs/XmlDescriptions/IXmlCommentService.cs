@@ -30,8 +30,8 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         /// Returns comments for a type.
         /// </summary>
         /// <param name="classType">The type for which comments are to be found.</param>
-        /// <returns><The comments associated with the type.  If not found, an empty
-        /// string is returned./returns>
+        /// <returns>The comments associated with the type.  If not found, an empty
+        /// string is returned.</returns>
         string GetTypeComments(Type classType);
 
         /// <summary>
