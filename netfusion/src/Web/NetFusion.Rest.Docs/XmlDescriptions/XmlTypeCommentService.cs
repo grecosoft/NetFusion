@@ -75,14 +75,14 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                     }
                     else
                     {
-                        propDoc.Type = BuildResourceDoc(itemType);
-                        propDoc.IsObject = true;
+                        propDoc.Type = itemType.GetJsTypeName();
+                        propDoc.ResourceDoc = BuildResourceDoc(itemType);
                     }
                 }
                 else if (propInfo.PropertyType.IsClass)
                 {
-                    propDoc.IsObject = true;
-                    propDoc.Type = BuildResourceDoc(propInfo.PropertyType);
+                    propDoc.Type = propInfo.PropertyType.GetJsTypeName();
+                    propDoc.ResourceDoc = BuildResourceDoc(propInfo.PropertyType);
                 }
                 
                 resourceDoc.Properties.Add(propDoc);

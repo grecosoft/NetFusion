@@ -52,8 +52,6 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             var (meta, ok) = mediaTypeEntry.GetResourceTypeMeta(resourceDoc.ResourceType);
             if (ok)
             {
-                var relationDocs = new List<ApiRelationDoc>();
-
                 foreach(ResourceLink resourceLink in meta.Links)
                 {
                     var relationDoc = new ApiRelationDoc
@@ -63,10 +61,8 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                     };
 
                     SetRelationInfo(relationDoc, (dynamic)resourceLink);
-                    relationDocs.Add(relationDoc);
+                    resourceDoc.RelationDocs.Add(relationDoc);
                 }
-
-                resourceDoc.RelationDocs = relationDocs.ToArray();
             }
 
             // Next check any embedded resources:

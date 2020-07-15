@@ -59,8 +59,8 @@ namespace WebTests.Rest.DocGeneration
             firstProp.Type.Should().Be("Number");
 
             secondProp.IsArray.Should().BeTrue();
-            secondProp.Type.Should().BeOfType<ApiResourceDoc>();
-            secondProp.IsObject.Should().BeTrue();
+            secondProp.ResourceDoc.Should().NotBeNull();
+            secondProp.Type.Should().Be("Object");
         }
 
         [Fact]
@@ -71,10 +71,10 @@ namespace WebTests.Rest.DocGeneration
 
             var objPropDoc = resourceDoc.Properties.FirstOrDefault(p => p.Name == "ThirdValue");
             objPropDoc.Should().NotBeNull();
-            objPropDoc.IsObject.Should().BeTrue();
-            objPropDoc.Type.Should().BeOfType<ApiResourceDoc>();
+            objPropDoc.ResourceDoc.Should().NotBeNull();
+            objPropDoc.Type.Should().Be("Object");
 
-            var childObjDoc = (ApiResourceDoc)objPropDoc.Type;
+            var childObjDoc = objPropDoc.ResourceDoc;
             childObjDoc.Properties.Should().NotBeNullOrEmpty();
             childObjDoc.Properties.Should().HaveCount(1);
 

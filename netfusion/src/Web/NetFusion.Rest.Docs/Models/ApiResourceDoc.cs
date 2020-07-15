@@ -26,12 +26,12 @@ namespace NetFusion.Rest.Docs.Models
         /// <summary>
         /// Documentation for child embedded named resources.
         /// </summary>
-        public ApiEmbeddedDoc[] EmbeddedResourceDocs { get; set; }
+        public ICollection<ApiEmbeddedDoc> EmbeddedResourceDocs { get; set; } = new List<ApiEmbeddedDoc>();
 
         /// <summary>
         /// Documentation for an link relations associated with the resource.
         /// </summary>
-        public ApiRelationDoc[] RelationDocs { get; set; }
+        public ICollection<ApiRelationDoc> RelationDocs { get; set; } = new List<ApiRelationDoc>();
 
         /// <summary>
         /// The resource type for which the documentation is associated.
