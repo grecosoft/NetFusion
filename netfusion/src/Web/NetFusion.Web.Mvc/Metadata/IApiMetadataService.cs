@@ -20,7 +20,7 @@ namespace NetFusion.Web.Mvc.Metadata
 
         ApiActionMeta GetActionMeta(MethodInfo methodInfo);
 
-        bool TryGetActionMeta(string relativePath, out ApiActionMeta actionMeta);
+        bool TryGetActionMeta(string httpMethod, string relativePath, out ApiActionMeta actionMeta);
         
         ApiActionMeta GetActionMeta<T>(string actionName, params Type[] paramTypes)
             where T : ControllerBase;

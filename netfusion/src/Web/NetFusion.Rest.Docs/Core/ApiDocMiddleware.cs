@@ -55,7 +55,7 @@ namespace NetFusion.Rest.Docs.Core
         {
             // Determine if the request matches the requirements for a query
             // used to request documentation for a specific Web Api.
-            if (! IsDocumentationRequest(httpContext, out string relativeDocPath))
+            if (! IsDocumentationRequest(httpContext, out string httpMethod, out string relativeDocPath))
             {
                 await _next(httpContext);
                 return;
@@ -63,7 +63,7 @@ namespace NetFusion.Rest.Docs.Core
             
             // If there is documentation for the requested Web Api route, return 
             // response containing the documentation.
-            if (apiDocService.TryGetActionDoc(relativeDocPath, out ApiActionDoc actionDoc))
+            if (apiDocService.TryGetActionDoc(httpMethod, relativeDocPath, out ApiActionDoc actionDoc))
             {
                 await RespondWithApiDoc(httpContext.Response, actionDoc);
                 return;
@@ -72,8 +72,9 @@ namespace NetFusion.Rest.Docs.Core
             httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
         }
         
-        private bool IsDocumentationRequest(HttpContext context, out string relativeDocPath)
+        private bool IsDocumentationRequest(HttpContext context, out string httpMethod, out string relativeDocPath)
         {
+            httpMethod = null;
             relativeDocPath = null;
             
             string path = context.Request.Path.Value;
@@ -81,15 +82,19 @@ namespace NetFusion.Rest.Docs.Core
             {
                 return false;
             }
-    
+
             IQueryCollection query = context.Request.Query;
+            if (query.TryGetValue("method", out var method) && !string.IsNullOrWhiteSpace(method))
+            {
+                httpMethod = method;
+            }
+
             if (query.TryGetValue("doc", out var url) && !string.IsNullOrWhiteSpace(url))
             {
                 relativeDocPath = url;
-                return true;
             }
 
-            return false;
+            return httpMethod != null && relativeDocPath != null;
         }
 
         private async Task RespondWithApiDoc(HttpResponse response, ApiActionDoc actionDoc)

@@ -22,6 +22,6 @@ namespace NetFusion.Rest.Docs
         /// <param name="relativePath">The URL associated with the WebApi method.</param>
         /// <param name="actionDoc">The documentation if found.</param>
         /// <returns>True if documentation could be found.  Otherwise, False.</returns>
-        bool TryGetActionDoc(string relativePath, out ApiActionDoc actionDoc);
+        bool TryGetActionDoc(string httpMethod, string relativePath, out ApiActionDoc actionDoc);
     }
 }

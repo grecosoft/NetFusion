@@ -58,13 +58,13 @@ namespace NetFusion.Rest.Docs.Core
             return actionDoc != null;
         }
 
-        public bool TryGetActionDoc(string relativePath, out ApiActionDoc actionDoc)
+        public bool TryGetActionDoc(string httpMethod, string relativePath, out ApiActionDoc actionDoc)
         {
             actionDoc = null;
 
             // Determines if there is metadata associated with the action method.
             // If metadata is found, builds an action document model from the metadata.
-            if (_apiMetadata.TryGetActionMeta(relativePath, out ApiActionMeta actionMeta))
+            if (_apiMetadata.TryGetActionMeta(httpMethod, relativePath, out ApiActionMeta actionMeta))
             {
                 actionDoc = BuildActionDoc(actionMeta);
             }

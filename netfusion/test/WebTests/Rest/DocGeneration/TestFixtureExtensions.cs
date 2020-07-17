@@ -34,7 +34,7 @@ namespace WebTests.Rest.DocGeneration
         }
 
         public static string GetDocUrl(this string actionUrl) =>
-            $"{new RestDocConfig().EndpointUrl}?doc={actionUrl}";
+            $"{new RestDocConfig().EndpointUrl}?method=get&doc={actionUrl}";
 
         public static async Task<ApiActionDoc> AsApiActionDocAsync(this HttpResponseMessage response)
         {
