@@ -33,7 +33,7 @@ namespace NetFusion.Rest.CodeGen.Plugin.Modules
 
         public override void RegisterDefaultServices(IServiceCollection services)
         {
-            services.AddSingleton<IApiCodeGenService, ApiCodeGenService>();
+            services.AddScoped<IApiCodeGenService, ApiCodeGenService>();
         }
 
         // Generates the Typescript for the models exposed by the Microservice's

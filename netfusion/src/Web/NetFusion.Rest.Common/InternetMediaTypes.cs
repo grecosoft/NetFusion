@@ -14,5 +14,10 @@
         /// application/hal+json
         /// </summary>
         public const string HalJson = "application/hal+json";
+
+        /// <summary>
+        /// text/plain
+        /// </summary>
+        public const string PlainText = "text/plain";
     }
 }

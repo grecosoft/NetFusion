@@ -18,6 +18,8 @@ namespace NetFusion.Rest.CodeGen.Plugin.Configs
         /// </summary>
         public bool IsGenerationDisabled { get; private set; } = false;
 
+        public string EndpointUrl { get; private set; } = "/api/net-fusion/rest";
+
         /// <summary>
         /// Specifies the directory to which code will be generated.
         /// </summary>
