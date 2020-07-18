@@ -1,5 +1,5 @@
 PACKAGES_DIR=../../_packages
-VERSION=9.9.31
+VERSION=9.9.33
 
 dotnet clean
 dotnet build NetFusion.sln
@@ -29,4 +29,5 @@ dotnet pack ./src/Web/NetFusion.Rest.Resources/NetFusion.Rest.Resources.csproj -
 dotnet pack ./src/Web/NetFusion.Rest.Server/NetFusion.Rest.Server.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Web/NetFusion.Rest.Client/NetFusion.Rest.Client.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Web/NetFusion.Rest.Docs/NetFusion.Rest.Docs.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
+dotnet pack ./src/Web/NetFusion.Rest.CodeGen/NetFusion.Rest.CodeGen.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 
