@@ -8,6 +8,10 @@ using NetFusion.Rest.Common;
 
 namespace NetFusion.Rest.CodeGen.Core
 {
+    /// <summary>
+    /// Middleware component added to the ASP.NET Pipeline exposing an endpoint
+    /// used to obtain a TypeScript for a correspond named resource.
+    /// </summary>
     public class ApiCodeGenMiddleware
     {
         private readonly RequestDelegate _next;
@@ -21,19 +25,18 @@ namespace NetFusion.Rest.CodeGen.Core
 
         public async Task Invoke(HttpContext httpContext, IApiCodeGenService apiCodeGenService)
         {
-            // If the request is not for a generate REST Api file,
-            // invoke the next request delegate in the pipline.
+            // If the request is not for generated TypeScript, invoke the next request delegate in the pipeline.
             if (! IsCodeGenRequest(httpContext, out string resourceName))
             {
                 await _next(httpContext);
                 return;
             }
 
-            // Since this is a request for a generated code file, determine if the
-            // file with the specified resource-name exists.
+            // Since this is a request for generated TypeScript, determine if the file with
+            // the specified resource-name exists.
             if (apiCodeGenService.TryGetResourceCodeFile(resourceName, out Stream stream))
             {
-                await RespondWithApiDoc(httpContext.Response, stream);
+                await RespondWithGeneratedCode(httpContext.Response, stream);
                 return;
             }
 
@@ -58,7 +61,8 @@ namespace NetFusion.Rest.CodeGen.Core
 
             return resourceName != null;
         }
-        private async Task RespondWithApiDoc(HttpResponse response, Stream stream)
+        
+        private static async Task RespondWithGeneratedCode(HttpResponse response, Stream stream)
         {
             response.StatusCode = StatusCodes.Status200OK;
             response.ContentType = InternetMediaTypes.PlainText;

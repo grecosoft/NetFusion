@@ -11,7 +11,7 @@ namespace WebTests.Rest.DocGeneration
 {
     public class DocGenerationTests
     {
-        // The comment, assocated with the action method, is specified as the description
+        // The comment, associated with the action method, is specified as the description
         // for the returned ApiActionDoc.
         [Fact]
         public Task DocsForWebApiMethodReturned()
@@ -50,15 +50,15 @@ namespace WebTests.Rest.DocGeneration
                     actionDoc.RouteParams.Should().NotBeNull()
                         .And.Subject.Should().HaveCount(2);
 
-                    var firstParm = actionDoc.RouteParams.ElementAt(0);
-                    firstParm.Name.Should().Be("p1");
-                    firstParm.Type.Should().Be("String");
-                    firstParm.Description.Should().Be("First parameter comment.");
+                    var firstParam = actionDoc.RouteParams.ElementAt(0);
+                    firstParam.Name.Should().Be("p1");
+                    firstParam.Type.Should().Be("String");
+                    firstParam.Description.Should().Be("First parameter comment.");
 
-                    var secondParm = actionDoc.RouteParams.ElementAt(1);
-                    secondParm.Name.Should().Be("p2");
-                    secondParm.Type.Should().Be("Number");
-                    secondParm.Description.Should().Be("Second parameter comment.");
+                    var secondParam = actionDoc.RouteParams.ElementAt(1);
+                    secondParam.Name.Should().Be("p2");
+                    secondParam.Type.Should().Be("Number");
+                    secondParam.Description.Should().Be("Second parameter comment.");
                 });
             });
         }
@@ -81,8 +81,7 @@ namespace WebTests.Rest.DocGeneration
                     actionDoc.RouteParams.Should().NotBeNull()
                         .And.Subject.Should().HaveCount(1);
 
-                    var paramWithDefault = actionDoc.RouteParams.FirstOrDefault(p => p.Name == "p1");
-                    paramWithDefault.Should().NotBeNull();
+                    var paramWithDefault = actionDoc.RouteParams.First(p => p.Name == "p1");
                     paramWithDefault.IsOptional.Should().BeTrue();
                     paramWithDefault.DefaultValue.Should().Be("100");
                 });
@@ -106,13 +105,11 @@ namespace WebTests.Rest.DocGeneration
                     actionDoc.HeaderParams.Should().NotBeEmpty();
                     actionDoc.HeaderParams.Should().HaveCount(2);
 
-                    var firstHeaderDoc = actionDoc.HeaderParams.FirstOrDefault(p => p.Name == "id");
-                    firstHeaderDoc.Should().NotBeNull();
+                    var firstHeaderDoc = actionDoc.HeaderParams.First(p => p.Name == "id");
                     firstHeaderDoc.Type.Should().Be("Number");
                     firstHeaderDoc.IsOptional.Should().BeFalse();
 
-                    var secondHeaderDoc = actionDoc.HeaderParams.FirstOrDefault(p => p.Name == "version");
-                    secondHeaderDoc.Should().NotBeNull();
+                    var secondHeaderDoc = actionDoc.HeaderParams.First(p => p.Name == "version");
                     secondHeaderDoc.Type.Should().Be("String");
                     secondHeaderDoc.IsOptional.Should().BeFalse();
 
@@ -138,11 +135,10 @@ namespace WebTests.Rest.DocGeneration
                     actionDoc.HeaderParams.Should().NotBeEmpty();
                     actionDoc.HeaderParams.Should().HaveCount(1);
 
-                    var headerParmDoc = actionDoc.HeaderParams.FirstOrDefault(p => p.Name == "version");
-                    headerParmDoc.Should().NotBeNull();
-                    headerParmDoc.Type.Should().Be("String");
-                    headerParmDoc.IsOptional.Should().BeTrue();
-                    headerParmDoc.DefaultValue.Should().Be("1.0.0");
+                    var headerParamDoc = actionDoc.HeaderParams.First(p => p.Name == "version");
+                    headerParamDoc.Type.Should().Be("String");
+                    headerParamDoc.IsOptional.Should().BeTrue();
+                    headerParamDoc.DefaultValue.Should().Be("1.0.0");
                 });
             });
         }
@@ -164,13 +160,11 @@ namespace WebTests.Rest.DocGeneration
                     actionDoc.QueryParams.Should().NotBeEmpty();
                     actionDoc.QueryParams.Should().HaveCount(2);
 
-                    var firstQueryDoc = actionDoc.QueryParams.FirstOrDefault(p => p.Name == "key");
-                    firstQueryDoc.Should().NotBeNull();
+                    var firstQueryDoc = actionDoc.QueryParams.First(p => p.Name == "key");
                     firstQueryDoc.Type.Should().Be("Number");
                     firstQueryDoc.IsOptional.Should().BeFalse();
 
-                    var secondQueryDoc = actionDoc.QueryParams.FirstOrDefault(p => p.Name == "unit");
-                    secondQueryDoc.Should().NotBeNull();
+                    var secondQueryDoc = actionDoc.QueryParams.First(p => p.Name == "unit");
                     secondQueryDoc.Type.Should().Be("String");
                     secondQueryDoc.IsOptional.Should().BeFalse();
 
@@ -195,14 +189,12 @@ namespace WebTests.Rest.DocGeneration
 
                     actionDoc.QueryParams.Should().NotBeEmpty();
     
-                    var firstQueryDoc = actionDoc.QueryParams.FirstOrDefault(p => p.Name == "version");
-                    firstQueryDoc.Should().NotBeNull();
+                    var firstQueryDoc = actionDoc.QueryParams.First(p => p.Name == "version");
                     firstQueryDoc.Type.Should().Be("String");
                     firstQueryDoc.IsOptional.Should().BeTrue();
                     firstQueryDoc.DefaultValue.Should().Be("9.0.0");
 
-                    var secondQueryDoc = actionDoc.QueryParams.FirstOrDefault(p => p.Name == "rating");
-                    secondQueryDoc.Should().NotBeNull();
+                    var secondQueryDoc = actionDoc.QueryParams.First(p => p.Name == "rating");
                     secondQueryDoc.Type.Should().Be("Number");
                     firstQueryDoc.IsOptional.Should().BeTrue();
                 });
@@ -269,20 +261,20 @@ namespace WebTests.Rest.DocGeneration
                     actionDoc.ResponseDocs.Should().HaveCount(2);
 
                     var firstRespDoc = actionDoc.ResponseDocs
-                        .FirstOrDefault(rd => rd.ResourceDoc.ResourceName == typeof(TestResponseModel).GetExposedResourceName());
+                        .First(rd => rd.ResourceDoc.ResourceName == typeof(TestResponseModel).GetExposedResourceName());
 
                     firstRespDoc.Status.Should().Be(StatusCodes.Status200OK);
 
                     var secondRespDoc = actionDoc.ResponseDocs
-                        .FirstOrDefault(rd => rd.ResourceDoc.ResourceName == typeof(TestCreatedResponseModel).GetExposedResourceName());
+                        .First(rd => rd.ResourceDoc.ResourceName == typeof(TestCreatedResponseModel).GetExposedResourceName());
 
                     secondRespDoc.Status.Should().Be(StatusCodes.Status201Created);
                 });
             });
         }
 
-        // An API can specify which resources will be embeeded within a parent resource.  When a resource
-        // has an embeddedresource, the resource document will have its embedded-resources collection populated.
+        // An API can specify which resources will be embedded within a parent resource.  When a resource
+        // has an embedded resource, the resource document will have its embedded-resources collection populated.
         [Fact]
         public Task DocsForEmbeddedResourceReturned()
         {
@@ -296,13 +288,11 @@ namespace WebTests.Rest.DocGeneration
                 {
                     var actionDoc = await response.AsApiActionDocAsync();
 
-                    var responseDoc = actionDoc.ResponseDocs.FirstOrDefault();
-                    responseDoc.Should().NotBeNull();
+                    var responseDoc = actionDoc.ResponseDocs.First();
                     responseDoc.ResourceDoc.ResourceName.Should().Be(typeof(RootResponseModel).GetExposedResourceName());
                     responseDoc.ResourceDoc.EmbeddedResourceDocs.Should().HaveCount(1);
 
-                    var embeddedResDoc = responseDoc.ResourceDoc.EmbeddedResourceDocs.FirstOrDefault();
-                    embeddedResDoc.Should().NotBeNull();
+                    var embeddedResDoc = responseDoc.ResourceDoc.EmbeddedResourceDocs.First();
                     embeddedResDoc.EmbeddedName.Should().Be("embedded-model");
                     embeddedResDoc.IsCollection.Should().BeFalse();
                     embeddedResDoc.ResourceDoc.Should().NotBeNull();
@@ -327,8 +317,7 @@ namespace WebTests.Rest.DocGeneration
                     var actionDoc = await response.AsApiActionDocAsync();
                     var responseDoc = actionDoc.ResponseDocs.First();
 
-                    var embeddedResDoc = responseDoc.ResourceDoc.EmbeddedResourceDocs.FirstOrDefault();
-                    embeddedResDoc.Should().NotBeNull();
+                    var embeddedResDoc = responseDoc.ResourceDoc.EmbeddedResourceDocs.First();
                     embeddedResDoc.EmbeddedName.Should().Be("embedded-models");
                     embeddedResDoc.IsCollection.Should().BeTrue();
                     embeddedResDoc.ResourceDoc.Should().NotBeNull();
@@ -383,13 +372,13 @@ namespace WebTests.Rest.DocGeneration
                 await webResponse.Assert.HttpResponseAsync(async response =>
                 {
                     var actionDoc = await response.AsApiActionDocAsync();
-                    var embeddedRelationDoc = actionDoc.ResponseDocs.FirstOrDefault()?
-                        .ResourceDoc?
-                        .EmbeddedResourceDocs?
-                        .FirstOrDefault()?
-                        .ResourceDoc?
-                        .RelationDocs?
-                        .FirstOrDefault();
+                    var embeddedRelationDoc = actionDoc.ResponseDocs.First()
+                        .ResourceDoc
+                        .EmbeddedResourceDocs
+                        .First()
+                        .ResourceDoc
+                        .RelationDocs
+                        .First();
 
                     embeddedRelationDoc.Should().NotBeNull();
 

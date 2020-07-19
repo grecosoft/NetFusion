@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using NetFusion.Rest.Common;
 using NetFusion.Rest.Docs.Core.Description;

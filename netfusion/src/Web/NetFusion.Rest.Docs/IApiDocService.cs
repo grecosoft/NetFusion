@@ -19,6 +19,7 @@ namespace NetFusion.Rest.Docs
         /// <summary>
         /// Returns documentation for a WebApi method.
         /// </summary>
+        /// <param name="httpMethod">The method associated with the WebApi method.</param>
         /// <param name="relativePath">The URL associated with the WebApi method.</param>
         /// <param name="actionDoc">The documentation if found.</param>
         /// <returns>True if documentation could be found.  Otherwise, False.</returns>

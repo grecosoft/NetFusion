@@ -14,11 +14,11 @@ namespace NetFusion.Rest.CodeGen.Plugin
 
         public CodeGenPlugin()
         {
-     
             AddConfig<RestCodeGenConfig>();
             AddModule<CodeGenModule>();
 
-            Description = "Plugin implementing management and querying of REST/HAL API documentation";
+            Description = "Plugin implementing access to generated TypeScript classes corresponding" +
+                          "the the C# classes from which the REST Api's are composed.";
             
             SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/netfusion/src/Web/NetFusion.Rest.CodeGen";
             DocUrl = "https://github.com/grecosoft/NetFusion/wiki";

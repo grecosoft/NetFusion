@@ -6,6 +6,10 @@ using System.Collections.Generic;
 
 namespace NetFusion.Rest.CodeGen.Core
 {
+    /// <summary>
+    /// Spec file for TypeGen Nuget used to determine the C# classes
+    /// for which TypeScript files should be generated.
+    /// </summary>
     public class ResourceGenerationSpec : GenerationSpec
     {
         private readonly IEnumerable<Type> _resourceTypes;
@@ -17,7 +21,7 @@ namespace NetFusion.Rest.CodeGen.Core
 
         public override void OnBeforeGeneration(OnBeforeGenerationArgs args)
         {
-            args.GeneratorOptions.FileHeading = "";
+            args.GeneratorOptions.FileHeading = string.Empty;
 
             args.GeneratorOptions.FileNameConverters.Add(new FileNameConverter());
             args.GeneratorOptions.TypeNameConverters.Add(new TypeNameConverter());

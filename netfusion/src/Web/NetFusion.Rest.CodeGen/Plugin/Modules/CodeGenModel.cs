@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +14,11 @@ using TypeGen.Core.Generator;
 
 namespace NetFusion.Rest.CodeGen.Plugin.Modules
 {
+    /// <summary>
+    /// Plugin module called during the bootstrap process.  This module generates TypeScript
+    /// classes for all WebApi models marked with ExposedNameAttribute.  These models represent
+    /// the data returned and sent to WebApi methods used by web-based clients.
+    /// </summary>
     public class CodeGenModule : PluginModule,
         ICodeGenModule
     {
@@ -23,9 +30,12 @@ namespace NetFusion.Rest.CodeGen.Plugin.Modules
             CodeGenConfig = Context.Plugin.GetConfig<RestCodeGenConfig>();
             if (CodeGenConfig.IsGenerationDisabled)
             {
+                _resourceTypes = new Type[] { };
                 return;
             }
 
+            // Any application centric types marked with the ExposedName Attribute
+            // are considered part of the Microservice's public API.
             _resourceTypes = Context.AllAppPluginTypes
                 .Where(t => t.HasAttribute<ExposedNameAttribute>())
                 .ToArray();
@@ -41,10 +51,18 @@ namespace NetFusion.Rest.CodeGen.Plugin.Modules
         // client when viewing a given API's documentation.
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {
+            if (CodeGenConfig.IsGenerationDisabled)
+            {
+                Context.Logger.LogWarning("TypeScript code generation is disabled.");
+                return base.OnRunModuleAsync(services);
+            }
+            
+            Context.Logger.LogInformation("Generating TypeScript for Microservice REST API.");
+            
             try
             {
-                Context.Logger.LogInformation("Generating TypeScript for Microservice REST API.");
-
+                DeleteExistingGeneratedFiles();
+                
                 var codeGenerator = new Generator(new GeneratorOptions {
                     BaseOutputDirectory = CodeGenConfig.CodeGenerationDirectory });
 
@@ -61,6 +79,25 @@ namespace NetFusion.Rest.CodeGen.Plugin.Modules
             }
 
             return base.OnStartModuleAsync(services);
+        }
+
+        private void DeleteExistingGeneratedFiles()
+        {
+            if (Directory.Exists(CodeGenConfig.CodeGenerationDirectory))
+            {
+                Directory.Delete(CodeGenConfig.CodeGenerationDirectory, true);
+            }
+        }
+
+        public override void Log(IDictionary<string, object> moduleLog)
+        {
+            moduleLog["Disabled"] = CodeGenConfig.IsGenerationDisabled;
+            moduleLog["OutputDirectory"] = CodeGenConfig.CodeGenerationDirectory;
+            moduleLog["Resources"] = _resourceTypes.Select(rt => new
+            {
+                ExposedResourceName = rt.GetExposedResourceName(),
+                ImplementationType = rt.FullName
+            }).ToArray();
         }
     }
 }

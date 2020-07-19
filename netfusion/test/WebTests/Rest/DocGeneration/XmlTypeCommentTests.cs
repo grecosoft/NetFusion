@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using FluentAssertions;
-using NetFusion.Rest.Docs.Models;
 using WebTests.Rest.DocGeneration.Mocks;
 using Xunit;
 
@@ -25,13 +24,11 @@ namespace WebTests.Rest.DocGeneration
             resourceDoc.Properties.Should().NotBeNullOrEmpty();
             resourceDoc.Properties.Should().HaveCount(3);
 
-            var firstPropDoc = resourceDoc.Properties.FirstOrDefault(p => p.Name == "FirstValue");
-            firstPropDoc.Should().NotBeNull();
+            var firstPropDoc = resourceDoc.Properties.First(p => p.Name == "FirstValue");
             firstPropDoc.Description.Should().Be("Example string property comment.");
             firstPropDoc.Type.Should().BeOfType<string>().And.Subject.Should().Be("String");
 
-            var secondPropDoc = resourceDoc.Properties.FirstOrDefault(p => p.Name == "SecondValue");
-            secondPropDoc.Should().NotBeNull();
+            var secondPropDoc = resourceDoc.Properties.First(p => p.Name == "SecondValue");
             secondPropDoc.Description.Should().Be("Example integer string property.");
             secondPropDoc.Type.Should().BeOfType<string>().And.Subject.Should().Be("Number");
         }
@@ -40,20 +37,20 @@ namespace WebTests.Rest.DocGeneration
         public void TypeMemberRequiredIndicator_SetOnDocModel()
         {
             var resourceDoc = XmlTypeCommentMock.Arrange.GetResourceDoc(typeof(RequiredTestResource));
-            resourceDoc.Properties.FirstOrDefault(p => p.Name == "FirstValue").IsRequired.Should().BeFalse();
-            resourceDoc.Properties.FirstOrDefault(p => p.Name == "SecondValue").IsRequired.Should().BeTrue();
-            resourceDoc.Properties.FirstOrDefault(p => p.Name == "ThirdValue").IsRequired.Should().BeTrue();
-            resourceDoc.Properties.FirstOrDefault(p => p.Name == "ForthValue").IsRequired.Should().BeFalse();
-            resourceDoc.Properties.FirstOrDefault(p => p.Name == "FifthValue").IsRequired.Should().BeTrue();
-            resourceDoc.Properties.FirstOrDefault(p => p.Name == "SixthValue").IsRequired.Should().BeFalse();
+            resourceDoc.Properties.First(p => p.Name == "FirstValue").IsRequired.Should().BeFalse();
+            resourceDoc.Properties.First(p => p.Name == "SecondValue").IsRequired.Should().BeTrue();
+            resourceDoc.Properties.First(p => p.Name == "ThirdValue").IsRequired.Should().BeTrue();
+            resourceDoc.Properties.First(p => p.Name == "ForthValue").IsRequired.Should().BeFalse();
+            resourceDoc.Properties.First(p => p.Name == "FifthValue").IsRequired.Should().BeTrue();
+            resourceDoc.Properties.First(p => p.Name == "SixthValue").IsRequired.Should().BeFalse();
         }
 
         [Fact]
         public void TypeMember_CanBeOf_ArrayType()
         {
             var resourceDoc = XmlTypeCommentMock.Arrange.GetResourceDoc(typeof(ArrayTestResource));
-            var firstProp = resourceDoc.Properties.FirstOrDefault(p => p.Name == "FirstValue");
-            var secondProp = resourceDoc.Properties.FirstOrDefault(p => p.Name == "SecondValue");
+            var firstProp = resourceDoc.Properties.First(p => p.Name == "FirstValue");
+            var secondProp = resourceDoc.Properties.First(p => p.Name == "SecondValue");
 
             firstProp.IsArray.Should().BeTrue();
             firstProp.Type.Should().Be("Number");
@@ -69,8 +66,7 @@ namespace WebTests.Rest.DocGeneration
             var resourceDoc = XmlTypeCommentMock.Arrange.GetResourceDoc(typeof(TestResource));
             resourceDoc.Properties.Should().HaveCount(3);
 
-            var objPropDoc = resourceDoc.Properties.FirstOrDefault(p => p.Name == "ThirdValue");
-            objPropDoc.Should().NotBeNull();
+            var objPropDoc = resourceDoc.Properties.First(p => p.Name == "ThirdValue");
             objPropDoc.ResourceDoc.Should().NotBeNull();
             objPropDoc.Type.Should().Be("Object");
 
@@ -78,7 +74,7 @@ namespace WebTests.Rest.DocGeneration
             childObjDoc.Properties.Should().NotBeNullOrEmpty();
             childObjDoc.Properties.Should().HaveCount(1);
 
-            var childObjPropDoc = childObjDoc.Properties.FirstOrDefault(p => p.Name == "FirstValue");
+            var childObjPropDoc = childObjDoc.Properties.First(p => p.Name == "FirstValue");
             childObjPropDoc.Should().NotBeNull();
             childObjPropDoc.Description.Should().Be("Example property of datetime.");
         }
