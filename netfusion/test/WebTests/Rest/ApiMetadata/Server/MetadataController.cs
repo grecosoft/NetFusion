@@ -23,6 +23,14 @@ namespace WebTests.Rest.ApiMetadata.Server
         [HttpGet("metadata-scenario-3/{id}/{v1?}/{v2?}")]
         public IActionResult OptionalRouteParamsWithDefaults(int id, int? v1 = 100, string v2 = "abc") => Ok();
 
+        [HttpPost("metadata-scenario-4/{id}")]
+        public IActionResult RouteParamWithPostBody(int id, [FromBody]MetaBodyPost data) => Ok();
+
+        [HttpPost("metadata-scenario-5/{id}")]
+        public IActionResult ActionObjectPropertySources(int id, 
+            [FromQuery]QueryParamSource queries,
+            [FromHeader]HeaderParamSource headers) => Ok();
+
         //-- Controller actions for testing Header Parameters:
         
         [HttpGet("metadata-scenario-10")]
@@ -72,7 +80,5 @@ namespace WebTests.Rest.ApiMetadata.Server
          ProducesResponseType(typeof(ResponseModel), StatusCodes.Status200OK),
          ProducesResponseType(typeof(ResponseModel), StatusCodes.Status418ImATeapot)]
         public IActionResult ActionWithStatusCodesWithSameResponseType() => Ok();
-        
-        
     }
 }

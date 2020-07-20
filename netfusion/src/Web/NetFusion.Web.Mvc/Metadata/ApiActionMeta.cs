@@ -57,6 +57,8 @@ namespace NetFusion.Web.Mvc.Metadata
         /// </summary>
         public ApiParameterMeta[] QueryParameters { get; }
         
+        public ApiParameterMeta[] BodyParameters { get; }
+        
         public ApiResponseMeta[] ResponseMeta { get; private set; }
 
         private readonly ApiDescription _apiDescription;
@@ -70,6 +72,7 @@ namespace NetFusion.Web.Mvc.Metadata
             RouteParameters = GetActionParameters(description.ActionDescriptor, BindingSource.Path);
             HeaderParameters = GetActionParameters(description.ActionDescriptor, BindingSource.Header);
             QueryParameters = GetActionParameters(description.ActionDescriptor, BindingSource.Query);
+            BodyParameters = GetActionParameters(description.ActionDescriptor, BindingSource.Body);
 
             SetActionMeta(description);
             SetActionResponseMeta(description);

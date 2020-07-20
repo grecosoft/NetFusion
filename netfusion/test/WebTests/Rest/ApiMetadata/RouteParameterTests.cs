@@ -37,6 +37,8 @@ namespace WebTests.Rest.ApiMetadata
                     RequiredRouteParams(service);
                     OptionalRouteParams(service);
                     OptionalRouteParamsWithDefaults(service);
+                    RouteParamPopulatedFromBodyPost(service);
+                    ActionParamsPopulatedFromObjectProperties(service);
                 });
             });
         }
@@ -68,6 +70,25 @@ namespace WebTests.Rest.ApiMetadata
             actionMetadata.RouteParameters.AssertParamMeta<int>("id");
             actionMetadata.RouteParameters.AssertParamMeta<int?>("v1", true, 100);
             actionMetadata.RouteParameters.AssertParamMeta<string>("v2", true, "abc");
+        }
+
+        private static void RouteParamPopulatedFromBodyPost(IApiMetadataService apiMetadata)
+        {
+            var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
+                "RouteParamWithPostBody", typeof(int), typeof(MetaBodyPost));
+            
+            actionMetadata.RouteParameters.AssertParamMeta<int>("id");
+            actionMetadata.BodyParameters.AssertParamMeta<MetaBodyPost>("data");
+        }
+
+        private static void ActionParamsPopulatedFromObjectProperties(IApiMetadataService apiMetadata)
+        {
+            var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
+                "ActionObjectPropertySources", typeof(int), typeof(QueryParamSource), typeof(HeaderParamSource));
+            
+            actionMetadata.RouteParameters.AssertParamMeta<int>("id");
+            actionMetadata.QueryParameters.AssertParamMeta<QueryParamSource>("queries");
+            actionMetadata.HeaderParameters.AssertParamMeta<HeaderParamSource>("headers");
         }
     }
 }
