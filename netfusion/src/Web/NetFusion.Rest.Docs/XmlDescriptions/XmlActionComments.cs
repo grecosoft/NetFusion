@@ -41,7 +41,7 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             {
                 var paramDoc = new ApiParameterDoc
                 {
-                    Name = paramMeta.BindingName,
+                    Name = paramMeta.ParameterName,
                     IsOptional = paramMeta.IsOptional,
                     DefaultValue = paramMeta.DefaultValue?.ToString(),
                     Type = paramMeta.ParameterType.GetJsTypeName()

@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using NetFusion.Rest.Client;
@@ -84,11 +85,13 @@ namespace WebTests.Rest.ApiMetadata
         private static void ActionParamsPopulatedFromObjectProperties(IApiMetadataService apiMetadata)
         {
             var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
-                "ActionObjectPropertySources", typeof(int), typeof(QueryParamSource), typeof(HeaderParamSource));
+                "ActionObjectPropertySources", typeof(int), typeof(HeaderParamSource), typeof(QueryParamSource));
             
             actionMetadata.RouteParameters.AssertParamMeta<int>("id");
-            actionMetadata.QueryParameters.AssertParamMeta<QueryParamSource>("queries");
-            actionMetadata.HeaderParameters.AssertParamMeta<HeaderParamSource>("headers");
+            actionMetadata.QueryParameters.AssertParamMeta<string>("Filter");
+            actionMetadata.QueryParameters.AssertParamMeta<string>("Version");
+            actionMetadata.HeaderParameters.AssertParamMeta<string>("ClientId");
+            actionMetadata.HeaderParameters.AssertParamMeta<DateTime>("AsOfDate");
         }
     }
 }

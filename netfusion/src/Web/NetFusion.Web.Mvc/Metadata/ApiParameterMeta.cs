@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace NetFusion.Web.Mvc.Metadata
@@ -18,11 +19,6 @@ namespace NetFusion.Web.Mvc.Metadata
         /// The type of the parameter expected by the controller's action.
         /// </summary>
         public Type ParameterType { get; }
-        
-        /// <summary>
-        /// The name used by the caller to bind a value to the parameter.
-        /// </summary>
-        public string BindingName { get; }
 
         /// <summary>
         /// Determines if the route parameter is optional and a value need not specified.
@@ -34,19 +30,24 @@ namespace NetFusion.Web.Mvc.Metadata
         /// </summary>
         public object DefaultValue { get; }
 
-        public ApiParameterMeta(ControllerParameterDescriptor descriptor)
+        public ApiParameterMeta(ApiParameterDescription apiParameterDescription)
         {
-            if (descriptor == null) throw new ArgumentNullException(nameof(descriptor));
+            if (apiParameterDescription == null) throw new ArgumentNullException(nameof(apiParameterDescription));
             
-            ParameterName = descriptor.Name;
-            ParameterType = descriptor.ParameterType;
-            BindingName = descriptor.BindingInfo.BinderModelName ?? ParameterName;
-            IsOptional = descriptor.ParameterInfo.IsOptional;
+            if (!(apiParameterDescription.ParameterDescriptor is ControllerParameterDescriptor paramDescriptor))
+            {
+                throw new InvalidCastException(
+                    $"Expected ParameterDescriptor derived type of: {typeof(ControllerParameterDescriptor)}");
+            }
+            
+            ParameterName = apiParameterDescription.Name;
+            ParameterType = apiParameterDescription.Type;
+            IsOptional = paramDescriptor.ParameterInfo.IsOptional;
 
-            object defaultValue = descriptor.ParameterInfo.DefaultValue ?? DBNull.Value;
+            object defaultValue = paramDescriptor.ParameterInfo.DefaultValue ?? DBNull.Value;
             if (defaultValue.GetType() != typeof(DBNull))
             {
-                DefaultValue = descriptor.ParameterInfo.DefaultValue;
+                DefaultValue = paramDescriptor.ParameterInfo.DefaultValue;
             }
         }
     }

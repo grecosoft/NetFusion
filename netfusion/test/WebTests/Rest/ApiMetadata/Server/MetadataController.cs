@@ -27,9 +27,9 @@ namespace WebTests.Rest.ApiMetadata.Server
         public IActionResult RouteParamWithPostBody(int id, [FromBody]MetaBodyPost data) => Ok();
 
         [HttpPost("metadata-scenario-5/{id}")]
-        public IActionResult ActionObjectPropertySources(int id, 
-            [FromQuery]QueryParamSource queries,
-            [FromHeader]HeaderParamSource headers) => Ok();
+        public IActionResult ActionObjectPropertySources(int id,
+            [FromQuery]HeaderParamSource headers,
+            [FromQuery]QueryParamSource queries) => Ok();
 
         //-- Controller actions for testing Header Parameters:
         

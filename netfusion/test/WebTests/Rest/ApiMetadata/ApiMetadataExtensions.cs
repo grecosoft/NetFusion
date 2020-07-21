@@ -12,7 +12,7 @@ namespace WebTests.Rest.ApiMetadata
             bool isOptional = false, 
             object defaultValue = null)
         {
-            var paramMeta = paramsMeta.Single(p => p.BindingName == name);
+            var paramMeta = paramsMeta.Single(p => p.ParameterName == name);
             paramMeta.Should().NotBeNull();
             paramMeta.IsOptional.Should().Be(isOptional);
             paramMeta.ParameterType.Should().Be(typeof(T));

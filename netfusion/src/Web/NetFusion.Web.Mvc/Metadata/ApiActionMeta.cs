@@ -63,19 +63,21 @@ namespace NetFusion.Web.Mvc.Metadata
 
         private readonly ApiDescription _apiDescription;
 
-        public ApiActionMeta(ApiDescription description)
+        public ApiActionMeta(ApiDescription apiDescription)
         {
-            _apiDescription = description ?? throw new ArgumentNullException(nameof(description));
+            _apiDescription = apiDescription ?? throw new ArgumentNullException(nameof(apiDescription));
             
-            RelativePath = description.RelativePath;
-            HttpMethod  = description.HttpMethod;
-            RouteParameters = GetActionParameters(description.ActionDescriptor, BindingSource.Path);
-            HeaderParameters = GetActionParameters(description.ActionDescriptor, BindingSource.Header);
-            QueryParameters = GetActionParameters(description.ActionDescriptor, BindingSource.Query);
-            BodyParameters = GetActionParameters(description.ActionDescriptor, BindingSource.Body);
-
-            SetActionMeta(description);
-            SetActionResponseMeta(description);
+            SetActionMeta(apiDescription);
+            
+            RelativePath = apiDescription.RelativePath;
+            HttpMethod  = apiDescription.HttpMethod;
+            
+            RouteParameters = GetActionParameters(apiDescription, BindingSource.Path);
+            HeaderParameters = GetActionParameters(apiDescription, BindingSource.Header);
+            QueryParameters = GetActionParameters(apiDescription, BindingSource.Query);
+            BodyParameters = GetActionParameters(apiDescription, BindingSource.Body);
+            
+            SetActionResponseMeta(apiDescription);
         }
 
         public IEnumerable<T> GetFilterMetadata<T>()
@@ -110,10 +112,10 @@ namespace NetFusion.Web.Mvc.Metadata
             }
         }
 
-        private static ApiParameterMeta[] GetActionParameters(ActionDescriptor actionDescriptor, BindingSource source) 
+        private static ApiParameterMeta[] GetActionParameters(ApiDescription apiDescription, BindingSource source)
         {
-            return actionDescriptor.Parameters.OfType<ControllerParameterDescriptor>()
-                .Where(p => p.BindingInfo.BindingSource == source)
+            return apiDescription.ParameterDescriptions
+                .Where(p => p.Source == source)
                 .Select(p => new ApiParameterMeta(p))
                 .ToArray(); 
         }
