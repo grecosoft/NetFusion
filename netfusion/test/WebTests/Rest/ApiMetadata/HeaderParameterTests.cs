@@ -1,11 +1,5 @@
-using System.Net.Http;
 using System.Threading.Tasks;
-using NetFusion.Rest.Client;
-using NetFusion.Rest.Client.Settings;
-using NetFusion.Web.Mvc.Metadata;
-using WebTests.Hosting;
 using WebTests.Rest.ApiMetadata.Server;
-using WebTests.Rest.Setup;
 using Xunit;
 
 namespace WebTests.Rest.ApiMetadata
@@ -17,55 +11,42 @@ namespace WebTests.Rest.ApiMetadata
     public class HeaderParameterTests
     {
         [Fact]
-        public Task ApiMetadata_RouterParams_Populated()
+        public Task RequiredHeaderParams()
         {
-            var mockResource = new MetaResource { Id = 10 };
-            
-            return WebHostFixture.TestAsync<MetadataController>(async host =>
+            return TestApiMetadata.Run(metadata =>
             {
-                var webResponse = await host
-                    .ArrangeWithDefaults(mockResource)
-                    .Act.OnRestClient(async client =>
-                    {             
-                        var request = ApiRequest.Create("api/documented/actions", HttpMethod.Get);
-                        request.UseHalDefaults();
-                        return await client.SendAsync(request);
-                    });
+                var actionMetadata = metadata.GetActionMeta<MetadataController>(
+                    "RequiredHeaderParams", typeof(int), typeof(string));
 
-                webResponse.Assert.Service((IApiMetadataService service) =>
-                {
-                    RequiredHeaderParams(service);
-                    OptionalHeaderParams(service);
-                    OptionalHeaderParamsWithDefaults(service);
-                });
+                actionMetadata.HeaderParameters.AssertParamMeta<int>("header-value1");
+                actionMetadata.HeaderParameters.AssertParamMeta<string>("header-value2");
             });
         }
         
-        private static void RequiredHeaderParams(IApiMetadataService apiMetadata)
+        [Fact]
+        public Task OptionalHeaderParams()
         {
-            var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
-                "RequiredHeaderParams", typeof(int), typeof(string));
+            return TestApiMetadata.Run(metadata =>
+            {
+                var actionMetadata = metadata.GetActionMeta<MetadataController>(
+                    "OptionalHeaderParams", typeof(int), typeof(string));
 
-            actionMetadata.HeaderParameters.AssertParamMeta<int>("header-value1");
-            actionMetadata.HeaderParameters.AssertParamMeta<string>("header-value2");
+                actionMetadata.HeaderParameters.AssertParamMeta<int?>("header-value1", true);
+                actionMetadata.HeaderParameters.AssertParamMeta<string>("header-value2", true);
+            });
         }
         
-        private static void OptionalHeaderParams(IApiMetadataService apiMetadata)
+        [Fact]
+        public Task OptionalHeaderParamsWithDefaults()
         {
-            var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
-                "OptionalHeaderParams", typeof(int), typeof(string));
+            return TestApiMetadata.Run(metadata =>
+            {
+                var actionMetadata = metadata.GetActionMeta<MetadataController>(
+                    "OptionalHeaderParamsWithDefaults", typeof(int), typeof(string));
 
-            actionMetadata.HeaderParameters.AssertParamMeta<int?>("header-value1", true);
-            actionMetadata.HeaderParameters.AssertParamMeta<string>("header-value2", true);
-        }
-        
-        private static void OptionalHeaderParamsWithDefaults(IApiMetadataService apiMetadata)
-        {
-            var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
-                "OptionalHeaderParamsWithDefaults", typeof(int), typeof(string));
-
-            actionMetadata.HeaderParameters.AssertParamMeta<int?>("header-value1", true, 100);
-            actionMetadata.HeaderParameters.AssertParamMeta<string>("header-value2", true, "abc");
+                actionMetadata.HeaderParameters.AssertParamMeta<int?>("header-value1", true, 100);
+                actionMetadata.HeaderParameters.AssertParamMeta<string>("header-value2", true, "abc");
+            });
         }
     }
 }

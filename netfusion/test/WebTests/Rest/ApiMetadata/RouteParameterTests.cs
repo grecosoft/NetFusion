@@ -1,12 +1,6 @@
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
-using NetFusion.Rest.Client;
-using NetFusion.Rest.Client.Settings;
-using NetFusion.Web.Mvc.Metadata;
-using WebTests.Hosting;
 using WebTests.Rest.ApiMetadata.Server;
-using WebTests.Rest.Setup;
 using Xunit;
 
 namespace WebTests.Rest.ApiMetadata
@@ -18,80 +12,73 @@ namespace WebTests.Rest.ApiMetadata
     public class RouteParameterTests
     {
         [Fact]
-        public Task ApiMetadata_RouterParams_Populated()
+        public Task RequiredRouteParams()
         {
-            var mockResource = new MetaResource { Id = 10 };
-            
-            return WebHostFixture.TestAsync<MetadataController>(async host =>
+            return TestApiMetadata.Run(metadata =>
             {
-                var webResponse = await host
-                    .ArrangeWithDefaults(mockResource)
-                    .Act.OnRestClient(async client =>
-                    {             
-                        var request = ApiRequest.Create("api/documented/actions", HttpMethod.Get);
-                        request.UseHalDefaults();
-                        return await client.SendAsync(request);
-                    });
-
-                webResponse.Assert.Service((IApiMetadataService service) =>
-                {
-                    RequiredRouteParams(service);
-                    OptionalRouteParams(service);
-                    OptionalRouteParamsWithDefaults(service);
-                    RouteParamPopulatedFromBodyPost(service);
-                    ActionParamsPopulatedFromObjectProperties(service);
-                });
+                var actionMetadata = metadata.GetActionMeta<MetadataController>(
+                    "RequiredRouteParams", typeof(int), typeof(string));
+            
+                actionMetadata.RouteParameters.AssertParamMeta<int>("id");
+                actionMetadata.RouteParameters.AssertParamMeta<string>("v1");
             });
         }
-        
-        private static void RequiredRouteParams(IApiMetadataService apiMetadata)
-        {
-            var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
-                "RequiredRouteParams", typeof(int), typeof(string));
-            
-            actionMetadata.RouteParameters.AssertParamMeta<int>("id");
-            actionMetadata.RouteParameters.AssertParamMeta<string>("v1");
-        }
 
-        private static void OptionalRouteParams(IApiMetadataService apiMetadata)
+        [Fact]
+        public Task OptionalRouteParams()
         {
-            var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
-                "OptionalRouteParams", typeof(int), typeof(int?), typeof(string));
+            return TestApiMetadata.Run(metadata =>
+            {
+                var actionMetadata = metadata.GetActionMeta<MetadataController>(
+                    "OptionalRouteParams", typeof(int), typeof(int?), typeof(string));
                 
-            actionMetadata.RouteParameters.AssertParamMeta<int>("id");
-            actionMetadata.RouteParameters.AssertParamMeta<int?>("v1", true);
-            actionMetadata.RouteParameters.AssertParamMeta<string>("v2", true);
+                actionMetadata.RouteParameters.AssertParamMeta<int>("id");
+                actionMetadata.RouteParameters.AssertParamMeta<int?>("v1", true);
+                actionMetadata.RouteParameters.AssertParamMeta<string>("v2", true);
+            });
         }
             
-        private static void OptionalRouteParamsWithDefaults(IApiMetadataService apiMetadata)
+        [Fact]
+        public Task OptionalRouteParamsWithDefaults()
         {
-            var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
-                "OptionalRouteParamsWithDefaults", typeof(int), typeof(int?), typeof(string));
+            return TestApiMetadata.Run(metadata =>
+            {
+                var actionMetadata = metadata.GetActionMeta<MetadataController>(
+                    "OptionalRouteParamsWithDefaults", typeof(int), typeof(int?), typeof(string));
                 
-            actionMetadata.RouteParameters.AssertParamMeta<int>("id");
-            actionMetadata.RouteParameters.AssertParamMeta<int?>("v1", true, 100);
-            actionMetadata.RouteParameters.AssertParamMeta<string>("v2", true, "abc");
+                actionMetadata.RouteParameters.AssertParamMeta<int>("id");
+                actionMetadata.RouteParameters.AssertParamMeta<int?>("v1", true, 100);
+                actionMetadata.RouteParameters.AssertParamMeta<string>("v2", true, "abc");
+            });
         }
 
-        private static void RouteParamPopulatedFromBodyPost(IApiMetadataService apiMetadata)
+        [Fact]
+        public Task RouteParamPopulatedFromBodyPost()
         {
-            var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
-                "RouteParamWithPostBody", typeof(int), typeof(MetaBodyPost));
+            return TestApiMetadata.Run(metadata =>
+            {
+                var actionMetadata = metadata.GetActionMeta<MetadataController>(
+                    "RouteParamWithPostBody", typeof(int), typeof(MetaBodyPost));
             
-            actionMetadata.RouteParameters.AssertParamMeta<int>("id");
-            actionMetadata.BodyParameters.AssertParamMeta<MetaBodyPost>("data");
+                actionMetadata.RouteParameters.AssertParamMeta<int>("id");
+                actionMetadata.BodyParameters.AssertParamMeta<MetaBodyPost>("data");
+            });
         }
 
-        private static void ActionParamsPopulatedFromObjectProperties(IApiMetadataService apiMetadata)
+        [Fact]
+        public Task ActionParamsPopulatedFromObjectProperties()
         {
-            var actionMetadata = apiMetadata.GetActionMeta<MetadataController>(
-                "ActionObjectPropertySources", typeof(int), typeof(HeaderParamSource), typeof(QueryParamSource));
+            return TestApiMetadata.Run(metadata =>
+            {
+                var actionMetadata = metadata.GetActionMeta<MetadataController>(
+                    "ActionObjectPropertySources", typeof(int), typeof(HeaderParamSource), typeof(QueryParamSource));
             
-            actionMetadata.RouteParameters.AssertParamMeta<int>("id");
-            actionMetadata.QueryParameters.AssertParamMeta<string>("Filter");
-            actionMetadata.QueryParameters.AssertParamMeta<string>("Version");
-            actionMetadata.HeaderParameters.AssertParamMeta<string>("ClientId");
-            actionMetadata.HeaderParameters.AssertParamMeta<DateTime>("AsOfDate");
+                actionMetadata.RouteParameters.AssertParamMeta<int>("id");
+                actionMetadata.QueryParameters.AssertParamMeta<string>("Filter");
+                actionMetadata.QueryParameters.AssertParamMeta<string>("Version");
+                actionMetadata.HeaderParameters.AssertParamMeta<string>("ClientId");
+                actionMetadata.HeaderParameters.AssertParamMeta<DateTime>("AsOfDate");
+            });
         }
     }
 }
