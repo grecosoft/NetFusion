@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using NetFusion.Rest.Docs.Core.Description;
 using NetFusion.Rest.Docs.Models;
 using NetFusion.Web.Mvc.Metadata;
 using NetFusion.Common.Extensions.Types;
 using System.Xml.XPath;
+using NetFusion.Rest.Docs.Core;
+using NetFusion.Rest.Resources;
 
 namespace NetFusion.Rest.Docs.XmlDescriptions
 {
@@ -13,10 +16,14 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
     public class XmlActionComments : IActionDescription
     {
         private readonly IXmlCommentService _xmlComments;
+        private readonly ITypeCommentService _typeComments;
 
-        public XmlActionComments(IXmlCommentService xmlComments)
+        public XmlActionComments(
+            IXmlCommentService xmlComments, 
+            ITypeCommentService typeComments)
         {
-            _xmlComments = xmlComments ?? throw new System.ArgumentNullException(nameof(xmlComments));
+            _xmlComments = xmlComments ?? throw new ArgumentNullException(nameof(xmlComments));
+            _typeComments = typeComments ?? throw new ArgumentNullException(nameof(typeComments));
         }
 
         public void Describe(ApiActionDoc actionDoc, ApiActionMeta actionMeta)
@@ -28,6 +35,7 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
             ApplyParamDocs(actionDoc.RouteParams, actionMeta.RouteParameters, methodNode);
             ApplyParamDocs(actionDoc.HeaderParams, actionMeta.HeaderParameters, methodNode);
             ApplyParamDocs(actionDoc.QueryParams, actionMeta.QueryParameters, methodNode);
+            ApplyParamDocs(actionDoc.BodyParams, actionMeta.BodyParameters, methodNode);
         }
 
         // Creates and adds parameter documentation for a method's parameters. If no XML node
@@ -47,11 +55,15 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                     Type = paramMeta.ParameterType.GetJsTypeName()
                 };
                 
-                if (methodNode != null)
+                if (methodNode != null && ReflectionUtil.IsPrimitiveType(paramMeta.ParameterType) )
                 {
                     paramDoc.Description = _xmlComments.GetMethodParamComment(methodNode, paramMeta.ParameterName);
                 }
-
+                else if (paramMeta.ParameterType.IsClass)
+                {
+                    paramDoc.ResourceDoc = _typeComments.GetResourceDoc(paramMeta.ParameterType);
+                }
+                
                 paramDocs.Add(paramDoc);
             }
         }

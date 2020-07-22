@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Xml.XPath;
@@ -18,9 +16,6 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
     /// </summary>
     public class XmlTypeCommentService : ITypeCommentService
     {
-        // A list of type that are considered primitive event if they are class/object based.
-        private static Type[] PrimitiveTypes { get; } = {typeof(string), typeof(DateTime)};
-
         private readonly IXmlCommentService _xmlComments;
 
         public XmlTypeCommentService(IXmlCommentService xmlComments)
@@ -56,20 +51,20 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
                 var propDoc = new ApiPropertyDoc
                 {
                     Name = propInfo.Name,
-                    IsRequired = IsMarkedRequired(propInfo) || !IsNullableProperty(propInfo),
+                    IsRequired = ReflectionUtil.IsMarkedRequired(propInfo) || !ReflectionUtil.IsNullableProperty(propInfo),
                     Description = _xmlComments.GetTypeMemberComments(propInfo)
                 };
                 
-                if (IsPrimitiveProperty(propInfo))
+                if (ReflectionUtil.IsPrimitiveProperty(propInfo))
                 {
                     propDoc.Type = propInfo.PropertyType.GetJsTypeName();
                 }
-                else if (IsEnumerableProperty(propInfo))
+                else if (ReflectionUtil.IsEnumerableProperty(propInfo))
                 {
                     propDoc.IsArray = true;
 
-                    Type itemType = GetEnumerableType(propInfo);
-                    if (IsPrimitiveType(itemType))
+                    Type itemType = ReflectionUtil.GetEnumerableType(propInfo);
+                    if (ReflectionUtil.IsPrimitiveType(itemType))
                     {
                         propDoc.Type = itemType.GetJsTypeName();
                     }
@@ -91,54 +86,6 @@ namespace NetFusion.Rest.Docs.XmlDescriptions
         
         private static IEnumerable<PropertyInfo> GetDescribableProperties(Type type) => 
             type.GetProperties().Where(p => p.CanRead);
-
-
-        private static bool IsPrimitiveProperty(PropertyInfo propertyInfo)
-        {
-            Type propType = propertyInfo.PropertyType;
-
-            return propType.IsPrimitive || PrimitiveTypes.Contains(propType);
-        }
-
-        private static bool IsPrimitiveType(Type type)
-        {
-            return type.IsPrimitive || PrimitiveTypes.Contains(type);
-        }
-
-        private static bool IsNullableProperty(PropertyInfo propertyInfo)
-        {
-            Type propType = propertyInfo.PropertyType;
-
-            return propType.IsClass ||
-                propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(Nullable<>);
-        }
-
-
-        private static bool IsMarkedRequired(MemberInfo memberInfo) =>
-            memberInfo.GetCustomAttribute<RequiredAttribute>() != null;
-
-
-        private static bool IsEnumerableProperty(PropertyInfo propertyInfo)
-        {
-            Type propType = propertyInfo.PropertyType;
-
-            return propType.IsArray || propType.IsSubclassOf(typeof(IEnumerable));
-        }
-
-        private static Type GetEnumerableType(PropertyInfo propertyInfo)
-        {
-            Type propType = propertyInfo.PropertyType;
-            if (propType.IsArray)
-            {
-                return propType.GetElementType();
-            }
-
-            if (propType.IsSubclassOf(typeof(IEnumerable<>)))
-            {
-                return propType.GetGenericArguments()[0];
-            }
-
-            return null;
-        }
+        
     }
 }

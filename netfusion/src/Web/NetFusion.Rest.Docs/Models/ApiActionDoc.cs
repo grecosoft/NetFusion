@@ -56,6 +56,11 @@ namespace NetFusion.Rest.Docs.Models
         /// Description of the header parameters accepted by the action method.
         /// </summary>
         public ICollection<ApiParameterDoc> HeaderParams { get; set; } = new List<ApiParameterDoc>();
+        
+        /// <summary>
+        /// Description of the parameters populated from the message body.
+        /// </summary>
+        public ICollection<ApiParameterDoc> BodyParams { get; set; } = new List<ApiParameterDoc>();
 
         /// <summary>
         /// Contains documentation for each of the possible HTTP status code and the

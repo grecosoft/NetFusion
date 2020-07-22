@@ -99,6 +99,10 @@ namespace WebTests.Rest.DocGeneration.Server
         [HttpGet("action/queries/default")]
         public IActionResult TestWithQueryDefaultValue(
             [FromQuery] int? rating, [FromQuery] string version = "9.0.0") => Ok();
-     
+
+
+        [HttpPost("action/body/post")]
+        public IActionResult TestWithPopulatedFromBody([FromBody] TestRequestModel model) => Ok();
+
     }
 }

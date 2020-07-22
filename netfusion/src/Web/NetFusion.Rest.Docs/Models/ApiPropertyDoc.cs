@@ -25,7 +25,7 @@ namespace NetFusion.Rest.Docs.Models
         /// </summary>
         public bool IsRequired { get; set; }
         
-        public object Type { get; set; }
+        public string Type { get; set; }
 
         public ApiResourceDoc ResourceDoc { get; set; }
     }

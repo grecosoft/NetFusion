@@ -389,6 +389,25 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
+        [Fact] 
+        public Task DocsForActionParamPopulatedFormBody()
+        {
+            return WebHostFixture.TestAsync<DocController>(async host =>
+            {
+                var webResponse = await host
+                    .ArrangeForRestDocs()
+                    .Act.OnClient(client => client.GetAsync("api/doc/tests/action/body/post".GetDocUrl("post")));
+
+                await webResponse.Assert.HttpResponseAsync(async response =>
+                {
+                    var actionDoc = await response.AsApiActionDocAsync();
+                    actionDoc.BodyParams.Should().HaveCount(1);
+                    actionDoc.BodyParams.First().ResourceDoc.Should().NotBeNull();
+                    actionDoc.BodyParams.First().ResourceDoc.Description.Should().Be("Example mode populated from the body of a request.");
+                });
+            });
+        }
+
         // If an API Web Url is specified for which the documentation could
         // not be determined, an HTTP 404 is returned.
         [Fact]

@@ -30,5 +30,11 @@ namespace NetFusion.Rest.Docs.Models
         /// Description of the parameter.
         /// </summary>
         public string Description { get; set; }
+        
+        /// <summary>
+        /// this will contain the documentation for an action method
+        /// populated from the message body.
+        /// </summary>
+        public ApiResourceDoc ResourceDoc { get; set; }
     }
 }
