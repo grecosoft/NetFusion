@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Text.Json;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Rest.Docs.Core.Description;
-using NetFusion.Rest.Docs.XmlDescriptions;
+using NetFusion.Rest.Docs.XmlComments;
 
 namespace NetFusion.Rest.Docs.Plugin.Configs
 {
     /// <summary>
     /// Plugin configuration used to alter the default configuration.
     /// </summary>
-    public class RestDocConfig : IPluginConfig
+    public class 
+        
+         RestDocConfig : IPluginConfig
     {
         /// <summary>
         /// The directory containing any needed documentation source files.

@@ -8,7 +8,7 @@ using NetFusion.Rest.Server.Mappings;
 using NetFusion.Rest.Server.Plugin;
 using NetFusion.Web.Mvc.Metadata;
 
-namespace NetFusion.Rest.Docs.XmlDescriptions
+namespace NetFusion.Rest.Docs.XmlComments
 {
     /// <summary>
     /// Determines if there are any link relations associated with the resources returned from

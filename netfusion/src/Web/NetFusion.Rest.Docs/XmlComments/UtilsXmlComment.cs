@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace NetFusion.Rest.Docs.XmlDescriptions
+namespace NetFusion.Rest.Docs.XmlComments
 {
         public class UtilsXmlComment
     {

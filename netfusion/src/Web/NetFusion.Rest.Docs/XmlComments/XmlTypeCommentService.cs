@@ -8,7 +8,7 @@ using NetFusion.Rest.Docs.Core;
 using NetFusion.Rest.Docs.Models;
 using NetFusion.Rest.Resources;
 
-namespace NetFusion.Rest.Docs.XmlDescriptions
+namespace NetFusion.Rest.Docs.XmlComments
 {
     /// <summary>
     /// Provides an implementation of the ITypeCommentService used to document types

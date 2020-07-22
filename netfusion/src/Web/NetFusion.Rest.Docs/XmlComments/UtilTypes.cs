@@ -1,11 +1,11 @@
 using System;
-using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reflection;
 
-namespace NetFusion.Rest.Docs.XmlDescriptions
+namespace NetFusion.Rest.Docs.XmlComments
 {
     public static class ReflectionUtil
     {

@@ -4,7 +4,7 @@ using NetFusion.Bootstrap.Plugins;
 using NetFusion.Rest.Docs.Core;
 using NetFusion.Rest.Docs.Core.Description;
 using NetFusion.Rest.Docs.Plugin.Configs;
-using NetFusion.Rest.Docs.XmlDescriptions;
+using NetFusion.Rest.Docs.XmlComments;
 
 namespace NetFusion.Rest.Docs.Plugin.Modules
 {

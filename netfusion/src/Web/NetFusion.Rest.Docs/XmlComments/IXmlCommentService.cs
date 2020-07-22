@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Xml.XPath;
 
-namespace NetFusion.Rest.Docs.XmlDescriptions
+namespace NetFusion.Rest.Docs.XmlComments
 {
     /// <summary>
     /// Provides services for reading member comments from an assembly's

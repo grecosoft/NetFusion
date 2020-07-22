@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Xml.XPath;
 using NetFusion.Rest.Docs.Plugin;
 
-namespace NetFusion.Rest.Docs.XmlDescriptions
+namespace NetFusion.Rest.Docs.XmlComments
 {
     public class XmlCommentService : IXmlCommentService
     {

@@ -1,12 +1,12 @@
-﻿using System.Linq;
-using NetFusion.Rest.Resources;
+﻿using System.Collections.Generic;
+using System.Linq;
+using NetFusion.Rest.Docs.Core;
 using NetFusion.Rest.Docs.Core.Description;
 using NetFusion.Rest.Docs.Models;
+using NetFusion.Rest.Resources;
 using NetFusion.Web.Mvc.Metadata;
-using System.Collections.Generic;
-using NetFusion.Rest.Docs.Core;
 
-namespace NetFusion.Rest.Docs.XmlDescriptions
+namespace NetFusion.Rest.Docs.XmlComments
 {
     /// <summary>
     /// Recursively processes all resource response documents specified for a given Api

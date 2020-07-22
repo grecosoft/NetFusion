@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Xml.XPath;
+using NetFusion.Common.Extensions.Types;
+using NetFusion.Rest.Docs.Core;
 using NetFusion.Rest.Docs.Core.Description;
 using NetFusion.Rest.Docs.Models;
 using NetFusion.Web.Mvc.Metadata;
-using NetFusion.Common.Extensions.Types;
-using System.Xml.XPath;
-using NetFusion.Rest.Docs.Core;
-using NetFusion.Rest.Resources;
 
-namespace NetFusion.Rest.Docs.XmlDescriptions
+namespace NetFusion.Rest.Docs.XmlComments
 {
     /// <summary>
     /// Sets the comments associated with a given Web Controller's action method.
