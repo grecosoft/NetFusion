@@ -22,7 +22,7 @@ namespace NetFusion.Rest.Docs.Xml.Descriptions
             _xmlComments = xmlComments ?? throw new ArgumentNullException(nameof(xmlComments));
         }
         
-        public void Describe(ApiRelationDoc relationDoc, ResourceLink resourceLink)
+        public void Describe(ApiResourceDoc resourceDoc, ApiRelationDoc relationDoc, ResourceLink resourceLink)
         {
             SetRelationInfo(relationDoc, (dynamic)resourceLink);
         }

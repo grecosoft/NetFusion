@@ -12,6 +12,7 @@ namespace NetFusion.Rest.Docs.Core.Descriptions
         /// Adds documentation to an embedded document.
         /// </summary>
         /// <param name="embeddedDoc">The embedded documentation model to describe.</param>
-        void Describe(ApiEmbeddedDoc embeddedDoc);
+        /// <param name="attribute">The attribute from which the embedded document was created.</param>
+        void Describe(ApiEmbeddedDoc embeddedDoc, EmbeddedResourceAttribute attribute);
     }
 }

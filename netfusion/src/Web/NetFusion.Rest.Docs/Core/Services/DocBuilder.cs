@@ -162,24 +162,24 @@ namespace NetFusion.Rest.Docs.Core.Services
             EmbeddedResourceAttribute[] embeddedResources)
         {
             // Find any embedded types specified for the resource type.
-            var resourceEmbeddedTypes = embeddedResources.Where(et =>
+            var embeddedAttributes = embeddedResources.Where(et =>
                 et.ParentResourceType.GetExposedResourceName() == parentResourceDoc.ResourceName);
 
             // For each embedded resource type, create an embedded resource document
             // with the documentation for each child embedded resource.
-            foreach (EmbeddedResourceAttribute resourceEmbeddedType in resourceEmbeddedTypes)
+            foreach (EmbeddedResourceAttribute embeddedAttribute in embeddedAttributes)
             {
                 var embeddedResourceDoc = new ApiEmbeddedDoc
                 {
-                    EmbeddedName = resourceEmbeddedType.EmbeddedName,
-                    IsCollection = resourceEmbeddedType.IsCollection,
-                    ResourceDoc = _typeComments.GetResourceDoc(resourceEmbeddedType.ChildResourceType)
+                    EmbeddedName = embeddedAttribute.EmbeddedName,
+                    IsCollection = embeddedAttribute.IsCollection,
+                    ResourceDoc = _typeComments.GetResourceDoc(embeddedAttribute.ChildResourceType)
                 };
 
-                embeddedResourceDoc.ResourceDoc.ResourceName = resourceEmbeddedType
+                embeddedResourceDoc.ResourceDoc.ResourceName = embeddedAttribute
                     .ChildResourceType.GetExposedResourceName();
                 
-                ApplyDescriptions<IEmbeddedDescription>(desc => desc.Describe(embeddedResourceDoc));
+                ApplyDescriptions<IEmbeddedDescription>(desc => desc.Describe(embeddedResourceDoc, embeddedAttribute));
 
                 yield return embeddedResourceDoc;
             }
@@ -214,7 +214,7 @@ namespace NetFusion.Rest.Docs.Core.Services
                         Method = resourceLink.Methods.FirstOrDefault(),
                     };
 
-                    ApplyDescriptions<IRelationDescription>(desc => desc.Describe(relationDoc, resourceLink));
+                    ApplyDescriptions<IRelationDescription>(desc => desc.Describe(resourceDoc, relationDoc, resourceLink));
                     resourceDoc.RelationDocs.Add(relationDoc);
                 }
             }

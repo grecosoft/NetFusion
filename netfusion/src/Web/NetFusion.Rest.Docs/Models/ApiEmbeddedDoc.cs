@@ -16,6 +16,11 @@ namespace NetFusion.Rest.Docs.Models
         public bool IsCollection { get; set; }
 
         /// <summary>
+        /// Information on how the embedded resource type relates to the parent.
+        /// </summary>
+        public string Description { get; set; }
+        
+        /// <summary>
         /// Documentation associated with the embedded resource.
         /// </summary>
         public ApiResourceDoc ResourceDoc { get; set; } 

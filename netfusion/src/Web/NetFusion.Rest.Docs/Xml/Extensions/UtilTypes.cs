@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using NetFusion.Common.Extensions.Reflection;
 
 namespace NetFusion.Rest.Docs.Xml.Extensions
 {
@@ -24,6 +24,8 @@ namespace NetFusion.Rest.Docs.Xml.Extensions
         public static bool IsPrimitiveType(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
+            
+            type = Nullable.GetUnderlyingType(type) ?? type;
             return type.IsPrimitive || PrimitiveTypes.Contains(type);
         }
 
@@ -33,8 +35,8 @@ namespace NetFusion.Rest.Docs.Xml.Extensions
             
             Type propType = propertyInfo.PropertyType;
 
-            return propType.IsClass ||
-                   propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(Nullable<>);
+            return propType.IsClass || propType.IsGenericType 
+                && propType.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
         
         public static bool IsMarkedRequired(MemberInfo memberInfo)
@@ -49,7 +51,10 @@ namespace NetFusion.Rest.Docs.Xml.Extensions
             if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
             
             Type propType = propertyInfo.PropertyType;
-            return propType.IsArray || propType.IsSubclassOf(typeof(IEnumerable));
+            return propType.IsArray || 
+                   propType.IsGenericType && 
+                   propType.GetGenericArguments().Length == 1 &&
+                   propType.CanAssignTo(typeof(IEnumerable));
         }
 
         public static Type GetEnumerableType(PropertyInfo propertyInfo)
@@ -62,7 +67,8 @@ namespace NetFusion.Rest.Docs.Xml.Extensions
                 return propType.GetElementType();
             }
 
-            if (propType.IsSubclassOf(typeof(IEnumerable<>)))
+            if (propType.IsGenericType && propType.GetGenericArguments().Length == 1 
+                    && propType.CanAssignTo(typeof(IEnumerable)))
             {
                 return propType.GetGenericArguments()[0];
             }

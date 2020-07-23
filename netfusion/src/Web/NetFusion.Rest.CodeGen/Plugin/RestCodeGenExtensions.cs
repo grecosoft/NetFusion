@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
-using NetFusion.Rest.CodeGen.Core;
 
 namespace NetFusion.Rest.CodeGen.Plugin
 {

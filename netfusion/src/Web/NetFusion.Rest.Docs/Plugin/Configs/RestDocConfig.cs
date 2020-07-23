@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Rest.Docs.Core.Descriptions;
+using NetFusion.Rest.Docs.Json.Descriptions;
 using NetFusion.Rest.Docs.Xml.Descriptions;
 
 namespace NetFusion.Rest.Docs.Plugin.Configs
@@ -62,8 +63,9 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
             AddDocDescription<XmlActionComments>();
             AddDocDescription<XmlParameterComments>();
             AddDocDescription<XmlResponseComments>();
-            AddDocDescription<XmlHalEmbeddedComments>();
             AddDocDescription<XmlHalRelationComments>();
+            AddDocDescription<JsonHalEmbeddedComments>();
+            AddDocDescription<JsonHalRelationComments>();
         }
 
         /// <summary>

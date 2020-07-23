@@ -62,7 +62,7 @@ namespace NetFusion.Rest.Docs.Xml.Services
 
                     Type itemType = ReflectionUtil.GetEnumerableType(propInfo);
                     if (ReflectionUtil.IsPrimitiveType(itemType))
-                    {
+                    {    
                         propDoc.Type = itemType.GetJsTypeName();
                     }
                     else
