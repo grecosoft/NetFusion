@@ -8,6 +8,10 @@ using NetFusion.Rest.Docs.Xml.Extensions;
 
 namespace NetFusion.Rest.Docs.Xml.Services
 {
+    /// <summary>
+    /// Service used to read documentation for types and members from XML
+    /// generated code files.
+    /// </summary>
     public class XmlCommentService : IXmlCommentService
     {
         private const string MemberXPath = "/doc/members/member[@name='{0}']";
@@ -18,17 +22,14 @@ namespace NetFusion.Rest.Docs.Xml.Services
 
         public XmlCommentService(IDocModule docModule)
         {
-            _docModule = docModule;
+            _docModule = docModule ?? throw new ArgumentNullException(nameof(docModule));
             _xmlAssemblyComments = new ConcurrentDictionary<Assembly, XPathNavigator>();
         }
 
         public XPathNavigator GetXmlCommentsForTypesAssembly(Type containedType)
         {
-            if (containedType is null)
-            {
-                throw new ArgumentNullException(nameof(containedType));
-            }
-
+            if (containedType == null) throw new ArgumentNullException(nameof(containedType));
+            
             Assembly typesAssembly = containedType.Assembly;
 
             return _xmlAssemblyComments.GetOrAdd(typesAssembly, assembly =>
@@ -44,11 +45,8 @@ namespace NetFusion.Rest.Docs.Xml.Services
 
         public XPathNavigator GetTypeNode(Type classType)
         {
-            if (classType is null)
-            {
-                throw new ArgumentNullException(nameof(classType));
-            }
-
+            if (classType == null) throw new ArgumentNullException(nameof(classType));
+            
             XPathNavigator xmlCommentsDoc = GetXmlCommentsForTypesAssembly(classType);
 
             string typeMemberName = UtilsXmlComment.GetMemberNameForType(classType);
@@ -57,6 +55,8 @@ namespace NetFusion.Rest.Docs.Xml.Services
 
         public string GetTypeComments(Type classType)
         {
+            if (classType == null) throw new ArgumentNullException(nameof(classType));
+            
             XPathNavigator memberNode = GetTypeNode(classType);
 
             var summaryNode = memberNode?.SelectSingleNode("summary");
@@ -65,10 +65,7 @@ namespace NetFusion.Rest.Docs.Xml.Services
 
         public XPathNavigator GetMethodNode(MethodInfo methodInfo)
         {
-            if (methodInfo is null)
-            {
-                throw new ArgumentNullException(nameof(methodInfo));
-            }
+            if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
 
             XPathNavigator xmlCommentsDoc = GetXmlCommentsForTypesAssembly(methodInfo.DeclaringType);
 
@@ -78,8 +75,9 @@ namespace NetFusion.Rest.Docs.Xml.Services
 
         public string GetMethodComments(MethodInfo methodInfo)
         {
+            if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
+            
             XPathNavigator memberNode = GetMethodNode(methodInfo);
-
             if (memberNode == null)
             {
                 return string.Empty;
@@ -88,8 +86,8 @@ namespace NetFusion.Rest.Docs.Xml.Services
             var summaryInnerXml = memberNode.SelectSingleNode("summary")?.InnerXml;
             var returnsInnerXml = memberNode.SelectSingleNode("returns")?.InnerXml;
 
-            return (UtilsXmlCommentText.Humanize(summaryInnerXml ?? String.Empty)
-                + " " + UtilsXmlCommentText.Humanize(returnsInnerXml ?? String.Empty)).Trim();
+            return (UtilsXmlCommentText.Humanize(summaryInnerXml ?? string.Empty)
+                + " " + UtilsXmlCommentText.Humanize(returnsInnerXml ?? string.Empty)).Trim();
         }
 
         public string GetTypeMemberComments(MemberInfo memberInfo)
@@ -105,6 +103,11 @@ namespace NetFusion.Rest.Docs.Xml.Services
 
         public string GetMethodParamComment(XPathNavigator methodNode, string paramName)
         {
+            if (methodNode == null) throw new ArgumentNullException(nameof(methodNode));
+            
+            if (string.IsNullOrWhiteSpace(paramName))
+                throw new ArgumentException("Parameter name must be specified.", nameof(paramName));
+            
             XPathNavigator paramNode = methodNode.SelectSingleNode(string.Format(ParamXPath, paramName));
             return paramNode != null ? UtilsXmlCommentText.Humanize(paramNode.InnerXml) : string.Empty;
         }

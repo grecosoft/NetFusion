@@ -6,12 +6,18 @@ using System.Text;
 
 namespace NetFusion.Rest.Docs.Xml.Extensions
 {
-        public class UtilsXmlComment
+    /// <summary>
+    /// Utility class containing methods used to build member type names for types
+    /// stored within XML generated comment files.  These member type names are used
+    /// to locate the documentation within the XML file.
+    /// </summary>
+    public class UtilsXmlComment
     {
         public static string GetMemberNameForMethod(MethodInfo method)
         {
+            if (method == null) throw new ArgumentNullException(nameof(method));
+            
             var builder = new StringBuilder("M:");
-
             builder.Append(QualifiedNameFor(method.DeclaringType));
             builder.Append($".{method.Name}");
 
@@ -29,6 +35,8 @@ namespace NetFusion.Rest.Docs.Xml.Extensions
 
         public static string GetMemberNameForType(Type type)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            
             var builder = new StringBuilder("T:");
             builder.Append(QualifiedNameFor(type));
 
@@ -37,6 +45,8 @@ namespace NetFusion.Rest.Docs.Xml.Extensions
 
         public static string GetMemberNameForFieldOrProperty(MemberInfo fieldOrPropertyInfo)
         {
+            if (fieldOrPropertyInfo == null) throw new ArgumentNullException(nameof(fieldOrPropertyInfo));
+            
             var builder = new StringBuilder(((fieldOrPropertyInfo.MemberType & MemberTypes.Field) != 0) ? "F:" : "P:");
             builder.Append(QualifiedNameFor(fieldOrPropertyInfo.DeclaringType));
             builder.Append($".{fieldOrPropertyInfo.Name}");

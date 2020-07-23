@@ -123,8 +123,10 @@ namespace NetFusion.Rest.Docs.Core.Services
                 // code, add documentation for the resource type. 
                 if (responseMeta.ModelType != null)
                 {
-                    ApplyDescriptions<IResponseDescription>(desc => desc.Describe(responseDoc, responseMeta));
+                    responseDoc.ResourceDoc = _typeComments.GetResourceDoc(responseMeta.ModelType);
                 }
+                
+                ApplyDescriptions<IResponseDescription>(desc => desc.Describe(responseDoc, responseMeta));
 
                 actionDoc.ResponseDocs.Add(responseDoc);
             }

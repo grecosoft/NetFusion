@@ -56,11 +56,7 @@ namespace NetFusion.Rest.Docs.Xml.Services
                     Description = _xmlComments.GetTypeMemberComments(propInfo)
                 };
                 
-                if (ReflectionUtil.IsPrimitiveProperty(propInfo))
-                {
-                    propDoc.Type = propInfo.PropertyType.GetJsTypeName();
-                }
-                else if (ReflectionUtil.IsEnumerableProperty(propInfo))
+                if (ReflectionUtil.IsEnumerableProperty(propInfo))
                 {
                     propDoc.IsArray = true;
 
@@ -75,6 +71,10 @@ namespace NetFusion.Rest.Docs.Xml.Services
                         propDoc.ResourceDoc = BuildResourceDoc(itemType);
                     }
                 }
+                else if (ReflectionUtil.IsPrimitiveProperty(propInfo))
+                {
+                    propDoc.Type = propInfo.PropertyType.GetJsTypeName();
+                }
                 else if (propInfo.PropertyType.IsClass)
                 {
                     propDoc.Type = propInfo.PropertyType.GetJsTypeName();
@@ -86,7 +86,8 @@ namespace NetFusion.Rest.Docs.Xml.Services
         }
         
         private static IEnumerable<PropertyInfo> GetDescribableProperties(Type type) => 
-            type.GetProperties().Where(p => p.CanRead);
+            type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty)
+                .Where(p => p.CanRead);
         
     }
 }

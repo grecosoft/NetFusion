@@ -7,8 +7,7 @@ using NetFusion.Web.Mvc.Metadata;
 namespace NetFusion.Rest.Docs.Xml.Descriptions
 {
     /// <summary>
-    /// Determines if there are any link relations associated with the resources returned from
-    /// the WebApi. If so, documentation of the relations are added to the resource's document.
+    /// Adds additional documentation of a link relation existing between two resources.
     /// </summary>
     public class XmlHalRelationComments : IRelationDescription
     {

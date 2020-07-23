@@ -5,6 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace NetFusion.Rest.Docs.Xml.Extensions
 {
+    /// <summary>
+    /// Utility class containing method to render the help documentation.
+    /// </summary>
     public static class UtilsXmlCommentText
     {
         private static readonly Regex RefTagPattern = new Regex(
@@ -17,11 +20,8 @@ namespace NetFusion.Rest.Docs.Xml.Extensions
 
         public static string Humanize(string text)
         {
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-            
+            if (text == null) throw new ArgumentNullException(nameof(text));
+
             // Call DecodeXml at last to avoid entities like &lt and &gt to break valid xml          
             return text
                 .NormalizeIndentation()

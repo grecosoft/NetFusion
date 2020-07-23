@@ -3,10 +3,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using NetFusion.Rest.CodeGen.Plugin;
 using NetFusion.Rest.Common;
 
-namespace NetFusion.Rest.CodeGen.Core
+namespace NetFusion.Rest.CodeGen.Plugin
 {
     /// <summary>
     /// Middleware component added to the ASP.NET Pipeline exposing an endpoint
