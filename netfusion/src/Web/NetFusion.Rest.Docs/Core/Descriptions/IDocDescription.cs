@@ -1,4 +1,4 @@
-namespace NetFusion.Rest.Docs.Core.Description
+namespace NetFusion.Rest.Docs.Core.Descriptions
 {
     /// <summary>
     /// Marker interface identifying a class responsible for describing REST Api actions.

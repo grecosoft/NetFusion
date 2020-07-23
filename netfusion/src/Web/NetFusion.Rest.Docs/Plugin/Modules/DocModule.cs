@@ -2,9 +2,11 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Rest.Docs.Core;
-using NetFusion.Rest.Docs.Core.Description;
+using NetFusion.Rest.Docs.Core.Descriptions;
+using NetFusion.Rest.Docs.Core.Services;
 using NetFusion.Rest.Docs.Plugin.Configs;
-using NetFusion.Rest.Docs.XmlComments;
+using NetFusion.Rest.Docs.Xml;
+using NetFusion.Rest.Docs.Xml.Services;
 
 namespace NetFusion.Rest.Docs.Plugin.Modules
 {
@@ -26,6 +28,7 @@ namespace NetFusion.Rest.Docs.Plugin.Modules
             services.AddSingleton<IXmlCommentService, XmlCommentService>();
             services.AddSingleton<ITypeCommentService, XmlTypeCommentService>();
 
+            services.AddScoped<IDocBuilder, DocBuilder>();
             services.AddScoped<IApiDocService, ApiDocService>();
         }
 

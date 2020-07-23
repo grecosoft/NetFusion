@@ -25,8 +25,15 @@ namespace NetFusion.Rest.Docs.Models
         /// </summary>
         public bool IsRequired { get; set; }
         
+        /// <summary>
+        /// The Json type of the property.
+        /// </summary>
         public string Type { get; set; }
 
+        /// <summary>
+        /// If the type of property is a class, this property will contain
+        /// the documentation for the associated resource type.
+        /// </summary>
         public ApiResourceDoc ResourceDoc { get; set; }
     }
 }

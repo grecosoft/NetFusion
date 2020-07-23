@@ -2,17 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Rest.Docs.Core.Description;
-using NetFusion.Rest.Docs.XmlComments;
+using NetFusion.Rest.Docs.Core.Descriptions;
+using NetFusion.Rest.Docs.Xml.Descriptions;
 
 namespace NetFusion.Rest.Docs.Plugin.Configs
 {
     /// <summary>
     /// Plugin configuration used to alter the default configuration.
     /// </summary>
-    public class 
-        
-         RestDocConfig : IPluginConfig
+    public class RestDocConfig : IPluginConfig
     {
         /// <summary>
         /// The directory containing any needed documentation source files.
@@ -30,10 +28,24 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
         /// documentation model.
         /// </summary>
         public JsonSerializerOptions SerializerOptions { get; private set; }
+        
+        /// <summary>
+        /// The description registered types used to lookup documentation
+        /// to describe parts of a WebApi method. 
+        /// </summary>
+        public IReadOnlyCollection<Type> DescriptionTypes { get; }
 
         private readonly List<Type> _descriptionTypes = new List<Type>();
 
         public RestDocConfig()
+        {
+            ConfigureDefaultSettings();
+            AddDefaultDescriptions();
+            
+            DescriptionTypes = _descriptionTypes.AsReadOnly();
+        }
+
+        private void ConfigureDefaultSettings()
         {
             EndpointUrl = "/api/net-fusion/rest";
             
@@ -41,9 +53,6 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
-
-            AddDefaultDescriptions();
-            DescriptionTypes = _descriptionTypes.AsReadOnly();
         }
 
         // These are the default registered classes responsible for applying 
@@ -51,9 +60,8 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
         private void AddDefaultDescriptions()
         {
             AddDocDescription<XmlActionComments>();
+            AddDocDescription<XmlParameterComments>();
             AddDocDescription<XmlResponseComments>();
-
-            // Called last to apply additional XML comments.
             AddDocDescription<XmlHalEmbeddedComments>();
             AddDocDescription<XmlHalRelationComments>();
         }
@@ -77,8 +85,7 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
         }
 
         /// <summary>
-        /// The end point that can be called to request documentation
-        /// for a WebApi action method.
+        /// The end point that can be called to request documentation for a WebApi action method.
         /// </summary>
         /// <param name="endpoint">The relative URL.</param>
         /// <returns>The configuration.</returns>
@@ -132,11 +139,5 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
             _descriptionTypes.Clear();
             return this;
         }
-
-        /// <summary>
-        /// The description registered types used to lookup documentation
-        /// to describe parts of a WebApi method. 
-        /// </summary>
-        public IReadOnlyCollection<Type> DescriptionTypes { get; }
     }
 }

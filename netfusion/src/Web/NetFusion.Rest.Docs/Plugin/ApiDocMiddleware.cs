@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Rest.Common;
 using NetFusion.Rest.Docs.Models;
-using NetFusion.Rest.Docs.Plugin;
 
-namespace NetFusion.Rest.Docs.Core
+namespace NetFusion.Rest.Docs.Plugin
 {
     /// <summary>
     /// ASP.NET pipeline middleware that will respond to requests for documentation describing an Api hosted at a
@@ -20,10 +19,10 @@ namespace NetFusion.Rest.Docs.Core
     /// the following would be sent for the documentation:
     ///     api/customers/{id}/accounts/top/{count}
     ///
-    /// Assuming the default endpoint used to query the documentation is used, the following would be the
-    /// complete request:
+    /// The HTTP Method associated with the action method route is also specified.  Assuming the default endpoint
+    /// used to query the documentation is used, the following would be the complete request:
     ///
-    /// http://localhost:5000/api/net-fusion/rest?doc=api/customers/{id}/accounts/top/{count}
+    /// http://localhost:5000/api/net-fusion/rest?method=GET&doc=api/customers/{id}/accounts/top/{count}
     ///
     /// When using the NetFusion.Rest.Server plugin to return Link Relations associated with resources,
     /// the caller can specify the following header value to return the route template to use when

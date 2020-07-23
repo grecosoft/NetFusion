@@ -1,0 +1,17 @@
+﻿using NetFusion.Rest.Docs.Models;
+
+namespace NetFusion.Rest.Docs.Core.Descriptions
+{
+    /// <summary>
+    /// Interface implemented by a class responsible for describing
+    /// an embedded resource returned by a controller's action method.
+    /// </summary>
+    public interface IEmbeddedDescription : IDocDescription
+    {
+        /// <summary>
+        /// Adds documentation to an embedded document.
+        /// </summary>
+        /// <param name="embeddedDoc">The embedded documentation model to describe.</param>
+        void Describe(ApiEmbeddedDoc embeddedDoc);
+    }
+}

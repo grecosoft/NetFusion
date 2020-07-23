@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 
-namespace NetFusion.Rest.Docs.XmlComments
+namespace NetFusion.Rest.Docs.Xml.Extensions
 {
     public static class ReflectionUtil
     {

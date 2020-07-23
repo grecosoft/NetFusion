@@ -1,6 +1,6 @@
 ﻿using NetFusion.Rest.Docs.Plugin;
 using NetFusion.Rest.Docs.Plugin.Configs;
-using NetFusion.Rest.Docs.XmlComments;
+using NetFusion.Rest.Docs.Xml.Services;
 
 namespace WebTests.Rest.DocGeneration.Mocks
 {

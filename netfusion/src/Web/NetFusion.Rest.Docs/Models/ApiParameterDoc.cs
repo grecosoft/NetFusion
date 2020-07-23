@@ -12,7 +12,7 @@ namespace NetFusion.Rest.Docs.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// The JSON type of the parameter.
+        /// The Json type of the parameter.
         /// </summary>
         public string Type { get; set; }
 

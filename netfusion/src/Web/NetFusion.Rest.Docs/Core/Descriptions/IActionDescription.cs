@@ -1,7 +1,7 @@
 using NetFusion.Rest.Docs.Models;
 using NetFusion.Web.Mvc.Metadata;
 
-namespace NetFusion.Rest.Docs.Core.Description
+namespace NetFusion.Rest.Docs.Core.Descriptions
 {
     /// <summary>
     /// Interface implemented by a class responsible for describing

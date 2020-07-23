@@ -19,7 +19,7 @@ namespace NetFusion.Rest.Docs.Plugin
             AddConfig<RestDocConfig>();
             AddModule<DocModule>();
 
-            Description = "Plugin implementing management and querying of REST/HAL API documentation";
+            Description = "Plugin implementing querying of REST/HAL API documentation";
             
             SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/netfusion/src/Web/NetFusion.Rest.Docs";
             DocUrl = "https://github.com/grecosoft/NetFusion/wiki";

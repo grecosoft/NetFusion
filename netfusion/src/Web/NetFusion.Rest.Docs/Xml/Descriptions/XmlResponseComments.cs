@@ -1,9 +1,9 @@
 using NetFusion.Rest.Docs.Core;
-using NetFusion.Rest.Docs.Core.Description;
+using NetFusion.Rest.Docs.Core.Descriptions;
 using NetFusion.Rest.Docs.Models;
 using NetFusion.Web.Mvc.Metadata;
 
-namespace NetFusion.Rest.Docs.XmlComments
+namespace NetFusion.Rest.Docs.Xml.Descriptions
 {
     /// <summary>
     /// Adds resource documentation to responses resource.

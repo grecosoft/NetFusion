@@ -4,8 +4,9 @@ using System.IO;
 using System.Reflection;
 using System.Xml.XPath;
 using NetFusion.Rest.Docs.Plugin;
+using NetFusion.Rest.Docs.Xml.Extensions;
 
-namespace NetFusion.Rest.Docs.XmlComments
+namespace NetFusion.Rest.Docs.Xml.Services
 {
     public class XmlCommentService : IXmlCommentService
     {

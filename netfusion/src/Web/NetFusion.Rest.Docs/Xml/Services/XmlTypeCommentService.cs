@@ -6,9 +6,10 @@ using System.Xml.XPath;
 using NetFusion.Common.Extensions.Types;
 using NetFusion.Rest.Docs.Core;
 using NetFusion.Rest.Docs.Models;
+using NetFusion.Rest.Docs.Xml.Extensions;
 using NetFusion.Rest.Resources;
 
-namespace NetFusion.Rest.Docs.XmlComments
+namespace NetFusion.Rest.Docs.Xml.Services
 {
     /// <summary>
     /// Provides an implementation of the ITypeCommentService used to document types

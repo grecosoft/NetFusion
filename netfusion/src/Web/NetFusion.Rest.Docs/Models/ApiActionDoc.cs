@@ -12,7 +12,7 @@ namespace NetFusion.Rest.Docs.Models
         public ApiActionDoc() { }
 
         /// <summary>
-        /// The relative path based on the host.
+        /// The relative path used to invoke the action.
         /// </summary>
         public string RelativePath { get; set; }
 
@@ -63,7 +63,7 @@ namespace NetFusion.Rest.Docs.Models
         public ICollection<ApiParameterDoc> BodyParams { get; set; } = new List<ApiParameterDoc>();
 
         /// <summary>
-        /// Contains documentation for each of the possible HTTP status code and the
+        /// Contains documentation for each of the possible HTTP status codes and the
         /// associated optional resource returned for the status.
         /// </summary>
         public ICollection<ApiResponseDoc> ResponseDocs { get; set; } = new List<ApiResponseDoc>();

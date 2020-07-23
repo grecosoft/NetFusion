@@ -7,7 +7,7 @@ namespace NetFusion.Rest.Docs.Models
     public class ApiResponseDoc
     {
         /// <summary>
-        /// The possible set of HTTP response status code.
+        /// The HTTP response status code associated with the response.
         /// </summary>
         public int Status { get; set; }
 
