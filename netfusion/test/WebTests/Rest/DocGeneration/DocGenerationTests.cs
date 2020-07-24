@@ -229,7 +229,7 @@ namespace WebTests.Rest.DocGeneration
         [Fact]
         public void ApiModelType_CanSpecifyExposedName()
         {
-            typeof(ModelWithExposedName).GetExposedResourceName()
+            typeof(ModelWithExposedName).GetResourceName()
                 .Should().Be("api.sample.model");
         }
 
@@ -240,8 +240,8 @@ namespace WebTests.Rest.DocGeneration
         [Fact]
         public void ApiModelTypeAndNamespace_IfNoExposedName()
         {
-            typeof(ModelWithoutExposedName).GetExposedResourceName()
-                .Should().Be(typeof(ModelWithoutExposedName).FullName);
+            typeof(ModelWithoutExposedName).GetResourceName()
+                .Should().Be(nameof(ModelWithoutExposedName));
         }
 
         // If an API method specifies the response type and status code, both
@@ -261,12 +261,12 @@ namespace WebTests.Rest.DocGeneration
                     actionDoc.ResponseDocs.Should().HaveCount(2);
 
                     var firstRespDoc = actionDoc.ResponseDocs
-                        .First(rd => rd.ResourceDoc.ResourceName == typeof(TestResponseModel).GetExposedResourceName());
+                        .First(rd => rd.ResourceDoc.ResourceName == typeof(TestResponseModel).GetResourceName());
 
                     firstRespDoc.Status.Should().Be(StatusCodes.Status200OK);
 
                     var secondRespDoc = actionDoc.ResponseDocs
-                        .First(rd => rd.ResourceDoc.ResourceName == typeof(TestCreatedResponseModel).GetExposedResourceName());
+                        .First(rd => rd.ResourceDoc.ResourceName == typeof(TestCreatedResponseModel).GetResourceName());
 
                     secondRespDoc.Status.Should().Be(StatusCodes.Status201Created);
                 });
@@ -289,14 +289,14 @@ namespace WebTests.Rest.DocGeneration
                     var actionDoc = await response.AsApiActionDocAsync();
 
                     var responseDoc = actionDoc.ResponseDocs.First();
-                    responseDoc.ResourceDoc.ResourceName.Should().Be(typeof(RootResponseModel).GetExposedResourceName());
+                    responseDoc.ResourceDoc.ResourceName.Should().Be(typeof(RootResponseModel).GetResourceName());
                     responseDoc.ResourceDoc.EmbeddedResourceDocs.Should().HaveCount(1);
 
                     var embeddedResDoc = responseDoc.ResourceDoc.EmbeddedResourceDocs.First();
                     embeddedResDoc.EmbeddedName.Should().Be("embedded-model");
                     embeddedResDoc.IsCollection.Should().BeFalse();
                     embeddedResDoc.ResourceDoc.Should().NotBeNull();
-                    embeddedResDoc.ResourceDoc.ResourceName.Should().Be(typeof(EmbeddedChildModel).GetExposedResourceName());
+                    embeddedResDoc.ResourceDoc.ResourceName.Should().Be(typeof(EmbeddedChildModel).GetResourceName());
                 });
             });
         }
@@ -321,7 +321,7 @@ namespace WebTests.Rest.DocGeneration
                     embeddedResDoc.EmbeddedName.Should().Be("embedded-models");
                     embeddedResDoc.IsCollection.Should().BeTrue();
                     embeddedResDoc.ResourceDoc.Should().NotBeNull();
-                    embeddedResDoc.ResourceDoc.ResourceName.Should().Be(typeof(EmbeddedChildModel).GetExposedResourceName());
+                    embeddedResDoc.ResourceDoc.ResourceName.Should().Be(typeof(EmbeddedChildModel).GetResourceName());
 
                 });
             });

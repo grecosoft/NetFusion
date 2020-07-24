@@ -5,7 +5,7 @@ namespace WebTests.Rest.DocGeneration.Server
     /// <summary>
     /// Example mode populated from the body of a request.
     /// </summary>
-    [ExposedName("TestRequest")]
+    [Resource("TestRequest")]
     public class TestRequestModel
     {
         /// <summary>

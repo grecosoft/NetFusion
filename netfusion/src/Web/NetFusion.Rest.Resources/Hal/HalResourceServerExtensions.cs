@@ -46,9 +46,8 @@ namespace NetFusion.Rest.Resources.Hal
 		/// <param name="named">Optional name used to identity the embedded resource.</param>
 		public static void EmbedResource<TModel>(this HalResource resource,
 	        HalResource<TModel> embeddedResource, 
-	        string named = null) where TModel: class
+	        string named) where TModel: class
 		{
-			named ??= typeof(TModel).GetExposedResourceName();
 			EmbedValue<TModel>(resource, embeddedResource, named);
 		}
 
@@ -58,10 +57,9 @@ namespace NetFusion.Rest.Resources.Hal
         /// <param name="resource">Parent resource to embed child model.</param>
         /// <param name="model">The model to embed.</param>
         /// <param name="named">The name used to identify the embedded model.</param>
-        public static void EmbedModel<TModel>(this HalResource resource, TModel model, string named = null)
+        public static void EmbedModel<TModel>(this HalResource resource, TModel model, string named)
 			where TModel: class
 		{
-			named ??= typeof(TModel).GetExposedResourceName();
 			EmbedValue<TModel>(resource, model, named);
 		}
 
@@ -73,10 +71,9 @@ namespace NetFusion.Rest.Resources.Hal
 		/// <param name="embeddedResources">The collection of resources to embed.</param>
 		/// <param name="named">Optional name used to identity the embedded resource collection..</param>
 		public static void EmbedResources<TModel>(this HalResource resource, 
-			IEnumerable<HalResource<TModel>> embeddedResources, 
-			string named = null) where TModel : class
+			IEnumerable<HalResource<TModel>> embeddedResources, string named)
+			where TModel : class
 		{
-			named ??= typeof(TModel).GetExposedResourceName();
 			EmbedValue<TModel>(resource, embeddedResources, named);
 		}
 
@@ -87,10 +84,8 @@ namespace NetFusion.Rest.Resources.Hal
 		/// <param name="models">The model to be embedded.</param>
 		/// <param name="named">Name used to identify the embedded models.</param>
 		public static void EmbedModels<TModel>(this HalResource resource, 
-			IEnumerable<TModel> models, 
-			string named = null) where TModel: class
+			IEnumerable<TModel> models, string named) where TModel: class
 		{
-			named ??= typeof(TModel).GetExposedResourceName();
 			EmbedValue<TModel>(resource, models, named);
 		}
 
@@ -103,12 +98,10 @@ namespace NetFusion.Rest.Resources.Hal
 				"The child value to embed cannot be null.");
 
 			if (named == null)
-            {
-                throw new InvalidOperationException(
-                    $"The embedded name for type: {typeof(TModel).FullName} could not be determined.  " +
-                    "The name was not explicitly provided and the model type was not decorated with the attribute: " + 
-                    $"{typeof(ExposedNameAttribute).FullName}");
-            }
+			{
+				throw new InvalidOperationException(
+					$"The embedded name for type: {typeof(TModel).FullName} was not specified.");
+			}
 
             resource.Embedded ??= new Dictionary<string, object>();
 

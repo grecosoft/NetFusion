@@ -5,7 +5,7 @@ namespace WebTests.Rest.CodeGeneration.Server
     /// <summary>
     /// Example model for which code will be generated.
     /// </summary>
-    [ExposedName("ResourceTwo")]
+    [Resource("ResourceTwo")]
     public class ApiModelTwo
     {
         

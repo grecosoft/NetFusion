@@ -35,11 +35,11 @@ namespace NetFusion.Rest.CodeGen.Core
 
     public class FileNameConverter : ITypeNameConverter
     {
-        public string Convert(string name, Type type) => type.GetExposedResourceName();
+        public string Convert(string name, Type type) => type.GetResourceName();
     }
 
     public class TypeNameConverter : ITypeNameConverter
     {
-        public string Convert(string name, Type type) => type.GetExposedResourceName();
+        public string Convert(string name, Type type) => type.GetResourceName();
     }
 }

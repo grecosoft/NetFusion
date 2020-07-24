@@ -24,8 +24,8 @@ namespace NetFusion.Rest.Docs.Json.Descriptions
             // Check for a specific comment defined for the parent and child resources.
             var embeddedComments =_docModule.HalComments.EmbeddedComments.FirstOrDefault(c =>
                 c.EmbeddedName == embeddedDoc.EmbeddedName &&
-                c.ParentResourceName == attribute.ParentResourceType.GetExposedResourceName() &&
-                c.ChildResourceName == attribute.ChildResourceType.GetExposedResourceName());
+                c.ParentResourceName == attribute.ParentResourceType.GetResourceName() &&
+                c.ChildResourceName == attribute.ChildResourceType.GetResourceName());
 
             if (embeddedComments != null)
             {

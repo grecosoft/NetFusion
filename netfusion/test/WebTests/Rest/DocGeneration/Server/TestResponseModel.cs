@@ -11,7 +11,7 @@ namespace WebTests.Rest.DocGeneration.Server
 
     }
 
-    [ExposedName("api.sample.model")]
+    [Resource("api.sample.model")]
     public class ModelWithExposedName
     {
 
@@ -22,13 +22,13 @@ namespace WebTests.Rest.DocGeneration.Server
 
     }
 
-    [ExposedName("api.root.model")]
+    [Resource("api.root.model")]
     public class RootResponseModel
     {
 
     }
 
-    [ExposedName("api.embedded.model")]
+    [Resource("api.embedded.model")]
     public class EmbeddedChildModel
     {
 

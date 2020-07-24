@@ -37,7 +37,7 @@ namespace NetFusion.Rest.Docs.Xml.Services
             var resourceDoc = new ApiResourceDoc
             {
                 Description = _xmlComments.GetTypeComments(resourceType),
-                ResourceName = resourceType.GetExposedResourceName(),
+                ResourceName = resourceType.GetResourceName(),
                 ResourceType = resourceType
             };
             

@@ -37,7 +37,7 @@ namespace NetFusion.Rest.CodeGen.Plugin.Modules
             // Any application centric types marked with the ExposedName Attribute
             // are considered part of the Microservice's public API.
             _resourceTypes = Context.AllAppPluginTypes
-                .Where(t => t.HasAttribute<ExposedNameAttribute>())
+                .Where(t => t.HasAttribute<ResourceAttribute>())
                 .ToArray();
         }
 
@@ -96,7 +96,7 @@ namespace NetFusion.Rest.CodeGen.Plugin.Modules
             moduleLog["OutputDirectory"] = CodeGenConfig.CodeGenerationDirectory;
             moduleLog["Resources"] = _resourceTypes.Select(rt => new
             {
-                ExposedResourceName = rt.GetExposedResourceName(),
+                ResourceName = rt.GetResourceName(),
                 ImplementationType = rt.FullName
             }).ToArray();
         }

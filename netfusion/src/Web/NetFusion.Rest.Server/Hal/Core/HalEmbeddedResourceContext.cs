@@ -23,12 +23,12 @@ namespace NetFusion.Rest.Server.Hal.Core
 
         public bool IsRequested<TModel>() where TModel: class
         {
-            var resourceName = typeof(TModel).GetExposedResourceName();
+            var resourceName = typeof(TModel).GetResourceName();
             if (resourceName == null)
             {
                 throw new InvalidOperationException(
                     "The resource name associated with the model could not be determined. The model of type: " + 
-                    $"{typeof(TModel)} is not marked with the attribute: {typeof(ExposedNameAttribute)}.");
+                    $"{typeof(TModel)} is not marked with the attribute: {typeof(ResourceAttribute)}.");
             }
 
             return IsRequested(resourceName);

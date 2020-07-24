@@ -13,7 +13,6 @@ namespace NetFusion.Rest.Resources.Hal
     {
         /// <summary>
         /// Untyped reference to the model.  Only set on the server.
-        /// Will be null on the client.
         /// </summary>
         [JsonIgnore]
         public object ModelValue { get; private set; }
@@ -53,7 +52,7 @@ namespace NetFusion.Rest.Resources.Hal
         /// Creates a new HAL Resource warping a model.
         /// </summary>
         /// <param name="model">The model to be wrapped inside resource.</param>
-        /// <param name="instance">The instance of the created resource.</param>
+        /// <param name="instance">Delegate passed instance of created resource.</param>
         /// <typeparam name="TModel">The type of the associated model.</typeparam>
         /// <returns>The created resource wrapping the model.</returns>
         public static HalResource<TModel> New<TModel>(TModel model, Action<HalResource<TModel>> instance = null)

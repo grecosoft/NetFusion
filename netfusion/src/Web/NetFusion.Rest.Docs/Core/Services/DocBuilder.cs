@@ -163,7 +163,7 @@ namespace NetFusion.Rest.Docs.Core.Services
         {
             // Find any embedded types specified for the resource type.
             var embeddedAttributes = embeddedResources.Where(et =>
-                et.ParentResourceType.GetExposedResourceName() == parentResourceDoc.ResourceName);
+                et.ParentResourceType.GetResourceName() == parentResourceDoc.ResourceName);
 
             // For each embedded resource type, create an embedded resource document
             // with the documentation for each child embedded resource.
@@ -177,7 +177,7 @@ namespace NetFusion.Rest.Docs.Core.Services
                 };
 
                 embeddedResourceDoc.ResourceDoc.ResourceName = embeddedAttribute
-                    .ChildResourceType.GetExposedResourceName();
+                    .ChildResourceType.GetResourceName();
                 
                 ApplyDescriptions<IEmbeddedDescription>(desc => desc.Describe(embeddedResourceDoc, embeddedAttribute));
 
