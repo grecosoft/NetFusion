@@ -51,10 +51,30 @@ namespace NetFusion.Test.Container
             if (assert == null) throw new ArgumentNullException(nameof(assert));
             
             _fixture.AssureCompositeAppStarted();
-
-            _testServiceScope = _testServiceScope ?? _fixture.AppUnderTest.CreateServiceScope().ServiceProvider;
+            _testServiceScope ??= _fixture.AppUnderTest.CreateServiceScope().ServiceProvider;
 
             assert(_testServiceScope);
+            return this;
+        }
+        
+        /// <summary>
+        /// Creates service instance from the container that can be asserted.
+        /// </summary>
+        /// <param name="assert">Method passed the service instance to assert.
+        /// If the service is not registered, null will be returned.</param>
+        /// <typeparam name="T">The service Type</typeparam>
+        /// <returns>Self Reference.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public ContainerAssert Service<T>(Action<T> assert)
+        {
+            if (assert == null) throw new ArgumentNullException(nameof(assert));
+            
+            _fixture.AssureContainerComposed();
+            _testServiceScope ??= _fixture.AppUnderTest.CreateServiceScope().ServiceProvider;
+
+            T serviceUnderTest = _testServiceScope.GetService<T>();
+            assert(serviceUnderTest);
+
             return this;
         }
         

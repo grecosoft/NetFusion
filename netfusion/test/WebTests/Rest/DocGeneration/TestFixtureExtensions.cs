@@ -20,7 +20,7 @@ namespace WebTests.Rest.DocGeneration
             {
 
             })
-            .UsingAppSerivces(appServices => appServices.UseRestDocs())
+            .UsingAppSerivces(appBuilder => appBuilder.UseRestDocs())
             .ComposedFrom(compose =>
             {
                 compose.AddRest();

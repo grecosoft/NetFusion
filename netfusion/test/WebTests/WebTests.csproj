@@ -19,6 +19,7 @@
     <ProjectReference Include="..\..\src\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
     <ProjectReference Include="..\..\src\Core\NetFusion.Test\NetFusion.Test.csproj" />
     <ProjectReference Include="..\..\src\Web\NetFusion.Rest.Client\NetFusion.Rest.Client.csproj" />
+    <ProjectReference Include="..\..\src\Web\NetFusion.Rest.CodeGen\NetFusion.Rest.CodeGen.csproj" />
     <ProjectReference Include="..\..\src\Web\NetFusion.Rest.Common\NetFusion.Rest.Common.csproj" />
     <ProjectReference Include="..\..\src\Web\NetFusion.Rest.Resources\NetFusion.Rest.Resources.csproj" />
     <ProjectReference Include="..\..\src\Web\NetFusion.Rest.Server\NetFusion.Rest.Server.csproj" />

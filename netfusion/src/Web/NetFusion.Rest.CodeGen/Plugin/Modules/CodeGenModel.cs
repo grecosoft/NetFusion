@@ -41,6 +41,8 @@ namespace NetFusion.Rest.CodeGen.Plugin.Modules
                 .ToArray();
         }
 
+        public IReadOnlyCollection<Type> ResourceTypes => _resourceTypes;
+
         public override void RegisterDefaultServices(IServiceCollection services)
         {
             services.AddScoped<IApiCodeGenService, ApiCodeGenService>();
@@ -71,7 +73,6 @@ namespace NetFusion.Rest.CodeGen.Plugin.Modules
 
                 Context.Logger.LogInformation(
                     $"TypeScript Code Generation Completed for {files.Count()} files.  See Composite Log for Details.");
-
             }
             catch (Exception ex)
             {

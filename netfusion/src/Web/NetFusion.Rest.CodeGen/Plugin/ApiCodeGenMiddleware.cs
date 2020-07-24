@@ -47,7 +47,7 @@ namespace NetFusion.Rest.CodeGen.Plugin
             resourceName = null;
 
             string path = context.Request.Path.Value;
-            if (!path.Equals(_codeGenModule.CodeGenConfig.EndpointUrl, StringComparison.OrdinalIgnoreCase))
+            if (! path.Equals(_codeGenModule.CodeGenConfig.EndpointUrl, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
