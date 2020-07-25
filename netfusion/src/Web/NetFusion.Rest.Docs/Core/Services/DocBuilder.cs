@@ -8,6 +8,7 @@ using NetFusion.Rest.Docs.Core.Descriptions;
 using NetFusion.Rest.Docs.Models;
 using NetFusion.Rest.Docs.Plugin;
 using NetFusion.Rest.Resources;
+using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Rest.Server.Linking;
 using NetFusion.Rest.Server.Mappings;
 using NetFusion.Rest.Server.Plugin;
@@ -16,26 +17,29 @@ using NetFusion.Web.Mvc.Metadata;
 namespace NetFusion.Rest.Docs.Core.Services
 {
     /// <summary>
-    /// Service responsible for constructing an action documentation model
-    /// based on its associated metadata.  The model is then augmented with
-    /// additional documentation such as code comments by invoking associated
+    /// Service responsible for constructing an action documentation model based on its associated metadata.
+    /// The model is then augmented with additional documentation such as code comments by invoking associated
     /// IDocDescription classes.
     /// </summary>
     public class DocBuilder : IDocBuilder
     {
         private readonly IResourceMediaModule _resourceMediaModule;
+        private readonly IApiMetadataService _apiMetadata;
         private readonly IDocDescription[] _docDescriptions;
         private readonly ITypeCommentService _typeComments;
         
         public DocBuilder(IDocModule docModule,
             IResourceMediaModule resourceMediaModule,
+            IApiMetadataService apiMetadata,
             IEnumerable<IDocDescription> docDescriptions,
             ITypeCommentService typeComments)
         {
             if (docModule == null) throw new ArgumentNullException(nameof(docModule));
+            if (docDescriptions == null) throw new ArgumentNullException(nameof(docDescriptions));
             
-            _typeComments = typeComments ?? throw new ArgumentNullException(nameof(typeComments));
             _resourceMediaModule = resourceMediaModule ?? throw new ArgumentNullException(nameof(resourceMediaModule));
+            _apiMetadata = apiMetadata ?? throw new ArgumentNullException(nameof(apiMetadata));
+            _typeComments = typeComments ?? throw new ArgumentNullException(nameof(typeComments));
             
             // Instances of the IDocDescription implementations are to be executed
             // based on the order of their types registered within RestDocConfig.
@@ -99,7 +103,7 @@ namespace NetFusion.Rest.Docs.Core.Services
                     Type = paramMeta.ParameterType.GetJsTypeName()
                 };
 
-                if (paramMeta.ParameterType.IsClass)
+                if (paramMeta.ParameterType.IsClass && !paramMeta.ParameterType.IsBasicType())
                 {
                     paramDoc.ResourceDoc = _typeComments.GetResourceDoc(paramMeta.ParameterType);
                 }
@@ -121,7 +125,7 @@ namespace NetFusion.Rest.Docs.Core.Services
 
                 // If there is a response resource associated with the response status
                 // code, add documentation for the resource type. 
-                if (responseMeta.ModelType != null)
+                if (responseMeta.ModelType != null && !responseMeta.ModelType.IsBasicType())
                 {
                     responseDoc.ResourceDoc = _typeComments.GetResourceDoc(responseMeta.ModelType);
                 }
@@ -214,6 +218,8 @@ namespace NetFusion.Rest.Docs.Core.Services
                         Method = resourceLink.Methods.FirstOrDefault(),
                     };
 
+                    SetLinkDetails(relationDoc, (dynamic)resourceLink);
+
                     ApplyDescriptions<IRelationDescription>(desc => desc.Describe(resourceDoc, relationDoc, resourceLink));
                     resourceDoc.RelationDocs.Add(relationDoc);
                 }
@@ -225,6 +231,21 @@ namespace NetFusion.Rest.Docs.Core.Services
             {
                 AddRelationDoc(embeddedResourceDoc, mediaTypeEntry);
             }
+        }
+
+        private static void SetLinkDetails(ApiRelationDoc relationDoc, ResourceLink resourceLink)
+        {
+            relationDoc.HRef = resourceLink.Href;
+        }
+        
+        private void SetLinkDetails(ApiRelationDoc relationDoc, ControllerActionLink resourceLink)
+        {
+            relationDoc.HRef = _apiMetadata.GetActionMeta(resourceLink.ActionMethodInfo).RelativePath;
+        }
+        
+        private void SetRelationInfo(ApiRelationDoc relationDoc, TemplateUrlLink resourceLink)
+        {
+            relationDoc.HRef = _apiMetadata.GetActionMeta(resourceLink.ActionMethodInfo).RelativePath;
         }
         
         private void ApplyDescriptions<T>(Action<T> description)

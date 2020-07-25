@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace NetFusion.Rest.Docs.Models
 {
     /// <summary>
-    /// Model describing a resource returned from a Web Api method.
+    /// Model describing a resource returned from or posted to a Web Api method.
     /// </summary>
     public class ApiResourceDoc
     {

@@ -7,8 +7,8 @@ using NetFusion.Web.Mvc.Metadata;
 namespace NetFusion.Rest.Docs.Xml.Descriptions
 {
     /// <summary>
-    /// Adds additional documentation to an action's parameter.  An action's parameter can be for
-    /// for a Route, Header, Query, or Body parameter.
+    /// Adds additional documentation to an action's parameter from a .NET Code Comment XML file.
+    /// An action's parameter can be for for a Route, Header, Query, or Body parameter.
     /// </summary>
     public class XmlParameterComments : IParameterDescription
     {

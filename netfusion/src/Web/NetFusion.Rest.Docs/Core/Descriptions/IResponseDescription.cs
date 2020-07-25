@@ -14,7 +14,7 @@ namespace NetFusion.Rest.Docs.Core.Descriptions
         /// </summary>
         /// <param name="responseDoc">The response document to describe.</param>
         /// <param name="responseMeta">The associated document metadata from which
-        /// the document mode was created.</param>
+        /// the document model was created.</param>
         void Describe(ApiResponseDoc responseDoc, ApiResponseMeta responseMeta);
     }
 }

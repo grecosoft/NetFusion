@@ -25,14 +25,13 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
         public string EndpointUrl { get; private set; }
 
         /// <summary>
-        /// The JSON serialization options used to serialize the action
-        /// documentation model.
+        /// The JSON serialization options used to serialize the action documentation model.
         /// </summary>
         public JsonSerializerOptions SerializerOptions { get; private set; }
         
         /// <summary>
-        /// The description registered types used to lookup documentation
-        /// to describe parts of a WebApi method. 
+        /// The description registered types used to lookup documentation to describe
+        /// parts of a WebApi method document model.
         /// </summary>
         public IReadOnlyCollection<Type> DescriptionTypes { get; }
 
@@ -62,7 +61,6 @@ namespace NetFusion.Rest.Docs.Plugin.Configs
         {
             AddDocDescription<XmlActionComments>();
             AddDocDescription<XmlParameterComments>();
-            AddDocDescription<XmlResponseComments>();
             AddDocDescription<XmlHalRelationComments>();
             AddDocDescription<JsonHalEmbeddedComments>();
             AddDocDescription<JsonHalRelationComments>();

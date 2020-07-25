@@ -23,10 +23,7 @@ namespace NetFusion.Rest.Docs.Core.Services
 
         public bool TryGetActionDoc(MethodInfo actionMethodInfo, out ApiActionDoc actionDoc)
         {
-            if (actionMethodInfo is null)
-            {
-                throw new ArgumentNullException(nameof(actionMethodInfo));
-            }
+            if (actionMethodInfo == null) throw new ArgumentNullException(nameof(actionMethodInfo));
 
             actionDoc = null;      
 
@@ -43,6 +40,9 @@ namespace NetFusion.Rest.Docs.Core.Services
         public bool TryGetActionDoc(string httpMethod, string relativePath, out ApiActionDoc actionDoc)
         {
             if (string.IsNullOrWhiteSpace(httpMethod))
+                throw new ArgumentException("Http Method must be Specified.", nameof(httpMethod));
+            
+            if (string.IsNullOrWhiteSpace(relativePath))
                 throw new ArgumentException("Relative Path must be Specified.", nameof(httpMethod));
             
             actionDoc = null;

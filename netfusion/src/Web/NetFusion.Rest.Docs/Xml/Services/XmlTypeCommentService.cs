@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml.XPath;
+using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Common.Extensions.Types;
 using NetFusion.Rest.Docs.Core;
 using NetFusion.Rest.Docs.Models;
-using NetFusion.Rest.Docs.Xml.Extensions;
 using NetFusion.Rest.Resources;
 
 namespace NetFusion.Rest.Docs.Xml.Services
@@ -52,16 +52,16 @@ namespace NetFusion.Rest.Docs.Xml.Services
                 var propDoc = new ApiPropertyDoc
                 {
                     Name = propInfo.Name,
-                    IsRequired = ReflectionUtil.IsMarkedRequired(propInfo) || !ReflectionUtil.IsNullableProperty(propInfo),
+                    IsRequired = propInfo.IsMarkedRequired() || !propInfo.IsNullable(),
                     Description = _xmlComments.GetTypeMemberComments(propInfo)
                 };
                 
-                if (ReflectionUtil.IsEnumerableProperty(propInfo))
+                if (propInfo.IsEnumerable())
                 {
                     propDoc.IsArray = true;
 
-                    Type itemType = ReflectionUtil.GetEnumerableType(propInfo);
-                    if (ReflectionUtil.IsPrimitiveType(itemType))
+                    Type itemType = propInfo.GetEnumerableType();
+                    if (itemType.IsBasicType())
                     {    
                         propDoc.Type = itemType.GetJsTypeName();
                     }
@@ -71,7 +71,7 @@ namespace NetFusion.Rest.Docs.Xml.Services
                         propDoc.ResourceDoc = BuildResourceDoc(itemType);
                     }
                 }
-                else if (ReflectionUtil.IsPrimitiveProperty(propInfo))
+                else if (propInfo.IsBasicType())
                 {
                     propDoc.Type = propInfo.PropertyType.GetJsTypeName();
                 }
@@ -88,6 +88,5 @@ namespace NetFusion.Rest.Docs.Xml.Services
         private static IEnumerable<PropertyInfo> GetDescribableProperties(Type type) => 
             type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty)
                 .Where(p => p.CanRead);
-        
     }
 }

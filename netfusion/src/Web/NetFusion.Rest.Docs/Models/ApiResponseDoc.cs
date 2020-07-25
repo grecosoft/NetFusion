@@ -1,8 +1,8 @@
 namespace NetFusion.Rest.Docs.Models
 {
     /// <summary>
-    /// Model representing the possible status code returned from a
-    /// Web Api method and the optional associated response resource.
+    /// Model representing the status code returned from a Web Api method a
+    /// nd the optional associated response resource.
     /// </summary>
     public class ApiResponseDoc
     {

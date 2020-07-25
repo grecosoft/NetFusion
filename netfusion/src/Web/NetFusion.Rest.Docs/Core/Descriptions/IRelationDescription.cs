@@ -10,7 +10,7 @@ namespace NetFusion.Rest.Docs.Core.Descriptions
     public interface IRelationDescription : IDocDescription
     {
         /// <summary>
-        /// Called to add documentation to a resource.
+        /// Called to add documentation to a resource's relation.
         /// </summary>
         /// <param name="resourceDoc">The resource for which the relation is associated.</param>
         /// <param name="relationDoc">The created relation document model.</param>

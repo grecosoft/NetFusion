@@ -1,35 +1,13 @@
 using System;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
-using NetFusion.Common.Extensions.Reflection;
 
-namespace NetFusion.Rest.Docs.Xml.Extensions
+namespace NetFusion.Common.Extensions.Reflection
 {
-    /// <summary>
-    /// Refection methods specific to documentation generation.
-    /// </summary>
-    public static class ReflectionUtil
+    public static class MemberExtensions
     {
-        // Types that are class based but consider to be primitive within this context.
-        private static Type[] PrimitiveTypes { get; } = {typeof(string), typeof(DateTime)};
-        
-        public static bool IsPrimitiveProperty(PropertyInfo propertyInfo)
-        {
-            if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
-            return IsPrimitiveType(propertyInfo.PropertyType);
-        }
-
-        public static bool IsPrimitiveType(Type type)
-        {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            
-            type = Nullable.GetUnderlyingType(type) ?? type;
-            return type.IsPrimitive || PrimitiveTypes.Contains(type);
-        }
-
-        public static bool IsNullableProperty(PropertyInfo propertyInfo)
+        public static bool IsNullable(this PropertyInfo propertyInfo)
         {
             if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
             
@@ -39,14 +17,13 @@ namespace NetFusion.Rest.Docs.Xml.Extensions
                 && propType.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
         
-        public static bool IsMarkedRequired(MemberInfo memberInfo)
+        public static bool IsMarkedRequired(this MemberInfo memberInfo)
         {
             if (memberInfo == null) throw new ArgumentNullException(nameof(memberInfo));
             return memberInfo.GetCustomAttribute<RequiredAttribute>() != null;
         }
-
-
-        public static bool IsEnumerableProperty(PropertyInfo propertyInfo)
+        
+        public static bool IsEnumerable(this PropertyInfo propertyInfo)
         {
             if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
             
@@ -57,7 +34,7 @@ namespace NetFusion.Rest.Docs.Xml.Extensions
                    propType.CanAssignTo(typeof(IEnumerable));
         }
 
-        public static Type GetEnumerableType(PropertyInfo propertyInfo)
+        public static Type GetEnumerableType(this PropertyInfo propertyInfo)
         {
             if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
             
@@ -68,7 +45,7 @@ namespace NetFusion.Rest.Docs.Xml.Extensions
             }
 
             if (propType.IsGenericType && propType.GetGenericArguments().Length == 1 
-                    && propType.CanAssignTo(typeof(IEnumerable)))
+                                       && propType.CanAssignTo(typeof(IEnumerable)))
             {
                 return propType.GetGenericArguments()[0];
             }

@@ -8,7 +8,7 @@ namespace NetFusion.Common.Extensions.Reflection
     /// <summary>
     /// Extension methods for querying type information.
     /// </summary>
-    public static class QueryReflectionExtensions
+    public static class ClassExtensions
     {
         /// <summary>
         /// Determines if the type is a non-abstract type derived from the specified parent type.

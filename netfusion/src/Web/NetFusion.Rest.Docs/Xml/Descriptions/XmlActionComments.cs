@@ -6,7 +6,8 @@ using NetFusion.Web.Mvc.Metadata;
 namespace NetFusion.Rest.Docs.Xml.Descriptions
 {
     /// <summary>
-    /// Sets the comments associated with a given Web Controller's action method.
+    /// Sets the comments associated with a given Web Controller's action method
+    /// from a .NET Code Comment XML file.
     /// </summary>
     public class XmlActionComments : IActionDescription
     {

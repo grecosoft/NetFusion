@@ -1,8 +1,7 @@
 namespace NetFusion.Rest.Docs.Models
 {
     /// <summary>
-    /// Documentation model for the different parameter inputs
-    /// accepted by a Web Api method.
+    /// Documentation model for the different parameter inputs accepted by a Web Api method.
     /// </summary>
     public class ApiParameterDoc
     {
@@ -32,8 +31,7 @@ namespace NetFusion.Rest.Docs.Models
         public string Description { get; set; }
         
         /// <summary>
-        /// this will contain the documentation for an action method
-        /// populated from the message body.
+        /// Contains the documentation for an action method parameter if populated from the message body.
         /// </summary>
         public ApiResourceDoc ResourceDoc { get; set; }
     }

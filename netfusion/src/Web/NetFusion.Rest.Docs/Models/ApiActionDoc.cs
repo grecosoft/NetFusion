@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace NetFusion.Rest.Docs.Models
@@ -25,12 +26,12 @@ namespace NetFusion.Rest.Docs.Models
         {
             if (string.IsNullOrWhiteSpace(relativePath))
             {
-                throw new System.ArgumentException("Value must be specified.", nameof(relativePath));
+                throw new ArgumentException("Value must be specified.", nameof(relativePath));
             }
 
             if (string.IsNullOrWhiteSpace(httpMethod))
             {
-                throw new System.ArgumentException("Value must be specified.", nameof(httpMethod));
+                throw new ArgumentException("Value must be specified.", nameof(httpMethod));
             }
 
             RelativePath = relativePath;
