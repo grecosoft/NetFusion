@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using NetFusion.Rest.Resources;
 
-namespace NetFusion.Rest.Resources.Hal
+namespace NetFusion.Rest.Client
 {
     /// <summary>
     /// Extension methods used by a .NET WebApi client used to obtain links
     /// and embedded resources and models
     /// </summary>
-    public static class HalResourceClientExtensions
+    public static class HalResourceExtensions
     {
-        static HalResourceClientExtensions()
+        static HalResourceExtensions()
         {
             DefaultOptions = new JsonSerializerOptions
             {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace NetFusion.Rest.Resources.Hal
+namespace NetFusion.Rest.Resources
 {
     /// <summary>
     /// Implements the IHalResource interface containing a non-type model.

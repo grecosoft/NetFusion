@@ -8,7 +8,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Resources;
 
 namespace NetFusion.Rest.Client.Core
 {

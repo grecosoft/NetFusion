@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Resources;
 
 namespace WebTests.Mocks
 {

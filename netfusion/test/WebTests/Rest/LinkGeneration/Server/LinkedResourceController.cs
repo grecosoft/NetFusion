@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Rest.Resources;
-using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Server.Hal;
 using WebTests.Mocks;
 
 namespace WebTests.Rest.LinkGeneration.Server

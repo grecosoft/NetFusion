@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetFusion.Rest.Resources;
 
-namespace NetFusion.Rest.Resources.Hal
+namespace NetFusion.Rest.Server.Hal
 {
 	/// <summary>
 	/// HalResource extension methods used on server side of an WebApi implementation.
@@ -10,7 +11,7 @@ namespace NetFusion.Rest.Resources.Hal
 	/// HalResource collections.  Also provides methods for embedding child resources
 	/// and models into parent resource.
 	/// </summary>
-    public static class HalResourceServerExtensions
+    public static class HalResourceExtensions
     {
 	    /// <summary>
 	    /// Wraps a model within a HalResource instance.  The returned resource can then

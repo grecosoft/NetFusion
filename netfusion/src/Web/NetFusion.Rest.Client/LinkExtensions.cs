@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NetFusion.Rest.Resources;
 
-namespace NetFusion.Rest.Client.Resources
+namespace NetFusion.Rest.Client
 {
     /// <summary>
     /// Extension methods used to create request from link object.

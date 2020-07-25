@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using FluentAssertions;
 using NetFusion.Rest.Client;
-using NetFusion.Rest.Client.Resources;
 using NetFusion.Rest.Resources;
 using Xunit;
 

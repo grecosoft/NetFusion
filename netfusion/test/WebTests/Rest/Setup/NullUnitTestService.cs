@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
-using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Resources;
 using WebTests.Mocks;
 using WebTests.Rest.ClientRequests.Server;
 

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using NetFusion.Rest.Client;
 using NetFusion.Rest.Resources;
-using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Server.Hal;
 using WebTests.Rest.Resources.Models;
 using Xunit;
 

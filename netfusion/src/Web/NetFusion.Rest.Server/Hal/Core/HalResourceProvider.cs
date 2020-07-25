@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NetFusion.Rest.Resources;
-using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Linking;
 using NetFusion.Rest.Server.Mappings;
 using NetFusion.Web.Mvc.Metadata;

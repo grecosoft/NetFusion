@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using FluentAssertions;
+using NetFusion.Rest.Client;
 using NetFusion.Rest.Resources;
-using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Server.Hal;
 using Xunit;
 
 namespace WebTests.Rest.Resources

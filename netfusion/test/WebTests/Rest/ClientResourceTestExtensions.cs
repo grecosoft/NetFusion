@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Net.Http;
 using NetFusion.Rest.Client;
-using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Resources;
 using Xunit;
 
 namespace WebTests.Rest
