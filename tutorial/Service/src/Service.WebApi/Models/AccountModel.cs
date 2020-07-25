@@ -5,7 +5,7 @@ namespace Service.WebApi.Models
     /// <summary>
     /// Resource representing a summary of an account.
     /// </summary>
-    [ExposedName("type-customer-account")]
+    [Resource("type-customer-account")]
     public class AccountModel
     {
         /// <summary>

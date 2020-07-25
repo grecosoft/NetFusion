@@ -3,7 +3,7 @@ using NetFusion.Rest.Resources;
 
 namespace Service.WebApi.Resources
 {
-    [ExposedName("type-address")]
+    [Resource("type-address")]
     public class AddressResource 
     {
         public Guid Id { get; set; }

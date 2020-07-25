@@ -8,7 +8,7 @@ using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Hal;
 using Xunit;
 
-namespace WebTests.Rest.Resources
+namespace WebTests.Rest.ClientRequests
 {
     
     /// <summary>
@@ -17,7 +17,7 @@ namespace WebTests.Rest.Resources
     /// models are correctly returned to the client.  Calling clients invoking actions on resources only
     /// submit back the model and not the resource.  
     /// </summary>
-    public class SerializationTests
+    public class ResourceSerializationTests
     {
         private static JsonSerializerOptions SerializerOptions => new JsonSerializerOptions
         {

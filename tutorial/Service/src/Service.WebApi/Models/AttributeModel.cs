@@ -20,7 +20,7 @@ namespace Service.WebApi.Models
     /// <summary>
     /// Contains a name/value pair.
     /// </summary>
-    [ExposedName("type-attribute")]
+    [Resource("type-attribute")]
     public class AttributeValue : AttributeValueBase
     {
         /// <summary>

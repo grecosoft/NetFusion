@@ -7,7 +7,7 @@ namespace Service.WebApi.Models
     /// <summary>
     /// Model representing a payment.
     /// </summary>
-    [ExposedName("type-payment")]
+    [Resource("type-payment")]
     public class PaymentModel
     {
         /// <summary>

@@ -5,7 +5,7 @@ namespace Service.WebApi.Resources
     /// <summary>
     /// Contains information about a school.
     /// </summary>
-    [ExposedName("type-school")]
+    [Resource("type-school")]
     public class SchoolResource 
     {
         /// <summary>

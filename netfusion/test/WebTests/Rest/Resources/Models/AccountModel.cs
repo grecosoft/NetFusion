@@ -2,6 +2,9 @@ using NetFusion.Rest.Resources;
 
 namespace WebTests.Rest.Resources.Models
 {
+    /// <summary>
+    /// Represents a model returned from a REST Api.
+    /// </summary>
     [Resource("AccountResource")]
     public class AccountModel
     {

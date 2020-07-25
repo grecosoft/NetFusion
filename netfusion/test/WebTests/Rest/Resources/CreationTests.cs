@@ -217,7 +217,6 @@ namespace WebTests.Rest.Resources
 
             resource.Model.Should().NotBeNull();
             resource.Links.Should().HaveCount(2);
-
         }
     }
 }
