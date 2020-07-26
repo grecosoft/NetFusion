@@ -3,12 +3,12 @@ using NetFusion.Test.Plugins;
 using WebTests.Hosting;
 using WebTests.Rest.CodeGeneration.Server;
 
-namespace WebTests.Rest.CodeGeneration
+namespace WebTests.Rest.CodeGeneration.Setup
 {
     /// <summary>
     /// Configured TestServer bootstrapped with NetFusion.
     /// </summary>
-    public static class TestFixtureExtensions
+    public static class TestWebHostSetup
     {
         /// <summary>
         /// Configures a TestServer bootstrapped with the Code-Generation plugin.

@@ -1,28 +1,33 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.Linq;
 using FluentAssertions;
-using WebTests.Rest.DocGeneration.Mocks;
+using WebTests.Rest.DocGeneration.Server;
+using WebTests.Rest.DocGeneration.Setup;
 using Xunit;
 
 namespace WebTests.Rest.DocGeneration
 {
     public class XmlTypeCommentTests
     {
+        /// <summary>
+        /// The description of a resource is set based on XML comment for that type.
+        /// </summary>
         [Fact]
         public void TypeComments_AddedToDocModel()
         {
-            var resourceDoc = XmlTypeCommentMock.Arrange.GetResourceDoc(typeof(TestResource));
+            var resourceDoc = XmlCommentsSetup.TypeService.GetResourceDoc(typeof(TestResource));
             resourceDoc.Should().NotBeNull();
             resourceDoc.Description.Should().Be("Class comment for test-resource.");
         }
 
+        /// <summary>
+        /// For each resource property, the associated comments are found in the XML comments
+        /// and specified on each property document model.
+        /// </summary>
         [Fact]
         public void TypeMemberComments_AddedToDocModel()
         {
-            var resourceDoc = XmlTypeCommentMock.Arrange.GetResourceDoc(typeof(TestResource));
+            var resourceDoc = XmlCommentsSetup.TypeService.GetResourceDoc(typeof(TestResource));
             resourceDoc.Properties.Should().NotBeNullOrEmpty();
-            resourceDoc.Properties.Should().HaveCount(3);
 
             var firstPropDoc = resourceDoc.Properties.First(p => p.Name == "FirstValue");
             firstPropDoc.Description.Should().Be("Example string property comment.");
@@ -33,10 +38,15 @@ namespace WebTests.Rest.DocGeneration
             secondPropDoc.Type.Should().BeOfType<string>().And.Subject.Should().Be("Number");
         }
 
+        /// <summary>
+        /// The required property is set on each resource property document model.  This is
+        /// based on the .NET Core Required attribute and the nullability of the property's
+        /// type.
+        /// </summary>
         [Fact]
         public void TypeMemberRequiredIndicator_SetOnDocModel()
         {
-            var resourceDoc = XmlTypeCommentMock.Arrange.GetResourceDoc(typeof(RequiredTestResource));
+            var resourceDoc = XmlCommentsSetup.TypeService.GetResourceDoc(typeof(RequiredTestResource));
             resourceDoc.Properties.First(p => p.Name == "FirstValue").IsRequired.Should().BeFalse();
             resourceDoc.Properties.First(p => p.Name == "SecondValue").IsRequired.Should().BeTrue();
             resourceDoc.Properties.First(p => p.Name == "ThirdValue").IsRequired.Should().BeTrue();
@@ -45,10 +55,14 @@ namespace WebTests.Rest.DocGeneration
             resourceDoc.Properties.First(p => p.Name == "SixthValue").IsRequired.Should().BeFalse();
         }
 
+        /// <summary>
+        /// Based on the type of a resource's property, the IsArray property of the document
+        /// model is set.
+        /// </summary>
         [Fact]
         public void TypeMember_CanBeOf_ArrayType()
         {
-            var resourceDoc = XmlTypeCommentMock.Arrange.GetResourceDoc(typeof(ArrayTestResource));
+            var resourceDoc = XmlCommentsSetup.TypeService.GetResourceDoc(typeof(ArrayTestResource));
             var firstProp = resourceDoc.Properties.First(p => p.Name == "FirstValue");
             var secondProp = resourceDoc.Properties.First(p => p.Name == "SecondValue");
 
@@ -60,10 +74,15 @@ namespace WebTests.Rest.DocGeneration
             secondProp.Type.Should().Be("Object");
         }
 
+        /// <summary>
+        /// If a resource property is of a complex class type, the documentation for that
+        /// type is provided by setting the ResourceDoc property on the document model.
+        /// NOTE:  this is a recursive process.
+        /// </summary>
         [Fact]
         public void TypeMember_CanBeOf_ObjectType()
         {
-            var resourceDoc = XmlTypeCommentMock.Arrange.GetResourceDoc(typeof(TestResource));
+            var resourceDoc = XmlCommentsSetup.TypeService.GetResourceDoc(typeof(TestResource));
             resourceDoc.Properties.Should().HaveCount(3);
 
             var objPropDoc = resourceDoc.Properties.First(p => p.Name == "ThirdValue");
@@ -78,66 +97,5 @@ namespace WebTests.Rest.DocGeneration
             childObjPropDoc.Should().NotBeNull();
             childObjPropDoc.Description.Should().Be("Example property of datetime.");
         }
-    }
-
-    /// <summary>
-    /// Class comment for test-resource.
-    /// </summary>
-    public class TestResource
-    {
-        /// <summary>
-        /// Example string property comment.
-        /// </summary>
-        public string FirstValue { get; set; }
-
-        /// <summary>
-        /// Example integer string property.
-        /// </summary>
-        public int SecondValue { get; set; }
-
-        /// <summary>
-        /// Example property of an object type.
-        /// </summary>
-        public TestChildResource ThirdValue { get; set; }
-    }
-
-    /// <summary>
-    /// Example comment for a child object type.
-    /// </summary>
-    public class TestChildResource
-    {
-        /// <summary>
-        /// Example property of datetime.
-        /// </summary>
-        public DateTime FirstValue { get; set; }
-    }
-
-    public class RequiredTestResource
-    {
-        public string FirstValue { get; set; }
-
-        [Required]
-        public string SecondValue { get; set; }
-
-        public int ThirdValue { get; set; }
-
-        public DateTime? ForthValue { get; set; }
-
-        [Required]
-        public int? FifthValue { get; set; }
-
-        public TestChildResource SixthValue { get; set; }
-    }
-
-    public class ArrayTestResource
-    {
-        public int[] FirstValue { get; set; }
-
-        public ArrayItemType[] SecondValue { get; set; }
-    }
-
-    public class ArrayItemType
-    {
-
     }
 }

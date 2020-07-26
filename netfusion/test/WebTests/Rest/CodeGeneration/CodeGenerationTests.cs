@@ -6,6 +6,7 @@ using NetFusion.Rest.CodeGen.Plugin.Configs;
 using NetFusion.Rest.CodeGen.Plugin.Modules;
 using NetFusion.Test.Container;
 using WebTests.Rest.CodeGeneration.Server;
+using WebTests.Rest.CodeGeneration.Setup;
 using Xunit;
 
 namespace WebTests.Rest.CodeGeneration

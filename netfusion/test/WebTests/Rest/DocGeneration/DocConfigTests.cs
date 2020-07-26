@@ -1,3 +1,9 @@
+using System;
+using System.IO;
+using System.Text.Json;
+using FluentAssertions;
+using NetFusion.Rest.Docs.Plugin.Configs;
+using NetFusion.Rest.Docs.Xml.Descriptions;
 using Xunit;
 
 namespace WebTests.Rest.DocGeneration
@@ -16,7 +22,8 @@ namespace WebTests.Rest.DocGeneration
         [Fact]
         public void ByDefaultDescriptionFiles_LocatedInBaseDirectory()
         {
-            
+            var config = new RestDocConfig();
+            config.DescriptionDirectory.Should().Be(AppContext.BaseDirectory);
         }
 
         /// <summary>
@@ -26,7 +33,9 @@ namespace WebTests.Rest.DocGeneration
         [Fact]
         public void BootstrapCan_Specify_FileDescriptionDirectory()
         {
-            
+            var config = new RestDocConfig();
+            config.SetDescriptionDirectory(Path.Combine(AppContext.BaseDirectory, "comment-files"));
+            config.DescriptionDirectory.Should().Be(Path.Combine(AppContext.BaseDirectory, "comment-files"));
         }
 
         /// <summary>
@@ -36,7 +45,8 @@ namespace WebTests.Rest.DocGeneration
         [Fact]
         public void DocumentationEndpoint_HasDefaultValue()
         {
-            
+            var config = new RestDocConfig();
+            config.EndpointUrl.Should().Be("/api/net-fusion/rest");
         }
 
         /// <summary>
@@ -46,7 +56,9 @@ namespace WebTests.Rest.DocGeneration
         [Fact]
         public void BootstrapCan_Specify_DocumentationEndPoint()
         {
-            
+            var config = new RestDocConfig();
+            config.UseEndpoint("api/use/this");
+            config.EndpointUrl.Should().Be("api/use/this");
         }
 
         /// <summary>
@@ -55,7 +67,9 @@ namespace WebTests.Rest.DocGeneration
         [Fact]
         public void DefaultSerializationSettingsSpecified()
         {
-            
+            var config = new RestDocConfig();
+            config.SerializerOptions.Should().NotBeNull();
+            config.SerializerOptions.PropertyNamingPolicy.Should().Be(JsonNamingPolicy.CamelCase);
         }
 
         /// <summary>
@@ -65,7 +79,9 @@ namespace WebTests.Rest.DocGeneration
         [Fact]
         public void SerializationSetting_CanBeSpecified()
         {
-            
+            var config = new RestDocConfig();
+            config.UseSerializationOptions(new JsonSerializerOptions {IgnoreNullValues = true});
+            config.SerializerOptions.IgnoreNullValues.Should().BeTrue();
         }
 
         /// <summary>
@@ -78,7 +94,8 @@ namespace WebTests.Rest.DocGeneration
         [Fact]
         public void DescriptionImplementations_SpecifiedByDefault()
         {
-            
+            var config = new RestDocConfig();
+            config.DescriptionTypes.Should().NotBeNullOrEmpty();
         }
 
         /// <summary>
@@ -86,9 +103,13 @@ namespace WebTests.Rest.DocGeneration
         /// bootstrapping of the host.
         /// </summary>
         [Fact]
-        public void DefaultDescriptionImplementations_Specified()
+        public void DescriptionImplementations_Specified()
         {
-            
+            var config = new RestDocConfig();
+            config.ClearDescriptions();
+            config.AddDocDescription<XmlActionComments>();
+            config.AddDocDescription<XmlParameterComments>();
+            config.DescriptionTypes.Should().HaveCount(2);
         }
     }
 }

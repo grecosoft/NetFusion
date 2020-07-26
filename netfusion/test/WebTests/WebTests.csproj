@@ -28,7 +28,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Rest\DocGeneration\" />
-    <Folder Include="Rest\DocGeneration\Mocks\" />
     <Folder Include="Rest\DocGeneration\Server\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HalComments.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

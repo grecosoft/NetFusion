@@ -3,7 +3,7 @@ using NetFusion.Rest.CodeGen.Plugin;
 using NetFusion.Test.Plugins;
 using WebTests.Rest.CodeGeneration.Server;
 
-namespace WebTests.Rest.CodeGeneration
+namespace WebTests.Rest.CodeGeneration.Setup
 {
     /// <summary>
     /// Common test configurations.

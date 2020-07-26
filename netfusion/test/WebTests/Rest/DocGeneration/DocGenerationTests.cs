@@ -6,13 +6,16 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Rest.Resources;
+using WebTests.Rest.DocGeneration.Setup;
 
 namespace WebTests.Rest.DocGeneration
 {
     public class DocGenerationTests
     {
-        // The comment, associated with the action method, is specified as the description
-        // for the returned ApiActionDoc.
+        /// <summary>
+        /// The comment, associated with the action method, is specified as the description
+        /// for the returned ApiActionDoc.
+        /// </summary>
         [Fact]
         public Task DocsForWebApiMethodReturned()
         {
@@ -32,8 +35,10 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
-        // When a action method has associated route parameters, the comments associated with
-        // the parameters are specified on each ApiParameterDoc instance.
+        /// <summary>
+        /// When a action method has associated route parameters, the comments associated with
+        /// the parameters are specified on each ApiParameterDoc instance.
+        /// </summary>
         [Fact]
         public Task DocsForEachRouteParamReturned()
         {
@@ -63,8 +68,10 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
-        // If a route parameter is optional and a default value is specified, the returned
-        // parameter document will include the default value.
+        /// <summary>
+        /// If a route parameter is optional and a default value is specified, the returned
+        /// parameter document will include the default value.
+        /// </summary>
         [Fact]
         public Task DocForRouteParam_IncludesDefaultValue()
         {
@@ -87,8 +94,10 @@ namespace WebTests.Rest.DocGeneration
                 });
             });
         }
-
-        // The API documentation contains the headers accepted by the REST method.
+        
+        /// <summary>
+        /// The API documentation contains the headers accepted by the REST method.
+        /// </summary>
         [Fact]
         public Task DocsForEachHeaderParamReturned()
         {
@@ -116,9 +125,11 @@ namespace WebTests.Rest.DocGeneration
                 });
             });
         }
-
-        // The API header documentation indicates if the header value has a default
-        // value that will be used if not specified.
+        
+        /// <summary>
+        /// The API header documentation indicates if the header value has a default
+        /// value that will be used if not specified.
+        /// </summary>
         [Fact]
         public Task DocForEachHeaderParam_IncludesDefaultValue()
         {
@@ -143,7 +154,9 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
-        // The API documentation contains the query parameters accepted by the REST method.
+        /// <summary>
+        /// The API documentation contains the query parameters accepted by the REST method.
+        /// </summary>
         [Fact]
         public Task DocsForEachQueryParamReturned()
         {
@@ -172,8 +185,11 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
-        // The API query parameter documentation indicates if the query value has
-        // a default value that will be used if not specified.
+        /// <summary>
+        /// The API query parameter documentation indicates if the query value has
+        /// a default value that will be used if not specified.
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public Task DocForEachQueryParam_IncludesDefaultValue()
         {
@@ -201,9 +217,10 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
-
-        // The response documentation will include the possible status types
-        // returned from the WebApi action method.
+        /// <summary>
+        /// The response documentation will include the possible status types
+        /// returned from the WebApi action method.
+        /// </summary>
         [Fact]
         public Task DocsForEachPossibleStatusCodeReturned()
         {
@@ -224,8 +241,10 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
-        // Response models returned from an API can specify a name used to identity
-        // the response type to external consumers.   
+        /// <summary>
+        /// Response models returned from an API can specify a name used to identity
+        /// the response type to external consumers.   
+        /// </summary>
         [Fact]
         public void ApiModelType_CanSpecifyExposedName()
         {
@@ -233,10 +252,12 @@ namespace WebTests.Rest.DocGeneration
                 .Should().Be("api.sample.model");
         }
 
-        // If a response model does not explicitly specify an external type name,
-        // the class name including the namespace is used.  The prior approach is
-        // best since the name is hard-coded and will not change if the internal
-        // class name is modified.
+        /// <summary>
+        /// If a response model does not explicitly specify an external type name,
+        /// the class name including the namespace is used.  The prior approach is
+        /// best since the name is hard-coded and will not change if the internal
+        /// class name is modified.
+        /// </summary>
         [Fact]
         public void ApiModelTypeAndNamespace_IfNoExposedName()
         {
@@ -244,8 +265,11 @@ namespace WebTests.Rest.DocGeneration
                 .Should().Be(nameof(ModelWithoutExposedName));
         }
 
-        // If an API method specifies the response type and status code, both
-        // will be contained within the response document.
+        /// <summary>
+        /// If an API method specifies the response type and status code, both
+        /// will be contained within the response document.
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public Task DocsForEachResponseResourceReturned()
         {
@@ -273,8 +297,10 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
-        // An API can specify which resources will be embedded within a parent resource.  When a resource
-        // has an embedded resource, the resource document will have its embedded-resources collection populated.
+        /// <summary>
+        /// An API can specify which resources will be embedded within a parent resource.  When a resource
+        /// has an embedded resource, the resource document will have its embedded-resources collection populated.
+        /// </summary>
         [Fact]
         public Task DocsForEmbeddedResourceReturned()
         {
@@ -301,8 +327,10 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
-        // An API can specify which resources will have an embedded collection of resources.  When a collection of
-        // resources is embedded, the IsCollection property will be set to true.
+        /// <summary>
+        /// An API can specify which resources will have an embedded collection of resources.  When a collection of
+        /// resources is embedded, the IsCollection property will be set to true.
+        /// </summary>
         [Fact]
         public Task DocsForEmbeddedResourceCollectionReturned()
         {
@@ -327,8 +355,10 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
-        // When the documentation for a resource is built, a check is made to determine if the resource has
-        // any associated linked relations.  If so, documentation is returned for each relation.
+        /// <summary>
+        /// When the documentation for a resource is built, a check is made to determine if the resource has
+        /// any associated linked relations.  If so, documentation is returned for each relation.
+        /// </summary>
         [Fact]
         public Task DocsForResourceRelationsReturned()
         {
@@ -357,9 +387,11 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
-        // Resources can be embedded to any nested level.  To keep APIs simple, it is best to limit the depth.
-        // Nevertheless, the following validates that a resource within an embedded collection containing another
-        // embedded single resource is correctly documented.
+        /// <summary>
+        /// Resources can be embedded to any nested level.  To keep APIs simple, it is best to limit the depth.
+        /// Nevertheless, the following validates that a resource within an embedded collection containing another
+        /// embedded single resource is correctly documented.
+        /// </summary>
         [Fact]
         public Task DocsForEmbeddedResources_RecursivelySet()
         {
@@ -389,6 +421,10 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
+        /// <summary>
+        /// For a controller action method that populates a resource/model from the message body,
+        /// the resource documentation is included in the action document.
+        /// </summary>
         [Fact] 
         public Task DocsForActionParamPopulatedFormBody()
         {
@@ -408,8 +444,10 @@ namespace WebTests.Rest.DocGeneration
             });
         }
 
-        // If an API Web Url is specified for which the documentation could
-        // not be determined, an HTTP 404 is returned.
+        /// <summary>
+        /// If an API Web Url is specified for which the documentation could
+        /// not be determined, an HTTP 404 is returned.
+        /// </summary>
         [Fact]
         public Task IfNoApiDocumentFound_Http404Returned()
         {

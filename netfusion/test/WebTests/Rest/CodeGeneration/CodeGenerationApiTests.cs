@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using WebTests.Hosting;
+using WebTests.Rest.CodeGeneration.Setup;
 using WebTests.Rest.DocGeneration.Server;
 using Xunit;
 

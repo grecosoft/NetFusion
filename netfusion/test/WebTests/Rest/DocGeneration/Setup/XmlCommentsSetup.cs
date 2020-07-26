@@ -3,17 +3,26 @@ using NetFusion.Rest.Docs.Plugin;
 using NetFusion.Rest.Docs.Plugin.Configs;
 using NetFusion.Rest.Docs.Xml.Services;
 
-namespace WebTests.Rest.DocGeneration.Mocks
+namespace WebTests.Rest.DocGeneration.Setup
 {
-    public class XmlTypeCommentMock
+    public class XmlCommentsSetup
     {
-        public static XmlTypeCommentService Arrange
+        public static XmlTypeCommentService TypeService
         {
             get
             {
                 var docModule = new MockDocModule();
                 var xmlCommentSrv = new XmlCommentService(docModule);
                 return new XmlTypeCommentService(xmlCommentSrv);
+            }
+        }
+        
+        public static XmlCommentService XmlService
+        {
+            get
+            {
+                var docModule = new MockDocModule();
+                return new XmlCommentService(docModule);
             }
         }
     }

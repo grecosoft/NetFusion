@@ -10,9 +10,9 @@ using NetFusion.Test.Plugins;
 using WebTests.Hosting;
 using WebTests.Rest.DocGeneration.Server;
 
-namespace WebTests.Rest.DocGeneration
+namespace WebTests.Rest.DocGeneration.Setup
 {
-    public static class TestFixtureExtensions
+    public static class TestWebHostSetup
     {
         public static WebServerConfig ArrangeForRestDocs(this WebHostFixture fixture)
         {

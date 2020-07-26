@@ -1,0 +1,16 @@
+{
+  "embeddedComments": [
+    {
+      "embeddedName":  "embedded-child", "parentResourceName":  "api.root.model", "childResourceName":  "api.embedded.model", 
+      "comments":  "exact_match_comment"
+    },
+    {
+      "embeddedName":  "embedded-child-partial", "comments":  "partial_match_comment"
+    }
+  ],
+  
+  "relationComments": [
+    { "relationName":  "current-child", "resourceName": "resource-with-relation", "comments":  "exact_match_comment" },
+    { "relationName":  "self", "comments":  "partial_match_comment" }
+  ]
+}
