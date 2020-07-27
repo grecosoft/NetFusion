@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using WebTests.Rest.ApiMetadata.Server;
+using WebTests.Rest.ApiMetadata.Setup;
 using Xunit;
 
 namespace WebTests.Rest.ApiMetadata
@@ -14,7 +15,7 @@ namespace WebTests.Rest.ApiMetadata
         [Fact]
         public Task RequiredRouteParams()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMetadata = metadata.GetActionMeta<MetadataController>(
                     "RequiredRouteParams", typeof(int), typeof(string));
@@ -27,7 +28,7 @@ namespace WebTests.Rest.ApiMetadata
         [Fact]
         public Task OptionalRouteParams()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMetadata = metadata.GetActionMeta<MetadataController>(
                     "OptionalRouteParams", typeof(int), typeof(int?), typeof(string));
@@ -41,7 +42,7 @@ namespace WebTests.Rest.ApiMetadata
         [Fact]
         public Task OptionalRouteParamsWithDefaults()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMetadata = metadata.GetActionMeta<MetadataController>(
                     "OptionalRouteParamsWithDefaults", typeof(int), typeof(int?), typeof(string));
@@ -55,7 +56,7 @@ namespace WebTests.Rest.ApiMetadata
         [Fact]
         public Task RouteParamPopulatedFromBodyPost()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMetadata = metadata.GetActionMeta<MetadataController>(
                     "RouteParamWithPostBody", typeof(int), typeof(MetaBodyPost));
@@ -68,7 +69,7 @@ namespace WebTests.Rest.ApiMetadata
         [Fact]
         public Task ActionParamsPopulatedFromObjectProperties()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMetadata = metadata.GetActionMeta<MetadataController>(
                     "ActionObjectPropertySources", typeof(int), typeof(HeaderParamSource), typeof(QueryParamSource));

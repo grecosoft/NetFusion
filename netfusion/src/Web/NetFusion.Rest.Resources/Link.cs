@@ -30,7 +30,7 @@
         /// <summary>
         /// Indicates the methods that can be used to call the HREF.
         /// </summary>
-        public string[] Methods { get; set; }
+        public string Method { get; set; }
 
         /// <summary>
         ///  Its value MAY be used as a secondary key for selecting Link Objects which 

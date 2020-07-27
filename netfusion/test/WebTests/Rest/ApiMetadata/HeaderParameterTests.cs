@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using WebTests.Rest.ApiMetadata.Server;
+using WebTests.Rest.ApiMetadata.Setup;
 using Xunit;
 
 namespace WebTests.Rest.ApiMetadata
@@ -13,7 +14,7 @@ namespace WebTests.Rest.ApiMetadata
         [Fact]
         public Task RequiredHeaderParams()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMetadata = metadata.GetActionMeta<MetadataController>(
                     "RequiredHeaderParams", typeof(int), typeof(string));
@@ -26,7 +27,7 @@ namespace WebTests.Rest.ApiMetadata
         [Fact]
         public Task OptionalHeaderParams()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMetadata = metadata.GetActionMeta<MetadataController>(
                     "OptionalHeaderParams", typeof(int), typeof(string));
@@ -39,7 +40,7 @@ namespace WebTests.Rest.ApiMetadata
         [Fact]
         public Task OptionalHeaderParamsWithDefaults()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMetadata = metadata.GetActionMeta<MetadataController>(
                     "OptionalHeaderParamsWithDefaults", typeof(int), typeof(string));

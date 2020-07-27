@@ -2,23 +2,26 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using WebTests.Rest.ApiMetadata.Server;
+using WebTests.Rest.ApiMetadata.Setup;
 using Xunit;
 
 namespace WebTests.Rest.ApiMetadata
 {
     /// <summary>
-    /// Validates the population of action level metadata from the underlying
-    /// parameter descriptions discovered by the ASP.NET runtime.
+    /// ASP.NET Core builds an underlying discovery model that is used to process incoming Web requests and
+    /// for generating URLs based on a set of controller, action, and route parameters.  The ApiMetadata
+    /// classes contain a subset of the needed metadata used by the other NetFusion web plugins.
     /// </summary>
     public class ActionTests
     {
         /// <summary>
-        /// Validates the action level metadata properties are correctly set.
+        /// The root ApiActionMeta contains the action specific information populated
+        /// from ASP.NET Core's underlying discovery model.
         /// </summary>
         [Fact]
         public Task ApiAction_Metadata_Populated()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMeta = metadata.GetActionMeta<MetadataController>("ActionDetails", typeof(int));
                 actionMeta.ControllerName.Should().Be("Metadata");
@@ -33,20 +36,26 @@ namespace WebTests.Rest.ApiMetadata
             });
         }
        
+        /// <summary>
+        /// A WebApi method can have the response status and corresponding model specified.
+        /// </summary>
         [Fact]
         public Task AssertStatusCodeWithResponse()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMeta = metadata.GetActionMeta<MetadataController>("ActionWithResponseTypeAndStatus");
                 actionMeta.ResponseMeta.AssertResponseMeta(StatusCodes.Status200OK, typeof(ResponseModel));
             });
         }
 
+        /// <summary>
+        /// A WebApi method can return more than one status code.
+        /// </summary>
         [Fact]
         public Task AssertMultipleStatusCodes()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMeta = metadata.GetActionMeta<MetadataController>("ActionWithMultipleStatuses");
                 actionMeta.ResponseMeta.AssertResponseMeta(StatusCodes.Status200OK);
@@ -54,10 +63,13 @@ namespace WebTests.Rest.ApiMetadata
             });
         }
 
+        /// <summary>
+        /// Different response status codes can return the same response model.
+        /// </summary>
         [Fact]
         public Task AssertActionWithStatusCodesWithSameResponseType()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMeta = metadata.GetActionMeta<MetadataController>(
                     "ActionWithStatusCodesWithSameResponseType");

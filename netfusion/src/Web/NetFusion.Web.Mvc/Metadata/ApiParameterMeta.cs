@@ -1,27 +1,28 @@
 using System;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace NetFusion.Web.Mvc.Metadata
 {
     /// <summary>
-    /// Parameter metadata for route template parameters that are
-    /// specified as part of the route URL.
+    /// Contains metadata for different parameter sources used to populate
+    /// values used by the controller.
     /// </summary>
     public class ApiParameterMeta
     {
         /// <summary>
-        /// The name of the parameter contained within the route template.
+        /// The name of the parameter.
         /// </summary>
         public string ParameterName { get; }
 
         /// <summary>
-        /// The type of the parameter expected by the controller's action.
+        /// The type of the parameter expected.
         /// </summary>
         public Type ParameterType { get; }
 
         /// <summary>
-        /// Determines if the route parameter is optional and a value need not specified.
+        /// Determines if the route parameter is optional.
         /// </summary>
         public bool IsOptional { get; }
 
@@ -37,7 +38,7 @@ namespace NetFusion.Web.Mvc.Metadata
             if (!(apiParameterDescription.ParameterDescriptor is ControllerParameterDescriptor paramDescriptor))
             {
                 throw new InvalidCastException(
-                    $"Expected ParameterDescriptor derived type of: {typeof(ControllerParameterDescriptor)}");
+                    $"Expected {nameof(ParameterDescriptor)} derived type of: {typeof(ControllerParameterDescriptor)}");
             }
             
             ParameterName = apiParameterDescription.Name;

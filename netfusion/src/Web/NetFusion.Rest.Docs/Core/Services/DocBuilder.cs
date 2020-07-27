@@ -215,7 +215,7 @@ namespace NetFusion.Rest.Docs.Core.Services
                     var relationDoc = new ApiRelationDoc
                     {
                         Name = resourceLink.RelationName,
-                        Method = resourceLink.Methods.FirstOrDefault(),
+                        Method = resourceLink.Method,
                     };
 
                     SetLinkDetails(relationDoc, (dynamic)resourceLink);

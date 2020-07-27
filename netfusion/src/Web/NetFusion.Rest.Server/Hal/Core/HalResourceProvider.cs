@@ -48,7 +48,7 @@ namespace NetFusion.Rest.Server.Hal.Core
             var link = new Link
             {
                 Href = resourceLink.Href,
-                Methods = resourceLink.Methods.ToArray()
+                Method = resourceLink.Method
             };
 
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
@@ -60,7 +60,7 @@ namespace NetFusion.Rest.Server.Hal.Core
             var link = new Link
             {
                 Href = resourceLink.FormatUrl(context.Model),
-                Methods = resourceLink.Methods.ToArray()
+                Method = resourceLink.Method
             };
 
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
@@ -85,7 +85,7 @@ namespace NetFusion.Rest.Server.Hal.Core
                     routeValues),
                 
                 Templated = false,
-                Methods = resourceLink.Methods.ToArray()
+                Method = resourceLink.Method
             };
 
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
@@ -114,7 +114,7 @@ namespace NetFusion.Rest.Server.Hal.Core
             var link = new Link
             {
                 Href = actionMeta.RelativePath,
-                Methods = new[] { actionMeta.HttpMethod }
+                Method = actionMeta.HttpMethod
             };
 
             MarkOptionalParams(actionMeta, link);

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using WebTests.Rest.ApiMetadata.Server;
+using WebTests.Rest.ApiMetadata.Setup;
 using Xunit;
 
 namespace WebTests.Rest.ApiMetadata
@@ -13,7 +14,7 @@ namespace WebTests.Rest.ApiMetadata
         [Fact]
         public Task RequiredQueryParams()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMetadata = metadata.GetActionMeta<MetadataController>(
                     "RequiredQueryParams", typeof(int), typeof(string));
@@ -26,7 +27,7 @@ namespace WebTests.Rest.ApiMetadata
         [Fact]
         public Task OptionalQueryParams()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMetadata = metadata.GetActionMeta<MetadataController>(
                     "OptionalQueryParams", typeof(int), typeof(string));
@@ -39,7 +40,7 @@ namespace WebTests.Rest.ApiMetadata
         [Fact]
         public Task OptionalQueryParamsWithDefaults()
         {
-            return TestApiMetadata.Run(metadata =>
+            return TestWebHostSetup.Run(metadata =>
             {
                 var actionMetadata = metadata.GetActionMeta<MetadataController>(
                     "OptionalQueryParamsWithDefaults", typeof(int), typeof(string));

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Resources;
 using Xunit;
@@ -21,9 +20,9 @@ namespace WebTests.Rest
 
             var link = resource.Links[relName];
             Assert.Equal(expectedValue, link.Href);
-            Assert.NotNull(link.Methods);
-            Assert.True(link.Methods.Length == 1, "One HTTP method expected.");
-            Assert.Equal(expectedMethod.Method, link.Methods.First());
+            Assert.NotNull(link.Method);
+            Assert.True(link.Method != null, "HTTP method expected.");
+            Assert.Equal(expectedMethod.Method, link.Method);
         }
 
         public static void AssertRequest(this ApiRequest request,

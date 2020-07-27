@@ -5,14 +5,12 @@ using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace NetFusion.Web.Mvc.Metadata
 {
     /// <summary>
-    /// Metadata containing information for controller routes
-    /// decorated with the ActionMetadataAttribute.
+    /// Metadata containing information about a controllers action method.
     /// </summary>
     public class ApiActionMeta
     {
@@ -56,8 +54,14 @@ namespace NetFusion.Web.Mvc.Metadata
         /// </summary>
         public ApiParameterMeta[] QueryParameters { get; }
         
+        /// <summary>
+        /// Metadata about the parameters populated from the message body.
+        /// </summary>
         public ApiParameterMeta[] BodyParameters { get; }
         
+        /// <summary>
+        /// Metadata about the response returned from an action.
+        /// </summary>
         public ApiResponseMeta[] ResponseMeta { get; private set; }
 
         private readonly ApiDescription _apiDescription;
@@ -76,12 +80,13 @@ namespace NetFusion.Web.Mvc.Metadata
             QueryParameters = GetActionParameters(apiDescription, BindingSource.Query);
             BodyParameters = GetActionParameters(apiDescription, BindingSource.Body);
             
-            SetActionResponseMeta(apiDescription);
+            SetActionResponseMeta();
         }
 
         public IEnumerable<T> GetFilterMetadata<T>()
         {
-            return _apiDescription.ActionDescriptor.FilterDescriptors.Select(fd => fd.Filter).OfType<T>();
+            return _apiDescription.ActionDescriptor.FilterDescriptors
+                .Select(fd => fd.Filter).OfType<T>();
         }
 
         private void SetActionMeta(ApiDescription apiDescription)
@@ -94,15 +99,15 @@ namespace NetFusion.Web.Mvc.Metadata
 
         // Looks for all ProducesResponseType attributes describing the results that can be
         // produced by the action method.
-        private void SetActionResponseMeta(ApiDescription apiDescription)
+        private void SetActionResponseMeta()
         {
-            ResponseMeta = GetFilterMetadata<ProducesResponseTypeAttribute>(apiDescription)
+            ResponseMeta = GetFilterMetadata<ProducesResponseTypeAttribute>()
                 .Select(p => new ApiResponseMeta(p.StatusCode, p.Type))
                 .ToArray();
             
-            // Next, determine if the action method as the ProducesDefaultResponseType attribute
+            // Next, determine if the action method has the ProducesDefaultResponseType attribute
             // specified to determine the response type to use if not specified.
-            var defaultType = GetFilterMetadata<ProducesDefaultResponseTypeAttribute>(apiDescription).FirstOrDefault();
+            var defaultType = GetFilterMetadata<ProducesDefaultResponseTypeAttribute>().FirstOrDefault();
             if (defaultType == null) return;
 
             foreach (ApiResponseMeta meta in ResponseMeta.Where(rm => rm.ModelType == null))
@@ -117,13 +122,6 @@ namespace NetFusion.Web.Mvc.Metadata
                 .Where(p => p.Source == source)
                 .Select(p => new ApiParameterMeta(p))
                 .ToArray(); 
-        }
-
-        private static IEnumerable<T> GetFilterMetadata<T>(ApiDescription apiDescription)
-            where T: IFilterMetadata
-        {
-            var actionDescriptor = (ControllerActionDescriptor)apiDescription.ActionDescriptor;
-            return actionDescriptor.FilterDescriptors.Select(fd => fd.Filter).OfType<T>();
         }
     }
 }

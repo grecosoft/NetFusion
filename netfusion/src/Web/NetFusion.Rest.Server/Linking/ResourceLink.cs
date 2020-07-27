@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace NetFusion.Rest.Server.Linking
+﻿namespace NetFusion.Rest.Server.Linking
 {
     /// <summary>
     /// Defines a link with an associated relation name.  The relation name indicates how
@@ -15,7 +13,7 @@ namespace NetFusion.Rest.Server.Linking
         public string RelationName { get; set; }       
         public string Href { get; set; }
         public string HrefLang { get; set; }
-        public IEnumerable<string> Methods { get; set; }
+        public string Method { get; set; }
 
         public string Name { get; set; }
         public string Title { get; set; }

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq;
 using System.Net.Http;
 using NetFusion.Rest.Resources;
 
@@ -187,7 +186,7 @@ namespace NetFusion.Rest.Client
             var request = new ApiRequest
             {
                 RequestUri = href,
-                Method = new HttpMethod(link.Methods.First()),
+                Method = new HttpMethod(link.Method),
                 IsTemplate = false
             };
 
@@ -285,17 +284,11 @@ namespace NetFusion.Rest.Client
 
 		private static void AssertLink(Link link)
 		{
-			if (! link.Methods.Any())
+			if (link.Method == null)
 			{
 				throw new InvalidOperationException($"Link Method value not specified for Href: {link.Href}.");
 			}
-
-			if (link.Methods.Length > 1)
-			{
-				throw new InvalidOperationException(
-					$"More then one Link Method value specified for Href: {link.Href}.");
-			}
-		}
+        }
 
         // ----------------- TEMPLATE POPULATION --------------------
         private static string ReplaceTemplateTokensWithValues(string urlTemplate, IDictionary<string, object> routeValues)

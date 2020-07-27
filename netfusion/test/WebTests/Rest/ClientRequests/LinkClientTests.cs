@@ -76,7 +76,7 @@ namespace WebTests.Rest.ClientRequests
             var link = new Link
             {
                 Href = "/api/test/url",
-                Methods = new[] { "GET" }
+                Method = "GET" 
             };
 
             // Act:
@@ -100,7 +100,7 @@ namespace WebTests.Rest.ClientRequests
             var link = new Link
             {
                 Href = "/api/test/url/{id}",
-                Methods = new[] { "GET" },
+                Method = "GET",
                 Templated = true
             };
 
@@ -122,7 +122,7 @@ namespace WebTests.Rest.ClientRequests
             var link = new Link
             {
                 Href = "/api/test/url/{id}",
-                Methods = new[] { "GET" },
+                Method = "GET",
                 Templated = true
             };
 
@@ -143,7 +143,7 @@ namespace WebTests.Rest.ClientRequests
             var link = new Link
             {
                 Href = "/api/test/url/{id}",
-                Methods = new[] { "GET" },
+                Method = "GET",
                 Templated = true
             };
 
@@ -186,24 +186,6 @@ namespace WebTests.Rest.ClientRequests
         }
 
         [Fact]
-        public void CannotCreateRequest_FromLink_WithMultipleMethods()
-        {
-            // Arrange:
-            // Link as returned from server and associated with resource.
-            var link = new Link
-            {
-                Href = "/api/test/url",
-                Methods = new[] { "GET", "OPTIONS" },
-                Templated = false
-            };
-
-            // Act:
-            var exception = Record.Exception(() => link.ToRequest());
-            exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Be("More then one Link Method value specified for Href: /api/test/url.");
-        }
-
-        [Fact]
         public void OptionalRouteParamaters_MustNotBeSpecified()
         {
             // Arrange:
@@ -211,7 +193,7 @@ namespace WebTests.Rest.ClientRequests
             var link = new Link
             {
                 Href = "/api/test/url/{id}/{?test}",
-                Methods = new[] { "GET" },
+                Method = "GET",
                 Templated = true
             };
 

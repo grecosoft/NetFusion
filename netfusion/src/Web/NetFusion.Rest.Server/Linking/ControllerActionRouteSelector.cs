@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -40,13 +39,13 @@ namespace NetFusion.Rest.Server.Linking
             var controllerAction = (MethodCallExpression)action.Body;
 
             _resourceLink.ActionMethodInfo = controllerAction.Method;
-            _resourceLink.Methods = GetHttpMethods(controllerAction.Method);
+            _resourceLink.Method = GetHttpMethods(controllerAction.Method);
         }
 
-        private static IEnumerable<string> GetHttpMethods(MemberInfo actionMethodInfo)
+        private static string GetHttpMethods(MemberInfo actionMethodInfo)
         {
             return actionMethodInfo.GetCustomAttributes<HttpMethodAttribute>(true)
-                .SelectMany(a => a.HttpMethods);
+                .SelectMany(a => a.HttpMethods).First();
         }
 
         // Associates the action method argument to the corresponding resource state property

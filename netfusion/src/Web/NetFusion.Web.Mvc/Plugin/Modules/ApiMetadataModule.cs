@@ -6,13 +6,10 @@ using NetFusion.Web.Mvc.Metadata.Core;
 namespace NetFusion.Web.Mvc.Plugin.Modules
 {
     /// <summary>
-    /// Plugin module configuring MVC to allow access to route 
-    /// metadata at specified endpoints.
+    /// Plugin module that registers a service used to query ASP.NET controller action metadata.
     /// </summary>
     public class ApiMetadataModule : PluginModule
     {
-        // Determine if the host application specified the WebMvcConfig configuration
-        // indicating that route metadata should be discoverable by clients.
         public override void RegisterDefaultServices(IServiceCollection services)
         {
             services.AddMvc();
