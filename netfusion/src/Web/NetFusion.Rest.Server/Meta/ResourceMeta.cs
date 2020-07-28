@@ -95,6 +95,10 @@ namespace NetFusion.Rest.Server.Meta
                 .WhereDuplicated(am => am.Name)
                 .ToArray();
 
+            // This constraint is required since out-bound links will be generated. When generating a link,
+            // by delegating to ASP.NET core, the controller name, action name, and route values are specified.
+            // The HTTP method is not taken into account since it is provided when called - but to generate an
+            // out-bound link we need to know the method.
             if (duplicateActionNames.Any())
             {
                 throw new InvalidOperationException(

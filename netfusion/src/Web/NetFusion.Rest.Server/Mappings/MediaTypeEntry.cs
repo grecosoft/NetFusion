@@ -33,8 +33,8 @@ namespace NetFusion.Rest.Server.Mappings
         /// <summary>
         /// Returns the metadata associated with a source type.
         /// </summary>
-        /// <returns>The resource metadata and boolean flag if found.</returns>
         /// <param name="sourceType">The type to determine if there is associated metadata.</param>
+        /// <returns>The resource metadata and boolean flag if found.</returns>
         public (IResourceMeta meta, bool ok) GetResourceTypeMeta(Type sourceType)
         {
             if (sourceType == null) throw new ArgumentNullException(nameof(sourceType),

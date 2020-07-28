@@ -44,7 +44,7 @@ namespace NetFusion.Rest.Server.Hal
 		/// </summary>
 		/// <param name="resource">Parent resource to embed child resource.</param>
 		/// <param name="embeddedResource">The resource to embed.</param>
-		/// <param name="named">Optional name used to identity the embedded resource.</param>
+		/// <param name="named">Name used to identity the embedded resource.</param>
 		public static void EmbedResource<TModel>(this HalResource resource,
 	        HalResource<TModel> embeddedResource, 
 	        string named) where TModel: class
@@ -70,7 +70,7 @@ namespace NetFusion.Rest.Server.Hal
 		/// <typeparam name="TModel">The type of each resource's model in the collection.</typeparam>
 		/// <param name="resource">Parent resource to embed child resources.</param>
 		/// <param name="embeddedResources">The collection of resources to embed.</param>
-		/// <param name="named">Optional name used to identity the embedded resource collection..</param>
+		/// <param name="named">Name used to identity the embedded resource collection..</param>
 		public static void EmbedResources<TModel>(this HalResource resource, 
 			IEnumerable<HalResource<TModel>> embeddedResources, string named)
 			where TModel : class

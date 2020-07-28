@@ -88,7 +88,7 @@ namespace NetFusion.Rest.Server.Meta
     
 
     /// <summary>
-    ///  Contains methods for creating ResourceLink instances based on expressions for a given
+    /// Contains methods for creating ResourceLink instances based on expressions for a given
     /// controller and resource's associated model type.
     /// </summary>
     /// <typeparam name="TController">The controller type associated with the link metadata.</typeparam>

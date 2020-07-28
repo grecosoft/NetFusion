@@ -18,7 +18,7 @@ namespace NetFusion.Rest.Server.Plugin
             AddModule<RestModule>();
 
             Description = "Plugin implementing ASP.NET Web Output Formatter used to apply meta-type " +
-                          "specific metadata to returned resources.  The plugin implements HAL meta-type.";
+                          "specific metadata to returned resources.  The plugin implements the HAL meta-type.";
             
             SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/netfusion/src/Web/NetFusion.Rest.Server";
             DocUrl = "https://github.com/grecosoft/NetFusion/wiki/web.rest.overview";

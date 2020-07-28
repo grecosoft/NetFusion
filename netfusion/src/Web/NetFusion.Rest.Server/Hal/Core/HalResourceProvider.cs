@@ -11,7 +11,7 @@ using NetFusion.Web.Mvc.Metadata;
 namespace NetFusion.Rest.Server.Hal.Core
 {
     /// <summary>
-    /// HAL provider that processes IHalResource based resources and applies
+    /// HAL provider that processes HalResource based resources and applies
     /// REST links to the resource.
     /// </summary>
     public class HalResourceProvider : IResourceProvider
@@ -85,7 +85,7 @@ namespace NetFusion.Rest.Server.Hal.Core
                     routeValues),
                 
                 Templated = false,
-                Method = resourceLink.Method
+                Method = actionMeta.HttpMethod
             };
 
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);

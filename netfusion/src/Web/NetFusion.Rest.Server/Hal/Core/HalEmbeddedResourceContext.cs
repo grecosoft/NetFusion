@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Primitives;
-using NetFusion.Rest.Resources;
 
 namespace NetFusion.Rest.Server.Hal.Core
 {
@@ -21,31 +20,18 @@ namespace NetFusion.Rest.Server.Hal.Core
             _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
         }
 
-        public bool IsRequested<TModel>() where TModel: class
+        public bool IsRequested(string embeddedName)
         {
-            var resourceName = typeof(TModel).GetResourceName();
-            if (resourceName == null)
-            {
-                throw new InvalidOperationException(
-                    "The resource name associated with the model could not be determined. The model of type: " + 
-                    $"{typeof(TModel)} is not marked with the attribute: {typeof(ResourceAttribute)}.");
-            }
-
-            return IsRequested(resourceName);
-        }
-
-        public bool IsRequested(string resourceName)
-        {
-            if (string.IsNullOrWhiteSpace(resourceName))
-                throw new ArgumentException("Resource name must be specified.", nameof(resourceName));
+            if (string.IsNullOrWhiteSpace(embeddedName))
+                throw new ArgumentException("Embedded name must be specified.", nameof(embeddedName));
             
             // If not specified by the caller, all resources are considered requested.
-            return !EmbeddedResourcesRequested || RequestedEmbeddedModels.Contains(resourceName);
+            return !EmbeddedResourcesRequested || RequestedEmbeddedModels.Contains(embeddedName);
         }
 
         // The client can specify the embed query-string parameter to indicate to the server
         // the embedded resource models they are interested in.  This is optional but can be
-        // used by the client and the server to reduce network traffic.
+        // used by the client and the server to reduce network traffic based on the client type.
         private bool EmbeddedResourcesRequested => _contextAccessor.ActionContext
             .HttpContext.Request.Query.ContainsKey("embed");
 

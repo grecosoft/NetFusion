@@ -56,12 +56,6 @@ namespace NetFusion.Rest.Server.Plugin.Modules
         // indicating that the returned resource should be augmented.
         private static IResourceProvider CreateProvider(IResourceMap resourceMap)
         {
-            if (resourceMap.ProviderType == null)
-            {
-                throw new InvalidOperationException(
-                    $"The resource map of type: {resourceMap.GetType()} did not set the provider type.");
-            }
-
             return (IResourceProvider)resourceMap.ProviderType.CreateInstance();
         }
 
