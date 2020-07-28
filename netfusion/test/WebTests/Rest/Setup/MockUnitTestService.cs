@@ -5,8 +5,7 @@ using NetFusion.Rest.Resources;
 using WebTests.Mocks;
 using WebTests.Rest.ClientRequests.Server;
 
-
-namespace WebTests.Rest.ClientRequests
+namespace WebTests.Rest.Setup
 {
     public class MockUnitTestService : IMockedService
     {

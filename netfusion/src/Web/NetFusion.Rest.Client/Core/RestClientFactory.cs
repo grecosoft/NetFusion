@@ -17,7 +17,6 @@ namespace NetFusion.Rest.Client.Core
         private readonly ILoggerFactory _loggerFactory;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IDictionary<string, IMediaTypeSerializer> _mediaTypeSerializers;
-
         
         public RestClientFactory(
             ILoggerFactory loggerFactory,

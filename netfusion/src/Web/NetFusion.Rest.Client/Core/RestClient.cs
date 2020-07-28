@@ -38,7 +38,6 @@ namespace NetFusion.Rest.Client.Core
             _mediaTypeSerializers = contentSerializers ?? throw new ArgumentNullException(nameof(contentSerializers));
         }
         
-
 		public async Task<ApiResponse> SendAsync(ApiRequest request,
             CancellationToken cancellationToken = default)
         {
@@ -48,23 +47,23 @@ namespace NetFusion.Rest.Client.Core
             return await SendRequest(request, cancellationToken).ConfigureAwait(false);
         }
 
-		public async Task<ApiResponse<TContent>> SendAsync<TContent>(ApiRequest request,
+		public async Task<ApiResponse<TModel>> SendAsync<TModel>(ApiRequest request,
             CancellationToken cancellationToken = default)
-            where TContent : class
+            where TModel : class
         {
             if (request == null) throw new ArgumentNullException(nameof(request),
                 "Request cannot be null.");
 
-            return await SendRequest<TContent>(request, cancellationToken).ConfigureAwait(false);
+            return await SendRequest<TModel>(request, cancellationToken).ConfigureAwait(false);
         }
         
-        public async Task<ApiResponse> SendAsync(ApiRequest request, Type contentType, 
-            CancellationToken cancellationToken)
+        public async Task<ApiResponse> SendAsync(ApiRequest request, Type modelType, 
+            CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (contentType == null) throw new ArgumentNullException(nameof(contentType));
+            if (modelType == null) throw new ArgumentNullException(nameof(modelType));
 
-            return await SendRequest(request, contentType, cancellationToken).ConfigureAwait(false);
+            return await SendRequest(request, modelType, cancellationToken).ConfigureAwait(false);
         }
 
         private async Task<ApiResponse> SendRequest(ApiRequest request, CancellationToken cancellationToken)
@@ -81,29 +80,31 @@ namespace NetFusion.Rest.Client.Core
             return response;
         }
 
-        private async Task<ApiResponse<TContent>> SendRequest<TContent>(ApiRequest request,  CancellationToken cancellationToken)
-            where TContent : class
+        private async Task<ApiResponse<TModel>> SendRequest<TModel>(ApiRequest request, 
+            CancellationToken cancellationToken)
+            where TModel : class
         {
             HttpRequestMessage requestMsg = await CreateRequestMessage(request);
             LogRequest(request);
             
-            HalResource<TContent> resource = null;
+            HalResource<TModel> resource = null;
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
 
             if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
             {
-                resource = await DeserializeResource<HalResource<TContent>>(responseMsg, 
-                    await responseMsg.Content.ReadAsStreamAsync());
+                await using Stream stream = await responseMsg.Content.ReadAsStreamAsync(); 
+                
+                resource = await DeserializeResource<HalResource<TModel>>(responseMsg, stream);
             }
 
-            var response = new ApiResponse<TContent>(requestMsg, responseMsg, resource);
+            var response = new ApiResponse<TModel>(requestMsg, responseMsg, resource);
             await SetErrorContext(responseMsg, response);
             
             LogResponse(response);
             return response;
         }
         
-        private async Task<ApiResponse> SendRequest(ApiRequest request, Type contentType, 
+        private async Task<ApiResponse> SendRequest(ApiRequest request, Type modelType, 
             CancellationToken cancellationToken)
         {
             HttpRequestMessage requestMsg = await CreateRequestMessage(request);
@@ -114,9 +115,9 @@ namespace NetFusion.Rest.Client.Core
             object resource = null;
             if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
             {
-                resource = DeserializeResource(responseMsg, 
-                    await responseMsg.Content.ReadAsStreamAsync(), 
-                    contentType);
+                await using var stream = await responseMsg.Content.ReadAsStreamAsync();
+                
+                resource = DeserializeResource(responseMsg, stream, modelType);
             }
 
             var response = new ApiResponse(requestMsg, responseMsg, resource);
@@ -232,12 +233,12 @@ namespace NetFusion.Rest.Client.Core
         
         private object DeserializeResource(HttpResponseMessage responseMsg, 
             Stream responseStream,
-            Type resourceType)
+            Type modelType)
         {
             string mediaType = responseMsg.Content.Headers.ContentType.MediaType;
             IMediaTypeSerializer serializer = GetMediaTypeSerializer(mediaType);
 
-            return serializer.Deserialize(responseStream, resourceType);
+            return serializer.Deserialize(responseStream, modelType);
         }
     }
 }
