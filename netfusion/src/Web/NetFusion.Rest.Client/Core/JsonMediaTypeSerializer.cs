@@ -2,7 +2,6 @@
 using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
 using System.IO;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -40,9 +39,7 @@ namespace NetFusion.Rest.Client.Core
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
             
-            string json = JsonSerializer.Serialize(value);
-            return Encoding.UTF8.GetBytes(json);
-
+            return JsonSerializer.SerializeToUtf8Bytes(value, _serializerOptions);
         }
 
         public Task<T> Deserialize<T>(Stream responseStream)
@@ -51,7 +48,7 @@ namespace NetFusion.Rest.Client.Core
             
             return JsonSerializer.DeserializeAsync<T>(responseStream, _serializerOptions).AsTask();
         }
-        
+
         public Task<object> Deserialize(Stream responseStream, Type type)
         {
             if (responseStream == null) throw new ArgumentNullException(nameof(responseStream));

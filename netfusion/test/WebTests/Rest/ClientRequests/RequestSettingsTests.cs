@@ -159,7 +159,7 @@ namespace WebTests.Rest.ClientRequests
                                     .AddParam("b", "v2");
                             });
                         
-                        return await client.SendAsync<Client.CustomerModel>(request);
+                        return await client.SendForHalAsync<Client.CustomerModel>(request);
                     });
 
                 response.Assert.ApiResponse(apiResponse =>

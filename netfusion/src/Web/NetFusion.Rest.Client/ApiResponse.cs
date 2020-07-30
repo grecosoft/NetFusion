@@ -7,14 +7,20 @@ using NetFusion.Rest.Resources;
 namespace NetFusion.Rest.Client
 {
     /// <summary>
-    /// Contains result properties for a submitted request.
+    /// Contains result properties for a submitted request with an optional untyped response state. 
     /// </summary>
     public class ApiResponse
     {
         /// <summary>
-        /// The message for which the result is associated.
+        /// The underlying message for which the result is associated.
+        /// This underlying message was created from the ApiRequest.
         /// </summary>
         public HttpRequestMessage Request { get; }
+        
+        /// <summary>
+        /// The underlying HTTP response message.
+        /// </summary>
+        public HttpResponseMessage Response { get; }
 
         /// <summary>
         /// Indicates if the response code is considered successful.
@@ -37,20 +43,17 @@ namespace NetFusion.Rest.Client
         public HttpResponseHeaders Headers { get;  }
 
         /// <summary>
-        /// The media-type of the returned response content.
-        /// Null if the response didn't contain content.
+        /// The media-type of the returned response content.  Null if the response didn't contain content.
         /// </summary>
         public string MediaType { get; }
 
         /// <summary>
-        /// The character set of the returned response content.
-        /// Null if the response didn't contain content.
+        /// The character set of the returned response content.  Null if the response didn't contain content.
         /// </summary>
         public string CharSet { get; }
 
         /// <summary>
-        /// The length of the returned response content.
-        /// Null if the response didn't contain content.
+        /// The length of the returned response content.  Null if the response didn't contain content.
         /// </summary>
         public long? ContentLength { get; }
 
@@ -67,18 +70,17 @@ namespace NetFusion.Rest.Client
         /// <summary>
         /// The deserialized returned content.
         /// </summary>
-        public object Content { get; protected set; }
+        public object State { get; protected set; }
         
         /// <summary>
-        /// The returned content of the response of a string if an error status
-        /// code was returned.
+        /// The returned content of the response as a string if an error status code was returned.
         /// </summary>
         public string ErrorContent { get; private set; }
 
-        public ApiResponse(HttpRequestMessage requestMsg, HttpResponseMessage responseMsg)
+        public ApiResponse(HttpResponseMessage responseMsg)
         {
-            Request = requestMsg ?? throw new ArgumentNullException(nameof(requestMsg),
-                "Request Message cannot be null.");
+            Response = responseMsg ?? throw new ArgumentNullException(nameof(responseMsg));
+            Request = responseMsg.RequestMessage;
             
             IsSuccessStatusCode = responseMsg.IsSuccessStatusCode;
             StatusCode = responseMsg.StatusCode;
@@ -95,10 +97,19 @@ namespace NetFusion.Rest.Client
             Server = responseMsg.Headers.Server?.ToString();
         }
 
-        public ApiResponse(HttpRequestMessage requestMsg, HttpResponseMessage responseMsg, object content)
-            : this(requestMsg, responseMsg)
+        public ApiResponse(HttpResponseMessage responseMsg, object state)
+            : this(responseMsg)
         {
-            Content = content;
+            State = state ?? throw new ArgumentNullException(nameof(state));
+        }
+        
+        /// <summary>
+        /// Sets the response context as a string for response error codes.
+        /// </summary>
+        /// <param name="value"></param>
+        public void SetErrorContent(string value)
+        {
+            ErrorContent = value;
         }
 
         /// <summary>
@@ -107,36 +118,50 @@ namespace NetFusion.Rest.Client
         /// </summary>
         public void ThrowIfNotSuccessStatusCode()
         {
-            if (! IsSuccessStatusCode)
+            if (IsSuccessStatusCode)
             {
-                throw new HttpRequestException(
-                    $"Response status code does not indicate success: {(int)StatusCode} ({StatusCode})");
+                return;
             }
-        }
 
-        /// <summary>
-        /// Sets the response context as a string for response error codes.
-        /// </summary>
-        /// <param name="value"></param>
-        public void SetErrorContext(string value)
+            string errMessage = $"Response status code does not indicate success: ({StatusCode})";
+            if (ErrorContent != null)
+            {
+                var serverEx = new Exception(ErrorContent);
+                throw new HttpRequestException(errMessage, serverEx);
+            }
+            
+            throw new HttpRequestException(errMessage);
+        }
+    }
+
+    /// <summary>
+    /// Derived ApiResponse with the body deserialized into typed content.
+    /// </summary>
+    /// <typeparam name="TContent">The type of the response content.</typeparam>
+    public class ApiResponse<TContent> : ApiResponse
+        where TContent : class
+    {
+        public TContent Content { get; }    
+
+        public ApiResponse(HttpResponseMessage responseMsg, TContent content) 
+            : base(responseMsg, content)
         {
-            ErrorContent = value;
+            Content = content;
         }
     }
 
 	/// <summary>
-    /// Contains result properties for a submitted request and the response content returned from the server.
+    /// Derived ApiResponse that supporting HAL based resource responses.
 	/// </summary>
-	public class ApiResponse<TModel> : ApiResponse
+	public class ApiHalResponse<TModel> : ApiResponse
         where TModel : class
     {
         public HalResource<TModel> Resource { get; }
 
-        public ApiResponse(HttpRequestMessage requestMsg, HttpResponseMessage responseMsg, HalResource<TModel> content)
-            : base(requestMsg, responseMsg)
+        public ApiHalResponse(HttpResponseMessage responseMsg, HalResource<TModel> resource)
+            : base(responseMsg, resource)
         {
-            Content = content;
-            Resource = content;
+            Resource = resource;
         }        
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NetFusion.Rest.Client;
@@ -74,12 +73,12 @@ namespace WebTests.Rest.LinkGeneration
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
                         request.UseHalDefaults();
-                        return await client.SendAsync<ClientModelStub>(request);
+                        return await client.SendForHalAsync<ClientModelStub>(request);
                     });
 
                 webResponse.Assert.ApiResponse(response =>
                 {
-                     var apiResponse = (ApiResponse<ClientModelStub>)response;
+                     var apiResponse = (ApiHalResponse<ClientModelStub>)response;
                      
                      // Required Route Parameters:
                      apiResponse.Resource.AssertLink("scenario-1", HttpMethod.Get, "/api/linked/resource/scenario-1/10");
@@ -112,12 +111,12 @@ namespace WebTests.Rest.LinkGeneration
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
                         request.UseHalDefaults();
-                        return await client.SendAsync<ClientModelStub>(request);
+                        return await client.SendForHalAsync<ClientModelStub>(request);
                     });
 
                 webResponse.Assert.ApiResponse(response =>
                 {
-                    var apiResponse = (ApiResponse<ClientModelStub>)response;
+                    var apiResponse = (ApiHalResponse<ClientModelStub>)response;
                      
                     // Optional Route Parameter with supplied value:
                     apiResponse.Resource.AssertLink("scenario-3", HttpMethod.Get, "/api/linked/resource/scenario-3/10/param-one/300");
@@ -150,12 +149,12 @@ namespace WebTests.Rest.LinkGeneration
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
                         request.UseHalDefaults();
-                        return await client.SendAsync<ClientModelStub>(request);
+                        return await client.SendForHalAsync<ClientModelStub>(request);
                     });
 
                 webResponse.Assert.ApiResponse(response =>
                 {
-                    var apiResponse = (ApiResponse<ClientModelStub>)response;
+                    var apiResponse = (ApiHalResponse<ClientModelStub>)response;
                      
                     // Optional Route Parameter with supplied value:
                     apiResponse.Resource.AssertLink("scenario-3", HttpMethod.Get, "/api/linked/resource/scenario-3/10/param-one");
@@ -187,12 +186,12 @@ namespace WebTests.Rest.LinkGeneration
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
                         request.UseHalDefaults();
-                        return await client.SendAsync<ClientModelStub>(request);
+                        return await client.SendForHalAsync<ClientModelStub>(request);
                     });
 
                 webResponse.Assert.ApiResponse(response =>
                 {
-                    var apiResponse = (ApiResponse<ClientModelStub>)response;
+                    var apiResponse = (ApiHalResponse<ClientModelStub>)response;
                      
                     // Optional Route Parameter with supplied value:
                     apiResponse.Resource.AssertLink("scenario-4", HttpMethod.Get, "/api/linked/resource/scenario-4/10/param-one/600/value-2");
@@ -224,12 +223,12 @@ namespace WebTests.Rest.LinkGeneration
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
                         request.UseHalDefaults();
-                        return await client.SendAsync<ClientModelStub>(request);
+                        return await client.SendForHalAsync<ClientModelStub>(request);
                     });
 
                 webResponse.Assert.ApiResponse(response =>
                 {
-                    var apiResponse = (ApiResponse<ClientModelStub>)response;
+                    var apiResponse = (ApiHalResponse<ClientModelStub>)response;
                      
                     // Optional Route Parameter with supplied value:
                     apiResponse.Resource.AssertLink("scenario-4", HttpMethod.Get, "/api/linked/resource/scenario-4/10/param-one");
@@ -261,12 +260,12 @@ namespace WebTests.Rest.LinkGeneration
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
                         request.UseHalDefaults();
-                        return await client.SendAsync<ClientModelStub>(request);
+                        return await client.SendForHalAsync<ClientModelStub>(request);
                     });
 
                 webResponse.Assert.ApiResponse(response =>
                 {
-                    var apiResponse = (ApiResponse<ClientModelStub>)response;
+                    var apiResponse = (ApiHalResponse<ClientModelStub>)response;
                      
                     // Optional Route Parameter with supplied value:
                     apiResponse.Resource.AssertLink("scenario-5", HttpMethod.Post, "/api/linked/resource/scenario-5/create");
@@ -298,12 +297,12 @@ namespace WebTests.Rest.LinkGeneration
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
                         request.UseHalDefaults();
-                        return await client.SendAsync<ClientModelStub>(request);
+                        return await client.SendForHalAsync<ClientModelStub>(request);
                     });
 
                 webResponse.Assert.ApiResponse(response =>
                 {
-                    var apiResponse = (ApiResponse<ClientModelStub>)response;
+                    var apiResponse = (ApiHalResponse<ClientModelStub>)response;
                      
                     // Optional Route Parameter with supplied value:
                     apiResponse.Resource.AssertLink("scenario-6", HttpMethod.Put, "/api/linked/resource/scenario-6/10/update");
@@ -345,12 +344,12 @@ namespace WebTests.Rest.LinkGeneration
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
                         request.UseHalDefaults();
-                        return await client.SendAsync<ClientModelStub>(request);
+                        return await client.SendForHalAsync<ClientModelStub>(request);
                     });
 
                 webResponse.Assert.ApiResponse(response =>
                 {
-                    var apiResponse = (ApiResponse<ClientModelStub>)response;
+                    var apiResponse = (ApiHalResponse<ClientModelStub>)response;
                      
                     apiResponse.Resource.AssertLink("scenario-20", HttpMethod.Options, "http://external/api/call/info");
                 });
@@ -392,12 +391,12 @@ namespace WebTests.Rest.LinkGeneration
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
                         request.UseHalDefaults();
-                        return await client.SendAsync<ClientModelStub>(request);
+                        return await client.SendForHalAsync<ClientModelStub>(request);
                     });
 
                 webResponse.Assert.ApiResponse(response =>
                 {
-                    var apiResponse = (ApiResponse<ClientModelStub>)response;
+                    var apiResponse = (ApiHalResponse<ClientModelStub>)response;
                      
                     apiResponse.Resource.AssertLink("scenario-25", HttpMethod.Options, "http://external/api/call/10/info/value-2");
                 });
@@ -428,12 +427,12 @@ namespace WebTests.Rest.LinkGeneration
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
                         request.UseHalDefaults();
-                        return await client.SendAsync<ClientModelStub>(request);
+                        return await client.SendForHalAsync<ClientModelStub>(request);
                     });
 
                 webResponse.Assert.ApiResponse(response =>
                 {
-                    var apiResponse = (ApiResponse<ClientModelStub>)response;
+                    var apiResponse = (ApiHalResponse<ClientModelStub>)response;
                      
                     apiResponse.Resource.AssertLink("scenario-30", HttpMethod.Options, "http://external/api/call/10/info/value-2");
 
@@ -472,12 +471,12 @@ namespace WebTests.Rest.LinkGeneration
                     {             
                         var request = ApiRequest.Create("api/linked/resource", HttpMethod.Get);
                         request.UseHalDefaults();
-                        return await client.SendAsync<ClientModelStub>(request);
+                        return await client.SendForHalAsync<ClientModelStub>(request);
                     });
 
                 webResponse.Assert.ApiResponse(response =>
                 {
-                    var apiResponse = (ApiResponse<ClientModelStub>)response;
+                    var apiResponse = (ApiHalResponse<ClientModelStub>)response;
                      
                     apiResponse.Resource.AssertLink("scenario-31", HttpMethod.Post, "api/linked/resource/scenario-33/{id}/comment");
                 });
@@ -533,12 +532,12 @@ namespace WebTests.Rest.LinkGeneration
                     {             
                         var request = ApiRequest.Create("api/linked/resource/embedded/child", HttpMethod.Get);
                         request.UseHalDefaults();
-                        return await client.SendAsync<ClientModelStub>(request);
+                        return await client.SendForHalAsync<ClientModelStub>(request);
                     });
 
                 webResponse.Assert.ApiResponse(response =>
                 {
-                    var apiResponse = (ApiResponse<ClientModelStub>)response;
+                    var apiResponse = (ApiHalResponse<ClientModelStub>)response;
                     var embeddedChild = apiResponse.Resource.GetEmbeddedResource<ClientModelStub>("embedded-resource");
 
                     embeddedChild.Should().NotBeNull();

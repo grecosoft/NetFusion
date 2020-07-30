@@ -4,7 +4,6 @@ using WebTests.Hosting;
 using NetFusion.Test.Plugins;
 using WebTests.Mocks;
 using WebTests.Rest.ApiMetadata.Server;
-using WebTests.Rest.ClientRequests;
 using WebTests.Rest.ClientRequests.Server;
 using WebTests.Rest.LinkGeneration.Server;
 

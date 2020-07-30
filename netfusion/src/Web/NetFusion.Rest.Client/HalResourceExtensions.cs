@@ -7,7 +7,7 @@ namespace NetFusion.Rest.Client
 {
     /// <summary>
     /// Extension methods used by a .NET WebApi client used to obtain links
-    /// and embedded resources and models
+    /// and embedded resources and models.
     /// </summary>
     public static class HalResourceExtensions
     {
@@ -45,7 +45,7 @@ namespace NetFusion.Rest.Client
         /// <returns>The link if found.  Otherwise an exception is raised.</returns>
         public static Link GetLink(this HalResource resource, string named)
         {
-            if (resource.TryGetLink(named, out Link link))
+            if (TryGetLink(resource, named, out Link link))
             {
                 return link;
             }
@@ -97,7 +97,7 @@ namespace NetFusion.Rest.Client
         public static TChildModel GetEmbeddedModel<TChildModel>(this HalResource resource, string named)
             where TChildModel: class
         {
-            if (resource.TryGetEmbeddedModel(named, out TChildModel model))
+            if (TryGetEmbeddedModel(resource, named, out TChildModel model))
             {
                 return model;
             }
@@ -137,7 +137,7 @@ namespace NetFusion.Rest.Client
                 return true;
             }
 
-            // Deserialize the embedded JObject into a type object instance.
+            // Deserialize the embedded JsonElement into a type object instance.
             if (resource.Embedded[named] is JsonElement embeddedJson)
             {
                 model = JsonSerializer.Deserialize<TChildModel>(
@@ -166,7 +166,7 @@ namespace NetFusion.Rest.Client
         public static HalResource<TChildModel> GetEmbeddedResource<TChildModel>(this HalResource resource, string named)
             where TChildModel : class
         {
-            if (resource.TryGetEmbeddedResource<TChildModel>(named, out var embeddedResource))
+            if (TryGetEmbeddedResource<TChildModel>(resource, named, out var embeddedResource))
             {
                 return embeddedResource;
             }
@@ -205,7 +205,7 @@ namespace NetFusion.Rest.Client
                 return true;
             }
 
-            // Deserialize the embedded JObject into a type object instance.
+            // Deserialize the embedded JsonElement into a type object instance.
             if (resource.Embedded[named] is JsonElement embeddedJson)
             {
                 embeddedResource = JsonSerializer.Deserialize<HalResource<TChildModel>>(
@@ -236,7 +236,7 @@ namespace NetFusion.Rest.Client
             this HalResource resource, string named)
             where TChildModel : class
         {
-            if (resource.TryGetEmbeddedResources<TChildModel>(named, out var embeddedResources))
+            if (TryGetEmbeddedResources<TChildModel>(resource, named, out var embeddedResources))
             {
                 return embeddedResources;
             }
@@ -304,7 +304,7 @@ namespace NetFusion.Rest.Client
         public static IEnumerable<TChildModel> GetEmbeddedModels<TChildModel>(this HalResource resource, string named)
             where TChildModel : class
         {
-            if (resource.TryGetEmbeddedModels<TChildModel>(named, out var embeddedModels))
+            if (TryGetEmbeddedModels<TChildModel>(resource, named, out var embeddedModels))
             {
                 return embeddedModels;
             }

@@ -36,7 +36,7 @@ namespace NetFusion.Rest.Client.Core
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Name of configured API not specified.", nameof(name));
             
-            ILogger logger = _loggerFactory.CreateLogger<RestClient>();
+            ILogger logger = _loggerFactory.CreateLogger(name);
             
             // Create instance of HttpClient and wrap it within a RestClient instance.
             HttpClient innerClient = _httpClientFactory.CreateClient(name);

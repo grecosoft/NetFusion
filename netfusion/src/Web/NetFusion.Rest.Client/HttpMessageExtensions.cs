@@ -19,7 +19,7 @@ namespace NetFusion.Rest.Client
             if (response == null) throw new ArgumentNullException(nameof(response));
             
             return response.StatusCode == HttpStatusCode.Unauthorized && response.Headers
-                       .GetValues("WWW-Authenticate").Any(v => v.Contains("realm"));
+                .GetValues("WWW-Authenticate").Any(v => v.Contains("realm"));
         }
 
         /// <summary>
@@ -32,10 +32,9 @@ namespace NetFusion.Rest.Client
         {
             if (response == null) throw new ArgumentNullException(nameof(response));
             
-            if ( ! response.IsAuthChallenge())
+            if (! response.IsAuthChallenge())
             {
-                throw new InvalidOperationException(
-                    "WWW-Authenticate header not found.");
+                throw new InvalidOperationException("WWW-Authenticate header not found.");
             }
 
             string authValue = response.Headers.GetValues("WWW-Authenticate")

@@ -13,7 +13,7 @@ using NetFusion.Rest.Resources;
 namespace NetFusion.Rest.Client.Core
 {
     /// <summary>
-    /// Client used to make HTTP requests.  
+    /// Client used to make HTTP requests by delegating to an inner HttpClient.  
     /// </summary>
     public class RestClient : IRestClient
     {
@@ -38,92 +38,94 @@ namespace NetFusion.Rest.Client.Core
             _mediaTypeSerializers = contentSerializers ?? throw new ArgumentNullException(nameof(contentSerializers));
         }
         
+        // Sends a request but does not attempt to deserialize the body of the response.
 		public async Task<ApiResponse> SendAsync(ApiRequest request,
             CancellationToken cancellationToken = default)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request),
-                "Request cannot be null.");
-
-            return await SendRequest(request, cancellationToken).ConfigureAwait(false);
+            return await SendRequestBuildResponse(request, cancellationToken, 
+                (httpResp, _) => new ApiResponse(httpResp));
         }
 
-		public async Task<ApiResponse<TModel>> SendAsync<TModel>(ApiRequest request,
+        // Sends the request and deserializes the body content into specific type.
+        public async Task<ApiResponse<TContent>> SendForContentAsync<TContent>(ApiRequest request,
+            CancellationToken cancellationToken = default)
+            where TContent : class
+        {
+            ApiResponse apiResp = await SendRequestBuildResponse(request, typeof(TContent), 
+                cancellationToken, 
+                (httpResp, contentObj) => new ApiResponse<TContent>(httpResp, (TContent)contentObj));
+
+            return apiResp as ApiResponse<TContent>;
+        }
+
+        // Sends a request and deserializes the response body into a HalResource containing
+        // the model.  The HalResource adds links and embedded items to the model.  
+		public async Task<ApiHalResponse<TModel>> SendForHalAsync<TModel>(ApiRequest request,
             CancellationToken cancellationToken = default)
             where TModel : class
         {
-            if (request == null) throw new ArgumentNullException(nameof(request),
-                "Request cannot be null.");
+            // Define the type into which body is to be deserialized.
+            Type halRespType = typeof(HalResource<>).MakeGenericType(typeof(TModel));
+            
+            ApiResponse apiResp = await SendRequestBuildResponse(request, halRespType,
+                cancellationToken,
+                (httpResp, contentObj) =>
+                {
+                    var resource = (HalResource<TModel>)contentObj;
+                    return new ApiHalResponse<TModel>(httpResp, resource);
+                });
 
-            return await SendRequest<TModel>(request, cancellationToken).ConfigureAwait(false);
+            return apiResp as ApiHalResponse<TModel>;
         }
         
-        public async Task<ApiResponse> SendAsync(ApiRequest request, Type modelType, 
+        // Sends a request and deserialize the response body into the provided type
+        // and sets the State property of the ApiResponse which is defined as Object
+        // and not of a specific type.
+        public Task<ApiResponse> SendAsync(ApiRequest request, Type contentType, 
             CancellationToken cancellationToken = default)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            if (modelType == null) throw new ArgumentNullException(nameof(modelType));
-
-            return await SendRequest(request, modelType, cancellationToken).ConfigureAwait(false);
+            return SendRequestBuildResponse(request, contentType, 
+                cancellationToken, 
+                (httpResp, contentObj) => new ApiResponse(httpResp, contentObj));
         }
-
-        private async Task<ApiResponse> SendRequest(ApiRequest request, CancellationToken cancellationToken)
+        
+        private Task<ApiResponse> SendRequestBuildResponse(ApiRequest request,
+            CancellationToken cancellationToken,
+            Func<HttpResponseMessage, object, ApiResponse> httpResponse)
         {
-            HttpRequestMessage requestMsg = await CreateRequestMessage(request);
-            LogRequest(request);
-            
-            HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
-
-            var response = new ApiResponse(requestMsg, responseMsg);
-            await SetErrorContext(responseMsg, response);
-
-            LogResponse(response);
-            return response;
+            return SendRequestBuildResponse(request, null, cancellationToken, httpResponse);
         }
-
-        private async Task<ApiResponse<TModel>> SendRequest<TModel>(ApiRequest request, 
-            CancellationToken cancellationToken)
-            where TModel : class
+        
+        // All other methods delegate to this method that coordinates the common code for
+        // sending the request and building the corresponding response.
+        private async Task<ApiResponse> SendRequestBuildResponse(ApiRequest request, 
+            Type contentType,
+            CancellationToken cancellationToken, 
+            Func<HttpResponseMessage, object, ApiResponse> httpResponse)
         {
-            HttpRequestMessage requestMsg = await CreateRequestMessage(request);
-            LogRequest(request);
-            
-            HalResource<TModel> resource = null;
-            HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
-
-            if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
+            if (request == null)
             {
-                await using Stream stream = await responseMsg.Content.ReadAsStreamAsync(); 
-                
-                resource = await DeserializeResource<HalResource<TModel>>(responseMsg, stream);
+                throw new ArgumentNullException(nameof(request), "Request must be specified.");
             }
-
-            var response = new ApiResponse<TModel>(requestMsg, responseMsg, resource);
-            await SetErrorContext(responseMsg, response);
             
-            LogResponse(response);
-            return response;
-        }
-        
-        private async Task<ApiResponse> SendRequest(ApiRequest request, Type modelType, 
-            CancellationToken cancellationToken)
-        {
             HttpRequestMessage requestMsg = await CreateRequestMessage(request);
 
             LogRequest(request);
             HttpResponseMessage responseMsg = await _httpClient.SendAsync(requestMsg, cancellationToken);
 
-            object resource = null;
-            if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
+            object contentObj = null;
+            if (responseMsg.IsSuccessStatusCode && responseMsg.Content != null && contentType != null)
             {
                 await using var stream = await responseMsg.Content.ReadAsStreamAsync();
-                
-                resource = DeserializeResource(responseMsg, stream, modelType);
+                contentObj = await DeserializeResource(responseMsg, stream, contentType);
             }
 
-            var response = new ApiResponse(requestMsg, responseMsg, resource);
+            // Invoke factory method provided by caller so they can build the correct type of response.
+            var response = httpResponse(responseMsg, contentObj);
+
             await SetErrorContext(responseMsg, response);
-            
             LogResponse(response);
+            
             return response;
         }
 
@@ -137,7 +139,7 @@ namespace NetFusion.Rest.Client.Core
             if (! responseMsg.IsSuccessStatusCode && responseMsg.Content != null)
             {
                 var errorBody = await responseMsg.Content.ReadAsStringAsync();
-                response.SetErrorContext(errorBody);
+                response.SetErrorContent(errorBody);
             }
         }
 
@@ -156,49 +158,70 @@ namespace NetFusion.Rest.Client.Core
         
         private async Task<HttpRequestMessage> CreateRequestMessage(ApiRequest request)
         {
-            string requestUri = request.RequestUri;
+            AssertRequest(request);
+            SetEmbeddedQueryString(request);
+            
+            string requestUri = await BuildRequestUrl(request);
+            var requestMsg = new HttpRequestMessage(request.Method, requestUri);
+            
+            request.Settings.Apply(requestMsg);
+            SerializeRequestContent(request, requestMsg);
+            
+            return requestMsg;
+        }
 
+        private static void AssertRequest(ApiRequest request)
+        {
             if (request.IsTemplate)
             {
                 throw new InvalidOperationException(
                     $"Request URI: {request.RequestUri}.  Templates must have all route-tokens populated " + 
-                    $"before making request to server.");
+                    "before making request to server.");
             }
-            
-            var requestSettings = request.Settings;
+        }
 
-            // Check if the request has any embedded names specified.  This allows the client
-            // to suggest to the server the subset of resources it needs from the default set
-            // of embedded resources normally returned from the server API.
+        // Check if the request has any embedded names specified.  This allows the client
+        // to suggest to the server the subset of resources it needs from the default set
+        // of embedded resources normally returned from the server API.
+        private static void SetEmbeddedQueryString(ApiRequest request)
+        {
             if (! string.IsNullOrWhiteSpace(request.EmbeddedNames))
             {
-                requestSettings.QueryString.AddParam("embed", request.EmbeddedNames);
+                request.Settings.QueryString.AddParam("embed", request.EmbeddedNames);
             }
+        }
 
+        private static async Task<string> BuildRequestUrl(ApiRequest request)
+        {
+            var requestSettings = request.Settings;
+            
             // Build the query string and append to request URL.
             if (requestSettings.QueryString.Params.Any())
             {
                 var encodedContent = new FormUrlEncodedContent(requestSettings.QueryString.Params);
-                requestUri += "?" + await encodedContent.ReadAsStringAsync();
+                return $"{request.RequestUri}?{await encodedContent.ReadAsStringAsync()}";
             }
 
-            var requestMsg = new HttpRequestMessage(request.Method, requestUri);
-            requestSettings.Apply(requestMsg);
+            return request.RequestUri;
+        }
 
+        private void SerializeRequestContent(ApiRequest request, HttpRequestMessage requestMsg)
+        {
+            var requestSettings = request.Settings;
+            
             // Serialize the body of the request based on its content-type.
-			if (request.Content != null)
-			{
+            if (request.Content != null)
+            {
                 if (requestSettings.Headers.ContentType == null)
                 {
                     throw new InvalidOperationException(
-                        $"The request for: {requestUri} contains content without having the Content-Type header specified.");
+                        $"The request for: {request.RequestUri} contains content without having the Content-Type header specified.");
                 }
 
-				requestMsg.Content = CreateContentForMediaType(requestSettings.Headers.ContentType, request.Content);
-			}
-            return requestMsg;
+                requestMsg.Content = CreateContentForMediaType(requestSettings.Headers.ContentType, request.Content);
+            }
         }
-
+        
         private HttpContent CreateContentForMediaType(HeaderValue headerValue, object content)
         {
             string mediaType = headerValue.Value.First();
@@ -212,7 +235,6 @@ namespace NetFusion.Rest.Client.Core
 
         private IMediaTypeSerializer GetMediaTypeSerializer(string mediaType)
         {
-
             if (! _mediaTypeSerializers.TryGetValue(mediaType, out IMediaTypeSerializer contentSerializer))
             {
                 throw new InvalidOperationException(
@@ -222,23 +244,14 @@ namespace NetFusion.Rest.Client.Core
             return contentSerializer;
         }
 
-        private Task<T> DeserializeResource<T>(HttpResponseMessage responseMsg, Stream responseStream)
-            where T : class
-        {
-            string mediaType = responseMsg.Content.Headers.ContentType.MediaType;
-            IMediaTypeSerializer serializer = GetMediaTypeSerializer(mediaType);
-
-            return serializer.Deserialize<T>(responseStream);
-        }
-        
-        private object DeserializeResource(HttpResponseMessage responseMsg, 
+        private async Task<object> DeserializeResource(HttpResponseMessage responseMsg, 
             Stream responseStream,
             Type modelType)
         {
             string mediaType = responseMsg.Content.Headers.ContentType.MediaType;
             IMediaTypeSerializer serializer = GetMediaTypeSerializer(mediaType);
 
-            return serializer.Deserialize(responseStream, modelType);
+            return await serializer.Deserialize(responseStream, modelType);
         }
     }
 }
