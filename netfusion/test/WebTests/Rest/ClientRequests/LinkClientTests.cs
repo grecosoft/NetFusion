@@ -153,7 +153,7 @@ namespace WebTests.Rest.ClientRequests
         }
 
         [Fact]
-        public void RequestUri_IsRequred()
+        public void RequestUri_IsRequired()
         {
             var exception = Record.Exception(() => ApiRequest.Create("", HttpMethod.Get));
             exception.Should().BeOfType<InvalidOperationException>();
@@ -186,7 +186,7 @@ namespace WebTests.Rest.ClientRequests
         }
 
         [Fact]
-        public void OptionalRouteParamaters_MustNotBeSpecified()
+        public void OptionalRouteParameters_MustNotBeSpecified()
         {
             // Arrange:
             // Link as returned from server and associated with resource.

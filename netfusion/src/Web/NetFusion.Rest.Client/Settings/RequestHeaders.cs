@@ -26,7 +26,7 @@ namespace NetFusion.Rest.Client.Settings
 		/// <summary>
 		/// A named list of header values associated with the request.
 		/// </summary>
-		public IReadOnlyDictionary<string, HeaderValue> Headers { get; }
+		public IReadOnlyDictionary<string, HeaderValue> Values { get; }
 
 		private readonly IDictionary<string, HeaderValue> _headers;
 
@@ -36,7 +36,7 @@ namespace NetFusion.Rest.Client.Settings
 		public RequestHeaders()
 		{
 			_headers = new Dictionary<string, HeaderValue>();
-			Headers = new ReadOnlyDictionary<string, HeaderValue>(_headers);
+			Values = new ReadOnlyDictionary<string, HeaderValue>(_headers);
 		}
 
         /// <summary>
@@ -131,22 +131,6 @@ namespace NetFusion.Rest.Client.Settings
 	    }
 
 	    /// <summary>
-	    /// Sets the Authorization header to the base64 encoded value created from
-	    /// joining all values with the ':' character.
-	    /// </summary>
-	    /// <param name="scheme">The custom scheme.</param>
-	    /// <param name="values">The values from which the authorization header is built.</param>
-	    /// <returns>Self reference for method changing.</returns>
-	    public RequestHeaders SetAuthHeader(string scheme, params string[] values)
-	    {
-		    if (string.IsNullOrWhiteSpace(scheme))
-			    throw new ArgumentException("Scheme not specified.", nameof(scheme));
-		    
-		    string authValue =  Base64Encode(string.Join(":", values));
-		    return Add("Authorization", $"{scheme} {authValue}");
-	    }
-
-	    /// <summary>
 	    /// Set the Authorization Bearer JWT token.
 	    /// </summary>
 	    /// <param name="token">The JWT token value.</param>
@@ -180,31 +164,31 @@ namespace NetFusion.Rest.Client.Settings
                 }
 			}
 
-			foreach (var (key, value) in Headers)
+			foreach (var (key, value) in Values)
 			{
                 requestMessage.Headers.Add(key, value.Value);
 			}
 		}
 
-		internal RequestHeaders GetMergedHeaders(RequestHeaders requestSettings)
+		internal RequestHeaders GetMerged(RequestHeaders requestSettings)
 		{
 			// Check if any of the known header values have been overridden.
 			var mergedHeaders = new RequestHeaders
 			{
-				Accept = requestSettings.Accept ?? Accept ?? new[] { HeaderValue.WithValue (InternetMediaTypes.Json) },
-				ContentType = requestSettings.ContentType ?? ContentType ?? HeaderValue.WithValue(InternetMediaTypes.Json)
+				Accept = Accept ?? requestSettings.Accept ?? new[] { HeaderValue.WithValue (InternetMediaTypes.Json) },
+				ContentType = ContentType ?? requestSettings.ContentType ?? HeaderValue.WithValue(InternetMediaTypes.Json)
             };
-
-			// Add all the headers from this settings object to the new merged version.
-			foreach (var (key, value) in Headers)
-			{
-                mergedHeaders._headers[key] = value;
-			}
-
-			// Override or add any header values being merged.
-			foreach (var (key, value) in requestSettings.Headers)
+			
+			foreach (var (key, value) in requestSettings.Values)
 			{
 				mergedHeaders._headers[key] = value;
+			}
+
+			// Override any passed headers having a corresponding value defined
+			// by the settings object being merged into.
+			foreach (var (key, value) in Values)
+			{
+                mergedHeaders._headers[key] = value;
 			}
 
 			return mergedHeaders;

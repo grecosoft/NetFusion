@@ -8,8 +8,7 @@ using NetFusion.Rest.Resources;
 namespace NetFusion.Rest.Client
 {
     /// <summary>
-    /// Represents a request that can be submitted to the server using
-    /// the IRestClient.
+    /// Represents a request that can be submitted to the server using the IRestClient.
     /// </summary>
     public class ApiRequest
     {
@@ -106,6 +105,18 @@ namespace NetFusion.Rest.Client
         {
             return Create(requestUri, HttpMethod.Put, config);
         }
+        
+        /// <summary>
+        /// Creates a new PATCH request to a specified Uri.
+        /// </summary>
+        /// <param name="requestUri">The request Uri to call.</param>
+        /// <param name="config">Optional delegate passed the created ApiRequest used to apply 
+        /// additional configurations.</param>
+        /// <returns>Created API request.</returns>
+        public static ApiRequest Patch(string requestUri, Action<ApiRequest> config = null)
+        {
+            return Create(requestUri, HttpMethod.Patch, config);
+        }
 
         /// <summary>
         /// Creates a new DELETE request to a specified Uri.
@@ -173,12 +184,28 @@ namespace NetFusion.Rest.Client
             return Create(link, expando);
         }
 
+        /// <summary>
+        /// Merges the provided settings into the settings currently defined by the request.
+        /// If a corresponding setting is defined by the request, it takes precedence over
+        /// the value being merged.  After the settings are merged, the Settings property is
+        /// updated to the new merged instance.
+        /// </summary>
+        /// <param name="settings">The settings to be merged into the settings of the request.</param>
+        /// <returns>Reference to the request.</returns>
+        public ApiRequest Merge(IRequestSettings settings)
+        {
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+            
+            Settings = Settings.GetMerged(settings);
+            return this;
+        }
+
         private static ApiRequest CreateFromLink(string href, Link link)
         {
             if (IsTemplateUrl(href))
             {
                 throw new InvalidOperationException(
-                    $"Links containing non-populated template URL tokens can't be requested.");
+                    "Links containing non-populated template URL tokens can't be requested.");
             }
 
             AssertLink(link);

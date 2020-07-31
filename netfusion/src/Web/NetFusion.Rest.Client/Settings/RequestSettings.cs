@@ -44,7 +44,7 @@ namespace NetFusion.Rest.Client.Settings
 
             return new RequestSettings
             {
-                Headers = Headers.GetMergedHeaders(requestSettings.Headers),
+                Headers = Headers.GetMerged(requestSettings.Headers),
                 QueryString = QueryString.GetMerged(requestSettings.QueryString)
             };
         }

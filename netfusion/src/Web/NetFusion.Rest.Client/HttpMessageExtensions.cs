@@ -14,7 +14,7 @@ namespace NetFusion.Rest.Client
         /// </summary>
         /// <param name="response">The response from a HTTP call.</param>
         /// <returns>True if an authentication challenge.  Otherwise, False.</returns>
-        public static bool IsAuthChallenge(this HttpResponseMessage response)
+        public static bool IsAuthChallenge(this ApiResponse response)
         {
             if (response == null) throw new ArgumentNullException(nameof(response));
             
@@ -28,7 +28,7 @@ namespace NetFusion.Rest.Client
         /// </summary>
         /// <param name="response">The response from a HTTP call.</param>
         /// <returns>The URL to call to authenticate.</returns>
-        public static string GetAuthRealmUrl(this HttpResponseMessage response)
+        public static string GetAuthRealmUrl(this ApiResponse response)
         {
             if (response == null) throw new ArgumentNullException(nameof(response));
             

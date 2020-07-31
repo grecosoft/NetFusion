@@ -10,8 +10,7 @@ namespace NetFusion.Rest.Client.Settings
     public static class RequestSettingsExtensions
     {
         /// <summary>
-        /// Applies the settings commonly used when submitting and consuming
-        /// REST/HAL based requests.
+        /// Applies the settings commonly used when submitting and consuming REST/HAL based requests.
         /// </summary>
         /// <param name="requestSettings">The request settings to configure.</param>
         /// <returns>Reference to the settings being configured.</returns>

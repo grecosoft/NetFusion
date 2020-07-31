@@ -13,10 +13,15 @@ namespace NetFusion.Rest.Client
         /// Creates a request corresponding to the link.
         /// </summary>
         /// <param name="link">The link to create a request from.</param>
+        /// <param name="config">Optional delegate passed the created ApiRequest used to apply 
+        /// additional configurations.</param>
         /// <returns>Created API request.</returns>
-        public static ApiRequest ToRequest(this Link link)
+        public static ApiRequest ToRequest(this Link link, Action<ApiRequest> config = null)
         {
-            return ApiRequest.Create(link);
+            var request = ApiRequest.Create(link);
+            
+            config?.Invoke(request);
+            return request;
         }
 
         /// <summary>
@@ -24,10 +29,16 @@ namespace NetFusion.Rest.Client
         /// </summary>
         /// <param name="link">The link to create a request from.</param>
         /// <param name="tokens">The values to use for link route template parameters.</param>
+        /// <param name="config">Optional delegate passed the created ApiRequest used to apply 
+        /// additional configurations.</param>
         /// <returns>Created API request.</returns>
-        public static ApiRequest ToRequest(this Link link, IDictionary<string, object> tokens)
+        public static ApiRequest ToRequest(this Link link, IDictionary<string, object> tokens,
+            Action<ApiRequest> config = null)
         {
-            return ApiRequest.Create(link, tokens);
+            var request = ApiRequest.Create(link, tokens);
+            
+            config?.Invoke(request);
+            return request;
         }
 
         /// <summary>
@@ -35,10 +46,16 @@ namespace NetFusion.Rest.Client
         /// </summary>
         /// <param name="link">The link to create a request from.</param>
         /// <param name="tokens">The values to use for link route template parameters.</param>
+        /// <param name="config">Optional delegate passed the created ApiRequest used to apply 
+        /// additional configurations.</param>
         /// <returns>Created API request.</returns>
-        public static ApiRequest ToRequest(this Link link, Action<dynamic> tokens)
+        public static ApiRequest ToRequest(this Link link, Action<dynamic> tokens,
+            Action<ApiRequest> config = null)
         {
-            return ApiRequest.Create(link, tokens);
+            var request = ApiRequest.Create(link, tokens);
+            
+            config?.Invoke(request);
+            return request;
         }
     }
 }
