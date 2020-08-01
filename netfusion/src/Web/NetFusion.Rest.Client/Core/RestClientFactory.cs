@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using NetFusion.Common.Extensions.Collections;
-using NetFusion.Rest.Client.Settings;
 
 namespace NetFusion.Rest.Client.Core
 {
@@ -37,7 +36,7 @@ namespace NetFusion.Rest.Client.Core
                 throw new ArgumentException("Name of configured API not specified.", nameof(name));
             
             ILogger logger = _loggerFactory.CreateLogger(name);
-            
+
             // Create instance of HttpClient and wrap it within a RestClient instance.
             HttpClient innerClient = _httpClientFactory.CreateClient(name);
             IRestClient client = new RestClient(logger, innerClient, _mediaTypeSerializers);

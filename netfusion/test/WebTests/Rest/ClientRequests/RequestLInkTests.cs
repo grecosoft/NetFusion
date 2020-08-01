@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using FluentAssertions;
 using NetFusion.Rest.Client;
@@ -14,7 +15,8 @@ namespace WebTests.Rest.ClientRequests
     /// usually make a request to an entry resource to obtains entry URLs for
     /// loading initial resources.  Then URLs are usually template based.
     /// </summary>
-    public class LinkClientTests
+    [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+    public class RequestLinkTests
     {
         /// <summary>
         /// The client will have to make one or more initial requests to entry point resources.
@@ -200,6 +202,52 @@ namespace WebTests.Rest.ClientRequests
             // Act:
             var request = link.ToRequest(values => values.Id = 300);
             request.AssertRequest("/api/test/url/300", HttpMethod.Get);
+        }
+
+        [Fact]
+        public void CanCheckIf_Resource_HasLink()
+        {
+            var response = new HalResource
+            {
+                Links = new Dictionary<string, Link>
+                {
+                    {"current-status", new Link()}
+                }
+            };
+
+            response.HasLink("current-status").Should().BeTrue();
+        }
+
+        [Fact]
+        public void CanGetResourceLink()
+        {
+            var link = new Link();
+            var response = new HalResource
+            {
+                Links = new Dictionary<string, Link>
+                {
+                    {"current-status", link}
+                }
+            };
+
+            response.GetLink("current-status").Should().NotBeNull();
+        }
+        
+        [Fact]
+        public void CanTypeToGetResourceLink()
+        {
+            var link = new Link();
+            var response = new HalResource
+            {
+                Links = new Dictionary<string, Link>
+                {
+                    {"current-status", link}
+                }
+            };
+
+            response.TryGetLink("current-status", out Link foundLink).Should().BeTrue();
+            foundLink.Should().NotBeNull();
+            foundLink.Should().BeSameAs(link);
         }
     }
 }

@@ -1,10 +1,10 @@
 using System;
-using NetFusion.Messaging.Types;
-using Xunit;
 using FluentAssertions;
+using NetFusion.Messaging.Types;
 using NetFusion.Messaging.Types.Attributes;
+using Xunit;
 
-namespace CoreTests.Messaging
+namespace CoreTests.MessagingTypes
 {
     /// <summary>
     /// Provides extension method tests for reading basic types and array of basic types stored within a dictionary
@@ -40,10 +40,9 @@ namespace CoreTests.Messaging
         {
             var domainEvent = new TestDomainEvent();
 
-            var exception = Assert.Throws<InvalidOperationException>(
-                () => domainEvent.Attributes.GetIntValue("Missing"));
-
-            exception.Message.Should().Contain("Attribute named: Missing not found.");
+            Assert.Throws<InvalidOperationException>(
+                () => domainEvent.Attributes.GetIntValue("Missing")
+            ).Message.Should().Contain("Attribute named: Missing not found.");
 
         }
 
@@ -153,6 +152,122 @@ namespace CoreTests.Messaging
             domainEvent.Attributes.SetIntValue("TestValue", 10, false);
 
             domainEvent.Attributes.GetIntValue("TestValue").Should().Be(5);
+        }
+
+        [Fact]
+        public void CanSetCorrelationId()
+        {
+            var expectedValue = Guid.NewGuid().ToString();
+            
+            var domainEvent = new TestDomainEvent();
+            domainEvent.SetCorrelationId(expectedValue);
+            domainEvent.GetCorrelationId().Should().Be(expectedValue);
+        }
+        
+        [Fact]
+        public void CanSetUtcDateOccurred()
+        {
+            var expectedValue = DateTime.Now;
+            var expectedUtcValue = expectedValue.ToUniversalTime();
+            
+            var domainEvent = new TestDomainEvent();
+            domainEvent.SetUtcDateOccurred(expectedValue);
+            domainEvent.GetUtcDateOccurred().Should().Be(expectedUtcValue);
+        }
+        
+        [Fact]
+        public void CanSetRouteKey()
+        {
+            var domainEvent = new TestDomainEvent();
+            const string expectedValue = "Hartford";
+            
+            domainEvent.SetRouteKey(expectedValue);
+            domainEvent.GetRouteKey().Should().Be(expectedValue);
+            
+            domainEvent.SetRouteKey("CT", "Hartford", "West");
+            domainEvent.GetRouteKey().Should().Be("CT.Hartford.West");
+        }
+        
+        [Fact]
+        public void CanSetPriority()
+        {
+            var domainEvent = new TestDomainEvent();
+            const byte expectedValue = 10;
+
+            domainEvent.GetPriority().Should().BeNull();
+            domainEvent.SetPriority(expectedValue);
+            domainEvent.GetPriority().Should().Be(expectedValue);
+        }
+
+        [Fact]
+        public void CanSetMessageId()
+        {
+            var domainEvent = new TestDomainEvent();
+            const string expectedValue = "NC_839472";
+            
+            domainEvent.SetMessageId(expectedValue);
+            domainEvent.GetMessageId().Should().Be(expectedValue);
+        }
+
+        [Fact]
+        public void CanSetSubject()
+        {
+            var domainEvent = new TestDomainEvent();
+            const string expectedValue = "LatestPurchaseOrder";
+            
+            domainEvent.SetSubject(expectedValue);
+            domainEvent.GetSubject().Should().Be(expectedValue);
+        }
+
+        [Fact]
+        public void CanSetReplyTo()
+        {
+            var domainEvent = new TestDomainEvent();
+            const string expectedValue = "OrderStatusQueue";
+            
+            domainEvent.SetReplyTo(expectedValue);
+            domainEvent.GetReplyTo().Should().Be(expectedValue);
+        }
+        
+        [Fact]
+        public void CanSetTo()
+        {
+            var domainEvent = new TestDomainEvent();
+            const string expectedValue = "InventoryLow";
+            
+            domainEvent.SetTo(expectedValue);
+            domainEvent.GetTo().Should().Be(expectedValue);
+        }
+
+        [Fact]
+        public void CanSetUserId()
+        {
+            var domainEvent = new TestDomainEvent();
+            const string expectedValue = "mark.twain@house.com";
+
+            domainEvent.SetUserId(expectedValue);
+            domainEvent.GetUserId().Should().Be(expectedValue);
+        }
+
+        [Fact]
+        public void CanSetAbsoluteExpiryTime()
+        {
+            var domainEvent = new TestDomainEvent();
+            var expectedValue = DateTime.Now.AddDays(5);
+            var expectedUtcValue = expectedValue.ToUniversalTime();
+
+            domainEvent.SetUtcAbsoluteExpiryTime(expectedValue);
+            domainEvent.GetUtcAbsoluteExpiryTime().Should().Be(expectedUtcValue);
+        }
+
+        [Fact]
+        public void CanSetTls()
+        {
+            var domainEvent = new TestDomainEvent();
+            const uint expectedValue = uint.MaxValue;
+            
+            domainEvent.SetTls(expectedValue);
+            domainEvent.GetTls().Should().Be(expectedValue);
         }
 
         private class TestDomainEvent : DomainEvent

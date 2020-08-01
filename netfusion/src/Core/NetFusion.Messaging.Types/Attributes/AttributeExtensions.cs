@@ -90,7 +90,7 @@ namespace NetFusion.Messaging.Types.Attributes
         {
             if (message.Attributes.HasValue(GetPluginScopedName("Priority")))
             {
-                return (byte?) message.Attributes.GetByteValue(GetPluginScopedName("Priority"));
+                return message.Attributes.GetByteValue(GetPluginScopedName("Priority"));
             }
 
             return null;
@@ -120,7 +120,7 @@ namespace NetFusion.Messaging.Types.Attributes
         /// <param name="message">The message to set identity value.</param>
         /// <param name="value">A value used to identity the message.</param>
         public static void SetMessageId(this IMessage message, string value) =>
-            message.Attributes.SetStringValue(value, GetPluginScopedName("MessageId"), false);
+            message.Attributes.SetStringValue(GetPluginScopedName("MessageId"), value, false);
       
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace NetFusion.Messaging.Types.Attributes
         /// <param name="message">The message to set attribute value.</param>
         /// <param name="value">The current subject value.</param>
         public static void SetSubject(this IMessage message, string value) =>
-            message.Attributes.SetStringValue(value, GetPluginScopedName("Subject"));
+            message.Attributes.SetStringValue(GetPluginScopedName("Subject"), value);
       
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace NetFusion.Messaging.Types.Attributes
         /// <param name="message">The message to set attribute value.</param>
         /// <param name="value"></param>
         public static void SetReplyTo(this IMessage message, string value) =>
-            message.Attributes.SetStringValue(value, GetPluginScopedName("ReplyTo"));
+            message.Attributes.SetStringValue(GetPluginScopedName("ReplyTo"), value);
       
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace NetFusion.Messaging.Types.Attributes
         /// <param name="message">The message to set attribute value.</param>
         /// <param name="value">The destination value.</param>
         public static void SetTo(this IMessage message, string value) =>
-            message.Attributes.SetStringValue(value, GetPluginScopedName("To"));
+            message.Attributes.SetStringValue(GetPluginScopedName("To"), value);
       
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace NetFusion.Messaging.Types.Attributes
         /// <param name="message">The message to set attribute value.</param>
         /// <param name="value">Value identity an user.</param>
         public static void SetUserId(this IMessage message, string value) =>
-            message.Attributes.SetStringValue(value, GetPluginScopedName("UserId"), false);
+            message.Attributes.SetStringValue(GetPluginScopedName("UserId"), value, false);
       
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace WebTests.Rest.ClientRequests
         [Fact]
         public Task QueryStringParams_CanBeSpecified()
         {
-            return WebHostFixture.TestAsync<LinkClientTests>(async host =>
+            return WebHostFixture.TestAsync<RequestLinkTests>(async host =>
             {
                 IMockedService mockedSrv = new MockUnitTestService();
 

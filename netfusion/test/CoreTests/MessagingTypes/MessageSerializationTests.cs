@@ -1,19 +1,23 @@
 using System.Text.Json;
 using FluentAssertions;
 using NetFusion.Messaging.Types;
-using Xunit;
 using NetFusion.Messaging.Types.Attributes;
 using NetFusion.Serialization;
+using Xunit;
 
-namespace CoreTests.Messaging
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
+// ReSharper disable ClassNeverInstantiated.Local
+
+namespace CoreTests.MessagingTypes
 {
     /// <summary>
-    /// These tests assure the correct serialization of message
-    /// derived classes.
+    /// These tests assure the correct serialization of message derived classes.
+    /// The base message type has a property named Attributes that can contain
+    /// a set of key/value pairs.  Both the key and value are string types so
+    /// the data can be easily sent out of process and deserialized.  
     /// </summary>
     public class MessageSerializationTests
     {
-
         [Fact]
         public void DomainEvent_UsingMsJson_SerializesCorrectly()
         {
@@ -23,17 +27,11 @@ namespace CoreTests.Messaging
             };
 
             domainEvent.Attributes.SetIntValue("TestAttrib1", 60);
-
-
+            
             var json = JsonSerializer.Serialize(domainEvent);
             var newDomainEvent = JsonSerializer.Deserialize<TestDomainEvent>(json);
 
             newDomainEvent.TestProp1.Should().Be(domainEvent.TestProp1);
-
-            // In the future release, properties with private setters will
-            // be supported by extending MS serializer.
-            // newDomainEvent.TestProp2.Should().Be(newDomainEvent.TestProp2);
-
             newDomainEvent.Attributes.GetIntValue("TestAttrib1").Should().Be(60);
         }
 
@@ -46,17 +44,11 @@ namespace CoreTests.Messaging
             };
 
             command.Attributes.SetIntValue("TestAttrib1", 60);
-
-
+            
             var json = JsonSerializer.Serialize(command);
             var newCommand = JsonSerializer.Deserialize<TestCommand>(json);
 
             newCommand.TestProp1.Should().Be(command.TestProp1);
-
-            // In the future release, properties with private setters will
-            // be supported by extending MS serializer.
-            // command.TestProp2.Should().Be(newCommand.TestProp2);
-
             newCommand.Attributes.GetIntValue("TestAttrib1").Should().Be(60);
         }
 
@@ -89,8 +81,7 @@ namespace CoreTests.Messaging
             };
 
             command.Attributes.SetIntValue("TestAttrib1", 60);
-
-
+            
             var data = serializer.Serialize(command);
             var newCommand = serializer.Deserialize<TestCommand>(data, typeof(TestCommand));
 
@@ -128,6 +119,5 @@ namespace CoreTests.Messaging
         public class TestResult
         {
         }
-        
     }
 }

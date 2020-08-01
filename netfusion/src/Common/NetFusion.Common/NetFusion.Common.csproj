@@ -12,9 +12,6 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="3.1.5" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utilities\Reflection" />
-  </ItemGroup>
   <PropertyGroup>
     <PackageId>NetFusion.Common</PackageId>
     <Title>NetFusion Common</Title>

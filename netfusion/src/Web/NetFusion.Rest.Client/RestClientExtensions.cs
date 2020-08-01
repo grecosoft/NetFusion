@@ -2,7 +2,6 @@ using System;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Rest.Client.Core;
-using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
 
 namespace NetFusion.Rest.Client
@@ -32,6 +31,7 @@ namespace NetFusion.Rest.Client
             // This service is registered as singleton since Microsoft's underlying IHttpClientFactory
             // to which it delegates is also registered a singleton.
             services.AddSingleton<IRestClientFactory, RestClientFactory>();
+            services.AddSingleton<IRestClientService, RestClientService>();
             return services;
         }
         

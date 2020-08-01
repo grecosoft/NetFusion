@@ -1,5 +1,4 @@
 ﻿using System;
-using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
 using System.IO;
 using System.Text.Json;

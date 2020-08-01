@@ -12,7 +12,7 @@ namespace NetFusion.Messaging.Types.Attributes
     /// dependent on the specific serializer being used.  (JSON serializers and
     /// MessagePack serializers will not know the exact type if object was used
     /// for the dictionary's type.  These serializers will deserialize the value
-    /// into an object representing the value).  
+    /// into an object representing the value that is dependent on their library).  
     /// </summary>
     public static class AttributeSetExtensions
     {

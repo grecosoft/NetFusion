@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace NetFusion.Rest.Client.Settings
+namespace NetFusion.Rest.Client
 {
     /// <summary>
     /// Interface defining contract implemented by classes responsible for
