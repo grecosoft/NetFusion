@@ -37,7 +37,7 @@ namespace CoreTests.Messaging
 
         public static CompositeContainer AddDerivedEventAndConsumer(this CompositeContainer container)
         {
-            var appPlugin = new MockApplicationPlugin();
+            var appPlugin = new MockAppPlugin();
             appPlugin.AddPluginType<MockBaseMessageConsumer>();
             
             container.RegisterPlugins(appPlugin);
@@ -46,7 +46,7 @@ namespace CoreTests.Messaging
 
         public static CompositeContainer AddEventAndExceptionConsumer(this CompositeContainer container)
         {
-            var appPlugin = new MockApplicationPlugin();
+            var appPlugin = new MockAppPlugin();
             appPlugin.AddPluginType<MockErrorMessageConsumer>();
             
             container.RegisterPlugins(appPlugin);

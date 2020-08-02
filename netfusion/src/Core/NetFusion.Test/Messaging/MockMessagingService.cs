@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NetFusion.Messaging;
@@ -15,10 +16,18 @@ namespace NetFusion.Test.Messaging
     /// </summary>
     public class MockMessagingService : IMessagingService
     {
+        // Records the received requests made to the service:
         private readonly List<object> _receivedRequests = new List<object>();
+        
+        // Contains known responses for commands and queries.
         private readonly Dictionary<Type, object> _commandResponses = new Dictionary<Type, object>();
         private readonly Dictionary<Type, object> _queryResponses = new Dictionary<Type, object>();
         
+        /// <summary>
+        /// Contains all the received requests (Commands, Domain Events, and Queries).  This collection
+        /// can be asserted to validate that a component, injecting IMessagingService, has correctly
+        /// sent messages of the correct type.
+        /// </summary>
         public IReadOnlyCollection<object> ReceivedRequests { get; }
 
         public MockMessagingService()
@@ -70,6 +79,33 @@ namespace NetFusion.Test.Messaging
             return this;
         }
         
+        /// <summary>
+        /// Returns all received commands of a specific type.
+        /// </summary>
+        /// <typeparam name="T">The type of command.</typeparam>
+        /// <returns>List of matching commands.</returns>
+        public IEnumerable<T> GetReceivedCommands<T>() 
+            where T : ICommand => _receivedRequests.OfType<T>();
+        
+        /// <summary>
+        /// Returns all received domain events of a specific type.
+        /// </summary>
+        /// <typeparam name="T">The type of domain event.</typeparam>
+        /// <returns>List of matching domain events.</returns>
+        public IEnumerable<T> GetReceivedDomainEvents<T>()
+            where T : IDomainEvent => _commandResponses.OfType<T>();
+        
+        /// <summary>
+        /// Returns all received queries of a specific type.
+        /// </summary>
+        /// <typeparam name="T">The type of query.</typeparam>
+        /// <returns>List of matching queries.</returns>
+        public IEnumerable<T> GetReceivedQueries<T>()
+            where T : IQuery => _receivedRequests.OfType<T>();
+        
+        
+        //-- Mocked Implementation of IMessagingServices:
+        
         Task IMessagingService.SendAsync(ICommand command, 
             CancellationToken cancellationToken,
             IntegrationTypes integrationType)
@@ -77,9 +113,7 @@ namespace NetFusion.Test.Messaging
             if (command == null) throw new ArgumentNullException(nameof(command));
             
             _receivedRequests.Add(command);
-            
-            object response = GetCommandResponse(command);
-            return Task.FromResult(response);
+            return Task.CompletedTask;
         }
 
         Task<TResult> IMessagingService.SendAsync<TResult>(ICommand<TResult> command, 
@@ -114,7 +148,8 @@ namespace NetFusion.Test.Messaging
             return Task.CompletedTask;
         }
 
-        Task<TResult> IMessagingService.DispatchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken)
+        Task<TResult> IMessagingService.DispatchAsync<TResult>(IQuery<TResult> query, 
+            CancellationToken cancellationToken)
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
             
@@ -123,7 +158,7 @@ namespace NetFusion.Test.Messaging
             object response = GetQueryResponse(query);
             return Task.FromResult((TResult)response);
         }
-
+        
         private object GetCommandResponse(ICommand command)
         {
             Type commandType = command.GetType();
@@ -134,6 +169,7 @@ namespace NetFusion.Test.Messaging
                     $"The command of type: {commandType} does not have a registered response.");
             }
             
+            // This allows testing the calling code for exception scenarios.
             if (response is Exception ex)
             {
                 throw ex;
@@ -152,6 +188,7 @@ namespace NetFusion.Test.Messaging
                     $"The query of type: {queryType} does not have a registered response.");
             }
             
+            // This allows testing the calling code for exception scenarios.
             if (response is Exception ex)
             {
                 throw ex;

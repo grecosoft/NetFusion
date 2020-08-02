@@ -201,7 +201,6 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.WithRabbitMqHost();
                     })
-                    .Configuration(TestSetup.AddValidBusConfig)
                     .Act.OnApplication(ca =>
                     {
                         ca.Start();

@@ -7,7 +7,7 @@ using NetFusion.Bootstrap.Plugins;
 namespace NetFusion.Test.Container
 {
     /// <summary>
-    /// Contains methods for arranging the main container objects under test.
+    /// Contains methods for arranging the container under test.
     /// </summary>
     public class ContainerArrange
     {
@@ -15,7 +15,7 @@ namespace NetFusion.Test.Container
 
         public ContainerArrange(ContainerFixture fixture)
         {
-            _fixture = fixture;
+            _fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
         }
         
         /// <summary>
@@ -24,18 +24,18 @@ namespace NetFusion.Test.Container
         /// </summary>
         /// <param name="arrange">Delegate passed the configuration builder
         /// to be initialized.</param>
-        /// <returns>Self Refrence</returns>
+        /// <returns>Self Reference</returns>
         public ContainerArrange Configuration(Action<IConfigurationBuilder> arrange)
         {
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
 
-            arrange(_fixture.ConfigBuilder);
+            if (_fixture.IsCompositeContainerBuild)
+            {
+                throw new InvalidOperationException(
+                    "Configuration cannot be arranged once Composite Container build.");
+            }
 
-            // The HostBuilder and WebHostBuilder automatically add IConfiguration
-            // to the container.
-            IConfiguration configuration = _fixture.ConfigBuilder.Build();
-            _fixture.Services.AddSingleton(configuration);
-            
+            arrange(_fixture.ConfigBuilder);
             return this;
         }
 
@@ -48,6 +48,12 @@ namespace NetFusion.Test.Container
         public ContainerArrange Services(Action<IServiceCollection> arrange)
         {
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
+
+            if (_fixture.IsCompositeContainerBuild)
+            {
+                throw new InvalidOperationException(
+                    "Services cannot be arranged once Composite Container built.");
+            }
 
             arrange(_fixture.Services);
             return this;
@@ -65,7 +71,7 @@ namespace NetFusion.Test.Container
         {
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
             
-            var config =  _fixture.ContainerUnderTest.GetPluginConfig<TConfig>();
+            var config =  _fixture.GetOrBuildContainer().GetPluginConfig<TConfig>();
             arrange(config);
             return this;
         }
@@ -80,7 +86,7 @@ namespace NetFusion.Test.Container
         {
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
 
-            arrange(_fixture.ContainerUnderTest);
+            arrange(_fixture.GetOrBuildContainer());
             return this;
         }
         

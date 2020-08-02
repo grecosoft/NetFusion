@@ -1,6 +1,7 @@
 ﻿using NetFusion.Bootstrap.Container;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NetFusion.Test.Container
 {
@@ -11,19 +12,22 @@ namespace NetFusion.Test.Container
     /// </summary>
     public class ContainerAct
     {
-        private readonly CompositeContainer _container;
         private readonly ContainerFixture _fixture;
+        private readonly CompositeContainer _container;
+
         private bool _actedOn;
+        private IServiceProvider _serviceProvider;
         private Exception _resultingException;
 
         public ContainerAct(ContainerFixture fixture)
         {
             _fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
-            _container = fixture.ContainerUnderTest;
+            _container = fixture.GetOrBuildContainer();
         }
-
-        private IServiceProvider _testServiceScope;
-
+        
+        
+        //-- Composite Container Actions:
+        
         /// <summary>
         /// Bootstraps the composite-container and adds the resulting IContainerApp
         /// service-collection.
@@ -100,6 +104,9 @@ namespace NetFusion.Test.Container
 
             return this;
         }
+        
+        
+        //-- Service Provider Assertions:
 
         /// <summary>
         /// Allows an unit-test to act on the server-provider associated with the
@@ -120,9 +127,9 @@ namespace NetFusion.Test.Container
             try
             {
                 var testScope = _fixture.AppUnderTest.CreateServiceScope();
-                _testServiceScope = testScope.ServiceProvider;
+                _serviceProvider = testScope.ServiceProvider;
 
-                await act(_testServiceScope).ConfigureAwait(false);
+                await act(_serviceProvider).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -151,9 +158,37 @@ namespace NetFusion.Test.Container
             try
             {
                 var testScope = _fixture.AppUnderTest.CreateServiceScope();
-                _testServiceScope = testScope.ServiceProvider;
+                _serviceProvider = testScope.ServiceProvider;
 
-                act(_testServiceScope);
+                act(_serviceProvider);
+            }
+            catch (Exception ex)
+            {
+                _resultingException = ex;
+            }
+
+            return this;
+        }
+        
+        
+        //-- Service Instance Assertions:
+
+        public async Task<ContainerAct> OnService<T>(Func<T, Task> act)
+        {
+            if (_actedOn)
+            {
+                throw new InvalidOperationException("The container can only be acted on once.");
+            }
+            
+            _fixture.AssureCompositeAppStarted();
+            
+            _actedOn = true;
+            try
+            {
+                var testScope = _fixture.AppUnderTest.CreateServiceScope();
+                _serviceProvider = testScope.ServiceProvider;
+
+                await act(_serviceProvider.GetRequiredService<T>()).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -163,12 +198,37 @@ namespace NetFusion.Test.Container
             return this;
         }
 
+        public ContainerAct OnService<T>(Action<T> act)
+        {
+            if (_actedOn)
+            {
+                throw new InvalidOperationException("The container can only be acted on once.");
+            }
+            
+            _fixture.AssureCompositeAppStarted();
+            
+            _actedOn = true;
+            try
+            {
+                var testScope = _fixture.AppUnderTest.CreateServiceScope();
+                _serviceProvider = testScope.ServiceProvider;
+
+                act(_serviceProvider.GetRequiredService<T>());
+            }
+            catch (Exception ex)
+            {
+                _resultingException = ex;
+            }
+
+            return this;
+        }
+        
         /// <summary>
         /// After acting on the container under test, the unit-test can call methods on this
         /// property to assert its state.
         /// </summary>
         public ContainerAssert Assert => new ContainerAssert(_fixture, _container, 
-            _testServiceScope, 
+            _serviceProvider, 
             _resultingException);
     }
 }

@@ -187,8 +187,8 @@ namespace CoreTests.Bootstrap
                 fixture.Arrange.Container(c =>
                     {
                         c.RegisterPlugin<MockHostPlugin>();
-                        c.RegisterPlugins(new MockApplicationPlugin());
-                        c.RegisterPlugins(new MockApplicationPlugin());
+                        c.RegisterPlugins(new MockAppPlugin());
+                        c.RegisterPlugins(new MockAppPlugin());
                     })
                     .Assert.CompositeAppBuilder(ca =>
                     {

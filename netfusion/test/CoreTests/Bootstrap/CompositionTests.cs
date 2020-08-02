@@ -60,7 +60,7 @@ namespace CoreTests.Bootstrap
                         var hostPlugin = new MockHostPlugin();
                         hostPlugin.AddPluginType<MockTypeOneBasedOnKnownType>();
                         
-                       var appPlugin = new MockApplicationPlugin();
+                       var appPlugin = new MockAppPlugin();
                        appPlugin.AddPluginType<MockTypeTwoBasedOnKnownType>();
                        
                        var corePlugin = new MockCorePlugin();
@@ -106,7 +106,7 @@ namespace CoreTests.Bootstrap
                         var corePlugin2 = new MockCorePlugin();
                         corePlugin2.AddPluginType<MockTypeTwoBasedOnKnownType>();
 
-                        var appPlugin = new MockApplicationPlugin();
+                        var appPlugin = new MockAppPlugin();
                         appPlugin.AddModule<MockComposedModule>();
                       
                         c.RegisterPlugins(hostPlugin, corePlugin, corePlugin2, appPlugin);
