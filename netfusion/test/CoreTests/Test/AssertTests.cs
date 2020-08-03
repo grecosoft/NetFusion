@@ -74,19 +74,6 @@ namespace CoreTests.Test
             });
         }
         
-        [Fact]
-        public void CanAssert_SpecificException()
-        {
-            
-        }
-
-        [Fact]
-        public void CanAssert_Exception()
-        {
-            
-        }
-        
-        
         //-- Types used by unit-tests:
         
         private class TestModule : PluginModule

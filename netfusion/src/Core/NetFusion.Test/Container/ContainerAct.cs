@@ -17,6 +17,7 @@ namespace NetFusion.Test.Container
 
         private bool _actedOn;
         private IServiceProvider _serviceProvider;
+        private bool _recordException;
         private Exception _resultingException;
 
         public ContainerAct(ContainerFixture fixture)
@@ -47,6 +48,10 @@ namespace NetFusion.Test.Container
             catch (Exception ex)
             {
                 _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
             }
 
             return this;
@@ -73,6 +78,10 @@ namespace NetFusion.Test.Container
             catch (Exception ex)
             {
                 _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
             }
 
             return this;
@@ -99,6 +108,10 @@ namespace NetFusion.Test.Container
             catch (Exception ex)
             {
                 _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
             }
 
             return this;
@@ -132,6 +145,10 @@ namespace NetFusion.Test.Container
             catch (Exception ex)
             {
                 _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
             }
 
             return this;
@@ -162,6 +179,10 @@ namespace NetFusion.Test.Container
             catch (Exception ex)
             {
                 _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
             }
 
             return this;
@@ -170,6 +191,28 @@ namespace NetFusion.Test.Container
         
         //-- Service Instance Assertions:
 
+        /// <summary>
+        /// If called, any raised exception will be recorded and not rethrown so the state
+        /// of the exception can be asserted. 
+        /// </summary>
+        /// <returns>Self Reference.</returns>
+        public ContainerAct RecordException()
+        {
+            if (_actedOn)
+            {
+                throw new InvalidOperationException("Exception must be marked for recording before action is taken.");
+            }
+
+            _recordException = true;
+            return this;
+        }
+
+        /// <summary>
+        /// Allows a registered service to be acted on so the results can be asserted.
+        /// </summary>
+        /// <param name="act">Reference to the service so it can be acted on.</param>
+        /// <typeparam name="T">The type of the service to be acted on.</typeparam>
+        /// <returns>Self Reference.</returns>
         public async Task<ContainerAct> OnServiceAsync<T>(Func<T, Task> act)
         {
             if (_actedOn)
@@ -190,11 +233,21 @@ namespace NetFusion.Test.Container
             catch (Exception ex)
             {
                 _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
             }
 
             return this;
         }
 
+        /// <summary>
+        /// Allows a registered service to be acted on so the results can be asserted.
+        /// </summary>
+        /// <param name="act">Reference to the service so it can be acted on.</param>
+        /// <typeparam name="T">The type of the service to be acted on.</typeparam>
+        /// <returns>Self Reference.</returns>
         public ContainerAct OnService<T>(Action<T> act)
         {
             if (_actedOn)
@@ -215,6 +268,10 @@ namespace NetFusion.Test.Container
             catch (Exception ex)
             {
                 _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
             }
 
             return this;

@@ -93,7 +93,7 @@ namespace NetFusion.Test.Messaging
         /// <typeparam name="T">The type of domain event.</typeparam>
         /// <returns>List of matching domain events.</returns>
         public IEnumerable<T> GetReceivedDomainEvents<T>()
-            where T : IDomainEvent => _commandResponses.OfType<T>();
+            where T : IDomainEvent => _receivedRequests.OfType<T>();
         
         /// <summary>
         /// Returns all received queries of a specific type.

@@ -19,7 +19,7 @@ namespace CoreTests.Bootstrap
                     {
                         c.RegisterPlugin<MockHostPlugin>();
                     })
-                    .Act.OnApplication(c =>
+                    .Act.RecordException().OnApplication(c =>
                     {
                         c.Start();
                         c.Start();
@@ -107,7 +107,7 @@ namespace CoreTests.Bootstrap
                     {
                         c.RegisterPlugin<MockHostPlugin>();
                     })
-                    .Act.OnApplication(ca =>
+                    .Act.RecordException().OnApplication(ca =>
                     {
                         ca.Start();
                         ca.Stop();

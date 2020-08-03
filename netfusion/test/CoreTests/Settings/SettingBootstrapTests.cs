@@ -142,7 +142,7 @@ namespace CoreTests.Settings
                         c.RegisterPlugin<SettingsPlugin>();
 
                     })
-                    .Act.OnServices(s =>
+                    .Act.RecordException().OnServices(s =>
                     {
                         s.GetRequiredService<DependentComponentInvalid>();
                     })

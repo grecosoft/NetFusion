@@ -78,7 +78,7 @@ namespace CoreTests.Messaging
             {
                 var testResult = await fixture.Arrange
                     .Container(c => c.WithHostCommandConsumer().AddMultipleConsumers())
-                    .Act.OnServicesAsync(s =>
+                    .Act.RecordException().OnServicesAsync(s =>
                     {
                         var messagingSrv = s.GetService<IMessagingService>();
                         var evt = new MockCommand();

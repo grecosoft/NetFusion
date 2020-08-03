@@ -9,7 +9,7 @@ namespace CoreTests.Test.Setup
         public static void WithEventHandler(CompositeContainer container)
         {
             var appPlugin = new MockAppPlugin();
-            appPlugin.AddPluginType<InterceptionTests.RealMessageHandler>();
+            appPlugin.AddPluginType<InterceptionTests.AppMessageHandler>();
             appPlugin.AddModule<InterceptionTests.ExampleModule>();
 
             container.RegisterPlugin<MockHostPlugin>();

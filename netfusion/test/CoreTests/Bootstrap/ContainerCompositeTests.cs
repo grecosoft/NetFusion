@@ -33,7 +33,7 @@ namespace CoreTests.Bootstrap
                         
                         r.RegisterPlugins(testPlugin);
                     })
-                    .Act.ComposeContainer()
+                    .Act.RecordException().ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
 
@@ -56,7 +56,7 @@ namespace CoreTests.Bootstrap
                         
                         c.RegisterPlugins(hostPlugin, corePlugin);
                     })
-                    .Act.ComposeContainer()
+                    .Act.RecordException().ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         ex.Message.Should().Contain("Plug-in identity values must be unique.");
@@ -79,7 +79,7 @@ namespace CoreTests.Bootstrap
                         
                         c.RegisterPlugins(hostPlugin);
                     })
-                    .Act.ComposeContainer()
+                    .Act.RecordException().ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         ex.Message.Should().Contain("All plugins must have AssemblyName and Name values.");
@@ -103,7 +103,7 @@ namespace CoreTests.Bootstrap
                         var testPlugin = new MockHostPlugin {AssemblyName = null};
                         c.RegisterPlugins(testPlugin);
                     })
-                    .Act.ComposeContainer()
+                    .Act.RecordException().ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         ex.Message.Should().Contain("All plugins must have AssemblyName and Name values.");
@@ -126,7 +126,7 @@ namespace CoreTests.Bootstrap
                         
                         c.RegisterPlugins(hostPlugin1, hostPlugin2);
                     })
-                    .Act.ComposeContainer()
+                    .Act.RecordException().ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         ex.Message.Should().Contain("There can only be one host plugin.");
@@ -146,7 +146,7 @@ namespace CoreTests.Bootstrap
                     {
 
                     })
-                    .Act.ComposeContainer()
+                    .Act.RecordException().ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         ex.Message.Should().Contain("The composite application must have one host plugin type.");
