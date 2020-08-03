@@ -47,7 +47,7 @@ namespace CoreTests.Messaging
             {
                 var testResult = await fixture.Arrange
                     .Container(c => c.WithHostRuleBasedConsumer())
-                    .Act.OnServices(s =>
+                    .Act.OnServicesAsync(s =>
                     {
                         var mockEvt = new MockRuleDomainEvent { RuleTestValue = 1500 };
                         return s.GetRequiredService<IMessagingService>()
@@ -69,7 +69,7 @@ namespace CoreTests.Messaging
             {
                 var testResult = await fixture.Arrange
                     .Container(c => c.WithHostRuleBasedConsumer())
-                    .Act.OnServices(s =>
+                    .Act.OnServicesAsync(s =>
                     {
                         var mockEvt = new MockRuleDomainEvent { RuleTestValue = 3000 };
                         return s.GetRequiredService<IMessagingService>()

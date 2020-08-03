@@ -4,6 +4,7 @@ using NetFusion.Bootstrap.Container;
 using NetFusion.Test.Plugins;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
 using NetFusion.Base.Validation;
@@ -20,11 +21,14 @@ namespace NetFusion.Test.Container
     /// </summary>
     public class ContainerFixture 
     {
-        // Microsoft Abstractions: The service-collection populated by plugin
-        // modules and configurations specific to a given unit-test.
-        internal IServiceCollection Services { get; private set; }
+        // The services arranged for the unit-test that may override any services added by plugins.
+        // This allows the unit test to override called services with mocked alternatives.
+        internal IServiceCollection ServiceOverrides { get; }
+        
+        // The collection of services populated by the composite application. 
+        internal IServiceCollection ComposedServices { get; private set; }
+        
         internal IConfigurationBuilder ConfigBuilder { get; private set; }
-
         internal ITypeResolver Resolver { get; private set; }
         
         // Reference to the composite-container in which plugins are registered
@@ -32,9 +36,14 @@ namespace NetFusion.Test.Container
         // can be used for the lifetime of the host.
         private CompositeContainer _container;
         private ICompositeApp _compositeApp;
-       
-        private ContainerFixture() { }
+
+        private ContainerFixture()
+        {
+            ServiceOverrides = new ServiceCollection();
+        }
         
+        
+        //-- Unit Test Execution Methods:
         
         /// <summary>
         /// Executes a test delegate passed an instance of ContainerFixture that
@@ -69,22 +78,21 @@ namespace NetFusion.Test.Container
             await test(fixture).ConfigureAwait(false);
 
             fixture._compositeApp?.Stop();
-        }      
-        
+        }
+
         private static ContainerFixture CreateFixture(ITypeResolver resolver)
         {
             return new ContainerFixture
             {
                 Resolver = resolver,
                 ConfigBuilder = new ConfigurationBuilder(),
-
-                Services = new ServiceCollection()
-                    .AddLogging()
-                    .AddOptions()
+                ComposedServices = new ServiceCollection()
             };
         }
+        
+        //-- Properties and methods used ty the Arrange, Act, and Assert classes.
 
-        public bool IsCompositeContainerBuild => _container != null;
+        internal bool IsCompositeContainerBuild => _container != null;
 
         /// <summary>
         /// Builds a Composite-Container using the Service-Collection associated
@@ -100,20 +108,20 @@ namespace NetFusion.Test.Container
             var configuration = ConfigBuilder.Build();
 
             // The GenericHost used by Web and Console projects automatically
-            // add IConfiguration to the container.
-            Services.AddSingleton(configuration);
+            // adds IConfiguration to the container.
+            ComposedServices.AddSingleton(configuration);
                 
             // Common services used by the majority of composite-applications or
             // default null-services for optional common services.
-            Services.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();
-            Services.AddSingleton<IValidationService, ValidationService>();
-            Services.AddSingleton<ISerializationManager, SerializationManager>();
-
-            _container = new CompositeContainer(Services, configuration, new BootstrapLogger());
+            ComposedServices.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();
+            ComposedServices.AddSingleton<IValidationService, ValidationService>();
+            ComposedServices.AddSingleton<ISerializationManager, SerializationManager>();
+            ComposedServices.AddLogging().AddOptions();
+            
+            _container = new CompositeContainer(ComposedServices, configuration, new BootstrapLogger());
             return _container;
         }
-   
-
+        
         /// <summary>
         /// Executes the compose method on the composite-container resulting in all
         /// plugins services being added to the corresponding service-collection.
@@ -125,6 +133,9 @@ namespace NetFusion.Test.Container
             if (!GetOrBuildContainer().IsComposed)
             {
                 GetOrBuildContainer().Compose(Resolver);
+
+                // Override any services provided by unit-tests.
+                ComposedServices.Add(ServiceOverrides);
             }
         }
 
@@ -143,21 +154,20 @@ namespace NetFusion.Test.Container
 
                 AssureContainerComposed();
                 
-                var serviceProvider = Services.BuildServiceProvider();
+                // Obtain reference to ICompositeApp representing composed application.
+                var serviceProvider = ComposedServices.BuildServiceProvider();
                 _compositeApp = serviceProvider.GetService<ICompositeApp>();
                 return _compositeApp;
             }
         }
 
         /// <summary>
-        /// Starts the built composite-application resulting in the starting
-        /// of all plugin modules.
+        /// Starts the built composite-application resulting in the starting of all plugin modules.
         /// </summary>
         public void AssureCompositeAppStarted()
         {
             if (!AppUnderTest.IsStarted)
             {
-                AssureContainerComposed();
                 AppUnderTest.Start();
             }
         }

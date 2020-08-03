@@ -29,8 +29,7 @@ namespace NetFusion.Test.Container
         //-- Composite Container Actions:
         
         /// <summary>
-        /// Bootstraps the composite-container and adds the resulting IContainerApp
-        /// service-collection.
+        /// Bootstraps the composite-container and adds the resulting IContainerApp service-collection.
         /// </summary>
         /// <returns>Self Reference.</returns>
         public ContainerAct ComposeContainer()
@@ -59,7 +58,7 @@ namespace NetFusion.Test.Container
         /// <param name="act">Method passed the instance of the application under test to be
         /// acted on by the unit-test.  The method can invoke an asynchronous method.</param>
         /// <returns>Self Reference.</returns>
-        public async Task<ContainerAct> OnApplication(Func<ICompositeApp, Task> act)
+        public async Task<ContainerAct> OnApplicationAsync(Func<ICompositeApp, Task> act)
         {
             if (_actedOn)
             {
@@ -109,12 +108,11 @@ namespace NetFusion.Test.Container
         //-- Service Provider Assertions:
 
         /// <summary>
-        /// Allows an unit-test to act on the server-provider associated with the
-        /// composite-application.
+        /// Allows an unit-test to act on the server-provider associated with the composite-application.
         /// </summary>
         /// <param name="act">Method called to act on the service provider.</param>
         /// <returns>Self Reference.</returns>
-        public async Task<ContainerAct> OnServices(Func<IServiceProvider, Task> act)
+        public async Task<ContainerAct> OnServicesAsync(Func<IServiceProvider, Task> act)
         {
             if (_actedOn)
             {
@@ -140,8 +138,7 @@ namespace NetFusion.Test.Container
         }
         
         /// <summary>
-        /// Allows an unit-test to act on the server-provider associated with the
-        /// composite-application.
+        /// Allows an unit-test to act on the server-provider associated with the composite-application.
         /// </summary>
         /// <param name="act">Method called to act on the service provider.</param>
         /// <returns>Self Reference.</returns>
@@ -173,7 +170,7 @@ namespace NetFusion.Test.Container
         
         //-- Service Instance Assertions:
 
-        public async Task<ContainerAct> OnService<T>(Func<T, Task> act)
+        public async Task<ContainerAct> OnServiceAsync<T>(Func<T, Task> act)
         {
             if (_actedOn)
             {

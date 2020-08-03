@@ -3,6 +3,7 @@ using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 // ReSharper disable once NotAccessedField.Local
 namespace NetFusion.Test.Container
@@ -19,15 +20,14 @@ namespace NetFusion.Test.Container
         private readonly ContainerFixture _fixture;
         private readonly CompositeContainer _container;
         private IServiceProvider _serviceProvider;
+        
         private readonly Exception _resultingException;
         
         // Constructor called to assert a container that has not been acted on,
         public ContainerAssert(ContainerFixture fixture)
         {
-            if (fixture == null) throw new ArgumentNullException(nameof(fixture));
-            
+            _fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
             _container = fixture.GetOrBuildContainer();
-            _fixture = fixture;
         }
         
         // Constructor called to assert an acted on container.
@@ -216,15 +216,25 @@ namespace NetFusion.Test.Container
             assert(_serviceProvider);
             return this;
         }
+        
+        public async Task<ContainerAssert> ServicesAsync(Func<IServiceProvider, Task> assert)
+        {
+            if (assert == null) throw new ArgumentNullException(nameof(assert));
+            
+            _fixture.AssureCompositeAppStarted();
+            _serviceProvider ??= _fixture.AppUnderTest.CreateServiceScope().ServiceProvider;
+
+            await assert(_serviceProvider);
+            return this;
+        }
 
         /// <summary>
         /// Creates service instance from the container that can be asserted.
         /// </summary>
         /// <param name="assert">Method passed the service instance to assert.
         /// If the service is not registered, null will be returned.</param>
-        /// <typeparam name="T">The service Type</typeparam>
+        /// <typeparam name="T">The service Type.</typeparam>
         /// <returns>Self Reference.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
         public ContainerAssert Service<T>(Action<T> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert));
@@ -234,6 +244,25 @@ namespace NetFusion.Test.Container
 
             T serviceUnderTest = _serviceProvider.GetService<T>();
             assert(serviceUnderTest);
+
+            return this;
+        }
+        
+        /// <summary>
+        /// Creates service instance from the container that can be asserted.
+        /// </summary>
+        /// <param name="assert">Method passed the service instance to assert.
+        /// <typeparam name="T">The service Type.</typeparam>
+        /// <returns>Self referenced within a pending task.</returns>
+        public async Task<ContainerAssert> ServiceAsync<T>(Func<T, Task> assert)
+        {
+            if (assert == null) throw new ArgumentNullException(nameof(assert));
+            
+            _fixture.AssureCompositeAppStarted();
+            _serviceProvider ??= _fixture.AppUnderTest.CreateServiceScope().ServiceProvider;
+
+            T serviceUnderTest = _serviceProvider.GetService<T>();
+            await assert(serviceUnderTest);
 
             return this;
         }

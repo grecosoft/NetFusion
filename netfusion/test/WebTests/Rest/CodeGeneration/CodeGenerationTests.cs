@@ -75,7 +75,6 @@ namespace WebTests.Rest.CodeGeneration
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange.Container(TestSetup.WithDefaults)
-                    .Act.ComposeContainer()
                     .Assert.PluginModule<CodeGenModule>(m =>
                     {
                         m.ResourceTypes.Should().HaveCount(2);
@@ -98,7 +97,6 @@ namespace WebTests.Rest.CodeGeneration
             {
                 fixture.Arrange.Container(TestSetup.WithDefaults)
                     .PluginConfig<RestCodeGenConfig>(c => c.Disable())
-                    .Act.ComposeContainer()
                     .Assert.PluginModule<CodeGenModule>(m =>
                     {
                         m.ResourceTypes.Should().BeEmpty();

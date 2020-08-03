@@ -20,10 +20,9 @@ namespace NetFusion.Test.Container
         
         /// <summary>
         /// Configures the configuration-builder with settings required for
-        /// the container object under-test.
+        /// the container under-test.
         /// </summary>
-        /// <param name="arrange">Delegate passed the configuration builder
-        /// to be initialized.</param>
+        /// <param name="arrange">Delegate passed the configuration builder to be initialized.</param>
         /// <returns>Self Reference</returns>
         public ContainerArrange Configuration(Action<IConfigurationBuilder> arrange)
         {
@@ -32,30 +31,30 @@ namespace NetFusion.Test.Container
             if (_fixture.IsCompositeContainerBuild)
             {
                 throw new InvalidOperationException(
-                    "Configuration cannot be arranged once Composite Container build.");
+                    "Configuration cannot be arranged once Composite Container is Built.");
             }
 
             arrange(_fixture.ConfigBuilder);
             return this;
         }
-
+        
         /// <summary>
-        /// Configures the service-collection with services required for
-        /// the container objects under test.
+        /// Configures the composite-container with a known set of plugins
+        /// pertaining to the unit-test.
         /// </summary>
-        /// <param name="arrange">Delegate passed the service-collection.</param>
+        /// <param name="arrange">Method passed the application container under test.</param>
         /// <returns>Self Reference</returns>
-        public ContainerArrange Services(Action<IServiceCollection> arrange)
+        public ContainerArrange Container(Action<CompositeContainer> arrange)
         {
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
-
+            
             if (_fixture.IsCompositeContainerBuild)
             {
                 throw new InvalidOperationException(
                     "Services cannot be arranged once Composite Container built.");
             }
 
-            arrange(_fixture.Services);
+            arrange(_fixture.GetOrBuildContainer());
             return this;
         }
         
@@ -77,19 +76,25 @@ namespace NetFusion.Test.Container
         }
         
         /// <summary>
-        /// Configures the composite-container with a known set of plugins
-        /// pertaining to the unit-test.
+        /// Configures the service-collection with services required for
+        /// the container objects under test.
         /// </summary>
-        /// <param name="arrange">Method passed the application container under test.</param>
+        /// <param name="arrange">Delegate passed the service-collection.</param>
         /// <returns>Self Reference</returns>
-        public ContainerArrange Container(Action<CompositeContainer> arrange)
+        public ContainerArrange Services(Action<IServiceCollection> arrange)
         {
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
 
-            arrange(_fixture.GetOrBuildContainer());
+            if (_fixture.IsCompositeContainerBuild)
+            {
+                throw new InvalidOperationException(
+                    "Services cannot be arranged once Composite Container built.");
+            }
+
+            arrange(_fixture.ServiceOverrides);
             return this;
         }
-        
+
         /// <summary>
         /// Allows the unit-test to act on the test-fixture under test.
         /// </summary>

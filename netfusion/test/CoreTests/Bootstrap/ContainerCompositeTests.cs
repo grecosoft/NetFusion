@@ -149,7 +149,7 @@ namespace CoreTests.Bootstrap
                     .Act.ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
-                        ex.Message.Should().Contain("he composite application must have one host plugin type.");
+                        ex.Message.Should().Contain("The composite application must have one host plugin type.");
                     });
             });
         }
