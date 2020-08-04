@@ -7,7 +7,12 @@ namespace NetFusion.Common.Extensions.Reflection
     public static class ClassificationExtensions
     {
         // Types that are class based but consider to be primitive within this context.
-        private static Type[] PrimitiveTypes { get; } = {typeof(string), typeof(DateTime)};
+        private static Type[] PrimitiveTypes { get; } =
+        {
+            typeof(string), 
+            typeof(DateTime),
+            typeof(decimal)
+        };
         
         public static bool IsBasicType(this PropertyInfo propertyInfo)
         {

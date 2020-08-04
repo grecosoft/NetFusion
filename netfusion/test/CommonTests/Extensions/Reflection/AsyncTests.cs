@@ -7,88 +7,88 @@ using Xunit;
 
 namespace CommonTests.Extensions.Reflection
 {
-
     public class AsyncTests
     {
         [Fact (DisplayName = "Can determine if method is Asynchronous")]
         public void CanDetermineIfMethod_IsAsynchronous()
         {
-            GetType().GetMethod(nameof(AsyncMethodToTest))
+            typeof(TestMethods).GetMethod(nameof(TestMethods.AsyncMethodToTest))
                 .IsAsyncMethod().Should().BeTrue();
 
-            GetType().GetMethod(nameof(AscynMethodWithResultToTest))
+            typeof(TestMethods).GetMethod(nameof(TestMethods.AsyncMethodWithResultToTest))
                 .IsAsyncMethod().Should().BeTrue();
 
-            GetType().GetMethod(nameof(NonAsyncVoidMethod))
+            typeof(TestMethods).GetMethod(nameof(TestMethods.NonAsyncVoidMethod))
                 .IsAsyncMethod().Should().BeFalse();
 
-            GetType().GetMethod(nameof(NonAsyncIntMethod))
+            typeof(TestMethods).GetMethod(nameof(TestMethods.NonAsyncIntMethod))
                 .IsAsyncMethod().Should().BeFalse();
         }
 
         [Fact (DisplayName = "Can determine if method returns Asynchronous result")]
         public void CanDetermineIfMethod_ReturnsAsynchronousResult()
         {
-            GetType().GetMethod(nameof(AsyncMethodToTest))
+            typeof(TestMethods).GetMethod(nameof(TestMethods.AsyncMethodToTest))
                 .IsAsyncMethodWithResult().Should().BeFalse();
 
-            GetType().GetMethod(nameof(AscynMethodWithResultToTest))
+            typeof(TestMethods).GetMethod(nameof(TestMethods.AsyncMethodWithResultToTest))
                 .IsAsyncMethodWithResult().Should().BeTrue();
 
-            GetType().GetMethod(nameof(NonAsyncVoidMethod))
+            typeof(TestMethods).GetMethod(nameof(TestMethods.NonAsyncVoidMethod))
                 .IsAsyncMethodWithResult().Should().BeFalse();
 
-            GetType().GetMethod(nameof(NonAsyncIntMethod))
+            typeof(TestMethods).GetMethod(nameof(TestMethods.NonAsyncIntMethod))
                 .IsAsyncMethodWithResult().Should().BeFalse();
         }
 
         [Fact (DisplayName = "Can determine if method is Asynchronous and can be Canceled")]
         public void CanDetermineIfMethod_IsAsynchronousAndCanCanceled()
         {
-            GetType().GetMethod(nameof(CancelableAsyncMethod))
+            typeof(TestMethods).GetMethod(nameof(TestMethods.CancelableAsyncMethod))
                .IsCancellableMethod().Should().BeTrue();
 
-            GetType().GetMethod(nameof(AsyncMethodToTest))
+            typeof(TestMethods).GetMethod(nameof(TestMethods.AsyncMethodToTest))
                .IsCancellableMethod().Should().BeFalse();
 
-            GetType().GetMethod(nameof(AscynMethodWithResultToTest))
+            typeof(TestMethods).GetMethod(nameof(TestMethods.AsyncMethodWithResultToTest))
                 .IsCancellableMethod().Should().BeFalse();
 
-            GetType().GetMethod(nameof(NonAsyncVoidMethod))
+            typeof(TestMethods).GetMethod(nameof(TestMethods.NonAsyncVoidMethod))
                 .IsCancellableMethod().Should().BeFalse();
 
-            GetType().GetMethod(nameof(NonAsyncIntMethod))
+            typeof(TestMethods).GetMethod(nameof(TestMethods.NonAsyncIntMethod))
                 .IsCancellableMethod().Should().BeFalse();
         }
 
-#pragma warning disable xUnit1013 // Public method should be marked as test
-        public static Task AsyncMethodToTest()
-#pragma warning restore xUnit1013 // Public method should be marked as test
+        private static class TestMethods
         {
-            throw new NotImplementedException();
-        }
+            public static Task AsyncMethodToTest()
+            {
+                throw new NotImplementedException();
+            }
 
-        public static Task<int> AscynMethodWithResultToTest()
-        {
-            throw new NotImplementedException();
-        }
+            public static Task<int> AsyncMethodWithResultToTest()
+            {
+                throw new NotImplementedException();
+            }
 
-        public static Task<int> CancelableAsyncMethod(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+            public static Task<int> CancelableAsyncMethod(CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+        
+            public static void NonAsyncVoidMethod()
+            {
 
-#pragma warning disable xUnit1013 // Public method should be marked as test
-        public static void NonAsyncVoidMethod()
-#pragma warning restore xUnit1013 // Public method should be marked as test
-        {
+            }
 
+            public static int NonAsyncIntMethod()
+            {
+                throw new NotImplementedException();
+            }
         }
-
-        public static int NonAsyncIntMethod()
-        {
-            throw new NotImplementedException();
-        }
+        
+        
     }
    
 }
