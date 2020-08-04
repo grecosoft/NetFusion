@@ -20,7 +20,7 @@ namespace NetFusion.Settings.Plugin
             DocUrl = "https://github.com/grecosoft/NetFusion/wiki/core.settings.overview";
             
             Description =  "Plug-in that locates application settings using Microsoft Configuration Extensions and " + 
-                           "initializes them when injected into a dependent component for the first time.";
+                           "initializes them when injected into a dependent component.";
         }
     }
     
