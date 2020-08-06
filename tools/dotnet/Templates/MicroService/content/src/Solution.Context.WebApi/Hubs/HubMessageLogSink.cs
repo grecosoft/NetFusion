@@ -19,7 +19,7 @@ namespace Solution.Context.WebApi.Hubs
             _hubContext = hubContext ?? throw new ArgumentNullException(nameof(hubContext));
         }
         
-        public Task ReceiveAsync(MessageLog messageLog)
+        public Task WriteLogAsync(MessageLog messageLog)
         {
             return _hubContext.Clients.All.LogMessage(MessageLogModel.FromEntity(messageLog));
         }

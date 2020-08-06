@@ -46,10 +46,7 @@ namespace Demo.WebApi
                 .AddMongoDb()
 
                 .AddRest()
-                .AddWebMvc(config =>
-                {
-                    config.EnableRouteMetadata = true;
-                })
+                .AddWebMvc()
 
 //                Enable for the Messaging-Publisher/Enricher examples ONLY                
 //                .InitPluginConfig<MessageDispatchConfig>(config =>

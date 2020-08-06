@@ -8,10 +8,10 @@ namespace Demo.Infra
 {
     public class MachineNameEnricher : MessageEnricher
     {
-        public override Task Enrich(IMessage message)
+        public override Task EnrichAsync(IMessage message)
         {
             message.Attributes.SetStringValue("MachineName", Environment.MachineName);
-            return base.Enrich(message);
+            return base.EnrichAsync(message);
         }
     }
 }

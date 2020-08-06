@@ -35,10 +35,7 @@ namespace Solution.Context.WebApi
             services.CompositeContainer(_configuration)
                 .AddSettings()
                 .AddMessaging()
-                .AddWebMvc(config =>
-                {
-                    config.EnableRouteMetadata = true;
-                })
+                .AddWebMvc()
                 .AddRest()
  
                 .AddPlugin<InfraPlugin>()

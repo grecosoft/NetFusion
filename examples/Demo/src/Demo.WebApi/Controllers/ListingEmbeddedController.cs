@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Demo.WebApi.Resources;
-using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Server.Hal;
 
 namespace Demo.WebApi.Controllers
 {
