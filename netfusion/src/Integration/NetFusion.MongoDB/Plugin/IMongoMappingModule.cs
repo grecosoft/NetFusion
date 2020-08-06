@@ -32,9 +32,8 @@ namespace NetFusion.MongoDB.Plugin
         IEntityClassMap GetEntityMap<T>() where T : class;
 
         /// <summary>
-        /// Given a mapped typed, returns the associated name used
-        /// to identify the derived type in MongoDB.  This corresponds
-        /// to the _t MongoDB property.
+        /// Given a mapped typed, returns the associated name used to identify the derived
+        /// type in MongoDB.  This corresponds to the _t MongoDB property.
         /// </summary>
         /// <param name="mappedEntityType">The mapped type.</param>
         /// <param name="knownEntityType">The derived mapped type.</param>

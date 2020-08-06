@@ -13,6 +13,11 @@ namespace NetFusion.MongoDB
         where TSettings : MongoSettings
     {
         /// <summary>
+        /// Reference to the underlying MongoDB.
+        /// </summary>
+        IMongoDatabase Database { get; }
+        
+        /// <summary>
         /// Returns a collection typed to a specific class.  
         /// </summary>
         /// <typeparam name="TDocument">The type of entity represented by the collection.</typeparam>

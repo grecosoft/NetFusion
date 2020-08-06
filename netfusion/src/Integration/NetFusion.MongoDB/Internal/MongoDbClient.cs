@@ -7,20 +7,20 @@ using NetFusion.MongoDB.Settings;
 namespace NetFusion.MongoDB.Internal
 {
     /// <summary>
-    /// Service component that is registered with the dependency injection 
-    /// container used to execute MongoDB commands.  Configures and delegates
-    /// to an instance of the MongoClient class and adds additional services.
+    /// Service component that is registered with the dependency injection container
+    /// used to execute MongoDB commands.  Configures and delegates to an instance of
+    /// the MongoClient class and adds additional services.
     /// </summary>
-    /// <typeparam name="TSettings">Type defining the settings that
-    /// should be used to connect to a specific database instance.
+    /// <typeparam name="TSettings">Type defining the settings that should be used to connect
+    /// to a specific database instance.
     /// </typeparam>
     public class MongoDbClient<TSettings> : IMongoDbClient<TSettings>
         where TSettings : MongoSettings
     {
         private readonly IMongoMappingModule _mappingModule;
-        private readonly IMongoDatabase _database;
 
         public TSettings DbSettings { get; }
+        public IMongoDatabase Database { get; }
 
         public MongoDbClient(TSettings dbSettings, IMongoMappingModule mappingModule)
         {
@@ -30,18 +30,18 @@ namespace NetFusion.MongoDB.Internal
             
             IMongoClient client = CreateClient();
 
-            _database = client.GetDatabase(
+            Database = client.GetDatabase(
                 dbSettings.DatabaseName,
                 dbSettings.DatabaseSettings);
         }
-
+        
         public IMongoCollection<TDocument> GetCollection<TDocument>(string collectionName,
             MongoCollectionSettings settings = null)
         {
             if (string.IsNullOrWhiteSpace(collectionName)) throw new ArgumentException(
                 "Collection name must be specified.", nameof(collectionName));
 
-            return _database.GetCollection<TDocument>(collectionName, settings);
+            return Database.GetCollection<TDocument>(collectionName, settings);
         }
 
         public IMongoCollection<TEntity> GetCollection<TEntity>(MongoCollectionSettings settings = null)
@@ -50,7 +50,7 @@ namespace NetFusion.MongoDB.Internal
             var mapping = GetEntityMapping(typeof(TEntity));
             var collectionName = GetEntityCollectionName(mapping);
 
-            return _database.GetCollection<TEntity>(collectionName, settings);
+            return Database.GetCollection<TEntity>(collectionName, settings);
         }
 
         public Task DropCollectionAsync<TEntity>()
@@ -59,7 +59,7 @@ namespace NetFusion.MongoDB.Internal
             var mapping = GetEntityMapping(typeof(TEntity));
             var collectionName = GetEntityCollectionName(mapping);
 
-            return _database.DropCollectionAsync(collectionName);
+            return Database.DropCollectionAsync(collectionName);
         }
 
         private IEntityClassMap GetEntityMapping(Type entityType)
