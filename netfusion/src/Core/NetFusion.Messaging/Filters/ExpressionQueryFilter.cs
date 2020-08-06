@@ -26,7 +26,7 @@ namespace NetFusion.Messaging.Filters
             _scriptingService = scriptingService ?? throw new ArgumentNullException(nameof(scriptingService));
         }
 
-        public async Task OnPostExecute(IQuery query)
+        public async Task OnPostExecuteAsync(IQuery query)
         {
             foreach (object resultItem in GetQueryResults(query).Where(IsAttributedResult))
             {

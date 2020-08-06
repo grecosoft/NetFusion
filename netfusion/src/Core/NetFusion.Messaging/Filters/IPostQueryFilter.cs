@@ -13,6 +13,6 @@ namespace NetFusion.Messaging.Filters
         /// </summary>
         /// <param name="query">The query being dispatched.</param>
         /// <returns>The task that will be completed when execution is completed.</returns>
-        Task OnPostExecute(IQuery query);
+        Task OnPostExecuteAsync(IQuery query);
     }
 }

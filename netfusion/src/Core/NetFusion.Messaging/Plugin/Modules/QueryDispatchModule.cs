@@ -20,10 +20,6 @@ namespace NetFusion.Messaging.Plugin.Modules
     {
         private IDictionary<Type, QueryDispatchInfo> _queryDispatchers; // QueryType => DispatchInfo
 
-        //------------------------------------------------------
-        //--Plugin Initialization
-        //------------------------------------------------------
-        
         // Create dictionary used to resolve how a query type is dispatched.  
         public override void Initialize()
         {
@@ -60,10 +56,6 @@ namespace NetFusion.Messaging.Plugin.Modules
             }
         }
         
-        //------------------------------------------------------
-        //--Plugin Services
-        //------------------------------------------------------
-
         public QueryDispatchInfo GetQueryDispatchInfo(Type queryType)
         {
             if (queryType == null) throw new ArgumentNullException(nameof(queryType));
@@ -82,11 +74,8 @@ namespace NetFusion.Messaging.Plugin.Modules
             var messagingDispatchLog = new Dictionary<string, object>();
             moduleLog["QueryConsumers"] = messagingDispatchLog;
 
-            foreach (var queryDispatcherRegistration in _queryDispatchers)
+            foreach (var (queryType, queryDispatcher) in _queryDispatchers)
             {
-                var queryType = queryDispatcherRegistration.Key;
-                var queryDispatcher = queryDispatcherRegistration.Value;
-
                 if (queryType.FullName == null) continue;
                 
                 messagingDispatchLog[queryType.FullName] = new {

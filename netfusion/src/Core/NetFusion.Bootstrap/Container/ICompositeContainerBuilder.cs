@@ -6,6 +6,9 @@ namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
     /// Provides methods for building a composite-application from a set of registered plugins.
+    /// A reference to this interface is used by the host application when started to register
+    /// plugins from which the composite-container is built.  A reference to this interface is
+    /// obtained by calling the CompositeContainer IServiceCollection extension method.
     /// </summary>
     public interface ICompositeContainerBuilder
     {

@@ -38,13 +38,13 @@ namespace NetFusion.Bootstrap.Plugins
         
         /// <summary>
         /// The modules for which the plugin is composed.  Modules are used to
-        /// organize the code for a plugin's implementation and are invoked
-        /// when the CompositeContainer is built.
+        /// organize the code for plugin implementation and are invoked when
+        /// the CompositeContainer is built.
         /// </summary>
         IEnumerable<IPluginModule> Modules { get; }
         
         /// <summary>
-        /// The configurations defined by the plugin. A plugin's configurations
+        /// The configurations defined by the plugin. A plugin configuration
         /// can be set by the host application or by another plugin to extend
         /// the behaviors of the plugin defining the configuration.
         /// </summary>
@@ -63,12 +63,12 @@ namespace NetFusion.Bootstrap.Plugins
         string Description { get; }
 
         /// <summary>
-        /// Optional URL referencing the plugin's source code.
+        /// Optional URL referencing the plugin source code.
         /// </summary>
         string SourceUrl { get; }
         
         /// <summary>
-        /// Optional URL referencing the plugin's documentation. 
+        /// Optional URL referencing the plugin documentation. 
         /// </summary>
         string DocUrl { get; }       
 

@@ -95,7 +95,7 @@ namespace NetFusion.Builder
                         "Errors were recorded when composing application.  See log for details.");
                 }
                 
-                // Allow the host initialization code to specify any last services.
+                // Allow the host initialization code to specify any last service overrides.
                 config?.Invoke(_serviceCollection);
             }
             catch 
@@ -107,8 +107,7 @@ namespace NetFusion.Builder
 
         private void RegisterRequiredDefaultServices()
         {
-            _bootstrapLogger.Add(LogLevel.Debug, 
-                "Adding Required Default Services");
+            _bootstrapLogger.Add(LogLevel.Debug, "Adding Required Default Services");
             
             RegisterDefaultService(typeof(ILoggerFactory), typeof(LoggerFactory));  
             

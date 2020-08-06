@@ -23,7 +23,7 @@ namespace NetFusion.Messaging.Filters
             _objectMapper = objectMapper ?? throw new ArgumentNullException(nameof(objectMapper));
         }
 
-        public Task OnPostExecute(IQuery query)
+        public Task OnPostExecuteAsync(IQuery query)
         {
             if (QueryResultCompatible(query))
             {

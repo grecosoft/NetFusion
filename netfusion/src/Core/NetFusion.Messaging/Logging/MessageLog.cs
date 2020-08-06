@@ -4,9 +4,19 @@ using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Logging
 {
+    /// <summary>
+    /// Defines the content in which the messages log is being generated.
+    /// </summary>
     public enum LogContextType
     {
+        /// <summary>
+        /// Indicates on the publishing side.
+        /// </summary>
         PublishedMessage,
+        
+        /// <summary>
+        /// Indicates on the receiving side.
+        /// </summary>
         ReceivedMessage
     }
     
