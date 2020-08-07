@@ -28,8 +28,8 @@ deploy:
   - provider: NuGet
     artifact: MyGet
     api_key:
-      secure: c/FNue2mw27B5A0B1V+pAtSl22XoSqSMu6pj8xIlKGdwAEqoCq7HRxtTqsJl/m1L
-    skip_symbols: false
+      secure: f3xnVJLL5yrsW+FURKu8jMWAYlTu2ZCNmGwHcq8e9hyJClcIHSSJODJ1Mnv8R9zV
+    skip_symbols: true
 
 skip_commits:
   message: /\[nobuild\]/
