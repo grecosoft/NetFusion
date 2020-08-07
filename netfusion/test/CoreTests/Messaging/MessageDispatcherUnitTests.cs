@@ -199,7 +199,7 @@ namespace CoreTests.Messaging
         {          
             public Exception ExpectedException { get; set; }
             
-            public override Task Enrich(IMessage message)
+            public override Task EnrichAsync(IMessage message)
             {
                 // Return a non-completed task.
                 return Task.Run(() =>

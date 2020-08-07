@@ -10,7 +10,6 @@ using NetFusion.RabbitMQ.Plugin;
 using NetFusion.Redis.Plugin;
 using NetFusion.Rest.Server.Plugin;
 using NetFusion.Settings.Plugin;
-using NetFusion.Web.Mvc.Plugin;
 using Service.App.Plugin;
 using Service.Domain.Plugin;
 using Service.Infra.Plugin;
@@ -18,6 +17,7 @@ using Service.WebApi.Plugin;
 using NetFusion.Builder;
 using NetFusion.Messaging.Logging;
 using NetFusion.Rest.Client;
+using NetFusion.Rest.Docs.Plugin;
 using Service.App.Services;
 using Service.WebApi.Hubs;
 
@@ -50,11 +50,8 @@ namespace Service.WebApi
                 .AddRabbitMq()
                 .AddRedis()
                 //.AddAmqp()
-                .AddWebMvc(c =>
-                {
-                    c.EnableRouteMetadata = true;
-                })
                 .AddRest()
+                .AddRestDocs()
                 
                 // Add application centric plugins:
                 .AddPlugin<DomainPlugin>()
@@ -89,6 +86,8 @@ namespace Service.WebApi
                     .WithExposedHeaders("WWW-Authenticate")
                     .AllowAnyHeader());
             }
+
+            app.UseRestDocs();
             
             app.UseHttpsRedirection();
             app.UseRouting();

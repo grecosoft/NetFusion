@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Meta;
@@ -14,6 +15,8 @@ namespace NetFusion.Rest.Server.Mappings
     /// </summary>
     public class ResourceContext
     {
+        public HttpContext HttpContext { get; set; }
+
         // Instance of a resource being returned.
         public IResource Resource { get; set; }
 

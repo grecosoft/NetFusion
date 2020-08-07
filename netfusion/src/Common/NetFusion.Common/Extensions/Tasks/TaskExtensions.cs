@@ -27,8 +27,8 @@ namespace NetFusion.Common.Extensions.Tasks
         /// <returns>Collection of invokers and associated task.</returns>
         public static TaskListItem<TInvoker>[] Invoke<TInvoker, TInput>(this IEnumerable<TInvoker> invokers, 
             TInput input,
-            Func<TInvoker, TInput, Task> invoke) 
-            where TInput : class where TInvoker : class
+            Func<TInvoker, TInput, Task> invoke)
+            where TInvoker : class
         {
             if (invokers == null) throw new ArgumentNullException(nameof(invokers));
             if (input == null) throw new ArgumentNullException(nameof(input));
@@ -58,7 +58,7 @@ namespace NetFusion.Common.Extensions.Tasks
             TInput input,
             Func<TInvoker, TInput, CancellationToken, Task> invoke,
             CancellationToken cancellationToken)
-            where TInput : class where TInvoker : class
+            where TInvoker : class
         {
             if (invokers == null) throw new ArgumentNullException(nameof(invokers));
             if (input == null) throw new ArgumentNullException(nameof(input));

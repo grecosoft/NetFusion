@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Rest.Client;
 
@@ -40,7 +41,20 @@ namespace WebTests.Hosting
             assert(_httpResponse);
             return this;
         }
-        
+
+        public async Task<WebServerAssert> HttpResponseAsync(Func<HttpResponseMessage, Task> assert)
+        {
+            if (assert == null) throw new ArgumentNullException(nameof(assert));
+
+            if (_httpResponse == null)
+            {
+                throw new InvalidOperationException("HttpClient was not acted on.");
+            }
+
+            await assert(_httpResponse);
+            return this;
+        }
+
         /// <summary>
         /// Allows the response issued with the IRequestClient to be asserted.
         /// </summary>

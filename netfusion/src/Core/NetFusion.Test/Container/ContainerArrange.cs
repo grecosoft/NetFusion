@@ -7,7 +7,7 @@ using NetFusion.Bootstrap.Plugins;
 namespace NetFusion.Test.Container
 {
     /// <summary>
-    /// Contains methods for arranging the main container objects under test.
+    /// Contains methods for arranging the container under test.
     /// </summary>
     public class ContainerArrange
     {
@@ -15,41 +15,46 @@ namespace NetFusion.Test.Container
 
         public ContainerArrange(ContainerFixture fixture)
         {
-            _fixture = fixture;
+            _fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
         }
         
         /// <summary>
         /// Configures the configuration-builder with settings required for
-        /// the container object under-test.
+        /// the container under-test.
         /// </summary>
-        /// <param name="arrange">Delegate passed the configuration builder
-        /// to be initialized.</param>
-        /// <returns>Self Refrence</returns>
+        /// <param name="arrange">Delegate passed the configuration builder to be initialized.</param>
+        /// <returns>Self Reference</returns>
         public ContainerArrange Configuration(Action<IConfigurationBuilder> arrange)
         {
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
 
-            arrange(_fixture.ConfigBuilder);
+            if (_fixture.IsCompositeContainerBuild)
+            {
+                throw new InvalidOperationException(
+                    "Configuration cannot be arranged once Composite Container is Built.");
+            }
 
-            // The HostBuilder and WebHostBuilder automatically add IConfiguration
-            // to the container.
-            IConfiguration configuration = _fixture.ConfigBuilder.Build();
-            _fixture.Services.AddSingleton(configuration);
-            
+            arrange(_fixture.ConfigBuilder);
             return this;
         }
-
+        
         /// <summary>
-        /// Configures the service-collection with services required for
-        /// the container objects under test.
+        /// Configures the composite-container with a known set of plugins
+        /// pertaining to the unit-test.
         /// </summary>
-        /// <param name="arrange">Delegate passed the service-collection.</param>
+        /// <param name="arrange">Method passed the application container under test.</param>
         /// <returns>Self Reference</returns>
-        public ContainerArrange Services(Action<IServiceCollection> arrange)
+        public ContainerArrange Container(Action<CompositeContainer> arrange)
         {
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
+            
+            if (_fixture.IsCompositeContainerBuild)
+            {
+                throw new InvalidOperationException(
+                    "Services cannot be arranged once Composite Container built.");
+            }
 
-            arrange(_fixture.Services);
+            arrange(_fixture.GetOrBuildContainer());
             return this;
         }
         
@@ -65,25 +70,31 @@ namespace NetFusion.Test.Container
         {
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
             
-            var config =  _fixture.ContainerUnderTest.GetPluginConfig<TConfig>();
+            var config =  _fixture.GetOrBuildContainer().GetPluginConfig<TConfig>();
             arrange(config);
             return this;
         }
         
         /// <summary>
-        /// Configures the composite-container with a known set of plugins
-        /// pertaining to the unit-test.
+        /// Configures the service-collection with services required for
+        /// the container objects under test.
         /// </summary>
-        /// <param name="arrange">Method passed the application container under test.</param>
+        /// <param name="arrange">Delegate passed the service-collection.</param>
         /// <returns>Self Reference</returns>
-        public ContainerArrange Container(Action<CompositeContainer> arrange)
+        public ContainerArrange Services(Action<IServiceCollection> arrange)
         {
             if (arrange == null) throw new ArgumentNullException(nameof(arrange));
 
-            arrange(_fixture.ContainerUnderTest);
+            if (_fixture.IsCompositeContainerBuild)
+            {
+                throw new InvalidOperationException(
+                    "Services cannot be arranged once Composite Container built.");
+            }
+
+            arrange(_fixture.ServiceOverrides);
             return this;
         }
-        
+
         /// <summary>
         /// Allows the unit-test to act on the test-fixture under test.
         /// </summary>

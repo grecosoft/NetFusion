@@ -1,17 +1,31 @@
 using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NetFusion.Rest.Resources.Hal;
-using NetFusion.Web.Mvc.Metadata;
+using NetFusion.Rest.Docs;
+using NetFusion.Rest.Resources;
+using NetFusion.Rest.Server.Hal;
+using Service.WebApi.Models;
 using Service.WebApi.Resources;
 
 namespace Service.WebApi.Controllers.Web
 {
+    /// <summary>
+    /// Controller comment.
+    /// </summary>
     [ApiController, Route("api/schools")]
-    [GroupMeta(nameof(RestController))]
     public class RestController : ControllerBase
     {
-        [HttpGet("{id}")]
-        public IActionResult GetSchool(int id)
+        /// <summary>
+        /// Queries a school resource.
+        /// </summary>
+        /// <param name="id">Value identifying the school.</param>
+        /// <param name="criteria">Query value used to specify a specific grade.</param>
+        /// <returns>School resource.</returns>
+        [HttpGet("{id}"), 
+         ProducesResponseType(typeof(AccountModel), StatusCodes.Status200OK),
+         ProducesResponseType(typeof(SchoolResource), StatusCodes.Status201Created),
+         EmbeddedResource(typeof(SchoolResource), typeof(AccountModel), "current-account")]
+        public IActionResult GetSchool(int id, [FromQuery]string criteria = "all-grades")
         {
             var school = new SchoolResource
             {
@@ -32,7 +46,7 @@ namespace Service.WebApi.Controllers.Web
 
             return Ok(school);
         }
-        
+
         [HttpGet("{id}/students")]
         public IActionResult GetStudents(int id)
         {
@@ -58,8 +72,7 @@ namespace Service.WebApi.Controllers.Web
             return Ok(parentResource);
         }
 
-        [HttpGet("students/{studentId}/address"),
-            ActionMeta(nameof(GetStudentAddress))]
+        [HttpGet("students/{studentId}/address")]
         public IActionResult GetStudentAddress(Guid studentId)
         {
             return Ok(new AddressResource

@@ -1,6 +1,7 @@
 ﻿using NetFusion.Bootstrap.Container;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NetFusion.Test.Container
 {
@@ -11,22 +12,25 @@ namespace NetFusion.Test.Container
     /// </summary>
     public class ContainerAct
     {
-        private readonly CompositeContainer _container;
         private readonly ContainerFixture _fixture;
+        private readonly CompositeContainer _container;
+
         private bool _actedOn;
+        private IServiceProvider _serviceProvider;
+        private bool _recordException;
         private Exception _resultingException;
 
         public ContainerAct(ContainerFixture fixture)
         {
             _fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
-            _container = fixture.ContainerUnderTest;
+            _container = fixture.GetOrBuildContainer();
         }
-
-        private IServiceProvider _testServiceScope;
-
+        
+        
+        //-- Composite Container Actions:
+        
         /// <summary>
-        /// Bootstraps the composite-container and adds the resulting IContainerApp
-        /// service-collection.
+        /// Bootstraps the composite-container and adds the resulting IContainerApp service-collection.
         /// </summary>
         /// <returns>Self Reference.</returns>
         public ContainerAct ComposeContainer()
@@ -44,6 +48,10 @@ namespace NetFusion.Test.Container
             catch (Exception ex)
             {
                 _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
             }
 
             return this;
@@ -55,7 +63,7 @@ namespace NetFusion.Test.Container
         /// <param name="act">Method passed the instance of the application under test to be
         /// acted on by the unit-test.  The method can invoke an asynchronous method.</param>
         /// <returns>Self Reference.</returns>
-        public async Task<ContainerAct> OnApplication(Func<ICompositeApp, Task> act)
+        public async Task<ContainerAct> OnApplicationAsync(Func<ICompositeApp, Task> act)
         {
             if (_actedOn)
             {
@@ -70,6 +78,10 @@ namespace NetFusion.Test.Container
             catch (Exception ex)
             {
                 _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
             }
 
             return this;
@@ -96,18 +108,24 @@ namespace NetFusion.Test.Container
             catch (Exception ex)
             {
                 _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
             }
 
             return this;
         }
+        
+        
+        //-- Service Provider Assertions:
 
         /// <summary>
-        /// Allows an unit-test to act on the server-provider associated with the
-        /// composite-application.
+        /// Allows an unit-test to act on the server-provider associated with the composite-application.
         /// </summary>
         /// <param name="act">Method called to act on the service provider.</param>
         /// <returns>Self Reference.</returns>
-        public async Task<ContainerAct> OnServices(Func<IServiceProvider, Task> act)
+        public async Task<ContainerAct> OnServicesAsync(Func<IServiceProvider, Task> act)
         {
             if (_actedOn)
             {
@@ -120,21 +138,24 @@ namespace NetFusion.Test.Container
             try
             {
                 var testScope = _fixture.AppUnderTest.CreateServiceScope();
-                _testServiceScope = testScope.ServiceProvider;
+                _serviceProvider = testScope.ServiceProvider;
 
-                await act(_testServiceScope).ConfigureAwait(false);
+                await act(_serviceProvider).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
             }
 
             return this;
         }
         
         /// <summary>
-        /// Allows an unit-test to act on the server-provider associated with the
-        /// composite-application.
+        /// Allows an unit-test to act on the server-provider associated with the composite-application.
         /// </summary>
         /// <param name="act">Method called to act on the service provider.</param>
         /// <returns>Self Reference.</returns>
@@ -151,24 +172,117 @@ namespace NetFusion.Test.Container
             try
             {
                 var testScope = _fixture.AppUnderTest.CreateServiceScope();
-                _testServiceScope = testScope.ServiceProvider;
+                _serviceProvider = testScope.ServiceProvider;
 
-                act(_testServiceScope);
+                act(_serviceProvider);
             }
             catch (Exception ex)
             {
                 _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
+            }
+
+            return this;
+        }
+        
+        
+        //-- Service Instance Assertions:
+
+        /// <summary>
+        /// If called, any raised exception will be recorded and not rethrown so the state
+        /// of the exception can be asserted. 
+        /// </summary>
+        /// <returns>Self Reference.</returns>
+        public ContainerAct RecordException()
+        {
+            if (_actedOn)
+            {
+                throw new InvalidOperationException("Exception must be marked for recording before action is taken.");
+            }
+
+            _recordException = true;
+            return this;
+        }
+
+        /// <summary>
+        /// Allows a registered service to be acted on so the results can be asserted.
+        /// </summary>
+        /// <param name="act">Reference to the service so it can be acted on.</param>
+        /// <typeparam name="T">The type of the service to be acted on.</typeparam>
+        /// <returns>Self Reference.</returns>
+        public async Task<ContainerAct> OnServiceAsync<T>(Func<T, Task> act)
+        {
+            if (_actedOn)
+            {
+                throw new InvalidOperationException("The container can only be acted on once.");
+            }
+            
+            _fixture.AssureCompositeAppStarted();
+            
+            _actedOn = true;
+            try
+            {
+                var testScope = _fixture.AppUnderTest.CreateServiceScope();
+                _serviceProvider = testScope.ServiceProvider;
+
+                await act(_serviceProvider.GetRequiredService<T>()).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
             }
 
             return this;
         }
 
         /// <summary>
+        /// Allows a registered service to be acted on so the results can be asserted.
+        /// </summary>
+        /// <param name="act">Reference to the service so it can be acted on.</param>
+        /// <typeparam name="T">The type of the service to be acted on.</typeparam>
+        /// <returns>Self Reference.</returns>
+        public ContainerAct OnService<T>(Action<T> act)
+        {
+            if (_actedOn)
+            {
+                throw new InvalidOperationException("The container can only be acted on once.");
+            }
+            
+            _fixture.AssureCompositeAppStarted();
+            
+            _actedOn = true;
+            try
+            {
+                var testScope = _fixture.AppUnderTest.CreateServiceScope();
+                _serviceProvider = testScope.ServiceProvider;
+
+                act(_serviceProvider.GetRequiredService<T>());
+            }
+            catch (Exception ex)
+            {
+                _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
+            }
+
+            return this;
+        }
+        
+        /// <summary>
         /// After acting on the container under test, the unit-test can call methods on this
         /// property to assert its state.
         /// </summary>
         public ContainerAssert Assert => new ContainerAssert(_fixture, _container, 
-            _testServiceScope, 
+            _serviceProvider, 
             _resultingException);
     }
 }

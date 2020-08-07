@@ -1,4 +1,6 @@
-using NetFusion.Web.Mvc.Metadata.Core;
+using System;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetFusion.Web.Mvc.Metadata
 {
@@ -8,25 +10,39 @@ namespace NetFusion.Web.Mvc.Metadata
     public interface IApiMetadataService
     {
         /// <summary>
-        /// Returns route metadata for all defined groups.
+        /// Determines if there is metadata for a given controller action relative path having
+        /// the associated HTTP method.
         /// </summary>
-        /// <returns>Metadata describing API groups and actions.</returns>
-        ApiGroupMeta[] GetApiGroups();
+        /// <param name="httpMethod">The http method used to invoke the action URI.</param>
+        /// <param name="relativePath">The path associated with the controller action.</param>
+        /// <param name="actionMeta">Reference to the controller action metadata if found.</param>
+        /// <returns>True if the controller metadata is found.  Otherwise, false.</returns>
+        bool TryGetActionMeta(string httpMethod, string relativePath, out ApiActionMeta actionMeta);
+        
+        /// <summary>
+        /// Determines if there is metadata for a given controller action method. 
+        /// </summary>
+        /// <param name="methodInfo">The runtime method information for the controller action.</param>
+        /// <param name="actionMeta">Reference to the controller action metadata if found.</param>
+        /// <returns>True if the controller metadata is found.  Otherwise, false.</returns>
+        bool TryGetActionMeta(MethodInfo methodInfo, out ApiActionMeta actionMeta);
 
         /// <summary>
-        /// Returns route metadata for a given API group.
+        /// Returns to the controller action metadata.
         /// </summary>
-        /// <param name="groupName">Name of the group.</param>
-        /// <returns>Metadata describing API group and actions.</returns>
-        ApiGroupMeta[] GetApiGroup(string groupName);
+        /// <param name="methodInfo">The runtime method information for the controller action.</param>
+        /// <returns>Reference to the metadata.  If not found, an exception is raised.</returns>
+        ApiActionMeta GetActionMeta(MethodInfo methodInfo);
 
+        
         /// <summary>
-        /// Returns the route meta for a specific API group and action.
+        /// Returns to the controller action metadata.
         /// </summary>
-        /// <param name="groupName">Name of the group.</param>
-        /// <param name="actionName">Name of the action.</param>
-        /// <returns>The route metadata for the action.  If not found,
-        /// an exception is thrown.</returns>
-        ApiActionMeta GetApiAction(string groupName, string actionName);
+        /// <param name="actionName">The name of the controller action.</param>
+        /// <param name="paramTypes">The types passed to the controller action.</param>
+        /// <typeparam name="T">The controller on which the action method is defined.</typeparam>
+        /// <returns>Reference to the metadata.  If not found, an exception is raised.</returns>
+        ApiActionMeta GetActionMeta<T>(string actionName, params Type[] paramTypes)
+            where T : ControllerBase;
     }
 }

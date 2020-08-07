@@ -2,6 +2,7 @@ using System;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Rest.Server.Plugin.Modules;
+using NetFusion.Web.Mvc.Plugin;
 
 namespace NetFusion.Rest.Server.Plugin
 {
@@ -17,10 +18,10 @@ namespace NetFusion.Rest.Server.Plugin
             AddModule<RestModule>();
 
             Description = "Plugin implementing ASP.NET Web Output Formatter used to apply meta-type " +
-                          "specific metadata to returned resources.  The plugin implements HAL meta-type.";
+                          "specific metadata to returned resources.  The plugin implements the HAL meta-type.";
             
-            SourceUrl = "https://github.com/grecosoft/NetFusion-Plugins/tree/master/src/Infrastructure/NetFusion.Rest.Server";
-            DocUrl = "https://github.com/grecosoft/NetFusion/wiki/infrastructure.web.rest.server.quickstart";
+            SourceUrl = "https://github.com/grecosoft/NetFusion/tree/master/netfusion/src/Web/NetFusion.Rest.Server";
+            DocUrl = "https://github.com/grecosoft/NetFusion/wiki/web.rest.overview";
         }
     }
         
@@ -29,6 +30,9 @@ namespace NetFusion.Rest.Server.Plugin
         public static ICompositeContainerBuilder AddRest(this ICompositeContainerBuilder composite)
         {
             if (composite == null) throw new ArgumentNullException(nameof(composite));
+            
+            // Add dependent plugins:
+            composite.AddWebMvc();
             
             // Add plugin for Rest API support:
             composite.AddPlugin<RestPlugin>();

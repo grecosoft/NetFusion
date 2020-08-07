@@ -22,7 +22,7 @@ namespace CoreTests.Messaging.Mocks
 
         public static CompositeContainer AddMultipleConsumers(this CompositeContainer container)
         {
-            var appPlugin = new MockApplicationPlugin();
+            var appPlugin = new MockAppPlugin();
             appPlugin.AddPluginType<MockInvalidCommandConsumer>();
             
             container.RegisterPlugins(appPlugin);

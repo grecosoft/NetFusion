@@ -4,8 +4,7 @@ using Microsoft.Extensions.Logging;
 namespace NetFusion.RabbitMQ.Logging
 {
     /// <summary>
-    /// Delegates to Microsoft's extensions logger any logs written
-    /// by EasyNetQ.
+    /// Delegates to Microsoft's extensions logger any logs written by EasyNetQ.
     /// </summary>
     internal class RabbitMqLogProvider : EasyNetQ.Logging.ILogProvider
     {

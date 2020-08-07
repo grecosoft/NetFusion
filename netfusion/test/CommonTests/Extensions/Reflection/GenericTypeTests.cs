@@ -62,5 +62,43 @@ namespace CommonTests.Extensions.Reflection
             genericInfo.GenericArguments[0].Should().BeSameAs(typeof(string));
             genericInfo.GenericArguments[1].Should().BeSameAs(typeof(int));
         }
+
+        [Fact]
+        public void GivenListOfTypes_CanDetermineThoseImplementingClosedInterfaceOfAssignableParamTypes()
+        {
+            var types = new[] { typeof(ItemOne), typeof(ItemTwo), typeof(ItemThree) };
+            
+            types.WhereHavingClosedInterfaceTypeOf(typeof(ITaggedItem<>), typeof(object))
+                .Should().HaveCount(3);
+            
+            types.WhereHavingClosedInterfaceTypeOf(typeof(ITaggedItem<>), typeof(string))
+                .Should().HaveCount(2);
+
+            types.WhereHavingClosedInterfaceTypeOf(typeof(ITaggedItem<>), typeof(int))
+                .Should().HaveCount(1);
+
+            types.WhereHavingClosedInterfaceTypeOf(typeof(ITaggedItem<>), typeof(decimal))
+                .Should().BeEmpty();
+        }
+        
+        private interface ITaggedItem<T>
+        {
+            T Tag { get; set; }
+        }
+
+        public class ItemOne : ITaggedItem<int>
+        {
+            public int Tag { get; set; }
+        }
+
+        public class ItemTwo : ITaggedItem<string>
+        {
+            public string Tag { get; set; }
+        }
+        
+        public class ItemThree : ITaggedItem<string>
+        {
+            public string Tag { get; set; }
+        }
     }
 }

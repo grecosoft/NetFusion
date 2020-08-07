@@ -12,7 +12,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
     {
         private readonly TaskCompletionSource<byte[]> _taskSource;
         private readonly CancellationTokenSource _timeCancelToken;
-        private CancellationTokenRegistration _cancelTokenReg;
+        private readonly CancellationTokenRegistration _cancelTokenReg;
 
         public RpcPendingRequest(
             TaskCompletionSource<byte[]> taskSource,

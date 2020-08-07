@@ -1,92 +1,95 @@
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace NetFusion.Web.Mvc.Metadata.Core
 {
     /// <summary>
-    /// Service returning metadata for an MVC applications defined
-    /// controllers and routes.
+    /// Service returning metadata for an MVC applications defined controllers and routes.
     /// </summary>
     public class ApiMetadataService : IApiMetadataService
     {
-        private readonly IApiDescriptionGroupCollectionProvider _descriptionProvider;
-        private readonly Lazy<ApiGroupMeta[]> _metadata;
+        private readonly ApiActionMeta[] _apiActionMeta;
 
         public ApiMetadataService(
-            IApiDescriptionGroupCollectionProvider descriptionProvider)
+            IApiDescriptionGroupCollectionProvider apiDescriptionProvider)
         {
-            _descriptionProvider = descriptionProvider;
-            _metadata = new Lazy<ApiGroupMeta[]>(LoadMetadata);
+            _apiActionMeta = QueryApiActionMeta(apiDescriptionProvider);
         }
-
-        public ApiGroupMeta[] GetApiGroups() => _metadata.Value;
-
-        public ApiGroupMeta[] GetApiGroup(string groupName)
+        
+        private static ApiActionMeta[] QueryApiActionMeta(IApiDescriptionGroupCollectionProvider descriptionProvider)
         {
-            if (groupName == null) throw new ArgumentNullException(nameof(groupName));
-            
-            return GetApiGroups().Where(g => g.GroupName == groupName)
+            var metadata = descriptionProvider.ApiDescriptionGroups.Items.SelectMany(gi => gi.Items)
+                .Select(ai => new ApiActionMeta(ai))
                 .ToArray();
+
+            AssertActionMethodsUnique(metadata);
+
+            return metadata;
         }
 
-        public ApiActionMeta GetApiAction(string groupName, string actionName)
+        // Technically, a controller method can have more than one associated Http Method.  
+        // Since this feature is not use very often, a check will be made so this is not
+        // allowed to simplify the implementation.  NOTE:  it is still valid to have the
+        // same URL route associated with two different Http Methods.
+        private static void AssertActionMethodsUnique(IEnumerable<ApiActionMeta> metadata)
         {
-            if (actionName == null) throw new ArgumentNullException(nameof(actionName));
+            var invalidMetadata = metadata.GroupBy(m => m.ActionMethodInfo)
+                .Where(g => g.Count() > 1)
+                .Select(g => $"Controller: {g.Key.DeclaringType?.FullName ?? ""}  Action: {g.Key.Name}")
+                .ToArray();
             
-            ApiGroupMeta apiGroup = GetApiGroup(groupName).FirstOrDefault();
-            if (apiGroup == null)
+            if (invalidMetadata.Any())
             {
                 throw new InvalidOperationException(
-                    $"The controller group name of: {groupName} was not configured.");
+                    $"The following action methods are not unique by Http Method: {string.Join(',', invalidMetadata)}");
             }
-
-            ApiActionMeta apiAction = apiGroup.Actions.FirstOrDefault(
-               a => a.ActionName == actionName);
-               
-            if (apiAction == null)
-            {
-                throw new InvalidOperationException(
-                    $"The controller action named: {actionName} for controller group: {groupName} is not configured.");
-            }
-            return apiAction;
         }
-
-        private ApiGroupMeta[] LoadMetadata()
+        
+        public bool TryGetActionMeta(MethodInfo methodInfo, out ApiActionMeta actionMeta)
         {
-            return PopulateGroupMeta().ToArray();
-        }
-
-        private IEnumerable<ApiGroupMeta> PopulateGroupMeta()
-        {
-            var groups = _descriptionProvider.ApiDescriptionGroups.Items
-                .Where(d => d.GroupName != null);
+            if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
             
-            foreach (ApiDescriptionGroup group in groups)
-            {
-                var actions = GetGroupActions(group.Items);
-                yield return new ApiGroupMeta(group.GroupName, actions.ToArray());
-            }
+            actionMeta = _apiActionMeta.FirstOrDefault(ad => ad.ActionMethodInfo == methodInfo);
+            return actionMeta != null;
         }
 
-        private static IEnumerable<ApiActionMeta> GetGroupActions(IEnumerable<ApiDescription> descriptions)
+        public bool TryGetActionMeta(string httpMethod, string relativePath, out ApiActionMeta actionMeta)
         {
-            foreach(ApiDescription description in descriptions)
-            {
-                if (description.ActionDescriptor is ControllerActionDescriptor actionDescriptor 
-                    && IsDiscoverableAction(actionDescriptor))
-                {
-                    yield return new ApiActionMeta(description, actionDescriptor);
-                }
-            }
+            if (string.IsNullOrWhiteSpace(httpMethod))
+                throw new ArgumentException("Http Method not specified.", nameof(httpMethod));
+            
+            if (string.IsNullOrWhiteSpace(relativePath))
+                throw new ArgumentException("Relative Path not specified.", nameof(relativePath));
+
+            actionMeta = _apiActionMeta.FirstOrDefault(ad => 
+                ad.HttpMethod == httpMethod.ToUpper() && 
+                ad.RelativePath == relativePath);
+
+            return actionMeta != null;
         }
 
-        private static bool IsDiscoverableAction(ControllerActionDescriptor actionDescriptor)
+        public ApiActionMeta GetActionMeta(MethodInfo methodInfo)
         {
-            return actionDescriptor.MethodInfo.HasAttribute<ActionMetaAttribute>();
+            if (TryGetActionMeta(methodInfo, out ApiActionMeta actionMeta)) return actionMeta;
+            
+            throw new InvalidOperationException(
+                $"Api Action Metadata not found for method named: {methodInfo.Name} on type: {methodInfo.DeclaringType?.Name}.");
+        }
+
+        public ApiActionMeta GetActionMeta<T>(string actionName, params Type[] paramTypes) where T : ControllerBase
+        {
+            if (string.IsNullOrWhiteSpace(actionName))
+                throw new ArgumentException("Action Name not specified.", nameof(actionName));
+            
+            MethodInfo actionMethod = typeof(T).GetMethod(actionName, paramTypes);
+            if (TryGetActionMeta(actionMethod, out ApiActionMeta actionMeta)) return actionMeta;
+             
+             throw new InvalidOperationException(
+                 $"Api Action Metadata not found for method named: {actionName} on type: {typeof(T).Name}.");
         }
     }
 }

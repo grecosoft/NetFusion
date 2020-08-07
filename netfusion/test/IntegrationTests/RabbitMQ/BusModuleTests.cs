@@ -57,7 +57,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.WithRabbitMqHost();
                     })
-                    .Act.OnApplication(ca =>
+                    .Act.RecordException().OnApplication(ca =>
                     {
                         ca.Start();
                     })
@@ -201,7 +201,6 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.WithRabbitMqHost();
                     })
-                    .Configuration(TestSetup.AddValidBusConfig)
                     .Act.OnApplication(ca =>
                     {
                         ca.Start();

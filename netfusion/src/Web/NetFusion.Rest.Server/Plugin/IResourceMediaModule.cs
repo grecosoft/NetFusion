@@ -17,5 +17,13 @@ namespace NetFusion.Rest.Server.Plugin
         /// <param name="mediaType">The media type of the metadata to be applied to the resource.</param>
         /// <param name="context">Contains details about the current request.</param>
         bool ApplyResourceMeta(string mediaType, ResourceContext context);
+
+        /// <summary>
+        /// Returns a media-type entry for the specified media-type. 
+        /// </summary>
+        /// <param name="mediaType">The media type of the metadata to retrieve.</param>
+        /// <returns>Object containing metadata required to generate
+        /// links associated with resources.</returns>
+        (MediaTypeEntry entry, bool ok) GetMediaTypeEntry(string mediaType);
     }
 }

@@ -2,22 +2,22 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Rest.Server.Plugin;
 using WebTests.Hosting;
 using NetFusion.Test.Plugins;
-using WebTests.Rest.ClientRequests;
+using WebTests.Mocks;
+using WebTests.Rest.ApiMetadata.Server;
 using WebTests.Rest.ClientRequests.Server;
 using WebTests.Rest.LinkGeneration.Server;
-
 
 namespace WebTests.Rest.Setup
 {
     public static class TestFixtureSetupExtensions
     {
-        public static WebServerConfig ArrangeWithDefaults(this WebHostFixture fixture, LinkedResource mockResource)
+        public static WebServerConfig ArrangeWithDefaults(this WebHostFixture fixture, params object[] mockResources)
         {
             return fixture.WithServices(services =>
                 {
                     var serviceMock = new MockUnitTestService
                     {
-                        ServerResources = new[] {mockResource}
+                        ServerResources = mockResources
                     };
                     
                     services.AddSingleton<IMockedService>(serviceMock);
@@ -27,7 +27,8 @@ namespace WebTests.Rest.Setup
                     compose.AddRest();
 
                     var hostPlugin = new MockHostPlugin();
-                    hostPlugin.AddPluginType<LinkedResourceMap>();
+                    hostPlugin.AddPluginType<ResourceMap>();
+                    hostPlugin.AddPluginType<MetaResourceMap>();
 
                     compose.AddPlugin(hostPlugin);
                 });
@@ -49,7 +50,7 @@ namespace WebTests.Rest.Setup
                     compose.AddRest();
 
                     var hostPlugin = new MockHostPlugin();
-                    hostPlugin.AddPluginType<LinkedResourceMap>();
+                    hostPlugin.AddPluginType<ResourceMap>();
                     hostPlugin.AddPluginType<CustomerResourceMap>();
 
                     compose.AddPlugin(hostPlugin);

@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Client.Core;
-using NetFusion.Rest.Client.Settings;
 using NetFusion.Rest.Common;
 
 namespace WebTests.Hosting

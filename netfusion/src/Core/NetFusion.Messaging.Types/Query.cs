@@ -56,9 +56,6 @@ namespace NetFusion.Messaging.Types
             base.Result = default(TResult);
         }
 
-        // The type of the result declared by the query.
-        Type IQuery.DeclaredResultType => typeof(TResult);
-
         /// <summary>
         /// The result of the query provided by the consumer.
         /// </summary>

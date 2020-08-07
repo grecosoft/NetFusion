@@ -1,22 +1,22 @@
 ﻿using NetFusion.Base.Entity;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace NetFusion.Messaging.Types
 {
     /// <summary>
-    /// An optional model from which a query result can be derived to add  a 
-    /// set of dynamic properties.  These dynamic properties can be utilized 
-    /// by query filters - for example to add calculated properties based on 
-    /// expressions evaluated by Roslyn.
+    /// An optional model from which a query result can be derived to add a 
+    /// set of dynamic properties. 
     /// </summary>
-    public class QueryReadModel : IAttributedEntity
+    public abstract class QueryReadModel : IAttributedEntity
     {
         /// <summary>
         /// Set of dynamic properties associated with the model.
         /// </summary>
+        [JsonIgnore]
         public IEntityAttributes Attributes { get; }
-        
-        public QueryReadModel()
+
+        protected QueryReadModel()
         {
             Attributes = new EntityAttributes();
         }

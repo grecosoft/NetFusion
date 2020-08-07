@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CoreTests.Settings.Setup;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,10 +8,8 @@ using Microsoft.Extensions.Options;
 using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Catalog;
 using NetFusion.Settings;
-using NetFusion.Settings.Plugin;
 using NetFusion.Settings.Plugin.Modules;
 using NetFusion.Test.Container;
-using NetFusion.Test.Plugins;
 using Xunit;
 
 namespace CoreTests.Settings
@@ -30,16 +29,7 @@ namespace CoreTests.Settings
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Container(c =>
-                    {
-                        // Plug-in type based on the type in the core plug-in.
-                        var hostPlugin = new MockHostPlugin();
-                        hostPlugin.AddPluginType(typeof(TestSettingsOne), typeof(TestSettingsTwo));
-
-                        c.RegisterPlugins(hostPlugin);
-                        c.RegisterPlugin<SettingsPlugin>();
-
-                    })
+                    .Container(c => TestSetup.AddSettingsPlugin(c, typeof(TestSettingsOne), typeof(TestSettingsTwo)))
                     .Assert.ServiceCollection(sc =>
                     {
                         var serviceTypes = sc.Select(s => s.ServiceType).ToArray();
@@ -73,6 +63,12 @@ namespace CoreTests.Settings
             Assert.Equal(ServiceLifetime.Singleton, catalog.Services.First().Lifetime);
         }
 
+        /// <summary>
+        /// All IAppSetting derived concrete class can be directly injected into a dependent
+        /// component without have to used IOptions.  A factory method is associated with
+        /// each IAppSetting derived type that automatically obtains the option and returns
+        /// the value.
+        /// </summary>
         [Fact]
         public void DependentComponent_HasSettingsInjected()
         {
@@ -92,16 +88,7 @@ namespace CoreTests.Settings
                         // Add service with settings dependency:
                         s.AddSingleton<DependentComponent>();
                     })
-                    .Container(c =>
-                    {
-                        // Plug-in type based on the type in the core plug-in.
-                        var hostPlugin = new MockHostPlugin();
-                        hostPlugin.AddPluginType(typeof(TestSettingsOne));
-                       
-                        c.RegisterPlugins(hostPlugin);
-                        c.RegisterPlugin<SettingsPlugin>();
-
-                    })
+                    .Container(c => TestSetup.AddSettingsPlugin(c, typeof(TestSettingsOne)))
                     .Assert.Services(s =>
                     {
                         var component = s.GetRequiredService<DependentComponent>();
@@ -113,6 +100,10 @@ namespace CoreTests.Settings
             });            
         }
 
+        /// <summary>
+        /// If derived IAppSetting class also implements the IValidatableType interface,
+        /// the state is validated before being injected into the dependent component.
+        /// </summary>
         [Fact]
         public void WhenAppSetting_Injected_StateValidated()
         {
@@ -132,23 +123,25 @@ namespace CoreTests.Settings
                         // Add service with settings dependency:
                         s.AddSingleton<DependentComponentInvalid>();
                     })
-                    .Container(c =>
-                    {
-                        // Plug-in type based on the type in the core plug-in.
-                        var hostPlugin = new MockHostPlugin();
-                        hostPlugin.AddPluginType(typeof(TestSettingsInvalid));
-                       
-                        c.RegisterPlugins(hostPlugin);
-                        c.RegisterPlugin<SettingsPlugin>();
-
-                    })
-                    .Act.OnServices(s =>
+                    .Container(c => TestSetup.AddSettingsPlugin(c, typeof(TestSettingsInvalid)))
+                    .Act.RecordException().OnServices(s =>
                     {
                         s.GetRequiredService<DependentComponentInvalid>();
                     })
                     .Assert.Exception(ex =>
                     {
                         ex.Should().BeOfType<SettingsValidationException>();
+                        
+                        var valEx = (SettingsValidationException) ex;
+                        valEx.SettingsSection.Should().Be("A:B");
+                        valEx.SettingsType.Should().Be(typeof(TestSettingsInvalid));
+                        valEx.ValidationResults.Should().NotBeNull();
+
+                        var validations = valEx.ValidationResults.ObjectValidations
+                            .SelectMany(ov => ov.Validations).ToArray();
+
+                        validations.Should().HaveCount(1);
+                        validations.First().Message.Should().Be("Value1 must be greater than Value2");
                     });
             });           
         }

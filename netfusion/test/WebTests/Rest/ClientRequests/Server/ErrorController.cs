@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebTests.Mocks;
 
 namespace WebTests.Rest.ClientRequests.Server
 {

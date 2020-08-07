@@ -4,9 +4,9 @@ using System.Reflection;
 namespace NetFusion.Rest.Server.Linking
 {
     /// <summary>
-    /// This class maps the action method parameter name to the corresponding state named property.
-    /// This mapping is executed at runtime to obtain the resource's state property values to be used
-    /// as the corresponding route-values.
+    /// This class maps the action method parameter name to the corresponding model named property.
+    /// This mapping is executed at runtime to obtain the model's property values to be used as the
+    /// corresponding route-values.
     /// </summary>
     public class RouteParameter
     {
@@ -16,34 +16,34 @@ namespace NetFusion.Rest.Server.Linking
         public string ActionParamName { get; }
 
         /// <summary>
-        /// The property on resource's state corresponding to the ActionParamName.  When generating
-        /// links, the value of this property on the sate is used as the corresponding route-value.
+        /// The property on model corresponding to the ActionParamName.  When generating links,
+        /// the value of this property on the model is used as the corresponding route-value.
         /// </summary>
         public string SourcePropName { get; }
 
         /// <summary>
-        /// Information for the property on the resource's state corresponding to the ModelPropName.
+        /// Information for the property on the model corresponding to the SourcePropName.
         /// </summary>
         public PropertyInfo SourcePropInfo { get; }
 
         /// <summary>
-        /// The method to be called to obtain the state's property value corresponding to the
+        /// The method to be called to obtain the model's property value corresponding to the
         /// controller's action method route-value.
         /// </summary>
         public MethodInfo SourceMethodInfo { get;  }
 
-        public RouteParameter(string actionParamName, PropertyInfo statePropInfo)
+        public RouteParameter(string actionParamName, PropertyInfo sourcePropInfo)
         {
             if (string.IsNullOrWhiteSpace(actionParamName))
                 throw new ArgumentException("Action parameter name not specified.", nameof(actionParamName));
 
-            if (statePropInfo == null) throw new ArgumentNullException(nameof(statePropInfo),
+            if (sourcePropInfo == null) throw new ArgumentNullException(nameof(sourcePropInfo),
                 "State property cannot be null.");
 
             ActionParamName = actionParamName;
-            SourcePropName = statePropInfo.Name;
-            SourcePropInfo = statePropInfo;
-            SourceMethodInfo = statePropInfo.GetGetMethod();
+            SourcePropName = sourcePropInfo.Name;
+            SourcePropInfo = sourcePropInfo;
+            SourceMethodInfo = sourcePropInfo.GetGetMethod();
         }
 
         // Called at runtime to receive the value of the state's property corresponding

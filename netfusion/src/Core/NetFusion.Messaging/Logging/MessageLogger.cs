@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace NetFusion.Messaging.Logging
 {
     /// <summary>
-    /// Called when messages are published or received.  Applies an needed common
+    /// Called when messages are published or received.  Applies any needed common
     /// functionality and then sends message to all registered IMessageLogSink
     /// instances.
     /// </summary>
@@ -16,6 +16,8 @@ namespace NetFusion.Messaging.Logging
         
         public MessageLogger(IEnumerable<IMessageLogSink> messageLogSinks)
         {
+            if (messageLogSinks == null) throw new ArgumentNullException(nameof(messageLogSinks));
+            
             _messageLogSinks = messageLogSinks.ToArray();
         }
 
@@ -34,7 +36,7 @@ namespace NetFusion.Messaging.Logging
             
             foreach (var sink in _messageLogSinks)
             {
-                await sink.ReceiveAsync(messageLog);
+                await sink.WriteLogAsync(messageLog);
             }
         }
     }

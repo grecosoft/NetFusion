@@ -35,7 +35,7 @@ namespace NetFusion.Messaging.Internal
 
             // Order the enrichers and the publishers based on the order of the type
             // registration specified during configuration.  Order should never matter
-            // but this will make the order known.
+            // but this will make the order known when debugging.
             _messageEnrichers = messageEnrichers
                 .OrderByMatchingType(messagingModule.DispatchConfig.EnricherTypes)
                 .ToArray();
@@ -82,9 +82,6 @@ namespace NetFusion.Messaging.Internal
         {
             if (eventSource == null) throw new ArgumentNullException(nameof(eventSource),
                 "Event source cannot be null.");
-
-            if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken),
-               "Cancellation token cannot be null.");
 
             var publisherErrors = new List<PublisherException>();
 
@@ -136,7 +133,7 @@ namespace NetFusion.Messaging.Internal
             try
             {
                 taskList = _messageEnrichers.Invoke(message,
-                    (enricher, msg) => enricher.Enrich(msg));
+                    (enricher, msg) => enricher.EnrichAsync(msg));
 
                 await taskList.WhenAll();
             }

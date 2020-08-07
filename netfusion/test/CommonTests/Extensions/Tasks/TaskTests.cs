@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using NetFusion.Common.Extensions.Tasks;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -39,14 +40,14 @@ namespace CommonTests.Extensions.Tasks
         }
 
         [Fact(DisplayName = "Can Query Exceptions when one or more task list item Fails")]
-        public async Task CanQueryException_WhenOneOrMoreTalskListItemFails()
+        public async Task CanQueryException_WhenOneOrMoreTaskListItemFails()
         {
             var state = new TestState { Value1 = 100, Value2 = 200 };
             var invokers = new[] {
                 new TestInvoker(),
                 new TestInvoker("Invoker Error1"),
                 new TestInvoker(),
-                new TestInvoker("InvokerError2") };
+                new TestInvoker("Invoker Error2") };
 
             var taskList = invokers.Invoke(state, (i, s) => i.Invoke(s));
 
@@ -64,49 +65,52 @@ namespace CommonTests.Extensions.Tasks
 
                 var firstEx = exceptions.ElementAt(0);
                 firstEx.Invoker.Should().Be(invokers.ElementAt(1));
+                firstEx.InnerException?.Message.Should().Be("Invoker Error1");
 
                 var secondEx = exceptions.ElementAt(1);
                 secondEx.Invoker.Should().Be(invokers.ElementAt(3));
+                secondEx.InnerException?.Message.Should().Be("Invoker Error2");
             }
         }
-    }
-
-    class TestInvoker
-    {
-        public string ErrorMessage { get; }
-
-        public TestInvoker(string errorMessage = null)
+        
+        private class TestInvoker
         {
-            ErrorMessage = errorMessage;
-        }
+            public string ErrorMessage { get; }
 
-        public Task Invoke(TestState state)
-        {
-            if (state == null) throw new ArgumentNullException(nameof(state));
-
-            if (ErrorMessage == null)
+            public TestInvoker(string errorMessage = null)
             {
-                return Task.CompletedTask;
+                ErrorMessage = errorMessage;
             }
 
-            return Task.FromException(new InvalidOperationException(ErrorMessage));
+            [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
+            public Task Invoke(TestState state)
+            {
+                if (state == null) throw new ArgumentNullException(nameof(state));
+
+                if (ErrorMessage == null)
+                {
+                    return Task.CompletedTask;
+                }
+
+                return Task.FromException(new InvalidOperationException(ErrorMessage));
+            }
         }
-    }
 
-    class TestState
-    {
-        public int Value1 { get; set; }
-        public int Value2 { get; set; }
-    }
-
-    class TestException : Exception
-    {
-        public TestInvoker Invoker { get; }
-
-        public TestException(string message, Exception innerException, TestInvoker invoker) :
-            base(message, innerException)
+        private class TestState
         {
-            Invoker = invoker;
+            public int Value1 { get; set; }
+            public int Value2 { get; set; }
+        }
+
+        private class TestException : Exception
+        {
+            public TestInvoker Invoker { get; }
+
+            public TestException(string message, Exception taskException, TestInvoker invoker) :
+                base(message, taskException.InnerException ?? taskException)
+            {
+                Invoker = invoker;
+            }
         }
     }
 }

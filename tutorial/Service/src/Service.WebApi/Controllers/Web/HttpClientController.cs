@@ -20,7 +20,7 @@ namespace Service.WebApi.Controllers.Web
             var requestClient = _requestClientFactory.CreateClient("test");
 
             var apiRequest = ApiRequest.Get("api/sensors/s87hss87d");
-            var apiResponse = await requestClient.SendAsync<SensorModel>(apiRequest);
+            var apiResponse = await requestClient.SendForHalAsync<SensorModel>(apiRequest);
 
             var sensor = apiResponse.Resource;
 

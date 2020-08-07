@@ -42,11 +42,11 @@ namespace NetFusion.Redis.Subscriber.Internal
             
             subscriber.Subscribe(channel, (onChannel, message) =>
                 {
-                    var messageParts = ChannelMessageEncoder.UnPack(message);
+                    var (contentType, messageData) = ChannelMessageEncoder.UnPack(message);
 
                     TDomainEvent domainEvent =_serializationMgr.Deserialize<TDomainEvent>(
-                        messageParts.contentType, 
-                        messageParts.messageData);
+                        contentType, 
+                        messageData);
                     
                     LogReceivedDomainEvent(database, channel, domainEvent);
                     handler(domainEvent);
@@ -65,11 +65,11 @@ namespace NetFusion.Redis.Subscriber.Internal
             
             await subscriber.SubscribeAsync(channel, (onChannel, message) =>
             {
-                var messageParts = ChannelMessageEncoder.UnPack(message);
+                var (contentType, messageData) = ChannelMessageEncoder.UnPack(message);
 
                 TDomainEvent domainEvent = _serializationMgr.Deserialize<TDomainEvent>(
-                    messageParts.contentType,
-                    messageParts.messageData);
+                    contentType,
+                    messageData);
 
                 LogReceivedDomainEvent(database, channel, domainEvent);
                 handler(domainEvent);

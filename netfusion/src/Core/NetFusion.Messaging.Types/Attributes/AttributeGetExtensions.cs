@@ -11,7 +11,7 @@ namespace NetFusion.Messaging.Types.Attributes
     /// dependent on the specific serializer being used.  (JSON serializers and
     /// MessagePack serializers will not know the exact type if object was used
     /// for the dictionary's type.  These serializers will deserialize the value
-    /// into an object representing the value).  
+    /// into an object representing the value that is dependent on their library).  
     /// </summary>
     public static class AttributeGetExtensions
     {
@@ -107,7 +107,7 @@ namespace NetFusion.Messaging.Types.Attributes
         
         //--  Byte
         
-        public static int GetByteValue(this IDictionary<string, string> attributes, string name)
+        public static byte GetByteValue(this IDictionary<string, string> attributes, string name)
         {
             string value = GetValue(attributes, name);
             if (value == null)
@@ -115,7 +115,7 @@ namespace NetFusion.Messaging.Types.Attributes
                 throw new InvalidOperationException($"Attribute named: {name} not found.");
             }
 
-            if (! int.TryParse(value, out int parsedValue))
+            if (! byte.TryParse(value, out byte parsedValue))
             {
                 throw new InvalidOperationException(
                     $"Attribute named: {name} with value: {value} could not be parsed as Byte.");

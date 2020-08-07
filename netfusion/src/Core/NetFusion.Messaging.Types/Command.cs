@@ -28,7 +28,7 @@ namespace NetFusion.Messaging.Types
         protected ICommandResultState ResultState => this;
         
         
-        //-- Explicit implementation of ICommandState used to access the command's result state.
+        //-- Explicit implementation of ICommandState used to access the command result state.
         object ICommandResultState.Result { get; set; }
         Type ICommandResultState.ResultType { get; set; }
         
@@ -42,7 +42,7 @@ namespace NetFusion.Messaging.Types
             {
                 throw new InvalidOperationException(
                     $"The handler for the command of type: {GetType()} returned a result of type: {result.GetType()} " + 
-                    $"and is not assignable to the command's declared result type of: {ResultState.ResultType}.");
+                    $"and is not assignable to the command declared result type of: {ResultState.ResultType}.");
             }
             
             ResultState.Result = result;

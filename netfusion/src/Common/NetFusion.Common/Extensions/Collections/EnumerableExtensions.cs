@@ -65,7 +65,8 @@ namespace NetFusion.Common.Extensions.Collections
         /// <param name="source">The source enumeration with potential duplicate property values.</param>
         /// <param name="propertySelector">Specifies the element property that should be tested for duplicate value.</param>
         /// <returns>Enumerable of all the duplicated property values.</returns>
-        public static IEnumerable<TKey> WhereDuplicated<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> propertySelector)
+        public static IEnumerable<TKey> WhereDuplicated<TSource, TKey>(this IEnumerable<TSource> source, 
+            Func<TSource, TKey> propertySelector)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (propertySelector == null) throw new ArgumentNullException(nameof(propertySelector));

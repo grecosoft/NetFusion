@@ -44,7 +44,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             var message = context.DeserializeIntoMessage(rpcCommandHandler.MessageType);
             
             var msgLog = new MessageLog(message, LogContextType.ReceivedMessage);
-            msgLog.SentHint("subscribe-rabbitmq-rpc");
+            msgLog.SentHint("subscribe-rabbitmq");
             
             context.LogReceivedMessage(message);
             context.AddMessageContextToLog(msgLog);
@@ -59,12 +59,12 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             }
             catch (AggregateException ex)
             {
-                msgLog.AddLogError(ex);
+                msgLog.AddLogError("Queue Subscription", ex);
                 await ReplyWithException(context, ex.InnerException);
             }
             catch (Exception ex)
             {
-                msgLog.AddLogError(ex);
+                msgLog.AddLogError("Queue Subscription", ex);
                 await ReplyWithException(context, ex);
             }
             finally { await context.MessageLogger.LogAsync(msgLog); }

@@ -37,6 +37,9 @@ namespace NetFusion.Messaging.Internal
             _logger = logger;
             _services = services;
             _dispatchModule = dispatchModule;
+            
+            // The order in which the filters are called should not matter.
+            // However,they are applied in the order configured.
             _queryFilters = queryFilters.OrderByMatchingType(filterModule.QueryFilterTypes);
         }
 
@@ -78,9 +81,9 @@ namespace NetFusion.Messaging.Internal
         
             LogQueryDispatch(query, consumer);
 
-            await ApplyFilters<IPreQueryFilter>(query, _queryFilters, (f, q) => f.OnPreExecute(q));
+            await ApplyFilters<IPreQueryFilter>(query, _queryFilters, (f, q) => f.OnPreExecuteAsync(q));
             await dispatcher.Dispatch(query, consumer, cancellationToken);
-            await ApplyFilters<IPostQueryFilter>(query, _queryFilters, (f, q) => f.OnPostExecute(q));
+            await ApplyFilters<IPostQueryFilter>(query, _queryFilters, (f, q) => f.OnPostExecuteAsync(q));
         }
 
         private void LogQueryDispatch(IQuery query, IQueryConsumer consumer)
@@ -89,8 +92,8 @@ namespace NetFusion.Messaging.Internal
         }
         
         // Executes a list of asynchronous filters and awaits their completion.  Once completed,
-        // any task error(s) are checked and raised.  The past list of query filters are filtered
-        // by the specified filter type of T.
+        // any task error(s) are checked and raised.  The passed list of query filters are filtered
+        // by the specified filter type of T (pre/post).
         private async Task ApplyFilters<T>(IQuery query, IEnumerable<IQueryFilter> filters, 
             Func<T, IQuery, Task> executeFilter) where T : class, IQueryFilter
         {

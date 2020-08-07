@@ -3,9 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Rest.Resources;
-using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Hal;
-using NetFusion.Web.Mvc.Metadata;
 using Service.Domain.Commands;
 using Service.Domain.Entities;
 using Service.Domain.Events;
@@ -18,7 +16,6 @@ using Service.WebApi.Models;
 namespace Service.WebApi.Controllers
 {
     [ApiController, Route("api/entry")]
-    [GroupMeta(nameof(ApiController))]
     public class ApiController : ControllerBase
     {
         private readonly ICompositeApp _compositeApp;
@@ -35,7 +32,7 @@ namespace Service.WebApi.Controllers
             return Ok(entryPoint.AsResource());
         }
 
-        [HttpGet("composite-log"), ActionMeta(nameof(GetCompositeLog))]
+        [HttpGet("composite-log")]
         public IActionResult GetCompositeLog()
         {
             return Ok(_compositeApp.Log);

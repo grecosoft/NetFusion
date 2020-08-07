@@ -117,7 +117,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                         GetRpcMessageHandler = GetRpcMessageHandler
                     };
 
-                    // Delegate to the queue factory, associated with the definition, and 
+                    // Delegate to the queue strategy, associated with the definition, and 
                     // allow it to determine how the received message should be processed. 
                     return definition.QueueStrategy.OnMessageReceivedAsync(consumerContext);
                 }, 

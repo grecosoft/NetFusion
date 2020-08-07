@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace NetFusion.Rest.Server.Linking
 {
@@ -13,18 +14,13 @@ namespace NetFusion.Rest.Server.Linking
     public class ControllerActionLink : ResourceLink
     {
         /// <summary>
-        /// The name of the controller used to determine the URL.
+        /// The runtime information associated with a selected controller's action.
         /// </summary>
-        public string Controller { get; internal set; }
-
-        /// <summary>
-        /// The name of the controller's action used to determine the URL.
-        /// </summary>
-        public string Action { get; internal set; }
+        public MethodInfo ActionMethodInfo { get; internal set; }
 
         /// <summary>
         /// The controller's action route parameters and the corresponding
-        /// resource state properties from which they are populated.
+        /// model properties from which they are populated.
         /// </summary>
         public IReadOnlyCollection<RouteParameter> RouteParameters { get; private set; }
 
@@ -36,7 +32,7 @@ namespace NetFusion.Rest.Server.Linking
         private readonly List<RouteParameter> _routeValues = new List<RouteParameter>();
 
         /// <summary>
-        /// Adds a mapping indicating the resource's state properties corresponding to an action parameter.
+        /// Adds a mapping indicating the model's properties corresponding to an action parameters.
         /// </summary>
         /// <param name="routeParam">Mapping between action parameter and corresponding resource's state property.</param>
         public void AddRouteValue(RouteParameter routeParam)

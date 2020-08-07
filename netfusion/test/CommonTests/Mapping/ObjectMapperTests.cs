@@ -34,7 +34,7 @@ namespace CommonTests.Mapping
                         c.RegisterPlugins(testPlugin);
                         c.RegisterPlugin<MappingPlugin>();
                     })
-                    .Act.OnServices(s =>
+                    .Act.RecordException().OnServices(s =>
                     {
                         var mapper = s.GetService<IObjectMapper>();
                         mapper.Map<TestInvalidMapType>(testSrcObj);

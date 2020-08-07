@@ -4,9 +4,19 @@ using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Logging
 {
+    /// <summary>
+    /// Defines the content in which the messages log is being generated.
+    /// </summary>
     public enum LogContextType
     {
+        /// <summary>
+        /// Indicates on the publishing side.
+        /// </summary>
         PublishedMessage,
+        
+        /// <summary>
+        /// Indicates on the receiving side.
+        /// </summary>
         ReceivedMessage
     }
     
@@ -38,12 +48,12 @@ namespace NetFusion.Messaging.Logging
         /// <summary>
         /// Details written by the publisher or receiver of the message.
         /// </summary>
-        public IReadOnlyCollection<string> LogDetails { get; }
+        public IReadOnlyDictionary<string, string> LogDetails { get; }
         
         /// <summary>
         /// Errors written by the publisher or receiver of the message.
         /// </summary>
-        public IReadOnlyCollection<string> LogErrors { get; }
+        public IReadOnlyDictionary<string, string> LogErrors { get; }
         
         /// <summary>
         /// String value that can be used by consumer.
@@ -52,7 +62,7 @@ namespace NetFusion.Messaging.Logging
 
         public MessageLog(IMessage message, LogContextType logContext)
         {
-            Message = message;
+            Message = message ?? throw new ArgumentNullException(nameof(message));
             MessageType = message.GetType().FullName;
             LogContext = logContext;
 
@@ -63,20 +73,24 @@ namespace NetFusion.Messaging.Logging
         /// <summary>
         /// Adds a log details message.
         /// </summary>
-        /// <param name="message">The message to be logged.</param>
-        public void AddLogDetail(string message) =>  _logDetails.Add(message);
-        
-        /// <summary>
-        /// Adds a log error message.
-        /// </summary>
-        /// <param name="message">The error message to be logged.</param>
-        public void AddLogError(string message) => _logErrors.Add(message);
+        /// <param name="name">The name of the associated value.</param>
+        /// <param name="value">The value of the named log attribute.</param>
+        public void AddLogDetail(string name, string value) => _logDetails[name] = value;
+       
 
         /// <summary>
         /// Adds exception as a log error message.
         /// </summary>
+        /// <param name="name">The name of the associated value.</param>
         /// <param name="exception">The exception to be logged.</param>
-        public void AddLogError(Exception exception) => _logDetails.Add(exception?.ToString());
+        public void AddLogError(string name, Exception exception) => _logErrors[name] = exception?.ToString();
+
+        /// <summary>
+        /// Adds exception as a log error message.
+        /// </summary>
+        /// <param name="name">The name of the associated value.</param>
+        /// <param name="value">Description of the exception to be logged.</param>
+        public void AddLogError(string name, string value) => _logErrors[name] = value;
 
         /// <summary>
         /// Sets a value that can be used by the consumer.  If the consumer is a web-client,
@@ -88,7 +102,7 @@ namespace NetFusion.Messaging.Logging
             Hint = value;
         }
         
-        private readonly List<string> _logDetails = new List<string>();
-        private readonly List<string> _logErrors = new List<string>();
+        private readonly Dictionary<string, string> _logDetails = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _logErrors = new Dictionary<string, string>();
     }
 }

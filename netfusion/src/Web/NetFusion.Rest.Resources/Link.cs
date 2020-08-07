@@ -11,6 +11,12 @@
         public string Href { get; set; }
 
         /// <summary>
+        /// Optionally set based on if the caller specified the header to set the
+        /// underlying action route used to query its corresponding documentation.
+        /// </summary>
+        public string DocQuery { get; set; }
+
+        /// <summary>
         /// Its value is a string and is intended for indicating the language of
         /// the target resource(as defined by [RFC5988]) (Optional).
         /// </summary>
@@ -24,7 +30,7 @@
         /// <summary>
         /// Indicates the methods that can be used to call the HREF.
         /// </summary>
-        public string[] Methods { get; set; }
+        public string Method { get; set; }
 
         /// <summary>
         ///  Its value MAY be used as a secondary key for selecting Link Objects which 

@@ -43,7 +43,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// Allows the plug-in to scan for types to be registered with the service collection.
         /// </summary>
         /// <param name="catalog">Reference to a catalog used to filter types to be registered.
-        /// The types contained within the catalog are based on the plugin's type.  Core plugins,
+        /// The types contained within the catalog are based on the plugin type.  Core plugins,
         /// can scan types contained within all plugins.  Whereas application centric plugins are
         /// limited to scanning types contained within application plugins. </param>
         void ScanPlugins(ITypeCatalog catalog);

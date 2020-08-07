@@ -5,6 +5,9 @@ using NetFusion.Bootstrap.Logging;
 
 namespace NetFusion.Builder
 {
+    /// <summary>
+    /// Contains extension methods used to build a composite-container by the host application. 
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>

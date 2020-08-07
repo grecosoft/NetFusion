@@ -63,10 +63,10 @@ namespace CommonTests.Extensions.Reflection
                 .Should().BeNull();
         }
 
-        class TestAttribute : Attribute { }
+        private class TestAttribute : Attribute { }
 
         [Test]
-        class TestClassWithAttribute
+        private class TestClassWithAttribute
         {
             [Obsolete]
             // ReSharper disable once UnusedMember.Local

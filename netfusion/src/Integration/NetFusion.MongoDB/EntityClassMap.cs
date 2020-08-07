@@ -10,8 +10,7 @@ using NetFusion.MongoDB.Internal;
 namespace NetFusion.MongoDB
 {
     /// <summary>
-    /// Derives from the base MongoDB driver mapping class and
-    /// adds any additional class mapping properties.
+    /// Derives from the base MongoDB driver mapping class and adds any additional class mapping properties.
     /// </summary>
     /// <typeparam name="TClass">The type of the entity being mapped.</typeparam>
     public abstract class EntityClassMap<TClass> : BsonClassMap<TClass>,

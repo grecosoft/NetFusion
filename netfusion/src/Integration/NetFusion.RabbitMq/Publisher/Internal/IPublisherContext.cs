@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
 using NetFusion.RabbitMQ.Plugin;
 
@@ -19,6 +18,5 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         
         // Services:
         ISerializationManager Serialization { get; }
-        IEntityScriptingService Scripting { get; }
     }
 }
