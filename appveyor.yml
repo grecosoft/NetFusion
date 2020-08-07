@@ -29,7 +29,7 @@ deploy:
     artifact: MyGet
     api_key:
       secure: f3xnVJLL5yrsW+FURKu8jMWAYlTu2ZCNmGwHcq8e9hyJClcIHSSJODJ1Mnv8R9zV
-    skip_symbols: false
+    skip_symbols: true
 
 skip_commits:
   message: /\[nobuild\]/
