@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using NetFusion.Common.Extensions.Tasks;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -81,6 +82,7 @@ namespace CommonTests.Extensions.Tasks
                 ErrorMessage = errorMessage;
             }
 
+            [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
             public Task Invoke(TestState state)
             {
                 if (state == null) throw new ArgumentNullException(nameof(state));

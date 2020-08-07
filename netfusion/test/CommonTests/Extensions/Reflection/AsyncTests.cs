@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using NetFusion.Common.Extensions.Reflection;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -72,6 +73,7 @@ namespace CommonTests.Extensions.Reflection
                 throw new NotImplementedException();
             }
 
+            [SuppressMessage("ReSharper", "UnusedParameter.Local")]
             public static Task<int> CancelableAsyncMethod(CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();

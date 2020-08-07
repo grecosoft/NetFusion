@@ -5,7 +5,6 @@ using System;
 using System.Threading;
 using NetFusion.Messaging.Types.Attributes;
 using NetFusion.Messaging.Types.Contracts;
-using NetFusion.RabbitMQ.Metadata;
 
 namespace NetFusion.RabbitMQ.Publisher.Internal
 {
@@ -27,8 +26,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             // Only send the message to the exchange if satisfying all constraints configured for the exchange.  
             // This only applies to domain-events, as commands are more specific in that they are explicitly
             // requesting a behavior to be taken. 
-            if (message is IDomainEvent && 
-                ! await Satisfies(context, createdExchange, message).ConfigureAwait(false))
+            if (message is IDomainEvent && ! createdExchange.Definition.Applies(message))
             {
                 return;
             }
@@ -72,19 +70,6 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             }
 
             return props;
-        }
-
-       private static async Task<bool> Satisfies(IPublisherContext context, CreatedExchange createdExchange, IMessage message)
-       {
-           ExchangeMeta definition = createdExchange.Definition;
-           bool applies = definition.Applies(message);
-
-           if (applies && definition.ScriptPredicate != null)
-           {
-               return await context.Scripting.SatisfiesPredicateAsync(message, definition.ScriptPredicate);
-           }
-
-           return applies;
         }
     }
 }

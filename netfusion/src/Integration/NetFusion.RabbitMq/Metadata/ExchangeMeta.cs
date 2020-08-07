@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using NetFusion.Base;
-using NetFusion.Base.Scripting;
 using NetFusion.Messaging.Types.Contracts;
 using NetFusion.RabbitMQ.Publisher.Internal;
 using NetFusion.RabbitMQ.Settings;
@@ -46,13 +45,6 @@ namespace NetFusion.RabbitMQ.Metadata
         /// Indicates that the queue is on the the RabbitMQ default exchange.
         /// </summary>
         public bool IsDefaultExchange => ExchangeName == null && ExchangeType == null;
-
-        /// <summary>
-        /// Predicate that can be evaluated at runtime using a dynamic expression
-        /// to determine if the message meets the criteria of the exchange.  This
-        /// allows the logic to be stored external to the application.
-        /// </summary>
-        public ScriptPredicate ScriptPredicate { get; private set; }
 
         /// <summary>
         /// Responsible for publishing the message based on the exchange type.
@@ -201,27 +193,6 @@ namespace NetFusion.RabbitMQ.Metadata
         /// <param name="message">The message being published.</param>
         /// <returns>True if the message should be published to the exchange.  Otherwise, False.</returns>
         internal virtual bool Applies(IMessage message) => true;
-
-        /// <summary>
-        /// Specifies a named script that should be evaluated for the message to determine if
-        /// it applies to the exchange and should be published.
-        /// </summary>
-        /// <param name="scriptName">The name of the script to execute against the message.</param>
-        /// <param name="attributeName">The script predicate attribute to check value of after
-        /// the script's expression has been evaluated.</param>
-        public void SetPredicate(string scriptName, string attributeName)
-        {
-            if (string.IsNullOrWhiteSpace(scriptName))
-                throw new ArgumentException("Script name not specified.", nameof(scriptName));
-            if (string.IsNullOrWhiteSpace(attributeName))
-                throw new ArgumentException("Attribute name not specified.", nameof(attributeName));
-
-            ScriptPredicate = new ScriptPredicate 
-            {
-                ScriptName = scriptName,
-                AttributeName = attributeName
-            };
-        }
 
         /// <summary>
         /// Survive server restarts. If this parameter is false, the exchange

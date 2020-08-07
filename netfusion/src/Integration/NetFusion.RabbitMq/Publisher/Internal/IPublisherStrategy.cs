@@ -5,14 +5,13 @@ using System.Threading;
 namespace NetFusion.RabbitMQ.Publisher.Internal
 {
     /// <summary>
-    /// Implemented by components that vary the message publishing logic based
-    /// on the style of message.
+    /// Implemented by components that vary the message publishing logic based on the style of message.
     /// </summary>
     internal interface IPublisherStrategy
     {
         /// <summary>
-        /// When called, should determine how a message should be published based
-        /// on the context of the call and the associated exchange definition.
+        /// When called, should determine how a message should be published based on the context of the
+        /// call and the associated exchange definition.
         /// </summary>
         /// <param name="context">Reference to common services.</param>
         /// <param name="createdExchange">Information about the exchange to which

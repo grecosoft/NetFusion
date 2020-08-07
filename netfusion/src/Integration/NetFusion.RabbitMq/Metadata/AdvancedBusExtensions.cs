@@ -96,8 +96,7 @@ namespace NetFusion.RabbitMQ.Metadata
             string[] routeKeys = meta.RouteKeys ?? new string[] { };
             if (routeKeys.Length > 0)
             {
-                // If route-keys specified, bind the queue to the exchange
-                // for each route-key.
+                // If route-keys specified, bind the queue to the exchange for each route-key.
                 foreach (string routeKey in meta.RouteKeys ?? new string[] {})
                 {
                     await bus.BindAsync(exchange, queue, routeKey);
