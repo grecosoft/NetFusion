@@ -29,10 +29,6 @@ namespace NetFusion.Redis.Plugin.Modules
         {
             _connections = new Dictionary<string, CachedConnection>();            
         }
-        
-        //------------------------------------------------------
-        //--Plugin Initialization
-        //------------------------------------------------------
 
         public override void Configure()
         {
@@ -62,10 +58,6 @@ namespace NetFusion.Redis.Plugin.Modules
                     duplicateConnNames);
             }
         }
-        
-        //------------------------------------------------------
-        //--Plugin Execution
-        //------------------------------------------------------
 
         protected override async Task OnStartModuleAsync(IServiceProvider services)
         {
@@ -103,10 +95,6 @@ namespace NetFusion.Redis.Plugin.Modules
                 await cachedConn.Connection.CloseAsync();
             }
         }
-
-        //------------------------------------------------------
-        //--Plugin Services
-        //------------------------------------------------------
 
         public IDatabase GetDatabase(string connectionName, int? database = null)
         {

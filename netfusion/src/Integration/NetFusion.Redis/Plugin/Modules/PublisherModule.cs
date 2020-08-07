@@ -9,24 +9,17 @@ using NetFusion.Redis.Publisher;
 namespace NetFusion.Redis.Plugin.Modules
 {
     /// <summary>
-    /// Plugin module that scans for all IChannelRegistry instances to 
-    /// build a list of metadata used to determine the channels to which
-    /// a domain-event should be published.
+    /// Plugin module that scans for all IChannelRegistry instances and builds a list of 
+    /// metadata used to determine the channels to which a domain-event should be published.
     /// </summary>
     public class PublisherModule : PluginModule,
         IPublisherModule
     {
-        // Property set during the bootstrap process containing a list of registries 
-        // used to determine the channel to which domain-events should be published.
         private IEnumerable<IChannelRegistry> Registries { get; set; }
         
         // Maps a domain-event type to a specific channel instance.
         private Dictionary<Type, ChannelMeta> _channels;
-        
-        //------------------------------------------------------
-        //--Plugin Initialization
-        //------------------------------------------------------
-        
+
         public override void Initialize()
         {
             ChannelMeta[] eventPubChannels = Registries
@@ -58,10 +51,6 @@ namespace NetFusion.Redis.Plugin.Modules
                     "duplicate-events", duplicateEventTypes);
             }
         }
-        
-        //------------------------------------------------------
-        //--Plugin Services
-        //------------------------------------------------------
 
         public bool HasChannel(Type domainEventType)
         {

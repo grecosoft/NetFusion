@@ -15,11 +15,10 @@ namespace NetFusion.Messaging.Types
         /// <summary>
         /// The types of the rules to be tested.
         /// </summary>
-        public Type[] RuleTypes { get; private set; } 
+        public Type[] RuleTypes { get; } 
 
         /// <summary>
-        /// Specifies how the list of roles should be evaluated to 
-        /// determine the final result.
+        /// Specifies how the list of roles should be evaluated to determine the final result.
         /// </summary>
         public RuleApplyTypes RuleApplyType { get; set; } = RuleApplyTypes.All;
 

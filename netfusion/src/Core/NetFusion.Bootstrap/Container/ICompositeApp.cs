@@ -39,6 +39,7 @@ namespace NetFusion.Bootstrap.Container
 
         /// <summary>
         /// Allows for service-location from a component that is not registered in the container.
+        /// This provides service location.
         /// </summary>
         /// <returns>Service scope from which services can be resolved.  The scope must be
         /// disposed after use.</returns>

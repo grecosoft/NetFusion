@@ -106,6 +106,10 @@ namespace NetFusion.Bootstrap.Container
         //--Container Composition
         //--------------------------------------------------
         
+        // Called by CompositeContainerBuilder to build an instance of CompositeApp
+        // from the list of registered plugins.  Once the plugin modules have been
+        // created and composed, a reference to IServiceCollection is passed so all
+        // modules can register their service implementations.
         public void Compose(ITypeResolver typeResolver)
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
@@ -117,12 +121,15 @@ namespace NetFusion.Bootstrap.Container
                     throw new ContainerException("Container has already been composed.");
                 }
                 
+                _builder.BootstrapLogger.Add(LogLevel.Debug, "Bootstrapping Plugins");
+                
                 // Delegate to the builder:
                 _builder.ComposeModules(typeResolver, _plugins);
                 _builder.RegisterServices(_serviceCollection);
+                
+                _builder.BootstrapLogger.Add(LogLevel.Debug, "Bootstrapping Completed");
 
                 IsComposed = true;
-
             }
             catch (ContainerException ex)
             {

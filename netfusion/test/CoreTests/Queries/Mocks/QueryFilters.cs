@@ -6,7 +6,7 @@ namespace CoreTests.Queries.Mocks
 {
     public class QueryFilterOne : IPreQueryFilter, IPostQueryFilter
     {
-        public Task OnPreExecute(IQuery query)
+        public Task OnPreExecuteAsync(IQuery query)
         {
             if (query is TestQuery testQuery)
             {
@@ -16,7 +16,7 @@ namespace CoreTests.Queries.Mocks
             return Task.CompletedTask;
         }
 
-        public Task OnPostExecute(IQuery query)
+        public Task OnPostExecuteAsync(IQuery query)
         {
             if (query is TestQuery testQuery)
             {
@@ -29,7 +29,7 @@ namespace CoreTests.Queries.Mocks
 
     public class QueryFilterTwo : IPreQueryFilter, IPostQueryFilter
     {
-        public Task OnPreExecute(IQuery query)
+        public Task OnPreExecuteAsync(IQuery query)
         {
             if(query is TestQuery testQuery)
             {
@@ -39,7 +39,7 @@ namespace CoreTests.Queries.Mocks
             return Task.CompletedTask;
         }
 
-        public Task OnPostExecute(IQuery query)
+        public Task OnPostExecuteAsync(IQuery query)
         {
             if (query is TestQuery testQuery)
             {

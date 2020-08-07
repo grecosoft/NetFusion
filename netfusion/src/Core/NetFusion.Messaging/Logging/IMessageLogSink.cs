@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 namespace NetFusion.Messaging.Logging
 {
     /// <summary>
-    /// Interface implemented by class called when message logs are sent to IMessageLogger.
+    /// Interface implemented by classes and called when message logs are sent to IMessageLogger.
     /// The implementation determines where messages should be written.
     /// </summary>
     public interface IMessageLogSink
@@ -13,6 +13,6 @@ namespace NetFusion.Messaging.Logging
         /// </summary>
         /// <param name="messageLog">Details about the message.</param>
         /// <returns>Asynchronous task.</returns>
-        Task ReceiveAsync(MessageLog messageLog);
+        Task WriteLogAsync(MessageLog messageLog);
     }
 }

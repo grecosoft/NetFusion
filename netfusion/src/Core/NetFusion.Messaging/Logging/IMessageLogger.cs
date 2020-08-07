@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 namespace NetFusion.Messaging.Logging
 {
     /// <summary>
-    /// Called by message processing code to log message publishing and subscribing information.
+    /// Called by message processing code to log message publishing and subscription information.
     /// Implementation responsible dispatching a log message to all registered IMessageLogSink
     /// implementations.  This logging is optional and in addition to the detailed messaging
     /// logs written to ILogger.  This allows higher-level logs to be correlated.

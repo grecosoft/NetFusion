@@ -13,7 +13,7 @@ namespace NetFusion.Messaging.Enrichers
         /// </summary>
         /// <param name="message">Reference to the message to enrich.</param>
         /// <returns>Future Result</returns>
-        public virtual Task Enrich(IMessage message)
+        public virtual Task EnrichAsync(IMessage message)
         {
             return Task.CompletedTask;
         }

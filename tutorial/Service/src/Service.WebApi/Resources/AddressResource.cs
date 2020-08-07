@@ -1,9 +1,10 @@
 using System;
-using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Resources;
 
 namespace Service.WebApi.Resources
 {
-    public class AddressResource : HalResource
+    [Resource("type-address")]
+    public class AddressResource 
     {
         public Guid Id { get; set; }
         public string AddressLine1 { get; set; }

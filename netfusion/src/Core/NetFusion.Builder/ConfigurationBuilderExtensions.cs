@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -58,21 +57,6 @@ namespace NetFusion.Builder
 
             builder.AddEnvironmentVariables();
             return builder;
-        }
-
-        /// <summary>
-        /// Allows configurations to be sourced form an in-memory dictionary of values.
-        /// </summary>
-        /// <param name="builder">The configuration to override with set of values.</param>
-        /// <param name="values">The values to add to the configuration.</param>
-        /// <returns>Instance of the configuration builder.</returns>
-        public static IConfigurationBuilder AddInMemoryOverrides(this IConfigurationBuilder builder,
-            IDictionary<string, string> values)
-        {
-            if (builder == null) throw new ArgumentNullException(nameof(builder), "Configuration builder not specified.");
-            if (values == null) throw new ArgumentNullException(nameof(values), "Settings not specified.");
-            
-            return builder.AddInMemoryCollection(values);
         }
     }
 }

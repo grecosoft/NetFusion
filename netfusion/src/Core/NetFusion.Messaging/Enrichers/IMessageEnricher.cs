@@ -16,6 +16,6 @@ namespace NetFusion.Messaging.Enrichers
         /// </summary>
         /// <param name="message">The message to enrich.</param>
         /// <returns>Future Result</returns>
-        Task Enrich(IMessage message);
+        Task EnrichAsync(IMessage message);
     }
 }

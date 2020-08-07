@@ -12,10 +12,10 @@ namespace NetFusion.Messaging.Enrichers
     {
         private readonly DateTime _scopedDateReceived = DateTime.UtcNow;
         
-        public override Task Enrich(IMessage message)
+        public override Task EnrichAsync(IMessage message)
         {
             message.SetUtcDateOccurred(_scopedDateReceived);
-            return base.Enrich(message);
+            return base.EnrichAsync(message);
         }
     }
 }

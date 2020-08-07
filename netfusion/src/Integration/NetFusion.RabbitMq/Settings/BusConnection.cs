@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using NetFusion.Base.Validation;
 
 namespace NetFusion.RabbitMQ.Settings
@@ -97,8 +98,8 @@ namespace NetFusion.RabbitMQ.Settings
         public void Validate(IObjectValidator validator)
         {
             validator.AddChild(Hosts);
-            validator.AddChildren(ExchangeSettings);
-            validator.AddChildren(QueueSettings);
+            validator.AddChildren(ExchangeSettings.OfType<object>());
+            validator.AddChildren(QueueSettings.OfType<object>());
         }
     }
 }

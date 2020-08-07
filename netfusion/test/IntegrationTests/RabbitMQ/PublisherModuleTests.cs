@@ -100,7 +100,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.ComposeContainer()
+                    .Act.RecordException().ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         
@@ -150,7 +150,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.ComposeContainer()
+                    .Act.RecordException().ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         

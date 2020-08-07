@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
@@ -22,8 +23,8 @@ namespace NetFusion.Rest.Server.Linking
 
         public ControllerActionTemplateSelector(TemplateUrlLink link, LambdaExpression action)
         {
-            _action = action;
-            _link = link;
+            _link = link ?? throw new ArgumentNullException(nameof(link));
+            _action = action ?? throw new ArgumentNullException(nameof(action));
         }
         
         public void SetTemplateInfo()

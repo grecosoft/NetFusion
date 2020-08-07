@@ -13,7 +13,7 @@ namespace Demo.Infra
     {
         private ITimestamp _queryWithTimestamp;
         
-        public Task OnPreExecute(IQuery query)
+        public Task OnPreExecuteAsync(IQuery query)
         {
             if (query is ITimestamp timestamp)
             {
@@ -24,7 +24,7 @@ namespace Demo.Infra
             return Task.CompletedTask;
         }
 
-        public Task OnPostExecute(IQuery query)
+        public Task OnPostExecuteAsync(IQuery query)
         {
             if (_queryWithTimestamp == null) return Task.CompletedTask;
             

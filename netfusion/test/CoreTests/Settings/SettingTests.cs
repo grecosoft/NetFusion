@@ -5,9 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NetFusion.Settings;
 using NetFusion.Test.Container;
-using NetFusion.Test.Plugins;
-using System.Collections.Generic;
-using NetFusion.Settings.Plugin;
+using CoreTests.Settings.Setup;
 using Xunit;
 
 namespace CoreTests.Settings
@@ -31,16 +29,8 @@ namespace CoreTests.Settings
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Configuration(AddInMemorySettings)
-                    .Container(c =>
-                    {
-                        var hostPlugin = new MockHostPlugin();
-                        hostPlugin.AddPluginType<MockSettings>();
-                  
-                        c.RegisterPlugins(hostPlugin);
-                        c.RegisterPlugin<SettingsPlugin>();
-
-                    })
+                    .Configuration(TestSetup.AddInMemorySettings)
+                    .Container(c => TestSetup.AddSettingsPlugin(c, typeof(MockSettings)))
                     .Assert.Services(s =>
                     {
                         var settings = s.GetService<MockSettings>();
@@ -63,16 +53,8 @@ namespace CoreTests.Settings
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Configuration(AddInMemorySettings)
-                    .Container(c =>
-                    {
-                        var hostPlugin = new MockHostPlugin();
-                        hostPlugin.AddPluginType<MockSettings>();
-                  
-                        c.RegisterPlugins(hostPlugin);
-                        c.RegisterPlugin<SettingsPlugin>();
-
-                    })
+                    .Configuration(TestSetup.AddInMemorySettings)
+                    .Container(c => TestSetup.AddSettingsPlugin(c, typeof(MockSettings)))
                     .Assert.Services(s =>
                     {
                         var configuration = s.GetService<IConfigurationRoot>();
@@ -89,16 +71,8 @@ namespace CoreTests.Settings
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Configuration(AddInMemorySettings)
-                    .Container(c =>
-                    {
-                        var hostPlugin = new MockHostPlugin();
-                        hostPlugin.AddPluginType<MockSettings>();
-                  
-                        c.RegisterPlugins(hostPlugin);
-                        c.RegisterPlugin<SettingsPlugin>();
-
-                    })
+                    .Configuration(TestSetup.AddInMemorySettings)
+                    .Container(c => TestSetup.AddSettingsPlugin(c, typeof(MockSettings)))
                     .Assert.Services(s =>
                     {
                         var configuration = s.GetService<IConfigurationRoot>();
@@ -121,16 +95,8 @@ namespace CoreTests.Settings
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange
-                    .Configuration(AddInMemorySettings)
-                    .Container(c =>
-                    {
-                        var hostPlugin = new MockHostPlugin();
-                        hostPlugin.AddPluginType<MockSettings>();
-                  
-                        c.RegisterPlugins(hostPlugin);
-                        c.RegisterPlugin<SettingsPlugin>();
-
-                    })
+                    .Configuration(TestSetup.AddInMemorySettings)
+                    .Container(c => TestSetup.AddSettingsPlugin(c, typeof(MockSettings)))
                     .Assert.Services(s =>
                     {
                         var options = s.GetService<IOptions<MockSettings>>();
@@ -143,25 +109,6 @@ namespace CoreTests.Settings
                         settings.Width.Should().Be(50);
                     });
             });
-        }
-
-        // Test the generation of section for derived setting types.
-        // Pass in type catalog and validate that settings are added to service collection.
-        // Test validation by passing catalog and creating service provider and then reading setting.
-        // Test logging of settings.
-
-        private static void AddInMemorySettings(IConfigurationBuilder builder)
-        {
-            var dict = new Dictionary<string, string>
-                {
-                    {"App:MainWindow:Height", "20"},
-                    {"App:MainWindow:Width", "50"},
-                    {"App:MainWindows:ValidatedValue", "3" },
-                    {"App:MainWindow:Dialog:Colors:Frame", "RED"},
-                    {"App:MainWindow:Dialog:Colors:Title", "DARK_RED"}
-                };
-
-            builder.AddInMemoryCollection(dict);
         }
     }
 }

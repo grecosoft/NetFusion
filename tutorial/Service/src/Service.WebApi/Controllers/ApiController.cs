@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Rest.Resources;
-using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Hal;
 using Service.Domain.Commands;
 using Service.Domain.Entities;

@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Rest.Common;
-using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Mappings;
 using NetFusion.Rest.Server.Plugin;
 using NetFusion.Web.Mvc.Extensions;
@@ -20,7 +20,7 @@ using NetFusion.Web.Mvc.Metadata;
 namespace NetFusion.Rest.Server.Hal.Core
 {
     /// <summary>
-    /// Output formatter that checks if the response object is of type IHalResource and
+    /// Output formatter that checks if the response object is of type HalResource and
     /// adds the HAL resource metadata.  Then the resulting resource is formatted as JSON.
     /// </summary>
     public class HalJsonOutputFormatter : TextOutputFormatter
@@ -52,6 +52,7 @@ namespace NetFusion.Rest.Server.Hal.Core
                 ApplyMetadataToResource(resource, resourceContext);
             }
             
+            // Delegate to the Json Serializer to produce HAL+JSON.
             await JsonSerializer.SerializeAsync(context.HttpContext.Response.Body, 
                 context.Object, 
                 context.Object.GetType(),
@@ -97,6 +98,7 @@ namespace NetFusion.Rest.Server.Hal.Core
         {
             return new ResourceContext
             {
+                HttpContext = httpContext,
                 MediaModule = httpContext.GetService<IResourceMediaModule>(),
                 ApiMetadata = httpContext.GetService<IApiMetadataService>(),
                 UrlHelper = httpContext.GetService<IUrlHelper>(),

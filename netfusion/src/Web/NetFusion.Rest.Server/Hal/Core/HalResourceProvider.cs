@@ -4,15 +4,14 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NetFusion.Rest.Resources;
-using NetFusion.Rest.Resources.Hal;
 using NetFusion.Rest.Server.Linking;
 using NetFusion.Rest.Server.Mappings;
-using NetFusion.Web.Mvc.Metadata.Core;
+using NetFusion.Web.Mvc.Metadata;
 
 namespace NetFusion.Rest.Server.Hal.Core
 {
     /// <summary>
-    /// HAL provider that processes IHalResource based resources and applies
+    /// HAL provider that processes HalResource based resources and applies
     /// REST links to the resource.
     /// </summary>
     public class HalResourceProvider : IResourceProvider
@@ -49,7 +48,7 @@ namespace NetFusion.Rest.Server.Hal.Core
             var link = new Link
             {
                 Href = resourceLink.Href,
-                Methods = resourceLink.Methods.ToArray()
+                Method = resourceLink.Method
             };
 
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
@@ -61,7 +60,7 @@ namespace NetFusion.Rest.Server.Hal.Core
             var link = new Link
             {
                 Href = resourceLink.FormatUrl(context.Model),
-                Methods = resourceLink.Methods.ToArray()
+                Method = resourceLink.Method
             };
 
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
@@ -86,10 +85,11 @@ namespace NetFusion.Rest.Server.Hal.Core
                     routeValues),
                 
                 Templated = false,
-                Methods = resourceLink.Methods.ToArray()
+                Method = actionMeta.HttpMethod
             };
 
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
+            SetRouteForDocQuery(context, actionMeta, link);
         }
 
         // For each controller action argument executes the cached expression on the model
@@ -114,11 +114,12 @@ namespace NetFusion.Rest.Server.Hal.Core
             var link = new Link
             {
                 Href = actionMeta.RelativePath,
-                Methods = new[] { actionMeta.HttpMethod }
+                Method = actionMeta.HttpMethod
             };
 
             MarkOptionalParams(actionMeta, link);
             UpdateLinkDescriptorsAndResource(context, resourceLink, link);
+            SetRouteForDocQuery(context, actionMeta, link);
         }
 
         private static void UpdateLinkDescriptorsAndResource(ResourceContext context, ResourceLink resourceLink, Link link)
@@ -159,11 +160,24 @@ namespace NetFusion.Rest.Server.Hal.Core
 
         private static void MarkOptionalParams(ApiActionMeta actionMeta, Link link)
         {
-            foreach(ApiParameterMeta paramMeta in actionMeta.Parameters.Where(p => p.IsOptional))
+            foreach(ApiParameterMeta paramMeta in actionMeta.RouteParameters.Where(p => p.IsOptional))
             {
                 link.Href = link.Href.Replace(
                     "{" + paramMeta.ParameterName + "}", 
                     "{?" + paramMeta.ParameterName + "}");
+            }
+        }
+
+        // Indicates if the request has a header value indicating that the URL template
+        // should be added to the returned Links.  The URL template is used to query
+        // the associated documentation for the corresponding controller action.
+        private static void SetRouteForDocQuery(ResourceContext context, ApiActionMeta actionMeta, Link link)
+        {
+            var headers = context.HttpContext.Request.Headers;
+
+            if (headers.TryGetValue("include-url-for-doc-query", out var values) && values.Contains("yes"))
+            {
+                link.DocQuery = actionMeta.RelativePath;
             }
         }
     }

@@ -56,7 +56,6 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.WithRabbitMqHost(typeof(MockTestBusConsumer));
                     })
-                    .Configuration(TestSetup.AddValidBusConfig)
                     .PluginConfig((MessageDispatchConfig c) =>
                     {
                         c.AddPublisher<RabbitMqPublisher>();

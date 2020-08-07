@@ -3,13 +3,12 @@ using System;
 using System.Threading.Tasks;
 using Demo.WebApi.Resources;
 using NetFusion.Rest.Resources;
-using NetFusion.Rest.Resources.Hal;
-using NetFusion.Web.Mvc.Metadata;
+using NetFusion.Rest.Server.Hal;
 
 namespace Demo.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]"), GroupMeta("Listing")]
+    [Route("api/[controller]")]
     public class ListingController : ControllerBase
     {
         [HttpGet("entry")]
@@ -23,7 +22,7 @@ namespace Demo.WebApi.Controllers
             return Ok(model.AsResource());
         }
         
-        [HttpGet("{id}"), ActionMeta("GetListing")]
+        [HttpGet("{id}")]
         public Task<IActionResult> GetListing(int id)
         {
             var listingModel = new ListingModel

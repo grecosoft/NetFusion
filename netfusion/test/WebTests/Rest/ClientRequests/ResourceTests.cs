@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using NetFusion.Rest.Client;
-using NetFusion.Rest.Resources.Hal;
 using WebTests.Hosting;
 using WebTests.Rest.ClientRequests.Server;
 using WebTests.Rest.Setup;
@@ -29,16 +28,16 @@ namespace WebTests.Rest.ClientRequests
                     .Act.OnRestClient(async client =>
                     {             
                         var request = ApiRequest.Get("api/customers/embedded/resource");
-                        return await client.SendAsync<CustomerModel>(request);
+                        return await client.SendForHalAsync<CustomerModel>(request);
                     });
 
                 response.Assert.ApiResponse(apiResponse =>
                 {
-                    var resourceResponse = (ApiResponse<CustomerModel>)apiResponse;
+                    var resourceResponse = (ApiHalResponse<CustomerModel>)apiResponse;
                     var resource = resourceResponse.Resource;
                     
                     // Validate that an embedded resource was returned.
-                    apiResponse.Content.Should().NotBeNull();
+                    apiResponse.State.Should().NotBeNull();
                     resource.Embedded.Should().NotBeNull();
                     resource.Embedded.Keys.Should().HaveCount(1);
                     resource.Embedded.ContainsKey("primary-address").Should().BeTrue();
@@ -67,12 +66,12 @@ namespace WebTests.Rest.ClientRequests
                     .Act.OnRestClient(async client =>
                     {             
                         var request = ApiRequest.Get("api/customers/embedded/collection");
-                        return await client.SendAsync<CustomerModel>(request);
+                        return await client.SendForHalAsync<CustomerModel>(request);
                     });
 
                 response.Assert.ApiResponse(apiResponse =>
                 {
-                    var resourceResponse = (ApiResponse<CustomerModel>)apiResponse;
+                    var resourceResponse = (ApiHalResponse<CustomerModel>)apiResponse;
                     var resource = resourceResponse.Resource;
                     
                     // Validate that an embedded resource collection was returned.

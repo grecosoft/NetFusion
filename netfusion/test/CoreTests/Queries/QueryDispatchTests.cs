@@ -77,7 +77,7 @@ namespace CoreTests.Queries
                         c.RegisterPlugins(hostPlugin);
                         c.RegisterPlugin<MessagingPlugin>();
                     })
-                    .Act.OnServices(s =>
+                    .Act.RecordException().OnServicesAsync(s =>
                     {
 
                         var dispatcher = s.GetService<IMessagingService>();
@@ -109,7 +109,7 @@ namespace CoreTests.Queries
                             c.RegisterPlugins(hostPlugin);
                             c.RegisterPlugin<MessagingPlugin>();
                         })
-                    .Act.OnServices(s =>
+                    .Act.OnServicesAsync(s =>
                         {
                            
                             var dispatcher = s.GetService<IMessagingService>();

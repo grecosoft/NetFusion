@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Resources;
+using NetFusion.Rest.Server.Hal;
 
 namespace WebTests.Rest.ClientRequests.Server
 {

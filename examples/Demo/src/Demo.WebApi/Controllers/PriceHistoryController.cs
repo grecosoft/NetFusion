@@ -1,25 +1,25 @@
 using Microsoft.AspNetCore.Mvc;
-using NetFusion.Rest.Resources.Hal;
-using NetFusion.Web.Mvc.Metadata;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Demo.WebApi.Resources;
+using NetFusion.Rest.Resources;
+using NetFusion.Rest.Server.Hal;
 
 namespace Demo.WebApi.Controllers
 {
     [ApiController]
-    [Route("api/listing/price-history"), GroupMeta("History")]
+    [Route("api/listing/price-history")]
     public class PriceHistoryController : ControllerBase
     {
-        [HttpGet("{id}"), ActionMeta("PriceHistory")]
+        [HttpGet("{id}")]
         public Task<PriceHistoryModel> GetPriceHistory(int id)
         {
             var history = GetPricingHistory().FirstOrDefault(h => h.PriceHistoryId == id);
             return Task.FromResult(history);
         }
 
-        [HttpGet("{listingId}/events"), ActionMeta("PriceHistoryEvents")]
+        [HttpGet("{listingId}/events")]
         public Task<IActionResult> GetPriceHistoryEvents(int listingId)
         {
             var historyResources = GetPricingHistory().Where(h => h.ListingId == listingId)

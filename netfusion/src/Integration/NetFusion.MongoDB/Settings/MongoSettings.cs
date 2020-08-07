@@ -31,7 +31,7 @@ namespace NetFusion.MongoDB.Settings
         public string AuthDatabaseName { get; set; }
 
         /// <summary>
-        /// The database to connect.
+        /// The database name to connect.
         /// </summary>
         public string DatabaseName { get; set; }
 

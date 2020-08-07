@@ -1,5 +1,5 @@
 using System;
-using NetFusion.Rest.Resources.Hal;
+using NetFusion.Rest.Resources;
 
 namespace Service.WebApi.Resources
 {

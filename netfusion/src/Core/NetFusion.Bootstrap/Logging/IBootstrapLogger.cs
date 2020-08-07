@@ -18,6 +18,13 @@ namespace NetFusion.Bootstrap.Logging
         /// </summary>
         bool HasErrors { get; }
         
+        /// <summary>
+        /// Adds a log entry that will be written to the .net core ILogger
+        /// once it is available withing the pipeline.
+        /// </summary>
+        /// <param name="logLevel">The level of the message.</param>
+        /// <param name="message">The message to be recorded</param>
+        /// <param name="args">Arguments contained within the message.</param>
         void Add(LogLevel logLevel, string message, params object[] args);
         
         /// <summary>

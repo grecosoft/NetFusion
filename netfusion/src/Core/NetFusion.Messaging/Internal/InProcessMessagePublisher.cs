@@ -85,9 +85,14 @@ namespace NetFusion.Messaging.Internal
 
             try
             {
-                MessageDispatchInfo[] matchingDispatchers = GetMatchingDispatchers(dispatchers, message);
+                // Filter the list of dispatchers to only those that apply.
+                MessageDispatchInfo[] matchingDispatchers = dispatchers
+                    .Where(dispatchInfo => dispatchInfo.IsMatch(message))
+                    .ToArray();
+                
                 AssertMessageDispatchers(message, matchingDispatchers);
 
+                // Execute all of matching dispatchers and await the list of associated tasks.
                 taskList = matchingDispatchers.Invoke(message, InvokeDispatcher, cancellationToken);
                 await taskList.WhenAll();
             }
@@ -108,25 +113,7 @@ namespace NetFusion.Messaging.Internal
                     "An exception was received when dispatching a message.", ex);
             }
         }
-
-        // Evaluates any specified handler dispatch rules to determine if the message
-        // meets the criteria required by the handler.
-        private MessageDispatchInfo[] GetMatchingDispatchers(
-            IEnumerable<MessageDispatchInfo> dispatchers, 
-            IMessage message)
-        {
-            List<MessageDispatchInfo> matchingDispatchers = new List<MessageDispatchInfo>();
-
-            foreach (MessageDispatchInfo dispatchInfo in dispatchers)
-            {
-                if (dispatchInfo.IsMatch(message))
-                {
-                    matchingDispatchers.Add(dispatchInfo);
-                }
-            }
-            return matchingDispatchers.ToArray();
-        }
-
+        
         private static void AssertMessageDispatchers(IMessage message, MessageDispatchInfo[] dispatchers)
         {
             // There are no constraints on the number of handlers for domain-events.
@@ -146,7 +133,8 @@ namespace NetFusion.Messaging.Internal
             }
         }
 
-        private Task InvokeDispatcher(MessageDispatchInfo dispatcher, IMessage message, CancellationToken cancellationToken)
+        private Task InvokeDispatcher(MessageDispatchInfo dispatcher, IMessage message, 
+            CancellationToken cancellationToken)
         {
             if (!_logger.IsEnabled(LogLevel.Trace))
             {
@@ -155,6 +143,7 @@ namespace NetFusion.Messaging.Internal
                     $"Method: { dispatcher.MessageHandlerMethod.Name} ");
             }
             
+            // Since this root component, use service-locator obtain reference to message consumer.
             var consumer = (IMessageConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
             return dispatcher.Dispatch(message, consumer, cancellationToken);
         }

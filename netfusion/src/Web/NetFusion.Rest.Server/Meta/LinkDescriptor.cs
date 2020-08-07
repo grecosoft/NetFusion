@@ -35,7 +35,7 @@ namespace NetFusion.Rest.Server.Meta
             if (method == null) throw new ArgumentNullException(nameof(method), 
                 "HTTP Method cannot be null.");
 
-            _resourceLink.Methods = new[] { method.Method };
+            _resourceLink.Method = method.Method;
 
             return this;
         }

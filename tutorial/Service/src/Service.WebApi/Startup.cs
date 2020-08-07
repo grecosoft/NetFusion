@@ -17,6 +17,7 @@ using Service.WebApi.Plugin;
 using NetFusion.Builder;
 using NetFusion.Messaging.Logging;
 using NetFusion.Rest.Client;
+using NetFusion.Rest.Docs.Plugin;
 using Service.App.Services;
 using Service.WebApi.Hubs;
 
@@ -50,6 +51,7 @@ namespace Service.WebApi
                 .AddRedis()
                 //.AddAmqp()
                 .AddRest()
+                .AddRestDocs()
                 
                 // Add application centric plugins:
                 .AddPlugin<DomainPlugin>()
@@ -84,6 +86,8 @@ namespace Service.WebApi
                     .WithExposedHeaders("WWW-Authenticate")
                     .AllowAnyHeader());
             }
+
+            app.UseRestDocs();
             
             app.UseHttpsRedirection();
             app.UseRouting();

@@ -7,7 +7,7 @@ using NetFusion.Settings;
 namespace NetFusion.RabbitMQ.Settings
 {
     /// <summary>
-    /// Configuration settings for defined business used by the application.
+    /// Configuration settings for defined buses used by the application.
     /// </summary>
     [ConfigurationSection("netfusion:rabbitMQ")]
     public class BusSettings : IAppSettings,

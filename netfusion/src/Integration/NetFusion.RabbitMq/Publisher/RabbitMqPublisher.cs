@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using EasyNetQ;
 using EasyNetQ.Topology;
-using NetFusion.Base.Scripting;
 using NetFusion.RabbitMQ.Publisher.Internal;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Serialization;
@@ -28,8 +27,7 @@ namespace NetFusion.RabbitMQ.Publisher
         // Dependent Services:
         public ILogger Logger { get; }
         public ISerializationManager Serialization { get; }
-        public IEntityScriptingService Scripting { get; }
-        
+
         // Dependent Modules:
         public IBusModule BusModule { get; }
         public IPublisherModule PublisherModule { get; }
@@ -40,14 +38,12 @@ namespace NetFusion.RabbitMQ.Publisher
             IBusModule busModule, 
             IPublisherModule publisherModule,
             ISerializationManager serializationManager,
-            IEntityScriptingService scripting,
             IMessageLogger messageLogger)
         {
             Logger = loggerFactory.CreateLogger<RabbitMqPublisher>();
             BusModule = busModule ?? throw new ArgumentNullException(nameof(busModule));    
             PublisherModule = publisherModule ?? throw new ArgumentNullException(nameof(publisherModule));
             Serialization = serializationManager ?? throw new ArgumentNullException(nameof(serializationManager));
-            Scripting = scripting ?? throw new ArgumentNullException(nameof(scripting));
 
             _messageLogger = messageLogger ?? throw new ArgumentNullException(nameof(messageLogger));
         }
