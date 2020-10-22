@@ -57,7 +57,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                 }
 
                 var dispatchEx = context.Serialization.Deserialize<MessageDispatchException>(contentType, ex.ReplayExceptionBody);
-                context.Logger.LogError(RabbitMqLogEvents.PublisherException, dispatchEx, "RPC Exception Reply.");
+                context.Logger.LogError(dispatchEx, "RPC Exception Reply.");
                 throw dispatchEx;
             }
         }

@@ -61,12 +61,12 @@ namespace NetFusion.Messaging.Internal
             catch (QueryDispatchException ex)
             {
                 // Log the details of the dispatch exception and rethrow.
-                _logger.LogErrorDetails(MessagingLogEvents.MessagingException, ex, "Exception dispatching query.");
+                _logger.LogErrorDetails(ex, "Exception dispatching query.");
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(MessagingLogEvents.MessagingException, ex, "Unexpected Exception dispatching query.");
+                _logger.LogError(ex, "Unexpected Exception dispatching query.");
                 throw;
             }
 
@@ -99,8 +99,7 @@ namespace NetFusion.Messaging.Internal
         {
             var filtersByType = filters.OfType<T>().ToArray();
             
-            _logger.LogTraceDetails(MessagingLogEvents.QueryDispatch, 
-                $"Applying ({typeof(T).Name}) Query Filters",
+            _logger.LogTraceDetails($"Applying ({typeof(T).Name}) Query Filters",
                 new {
                     FilterTypes = filtersByType.Select(f => f.GetType().FullName).ToArray()
                 });

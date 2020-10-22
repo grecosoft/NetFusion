@@ -78,8 +78,7 @@ namespace NetFusion.Redis.Subscriber.Internal
 
         private void LogReceivedDomainEvent(string database, string channel, IDomainEvent domainEvent)
         {
-            _logger.LogTraceDetails(RedisLogEvents.SubscriberEvent, 
-                "Subscription delegate being called.", new
+            _logger.LogTraceDetails("Subscription delegate being called.", new
                 {
                     Database = database,
                     Channel = channel,
@@ -92,8 +91,7 @@ namespace NetFusion.Redis.Subscriber.Internal
             if (string.IsNullOrWhiteSpace(channel))
                 throw new ArgumentException("Channel not specified.", nameof(channel));
 
-            _logger.LogTrace(RedisLogEvents.SubscriberEvent, 
-                "Unsubscribe channel named {channel} from database {database}", channel, database);
+            _logger.LogTrace("Unsubscribe channel named {channel} from database {database}", channel, database);
             
             var subscriber = _connModule.GetSubscriber(database);
             subscriber.Unsubscribe(channel);
@@ -104,8 +102,7 @@ namespace NetFusion.Redis.Subscriber.Internal
             if (string.IsNullOrWhiteSpace(channel))
                 throw new ArgumentException("Channel not specified.", nameof(channel));
                 
-            _logger.LogTrace(RedisLogEvents.SubscriberEvent, 
-                "Unsubscribe channel named {channel} from database {database}", channel, database);
+            _logger.LogTrace("Unsubscribe channel named {channel} from database {database}", channel, database);
             
             var subscriber = _connModule.GetSubscriber(database);
             await subscriber.UnsubscribeAsync(channel).ConfigureAwait(false);

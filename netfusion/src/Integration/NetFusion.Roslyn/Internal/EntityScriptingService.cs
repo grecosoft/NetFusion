@@ -83,18 +83,16 @@ namespace NetFusion.Roslyn.Internal
         {
             var preEvalDetails = GetPreEvalDetails(entity, evaluator);
 
-            using (var durationLogger = _logger.LogTraceDuration(ScriptingLogEvents.ScriptExecution, "Script Evaluation"))
+            using (var durationLogger = _logger.LogTraceDuration("Script Evaluation"))
             {
-                durationLogger.Log.LogTraceDetails(ScriptingLogEvents.ScriptPreEvaluation, 
-                    "Pre-Evaluation Details", preEvalDetails);
+                durationLogger.Log.LogTraceDetails("Pre-Evaluation Details", preEvalDetails);
 
                 CompileScript(evaluator);
                 SetDefaultAttributeValues(evaluator.Script, entity);
                 
                 await evaluator.ExecuteAsync(entity);
 
-                durationLogger.Log.LogTraceDetails(ScriptingLogEvents.ScriptPostEvaluation, 
-                    "Post-Evaluation Details", new { PostEvalValues = entity });
+                durationLogger.Log.LogTraceDetails("Post-Evaluation Details", new { PostEvalValues = entity });
             }
         }
 

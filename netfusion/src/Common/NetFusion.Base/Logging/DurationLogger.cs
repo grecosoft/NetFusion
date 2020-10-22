@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
-namespace NetFusion.Bootstrap.Logging
+namespace NetFusion.Base.Logging
 {
     /// <summary>
     /// Logs the time required to execute a block of code.

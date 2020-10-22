@@ -137,7 +137,7 @@ namespace NetFusion.Mapping.Core
 
         private void LogFoundMapping(TargetMap targetMap)
         {
-            _logger.LogDebug(MappingLogEvents.MappingApplied, "Mapping Applied: {SourceType} --> {TargetType} Using Strategy: {StrategyType}", 
+            _logger.LogDebug("Mapping Applied: {SourceType} --> {TargetType} Using Strategy: {StrategyType}", 
                 targetMap.SourceType,
                 targetMap.TargetType, 
                 targetMap.StrategyType);

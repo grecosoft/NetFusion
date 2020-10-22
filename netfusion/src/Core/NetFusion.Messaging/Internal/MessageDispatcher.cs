@@ -119,7 +119,7 @@ namespace NetFusion.Messaging.Internal
             catch (PublisherException ex)
             {
                 // Log the details of the publish exception and rethrow.
-                _logger.LogErrorDetails(MessagingLogEvents.MessagingException, ex, "Exception publishing message.");
+                _logger.LogErrorDetails(ex, "Exception publishing message.");
                 throw;
             }
         }

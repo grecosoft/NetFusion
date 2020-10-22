@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Base.Logging;
 using NetFusion.Bootstrap;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Logging;

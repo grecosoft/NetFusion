@@ -149,7 +149,7 @@ namespace NetFusion.Messaging.Plugin.Modules
             }
             catch (Exception ex)
             {
-                Context.Logger.LogError(MessagingLogEvents.MessagingException, ex, "Message Dispatch Error Details.");
+                Context.Logger.LogError(ex, "Message Dispatch Error Details.");
                 throw;
             }
         }

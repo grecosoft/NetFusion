@@ -1,3 +1,4 @@
+using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Logging;
 
 namespace NetFusion.Bootstrap

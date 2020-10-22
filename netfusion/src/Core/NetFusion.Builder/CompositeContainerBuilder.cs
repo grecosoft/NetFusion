@@ -2,6 +2,7 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
 using NetFusion.Base.Validation;

@@ -106,8 +106,7 @@ namespace NetFusion.Redis.Plugin.Modules
         private void LogReceivedDomainEvent(string channel, IDomainEvent domainEvent,
             MessageChannelSubscriber subscriber)
         {
-            Context.Logger.LogTraceDetails(RedisLogEvents.SubscriberEvent, 
-                "Domain event received on Redis Channel.", 
+            Context.Logger.LogTraceDetails("Domain event received on Redis Channel.", 
                 new
                 {
                     Channel = channel,

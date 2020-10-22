@@ -69,8 +69,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
             
-            Logger.LogTraceDetails(RabbitMqLogEvents.SubscriberEvent, 
-                "Message Received from Message Bus.", 
+            Logger.LogTraceDetails("Message Received from Message Bus.", 
                 new {
                     Bus = Subscriber.QueueMeta.Exchange.BusName,
                     Exchange = Subscriber.QueueMeta.Exchange.ExchangeName,

@@ -92,8 +92,7 @@ namespace NetFusion.RabbitMQ.Publisher
 
         private void LogPublishedMessage(CreatedExchange exchange, IMessage message)
         {
-            Logger.LogTraceDetails(RabbitMqLogEvents.PublisherEvent, 
-                "Message being Published to Message Bus.", 
+            Logger.LogTraceDetails("Message being Published to Message Bus.", 
                 new {
                     exchange.Definition.BusName,
                     exchange.Definition.ExchangeName,

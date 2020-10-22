@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
@@ -121,6 +122,14 @@ namespace NetFusion.Bootstrap.Container
                 }
 
                 NfExtensions.Logger.Add(LogLevel.Information, "NetFusion {Version}", Version.ToString());
+
+                LogMessage message = LogMessage.For("This is a test {Value1}").WithProperties(new[]
+                {
+                    new LogProperty { Name = "Value1", Value = 5000 },
+                    new LogProperty { Name = "Value2", Value = new { a = 100, b = "audi"}}, 
+                });
+                
+                NfExtensions.Logger.Write(LogLevel.Information, message);
                 
            
                 // Delegate to the builder:

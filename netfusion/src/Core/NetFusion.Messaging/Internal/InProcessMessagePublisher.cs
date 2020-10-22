@@ -168,7 +168,7 @@ namespace NetFusion.Messaging.Internal
             
             var dispatcherDetails = GetDispatchLogDetails(dispatchers);
 
-            _logger.LogTraceDetails(MessagingLogEvents.MessagingDispatch, $"Message Published: {message.GetType()}",
+            _logger.LogTraceDetails($"Message Published: {message.GetType()}",
                 new
                 {
                     Dispatchers = dispatcherDetails,

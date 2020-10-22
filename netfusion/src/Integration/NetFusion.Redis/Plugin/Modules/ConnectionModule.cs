@@ -125,8 +125,7 @@ namespace NetFusion.Redis.Plugin.Modules
             
             if (! cachedConn.Connection.IsConnected)
             {
-                Context.Logger.LogError(RedisLogEvents.ConnException, 
-                    "Requested database connection {dbConfigName} is currently in a disconnected state.",
+                Context.Logger.LogError("Requested database connection {dbConfigName} is currently in a disconnected state.",
                     connectionName);
             }
 

@@ -75,7 +75,7 @@ namespace NetFusion.Bootstrap.Container
                 _logger.LogInformation("Composite-Application Starting.");
                
                 // Create a service scope in which each plugin can be started:
-                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStart, "Starting Modules"))
+                using (_logger.LogTraceDuration("Starting Modules"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {                    
                     await StartModules(scope.ServiceProvider);
@@ -84,7 +84,7 @@ namespace NetFusion.Bootstrap.Container
                 // If Trace logging is enabled, dump the detailed composite log:
                 if (_logger.IsEnabled(LogLevel.Trace))
                 {
-                    _logger.LogTraceDetails(BootstrapLogEvents.BootstrapCompositeLog, "Composite-Log", Log);
+                    _logger.LogTraceDetails("Composite-Log", Log);
                 }
                 
                 _logger.LogInformation("CompositeApplication Started");
@@ -203,7 +203,7 @@ namespace NetFusion.Bootstrap.Container
                 _logger.LogInformation("Composite Application Stopping.");
                 
                 // Create a service scope in which each plugin can be stopped:
-                using (_logger.LogTraceDuration(BootstrapLogEvents.BootstrapStop, "Stopping Composite-Application"))
+                using (_logger.LogTraceDuration("Stopping Composite-Application"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
                     await StopPluginModulesAsync(scope.ServiceProvider);

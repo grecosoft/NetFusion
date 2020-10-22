@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace NetFusion.Bootstrap.Logging
+namespace NetFusion.Base.Logging
 {
     /// <summary>
     /// 
@@ -9,6 +9,11 @@ namespace NetFusion.Bootstrap.Logging
     {
         public void Add(LogLevel logLevel, string message, params object[] args)
         { 
+        }
+
+        public void Write(LogLevel logLevel, LogMessage message)
+        {
+
         }
     }
 }

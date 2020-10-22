@@ -107,7 +107,7 @@ namespace NetFusion.Redis.Publisher
         
         private void LogChannelPublish(IDomainEvent domainEvent, string databaseName, string channelName)
         {
-            _logger.LogTraceDetails(RedisLogEvents.PublisherEvent, "Domain Event being published to Redis Channel.", 
+            _logger.LogTraceDetails("Domain Event being published to Redis Channel.", 
                 new
                 {
                     DatabaseConfigName = databaseName,
