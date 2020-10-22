@@ -32,6 +32,5 @@ namespace NetFusion.Bootstrap.Container
         
         // Logging:
         CompositeAppLog CompositeLog { get; }
-        IBootstrapLogger BootstrapLogger { get; }
     }
 }

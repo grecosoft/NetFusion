@@ -17,9 +17,9 @@ namespace NetFusion.Bootstrap.Container
     /// </summary>
     public class TypeResolver : ITypeResolver
     {
-        private readonly IBootstrapLogger _logger;
+        private readonly IExtendedLogger _logger;
         
-        public TypeResolver(IBootstrapLogger logger)
+        public TypeResolver(IExtendedLogger logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }

@@ -35,16 +35,15 @@ namespace NetFusion.Bootstrap.Container
         public ICompositeAppBuilder AppBuilder => _builder;
         
         // Instantiated by CompositeContainerBuilder.
-        public CompositeContainer(IServiceCollection services, 
-            IConfiguration configuration,
-            IBootstrapLogger bootstrapLogger)
+        public CompositeContainer(IServiceCollection services, IConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            if (bootstrapLogger == null) throw new ArgumentNullException(nameof(bootstrapLogger));
 
             _serviceCollection = services ?? throw new ArgumentNullException(nameof(services));
-            _builder = new CompositeAppBuilder(services, configuration, bootstrapLogger);
+            _builder = new CompositeAppBuilder(services, configuration);
         }
+
+        private Version Version => GetType().Assembly.GetName().Version;
         
         /// <summary>
         /// Adds a plugin to the composite-container.  If the plugin type is already registered,
@@ -120,14 +119,15 @@ namespace NetFusion.Bootstrap.Container
                 {
                     throw new ContainerException("Container has already been composed.");
                 }
+
+                NfExtensions.Logger.Add(LogLevel.Information, "NetFusion {Version}", Version.ToString());
                 
-                _builder.BootstrapLogger.Add(LogLevel.Debug, "Bootstrapping Plugins");
-                
+           
                 // Delegate to the builder:
                 _builder.ComposeModules(typeResolver, _plugins);
                 _builder.RegisterServices(_serviceCollection);
                 
-                _builder.BootstrapLogger.Add(LogLevel.Debug, "Bootstrapping Completed");
+                NfExtensions.Logger.Add(LogLevel.Debug, "Bootstrapping Completed");
 
                 IsComposed = true;
             }
@@ -147,12 +147,12 @@ namespace NetFusion.Bootstrap.Container
         {
             if (ex.Details != null)
             {
-                _builder.BootstrapLogger.Add(LogLevel.Error, 
+                NfExtensions.Logger.Add(LogLevel.Error, 
                     $"Bootstrap Exception: {ex}; Details: {ex.Details.ToIndentedJson()}");
                 return ex;
             }
             
-            _builder.BootstrapLogger.Add(LogLevel.Error, $"Bootstrap Exception: {ex}");
+            NfExtensions.Logger.Add(LogLevel.Error, $"Bootstrap Exception: {ex}");
             return ex;
         }
     }

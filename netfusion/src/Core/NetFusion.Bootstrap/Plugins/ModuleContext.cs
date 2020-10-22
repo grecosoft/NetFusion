@@ -60,7 +60,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// Logging factory.  Only available after the service-provider has been created.
-        /// Use the BootstrapLogger in code executing before the container is created.
+        /// Use the ExtendedLogger in code executing before the container is created.
         /// </summary>
         public ILoggerFactory LoggerFactory
         {
@@ -69,7 +69,7 @@ namespace NetFusion.Bootstrap.Plugins
                 if (_loggerFactory == null)
                 {
                     throw new InvalidOperationException(
-                        "LoggerFactory can't be accessed until service-provider created.  Use BootstrapLogger.");
+                        "LoggerFactory can't be accessed until service-provider created.  Use ExtendedLogger.");
                 }
 
                 return _loggerFactory;
@@ -81,18 +81,18 @@ namespace NetFusion.Bootstrap.Plugins
         /// before the service-provider has been created.
         /// </summary>
         /// <exception cref="InvalidOperationException"></exception>
-        public IBootstrapLogger BootstrapLogger
+        public IExtendedLogger ExtendedLogger
         {
             get
             {
                 if (_logger != null)
                 {
                     throw new InvalidOperationException(
-                        "BootstrapLogger should not be used after the service-provider has been created." + 
+                        "ExtendedLogger should not be used after the service-provider has been created." + 
                         "Use Logger instead." );
                 }
 
-                return _builder.BootstrapLogger;
+                return NfExtensions.Logger;
             }
         }
         
@@ -107,7 +107,7 @@ namespace NetFusion.Bootstrap.Plugins
                 if (_logger == null)
                 {
                     throw new InvalidOperationException(
-                        "Logger can't be accessed until service-provider created.  Use BootstrapLogger.");
+                        "Logger can't be accessed until service-provider created.  Use ExtendedLogger.");
                 }
 
                 return _logger;

@@ -18,6 +18,8 @@ using NetFusion.Builder;
 using NetFusion.Messaging.Logging;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Docs.Plugin;
+using NetFusion.Serilog;
+using Serilog;
 using Service.App.Services;
 using Service.WebApi.Hubs;
 
@@ -40,15 +42,15 @@ namespace Service.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.CompositeContainer(_configuration)
+            services.CompositeContainer(_configuration, new SerilogExtendedLogger())
                 // Add common plugins:
                 .AddSettings()
                 .AddMessaging()
                 
                 // Add technology specific plugins:
-                .AddMongoDb()
-                .AddRabbitMq()
-                .AddRedis()
+              //  .AddMongoDb()
+              //  .AddRabbitMq()
+              //  .AddRedis()
                 //.AddAmqp()
                 .AddRest()
                 .AddRestDocs()
@@ -86,9 +88,10 @@ namespace Service.WebApi
                     .WithExposedHeaders("WWW-Authenticate")
                     .AllowAnyHeader());
             }
+            
+            app.UseSerilogRequestLogging();
 
             app.UseRestDocs();
-            
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();

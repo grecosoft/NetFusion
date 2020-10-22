@@ -99,9 +99,8 @@ namespace WebTests.Hosting
                 {
                     // Create instance used to add plugins to the underlying service-collection.
                     var compositeBuilder = new CompositeContainerBuilder(services, 
-                        context.Configuration,
-                        new BootstrapLogger(),
-                        new TestTypeResolver());
+                        context.Configuration, 
+                        new TestTypeResolver(), new NullExtendedLogger());
                     
                     // Allow the unit-test to add the need plugins and call the compose method
                     // to populate the service-collection.

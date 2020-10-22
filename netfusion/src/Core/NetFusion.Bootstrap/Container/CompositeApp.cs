@@ -115,18 +115,6 @@ namespace NetFusion.Bootstrap.Container
 
         private void LogCoreServices()
         {
-            // Write the logs that were recorded before the container-provider
-            // was built now that ILogger is available.
-            _builder.BootstrapLogger.WriteToLogger(_logger);
-            
-            // If there were any bootstrap errors,  raise an exception to 
-            // abort starting the composite-application.
-            if (_builder.BootstrapLogger.HasErrors)
-            {
-                throw new ContainerException(
-                    "Errors were recorded when bootstrapping Composite-Application.  See log for details.");
-            }
-            
             var coreServiceLog = new CoreServicesLog(_logger, _serviceProvider);
             coreServiceLog.Log();
         }
@@ -274,12 +262,12 @@ namespace NetFusion.Bootstrap.Container
         {
             if (ex.Details != null)
             {
-                _builder.BootstrapLogger.Add(LogLevel.Error, 
+                NfExtensions.Logger.Add(LogLevel.Error, 
                     $"Composite Application Exception: {ex}; Details: {ex.Details.ToIndentedJson()}");
                 return ex;
             }
             
-            _builder.BootstrapLogger.Add(LogLevel.Error, $"Composite Application Exception: {ex}");
+            NfExtensions.Logger.Add(LogLevel.Error, $"Composite Application Exception: {ex}");
             return ex;
         }
 

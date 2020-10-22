@@ -38,7 +38,7 @@ namespace NetFusion.Redis.Plugin.Modules
             }
             catch (SettingsValidationException ex)
             {
-                Context.BootstrapLogger.Add(LogLevel.Error, ex.Message);
+                Context.ExtendedLogger.Add(LogLevel.Error, ex.Message);
                 throw;
             }
            

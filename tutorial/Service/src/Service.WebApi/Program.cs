@@ -6,6 +6,8 @@ using NetFusion.Bootstrap.Container;
 using NetFusion.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Events;
 
 namespace Service.WebApi
 {
@@ -19,6 +21,9 @@ namespace Service.WebApi
             
             var compositeApp = webHost.Services.GetService<ICompositeApp>();
             var lifetime = webHost.Services.GetService<IHostApplicationLifetime>();
+            
+            var logger = webHost.Services.GetService<ILogger<Program>>();
+            logger.LogError("test log {value}", 555, 444);
 
             lifetime.ApplicationStopping.Register(() =>
             {
@@ -26,7 +31,7 @@ namespace Service.WebApi
             });
                   
             await compositeApp.StartAsync();
-            await webHost.RunAsync();    
+            await webHost.RunAsync();
         }
 
         private static IHost BuildWebHost(string[] args) 
@@ -37,7 +42,9 @@ namespace Service.WebApi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                }).Build();
+                })
+                .UseSerilog()
+                .Build();
         }
 
         private static void SetupConfiguration(HostBuilderContext context, 
@@ -49,17 +56,26 @@ namespace Service.WebApi
         private static void SetupLogging(HostBuilderContext context, 
             ILoggingBuilder builder)
         {
-            builder.ClearProviders();
-
-            if (context.HostingEnvironment.IsDevelopment())
-            {
-                builder.AddDebug().SetMinimumLevel(LogLevel.Debug);
-                builder.AddConsole().SetMinimumLevel(LogLevel.Debug);
-            }
-            else
-            {
-                builder.AddConsole().SetMinimumLevel(LogLevel.Information);
-            }
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.Seq("http://localhost:5351")
+                .CreateLogger();
+            
+            
+            // builder.ClearProviders();
+            //
+            // if (context.HostingEnvironment.IsDevelopment())
+            // {
+            //     builder.AddDebug().SetMinimumLevel(LogLevel.Debug);
+            //     builder.AddConsole().SetMinimumLevel(LogLevel.Debug);
+            // }
+            // else
+            // {
+            //     builder.AddConsole().SetMinimumLevel(LogLevel.Information);
+            // }
         }
     }
 }

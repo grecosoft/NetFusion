@@ -11,6 +11,19 @@ namespace NetFusion.Bootstrap.Logging
     /// </summary>
     public static class LoggerExtensions
     {
+        public static void LogTest(this ILogger logger, string message)
+        {
+            NfExtensions.Logger.Add(LogLevel.Information, message);
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
         //------------------------------------------DEBUG------------------------------------------//
 
         public static void LogDebugDetails(this ILogger logger, EventId eventId, Exception exception,

@@ -11,7 +11,7 @@ namespace Service.Infra.Plugin.Modules
     {
         public override void ScanPlugins(ITypeCatalog catalog)
         {
-           catalog.AsImplementedInterface("Repository", ServiceLifetime.Scoped);
+         //  catalog.AsImplementedInterface("Repository", ServiceLifetime.Scoped);
         }
     }
 }

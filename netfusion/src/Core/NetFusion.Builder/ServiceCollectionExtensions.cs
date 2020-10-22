@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Bootstrap;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Logging;
 
@@ -17,12 +18,12 @@ namespace NetFusion.Builder
         /// <param name="configuration">The application's configuration.</param>
         /// <returns>Builder used to create composite-container instance.</returns>
         public static ICompositeContainerBuilder CompositeContainer(this IServiceCollection services,
-            IConfiguration configuration)
+            IConfiguration configuration, IExtendedLogger extendedLogger = null)
         {
-            var bootstrapLogger = new BootstrapLogger();
-            var resolver = new TypeResolver(bootstrapLogger);
+            NfExtensions.Logger = extendedLogger ?? NfExtensions.Logger;
             
-            return new CompositeContainerBuilder(services, configuration, bootstrapLogger, resolver);
+            var resolver = new TypeResolver(extendedLogger);
+            return new CompositeContainerBuilder(services, configuration, resolver, extendedLogger);
         }
     }
 }
