@@ -8,7 +8,6 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Logging;
-using NetFusion.Bootstrap.Logging;
 
 namespace NetFusion.Bootstrap.Container
 {
@@ -85,15 +84,16 @@ namespace NetFusion.Bootstrap.Container
             Type knownType, 
             IEnumerable<object> discoveredInstances)
         {
-            string instanceTypes = string.Join(", ", discoveredInstances.Select(di => 
-                di.GetType().FullName).ToArray());
-            
-            _logger.Add(LogLevel.Trace, 
-                "Module: {moduleName} Property: {moduleProp}:  Type: {knownType} => {instances}", 
-                moduleProp.DeclaringType?.FullName,
-                moduleProp.Name,
-                knownType.FullName, 
-                $"[{instanceTypes}]");
+            // TODO:
+            // string instanceTypes = string.Join(", ", discoveredInstances.Select(di => 
+            //     di.GetType().FullName).ToArray());
+            //
+            // _logger.Add(LogLevel.Trace, 
+            //     "Module: {moduleName} Property: {moduleProp}:  Type: {knownType} => {instances}", 
+            //     moduleProp.DeclaringType?.FullName,
+            //     moduleProp.Name,
+            //     knownType.FullName, 
+            //     $"[{instanceTypes}]");
         }
     }
 }

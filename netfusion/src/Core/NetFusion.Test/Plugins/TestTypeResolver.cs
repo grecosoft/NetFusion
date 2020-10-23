@@ -3,7 +3,6 @@ using NetFusion.Bootstrap.Plugins;
 using System;
 using System.Collections.Generic;
 using NetFusion.Base.Logging;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions.Reflection;
 
 namespace NetFusion.Test.Plugins

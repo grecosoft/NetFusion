@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Builder;
 using NetFusion.Test.Plugins;
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Logging;
@@ -24,6 +25,11 @@ namespace NetFusion.Serilog
             }
             
             Log.Write(eventLevel.Value, message, args);
+        }
+        
+        public void Error(Exception ex, string message, params object[] args)
+        {
+            Log.Error(ex, message, args);
         }
 
         public void Write(LogLevel logLevel, LogMessage message)

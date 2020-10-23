@@ -8,8 +8,6 @@ using NetFusion.Base.Serialization;
 using NetFusion.Base.Validation;
 using NetFusion.Bootstrap;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Bootstrap.Exceptions;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Serialization;
 
@@ -83,12 +81,20 @@ namespace NetFusion.Builder
         // instance that can be used for the lifetime of the host.  
         public void Compose(Action<IServiceCollection> config = null)
         {
-            RegisterRequiredDefaultServices();
+            try
+            {
+                RegisterRequiredDefaultServices();
 
-            _container.Compose(_typeResolver);
+                _container.Compose(_typeResolver);
                 
-            // Allow the host initialization code to specify any last service overrides.
-            config?.Invoke(_serviceCollection);
+                // Allow the host initialization code to specify any last service overrides.
+                config?.Invoke(_serviceCollection);
+            }
+            catch(Exception ex)
+            {
+                NfExtensions.Logger.Error(ex, "Error building Composite Container");
+                throw;
+            }
         }
 
         private void RegisterRequiredDefaultServices()

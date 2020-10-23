@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Base.Logging;
-using NetFusion.Bootstrap.Logging;
 
 namespace NetFusion.Bootstrap.Plugins
 {

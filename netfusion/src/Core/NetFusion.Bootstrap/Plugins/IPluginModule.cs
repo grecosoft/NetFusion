@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using NetFusion.Bootstrap.Catalog;
 
@@ -14,6 +15,10 @@ namespace NetFusion.Bootstrap.Plugins
     /// </summary>
     public interface IPluginModule 
     {
+        public string Name { get; }
+        
+        public PropertyInfo[] DependentServiceModules { get; set; }
+        
         /// <summary>
         /// Contains plug-in information that can be used by the module during bootstrapping.
         /// </summary>

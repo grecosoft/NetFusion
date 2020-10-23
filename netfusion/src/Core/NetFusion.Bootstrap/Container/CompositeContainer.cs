@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Exceptions;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
@@ -29,10 +28,8 @@ namespace NetFusion.Bootstrap.Container
 
         public bool IsComposed { get; private set; }
 
-        //--------------------------------------------------
-        //--Container Initialization
-        //--------------------------------------------------
-
+        // --------------------------- [Container Initialization] -------------------------------
+  
         public ICompositeAppBuilder AppBuilder => _builder;
         
         // Instantiated by CompositeContainerBuilder.
@@ -44,7 +41,7 @@ namespace NetFusion.Bootstrap.Container
             _builder = new CompositeAppBuilder(services, configuration);
         }
 
-        private Version Version => GetType().Assembly.GetName().Version;
+        private string Version => GetType().Assembly.GetName().Version.ToString();
         
         /// <summary>
         /// Adds a plugin to the composite-container.  If the plugin type is already registered,
@@ -75,7 +72,9 @@ namespace NetFusion.Bootstrap.Container
         {
             return _plugins.Any(p => p.GetType() == typeof(T));
         }
-
+        
+        // --------------------------- [Configurations] -------------------------------
+        
         // Returns a container level configuration used to configure the runtime behavior
         // of the built container.
         public T GetContainerConfig<T>() where T : IContainerConfig
@@ -101,15 +100,10 @@ namespace NetFusion.Bootstrap.Container
             return (T) pluginConfig;
         }
         
-        
-        //--------------------------------------------------
-        //--Container Composition
-        //--------------------------------------------------
+        // --------------------------- [Container Composition] -------------------------------
         
         // Called by CompositeContainerBuilder to build an instance of CompositeApp
-        // from the list of registered plugins.  Once the plugin modules have been
-        // created and composed, a reference to IServiceCollection is passed so all
-        // modules can register their service implementations.
+        // from the list of registered plugins.  
         public void Compose(ITypeResolver typeResolver)
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
@@ -118,25 +112,16 @@ namespace NetFusion.Bootstrap.Container
             {
                 if (IsComposed)
                 {
-                    throw new ContainerException("Container has already been composed.");
+                    throw new ContainerException("Container already composed");
                 }
 
-                NfExtensions.Logger.Add(LogLevel.Information, "NetFusion {Version}", Version.ToString());
-
-                LogMessage message = LogMessage.For("This is a test {Value1}").WithProperties(new[]
-                {
-                    new LogProperty { Name = "Value1", Value = 5000 },
-                    new LogProperty { Name = "Value2", Value = new { a = 100, b = "audi"}}, 
-                });
+                NfExtensions.Logger.Add(LogLevel.Information, "NetFusion {Version}", Version);
                 
-                NfExtensions.Logger.Write(LogLevel.Information, message);
-                
-           
                 // Delegate to the builder:
                 _builder.ComposeModules(typeResolver, _plugins);
                 _builder.RegisterServices(_serviceCollection);
-                
-                NfExtensions.Logger.Add(LogLevel.Debug, "Bootstrapping Completed");
+
+                LogComposedPlugins();
 
                 IsComposed = true;
             }
@@ -151,8 +136,65 @@ namespace NetFusion.Bootstrap.Container
                     "Unexpected container error.  See Inner Exception.", ex));
             }
         }
+        
+        // --------------------------- [Logging] -------------------------------
 
-        private Exception LogException(ContainerException ex)
+        // Creates a log message for each plug-in.  Then adds details pertaining
+        // to the plug-in as log properties.
+        private void LogComposedPlugins()
+        {
+            foreach (LogMessage pluginLog in _plugins.Select(CreatePluginLog))
+            {
+                NfExtensions.Logger.Write(LogLevel.Information, pluginLog);
+            }
+        }
+
+        private static LogMessage CreatePluginLog(IPlugin plugin)
+        {
+            var logMessage = LogMessage.For("{PluginType} {Name} Composed", plugin.PluginType, plugin.Name);
+            LogPluginMetadata(logMessage, plugin);
+            LogPluginModules(logMessage, plugin);
+
+            return logMessage;
+        }
+
+        public static void LogPluginMetadata(LogMessage logMessage, IPlugin plugin)
+        {
+            logMessage.WithProperties(
+                new LogProperty { Name = "PluginId", Value = plugin.PluginId },
+                new LogProperty { Name = "Assembly", Value = plugin.AssemblyName },
+                new LogProperty { Name = "Version", Value = plugin.AssemblyVersion },
+                new LogProperty { Name = "Description", Value = plugin.Description },
+                new LogProperty { Name = "SourceUrl", Value = plugin.SourceUrl }
+            );
+        }
+
+        // Adds to the plug-in log as a child log property containing the log for each
+        // module where the name of the property is the name of the module's type.
+        public static void LogPluginModules(LogMessage logMessage, IPlugin plugin)
+        {
+            var moduleProps = plugin.Modules.Select(m =>
+            {
+                var values = new Dictionary<string, object>();
+                m.Log(values);
+                LogDependentModules(values, m);
+                return new LogProperty { Name = m.Name, Value = values, DestructureObjects = true};
+            });
+
+            logMessage.WithProperties(moduleProps.ToArray());
+        }
+
+        private static void LogDependentModules(IDictionary<string, object> values, IPluginModule module)
+        {
+            var dependencies = module.DependentServiceModules.Select(dms => new {
+                ModuleProperty = dms.Name,
+                ReferencedModule = dms.PropertyType.FullName
+            });
+
+            values["DependentModules"] = dependencies.ToArray();
+        }
+
+        private static Exception LogException(ContainerException ex)
         {
             if (ex.Details != null)
             {

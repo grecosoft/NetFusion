@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using Serilog.Formatting.Compact;
 
 namespace Service.WebApi
 {
@@ -22,9 +23,6 @@ namespace Service.WebApi
             var compositeApp = webHost.Services.GetService<ICompositeApp>();
             var lifetime = webHost.Services.GetService<IHostApplicationLifetime>();
             
-            var logger = webHost.Services.GetService<ILogger<Program>>();
-            logger.LogError("test log {value}", 555, 444);
-
             lifetime.ApplicationStopping.Register(() =>
             {
                 compositeApp.Stop();

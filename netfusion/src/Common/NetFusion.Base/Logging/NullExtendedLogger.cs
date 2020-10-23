@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Extensions.Logging;
 
 namespace NetFusion.Base.Logging
@@ -14,6 +15,11 @@ namespace NetFusion.Base.Logging
         public void Write(LogLevel logLevel, LogMessage message)
         {
 
+        }
+
+        public void Error(Exception ex, string message, params object[] args)
+        {
+          
         }
     }
 }

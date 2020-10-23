@@ -64,30 +64,19 @@ namespace NetFusion.Bootstrap.Container
         {
             if (IsStarted)
             {
-                throw LogException(new ContainerException(
-                    "The Composite-Application has already been started."));
+                throw LogException(new ContainerException("The Composite-Application has already been started."));
             }
 
             LogCoreServices();
             
             try
             {
-                _logger.LogInformation("Composite-Application Starting.");
-               
                 // Create a service scope in which each plugin can be started:
                 using (_logger.LogTraceDuration("Starting Modules"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {                    
                     await StartModules(scope.ServiceProvider);
                 }
-               
-                // If Trace logging is enabled, dump the detailed composite log:
-                if (_logger.IsEnabled(LogLevel.Trace))
-                {
-                    _logger.LogTraceDetails("Composite-Log", Log);
-                }
-                
-                _logger.LogInformation("CompositeApplication Started");
             }
             catch (ContainerException ex)
             {
@@ -115,8 +104,9 @@ namespace NetFusion.Bootstrap.Container
 
         private void LogCoreServices()
         {
-            var coreServiceLog = new CoreServicesLog(_logger, _serviceProvider);
-            coreServiceLog.Log();
+            // TODO:
+            // var coreServiceLog = new CoreServicesLog(_logger, _serviceProvider);
+            // coreServiceLog.Log();
         }
         
         private async Task StartModules(IServiceProvider services)
@@ -208,8 +198,6 @@ namespace NetFusion.Bootstrap.Container
                 {
                     await StopPluginModulesAsync(scope.ServiceProvider);
                 }
-                
-                _logger.LogInformation("Composite Application Stopped.");
             }
             catch (ContainerException ex)
             {

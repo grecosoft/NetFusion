@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
 using NetFusion.Base.Validation;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Serialization;
 
 // ReSharper disable MethodHasAsyncOverload

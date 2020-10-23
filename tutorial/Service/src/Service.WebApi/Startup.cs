@@ -5,9 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using Microsoft.Extensions.Hosting;
 using NetFusion.Messaging.Plugin;
-using NetFusion.MongoDB.Plugin;    
-using NetFusion.RabbitMQ.Plugin;
-using NetFusion.Redis.Plugin;
 using NetFusion.Rest.Server.Plugin;
 using NetFusion.Settings.Plugin;
 using Service.App.Plugin;
@@ -16,6 +13,7 @@ using Service.Infra.Plugin;
 using Service.WebApi.Plugin;
 using NetFusion.Builder;
 using NetFusion.Messaging.Logging;
+using NetFusion.Redis.Plugin;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Docs.Plugin;
 using NetFusion.Serilog;
@@ -50,7 +48,7 @@ namespace Service.WebApi
                 // Add technology specific plugins:
               //  .AddMongoDb()
               //  .AddRabbitMq()
-              //  .AddRedis()
+                .AddRedis()
                 //.AddAmqp()
                 .AddRest()
                 .AddRestDocs()

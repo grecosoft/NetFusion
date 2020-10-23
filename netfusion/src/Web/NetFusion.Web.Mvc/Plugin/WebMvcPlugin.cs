@@ -8,7 +8,7 @@ namespace NetFusion.Web.Mvc.Plugin
     {
         public override string PluginId => "3C757DE1-48E1-452D-959A-01C8961B43D8";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
-        public override string Name => "NetFusion: Web-MVC Plugin";
+        public override string Name => "NetFusion: Web-MVC";
         
         public WebMvcPlugin()
         {
