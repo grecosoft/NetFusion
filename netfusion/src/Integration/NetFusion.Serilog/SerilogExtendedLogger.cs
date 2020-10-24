@@ -16,7 +16,7 @@ namespace NetFusion.Serilog
     /// </summary>
     public class SerilogExtendedLogger : IExtendedLogger
     {
-        public void Add(LogLevel logLevel, string message, params object[] args)
+        public void Write(LogLevel logLevel, string message, params object[] args)
         {
             var eventLevel = ToSerilogLevel(logLevel);
             if (eventLevel == null)
@@ -26,10 +26,18 @@ namespace NetFusion.Serilog
             
             Log.Write(eventLevel.Value, message, args);
         }
-        
+
         public void Error(Exception ex, string message, params object[] args)
         {
             Log.Error(ex, message, args);
+        }
+
+        public void Error(Exception ex, string message, IDictionary<string, object> details, params object[] args)
+        {
+            using (LogContext.Push(new PropertyEnricher("Details", details, true)))
+            {
+                Log.Error(ex, message, args);
+            }
         }
 
         public void Write(LogLevel logLevel, LogMessage message)

@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 
 namespace NetFusion.Bootstrap.Container
@@ -82,10 +81,7 @@ namespace NetFusion.Bootstrap.Container
             return _builder.GetContainerConfig<T>();
         }
         
-        // Finds a configuration belonging to one of the registered plugins.  When a plugin
-        // is registered with the container, it can extend the behavior of another plugin by
-        // requesting a configuration from the other plugin and setting information used to
-        // extended the base implementation.
+        // Finds a configuration belonging to one of the registered plugins.
         public T GetPluginConfig<T>() where T : IPluginConfig
         {
             var pluginConfig = _plugins.SelectMany(p => p.Configs)
@@ -115,7 +111,7 @@ namespace NetFusion.Bootstrap.Container
                     throw new ContainerException("Container already composed");
                 }
 
-                NfExtensions.Logger.Add(LogLevel.Information, "NetFusion {Version}", Version);
+                NfExtensions.Logger.Write(LogLevel.Information, "NetFusion {Version} Bootstrapping", Version);
                 
                 // Delegate to the builder:
                 _builder.ComposeModules(typeResolver, _plugins);
@@ -127,19 +123,19 @@ namespace NetFusion.Bootstrap.Container
             }
             catch (ContainerException ex)
             {
-                LogException(ex);
+                NfExtensions.Logger.Error(ex, "Bootstrap Exception", ex.Details);
                 throw;
             }
             catch (Exception ex)
             {
-                throw LogException(new ContainerException(
-                    "Unexpected container error.  See Inner Exception.", ex));
+                NfExtensions.Logger.Error(ex, "Bootstrap Exception");
+                throw new ContainerException("Unexpected container error.  See Inner Exception.", ex);
             }
         }
         
         // --------------------------- [Logging] -------------------------------
 
-        // Creates a log message for each plug-in.  Then adds details pertaining
+        // Creates a log message for each plug-in and adds details pertaining
         // to the plug-in as log properties.  
         private void LogComposedPlugins()
         {
@@ -165,6 +161,7 @@ namespace NetFusion.Bootstrap.Container
                 new LogProperty { Name = "Assembly", Value = plugin.AssemblyName },
                 new LogProperty { Name = "Version", Value = plugin.AssemblyVersion },
                 new LogProperty { Name = "Description", Value = plugin.Description },
+                new LogProperty { Name = "DocUrl", Value = plugin.DocUrl },
                 new LogProperty { Name = "SourceUrl", Value = plugin.SourceUrl }
             );
         }
@@ -210,19 +207,6 @@ namespace NetFusion.Bootstrap.Container
             });
 
             values["DiscoveredProperties"] = discoveredProps.ToArray();
-        }
-
-        private static Exception LogException(ContainerException ex)
-        {
-            if (ex.Details != null)
-            {
-                NfExtensions.Logger.Add(LogLevel.Error, 
-                    $"Bootstrap Exception: {ex}; Details: {ex.Details.ToIndentedJson()}");
-                return ex;
-            }
-            
-            NfExtensions.Logger.Add(LogLevel.Error, $"Bootstrap Exception: {ex}");
-            return ex;
         }
     }
 }

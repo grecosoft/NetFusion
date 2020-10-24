@@ -65,6 +65,7 @@ namespace NetFusion.Bootstrap.Container
             
             // Allow each plug-in module to compose itself from concrete types, defined by
             // other plugins, based on abstract types defined by the plugin being composed.
+            // This of this as a simplified implementation of Microsoft's MEF.
             ComposeCorePlugins(typeResolver);
             ComposeApplicationPlugins(typeResolver);
             
@@ -82,8 +83,7 @@ namespace NetFusion.Bootstrap.Container
             var config = _containerConfigs.FirstOrDefault(c => c.GetType() == typeof(T));
             if (config == null)
             {
-                throw new ContainerException(
-                    $"Container configuration of type: {typeof(T)} is not registered.");
+                throw new ContainerException($"Container configuration of type: {typeof(T)} is not registered.");
             }
 
             return (T)config;
@@ -111,8 +111,8 @@ namespace NetFusion.Bootstrap.Container
         // --------------------------- [Module Dependencies] -------------------------------
         
         // A plugin module can reference another module by having a property deriving from IPluginModuleService
-        // Finds all IPluginModuleService derived properties of the referencing module and set them corresponding
-        // referenced module instance.
+        // Finds all IPluginModuleService derived properties of the referencing module and sets them  to the
+        // corresponding referenced module instance.
         private void ComposeModuleDependencies()
         {
             foreach (IPluginModule module in AllModules)
@@ -184,10 +184,10 @@ namespace NetFusion.Bootstrap.Container
         }
         
         /// <summary>
-        /// Returns types associated with a specific category of plug-in.
+        /// Returns types associated with a specific category of plugin.
         /// </summary>
-        /// <param name="pluginTypes">The category of plug-ins to limit the return types.</param>
-        /// <returns>List of limited plug in types or all plug-in types if no category is specified.</returns>
+        /// <param name="pluginTypes">The category of plugins to limit the return types.</param>
+        /// <returns>List of limited plugin types or all plugin types if no category is specified.</returns>
         public IEnumerable<Type> GetPluginTypes(params PluginTypes[] pluginTypes)
         {
             if (pluginTypes == null) throw new ArgumentNullException(nameof(pluginTypes),
@@ -297,9 +297,7 @@ namespace NetFusion.Bootstrap.Container
                 module.ScanPlugins(typeCatalog);
             }
         }
-
-        // Check each plugin module for implemented IPluginModuleService derived interfaces.
-        // the plugin module is then registered as implementing these interfaces.
+        
         private void RegisterPluginServices(IServiceCollection services)
         {
             RegisterPluginServices(services, CorePlugins);

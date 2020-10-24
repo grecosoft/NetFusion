@@ -7,11 +7,9 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions;
 
 namespace NetFusion.Bootstrap.Container
 {
-    
     /// <summary>
     /// Resulting Composite-Application built from a set of plugins.  A reference to a singleton instance
     /// of this class can be referenced by injecting ICompositeApp into a dependent service component.
@@ -58,18 +56,18 @@ namespace NetFusion.Bootstrap.Container
         // application is started.
         public async Task StartAsync()
         {
+            const string startExMsg = "Error Starting Composite Application";
+            
             if (IsStarted)
             {
-                throw LogException(new ContainerException("The Composite-Application has already been started."));
+                NfExtensions.Logger.Write(LogLevel.Error, "Composite Application already started");
+                throw new ContainerException("Composite Application already started");
             }
 
-            // TODO:
-            //LogCoreServices();
-            
             try
             {
                 // Create a service scope in which each plugin can be started:
-                using (_logger.LogTraceDuration("Starting Modules"))
+                using (_logger.LogInformationDuration("Starting Modules"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {                    
                     await StartModules(scope.ServiceProvider);
@@ -77,33 +75,27 @@ namespace NetFusion.Bootstrap.Container
             }
             catch (ContainerException ex)
             {
-                LogException(ex);
+                NfExtensions.Logger.Error(ex, startExMsg, ex.Details);
                 throw;
             }
             catch (AggregateException ex)
             {
                 var flattenedEx = ex.Flatten();
-                throw LogException(new ContainerException(
-                    "Error starting Composite-Application.  See Inner Exception.", flattenedEx));
+                
+                NfExtensions.Logger.Error(ex, startExMsg, flattenedEx);
+                throw new ContainerException(startExMsg, flattenedEx);
                 
             }
             catch (Exception ex)
             {
-                throw LogException(new ContainerException(
-                    "Error starting Composite-Application. See Inner Exception.", ex));
+                NfExtensions.Logger.Error(ex, startExMsg, ex);
+                throw new ContainerException(startExMsg, ex);
             }
         }
 
         public void Start()
         {
             StartAsync().GetAwaiter().GetResult();
-        }
-
-        private void LogCoreServices()
-        {
-            // TODO:
-            // var coreServiceLog = new CoreServicesLog(_logger, _serviceProvider);
-            // coreServiceLog.Log();
         }
         
         private async Task StartModules(IServiceProvider services)
@@ -150,9 +142,7 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        //-----------------------------------------------------
-        //--Runtime Services
-        //-----------------------------------------------------
+        // --------------------------- [Runtime Services] -------------------------------
         
         public IDictionary<string, object> Log
         {
@@ -172,14 +162,14 @@ namespace NetFusion.Bootstrap.Container
             return _serviceProvider.CreateScope();
         }
 
-        //-----------------------------------------------------
-        //--Stopping Composite Application
-        //-----------------------------------------------------
+        // --------------------------- [Stopping Composite Application] -------------------------------
         
         // Should be called when the application-host is stopped.  Each registered
         // plugin-module is stopped allowing it to reclaim resources.
         public async Task StopAsync()
         {
+            const string stopExMsg = "Error Stopping Composite Application";
+            
             if (! IsStarted)
             {
                 return;
@@ -190,7 +180,7 @@ namespace NetFusion.Bootstrap.Container
                 _logger.LogInformation("Composite Application Stopping.");
                 
                 // Create a service scope in which each plugin can be stopped:
-                using (_logger.LogTraceDuration("Stopping Composite-Application"))
+                using (_logger.LogInformationDuration("Stopping Composite-Application"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
                     await StopPluginModulesAsync(scope.ServiceProvider);
@@ -198,20 +188,20 @@ namespace NetFusion.Bootstrap.Container
             }
             catch (ContainerException ex)
             {
-                LogException(ex);
+                NfExtensions.Logger.Error(ex, stopExMsg, ex.Details);
                 throw;
             }
             catch (AggregateException ex)
             {
                 var flattenedEx = ex.Flatten();
-                throw LogException(new ContainerException(
-                    "Error stopping composite-application.  See Inner Exception.", flattenedEx));
                 
+                NfExtensions.Logger.Error(flattenedEx, stopExMsg);
+                throw new ContainerException(stopExMsg, flattenedEx);
             }
             catch (Exception ex)
             {
-                throw LogException(new ContainerException(
-                    "Error stopping composite-application.  See Inner Exception.", ex));
+                NfExtensions.Logger.Error(ex, stopExMsg, ex);
+                throw new ContainerException(stopExMsg, ex);
             }
         }
         
@@ -242,26 +232,12 @@ namespace NetFusion.Bootstrap.Container
                 await module.StopModuleAsync(services);
             }
         }
-        
-        private Exception LogException(ContainerException ex)
-        {
-            if (ex.Details != null)
-            {
-                NfExtensions.Logger.Add(LogLevel.Error, 
-                    $"Composite Application Exception: {ex}; Details: {ex.Details.ToIndentedJson()}");
-                return ex;
-            }
-            
-            NfExtensions.Logger.Add(LogLevel.Error, $"Composite Application Exception: {ex}");
-            return ex;
-        }
 
         private void ThrowIfStopped()
         {
             if (! IsStarted)
             {
-                throw new ContainerException(
-                    "The Composite Application has been stopped and can no longer be accessed.");
+                throw new ContainerException("Stopped Composite Application can no longer be accessed");
             }
         }
     }

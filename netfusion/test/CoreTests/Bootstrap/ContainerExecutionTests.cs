@@ -26,7 +26,7 @@ namespace CoreTests.Bootstrap
                     })
                     .Assert.Exception<ContainerException>(ex =>
                     {
-                        ex.Message.Should().Contain("The Composite-Application has already been started.");
+                        ex.Message.Should().Contain("Composite Application already started");
                     });
             });
         }
@@ -116,7 +116,7 @@ namespace CoreTests.Bootstrap
                     .Assert.Exception<ContainerException>(ex =>
                     {
                         ex.Message.Should().Be(
-                            "The Composite Application has been stopped and can no longer be accessed.");
+                            "Stopped Composite Application can no longer be accessed");
                     });
             });
         }

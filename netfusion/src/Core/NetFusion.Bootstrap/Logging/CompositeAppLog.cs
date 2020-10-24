@@ -89,6 +89,7 @@ namespace NetFusion.Bootstrap.Logging
                 });
         }
 
+        // TODO:  make this public so it can be called for the logging...
         private void LogPluginRegistrations(IPlugin plugin, IDictionary<string, object> log)
         {
             var implementationTypes = _services.Select(s => new {

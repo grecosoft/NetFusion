@@ -4,7 +4,6 @@ using NetFusion.Bootstrap.Container;
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Base.Logging;
 
 namespace NetFusion.Bootstrap.Plugins
 {
@@ -69,33 +68,13 @@ namespace NetFusion.Bootstrap.Plugins
                 if (_loggerFactory == null)
                 {
                     throw new InvalidOperationException(
-                        "LoggerFactory can't be accessed until service-provider created.  Use ExtendedLogger.");
+                        $"LoggerFactory not available until service-provider created. Use {nameof(NfExtensions.Logger)}");
                 }
 
                 return _loggerFactory;
             }
         }
 
-        /// <summary>
-        /// Logger that can be used to record logs during the bootstrap process
-        /// before the service-provider has been created.
-        /// </summary>
-        /// <exception cref="InvalidOperationException"></exception>
-        public IExtendedLogger ExtendedLogger
-        {
-            get
-            {
-                if (_logger != null)
-                {
-                    throw new InvalidOperationException(
-                        "ExtendedLogger should not be used after the service-provider has been created." + 
-                        "Use Logger instead." );
-                }
-
-                return NfExtensions.Logger;
-            }
-        }
-        
         /// <summary>
         /// Logger with the name of the plug-in used to identify the log messages.
         /// Can only be used after the service-provider has been created.
@@ -107,7 +86,7 @@ namespace NetFusion.Bootstrap.Plugins
                 if (_logger == null)
                 {
                     throw new InvalidOperationException(
-                        "Logger can't be accessed until service-provider created.  Use ExtendedLogger.");
+                        "Logger can't be accessed until service-provider created. Use {nameof(NfExtensions.Logger)}");
                 }
 
                 return _logger;

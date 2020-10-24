@@ -22,7 +22,7 @@ namespace NetFusion.Builder
     {
         private readonly IServiceCollection _serviceCollection;
         private readonly ITypeResolver _typeResolver;
-        
+
         private readonly CompositeContainer _container;
         
         public CompositeContainerBuilder(IServiceCollection serviceCollection,
@@ -96,20 +96,15 @@ namespace NetFusion.Builder
                 throw;
             }
         }
-
+        
         private void RegisterRequiredDefaultServices()
         {
-            RegisterDefaultService(typeof(ILoggerFactory), typeof(LoggerFactory));  
-            
-            // These services can be overridden by the host.
-            RegisterDefaultService(typeof(IValidationService), typeof(ValidationService));
-            RegisterDefaultService(typeof(ISerializationManager), typeof(SerializationManager));
-            RegisterDefaultService(typeof(IEntityScriptingService), typeof(NullEntityScriptingService));
-        }
-        
-        private void RegisterDefaultService(Type serviceType, Type implementationType)
-        {
-            _serviceCollection.AddSingleton(serviceType, implementationType);
+            _serviceCollection.AddSingleton<ILoggerFactory, LoggerFactory>();
+
+            // These services can be overridden by the host:
+            _serviceCollection.AddSingleton<IValidationService, ValidationService>();
+            _serviceCollection.AddSingleton<ISerializationManager, SerializationManager>();
+            _serviceCollection.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();
         }
     }
 }

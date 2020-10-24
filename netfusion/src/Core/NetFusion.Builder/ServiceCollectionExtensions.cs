@@ -16,13 +16,14 @@ namespace NetFusion.Builder
         /// an application from a set of plugins.</summary>
         /// <param name="services">The base service collection provided by the host.</param>
         /// <param name="configuration">The application's configuration.</param>
+        /// <param name="extendedLogger">Logger specified by the host providing extended logging
+        /// to Microsoft's ILogger.  This logger is also used during the bootstrap process before
+        /// Microsoft's ILogger is available via dependency injection.</param>
         /// <returns>Builder used to create composite-container instance.</returns>
         public static ICompositeContainerBuilder CompositeContainer(this IServiceCollection services,
             IConfiguration configuration, IExtendedLogger extendedLogger = null)
         {
-            NfExtensions.Logger = extendedLogger ?? NfExtensions.Logger;
-            
-            var resolver = new TypeResolver(extendedLogger);
+            var resolver = new TypeResolver(extendedLogger ?? NfExtensions.Logger);
             return new CompositeContainerBuilder(services, configuration, resolver, extendedLogger);
         }
     }
