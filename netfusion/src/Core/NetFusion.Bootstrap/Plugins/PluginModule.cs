@@ -15,16 +15,10 @@ namespace NetFusion.Bootstrap.Plugins
     /// </summary>
     public abstract class PluginModule : IPluginModule
     {
-        /// <summary>
-        /// The type name of the module's class.
-        /// </summary>
-        public string Name => GetType().Name;
-        
-        /// <summary>
-        /// The properties corresponding to references to other service modules automatically
-        /// set when a plugin module is bootstrapped.
-        /// </summary>
-        public PropertyInfo[] DependentServiceModules { get; set; }
+        // The following properties are set to record information that can be later logged.
+        string IPluginModule.Name => GetType().Name;
+        PropertyInfo[] IPluginModule.DependentServiceModules { get; set; }
+        IDictionary<PropertyInfo, Tuple<Type, Type[]>> IPluginModule.KnownTypeProperties { get; set; }
         
         /// <summary>
         /// Contains plug-in context information that can be used by the module during

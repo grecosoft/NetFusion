@@ -44,7 +44,7 @@ namespace NetFusion.Base.Logging
         public void Dispose()
         {
             _stopWatch.Stop();
-            _logMessage("End Process: {ProcessName}, {ElapsedMs}", new object[] { _processName, _stopWatch.ElapsedMilliseconds });
+            _logMessage("End Process: {ProcessName}, {ElapsedMs} ms", new object[] { _processName, _stopWatch.ElapsedMilliseconds });
         }
     }
 }

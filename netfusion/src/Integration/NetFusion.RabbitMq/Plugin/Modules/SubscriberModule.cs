@@ -31,7 +31,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         private IMessageLogger _messageLogger;
 
         // Message handlers subscribed to queues:
-        private MessageQueueSubscriber[] _subscribers;
+        private MessageQueueSubscriber[] _subscribers = Array.Empty<MessageQueueSubscriber>();
         
         //------------------------------------------------------
         //--Plugin Execution

@@ -140,7 +140,7 @@ namespace NetFusion.Bootstrap.Container
         // --------------------------- [Logging] -------------------------------
 
         // Creates a log message for each plug-in.  Then adds details pertaining
-        // to the plug-in as log properties.
+        // to the plug-in as log properties.  
         private void LogComposedPlugins()
         {
             foreach (LogMessage pluginLog in _plugins.Select(CreatePluginLog))
@@ -169,19 +169,25 @@ namespace NetFusion.Bootstrap.Container
             );
         }
 
-        // Adds to the plug-in log as a child log property containing the log for each
-        // module where the name of the property is the name of the module's type.
+        // Adds a log property named Modules containing a log for each plug-in module.
         public static void LogPluginModules(LogMessage logMessage, IPlugin plugin)
         {
-            var moduleProps = plugin.Modules.Select(m =>
+            var moduleLogs = plugin.Modules.Select(m =>
             {
-                var values = new Dictionary<string, object>();
-                m.Log(values);
-                LogDependentModules(values, m);
-                return new LogProperty { Name = m.Name, Value = values, DestructureObjects = true};
-            });
+                var moduleLog = new Dictionary<string, object>();
+                m.Log(moduleLog);
+                
+                LogDependentModules(moduleLog, m);
+                LogKnownTypeProperties(moduleLog, m);
+                
+                return new { m.Name, moduleLog };
+            }).ToDictionary(i => i.Name);
 
-            logMessage.WithProperties(moduleProps.ToArray());
+            logMessage.WithProperties(new LogProperty {
+                Name = "Modules", 
+                Value = moduleLogs, 
+                DestructureObjects = true
+            });
         }
 
         private static void LogDependentModules(IDictionary<string, object> values, IPluginModule module)
@@ -192,6 +198,18 @@ namespace NetFusion.Bootstrap.Container
             });
 
             values["DependentModules"] = dependencies.ToArray();
+        }
+
+        private static void LogKnownTypeProperties(IDictionary<string, object> values, IPluginModule module)
+        {
+            var discoveredProps = module.KnownTypeProperties.Select(kt => new
+            {
+                PropertyName = kt.Key.Name,
+                KnownType = kt.Value.Item1,
+                DiscoveredInstances = kt.Value.Item2.Select(t => t.FullName)
+            });
+
+            values["DiscoveredProperties"] = discoveredProps.ToArray();
         }
 
         private static Exception LogException(ContainerException ex)

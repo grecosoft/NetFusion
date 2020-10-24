@@ -15,10 +15,24 @@ namespace NetFusion.Bootstrap.Plugins
     /// </summary>
     public interface IPluginModule 
     {
-        public string Name { get; }
+        /// <summary>
+        /// The type name of the module's class.
+        /// </summary>
+        string Name { get; }
         
+        /// <summary>
+        /// The properties corresponding to references to other service modules automatically
+        /// set when a plugin module is bootstrapped.
+        /// </summary>
         public PropertyInfo[] DependentServiceModules { get; set; }
         
+        /// <summary>
+        /// These are all the properties defined as an enumeration of IKnownPlugin.  These
+        /// properties are automatically set to a collection of class instances implementing
+        /// the derived IKnownPlugin interface.
+        /// </summary>
+        public IDictionary<PropertyInfo, Tuple<Type, Type[]>> KnownTypeProperties { get; set; }
+
         /// <summary>
         /// Contains plug-in information that can be used by the module during bootstrapping.
         /// </summary>

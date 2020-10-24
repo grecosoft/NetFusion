@@ -50,16 +50,12 @@ namespace NetFusion.Bootstrap.Container
             HostPlugin = new PluginSummary(builder.HostPlugin);
         }
 
-  
-        //-----------------------------------------------------
-        //--Starting Composite Application
-        //-----------------------------------------------------
+        // --------------------------- [Starting Composite Application] -----------------------------------
         
-        // At this point, the composite-application has been created from all the 
-        // registered plugins and all modules have been initialized and services
-        // registered.  This is the last call allowing each plugin module to
-        // execute code within the created dependency-injection container before
-        // the host application is started.
+        // At this point, the composite-application has been created from all the registered plugins and
+        // all modules have been initialized and services registered.  This is the last call allowing each
+        // plugin module to execute code within the created dependency-injection container before the host
+        // application is started.
         public async Task StartAsync()
         {
             if (IsStarted)
@@ -67,7 +63,8 @@ namespace NetFusion.Bootstrap.Container
                 throw LogException(new ContainerException("The Composite-Application has already been started."));
             }
 
-            LogCoreServices();
+            // TODO:
+            //LogCoreServices();
             
             try
             {
@@ -127,20 +124,20 @@ namespace NetFusion.Bootstrap.Container
             var hostStartTask = StartPluginModules(services, _builder.HostPlugin);
 
             await Task.WhenAll(coreStartTask, appStartTask, hostStartTask);
+            
+            _logger.LogInformation("All Modules Started");
 
             // Last phase to allow any modules to execute any processing that
             // might be dependent on another module being started.
             await RunPluginModules(services);
+            
+            _logger.LogInformation("All Modules Ran");
         }
 
-        private async Task StartPluginModules(IServiceProvider services, params IPlugin[] plugins)
+        private static async Task StartPluginModules(IServiceProvider services, params IPlugin[] plugins)
         {
             foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
             {
-                _logger.LogDebug("Starting Module: {moduleType} for Plugin: {pluginName}", 
-                    module.GetType().Name, 
-                    module.Context.Plugin.Name);
-                
                 await module.StartModuleAsync(services);
             }
         }
