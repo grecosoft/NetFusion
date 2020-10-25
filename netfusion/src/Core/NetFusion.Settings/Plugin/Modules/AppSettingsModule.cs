@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NetFusion.Bootstrap;
+using NetFusion.Base;
 using NetFusion.Bootstrap.Catalog;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Reflection;
@@ -36,7 +36,7 @@ namespace NetFusion.Settings.Plugin.Modules
 
                 if (string.IsNullOrWhiteSpace(sectionPath))
                 {
-                    NfExtensions.Logger.Write(LogLevel.Warning,
+                    NfExtensions.Logger.Write<AppSettingsModule>(LogLevel.Warning,
                         $"The section path for setting type: {appSettingType.AssemblyQualifiedName} could " + 
                         $"not be determined. Make sure the attribute: {typeof(ConfigurationSectionAttribute)} is specified.");
                     

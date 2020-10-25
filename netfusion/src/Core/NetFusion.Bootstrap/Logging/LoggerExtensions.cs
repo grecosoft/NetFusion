@@ -2,7 +2,6 @@
 using NetFusion.Base.Exceptions;
 using NetFusion.Common.Extensions;
 using System;
-using NetFusion.Base.Logging;
 
 namespace NetFusion.Bootstrap.Logging
 {
@@ -15,21 +14,14 @@ namespace NetFusion.Bootstrap.Logging
     /// </summary>
     public static class LoggerExtensions
     {
-        public static void LogTest(this ILogger logger, string message)
-        {
-            NfExtensions.Logger.Write(LogLevel.Information, message);
-        }
-        
-        
-        
-        
-        
+        //3
         public static void LogTraceDetails(this ILogger logger, string message, object details)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
             logger.LogDetails(LogLevel.Trace, null, message, details);
         }
         
+        //2
         public static void LogErrorDetails(this ILogger logger, Exception exception,
             string message)
         {
@@ -48,31 +40,7 @@ namespace NetFusion.Bootstrap.Logging
         
         
         
-        public static DurationLogger LogInformationDuration(this ILogger logger, string processName)
-        {
-            if (logger == null) throw new ArgumentNullException(nameof(logger), 
-                "Logger cannot be null.");
-
-            if (processName == null) throw new ArgumentException(
-                "Name identifying process being logged cannot be null.", nameof(processName));
-
-            logger.LogTrace("Start Process: {ProcessName}", processName);
-
-            return new DurationLogger(logger, processName, logger.LogInformation);
-        }
-
-        public static DurationLogger LogTraceDuration(this ILogger logger, string processName)
-        {
-            if (logger == null) throw new ArgumentNullException(nameof(logger), 
-                "Logger cannot be null.");
-
-            if (processName == null) throw new ArgumentException(
-                "Name identifying process being logged cannot be null.", nameof(processName));
-
-            logger.LogTrace("Start Process: {ProcessName}", processName);
-
-            return new DurationLogger(logger, processName, logger.LogTrace);
-        }
+        
 
        
 

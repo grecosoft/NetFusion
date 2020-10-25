@@ -17,7 +17,7 @@ namespace NetFusion.Serilog
     /// </summary>
     public class SerilogExtendedLogger : IExtendedLogger
     {
-        public void Write(LogLevel logLevel, string message, params object[] args)
+        public void Write<TContext>(LogLevel logLevel, string message, params object[] args)
         {
             var eventLevel = ToSerilogLevel(logLevel);
             if (eventLevel == null)
@@ -25,28 +25,28 @@ namespace NetFusion.Serilog
                 return;
             }
             
-            Log.Write(eventLevel.Value, message, args);
+            Log.ForContext<TContext>().Write(eventLevel.Value, message, args);
         }
 
-        public void Error(Exception ex, string message, params object[] args)
+        public void Error<TContext>(Exception ex, string message, params object[] args)
         {
-            Log.Error(ex, message, args);
+            Log.ForContext<TContext>().Error(ex, message, args);
         }
 
-        public void Error(Exception ex, string message, IDictionary<string, object> details, params object[] args)
+        public void Error<TContext>(Exception ex, string message, IDictionary<string, object> details, params object[] args)
         {
             using (LogContext.Push(new PropertyEnricher("Details", details, true)))
             {
-                Log.Error(ex, message, args);
+                Log.ForContext<TContext>().Error(ex, message, args);
             }
         }
 
-        public void Write(IEnumerable<LogMessage> messages)
+        public void Write<TContext>(IEnumerable<LogMessage> messages)
         {
-            messages.ForEach(Write);
+            messages.ForEach(Write<TContext>);
         }
         
-        public void Write(LogMessage message)
+        public void Write<TContext>(LogMessage message)
         {
             var eventLevel = ToSerilogLevel(message.LogLevel);
             if (eventLevel == null)
@@ -57,7 +57,7 @@ namespace NetFusion.Serilog
             var enrichers = CreatePropertyEnrichers(message).ToArray();
             using (LogContext.Push(enrichers))
             {
-                Log.Write(eventLevel.Value, message.Message, message.Args);
+                Log.ForContext<TContext>().Write(eventLevel.Value, message.Message, message.Args);
             }
         }
 

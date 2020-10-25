@@ -1,6 +1,6 @@
 using NetFusion.Base.Logging;
 
-namespace NetFusion.Bootstrap
+namespace NetFusion.Base
 {
     /// <summary>
     /// Static class containing references to global class instances

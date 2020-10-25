@@ -11,7 +11,7 @@ using NetFusion.RabbitMQ.Settings;
 using NetFusion.Settings;
 using System.Threading.Tasks;
 using EasyNetQ.Logging;
-using NetFusion.Bootstrap;
+using NetFusion.Base;
 using NetFusion.RabbitMQ.Logging;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
@@ -55,7 +55,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             }
             catch (SettingsValidationException ex)
             {
-                NfExtensions.Logger.Write(LogLevel.Error, ex.Message);
+                NfExtensions.Logger.Write<BusModule>(LogLevel.Error, ex.Message);
                 throw;
             }
         }

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base;
+using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
@@ -60,7 +62,7 @@ namespace NetFusion.Bootstrap.Container
             
             if (IsStarted)
             {
-                NfExtensions.Logger.Write(LogLevel.Error, "Composite Application already started");
+                NfExtensions.Logger.Write<CompositeApp>(LogLevel.Error, "Composite Application already started");
                 throw new ContainerException("Composite Application already started");
             }
 
@@ -70,26 +72,26 @@ namespace NetFusion.Bootstrap.Container
                 using (_logger.LogInformationDuration("Starting Modules"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {                    
-                    NfExtensions.Logger.Write(CoreServicesLogger.Log(scope.ServiceProvider));
+                    NfExtensions.Logger.Write<CompositeApp>(CoreServicesLogger.Log(scope.ServiceProvider));
                     await StartModules(scope.ServiceProvider);
                 }
             }
             catch (ContainerException ex)
             {
-                NfExtensions.Logger.Error(ex, startExMsg, ex.Details);
+                NfExtensions.Logger.Error<CompositeApp>(ex, startExMsg, ex.Details);
                 throw;
             }
             catch (AggregateException ex)
             {
                 var flattenedEx = ex.Flatten();
                 
-                NfExtensions.Logger.Error(ex, startExMsg, flattenedEx);
+                NfExtensions.Logger.Error<CompositeApp>(ex, startExMsg, flattenedEx);
                 throw new ContainerException(startExMsg, flattenedEx);
                 
             }
             catch (Exception ex)
             {
-                NfExtensions.Logger.Error(ex, startExMsg, ex);
+                NfExtensions.Logger.Error<CompositeApp>(ex, startExMsg, ex);
                 throw new ContainerException(startExMsg, ex);
             }
         }
@@ -189,19 +191,19 @@ namespace NetFusion.Bootstrap.Container
             }
             catch (ContainerException ex)
             {
-                NfExtensions.Logger.Error(ex, stopExMsg, ex.Details);
+                NfExtensions.Logger.Error<CompositeApp>(ex, stopExMsg, ex.Details);
                 throw;
             }
             catch (AggregateException ex)
             {
                 var flattenedEx = ex.Flatten();
                 
-                NfExtensions.Logger.Error(flattenedEx, stopExMsg);
+                NfExtensions.Logger.Error<CompositeApp>(flattenedEx, stopExMsg);
                 throw new ContainerException(stopExMsg, flattenedEx);
             }
             catch (Exception ex)
             {
-                NfExtensions.Logger.Error(ex, stopExMsg, ex);
+                NfExtensions.Logger.Error<CompositeApp>(ex, stopExMsg, ex);
                 throw new ContainerException(stopExMsg, ex);
             }
         }

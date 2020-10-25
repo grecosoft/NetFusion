@@ -34,7 +34,7 @@ namespace NetFusion.Bootstrap.Container
         public IPluginModule[] AllModules => AllPlugins.SelectMany(p => p.Modules).ToArray();
         
         // Logging Properties:
-        public CompositeAppLog CompositeLog { get; private set; }
+        public CompositeAppLogger CompositeLog { get; private set; }
         
         public CompositeAppBuilder(IServiceCollection serviceCollection, IConfiguration configuration)
         {
@@ -338,7 +338,7 @@ namespace NetFusion.Bootstrap.Container
         
         private void CreateCompositeLogger(IServiceCollection serviceCollection)
         {
-            CompositeLog = new CompositeAppLog(this, serviceCollection);
+            CompositeLog = new CompositeAppLogger(this, serviceCollection);
         }
     }
 }

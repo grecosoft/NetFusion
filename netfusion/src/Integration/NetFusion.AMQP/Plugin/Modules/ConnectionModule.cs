@@ -7,7 +7,7 @@ using Amqp;
 using Amqp.Framing;
 using Microsoft.Extensions.Logging;
 using NetFusion.AMQP.Settings;
-using NetFusion.Bootstrap;
+using NetFusion.Base;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Settings;
 
@@ -52,7 +52,7 @@ namespace NetFusion.AMQP.Plugin.Modules
             }
             catch (SettingsValidationException ex)
             {
-                NfExtensions.Logger.Write(LogLevel.Error, ex.Message);
+                NfExtensions.Logger.Write<ConnectionModule>(LogLevel.Error, ex.Message);
             }   
         }
         

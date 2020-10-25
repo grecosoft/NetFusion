@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Entity;
+using NetFusion.Base.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions;

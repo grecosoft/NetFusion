@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base;
 using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
@@ -112,7 +113,8 @@ namespace NetFusion.Bootstrap.Container
                     throw new ContainerException("Container already composed");
                 }
 
-                NfExtensions.Logger.Write(LogLevel.Information, "NetFusion {Version} Bootstrapping", Version);
+                NfExtensions.Logger.Write<CompositeContainer>(LogLevel.Information, 
+                    "NetFusion {Version} Bootstrapping", Version);
                 
                 // Delegate to the builder:
                 _builder.ComposeModules(typeResolver, _plugins);
@@ -124,12 +126,12 @@ namespace NetFusion.Bootstrap.Container
             }
             catch (ContainerException ex)
             {
-                NfExtensions.Logger.Error(ex, "Bootstrap Exception", ex.Details);
+                NfExtensions.Logger.Error<CompositeContainer>(ex, "Bootstrap Exception", ex.Details);
                 throw;
             }
             catch (Exception ex)
             {
-                NfExtensions.Logger.Error(ex, "Bootstrap Exception");
+                NfExtensions.Logger.Error<CompositeContainer>(ex, "Bootstrap Exception");
                 throw new ContainerException("Unexpected container error.  See Inner Exception.", ex);
             }
         }
@@ -139,7 +141,7 @@ namespace NetFusion.Bootstrap.Container
             foreach (var plugin in plugins)
             {
                 LogMessage pluginLog = PluginLogger.Log(plugin, services);
-                NfExtensions.Logger.Write(pluginLog);
+                NfExtensions.Logger.Write<CompositeContainer>(pluginLog);
             }
         }
     }

@@ -22,9 +22,9 @@ namespace NetFusion.Base.Logging
             };
         }
 
-        public LogMessage WithProperties(params LogProperty[] details)
+        public LogMessage WithProperties(params LogProperty[] properties)
         {
-            Properties.AddRange(details);
+            Properties.AddRange(properties);
             return this;
         }
     }

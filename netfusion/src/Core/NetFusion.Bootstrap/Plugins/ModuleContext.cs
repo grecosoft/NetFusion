@@ -4,6 +4,7 @@ using NetFusion.Bootstrap.Container;
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Base;
 
 namespace NetFusion.Bootstrap.Plugins
 {

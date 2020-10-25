@@ -9,29 +9,29 @@ namespace NetFusion.Base.Logging
     /// </summary>
     public class NullExtendedLogger : IExtendedLogger
     {
-        public void Write(LogMessage message)
-        {
-
-        }
-
-        public void Write(IEnumerable<LogMessage> messages)
+        public void Write<TContext>(LogMessage message)
         {
            
         }
 
-        public void Write(LogLevel logLevel, string message, params object[] args)
+        public void Write<TContext>(IEnumerable<LogMessage> messages)
         {
            
         }
 
-        public void Error(Exception ex, string message, params object[] args)
+        public void Write<TContext>(LogLevel logLevel, string message, params object[] args)
         {
-          
+            
         }
 
-        public void Error(Exception ex, string message, IDictionary<string, object> details, params object[] args)
+        public void Error<TContext>(Exception ex, string message, params object[] args)
         {
+            
+        }
 
+        public void Error<TContext>(Exception ex, string message, IDictionary<string, object> details = null, params object[] args)
+        {
+         
         }
     }
 }

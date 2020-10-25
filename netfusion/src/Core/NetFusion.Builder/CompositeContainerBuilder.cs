@@ -2,11 +2,11 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base;
 using NetFusion.Base.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
 using NetFusion.Base.Validation;
-using NetFusion.Bootstrap;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Serialization;
@@ -92,7 +92,7 @@ namespace NetFusion.Builder
             }
             catch(Exception ex)
             {
-                NfExtensions.Logger.Error(ex, "Error building Composite Container");
+                NfExtensions.Logger.Error<CompositeContainerBuilder>(ex, "Error building Composite Container");
                 throw;
             }
         }
