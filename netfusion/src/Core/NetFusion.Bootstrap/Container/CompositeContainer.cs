@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Exceptions;
+using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 
@@ -117,7 +118,7 @@ namespace NetFusion.Bootstrap.Container
                 _builder.ComposeModules(typeResolver, _plugins);
                 _builder.RegisterServices(_serviceCollection);
 
-                LogComposedPlugins();
+                LogComposedPlugins(_plugins, _serviceCollection);
 
                 IsComposed = true;
             }
@@ -132,81 +133,14 @@ namespace NetFusion.Bootstrap.Container
                 throw new ContainerException("Unexpected container error.  See Inner Exception.", ex);
             }
         }
-        
-        // --------------------------- [Logging] -------------------------------
 
-        // Creates a log message for each plug-in and adds details pertaining
-        // to the plug-in as log properties.  
-        private void LogComposedPlugins()
+        private static void LogComposedPlugins(IEnumerable<IPlugin> plugins, IServiceCollection services)
         {
-            foreach (LogMessage pluginLog in _plugins.Select(CreatePluginLog))
+            foreach (var plugin in plugins)
             {
+                LogMessage pluginLog = PluginLogger.LogPlugin(plugin, services);
                 NfExtensions.Logger.Write(LogLevel.Information, pluginLog);
             }
-        }
-
-        private static LogMessage CreatePluginLog(IPlugin plugin)
-        {
-            var logMessage = LogMessage.For("{PluginType} {Name} Composed", plugin.PluginType, plugin.Name);
-            LogPluginMetadata(logMessage, plugin);
-            LogPluginModules(logMessage, plugin);
-
-            return logMessage;
-        }
-
-        public static void LogPluginMetadata(LogMessage logMessage, IPlugin plugin)
-        {
-            logMessage.WithProperties(
-                new LogProperty { Name = "PluginId", Value = plugin.PluginId },
-                new LogProperty { Name = "Assembly", Value = plugin.AssemblyName },
-                new LogProperty { Name = "Version", Value = plugin.AssemblyVersion },
-                new LogProperty { Name = "Description", Value = plugin.Description },
-                new LogProperty { Name = "DocUrl", Value = plugin.DocUrl },
-                new LogProperty { Name = "SourceUrl", Value = plugin.SourceUrl }
-            );
-        }
-
-        // Adds a log property named Modules containing a log for each plug-in module.
-        public static void LogPluginModules(LogMessage logMessage, IPlugin plugin)
-        {
-            var moduleLogs = plugin.Modules.Select(m =>
-            {
-                var moduleLog = new Dictionary<string, object>();
-                m.Log(moduleLog);
-                
-                LogDependentModules(moduleLog, m);
-                LogKnownTypeProperties(moduleLog, m);
-                
-                return new { m.Name, moduleLog };
-            }).ToDictionary(i => i.Name);
-
-            logMessage.WithProperties(new LogProperty {
-                Name = "Modules", 
-                Value = moduleLogs, 
-                DestructureObjects = true
-            });
-        }
-
-        private static void LogDependentModules(IDictionary<string, object> values, IPluginModule module)
-        {
-            var dependencies = module.DependentServiceModules.Select(dms => new {
-                ModuleProperty = dms.Name,
-                ReferencedModule = dms.PropertyType.FullName
-            });
-
-            values["DependentModules"] = dependencies.ToArray();
-        }
-
-        private static void LogKnownTypeProperties(IDictionary<string, object> values, IPluginModule module)
-        {
-            var discoveredProps = module.KnownTypeProperties.Select(kt => new
-            {
-                PropertyName = kt.Key.Name,
-                KnownType = kt.Value.Item1,
-                DiscoveredInstances = kt.Value.Item2.Select(t => t.FullName)
-            });
-
-            values["DiscoveredProperties"] = discoveredProps.ToArray();
         }
     }
 }

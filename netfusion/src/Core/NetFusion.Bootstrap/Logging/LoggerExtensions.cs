@@ -6,6 +6,9 @@ using NetFusion.Base.Logging;
 
 namespace NetFusion.Bootstrap.Logging
 {
+    
+    // TODO:  Move NetFusion.Base
+    
     /// <summary>
     /// Additional logging methods extending the ILogger interface that allow passing an object
     /// containing additional details to be logged as JSON.
@@ -26,6 +29,24 @@ namespace NetFusion.Bootstrap.Logging
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
             logger.LogDetails(LogLevel.Trace, null, message, details);
         }
+        
+        public static void LogErrorDetails(this ILogger logger, Exception exception,
+            string message)
+        {
+            if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
+            if (exception == null) throw new ArgumentNullException(nameof(exception), "Exception cannot be null.");
+
+            object details = null;
+            if (exception is NetFusionException netFusionEx)
+            {
+                details = netFusionEx.Details;
+            }
+
+            logger.LogDetails(LogLevel.Error, exception, message, details);
+        }
+        
+        
+        
         
         public static DurationLogger LogInformationDuration(this ILogger logger, string processName)
         {
@@ -53,21 +74,16 @@ namespace NetFusion.Bootstrap.Logging
             return new DurationLogger(logger, processName, logger.LogTrace);
         }
 
-        public static void LogErrorDetails(this ILogger logger, Exception exception,
-            string message)
-        {
-            if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
-            if (exception == null) throw new ArgumentNullException(nameof(exception), "Exception cannot be null.");
+       
 
-            object details = null;
-            if (exception is NetFusionException netFusionEx)
-            {
-                details = netFusionEx.Details;
-            }
-
-            logger.LogDetails(LogLevel.Error, exception, message, details);
-        }
-
+        
+        
+        
+        
+        
+        
+        
+        
         private static void LogDetails(this ILogger logger, LogLevel logLevel,
            Exception exception,
            string message,

@@ -74,7 +74,7 @@ namespace NetFusion.Bootstrap.Logging
             log["PluginDocUrl"] = plugin.DocUrl;
 
             LogPluginModules(plugin, log);
-            LogPluginRegistrations(plugin, log);
+            PluginLogger.LogPluginRegistrations(plugin, _services, log);
         }
 
         private static void LogPluginModules(IPlugin plugin, IDictionary<string, object> log)
@@ -87,28 +87,6 @@ namespace NetFusion.Bootstrap.Logging
                     pm.Log(moduleLog);
                     return moduleLog;
                 });
-        }
-
-        // TODO:  make this public so it can be called for the logging...
-        private void LogPluginRegistrations(IPlugin plugin, IDictionary<string, object> log)
-        {
-            var implementationTypes = _services.Select(s => new {
-                s.ServiceType,
-                ImplementationType = s.ImplementationType ?? s.ImplementationInstance?.GetType(),
-                LifeTime = s.Lifetime.ToString(),
-                IsFactory = s.ImplementationFactory != null
-            });
-
-            // Logs the service implementations defined within the plugin registered
-            // for a given service type.
-            log["ServiceRegistrations"] = implementationTypes
-                .Where(it => !it.IsFactory && plugin.HasType(it.ImplementationType))
-                .Select(rt => new
-                {
-                    ServiceType = rt.ServiceType.FullName,
-                    ImplementationType = rt.ImplementationType.FullName,
-                    rt.LifeTime
-                }).OrderBy(rt => rt.ServiceType).ToArray();
         }
     }
 }
