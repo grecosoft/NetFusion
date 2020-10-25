@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Logging;
+using NetFusion.Common.Extensions.Collections;
 using Serilog;
 using Serilog.Context;
 using Serilog.Core;
@@ -40,9 +41,14 @@ namespace NetFusion.Serilog
             }
         }
 
-        public void Write(LogLevel logLevel, LogMessage message)
+        public void Write(IEnumerable<LogMessage> messages)
         {
-            var eventLevel = ToSerilogLevel(logLevel);
+            messages.ForEach(Write);
+        }
+        
+        public void Write(LogMessage message)
+        {
+            var eventLevel = ToSerilogLevel(message.LogLevel);
             if (eventLevel == null)
             {
                 return;

@@ -70,6 +70,7 @@ namespace NetFusion.Bootstrap.Container
                 using (_logger.LogInformationDuration("Starting Modules"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {                    
+                    NfExtensions.Logger.Write(CoreServicesLogger.Log(scope.ServiceProvider));
                     await StartModules(scope.ServiceProvider);
                 }
             }

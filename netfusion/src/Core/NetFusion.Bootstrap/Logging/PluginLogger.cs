@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Plugins;
 
@@ -17,12 +18,13 @@ namespace NetFusion.Bootstrap.Logging
         /// </summary>
         /// <param name="plugins">List of plugins from which the composite application is composed.</param>
         /// <param name="services">Reference to the dependency-injection service collection.</param>
-        public static LogMessage LogPlugin(IPlugin plugin, IServiceCollection services)
+        public static LogMessage Log(IPlugin plugin, IServiceCollection services)
         {
             if (plugin == null) throw new ArgumentNullException(nameof(plugin));
             if (services == null) throw new ArgumentNullException(nameof(services));
             
-            var logMessage = LogMessage.For("{PluginType} {Name} Composed", plugin.PluginType, plugin.Name);
+            var logMessage = LogMessage.For(LogLevel.Information, "{PluginType} {Name} Composed", 
+                plugin.PluginType, plugin.Name);
                 
             LogPluginMetadata(logMessage, plugin);
             LogPluginModules(logMessage, plugin);

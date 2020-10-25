@@ -138,8 +138,8 @@ namespace NetFusion.Bootstrap.Container
         {
             foreach (var plugin in plugins)
             {
-                LogMessage pluginLog = PluginLogger.LogPlugin(plugin, services);
-                NfExtensions.Logger.Write(LogLevel.Information, pluginLog);
+                LogMessage pluginLog = PluginLogger.Log(plugin, services);
+                NfExtensions.Logger.Write(pluginLog);
             }
         }
     }

@@ -9,7 +9,8 @@ namespace NetFusion.Base.Logging
     /// </summary>
     public interface IExtendedLogger
     {
-        void Write(LogLevel logLevel, LogMessage message);
+        void Write(LogMessage message);
+        void Write(IEnumerable<LogMessage> messages);
         
         void Write(LogLevel logLevel, string message, params object[] args);
 
