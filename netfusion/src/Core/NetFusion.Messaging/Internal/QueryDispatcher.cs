@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Tasks;
@@ -88,7 +89,10 @@ namespace NetFusion.Messaging.Internal
 
         private void LogQueryDispatch(IQuery query, IQueryConsumer consumer)
         {
-            _logger.LogTraceDetails($"Dispatching Query Type: {query.GetType()} to Consumer: {consumer.GetType()}", query);
+            _logger.WriteDetails(LogLevel.Trace, "Dispatching Query {QueryType} to {ConsumerType}", 
+                query, 
+                query.GetType().FullName, 
+                consumer.GetType().FullName);
         }
         
         // Executes a list of asynchronous filters and awaits their completion.  Once completed,

@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Exceptions;
@@ -21,7 +21,7 @@ namespace NetFusion.Messaging.Internal
     /// </summary>
     public class InProcessMessagePublisher : MessagePublisher
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<InProcessMessagePublisher> _logger;
         private readonly IServiceProvider _services;
         private readonly IMessageDispatchModule _messagingModule;
         private readonly IMessageLogger _messageLogger;
@@ -165,15 +165,14 @@ namespace NetFusion.Messaging.Internal
         private void LogMessageDispatchInfo(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
         {
             if (! _logger.IsEnabled(LogLevel.Trace)) return;
-            
-            var dispatcherDetails = GetDispatchLogDetails(dispatchers);
 
-            _logger.LogTraceDetails($"Message Published: {message.GetType()}",
-                new
-                {
-                    Dispatchers = dispatcherDetails,
-                    Message = message
-                });
+            var messageDetails = new
+            {
+                Dispatchers =  GetDispatchLogDetails(dispatchers),
+                Message = message
+            };  
+            
+            _logger.WriteDetails(LogLevel.Trace, "Message {MessageType} Published ", messageDetails, message.GetType());
         }
 
         private static object GetDispatchLogDetails(IEnumerable<MessageDispatchInfo> dispatchers)

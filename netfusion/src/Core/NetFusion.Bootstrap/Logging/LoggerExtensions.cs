@@ -14,7 +14,7 @@ namespace NetFusion.Bootstrap.Logging
     /// </summary>
     public static class LoggerExtensions
     {
-        //3
+        //8
         public static void LogTraceDetails(this ILogger logger, string message, object details)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");

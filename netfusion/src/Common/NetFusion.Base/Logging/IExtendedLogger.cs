@@ -10,10 +10,19 @@ namespace NetFusion.Base.Logging
     public interface IExtendedLogger
     {
         void Write<TContext>(LogMessage message);
+        
         void Write<TContext>(IEnumerable<LogMessage> messages);
         
-        void Write<TContext>(LogLevel logLevel, string message, params object[] args);
-        void Error<TContext>(Exception ex, string message, params object[] args);
-        void Error<TContext>(Exception ex, string message, IDictionary<string, object> details = null, params object[] args);
+        void Write<TContext>(LogLevel logLevel, string message, 
+            params object[] args);
+        
+        void WriteDetails<TContext>(LogLevel logLevel, string message, object details, 
+            params object[] args);
+
+        void ErrorDetails<TContext>(Exception ex, string message, object details, 
+            params object[] args);
+        
+        void Error<TContext>(Exception ex, string message, 
+            params object[] args);
     }
 }

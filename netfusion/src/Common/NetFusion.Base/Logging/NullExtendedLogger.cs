@@ -24,12 +24,17 @@ namespace NetFusion.Base.Logging
             
         }
 
+        public void WriteDetails<TContext>(LogLevel logLevel, string message, object details, params object[] args)
+        {
+            
+        }
+
         public void Error<TContext>(Exception ex, string message, params object[] args)
         {
             
         }
 
-        public void Error<TContext>(Exception ex, string message, IDictionary<string, object> details = null, params object[] args)
+        public void ErrorDetails<TContext>(Exception ex, string message, object details, params object[] args)
         {
          
         }

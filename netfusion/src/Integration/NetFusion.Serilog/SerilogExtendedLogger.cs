@@ -17,15 +17,51 @@ namespace NetFusion.Serilog
     /// </summary>
     public class SerilogExtendedLogger : IExtendedLogger
     {
-        public void Write<TContext>(LogLevel logLevel, string message, params object[] args)
+        public void Write<TContext>(LogMessage message)
         {
-            var eventLevel = ToSerilogLevel(logLevel);
-            if (eventLevel == null)
-            {
-                return;
-            }
+            if (message == null) throw new ArgumentNullException(nameof(message));
             
+            var eventLevel = ToSerilogLevel(message.LogLevel);
+            if (eventLevel == null) return;
+ 
+            var enrichers = CreatePropertyEnrichers(message).ToArray();
+            using (LogContext.Push(enrichers))
+            {
+                Log.ForContext<TContext>().Write(eventLevel.Value, message.Message, message.Args);
+            }
+        }
+        
+        public void Write<TContext>(IEnumerable<LogMessage> messages)
+        {
+            if (messages == null) throw new ArgumentNullException(nameof(messages));
+            
+            messages.ForEach(Write<TContext>);
+        }
+
+        public void Write<TContext>(LogLevel logLevel, string message, 
+            params object[] args)
+        {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            
+            var eventLevel = ToSerilogLevel(logLevel);
+            if (eventLevel == null) return;
+
             Log.ForContext<TContext>().Write(eventLevel.Value, message, args);
+        }
+
+        public void WriteDetails<TContext>(LogLevel logLevel, string message, object details, 
+            params object[] args)
+        {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (details == null) throw new ArgumentNullException(nameof(details));
+            
+            var eventLevel = ToSerilogLevel(logLevel);
+            if (eventLevel == null) return;
+
+            using (LogContext.Push(new PropertyEnricher("Details", details, true)))
+            {
+                Log.ForContext<TContext>().Write(eventLevel.Value, message, args);
+            }
         }
 
         public void Error<TContext>(Exception ex, string message, params object[] args)
@@ -33,7 +69,8 @@ namespace NetFusion.Serilog
             Log.ForContext<TContext>().Error(ex, message, args);
         }
 
-        public void Error<TContext>(Exception ex, string message, IDictionary<string, object> details, params object[] args)
+        public void ErrorDetails<TContext>(Exception ex, string message, object details, 
+            params object[] args)
         {
             using (LogContext.Push(new PropertyEnricher("Details", details, true)))
             {
@@ -41,25 +78,9 @@ namespace NetFusion.Serilog
             }
         }
 
-        public void Write<TContext>(IEnumerable<LogMessage> messages)
-        {
-            messages.ForEach(Write<TContext>);
-        }
         
-        public void Write<TContext>(LogMessage message)
-        {
-            var eventLevel = ToSerilogLevel(message.LogLevel);
-            if (eventLevel == null)
-            {
-                return;
-            }
-
-            var enrichers = CreatePropertyEnrichers(message).ToArray();
-            using (LogContext.Push(enrichers))
-            {
-                Log.ForContext<TContext>().Write(eventLevel.Value, message.Message, message.Args);
-            }
-        }
+        
+        
 
         private static IEnumerable<ILogEventEnricher> CreatePropertyEnrichers(LogMessage message) => 
             message.Properties.Select(p => new PropertyEnricher(p.Name, p.Value, p.DestructureObjects));
