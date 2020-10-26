@@ -102,11 +102,12 @@ namespace NetFusion.Messaging.Internal
             Func<T, IQuery, Task> executeFilter) where T : class, IQueryFilter
         {
             var filtersByType = filters.OfType<T>().ToArray();
-            
-            _logger.LogTraceDetails($"Applying ({typeof(T).Name}) Query Filters",
-                new {
-                    FilterTypes = filtersByType.Select(f => f.GetType().FullName).ToArray()
-                });
+
+            _logger.WriteDetails(LogLevel.Trace, "Applying {FilterType} Query Filters",
+                    new {
+                        FilterTypes = filtersByType.Select(f => f.GetType().FullName).ToArray()
+                    },
+                typeof(T).Name);
 
             TaskListItem<T>[] taskList = null;
 

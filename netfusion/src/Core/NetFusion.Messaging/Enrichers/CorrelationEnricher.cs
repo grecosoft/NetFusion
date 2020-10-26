@@ -19,7 +19,7 @@ namespace NetFusion.Messaging.Enrichers
             message.SetCorrelationId(Guid.NewGuid().ToString());
             
             // All messages published within the same lifetime scope
-            // wll have the same ScopedRequestId.
+            // will have the same ScopedRequestId.
             message.Attributes.SetGuidValue(
                 AttributeExtensions.GetPluginScopedName("ScopedRequestId"),
                 _scopedRequestId, false);

@@ -27,7 +27,7 @@ namespace NetFusion.Messaging.Plugin.Modules
         // Discovered Properties:
         private IEnumerable<IMessageDispatchRule> DispatchRules { get; set; }
 
-        // IMessagingModule:
+        // IMessageDispatchModule:
         public MessageDispatchConfig DispatchConfig { get; private set; }
         public ILookup<Type, MessageDispatchInfo> AllMessageTypeDispatchers { get; private set; } // MessageType => Dispatcher(s)
         public ILookup<Type, MessageDispatchInfo> InProcessDispatchers { get; private set; } //MessageType => Dispatcher(s)

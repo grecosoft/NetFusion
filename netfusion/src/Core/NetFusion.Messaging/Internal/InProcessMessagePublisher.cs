@@ -164,15 +164,15 @@ namespace NetFusion.Messaging.Internal
 
         private void LogMessageDispatchInfo(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
         {
-            if (! _logger.IsEnabled(LogLevel.Trace)) return;
-
             var messageDetails = new
             {
                 Dispatchers =  GetDispatchLogDetails(dispatchers),
                 Message = message
             };  
             
-            _logger.WriteDetails(LogLevel.Trace, "Message {MessageType} Published ", messageDetails, message.GetType());
+            _logger.WriteDetails(LogLevel.Information, "Message {MessageType} Dispatched", 
+                messageDetails,
+                message.GetType());
         }
 
         private static object GetDispatchLogDetails(IEnumerable<MessageDispatchInfo> dispatchers)

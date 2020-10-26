@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging;
@@ -26,7 +27,7 @@ namespace NetFusion.Redis.Publisher
         private readonly IConnectionModule _connModule;
         private readonly IPublisherModule _pubModule;
 
-        private readonly ILogger _logger;
+        private readonly ILogger<RedisPublisher> _logger;
         private readonly ISerializationManager _serialization;
         private readonly IMessageLogger _messageLogger;
         
@@ -107,7 +108,7 @@ namespace NetFusion.Redis.Publisher
         
         private void LogChannelPublish(IDomainEvent domainEvent, string databaseName, string channelName)
         {
-            _logger.LogTraceDetails("Domain Event being published to Redis Channel.", 
+            _logger.WriteDetails(LogLevel.Trace, "Domain Event being published to Redis Channel.", 
                 new
                 {
                     DatabaseConfigName = databaseName,

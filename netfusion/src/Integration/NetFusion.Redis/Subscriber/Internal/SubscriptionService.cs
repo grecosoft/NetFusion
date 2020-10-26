@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Base.Serialization;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging.Types.Contracts;
@@ -15,7 +16,7 @@ namespace NetFusion.Redis.Subscriber.Internal
     /// </summary>
     public class SubscriptionService : ISubscriptionService
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<SubscriptionService> _logger;
         private readonly IConnectionModule _connModule;
         private readonly ISerializationManager _serializationMgr;
         
@@ -78,7 +79,7 @@ namespace NetFusion.Redis.Subscriber.Internal
 
         private void LogReceivedDomainEvent(string database, string channel, IDomainEvent domainEvent)
         {
-            _logger.LogTraceDetails("Subscription delegate being called.", new
+            _logger.WriteDetails(LogLevel.Trace, "Subscription delegate being called.", new
                 {
                     Database = database,
                     Channel = channel,
