@@ -62,7 +62,7 @@ namespace NetFusion.Messaging.Internal
             catch (QueryDispatchException ex)
             {
                 // Log the details of the dispatch exception and rethrow.
-                _logger.LogErrorDetails(ex, "Exception dispatching query.");
+                _logger.Error(ex, "Exception dispatching query.");
                 throw;
             }
             catch (Exception ex)

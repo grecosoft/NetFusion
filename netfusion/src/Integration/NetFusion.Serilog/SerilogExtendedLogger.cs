@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Exceptions;
 using NetFusion.Base.Logging;
 using NetFusion.Common.Extensions.Collections;
 using Serilog;
@@ -78,10 +79,14 @@ namespace NetFusion.Serilog
             }
         }
 
+        public void Error<TContext>(NetFusionException ex, string message, params object[] args)
+        {
+            using (LogContext.Push(new PropertyEnricher("Details", ex.Details, true)))
+            {
+                Log.ForContext<TContext>().Error(ex, message, args);
+            }
+        }
         
-        
-        
-
         private static IEnumerable<ILogEventEnricher> CreatePropertyEnrichers(LogMessage message) => 
             message.Properties.Select(p => new PropertyEnricher(p.Name, p.Value, p.DestructureObjects));
         

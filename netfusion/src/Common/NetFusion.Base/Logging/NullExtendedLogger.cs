@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Exceptions;
 
 namespace NetFusion.Base.Logging
 {
@@ -30,6 +31,11 @@ namespace NetFusion.Base.Logging
         }
 
         public void Error<TContext>(Exception ex, string message, params object[] args)
+        {
+            
+        }
+
+        public void Error<TContext>(NetFusionException ex, string message, params object[] args)
         {
             
         }

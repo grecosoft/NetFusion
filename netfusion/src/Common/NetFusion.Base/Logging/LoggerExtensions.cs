@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Exceptions;
 
 namespace NetFusion.Base.Logging
 {
@@ -26,6 +27,10 @@ namespace NetFusion.Base.Logging
             Exception ex, string message, object details,
             params object[] args) => 
             NfExtensions.Logger.ErrorDetails<TContext>(ex, message, details, args);
+
+        public static void Error<TContext>(this ILogger<TContext> logger,
+            NetFusionException ex, string message,
+            params object[] args) => NfExtensions.Logger.Error<TContext>(ex, message, args);
         
         public static DurationLogger LogInformationDuration(this ILogger logger, string processName)
         {

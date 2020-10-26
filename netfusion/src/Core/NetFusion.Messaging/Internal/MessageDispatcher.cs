@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Enrichers;
@@ -119,7 +119,7 @@ namespace NetFusion.Messaging.Internal
             catch (PublisherException ex)
             {
                 // Log the details of the publish exception and rethrow.
-                _logger.LogErrorDetails(ex, "Exception publishing message.");
+                _logger.Error(ex, "Exception publishing message.");
                 throw;
             }
         }
