@@ -102,6 +102,8 @@ namespace NetFusion.Messaging.Internal
                 throw new PublisherException("Exception dispatching event source.", eventSource, publisherErrors);
             }
         }
+        
+        // ----------------------------- [Publishing] -----------------------------
 
         // Private method to which all other publish methods delegate to asynchronously apply
         // the enrichers and to invoke all registered message publishers.
@@ -127,9 +129,7 @@ namespace NetFusion.Messaging.Internal
         private async Task ApplyMessageEnrichers(IMessage message)
         {
             TaskListItem<IMessageEnricher>[] taskList = null;
-
-            LogConfiguredEnrichers();
-
+            
             try
             {
                 taskList = _messageEnrichers.Invoke(message,
@@ -152,15 +152,6 @@ namespace NetFusion.Messaging.Internal
 
                 throw new PublisherException("Exception when invoking message enrichers.", message, ex);
             }
-        }
-
-        private void LogConfiguredEnrichers()
-        {
-            if (!_logger.IsEnabled(LogLevel.Trace)) return;
-
-            string enricherTypes = string.Join(", ", _messageEnrichers.Select(e => e.GetType().FullName).ToArray());
-            
-            _logger.LogTrace("Enriched By: [{enricherTypes}] ", enricherTypes);
         }
 
         private async Task InvokePublishers(IMessage message, CancellationToken cancellationToken, 

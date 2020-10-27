@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Logging;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Exceptions;
@@ -73,44 +72,36 @@ namespace NetFusion.Messaging.Internal
 
             return query.Result;
         }
+        
+        // ----------------------------- [Query Dispatching] -----------------------------
 
         // Creates an instance of the consumer that will execute the query and calls it between the
         // pre and post filters.
         private async Task InvokeDispatcher(QueryDispatchInfo dispatcher, IQuery query, CancellationToken cancellationToken)
         {
             var consumer = (IQueryConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
-        
-            LogQueryDispatch(query, consumer);
-
+            
             await ApplyFilters<IPreQueryFilter>(query, _queryFilters, (f, q) => f.OnPreExecuteAsync(q));
+            
+            LogQueryDispatch(dispatcher, query);
             await dispatcher.Dispatch(query, consumer, cancellationToken);
+            
             await ApplyFilters<IPostQueryFilter>(query, _queryFilters, (f, q) => f.OnPostExecuteAsync(q));
-        }
-
-        private void LogQueryDispatch(IQuery query, IQueryConsumer consumer)
-        {
-            _logger.WriteDetails(LogLevel.Trace, "Dispatching Query {QueryType} to {ConsumerType}", 
-                query, 
-                query.GetType().FullName, 
-                consumer.GetType().FullName);
+            
+            LogQueryDispatched(dispatcher, query);
         }
         
         // Executes a list of asynchronous filters and awaits their completion.  Once completed,
         // any task error(s) are checked and raised.  The passed list of query filters are filtered
         // by the specified filter type of T (pre/post).
-        private async Task ApplyFilters<T>(IQuery query, IEnumerable<IQueryFilter> filters, 
-            Func<T, IQuery, Task> executeFilter) where T : class, IQueryFilter
+        private async Task ApplyFilters<TFilter>(IQuery query, IEnumerable<IQueryFilter> filters, 
+            Func<TFilter, IQuery, Task> executeFilter) where TFilter : class, IQueryFilter
         {
-            var filtersByType = filters.OfType<T>().ToArray();
+            var filtersByType = filters.OfType<TFilter>().ToArray();
 
-            _logger.WriteDetails(LogLevel.Trace, "Applying {FilterType} Query Filters",
-                    new {
-                        FilterTypes = filtersByType.Select(f => f.GetType().FullName).ToArray()
-                    },
-                typeof(T).Name);
-
-            TaskListItem<T>[] taskList = null;
-
+            LogQueryFilters<TFilter>(filtersByType);
+            
+            TaskListItem<TFilter>[] taskList = null;
             try
             {
                 taskList = filtersByType.Invoke(query, executeFilter);
@@ -120,7 +111,7 @@ namespace NetFusion.Messaging.Internal
             {
                 if (taskList != null)
                 {
-                    var filterErrors = taskList.GetExceptions(ti => new QueryFilterException<T>(ti));
+                    var filterErrors = taskList.GetExceptions(ti => new QueryFilterException<TFilter>(ti));
                     if (filterErrors.Any())
                     {
                         throw new QueryDispatchException("Exception when invoking query filters.", filterErrors);
@@ -129,6 +120,42 @@ namespace NetFusion.Messaging.Internal
 
                 throw new QueryDispatchException("Exception when invoking query filters.", ex);
             }
+        }
+        
+        // ----------------------------- [Logging] -----------------------------
+
+        public void LogQueryDispatch(QueryDispatchInfo dispatcher, IQuery query)
+        {
+            _logger.LogDebug("Dispatching Query {QueryType} to Consumer {ConsumerType} Handler {MethodName}", 
+                query.GetType(), 
+                dispatcher.ConsumerType, 
+                dispatcher.HandlerMethod.Name);
+        }
+        
+        private void LogQueryDispatched(QueryDispatchInfo dispatchInfo, IQuery query)
+        {
+            var log = LogMessage.For(LogLevel.Debug, "Query {QueryType} Dispatched", query.GetType());
+            
+            log.WithProperties(
+                new LogProperty { Name = "Query", Value = query, DestructureObjects = true }, 
+                new LogProperty { Name = "Dispatcher", Value = new {
+                        Consumer = dispatchInfo.ConsumerType, 
+                        Handler = dispatchInfo.HandlerMethod.Name }
+                });
+
+            _logger.Write(log);
+        }
+
+        private void LogQueryFilters<TFilter>(IEnumerable<IQueryFilter> filters) 
+            where TFilter : IQueryFilter
+        {
+            var log = LogMessage.For(LogLevel.Debug, "Applying {FilterType} Query Filters", typeof(TFilter).Name);
+            log.WithProperties(new LogProperty
+            {
+                Name = "FilterTypes", Value = filters.Select(f => f.GetType().FullName).ToArray()
+            });
+            
+            _logger.Write(log);
         }
     }
 }
