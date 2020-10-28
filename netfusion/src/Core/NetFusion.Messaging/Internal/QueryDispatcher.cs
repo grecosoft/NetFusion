@@ -75,8 +75,8 @@ namespace NetFusion.Messaging.Internal
         
         // ----------------------------- [Query Dispatching] -----------------------------
 
-        // Creates an instance of the consumer that will execute the query and calls it between the
-        // pre and post filters.
+        // Creates an instance of the consumer that will execute the query and calls
+        // it between the pre and post filters.
         private async Task InvokeDispatcher(QueryDispatchInfo dispatcher, IQuery query, CancellationToken cancellationToken)
         {
             var consumer = (IQueryConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
@@ -93,7 +93,7 @@ namespace NetFusion.Messaging.Internal
         
         // Executes a list of asynchronous filters and awaits their completion.  Once completed,
         // any task error(s) are checked and raised.  The passed list of query filters are filtered
-        // by the specified filter type of T (pre/post).
+        // by the specified filter type of TFilter (pre/post).
         private async Task ApplyFilters<TFilter>(IQuery query, IEnumerable<IQueryFilter> filters, 
             Func<TFilter, IQuery, Task> executeFilter) where TFilter : class, IQueryFilter
         {

@@ -45,10 +45,7 @@ namespace NetFusion.Messaging.Internal
 
         public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
-            // Determine the dispatchers associated with the message.
-            MessageDispatchInfo[] dispatchers = _messagingModule.InProcessDispatchers
-                .WhereHandlerForMessage(message.GetType())
-                .ToArray();
+            MessageDispatchInfo[] dispatchers = GetMessageDispatchers(message);
 
             if (! dispatchers.Any())
             {
@@ -57,14 +54,13 @@ namespace NetFusion.Messaging.Internal
             
             var msgLog = new MessageLog(message, LogContextType.PublishedMessage);
             msgLog.SentHint("publish-inprocess");
-            
             AddDispatchersToLog(msgLog, dispatchers);
             
             // Execute all handlers and return the task for the caller to await.
             try
             {
-                await InvokeMessageDispatchers(message, dispatchers, cancellationToken).ConfigureAwait(false);
-                LogMessageDispatched(message, dispatchers);
+                await InvokeMessageDispatchers(dispatchers, message, cancellationToken).ConfigureAwait(false);
+                LogMessageDispatched(dispatchers, message);
             }
             catch (MessageDispatchException ex)
             {
@@ -76,24 +72,28 @@ namespace NetFusion.Messaging.Internal
                 await _messageLogger.LogAsync(msgLog);
             }
         }
-        
-        private async Task InvokeMessageDispatchers(IMessage message,
-            IEnumerable<MessageDispatchInfo> dispatchers,
+
+        // Determine the dispatchers associated with the message. 
+        private MessageDispatchInfo[] GetMessageDispatchers(IMessage message)
+        {
+            return _messagingModule.InProcessDispatchers
+                .WhereHandlerForMessage(message.GetType())
+                .Where(dispatchInfo => dispatchInfo.IsMatch(message))
+                .ToArray();
+        }
+
+        private async Task InvokeMessageDispatchers(MessageDispatchInfo[] dispatchers, 
+            IMessage message,
             CancellationToken cancellationToken)
         {
             TaskListItem<MessageDispatchInfo>[] taskList = null;
 
             try
             {
-                // Filter the list of dispatchers to only those that apply.
-                MessageDispatchInfo[] matchingDispatchers = dispatchers
-                    .Where(dispatchInfo => dispatchInfo.IsMatch(message))
-                    .ToArray();
-                
-                AssertMessageDispatchers(message, matchingDispatchers);
+                AssertMessageDispatchers(message, dispatchers);
 
                 // Execute all of matching dispatchers and await the list of associated tasks.
-                taskList = matchingDispatchers.Invoke(message, InvokeDispatcher, cancellationToken);
+                taskList = dispatchers.Invoke(message, InvokeDispatcher, cancellationToken);
                 await taskList.WhenAll();
             }
             catch (Exception ex)
@@ -153,7 +153,7 @@ namespace NetFusion.Messaging.Internal
                 dispatcher.MessageHandlerMethod.Name);
         }
         
-        private void LogMessageDispatched(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
+        private void LogMessageDispatched(IEnumerable<MessageDispatchInfo> dispatchers, IMessage message)
         {
             var log = LogMessage.For(LogLevel.Information, "Message {MessageType} Dispatched", message.GetType());
             log.WithProperties(
@@ -173,7 +173,7 @@ namespace NetFusion.Messaging.Internal
                 .ToArray();
         }
         
-        private void AddDispatchersToLog(MessageLog msgLog, MessageDispatchInfo[] dispatchers)
+        private void AddDispatchersToLog(MessageLog msgLog, IEnumerable<MessageDispatchInfo> dispatchers)
         {
             if (! _messageLogger.IsLoggingEnabled) return;
             

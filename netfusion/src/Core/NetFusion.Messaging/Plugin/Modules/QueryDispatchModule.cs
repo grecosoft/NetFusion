@@ -20,6 +20,8 @@ namespace NetFusion.Messaging.Plugin.Modules
     {
         private IDictionary<Type, QueryDispatchInfo> _queryDispatchers; // QueryType => DispatchInfo
 
+        // ---------------------- [Plugin Initialization] ----------------------
+        
         // Create dictionary used to resolve how a query type is dispatched.  
         public override void Initialize()
         {
@@ -42,7 +44,7 @@ namespace NetFusion.Messaging.Plugin.Modules
                 ServiceLifetime.Scoped);
         }
 
-        public static void AssureNoDuplicateHandlers(IEnumerable<QueryDispatchInfo> queryHandlers)
+        private static void AssureNoDuplicateHandlers(IEnumerable<QueryDispatchInfo> queryHandlers)
         {
             var queryTypeNames = queryHandlers.WhereDuplicated(qh => qh.QueryType)
                 .Select(qt => qt.AssemblyQualifiedName)
@@ -56,6 +58,8 @@ namespace NetFusion.Messaging.Plugin.Modules
             }
         }
         
+        // ---------------------- [Plugin Services] ----------------------
+        
         public QueryDispatchInfo GetQueryDispatchInfo(Type queryType)
         {
             if (queryType == null) throw new ArgumentNullException(nameof(queryType));
@@ -68,6 +72,8 @@ namespace NetFusion.Messaging.Plugin.Modules
             throw new QueryDispatchException(
                 $"Dispatch information for the query type: { queryType.AssemblyQualifiedName } is not registered.");
         }
+        
+        // ---------------------- [Logging] ----------------------
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
