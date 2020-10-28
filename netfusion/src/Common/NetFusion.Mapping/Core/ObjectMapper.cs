@@ -4,6 +4,8 @@ using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetFusion.Mapping.Plugin;
+
 // ReSharper disable ConvertIfStatementToNullCoalescingExpression
 
 namespace NetFusion.Mapping.Core

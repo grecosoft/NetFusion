@@ -6,10 +6,9 @@ using System;
 namespace NetFusion.Settings
 {
     /// <summary>
-    /// Additional configuration service collection extensions.  These extension 
-    /// methods provide non-generic typed versions of the corresponding methods 
-    /// defined by Microsoft called to automatically add options. The generic
-    /// version can be found here:
+    /// Additional configuration service collection extensions.  These extension methods provide non-generic typed
+    /// versions of the corresponding methods defined by Microsoft called to automatically add options. 
+    /// The generic version can be found here:
     ///
     /// https://github.com/aspnet/Options/blob/master/src/Microsoft.Extensions.Options.ConfigurationExtensions/OptionsConfigurationServiceCollectionExtensions.cs
     /// https://github.com/aspnet/Options/blob/master/src/Microsoft.Extensions.Options/Options.cs
@@ -28,16 +27,9 @@ namespace NetFusion.Settings
             Type optionType, string name, 
             IConfiguration config)
         {
-            if (services == null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
-
-            if (config == null)
-            {
-                throw new ArgumentNullException(nameof(config));
-            }
-
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (config == null) throw new ArgumentNullException(nameof(config));
+  
             Type serviceType = typeof(IOptionsChangeTokenSource<>).MakeGenericType(optionType);
 
             object implementationType = Activator.CreateInstance(

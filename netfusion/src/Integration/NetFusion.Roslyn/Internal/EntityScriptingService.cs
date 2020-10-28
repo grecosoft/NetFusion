@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Base.Entity;
 using NetFusion.Base.Logging;
 using NetFusion.Base.Scripting;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 
@@ -24,7 +23,7 @@ namespace NetFusion.Roslyn.Internal
     /// </summary>
     public class EntityScriptingService : IEntityScriptingService
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<EntityScriptingService> _logger;
 
         // Map between a domain entity and its related set of named scripts.
         private ILookup<Type, ScriptEvaluator> _scriptEvaluators;
@@ -84,16 +83,18 @@ namespace NetFusion.Roslyn.Internal
         {
             var preEvalDetails = GetPreEvalDetails(entity, evaluator);
 
-            using (var durationLogger = _logger.LogTraceDuration("Script Evaluation"))
+            using (_logger.LogTraceDuration("Script Evaluation"))
             {
-                durationLogger.Log.LogTraceDetails("Pre-Evaluation Details", preEvalDetails);
+                _logger.WriteDetails(LogLevel.Debug, "Pre-Evaluation: {EntityType}", 
+                    preEvalDetails, 
+                    entity.GetType().Name);
 
                 CompileScript(evaluator);
                 SetDefaultAttributeValues(evaluator.Script, entity);
                 
                 await evaluator.ExecuteAsync(entity);
-
-                durationLogger.Log.LogTraceDetails("Post-Evaluation Details", new { PostEvalValues = entity });
+                
+                _logger.WriteDetails(LogLevel.Debug, "Post-Evaluation: {EntityType}", entity, entity.GetType().Name);
             }
         }
 
