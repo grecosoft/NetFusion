@@ -13,6 +13,8 @@ using Service.Infra.Plugin;
 using Service.WebApi.Plugin;
 using NetFusion.Builder;
 using NetFusion.Messaging.Logging;
+using NetFusion.MongoDB.Plugin;
+using NetFusion.RabbitMQ.Plugin;
 using NetFusion.Redis.Plugin;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Docs.Plugin;
@@ -46,8 +48,8 @@ namespace Service.WebApi
                 .AddMessaging()
                 
                 // Add technology specific plugins:
-              //  .AddMongoDb()
-              //  .AddRabbitMq()
+                .AddMongoDb()
+                .AddRabbitMq()
                 .AddRedis()
                 //.AddAmqp()
                 .AddRest()

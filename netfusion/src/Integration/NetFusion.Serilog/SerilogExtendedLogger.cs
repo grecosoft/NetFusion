@@ -67,7 +67,7 @@ namespace NetFusion.Serilog
             var eventLevel = ToSerilogLevel(logLevel);
             if (eventLevel == null) return;
 
-            using (LogContext.Push(new PropertyEnricher("Details", details, true)))
+            using (LogContext.Push(new PropertyEnricher("Details", GetDetailsToLog(details), true)))
             {
                 Log.ForContext<TContext>().Write(eventLevel.Value, message, args);
             }
@@ -88,7 +88,7 @@ namespace NetFusion.Serilog
             if (message == null) throw new ArgumentNullException(nameof(message));
             if (details == null) throw new ArgumentNullException(nameof(details));
 
-            using (LogContext.Push(new PropertyEnricher("Details", details, true)))
+            using (LogContext.Push(new PropertyEnricher("Details", GetDetailsToLog(details), true)))
             {
                 Log.ForContext<TContext>().Error(ex, message, args);
             }
@@ -106,7 +106,11 @@ namespace NetFusion.Serilog
         }
         
         private static IEnumerable<ILogEventEnricher> CreatePropertyEnrichers(LogMessage message) => 
-            message.Properties.Select(p => new PropertyEnricher(p.Name, p.Value, p.DestructureObjects));
+            message.Properties.Select(p => new PropertyEnricher(
+                p.Name, 
+                GetDetailsToLog(p.Value),
+                p.DestructureObjects)
+            );
         
 
         private static LogEventLevel? ToSerilogLevel(LogLevel logLevel)
@@ -122,5 +126,8 @@ namespace NetFusion.Serilog
                 _ => null
             };
         }
+
+        private static object GetDetailsToLog(object details) => 
+            details is ITypeLog typeLog ? typeLog.Log() : details;
     }
 }
