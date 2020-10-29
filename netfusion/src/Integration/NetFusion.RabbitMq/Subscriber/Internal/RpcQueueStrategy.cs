@@ -74,8 +74,10 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         {
             string rpcQueueName = context.Subscriber.QueueMeta.QueueName;
             string rpcActionNamespace = context.MessageProps.GetRpcActionNamespace();
-            
-            context.Logger.LogTrace(
+
+            var logger = context.LoggerFactory.CreateLogger<RpcQueueStrategy>();
+                
+                logger.LogDebug(
                 "RPC command received.  Attempting to dispatch to handler associated with queue named {queueName} and " + 
                 "for action named {actionName}", rpcQueueName, rpcActionNamespace);
 

@@ -6,8 +6,8 @@ using EasyNetQ;
 using EasyNetQ.Topology;
 using NetFusion.RabbitMQ.Publisher.Internal;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Base.Serialization;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Logging;
@@ -25,7 +25,7 @@ namespace NetFusion.RabbitMQ.Publisher
         IPublisherContext
     {
         // Dependent Services:
-        public ILogger Logger { get; }
+        public ILoggerFactory LoggerFactory { get; }
         public ISerializationManager Serialization { get; }
 
         // Dependent Modules:
@@ -40,7 +40,7 @@ namespace NetFusion.RabbitMQ.Publisher
             ISerializationManager serializationManager,
             IMessageLogger messageLogger)
         {
-            Logger = loggerFactory.CreateLogger<RabbitMqPublisher>();
+            LoggerFactory = loggerFactory;
             BusModule = busModule ?? throw new ArgumentNullException(nameof(busModule));    
             PublisherModule = publisherModule ?? throw new ArgumentNullException(nameof(publisherModule));
             Serialization = serializationManager ?? throw new ArgumentNullException(nameof(serializationManager));
@@ -92,14 +92,16 @@ namespace NetFusion.RabbitMQ.Publisher
 
         private void LogPublishedMessage(CreatedExchange exchange, IMessage message)
         {
-            Logger.LogTraceDetails("Message being Published to Message Bus.", 
+            var logger = LoggerFactory.CreateLogger<RabbitMqPublisher>();
+            
+            logger.WriteDetails(LogLevel.Debug, "Message being Published to Message Bus.",
                 new {
-                    exchange.Definition.BusName,
-                    exchange.Definition.ExchangeName,
-                    exchange.Definition.QueueMeta?.QueueName,
-                    exchange.Definition.ContentType,
-                    Message = message
-                });
+                        exchange.Definition.BusName,
+                        exchange.Definition.ExchangeName,
+                        exchange.Definition.QueueMeta?.QueueName,
+                        exchange.Definition.ContentType,
+                        Message = message
+                    });
         }
         
         private void AddExchangeMetaToLog(MessageLog msgLog, ExchangeMeta definition)

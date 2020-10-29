@@ -2,8 +2,8 @@ using IMessage = NetFusion.Messaging.Types.Contracts.IMessage;
 using System;
 using EasyNetQ;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Base.Serialization;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin;
@@ -17,7 +17,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     /// </summary>
     public class ConsumeContext 
     {
-        public ILogger Logger { get; set; }
+        public ILoggerFactory LoggerFactory { get; set; }
         
         public byte[] MessageData { get; set; }
         
@@ -68,8 +68,10 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         public void LogReceivedMessage(IMessage message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
-            
-            Logger.LogTraceDetails("Message Received from Message Bus.", 
+
+            var logger = LoggerFactory.CreateLogger<ConsumeContext>();
+
+            logger.WriteDetails(LogLevel.Debug, "Message Received from Message Bus.", 
                 new {
                     Bus = Subscriber.QueueMeta.Exchange.BusName,
                     Exchange = Subscriber.QueueMeta.Exchange.ExchangeName,

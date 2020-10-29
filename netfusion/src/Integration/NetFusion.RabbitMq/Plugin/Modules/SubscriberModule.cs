@@ -33,10 +33,8 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         // Message handlers subscribed to queues:
         private MessageQueueSubscriber[] _subscribers = Array.Empty<MessageQueueSubscriber>();
         
-        //------------------------------------------------------
-        //--Plugin Execution
-        //------------------------------------------------------
-
+        // ------------------------- [Plugin Execution] --------------------------
+        
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {
             // Dependent Services:
@@ -105,7 +103,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 {
                     var consumerContext = new ConsumeContext 
                     {
-                        Logger = Context.LoggerFactory.CreateLogger(definition.QueueStrategy.GetType().FullName),
+                        LoggerFactory = Context.LoggerFactory,
                         MessageData = bytes,
                         MessageProps = msgProps,
                         MessageReceiveInfo = receiveInfo,
@@ -163,6 +161,8 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
             return matchingDispatchers.First().DispatchInfo;
         }
+        
+        // ------------------------ [Logging] --------------------------
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
