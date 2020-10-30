@@ -69,8 +69,10 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         {
             var definition = createdExchange.Definition;
 
-            logger.WriteDetails(LogLevel.Debug, "Response to RPC message sent to queue {QueueName} on bus {BusName}", 
+            logger.WriteDetails(LogLevel.Debug,
+                "Response {ResponseType} to RPC message received on queue {QueueName} on bus {BusName}", 
                 responseObj, 
+                responseObj.GetType(),
                 definition.QueueMeta.QueueName,
                 definition.BusName);
         }

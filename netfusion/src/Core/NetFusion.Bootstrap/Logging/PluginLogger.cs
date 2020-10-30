@@ -39,7 +39,6 @@ namespace NetFusion.Bootstrap.Logging
                 new LogProperty { Name = "PluginId", Value = plugin.PluginId },
                 new LogProperty { Name = "Assembly", Value = plugin.AssemblyName },
                 new LogProperty { Name = "Version", Value = plugin.AssemblyVersion },
-                new LogProperty { Name = "Description", Value = plugin.Description },
                 new LogProperty { Name = "DocUrl", Value = plugin.DocUrl },
                 new LogProperty { Name = "SourceUrl", Value = plugin.SourceUrl }
             );

@@ -89,19 +89,28 @@ namespace NetFusion.RabbitMQ.Publisher
             IExchange exchange = await bus.Advanced.ExchangeDeclareAsync(meta);
             return new CreatedExchange(bus, exchange, meta);
         }
+        
+        // ---------------------------------- [Logging] ----------------------------------
 
         private void LogPublishedMessage(CreatedExchange exchange, IMessage message)
         {
             var logger = LoggerFactory.CreateLogger<RabbitMqPublisher>();
             
-            logger.WriteDetails(LogLevel.Debug, "Message being Published to Message Bus.",
-                new {
-                        exchange.Definition.BusName,
-                        exchange.Definition.ExchangeName,
-                        exchange.Definition.QueueMeta?.QueueName,
-                        exchange.Definition.ContentType,
-                        Message = message
-                    });
+            var exchangeInfo = new {
+                exchange.Definition.BusName,
+                exchange.Definition.ExchangeName,
+                exchange.Definition.QueueMeta?.QueueName,
+                exchange.Definition.ContentType,
+            };
+
+            var log = LogMessage.For(LogLevel.Information, "Publishing {MessageType} to {Exchange} on {Bus}",
+                message.GetType(), 
+                exchangeInfo.ExchangeName, 
+                exchangeInfo.BusName).WithProperties(
+                    new LogProperty { Name = "Message", Value = message, DestructureObjects = true },
+                    new LogProperty { Name = "ExchangeInfo", Value = exchangeInfo, DestructureObjects = true });
+            
+            logger.Write(log);
         }
         
         private void AddExchangeMetaToLog(MessageLog msgLog, ExchangeMeta definition)

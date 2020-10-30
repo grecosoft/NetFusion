@@ -59,6 +59,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             object message = Serialization.Deserialize(MessageProps.ContentType, messageType, MessageData);
             return (IMessage)message;
         }
+        // ---------------------------------- [Logging] ----------------------------------
         
         /// <summary>
         /// Logs the provided deserialized message and the information about the exchange and
@@ -71,16 +72,23 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
 
             var logger = LoggerFactory.CreateLogger<ConsumeContext>();
 
-            logger.WriteDetails(LogLevel.Debug, "Message Received from Message Bus.", 
-                new {
-                    Bus = Subscriber.QueueMeta.Exchange.BusName,
-                    Exchange = Subscriber.QueueMeta.Exchange.ExchangeName,
-                    Queue = Subscriber.QueueMeta.QueueName,
-                    MessageProps.ContentType,
-                    Consumer = Subscriber.DispatchInfo.ConsumerType.Name,
-                    Handler = Subscriber.DispatchInfo.MessageHandlerMethod.Name,
-                    Message = message
-                });
+            var queueInfo = new {
+                Bus = Subscriber.QueueMeta.Exchange.BusName,
+                Exchange = Subscriber.QueueMeta.Exchange.ExchangeName,
+                Queue = Subscriber.QueueMeta.QueueName,
+                MessageProps.ContentType,
+                Consumer = Subscriber.DispatchInfo.ConsumerType.Name,
+                Handler = Subscriber.DispatchInfo.MessageHandlerMethod.Name
+            };
+
+            var log = LogMessage.For(LogLevel.Information, "Message {MessageType} Received from {Queue} on {Bus}",
+                message.GetType(),
+                queueInfo.Queue,
+                queueInfo.Bus).WithProperties(
+                    new LogProperty { Name = "Message", Value = message, DestructureObjects = true },
+                    new LogProperty { Name = "QueueInfo", Value = queueInfo, DestructureObjects = true });
+            
+            logger.Write(log);
         }
 
         public void AddMessageContextToLog(MessageLog msgLog)

@@ -134,14 +134,15 @@ namespace NetFusion.Messaging.Internal
         
         private void LogQueryDispatched(QueryDispatchInfo dispatchInfo, IQuery query)
         {
-            var log = LogMessage.For(LogLevel.Debug, "Query {QueryType} Dispatched", query.GetType());
+            var handlerInfo = new {
+                Consumer = dispatchInfo.ConsumerType,
+                Handler = dispatchInfo.HandlerMethod.Name
+            };
             
-            log.WithProperties(
-                new LogProperty { Name = "Query", Value = query, DestructureObjects = true }, 
-                new LogProperty { Name = "Dispatcher", Value = new {
-                        Consumer = dispatchInfo.ConsumerType, 
-                        Handler = dispatchInfo.HandlerMethod.Name }
-                });
+            var log = LogMessage.For(LogLevel.Debug, "Query {QueryType} Dispatched", query.GetType())
+                .WithProperties(
+                    new LogProperty { Name = "Query", Value = query, DestructureObjects = true }, 
+                    new LogProperty { Name = "Handler", Value = handlerInfo, DestructureObjects = true });
 
             _logger.Write(log);
         }
@@ -149,11 +150,13 @@ namespace NetFusion.Messaging.Internal
         private void LogQueryFilters<TFilter>(IEnumerable<IQueryFilter> filters) 
             where TFilter : IQueryFilter
         {
-            var log = LogMessage.For(LogLevel.Debug, "Applying {FilterType} Query Filters", typeof(TFilter).Name);
-            log.WithProperties(new LogProperty
-            {
-                Name = "FilterTypes", Value = filters.Select(f => f.GetType().FullName).ToArray()
-            });
+            var log = LogMessage.For(LogLevel.Debug, "Applying {FilterType} Query Filters", typeof(TFilter).Name)
+                .WithProperties(new LogProperty
+                {
+                    Name = "FilterTypes", 
+                    Value = filters.Select(f => f.GetType().FullName).ToArray(),
+                    DestructureObjects = true
+                });
             
             _logger.Write(log);
         }
