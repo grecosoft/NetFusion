@@ -112,16 +112,19 @@ namespace NetFusion.Redis.Plugin.Modules
         private void LogReceivedDomainEvent(string channel, IDomainEvent domainEvent,
             MessageChannelSubscriber subscriber)
         {
-            var channelInfo = new
+            var dispatchInfo = new
             {
-                Channel = channel,
-                Subscription = subscriber.Channel,
+                subscriber.DispatchInfo.MessageType,
+                subscriber.DispatchInfo.ConsumerType, 
+                subscriber.DispatchInfo.MessageHandlerMethod.Name
             };
 
             var log = LogMessage.For(LogLevel.Information,
-                "Domain event {EventName} received on Redis Channel",
-                domainEvent.GetType().Name).WithProperties(
-                    new LogProperty { Name = "ChannelInfo", Value = channelInfo, DestructureObjects = true }, 
+                "Domain event {EventName} Received on Redis Channel {ChannelName} on {DatabaseName}",
+                domainEvent.GetType().Name, 
+                channel, 
+                subscriber.DatabaseName).WithProperties(
+                    new LogProperty { Name = "DispatchInfo", Value = dispatchInfo, DestructureObjects = true }, 
                     new LogProperty { Name = "DomainEvent", Value = domainEvent, DestructureObjects = true });
             
             _logger.Write(log);

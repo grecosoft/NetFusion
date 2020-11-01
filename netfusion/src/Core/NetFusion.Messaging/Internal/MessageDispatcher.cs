@@ -164,6 +164,8 @@ namespace NetFusion.Messaging.Internal
 
             try
             {
+                LogPublishedMessage(message);
+                
                 taskList = publishers.Invoke(message,
                     (pub, msg) => pub.PublishMessageAsync(msg, cancellationToken));
 
@@ -184,6 +186,13 @@ namespace NetFusion.Messaging.Internal
 
                 throw new PublisherException("Exception when invoking message publishers.", message, ex);
             }
+        }
+        
+        private void LogPublishedMessage(IMessage message)
+        {
+            _logger.WriteDetails(LogLevel.Information, "Message {MessageType} Published", 
+                message, 
+                message.GetType().Name);          
         }
     }
 }

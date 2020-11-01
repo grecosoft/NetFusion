@@ -73,7 +73,7 @@ namespace NetFusion.RabbitMQ.Publisher
             // Create the exchange/queue:
             CreatedExchange createdExchange = await CreateExchange(bus, definition).ConfigureAwait(false);
 
-            LogPublishedMessage(createdExchange, message);
+            LogPublishedMessage(createdExchange);
             AddExchangeMetaToLog(msgLog, definition);
 
             // Publish the message to the created exchange/queue.
@@ -92,23 +92,23 @@ namespace NetFusion.RabbitMQ.Publisher
         
         // ---------------------------------- [Logging] ----------------------------------
 
-        private void LogPublishedMessage(CreatedExchange exchange, IMessage message)
+        private void LogPublishedMessage(CreatedExchange exchange)
         {
             var logger = LoggerFactory.CreateLogger<RabbitMqPublisher>();
             
             var exchangeInfo = new {
+                exchange.Definition.MessageType,
                 exchange.Definition.BusName,
                 exchange.Definition.ExchangeName,
                 exchange.Definition.QueueMeta?.QueueName,
                 exchange.Definition.ContentType,
             };
 
-            var log = LogMessage.For(LogLevel.Information, "Publishing {MessageType} to {Exchange} on {Bus}",
-                message.GetType(), 
+            var log = LogMessage.For(LogLevel.Information, "Publishing {MessageType} to {Exchange} on {Bus}", 
+                exchangeInfo.MessageType,
                 exchangeInfo.ExchangeName, 
                 exchangeInfo.BusName).WithProperties(
-                    new LogProperty { Name = "Message", Value = message, DestructureObjects = true },
-                    new LogProperty { Name = "ExchangeInfo", Value = exchangeInfo, DestructureObjects = true });
+                new LogProperty { Name = "ExchangeInfo", Value = exchangeInfo, DestructureObjects = true });
             
             logger.Write(log);
         }

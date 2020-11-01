@@ -60,7 +60,6 @@ namespace NetFusion.Messaging.Internal
             try
             {
                 await InvokeMessageDispatchers(dispatchers, message, cancellationToken).ConfigureAwait(false);
-                LogMessageDispatched(dispatchers, message);
             }
             catch (MessageDispatchException ex)
             {
@@ -136,7 +135,7 @@ namespace NetFusion.Messaging.Internal
         private Task InvokeDispatcher(MessageDispatchInfo dispatcher, IMessage message, 
             CancellationToken cancellationToken)
         {
-            LogMessageDispatch(dispatcher, message);
+            LogMessageDispatch(dispatcher);
 
             // Since this root component, use service-locator obtain reference to message consumer.
             var consumer = (IMessageConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
@@ -145,22 +144,12 @@ namespace NetFusion.Messaging.Internal
         
         // ----------------------------- [Logging] -----------------------------
 
-        private void LogMessageDispatch(MessageDispatchInfo dispatcher, IMessage message)
+        private void LogMessageDispatch(MessageDispatchInfo dispatcher)
         {
             _logger.LogDebug("Dispatching Message {MessageType} to Consumer {ConsumerType} Handler {MethodName}", 
-                message.GetType(), 
+                dispatcher.MessageType,
                 dispatcher.ConsumerType, 
                 dispatcher.MessageHandlerMethod.Name);
-        }
-        
-        private void LogMessageDispatched(IEnumerable<MessageDispatchInfo> dispatchers, IMessage message)
-        {
-            var log = LogMessage.For(LogLevel.Information, "Message {MessageType} Dispatched", message.GetType());
-            log.WithProperties(
-                new LogProperty { Name = "Message", Value = message, DestructureObjects = true }, 
-                new LogProperty { Name = "Dispatchers", Value = GetDispatchLogDetails(dispatchers), DestructureObjects = true});
-            
-            _logger.Write(log);
         }
         
         private static object GetDispatchLogDetails(IEnumerable<MessageDispatchInfo> dispatchers)
