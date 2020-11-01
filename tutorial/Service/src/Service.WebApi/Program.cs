@@ -64,19 +64,6 @@ namespace Service.WebApi
                 .WriteTo.Console()
                 .WriteTo.Seq("http://localhost:5351")
                 .CreateLogger();
-            
-            
-            // builder.ClearProviders();
-            //
-            // if (context.HostingEnvironment.IsDevelopment())
-            // {
-            //     builder.AddDebug().SetMinimumLevel(LogLevel.Debug);
-            //     builder.AddConsole().SetMinimumLevel(LogLevel.Debug);
-            // }
-            // else
-            // {
-            //     builder.AddConsole().SetMinimumLevel(LogLevel.Information);
-            // }
         }
     }
 }

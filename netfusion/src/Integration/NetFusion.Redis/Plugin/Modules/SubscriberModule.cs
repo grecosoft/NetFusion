@@ -106,18 +106,25 @@ namespace NetFusion.Redis.Plugin.Modules
                 });
             }
         }
+        
+        // ------------------------------ [Logging] -------------------------------
 
         private void LogReceivedDomainEvent(string channel, IDomainEvent domainEvent,
             MessageChannelSubscriber subscriber)
         {
-            _logger.WriteDetails(LogLevel.Debug, "Domain event {EventName} received on Redis Channel", 
-                new
-                {
-                    Channel = channel,
-                    Subscription = subscriber.Channel,
-                    DomainEvent = domainEvent
-                }, 
-                domainEvent.GetType().Name);
+            var channelInfo = new
+            {
+                Channel = channel,
+                Subscription = subscriber.Channel,
+            };
+
+            var log = LogMessage.For(LogLevel.Information,
+                "Domain event {EventName} received on Redis Channel",
+                domainEvent.GetType().Name).WithProperties(
+                    new LogProperty { Name = "ChannelInfo", Value = channelInfo, DestructureObjects = true }, 
+                    new LogProperty { Name = "DomainEvent", Value = domainEvent, DestructureObjects = true });
+            
+            _logger.Write(log);
         }
 
         private void AddMessageLogDetails(MessageLog msgLog, string channel, MessageChannelSubscriber subscriber)

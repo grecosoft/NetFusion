@@ -129,10 +129,14 @@ namespace NetFusion.Bootstrap.Container
             _logger.LogInformation("All Modules Ran");
         }
 
-        private static async Task StartPluginModules(IServiceProvider services, params IPlugin[] plugins)
+        private async Task StartPluginModules(IServiceProvider services, params IPlugin[] plugins)
         {
             foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
             {
+                _logger.LogDebug("Starting Module: {moduleType} for Plugin: {pluginName}", 
+                    module.GetType().Name, 
+                    module.Context.Plugin.Name);
+                
                 await module.StartModuleAsync(services);
             }
         }
@@ -141,6 +145,10 @@ namespace NetFusion.Bootstrap.Container
         {
             foreach (IPluginModule module in _builder.AllModules)
             {
+                _logger.LogDebug("Running Module: {moduleType} for Plugin: {pluginName}", 
+                    module.GetType().Name, 
+                    module.Context.Plugin.Name);
+                
                 await module.RunModuleAsync(services);
             }
         }

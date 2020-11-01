@@ -6,6 +6,8 @@ using NetFusion.Bootstrap.Container;
 using NetFusion.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Events;
 
 namespace Subscriber.WebApi
 {
@@ -37,7 +39,9 @@ namespace Subscriber.WebApi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                }).Build();
+                })
+                .UseSerilog()
+                .Build();
         }
 
         private static void SetupConfiguration(HostBuilderContext context, 
@@ -49,17 +53,17 @@ namespace Subscriber.WebApi
         private static void SetupLogging(HostBuilderContext context, 
             ILoggingBuilder builder)
         {
-            builder.ClearProviders();
-
-            if (context.HostingEnvironment.IsDevelopment())
-            {
-                builder.AddDebug().SetMinimumLevel(LogLevel.Debug);
-                builder.AddConsole().SetMinimumLevel(LogLevel.Debug);
-            }
-            else
-            {
-                builder.AddConsole().SetMinimumLevel(LogLevel.Information);
-            }
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft.AspNetCore.Hosting.Diagnostics", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.AspNetCore.Routing.EndpointMiddleware", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.Seq("http://localhost:5351")
+                .CreateLogger();
         }
     }
 }

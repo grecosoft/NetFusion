@@ -76,22 +76,12 @@ namespace NetFusion.Redis.Subscriber.Internal
             }).ConfigureAwait(false);
         }
 
-        private void LogReceivedDomainEvent(string database, string channel, IDomainEvent domainEvent)
-        {
-            _logger.WriteDetails(LogLevel.Trace, "Subscription delegate being called.", new
-                {
-                    Database = database,
-                    Channel = channel,
-                    DomainEvent = domainEvent
-                });
-        }
-
         public void UnSubscribe(string database, string channel)
         {
             if (string.IsNullOrWhiteSpace(channel))
                 throw new ArgumentException("Channel not specified.", nameof(channel));
 
-            _logger.LogTrace("Unsubscribe channel named {channel} from database {database}", channel, database);
+            _logger.LogDebug("Unsubscribe channel named {channel} from database {database}", channel, database);
             
             var subscriber = _connModule.GetSubscriber(database);
             subscriber.Unsubscribe(channel);
@@ -102,10 +92,28 @@ namespace NetFusion.Redis.Subscriber.Internal
             if (string.IsNullOrWhiteSpace(channel))
                 throw new ArgumentException("Channel not specified.", nameof(channel));
                 
-            _logger.LogTrace("Unsubscribe channel named {channel} from database {database}", channel, database);
+            _logger.LogDebug("Unsubscribe channel named {channel} from database {database}", channel, database);
             
             var subscriber = _connModule.GetSubscriber(database);
             await subscriber.UnsubscribeAsync(channel).ConfigureAwait(false);
+        }
+        
+        // ---------------------------------- [Logging] --------------------------------
+
+        private void LogReceivedDomainEvent(string database, string channel, IDomainEvent domainEvent)
+        {
+            var channelInfo = new
+            {
+                Database = database,
+                Channel = channel
+            };
+
+            var log = LogMessage.For(LogLevel.Information, "Subscription delegate being called.")
+                .WithProperties(
+                    new LogProperty { Name = "ChannelInfo", Value = channelInfo, DestructureObjects = true }, 
+                    new LogProperty { Name = "DomainEvent", Value = domainEvent, DestructureObjects = true });
+            
+            _logger.Write(log);
         }
     }
 }

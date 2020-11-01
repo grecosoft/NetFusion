@@ -81,13 +81,16 @@ namespace NetFusion.Roslyn.Internal
 
         private async Task ExecuteScript(object entity, ScriptEvaluator evaluator)
         {
-            var preEvalDetails = GetPreEvalDetails(entity, evaluator);
+            var preEvalDetails = GetPreEvalDetails(evaluator);
 
             using (_logger.LogTraceDuration("Script Evaluation"))
             {
-                _logger.WriteDetails(LogLevel.Debug, "Pre-Evaluation: {EntityType}", 
-                    preEvalDetails, 
-                    entity.GetType().Name);
+                var log = LogMessage.For(LogLevel.Debug, "Pre-Evaluation: {EntityType}", entity.GetType().Name)
+                    .WithProperties(
+                        new LogProperty { Name = "EvalDetails", Value = preEvalDetails, DestructureObjects = true}, 
+                        new LogProperty { Name = "Entity", Value = entity, DestructureObjects = true });
+                
+                _logger.Write(log);
 
                 CompileScript(evaluator);
                 SetDefaultAttributeValues(evaluator.Script, entity);
@@ -98,13 +101,12 @@ namespace NetFusion.Roslyn.Internal
             }
         }
 
-        private object GetPreEvalDetails(object entity, ScriptEvaluator evaluator)
+        private object GetPreEvalDetails(ScriptEvaluator evaluator)
         {
             if (_logger.IsEnabled(LogLevel.Trace))
             {
                 return new
                 {
-                    PreEvalValues = entity,
                     Script = evaluator.Script.Expressions
                         .OrderBy(e => e.Sequence)
                         .Select(e => new { e.AttributeName, e.Expression })

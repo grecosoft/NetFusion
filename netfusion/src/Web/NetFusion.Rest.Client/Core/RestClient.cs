@@ -131,7 +131,7 @@ namespace NetFusion.Rest.Client.Core
 
         private void LogRequest(ApiRequest request)
         {
-            _logger.LogTrace("Sending request to: {uri} for method: {method}.", request.RequestUri, request.Method);
+            _logger.LogDebug("Sending request to: {uri} for method: {method}.", request.RequestUri, request.Method);
         }
 
         private static async Task SetErrorContext(HttpResponseMessage responseMsg, ApiResponse response)
@@ -147,7 +147,7 @@ namespace NetFusion.Rest.Client.Core
         {
             var request = response.Request;
             
-            _logger.LogTrace(
+            _logger.LogDebug(
                 "Response received for: {uri} with method: {method}. " + 
                 "Received status code: {statusCode} with reason: {reasonPhase}.",
                 request.RequestUri, 

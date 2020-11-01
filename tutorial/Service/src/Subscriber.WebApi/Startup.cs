@@ -10,6 +10,8 @@ using NetFusion.Builder;
 using NetFusion.Messaging.Logging;
 using NetFusion.RabbitMQ.Plugin;
 using NetFusion.Redis.Plugin;
+using NetFusion.Serilog;
+using Serilog;
 using Subscriber.WebApi.Hubs;
 using Subscriber.WebApi.Plugin;
 
@@ -31,7 +33,7 @@ namespace Subscriber.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.CompositeContainer(_configuration)
+            services.CompositeContainer(_configuration, new SerilogExtendedLogger())
                 .AddSettings()
                 .AddMessaging()
                 .AddRabbitMq()
@@ -50,7 +52,6 @@ namespace Subscriber.WebApi
                 services.AddMessageLogSink<HubMessageLogSink>();
             }
         }
-        
 
         public void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime, IWebHostEnvironment env)
         {
@@ -63,6 +64,8 @@ namespace Subscriber.WebApi
                     .WithExposedHeaders("WWW-Authenticate")
                     .AllowAnyHeader());
             }
+            
+            app.UseSerilogRequestLogging();
             
             app.UseHttpsRedirection();
             app.UseRouting();

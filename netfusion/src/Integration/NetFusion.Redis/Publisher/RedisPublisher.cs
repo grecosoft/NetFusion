@@ -107,13 +107,19 @@ namespace NetFusion.Redis.Publisher
         
         private void LogChannelPublish(IDomainEvent domainEvent, string databaseName, string channelName)
         {
-            _logger.WriteDetails(LogLevel.Trace, "Domain Event being published to Redis Channel.", 
-                new
-                {
-                    DatabaseConfigName = databaseName,
-                    ChannelName = channelName,
-                    DomainEvent = domainEvent
-                });
+            var channelInfo = new
+            {
+                DatabaseConfigName = databaseName,
+                ChannelName = channelName,
+            };
+
+            var log = LogMessage.For(LogLevel.Information,
+                "Domain event {EventName} received on Redis Channel",
+                domainEvent.GetType().Name).WithProperties(
+                new LogProperty { Name = "ChannelInfo", Value = channelInfo, DestructureObjects = true },
+                new LogProperty { Name = "DomainEvent", Value = domainEvent, DestructureObjects = true });
+            
+            _logger.Write(log);
         }
 
         private static void AddMessageDetails(MessageLog msgLog, string databaseName, string channelName)

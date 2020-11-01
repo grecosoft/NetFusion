@@ -101,7 +101,7 @@ namespace NetFusion.Mapping.Core
             if (mappedResult == null)
             {
                 _logger.LogDebug(
-                    "The mapping strategy for source: {sourceType} and target: {targetType} type returned null " + 
+                    "The mapping strategy for source: {sourceType} and target: {targetType} type returned null" + 
                     " for the mapped result.", source.GetType(), targetType);
             }
             
