@@ -58,7 +58,7 @@ namespace NetFusion.Serilog
             Log.ForContext<TContext>().Write(eventLevel.Value, message, args);
         }
 
-        public void WriteDetails<TContext>(LogLevel logLevel, string message, object details, 
+        public void WriteDetails<TContext>(LogLevel logLevel, string message, object details,
             params object[] args)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));

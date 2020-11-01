@@ -110,10 +110,10 @@ namespace NetFusion.Redis.Subscriber.Internal
 
             var log = LogMessage.For(LogLevel.Information, "Subscription delegate being called.")
                 .WithProperties(
-                    new LogProperty { Name = "ChannelInfo", Value = channelInfo, DestructureObjects = true }, 
-                    new LogProperty { Name = "DomainEvent", Value = domainEvent, DestructureObjects = true });
+                    new LogProperty { Name = "ChannelInfo", Value = channelInfo }, 
+                    new LogProperty { Name = "DomainEvent", Value = domainEvent });
             
-            _logger.Write(log);
+            _logger.Log(log);
         }
     }
 }

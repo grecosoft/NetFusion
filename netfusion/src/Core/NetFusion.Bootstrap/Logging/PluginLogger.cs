@@ -58,10 +58,8 @@ namespace NetFusion.Bootstrap.Logging
                 return new { m.Name, moduleLog };
             }).ToDictionary(i => i.Name);
 
-            logMessage.WithProperties(new LogProperty {
-                Name = "Modules", 
-                Value = moduleLogs, 
-                DestructureObjects = true
+            logMessage.WithProperties(
+                new LogProperty { Name = "Modules", Value = moduleLogs
             });
         }
 
@@ -95,8 +93,7 @@ namespace NetFusion.Bootstrap.Logging
             
             logMessage.WithProperties(new LogProperty {
                 Name = "Service", 
-                Value = serviceLog, 
-                DestructureObjects = true
+                Value = serviceLog
             });
         }
 

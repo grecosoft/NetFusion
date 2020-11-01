@@ -126,7 +126,7 @@ namespace NetFusion.Bootstrap.Container
             }
             catch (ContainerException ex)
             {
-                NfExtensions.Logger.ErrorDetails<CompositeContainer>(ex, "Bootstrap Exception", ex.Details);
+                NfExtensions.Logger.Error<CompositeContainer>(ex, "Bootstrap Exception");
                 throw;
             }
             catch (Exception ex)

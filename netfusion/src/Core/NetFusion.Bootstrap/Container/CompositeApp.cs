@@ -78,20 +78,20 @@ namespace NetFusion.Bootstrap.Container
             }
             catch (ContainerException ex)
             {
-                NfExtensions.Logger.ErrorDetails<CompositeApp>(ex, startExMsg, ex.Details);
+                NfExtensions.Logger.Error<CompositeApp>(ex, startExMsg);
                 throw;
             }
             catch (AggregateException ex)
             {
                 var flattenedEx = ex.Flatten();
                 
-                NfExtensions.Logger.ErrorDetails<CompositeApp>(ex, startExMsg, flattenedEx);
+                NfExtensions.Logger.Error<CompositeApp>(flattenedEx, startExMsg);
                 throw new ContainerException(startExMsg, flattenedEx);
                 
             }
             catch (Exception ex)
             {
-                NfExtensions.Logger.ErrorDetails<CompositeApp>(ex, startExMsg, ex);
+                NfExtensions.Logger.Error<CompositeApp>(ex, startExMsg);
                 throw new ContainerException(startExMsg, ex);
             }
         }
@@ -199,7 +199,7 @@ namespace NetFusion.Bootstrap.Container
             }
             catch (ContainerException ex)
             {
-                NfExtensions.Logger.ErrorDetails<CompositeApp>(ex, stopExMsg, ex.Details);
+                NfExtensions.Logger.Error<CompositeApp>(ex, stopExMsg);
                 throw;
             }
             catch (AggregateException ex)
@@ -211,7 +211,7 @@ namespace NetFusion.Bootstrap.Container
             }
             catch (Exception ex)
             {
-                NfExtensions.Logger.ErrorDetails<CompositeApp>(ex, stopExMsg, ex);
+                NfExtensions.Logger.Error<CompositeApp>(ex, stopExMsg);
                 throw new ContainerException(stopExMsg, ex);
             }
         }

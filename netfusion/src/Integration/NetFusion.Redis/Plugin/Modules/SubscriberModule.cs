@@ -124,10 +124,10 @@ namespace NetFusion.Redis.Plugin.Modules
                 domainEvent.GetType().Name, 
                 channel, 
                 subscriber.DatabaseName).WithProperties(
-                    new LogProperty { Name = "DispatchInfo", Value = dispatchInfo, DestructureObjects = true }, 
-                    new LogProperty { Name = "DomainEvent", Value = domainEvent, DestructureObjects = true });
+                    new LogProperty { Name = "DispatchInfo", Value = dispatchInfo }, 
+                    new LogProperty { Name = "DomainEvent", Value = domainEvent });
             
-            _logger.Write(log);
+            _logger.Log(log);
         }
 
         private void AddMessageLogDetails(MessageLog msgLog, string channel, MessageChannelSubscriber subscriber)

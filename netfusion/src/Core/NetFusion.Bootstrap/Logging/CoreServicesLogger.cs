@@ -45,11 +45,8 @@ namespace NetFusion.Bootstrap.Logging
                 }).ToArray()
             };
 
-            logMessage.WithProperties(new LogProperty {
-                Name = "ContentTypes",
-                Value = contentTypes,
-                DestructureObjects = true
-            });
+            logMessage.WithProperties(
+                new LogProperty { Name = "ContentTypes", Value = contentTypes });
 
             return logMessage;
         }

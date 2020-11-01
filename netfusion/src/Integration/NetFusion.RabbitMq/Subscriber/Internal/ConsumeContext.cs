@@ -85,10 +85,10 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
                 message.GetType(),
                 queueInfo.Queue,
                 queueInfo.Bus).WithProperties(
-                    new LogProperty { Name = "Message", Value = message, DestructureObjects = true },
-                    new LogProperty { Name = "QueueInfo", Value = queueInfo, DestructureObjects = true });
+                    new LogProperty { Name = "Message", Value = message },
+                    new LogProperty { Name = "QueueInfo", Value = queueInfo });
             
-            logger.Write(log);
+            logger.Log(log);
         }
 
         public void AddMessageContextToLog(MessageLog msgLog)

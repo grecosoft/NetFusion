@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using NetFusion.Base.Logging;
 using NetFusion.Base.Serialization;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Internal;

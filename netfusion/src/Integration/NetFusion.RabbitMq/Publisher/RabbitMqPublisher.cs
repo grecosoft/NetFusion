@@ -67,17 +67,17 @@ namespace NetFusion.RabbitMQ.Publisher
             
             // Lookup the exchange associated with the message and the bus
             // on which it should be created.
-            ExchangeMeta definition = PublisherModule.GetDefinition(messageType);
-            IBus bus = BusModule.GetBus(definition.BusName);
+            ExchangeMeta exchangeMeta = PublisherModule.GetDefinition(messageType);
+            IBus bus = BusModule.GetBus(exchangeMeta.BusName);
             
             // Create the exchange/queue:
-            CreatedExchange createdExchange = await CreateExchange(bus, definition).ConfigureAwait(false);
+            CreatedExchange exchange = await CreateExchange(bus, exchangeMeta).ConfigureAwait(false);
 
-            LogPublishedMessage(createdExchange);
-            AddExchangeMetaToLog(msgLog, definition);
+            LogMessageExchange(exchangeMeta);
+            AddExchangeMetaToLog(msgLog, exchangeMeta);
 
             // Publish the message to the created exchange/queue.
-            await definition.PublisherStrategy.Publish(this, createdExchange,
+            await exchangeMeta.PublisherStrategy.Publish(this, exchange,
                 message,
                 cancellationToken);
 
@@ -92,25 +92,25 @@ namespace NetFusion.RabbitMQ.Publisher
         
         // ---------------------------------- [Logging] ----------------------------------
 
-        private void LogPublishedMessage(CreatedExchange exchange)
+        private void LogMessageExchange(ExchangeMeta exchangeMeta)
         {
             var logger = LoggerFactory.CreateLogger<RabbitMqPublisher>();
             
             var exchangeInfo = new {
-                exchange.Definition.MessageType,
-                exchange.Definition.BusName,
-                exchange.Definition.ExchangeName,
-                exchange.Definition.QueueMeta?.QueueName,
-                exchange.Definition.ContentType,
+                exchangeMeta.MessageType,
+                exchangeMeta.BusName,
+                exchangeMeta.ExchangeName,
+                exchangeMeta.QueueMeta?.QueueName,
+                exchangeMeta.ContentType
             };
 
             var log = LogMessage.For(LogLevel.Information, "Publishing {MessageType} to {Exchange} on {Bus}", 
                 exchangeInfo.MessageType,
                 exchangeInfo.ExchangeName, 
                 exchangeInfo.BusName).WithProperties(
-                new LogProperty { Name = "ExchangeInfo", Value = exchangeInfo, DestructureObjects = true });
+                    new LogProperty { Name = "ExchangeInfo", Value = exchangeInfo });
             
-            logger.Write(log);
+            logger.Log(log);
         }
         
         private void AddExchangeMetaToLog(MessageLog msgLog, ExchangeMeta definition)

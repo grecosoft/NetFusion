@@ -83,21 +83,21 @@ namespace NetFusion.Roslyn.Internal
         {
             var preEvalDetails = GetPreEvalDetails(evaluator);
 
-            using (_logger.LogTraceDuration("Script Evaluation"))
+            using (_logger.LogDebugDuration("Script Evaluation"))
             {
                 var log = LogMessage.For(LogLevel.Debug, "Pre-Evaluation: {EntityType}", entity.GetType().Name)
                     .WithProperties(
-                        new LogProperty { Name = "EvalDetails", Value = preEvalDetails, DestructureObjects = true}, 
-                        new LogProperty { Name = "Entity", Value = entity, DestructureObjects = true });
+                        new LogProperty { Name = "EvalDetails", Value = preEvalDetails }, 
+                        new LogProperty { Name = "Entity", Value = entity });
                 
-                _logger.Write(log);
+                _logger.Log(log);
 
                 CompileScript(evaluator);
                 SetDefaultAttributeValues(evaluator.Script, entity);
                 
                 await evaluator.ExecuteAsync(entity);
                 
-                _logger.WriteDetails(LogLevel.Debug, "Post-Evaluation: {EntityType}", entity, entity.GetType().Name);
+                _logger.LogDetails(LogLevel.Debug, "Post-Evaluation: {EntityType}", entity, entity.GetType().Name);
             }
         }
 

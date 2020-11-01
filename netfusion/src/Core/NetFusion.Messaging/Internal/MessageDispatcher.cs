@@ -112,6 +112,8 @@ namespace NetFusion.Messaging.Internal
         {
             if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken),
                "Cancellation token cannot be null.");
+            
+            LogPublishedMessage(message);
 
             try
             {
@@ -121,7 +123,7 @@ namespace NetFusion.Messaging.Internal
             catch (PublisherException ex)
             {
                 // Log the details of the publish exception and rethrow.
-                _logger.Error(ex, "Exception publishing message.");
+                _logger.LogError(ex, "Exception publishing message.");
                 throw;
             }
         }
@@ -164,8 +166,6 @@ namespace NetFusion.Messaging.Internal
 
             try
             {
-                LogPublishedMessage(message);
-                
                 taskList = publishers.Invoke(message,
                     (pub, msg) => pub.PublishMessageAsync(msg, cancellationToken));
 
@@ -190,9 +190,11 @@ namespace NetFusion.Messaging.Internal
         
         private void LogPublishedMessage(IMessage message)
         {
-            _logger.WriteDetails(LogLevel.Information, "Message {MessageType} Published", 
-                message, 
-                message.GetType().Name);          
+            var log = LogMessage.For(LogLevel.Information, "Message {MessageType} Published", message.GetType())
+                .WithProperties(
+                    new LogProperty { Name = "Message", Value = message });
+            
+            _logger.Log(log);
         }
     }
 }

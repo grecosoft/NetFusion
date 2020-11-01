@@ -61,7 +61,7 @@ namespace NetFusion.Messaging.Internal
             catch (QueryDispatchException ex)
             {
                 // Log the details of the dispatch exception and rethrow.
-                _logger.Error(ex, "Exception dispatching query.");
+                _logger.LogError(ex, "Exception dispatching query.");
                 throw;
             }
             catch (Exception ex)
@@ -141,10 +141,10 @@ namespace NetFusion.Messaging.Internal
             
             var log = LogMessage.For(LogLevel.Debug, "Query {QueryType} Dispatched", query.GetType())
                 .WithProperties(
-                    new LogProperty { Name = "Query", Value = query, DestructureObjects = true }, 
-                    new LogProperty { Name = "Handler", Value = handlerInfo, DestructureObjects = true });
+                    new LogProperty { Name = "Query", Value = query }, 
+                    new LogProperty { Name = "Handler", Value = handlerInfo });
 
-            _logger.Write(log);
+            _logger.Log(log);
         }
 
         private void LogQueryFilters<TFilter>(IEnumerable<IQueryFilter> filters) 
@@ -154,11 +154,10 @@ namespace NetFusion.Messaging.Internal
                 .WithProperties(new LogProperty
                 {
                     Name = "FilterTypes", 
-                    Value = filters.Select(f => f.GetType().FullName).ToArray(),
-                    DestructureObjects = true
+                    Value = filters.Select(f => f.GetType().FullName).ToArray()
                 });
             
-            _logger.Write(log);
+            _logger.Log(log);
         }
     }
 }

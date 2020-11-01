@@ -46,7 +46,6 @@ namespace NetFusion.Messaging.Internal
         public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
             MessageDispatchInfo[] dispatchers = GetMessageDispatchers(message);
-
             if (! dispatchers.Any())
             {
                 return;
@@ -85,8 +84,9 @@ namespace NetFusion.Messaging.Internal
             IMessage message,
             CancellationToken cancellationToken)
         {
-            TaskListItem<MessageDispatchInfo>[] taskList = null;
+            LogMessageDispatchers(dispatchers, message);
 
+            TaskListItem<MessageDispatchInfo>[] taskList = null;
             try
             {
                 AssertMessageDispatchers(message, dispatchers);
@@ -135,8 +135,6 @@ namespace NetFusion.Messaging.Internal
         private Task InvokeDispatcher(MessageDispatchInfo dispatcher, IMessage message, 
             CancellationToken cancellationToken)
         {
-            LogMessageDispatch(dispatcher);
-
             // Since this root component, use service-locator obtain reference to message consumer.
             var consumer = (IMessageConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
             return dispatcher.Dispatch(message, consumer, cancellationToken);
@@ -144,14 +142,13 @@ namespace NetFusion.Messaging.Internal
         
         // ----------------------------- [Logging] -----------------------------
 
-        private void LogMessageDispatch(MessageDispatchInfo dispatcher)
+        private void LogMessageDispatchers(MessageDispatchInfo[] dispatchers, IMessage message)
         {
-            _logger.LogDebug("Dispatching Message {MessageType} to Consumer {ConsumerType} Handler {MethodName}", 
-                dispatcher.MessageType,
-                dispatcher.ConsumerType, 
-                dispatcher.MessageHandlerMethod.Name);
+            _logger.LogDetails(LogLevel.Debug, "Dispatching Message {MessageType}", 
+                dispatchers, 
+                message.GetType());
         }
-        
+
         private static object GetDispatchLogDetails(IEnumerable<MessageDispatchInfo> dispatchers)
         {
             return dispatchers.Select(d => new {
