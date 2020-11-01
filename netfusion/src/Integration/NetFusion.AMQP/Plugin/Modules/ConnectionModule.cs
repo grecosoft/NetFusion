@@ -52,7 +52,7 @@ namespace NetFusion.AMQP.Plugin.Modules
             }
             catch (SettingsValidationException ex)
             {
-                NfExtensions.Logger.Write<ConnectionModule>(LogLevel.Error, ex.Message);
+                NfExtensions.Logger.Log<ConnectionModule>(LogLevel.Error, ex.Message);
             }   
         }
         

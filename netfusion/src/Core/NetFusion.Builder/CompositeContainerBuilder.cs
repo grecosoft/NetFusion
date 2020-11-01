@@ -92,7 +92,7 @@ namespace NetFusion.Builder
             }
             catch(Exception ex)
             {
-                NfExtensions.Logger.Error<CompositeContainerBuilder>(ex, "Error building Composite Container");
+                NfExtensions.Logger.LogError<CompositeContainerBuilder>(ex, "Error building Composite Container");
                 throw;
             }
         }

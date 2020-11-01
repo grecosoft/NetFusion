@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Base.Exceptions;
 using NetFusion.Base.Logging;
 using NetFusion.Common.Extensions.Collections;
-using Serilog;
+using SerilogLogger = Serilog.Log;
 using Serilog.Context;
 using Serilog.Core;
 using Serilog.Core.Enrichers;
@@ -19,7 +19,7 @@ namespace NetFusion.Serilog
     /// </summary>
     public class SerilogExtendedLogger : IExtendedLogger
     {
-        public void Write<TContext>(LogMessage message)
+        public void Log<TContext>(LogMessage message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
             
@@ -29,25 +29,25 @@ namespace NetFusion.Serilog
             var enrichers = CreatePropertyEnrichers(message).ToArray();
             using (LogContext.Push(enrichers))
             {
-                Log.ForContext<TContext>().Write(eventLevel.Value, message.Message, message.Args);
+                SerilogLogger.ForContext<TContext>().Write(eventLevel.Value, message.Message, message.Args);
             }
         }
         
-        public void Write<TContext>(params LogMessage[] messages)
+        public void Log<TContext>(params LogMessage[] messages)
         {
             if (messages == null) throw new ArgumentNullException(nameof(messages));
             
-            messages.ForEach(Write<TContext>);
+            messages.ForEach(Log<TContext>);
         }
         
-        public void Write<TContext>(IEnumerable<LogMessage> messages)
+        public void Log<TContext>(IEnumerable<LogMessage> messages)
         {
             if (messages == null) throw new ArgumentNullException(nameof(messages));
             
-            messages.ForEach(Write<TContext>);
+            messages.ForEach(Log<TContext>);
         }
 
-        public void Write<TContext>(LogLevel logLevel, string message, 
+        public void Log<TContext>(LogLevel logLevel, string message, 
             params object[] args)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
@@ -55,10 +55,10 @@ namespace NetFusion.Serilog
             var eventLevel = ToSerilogLevel(logLevel);
             if (eventLevel == null) return;
 
-            Log.ForContext<TContext>().Write(eventLevel.Value, message, args);
+            SerilogLogger.ForContext<TContext>().Write(eventLevel.Value, message, args);
         }
 
-        public void WriteDetails<TContext>(LogLevel logLevel, string message, object details,
+        public void LogDetails<TContext>(LogLevel logLevel, string message, object details,
             params object[] args)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
@@ -69,19 +69,19 @@ namespace NetFusion.Serilog
 
             using (LogContext.Push(new PropertyEnricher("Details", GetDetailsToLog(details), true)))
             {
-                Log.ForContext<TContext>().Write(eventLevel.Value, message, args);
+                SerilogLogger.ForContext<TContext>().Write(eventLevel.Value, message, args);
             }
         }
 
-        public void Error<TContext>(Exception ex, string message, params object[] args)
+        public void LogError<TContext>(Exception ex, string message, params object[] args)
         {
             if (ex == null) throw new ArgumentNullException(nameof(ex));
             if (message == null) throw new ArgumentNullException(nameof(message));
 
-            Log.ForContext<TContext>().Error(ex, message, args);
+            SerilogLogger.ForContext<TContext>().Error(ex, message, args);
         }
 
-        public void ErrorDetails<TContext>(Exception ex, string message, object details, 
+        public void LogErrorDetails<TContext>(Exception ex, string message, object details, 
             params object[] args)
         {
             if (ex == null) throw new ArgumentNullException(nameof(ex));
@@ -90,18 +90,18 @@ namespace NetFusion.Serilog
 
             using (LogContext.Push(new PropertyEnricher("Details", GetDetailsToLog(details), true)))
             {
-                Log.ForContext<TContext>().Error(ex, message, args);
+                SerilogLogger.ForContext<TContext>().Error(ex, message, args);
             }
         }
 
-        public void Error<TContext>(NetFusionException ex, string message, params object[] args)
+        public void LogError<TContext>(NetFusionException ex, string message, params object[] args)
         {
             if (ex == null) throw new ArgumentNullException(nameof(ex));
             if (message == null) throw new ArgumentNullException(nameof(message));
             
             using (LogContext.Push(new PropertyEnricher("Details", ex.Details, true)))
             {
-                Log.ForContext<TContext>().Error(ex, message, args);
+                SerilogLogger.ForContext<TContext>().Error(ex, message, args);
             }
         }
         

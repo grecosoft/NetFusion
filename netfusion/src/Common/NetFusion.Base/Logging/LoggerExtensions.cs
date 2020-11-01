@@ -18,7 +18,7 @@ namespace NetFusion.Base.Logging
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
         public static void Log<TContext>(this ILogger<TContext> logger,
             LogMessage message) => 
-            NfExtensions.Logger.Write<TContext>(message);
+            NfExtensions.Logger.Log<TContext>(message);
         
         /// <summary>
         /// Writes multiple messages containing sets of detailed properties.
@@ -28,7 +28,7 @@ namespace NetFusion.Base.Logging
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
         public static void Log<TContext>(this ILogger<TContext> logger,
             params LogMessage[] message) => 
-            NfExtensions.Logger.Write<TContext>(message);
+            NfExtensions.Logger.Log<TContext>(message);
 
         /// <summary>
         /// Writes a list of log messages containing sets of detailed properties.
@@ -38,7 +38,7 @@ namespace NetFusion.Base.Logging
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
         public static void Log<TContext>(this ILogger<TContext> logger,
             IEnumerable<LogMessage> messages) => 
-            NfExtensions.Logger.Write<TContext>(messages);
+            NfExtensions.Logger.Log<TContext>(messages);
 
         /// <summary>
         /// Writes log message containing set of arguments and a detailed child log property.
@@ -52,7 +52,7 @@ namespace NetFusion.Base.Logging
         public static void LogDetails<TContext>(this ILogger<TContext> logger,
             LogLevel logLevel, string message, object details,
             params object[] args) => 
-            NfExtensions.Logger.WriteDetails<TContext>(logLevel, message, details, args);
+            NfExtensions.Logger.LogDetails<TContext>(logLevel, message, details, args);
 
         /// <summary>
         /// Writes an error message containing set of arguments for an exception.
@@ -66,7 +66,7 @@ namespace NetFusion.Base.Logging
         public static void LogErrorDetails<TContext>(this ILogger<TContext> logger,
             Exception ex, string message, object details,
             params object[] args) => 
-            NfExtensions.Logger.ErrorDetails<TContext>(ex, message, details, args);
+            NfExtensions.Logger.LogErrorDetails<TContext>(ex, message, details, args);
 
         /// <summary>
         /// Writes an error message containing set of arguments for an exception.
@@ -79,7 +79,7 @@ namespace NetFusion.Base.Logging
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
         public static void LogError<TContext>(this ILogger<TContext> logger,
             NetFusionException ex, string message,
-            params object[] args) => NfExtensions.Logger.Error<TContext>(ex, message, args);
+            params object[] args) => NfExtensions.Logger.LogError<TContext>(ex, message, args);
         
         
         public static DurationLogger LogInformationDuration(this ILogger logger, string processName)

@@ -55,7 +55,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             }
             catch (SettingsValidationException ex)
             {
-                NfExtensions.Logger.Write<BusModule>(LogLevel.Error, ex.Message);
+                NfExtensions.Logger.Log<BusModule>(LogLevel.Error, ex.Message);
                 throw;
             }
         }

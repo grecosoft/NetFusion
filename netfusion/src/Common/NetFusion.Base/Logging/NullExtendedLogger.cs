@@ -12,15 +12,15 @@ namespace NetFusion.Base.Logging
     /// </summary>
     public class NullExtendedLogger : IExtendedLogger
     {
-        public void Write<TContext>(LogMessage message) { }
-        public void Write<TContext>(params LogMessage[] messages) { }
-        public void Write<TContext>(IEnumerable<LogMessage> messages) { }
-        public void Write<TContext>(LogLevel logLevel, string message, params object[] args) { }
+        public void Log<TContext>(LogMessage message) { }
+        public void Log<TContext>(params LogMessage[] messages) { }
+        public void Log<TContext>(IEnumerable<LogMessage> messages) { }
+        public void Log<TContext>(LogLevel logLevel, string message, params object[] args) { }
         
-        public void WriteDetails<TContext>(LogLevel logLevel, string message, object details, params object[] args) { }
+        public void LogDetails<TContext>(LogLevel logLevel, string message, object details, params object[] args) { }
        
-        public void Error<TContext>(Exception ex, string message, params object[] args) { }
-        public void ErrorDetails<TContext>(Exception ex, string message, object details, params object[] args) { }
-        public void Error<TContext>(NetFusionException ex, string message, params object[] args) { }
+        public void LogError<TContext>(Exception ex, string message, params object[] args) { }
+        public void LogErrorDetails<TContext>(Exception ex, string message, object details, params object[] args) { }
+        public void LogError<TContext>(NetFusionException ex, string message, params object[] args) { }
     }
 }

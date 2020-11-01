@@ -34,7 +34,7 @@ namespace NetFusion.Settings.Plugin.Modules
 
                 if (string.IsNullOrWhiteSpace(sectionPath))
                 {
-                    NfExtensions.Logger.Write<AppSettingsModule>(LogLevel.Warning, 
+                    NfExtensions.Logger.Log<AppSettingsModule>(LogLevel.Warning, 
                         "The section path for settings {SettingsType} could not be determined.  Make sure the " +
                         "attribute {AttributeType} is specified.",
                         appSettingType.AssemblyQualifiedName, 

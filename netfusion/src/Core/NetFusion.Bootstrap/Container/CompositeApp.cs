@@ -62,7 +62,7 @@ namespace NetFusion.Bootstrap.Container
             
             if (IsStarted)
             {
-                NfExtensions.Logger.Write<CompositeApp>(LogLevel.Error, "Composite Application already started");
+                NfExtensions.Logger.Log<CompositeApp>(LogLevel.Error, "Composite Application already started");
                 throw new ContainerException("Composite Application already started");
             }
 
@@ -72,26 +72,26 @@ namespace NetFusion.Bootstrap.Container
                 using (_logger.LogInformationDuration("Starting Modules"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {                    
-                    NfExtensions.Logger.Write<CompositeApp>(CoreServicesLogger.Log(scope.ServiceProvider));
+                    NfExtensions.Logger.Log<CompositeApp>(CoreServicesLogger.Log(scope.ServiceProvider));
                     await StartModules(scope.ServiceProvider);
                 }
             }
             catch (ContainerException ex)
             {
-                NfExtensions.Logger.Error<CompositeApp>(ex, startExMsg);
+                NfExtensions.Logger.LogError<CompositeApp>(ex, startExMsg);
                 throw;
             }
             catch (AggregateException ex)
             {
                 var flattenedEx = ex.Flatten();
                 
-                NfExtensions.Logger.Error<CompositeApp>(flattenedEx, startExMsg);
+                NfExtensions.Logger.LogError<CompositeApp>(flattenedEx, startExMsg);
                 throw new ContainerException(startExMsg, flattenedEx);
                 
             }
             catch (Exception ex)
             {
-                NfExtensions.Logger.Error<CompositeApp>(ex, startExMsg);
+                NfExtensions.Logger.LogError<CompositeApp>(ex, startExMsg);
                 throw new ContainerException(startExMsg, ex);
             }
         }
@@ -199,19 +199,19 @@ namespace NetFusion.Bootstrap.Container
             }
             catch (ContainerException ex)
             {
-                NfExtensions.Logger.Error<CompositeApp>(ex, stopExMsg);
+                NfExtensions.Logger.LogError<CompositeApp>(ex, stopExMsg);
                 throw;
             }
             catch (AggregateException ex)
             {
                 var flattenedEx = ex.Flatten();
                 
-                NfExtensions.Logger.Error<CompositeApp>(flattenedEx, stopExMsg);
+                NfExtensions.Logger.LogError<CompositeApp>(flattenedEx, stopExMsg);
                 throw new ContainerException(stopExMsg, flattenedEx);
             }
             catch (Exception ex)
             {
-                NfExtensions.Logger.Error<CompositeApp>(ex, stopExMsg);
+                NfExtensions.Logger.LogError<CompositeApp>(ex, stopExMsg);
                 throw new ContainerException(stopExMsg, ex);
             }
         }

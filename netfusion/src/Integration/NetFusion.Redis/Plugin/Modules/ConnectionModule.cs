@@ -39,7 +39,7 @@ namespace NetFusion.Redis.Plugin.Modules
             }
             catch (SettingsValidationException ex)
             {
-                NfExtensions.Logger.Write<ConnectionModule>(LogLevel.Error, ex.Message);
+                NfExtensions.Logger.Log<ConnectionModule>(LogLevel.Error, ex.Message);
                 throw;
             }
            

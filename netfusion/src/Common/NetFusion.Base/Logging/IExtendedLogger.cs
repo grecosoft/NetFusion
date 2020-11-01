@@ -16,21 +16,21 @@ namespace NetFusion.Base.Logging
         /// </summary>
         /// <param name="message">The message to log.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
-        void Write<TContext>(LogMessage message);
+        void Log<TContext>(LogMessage message);
         
         /// <summary>
         /// Writes multiple messages containing sets of detailed properties.
         /// </summary>
         /// <param name="messages">Messages to write to the log.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
-        public void Write<TContext>(params LogMessage[] messages);
+        public void Log<TContext>(params LogMessage[] messages);
         
         /// <summary>
         /// Writes a list of log messages containing sets of detailed properties.
         /// </summary>
         /// <param name="messages">Messages to write to the log.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
-        void Write<TContext>(IEnumerable<LogMessage> messages);
+        void Log<TContext>(IEnumerable<LogMessage> messages);
         
         /// <summary>
         /// Writes log message containing options set of arguments.
@@ -39,7 +39,7 @@ namespace NetFusion.Base.Logging
         /// <param name="message">The message template to log.</param>
         /// <param name="args">Optional message template argument values.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
-        void Write<TContext>(LogLevel logLevel, string message, 
+        void Log<TContext>(LogLevel logLevel, string message, 
             params object[] args);
         
         /// <summary>
@@ -50,7 +50,7 @@ namespace NetFusion.Base.Logging
         /// <param name="details">Details stored as a log property.</param>
         /// <param name="args">Optional message template argument values.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
-        void WriteDetails<TContext>(LogLevel logLevel, string message, object details, 
+        void LogDetails<TContext>(LogLevel logLevel, string message, object details, 
             params object[] args);
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace NetFusion.Base.Logging
         /// <param name="message">The message template to log.</param>
         /// <param name="args">Optional message template argument values.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
-        void Error<TContext>(Exception ex, string message, 
+        void LogError<TContext>(Exception ex, string message, 
             params object[] args);
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace NetFusion.Base.Logging
         /// <param name="details">Details stored as a log property.</param>
         /// <param name="args">Optional message template argument values.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
-        void ErrorDetails<TContext>(Exception ex, string message, object details, 
+        void LogErrorDetails<TContext>(Exception ex, string message, object details, 
             params object[] args);
         
         /// <summary>
@@ -82,7 +82,7 @@ namespace NetFusion.Base.Logging
         /// <param name="details">Details stored as a log property.</param>
         /// <param name="args">Optional message template argument values.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
-        void Error<TContext>(NetFusionException ex, string message, 
+        void LogError<TContext>(NetFusionException ex, string message, 
             params object[] args);
     }
 }
