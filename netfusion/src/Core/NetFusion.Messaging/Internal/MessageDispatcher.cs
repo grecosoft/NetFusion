@@ -122,8 +122,13 @@ namespace NetFusion.Messaging.Internal
             }
             catch (PublisherException ex)
             {
+                var log = LogMessage.For(LogLevel.Error, "Exception Publishing Message {MessageType}",
+                    message.GetType()).WithProperties(
+                        new LogProperty { Name = "Message", Value = message }
+                    );
+                
                 // Log the details of the publish exception and rethrow.
-                _logger.LogError(ex, "Exception publishing message.");
+                _logger.Log(ex, log);
                 throw;
             }
         }

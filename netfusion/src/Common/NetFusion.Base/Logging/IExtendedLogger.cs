@@ -31,6 +31,15 @@ namespace NetFusion.Base.Logging
         /// <param name="messages">Messages to write to the log.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
         void Log<TContext>(IEnumerable<LogMessage> messages);
+
+        /// <summary>
+        /// Writes log message containing a set of detailed properties associated with
+        /// an exception.
+        /// </summary>
+        /// <param name="ex">The exception to log.</param>
+        /// <param name="message">The message to log.</param>
+        /// <typeparam name="TContext">Namespace associated with the log message.</typeparam>
+        void Log<TContext>(NetFusionException ex, LogMessage message);
         
         /// <summary>
         /// Writes log message containing options set of arguments.

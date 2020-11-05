@@ -15,6 +15,8 @@ namespace NetFusion.Base.Logging
         public void Log<TContext>(LogMessage message) { }
         public void Log<TContext>(params LogMessage[] messages) { }
         public void Log<TContext>(IEnumerable<LogMessage> messages) { }
+        public void Log<TContext>(NetFusionException ex, LogMessage message) { }
+
         public void Log<TContext>(LogLevel logLevel, string message, params object[] args) { }
         
         public void LogDetails<TContext>(LogLevel logLevel, string message, object details, params object[] args) { }

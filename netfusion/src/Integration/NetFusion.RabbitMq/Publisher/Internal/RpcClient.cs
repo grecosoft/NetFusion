@@ -166,7 +166,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                         return;        
                     }
                     
-                    _logger.LogTrace("Reply to message with correlation id of: {correlationId} received.", correlationId);
+                    _logger.LogDebug("Reply to message with correlation id of: {correlationId} received.", correlationId);
 
                     if (msgProps.IsRpcReplyException())
                     {

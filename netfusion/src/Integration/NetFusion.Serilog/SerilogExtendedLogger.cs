@@ -46,6 +46,21 @@ namespace NetFusion.Serilog
             
             messages.ForEach(Log<TContext>);
         }
+        
+        public void Log<TContext>(NetFusionException ex, LogMessage message)
+        {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+
+            var eventLevel = ToSerilogLevel(message.LogLevel) ?? LogEventLevel.Error;
+
+            var enrichers = CreatePropertyEnrichers(message).ToList();
+            enrichers.Add(new PropertyEnricher("Details", ex.Details, true));
+            
+            using (LogContext.Push(enrichers.ToArray()))
+            {
+                SerilogLogger.ForContext<TContext>().Write(eventLevel, ex, message.Message, message.Args);
+            }
+        }
 
         public void Log<TContext>(LogLevel logLevel, string message, 
             params object[] args)

@@ -41,6 +41,17 @@ namespace NetFusion.Base.Logging
             NfExtensions.Logger.Log<TContext>(messages);
 
         /// <summary>
+        /// Writes log message containing a set of detailed properties associated with
+        /// an exception.
+        /// </summary>
+        /// <param name="ex">The exception to log.</param>
+        /// <param name="message">The message to log.</param>
+        /// <typeparam name="TContext">Namespace associated with the log message.</typeparam>
+        public static void Log<TContext>(this ILogger<TContext> logger,
+            NetFusionException ex, LogMessage message) =>
+            NfExtensions.Logger.Log<TContext>(ex, message);
+
+        /// <summary>
         /// Writes log message containing set of arguments and a detailed child log property.
         /// </summary>
         /// <param name="logger">Logger instance.</param>

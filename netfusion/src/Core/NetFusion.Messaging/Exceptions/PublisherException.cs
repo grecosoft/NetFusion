@@ -14,6 +14,8 @@ namespace NetFusion.Messaging.Exceptions
     /// </summary>
     public class PublisherException : NetFusionException
     {
+        public IMessage PublishedMessage { get; }
+        
         /// <summary>
         /// Publisher Exception.
         /// </summary>
@@ -24,7 +26,7 @@ namespace NetFusion.Messaging.Exceptions
 
         }
         
-        public IEnumerable<Exception> ExceptionDetails { get; private set; }
+        public IEnumerable<Exception> ExceptionDetails { get; }
 
         /// <summary>
         /// Publisher Exception.
@@ -38,14 +40,12 @@ namespace NetFusion.Messaging.Exceptions
             IMessage message,
             IEnumerable<PublisherException> publisherExceptions) : base(errorMessage)
         {
-            if (message == null) throw new ArgumentNullException(nameof(message));
-
+            PublishedMessage = message ?? throw new ArgumentNullException(nameof(message));
             ExceptionDetails = publisherExceptions ?? throw new ArgumentNullException(nameof(publisherExceptions));
             
             Details = new Dictionary<string, object>
             {
                 { "Message", errorMessage },
-                { "PublishedMessage", message },
                 { "PublishExceptionDetails", publisherExceptions.Select(e => e.Details).ToArray() }
             };
         }
