@@ -26,6 +26,7 @@ namespace NetFusion.Messaging.Plugin.Configs
             // application's configuration can clear.
             AddEnricher<CorrelationEnricher>();
             AddEnricher<DateOccurredEnricher>();
+            AddEnricher<HostEnricher>();
         }
 
         /// <summary>

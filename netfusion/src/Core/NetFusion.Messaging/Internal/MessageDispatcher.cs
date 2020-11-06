@@ -113,11 +113,13 @@ namespace NetFusion.Messaging.Internal
             if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken),
                "Cancellation token cannot be null.");
             
-            LogPublishedMessage(message);
+            
 
             try
             {
                 await ApplyMessageEnrichers(message);
+                LogPublishedMessage(message);
+                
                 await InvokePublishers(message, cancellationToken, integrationType);
             }
             catch (PublisherException ex)
