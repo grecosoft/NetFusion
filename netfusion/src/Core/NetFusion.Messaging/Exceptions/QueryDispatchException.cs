@@ -17,9 +17,10 @@ namespace NetFusion.Messaging.Exceptions
         /// Dispatch exception.
         /// </summary>
         /// <param name="message">Dispatch error message.</param>
-        public QueryDispatchException(string message) :
-            base(message)
-        { }
+        public QueryDispatchException(string message) : base(message)
+        {
+            
+        }
 
         /// <summary>
         /// Dispatch Exception.
@@ -27,9 +28,11 @@ namespace NetFusion.Messaging.Exceptions
         /// <param name="message">Dispatch error message.</param>
         /// <param name="innerException">The source exception.  If the exception is derived
         /// from NetFusionException, the details will be added to this exception's details.</param>
-        public QueryDispatchException(string message, Exception innerException) :
-            base(message, innerException)
-        { }
+        public QueryDispatchException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+            
+        }
 
         /// <summary>
         /// Dispatch Exception.
@@ -54,17 +57,14 @@ namespace NetFusion.Messaging.Exceptions
         /// <summary>
         /// Dispatch Exception.
         /// </summary>
-        /// <param name="errorMessage">Dispatch error message.</param>
-        /// <param name="filterExceptions">List of exceptions for failed query filters..</param>
-        public QueryDispatchException(string errorMessage, IEnumerable<QueryFilterException> filterExceptions)
-            : base(errorMessage)
+        /// <param name="message">Dispatch error message.</param>
+        /// <param name="filterExceptions">List of exceptions for failed query filters.</param>
+        public QueryDispatchException(string message, IEnumerable<QueryFilterException> filterExceptions)
+            : base(message)
         {
             if (filterExceptions == null) throw new ArgumentNullException(nameof(filterExceptions));
 
-            Details = new Dictionary<string, object>
-            {
-                { "DispatchExceptions", filterExceptions.Select(de => de.Details).ToArray() }
-            };
+            Details["DispatchExceptions"] = filterExceptions.Select(de => de.Details).ToArray();
         }
 
         /// <summary>

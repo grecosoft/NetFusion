@@ -152,12 +152,11 @@ namespace NetFusion.Messaging.Internal
                     if (enricherErrors.Any())
                     {
                         throw new PublisherException("Exception when invoking message enrichers.",
-                            message,
                             enricherErrors);
                     }
                 }
 
-                throw new PublisherException("Exception when invoking message enrichers.", message, ex);
+                throw new PublisherException("Exception when invoking message enrichers.", ex);
             }
         }
 
@@ -189,7 +188,7 @@ namespace NetFusion.Messaging.Internal
                     }
                 }
 
-                throw new PublisherException("Exception when invoking message publishers.", message, ex);
+                throw new PublisherException("Exception when invoking message publishers.", ex);
             }
         }
         

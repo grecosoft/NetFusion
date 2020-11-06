@@ -10,12 +10,14 @@ namespace NetFusion.Messaging.Exceptions
     /// </summary>
     public class EnricherException : NetFusionException
     {
+        public EnricherException() { }
+        
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="taskItem">The task item containing the exception.</param>
         public EnricherException(TaskListItem<IMessageEnricher> taskItem)
-            :base("Enricher Exception", GetSourceException(taskItem))
+            : base("Enricher Exception", GetSourceException(taskItem))
         {
             if (taskItem == null) throw new NullReferenceException(nameof(taskItem));
 
@@ -24,6 +26,7 @@ namespace NetFusion.Messaging.Exceptions
 
         private static Exception GetSourceException(TaskListItem<IMessageEnricher> taskItem)
         {
+            // Get the aggregate inner exception.
             var taskException = taskItem.Task.Exception;
             return taskException?.InnerException;
         }

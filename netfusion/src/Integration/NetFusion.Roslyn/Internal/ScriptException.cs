@@ -20,8 +20,7 @@ namespace NetFusion.Roslyn.Internal
         /// Constructor.
         /// </summary>
         /// <param name="message">Message describing the script evaluation exception.</param>
-        public ScriptException(string message)
-            : base(message)
+        public ScriptException(string message) : base(message)
         {
 
         }
@@ -33,18 +32,6 @@ namespace NetFusion.Roslyn.Internal
         /// <param name="innerException">The source exception containing details.</param>
         public ScriptException(string message, Exception innerException)
             : base(message, innerException)
-        {
-
-        }
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="message">Message describing the script evaluation exception.</param>
-        /// <param name="detailKey">Identifies the exception details.</param>
-        /// <param name="details">Object containing detailed information about the application
-        /// state at the time of the exception.</param>
-        public ScriptException(string message, string detailKey, object details)
-            : base(message, detailKey, details)
         {
 
         }

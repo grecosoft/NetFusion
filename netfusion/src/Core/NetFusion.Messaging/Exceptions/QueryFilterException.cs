@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using NetFusion.Base.Exceptions;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Filters;
@@ -12,7 +11,11 @@ namespace NetFusion.Messaging.Exceptions
     /// </summary>
     public class QueryFilterException : NetFusionException
     {
-        
+        protected QueryFilterException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+            
+        }
     }
     
     /// <summary>
@@ -26,18 +29,19 @@ namespace NetFusion.Messaging.Exceptions
         /// Constructor.
         /// </summary>
         /// <param name="taskItem">Task result containing the exception.</param>
-        public QueryFilterException(TaskListItem<T> taskItem)
+        public QueryFilterException(TaskListItem<T> taskItem) 
+            : base("Query Filter Exception", GetSourceException(taskItem))
         {
             if (taskItem == null) throw new ArgumentNullException(nameof(taskItem));
 
+            Details["Filter"] = taskItem.Invoker.GetType().FullName;
+        }
+        
+        private static Exception GetSourceException(TaskListItem<T> taskItem)
+        {
+            // Get the aggregate inner exception.
             var taskException = taskItem.Task.Exception;
-            var sourceException = taskException?.InnerException;
-
-            Details = new Dictionary<string, object>
-            {
-                { "Message", sourceException?.Message },
-                { "Filter", taskItem.Invoker.GetType().FullName }
-            };
+            return taskException?.InnerException;
         }
     }
 }
