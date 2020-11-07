@@ -25,7 +25,7 @@
         "type": "parameter",
         "datatype":"string",
         "isRequired": true,
-        "description": "The name of the service used in docker-compose."
+        "description": "The name of the service."
       },
       "docker-image-name":{
         "type": "generated",

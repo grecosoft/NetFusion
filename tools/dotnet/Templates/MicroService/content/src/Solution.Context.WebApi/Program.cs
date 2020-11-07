@@ -19,6 +19,9 @@ namespace Solution.Context.WebApi
     // to the Startup class to initialize HTTP pipeline related settings.
     public class Program
     {
+        // Allows changing the minimum log level of the service at runtime.
+        private static readonly LogLevelControl LogLevelControl = new LogLevelControl();
+        
         public static async Task Main(string[] args)
         {
             IHost webHost = BuildWebHost(args);
@@ -39,12 +42,18 @@ namespace Solution.Context.WebApi
         private static IHost BuildWebHost(string[] args) 
         {
             return Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(SetupConfiguration)
+                .ConfigureLogging(SetupLogging)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.ConfigureServices(sc =>
+                    {
+                        // Register Log Level Control so it can be injected into
+                        // a service at runtime to change the level.
+                        sc.AddLogLevelControl(LogLevelControl);
+                    });
                 })
-                .ConfigureAppConfiguration(SetupConfiguration)
-                .ConfigureLogging(SetupLogging)
                 .UseSerilog()
                 .Build();
         }
@@ -65,7 +74,7 @@ namespace Solution.Context.WebApi
             Serilog.Debugging.SelfLog.Enable(Console.Error);
             
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
+                .MinimumLevel.ControlledBy(LogLevelControl.Switch)
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
 
                 .Enrich.FromLogContext()
