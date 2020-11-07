@@ -1,5 +1,5 @@
 PACKAGES_DIR=../../_packages
-VERSION=9.9.42
+VERSION=9.9.43
 
 dotnet clean
 dotnet build NetFusion.sln
@@ -15,6 +15,7 @@ dotnet pack ./src/Core/NetFusion.Messaging/NetFusion.Messaging.csproj --no-build
 dotnet pack ./src/Core/NetFusion.Builder/NetFusion.Builder.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Core/NetFusion.Test/NetFusion.Test.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 
+dotnet pack ./src/Integration/NetFusion.Serilog/NetFusion.Serilog.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Integration/NetFusion.Serialization/NetFusion.Serialization.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Integration/NetFusion.Roslyn/NetFusion.Roslyn.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Integration/NetFusion.EntityFramework/NetFusion.EntityFramework.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION

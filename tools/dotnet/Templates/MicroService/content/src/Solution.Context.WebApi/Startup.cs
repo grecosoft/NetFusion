@@ -7,8 +7,10 @@ using NetFusion.Builder;
 using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Rest.Server.Plugin;
+using NetFusion.Serilog;
 using NetFusion.Settings.Plugin;
 using NetFusion.Web.Mvc.Plugin;
+using Serilog;
 using Solution.Context.App.Plugin;
 using Solution.Context.Domain.Plugin;
 using Solution.Context.Infra.Plugin;
@@ -32,7 +34,7 @@ namespace Solution.Context.WebApi
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.CompositeContainer(_configuration)
+            services.CompositeContainer(_configuration, new SerilogExtendedLogger())
                 .AddSettings()
                 .AddMessaging()
                 .AddWebMvc()
@@ -45,6 +47,7 @@ namespace Solution.Context.WebApi
                 .Compose();
 
             services.AddCors();
+            services.AddHttpContextAccessor();
             services.AddControllers();
 
             // Adds SignalR and a message log sink that delegates
@@ -67,6 +70,8 @@ namespace Solution.Context.WebApi
                     .WithExposedHeaders("WWW-Authenticate","resource-404")
                     .AllowAnyHeader());
             }
+            
+            app.UseSerilogRequestLogging();
             
             app.UseRouting();
             app.UseAuthorization();
