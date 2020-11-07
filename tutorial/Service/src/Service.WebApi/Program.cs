@@ -64,6 +64,7 @@ namespace Service.WebApi
                 .MinimumLevel.Override("Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .Enrich.WithHostIdentity(WebApiPlugin.HostId, WebApiPlugin.HostName)
+                .Enrich.WithCorrelationId()
                 .WriteTo.Console()
                 .WriteTo.Seq("http://localhost:5351")
                 .CreateLogger();

@@ -45,6 +45,7 @@ namespace Subscriber.WebApi
             
             services.AddCors();
             services.AddControllers();
+            services.AddHttpContextAccessor();
 
             if (_hostingEnv.IsDevelopment())
             {

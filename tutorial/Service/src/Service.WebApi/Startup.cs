@@ -64,6 +64,7 @@ namespace Service.WebApi
             
             services.AddCors();
             services.AddControllers();
+            services.AddHttpContextAccessor();
             services.AddSingleton(InMemoryScripting.LoadSensorScript());
             
             services.AddRestClientFactory();
