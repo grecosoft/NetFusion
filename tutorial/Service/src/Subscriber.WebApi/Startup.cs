@@ -23,7 +23,6 @@ namespace Subscriber.WebApi
     {
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _hostingEnv;
-
         
         public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnv)
         {

@@ -127,8 +127,7 @@ namespace NetFusion.Serilog
                 p.DestructureObjects)
             );
         
-
-        private static LogEventLevel? ToSerilogLevel(LogLevel logLevel)
+        public static LogEventLevel? ToSerilogLevel(LogLevel logLevel)
         {
             return logLevel switch
             {

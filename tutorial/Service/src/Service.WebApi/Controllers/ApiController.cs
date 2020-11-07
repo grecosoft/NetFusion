@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Rest.Resources;
 using NetFusion.Rest.Server.Hal;
@@ -19,10 +21,13 @@ namespace Service.WebApi.Controllers
     public class ApiController : ControllerBase
     {
         private readonly ICompositeApp _compositeApp;
+        private readonly ILogLevelControl _logLevelControl;
         
-        public ApiController(ICompositeApp compositeApp)
+        public ApiController(ICompositeApp compositeApp,
+            ILogLevelControl logLevelControl)
         {
             _compositeApp = compositeApp ?? throw new ArgumentNullException(nameof(compositeApp));
+            _logLevelControl = logLevelControl ?? throw new ArgumentNullException(nameof(logLevelControl));
         }
         
         [HttpGet("examples")]
@@ -36,6 +41,18 @@ namespace Service.WebApi.Controllers
         public IActionResult GetCompositeLog()
         {
             return Ok(_compositeApp.Log);
+        }
+
+        [HttpPut("minimum/log/{level}")]
+        public IActionResult SetLogLevel(string level)
+        {
+            if (! Enum.TryParse<LogLevel>(level, true, out var logLevel))
+            {
+                return BadRequest("Invalid Log Level");
+            }
+            
+            var setLogLevel = _logLevelControl.SetMinimumLevel(logLevel);
+            return Ok(setLogLevel);
         }
     }
 
