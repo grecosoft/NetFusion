@@ -40,7 +40,7 @@ namespace Subscriber.WebApi
                 // .AddAmqp()
                 .AddRedis()
 
-                .AddPlugin<ClientPlugin>()
+                .AddPlugin<WebApiPlugin>()
                 .Compose();
             
             services.AddCors();

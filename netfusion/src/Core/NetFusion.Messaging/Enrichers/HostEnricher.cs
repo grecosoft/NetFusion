@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Container;    
 using NetFusion.Messaging.Types.Attributes;
 using NetFusion.Messaging.Types.Contracts;
 

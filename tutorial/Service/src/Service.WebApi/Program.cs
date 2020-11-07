@@ -6,8 +6,10 @@ using NetFusion.Bootstrap.Container;
 using NetFusion.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NetFusion.Serilog;
 using Serilog;
 using Serilog.Events;
+using Service.WebApi.Plugin;
 
 namespace Service.WebApi
 {
@@ -61,6 +63,7 @@ namespace Service.WebApi
                 .MinimumLevel.Override("Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor", LogEventLevel.Warning)
                 .MinimumLevel.Override("Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
+                .Enrich.WithHostIdentity(WebApiPlugin.HostId, WebApiPlugin.HostName)
                 .WriteTo.Console()
                 .WriteTo.Seq("http://localhost:5351")
                 .CreateLogger();

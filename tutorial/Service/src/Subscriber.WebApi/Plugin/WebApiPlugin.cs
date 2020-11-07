@@ -1,12 +1,12 @@
 using NetFusion.Bootstrap.Plugins;
 
-namespace Service.WebApi.Plugin
+namespace Subscriber.WebApi.Plugin
 {
     public class WebApiPlugin : PluginBase
     {
-        public const string HostId = "fddc1d2d-2f86-4d96-a1a8-e3de72c1a02a";
-        public const string HostName = "Example-WebApi";
-
+        public const string HostId = "fAD13D4BB-8777-4F73-8C6E-23BD03ABC433";
+        public const string HostName = "Example-Subscriber";
+        
         public override PluginTypes PluginType => PluginTypes.HostPlugin;
         public override string PluginId => HostId;
         public override string Name => HostName;
