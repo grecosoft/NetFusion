@@ -27,7 +27,7 @@ namespace Subscriber.WebApi
         
         public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnv)
         {
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));    
             _hostingEnv = hostingEnv ?? throw new ArgumentNullException(nameof(hostingEnv));
         }
 

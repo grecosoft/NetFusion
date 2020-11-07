@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -55,18 +57,22 @@ namespace Subscriber.WebApi
         private static void SetupLogging(HostBuilderContext context, 
             ILoggingBuilder builder)
         {
+            var seqUrl = context.Configuration.GetValue("logging:seqUrl", "http://localhost:5341");
+
+            // Send any serilog configuration issue logs to console.
+            Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
+            Serilog.Debugging.SelfLog.Enable(Console.Error);
+            
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .MinimumLevel.Override("Microsoft.AspNetCore.Hosting.Diagnostics", LogEventLevel.Warning)
-                .MinimumLevel.Override("Microsoft.AspNetCore.Routing.EndpointMiddleware", LogEventLevel.Warning)
-                .MinimumLevel.Override("Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor", LogEventLevel.Warning)
-                .MinimumLevel.Override("Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+
                 .Enrich.FromLogContext()
-                .Enrich.WithHostIdentity(WebApiPlugin.HostId, WebApiPlugin.HostName)
                 .Enrich.WithCorrelationId()
-                .WriteTo.Console()
-                .WriteTo.Seq("http://localhost:5351")
+                .Enrich.WithHostIdentity(WebApiPlugin.HostId, WebApiPlugin.HostName)
+                
+                .WriteTo.ColoredConsole()
+                .WriteTo.Seq(seqUrl)
                 .CreateLogger();
         }
     }

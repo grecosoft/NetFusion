@@ -17,11 +17,15 @@
     <ProjectReference Include="..\..\..\..\netfusion\src\Web\NetFusion.Rest.Resources\NetFusion.Rest.Resources.csproj" />
     <ProjectReference Include="..\..\..\..\netfusion\src\Web\NetFusion.Rest.Server\NetFusion.Rest.Server.csproj" />
     <ProjectReference Include="..\..\..\..\netfusion\src\Web\NetFusion.Web.Mvc\NetFusion.Web.Mvc.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Components\Service.App\Service.App.csproj" />
     <ProjectReference Include="..\Components\Service.Domain\Service.Domain.csproj" />
     <ProjectReference Include="..\Components\Service.Infra\Service.Infra.csproj" />
-
+  </ItemGroup>
+    <ItemGroup>
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+    <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
   </ItemGroup>
 </Project>
