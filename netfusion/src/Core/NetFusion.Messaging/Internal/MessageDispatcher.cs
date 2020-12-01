@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Enrichers;
@@ -102,6 +102,8 @@ namespace NetFusion.Messaging.Internal
                 throw new PublisherException("Exception dispatching event source.", eventSource, publisherErrors);
             }
         }
+        
+        // ----------------------------- [Publishing] -----------------------------
 
         // Private method to which all other publish methods delegate to asynchronously apply
         // the enrichers and to invoke all registered message publishers.
@@ -110,16 +112,25 @@ namespace NetFusion.Messaging.Internal
         {
             if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken),
                "Cancellation token cannot be null.");
+            
+            
 
             try
             {
                 await ApplyMessageEnrichers(message);
+                LogPublishedMessage(message);
+                
                 await InvokePublishers(message, cancellationToken, integrationType);
             }
             catch (PublisherException ex)
             {
+                var log = LogMessage.For(LogLevel.Error, "Exception Publishing Message {MessageType}",
+                    message.GetType()).WithProperties(
+                        new LogProperty { Name = "Message", Value = message }
+                    );
+                
                 // Log the details of the publish exception and rethrow.
-                _logger.LogErrorDetails(MessagingLogEvents.MessagingException, ex, "Exception publishing message.");
+                _logger.Log(ex, log);
                 throw;
             }
         }
@@ -127,9 +138,7 @@ namespace NetFusion.Messaging.Internal
         private async Task ApplyMessageEnrichers(IMessage message)
         {
             TaskListItem<IMessageEnricher>[] taskList = null;
-
-            LogConfiguredEnrichers();
-
+            
             try
             {
                 taskList = _messageEnrichers.Invoke(message,
@@ -145,22 +154,12 @@ namespace NetFusion.Messaging.Internal
                     if (enricherErrors.Any())
                     {
                         throw new PublisherException("Exception when invoking message enrichers.",
-                            message,
                             enricherErrors);
                     }
                 }
 
-                throw new PublisherException("Exception when invoking message enrichers.", message, ex);
+                throw new PublisherException("Exception when invoking message enrichers.", ex);
             }
-        }
-
-        private void LogConfiguredEnrichers()
-        {
-            if (!_logger.IsEnabled(LogLevel.Trace)) return;
-
-            string enricherTypes = string.Join(", ", _messageEnrichers.Select(e => e.GetType().FullName).ToArray());
-            
-            _logger.LogTrace("Enriched By: [{enricherTypes}] ", enricherTypes);
         }
 
         private async Task InvokePublishers(IMessage message, CancellationToken cancellationToken, 
@@ -191,8 +190,17 @@ namespace NetFusion.Messaging.Internal
                     }
                 }
 
-                throw new PublisherException("Exception when invoking message publishers.", message, ex);
+                throw new PublisherException("Exception when invoking message publishers.", ex);
             }
+        }
+        
+        private void LogPublishedMessage(IMessage message)
+        {
+            var log = LogMessage.For(LogLevel.Information, "Message {MessageType} Published", message.GetType())
+                .WithProperties(
+                    new LogProperty { Name = "Message", Value = message });
+            
+            _logger.Log(log);
         }
     }
 }

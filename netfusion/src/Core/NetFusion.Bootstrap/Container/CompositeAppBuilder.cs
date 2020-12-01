@@ -4,12 +4,10 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Catalog;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 
@@ -36,23 +34,17 @@ namespace NetFusion.Bootstrap.Container
         public IPluginModule[] AllModules => AllPlugins.SelectMany(p => p.Modules).ToArray();
         
         // Logging Properties:
-        public IBootstrapLogger BootstrapLogger { get; }
-        public CompositeAppLog CompositeLog { get; private set; }
+        public CompositeAppLogger CompositeLog { get; private set; }
         
-        public CompositeAppBuilder(IServiceCollection serviceCollection, 
-            IConfiguration configuration,
-            IBootstrapLogger bootstrapLogger)
+        public CompositeAppBuilder(IServiceCollection serviceCollection, IConfiguration configuration)
         {
             _containerConfigs = new List<IContainerConfig>();
             
             ServiceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
             Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            BootstrapLogger = bootstrapLogger ?? throw new ArgumentNullException(nameof(bootstrapLogger));
         }
         
-        //---------------------------------------------
-        //--Initialization
-        //---------------------------------------------
+        // --------------------------- [Initialization] -------------------------------
         
         // Provided a list of plugins, creates and initializes all plugin modules.
         internal void ComposeModules(ITypeResolver typeResolver, IEnumerable<IPlugin> plugins)
@@ -60,15 +52,11 @@ namespace NetFusion.Bootstrap.Container
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
             if (plugins == null) throw new ArgumentNullException(nameof(plugins));
 
-            BootstrapLogger.Add(LogLevel.Debug, "Composing Plugins");
-            
             CategorizePlugins(plugins);
             SetPluginAssemblyInfo(typeResolver);
             
             // Before composing the plugin modules, verify the plugins from which 
             // the composite application is being build.
-            BootstrapLogger.Add(LogLevel.Debug, "Validating Plugins");
-            
             var validator = new CompositeAppValidation(AllPlugins);
             validator.Validate();
 
@@ -77,6 +65,7 @@ namespace NetFusion.Bootstrap.Container
             
             // Allow each plug-in module to compose itself from concrete types, defined by
             // other plugins, based on abstract types defined by the plugin being composed.
+            // This of this as a simplified implementation of Microsoft's MEF.
             ComposeCorePlugins(typeResolver);
             ComposeApplicationPlugins(typeResolver);
             
@@ -94,8 +83,7 @@ namespace NetFusion.Bootstrap.Container
             var config = _containerConfigs.FirstOrDefault(c => c.GetType() == typeof(T));
             if (config == null)
             {
-                throw new ContainerException(
-                    $"Container configuration of type: {typeof(T)} is not registered.");
+                throw new ContainerException($"Container configuration of type: {typeof(T)} is not registered.");
             }
 
             return (T)config;
@@ -108,27 +96,6 @@ namespace NetFusion.Bootstrap.Container
             HostPlugin = AllPlugins.FirstOrDefault(p => p.PluginType == PluginTypes.HostPlugin);
             AppPlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.ApplicationPlugin).ToArray();
             CorePlugins = AllPlugins.Where(p => p.PluginType == PluginTypes.CorePlugin).ToArray();
-            
-            LogPlugins(AllPlugins);
-        }
-        
-        private void LogPlugins(IEnumerable<IPlugin> plugins)
-        {
-            BootstrapLogger.Add(LogLevel.Debug, "Registered Plugins");
-            
-            foreach (var plugin in plugins.OrderBy(p => p.PluginType))
-            {
-                var details = new
-                {
-                    plugin.Name,
-                    plugin.PluginId,
-                    plugin.AssemblyName,
-                    Configs = plugin.Configs.Select(c => c.GetType().FullName),
-                    Modules = plugin.Modules.Select(m => m.GetType().FullName)
-                };
-                
-                BootstrapLogger.Add(LogLevel.Debug, details.ToIndentedJson());
-            }
         }
         
         // Delegates to the type resolver to populate information and the types associated with each plugin.
@@ -140,28 +107,22 @@ namespace NetFusion.Bootstrap.Container
                 typeResolver.SetPluginMeta(plugin);
             }
         }
-        
-        //---------------------------------------------
-        //--Module Dependencies
-        //---------------------------------------------
+
+        // --------------------------- [Module Dependencies] -------------------------------
         
         // A plugin module can reference another module by having a property deriving from IPluginModuleService
-        // Finds all IPluginModuleService derived properties of the referencing module and set them corresponding
-        // referenced module instance.
+        // Finds all IPluginModuleService derived properties of the referencing module and sets them  to the
+        // corresponding referenced module instance.
         private void ComposeModuleDependencies()
         {
-            BootstrapLogger.Add(LogLevel.Debug,"Composing Plugin Module Service Dependencies.");
-            
             foreach (IPluginModule module in AllModules)
             {
-                var dependentServiceProps = GetDependentServiceProperties(module);
-                foreach (PropertyInfo serviceProp in dependentServiceProps)
+                module.DependentServiceModules = GetDependentServiceProperties(module);
+                foreach (PropertyInfo serviceProp in module.DependentServiceModules)
                 {
                     IPluginModuleService dependentService = GetModuleSupportingService(serviceProp.PropertyType);
                     serviceProp.SetValue(module, dependentService);
                 }
-                
-                LogModuleDependencies(module, dependentServiceProps);
             }
         }
         
@@ -192,29 +153,12 @@ namespace NetFusion.Bootstrap.Container
             return (IPluginModuleService)foundModules.First();
         }
 
-        private void LogModuleDependencies(IPluginModule module, IEnumerable<PropertyInfo> moduleProps)
-        {            
-            foreach (PropertyInfo moduleProp in moduleProps)
-            {
-                BootstrapLogger.Add(LogLevel.Trace,
-                    "Module: {moduleName} Property: {propName}:  References Module: {refModuleName}",
-                    module.GetType().FullName,
-                    moduleProp.Name,
-                    moduleProp.PropertyType.FullName);
-            }
-        }
-        
-        
-        //--------------------------------------------------
-        //--Container Composition
-        //--------------------------------------------------
+        // --------------------------- [Container Composition] -------------------------------
 
         // Core plugins are composed from all other plugin types since they implement
         // reusable cross-cutting concerns.
         private void ComposeCorePlugins(ITypeResolver typeResolver)
         {
-            BootstrapLogger.Add(LogLevel.Debug,"Composing Core Plugin Modules.");
-            
             var allPluginTypes = GetPluginTypes().ToArray();
 
             foreach (var plugin in CorePlugins)
@@ -227,8 +171,6 @@ namespace NetFusion.Bootstrap.Container
         // and are composed only from other application specific plugins.
         private void ComposeApplicationPlugins(ITypeResolver typeResolver)
         {
-            BootstrapLogger.Add(LogLevel.Debug,"Composing Application Plugin Modules.");
-            
             var allAppPluginTypes = GetPluginTypes(
                 PluginTypes.ApplicationPlugin, 
                 PluginTypes.HostPlugin).ToArray();
@@ -242,10 +184,10 @@ namespace NetFusion.Bootstrap.Container
         }
         
         /// <summary>
-        /// Returns types associated with a specific category of plug-in.
+        /// Returns types associated with a specific category of plugin.
         /// </summary>
-        /// <param name="pluginTypes">The category of plug-ins to limit the return types.</param>
-        /// <returns>List of limited plug in types or all plug-in types if no category is specified.</returns>
+        /// <param name="pluginTypes">The category of plugins to limit the return types.</param>
+        /// <returns>List of limited plugin types or all plugin types if no category is specified.</returns>
         public IEnumerable<Type> GetPluginTypes(params PluginTypes[] pluginTypes)
         {
             if (pluginTypes == null) throw new ArgumentNullException(nameof(pluginTypes),
@@ -255,10 +197,7 @@ namespace NetFusion.Bootstrap.Container
                 : AllPlugins.Where(p => pluginTypes.Contains(p.PluginType)).SelectMany(p => p.Types);
         }
         
-        
-        //--------------------------------------------------
-        //--Module Initialization and Configuration
-        //--------------------------------------------------
+        // --------------------------- [Module Initialization / Configuration] -------------------------------
         
         // Before services are registered by modules, a two phase initialization is completed.
         // First all modules have the Initialize() method called.  The Initialize() method is
@@ -268,8 +207,6 @@ namespace NetFusion.Bootstrap.Container
         // initialized by a dependent module.
         private void ConfigurePlugins()
         {
-            BootstrapLogger.Add(LogLevel.Debug, "Initializing and Configuring Plugins");
-            
             CorePlugins.ForEach(ConfigureModules);
             AppPlugins.ForEach(ConfigureModules);
             
@@ -290,9 +227,7 @@ namespace NetFusion.Bootstrap.Container
             }
         }
         
-        //--------------------------------------------------
-        //--Module Service Registrations
-        //--------------------------------------------------
+        // --------------------------- [Module Service Registrations] -------------------------------
    
         // Allows each module to register services that can be injected into
         // other components.  These services expose functionality implemented
@@ -300,9 +235,7 @@ namespace NetFusion.Bootstrap.Container
         internal void RegisterServices(IServiceCollection services)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
-            
-            BootstrapLogger.Add(LogLevel.Debug, "Registering Plugin Services");
-           
+
             RegisterDefaultPluginServices(services);
             ScanPluginsForServices(services);
             RegisterPluginServices(services);
@@ -317,8 +250,6 @@ namespace NetFusion.Bootstrap.Container
         // implementations that can be optionally overridden by other plug-ins.  
         private void RegisterDefaultPluginServices(IServiceCollection services)
         {
-            BootstrapLogger.Add(LogLevel.Debug, "Registering Default Plugin Services.");
-            
             foreach (IPluginModule module in AllModules)
             {
                 module.RegisterDefaultServices(services);
@@ -328,8 +259,6 @@ namespace NetFusion.Bootstrap.Container
         // Allow each plugin module to scan for plugin types.  
         private void ScanPluginsForServices(IServiceCollection services)
         {
-            BootstrapLogger.Add(LogLevel.Debug, "Scanning for Plugin Service Registrations");
-            
             ScanCorePlugins(services);
             ScanApplicationPlugins(services);
         }
@@ -368,13 +297,9 @@ namespace NetFusion.Bootstrap.Container
                 module.ScanPlugins(typeCatalog);
             }
         }
-
-        // Check each plugin module for implemented IPluginModuleService derived interfaces.
-        // the plugin module is then registered as implementing these interfaces.
+        
         private void RegisterPluginServices(IServiceCollection services)
         {
-            BootstrapLogger.Add(LogLevel.Debug, "Registering Plugin Services.");
-            
             RegisterPluginServices(services, CorePlugins);
             RegisterPluginServices(services, AppPlugins);
             RegisterPluginServices(services, HostPlugin);
@@ -392,8 +317,6 @@ namespace NetFusion.Bootstrap.Container
         // interfaces deriving from IPluginModuleService.
         private void RegisterPluginModulesAsService(IServiceCollection services)
         {
-            BootstrapLogger.Add(LogLevel.Debug, "Registering Plugin Modules as Service.");
-            
             var modulesWithServices = AllModules.OfType<IPluginModuleService>();
 
             foreach (IPluginModuleService moduleService in modulesWithServices)
@@ -409,15 +332,13 @@ namespace NetFusion.Bootstrap.Container
         // application built from a set of plugins.
         private void RegisterCompositeApplication(IServiceCollection services)
         {
-            BootstrapLogger.Add(LogLevel.Debug, "Registering Composite Application.");
-            
             services.AddSingleton<ICompositeAppBuilder>(this);
             services.AddSingleton<ICompositeApp, CompositeApp>();
         }
         
         private void CreateCompositeLogger(IServiceCollection serviceCollection)
         {
-            CompositeLog = new CompositeAppLog(this, serviceCollection);
+            CompositeLog = new CompositeAppLogger(this, serviceCollection);
         }
     }
 }

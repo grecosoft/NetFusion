@@ -16,13 +16,12 @@ namespace NetFusion.Messaging.Enrichers
         
         public override Task EnrichAsync(IMessage message)
         {
-            message.SetCorrelationId(Guid.NewGuid().ToString());
+            message.SetCorrelationId(_scopedRequestId.ToString());
             
-            // All messages published within the same lifetime scope
-            // wll have the same ScopedRequestId.
+            // This adds an unique value to identity each message.
             message.Attributes.SetGuidValue(
-                AttributeExtensions.GetPluginScopedName("ScopedRequestId"),
-                _scopedRequestId, false);
+                AttributeExtensions.GetPluginScopedName("MessageId"),
+                Guid.NewGuid(), false);
 
             return base.EnrichAsync(message);
         }

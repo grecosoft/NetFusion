@@ -12,7 +12,7 @@ namespace NetFusion.RabbitMQ.Plugin
     {
         public override string PluginId => "2B389655-E790-4D30-B19C-C06AB8096C6A";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
-        public override string Name => "NetFusion: RabbitMQ Plugin";
+        public override string Name => "NetFusion: RabbitMQ";
         public RabbitMqPlugin()
         {
             AddModule<BusModule>();

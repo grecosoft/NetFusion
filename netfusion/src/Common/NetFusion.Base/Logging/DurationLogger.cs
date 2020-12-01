@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
-namespace NetFusion.Bootstrap.Logging
+namespace NetFusion.Base.Logging
 {
     /// <summary>
     /// Logs the time required to execute a block of code.
@@ -44,7 +44,7 @@ namespace NetFusion.Bootstrap.Logging
         public void Dispose()
         {
             _stopWatch.Stop();
-            _logMessage("End Process: {ProcessName}, {ElapsedMs}", new object[] { _processName, _stopWatch.ElapsedMilliseconds });
+            _logMessage("End Process: {ProcessName}, {ElapsedMs} ms", new object[] { _processName, _stopWatch.ElapsedMilliseconds });
         }
     }
 }

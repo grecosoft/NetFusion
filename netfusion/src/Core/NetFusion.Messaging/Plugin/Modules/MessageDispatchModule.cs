@@ -27,14 +27,12 @@ namespace NetFusion.Messaging.Plugin.Modules
         // Discovered Properties:
         private IEnumerable<IMessageDispatchRule> DispatchRules { get; set; }
 
-        // IMessagingModule:
+        // IMessageDispatchModule:
         public MessageDispatchConfig DispatchConfig { get; private set; }
         public ILookup<Type, MessageDispatchInfo> AllMessageTypeDispatchers { get; private set; } // MessageType => Dispatcher(s)
         public ILookup<Type, MessageDispatchInfo> InProcessDispatchers { get; private set; } //MessageType => Dispatcher(s)
-
-        //------------------------------------------------------
-        //--Plugin Initialization
-        //------------------------------------------------------
+        
+        // ---------------------- [Plugin Initialization] ----------------------
         
         // Stores type meta-data for the message consumers that
         // should be notified when a given message is published. 
@@ -116,9 +114,7 @@ namespace NetFusion.Messaging.Plugin.Modules
             }
         }
         
-        //------------------------------------------------------
-        //--Plugin Services
-        //------------------------------------------------------
+        // ---------------------- [Plugin Services] ----------------------
         
         // For a given dispatcher, creates the associated consumer and invokes it with message.
         public async Task<object> InvokeDispatcherInNewLifetimeScopeAsync(MessageDispatchInfo dispatcher, 
@@ -149,10 +145,12 @@ namespace NetFusion.Messaging.Plugin.Modules
             }
             catch (Exception ex)
             {
-                Context.Logger.LogError(MessagingLogEvents.MessagingException, ex, "Message Dispatch Error Details.");
+                Context.Logger.LogError(ex, "Message Dispatch Error Details.");
                 throw;
             }
         }
+        
+        // ---------------------- [Logging] ----------------------
 
         // For each discovered message event type, execute the same code that is used at runtime to determine
         // the consumer methods that handle the message.  Then log the information.

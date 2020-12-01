@@ -10,7 +10,7 @@ namespace NetFusion.Rest.CodeGen.Plugin
     {
         public override string PluginId => "6026738F-5EA5-4978-9203-EC25297632A9";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
-        public override string Name => "NetFusion: REST Code-Generation Plugin";
+        public override string Name => "NetFusion: REST Code-Generation";
 
         public CodeGenPlugin()
         {

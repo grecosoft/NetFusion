@@ -2,7 +2,7 @@
 using NetFusion.Bootstrap.Plugins;
 using System;
 using System.Collections.Generic;
-using NetFusion.Bootstrap.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Common.Extensions.Reflection;
 
 namespace NetFusion.Test.Plugins
@@ -16,7 +16,7 @@ namespace NetFusion.Test.Plugins
     /// </summary>
     public class TestTypeResolver : ITypeResolver
     {
-        private readonly ITypeResolver _baseResolver = new TypeResolver(new BootstrapLogger());
+        private readonly ITypeResolver _baseResolver = new TypeResolver(new NullExtendedLogger());
 
         public void SetPluginMeta(IPlugin plugin)
         {

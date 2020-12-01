@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using NetFusion.Bootstrap.Catalog;
 
 namespace NetFusion.Bootstrap.Plugins
@@ -14,6 +15,11 @@ namespace NetFusion.Bootstrap.Plugins
     /// </summary>
     public abstract class PluginModule : IPluginModule
     {
+        // The following properties are set to record information that can be later logged.
+        string IPluginModule.Name => GetType().Name;
+        PropertyInfo[] IPluginModule.DependentServiceModules { get; set; }
+        IDictionary<PropertyInfo, Tuple<Type, Type[]>> IPluginModule.KnownTypeProperties { get; set; }
+        
         /// <summary>
         /// Contains plug-in context information that can be used by the module during
         /// bootstrapping.

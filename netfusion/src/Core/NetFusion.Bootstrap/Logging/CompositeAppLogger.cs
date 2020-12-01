@@ -12,12 +12,12 @@ namespace NetFusion.Bootstrap.Logging
     /// and produces a nested dictionary structure representing the application that can
     /// be logged during host application initialization as JSON.
     /// </summary>
-    public class CompositeAppLog
+    public class CompositeAppLogger
     {
         private readonly ICompositeAppBuilder _application;
         private readonly IServiceCollection _services;
 
-        public CompositeAppLog(ICompositeAppBuilder application, IServiceCollection services)
+        public CompositeAppLogger(ICompositeAppBuilder application, IServiceCollection services)
         {
             _application = application ?? throw new ArgumentNullException(nameof(application),
                 "Composite Application to log cannot be null.");
@@ -74,7 +74,7 @@ namespace NetFusion.Bootstrap.Logging
             log["PluginDocUrl"] = plugin.DocUrl;
 
             LogPluginModules(plugin, log);
-            LogPluginRegistrations(plugin, log);
+            PluginLogger.LogPluginRegistrations(plugin, _services, log);
         }
 
         private static void LogPluginModules(IPlugin plugin, IDictionary<string, object> log)
@@ -87,27 +87,6 @@ namespace NetFusion.Bootstrap.Logging
                     pm.Log(moduleLog);
                     return moduleLog;
                 });
-        }
-
-        private void LogPluginRegistrations(IPlugin plugin, IDictionary<string, object> log)
-        {
-            var implementationTypes = _services.Select(s => new {
-                s.ServiceType,
-                ImplementationType = s.ImplementationType ?? s.ImplementationInstance?.GetType(),
-                LifeTime = s.Lifetime.ToString(),
-                IsFactory = s.ImplementationFactory != null
-            });
-
-            // Logs the service implementations defined within the plugin registered
-            // for a given service type.
-            log["ServiceRegistrations"] = implementationTypes
-                .Where(it => !it.IsFactory && plugin.HasType(it.ImplementationType))
-                .Select(rt => new
-                {
-                    ServiceType = rt.ServiceType.FullName,
-                    ImplementationType = rt.ImplementationType.FullName,
-                    rt.LifeTime
-                }).OrderBy(rt => rt.ServiceType).ToArray();
         }
     }
 }

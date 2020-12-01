@@ -17,8 +17,8 @@ namespace NetFusion.Messaging.Exceptions
         /// Dispatch exception.
         /// </summary>
         /// <param name="message">Dispatch error message.</param>
-        public MessageDispatchException(string message): 
-            base(message) { }
+        public MessageDispatchException(string message) 
+            : base(message) { }
 
         /// <summary>
         /// Dispatch Exception.
@@ -26,8 +26,8 @@ namespace NetFusion.Messaging.Exceptions
         /// <param name="message">Dispatch error message.</param>
         /// <param name="innerException">The source exception.  If the exception is derived
         /// from NetFusionException, the details will be added to this exception's details.</param>
-        public MessageDispatchException(string message, Exception innerException) :
-            base(message, innerException) { }
+        public MessageDispatchException(string message, Exception innerException) 
+            : base(message, innerException) { }
 
         /// <summary>
         /// Dispatch Exception.
@@ -36,8 +36,8 @@ namespace NetFusion.Messaging.Exceptions
         /// <param name="dispatchInfo">Describes how the message is to be dispatched when published.</param>
         /// <param name="innerException">The source exception.  If the exception is derived from 
         /// NetFusionException, the detail will be added to this exception's details.</param>
-        public MessageDispatchException(string message, MessageDispatchInfo dispatchInfo, Exception innerException)
-            : base(message, innerException)
+        public MessageDispatchException(string message, MessageDispatchInfo dispatchInfo, 
+            Exception innerException) : base(message)
         {
             if (dispatchInfo == null) throw new ArgumentNullException(nameof(dispatchInfo));
             
@@ -47,22 +47,32 @@ namespace NetFusion.Messaging.Exceptions
                 ConsumerType = dispatchInfo.ConsumerType.FullName,
                 HandlerMethod = dispatchInfo.MessageHandlerMethod.Name
             };
+            
+            // If the exception resulted from the publishing of a child message, record
+            // the type of the message (the details will be in a separate exception).
+            if (innerException is PublisherException publisherEx)
+            {
+                Details["ExceptionDetails"] = publisherEx.PublishedMessage == null
+                    ? "Error Publishing Message"
+                    : $"Error Publishing Message {publisherEx.PublishedMessage.GetType()}";
+
+                return;
+            }
+            
+            AddExceptionDetails(innerException);
         }
 
         /// <summary>
         /// Dispatch Exception.
         /// </summary>
-        /// <param name="errorMessage">Dispatch error message.</param>
+        /// <param name="message">Dispatch error message.</param>
         /// <param name="dispatchExceptions">List of message dispatch exceptions.</param>
-        public MessageDispatchException(string errorMessage, IEnumerable<MessageDispatchException> dispatchExceptions) 
-            : base(errorMessage)
+        public MessageDispatchException(string message, IEnumerable<MessageDispatchException> dispatchExceptions) 
+            : base(message)
         {
-            if (dispatchExceptions == null) throw new ArgumentNullException(nameof(errorMessage));
-            
-            Details = new Dictionary<string, object>
-            {
-                { "DispatchExceptions", dispatchExceptions.Select(de => de.Details).ToArray() }
-            };
+            if (dispatchExceptions == null) throw new ArgumentNullException(nameof(message));
+
+            Details["ExceptionDetails"] = dispatchExceptions.Select(de => de.Details).ToArray();
         }
     }
 }

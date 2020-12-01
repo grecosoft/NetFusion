@@ -6,8 +6,8 @@ using EasyNetQ;
 using EasyNetQ.Topology;
 using NetFusion.RabbitMQ.Publisher.Internal;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Base.Serialization;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Logging;
@@ -25,7 +25,7 @@ namespace NetFusion.RabbitMQ.Publisher
         IPublisherContext
     {
         // Dependent Services:
-        public ILogger Logger { get; }
+        public ILoggerFactory LoggerFactory { get; }
         public ISerializationManager Serialization { get; }
 
         // Dependent Modules:
@@ -40,7 +40,7 @@ namespace NetFusion.RabbitMQ.Publisher
             ISerializationManager serializationManager,
             IMessageLogger messageLogger)
         {
-            Logger = loggerFactory.CreateLogger<RabbitMqPublisher>();
+            LoggerFactory = loggerFactory;
             BusModule = busModule ?? throw new ArgumentNullException(nameof(busModule));    
             PublisherModule = publisherModule ?? throw new ArgumentNullException(nameof(publisherModule));
             Serialization = serializationManager ?? throw new ArgumentNullException(nameof(serializationManager));
@@ -67,17 +67,17 @@ namespace NetFusion.RabbitMQ.Publisher
             
             // Lookup the exchange associated with the message and the bus
             // on which it should be created.
-            ExchangeMeta definition = PublisherModule.GetDefinition(messageType);
-            IBus bus = BusModule.GetBus(definition.BusName);
+            ExchangeMeta exchangeMeta = PublisherModule.GetDefinition(messageType);
+            IBus bus = BusModule.GetBus(exchangeMeta.BusName);
             
             // Create the exchange/queue:
-            CreatedExchange createdExchange = await CreateExchange(bus, definition).ConfigureAwait(false);
+            CreatedExchange exchange = await CreateExchange(bus, exchangeMeta).ConfigureAwait(false);
 
-            LogPublishedMessage(createdExchange, message);
-            AddExchangeMetaToLog(msgLog, definition);
+            LogMessageExchange(exchangeMeta);
+            AddExchangeMetaToLog(msgLog, exchangeMeta);
 
             // Publish the message to the created exchange/queue.
-            await definition.PublisherStrategy.Publish(this, createdExchange,
+            await exchangeMeta.PublisherStrategy.Publish(this, exchange,
                 message,
                 cancellationToken);
 
@@ -89,18 +89,28 @@ namespace NetFusion.RabbitMQ.Publisher
             IExchange exchange = await bus.Advanced.ExchangeDeclareAsync(meta);
             return new CreatedExchange(bus, exchange, meta);
         }
+        
+        // ---------------------------------- [Logging] ----------------------------------
 
-        private void LogPublishedMessage(CreatedExchange exchange, IMessage message)
+        private void LogMessageExchange(ExchangeMeta exchangeMeta)
         {
-            Logger.LogTraceDetails(RabbitMqLogEvents.PublisherEvent, 
-                "Message being Published to Message Bus.", 
-                new {
-                    exchange.Definition.BusName,
-                    exchange.Definition.ExchangeName,
-                    exchange.Definition.QueueMeta?.QueueName,
-                    exchange.Definition.ContentType,
-                    Message = message
-                });
+            var logger = LoggerFactory.CreateLogger<RabbitMqPublisher>();
+            
+            var exchangeInfo = new {
+                exchangeMeta.MessageType,
+                exchangeMeta.BusName,
+                exchangeMeta.ExchangeName,
+                exchangeMeta.QueueMeta?.QueueName,
+                exchangeMeta.ContentType
+            };
+
+            var log = LogMessage.For(LogLevel.Information, "Publishing {MessageType} to {Exchange} on {Bus}", 
+                exchangeInfo.MessageType,
+                exchangeInfo.ExchangeName, 
+                exchangeInfo.BusName).WithProperties(
+                    new LogProperty { Name = "ExchangeInfo", Value = exchangeInfo });
+            
+            logger.Log(log);
         }
         
         private void AddExchangeMetaToLog(MessageLog msgLog, ExchangeMeta definition)

@@ -4,6 +4,8 @@ using NetFusion.Common.Extensions.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetFusion.Mapping.Plugin;
+
 // ReSharper disable ConvertIfStatementToNullCoalescingExpression
 
 namespace NetFusion.Mapping.Core
@@ -99,7 +101,7 @@ namespace NetFusion.Mapping.Core
             if (mappedResult == null)
             {
                 _logger.LogDebug(
-                    "The mapping strategy for source: {sourceType} and target: {targetType} type returned null " + 
+                    "The mapping strategy for source: {sourceType} and target: {targetType} type returned null" + 
                     " for the mapped result.", source.GetType(), targetType);
             }
             
@@ -137,7 +139,7 @@ namespace NetFusion.Mapping.Core
 
         private void LogFoundMapping(TargetMap targetMap)
         {
-            _logger.LogDebug(MappingLogEvents.MappingApplied, "Mapping Applied: {SourceType} --> {TargetType} Using Strategy: {StrategyType}", 
+            _logger.LogDebug("Mapping Applied: {SourceType} --> {TargetType} Using Strategy: {StrategyType}", 
                 targetMap.SourceType,
                 targetMap.TargetType, 
                 targetMap.StrategyType);
