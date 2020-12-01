@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Demo.Core.Plugin;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base;
 using NetFusion.Bootstrap.Plugins;
 
 namespace Demo.App.Plugin.Modules
@@ -12,19 +13,19 @@ namespace Demo.App.Plugin.Modules
 
         public override void Initialize()
         {
-            Context.BootstrapLogger.Add(LogLevel.Debug, "--Initialize Called--");   
-            Context.BootstrapLogger.Add(LogLevel.Debug, Context.AppHost.Name);
-            Context.BootstrapLogger.Add(LogLevel.Debug, Context.Plugin.Name); 
+            NfExtensions.Logger.Log<LifeCycleModule>(LogLevel.Debug, "--Initialize Called--");   
+            NfExtensions.Logger.Log<LifeCycleModule>(LogLevel.Debug, Context.AppHost.Name);
+            NfExtensions.Logger.Log<LifeCycleModule>(LogLevel.Debug, Context.Plugin.Name); 
 
             if (CalcModule != null) 
             {
-                Context.BootstrapLogger.Add(LogLevel.Debug, "Module Reference Set!");
+                NfExtensions.Logger.Log<LifeCycleModule>(LogLevel.Debug, "Module Reference Set!");
             }
         }
 
         public override void Configure()
         {
-            Context.BootstrapLogger.Add(LogLevel.Debug, "--Configure Called--");
+            NfExtensions.Logger.Log<LifeCycleModule>(LogLevel.Debug, "--Configure Called--");
         }
         
         protected override Task OnStartModuleAsync(IServiceProvider services)

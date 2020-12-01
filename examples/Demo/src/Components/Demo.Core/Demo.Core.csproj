@@ -9,9 +9,9 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="3.2.166" />
-    <PackageReference Include="NetFusion.Base" Version="3.2.166" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.166" />  
+    <PackageReference Include="NetFusion.Common" Version="3.2.168" />
+    <PackageReference Include="NetFusion.Base" Version="3.2.168" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="3.2.168" />  
   </ItemGroup>
   
   <ItemGroup>
