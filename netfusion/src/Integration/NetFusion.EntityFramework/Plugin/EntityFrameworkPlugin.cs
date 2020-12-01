@@ -9,7 +9,7 @@ namespace NetFusion.EntityFramework.Plugin
     {
         public override string PluginId => "4316A9C70-C3AE-4DC2-8DEA-097EBDB342F7";
         public override PluginTypes PluginType => PluginTypes.CorePlugin;
-        public override string Name => "NetFusion: Entity Framework Plugin";
+        public override string Name => "NetFusion: Entity Framework";
 
         public EntityFrameworkPlugin()
         {

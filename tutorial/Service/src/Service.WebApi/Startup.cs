@@ -5,9 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using Microsoft.Extensions.Hosting;
 using NetFusion.Messaging.Plugin;
-using NetFusion.MongoDB.Plugin;    
-using NetFusion.RabbitMQ.Plugin;
-using NetFusion.Redis.Plugin;
 using NetFusion.Rest.Server.Plugin;
 using NetFusion.Settings.Plugin;
 using Service.App.Plugin;
@@ -16,8 +13,13 @@ using Service.Infra.Plugin;
 using Service.WebApi.Plugin;
 using NetFusion.Builder;
 using NetFusion.Messaging.Logging;
+using NetFusion.MongoDB.Plugin;
+using NetFusion.RabbitMQ.Plugin;
+using NetFusion.Redis.Plugin;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Docs.Plugin;
+using NetFusion.Serilog;
+using Serilog;
 using Service.App.Services;
 using Service.WebApi.Hubs;
 
@@ -40,7 +42,7 @@ namespace Service.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.CompositeContainer(_configuration)
+            services.CompositeContainer(_configuration, new SerilogExtendedLogger())
                 // Add common plugins:
                 .AddSettings()
                 .AddMessaging()
@@ -62,6 +64,7 @@ namespace Service.WebApi
             
             services.AddCors();
             services.AddControllers();
+            services.AddHttpContextAccessor();
             services.AddSingleton(InMemoryScripting.LoadSensorScript());
             
             services.AddRestClientFactory();
@@ -86,9 +89,10 @@ namespace Service.WebApi
                     .WithExposedHeaders("WWW-Authenticate")
                     .AllowAnyHeader());
             }
+            
+            app.UseSerilogRequestLogging();
 
             app.UseRestDocs();
-            
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();

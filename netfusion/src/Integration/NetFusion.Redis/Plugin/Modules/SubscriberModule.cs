@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Base.Serialization;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Messaging.Logging;
@@ -24,6 +25,8 @@ namespace NetFusion.Redis.Plugin.Modules
     /// </summary>
     public class SubscriberModule : PluginModule
     {
+        private ILogger<SubscriberModule> _logger;
+        
         // Dependent Module Services:
         protected IConnectionModule ConnModule { get; set; }
         protected IMessageDispatchModule DispatchModule { get; set; }
@@ -57,6 +60,7 @@ namespace NetFusion.Redis.Plugin.Modules
 
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {
+            _logger = services.GetService<ILogger<SubscriberModule>>();
             _serializationManager = services.GetRequiredService<ISerializationManager>();
             _messageLogger = services.GetRequiredService<IMessageLogger>();
 
@@ -102,18 +106,28 @@ namespace NetFusion.Redis.Plugin.Modules
                 });
             }
         }
+        
+        // ------------------------------ [Logging] -------------------------------
 
         private void LogReceivedDomainEvent(string channel, IDomainEvent domainEvent,
             MessageChannelSubscriber subscriber)
         {
-            Context.Logger.LogTraceDetails(RedisLogEvents.SubscriberEvent, 
-                "Domain event received on Redis Channel.", 
-                new
-                {
-                    Channel = channel,
-                    Subscription = subscriber.Channel,
-                    DomainEvent = domainEvent
-                });
+            var dispatchInfo = new
+            {
+                subscriber.DispatchInfo.MessageType,
+                subscriber.DispatchInfo.ConsumerType, 
+                subscriber.DispatchInfo.MessageHandlerMethod.Name
+            };
+
+            var log = LogMessage.For(LogLevel.Information,
+                "Domain event {EventName} Received on Redis Channel {ChannelName} on {DatabaseName}",
+                domainEvent.GetType().Name, 
+                channel, 
+                subscriber.DatabaseName).WithProperties(
+                    new LogProperty { Name = "DispatchInfo", Value = dispatchInfo }, 
+                    new LogProperty { Name = "DomainEvent", Value = domainEvent });
+            
+            _logger.Log(log);
         }
 
         private void AddMessageLogDetails(MessageLog msgLog, string channel, MessageChannelSubscriber subscriber)

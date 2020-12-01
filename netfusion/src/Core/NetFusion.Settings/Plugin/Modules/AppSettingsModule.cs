@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NetFusion.Base;
 using NetFusion.Bootstrap.Catalog;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Reflection;
@@ -20,9 +21,7 @@ namespace NetFusion.Settings.Plugin.Modules
     /// </summary>
     public class AppSettingsModule : PluginModule
     {
-        //------------------------------------------------------
-        //--Plugin Initialization
-        //------------------------------------------------------
+        // ------------------------ [Plugin Initialization] --------------------------
         
         public override void RegisterServices(IServiceCollection services)
         {
@@ -35,10 +34,12 @@ namespace NetFusion.Settings.Plugin.Modules
 
                 if (string.IsNullOrWhiteSpace(sectionPath))
                 {
-                    Context.BootstrapLogger.Add(LogLevel.Warning,
-                        $"The section path for setting type: {appSettingType.AssemblyQualifiedName} could " + 
-                        $"not be determined. Make sure the attribute: {typeof(ConfigurationSectionAttribute)} is specified.");
-                    
+                    NfExtensions.Logger.Log<AppSettingsModule>(LogLevel.Warning, 
+                        "The section path for settings {SettingsType} could not be determined.  Make sure the " +
+                        "attribute {AttributeType} is specified.",
+                        appSettingType.AssemblyQualifiedName, 
+                        typeof(ConfigurationSectionAttribute));
+
                     continue;
                 }
                 
@@ -71,9 +72,7 @@ namespace NetFusion.Settings.Plugin.Modules
                 }));
         }
         
-        //------------------------------------------------------
-        //--Plugin Execution
-        //------------------------------------------------------
+        // ------------------------- [Logging] ------------------------------
 
         public override void Log(IDictionary<string, object> moduleLog)
         {

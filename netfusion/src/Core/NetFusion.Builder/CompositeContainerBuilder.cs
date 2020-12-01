@@ -2,12 +2,12 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base;
+using NetFusion.Base.Logging;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
 using NetFusion.Base.Validation;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Bootstrap.Exceptions;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Serialization;
 
@@ -21,23 +21,26 @@ namespace NetFusion.Builder
     public class CompositeContainerBuilder : ICompositeContainerBuilder
     {
         private readonly IServiceCollection _serviceCollection;
-        private readonly IBootstrapLogger _bootstrapLogger;
         private readonly ITypeResolver _typeResolver;
-        
+
         private readonly CompositeContainer _container;
         
-        public CompositeContainerBuilder(IServiceCollection serviceCollection, 
+        public CompositeContainerBuilder(IServiceCollection serviceCollection,
             IConfiguration configuration,
-            IBootstrapLogger bootstrapLogger,
-            ITypeResolver typeResolver)
+            ITypeResolver typeResolver,
+            IExtendedLogger extendedLogger = null)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             
             _serviceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
-            _bootstrapLogger = bootstrapLogger ?? throw new ArgumentNullException(nameof(bootstrapLogger));
             _typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
+
+            if (extendedLogger != null)
+            {
+                NfExtensions.Logger = extendedLogger;
+            }
             
-            _container = new CompositeContainer(serviceCollection, configuration, bootstrapLogger);
+            _container = new CompositeContainer(serviceCollection, configuration);
         }
         
         public ICompositeContainerBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new()
@@ -78,51 +81,30 @@ namespace NetFusion.Builder
         // instance that can be used for the lifetime of the host.  
         public void Compose(Action<IServiceCollection> config = null)
         {
-            RegisterRequiredDefaultServices();
-
             try
             {
-                // Not until the ICompositeApp has been created will the service-provider
-                // be created and the ILogger available.  Until this point, all logs are
-                // written to the IBootstrapLogger.  
+                RegisterRequiredDefaultServices();
+
                 _container.Compose(_typeResolver);
-                
-                // Account for the case where a message with an Error log level is recorded
-                // for which an exception was not raised.
-                if (_bootstrapLogger.HasErrors)
-                {
-                    throw new ContainerException(
-                        "Errors were recorded when composing application.  See log for details.");
-                }
                 
                 // Allow the host initialization code to specify any last service overrides.
                 config?.Invoke(_serviceCollection);
             }
-            catch 
+            catch(Exception ex)
             {
-                _bootstrapLogger.WriteToStandardOut();
+                NfExtensions.Logger.LogError<CompositeContainerBuilder>(ex, "Error building Composite Container");
                 throw;
             }
         }
-
+        
         private void RegisterRequiredDefaultServices()
         {
-            _bootstrapLogger.Add(LogLevel.Debug, "Adding Required Default Services");
-            
-            RegisterDefaultService(typeof(ILoggerFactory), typeof(LoggerFactory));  
-            
-            // These services can be overridden by the host.
-            RegisterDefaultService(typeof(IValidationService), typeof(ValidationService));
-            RegisterDefaultService(typeof(ISerializationManager), typeof(SerializationManager));
-            RegisterDefaultService(typeof(IEntityScriptingService), typeof(NullEntityScriptingService));
-        }
-        
-        private void RegisterDefaultService(Type serviceType, Type implementationType)
-        {
-            _serviceCollection.AddSingleton(serviceType, implementationType);
-            
-            _bootstrapLogger.Add(LogLevel.Debug, 
-                $"Service: {serviceType}; Implementation: {implementationType} ");
+            _serviceCollection.AddSingleton<ILoggerFactory, LoggerFactory>();
+
+            // These services can be overridden by the host:
+            _serviceCollection.AddSingleton<IValidationService, ValidationService>();
+            _serviceCollection.AddSingleton<ISerializationManager, SerializationManager>();
+            _serviceCollection.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();
         }
     }
 }

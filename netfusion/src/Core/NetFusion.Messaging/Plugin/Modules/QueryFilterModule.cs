@@ -20,6 +20,8 @@ namespace NetFusion.Messaging.Plugin.Modules
         {
             _queryDispatchConfig = Context.Plugin.GetConfig<QueryDispatchConfig>();
         }
+        
+        // ---------------------- [Plugin Initialization] ----------------------
 
         // The pre and post filters configured for the application host during bootstrap configuration.
         public IEnumerable<Type> QueryFilterTypes => _queryDispatchConfig.QueryFilters;
@@ -33,6 +35,8 @@ namespace NetFusion.Messaging.Plugin.Modules
                 services.AddScoped(typeof(IQueryFilter), queryFilterType);
             }
         }
+        
+        // ---------------------- [Logging] ----------------------
 
         public override void Log(IDictionary<string, object> moduleLog)
         {

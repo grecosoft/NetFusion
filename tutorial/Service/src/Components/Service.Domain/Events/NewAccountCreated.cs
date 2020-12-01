@@ -1,8 +1,10 @@
+using NetFusion.Base.Logging;
 using NetFusion.Messaging.Types;
 
 namespace Service.Domain.Events
 {
-    public class NewAccountCreated : DomainEvent
+    public class NewAccountCreated : DomainEvent,
+        ITypeLog
     {
         public string FirstName { get; }
         public string LastName { get; }
@@ -16,6 +18,15 @@ namespace Service.Domain.Events
             FirstName = firstName;
             LastName = lastName;
             AccountNumber = accountNumber;
+        }
+
+        public object Log()
+        {
+            return new
+            {
+                State = AccountNumber,
+                Attributes
+            };
         }
     }
 }

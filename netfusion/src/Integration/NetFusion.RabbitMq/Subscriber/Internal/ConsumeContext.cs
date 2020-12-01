@@ -2,8 +2,8 @@ using IMessage = NetFusion.Messaging.Types.Contracts.IMessage;
 using System;
 using EasyNetQ;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Base.Serialization;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin;
@@ -17,7 +17,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     /// </summary>
     public class ConsumeContext 
     {
-        public ILogger Logger { get; set; }
+        public ILoggerFactory LoggerFactory { get; set; }
         
         public byte[] MessageData { get; set; }
         
@@ -59,6 +59,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             object message = Serialization.Deserialize(MessageProps.ContentType, messageType, MessageData);
             return (IMessage)message;
         }
+        // ---------------------------------- [Logging] ----------------------------------
         
         /// <summary>
         /// Logs the provided deserialized message and the information about the exchange and
@@ -68,18 +69,26 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         public void LogReceivedMessage(IMessage message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
+
+            var logger = LoggerFactory.CreateLogger<ConsumeContext>();
+
+            var queueInfo = new {
+                Bus = Subscriber.QueueMeta.Exchange.BusName,
+                Exchange = Subscriber.QueueMeta.Exchange.ExchangeName,
+                Queue = Subscriber.QueueMeta.QueueName,
+                MessageProps.ContentType,
+                Consumer = Subscriber.DispatchInfo.ConsumerType.Name,
+                Handler = Subscriber.DispatchInfo.MessageHandlerMethod.Name
+            };
+
+            var log = LogMessage.For(LogLevel.Information, "Message {MessageType} Received from {Queue} on {Bus}",
+                message.GetType(),
+                queueInfo.Queue,
+                queueInfo.Bus).WithProperties(
+                    new LogProperty { Name = "Message", Value = message },
+                    new LogProperty { Name = "QueueInfo", Value = queueInfo });
             
-            Logger.LogTraceDetails(RabbitMqLogEvents.SubscriberEvent, 
-                "Message Received from Message Bus.", 
-                new {
-                    Bus = Subscriber.QueueMeta.Exchange.BusName,
-                    Exchange = Subscriber.QueueMeta.Exchange.ExchangeName,
-                    Queue = Subscriber.QueueMeta.QueueName,
-                    MessageProps.ContentType,
-                    Consumer = Subscriber.DispatchInfo.ConsumerType.Name,
-                    Handler = Subscriber.DispatchInfo.MessageHandlerMethod.Name,
-                    Message = message
-                });
+            logger.Log(log);
         }
 
         public void AddMessageContextToLog(MessageLog msgLog)

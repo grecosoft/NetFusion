@@ -9,8 +9,8 @@ using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Entity;
+using NetFusion.Base.Logging;
 using NetFusion.Base.Scripting;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 
@@ -23,7 +23,7 @@ namespace NetFusion.Roslyn.Internal
     /// </summary>
     public class EntityScriptingService : IEntityScriptingService
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<EntityScriptingService> _logger;
 
         // Map between a domain entity and its related set of named scripts.
         private ILookup<Type, ScriptEvaluator> _scriptEvaluators;
@@ -81,30 +81,32 @@ namespace NetFusion.Roslyn.Internal
 
         private async Task ExecuteScript(object entity, ScriptEvaluator evaluator)
         {
-            var preEvalDetails = GetPreEvalDetails(entity, evaluator);
+            var preEvalDetails = GetPreEvalDetails(evaluator);
 
-            using (var durationLogger = _logger.LogTraceDuration(ScriptingLogEvents.ScriptExecution, "Script Evaluation"))
+            using (_logger.LogDebugDuration("Script Evaluation"))
             {
-                durationLogger.Log.LogTraceDetails(ScriptingLogEvents.ScriptPreEvaluation, 
-                    "Pre-Evaluation Details", preEvalDetails);
+                var log = LogMessage.For(LogLevel.Debug, "Pre-Evaluation: {EntityType}", entity.GetType().Name)
+                    .WithProperties(
+                        new LogProperty { Name = "EvalDetails", Value = preEvalDetails }, 
+                        new LogProperty { Name = "Entity", Value = entity });
+                
+                _logger.Log(log);
 
                 CompileScript(evaluator);
                 SetDefaultAttributeValues(evaluator.Script, entity);
                 
                 await evaluator.ExecuteAsync(entity);
-
-                durationLogger.Log.LogTraceDetails(ScriptingLogEvents.ScriptPostEvaluation, 
-                    "Post-Evaluation Details", new { PostEvalValues = entity });
+                
+                _logger.LogDetails(LogLevel.Debug, "Post-Evaluation: {EntityType}", entity, entity.GetType().Name);
             }
         }
 
-        private object GetPreEvalDetails(object entity, ScriptEvaluator evaluator)
+        private object GetPreEvalDetails(ScriptEvaluator evaluator)
         {
             if (_logger.IsEnabled(LogLevel.Trace))
             {
                 return new
                 {
-                    PreEvalValues = entity,
                     Script = evaluator.Script.Expressions
                         .OrderBy(e => e.Sequence)
                         .Select(e => new { e.AttributeName, e.Expression })

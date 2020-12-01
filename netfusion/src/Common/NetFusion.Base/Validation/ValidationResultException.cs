@@ -14,13 +14,13 @@ namespace NetFusion.Base.Validation
         /// can be viewed by the client.
         /// </summary>
         /// <returns>Boolean value.</returns>
-        public bool NotifyClient { get; private set; }
+        public bool NotifyClient { get; }
 
         /// <summary>
         /// The associated validation result set.
         /// </summary>
         /// <returns>The set of invalidations associated with the exception.</returns>
-        public ValidationResultSet Result { get; private set; }
+        public ValidationResultSet Result { get; }
 
         /// <summary>
         /// Constructor

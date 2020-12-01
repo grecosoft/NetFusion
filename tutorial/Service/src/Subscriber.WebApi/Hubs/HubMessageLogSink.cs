@@ -13,7 +13,7 @@ namespace Subscriber.WebApi.Hubs
         {
             _hubContext = hubContext;
         }
-        public Task ReceiveAsync(MessageLog messageLog)
+        public Task WriteLogAsync(MessageLog messageLog)
         {
             return _hubContext.Clients.All.LogMessage(MessageLogModel.FromEntity(messageLog));
         }

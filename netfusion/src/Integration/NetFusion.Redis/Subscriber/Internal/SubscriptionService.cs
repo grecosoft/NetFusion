@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Base.Serialization;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Messaging.Types.Contracts;
 using NetFusion.Redis.Internal;
 using NetFusion.Redis.Plugin;
@@ -15,7 +15,7 @@ namespace NetFusion.Redis.Subscriber.Internal
     /// </summary>
     public class SubscriptionService : ISubscriptionService
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<SubscriptionService> _logger;
         private readonly IConnectionModule _connModule;
         private readonly ISerializationManager _serializationMgr;
         
@@ -76,24 +76,12 @@ namespace NetFusion.Redis.Subscriber.Internal
             }).ConfigureAwait(false);
         }
 
-        private void LogReceivedDomainEvent(string database, string channel, IDomainEvent domainEvent)
-        {
-            _logger.LogTraceDetails(RedisLogEvents.SubscriberEvent, 
-                "Subscription delegate being called.", new
-                {
-                    Database = database,
-                    Channel = channel,
-                    DomainEvent = domainEvent
-                });
-        }
-
         public void UnSubscribe(string database, string channel)
         {
             if (string.IsNullOrWhiteSpace(channel))
                 throw new ArgumentException("Channel not specified.", nameof(channel));
 
-            _logger.LogTrace(RedisLogEvents.SubscriberEvent, 
-                "Unsubscribe channel named {channel} from database {database}", channel, database);
+            _logger.LogDebug("Unsubscribe channel named {channel} from database {database}", channel, database);
             
             var subscriber = _connModule.GetSubscriber(database);
             subscriber.Unsubscribe(channel);
@@ -104,11 +92,28 @@ namespace NetFusion.Redis.Subscriber.Internal
             if (string.IsNullOrWhiteSpace(channel))
                 throw new ArgumentException("Channel not specified.", nameof(channel));
                 
-            _logger.LogTrace(RedisLogEvents.SubscriberEvent, 
-                "Unsubscribe channel named {channel} from database {database}", channel, database);
+            _logger.LogDebug("Unsubscribe channel named {channel} from database {database}", channel, database);
             
             var subscriber = _connModule.GetSubscriber(database);
             await subscriber.UnsubscribeAsync(channel).ConfigureAwait(false);
+        }
+        
+        // ---------------------------------- [Logging] --------------------------------
+
+        private void LogReceivedDomainEvent(string database, string channel, IDomainEvent domainEvent)
+        {
+            var channelInfo = new
+            {
+                Database = database,
+                Channel = channel
+            };
+
+            var log = LogMessage.For(LogLevel.Information, "Subscription delegate being called.")
+                .WithProperties(
+                    new LogProperty { Name = "ChannelInfo", Value = channelInfo }, 
+                    new LogProperty { Name = "DomainEvent", Value = domainEvent });
+            
+            _logger.Log(log);
         }
     }
 }

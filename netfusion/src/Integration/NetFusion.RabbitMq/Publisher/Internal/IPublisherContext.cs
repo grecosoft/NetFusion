@@ -10,7 +10,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
     /// </summary>
     internal interface IPublisherContext
     {
-        ILogger Logger { get; }
+        ILoggerFactory LoggerFactory { get; }
         
         // Modules:
         IBusModule BusModule { get; }

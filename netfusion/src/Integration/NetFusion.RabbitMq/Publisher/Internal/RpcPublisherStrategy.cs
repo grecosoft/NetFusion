@@ -4,7 +4,7 @@ using EasyNetQ;
 using System.Threading;
 using NetFusion.Messaging.Exceptions;
 using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.RabbitMQ.Publisher.Internal
@@ -18,6 +18,8 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             IMessage message,
             CancellationToken cancellationToken)
         {
+            var logger = context.LoggerFactory.CreateLogger<RpcPublisherStrategy>();
+            
             ICommand command = (ICommand)message;
             string contentType = createdExchange.Definition.ContentType;
 
@@ -46,7 +48,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                 var responseObj = context.Serialization.Deserialize(contentType, commandResult.ResultType, resultBytes);
                 commandResult.SetResult(responseObj);
 
-                LogReceivedRpcResponse(context, createdExchange, responseObj);
+                LogReceivedRpcResponse(logger, createdExchange, responseObj);
             }
             catch (RpcReplyException ex)
             {
@@ -57,17 +59,22 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                 }
 
                 var dispatchEx = context.Serialization.Deserialize<MessageDispatchException>(contentType, ex.ReplayExceptionBody);
-                context.Logger.LogError(RabbitMqLogEvents.PublisherException, dispatchEx, "RPC Exception Reply.");
+                logger.LogError(dispatchEx, "RPC Exception Reply.");
                 throw dispatchEx;
             }
         }
 
-        private static void LogReceivedRpcResponse(IPublisherContext context, CreatedExchange createdExchange, object responseObj)
+        private static void LogReceivedRpcResponse(ILogger<RpcPublisherStrategy> logger, 
+            CreatedExchange createdExchange, object responseObj)
         {
             var definition = createdExchange.Definition;
-            
-            context.Logger.LogTraceDetails(
-                $"Response to RPC message sent to queue: {definition.QueueMeta.QueueName} on bus: {definition.BusName}", responseObj);
+
+            logger.LogDetails(LogLevel.Debug,
+                "Response {ResponseType} to RPC message received on queue {QueueName} on bus {BusName}", 
+                responseObj, 
+                responseObj.GetType(),
+                definition.QueueMeta.QueueName,
+                definition.BusName);
         }
     }
 }

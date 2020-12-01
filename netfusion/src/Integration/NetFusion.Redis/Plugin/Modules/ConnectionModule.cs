@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
@@ -38,7 +39,7 @@ namespace NetFusion.Redis.Plugin.Modules
             }
             catch (SettingsValidationException ex)
             {
-                Context.BootstrapLogger.Add(LogLevel.Error, ex.Message);
+                NfExtensions.Logger.Log<ConnectionModule>(LogLevel.Error, ex.Message);
                 throw;
             }
            
@@ -125,8 +126,7 @@ namespace NetFusion.Redis.Plugin.Modules
             
             if (! cachedConn.Connection.IsConnected)
             {
-                Context.Logger.LogError(RedisLogEvents.ConnException, 
-                    "Requested database connection {dbConfigName} is currently in a disconnected state.",
+                Context.Logger.LogError("Requested database connection {dbConfigName} is currently in a disconnected state.",
                     connectionName);
             }
 

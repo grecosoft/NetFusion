@@ -11,7 +11,7 @@ namespace NetFusion.Messaging.Enrichers
     public interface IMessageEnricher
     {
         /// <summary>
-        /// Implementation should add a key/value part to the message if it is
+        /// Implementation should add a key/value pair to the message if it is
         /// not already present.
         /// </summary>
         /// <param name="message">The message to enrich.</param>

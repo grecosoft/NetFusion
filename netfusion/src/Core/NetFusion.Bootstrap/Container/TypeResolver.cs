@@ -6,8 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Logging;
+using NetFusion.Base.Logging;
 
 namespace NetFusion.Bootstrap.Container
 {
@@ -17,9 +16,10 @@ namespace NetFusion.Bootstrap.Container
     /// </summary>
     public class TypeResolver : ITypeResolver
     {
-        private readonly IBootstrapLogger _logger;
+        // ReSharper disable once NotAccessedField.Local
+        private readonly IExtendedLogger _logger;
         
-        public TypeResolver(IBootstrapLogger logger)
+        public TypeResolver(IExtendedLogger logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -46,6 +46,8 @@ namespace NetFusion.Bootstrap.Container
 
             foreach (IPluginModule module in plugin.Modules)
             {
+                module.KnownTypeProperties = new Dictionary<PropertyInfo, Tuple<Type, Type[]>>();
+                
                 IEnumerable<PropertyInfo> knownTypeProps = GetKnownTypeProperties(module);
                 knownTypeProps.ForEach(ktp => SetKnownPropertyInstances(module, ktp, fromPluginTypes));
             }
@@ -61,13 +63,13 @@ namespace NetFusion.Bootstrap.Container
                     && p.CanWrite);
         }
         
-        private void SetKnownPropertyInstances(IPluginModule forModule, PropertyInfo knownTypeProperty,
+        private static void SetKnownPropertyInstances(IPluginModule module, PropertyInfo knownTypeProperty,
             IEnumerable<Type> fromPluginTypes)
         {
             var knownType = knownTypeProperty.PropertyType.GetGenericArguments().First();
             var discoveredInstances = fromPluginTypes.CreateInstancesDerivingFrom(knownType).ToArray();
 
-            LogPluginKnownTypeInstances(knownTypeProperty, knownType, discoveredInstances);
+            RecordKnowProperties(module, knownTypeProperty, knownType, discoveredInstances);
 
             // Create an array based on the known type and populate it from discovered instances.
             Array array = Array.CreateInstance(knownType, discoveredInstances.Length);
@@ -77,22 +79,17 @@ namespace NetFusion.Bootstrap.Container
             }
 
             // Set the corresponding property on the module.
-            knownTypeProperty.SetValue(forModule, array);
+            knownTypeProperty.SetValue(module, array);
         }
 
-        private void LogPluginKnownTypeInstances(PropertyInfo moduleProp, 
+        // Record the discovered properties to it can be logged later.
+        private static void RecordKnowProperties(IPluginModule module, PropertyInfo knownTypeProperty, 
             Type knownType, 
             IEnumerable<object> discoveredInstances)
         {
-            string instanceTypes = string.Join(", ", discoveredInstances.Select(di => 
-                di.GetType().FullName).ToArray());
-            
-            _logger.Add(LogLevel.Trace, 
-                "Module: {moduleName} Property: {moduleProp}:  Type: {knownType} => {instances}", 
-                moduleProp.DeclaringType?.FullName,
-                moduleProp.Name,
-                knownType.FullName, 
-                $"[{instanceTypes}]");
+            module.KnownTypeProperties[knownTypeProperty] = new Tuple<Type, Type[]>(
+                knownType, 
+                discoveredInstances.Select(i => i.GetType()).ToArray());
         }
     }
 }

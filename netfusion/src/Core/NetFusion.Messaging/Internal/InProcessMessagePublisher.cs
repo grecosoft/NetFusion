@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Bootstrap.Logging;
+using NetFusion.Base.Logging;
 using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Exceptions;
@@ -21,7 +21,7 @@ namespace NetFusion.Messaging.Internal
     /// </summary>
     public class InProcessMessagePublisher : MessagePublisher
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<InProcessMessagePublisher> _logger;
         private readonly IServiceProvider _services;
         private readonly IMessageDispatchModule _messagingModule;
         private readonly IMessageLogger _messageLogger;
@@ -45,11 +45,7 @@ namespace NetFusion.Messaging.Internal
 
         public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
-            // Determine the dispatchers associated with the message.
-            MessageDispatchInfo[] dispatchers = _messagingModule.InProcessDispatchers
-                .WhereHandlerForMessage(message.GetType())
-                .ToArray();
-
+            MessageDispatchInfo[] dispatchers = GetMessageDispatchers(message);
             if (! dispatchers.Any())
             {
                 return;
@@ -57,14 +53,12 @@ namespace NetFusion.Messaging.Internal
             
             var msgLog = new MessageLog(message, LogContextType.PublishedMessage);
             msgLog.SentHint("publish-inprocess");
-            
-            LogMessageDispatchInfo(message, dispatchers);
             AddDispatchersToLog(msgLog, dispatchers);
             
             // Execute all handlers and return the task for the caller to await.
             try
             {
-                await InvokeMessageDispatchers(message, dispatchers, cancellationToken).ConfigureAwait(false);
+                await InvokeMessageDispatchers(dispatchers, message, cancellationToken).ConfigureAwait(false);
             }
             catch (MessageDispatchException ex)
             {
@@ -76,24 +70,29 @@ namespace NetFusion.Messaging.Internal
                 await _messageLogger.LogAsync(msgLog);
             }
         }
-        
-        private async Task InvokeMessageDispatchers(IMessage message,
-            IEnumerable<MessageDispatchInfo> dispatchers,
+
+        // Determine the dispatchers associated with the message. 
+        private MessageDispatchInfo[] GetMessageDispatchers(IMessage message)
+        {
+            return _messagingModule.InProcessDispatchers
+                .WhereHandlerForMessage(message.GetType())
+                .Where(dispatchInfo => dispatchInfo.IsMatch(message))
+                .ToArray();
+        }
+
+        private async Task InvokeMessageDispatchers(MessageDispatchInfo[] dispatchers, 
+            IMessage message,
             CancellationToken cancellationToken)
         {
-            TaskListItem<MessageDispatchInfo>[] taskList = null;
+            LogMessageDispatchers(dispatchers, message);
 
+            TaskListItem<MessageDispatchInfo>[] taskList = null;
             try
             {
-                // Filter the list of dispatchers to only those that apply.
-                MessageDispatchInfo[] matchingDispatchers = dispatchers
-                    .Where(dispatchInfo => dispatchInfo.IsMatch(message))
-                    .ToArray();
-                
-                AssertMessageDispatchers(message, matchingDispatchers);
+                AssertMessageDispatchers(message, dispatchers);
 
                 // Execute all of matching dispatchers and await the list of associated tasks.
-                taskList = matchingDispatchers.Invoke(message, InvokeDispatcher, cancellationToken);
+                taskList = dispatchers.Invoke(message, InvokeDispatcher, cancellationToken);
                 await taskList.WhenAll();
             }
             catch (Exception ex)
@@ -136,18 +135,44 @@ namespace NetFusion.Messaging.Internal
         private Task InvokeDispatcher(MessageDispatchInfo dispatcher, IMessage message, 
             CancellationToken cancellationToken)
         {
-            if (!_logger.IsEnabled(LogLevel.Trace))
-            {
-                _logger.LogDebug(
-                    $"Dispatching message Type: {message.GetType()} to Consumer: { dispatcher.ConsumerType } " +
-                    $"Method: { dispatcher.MessageHandlerMethod.Name} ");
-            }
-            
             // Since this root component, use service-locator obtain reference to message consumer.
             var consumer = (IMessageConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
             return dispatcher.Dispatch(message, consumer, cancellationToken);
         }
+        
+        // ----------------------------- [Logging] -----------------------------
 
+        private void LogMessageDispatchers(MessageDispatchInfo[] dispatchers, IMessage message)
+        {
+            _logger.LogDetails(LogLevel.Debug, "Dispatching Message {MessageType}", 
+                dispatchers, 
+                message.GetType());
+        }
+
+        private static object GetDispatchLogDetails(IEnumerable<MessageDispatchInfo> dispatchers)
+        {
+            return dispatchers.Select(d => new {
+                    d.MessageType.FullName,
+                    Consumer = d.ConsumerType.FullName,
+                    Method = d.MessageHandlerMethod.Name
+                })
+                .ToArray();
+        }
+        
+        private void AddDispatchersToLog(MessageLog msgLog, IEnumerable<MessageDispatchInfo> dispatchers)
+        {
+            if (! _messageLogger.IsLoggingEnabled) return;
+            
+            msgLog.AddLogDetail("In-Process", "Message dispatchers for message.");
+            foreach (MessageDispatchInfo dispatcher in dispatchers)
+            {
+                msgLog.AddLogDetail("Handler Class", dispatcher.ConsumerType.FullName);
+                msgLog.AddLogDetail("Handler Method", dispatcher.MessageHandlerMethod.Name);
+            }
+        }
+        
+        // ----------------------------- [Exception Handling] -----------------------------
+        
         private static MessageDispatchException GetDispatchException(TaskListItem<MessageDispatchInfo> taskItem)
         {
             var sourceEx = taskItem.Task.Exception?.InnerException;
@@ -159,43 +184,6 @@ namespace NetFusion.Messaging.Internal
 
             return new MessageDispatchException("Error calling message consumer.", 
                 taskItem.Invoker, sourceEx);
-            
-        }
-
-        private void LogMessageDispatchInfo(IMessage message, IEnumerable<MessageDispatchInfo> dispatchers)
-        {
-            if (! _logger.IsEnabled(LogLevel.Trace)) return;
-            
-            var dispatcherDetails = GetDispatchLogDetails(dispatchers);
-
-            _logger.LogTraceDetails(MessagingLogEvents.MessagingDispatch, $"Message Published: {message.GetType()}",
-                new
-                {
-                    Dispatchers = dispatcherDetails,
-                    Message = message
-                });
-        }
-
-        private static object GetDispatchLogDetails(IEnumerable<MessageDispatchInfo> dispatchers)
-        {
-            return dispatchers.Select(d => new {
-                d.MessageType.FullName,
-                Consumer = d.ConsumerType.FullName,
-                Method = d.MessageHandlerMethod.Name
-            })
-            .ToArray();
-        }
-        
-        private void AddDispatchersToLog(MessageLog msgLog, MessageDispatchInfo[] dispatchers)
-        {
-            if (! _messageLogger.IsLoggingEnabled) return;
-            
-            msgLog.AddLogDetail("In-Process", "Message dispatchers for message.");
-            foreach (MessageDispatchInfo dispatcher in dispatchers)
-            {
-                msgLog.AddLogDetail("Handler Class", dispatcher.ConsumerType.FullName);
-                msgLog.AddLogDetail("Handler Method", dispatcher.MessageHandlerMethod.Name);
-            }
         }
 
         private void AddErrorsToLog(MessageLog msgLog, MessageDispatchException ex)

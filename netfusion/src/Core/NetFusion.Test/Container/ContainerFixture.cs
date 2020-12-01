@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using NetFusion.Base.Scripting;
 using NetFusion.Base.Serialization;
 using NetFusion.Base.Validation;
-using NetFusion.Bootstrap.Logging;
 using NetFusion.Serialization;
 
 // ReSharper disable MethodHasAsyncOverload
@@ -118,7 +117,7 @@ namespace NetFusion.Test.Container
             ComposedServices.AddSingleton<ISerializationManager, SerializationManager>();
             ComposedServices.AddLogging().AddOptions();
             
-            _container = new CompositeContainer(ComposedServices, configuration, new BootstrapLogger());
+            _container = new CompositeContainer(ComposedServices, configuration);
             return _container;
         }
         

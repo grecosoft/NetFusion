@@ -4,7 +4,7 @@ using NetFusion.Bootstrap.Container;
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Bootstrap.Logging;
+using NetFusion.Base;
 
 namespace NetFusion.Bootstrap.Plugins
 {
@@ -60,7 +60,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         /// <summary>
         /// Logging factory.  Only available after the service-provider has been created.
-        /// Use the BootstrapLogger in code executing before the container is created.
+        /// Use the ExtendedLogger in code executing before the container is created.
         /// </summary>
         public ILoggerFactory LoggerFactory
         {
@@ -69,33 +69,13 @@ namespace NetFusion.Bootstrap.Plugins
                 if (_loggerFactory == null)
                 {
                     throw new InvalidOperationException(
-                        "LoggerFactory can't be accessed until service-provider created.  Use BootstrapLogger.");
+                        $"LoggerFactory not available until service-provider created. Use {nameof(NfExtensions.Logger)}");
                 }
 
                 return _loggerFactory;
             }
         }
 
-        /// <summary>
-        /// Logger that can be used to record logs during the bootstrap process
-        /// before the service-provider has been created.
-        /// </summary>
-        /// <exception cref="InvalidOperationException"></exception>
-        public IBootstrapLogger BootstrapLogger
-        {
-            get
-            {
-                if (_logger != null)
-                {
-                    throw new InvalidOperationException(
-                        "BootstrapLogger should not be used after the service-provider has been created." + 
-                        "Use Logger instead." );
-                }
-
-                return _builder.BootstrapLogger;
-            }
-        }
-        
         /// <summary>
         /// Logger with the name of the plug-in used to identify the log messages.
         /// Can only be used after the service-provider has been created.
@@ -107,7 +87,7 @@ namespace NetFusion.Bootstrap.Plugins
                 if (_logger == null)
                 {
                     throw new InvalidOperationException(
-                        "Logger can't be accessed until service-provider created.  Use BootstrapLogger.");
+                        "Logger can't be accessed until service-provider created. Use {nameof(NfExtensions.Logger)}");
                 }
 
                 return _logger;

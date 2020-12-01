@@ -4,10 +4,11 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NetFusion.Base;
+using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions;
 using NetFusion.Common.Extensions.Collections;
 
 namespace NetFusion.Bootstrap.Container
@@ -28,23 +29,20 @@ namespace NetFusion.Bootstrap.Container
 
         public bool IsComposed { get; private set; }
 
-        //--------------------------------------------------
-        //--Container Initialization
-        //--------------------------------------------------
-
+        // --------------------------- [Container Initialization] -------------------------------
+  
         public ICompositeAppBuilder AppBuilder => _builder;
         
         // Instantiated by CompositeContainerBuilder.
-        public CompositeContainer(IServiceCollection services, 
-            IConfiguration configuration,
-            IBootstrapLogger bootstrapLogger)
+        public CompositeContainer(IServiceCollection services, IConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            if (bootstrapLogger == null) throw new ArgumentNullException(nameof(bootstrapLogger));
 
             _serviceCollection = services ?? throw new ArgumentNullException(nameof(services));
-            _builder = new CompositeAppBuilder(services, configuration, bootstrapLogger);
+            _builder = new CompositeAppBuilder(services, configuration);
         }
+
+        private string Version => GetType().Assembly.GetName().Version.ToString();
         
         /// <summary>
         /// Adds a plugin to the composite-container.  If the plugin type is already registered,
@@ -75,7 +73,9 @@ namespace NetFusion.Bootstrap.Container
         {
             return _plugins.Any(p => p.GetType() == typeof(T));
         }
-
+        
+        // --------------------------- [Configurations] -------------------------------
+        
         // Returns a container level configuration used to configure the runtime behavior
         // of the built container.
         public T GetContainerConfig<T>() where T : IContainerConfig
@@ -83,10 +83,7 @@ namespace NetFusion.Bootstrap.Container
             return _builder.GetContainerConfig<T>();
         }
         
-        // Finds a configuration belonging to one of the registered plugins.  When a plugin
-        // is registered with the container, it can extend the behavior of another plugin by
-        // requesting a configuration from the other plugin and setting information used to
-        // extended the base implementation.
+        // Finds a configuration belonging to one of the registered plugins.
         public T GetPluginConfig<T>() where T : IPluginConfig
         {
             var pluginConfig = _plugins.SelectMany(p => p.Configs)
@@ -101,15 +98,10 @@ namespace NetFusion.Bootstrap.Container
             return (T) pluginConfig;
         }
         
-        
-        //--------------------------------------------------
-        //--Container Composition
-        //--------------------------------------------------
+        // --------------------------- [Container Composition] -------------------------------
         
         // Called by CompositeContainerBuilder to build an instance of CompositeApp
-        // from the list of registered plugins.  Once the plugin modules have been
-        // created and composed, a reference to IServiceCollection is passed so all
-        // modules can register their service implementations.
+        // from the list of registered plugins.  
         public void Compose(ITypeResolver typeResolver)
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
@@ -118,42 +110,39 @@ namespace NetFusion.Bootstrap.Container
             {
                 if (IsComposed)
                 {
-                    throw new ContainerException("Container has already been composed.");
+                    throw new ContainerException("Container already composed");
                 }
-                
-                _builder.BootstrapLogger.Add(LogLevel.Debug, "Bootstrapping Plugins");
+
+                NfExtensions.Logger.Log<CompositeContainer>(LogLevel.Information, 
+                    "NetFusion {Version} Bootstrapping", Version);
                 
                 // Delegate to the builder:
                 _builder.ComposeModules(typeResolver, _plugins);
                 _builder.RegisterServices(_serviceCollection);
-                
-                _builder.BootstrapLogger.Add(LogLevel.Debug, "Bootstrapping Completed");
+
+                LogComposedPlugins(_plugins, _serviceCollection);
 
                 IsComposed = true;
             }
             catch (ContainerException ex)
             {
-                LogException(ex);
+                NfExtensions.Logger.LogError<CompositeContainer>(ex, "Bootstrap Exception");
                 throw;
             }
             catch (Exception ex)
             {
-                throw LogException(new ContainerException(
-                    "Unexpected container error.  See Inner Exception.", ex));
+                NfExtensions.Logger.LogError<CompositeContainer>(ex, "Bootstrap Exception");
+                throw new ContainerException("Unexpected container error.  See Inner Exception.", ex);
             }
         }
 
-        private Exception LogException(ContainerException ex)
+        private static void LogComposedPlugins(IEnumerable<IPlugin> plugins, IServiceCollection services)
         {
-            if (ex.Details != null)
+            foreach (var plugin in plugins)
             {
-                _builder.BootstrapLogger.Add(LogLevel.Error, 
-                    $"Bootstrap Exception: {ex}; Details: {ex.Details.ToIndentedJson()}");
-                return ex;
+                LogMessage pluginLog = PluginLogger.Log(plugin, services);
+                NfExtensions.Logger.Log<CompositeContainer>(pluginLog);
             }
-            
-            _builder.BootstrapLogger.Add(LogLevel.Error, $"Bootstrap Exception: {ex}");
-            return ex;
         }
     }
 }
