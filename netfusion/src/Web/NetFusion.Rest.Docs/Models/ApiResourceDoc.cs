@@ -21,7 +21,7 @@ namespace NetFusion.Rest.Docs.Models
         /// <summary>
         /// Documentation for the resources properties.
         /// </summary>
-        public ICollection<ApiPropertyDoc> Properties { get; } = new List<ApiPropertyDoc>();
+        public ICollection<ApiPropertyDoc> Properties { get; set; } = new List<ApiPropertyDoc>();
 
         /// <summary>
         /// Documentation for child embedded named resources.

@@ -243,7 +243,7 @@ namespace NetFusion.Rest.Docs.Core.Services
             relationDoc.HRef = _apiMetadata.GetActionMeta(resourceLink.ActionMethodInfo).RelativePath;
         }
         
-        private void SetRelationInfo(ApiRelationDoc relationDoc, TemplateUrlLink resourceLink)
+        private void SetLinkDetails(ApiRelationDoc relationDoc, TemplateUrlLink resourceLink)
         {
             relationDoc.HRef = _apiMetadata.GetActionMeta(resourceLink.ActionMethodInfo).RelativePath;
         }

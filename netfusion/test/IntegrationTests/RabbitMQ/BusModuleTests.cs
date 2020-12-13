@@ -119,7 +119,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.Equal("TestUser", busConfig.UserName);        
                         Assert.Equal("TestPassword", busConfig.Password);
                         Assert.Equal("TestVHost", busConfig.VirtualHost);    
-                        Assert.Equal(20, busConfig.RequestedHeartbeat);
+                      //  Assert.Equal(20, busConfig.RequestedHeartbeat);
                         Assert.Equal("TestBus1", busConfig.Name);
                         Assert.True(busConfig.Hosts.Count() == 1); 
 
@@ -147,9 +147,8 @@ namespace IntegrationTests.RabbitMQ
                     {
                         var exchangeMeta = ExchangeMeta.Define("TestBus1", "TestExchangeName", ExchangeType.Direct);
                         m.ApplyExchangeSettings(exchangeMeta);
-
-                        Assert.True(exchangeMeta.IsPassive);
-                        Assert.Equal("TestAltExchangeName", exchangeMeta.AlternateExchangeName);
+                        
+                        Assert.True(exchangeMeta.IsNonRoutedSaved);
                         Assert.Equal("TestContentType", exchangeMeta.ContentType);
                         Assert.Equal(10000, exchangeMeta.CancelRpcRequestAfterMs);
                     });
@@ -174,11 +173,8 @@ namespace IntegrationTests.RabbitMQ
                         var queueMeta = ExchangeMeta.DefineDefault("TestBus1", "TestQueueName").QueueMeta;
                         m.ApplyQueueSettings(queueMeta);
                         
-                        Assert.True(queueMeta.IsPassive);
                         Assert.Equal(20000, queueMeta.PerQueueMessageTtl);
-                        Assert.Equal("TestDeadLetterExchange", queueMeta.DeadLetterExchange);
-                        Assert.Equal("TestDeadLetterRoutingKey", queueMeta.DeadLetterRoutingKey);
-                        Assert.Equal((byte)10, queueMeta.MaxPriority);
+                        Assert.Equal(10, queueMeta.MaxPriority);
                         Assert.Equal(5, queueMeta.PrefetchCount);
                         Assert.Equal(2, queueMeta.Priority);
                     });

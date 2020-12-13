@@ -19,14 +19,14 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             CancellationToken cancellationToken)
         {
             // Prepare the message and its defining properties to be published.
-            byte[] messageBody = context.Serialization.Serialize(message, createdExchange.Definition.ContentType);
+            byte[] messageBody = context.Serialization.Serialize(message, createdExchange.Meta.ContentType);
             MessageProperties messageProperties = GetMessageProperties(context, createdExchange, message);
-            string routeKey = message.GetRouteKey() ?? createdExchange.Definition.RouteKey;
+            string routeKey = message.GetRouteKey() ?? createdExchange.Meta.RouteKey;
 
             // Only send the message to the exchange if satisfying all constraints configured for the exchange.  
             // This only applies to domain-events, as commands are more specific in that they are explicitly
             // requesting a behavior to be taken. 
-            if (message is IDomainEvent && ! createdExchange.Definition.Applies(message))
+            if (message is IDomainEvent && ! createdExchange.Meta.Applies(message))
             {
                 return;
             }
@@ -36,7 +36,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                 routeKey ?? string.Empty, 
                 false,
                 messageProperties,
-                messageBody).ConfigureAwait(false);
+                messageBody, cancellationToken).ConfigureAwait(false);
         }
         
         public static MessageProperties GetMessageProperties(IPublisherContext context, 
@@ -47,7 +47,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             if (createdExchange == null) throw new ArgumentNullException(nameof(createdExchange));
             if (message == null) throw new ArgumentNullException(nameof(message));
 
-            var definition = createdExchange.Definition;
+            var definition = createdExchange.Meta;
 
             var props = new MessageProperties
             {

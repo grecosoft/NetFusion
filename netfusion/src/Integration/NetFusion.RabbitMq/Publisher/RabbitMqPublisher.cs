@@ -2,8 +2,6 @@ using IMessage = NetFusion.Messaging.Types.Contracts.IMessage;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using EasyNetQ;
-using EasyNetQ.Topology;
 using NetFusion.RabbitMQ.Publisher.Internal;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Logging;
@@ -65,31 +63,21 @@ namespace NetFusion.RabbitMQ.Publisher
             var msgLog = new MessageLog(message, LogContextType.PublishedMessage);
             msgLog.SentHint("publish-rabbitmq");
             
-            // Lookup the exchange associated with the message and the bus
-            // on which it should be created.
-            ExchangeMeta exchangeMeta = PublisherModule.GetDefinition(messageType);
-            IBus bus = BusModule.GetBus(exchangeMeta.BusName);
-            
-            // Create the exchange/queue:
-            CreatedExchange exchange = await CreateExchange(bus, exchangeMeta).ConfigureAwait(false);
+            // Lookup the exchange associated with the message to which
+            // the message should be published.
+            CreatedExchange exchange = PublisherModule.GetExchange(messageType);
 
-            LogMessageExchange(exchangeMeta);
-            AddExchangeMetaToLog(msgLog, exchangeMeta);
+            LogMessageExchange(exchange.Meta);
+            AddExchangeMetaToLog(msgLog, exchange.Meta);
 
             // Publish the message to the created exchange/queue.
-            await exchangeMeta.PublisherStrategy.Publish(this, exchange,
+            await exchange.Meta.PublisherStrategy.Publish(this, exchange,
                 message,
                 cancellationToken);
 
             await _messageLogger.LogAsync(msgLog);
         }
 
-        private static async Task<CreatedExchange> CreateExchange(IBus bus, ExchangeMeta meta)
-        {
-            IExchange exchange = await bus.Advanced.ExchangeDeclareAsync(meta);
-            return new CreatedExchange(bus, exchange, meta);
-        }
-        
         // ---------------------------------- [Logging] ----------------------------------
 
         private void LogMessageExchange(ExchangeMeta exchangeMeta)
@@ -104,7 +92,7 @@ namespace NetFusion.RabbitMQ.Publisher
                 exchangeMeta.ContentType
             };
 
-            var log = LogMessage.For(LogLevel.Information, "Publishing {MessageType} to {Exchange} on {Bus}", 
+            var log = LogMessage.For(LogLevel.Debug, "Publishing {MessageType} to {Exchange} on {Bus}", 
                 exchangeInfo.MessageType,
                 exchangeInfo.ExchangeName, 
                 exchangeInfo.BusName).WithProperties(

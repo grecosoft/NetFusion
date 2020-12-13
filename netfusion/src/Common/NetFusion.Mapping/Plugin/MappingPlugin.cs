@@ -1,3 +1,4 @@
+using System;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Mapping.Plugin.Modules;
@@ -28,6 +29,8 @@ namespace NetFusion.Mapping.Plugin
     {
         public static ICompositeContainerBuilder AddMapping(this ICompositeContainerBuilder composite)
         {
+            if (composite == null) throw new ArgumentNullException(nameof(composite));
+            
             // Add mapping plugin:
             return composite.AddPlugin<MappingPlugin>();
         }

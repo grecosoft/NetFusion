@@ -19,24 +19,15 @@ namespace NetFusion.RabbitMQ.Settings
         public string[] RouteKeys { get; set; }
 
         /// <summary>
-        /// Do not create the queue if it doesn't exist, instead, throw an exception.
-        /// </summary>
-        public bool? Passive { get; set; }
-
-        /// <summary>
         /// How long in milliseconds a message should remain on the queue before it is discarded.
         /// </summary>
         public int? PerQueueMessageTtl { get; set; }
 
-         /// <summary>
-        ///  Determines an exchange name can remain unused before it is automatically deleted by the server.
-        /// </summary>
-        public string DeadLetterExchange { get; set;}
-
         /// <summary>
-        /// Determines an exchange name can remain unused before it is automatically deleted by the server.
+        /// Indicates that any unacknowledged messages should be sent to the dead letter exchange
+        /// and saved to any bound queues for future processing. 
         /// </summary>
-        public string DeadLetterRoutingKey { get; set;}
+        public bool? IsUnacknowledgedSaved { get; set; }
 
         /// <summary>
         /// Determines the maximum message priority that the queue should support.

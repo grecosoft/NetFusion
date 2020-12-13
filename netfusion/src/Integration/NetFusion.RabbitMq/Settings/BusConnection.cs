@@ -67,11 +67,6 @@ namespace NetFusion.RabbitMQ.Settings
         public bool PersistentMessages { get; set; } = true;
 
         /// <summary>
-        /// Indicates if multiple background threads should be used.
-        /// </summary>
-        public bool UseBackgroundThreads { get; set; } = false;
-        
-        /// <summary>
         /// The number of seconds to wait before trying to reconnect.
         /// </summary>
         public TimeSpan ConnectIntervalAttempt { get; set; } = TimeSpan.FromSeconds(5.0);
@@ -93,7 +88,8 @@ namespace NetFusion.RabbitMQ.Settings
         /// </summary>
         /// <returns>Collection of queue settings.</returns>
         public QueueSettings[] QueueSettings { get; set; } = Array.Empty<QueueSettings>();
-
+        
+        internal bool? IsConnected { get; set; }
 
         public void Validate(IObjectValidator validator)
         {

@@ -10,9 +10,12 @@ using NetFusion.RabbitMQ.Metadata;
 using NetFusion.RabbitMQ.Settings;
 using NetFusion.Settings;
 using System.Threading.Tasks;
+using EasyNetQ.Consumer;
 using EasyNetQ.Logging;
 using NetFusion.Base;
 using NetFusion.RabbitMQ.Logging;
+using NetFusion.RabbitMQ.Plugin.Configs;
+using NetFusion.RabbitMQ.Subscriber.Internal;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 [assembly: InternalsVisibleTo("IntegrationTests")]
@@ -26,6 +29,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
     public class BusModule : PluginModule,
         IBusModule
     {
+        private RabbitMqConfig RabbitMqConfig { get; set; }
         private BusSettings _busSettings;
         
         // The bus instances keyed by name created from BusSettings.
@@ -42,13 +46,15 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         // robin among a set of running application instances.
         public string HostAppId => Context.AppHost.PluginId;
         
-        //------------------------------------------------------
-        //--Plugin Initialization
-        //------------------------------------------------------
+        public event EventHandler<ReconnectionEventArgs> Reconnection;
+        
+        //----------- [Plugin Initialization] ---------------
 
         // Creates IBus instances for each configured bus.
         public override void Initialize()
         {
+            RabbitMqConfig = Context.Plugin.GetConfig<RabbitMqConfig>();
+            
             try
             {
                 _busSettings = Context.Configuration.GetSettings(new BusSettings());
@@ -60,9 +66,8 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             }
         }
         
-        //------------------------------------------------------
-        //--Plugin Execution
-        //------------------------------------------------------
+        
+        //----------- [Plugin Execution] ---------------
 
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {
@@ -86,9 +91,8 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             return base.OnStopModuleAsync(services);
         }
         
-        //------------------------------------------------------
-        //--Plugin Services
-        //------------------------------------------------------
+        
+        //----------- [Plugin Services]  ---------------
 
         public IBus GetBus(string named)
         {
@@ -114,22 +118,17 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         {
             if (meta == null) throw new ArgumentNullException(nameof(meta));
 
-            var queueSettings = GetQueueSettings(meta.Exchange.BusName, meta.QueueName);
+            var queueSettings = GetQueueSettings(meta.ExchangeMeta.BusName, meta.QueueName);
             if (queueSettings != null)
             {
                 meta.ApplyOverrides(queueSettings);
             }
             
-            ApplyExchangeSettingsInternal(meta.Exchange, applyQueueSettings: false);
+            ApplyExchangeSettingsInternal(meta.ExchangeMeta, applyQueueSettings: false);
         }
-
-        // Delegates any EasyNetQ logs to a Microsoft logger instance.
-        private void ConfigureLogging()
-        {
-            ILogger logger = Context.LoggerFactory.CreateLogger("EasyNetQ");
-
-            LogProvider.SetCurrentLogProvider(new RabbitMqLogProvider(logger));
-        }
+        
+        
+        //----------- [Connection Creation]  ---------------
         
         private void CreateBus(BusConnection conn)
         {
@@ -145,13 +144,12 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 UserName = conn.UserName,
                 Password = conn.Password,
                 VirtualHost = conn.VHostName,
-                RequestedHeartbeat = conn.Heartbeat,
+                RequestedHeartbeat = TimeSpan.FromSeconds(conn.Heartbeat),
                 Name = conn.BusName,
                 Product = Context.AppHost.Name,
-                Timeout =  conn.Timeout,
+                Timeout =  TimeSpan.FromSeconds(conn.Timeout),
                 PublisherConfirms = conn.PublisherConfirms,
                 PersistentMessages = conn.PersistentMessages,
-                UseBackgroundThreads = conn.UseBackgroundThreads,
                 PrefetchCount = conn.PrefetchCount
             };
 
@@ -163,17 +161,44 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 Port = h.Port
             }).ToArray();
 
-            // Allow EasyNetQ to validate the connection configuration:
-            connConfig.Validate();
-    
-            _buses[conn.BusName] = BusFactory(connConfig);
+            IBus bus = BusFactory(connConfig);
+            _buses[conn.BusName] = bus;
+
+            MonitorConnection(conn, bus);
+        }
+
+        private void MonitorConnection(BusConnection conn, IBus bus)
+        {
+            if (bus.Advanced == null) return;
+            
+            bus.Advanced.Disconnected += (sender, args) => conn.IsConnected = false;
+
+            bus.Advanced.Connected += (sender, args) =>
+            {
+                // Initial connection to broker:
+                if (conn.IsConnected == null)
+                {
+                    conn.IsConnected = true;
+                    return;
+                }
+                
+                Context.Logger.LogInformation("Connection reestablished to broker {BusName} ", conn.BusName);
+
+                // If this is not the first time connecting, then the connection 
+                // event is for a reconnection from a dropped connection.
+                conn.IsConnected = true;
+                Reconnection?.Invoke(this, new ReconnectionEventArgs { Connection = conn });
+            };
         }
 
         /// <summary>
         /// Factory method used to return an IBus implementation.  Default to EasyNetQ but can also
         /// be used to provided a mock during unit testing.
         /// </summary>
-        protected Func<ConnectionConfiguration, IBus> BusFactory = c => RabbitHutch.CreateBus(c, rs => {});
+        protected Func<ConnectionConfiguration, IBus> BusFactory = c => RabbitHutch.CreateBus(c, rs =>
+        {
+            rs.Register<IConsumerErrorStrategy>(new ConsumerErrorStrategy());
+        });
 
         // Additional client properties associated with created connections.
         private void SetAdditionalClientProperties(IDictionary<string, object> clientProps)
@@ -189,6 +214,9 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             clientProps["AppHost Description"] = appHostPlugin.Description;
             clientProps["Machine Name"] = Environment.MachineName;          
         }
+        
+        
+        //----------- [Connection Setting Metadata]  ---------------
         
         private void ApplyExchangeSettingsInternal(ExchangeMeta meta, bool applyQueueSettings = true)
         {
@@ -241,6 +269,20 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             var busConn = GetBusConnectionSettings(busName);
             return busConn.QueueSettings.FirstOrDefault(s => s.QueueName == queueName);
         }
+        
+        //----------- [Plugin Logging] ---------------
+        
+        private void ConfigureLogging()
+        {
+            if (RabbitMqConfig.DelegateToBaseLogger)
+            {
+                NfExtensions.Logger.Log<BusModule>(LogLevel.Information,
+                    "EasyNetQ logs forwarded to Microsoft's base ILogger.");
+                
+                ILogger logger = Context.LoggerFactory.CreateLogger("EasyNetQ");
+                LogProvider.SetCurrentLogProvider(new RabbitMqLogProvider(logger));
+            }
+        }
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
@@ -251,7 +293,6 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 c.Timeout,
                 c.PublisherConfirms,
                 c.PersistentMessages,
-                c.UseBackgroundThreads,
                 c.PrefetchCount,
                 Hosts = c.Hosts.Select(h => new { h.HostName, h.Port })
             }).ToArray();

@@ -22,7 +22,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         /// <summary>
         /// The definition on which the created exchange was based.
         /// </summary>
-        public ExchangeMeta Definition { get; }
+        public ExchangeMeta Meta { get; }
 
         public CreatedExchange(
             IBus bus,
@@ -31,7 +31,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         {
             Bus = bus ?? throw new System.ArgumentNullException(nameof(bus));
             Exchange = exchange ?? throw new System.ArgumentNullException(nameof(exchange));
-            Definition = definition ?? throw new System.ArgumentNullException(nameof(definition));
+            Meta = definition ?? throw new System.ArgumentNullException(nameof(definition));
         }
     }
 }

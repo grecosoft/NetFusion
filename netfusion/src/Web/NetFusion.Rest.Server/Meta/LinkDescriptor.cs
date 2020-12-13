@@ -51,15 +51,6 @@ namespace NetFusion.Rest.Server.Meta
 
         //---------------- OPTIONAL LINK PROPERTIES SET BY RESOURCE MAPPINGS ----------------------
 
-        public LinkDescriptor<TSource> SetName(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Name Value not specified.", nameof(name));
-
-            _resourceLink.Name = name;
-            return this;
-        }
-
         public LinkDescriptor<TSource> SetTitle(string title)
         {
             if (string.IsNullOrWhiteSpace(title))

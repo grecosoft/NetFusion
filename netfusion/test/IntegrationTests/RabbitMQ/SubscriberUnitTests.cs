@@ -69,19 +69,18 @@ namespace IntegrationTests.RabbitMQ
                         var queueDef = m.CreatedQueues.FirstOrDefault(q => q.QueueName == "TestDirectQueue");
                         Assert.NotNull(queueDef);
                         
-                        var exchangeDef = queueDef.Exchange;
+                        var exchangeDef = queueDef.ExchangeMeta;
                         Assert.NotNull(exchangeDef);
 
                         // Assert the exchange settings:
-                        Assert.Null(exchangeDef.AlternateExchangeName);
+                        Assert.False(exchangeDef.IsNonRoutedSaved);
                         Assert.Equal("TestBus1", exchangeDef.BusName);
                         Assert.Equal("TestDirectExchange", exchangeDef.ExchangeName);
                         Assert.Equal(ExchangeType.Direct, exchangeDef.ExchangeType);
                         Assert.False(exchangeDef.IsAutoDelete);
                         Assert.False(exchangeDef.IsDefaultExchange);
                         Assert.True(exchangeDef.IsDurable);
-                        Assert.False(exchangeDef.IsPassive);
-                        
+
                         // Assert the queue settings:
                         Assert.True(queueDef.RouteKeys.Length == 1);
                         Assert.True(queueDef.RouteKeys.FirstOrDefault() == "CustomerRegistrationCompleted");
@@ -90,8 +89,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.False(queueDef.IsAutoDelete);
                         Assert.True(queueDef.IsDurable);
                         Assert.False(queueDef.IsExclusive);
-                        Assert.False(queueDef.IsPassive);
-                            
+
                         // Assert consumer method subscription:
                         var handlerMethod = typeof(MockTestBusConsumer).GetMethod("DirectQueueMessageHandler");
                         var subscriber = m.Subscribers.FirstOrDefault(s => 
@@ -126,19 +124,18 @@ namespace IntegrationTests.RabbitMQ
                         var queueDef = m.CreatedQueues.FirstOrDefault(q => q.QueueName == "TestTopicQueue");
                         Assert.NotNull(queueDef);
                         
-                        var exchangeDef = queueDef.Exchange;
+                        var exchangeDef = queueDef.ExchangeMeta;
                         Assert.NotNull(exchangeDef);
                         
                         // Assert the exchange settings:
-                        Assert.Null(exchangeDef.AlternateExchangeName);
+                        Assert.False(exchangeDef.IsNonRoutedSaved);
                         Assert.Equal("TestBus1", exchangeDef.BusName);
                         Assert.Equal("TestTopicExchange", exchangeDef.ExchangeName);
                         Assert.Equal(ExchangeType.Topic, exchangeDef.ExchangeType);
                         Assert.False(exchangeDef.IsAutoDelete);
                         Assert.False(exchangeDef.IsDefaultExchange);
                         Assert.True(exchangeDef.IsDurable);
-                        Assert.False(exchangeDef.IsPassive);
-                        
+
                         // Assert the queue settings:
                         Assert.True(queueDef.RouteKeys.Length == 1);
                         Assert.True(queueDef.RouteKeys.FirstOrDefault() == "VW.*.White");
@@ -147,8 +144,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.False(queueDef.IsAutoDelete);
                         Assert.True(queueDef.IsDurable);
                         Assert.False(queueDef.IsExclusive);
-                        Assert.False(queueDef.IsPassive);
-                            
+
                         // Assert consumer method subscription:
                         var handlerMethod = typeof(MockTestBusConsumer).GetMethod("TopicQueueMessageHandler");
                         var subscriber = m.Subscribers.FirstOrDefault(s => 
@@ -181,22 +177,21 @@ namespace IntegrationTests.RabbitMQ
                     .Assert.PluginModule<MockSubscriberModule>(m =>
                     {
 
-                        var queueDef = m.CreatedQueues.FirstOrDefault(q => q.Exchange.ExchangeName == "TestFanoutExchange");
+                        var queueDef = m.CreatedQueues.FirstOrDefault(q => q.ExchangeMeta.ExchangeName == "TestFanoutExchange");
                         Assert.NotNull(queueDef);
 
-                        var exchangeDef = queueDef.Exchange;
+                        var exchangeDef = queueDef.ExchangeMeta;
                         Assert.NotNull(exchangeDef);
                         
                         // Assert the exchange settings:
-                        Assert.Null(exchangeDef.AlternateExchangeName);
+                        Assert.False(exchangeDef.IsNonRoutedSaved);
                         Assert.Equal("TestBus1", exchangeDef.BusName);
                         Assert.Equal("TestFanoutExchange", exchangeDef.ExchangeName);
                         Assert.Equal(ExchangeType.Fanout, exchangeDef.ExchangeType);
                         Assert.True(exchangeDef.IsAutoDelete);
                         Assert.False(exchangeDef.IsDefaultExchange);
                         Assert.False(exchangeDef.IsDurable);
-                        Assert.False(exchangeDef.IsPassive);
-                        
+
                         // Assert the queue settings:
                         Assert.Null(queueDef.RouteKeys);
                         Assert.False(queueDef.AppendHostId);
@@ -204,8 +199,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.True(queueDef.IsAutoDelete);
                         Assert.False(queueDef.IsDurable);
                         Assert.True(queueDef.IsExclusive);
-                        Assert.False(queueDef.IsPassive);
-                            
+
                         // Assert consumer method subscription:
                         var handlerMethod = typeof(MockTestBusConsumer).GetMethod("FanoutQueueMessageHandler");
                         var subscriber = m.Subscribers.FirstOrDefault(s => 
@@ -246,8 +240,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.False(queueDef.IsAutoDelete);
                         Assert.True(queueDef.IsDurable);
                         Assert.False(queueDef.IsExclusive);
-                        Assert.False(queueDef.IsPassive);
-                            
+
                         // Assert consumer method subscription:
                         var handlerMethod = typeof(MockTestBusConsumer).GetMethod("WorkQueueMessageHandler");
                         var subscriber = m.Subscribers.FirstOrDefault(s => 
@@ -282,23 +275,22 @@ namespace IntegrationTests.RabbitMQ
                         var queueDef = m.CreatedQueues.FirstOrDefault(q => q.QueueName == "TestRpcQueue");
                         Assert.NotNull(queueDef);
 
-                        var exchangeDef = queueDef.Exchange;
+                        var exchangeDef = queueDef.ExchangeMeta;
                         Assert.NotNull(exchangeDef);
                                            
                         // Assert the exchange settings:
-                        Assert.Null(exchangeDef.AlternateExchangeName);
+                        Assert.False(exchangeDef.IsNonRoutedSaved);
                         Assert.Equal("TestBus1", exchangeDef.BusName);
                         Assert.True(exchangeDef.IsDefaultExchange);
                         
                         // Assert the queue settings:          
-                        Assert.Equal("ActionName", queueDef.Exchange.ActionNamespace);
+                        Assert.Equal("ActionName", queueDef.ExchangeMeta.ActionNamespace);
                         Assert.False(queueDef.AppendHostId);
                         Assert.False(queueDef.AppendUniqueId);
                         Assert.True(queueDef.IsAutoDelete);
                         Assert.False(queueDef.IsDurable);
                         Assert.False(queueDef.IsExclusive);
-                        Assert.False(queueDef.IsPassive);
-                            
+
                         // Assert consumer method subscription:
                         var handlerMethod = typeof(MockTestBusConsumer).GetMethod("RpcQueueMessageHandler");
                         var subscriber = m.Subscribers.FirstOrDefault(s => 

@@ -5,7 +5,7 @@ namespace NetFusion.Mapping
     /// <summary>
     /// Static class used to create an instance of generic DelegateMap class for a
     /// specific source and target types.  This allows the instance to be created
-    /// based on the mapping function types. 
+    /// based on the mapping function parameter types. 
     /// </summary>
     public static class DelegateMap
     {
@@ -22,7 +22,7 @@ namespace NetFusion.Mapping
             where TSource: class 
             where TTarget: class
         {
-            var map = new DelegateMap<TSource,TTarget>();
+            var map = new DelegateMap<TSource, TTarget>();
             map.SetMap(sourceToTarget);
 
             return map;
@@ -38,14 +38,14 @@ namespace NetFusion.Mapping
         /// <typeparam name="TTarget">The target type.</typeparam>
         /// <returns>Instance of a DelegateMap used to convert back and fourth between a source
         /// and target type.</returns>
-        public static DelegateMap<TSource, TTarget> Transform<TSource, TTarget>(
+        public static DelegateMap<TSource, TTarget> Map<TSource, TTarget>(
             Func<TSource, TTarget> sourceToTarget, 
             Func<TTarget, TSource> targetToSource)
         
             where TSource : class
             where TTarget : class
         {
-            var map = new DelegateMap<TSource,TTarget>();
+            var map = new DelegateMap<TSource, TTarget>();
             map.SetMap(sourceToTarget);
             map.SetMap(targetToSource);
 

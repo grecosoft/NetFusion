@@ -24,7 +24,7 @@ namespace NetFusion.Rest.Docs.Json.Descriptions
             // Check if comments exist for the specific resource and relation name.
             var relationComment = _docModule.HalComments.RelationComments.FirstOrDefault(r =>
                 r.ResourceName == resourceDoc.ResourceName &&
-                r.ResourceName == relationDoc.Name);
+                r.RelationName == relationDoc.Name);
 
             if (relationComment != null)
             {

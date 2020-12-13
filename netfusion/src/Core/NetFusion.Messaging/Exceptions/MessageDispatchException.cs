@@ -37,7 +37,7 @@ namespace NetFusion.Messaging.Exceptions
         /// <param name="innerException">The source exception.  If the exception is derived from 
         /// NetFusionException, the detail will be added to this exception's details.</param>
         public MessageDispatchException(string message, MessageDispatchInfo dispatchInfo, 
-            Exception innerException) : base(message)
+            Exception innerException) : base(message, innerException)
         {
             if (dispatchInfo == null) throw new ArgumentNullException(nameof(dispatchInfo));
             

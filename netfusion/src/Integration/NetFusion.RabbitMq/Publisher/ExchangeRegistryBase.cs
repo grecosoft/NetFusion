@@ -50,7 +50,6 @@ namespace NetFusion.RabbitMQ.Publisher
                 config.IsAutoDelete = false;
                 config.IsDurable = true;
                 config.IsPersistent = true;
-                config.IsPassive = false;
             });
             
             _exchanges.Add(exchange);
@@ -78,7 +77,6 @@ namespace NetFusion.RabbitMQ.Publisher
                 config.IsAutoDelete = false;
                 config.IsDurable = true;
                 config.IsPersistent = true;
-                config.IsPassive = false;
             });
             
             _exchanges.Add(exchange);
@@ -108,7 +106,6 @@ namespace NetFusion.RabbitMQ.Publisher
                 config.IsAutoDelete = true;
                 config.IsDurable = false;
                 config.IsPersistent = false;
-                config.IsPassive = false;
             });
             
             _exchanges.Add(exchange);
@@ -137,7 +134,6 @@ namespace NetFusion.RabbitMQ.Publisher
             {
                 config.IsAutoDelete = false;
                 config.IsDurable = true;
-                config.IsPassive = false;
                 config.IsExclusive = false;
             });
 
@@ -172,7 +168,6 @@ namespace NetFusion.RabbitMQ.Publisher
                 {
                     config.IsAutoDelete = true;
                     config.IsDurable = false;
-                    config.IsPassive = false;
                     config.IsExclusive = false;
                 });
 

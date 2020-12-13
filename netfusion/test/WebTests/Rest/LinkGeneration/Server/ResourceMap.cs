@@ -36,7 +36,6 @@ namespace WebTests.Rest.LinkGeneration.Server
 
                 .LinkMeta(meta => meta.Href("scenario-30", HttpMethod.Options, 
                         r => $"http://external/api/call/{r.Id}/info/{r.Value2}")
-                            .SetName("test-name")
                             .SetTitle("test-title")
                             .SetType("test-type")
                             .SetHrefLang("test-href-lang"))

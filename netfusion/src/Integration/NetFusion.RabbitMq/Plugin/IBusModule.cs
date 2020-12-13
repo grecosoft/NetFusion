@@ -1,3 +1,4 @@
+using System;
 using EasyNetQ;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.RabbitMQ.Metadata;
@@ -36,5 +37,10 @@ namespace NetFusion.RabbitMQ.Plugin
         /// </summary>
         /// <param name="meta">Metadata about a queue to be created.</param>
         void ApplyQueueSettings(QueueMeta meta);
+
+        /// <summary>
+        /// Event raised when a connection to a broker is reestablished.
+        /// </summary>
+        event EventHandler<ReconnectionEventArgs> Reconnection;
     }
 }

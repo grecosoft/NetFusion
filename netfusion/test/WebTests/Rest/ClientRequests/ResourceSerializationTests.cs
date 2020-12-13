@@ -65,7 +65,7 @@ namespace WebTests.Rest.ClientRequests
             var embeddedResource = stats.AsResource();
             embeddedResource.Links = new Dictionary<string, Link>
             {
-                { "reset", new Link { Name = "reset", Href = "http://sensor/stats/reset"}}
+                { "reset", new Link { Href = "http://sensor/stats/reset"}}
             };
             
             resource.EmbedModel(embeddedResource, "stats");
@@ -108,7 +108,7 @@ namespace WebTests.Rest.ClientRequests
             {
                 embeddedResource.Links = new Dictionary<string, Link>
                 {
-                    { "reset", new Link { Name = "reset", Href = "http://sensor/stats/reset"}}
+                    { "reset", new Link { Href = "http://sensor/stats/reset"}}
                 };
             }
             
@@ -199,8 +199,8 @@ namespace WebTests.Rest.ClientRequests
 
         private static IDictionary<string, Link> TestLinks => new Dictionary<string, Link>
         {
-            { "status", new Link {Name = "status", Href = "http://sensor/status"} },
-            { "version", new Link {Name = "version", Href = "http://sensor/version"} }
+            { "status", new Link { Href = "http://sensor/status"} },
+            { "version", new Link { Href = "http://sensor/version"} }
         };
     }
 

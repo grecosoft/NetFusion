@@ -50,13 +50,13 @@ namespace NetFusion.Mapping
         /// </summary>
         /// <param name="source">The source object to be mapped.</param>
         /// <returns>Instance of the target object.</returns>
-        protected virtual TTarget SourceToTarget(TSource source) => default;
+        protected virtual TTarget SourceToTarget(TSource source) => null;
 
         /// <summary>
         /// Overridden by a derived mapping strategy to map target to source object.
         /// </summary>
         /// <param name="target">The target object to be mapped.</param>
         /// <returns>Instance of the source object.</returns>
-        protected virtual TSource TargetToSource(TTarget target) => default;
+        protected virtual TSource TargetToSource(TTarget target) => null;
     }
 }

@@ -437,7 +437,6 @@ namespace WebTests.Rest.LinkGeneration
                     apiResponse.Resource.AssertLink("scenario-30", HttpMethod.Options, "http://external/api/call/10/info/value-2");
 
                     var link = apiResponse.Resource.Links["scenario-30"];
-                    Assert.Equal("test-name", link.Name);
                     Assert.Equal("test-title", link.Title);
                     Assert.Equal("test-type", link.Type);
                     Assert.Equal("test-href-lang", link.HrefLang);

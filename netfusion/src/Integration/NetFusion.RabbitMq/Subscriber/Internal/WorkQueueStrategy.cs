@@ -17,8 +17,8 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
                 {
                     config.IsAutoDelete = false;
                     config.IsDurable = true;
-                    config.IsPassive = false;
                     config.IsExclusive = false;
+                    config.IsUnacknowledgedSaved = attribute.IsUnacknowledgedSaved;
                 });
 
             return exchange.QueueMeta;

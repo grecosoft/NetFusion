@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Messaging.Plugin;
+using NetFusion.RabbitMQ.Plugin.Configs;
 using NetFusion.RabbitMQ.Settings;
 using NetFusion.Test.Plugins;
 
@@ -20,6 +21,7 @@ namespace IntegrationTests.RabbitMQ
             hostPlugin.AddPluginType(hostTypes);
 
             var corePlugin = new MockCorePlugin();
+            corePlugin.AddConfig<RabbitMqConfig>();
             corePlugin.AddPluginType<BusSettings>();
             corePlugin.AddModule<MockBusModule>();
             corePlugin.AddModule<MockPublisherModule>();
@@ -100,7 +102,7 @@ namespace IntegrationTests.RabbitMQ
         {
             values["NetFusion:RabbitMQ:Connections:0:ExchangeSettings:0:ExchangeName"] = "TestExchangeName";
             values["NetFusion:RabbitMQ:Connections:0:ExchangeSettings:0:Passive"] = "true";
-            values["NetFusion:RabbitMQ:Connections:0:ExchangeSettings:0:AlternateExchange"] = "TestAltExchangeName";
+            values["NetFusion:RabbitMQ:Connections:0:ExchangeSettings:0:IsNonRoutedSaved"] = "true";
             values["NetFusion:RabbitMQ:Connections:0:ExchangeSettings:0:ContentType"] = "TestContentType";
             values["NetFusion:RabbitMQ:Connections:0:ExchangeSettings:0:CancelRpcRequestAfterMs"] = "10000";
         }
@@ -110,8 +112,6 @@ namespace IntegrationTests.RabbitMQ
             values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:QueueName"] = "TestQueueName";
             values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:Passive"] = "true";
             values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:PerQueueMessageTtl"] = "20000";
-            values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:DeadLetterExchange"] = "TestDeadLetterExchange";
-            values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:DeadLetterRoutingKey"] = "TestDeadLetterRoutingKey";
             values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:MaxPriority"] = "10";
             values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:PrefetchCount"] = "5";
             values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:Priority"] = "2";

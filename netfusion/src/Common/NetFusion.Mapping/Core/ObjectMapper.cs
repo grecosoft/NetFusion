@@ -12,7 +12,8 @@ namespace NetFusion.Mapping.Core
 {
     /// <summary>
     /// Responsible for finding the mapping strategy for mapping a specified source type
-    /// to its corresponding target type. 
+    /// to its corresponding target type.   If a matching strategy is found, it is invoked
+    /// to map the source type to its corresponding target type.
     /// </summary>
     public class ObjectMapper : IObjectMapper
     {
@@ -45,6 +46,7 @@ namespace NetFusion.Mapping.Core
         }
         
         public bool TryMap<TTarget>(object source, out TTarget mappedResult)
+            where TTarget : class
         {
             if (TryMap(source, typeof(TTarget), out object result))
             {
@@ -52,7 +54,7 @@ namespace NetFusion.Mapping.Core
                 return true;
             }
 
-            mappedResult = default;
+            mappedResult = null;
             return false;
         }
 
@@ -101,8 +103,8 @@ namespace NetFusion.Mapping.Core
             if (mappedResult == null)
             {
                 _logger.LogDebug(
-                    "The mapping strategy for source: {sourceType} and target: {targetType} type returned null" + 
-                    " for the mapped result.", source.GetType(), targetType);
+                    "The mapping strategy for source: {sourceType} and target: {targetType} type returned null " + 
+                    "for the mapped result.", source.GetType(), targetType);
             }
             
             return mappedResult != null;
@@ -110,7 +112,7 @@ namespace NetFusion.Mapping.Core
 
         // Determines if there is a mapping strategy matching the exact target type.  
         // If not present, a strategy with a matching target type, deriving from the 
-        // specified target type, is searched.  This allows mapping polymorphic-ally 
+        // specified target type, is searched.  This allows for polymorphic mapping
         // to a derived target type for a corresponding source type.
         private TargetMap FindMappingStrategy(Type sourceType, Type targetType)
         {

@@ -41,10 +41,18 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             _serializationManager = services.GetRequiredService<ISerializationManager>();
             _messageLogger = services.GetRequiredService<IMessageLogger>();
 
+            BusModule.Reconnection += async (sender, args) => await HandleReconnection(args);
+
             _subscribers = GetQueueSubscribers(MessagingModule);
             return SubscribeToQueues(BusModule, _subscribers);
         }
-        
+
+        protected override Task OnStopModuleAsync(IServiceProvider services)
+        {
+            _subscribers.ForEach(s => s.Consumer?.Dispose());
+            return base.OnStopModuleAsync(services);
+        }
+
         // Delegates to the core message dispatch module to find all message dispatch
         // handlers and filters the list to only those that should be bound to a queue.
         private MessageQueueSubscriber[] GetQueueSubscribers(IMessageDispatchModule messageDispatch)
@@ -61,7 +69,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         // exchange and queue then bind it to the in-process handler. 
         private async Task SubscribeToQueues(IBusModule busModule, IEnumerable<MessageQueueSubscriber> subscribers)
         {
-            // Tacks the RPC queue that have been already bound.  For a given named RPC queue, we only
+            // Tracks the RPC queue that have been already bound.  For a given named RPC queue, we only
             // want to bind once since the command action namespace is used to determine the actual
             // handler to be called (multiple commands are sent on a single queue).
             HashSet<string> boundToRpcQueues = new HashSet<string>();
@@ -70,18 +78,18 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             {
                 busModule.ApplyQueueSettings(subscriber.QueueMeta);
  
-                if (subscriber.QueueMeta.Exchange.IsRpcExchange 
+                if (subscriber.QueueMeta.ExchangeMeta.IsRpcExchange 
                     && boundToRpcQueues.Contains(subscriber.QueueMeta.QueueName))
                 {
                     continue;
                 }
                 
-                var bus = busModule.GetBus(subscriber.QueueMeta.Exchange.BusName);
+                var bus = busModule.GetBus(subscriber.QueueMeta.ExchangeMeta.BusName);
                 IQueue queue = await QueueDeclareAsync(bus, subscriber.QueueMeta);
                 
                 ConsumeMessageQueue(bus, queue, subscriber);
                 
-                if (subscriber.QueueMeta.Exchange.IsRpcExchange)
+                if (subscriber.QueueMeta.ExchangeMeta.IsRpcExchange)
                 {
                     boundToRpcQueues.Add(queue.Name);
                 }
@@ -98,21 +106,21 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         {
             QueueMeta definition = subscriber.QueueMeta;
 
-            bus.Advanced.Consume(queue, 
+            subscriber.Consumer = bus.Advanced.Consume(queue, 
                 (bytes, msgProps, receiveInfo) => 
                 {
-                    var consumerContext = new ConsumeContext 
+                    // Create context containing the received message information and
+                    // additional serviced required to process the message.
+                    var consumerContext = new ConsumeContext(subscriber, msgProps, receiveInfo, bytes)
                     {
                         LoggerFactory = Context.LoggerFactory,
-                        MessageData = bytes,
-                        MessageProps = msgProps,
-                        MessageReceiveInfo = receiveInfo,
-                        Subscriber = subscriber,
+                        GetRpcMessageHandler = GetRpcMessageHandler,
+          
+                        // Dependent Services:
                         BusModule = BusModule,
                         MessagingModule = MessagingModule,
                         Serialization = _serializationManager,
-                        MessageLogger = _messageLogger,
-                        GetRpcMessageHandler = GetRpcMessageHandler
+                        MessageLogger = _messageLogger
                     };
 
                     // Delegate to the queue strategy, associated with the definition, and 
@@ -128,11 +136,24 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
                     if (definition.IsExclusive)
                     {
-                        config.AsExclusive();
+                        config.WithExclusive();
                     }
 
                     config.WithPriority(definition.Priority);
                 });
+        }
+
+        // Called when a reconnection to the the broker is detected.  The IBus will reestablish
+        // the connection when available.  However, the reconnection could mean that the broker
+        // was restarted.  In this case, any auto-delete queues will need to be recreated.
+        private async Task HandleReconnection(ReconnectionEventArgs eventArgs)
+        {
+            var busSubscribers = _subscribers
+                .Where(s => s.QueueMeta.ExchangeMeta.BusName == eventArgs.Connection.BusName)
+                .ToArray();            
+            
+            busSubscribers.ForEach(s => s.Consumer?.Dispose());            
+            await SubscribeToQueues(BusModule, busSubscribers);
         }
 
         // Looks up the dispatch information that should be used to handle the RPC style message.
@@ -143,7 +164,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             
             var matchingDispatchers = _subscribers.Where(s =>
                 s.QueueMeta.QueueName == queueName &&
-                s.QueueMeta.Exchange.ActionNamespace == actionNamespace).ToArray();
+                s.QueueMeta.ExchangeMeta.ActionNamespace == actionNamespace).ToArray();
 
             if (matchingDispatchers.Length == 0)
             {
@@ -162,7 +183,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             return matchingDispatchers.First().DispatchInfo;
         }
         
-        // ------------------------ [Logging] --------------------------
+        // ------------------------ [Public Logging] --------------------------
 
         public override void Log(IDictionary<string, object> moduleLog)
         {

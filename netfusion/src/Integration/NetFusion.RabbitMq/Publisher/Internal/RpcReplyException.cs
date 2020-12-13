@@ -3,14 +3,12 @@ using System;
 namespace NetFusion.RabbitMQ.Publisher.Internal
 {
     /// <summary>
-    /// Exception that is thrown if the RPC reply contains an 
-    /// serialized exception.
+    /// Exception that is thrown if the RPC reply contains an serialized exception.
     /// </summary>
     public class RpcReplyException : Exception
     {
         /// <summary>
-        /// The serialized exception returned from the consumer to
-        /// which the RPC request was sent.
+        /// The serialized exception returned from the consumer to which the RPC request was sent.
         /// </summary>
         public byte[] ReplayExceptionBody { get; }
         

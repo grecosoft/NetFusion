@@ -8,7 +8,11 @@ namespace Service.Infra
     {
         protected override void OnRegister()
         {
-            DefineDirectExchange<PropertySold>("RealEstate", "testBus");
+            DefineDirectExchange<PropertySold>("RealEstate", "testBus", settings =>
+            {
+                settings.IsNonRoutedSaved = true;
+            });
+            
             DefineTopicExchange<AutoSaleCompleted>("CompletedAutoSales", "testBus");
             DefineFanoutExchange<TemperatureReading>("TemperatureReading", "testBus");
             DefineWorkQueue<SendEmail>("GeneratedAndSendEmail", "testBus");
