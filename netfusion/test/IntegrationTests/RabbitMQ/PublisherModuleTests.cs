@@ -58,7 +58,7 @@ namespace IntegrationTests.RabbitMQ
                     })
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
-                        var definition = m.GetDefinition(typeof(AutoSalesEvent));
+                        var definition = m.GetExchangeMeta(typeof(AutoSalesEvent));
                         Assert.NotNull(definition);
                     });
             });
@@ -78,7 +78,7 @@ namespace IntegrationTests.RabbitMQ
                     })
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
-                        Assert.Throws<InvalidOperationException>(() => m.GetDefinition(typeof(TestCommand1)));                       
+                        Assert.Throws<InvalidOperationException>(() => m.GetExchangeMeta(typeof(TestCommand1)));                       
                     });
             });
         }
@@ -127,8 +127,8 @@ namespace IntegrationTests.RabbitMQ
                     })
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
-                        Assert.NotNull(m.GetDefinition(typeof(TestDomainEvent)));
-                        Assert.NotNull(m.GetDefinition(typeof(TestDomainEvent2)));
+                        Assert.NotNull(m.GetExchangeMeta(typeof(TestDomainEvent)));
+                        Assert.NotNull(m.GetExchangeMeta(typeof(TestDomainEvent2)));
                     });
             });
         }
@@ -174,59 +174,14 @@ namespace IntegrationTests.RabbitMQ
                     })
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
-                        Assert.NotNull(m.GetDefinition(typeof(TestCommand1)));
-                        Assert.NotNull(m.GetDefinition(typeof(TestCommand2)));
+                        Assert.NotNull(m.GetExchangeMeta(typeof(TestCommand1)));
+                        Assert.NotNull(m.GetExchangeMeta(typeof(TestCommand2)));
                     });
             });
         }
+        
 
-        /// <summary>
-        /// For each specified RPC exchange, a corresponding IRpcClient instance is created for
-        /// sending commands to the subscriber.  Multiple commands can be sent on the same RPC
-        /// eachange where the RouteKey identifies the specific command.  For example, there can
-        /// be a "Calculations" exchange on which commands with route keys "CalculatePropTax" and
-        /// "CalculateAutoTax" can be published.  Note:  A Direct RabbitMQ exchange is used for
-        /// sending RPC style messages.  In this example, a single IRpcClient is created for the
-        /// "Calculations" exchange over which the "CalculatePropTax" and "CalculateAutoTax"
-        /// commands are sent.  Each IRpcClient instance creates a corresponding queue on which
-        /// it will subscribe for responses to the sent commands.  This design allows multiple
-        /// IRpcClient instances to be created to allow dispursing commands accross eachanges.
-        /// </summary>
-        [Fact]
-        public void RpcClientCreated_ForEachRpcExchange()
-        {
-            ContainerFixture.Test(fixture => {
-                fixture.Arrange
-                    .Configuration(TestSetup.AddValidBusConfig)
-                    .Container(c =>
-                    {
-                        c.WithRabbitMqHost(typeof(RpcExchangeRegistry));
-                    })
-                    .PluginConfig((MessageDispatchConfig c) =>
-                    {
-                        c.AddPublisher<RabbitMqPublisher>();
-                    })
-                    .Act.OnApplication(ca =>
-                    {
-                        ca.Start();
-                    })
-                    .Assert.PluginModule<MockPublisherModule>(m =>
-                    {
-                        var calExchangeClient = m.GetRpcClient("TestBus1", "Calculations");
-                        var refExchangeClient = m.GetRpcClient("TestBus1", "LookupReferenceData");
-                        
-                        Assert.NotNull(calExchangeClient);
-                        Assert.NotNull(refExchangeClient);
-                        Assert.NotSame(calExchangeClient, refExchangeClient);
-                    });
-            });
-        }
-
-
-
-
-
-public class ValidExchangeRegistry : ExchangeRegistryBase
+        public class ValidExchangeRegistry : ExchangeRegistryBase
         {
             protected override void OnRegister()
             {

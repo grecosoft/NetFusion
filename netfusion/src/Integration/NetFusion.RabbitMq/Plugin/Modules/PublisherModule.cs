@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using EasyNetQ;
+using EasyNetQ.Topology;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
@@ -14,9 +15,7 @@ using NetFusion.RabbitMQ.Publisher.Internal;
 namespace NetFusion.RabbitMQ.Plugin.Modules
 {
     /// <summary>
-    /// Plugin module responsible for finding and caching the registered exchange definitions 
-    /// that should be created when the associated message type is published.  This plugin
-    /// module encapsulates the concerns of the publisher.  It finds all exchange definitions
+    /// Plugin module encapsulating the concerns of the publisher.  Finds all exchange definitions
     /// describing the exchanges/queues to which messages can be sent.  This discovered metadata
     /// is then used to create the needed exchanges and queues by delegating to the EasyNetQ
     /// advanced API.
@@ -31,9 +30,11 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         // to be created by defining one or more IExchangeRegister derived types.
         public IEnumerable<IExchangeRegistry> Registries { get;  protected set; }  
         
-        // Records for a given message type the exchange to which the message should be published.
+        // Records for a given message type the exchange metadata and the exchange
+        // created from the metadata to which the message should be published.
         private IDictionary<Type, ExchangeMeta> _messageExchanges;
-
+        private readonly IDictionary<Type, CreatedExchange> _createdExchanges;
+        
         // Stores for the unique set of named RPC exchanges the associated RPC client that will create a queue,
         // on the default exchange, to process replies from the consumer containing the response to the original
         // sent command.  A client and replay queue is created for each unique RPC exchange name allowing a single
@@ -44,12 +45,11 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         public PublisherModule()
         {
             _exchangeRpcClients = new Dictionary<string, IRpcClient>();
+            _createdExchanges = new Dictionary<Type, CreatedExchange>();
         }
-        
-        //------------------------------------------------------
-        //--Plugin Initialization
-        //------------------------------------------------------
 
+        //----------- [Plugin Initialization]  ---------------
+      
         public override void Configure()
         {
             var definitions = Registries.SelectMany(r => r.GetDefinitions()).ToArray();
@@ -64,7 +64,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         // values.  These default values can be overridden by specifying them within the application's configuration.
         private void ApplyConfiguredOverrides(IEnumerable<ExchangeMeta> definitions)
         {
-            foreach (var definition in definitions)
+            foreach (ExchangeMeta definition in definitions)
             {
                 BusModule.ApplyExchangeSettings(definition);
             }
@@ -136,18 +136,15 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             } 
         }
 
-        //------------------------------------------------------
-        //--Plugin Execution
-        //------------------------------------------------------
+        
+        //----------- [Plugin Execution] ---------------
         
         protected override async Task OnStartModuleAsync(IServiceProvider services)
         {
-            CreateExchangeRpcClients(_messageExchanges.Values);
-            
-            foreach (IRpcClient client in _exchangeRpcClients.Values)
-            {
-                await client.CreateAndSubscribeToReplyQueueAsync();
-            }
+            await CreateExchanges(_messageExchanges.Values);
+            await CreateRpcExchangeClients(_messageExchanges.Values);
+
+            BusModule.Reconnection += async (sender, args) => await HandleReconnection(args);
         }
 
         protected override Task OnStopModuleAsync(IServiceProvider services)
@@ -159,11 +156,23 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             
             return base.OnStopModuleAsync(services);
         }
-        
+
+        private async Task CreateExchanges(IEnumerable<ExchangeMeta> definitions)
+        {
+            foreach (ExchangeMeta exchangeMeta in definitions)
+            {
+                IBus bus = BusModule.GetBus(exchangeMeta.BusName);
+                IExchange exchange = await bus.Advanced.ExchangeDeclareAsync(exchangeMeta);
+                
+                var createdExchange = new CreatedExchange(bus, exchange, exchangeMeta);
+                _createdExchanges[exchangeMeta.MessageType] = createdExchange;
+            }
+        }
+
         // Creates a RPC client for each RPC exchange.  RPC style commands are passed through
         // this client when sent.  It also monitors the reply queue for commands responses 
         // that are correlated back to the original sent command.
-        private void CreateExchangeRpcClients(IEnumerable<ExchangeMeta> definitions)
+        private async Task CreateRpcExchangeClients(IEnumerable<ExchangeMeta> definitions)
         {
             var rpcExchanges = definitions.Where(d => d.IsRpcExchange);
             foreach (ExchangeMeta rpcExchange in rpcExchanges)
@@ -171,7 +180,9 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 string rpcClientKey = $"{rpcExchange.BusName}|{rpcExchange.QueueMeta.QueueName}";
                 if (! _exchangeRpcClients.ContainsKey(rpcClientKey))
                 {
-                    _exchangeRpcClients[rpcClientKey] = CreateRpcClient(rpcExchange);
+                    var rpcClient = CreateRpcClient(rpcExchange);
+                    _exchangeRpcClients[rpcClientKey] = rpcClient;
+                    await rpcClient.CreateAndSubscribeToReplyQueueAsync();
                 }
             }
         }
@@ -185,11 +196,35 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             rpcClient.SetLogger(logger);
             return rpcClient;
         }
-        
-        //------------------------------------------------------
-        //--Plugin Services
-        //------------------------------------------------------
 
+        // Called when a reconnection to the the broker is detected.  The IBus will reestablish
+        // the connection when available.  However, the reconnection could mean that the broker
+        // was restarted.  In this case, any auto-delete queues will need to be recreated.
+        private async Task HandleReconnection(ReconnectionEventArgs eventArgs)
+        {
+            // Recreate all exchanges/queues on the bus for which the connection was restored.
+            // RabbitMQ will only create these entities if they are not already present.
+            var busExchanges = _messageExchanges.Values
+                .Where(e => e.BusName == eventArgs.Connection.BusName)
+                .ToArray();
+                
+            await CreateExchanges(busExchanges);
+
+            // Next, recreate all IRpcClient reply-queues that belong to bus 
+            // that was reconnected.
+            var busRpcClients = _exchangeRpcClients.Values
+                .Where(c => c.BusName == eventArgs.Connection.BusName)
+                .ToArray();
+
+            foreach (IRpcClient client in busRpcClients)
+            {
+                await client.CreateAndSubscribeToReplyQueueAsync();
+            }
+        }
+        
+        
+        //----------- [Plugin Services] ---------------
+        
         // Determines if the specified message should be delivered to an exchange.
         public bool IsExchangeMessage(Type messageType)
         {
@@ -198,7 +233,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         }
 
         // Returns information about the exchange to which a given type of message should be delivered.
-        public ExchangeMeta GetDefinition(Type messageType)
+        public ExchangeMeta GetExchangeMeta(Type messageType)
         {
             if (messageType == null) throw new ArgumentNullException(nameof(messageType));
 
@@ -208,6 +243,19 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                     $"No exchange definition registered for message type: {messageType}");
             }
             return _messageExchanges[messageType];
+        }
+
+        // Returns exchange to which a given type of message should be delivered.
+        public CreatedExchange GetExchange(Type messageType)
+        {
+            if (messageType == null) throw new ArgumentNullException(nameof(messageType));
+
+            if (! IsExchangeMessage(messageType))
+            {
+                throw new InvalidOperationException(
+                    $"No exchange definition registered for message type: {messageType}");
+            }
+            return _createdExchanges[messageType];
         }
         
         // Returns the RPC Client used to deliver a message to a consumer for which a response
@@ -229,6 +277,9 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
             return client;
         }
+        
+        
+        //----------- [Plugin Logging] ---------------
 
         public override void Log(IDictionary<string, object> moduleLog)
         {

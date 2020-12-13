@@ -13,7 +13,6 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
     /// </summary>
     internal class RpcClient : IRpcClient
     {
-        private readonly string _busName;
         private ILogger _logger;
 
         // Dictionary containing the pending task associated with the originating 
@@ -22,18 +21,18 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
 
         public IBus Bus { get; }
         public string ReplyToQueueName { get; }
+        public string BusName { get; }
+
+        private IDisposable _consumer;
 
         public RpcClient(string busName, string queueName, IBus bus)
         {
-            if (string.IsNullOrWhiteSpace(busName))
-                throw new ArgumentException("Bus name not specified", nameof(busName));
-
             if (string.IsNullOrWhiteSpace(queueName))
                 throw new ArgumentException("Queue name not specified.", nameof(queueName));
 
-            _busName = busName;
             _pendingRpcRequests = new ConcurrentDictionary<string, RpcPendingRequest>();
 
+            BusName = busName ?? throw new ArgumentNullException(nameof(busName));
             Bus = bus ?? throw new ArgumentNullException(nameof(bus));
 
             // The queue unique to the running host instance on which replies to published
@@ -61,13 +60,13 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             var futureResult = new TaskCompletionSource<byte[]>();
 
             string correlationId = messageProperties.CorrelationId;
-            int cancelRpcRequestAfterMs = createdExchange.Definition.CancelRpcRequestAfterMs;
+            int cancelRpcRequestAfterMs = createdExchange.Meta.CancelRpcRequestAfterMs;
 
             var rpcPendingRequest = new RpcPendingRequest(futureResult, cancellationToken, cancelRpcRequestAfterMs);
             
             _pendingRpcRequests[correlationId] = rpcPendingRequest;
 
-            string routeKey = createdExchange.Definition.QueueMeta.QueueName;
+            string routeKey = createdExchange.Meta.QueueMeta.QueueName;
 
             LogRpcPublishDetails(createdExchange, correlationId);
 
@@ -76,7 +75,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                 routeKey, 
                 false,
                 messageProperties,
-                messageBody).ConfigureAwait(false);
+                messageBody, cancellationToken).ConfigureAwait(false);
 
             try
             {
@@ -111,8 +110,8 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
 
         private void LogRpcPublishDetails(CreatedExchange createdExchange, string correlationId)
         {
-            string receiverQueue = createdExchange.Definition.QueueMeta.QueueName;
-            string actionNs = createdExchange.Definition.ActionNamespace;
+            string receiverQueue = createdExchange.Meta.QueueMeta.QueueName;
+            string actionNs = createdExchange.Meta.ActionNamespace;
             
             _logger.LogDebug("Sending RPC message with Correlation Id: {correlationId} to Receiver Queue: {receiverQueue} " + 
                              "having Action Namespace: {requestNs}.  Will receive response on Reply Queue: {replyQueueName}.", 
@@ -128,8 +127,8 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         {
             msgProps.ReplyTo = ReplyToQueueName;
             msgProps.CorrelationId ??= Guid.NewGuid().ToString();
-            msgProps.SetRpcReplyBusConfigName(_busName);
-            msgProps.SetRpcActionNamespace(createdExchange.Definition.ActionNamespace);
+            msgProps.SetRpcReplyBusConfigName(BusName);
+            msgProps.SetRpcActionNamespace(createdExchange.Meta.ActionNamespace);
         }
 
         public async Task CreateAndSubscribeToReplyQueueAsync()
@@ -138,14 +137,15 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             // command replies.  This queue is on the default exchange and will be deleted
             // with the host application terminates.
             var queue = await Bus.Advanced.QueueDeclareAsync(ReplyToQueueName,
-                passive: false,
                 durable: false,
                 exclusive: true,
                 autoDelete: true);
+            
+            _consumer?.Dispose();
 
             // Consumes the reply queue and determines the pending task associated with the
             // originating sent command and sets the result to mark the task completed.
-            Bus.Advanced.Consume(queue, 
+            _consumer = Bus.Advanced.Consume(queue, 
                 (msgBody, msgProps, msgReceiveInfo) => {
 
                     string correlationId = msgProps.CorrelationId;
@@ -180,6 +180,8 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         
         public void Dispose()
         {
+            _consumer?.Dispose();
+
             foreach (RpcPendingRequest pendingRequest in _pendingRpcRequests.Values)
             {
                 pendingRequest.Cancel();

@@ -32,9 +32,6 @@ namespace NetFusion.Mapping.Plugin.Modules
         }
 
         // Finds all mappings provided by instances implementing IMappingStrategyFactory.
-        // The strategies provided by a factory often are MappingDelegateStrategy 
-        // instances that provides a non-custom mapping delegating to an open-source
-        // library.
         private IEnumerable<TargetMap> GetFactoryProvidedMappingStrategies()
         {
             return StrategyFactories
@@ -47,11 +44,9 @@ namespace NetFusion.Mapping.Plugin.Modules
                 });
         }
 
-        // Find all types that are a closed type of IMappingStrategy<,> such 
-        // as IMappingStrategy<Car, CarModel>.  These are mapping strategies
-        // containing custom mapping logic.  These mapping strategies are
-        // registered in the DI container and therefore can have dependencies 
-        // injected. 
+        // Find all types that are a closed type of IMappingStrategy<,> such as IMappingStrategy<Car, CarModel>.
+        // These are mapping strategies containing custom mapping logic.  These mapping strategies are registered
+        // in the DI container and therefore can have dependencies injected. 
         private IEnumerable<TargetMap> GetCustomMappingStrategies()
         {
             Type openGenericMapType = typeof(IMappingStrategy<,>);

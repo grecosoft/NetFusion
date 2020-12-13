@@ -21,7 +21,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             var logger = context.LoggerFactory.CreateLogger<RpcPublisherStrategy>();
             
             ICommand command = (ICommand)message;
-            string contentType = createdExchange.Definition.ContentType;
+            string contentType = createdExchange.Meta.ContentType;
 
             // Serialize the message and get the properties from the default-publisher to be used as 
             // the initial list of message properties to which RPC specific properties will be added.
@@ -30,8 +30,8 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             
             // Get the RPC client associated with the exchange to which the RPC message is being sent.
             IRpcClient client = context.PublisherModule.GetRpcClient(
-                createdExchange.Definition.BusName,
-                createdExchange.Definition.QueueMeta.QueueName);
+                createdExchange.Meta.BusName,
+                createdExchange.Meta.QueueMeta.QueueName);
 
             // Note:  Consumer replies with same content-type that was used to publish command.
             
@@ -67,7 +67,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         private static void LogReceivedRpcResponse(ILogger<RpcPublisherStrategy> logger, 
             CreatedExchange createdExchange, object responseObj)
         {
-            var definition = createdExchange.Definition;
+            var definition = createdExchange.Meta;
 
             logger.LogDetails(LogLevel.Debug,
                 "Response {ResponseType} to RPC message received on queue {QueueName} on bus {BusName}", 

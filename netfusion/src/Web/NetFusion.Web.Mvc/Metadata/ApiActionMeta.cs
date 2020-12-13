@@ -82,19 +82,19 @@ namespace NetFusion.Web.Mvc.Metadata
             
             SetActionResponseMeta();
         }
-
-        public IEnumerable<T> GetFilterMetadata<T>()
-        {
-            return _apiDescription.ActionDescriptor.FilterDescriptors
-                .Select(fd => fd.Filter).OfType<T>();
-        }
-
+        
         private void SetActionMeta(ApiDescription apiDescription)
         {
             var actionDescriptor = (ControllerActionDescriptor)apiDescription.ActionDescriptor;
             ActionMethodInfo = actionDescriptor.MethodInfo;
             ActionName = actionDescriptor.ActionName;
             ControllerName = actionDescriptor.ControllerName;
+        }
+        
+        public IEnumerable<T> GetFilterMetadata<T>()
+        {
+            return _apiDescription.ActionDescriptor.FilterDescriptors
+                .Select(fd => fd.Filter).OfType<T>();
         }
 
         // Looks for all ProducesResponseType attributes describing the results that can be
@@ -110,6 +110,7 @@ namespace NetFusion.Web.Mvc.Metadata
             var defaultType = GetFilterMetadata<ProducesDefaultResponseTypeAttribute>().FirstOrDefault();
             if (defaultType == null) return;
 
+            // Set the response model type if not explicitly specified.
             foreach (ApiResponseMeta meta in ResponseMeta.Where(rm => rm.ModelType == null))
             {
                 meta.ModelType = defaultType.Type;

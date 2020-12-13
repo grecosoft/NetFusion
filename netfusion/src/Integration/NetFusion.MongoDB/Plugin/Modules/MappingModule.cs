@@ -27,7 +27,7 @@ namespace NetFusion.MongoDB.Plugin.Modules
                 {
                     if (! BsonClassMap.IsClassMapRegistered(map.EntityType))
                     {
-                        map.AddKnownPluginTypes(Context.AllPluginTypes);
+                        map.AddKnownPluginTypes(Context.AllAppPluginTypes);
                         BsonClassMap.RegisterClassMap(map.ClassMap);
                     }
                 }
@@ -79,7 +79,7 @@ namespace NetFusion.MongoDB.Plugin.Modules
             moduleLog["EntityMappings"] = Mappings.Select(m => new
             {
                 MappingType = m.GetType().AssemblyQualifiedName,
-                EntityType = m.EntityType.AssemblyQualifiedName,
+                EntityType = m.EntityType.FullName,
                 m.CollectionName,
                 Descriminator = m.ClassMap.Discriminator,
                 KnownTypes = m.ClassMap.KnownTypes.Select( kt => kt.FullName)

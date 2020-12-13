@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace NetFusion.Rest.Resources
 {
     /// <summary>
-    /// Implements the IHalResource interface containing a non-type model.
+    /// Implements the IResource interface containing a non-type model.
     /// This interface is used internally when attaching the HAL specific
     /// information to a returned HAL Resource.
     /// </summary>
@@ -80,7 +80,7 @@ namespace NetFusion.Rest.Resources
     }
     
     /// <summary>
-    /// Provides an implementation of the IHalResource wrapping a typed model
+    /// Provides an implementation of the IResource wrapping a typed model
     /// used to associate links and embedded resources.
     /// </summary>
     public class HalResource<TModel> : HalResource

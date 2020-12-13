@@ -21,8 +21,8 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
                 {
                     config.IsAutoDelete = true;
                     config.IsDurable = false;
-                    config.IsPassive = false;
                     config.IsPersistent = false;
+                    config.IsNonRoutedSaved = attribute.IsNonRoutedSaved;
                 });
             
             var queue = QueueMeta.Define(attribute.QueueName, exchange,
@@ -30,9 +30,9 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
                 {
                     config.IsAutoDelete = true;
                     config.IsDurable = false;
-                    config.IsPassive = false;
                     config.IsExclusive = true;
                     config.AppendUniqueId = true;
+                    config.IsUnacknowledgedSaved = attribute.IsUnacknowledgedSaved;
                 });
 
             return queue;

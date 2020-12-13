@@ -28,18 +28,12 @@
         public bool? Templated { get; set; }
 
         /// <summary>
-        /// Indicates the methods that can be used to call the HREF.
+        /// Indicates the method that can be used to call the HREF.
         /// </summary>
         public string Method { get; set; }
 
         /// <summary>
-        ///  Its value MAY be used as a secondary key for selecting Link Objects which 
-        ///  share the same relation type.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        ///  Its value is a string and is intended for labeling the link with a
+        /// Its value is a string and is intended for labeling the link with a
         /// human-readable identifier(as defined by [RFC5988]) (Optional).
         /// </summary>
         public string Title { get; set; }

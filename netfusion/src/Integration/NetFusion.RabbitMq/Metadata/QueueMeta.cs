@@ -25,7 +25,13 @@ namespace NetFusion.RabbitMQ.Metadata
         /// The metadata of the exchange associated with the queue on which
         /// it should be created.
         /// </summary>
-        public ExchangeMeta Exchange { get; private set; }
+        public ExchangeMeta ExchangeMeta { get; private set; }
+        
+        /// <summary>
+        /// Indicates that any unacknowledged messages should be sent to the dead letter exchange
+        /// and saved to any bound queues for future processing. 
+        /// </summary>
+        public bool IsUnacknowledgedSaved { get; set; }
         
         /// <summary>
         /// Defines a queue on an exchange.
@@ -43,7 +49,7 @@ namespace NetFusion.RabbitMQ.Metadata
             {
                QueueName = queueName,
                ScopedQueueName = queueName,
-               Exchange = exchange
+               ExchangeMeta = exchange
             };
             
             config?.Invoke(queue);
@@ -68,11 +74,6 @@ namespace NetFusion.RabbitMQ.Metadata
         /// queue should be processed.
         /// </summary>
         internal IQueueStrategy QueueStrategy { get; set; }
-
-        /// <summary>
-        /// Do not create an exchange. If the named exchange doesn't exist, throw an exception.
-        /// </summary>
-        public bool IsPassive { get; set; }
 
         /// <summary>
         /// Indicates that the queue should survive a server restart.
@@ -109,37 +110,25 @@ namespace NetFusion.RabbitMQ.Metadata
         /// <param name="settings">External stored exchange settings.</param>
         public void ApplyOverrides(QueueSettings settings)
         {
-            IsPassive = settings.Passive ?? IsPassive;
             RouteKeys = settings.RouteKeys ?? RouteKeys;
 
             PrefetchCount = settings.PrefetchCount ?? PrefetchCount;
             MaxPriority = settings.MaxPriority;
             Priority = settings.Priority ?? Priority;
             
-            DeadLetterExchange = settings.DeadLetterExchange ?? DeadLetterExchange;
-            DeadLetterRoutingKey = settings.DeadLetterRoutingKey ?? DeadLetterRoutingKey;
+            IsUnacknowledgedSaved = settings.IsUnacknowledgedSaved ?? IsUnacknowledgedSaved;
             PerQueueMessageTtl = settings.PerQueueMessageTtl ?? PerQueueMessageTtl;
         }
                 
         /// <summary>
         /// Determines the maximum message priority that the queue should support.
         /// </summary>
-        public byte? MaxPriority { get; set; }
+        public int? MaxPriority { get; set; }
 
         /// <summary>
         /// How long in milliseconds a message should remain on the queue before it is discarded.
         /// </summary>
         public int? PerQueueMessageTtl { get; set;}
-
-        /// <summary>
-        ///  Determines an exchange name can remain unused before it is automatically deleted by the server.
-        /// </summary>
-        public string DeadLetterExchange { get; set;}
-
-        /// <summary>
-        /// Determines an exchange name can remain unused before it is automatically deleted by the server.
-        /// </summary>
-        public string DeadLetterRoutingKey { get; set;}
 
         /// <summary>
         /// The route keys if the specified type of exchange supports the usage of route keys.
@@ -161,7 +150,7 @@ namespace NetFusion.RabbitMQ.Metadata
         public void LogProperties(IDictionary<string, object> log)
         {
             log["Queue"] = GetLogDetails();
-            log["Exchange"] = Exchange.IsDefaultExchange ? "Default-Exchange" : Exchange.GetLogDetails();
+            log["Exchange"] = ExchangeMeta.IsDefaultExchange ? "Default-Exchange" : ExchangeMeta.GetLogDetails();
         }
 
         /// <summary>
@@ -177,12 +166,10 @@ namespace NetFusion.RabbitMQ.Metadata
                 IsAutoDelete,
                 IsDurable,
                 IsExclusive,
-                IsPassive,
                 RouteKeys,
                 Priority,
                 MaxPriority,
                 PerQueueMessageTtl,
-                DeadLetterRoutingKey,
                 PrefetchCount
             };
         }

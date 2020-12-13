@@ -45,7 +45,7 @@ namespace NetFusion.Mapping
         /// <param name="mappedResult">The result if the source object could be mapped.</param>
         /// <returns>True if the source object could be mapped.  Otherwise False is returned.</returns>
         bool TryMap(object source, Type targetType, out object mappedResult);
-        
+
         /// <summary>
         /// Maps a source type to the specified target type or derived type.  If the source
         /// object could not be mapped, false is returned.  Otherwise true is returned and
@@ -58,6 +58,6 @@ namespace NetFusion.Mapping
         /// </typeparam>
         /// <param name="mappedResult">The result if the source object could be mapped.</param>
         /// <returns>True if the source object could be mapped.  Otherwise False is returned.</returns>
-        bool TryMap<TTarget>(object source, out TTarget mappedResult);
+        bool TryMap<TTarget>(object source, out TTarget mappedResult) where TTarget : class;
     }
 }

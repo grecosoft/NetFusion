@@ -17,22 +17,32 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     /// </summary>
     public class ConsumeContext 
     {
-        public ILoggerFactory LoggerFactory { get; set; }
-        
-        public byte[] MessageData { get; set; }
+        public MessageQueueSubscriber Subscriber { get; }
         
         // Metadata and received message properties:
-        public MessageProperties MessageProps { get; internal set; }
-        public MessageReceivedInfo MessageReceiveInfo { get; internal set; }
-        public MessageQueueSubscriber Subscriber { get; internal set; }
-
+        public MessageProperties MessageProps { get; }
+        public MessageReceivedInfo MessageReceiveInfo { get; }
+        public byte[] MessageData { get; }
+        
+        public ConsumeContext(MessageQueueSubscriber subscriber,
+            MessageProperties props, 
+            MessageReceivedInfo receivedInfo, 
+            byte[] data)
+        {
+            Subscriber = subscriber;
+            MessageProps = props;
+            MessageReceiveInfo = receivedInfo;
+            MessageData = data;
+        }
+        
+        public ILoggerFactory LoggerFactory { get; set; }
+        public Func<string, string, MessageDispatchInfo> GetRpcMessageHandler { get; internal set; }
+        
         // Services:
         public IBusModule BusModule { get; internal set; }
         public IMessageDispatchModule MessagingModule { get; internal set; }
         public ISerializationManager Serialization { get; internal set; }
         public IMessageLogger MessageLogger { get; internal set; }
-
-        public Func<string, string, MessageDispatchInfo> GetRpcMessageHandler { get; internal set; }
         
         /// <summary>
         /// Returns the received message data as a deserialized message using the
@@ -59,6 +69,8 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             object message = Serialization.Deserialize(MessageProps.ContentType, messageType, MessageData);
             return (IMessage)message;
         }
+        
+        
         // ---------------------------------- [Logging] ----------------------------------
         
         /// <summary>
@@ -73,15 +85,15 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             var logger = LoggerFactory.CreateLogger<ConsumeContext>();
 
             var queueInfo = new {
-                Bus = Subscriber.QueueMeta.Exchange.BusName,
-                Exchange = Subscriber.QueueMeta.Exchange.ExchangeName,
+                Bus = Subscriber.QueueMeta.ExchangeMeta.BusName,
+                Exchange = Subscriber.QueueMeta.ExchangeMeta.ExchangeName,
                 Queue = Subscriber.QueueMeta.QueueName,
                 MessageProps.ContentType,
                 Consumer = Subscriber.DispatchInfo.ConsumerType.Name,
                 Handler = Subscriber.DispatchInfo.MessageHandlerMethod.Name
             };
 
-            var log = LogMessage.For(LogLevel.Information, "Message {MessageType} Received from {Queue} on {Bus}",
+            var log = LogMessage.For(LogLevel.Debug, "Message {MessageType} Received from {Queue} on {Bus}",
                 message.GetType(),
                 queueInfo.Queue,
                 queueInfo.Bus).WithProperties(
@@ -95,8 +107,8 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         {
             if (msgLog == null) throw new ArgumentNullException(nameof(msgLog));
             
-            msgLog.AddLogDetail("Exchange Name", Subscriber.QueueMeta.Exchange.ExchangeName);
-            msgLog.AddLogDetail("Exchange Type", Subscriber.QueueMeta.Exchange.ExchangeType);
+            msgLog.AddLogDetail("Exchange Name", Subscriber.QueueMeta.ExchangeMeta.ExchangeName);
+            msgLog.AddLogDetail("Exchange Type", Subscriber.QueueMeta.ExchangeMeta.ExchangeType);
             msgLog.AddLogDetail("Queue Name", Subscriber.QueueMeta.QueueName);
             msgLog.AddLogDetail("Content Type", MessageProps.ContentType);
             msgLog.AddLogDetail("Handler Class", Subscriber.DispatchInfo.ConsumerType.Name);

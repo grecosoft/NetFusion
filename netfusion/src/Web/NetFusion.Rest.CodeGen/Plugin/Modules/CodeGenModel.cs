@@ -72,7 +72,8 @@ namespace NetFusion.Rest.CodeGen.Plugin.Modules
                 var files = codeGenerator.Generate(new[] { codeSpec });
 
                 Context.Logger.LogInformation(
-                    $"TypeScript Code Generation Completed for {files.Count()} files.  See Composite Log for Details.");
+                    "TypeScript Code Generation Completed for {NumberFiles} files.  See Composite Log for Details.",
+                    files.Count());
             }
             catch (Exception ex)
             {

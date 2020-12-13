@@ -5,6 +5,10 @@ namespace NetFusion.RabbitMQ.Logging
 {
     /// <summary>
     /// Delegates to Microsoft's extensions logger any logs written by EasyNetQ.
+    /// This should be used if one of the loggers supported by NetEasyQ is not
+    /// being used by the host application.  By default, this log provider is
+    /// not used unless the DelegateToBaseLogger property of the RabbitMqConfig
+    /// is set to true.
     /// </summary>
     internal class RabbitMqLogProvider : EasyNetQ.Logging.ILogProvider
     {

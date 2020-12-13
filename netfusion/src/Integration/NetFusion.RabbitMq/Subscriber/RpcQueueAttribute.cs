@@ -12,8 +12,7 @@ namespace NetFusion.RabbitMQ.Subscriber
     {
         public string ActionNamespace { get; }
         
-        public RpcQueueAttribute(string busName, string queueName, string actionNamespace) 
-            
+        public RpcQueueAttribute(string busName, string queueName, string actionNamespace)
             : base(busName, queueName, new RpcQueueStrategy())
         {
             if (string.IsNullOrWhiteSpace(actionNamespace))

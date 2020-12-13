@@ -12,6 +12,11 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
     public interface IRpcClient : IDisposable
     {
         /// <summary>
+        /// The name of the bus associated with the connection.
+        /// </summary>
+        public string BusName { get; }
+        
+        /// <summary>
         /// Should publish the message bytes to the exchange and monitor
         /// the reply queue for the response.
         /// </summary>

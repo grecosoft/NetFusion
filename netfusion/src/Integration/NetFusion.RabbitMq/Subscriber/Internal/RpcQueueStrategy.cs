@@ -25,7 +25,6 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
                 {
                     config.IsAutoDelete = true;
                     config.IsDurable = false;
-                    config.IsPassive = false;
                     config.IsExclusive = false;
                 });
 
@@ -107,10 +106,10 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             MessageProperties replyMessageProps, 
             object response)
         {
-            string busReplyToKey = context.MessageProps.GetRpcReplyBusConfigName();
+            string replyBusConfigName = context.MessageProps.GetRpcReplyBusConfigName();
             string replyToQueue = GetReplyToQueue(context.MessageProps);
 
-            IBus replyToBus = context.BusModule.GetBus(busReplyToKey);
+            IBus replyToBus = context.BusModule.GetBus(replyBusConfigName);
             byte[] replyBody = context.Serialization.Serialize(response, replyMessageProps.ContentType);
 
             await replyToBus.Advanced.PublishAsync(Exchange.GetDefault(), replyToQueue, 

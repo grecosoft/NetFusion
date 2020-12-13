@@ -9,12 +9,14 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
     [AttributeUsage(AttributeTargets.Method, Inherited = false)]
     public abstract class SubscriberQueueAttribute : Attribute
     {
-        public string BusName { get;  }
+        public string BusName { get; }
         public string QueueName { get;  }
         public IQueueStrategy QueueStrategy { get; }
         
         public string ExchangeName { get; protected set; }
         public string[] RouteKeys { get; protected set; }
+        public bool IsNonRoutedSaved { get; set; }
+        public bool IsUnacknowledgedSaved { get; set; }
 
         protected SubscriberQueueAttribute(string busName, string queueName, IQueueStrategy strategy)
         {

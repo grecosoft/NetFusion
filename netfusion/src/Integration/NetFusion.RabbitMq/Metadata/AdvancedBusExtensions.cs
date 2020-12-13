@@ -13,6 +13,14 @@ namespace NetFusion.RabbitMQ.Metadata
     /// </summary>
     public static class AdvancedBusExtensions
     {
+        // Predefined Exchange and Queue names
+        private const string UndeliveredExchangeName = "NetFusion_Undelivered";
+        private const string UndeliveredQueueName = "NetFusion_Undelivered_Messages";
+        private const string DeadLetterExchangeName = "NetFusion_DeadLetter";
+        private const string DeadLetterQueueName = "NetFusion_DeadLetter_Messages";
+        
+        // --------------------- [Exchange and Queue Creation] ------------------- 
+        
         /// <summary>
         /// Creates an exchange on the message broker.  If the exchange is the default exchange
         /// with a defined queue, the queue is created on the RabbitMQ default exchange.
@@ -30,24 +38,11 @@ namespace NetFusion.RabbitMQ.Metadata
             // https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-default
             if (meta.QueueMeta != null)
             {
-                await bus.QueueDeclareAsync(meta.QueueMeta.ScopedQueueName,
-                    durable: meta.QueueMeta.IsDurable,
-                    autoDelete: meta.QueueMeta.IsAutoDelete,
-                    exclusive: meta.QueueMeta.IsExclusive,
-                    passive: meta.QueueMeta.IsPassive,
-                    maxPriority: meta.QueueMeta.MaxPriority,
-                    deadLetterExchange: meta.QueueMeta.DeadLetterExchange,
-                    deadLetterRoutingKey: meta.QueueMeta.DeadLetterRoutingKey,
-                    perQueueMessageTtl: meta.QueueMeta.PerQueueMessageTtl).ConfigureAwait(false);
-
+                await CreateQueue(bus, meta.QueueMeta);
                 return Exchange.GetDefault();
             }
-            
-            return await bus.ExchangeDeclareAsync(meta.ExchangeName, meta.ExchangeType, 
-                durable: meta.IsDurable,
-                autoDelete: meta.IsAutoDelete, 
-                passive: meta.IsPassive,
-                alternateExchange: meta.AlternateExchangeName).ConfigureAwait(false);
+
+            return await CreateExchange(bus, meta);
         }
 
         /// <summary>
@@ -65,49 +60,124 @@ namespace NetFusion.RabbitMQ.Metadata
             if (meta == null) throw new ArgumentNullException(nameof(meta));
 
             IExchange exchange = Exchange.GetDefault(); //  Assume default exchange.
-            ExchangeMeta exchangeMeta = meta.Exchange;
-            
-            if (! meta.Exchange.IsDefaultExchange)
+            if (! meta.ExchangeMeta.IsDefaultExchange)
             {
-                exchange = await bus.ExchangeDeclareAsync(exchangeMeta.ExchangeName, exchangeMeta.ExchangeType, 
-                    durable: exchangeMeta.IsDurable,
-                    autoDelete: exchangeMeta.IsAutoDelete, 
-                    passive: exchangeMeta.IsPassive,
-                    alternateExchange: exchangeMeta.AlternateExchangeName);
+                exchange = await CreateExchange(bus, meta.ExchangeMeta);
             }
+
+            IQueue queue = await CreateQueue(bus, meta);
             
-            IQueue queue = await bus.QueueDeclareAsync(meta.ScopedQueueName, 
-                durable: meta.IsDurable,
-                autoDelete: meta.IsAutoDelete,
-                exclusive: meta.IsExclusive,
-                passive: meta.IsPassive,
-                maxPriority: meta.MaxPriority,
-                deadLetterExchange: meta.DeadLetterExchange,
-                deadLetterRoutingKey: meta.DeadLetterRoutingKey,
-                perQueueMessageTtl: meta.PerQueueMessageTtl);
-
-
             // Queues defined on the default exchange so don't bind.
-            if (exchangeMeta.IsDefaultExchange)
+            if (meta.ExchangeMeta.IsDefaultExchange)
             {
                 return queue;
             }
 
+            BindQueueToExchange(meta, bus, queue, exchange);
+            return queue;
+        }
+        
+        private static void BindQueueToExchange(QueueMeta meta, IAdvancedBus bus, IQueue queue, IExchange exchange)
+        {
             string[] routeKeys = meta.RouteKeys ?? new string[] { };
             if (routeKeys.Length > 0)
             {
                 // If route-keys specified, bind the queue to the exchange for each route-key.
                 foreach (string routeKey in meta.RouteKeys ?? new string[] {})
                 {
-                    await bus.BindAsync(exchange, queue, routeKey);
+                    bus.Bind(exchange, queue, routeKey);
                 }
             } 
             else 
             {
-                await bus.BindAsync(exchange, queue, string.Empty);
+                bus.Bind(exchange, queue, string.Empty);
             }
+        }
+        
+        
+        // ---------------------- [Exchange Creation] -----------------------
+        
+        private static async Task<IExchange> CreateExchange(IAdvancedBus bus, ExchangeMeta meta)
+        {
+            IExchange undeliveredExchange = await CreateUndeliverableExchange(bus, meta);
+            return await bus.ExchangeDeclareAsync(meta.ExchangeName, config =>
+            {
+                PopulateConfig(config, meta);
+                if (undeliveredExchange != null)
+                {
+                    config.WithAlternateExchange(undeliveredExchange);
+                }
+            });
+        }
+        
+        private static void PopulateConfig(IExchangeDeclareConfiguration config, ExchangeMeta meta)
+        {
+            config.WithType(meta.ExchangeType);
+            config.AsDurable(meta.IsDurable);
+            config.AsAutoDelete(meta.IsAutoDelete);
+        }
+        
+        private static async Task<IExchange> CreateUndeliverableExchange(IAdvancedBus bus, ExchangeMeta meta)
+        {
+            if (! meta.IsNonRoutedSaved) return null; 
             
-            return queue;
+            // Declare an exchange that will be sent all un-routed messages.
+            var altExchange = await bus.ExchangeDeclareAsync(UndeliveredExchangeName, 
+                config => config.WithType(ExchangeType.Fanout).AsDurable(true)
+            );
+
+            var undeliveredQueue = await bus.QueueDeclareAsync(UndeliveredQueueName, config => config.AsDurable(true));
+            
+            bus.Bind(altExchange, undeliveredQueue, string.Empty);
+            return altExchange;
+        }
+        
+        
+        // ---------------------- [Queue Creation] -----------------------
+        
+        private static async Task<IQueue> CreateQueue(IAdvancedBus bus, QueueMeta meta)
+        {
+            IExchange deadLetterExchange = await CreateDeadLetterExchange(bus, meta);
+            return await bus.QueueDeclareAsync(meta.ScopedQueueName, config =>
+            {
+                PopulateConfig(config, meta);
+                if (deadLetterExchange != null)
+                {
+                    config.WithDeadLetterExchange(deadLetterExchange);
+                }
+            });
+        }
+
+        private static void PopulateConfig(IQueueDeclareConfiguration config, QueueMeta meta)
+        {
+            config.AsDurable(meta.IsDurable);
+            config.AsAutoDelete(meta.IsAutoDelete);
+            config.AsExclusive(meta.IsExclusive);
+
+            if (meta.MaxPriority != null)
+            {
+                config.WithMaxPriority(meta.MaxPriority.Value);
+            }
+
+            if (meta.PerQueueMessageTtl != null)
+            {
+                config.WithMessageTtl(TimeSpan.FromSeconds(meta.PerQueueMessageTtl.Value));
+            }
+        }
+        
+        private static async Task<IExchange> CreateDeadLetterExchange(IAdvancedBus bus, QueueMeta meta)
+        {
+            if (! meta.IsUnacknowledgedSaved) return null; 
+            
+            // Declare an exchange that will be sent all unprocessed messages.
+            var deadLetterExchange = await bus.ExchangeDeclareAsync(DeadLetterExchangeName, 
+                config => config.WithType(ExchangeType.Fanout).AsDurable(true)
+            );
+
+            var undeliveredQueue = await bus.QueueDeclareAsync(DeadLetterQueueName, config => config.AsDurable(true));
+            
+            bus.Bind(deadLetterExchange, undeliveredQueue, string.Empty);
+            return deadLetterExchange;
         }
     }
 }

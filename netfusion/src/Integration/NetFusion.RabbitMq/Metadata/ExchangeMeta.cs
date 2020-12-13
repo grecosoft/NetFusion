@@ -138,7 +138,7 @@ namespace NetFusion.RabbitMQ.Metadata
             if (string.IsNullOrWhiteSpace(exchangeType))
                 throw new ArgumentException("Exchange type not specified", nameof(exchangeType));
 
-            var exchange = new ExchangeMeta<TMessage>()
+            var exchange = new ExchangeMeta<TMessage>
             {
                 BusName = busName,
                 ExchangeName = exchangeName,
@@ -211,12 +211,6 @@ namespace NetFusion.RabbitMQ.Metadata
         internal bool IsPersistent { get; set; }
 
         /// <summary>
-        /// Indicates that an exception should be thrown if the exchange
-        /// has not already been created.  
-        /// </summary>
-        internal bool IsPassive { get; set; }
-
-        /// <summary>
         /// The optional route key associated with the exchange definition.
         /// </summary>
         internal string RouteKey { get; set; }
@@ -234,17 +228,17 @@ namespace NetFusion.RabbitMQ.Metadata
         public void ApplyOverrides(ExchangeSettings settings)
         {
             if (settings == null) throw new ArgumentNullException(nameof(settings));
-
-            IsPassive = settings.Passive ?? IsPassive;
+            
             ContentType = settings.ContentType ?? ContentType;
             CancelRpcRequestAfterMs = settings.CancelRpcRequestAfterMs ?? CancelRpcRequestAfterMs;
-            AlternateExchangeName = settings.AlternateExchange ?? AlternateExchangeName;
+            IsNonRoutedSaved = settings.IsNonRoutedSaved ?? IsNonRoutedSaved;
         }
 
         /// <summary>
-        /// Route messages to this exchange if they cannot be routed.
+        /// Indicates messages published to the queue are of importance
+        /// and should be written to the undelivered message exchange.
         /// </summary>
-        public string AlternateExchangeName { get; set; }
+        public bool IsNonRoutedSaved { get; set; }
 
         /// <summary>
         /// The content type of the serialized message body.
@@ -290,7 +284,6 @@ namespace NetFusion.RabbitMQ.Metadata
                 MessageType = MessageType?.FullName ?? "n/a",
                 IsAutoDelete,
                 IsDurable,
-                IsPassive,
                 IsPersistent,
                 IsRpcExchange,
                 IsDefaultExchange,

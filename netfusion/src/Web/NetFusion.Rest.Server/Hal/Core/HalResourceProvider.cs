@@ -153,7 +153,6 @@ namespace NetFusion.Rest.Server.Hal.Core
         private static void SetLinkOptionalDescriptors(ResourceLink resourceLink, Link link)
         {
             link.HrefLang = resourceLink.HrefLang;
-            link.Name = resourceLink.Name;
             link.Title = resourceLink.Title;
             link.Type = resourceLink.Type;
         }

@@ -42,7 +42,7 @@ namespace IntegrationTests.RabbitMQ
                     })
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
-                        var definition = m.GetDefinition(typeof(DirectDomainEvent));
+                        var definition = m.GetExchangeMeta(typeof(DirectDomainEvent));
                         Assert.NotNull(definition);
                         
                         // Asserts the proper configuration of a Direct exchange.  A subset of
@@ -54,13 +54,12 @@ namespace IntegrationTests.RabbitMQ
                         Assert.Null(definition.RouteKey);
                         Assert.Equal("application/json", definition.ContentType);
                         Assert.Equal(ExchangeType.Direct, definition.ExchangeType);
-                        Assert.Null(definition.AlternateExchangeName);
+                        Assert.False(definition.IsNonRoutedSaved);
                         Assert.Equal(typeof(DirectDomainEvent), definition.MessageType);
 
                         Assert.False(definition.IsDefaultExchange);
                         Assert.False(definition.IsAutoDelete);
                         Assert.True(definition.IsDurable);
-                        Assert.False(definition.IsPassive);
                         Assert.True(definition.IsPersistent);
                         Assert.False(definition.IsRpcExchange);
                     });
@@ -94,7 +93,7 @@ namespace IntegrationTests.RabbitMQ
                     })
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
-                        var definition = m.GetDefinition(typeof(TopicDomainEvent));
+                        var definition = m.GetExchangeMeta(typeof(TopicDomainEvent));
                         Assert.NotNull(definition);
                         
                         // Asserts the proper configuration of a Topic exchange.  A subset of
@@ -106,13 +105,12 @@ namespace IntegrationTests.RabbitMQ
                         Assert.Null(definition.RouteKey);
                         Assert.Equal("application/json", definition.ContentType);
                         Assert.Equal(ExchangeType.Topic, definition.ExchangeType);
-                        Assert.Null(definition.AlternateExchangeName);
+                        Assert.False(definition.IsNonRoutedSaved);
                         Assert.Equal(typeof(TopicDomainEvent), definition.MessageType);
 
                         Assert.False(definition.IsDefaultExchange);
                         Assert.False(definition.IsAutoDelete);
                         Assert.True(definition.IsDurable);
-                        Assert.False(definition.IsPassive);
                         Assert.True(definition.IsPersistent);
                         Assert.False(definition.IsRpcExchange);
                     });
@@ -147,7 +145,7 @@ namespace IntegrationTests.RabbitMQ
                     })
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
-                        var definition = m.GetDefinition(typeof(FanoutDomainEvent));
+                        var definition = m.GetExchangeMeta(typeof(FanoutDomainEvent));
                         Assert.NotNull(definition);
                         
                         // Asserts the proper configuration of a Fanout exchange.  A subset of
@@ -159,13 +157,12 @@ namespace IntegrationTests.RabbitMQ
                         Assert.Null(definition.RouteKey);
                         Assert.Equal("application/json", definition.ContentType);
                         Assert.Equal(ExchangeType.Fanout, definition.ExchangeType);
-                        Assert.Null(definition.AlternateExchangeName);
+                        Assert.False(definition.IsNonRoutedSaved);
                         Assert.Equal(typeof(FanoutDomainEvent), definition.MessageType);
 
                         Assert.False(definition.IsDefaultExchange);
                         Assert.True(definition.IsAutoDelete);
                         Assert.False(definition.IsDurable);
-                        Assert.False(definition.IsPassive);
                         Assert.False(definition.IsPersistent);
                         Assert.False(definition.IsRpcExchange);
                     });
@@ -195,7 +192,7 @@ namespace IntegrationTests.RabbitMQ
                     })
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
-                        var definition = m.GetDefinition(typeof(WorkQueueCommand));
+                        var definition = m.GetExchangeMeta(typeof(WorkQueueCommand));
                         Assert.NotNull(definition);
                         
                         // Asserts the proper configuration of a Workqueue.  A subset of
@@ -207,7 +204,7 @@ namespace IntegrationTests.RabbitMQ
                         Assert.Equal("WorkQueueName", definition.RouteKey);
                         Assert.Equal("application/json", definition.ContentType);
                         Assert.Null(definition.ExchangeType);
-                        Assert.Null(definition.AlternateExchangeName);
+                        Assert.False(definition.IsNonRoutedSaved);
                         Assert.Equal(typeof(WorkQueueCommand), definition.MessageType);
 
                         Assert.True(definition.IsDefaultExchange);
@@ -216,7 +213,6 @@ namespace IntegrationTests.RabbitMQ
                         // it is created on the default exchange.
                         Assert.False(definition.IsAutoDelete);
                         Assert.False(definition.IsDurable);
-                        Assert.False(definition.IsPassive);
                         Assert.False(definition.IsPersistent);
                         Assert.False(definition.IsRpcExchange);
                     });
@@ -243,14 +239,14 @@ namespace IntegrationTests.RabbitMQ
                     })
                     .Assert.PluginModule<MockPublisherModule>(m =>
                     {
-                        var definition = m.GetDefinition(typeof(RpcCommand));
+                        var definition = m.GetExchangeMeta(typeof(RpcCommand));
                         Assert.NotNull(definition);
                       
                         Assert.Equal("TestBus1", definition.BusName);
                         Assert.Equal("RpcExchangeName", definition.QueueMeta.QueueName);
                         Assert.Null(definition.RouteKey);
                         Assert.Equal("application/json", definition.ContentType);
-                        Assert.Null(definition.AlternateExchangeName);
+                        Assert.False(definition.IsNonRoutedSaved);
                         Assert.Equal(typeof(RpcCommand), definition.MessageType);
 
                         // Rpc Commands are sent to a queue defined on the default exchange.
@@ -265,7 +261,6 @@ namespace IntegrationTests.RabbitMQ
                         Assert.Equal("ActionName", definition.ActionNamespace);
                         Assert.True(definition.QueueMeta.IsAutoDelete);
                         Assert.False(definition.QueueMeta.IsDurable);
-                        Assert.False(definition.QueueMeta.IsPassive);
                     });
             });
         }

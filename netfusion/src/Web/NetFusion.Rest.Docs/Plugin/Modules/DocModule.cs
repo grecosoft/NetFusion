@@ -66,7 +66,7 @@ namespace NetFusion.Rest.Docs.Plugin.Modules
             }
             catch (Exception ex)
             {
-                Context.Logger.LogError(ex, $"Error reading HAL Comments from path: {halCommentFilePath}");
+                Context.Logger.LogError(ex, "Error reading HAL Comments from path: {PathName}", halCommentFilePath);
             }
         }
     }

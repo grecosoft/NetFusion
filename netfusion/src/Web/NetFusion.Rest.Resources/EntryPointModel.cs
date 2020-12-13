@@ -11,8 +11,7 @@
         public string Version { get; set; }
         
         /// <summary>
-        /// Optional URL to document describing the API.  Since most developers
-        /// don't document, this will most likely be null or empty-string.
+        /// Optional URL to document describing the API. 
         /// </summary>
         public string ApiDocUrl { get; set; }
     }    

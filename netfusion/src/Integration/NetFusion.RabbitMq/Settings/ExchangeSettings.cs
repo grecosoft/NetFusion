@@ -14,14 +14,9 @@ namespace NetFusion.RabbitMQ.Settings
         public string ExchangeName { get; set; }
 
         /// <summary>
-        /// Do not create an exchange. If the named exchange doesn't exist, throw an exception.
-        /// </summary>
-        public bool? Passive { get; set; }
-
-        /// <summary>
         /// Route messages to this exchange if they cannot be routed.
         /// </summary>
-        public string AlternateExchange { get; set; }
+        public bool? IsNonRoutedSaved { get; set; }
         
         /// <summary>
         /// The MIME value indicating how the message should be serialized.

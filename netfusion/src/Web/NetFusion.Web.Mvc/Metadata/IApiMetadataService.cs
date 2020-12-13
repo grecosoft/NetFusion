@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace NetFusion.Web.Mvc.Metadata
 {
     /// <summary>
-    /// Returns metadata for controller and its associated routes.
+    /// Returns metadata for a controller and its associated routes.
     /// </summary>
     public interface IApiMetadataService
     {
@@ -33,7 +33,6 @@ namespace NetFusion.Web.Mvc.Metadata
         /// <param name="methodInfo">The runtime method information for the controller action.</param>
         /// <returns>Reference to the metadata.  If not found, an exception is raised.</returns>
         ApiActionMeta GetActionMeta(MethodInfo methodInfo);
-
         
         /// <summary>
         /// Returns to the controller action metadata.

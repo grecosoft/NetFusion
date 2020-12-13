@@ -18,7 +18,7 @@ namespace NetFusion.Rest.Server.Plugin.Modules
         // IKnownPluginType - set by NetFusion bootstrapper.  
         private IEnumerable<IResourceMap> ResourceMappings { get; set; }
 
-        // MediaTypeName (i.e. HAL) --> Entry
+        // MediaTypeName (i.e. application/hal+json) --> Entry
         private readonly Dictionary<string, MediaTypeEntry> _mediaResourceTypeMeta = new Dictionary<string, MediaTypeEntry>();
 
         // Caches all of the resource-metadata associated with resources for a specific media type.
@@ -41,7 +41,7 @@ namespace NetFusion.Rest.Server.Plugin.Modules
                     _mediaResourceTypeMeta[mediaTypeEntry.MediaType] = mediaTypeEntry;
                 }
 
-                // Build and add the configured resource metadata to the media-type entry.
+                // Build and and the configured resource metadata to the media-type entry.
                 resourceMap.BuildMap();
             
                 foreach (IResourceMeta resourceMeta in resourceMap.ResourceMeta)

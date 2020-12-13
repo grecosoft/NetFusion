@@ -22,7 +22,7 @@ namespace NetFusion.Rest.Server.Linking
         /// The controller's action route parameters and the corresponding
         /// model properties from which they are populated.
         /// </summary>
-        public IReadOnlyCollection<RouteParameter> RouteParameters { get; private set; }
+        public IReadOnlyCollection<RouteParameter> RouteParameters { get; }
 
         public ControllerActionLink()    
         {
