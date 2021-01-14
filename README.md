@@ -5,6 +5,7 @@
 *Great things are done by a series of small things that are brought together* - *Vincent Van Gogh*
 
 ![Master Build & Publish](https://github.com/grecosoft/NetFusion/workflows/Master%20Build%20&%20Publish/badge.svg?branch=master)
+![Microservice Template](https://github.com/grecosoft/NetFusion/workflows/Microservice%20Template/badge.svg)
 
 ![image](https://raw.githubusercontent.com/wiki/grecosoft/NetFusion/img/DotNetCore.png)
 
