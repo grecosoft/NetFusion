@@ -5,11 +5,17 @@ on:
     branches: [ master ]
     paths:
       - 'tools/**'
+env:
+  solution: ./tools/dotnet/Templates/MicroService/content/src/Solution.Context.sln
+  packageDir: ./assets/pkgs
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    
+    env:
+      buildVersion: '4.5.${{github.run_number}}'
+      nugetAuthToken: ${{ secrets.NuGetAPIKey }}
 
     steps:
     - uses: actions/checkout@v2
@@ -17,5 +23,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.405
-    - name: Print
-      run: echo ${{github.run_number}}
+    - name: Restore Dependencies
+      run: dotnet restore $solution
+    - name: Build Template
+      run: dotnet build --no-restore -c Release --version-suffix $buildVersion $solution
