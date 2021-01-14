@@ -6,7 +6,7 @@ on:
     paths:
       - 'tools/**'
 env:
-  solution: ./tools/dotnet/Templates/MicroService/content/src/Solution.Context.sln
+  buildRoot: ./tools/dotnet/Templates/MicroService/content/src
   packageDir: ./assets/pkgs
 
 jobs:
@@ -26,6 +26,5 @@ jobs:
     - name: Restore Dependencies
       run: dotnet restore $solution
     - name: Build Template
-      run: dotnet build --no-restore -c Release --version-suffix $buildVersion $solution
-    - name: Package Assemblies
-      run: dotnet pack --no-build $solution -p:PackageVersion=$buildVersion -o $packageDir
+      run: dotnet build --no-restore -c Release --version-suffix $buildVersion {{$buildRoot}}/Solution.Context.sln
+
