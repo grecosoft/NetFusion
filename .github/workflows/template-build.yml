@@ -7,6 +7,7 @@ on:
       - 'tools/**'
 env:
   solutionRoot: ./tools/dotnet/Templates/MicroService/content/src
+  nugetSpec: ./tools/dotnet/Templates/MicroService/MicroService.nuspec  
   packageDir: ./assets/pkgs
 
 jobs:
@@ -32,5 +33,5 @@ jobs:
     - name: Build Template
       run: dotnet build --no-restore -c Release --version-suffix $buildVersion $solutionRoot/Solution.Context.sln
     - name: Package Template
-      run: nuget --help
+      run: nuget pack $nugetSpec -Version $buildVersion -Output $packageDir 
 
