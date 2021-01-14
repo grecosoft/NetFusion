@@ -24,7 +24,7 @@ jobs:
       with:
         dotnet-version: 3.1.405
     - name: Restore Dependencies
-      run: dotnet restore $solution
+      run: dotnet restore $buildRoot/Solution.Context.sln
     - name: Build Template
       run: dotnet build --no-restore -c Release --version-suffix $buildVersion $buildRoot/Solution.Context.sln
 
