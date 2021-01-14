@@ -6,7 +6,7 @@ on:
     paths:
       - 'tools/**'
 env:
-  buildRoot: ./tools/dotnet/Templates/MicroService/content/src
+  solutionRoot: ./tools/dotnet/Templates/MicroService/content/src
   packageDir: ./assets/pkgs
 
 jobs:
@@ -23,8 +23,14 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.405
+    - name: Setup NuGet.exe 
+      uses: NuGet/setup-nuget@v1.0.5
+      with:
+        nuget-version: latest
     - name: Restore Dependencies
-      run: dotnet restore $buildRoot/Solution.Context.sln
+      run: dotnet restore $solutionRoot/Solution.Context.sln
     - name: Build Template
-      run: dotnet build --no-restore -c Release --version-suffix $buildVersion $buildRoot/Solution.Context.sln
+      run: dotnet build --no-restore -c Release --version-suffix $buildVersion $solutionRoot/Solution.Context.sln
+    - name: Package Template
+      run: nuget --help
 
