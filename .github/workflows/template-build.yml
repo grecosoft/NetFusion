@@ -18,4 +18,4 @@ jobs:
       with:
         dotnet-version: 3.1.405
     - name: Print
-      run: echo $github.run_number
+      run: echo ${{github.run_number}}
