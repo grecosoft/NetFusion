@@ -26,5 +26,5 @@ jobs:
     - name: Restore Dependencies
       run: dotnet restore $solution
     - name: Build Template
-      run: dotnet build --no-restore -c Release --version-suffix $buildVersion {{$buildRoot}}/Solution.Context.sln
+      run: dotnet build --no-restore -c Release --version-suffix $buildVersion $buildRoot/Solution.Context.sln
 
