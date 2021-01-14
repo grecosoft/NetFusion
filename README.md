@@ -4,7 +4,7 @@
 
 *Great things are done by a series of small things that are brought together* - *Vincent Van Gogh*
 
-[![Build status](https://ci.appveyor.com/api/projects/status/8k6l6lvmuulk2y94?svg=true)](https://ci.appveyor.com/project/grecosoft/netfusion)
+![Master Build & Publish](https://github.com/grecosoft/NetFusion/workflows/Master%20Build%20&%20Publish/badge.svg?branch=master)
 
 ![image](https://raw.githubusercontent.com/wiki/grecosoft/NetFusion/img/DotNetCore.png)
 
