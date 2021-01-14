@@ -33,5 +33,5 @@ jobs:
     - name: Build Template
       run: dotnet build --no-restore -c Release --version-suffix $buildVersion $solutionRoot/Solution.Context.sln
     - name: Package Template
-      run: nuget pack $nugetSpec -Version $buildVersion -Output $packageDir 
+      run: nuget pack $nugetSpec -Version $buildVersion -OutputDirectory $packageDir 
 
