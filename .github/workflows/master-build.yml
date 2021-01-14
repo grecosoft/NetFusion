@@ -1,0 +1,37 @@
+name: Master Build & Publish
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+env:
+  solution: ./netfusion/NetFusion.sln
+  packageDir: ./netfusion/pkgs
+
+jobs:
+  build:
+    env:
+      buildVersion: '3.3.${{github.run_number}}'
+      nugetAuthToken: ${{ secrets.NuGetAPIKey }}
+    
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.101
+    - name: Print Variables
+      run: echo $buildVersion
+    - name: Restore Dependencies
+      run: dotnet restore $solution
+    - name: Build for Test
+      run: dotnet build --no-restore --version-suffix $buildVersion $solution
+    - name: Test
+      run: dotnet test --no-build --verbosity normal $solution
+    - name: Build for Release
+      run: dotnet build --no-restore -c Release --version-suffix $buildVersion $solution
+    - name: Package Assemblies
+      run: dotnet pack --no-build $solution -p:PackageVersion=$buildVersion -o $packageDir
