@@ -63,7 +63,6 @@ namespace NetFusion.Common.Extensions.Tasks
             if (invokers == null) throw new ArgumentNullException(nameof(invokers));
             if (input == null) throw new ArgumentNullException(nameof(input));
             if (invoke == null) throw new ArgumentNullException(nameof(invoke));
-            if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken));
 
             var taskList = new List<TaskListItem<TInvoker>>();
             foreach (TInvoker invoker in invokers)

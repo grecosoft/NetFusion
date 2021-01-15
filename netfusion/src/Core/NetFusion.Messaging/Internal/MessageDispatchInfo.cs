@@ -129,7 +129,6 @@ namespace NetFusion.Messaging.Internal
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
             if (consumer == null) throw new ArgumentNullException(nameof(consumer));
-            if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken));
 
             var taskSource = new TaskCompletionSource<object>();
 
