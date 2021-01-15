@@ -10,6 +10,7 @@
     <ProjectReference Include="..\..\..\..\netfusion\src\Common\NetFusion.Common\NetFusion.Common.csproj" />
     <ProjectReference Include="..\..\..\..\netfusion\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
     <ProjectReference Include="..\..\..\..\netfusion\src\Core\NetFusion.Builder\NetFusion.Builder.csproj" />
+    <ProjectReference Include="..\..\..\..\netfusion\src\Integration\NetFusion.Azure.ServiceBus\NetFusion.Azure.ServiceBus.csproj" />
     <ProjectReference Include="..\..\..\..\netfusion\src\Integration\NetFusion.Serilog\NetFusion.Serilog.csproj" />
     <ProjectReference Include="..\..\..\..\netfusion\src\Web\NetFusion.Rest.Client\NetFusion.Rest.Client.csproj" />
     <ProjectReference Include="..\..\..\..\netfusion\src\Web\NetFusion.Rest.Common\NetFusion.Rest.Common.csproj" />

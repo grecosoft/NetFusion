@@ -14,6 +14,7 @@ using Demo.Domain.Plugin;
 using Demo.Infra;
 using Demo.Infra.Plugin;
 using Demo.WebApi.Plugin;
+using NetFusion.Azure.ServiceBus.Plugin;
 using NetFusion.MongoDB.Plugin;
 using NetFusion.Redis.Plugin;
 using NetFusion.Messaging.Plugin.Configs;
@@ -41,8 +42,9 @@ namespace Demo.WebApi
                 .AddMapping()
                 .AddMessaging()
                 .AddRabbitMq()
+                .AddAzureServiceBus()
                 .AddRedis()
-                .AddRoslyn()
+                //.AddRoslyn()
                 .AddMongoDb()
 
                 .AddRest()

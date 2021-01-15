@@ -112,6 +112,15 @@ namespace NetFusion.Messaging.Types.Attributes
             return SetAttribute(attributes, name, value.ToString("o"), overrideIfPresent);
         }
         
+        //-- TimeSpan
+
+        public static IDictionary<string, string> SetTimeSpan(this IDictionary<string, string> attributes,
+            string name, TimeSpan value,
+            bool overrideIfPresent = true)
+        {
+            return SetAttribute(attributes, name, value.ToString(), overrideIfPresent);
+        }
+        
         //--  UInt
         
         public static IDictionary<string, string> SetUIntValue(this IDictionary<string, string> attributes, 

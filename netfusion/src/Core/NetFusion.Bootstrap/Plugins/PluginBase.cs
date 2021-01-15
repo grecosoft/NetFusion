@@ -21,7 +21,7 @@ namespace NetFusion.Bootstrap.Plugins
         public string Description { get; protected set; }
         public string SourceUrl { get; protected set; } 
         public string DocUrl { get; protected set; }
-        
+
         // Plugin Parts:
         public IEnumerable<IPluginConfig> Configs => _configs;
         public IEnumerable<IPluginModule> Modules => _modules;

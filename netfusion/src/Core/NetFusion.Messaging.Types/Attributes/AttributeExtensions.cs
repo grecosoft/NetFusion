@@ -253,5 +253,28 @@ namespace NetFusion.Messaging.Types.Attributes
 
             return null;
         }
+
+        /// <summary>
+        /// Used to specify a time after which a message should no longer be processed.
+        /// </summary>
+        /// <param name="message">The message to set attribute value.</param>
+        /// <param name="value">The timespan value.</param>
+        public static void SetTimeToLive(this IMessage message, TimeSpan value) =>
+            message.Attributes.SetTimeSpan(GetPluginScopedName("TimeToLive"), value);
+
+        /// <summary>
+        /// Returns the time after which a message should no longer be processed.
+        /// </summary>
+        /// <param name="message">The message to retrieve attribute value.</param>
+        /// <returns>The timespan value.</returns>
+        public static TimeSpan? GetTimeToLive(this IMessage message)
+        {
+            if (message.Attributes.HasValue(GetPluginScopedName("TimeToLive")))
+            {
+                return message.Attributes.GetTimeSpanValue(GetPluginScopedName("TimeToLive"));
+            }
+
+            return null;
+        }
     }
 }

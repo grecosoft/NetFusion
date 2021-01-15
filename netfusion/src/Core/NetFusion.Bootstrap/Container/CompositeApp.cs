@@ -131,13 +131,16 @@ namespace NetFusion.Bootstrap.Container
 
         private async Task StartPluginModules(IServiceProvider services, params IPlugin[] plugins)
         {
-            foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
+            foreach (IPlugin plugin in plugins)
             {
-                _logger.LogDebug("Starting Module: {moduleType} for Plugin: {pluginName}", 
-                    module.GetType().Name, 
-                    module.Context.Plugin.Name);
+                foreach (IPluginModule module in plugin.Modules)
+                {
+                    _logger.LogDebug("Starting Module: {moduleType} for Plugin: {pluginName}", 
+                        module.GetType().Name, 
+                        module.Context.Plugin.Name);
                 
-                await module.StartModuleAsync(services);
+                    await module.StartModuleAsync(services);
+                }
             }
         }
 
@@ -234,13 +237,17 @@ namespace NetFusion.Bootstrap.Container
 
         private async Task StopPluginModules(IServiceProvider services, params IPlugin[] plugins)
         {
-            foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
+            foreach (IPlugin plugin in plugins)
             {
-                _logger.LogDebug("Stopping Module: {moduleType} for Plugin: {pluginName}", 
-                    module.GetType().Name, 
-                    module.Context.Plugin.Name);
+                var pluginModules = plugin.Modules.Reverse().ToArray();
+                foreach (IPluginModule module in pluginModules)
+                {
+                    _logger.LogDebug("Stopping Module: {moduleType} for Plugin: {pluginName}", 
+                        module.GetType().Name, 
+                        module.Context.Plugin.Name);
                 
-                await module.StopModuleAsync(services);
+                    await module.StopModuleAsync(services);
+                }
             }
         }
 

@@ -84,6 +84,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Rest.CodeGen", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Serilog", "..\netfusion\src\Integration\NetFusion.Serilog\NetFusion.Serilog.csproj", "{14A35AC9-7119-44E5-96F3-567C4BC8E9F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFusion.Azure.ServiceBus", "..\netfusion\src\Integration\NetFusion.Azure.ServiceBus\NetFusion.Azure.ServiceBus.csproj", "{392DCA31-FF06-47C9-B197-8C14E4F0C66C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -222,6 +224,10 @@ Global
 		{14A35AC9-7119-44E5-96F3-567C4BC8E9F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14A35AC9-7119-44E5-96F3-567C4BC8E9F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14A35AC9-7119-44E5-96F3-567C4BC8E9F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{392DCA31-FF06-47C9-B197-8C14E4F0C66C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{392DCA31-FF06-47C9-B197-8C14E4F0C66C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{392DCA31-FF06-47C9-B197-8C14E4F0C66C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{392DCA31-FF06-47C9-B197-8C14E4F0C66C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -265,6 +271,7 @@ Global
 		{EFB042B1-5DAD-4795-8F18-F0F7411D2012} = {1F6BA04E-F6CA-47C1-AB79-CAFED0D805F4}
 		{4867681D-1A37-433B-8917-369D82A6C7C6} = {1F6BA04E-F6CA-47C1-AB79-CAFED0D805F4}
 		{14A35AC9-7119-44E5-96F3-567C4BC8E9F8} = {0A108820-F110-4B36-A5CF-A59FC7C64955}
+		{392DCA31-FF06-47C9-B197-8C14E4F0C66C} = {0A108820-F110-4B36-A5CF-A59FC7C64955}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17556D20-DBFC-4AEB-857D-74B7C1EDEA60}

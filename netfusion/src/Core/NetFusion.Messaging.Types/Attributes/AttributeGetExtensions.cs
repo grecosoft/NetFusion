@@ -180,6 +180,7 @@ namespace NetFusion.Messaging.Types.Attributes
                         throw new InvalidOperationException(
                             $"Attribute named: {name} with value: {parsedValue} could not be parsed as a Decimal.");
                     }
+                    
                     yield return parsedValue;
                 }
             }
@@ -318,6 +319,25 @@ namespace NetFusion.Messaging.Types.Attributes
             }
 
             return parsedValue.ToUniversalTime();
+        }
+        
+        //-- TimeSpan
+        
+        public static TimeSpan GetTimeSpanValue(this IDictionary<string, string> attributes, string name)
+        {
+            string value = GetValue(attributes, name);
+            if (value == null)
+            {
+                throw new InvalidOperationException($"Attribute named: {name} not found.");
+            }
+
+            if (! TimeSpan.TryParse(value, out TimeSpan parsedValue))
+            {
+                throw new InvalidOperationException(
+                    $"Attribute named: {name} with value: {value} could not be parsed as a Guid.");
+            }
+
+            return parsedValue;
         }
         
         //--  Boolean

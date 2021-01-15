@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Microsoft.Extensions.Hosting;
+using NetFusion.Azure.ServiceBus.Plugin;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Rest.Server.Plugin;
 using NetFusion.Settings.Plugin;
@@ -50,6 +51,7 @@ namespace Service.WebApi
                 // Add technology specific plugins:
                 .AddMongoDb()
                 .AddRabbitMq()
+                .AddAzureServiceBus()
                 .AddRedis()
                 //.AddAmqp()
                 .AddRest()

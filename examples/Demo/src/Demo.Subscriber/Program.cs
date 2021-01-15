@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NetFusion.Azure.ServiceBus.Plugin;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Builder;
 using NetFusion.RabbitMQ.Plugin;
@@ -20,6 +21,7 @@ namespace Demo.Subscriber
                 {
                     services.CompositeContainer(hostContext.Configuration)
                         .AddRabbitMq()
+                        .AddAzureServiceBus()
                         .AddRedis()
                         .AddPlugin<HostPlugin>()
                         .Compose();

@@ -206,5 +206,7 @@ namespace NetFusion.Messaging.Internal
 
             return null; 
         }
+
+        public override string ToString() => $"{ConsumerType.Name}.{MessageHandlerMethod.Name}({MessageType})";
     }
 }
