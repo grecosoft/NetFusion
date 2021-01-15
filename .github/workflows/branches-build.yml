@@ -25,7 +25,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.405
+        dotnet-version: 5.0.102
     - name: Print Variables
       run: echo $buildVersion
     - name: Restore Dependencies
