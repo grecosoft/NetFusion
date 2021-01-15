@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -13,15 +13,15 @@
     <ProjectReference Include="..\Components\Demo.Infra\Demo.Infra.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="9.9.46" />
-    <PackageReference Include="NetFusion.Base" Version="9.9.46" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="9.9.46" />
-    <PackageReference Include="NetFusion.Builder" Version="9.9.46" />
+    <PackageReference Include="NetFusion.Common" Version="9.9.47" />
+    <PackageReference Include="NetFusion.Base" Version="9.9.47" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="9.9.47" />
+    <PackageReference Include="NetFusion.Builder" Version="9.9.47" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Web.Mvc" Version="9.9.46" />
-    <PackageReference Include="NetFusion.Rest.Common" Version="9.9.46" />
-    <PackageReference Include="NetFusion.Rest.Resources" Version="9.9.46" />
-    <PackageReference Include="NetFusion.Rest.Server" Version="9.9.46" />
+    <PackageReference Include="NetFusion.Web.Mvc" Version="9.9.47" />
+    <PackageReference Include="NetFusion.Rest.Common" Version="9.9.47" />
+    <PackageReference Include="NetFusion.Rest.Resources" Version="9.9.47" />
+    <PackageReference Include="NetFusion.Rest.Server" Version="9.9.47" />
   </ItemGroup>
 </Project>

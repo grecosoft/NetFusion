@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -8,11 +8,11 @@
     <ProjectReference Include="..\Demo.Core\Demo.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Azure.ServiceBus" Version="9.9.46" />
-    <PackageReference Include="NetFusion.Common" Version="9.9.46" />
-    <PackageReference Include="NetFusion.Base" Version="9.9.46" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="9.9.46" />
-    <PackageReference Include="NetFusion.Settings" Version="9.9.46" />
-    <PackageReference Include="NetFusion.Messaging" Version="9.9.46" />
+    <PackageReference Include="NetFusion.Azure.ServiceBus" Version="9.9.47" />
+    <PackageReference Include="NetFusion.Common" Version="9.9.47" />
+    <PackageReference Include="NetFusion.Base" Version="9.9.47" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="9.9.47" />
+    <PackageReference Include="NetFusion.Settings" Version="9.9.47" />
+    <PackageReference Include="NetFusion.Messaging" Version="9.9.47" />
   </ItemGroup>
 </Project>
