@@ -10,7 +10,6 @@ namespace Demo.Subscriber
 
         public HostPlugin()
         {
-            HostCode = "DemoSub";
             Description = "WebApi host exposing REST/HAL based Web API.";
         }
     }
