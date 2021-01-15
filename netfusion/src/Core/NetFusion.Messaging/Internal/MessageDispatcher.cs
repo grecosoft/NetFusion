@@ -110,11 +110,6 @@ namespace NetFusion.Messaging.Internal
         private async Task PublishMessage(IMessage message, IntegrationTypes integrationType, 
             CancellationToken cancellationToken)
         {
-            if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken),
-               "Cancellation token cannot be null.");
-            
-            
-
             try
             {
                 await ApplyMessageEnrichers(message);

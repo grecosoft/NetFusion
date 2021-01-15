@@ -123,7 +123,6 @@ namespace NetFusion.Messaging.Plugin.Modules
         {
             if (dispatcher == null) throw new ArgumentNullException(nameof(dispatcher));
             if (message == null) throw new ArgumentNullException(nameof(message));
-            if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken));
 
             if (! message.GetType().CanAssignTo(dispatcher.MessageType))
             {

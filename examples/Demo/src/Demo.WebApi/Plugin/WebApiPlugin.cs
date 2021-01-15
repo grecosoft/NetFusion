@@ -10,7 +10,6 @@ namespace Demo.WebApi.Plugin
 
         public WebApiPlugin()
         {
-            HostCode = "DemoPub";
             Description = "WebApi host exposing REST/HAL based Web API.";
         }
     }

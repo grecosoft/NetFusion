@@ -51,7 +51,6 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         {
             if (createdExchange == null) throw new ArgumentNullException(nameof(createdExchange));
             if (messageBody == null) throw new ArgumentNullException(nameof(messageBody));
-            if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken));
 
             AppendRpcMessageProperties(messageProperties, createdExchange);
 

@@ -2,17 +2,17 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.6" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.6" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.6" />
-    <PackageReference Include="NetFusion.Azure.ServiceBus" Version="9.9.46" />
-    <PackageReference Include="NetFusion.Builder" Version="9.9.46" />
-    <PackageReference Include="NetFusion.RabbitMQ" Version="9.9.46" />
-    <PackageReference Include="NetFusion.Redis" Version="9.9.46" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+    <PackageReference Include="NetFusion.Azure.ServiceBus" Version="9.9.47" />
+    <PackageReference Include="NetFusion.Builder" Version="9.9.47" />
+    <PackageReference Include="NetFusion.RabbitMQ" Version="9.9.47" />
+    <PackageReference Include="NetFusion.Redis" Version="9.9.47" />
   </ItemGroup>
 
 </Project>
