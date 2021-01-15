@@ -48,7 +48,7 @@ namespace NetFusion.Bootstrap.Container
             {
                 throw new ContainerException(
                     "Plug-in identity values must be unique.  See details for duplicated Plug-in Ids.",
-                     "DuplicatePluginIds", duplicatePluginIds);
+                    "DuplicatePluginIds", duplicatePluginIds);
             }
         }
 

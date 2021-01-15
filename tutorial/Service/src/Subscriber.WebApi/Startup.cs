@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Microsoft.Extensions.Hosting;
+using NetFusion.Azure.ServiceBus.Plugin;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Settings.Plugin;
 using NetFusion.Builder;
@@ -36,6 +37,7 @@ namespace Subscriber.WebApi
                 .AddSettings()
                 .AddMessaging()
                 .AddRabbitMq()
+                .AddAzureServiceBus()
                 // .AddAmqp()
                 .AddRedis()
 
