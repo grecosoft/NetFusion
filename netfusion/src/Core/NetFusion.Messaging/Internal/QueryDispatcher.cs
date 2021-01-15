@@ -49,9 +49,6 @@ namespace NetFusion.Messaging.Internal
             if (query == null) throw new ArgumentNullException(nameof(query),
                 "Query to dispatch can't be null.");
 
-            if (cancellationToken == null) throw new ArgumentNullException(nameof(cancellationToken),
-                "Cancellation token can't be null.");
-
             QueryDispatchInfo dispatchInfo = _dispatchModule.GetQueryDispatchInfo(query.GetType());
 
             try
