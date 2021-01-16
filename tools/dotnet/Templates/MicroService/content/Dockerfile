@@ -1,4 +1,4 @@
-FROM  mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+FROM  mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
 WORKDIR /build/src
 
 LABEL "net-fusion.template.layer"="Contains Restored NuGets"
@@ -53,7 +53,7 @@ RUN dotnet publish ./Solution.Context.WebApi/Solution.Context.WebApi.csproj --ou
 #   belonging to a new Docker image based on the aspnet core base image.  
 # - This base image is much smaller since it is a non SDK runtime for asp.net core.
 # --------------------------------------------------------------------------------------
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /microservice
 
 COPY --from=build-env /build/out ./
