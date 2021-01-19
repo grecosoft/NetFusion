@@ -143,6 +143,11 @@ namespace NetFusion.Messaging.Internal
                     }
 
                     var asyncResult = (Task)Invoker.DynamicInvoke(invokeParams.ToArray());
+                    if (asyncResult == null)
+                    {
+                        throw new NullReferenceException("Result of Message Dynamic Dispatch can't be null.");
+                    }
+                    
                     await asyncResult.ConfigureAwait(false);
 
                     object result = ProcessResult(message, asyncResult);
@@ -183,11 +188,10 @@ namespace NetFusion.Messaging.Internal
             {
                 return null;
             }
-            
-           
+
             // A Task containing a result is being returned so get the result
             // from the returned task and set it as the command result:
-            if (result != null && IsAsyncWithResult)
+            if (IsAsyncWithResult)
             {
                 dynamic resultTask = result;
                 var resultValue = (object)resultTask.Result;
@@ -197,7 +201,7 @@ namespace NetFusion.Messaging.Internal
             }
 
             // The handler was not asynchronous set the result of the command:
-            if (result != null && !IsAsync)
+            if (!IsAsync)
             {
                 resultState.SetResult(result);
                 return result;

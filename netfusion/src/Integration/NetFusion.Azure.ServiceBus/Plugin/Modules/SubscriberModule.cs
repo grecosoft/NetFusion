@@ -136,10 +136,10 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
                 .Select(md =>
                 {
                     var subAttrib = md.MessageHandlerMethod.GetAttribute<TopicSubscriptionAttribute>();
-                    return new TopicSubscription(subAttrib.NamespaceName, subAttrib.EntityName, subAttrib.SubscriptionName)
+                    return new TopicSubscription(subAttrib.NamespaceName, subAttrib.EntityName, 
+                        subAttrib.SubscriptionName, subAttrib.IsFanout)
                     {
-                        DispatchInfo = md,
-                        IsFanout = subAttrib.IsFanout
+                        DispatchInfo = md
                     };
                 });
         }
