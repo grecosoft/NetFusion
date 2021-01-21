@@ -32,7 +32,7 @@ namespace NetFusion.Bootstrap.Container
             
             plugin.SetPluginMeta(
                 assembly.FullName, 
-                assembly.GetName().Version.ToString(),
+                assembly.GetName().Version?.ToString() ?? "",
                 assembly.GetExportedTypes());
         }
 

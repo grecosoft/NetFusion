@@ -26,8 +26,8 @@ namespace Service.WebApi
         {
             IHost webHost = BuildWebHost(args);
             
-            var compositeApp = webHost.Services.GetService<ICompositeApp>();
-            var lifetime = webHost.Services.GetService<IHostApplicationLifetime>();
+            var compositeApp = webHost.Services.GetRequiredService<ICompositeApp>();
+            var lifetime = webHost.Services.GetRequiredService<IHostApplicationLifetime>();
             
             lifetime.ApplicationStopping.Register(() =>
             {
