@@ -112,6 +112,11 @@ namespace NetFusion.Messaging.Internal
                     }
 
                     var asyncResult = (Task)Invoker.DynamicInvoke(invokeParams.ToArray());
+                    if (asyncResult == null)
+                    {
+                        throw new NullReferenceException("Result of Message Dynamic Dispatch can't be null.");
+                    }
+                    
                     await asyncResult.ConfigureAwait(false);
 
                     object result = ProcessResult(query, asyncResult);

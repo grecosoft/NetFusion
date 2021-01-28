@@ -94,7 +94,7 @@ namespace NetFusion.Bootstrap.Plugins
             }
         }
         
-        public void InitLogging(IServiceProvider services)
+        internal void InitLogging(IServiceProvider services)
         {
             _loggerFactory = services.GetService<ILoggerFactory>();
             _logger = _loggerFactory.CreateLogger(Plugin.GetType());

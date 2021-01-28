@@ -26,8 +26,8 @@ namespace Solution.Context.WebApi
         {
             IHost webHost = BuildWebHost(args);
             
-            var compositeApp = webHost.Services.GetService<ICompositeApp>();
-            var lifetime = webHost.Services.GetService<IHostApplicationLifetime>();
+            var compositeApp = webHost.Services.GetRequiredService<ICompositeApp>();
+            var lifetime = webHost.Services.GetRequiredService<IHostApplicationLifetime>();
 
             lifetime.ApplicationStopping.Register(() =>
             {
@@ -67,13 +67,13 @@ namespace Solution.Context.WebApi
         private static void SetupLogging(HostBuilderContext context, 
             ILoggingBuilder builder)
         {
-            var seqUrl = context.Configuration.GetValue("logging:seqUrl", "http://localhost:5341");
+            var seqUrl = context.Configuration.GetValue<string>("logging:seqUrl");
 
             // Send any Serilog configuration issue logs to console.
             Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
             Serilog.Debugging.SelfLog.Enable(Console.Error);
             
-            Log.Logger = new LoggerConfiguration()
+            var logConfig = new LoggerConfiguration()
                 .MinimumLevel.ControlledBy(LogLevelControl.Switch)
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
 
@@ -81,9 +81,14 @@ namespace Solution.Context.WebApi
                 .Enrich.WithCorrelationId()
                 .Enrich.WithHostIdentity(WebApiPlugin.HostId, WebApiPlugin.HostName)
                 
-                .WriteTo.ColoredConsole()
-                .WriteTo.Seq(seqUrl)
-                .CreateLogger();
+                .WriteTo.ColoredConsole();
+
+            if (! string.IsNullOrEmpty(seqUrl))
+            {
+                logConfig.WriteTo.Seq(seqUrl);
+            }
+            
+            Log.Logger = logConfig.CreateLogger();
         }
     }
 }
