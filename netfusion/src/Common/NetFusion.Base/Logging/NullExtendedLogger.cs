@@ -13,24 +13,24 @@ namespace NetFusion.Base.Logging
     /// </summary>
     public class NullExtendedLogger : IExtendedLogger
     {
-        public void Log<TContext>(LogMessage message) => Console.WriteLine(message.ToIndentedJson());
-        public void Log<TContext>(params LogMessage[] messages) => Console.WriteLine(messages.ToIndentedJson());
-        public void Log<TContext>(IEnumerable<LogMessage> messages) => Console.WriteLine(messages.ToIndentedJson());
+        public void Log<TContext>(LogMessage message) => Console.WriteLine(message);
+        public void Log<TContext>(params LogMessage[] messages) => Console.WriteLine(messages);
+        public void Log<TContext>(IEnumerable<LogMessage> messages) => Console.WriteLine(messages);
         public void Log<TContext>(NetFusionException ex, LogMessage message) { Console.WriteLine(ex.Message); }
 
         public void Log<TContext>(LogLevel logLevel, string message, params object[] args)
-            => Console.WriteLine(new {message, args}.ToIndentedJson());
+            => Console.WriteLine(message);
 
         public void LogDetails<TContext>(LogLevel logLevel, string message, object details, params object[] args)
-            => Console.WriteLine(new { message, details, args }.ToIndentedJson());
+            => Console.WriteLine(message);
 
         public void LogError<TContext>(Exception ex, string message, params object[] args)
-            => Console.WriteLine(new {errorMsg = ex.Message, message, args});
+            => Console.WriteLine(ex.Message);
 
         public void LogErrorDetails<TContext>(Exception ex, string message, object details, params object[] args)
-            => Console.WriteLine(new {errorMsg = ex.Message, message, details, args}.ToIndentedJson());
+            => Console.WriteLine(ex.Message);
 
         public void LogError<TContext>(NetFusionException ex, string message, params object[] args)
-            => Console.WriteLine(new {errorMsg = ex.Message, message, args}.ToIndentedJson());
+            => Console.WriteLine(ex.Message);
     }
 }

@@ -1,8 +1,7 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text.Json;
 
 namespace NetFusion.Common.Extensions
 {
@@ -35,9 +34,12 @@ namespace NetFusion.Common.Extensions
         public static string ToIndentedJson(this object value)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
-            return JsonConvert.SerializeObject(value, Formatting.Indented, new JsonSerializerSettings
+
+            return JsonSerializer.Serialize(value, new JsonSerializerOptions
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
+                WriteIndented = true,
+                IgnoreNullValues = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
         }
 
@@ -49,8 +51,11 @@ namespace NetFusion.Common.Extensions
         public static string ToJson(this object value)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
-            return JsonConvert.SerializeObject(value, Formatting.None, new JsonSerializerSettings {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            
+            return JsonSerializer.Serialize(value, new JsonSerializerOptions
+            {
+                IgnoreNullValues = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
         }
     }
