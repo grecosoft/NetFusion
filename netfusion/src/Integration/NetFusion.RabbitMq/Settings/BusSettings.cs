@@ -16,36 +16,33 @@ namespace NetFusion.RabbitMQ.Settings
         /// <summary>
         /// List of broker connections specified by host application.
         /// </summary>
-        public IList<BusConnection> Connections { get; set; }
-
-        public BusSettings()
-        {
-            Connections = new List<BusConnection>();
-        }
-
-        /// <summary>
-        /// Returns connection settings for a named bus configuration.
-        /// </summary>
-        /// <param name="busName">The name of the bus to return the settings.</param>
-        /// <returns>The bus related settings.  If a bus with the specified 
-        /// name is not defined, an exception is raised.</returns>
-        public BusConnection GetConnection(string busName)
-        {
-            if (string.IsNullOrWhiteSpace(busName))
-                throw new ArgumentException("Bus name not specified.", nameof(busName));
-
-            BusConnection conn = Connections.FirstOrDefault(c => c.BusName == busName);
-            
-            if (conn == null)
-            {
-                throw new InvalidOperationException($"Bus connection with name: {busName} not configured.");
-            }
-            return conn;
-        }
+        public Dictionary<string, BusConnection> Connections { get; set; } = new();
 
         public void Validate(IObjectValidator validator)
         {
             validator.AddChildren(Connections);
+        }
+
+        /// <summary>
+        /// The configuration represents a collection of items by keyed named.
+        /// Updates the name on each item to that of the key specified within
+        /// the configuration.
+        /// </summary>
+        public void SetNamedConfigurations()
+        {
+            foreach (var (busName, conn) in Connections)
+            {
+                conn.BusName = busName;
+                foreach (var (exchangeName, exchange) in conn.ExchangeSettings)
+                {
+                    exchange.ExchangeName = exchangeName;
+                }
+
+                foreach (var (queueName, queue) in conn.QueueSettings)
+                {
+                    queue.QueueName = queueName;
+                }
+            }
         }
     }
 }

@@ -51,7 +51,7 @@ namespace Service.WebApi
                 // Add technology specific plugins:
                 .AddMongoDb()
                 .AddRabbitMq()
-                .AddAzureServiceBus()
+               // .AddAzureServiceBus()
                 .AddRedis()
                 //.AddAmqp()
                 .AddRest()
