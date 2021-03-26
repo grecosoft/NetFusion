@@ -58,6 +58,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             try
             {
                 _busSettings = Context.Configuration.GetSettings(new BusSettings());
+                _busSettings.SetNamedConfigurations();
             }
             catch (SettingsValidationException ex)
             {
@@ -73,7 +74,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         {
             ConfigureLogging();
             
-            foreach (BusConnection conn in _busSettings.Connections)
+            foreach (BusConnection conn in _busSettings.Connections.Values)
             {
                 CreateBus(conn);
             }
@@ -242,14 +243,12 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             if (string.IsNullOrWhiteSpace(busName))
                 throw new ArgumentException("Bus name not specified.", nameof(busName));
 
-            BusConnection connection = _busSettings.Connections.FirstOrDefault(c => c.BusName == busName);
-            if (connection == null)
+            if (! _busSettings.Connections.TryGetValue(busName, out var busConn))
             {
-                throw new InvalidOperationException(
-                    $"A bus configuration with the name: {busName} has not been configured.");
+                throw new InvalidOperationException($"Bus connection with name: {busName} not configured.");
             }
 
-            return connection;
+            return busConn;
         }
 
         private ExchangeSettings GetExchangeSettings(string busName, string exchangeName)
@@ -258,7 +257,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 throw new ArgumentException("Exchange name not specified.", nameof(exchangeName));
 
             var busConn = GetBusConnectionSettings(busName);
-            return busConn.ExchangeSettings.FirstOrDefault(s => s.ExchangeName == exchangeName);
+            return busConn.ExchangeSettings.Values.FirstOrDefault(s => s.ExchangeName == exchangeName);
         }
         
         private QueueSettings GetQueueSettings(string busName, string queueName)
@@ -267,7 +266,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 throw new ArgumentException("Queue name not specified.", nameof(queueName));
 
             var busConn = GetBusConnectionSettings(busName);
-            return busConn.QueueSettings.FirstOrDefault(s => s.QueueName == queueName);
+            return busConn.QueueSettings.Values.FirstOrDefault(s => s.QueueName == queueName);
         }
         
         //----------- [Plugin Logging] ---------------
@@ -286,7 +285,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["BusConnections"] = _busSettings.Connections.Select( c => new {
+            moduleLog["BusConnections"] = _busSettings.Connections.Values.Select( c => new {
                 c.BusName,
                 c.UserName,
                 c.VHostName,

@@ -37,7 +37,7 @@ namespace Subscriber.WebApi
                 .AddSettings()
                 .AddMessaging()
                 .AddRabbitMq()
-                .AddAzureServiceBus()
+                //.AddAzureServiceBus()
                 // .AddAmqp()
                 .AddRedis()
 

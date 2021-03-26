@@ -54,7 +54,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                 ContentType = definition.ContentType,
                 AppId = context.BusModule.HostAppId,
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                DeliveryMode = definition.IsPersistent ? 2 : 1
+                DeliveryMode = Convert.ToByte(definition.IsPersistent ? 2 : 1)
             };
             
             string correlationId = message.GetCorrelationId();

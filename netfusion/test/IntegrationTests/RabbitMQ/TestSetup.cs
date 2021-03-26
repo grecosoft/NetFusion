@@ -36,14 +36,14 @@ namespace IntegrationTests.RabbitMQ
         
         public static void AddValidBusConfig(IConfigurationBuilder configBuilder)
         {
-            var values = GetValidBusConfig(0);
+            var values = GetValidBusConfig();
             configBuilder.AddInMemoryCollection(values);
         }
         
         public static void AddValidMultipleBusConfig(IConfigurationBuilder configBuilder)
         {
-            var firstBusConfig = GetValidBusConfig(0);
-            var secondBusConfig = GetValidBusConfig(1, "TestBus2");
+            var firstBusConfig = GetValidBusConfig();
+            var secondBusConfig = GetValidBusConfig("TestBus2");
             
             foreach (var secondBusValue in secondBusConfig)
             {
@@ -53,22 +53,9 @@ namespace IntegrationTests.RabbitMQ
             configBuilder.AddInMemoryCollection(firstBusConfig);
         }
 
-        public static void AddDuplicateBusConfig(IConfigurationBuilder configBuilder)
-        {
-            var values = GetValidBusConfig(0);
-            var dupValues = GetValidBusConfig(1);
-
-            foreach (var dupValue in dupValues)
-            {
-                values.Add(dupValue);
-            }
-            
-            configBuilder.AddInMemoryCollection(values);
-        }
-
         public static void AddValidBusConfigWithExchangeSettings(IConfigurationBuilder configBuilder)
         {
-            var values = GetValidBusConfig(0);
+            var values = GetValidBusConfig();
 
             AddExchangeSettingsToFirstConfig(values);
             configBuilder.AddInMemoryCollection(values);
@@ -76,45 +63,46 @@ namespace IntegrationTests.RabbitMQ
 
         public static void AddValidBusConfigWithQueueSettings(IConfigurationBuilder configBuilder)
         {
-            var values = GetValidBusConfig(0);
+            var values = GetValidBusConfig();
 
             AddQueueSettingsToFirstConfig(values);
             configBuilder.AddInMemoryCollection(values);
         }
 
 
-        private static IDictionary<string, string> GetValidBusConfig(int idx, string busName = "TestBus1")
+        private static IDictionary<string, string> GetValidBusConfig(string busName = "TestBus1")
         {
-            var values = new Dictionary<string, string>();
+            var values = new Dictionary<string, string>
+            {
+                [$"NetFusion:RabbitMQ:Connections:{busName}:UserName"] = "TestUser",
+                [$"NetFusion:RabbitMQ:Connections:{busName}:Password"] = "TestPassword",
+                [$"NetFusion:RabbitMQ:Connections:{busName}:Heartbeat"] = "20",
+                [$"NetFusion:RabbitMQ:Connections:{busName}:VHostName"] = "TestVHost",
+                [$"NetFusion:RabbitMQ:Connections:{busName}:Hosts:0:hostName"] = "TestHost",
+                [$"NetFusion:RabbitMQ:Connections:{busName}:Hosts:0:port"] = "2222"
+            };
 
-            values[$"NetFusion:RabbitMQ:Connections:{idx}:BusName"] = busName;
-            values[$"NetFusion:RabbitMQ:Connections:{idx}:UserName"] = "TestUser";
-            values[$"NetFusion:RabbitMQ:Connections:{idx}:Password"] = "TestPassword";
-            values[$"NetFusion:RabbitMQ:Connections:{idx}:Heartbeat"] = "20";
-            values[$"NetFusion:RabbitMQ:Connections:{idx}:VHostName"] = "TestVHost";
-            values[$"NetFusion:RabbitMQ:Connections:{idx}:Hosts:0:hostName"] = "TestHost";
-            values[$"NetFusion:RabbitMQ:Connections:{idx}:Hosts:0:port"] = "2222";
 
             return values;
         }
 
         public static void AddExchangeSettingsToFirstConfig(IDictionary<string, string> values)
         {
-            values["NetFusion:RabbitMQ:Connections:0:ExchangeSettings:0:ExchangeName"] = "TestExchangeName";
-            values["NetFusion:RabbitMQ:Connections:0:ExchangeSettings:0:Passive"] = "true";
-            values["NetFusion:RabbitMQ:Connections:0:ExchangeSettings:0:IsNonRoutedSaved"] = "true";
-            values["NetFusion:RabbitMQ:Connections:0:ExchangeSettings:0:ContentType"] = "TestContentType";
-            values["NetFusion:RabbitMQ:Connections:0:ExchangeSettings:0:CancelRpcRequestAfterMs"] = "10000";
+            values["NetFusion:RabbitMQ:Connections:TestBus1:ExchangeSettings:TestExchangeName:ExchangeName"] = "TestExchangeName";
+            values["NetFusion:RabbitMQ:Connections:TestBus1:ExchangeSettings:TestExchangeName:Passive"] = "true";
+            values["NetFusion:RabbitMQ:Connections:TestBus1:ExchangeSettings:TestExchangeName:IsNonRoutedSaved"] = "true";
+            values["NetFusion:RabbitMQ:Connections:TestBus1:ExchangeSettings:TestExchangeName:ContentType"] = "TestContentType";
+            values["NetFusion:RabbitMQ:Connections:TestBus1:ExchangeSettings:TestExchangeName:CancelRpcRequestAfterMs"] = "10000";
         }
 
         public static void AddQueueSettingsToFirstConfig(IDictionary<string, string> values)
         {
-            values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:QueueName"] = "TestQueueName";
-            values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:Passive"] = "true";
-            values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:PerQueueMessageTtl"] = "20000";
-            values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:MaxPriority"] = "10";
-            values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:PrefetchCount"] = "5";
-            values["NetFusion:RabbitMQ:Connections:0:QueueSettings:0:Priority"] = "2";
+            values["NetFusion:RabbitMQ:Connections:TestBus1:QueueSettings:TestQueueName:QueueName"] = "TestQueueName";
+            values["NetFusion:RabbitMQ:Connections:TestBus1:QueueSettings:TestQueueName:Passive"] = "true";
+            values["NetFusion:RabbitMQ:Connections:TestBus1:QueueSettings:TestQueueName:PerQueueMessageTtl"] = "20000";
+            values["NetFusion:RabbitMQ:Connections:TestBus1:QueueSettings:TestQueueName:MaxPriority"] = "10";
+            values["NetFusion:RabbitMQ:Connections:TestBus1:QueueSettings:TestQueueName:PrefetchCount"] = "5";
+            values["NetFusion:RabbitMQ:Connections:TestBus1:QueueSettings:TestQueueName:Priority"] = "2";
         }
     }
 
