@@ -1,5 +1,5 @@
 PACKAGES_DIR=../../../_packages
-VERSION=9.9.52
+VERSION=9.9.53
 
 dotnet clean
 dotnet build NetFusion.sln
@@ -24,6 +24,7 @@ dotnet pack ./src/Integration/NetFusion.Redis/NetFusion.Redis.csproj --no-build 
 dotnet pack ./src/Integration/NetFusion.AMQP/NetFusion.AMQP.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Integration/NetFusion.RabbitMq/NetFusion.RabbitMQ.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Integration/NetFusion.Azure.ServiceBus/NetFusion.Azure.ServiceBus.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
+dotnet pack ./src/Integration/NetFusion.Kubernetes/NetFusion.Kubernetes.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 
 dotnet pack ./src/Web/NetFusion.Web.Mvc/NetFusion.Web.Mvc.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Web/NetFusion.Rest.Common/NetFusion.Rest.Common.csproj --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
