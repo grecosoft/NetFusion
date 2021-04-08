@@ -12,9 +12,10 @@ namespace NetFusion.Serilog.Enrichers
     {
         public const string HostPluginNameProperty = "Microservice";
         public const string HostPluginIdProperty = "MicroserviceId";
+        public const string HostNameProperty = "HostName";
 
-        private readonly string _hostName;
-        private readonly string _hostId;
+        private readonly string _microserviceName;
+        private readonly string _microserviceId;
 
         public HostIdentityEnricher(string microserviceName, string microserviceId)
         {
@@ -24,17 +25,20 @@ namespace NetFusion.Serilog.Enrichers
             if (string.IsNullOrWhiteSpace(microserviceId))
                 throw new ArgumentException("Microservice Id not Specified", nameof(microserviceId));
             
-            _hostName = microserviceName;
-            _hostId = microserviceId;
+            _microserviceName = microserviceName;
+            _microserviceId = microserviceId;
         }
         
         public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
         {
-            var name = new LogEventProperty(HostPluginNameProperty, new ScalarValue(_hostName));
-            var id = new LogEventProperty(HostPluginIdProperty, new ScalarValue(_hostId));
-        
-            logEvent.AddPropertyIfAbsent(name);
-            logEvent.AddPropertyIfAbsent(id);
+            logEvent.AddPropertyIfAbsent(new LogEventProperty(HostPluginNameProperty, new ScalarValue(_microserviceName)));
+            logEvent.AddPropertyIfAbsent(new LogEventProperty(HostPluginIdProperty, new ScalarValue(_microserviceId)));
+
+            string hostName = Environment.GetEnvironmentVariable("HOSTNAME");
+            if (! string.IsNullOrWhiteSpace(hostName))
+            {
+                logEvent.AddPropertyIfAbsent(new LogEventProperty(HostNameProperty, new ScalarValue(hostName)));
+            }
         }
     }
 }
