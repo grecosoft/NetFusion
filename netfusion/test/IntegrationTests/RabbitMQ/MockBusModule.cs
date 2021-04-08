@@ -11,7 +11,7 @@ namespace IntegrationTests.RabbitMQ
     public class MockBusModule : BusModule
     {
         public List<ConnectionConfiguration> ConnConfigs { get; }
-        private readonly Mock<IBus> _mockBus = new Mock<IBus>();
+        private readonly Mock<IBus> _mockBus = new();
 
         public MockBusModule()
         {

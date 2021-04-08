@@ -1,4 +1,0 @@
-These are the ASP.NET Core controllers that are called in response to HTTP requests.
-The controller methods populate models from the received data from which Commands
-and Queries are created.  The created Command/Query is submitted and handled by
-a component contained within the App project.

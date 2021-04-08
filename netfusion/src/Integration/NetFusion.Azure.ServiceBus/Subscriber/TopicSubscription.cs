@@ -27,11 +27,11 @@ namespace NetFusion.Azure.ServiceBus.Subscriber
         /// Indicates that messages should be delivered to all consumers and not round-robin.  If set, an
         /// unique quid is append to the subscription name making it unique per running Microservice instance.
         /// </summary>
-        public bool IsFanout { get; internal set; }
+        public bool IsFanout { get; }
 
         private readonly IDictionary<string, CreateRuleOptions> _rules = new Dictionary<string, CreateRuleOptions>();
 
-        public TopicSubscription(string namespaceName, string topicName, string subscriptionName)
+        public TopicSubscription(string namespaceName, string topicName, string subscriptionName, bool isFanout)
             : base(namespaceName, topicName)
         {
             if (string.IsNullOrWhiteSpace(topicName))
@@ -42,6 +42,7 @@ namespace NetFusion.Azure.ServiceBus.Subscriber
 
             SubscriptionName = subscriptionName;
             SettingsKey = $"{topicName}|{subscriptionName}";
+            IsFanout = isFanout;
             SubscriptionStrategy = new TopicSubscriptionStrategy(this);
             
             UniqueSubscriptionName = IsFanout ? $"{SubscriptionName}_{Guid.NewGuid()}" : SubscriptionName;

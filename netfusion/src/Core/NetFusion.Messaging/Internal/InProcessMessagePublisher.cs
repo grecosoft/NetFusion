@@ -144,8 +144,16 @@ namespace NetFusion.Messaging.Internal
 
         private void LogMessageDispatchers(MessageDispatchInfo[] dispatchers, IMessage message)
         {
-            _logger.LogDetails(LogLevel.Debug, "Dispatching Message {MessageType}", 
-                dispatchers, 
+            _logger.LogDetails(LogLevel.Debug, "Dispatching Message {MessageType}",
+                dispatchers.Select(d => new
+                {
+                    MessageType = d.MessageType.FullName,
+                    ConsumerTpe = d.ConsumerType.FullName,
+                    HandlerMethod = d.MessageHandlerMethod.Name,
+                    d.IsAsync,
+                    HasRules = d.DispatchRules.Any(),
+                    d.IncludeDerivedTypes
+                }), 
                 message.GetType());
         }
 

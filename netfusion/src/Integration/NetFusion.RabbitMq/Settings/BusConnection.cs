@@ -14,7 +14,6 @@ namespace NetFusion.RabbitMQ.Settings
         /// <summary>
         /// The name of the bus used in code when declaring exchanges and queues.
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "BrokerName Required")]
         public string BusName { get; set; }
 
         /// <summary>
@@ -81,13 +80,13 @@ namespace NetFusion.RabbitMQ.Settings
         /// Exchange settings stored external from the code.
         /// </summary>
         /// <returns>Collection of exchange settings.</returns>
-        public ExchangeSettings[] ExchangeSettings { get; set; } = Array.Empty<ExchangeSettings>();
+        public Dictionary<string, ExchangeSettings> ExchangeSettings { get; set; } = new();
 
         /// <summary>
         /// Queue settings stored external from the code.
         /// </summary>
         /// <returns>Collection of queue settings.</returns>
-        public QueueSettings[] QueueSettings { get; set; } = Array.Empty<QueueSettings>();
+        public Dictionary<string, QueueSettings> QueueSettings { get; set; } = new();
         
         internal bool? IsConnected { get; set; }
 

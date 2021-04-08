@@ -45,32 +45,6 @@ namespace IntegrationTests.RabbitMQ
         }
 
         /// <summary>
-        /// The name specified for the bus configuration must be unique.
-        /// </summary>
-        [Fact]
-        public void ServiceBusName_MustBeUnique()
-        {
-             ContainerFixture.Test(fixture => {
-                fixture.Arrange
-                    .Configuration(TestSetup.AddDuplicateBusConfig)
-                    .Container(c =>
-                    {
-                        c.WithRabbitMqHost();
-                    })
-                    .Act.RecordException().OnApplication(ca =>
-                    {
-                        ca.Start();
-                    })
-                    .Assert.Exception<ContainerException>(ex =>
-                    {
-                        Assert.Equal(
-                            "A bus has already been created for the bus named: TestBus1.Check configuration for duplicates.", 
-                            ex.Message);
-                    });
-            });
-        }
-
-        /// <summary>
         /// An exception is raised if a bus is requested that has not been configured.
         /// </summary>
         [Fact]
