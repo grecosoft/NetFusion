@@ -7,10 +7,14 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\netfusion\src\Common\NetFusion.Base\NetFusion.Base.csproj" />
-    <ProjectReference Include="..\..\..\..\..\netfusion\src\Common\NetFusion.Common\NetFusion.Common.csproj" />
-    <ProjectReference Include="..\..\..\..\..\netfusion\src\Core\NetFusion.Bootstrap\NetFusion.Bootstrap.csproj" />
-    <ProjectReference Include="..\..\..\..\..\netfusion\src\Core\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
-    <ProjectReference Include="..\..\..\..\..\netfusion\src\Core\NetFusion.Settings\NetFusion.Settings.csproj" />
+    <PackageReference Include="NetFusion.Base" Version="9.9.54" />
+    <PackageReference Include="NetFusion.Common" Version="9.9.54" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="9.9.54" />
+    <PackageReference Include="NetFusion.Messaging.Types" Version="9.9.54" />
+    <PackageReference Include="NetFusion.Settings" Version="9.9.54" />
   </ItemGroup>
 </Project>
+
+
+
+
