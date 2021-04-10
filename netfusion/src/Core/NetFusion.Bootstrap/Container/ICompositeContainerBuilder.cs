@@ -51,7 +51,7 @@ namespace NetFusion.Bootstrap.Container
         /// <summary>
         /// Builds a composite-application from the set of registered plug-ins.  After this method
         /// is invoked, the ICompositeApp will have been added to the IServiceCollection. The host
-        /// can object an instance of the ICompositeApp from the created IServiceProvider.
+        /// can obtain an instance of the ICompositeApp from the created IServiceProvider.
         /// </summary>
         /// <param name="config">Delegate passed the service-collection being populated.  This is
         /// the last place where the host can add services and therefore will override any existing

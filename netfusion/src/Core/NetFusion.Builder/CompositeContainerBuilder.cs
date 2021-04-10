@@ -14,9 +14,9 @@ using NetFusion.Serialization;
 namespace NetFusion.Builder
 {
     /// <summary>
-    /// Provides an API used by the host application to build a composite application
-    /// from a set of registered plugins.  The implementation creates and configures
-    /// an instance of the CompositeContainer to which plugins are added.
+    /// Provides an implementation used by the host application to build a composite application
+    /// from a set of registered plugins.  The implementation creates and configures an instance
+    /// of the CompositeContainer to which plugins are added.
     /// </summary>
     public class CompositeContainerBuilder : ICompositeContainerBuilder
     {
@@ -28,18 +28,16 @@ namespace NetFusion.Builder
         public CompositeContainerBuilder(IServiceCollection serviceCollection,
             IConfiguration configuration,
             ITypeResolver typeResolver,
-            IExtendedLogger extendedLogger = null)
+            IExtendedLogger extendedLogger)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             
             _serviceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
             _typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
 
-            if (extendedLogger != null)
-            {
-                NfExtensions.Logger = extendedLogger;
-            }
-            
+            // Set property on static class referenced to write logs before .NET's ILogger can be referenced.
+            NfExtensions.Logger = extendedLogger ?? throw new ArgumentNullException(nameof(extendedLogger));
+
             _container = new CompositeContainer(serviceCollection, configuration);
         }
         
