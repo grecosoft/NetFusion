@@ -2,16 +2,16 @@
 using System.Linq;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using NetFusion.Bootstrap.Catalog;
+using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Reflection;
 using Xunit;
 
 namespace CoreTests.Bootstrap
 {
     /// <summary>
-    /// Validates scanning for service implementations that are registered as services
-    /// with the Microsoft IServiceCollection.
+    /// Validates scanning for service implementations that are registered as services with the Microsoft
+    /// IServiceCollection.
     /// </summary>
     public class TypeCatalogTests
     {
@@ -23,7 +23,7 @@ namespace CoreTests.Bootstrap
                 typeof(ComponentTwo));
            
             catalog.AsService<ICommonComponent>(
-                t => t.Name.StartsWith("Component", System.StringComparison.Ordinal),
+                t => t.Name.StartsWith("Component", StringComparison.Ordinal),
                 ServiceLifetime.Scoped);
             
             Assert.Equal(2, catalog.Services.Count);
@@ -41,7 +41,7 @@ namespace CoreTests.Bootstrap
                 typeof(ComponentTwo));
 
             catalog.AsSelf(
-                t => t.Name.StartsWith("Component", System.StringComparison.Ordinal),
+                t => t.Name.StartsWith("Component", StringComparison.Ordinal),
                 ServiceLifetime.Scoped);
             
             Assert.Equal(2, catalog.Services.Count);
@@ -58,7 +58,7 @@ namespace CoreTests.Bootstrap
                 typeof(ComponentTwo));
 
             catalog.AsDescriptor(
-                t => t.Name.StartsWith("Component", System.StringComparison.Ordinal),
+                t => t.Name.StartsWith("Component", StringComparison.Ordinal),
                 t => ServiceDescriptor.Transient(t, t));
             
             Assert.Equal(2, catalog.Services.Count);
@@ -145,6 +145,25 @@ namespace CoreTests.Bootstrap
             ex.Message.Should().Contain("not assignable to").And.Contain("Implementation Instance");
         }
 
+        [Fact]
+        public void CanRegisterService_ProvidingMultiple_Behaviors()
+        {
+            var services = new ServiceCollection();
+            var serviceModule = new PluginModule();
+
+            var behaviors = serviceModule.GetType().GetInterfaces()
+                .Where(it => it.CanAssignTo<IPluginModuleService>())
+                .ToArray();
+
+            services.AddSingleton(behaviors, serviceModule);
+
+            var provider = services.BuildServiceProvider();
+            var behaviorA = provider.GetRequiredService<IProvideBehaviorA>();
+            var behaviorB = provider.GetRequiredService<IProvideBehaviorB>();
+
+            behaviorA.Should().Be(behaviorB);
+        }
+
         public interface ICommonComponent
         {
             
@@ -178,6 +197,21 @@ namespace CoreTests.Bootstrap
         }
 
         public class ComponentNotMatchingConvention : ISpecial
+        {
+            
+        }
+
+        public interface IProvideBehaviorA : IPluginModuleService
+        {
+            
+        }
+        
+        public interface IProvideBehaviorB : IPluginModuleService
+        {
+            
+        }
+        
+        public class PluginModule : IProvideBehaviorA, IProvideBehaviorB
         {
             
         }

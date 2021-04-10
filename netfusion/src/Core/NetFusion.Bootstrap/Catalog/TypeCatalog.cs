@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using NetFusion.Common.Extensions.Reflection;
 
 namespace NetFusion.Bootstrap.Catalog
@@ -10,6 +9,16 @@ namespace NetFusion.Bootstrap.Catalog
     /// <summary>
     /// Constructed with a list of types and provides methods for filtering the list
     /// for types to be added to the service collection.
+    /// 
+    /// DESIGN NOTE: IPluginModule implementations are called during the bootstrap process and passed a reference
+    /// to ITypeCatalog containing types from a set of plugins.  The set of types passed is determined by the type
+    /// of plugin in which the module is defined.  If a module is contained within a Core plugin, then types from all
+    /// plugins are provided for filtering.  However, if the module is contained within an Application plugin, only
+    /// types form other Application plugins are provided for filtering.
+    ///
+    /// DESIGN DECISION: This is by design since a Core plugins implement non-application cross-cutting functionality
+    /// used to implement other Core and Application specific plugins.  Core plugins provide interfaces and abstract
+    /// class for which consuming plugins provide concrete implementations.
     /// </summary>
     public class TypeCatalog : ITypeCatalog
     {
@@ -92,14 +101,14 @@ namespace NetFusion.Bootstrap.Catalog
         // before adding the service to the collection.
         private void AddDescriptor(ServiceDescriptor descriptor)
         {
-            if (! descriptor.ImplementationInstance?.GetType().CanAssignTo(descriptor.ServiceType) ?? false)
+            if (!descriptor.ImplementationInstance?.GetType().CanAssignTo(descriptor.ServiceType) ?? false)
             {
                 throw new InvalidCastException(
                     $"Implementation Instance: {descriptor.ImplementationInstance?.GetType()} not assignable to " + 
                     $"Service Type: {descriptor.ServiceType}");
             }
             
-            if (! descriptor.ImplementationType?.CanAssignTo(descriptor.ServiceType) ?? false)
+            if (!descriptor.ImplementationType?.CanAssignTo(descriptor.ServiceType) ?? false)
             {
                 throw new InvalidCastException(
                     $"Implementation Type: {descriptor.ImplementationType} not assignable to " + 

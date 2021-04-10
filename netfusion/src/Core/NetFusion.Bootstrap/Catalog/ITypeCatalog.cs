@@ -4,17 +4,18 @@ using Microsoft.Extensions.DependencyInjection;
 namespace NetFusion.Bootstrap.Catalog
 {
     /// <summary>
-    /// Allows plug-in types matching a provided filter to be registered with the Microsoft's 
-    /// service collection.  A reference to this interface is passed to plug-in modules and 
-    /// used to scan for types to be added to the service-collection during the application
-    /// container's bootstrap process.
+    /// Allows types matching a provided filter to be registered with the Microsoft's service collection.
+    /// A reference to this interface is passed to plug-in modules and used to scan for types to be added
+    /// to the service-collection during the bootstrap process.
     /// </summary>
     public interface ITypeCatalog
     {
         /// <summary>
         /// Registers the types matching the provided filter as the specified service type.
+        /// When the service type is resolved, the collection of matching service implementations
+        /// are returned. 
         /// </summary>
-        /// <typeparam name="TService">The service registration type.  All concrete
+        /// <typeparam name="TService">The service registration type.  All concrete classes
         /// matching the supplied filter will be registered as TService.</typeparam>
         /// <param name="filter">The predicate used find matching types.</param>
         /// <param name="lifetime">The lifetime of the registered service.</param>
@@ -24,16 +25,16 @@ namespace NetFusion.Bootstrap.Catalog
         /// <summary>
         /// Registers the types matching the provided filter as both the service and implementation types.
         /// </summary>
-        /// <param name="filter">The predicated used to find matching types.</param>
+        /// <param name="filter">The predicate used to find matching types.</param>
         /// <param name="lifetime">The lifetime of the registered service.</param>
         /// <returns>Reference to the type catalog.</returns>
         ITypeCatalog AsSelf(Func<Type, bool> filter, ServiceLifetime lifetime);
 
         /// <summary>
-        /// Registers the types matching the provided filters as a provided service descriptor.
+        /// Registers the types matching the provided filter as a provided service descriptor.
         /// </summary>
         /// <param name="filter">The predicate used to find matching types.</param>
-        /// <param name="describedBy">Delegate passed the matching type and returned
+        /// <param name="describedBy">Delegate passed the matching type and returns
         /// the corresponding descriptor to be added to the service collection.</param>
         /// <returns>Reference to the type catalog.</returns>
         ITypeCatalog AsDescriptor(Func<Type, bool> filter, Func<Type, ServiceDescriptor> describedBy);

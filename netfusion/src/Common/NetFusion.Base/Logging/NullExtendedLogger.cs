@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Exceptions;
-using NetFusion.Common.Extensions;
 
 namespace NetFusion.Base.Logging
 {
