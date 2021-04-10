@@ -22,7 +22,7 @@ namespace NetFusion.Bootstrap.Catalog
         ITypeCatalog AsService<TService>(Func<Type, bool> filter, ServiceLifetime lifetime);
 
         /// <summary>
-        /// Registers the types matching the provided filter as the service and implementation types.
+        /// Registers the types matching the provided filter as both the service and implementation types.
         /// </summary>
         /// <param name="filter">The predicated used to find matching types.</param>
         /// <param name="lifetime">The lifetime of the registered service.</param>
@@ -40,10 +40,14 @@ namespace NetFusion.Bootstrap.Catalog
 
         /// <summary>
         /// Registers the service implementation types matching the provided filter as an interface
-        /// matching a convention.  An exception is raised if the service implementation type supports
-        /// zero interfaces.  If multiple interfaces are supported, one is selected starting with the 
-        /// name of the service implementation type prefixed with "I".  If a single service interface
-        /// type cannot be determined, an exception is thrown. 
+        /// matching a convention.  An exception is raised if the service implementation type does
+        /// not implement one and only one service interface having the name of the implementation
+        /// type prefixed with the character "I".
+        /// <example>
+        ///     class ContactRepository : IContactRepository
+        ///     {
+        ///     }
+        /// </example>
         /// </summary>
         /// <param name="filter">The predicate used to find matching types.</param>
         /// <param name="lifetime">The lifetime of the registered service.</param>
@@ -52,10 +56,9 @@ namespace NetFusion.Bootstrap.Catalog
 
         /// <summary>
         /// Registers the service implementation types having a name ending in a suffix as an interface
-        /// matching a convention.  An exception is raised if the service implementation type supports
-        /// zero interfaces.  If multiple interfaces are supported, one is selected starting with the 
-        /// name of the service implementation type prefixed with "I".  If a single service interface
-        /// type cannot be determined, an exception is thrown. 
+        /// matching a convention.  An exception is raised if the service implementation type does
+        /// not implement one and only one service interface having the name of the implementation
+        /// type prefixed with the character "I".
         /// </summary>
         /// <param name="typeSuffix">The suffix type name used to find matching types.</param>
         /// <param name="lifetime">The lifetime of the registered service.</param>

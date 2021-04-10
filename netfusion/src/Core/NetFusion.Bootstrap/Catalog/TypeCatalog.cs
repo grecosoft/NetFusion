@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using NetFusion.Common.Extensions.Reflection;
 
 namespace NetFusion.Bootstrap.Catalog
 {
@@ -34,7 +36,7 @@ namespace NetFusion.Bootstrap.Catalog
 
             foreach (Type matchingType in _types.Where(filter))
             {
-                Services.Add(new ServiceDescriptor(typeof(TService), matchingType, lifetime));
+                AddDescriptor(new ServiceDescriptor(typeof(TService), matchingType, lifetime));
             }
             return this;
         }
@@ -45,7 +47,7 @@ namespace NetFusion.Bootstrap.Catalog
 
             foreach (Type matchingType in _types.Where(filter))
             {
-                Services.Add(new ServiceDescriptor(matchingType, matchingType, lifetime));
+                AddDescriptor(new ServiceDescriptor(matchingType, matchingType, lifetime));
             }
             return this;
         }
@@ -58,7 +60,7 @@ namespace NetFusion.Bootstrap.Catalog
        
             foreach (Type matchingType in _types.Where(filter))
             {
-                Services.Add(describedBy(matchingType));
+                AddDescriptor(describedBy(matchingType));
             }
             return this;
         }
@@ -70,10 +72,7 @@ namespace NetFusion.Bootstrap.Catalog
             foreach (Type matchingType in _types.Where(filter))
             {
                 Type serviceType = GetServiceInterface(matchingType);
-                if (serviceType != null)
-                {
-                    Services.Add(new ServiceDescriptor(serviceType, matchingType, lifetime));
-                }
+                AddDescriptor(new ServiceDescriptor(serviceType, matchingType, lifetime));
             }
 
             return this;
@@ -89,23 +88,43 @@ namespace NetFusion.Bootstrap.Catalog
                 lifetime);
         }
 
-        private static Type GetServiceInterface(Type serviceType)
+        // Validates that the implementation type or instance is assignable to the service type
+        // before adding the service to the collection.
+        private void AddDescriptor(ServiceDescriptor descriptor)
         {
-            Type[] serviceInterfaces = serviceType.GetInterfaces();
-            if (! serviceInterfaces.Any())
+            if (! descriptor.ImplementationInstance?.GetType().CanAssignTo(descriptor.ServiceType) ?? false)
             {
-                return null;
+                throw new InvalidCastException(
+                    $"Implementation Instance: {descriptor.ImplementationInstance?.GetType()} not assignable to " + 
+                    $"Service Type: {descriptor.ServiceType}");
+            }
+            
+            if (! descriptor.ImplementationType?.CanAssignTo(descriptor.ServiceType) ?? false)
+            {
+                throw new InvalidCastException(
+                    $"Implementation Type: {descriptor.ImplementationType} not assignable to " + 
+                    $"Service Type: {descriptor.ServiceType}");
             }
 
-            Type[] serviceInterfacesByConvention = serviceInterfaces.Where(
-                t => t.Name.Equals("I" + serviceType.Name, StringComparison.Ordinal)).ToArray();
-
-            if (serviceInterfacesByConvention.Length == 1)
-            {
-                return serviceInterfacesByConvention.First();
-            }
+            Services.Add(descriptor);
+        }
         
-            return null;
+        private static Type GetServiceInterface(Type implementationType)
+        {
+            string serviceName = $"I{implementationType.Name}";
+            
+            Type[] serviceInterfaces = implementationType.GetInterfaces()
+                .Where(t => t.Name.Equals(serviceName, StringComparison.Ordinal))
+                .ToArray();
+            
+            if (serviceInterfaces.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    $"The implementation type: {implementationType} does not implement one and " + 
+                    $"only one interface named: {serviceName}");
+            }
+
+            return serviceInterfaces.First();
         }
     }
 }

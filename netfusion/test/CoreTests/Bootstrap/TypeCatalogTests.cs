@@ -1,10 +1,18 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using NetFusion.Bootstrap.Catalog;
+using NetFusion.Common.Extensions.Reflection;
 using Xunit;
 
 namespace CoreTests.Bootstrap
 {
+    /// <summary>
+    /// Validates scanning for service implementations that are registered as services
+    /// with the Microsoft IServiceCollection.
+    /// </summary>
     public class TypeCatalogTests
     {
         [Fact]
@@ -60,7 +68,7 @@ namespace CoreTests.Bootstrap
         }
 
         [Fact]
-        public void CanRegisterSetOfFilteredTypes_AsAllSupportedInterfaces()
+        public void CanRegisterSetOfFilteredTypes_AsMatchingInterface()
         {
             var catalog = new TypeCatalog(new ServiceCollection(), typeof(ComponentTwo));
 
@@ -74,7 +82,7 @@ namespace CoreTests.Bootstrap
         }
 
         [Fact]
-        public void CanRegisterSetOfTypesWithNamedSuffix_AsAllSupportedInterfaces()
+        public void CanRegisterSetOfTypesWithNamedSuffix_AsMatchingInterface()
         {
             var catalog = new TypeCatalog(new ServiceCollection(), typeof(ComponentTwo));
 
@@ -86,6 +94,56 @@ namespace CoreTests.Bootstrap
             Assert.Contains(catalog.Services, s => s.ServiceType == typeof(IComponentTwo));
         }
 
+        [Fact]
+        public void CanCreateCatalog_FromServiceCollection()
+        {
+            var services = new ServiceCollection();
+            var catalog = services.CreateCatalog(new [] {typeof(ComponentOne)});
+            
+            catalog.Should().NotBeNull();
+            services.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ServiceInterface_MatchingConvention_MustBeFound()
+        {
+            var catalog = new TypeCatalog(new ServiceCollection(), typeof(ComponentNotMatchingConvention));
+            
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+            {
+                catalog.AsImplementedInterface(_ => true, ServiceLifetime.Transient);
+            });
+
+            ex.Message.Should().Contain("does not implement one and only one interface");
+        }
+
+        [Fact]
+        public void ImplementationType_MustBeAssignable_ToServiceType()
+        {
+            var catalog = new TypeCatalog(new ServiceCollection(), typeof(ComponentOne));
+            
+            var ex = Assert.Throws<InvalidCastException>(() =>
+            {
+                catalog.AsService<ISpecial>(_ => true, ServiceLifetime.Transient);
+            });
+
+            ex.Message.Should().Contain("not assignable to").And.Contain("Implementation Type");
+        }
+        
+        [Fact]
+        public void ImplementationInstance_MustBeAssignable_ToServiceType()
+        {
+            var catalog = new TypeCatalog(new ServiceCollection(), typeof(ComponentOne));
+            
+            var ex = Assert.Throws<InvalidCastException>(() =>
+            {
+                catalog.AsDescriptor(
+                    _ => true,
+                    st => ServiceDescriptor.Singleton(typeof(ISpecial), st.CreateInstance()));
+            });
+
+            ex.Message.Should().Contain("not assignable to").And.Contain("Implementation Instance");
+        }
 
         public interface ICommonComponent
         {
@@ -115,6 +173,11 @@ namespace CoreTests.Bootstrap
         }
 
         public interface ISpecial
+        {
+            
+        }
+
+        public class ComponentNotMatchingConvention : ISpecial
         {
             
         }
