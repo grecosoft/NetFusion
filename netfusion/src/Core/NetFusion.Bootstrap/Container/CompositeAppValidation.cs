@@ -8,8 +8,8 @@ using NetFusion.Bootstrap.Plugins;
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Validates that the manifest registry was correctly constructed
-    /// from the registered plug-ins. 
+    /// Validates the state of the  registered plugins before being
+    /// used to build the composite-application.
     /// </summary>
     internal class CompositeAppValidation
     {
@@ -41,13 +41,14 @@ namespace NetFusion.Bootstrap.Container
                     "MissingPluginIds", invalidPluginTypes);
             }
 
-            IEnumerable<string> duplicatePluginIds = _plugins.WhereDuplicated(p => p.PluginId)
+            IEnumerable<Type> duplicatePluginIds = _plugins.WhereDuplicated(p => p.PluginId)
+                .Select(p => p.GetType())
                 .ToArray();
 
             if (duplicatePluginIds.Any())
             {
                 throw new ContainerException(
-                    "Plug-in identity values must be unique.  See details for duplicated Plug-in Ids.",
+                    "Plug-in identity values must be unique.  See details for invalid plugin types.",
                     "DuplicatePluginIds", duplicatePluginIds);
             }
         }
@@ -80,7 +81,8 @@ namespace NetFusion.Bootstrap.Container
 
             if (hostPluginTypes.Length > 1)
             {
-                throw new ContainerException("There can only be one host plugin.", 
+                throw new ContainerException(
+                    "There can only be one host plugin.  See details for invalid plugin types.", 
                     "HostPluginTypes", hostPluginTypes);
             }
         }
@@ -93,7 +95,8 @@ namespace NetFusion.Bootstrap.Container
 
             if (duplicateConfigTypes.Any())
             {
-                throw new ContainerException("A plugin configuration can only be registered once.", 
+                throw new ContainerException(
+                    "A plugin configuration can only be registered once. See details for invalid configuration types", 
                     "DuplicateConfigTypes", duplicateConfigTypes);
             }
         }

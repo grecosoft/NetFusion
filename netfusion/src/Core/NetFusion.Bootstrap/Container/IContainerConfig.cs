@@ -1,9 +1,9 @@
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Marker interface representing a container level configuration.  These configurations
-    /// can be updated by the host application when building the CompositeContainer to change
-    /// how the container is constructed.
+    /// Marker interface representing container level configurations.  These configurations
+    /// provide default settings that can be overriden by the host application when building
+    /// the CompositeContainer.
     /// </summary>
     public interface IContainerConfig
     {

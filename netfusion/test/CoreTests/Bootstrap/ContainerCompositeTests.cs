@@ -21,7 +21,7 @@ namespace CoreTests.Bootstrap
         /// most often used.
         /// </summary>
         [Fact(DisplayName = "All Plug-In Manifests must have Identity value")]
-        public void AllPluginManifests_MustHaveIdentityValue()
+        public void AllPluginDefinitions_MustHaveIdentityValue()
         {
             ContainerFixture.Test(fixture =>
             {

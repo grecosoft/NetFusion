@@ -11,7 +11,7 @@
     /// </summary>
     public class MockAppPlugin : MockPlugin
     {
-        public MockAppPlugin() : base(PluginTypes.ApplicationPlugin)
+        public MockAppPlugin() : base(PluginTypes.AppPlugin)
         {
             
         }

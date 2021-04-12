@@ -72,7 +72,7 @@ namespace NetFusion.Messaging.Plugin.Modules
         }
 
         // Registers all the message consumers within the service collection.
-        public override void ScanPlugins(ITypeCatalog catalog)
+        public override void ScanForServices(ITypeCatalog catalog)
         {
             catalog.AsSelf(
                 t => t.IsConcreteTypeDerivedFrom<IMessageConsumer>(),

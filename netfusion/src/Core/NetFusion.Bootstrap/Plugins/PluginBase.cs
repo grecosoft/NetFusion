@@ -8,7 +8,7 @@ namespace NetFusion.Bootstrap.Plugins
     /// <summary>
     /// Base class providing a default implementation of the IPlugin interface.
     /// Each assembly defining a plugin should define a derived type containing
-    /// metadata, configurations, and modules for which the plugin is comprised.
+    /// metadata, configurations, and modules from which the plugin is comprised.
     /// </summary>
     public abstract class PluginBase : IPlugin
     {
@@ -31,8 +31,8 @@ namespace NetFusion.Bootstrap.Plugins
         public string AssemblyName { get; set; }
         public string AssemblyVersion { get; set; }
 
-        private readonly List<IPluginConfig> _configs = new List<IPluginConfig>();
-        private readonly List<IPluginModule> _modules = new List<IPluginModule>();
+        private readonly List<IPluginConfig> _configs = new();
+        private readonly List<IPluginModule> _modules = new();
 
         /// <summary>
         /// Adds a module to the plugin.
@@ -40,6 +40,11 @@ namespace NetFusion.Bootstrap.Plugins
         /// <typeparam name="TModule">The module type.</typeparam>
         protected void AddModule<TModule>() where TModule : IPluginModule, new()
         {
+            if (_modules.Any(m => m.GetType() == typeof(TModule)))
+            {
+                throw new ContainerException($"Plugin Module of type: {typeof(TModule)} already added.");
+            }
+            
             _modules.Add(new TModule());
         }
 
@@ -49,6 +54,11 @@ namespace NetFusion.Bootstrap.Plugins
         /// <typeparam name="TConfig">The configuration type.</typeparam>
         protected void AddConfig<TConfig>() where TConfig : IPluginConfig, new()
         {
+            if (_configs.Any(c => c.GetType() == typeof(TConfig)))
+            {
+                throw new ContainerException($"Plugin Configuration of type: {typeof(TConfig)} already added.");
+            }
+            
             _configs.Add(new TConfig());
         }
 
