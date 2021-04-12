@@ -76,14 +76,7 @@ namespace NetFusion.Bootstrap.Container
         }
         
         // --------------------------- [Configurations] -------------------------------
-        
-        // Returns a container level configuration used to configure the runtime behavior
-        // of the built container.
-        public T GetContainerConfig<T>() where T : IContainerConfig
-        {
-            return _builder.GetContainerConfig<T>();
-        }
-        
+
         // Finds a configuration belonging to one of the registered plugins.
         public T GetPluginConfig<T>() where T : IPluginConfig
         {

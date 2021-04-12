@@ -42,7 +42,8 @@ namespace NetFusion.Bootstrap.Plugins
         {
             if (_modules.Any(m => m.GetType() == typeof(TModule)))
             {
-                throw new ContainerException($"Plugin Module of type: {typeof(TModule)} already added.");
+                throw new ContainerException($"Plugin Module of type: {typeof(TModule)} already added.", 
+                    "bootstrap-duplicate-module");
             }
             
             _modules.Add(new TModule());

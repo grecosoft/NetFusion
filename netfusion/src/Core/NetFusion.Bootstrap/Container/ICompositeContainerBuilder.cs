@@ -27,16 +27,6 @@ namespace NetFusion.Bootstrap.Container
         /// <param name="plugin">One ore more plugin instances.</param>
         /// <returns>Reference to builder.</returns>
         ICompositeContainerBuilder AddPlugin(params IPlugin[] plugin);
-        
-        /// <summary>
-        /// Can be called by the host when bootstrapping the application to configure
-        /// container level configurations.
-        /// </summary>
-        /// <param name="configure">Delegate passed an instance of the configuration.</param>
-        /// <typeparam name="T">The type of the configuration to initialize.</typeparam>
-        /// <returns>Reference to the builder.  If the specified configuration is not
-        /// registered at the container level, an exception is raised.</returns>
-        ICompositeContainerBuilder InitContainerConfig<T>(Action<T> configure) where T : IContainerConfig;
 
         /// <summary>
         /// Can be called by the host when bootstrapping the application to configure

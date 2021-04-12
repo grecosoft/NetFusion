@@ -20,7 +20,9 @@ namespace NetFusion.Bootstrap.Exceptions
         /// Constructor.
         /// </summary>
         /// <param name="message">Message describing the container bootstrap exception.</param>
-        public ContainerException(string message) : base(message)
+        /// <param name="exceptionId">Optional value used to identity the exception.</param>
+        public ContainerException(string message, string exceptionId = null) 
+            : base(message, exceptionId)
         {
 
         }
@@ -30,8 +32,9 @@ namespace NetFusion.Bootstrap.Exceptions
         /// </summary>
         /// <param name="message">Message describing the container bootstrap exception.</param>
         /// <param name="innerException">The source exception containing details.</param>
-        public ContainerException(string message, Exception innerException)
-            : base(message, innerException)
+        /// <param name="exceptionId">Optional value used to identity the exception.</param>
+        public ContainerException(string message, Exception innerException, string exceptionId = null)
+            : base(message, innerException, exceptionId: exceptionId)
         {
 
         }
@@ -43,8 +46,9 @@ namespace NetFusion.Bootstrap.Exceptions
         /// <param name="detailKey">Value used to identify the details.</param>
         /// <param name="details">Object containing detailed information about the application
         /// state at the time of the exception.</param>
-        public ContainerException(string message, string detailKey, object details)
-            : base(message, detailKey, details)
+        /// <param name="exceptionId">Optional value used to identity the exception.</param>
+        public ContainerException(string message, string detailKey, object details, string exceptionId = null)
+            : base(message, detailKey, details, exceptionId)
         {
 
         }

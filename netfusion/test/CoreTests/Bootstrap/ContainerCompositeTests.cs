@@ -10,9 +10,9 @@ namespace CoreTests.Bootstrap
 {
     /// <summary>
     /// The following tests the constraints that must exist when composing a
-    /// CompositeContainer from a set of plugins.
+    /// CompositeContainer and its structure from a set of plugins. 
     /// </summary>
-    public class ContainerTests
+    public class ContainerStructureTests
     {
         /// <summary>
         /// Not often used by plugin-implementations, but can be used for cases where
@@ -20,7 +20,7 @@ namespace CoreTests.Bootstrap
         /// a specific application.  In this case, the PluginId of the host plugin is
         /// most often used.
         /// </summary>
-        [Fact(DisplayName = "All Plug-In Manifests must have Identity value")]
+        [Fact(DisplayName = "All Plugin Definitions must have and Identity Value")]
         public void AllPluginDefinitions_MustHaveIdentityValue()
         {
             ContainerFixture.Test(fixture =>
@@ -36,12 +36,12 @@ namespace CoreTests.Bootstrap
                     .Act.RecordException().ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
-
+                        ex.ExceptionId.Should().Be("bootstrap-missing-plugin-id");
                     });
             });
         }
 
-        [Fact(DisplayName = "Plug-In Id Values must be Unique")]
+        [Fact(DisplayName = "Plugin Identity Values must be Unique")]
         public void PluginIdsValues_MustBeUnique()
         {
             ContainerFixture.Test(fixture =>
@@ -59,7 +59,7 @@ namespace CoreTests.Bootstrap
                     .Act.RecordException().ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
-                        ex.Message.Should().Contain("Plug-in identity values must be unique.");
+                        ex.ExceptionId.Should().Be("bootstrap-duplicate-plugin-id");
                     });
             });
         }
@@ -67,7 +67,7 @@ namespace CoreTests.Bootstrap
         /// <summary>
         /// Each plug-in has a name that is used when logging the composite container structure.
         /// </summary>
-        [Fact(DisplayName = "Plug-In Name must be Specified")]
+        [Fact(DisplayName = "Plugin Name must be Specified")]
         public void PluginName_MustBeSpecified()
         {
             ContainerFixture.Test(fixture =>
@@ -82,7 +82,7 @@ namespace CoreTests.Bootstrap
                     .Act.RecordException().ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
-                        ex.Message.Should().Contain("All plugins must have AssemblyName and Name values.");
+                        ex.ExceptionId.Should().Be("bootstrap-missing-metadata");
                     });
             });
         }
@@ -91,9 +91,9 @@ namespace CoreTests.Bootstrap
         /// While every .NET type has an assembly, the only code in the design that
         /// has a dependency on the actual .NET assembly is the class implementing
         /// the ITypeResolver interface.  The type resolver specifies the name of the
-        /// type's assembly which must be unique among plug-ins.
+        /// type's assembly which is a required property..
         /// </summary>
-        [Fact(DisplayName = "Plug-In Assembly Name must be Specified")]
+        [Fact(DisplayName = "Plugin Assembly Name must be Specified")]
         public void PluginAssemblyName_MustBeSpecified()
         {
             ContainerFixture.Test(fixture =>
@@ -106,7 +106,7 @@ namespace CoreTests.Bootstrap
                     .Act.RecordException().ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
-                        ex.Message.Should().Contain("All plugins must have AssemblyName and Name values.");
+                        ex.ExceptionId.Should().Be("bootstrap-missing-metadata");
                     });
             });
         }
@@ -114,7 +114,7 @@ namespace CoreTests.Bootstrap
         /// <summary>
         /// The composite application must have one and only one application host plug-in.
         /// </summary>
-        [Fact(DisplayName = "Composite Application cannot have multiples Application Host Plug-Ins")]
+        [Fact(DisplayName = "Composite Application cannot have multiples Host Plugins")]
         public void CompositeApplication_CannotHaveMultiple_AppHostPlugins()
         {
             ContainerFixture.Test(fixture =>
@@ -129,7 +129,7 @@ namespace CoreTests.Bootstrap
                     .Act.RecordException().ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
-                        ex.Message.Should().Contain("There can only be one host plugin.");
+                        ex.ExceptionId.Should().Be("bootstrap-multiple-host-plugins");
                     });
             });
         }
@@ -137,7 +137,7 @@ namespace CoreTests.Bootstrap
         /// <summary>
         /// The composite application must have one application host plug-in.
         /// </summary>
-        [Fact(DisplayName = "Composite Application must have one Application host Plug-In")]
+        [Fact(DisplayName = "Composite Application must have one Host Plugin")]
         public void CompositeApplication_MustHaveOne_AppHostPlugin()
         {
             ContainerFixture.Test(fixture =>
@@ -149,16 +149,16 @@ namespace CoreTests.Bootstrap
                     .Act.RecordException().ComposeContainer()
                     .Assert.Exception<ContainerException>(ex =>
                     {
-                        ex.Message.Should().Contain("The composite application must have one host plugin type.");
+                        ex.ExceptionId.Should().Be("bootstrap-missing-host-plugin");
                     });
             });
         }
 
         /// <summary>
-        /// The composite application will be constructed from one plug-in that hosts
+        /// The composite application will be constructed from one plugin that hosts
         /// the application.
         /// </summary>
-        [Fact(DisplayName = "Composite Application has Application Host Plug-In")]
+        [Fact(DisplayName = "Composite Application has Application Host Plugin")]
         public void Composite_Application_Has_AppHostPlugin()
         {
             ContainerFixture.Test(fixture =>
@@ -175,9 +175,8 @@ namespace CoreTests.Bootstrap
         }
 
         /// <summary>
-        /// The composite application can be constructed from several application
-        /// specific plug-in components.  These plug-ins contain the main modules of the 
-        /// application.
+        /// The composite application can be constructed from several application specific
+        /// plugin components.  These plugins contain the main components of the application.
         /// </summary>
         [Fact(DisplayName = "Composite Application can have Multiple Application Component Plug-Ins")]
         public void CompositeApplication_CanHaveMultiple_AppComponentPlugins()
@@ -198,11 +197,11 @@ namespace CoreTests.Bootstrap
         }
 
         /// <summary>
-        /// The composite application can be constructed from several core plug-ins.
-        /// These plug-ins provide reusable services for technical implementations
-        /// that can optionally used by other plug-ins.
+        /// The composite application can be constructed from several core plugins.
+        /// These plugins provide reusable services for technical implementations
+        /// optionally used by other plugins.
         /// </summary>
-        [Fact(DisplayName = "Composite Application can have Multiple Core Plug-Ins")]
+        [Fact(DisplayName = "Composite Application can have Multiple Core Plugins")]
         public void CompositeApplication_CanHaveMultiple_CorePlugins()
         {
             ContainerFixture.Test(fixture =>
@@ -221,8 +220,7 @@ namespace CoreTests.Bootstrap
         }
 
         /// <summary>
-        /// A plug-in can have multiple modules to separate the configuration for different
-        /// provided services.
+        /// A plug-in can have multiple modules to separate and organize the implementation.
         /// </summary>
         [Fact(DisplayName = "Plug-In can have Multiple Modules")]
         public void PluginCanHave_MultipleModules()
@@ -248,6 +246,19 @@ namespace CoreTests.Bootstrap
                         pluginModules.OfType<MockPluginThreeModule>().Should().HaveCount(1);
                     });
             });
+        }
+
+        [Fact]
+        public void PluginModule_CanOnlyBe_AddedOnce()
+        {
+            var exception = Assert.Throws<ContainerException>(() =>
+            {
+                var plugin = new MockAppPlugin();
+                plugin.AddModule<MockPluginOneModule>();
+                plugin.AddModule<MockPluginOneModule>();
+            });
+
+            exception.ExceptionId.Should().Be("bootstrap-duplicate-module");
         }
     }
 }

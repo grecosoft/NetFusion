@@ -19,8 +19,6 @@ namespace NetFusion.Bootstrap.Container
     /// </summary>
     internal class CompositeAppBuilder : ICompositeAppBuilder
     {
-        private readonly IList<IContainerConfig> _containerConfigs;
-  
         // .NET Core Service Abstractions:
         public IServiceCollection ServiceCollection { get; }
         public IConfiguration Configuration { get; }
@@ -38,8 +36,6 @@ namespace NetFusion.Bootstrap.Container
         
         public CompositeAppBuilder(IServiceCollection serviceCollection, IConfiguration configuration)
         {
-            _containerConfigs = new List<IContainerConfig>();
-            
             ServiceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
             Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
@@ -57,33 +53,7 @@ namespace NetFusion.Bootstrap.Container
             ComposePlugins(typeResolver);
             ConfigurePlugins();
         }
-        
-        public void AddContainerConfig(IContainerConfig containerConfig)
-        {
-            if (containerConfig == null) throw new ArgumentNullException(nameof(containerConfig));
 
-            var configType = containerConfig.GetType();
-
-            IContainerConfig existingConfig = _containerConfigs.FirstOrDefault(c => c.GetType() == configType);
-            if (existingConfig != null)
-            {
-                throw new ContainerException($"Container configuration of type: {configType} already added.");
-            }
-            
-            _containerConfigs.Add(containerConfig);
-        }
-        
-        public T GetContainerConfig<T>() where T : IContainerConfig
-        {
-            var config = _containerConfigs.FirstOrDefault(c => c.GetType() == typeof(T));
-            if (config == null)
-            {
-                throw new ContainerException($"Container configuration of type: {typeof(T)} is not registered.");
-            }
-
-            return (T)config;
-        }
-        
         /// <summary>
         /// Returns types associated with a specific category of plugin.
         /// </summary>

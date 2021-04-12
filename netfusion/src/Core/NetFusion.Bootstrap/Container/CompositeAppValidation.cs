@@ -25,7 +25,6 @@ namespace NetFusion.Bootstrap.Container
             AssertPluginIdentity();
             AssertPluginMetadata();
             AssertPluginTypes();
-            AssertPluginConfigs();
         }
 
         private void AssertPluginIdentity()
@@ -38,7 +37,7 @@ namespace NetFusion.Bootstrap.Container
             {
                 throw new ContainerException(
                     "All plugins must have a PluginId specified.  See details for invalid plugin types.",
-                    "MissingPluginIds", invalidPluginTypes);
+                    "MissingPluginIds", invalidPluginTypes, "bootstrap-missing-plugin-id");
             }
 
             IEnumerable<Type> duplicatePluginIds = _plugins.WhereDuplicated(p => p.PluginId)
@@ -49,7 +48,7 @@ namespace NetFusion.Bootstrap.Container
             {
                 throw new ContainerException(
                     "Plug-in identity values must be unique.  See details for invalid plugin types.",
-                    "DuplicatePluginIds", duplicatePluginIds);
+                    "DuplicatePluginIds", duplicatePluginIds, "bootstrap-duplicate-plugin-id");
             }
         }
 
@@ -64,7 +63,7 @@ namespace NetFusion.Bootstrap.Container
             {
                 throw new ContainerException(
                     "All plugins must have AssemblyName and Name values.  See details for invalid plugin types.", 
-                    "InvalidPluginTypes", invalidPluginTypes);
+                    "InvalidPluginTypes", invalidPluginTypes, "bootstrap-missing-metadata");
             }
         }
 
@@ -75,29 +74,15 @@ namespace NetFusion.Bootstrap.Container
             
             if (hostPluginTypes.Empty())
             {
-                throw new ContainerException(
-                    "The composite application must have one host plugin type.");
+                throw new ContainerException("The composite application must have one host plugin type.",
+                    "bootstrap-missing-host-plugin");
             }
 
             if (hostPluginTypes.Length > 1)
             {
                 throw new ContainerException(
                     "There can only be one host plugin.  See details for invalid plugin types.", 
-                    "HostPluginTypes", hostPluginTypes);
-            }
-        }
-
-        private void AssertPluginConfigs()
-        {
-            var duplicateConfigTypes = _plugins.SelectMany(p => p.Configs)
-                .WhereDuplicated(c => c.GetType())
-                .ToArray();
-
-            if (duplicateConfigTypes.Any())
-            {
-                throw new ContainerException(
-                    "A plugin configuration can only be registered once. See details for invalid configuration types", 
-                    "DuplicateConfigTypes", duplicateConfigTypes);
+                    "HostPluginTypes", hostPluginTypes, "bootstrap-multiple-host-plugins");
             }
         }
     }
