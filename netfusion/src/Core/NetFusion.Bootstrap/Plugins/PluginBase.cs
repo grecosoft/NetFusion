@@ -57,7 +57,8 @@ namespace NetFusion.Bootstrap.Plugins
         {
             if (_configs.Any(c => c.GetType() == typeof(TConfig)))
             {
-                throw new ContainerException($"Plugin Configuration of type: {typeof(TConfig)} already added.");
+                throw new ContainerException($"Plugin Configuration of type: {typeof(TConfig)} already added.", 
+                    "bootstrap-duplicate-config");
             }
             
             _configs.Add(new TConfig());
@@ -85,7 +86,7 @@ namespace NetFusion.Bootstrap.Plugins
             if (config == null)
             {
                 throw new ContainerException(
-                    $"Plugin configuration of type: {typeof(T)} is not registered.");
+                    $"Plugin configuration of type: {typeof(T)} is not registered.", "missing-plugin-config");
             }
 
             return (T)config;

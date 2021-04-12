@@ -64,6 +64,17 @@ namespace NetFusion.Test.Container
             assert(_fixture.GetOrBuildContainer().AppBuilder);
             return this;
         }
+        
+        public ContainerAssert CompositeContainer(Action<CompositeContainer> assert)
+        {
+            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+                "Assert method not specified.");
+
+            _fixture.AssureContainerComposed();
+            
+            assert(_fixture.GetOrBuildContainer());
+            return this;
+        }
 
         /// <summary>
         /// Allows the unit-test to assert the state of the created composite-application.

@@ -14,7 +14,7 @@ namespace NetFusion.Test.Plugins
     {
         private string _pluginId = Guid.NewGuid().ToString();
         private string _name;
-        private readonly List<Type> _pluginTypes = new List<Type>();
+        private readonly List<Type> _pluginTypes = new();
 
         public override string PluginId => _pluginId;
         public override string Name => _name;

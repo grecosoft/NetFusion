@@ -82,16 +82,16 @@ namespace CoreTests.Test
                         // However, when testing a non-mocked plugin, the configuration
                         // is added internally and why you can arrange configurations.
                         var corePlugin = new MockCorePlugin();
-                        corePlugin.AddConfig<MockPluginConfig>();
+                        corePlugin.AddConfig<MockPluginConfigOne>();
                         
                         c.RegisterPlugin<MockHostPlugin>();
                         c.RegisterPlugins(corePlugin);
                     })
-                    .PluginConfig((MockPluginConfig config) =>
+                    .PluginConfig((MockPluginConfigOne config) =>
                     {
                         config.ConfigValue = "Arranged-Value";
                     }).Act.ComposeContainer()
-                    .Assert.Configuration((MockPluginConfig c) =>
+                    .Assert.Configuration((MockPluginConfigOne c) =>
                     {
                         c.ConfigValue.Should().Be("Arranged-Value");
                     });

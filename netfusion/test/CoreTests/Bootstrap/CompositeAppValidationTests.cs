@@ -1,5 +1,3 @@
-﻿using System.Linq;
-using CoreTests.Bootstrap.Mocks;
 using FluentAssertions;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Test.Container;
@@ -12,7 +10,7 @@ namespace CoreTests.Bootstrap
     /// The following tests the constraints that must exist when composing a
     /// CompositeContainer and its structure from a set of plugins. 
     /// </summary>
-    public class ContainerStructureTests
+    public class CompositeAppValidationTests
     {
         /// <summary>
         /// Not often used by plugin-implementations, but can be used for cases where
@@ -152,113 +150,6 @@ namespace CoreTests.Bootstrap
                         ex.ExceptionId.Should().Be("bootstrap-missing-host-plugin");
                     });
             });
-        }
-
-        /// <summary>
-        /// The composite application will be constructed from one plugin that hosts
-        /// the application.
-        /// </summary>
-        [Fact(DisplayName = "Composite Application has Application Host Plugin")]
-        public void Composite_Application_Has_AppHostPlugin()
-        {
-            ContainerFixture.Test(fixture =>
-            {
-                fixture.Arrange.Container(c =>
-                    {
-                        c.RegisterPlugin<MockHostPlugin>();
-                    })
-                    .Assert.CompositeAppBuilder(ca =>
-                    {
-                        ca.HostPlugin.Should().NotBeNull();
-                    });
-            });
-        }
-
-        /// <summary>
-        /// The composite application can be constructed from several application specific
-        /// plugin components.  These plugins contain the main components of the application.
-        /// </summary>
-        [Fact(DisplayName = "Composite Application can have Multiple Application Component Plug-Ins")]
-        public void CompositeApplication_CanHaveMultiple_AppComponentPlugins()
-        {
-            ContainerFixture.Test(fixture =>
-            {
-                fixture.Arrange.Container(c =>
-                    {
-                        c.RegisterPlugin<MockHostPlugin>();
-                        c.RegisterPlugins(new MockAppPlugin());
-                        c.RegisterPlugins(new MockAppPlugin());
-                    })
-                    .Assert.CompositeAppBuilder(ca =>
-                    {
-                        ca.AppPlugins.Should().HaveCount(2);
-                    });
-            });
-        }
-
-        /// <summary>
-        /// The composite application can be constructed from several core plugins.
-        /// These plugins provide reusable services for technical implementations
-        /// optionally used by other plugins.
-        /// </summary>
-        [Fact(DisplayName = "Composite Application can have Multiple Core Plugins")]
-        public void CompositeApplication_CanHaveMultiple_CorePlugins()
-        {
-            ContainerFixture.Test(fixture =>
-            {
-                fixture.Arrange.Container(c =>
-                    {
-                        c.RegisterPlugin<MockHostPlugin>();
-                        c.RegisterPlugins(new MockCorePlugin());
-                        c.RegisterPlugins(new MockCorePlugin());
-                    })
-                    .Assert.CompositeAppBuilder(ca =>
-                    {
-                        ca.CorePlugins.Should().HaveCount(2);
-                    });
-            });
-        }
-
-        /// <summary>
-        /// A plug-in can have multiple modules to separate and organize the implementation.
-        /// </summary>
-        [Fact(DisplayName = "Plug-In can have Multiple Modules")]
-        public void PluginCanHave_MultipleModules()
-        {
-            ContainerFixture.Test(fixture =>
-            {
-                fixture.Arrange.Container(c =>
-                    {
-                        c.RegisterPlugin<MockHostPlugin>();
-                        
-                        var testPlugin = new MockCorePlugin();
-                        testPlugin.AddModule<MockPluginTwoModule>();
-                        testPlugin.AddModule<MockPluginThreeModule>();
-
-                        c.RegisterPlugins(testPlugin);
-
-                    })
-                    .Assert.CompositeAppBuilder(ca =>
-                    {
-                        var pluginModules = ca.CorePlugins.First().Modules.ToArray();
-                        pluginModules.Should().HaveCount(2);
-                        pluginModules.OfType<MockPluginTwoModule>().Should().HaveCount(1);
-                        pluginModules.OfType<MockPluginThreeModule>().Should().HaveCount(1);
-                    });
-            });
-        }
-
-        [Fact]
-        public void PluginModule_CanOnlyBe_AddedOnce()
-        {
-            var exception = Assert.Throws<ContainerException>(() =>
-            {
-                var plugin = new MockAppPlugin();
-                plugin.AddModule<MockPluginOneModule>();
-                plugin.AddModule<MockPluginOneModule>();
-            });
-
-            exception.ExceptionId.Should().Be("bootstrap-duplicate-module");
         }
     }
 }

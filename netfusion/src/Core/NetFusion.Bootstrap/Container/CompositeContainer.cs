@@ -86,7 +86,7 @@ namespace NetFusion.Bootstrap.Container
             if (pluginConfig == null)
             {
                 throw new ContainerException(
-                    $"Plugin configuration of type: {typeof(T)} is not registered.");
+                    $"Plugin configuration of type: {typeof(T)} is not registered.", "missing-plugin-config");
             }
 
             return (T) pluginConfig;

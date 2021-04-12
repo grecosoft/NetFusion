@@ -117,6 +117,30 @@ namespace NetFusion.Test.Container
             return this;
         }
         
+        public ContainerAct OnCompositeContainer(Action<CompositeContainer> act)
+        {
+            if (_actedOn)
+            {
+                throw new InvalidOperationException("The container can only be acted on once.");
+            }
+
+            _actedOn = true;
+            try
+            {
+                act(_container);
+            }
+            catch (Exception ex)
+            {
+                _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
+            }
+
+            return this;
+        }
+        
         
         //-- Service Provider Assertions:
 

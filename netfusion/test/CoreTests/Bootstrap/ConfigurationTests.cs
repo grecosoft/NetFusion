@@ -25,13 +25,13 @@ namespace CoreTests.Bootstrap
                 fixture.Arrange.Container(c =>
                     {
                         var hostPlugin = new MockHostPlugin();
-                        hostPlugin.AddConfig<MockPluginConfig>();
+                        hostPlugin.AddConfig<MockPluginConfigOne>();
                         hostPlugin.AddModule<MockPluginOneModule>();
                         
                         c.RegisterPlugins(hostPlugin);
                     })
                     .Assert.PluginModule<MockPluginOneModule>(m => {
-                        m.Context.Plugin.GetConfig<MockPluginConfig>().Should().NotBeNull();
+                        m.Context.Plugin.GetConfig<MockPluginConfigOne>().Should().NotBeNull();
                     });
             });
         }
