@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Linq;
+﻿using System.Linq;
 using CoreTests.Bootstrap.Mocks;
 using FluentAssertions;
 using NetFusion.Bootstrap.Exceptions;
@@ -13,13 +12,13 @@ namespace CoreTests.Bootstrap
     /// The following tests the constraints that must exist when composing a
     /// CompositeContainer and its structure from a set of plugins. 
     /// </summary>
-    public class configPluginTests
+    public class CompositeContainerPluginTests
     {
         /// <summary>
         /// The composite application will be constructed from one plugin that hosts
         /// the application.
         /// </summary>
-        [Fact(DisplayName = "Composite Application has Application Host Plugin")]
+        [Fact]
         public void Composite_Application_Has_AppHostPlugin()
         {
             ContainerFixture.Test(fixture =>
@@ -37,9 +36,9 @@ namespace CoreTests.Bootstrap
 
         /// <summary>
         /// The composite application can be constructed from several application specific
-        /// plugin components.  These plugins contain the main components of the application.
+        /// plugin components.  These plugins contain the application specific components.
         /// </summary>
-        [Fact(DisplayName = "Composite Application can have Multiple Application Component Plug-Ins")]
+        [Fact]
         public void CompositeApplication_CanHaveMultiple_AppComponentPlugins()
         {
             ContainerFixture.Test(fixture =>
@@ -59,10 +58,10 @@ namespace CoreTests.Bootstrap
 
         /// <summary>
         /// The composite application can be constructed from several core plugins.
-        /// These plugins provide reusable services for technical implementations
+        /// These plugins provide reusable components for technical implementations
         /// optionally used by other plugins.
         /// </summary>
-        [Fact(DisplayName = "Composite Application can have Multiple Core Plugins")]
+        [Fact]
         public void CompositeApplication_CanHaveMultiple_CorePlugins()
         {
             ContainerFixture.Test(fixture =>
@@ -80,6 +79,11 @@ namespace CoreTests.Bootstrap
             });
         }
 
+        /// <summary>
+        /// If a plugin is added more than once to the CompositeContainer, it is ignored.
+        /// This allows a core plugin to register any dependent plugins without having to
+        /// worry if another core plugin already registered the dependent plugin.
+        /// </summary>
         [Fact]
         public void PluginIgnored_IfAdded_MoreThanOnce()
         {
@@ -101,7 +105,7 @@ namespace CoreTests.Bootstrap
         /// <summary>
         /// A plug-in can have multiple modules to separate and organize the implementation.
         /// </summary>
-        [Fact(DisplayName = "Plug-In can have Multiple Modules")]
+        [Fact]
         public void PluginCanHave_MultipleModules()
         {
             ContainerFixture.Test(fixture =>
@@ -127,6 +131,27 @@ namespace CoreTests.Bootstrap
             });
         }
         
+        /// <summary>
+        /// A plugin module of a specific type can only be registered once with a plugin.
+        /// </summary>
+        [Fact]
+        public void PluginModule_CanOnlyBe_AddedOnce()
+        {
+            var exception = Assert.Throws<ContainerException>(() =>
+            {
+                var plugin = new MockAppPlugin();
+                plugin.AddModule<MockPluginOneModule>();
+                plugin.AddModule<MockPluginOneModule>();
+            });
+
+            exception.ExceptionId.Should().Be("bootstrap-duplicate-module");
+        }
+        
+        /// <summary>
+        /// Plugins can register plugin-configurations used by the host to specify plugin specific settings.
+        /// The CompositeContainer allows referencing any plugin configuration across all plugins registered
+        /// with the container.
+        /// </summary>
         [Fact]
         public void CanReference_AnyPluginConfiguration()
         {
@@ -153,6 +178,10 @@ namespace CoreTests.Bootstrap
             });
         }
         
+        /// <summary>
+        /// If a requested plugin configuration is not registered, the composite
+        /// container will raise an exception.
+        /// </summary>
         [Fact]
         public void ReferencingAny_PluginConfiguration_MustExist()
         {
@@ -177,6 +206,9 @@ namespace CoreTests.Bootstrap
             });
         }
         
+        /// <summary>
+        /// A given configuration can only be registered once with the plugin.
+        /// </summary>
         [Fact]
         public void PluginConfig_CanOnlyBe_AddedOnce()
         {
@@ -190,6 +222,25 @@ namespace CoreTests.Bootstrap
             exception.ExceptionId.Should().Be("bootstrap-duplicate-config");
         }
 
+        /// <summary>
+        /// If a reference to a specific plugin is available, it can be used
+        /// to request a registered configuration specific to the plugin. 
+        /// </summary>
+        [Fact]
+        public void ExistingPluginConfig_CanBe_Requested()
+        {
+            var plugin = new MockAppPlugin();
+            plugin.AddConfig<MockPluginConfigOne>();
+            
+            var config = plugin.GetConfig<MockPluginConfigOne>();
+            config.Should().NotBeNull();
+        }
+        
+        /// <summary>
+        /// If a reference to a plugin is used to request a specific
+        /// plugin configuration that does not exist, an exception is
+        /// raised.
+        /// </summary>
         [Fact]
         public void Requested_PluginConfig_MustExist()
         {
@@ -200,29 +251,6 @@ namespace CoreTests.Bootstrap
             });
 
             exception.ExceptionId.Should().Be("missing-plugin-config");
-        }
-        
-        [Fact]
-        public void ExistingPluginConfig_CanBe_Requested()
-        {
-            var plugin = new MockAppPlugin();
-            plugin.AddConfig<MockPluginConfigOne>();
-            
-            var config = plugin.GetConfig<MockPluginConfigOne>();
-            config.Should().NotBeNull();
-        }
-
-        [Fact]
-        public void PluginModule_CanOnlyBe_AddedOnce()
-        {
-            var exception = Assert.Throws<ContainerException>(() =>
-            {
-                var plugin = new MockAppPlugin();
-                plugin.AddModule<MockPluginOneModule>();
-                plugin.AddModule<MockPluginOneModule>();
-            });
-
-            exception.ExceptionId.Should().Be("bootstrap-duplicate-module");
         }
     }
 }

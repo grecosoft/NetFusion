@@ -12,13 +12,13 @@ namespace CoreTests.Bootstrap
     /// all provided configurations are associated with the plug-in defining them.  The configurations 
     /// can be referenced within the plug-in modules.
     /// </summary>
-    public class ConfigurationTests
+    public class PluginModuleTests
     {
         /// <summary>
         /// When developing a plug-in that has associated configurations, they are most often
         /// accessed from within one or more modules.
         /// </summary>
-        [Fact(DisplayName = "Plug-in Developer can access Configuration from Module")]
+        [Fact]
         public void PluginDeveloper_CanAccess_ConfigurationFromModule()
         {
             ContainerFixture.Test(fixture => {

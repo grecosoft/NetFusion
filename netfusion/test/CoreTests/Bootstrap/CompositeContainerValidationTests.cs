@@ -10,7 +10,7 @@ namespace CoreTests.Bootstrap
     /// The following tests the constraints that must exist when composing a
     /// CompositeContainer and its structure from a set of plugins. 
     /// </summary>
-    public class CompositeAppValidationTests
+    public class CompositeContainerValidationTests
     {
         /// <summary>
         /// Not often used by plugin-implementations, but can be used for cases where
@@ -18,7 +18,7 @@ namespace CoreTests.Bootstrap
         /// a specific application.  In this case, the PluginId of the host plugin is
         /// most often used.
         /// </summary>
-        [Fact(DisplayName = "All Plugin Definitions must have and Identity Value")]
+        [Fact]
         public void AllPluginDefinitions_MustHaveIdentityValue()
         {
             ContainerFixture.Test(fixture =>
@@ -39,7 +39,7 @@ namespace CoreTests.Bootstrap
             });
         }
 
-        [Fact(DisplayName = "Plugin Identity Values must be Unique")]
+        [Fact]
         public void PluginIdsValues_MustBeUnique()
         {
             ContainerFixture.Test(fixture =>
@@ -65,7 +65,7 @@ namespace CoreTests.Bootstrap
         /// <summary>
         /// Each plug-in has a name that is used when logging the composite container structure.
         /// </summary>
-        [Fact(DisplayName = "Plugin Name must be Specified")]
+        [Fact]
         public void PluginName_MustBeSpecified()
         {
             ContainerFixture.Test(fixture =>
@@ -91,7 +91,7 @@ namespace CoreTests.Bootstrap
         /// the ITypeResolver interface.  The type resolver specifies the name of the
         /// type's assembly which is a required property..
         /// </summary>
-        [Fact(DisplayName = "Plugin Assembly Name must be Specified")]
+        [Fact]
         public void PluginAssemblyName_MustBeSpecified()
         {
             ContainerFixture.Test(fixture =>
@@ -112,7 +112,7 @@ namespace CoreTests.Bootstrap
         /// <summary>
         /// The composite application must have one and only one application host plug-in.
         /// </summary>
-        [Fact(DisplayName = "Composite Application cannot have multiples Host Plugins")]
+        [Fact]
         public void CompositeApplication_CannotHaveMultiple_AppHostPlugins()
         {
             ContainerFixture.Test(fixture =>
@@ -135,7 +135,7 @@ namespace CoreTests.Bootstrap
         /// <summary>
         /// The composite application must have one application host plug-in.
         /// </summary>
-        [Fact(DisplayName = "Composite Application must have one Host Plugin")]
+        [Fact]
         public void CompositeApplication_MustHaveOne_AppHostPlugin()
         {
             ContainerFixture.Test(fixture =>
