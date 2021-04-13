@@ -10,7 +10,29 @@ namespace CoreTests.Bootstrap
 {
     public class ContainerExecutionTests
     {
-        [Fact(DisplayName = "Container can only be Started Once")]
+        /// <summary>
+        /// When developing a plug-in that has associated configurations, they are most often
+        /// accessed from within one or more modules.
+        /// </summary>
+        [Fact]
+        public void Module_CanAccess_ConfigurationFromPlugin()
+        {
+            ContainerFixture.Test(fixture => {
+                fixture.Arrange.Container(c =>
+                    {
+                        var hostPlugin = new MockHostPlugin();
+                        hostPlugin.AddConfig<MockPluginConfigOne>();
+                        hostPlugin.AddModule<MockPluginOneModule>();
+                        
+                        c.RegisterPlugins(hostPlugin);
+                    })
+                    .Assert.PluginModule<MockPluginOneModule>(m => {
+                        m.Context.Plugin.GetConfig<MockPluginConfigOne>().Should().NotBeNull();
+                    });
+            });
+        }
+        
+        [Fact]
         public void Container_CanOnlyBeStartedOnce()
         {
             ContainerFixture.Test(fixture =>
@@ -38,7 +60,7 @@ namespace CoreTests.Bootstrap
         /// this is where a service bus plug-in would create the needed queues
         /// and subscribe to consumers.
         /// </summary>
-        [Fact(DisplayName = "When Container Started each Plug-in Module is Started")]
+        [Fact]
         public void WhenAppContainerStarted_EachPluginModuleStarted()
         {
             ContainerFixture.Test(fixture =>
@@ -69,7 +91,7 @@ namespace CoreTests.Bootstrap
         /// When the application container is stopped, each plug-in module
         /// will be stopped.
         /// </summary>
-        [Fact(DisplayName = "When Container stopped plug-in Modules are stopped")]
+        [Fact]
         public void AppContainerStopped_PluginModules_AreStopped()
         {
             ContainerFixture.Test(fixture =>
@@ -98,7 +120,7 @@ namespace CoreTests.Bootstrap
         /// Once the application container is disposed, the associated service
         /// provider can no longer be accessed.
         /// </summary>
-        [Fact(DisplayName = "Stopped Container cannot have Service Provider accessed")]
+        [Fact]
         public void StoppedAppContainer_CannotHave_ServicesAccessed()
         {
             ContainerFixture.Test(fixture =>

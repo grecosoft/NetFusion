@@ -7,31 +7,52 @@ using Xunit;
 namespace CoreTests.Bootstrap
 {
     /// <summary>
-    /// The host application can register container configurations during the bootstrap process.  
-    /// All container configurations belong to a specific plug-in.  When the application is composed, 
-    /// all provided configurations are associated with the plug-in defining them.  The configurations 
-    /// can be referenced within the plug-in modules.
+    /// After a composite container is composed, a service named ICompositeApp is added to the
+    /// service collection representing the application bootstrapped from the registered plugins.
     /// </summary>
-    public class PluginModuleTests
+    public class CompositeAppTests
     {
-        /// <summary>
-        /// When developing a plug-in that has associated configurations, they are most often
-        /// accessed from within one or more modules.
-        /// </summary>
         [Fact]
-        public void PluginDeveloper_CanAccess_ConfigurationFromModule()
+        public void CompositeApp_Provides_SummaryOfHost()
         {
-            ContainerFixture.Test(fixture => {
+            ContainerFixture.Test(fixture =>
+            {
+                var hostPlugin = new MockHostPlugin();
+                fixture.Arrange.Container(c => 
+                {
+                    c.RegisterPlugins(hostPlugin);
+                })
+                .Assert.Application(ca =>
+                {
+                    ca.HostPlugin.Should().NotBeNull();
+                    ca.HostPlugin.PluginId.Should().Be(hostPlugin.PluginId);
+                    ca.HostPlugin.Name.Should().Be(hostPlugin.Name);
+                    ca.HostPlugin.AssemblyName.Should().Be(hostPlugin.AssemblyName);
+                    ca.HostPlugin.AssemblyVersion.Should().Be(hostPlugin.AssemblyVersion);
+                });
+            });
+        }
+
+        [Fact]
+        public void CompositeApp_Provides_CompositeLog()
+        {
+            ContainerFixture.Test(fixture =>
+            {
                 fixture.Arrange.Container(c =>
                     {
-                        var hostPlugin = new MockHostPlugin();
-                        hostPlugin.AddConfig<MockPluginConfigOne>();
-                        hostPlugin.AddModule<MockPluginOneModule>();
-                        
-                        c.RegisterPlugins(hostPlugin);
+                        c.RegisterPlugin<MockHostPlugin>();
+                        c.RegisterPlugin<MockAppPlugin>();
+
+                        var corePlugin = new MockCorePlugin();
+                        corePlugin.AddModule<MockPluginOneModule>();
+                        c.RegisterPlugins(corePlugin);
                     })
-                    .Assert.PluginModule<MockPluginOneModule>(m => {
-                        m.Context.Plugin.GetConfig<MockPluginConfigOne>().Should().NotBeNull();
+                    .Act.OnApplication(a => a.Start())
+                    .Assert.Application(ca =>
+                    {
+                        var log = ca.Log;
+
+                        log.Should().NotBeNull();
                     });
             });
         }
