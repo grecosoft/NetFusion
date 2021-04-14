@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using NetFusion.Common.Extensions;
 using Xunit;
 
@@ -7,19 +8,36 @@ namespace CommonTests.Extensions
     public class ObjectTests
     {
         [Fact]
-        public void ToDictionary()
+        public void CanSerializeObject_To_IndentedJson()
         {
-            var obj = new
+            var customer = new Customer
             {
-                FirstValue = 10,
-                SecondValue = "TestValue",
+                Id = Guid.NewGuid().ToString(),
+                FirstName = "Alex",
+                LastName = "Green"
             };
 
-            var objDictionary = obj.ToDictionary();
-            objDictionary.Should().HaveCount(2);
-            objDictionary.Keys.Should().Contain("FirstValue", "SecondValue");
-            objDictionary["FirstValue"].Should().Be(10);
-            objDictionary["SecondValue"].Should().Be("TestValue");
+            customer.ToIndentedJson().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public void CanSerializeObject_to_Json()
+        {
+            var customer = new Customer
+            {
+                Id = Guid.NewGuid().ToString(),
+                FirstName = "Alex",
+                LastName = "Green"
+            };
+
+            customer.ToJson().Should().NotBeNullOrEmpty();
+        }
+
+        private class Customer
+        {
+            public string Id { get; init; }
+            public string FirstName { get; init; }
+            public string LastName { get; init; }
         }
     }
 }
