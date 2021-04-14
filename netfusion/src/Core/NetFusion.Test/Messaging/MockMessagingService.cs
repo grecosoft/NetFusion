@@ -11,17 +11,17 @@ namespace NetFusion.Test.Messaging
     /// <summary>
     /// Implementation of the IMessagingService that can be passed to a dependent component that is
     /// under test.  This mock implementation allows known expected response to be registered for
-    /// commands.  Also, the received Command, Queries, and Domain events are recorded so they can
+    /// commands.  Also, the received Commands, Queries, and Domain events are recorded so they can
     /// be asserted by the unit-test if needed.
     /// </summary>
     public class MockMessagingService : IMessagingService
     {
         // Records the received requests made to the service:
-        private readonly List<object> _receivedRequests = new List<object>();
+        private readonly List<object> _receivedRequests = new();
         
         // Contains known responses for commands and queries.
-        private readonly Dictionary<Type, object> _commandResponses = new Dictionary<Type, object>();
-        private readonly Dictionary<Type, object> _queryResponses = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object> _commandResponses = new();
+        private readonly Dictionary<Type, object> _queryResponses = new();
         
         /// <summary>
         /// Contains all the received requests (Commands, Domain Events, and Queries).  This collection

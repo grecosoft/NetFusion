@@ -4,7 +4,7 @@
 
     /// <summary>
     /// Mock application component plug-in that can be used for testing.
-    /// The application container can have multiple associated application
+    /// The composite container can have multiple associated application
     /// components.  Components in this type of plug-in are specific 
     /// to the domain of the application.  Domain Entities, Aggregates, 
     /// and Services such examples.
