@@ -9,14 +9,14 @@ namespace CommonTests.Extensions.Reflection
 {
     public class GenericTypeTests
     {
-        [Fact (DisplayName = "Given Type can determine Open Generic")]
+        [Fact]
         public void GivenType_CanDetermineOpenGeneric()
         {
             typeof(List<>).IsOpenGenericType().Should().BeTrue();
             typeof(List<int>).IsOpenGenericType().Should().BeFalse();
         }
 
-        [Fact (DisplayName = "Gen Type can determine Closed Generic")]
+        [Fact]
         public void GivenType_CanDetermineClosedGeneric()
         {
             var closedType = typeof(Tuple<int, string, int>);
@@ -28,7 +28,7 @@ namespace CommonTests.Extensions.Reflection
             closedType.IsClosedGenericTypeOf(openType).Should().BeFalse();
         }
 
-        [Fact (DisplayName = "Given Type can determine Close Generic of Assignable Param. Types")]
+        [Fact]
         public void GivenType_CanDetermineClosedGenericOfAssignableParamTypes()
         {
             var closedType = typeof(Tuple<int, string, int>);
@@ -47,7 +47,7 @@ namespace CommonTests.Extensions.Reflection
               .Should().BeTrue();
         }
 
-        [Fact (DisplayName = "Given Types can determine those Implementing Closed Generic Interface of Assignable Param. Types.")]
+        [Fact]
         public void GivenTypes_CanDetermineThoseImplementingClosedGenericInterfacesOfAssignableParamTypes()
         {
             var closedTypes = new[] { typeof(Dictionary<string, int>), typeof(List<int>) };

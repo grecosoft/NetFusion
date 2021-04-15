@@ -21,9 +21,7 @@ namespace NetFusion.Common.Extensions.Reflection
             if (childType == null) throw new ArgumentNullException(nameof(childType));
             if (parentType == null) throw new ArgumentNullException(nameof(parentType));
 
-            var childTypeInfo = childType.GetTypeInfo();
-
-            return !childTypeInfo.IsAbstract && childType.IsDerivedFrom(parentType);
+            return !childType.IsAbstract && childType.IsDerivedFrom(parentType);
         }
 
         /// <summary>
@@ -100,14 +98,13 @@ namespace NetFusion.Common.Extensions.Reflection
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            if (! typeof(T).GetTypeInfo().IsInterface)
+            if (! typeof(T).IsInterface)
             {
                 throw new InvalidOperationException(
                     "The specified generic parameter must be an interface type.");
             }
 
-            return type.GetTypeInfo()
-                .GetInterfaces()
+            return type.GetInterfaces()
                 .Where(mi => mi.IsDerivedFrom<T>());
         }
 
@@ -119,9 +116,8 @@ namespace NetFusion.Common.Extensions.Reflection
         public static bool HasDefaultConstructor(this Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
-
-            var typeInfo = type.GetTypeInfo();
-            return typeInfo.IsValueType || typeInfo.GetConstructor(Type.EmptyTypes) != null;
+            
+            return type.IsValueType || type.GetConstructor(Type.EmptyTypes) != null;
         }
 
         /// <summary>
