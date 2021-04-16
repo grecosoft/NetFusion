@@ -128,7 +128,7 @@ namespace NetFusion.Messaging.Internal
 
         private static Type[] GetOptionalRuleTypes(MethodInfo methodInfo)
         {
-            return methodInfo.GetCustomAttribute<ApplyDispatchRuleAttribute>()?.RuleTypes ?? new Type[] { };
+            return methodInfo.GetCustomAttribute<ApplyDispatchRuleAttribute>()?.RuleTypes ?? Array.Empty<Type>();
         }
 
         private static RuleApplyTypes GetOptionalRuleApplyType(MethodInfo methodInfo)

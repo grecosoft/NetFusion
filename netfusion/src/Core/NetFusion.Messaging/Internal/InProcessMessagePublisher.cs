@@ -40,7 +40,7 @@ namespace NetFusion.Messaging.Internal
 
         // Not used by the implementation, but other plug-ins can use the integration type to apply
         // a subset of the publishers.  i.e. In a unit-of-work, you might want to deliver domain-events
-        // in-process before doing so for broker based events.
+        // in-process before doing so for external integration based events.
         public override IntegrationTypes IntegrationType => IntegrationTypes.Internal;
 
         public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
@@ -50,11 +50,9 @@ namespace NetFusion.Messaging.Internal
             {
                 return;
             }
-            
-            var msgLog = new MessageLog(message, LogContextType.PublishedMessage);
-            msgLog.SentHint("publish-inprocess");
-            AddDispatchersToLog(msgLog, dispatchers);
-            
+
+            var msgLog = CreateLogMessage(message, dispatchers);
+
             // Execute all handlers and return the task for the caller to await.
             try
             {
@@ -116,7 +114,7 @@ namespace NetFusion.Messaging.Internal
         private static void AssertMessageDispatchers(IMessage message, MessageDispatchInfo[] dispatchers)
         {
             // There are no constraints on the number of handlers for domain-events.
-            if (! (message is ICommand command))
+            if (message is not ICommand command)
             {
                 return;
             }
@@ -142,6 +140,27 @@ namespace NetFusion.Messaging.Internal
         
         // ----------------------------- [Logging] -----------------------------
 
+        private MessageLog CreateLogMessage(IMessage message, MessageDispatchInfo[] dispatchers)
+        {
+            var msgLog = new MessageLog(message, LogContextType.PublishedMessage);
+            msgLog.SentHint("publish-in-process");
+            AddDispatchersToLog(msgLog, dispatchers);
+
+            return msgLog;
+        }
+        
+        private void AddDispatchersToLog(MessageLog msgLog, IEnumerable<MessageDispatchInfo> dispatchers)
+        {
+            if (! _messageLogger.IsLoggingEnabled) return;
+            
+            msgLog.AddLogDetail("In-Process", "Message dispatchers for message.");
+            foreach (MessageDispatchInfo dispatcher in dispatchers)
+            {
+                msgLog.AddLogDetail("Handler Class", dispatcher.ConsumerType.FullName);
+                msgLog.AddLogDetail("Handler Method", dispatcher.MessageHandlerMethod.Name);
+            }
+        }
+        
         private void LogMessageDispatchers(MessageDispatchInfo[] dispatchers, IMessage message)
         {
             _logger.LogDetails(LogLevel.Debug, "Dispatching Message {MessageType}",
@@ -167,18 +186,7 @@ namespace NetFusion.Messaging.Internal
                 .ToArray();
         }
         
-        private void AddDispatchersToLog(MessageLog msgLog, IEnumerable<MessageDispatchInfo> dispatchers)
-        {
-            if (! _messageLogger.IsLoggingEnabled) return;
-            
-            msgLog.AddLogDetail("In-Process", "Message dispatchers for message.");
-            foreach (MessageDispatchInfo dispatcher in dispatchers)
-            {
-                msgLog.AddLogDetail("Handler Class", dispatcher.ConsumerType.FullName);
-                msgLog.AddLogDetail("Handler Method", dispatcher.MessageHandlerMethod.Name);
-            }
-        }
-        
+
         // ----------------------------- [Exception Handling] -----------------------------
         
         private static MessageDispatchException GetDispatchException(TaskListItem<MessageDispatchInfo> taskItem)
