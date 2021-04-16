@@ -21,32 +21,32 @@ namespace NetFusion.Messaging.Internal
             _queryDispatcher = queryDispatcher;
         }
 
-        public Task PublishAsync(IDomainEvent domainEvent, 
-            CancellationToken cancellationToken = default, 
-            IntegrationTypes integrationType = IntegrationTypes.All)
+        public Task PublishAsync(IDomainEvent domainEvent,
+            IntegrationTypes integrationType = IntegrationTypes.All,
+            CancellationToken cancellationToken = default)
         {
-            return _messageDispatcher.PublishAsync(domainEvent, cancellationToken, integrationType);
+            return _messageDispatcher.PublishAsync(domainEvent, integrationType, cancellationToken);
         }
 
-        public Task PublishAsync(IEventSource eventSource, 
-            CancellationToken cancellationToken = default, 
-            IntegrationTypes integrationType = IntegrationTypes.All)
+        public Task PublishAsync(IEventSource eventSource,
+            IntegrationTypes integrationType = IntegrationTypes.All,
+            CancellationToken cancellationToken = default)
         {
-            return _messageDispatcher.PublishAsync(eventSource, cancellationToken, integrationType);
+            return _messageDispatcher.PublishAsync(eventSource, integrationType, cancellationToken);
         }
 
-        public Task SendAsync(ICommand command, 
-            CancellationToken cancellationToken = default,
-            IntegrationTypes integrationType = IntegrationTypes.All)
+        public Task SendAsync(ICommand command,
+            IntegrationTypes integrationType = IntegrationTypes.All,
+            CancellationToken cancellationToken = default)
         {
-            return _messageDispatcher.SendAsync(command, cancellationToken, integrationType);
+            return _messageDispatcher.SendAsync(command, integrationType, cancellationToken);
         }
 
-        public Task<TResult> SendAsync<TResult>(ICommand<TResult> command, 
-            CancellationToken cancellationToken = default,
-            IntegrationTypes integrationType = IntegrationTypes.All)
+        public Task<TResult> SendAsync<TResult>(ICommand<TResult> command,
+            IntegrationTypes integrationType = IntegrationTypes.All,
+            CancellationToken cancellationToken = default)
         {
-            return _messageDispatcher.SendAsync(command, cancellationToken, integrationType);
+            return _messageDispatcher.SendAsync(command, integrationType, cancellationToken);
         }
 
         public Task<TResult> DispatchAsync<TResult>(IQuery<TResult> query,

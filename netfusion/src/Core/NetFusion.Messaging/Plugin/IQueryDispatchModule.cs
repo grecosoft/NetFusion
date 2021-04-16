@@ -1,6 +1,7 @@
 ﻿using System;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Messaging.Internal;
+using NetFusion.Messaging.Plugin.Configs;
 
 namespace NetFusion.Messaging.Plugin
 {
@@ -9,6 +10,8 @@ namespace NetFusion.Messaging.Plugin
     /// </summary>
     public interface IQueryDispatchModule : IPluginModuleService
     {
+        public QueryDispatchConfig DispatchConfig { get; }
+        
         /// <summary>
         /// Returns information of how a given query should be dispatched.
         /// </summary>

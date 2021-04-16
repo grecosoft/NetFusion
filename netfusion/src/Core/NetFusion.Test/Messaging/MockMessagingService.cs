@@ -106,9 +106,9 @@ namespace NetFusion.Test.Messaging
         
         //-- Mocked Implementation of IMessagingServices:
         
-        Task IMessagingService.SendAsync(ICommand command, 
-            CancellationToken cancellationToken,
-            IntegrationTypes integrationType)
+        Task IMessagingService.SendAsync(ICommand command,
+            IntegrationTypes integrationType,
+            CancellationToken cancellationToken)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
             
@@ -116,9 +116,9 @@ namespace NetFusion.Test.Messaging
             return Task.CompletedTask;
         }
 
-        Task<TResult> IMessagingService.SendAsync<TResult>(ICommand<TResult> command, 
-            CancellationToken cancellationToken,
-            IntegrationTypes integrationType)
+        Task<TResult> IMessagingService.SendAsync<TResult>(ICommand<TResult> command,
+            IntegrationTypes integrationType,
+            CancellationToken cancellationToken)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
             
@@ -128,9 +128,9 @@ namespace NetFusion.Test.Messaging
             return Task.FromResult((TResult)response);
         }
 
-        Task IMessagingService.PublishAsync(IDomainEvent domainEvent, 
-            CancellationToken cancellationToken,
-            IntegrationTypes integrationType)
+        Task IMessagingService.PublishAsync(IDomainEvent domainEvent,
+            IntegrationTypes integrationType,
+            CancellationToken cancellationToken)
         {
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
             
@@ -138,9 +138,9 @@ namespace NetFusion.Test.Messaging
             return Task.CompletedTask;
         }
         
-        Task IMessagingService.PublishAsync(IEventSource eventSource, 
-            CancellationToken cancellationToken,
-            IntegrationTypes integrationType)
+        Task IMessagingService.PublishAsync(IEventSource eventSource,
+            IntegrationTypes integrationType,
+            CancellationToken cancellationToken)
         {
             if (eventSource == null) throw new ArgumentNullException(nameof(eventSource));
             

@@ -12,10 +12,10 @@ namespace NetFusion.Messaging.Internal
 {
     /// <summary>
     /// Contains information used to invoke message handlers for a given message type at runtime.
-    /// This information is gathered by the plug-in module during the bootstrap process.  Other
-    /// plug-ins requiring the publishing of messages can also access this information.  Other 
-    /// plug-ins can use metadata attributes specific to their plug-in to further filter the 
-    /// consumer handlers that should be invoked.
+    /// This information is gathered by the plugin module during the bootstrap process.
+    /// Other plugins requiring the publishing of messages can also access this information.
+    /// These other plugins can use metadata attributes, specific to their plug-in, to further
+    /// filter the consumer handlers that should be invoked.
     /// </summary>
     public class MessageDispatchInfo
     {
@@ -184,7 +184,7 @@ namespace NetFusion.Messaging.Internal
         {
             // If we are processing a result for a command, the result
             // needs to be set.  
-            if (! (message is ICommandResultState resultState))
+            if (message is not ICommandResultState resultState)
             {
                 return null;
             }

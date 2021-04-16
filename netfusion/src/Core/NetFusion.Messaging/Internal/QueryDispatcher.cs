@@ -28,10 +28,10 @@ namespace NetFusion.Messaging.Internal
         // Dependent modules.
         private readonly IQueryDispatchModule _dispatchModule;
 
-        public QueryDispatcher(ILogger<QueryDispatcher> logger,
+        public QueryDispatcher(
+            ILogger<QueryDispatcher> logger,
             IServiceProvider services,
             IQueryDispatchModule dispatchModule,
-            IQueryFilterModule filterModule,
             IEnumerable<IQueryFilter> queryFilters)
         {
             _logger = logger;
@@ -40,7 +40,7 @@ namespace NetFusion.Messaging.Internal
             
             // The order in which the filters are called should not matter.
             // However,they are applied in the order configured.
-            _queryFilters = queryFilters.OrderByMatchingType(filterModule.QueryFilterTypes);
+            _queryFilters = queryFilters.OrderByMatchingType(_dispatchModule.DispatchConfig.QueryFilters);
         }
 
         public async Task<TResult> Dispatch<TResult>(IQuery<TResult> query, 
@@ -64,7 +64,7 @@ namespace NetFusion.Messaging.Internal
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unexpected Exception dispatching query.");
-                throw;
+                throw new QueryDispatchException("Exception dispatching query.", ex);
             }
 
             return query.Result;
