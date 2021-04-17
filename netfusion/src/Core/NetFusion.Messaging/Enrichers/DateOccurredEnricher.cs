@@ -10,6 +10,8 @@ namespace NetFusion.Messaging.Enrichers
     /// </summary>
     public class DateOccurredEnricher : MessageEnricher
     {
+        // The MessageEnricherModule registers all enrichers with a scoped lifetime.  Therefore,
+        // the below date value will be the same for all published messages during a given request.
         private readonly DateTime _scopedDateReceived = DateTime.UtcNow;
         
         public override Task EnrichAsync(IMessage message)

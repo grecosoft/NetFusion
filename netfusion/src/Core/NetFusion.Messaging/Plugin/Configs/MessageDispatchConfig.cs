@@ -14,8 +14,8 @@ namespace NetFusion.Messaging.Plugin.Configs
     {
         // The list of message publishers that can handle message delivery.  
         // The default publisher dispatches messages to in-process event handlers.
-        private readonly List<Type> _messagePublisherTypes = new List<Type> { typeof(InProcessMessagePublisher) };
-        private readonly List<Type> _messageEnrichers = new List<Type>();
+        private readonly List<Type> _messagePublisherTypes = new() { typeof(InProcessMessagePublisher) };
+        private readonly List<Type> _messageEnrichers = new();
 
         public MessageDispatchConfig()
         {

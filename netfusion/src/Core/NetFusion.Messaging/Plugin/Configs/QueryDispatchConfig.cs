@@ -11,7 +11,7 @@ namespace NetFusion.Messaging.Plugin.Configs
     /// </summary>
     public class QueryDispatchConfig : IPluginConfig
     {
-        private readonly List<Type> _queryFilterTypes = new List<Type>();
+        private readonly List<Type> _queryFilterTypes = new();
 
         /// <summary>
         /// The query filter types that should be executed when dispatching 

@@ -21,8 +21,7 @@ namespace NetFusion.Messaging
             IntegrationTypes integrationType = IntegrationTypes.All, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Sends a command to all associated consumer message handlers and returns 
-        /// the consumer's response.</summary>
+        /// Sends a command to all associated consumer message and returns the result.</summary>
         /// <param name="command">The command to be published.</param>
         /// <param name="integrationType">Specifies the scope to which publishers send messages to subscribers.</param>
         /// <param name="cancellationToken">Optional cancellation token passed to message handler.</param>
@@ -54,9 +53,8 @@ namespace NetFusion.Messaging
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Dispatches a query to its corresponding consumer.  When dispatching the
-        /// query, it passes through a set of pre/post filters that can alter the
-        /// query or consumer returned result.
+        /// Dispatches a query to its corresponding consumer.  When dispatching the query, it passes through a set
+        /// of pre/post filters that can alter the query or consumer returned result.
         /// </summary>
         /// <typeparam name="TResult">The type of the query result.</typeparam>
         /// <param name="query">The query to be dispatched to its corresponding consumer.</param>

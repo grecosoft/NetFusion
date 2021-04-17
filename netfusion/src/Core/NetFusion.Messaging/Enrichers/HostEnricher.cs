@@ -7,7 +7,7 @@ namespace NetFusion.Messaging.Enrichers
 {
     /// <summary>
     /// Enricher that tags all messages with the name and identity
-    /// of the Microservice where the message was published.
+    /// of the Microservice from where the message was published.
     /// </summary>
     public class HostEnricher : MessageEnricher
     {

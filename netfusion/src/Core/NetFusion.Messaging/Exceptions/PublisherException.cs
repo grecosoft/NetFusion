@@ -15,7 +15,7 @@ namespace NetFusion.Messaging.Exceptions
     public class PublisherException : NetFusionException
     {
         public IMessage PublishedMessage { get; }
-        public IEnumerable<Exception> ExceptionDetails { get; }
+        public IEnumerable<NetFusionException> ExceptionDetails { get; }
         
         /// <summary>
         /// Publisher Exception.
@@ -59,7 +59,7 @@ namespace NetFusion.Messaging.Exceptions
         /// <param name="publisherExceptionDetails">List of exceptions when publishing message to one 
         /// or more publishers.</param>
         public PublisherException(string message, IMessage publishedMessage,
-            IEnumerable<PublisherException> exceptionDetails) : base(message)
+            IEnumerable<NetFusionException> exceptionDetails) : base(message)
         {
             PublishedMessage = publishedMessage ?? throw new ArgumentNullException(nameof(publishedMessage));
             ExceptionDetails = exceptionDetails ?? throw new ArgumentNullException(nameof(exceptionDetails));
@@ -74,7 +74,7 @@ namespace NetFusion.Messaging.Exceptions
         /// <param name="eventSource">The entity with associated domain-events.</param>
         /// <param name="exceptionDetails">List exceptions when publishing message to one or more publishers.</param>
         public PublisherException(string message, IEventSource eventSource,
-            IEnumerable<PublisherException> exceptionDetails) : base(message)
+            IEnumerable<NetFusionException> exceptionDetails) : base(message)
         {
             if (eventSource == null) throw new ArgumentNullException(nameof(eventSource));
 

@@ -53,8 +53,8 @@ namespace NetFusion.Messaging.Exceptions
             if (innerException is PublisherException publisherEx)
             {
                 Details["ExceptionDetails"] = publisherEx.PublishedMessage == null
-                    ? "Error Publishing Message"
-                    : $"Error Publishing Message {publisherEx.PublishedMessage.GetType()}";
+                    ? "Error Publishing Child Message"
+                    : $"Error Publishing Child Message of Type: {publisherEx.PublishedMessage.GetType()}";
 
                 return;
             }
