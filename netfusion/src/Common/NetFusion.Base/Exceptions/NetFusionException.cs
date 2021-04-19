@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NetFusion.Base.Exceptions
 {
@@ -9,6 +10,8 @@ namespace NetFusion.Base.Exceptions
     public class NetFusionException : Exception
     {
         public string ExceptionId { get; }
+        
+        public IEnumerable<Exception> ChildExceptions { get; protected set; }
         
         /// <summary>
         /// Dictionary of key/value pairs containing details of the exception. 
@@ -46,6 +49,15 @@ namespace NetFusion.Base.Exceptions
             Details["Message"] = message;
 
             AddExceptionDetails(innerException, addToDetails);
+        }
+
+        protected NetFusionException(string message, AggregateException aggregateException)
+            : base(message, aggregateException.InnerException)
+        {
+            ChildExceptions = aggregateException.Flatten().InnerExceptions;
+            
+            Details["Message"] = message;
+            Details["ExceptionDetails"] = ChildExceptions.Select(ex => ex.ToString()).ToArray();
         }
 
         protected void AddExceptionDetails(Exception innerException, bool addToDetails = true)

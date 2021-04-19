@@ -27,13 +27,13 @@ namespace CoreTests.Messaging
                     .Act.OnServicesAsync(async s =>
                     {
                         var mockEvt = new MockDomainEvent();
-                        await s.GetService<IMessagingService>()
+                        await s.GetRequiredService<IMessagingService>()
                             .PublishAsync(mockEvt);
                     });
 
                 testResult.Assert.Services(s =>
                 {
-                    var consumer = s.GetService<MockDomainEventConsumer>();
+                    var consumer = s.GetRequiredService<MockDomainEventConsumer>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventHandlerOne");
                 });
             });
@@ -50,7 +50,7 @@ namespace CoreTests.Messaging
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Container(c => c.WithHost().AddDerivedEventAndConsumer())
+                    .Container(c => c.AddHost().AddDerivedEventAndConsumer())
                     .Act.OnServicesAsync(async s =>
                     {
                         var mockEvt = new MockDerivedDomainEvent();

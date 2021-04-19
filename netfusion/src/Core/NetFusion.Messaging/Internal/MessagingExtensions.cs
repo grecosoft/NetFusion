@@ -101,7 +101,7 @@ namespace NetFusion.Messaging.Internal
             var paramTypes = new List<Type>
             {
                 methodInfo.DeclaringType,                           // Consumer Type
-                methodInfo.GetParameters().First().ParameterType,   // Message Type
+                methodInfo.GetParameters().First().ParameterType    // Message Type
             };
 
             // Optional Handler Parameters:

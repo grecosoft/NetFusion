@@ -14,6 +14,47 @@ namespace CoreTests.Messaging
     /// </summary>
     public static class TestSetupExtensions
     {
+        // Adds a host plugin configured with the core messaging plugin.
+        public static CompositeContainer AddHost(this CompositeContainer container)
+        {
+            var hostPlugin = new MockHostPlugin();
+            
+            container.RegisterPlugins(hostPlugin);
+            container.RegisterPlugin<MessagingPlugin>();
+            
+            return container;
+        }
+        
+        // ----------------------- [Exception Test Scenarios] --------------------------
+        
+        public static CompositeContainer WithMessageHandlerException(this CompositeContainer container)
+        {
+            var appPlugin = new MockAppPlugin();
+            appPlugin.AddPluginType<MockErrorMessageConsumer>();
+            
+            container.RegisterPlugins(appPlugin);
+            return container;
+        }
+        
+        public static CompositeContainer WithChildMessageHandlerException(this CompositeContainer container)
+        {
+            var appPlugin = new MockAppPlugin();
+            appPlugin.AddPluginType<MockErrorParentMessageConsumer>();
+            appPlugin.AddPluginType<MockErrorChildMessageConsumer>();
+            
+            container.RegisterPlugins(appPlugin);
+            return container;
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         public static CompositeContainer WithHostConsumer(this CompositeContainer container)
         {
             var hostPlugin = new MockHostPlugin();
@@ -25,15 +66,7 @@ namespace CoreTests.Messaging
             return container;
         }
 
-        public static CompositeContainer WithHost(this CompositeContainer container)
-        {
-            var hostPlugin = new MockHostPlugin();
-            
-            container.RegisterPlugins(hostPlugin);
-            container.RegisterPlugin<MessagingPlugin>();
-            
-            return container;
-        }
+        
 
         public static CompositeContainer AddDerivedEventAndConsumer(this CompositeContainer container)
         {
@@ -44,14 +77,9 @@ namespace CoreTests.Messaging
             return container;
         }
 
-        public static CompositeContainer AddEventAndExceptionConsumer(this CompositeContainer container)
-        {
-            var appPlugin = new MockAppPlugin();
-            appPlugin.AddPluginType<MockErrorMessageConsumer>();
-            
-            container.RegisterPlugins(appPlugin);
-            return container;
-        }
+        
+
+        
     }
 
     //-------------------------- MOCKED TYPED --------------------------------------
@@ -78,11 +106,42 @@ namespace CoreTests.Messaging
     public class MockErrorMessageConsumer : IMessageConsumer
     {
         [InProcessHandler]
-        public Task OnEvent1Async(MockDomainEvent evt)
+        public Task OnEventAsync(MockDomainEvent evt)
         {
-            return Task.Run(() => throw new InvalidOperationException(nameof(OnEvent1Async)));
+            return Task.Run(() => throw new InvalidOperationException(nameof(OnEventAsync)));
         }
     }
+    
+    public class MockErrorParentMessageConsumer : MockConsumer,
+        IMessageConsumer
+    {
+        private readonly IMessagingService _messaging;
+        
+        public MockErrorParentMessageConsumer(IMessagingService messaging)
+        {
+            _messaging = messaging;
+        }
+        
+        [InProcessHandler]
+        public async Task OnDomainEventAsync(MockDomainEvent evt)
+        {
+            await _messaging.PublishAsync(new MockDomainEventTwo());
+        }
+    }
+
+    public class MockErrorChildMessageConsumer : MockConsumer,
+        IMessageConsumer
+    {
+        [InProcessHandler]
+        public Task OnDomainEventTwoAsync(MockDomainEventTwo evt)
+        {
+            return Task.Run(() => throw new InvalidOperationException(nameof(OnDomainEventTwoAsync)));
+        }
+    }
+    
+    
+    
+    
 
 
     public class MockBaseDomainEvent : DomainEvent
@@ -113,5 +172,7 @@ namespace CoreTests.Messaging
 
             AddCalledHandler("OnIncludeBaseEventHandler");
         }
+
+        
     }
 }

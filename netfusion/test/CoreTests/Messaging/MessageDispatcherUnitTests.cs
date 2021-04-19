@@ -97,15 +97,15 @@ namespace CoreTests.Messaging
             {
                 // Assert:
                 // ...The publisher exception has a list of exceptions for each failed enricher.
-                Assert.NotNull(ex.ExceptionDetails);
-                Assert.Equal(2, ex.ExceptionDetails.Count());
-                Assert.True(ex.ExceptionDetails.All(dEx => dEx.GetType() == typeof(EnricherException)));
+                Assert.NotNull(ex.ChildExceptions);
+                Assert.Equal(2, ex.ChildExceptions.Count());
+                Assert.True(ex.ChildExceptions.All(dEx => dEx.GetType() == typeof(EnricherException)));
                 
                 // ... Each enricher exception will have an inner-exception referencing the actual
                 // ... exception thrown by the enricher:
-                Assert.True(ex.ExceptionDetails.All(dEx => dEx.InnerException?.GetType() == typeof(InvalidOperationException)));
+                Assert.True(ex.ChildExceptions.All(dEx => dEx.InnerException?.GetType() == typeof(InvalidOperationException)));
                
-                var messages = ex.ExceptionDetails.Select(dEx => dEx.InnerException?.Message).ToArray();
+                var messages = ex.ChildExceptions.Select(dEx => dEx.InnerException?.Message).ToArray();
                 Assert.Contains("ENRICHER_MESSAGE_1", messages);
                 Assert.Contains("ENRICHER_MESSAGE_2", messages);
 
@@ -158,15 +158,15 @@ namespace CoreTests.Messaging
             {
                 // Assert:
                 // ...The publisher exception has a list of exceptions for each failed enricher.
-                Assert.NotNull(ex.ExceptionDetails);
-                Assert.Equal(2, ex.ExceptionDetails.Count());
-                Assert.True(ex.ExceptionDetails.All(dEx => dEx.GetType() == typeof(PublisherException)));
+                Assert.NotNull(ex.ChildExceptions);
+                Assert.Equal(2, ex.ChildExceptions.Count());
+                Assert.True(ex.ChildExceptions.All(dEx => dEx.GetType() == typeof(PublisherException)));
                 
                 // ... Each publisher exception will have an inner-exception referencing the actual
                 // ... exception thrown by the publisher:
-                Assert.True(ex.ExceptionDetails.All(dEx => dEx.InnerException?.GetType() == typeof(InvalidOperationException)));
+                Assert.True(ex.ChildExceptions.All(dEx => dEx.InnerException?.GetType() == typeof(InvalidOperationException)));
                
-                var messages = ex.ExceptionDetails.Select(dEx => dEx.InnerException?.Message).ToArray();
+                var messages = ex.ChildExceptions.Select(dEx => dEx.InnerException?.Message).ToArray();
                 Assert.Contains("PUBLISHER_MESSAGE_1", messages);
                 Assert.Contains("PUBLISHER_MESSAGE_2", messages);
 

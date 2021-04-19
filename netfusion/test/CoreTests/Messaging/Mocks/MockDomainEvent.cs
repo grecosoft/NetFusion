@@ -9,4 +9,9 @@ namespace CoreTests.Messaging.Mocks
     {
 
     }
+
+    public class MockDomainEventTwo : DomainEvent
+    {
+        
+    }
 }

@@ -102,6 +102,7 @@ namespace NetFusion.Messaging.Internal
                     {
                         throw new MessageDispatchException(
                             "An exception was received when dispatching a message to one or more handlers.",
+                            ex,
                             dispatchErrors);
                     }
                 }
@@ -191,15 +192,9 @@ namespace NetFusion.Messaging.Internal
         
         private static MessageDispatchException GetDispatchException(TaskListItem<MessageDispatchInfo> taskItem)
         {
-            var sourceEx = taskItem.Task.Exception?.InnerException;
-
-            if (sourceEx is MessageDispatchException dispatchEx)
-            {
-                return dispatchEx;
-            }
-
-            return new MessageDispatchException("Error calling message consumer.", 
-                taskItem.Invoker, sourceEx);
+            return new("Error Dispatching Message to In-Process Handler", 
+                taskItem.Invoker, 
+                taskItem.Task.Exception);
         }
 
         private void AddErrorsToLog(MessageLog msgLog, MessageDispatchException ex)

@@ -176,10 +176,11 @@ namespace NetFusion.Messaging.Internal
             {
                 if (taskList != null)
                 {
-                    var publisherErrors = taskList.GetExceptions(ti => new PublisherException(ti));
+                    var publisherErrors = taskList.GetExceptions(GetPublisherException);
                     if (publisherErrors.Any())
                     {
                         throw new PublisherException("Exception when invoking message publishers.",
+                            ex,
                             message,
                             publisherErrors);
                     }
@@ -187,6 +188,11 @@ namespace NetFusion.Messaging.Internal
 
                 throw new PublisherException("Exception when invoking message publishers.", ex);
             }
+        }
+
+        private static PublisherException GetPublisherException(TaskListItem<IMessagePublisher> taskItem)
+        {
+            return new("Error Invoking Publisher", taskItem.Invoker, taskItem.Task.Exception);
         }
         
         private void LogPublishedMessage(IMessage message)

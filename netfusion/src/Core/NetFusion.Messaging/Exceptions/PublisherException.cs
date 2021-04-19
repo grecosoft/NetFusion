@@ -15,7 +15,6 @@ namespace NetFusion.Messaging.Exceptions
     public class PublisherException : NetFusionException
     {
         public IMessage PublishedMessage { get; }
-        public IEnumerable<NetFusionException> ExceptionDetails { get; }
         
         /// <summary>
         /// Publisher Exception.
@@ -54,15 +53,16 @@ namespace NetFusion.Messaging.Exceptions
         /// <summary>
         /// Publisher Exception.
         /// </summary>
-        /// <param name="errorMessage">The error message raised when publishing the message.</param>
-        /// <param name="message">The message being dispatched.</param>
+        /// <param name="message">The error message raised when publishing the message.</param>
+        /// <param name="innerException">The source of the exception.</param>
+        /// <param name="publishedMessage">The message being dispatched.</param>
         /// <param name="publisherExceptionDetails">List of exceptions when publishing message to one 
         /// or more publishers.</param>
-        public PublisherException(string message, IMessage publishedMessage,
-            IEnumerable<NetFusionException> exceptionDetails) : base(message)
+        public PublisherException(string message, Exception innerException, IMessage publishedMessage,
+            IEnumerable<NetFusionException> exceptionDetails) : base(message, innerException)
         {
             PublishedMessage = publishedMessage ?? throw new ArgumentNullException(nameof(publishedMessage));
-            ExceptionDetails = exceptionDetails ?? throw new ArgumentNullException(nameof(exceptionDetails));
+            ChildExceptions = exceptionDetails ?? throw new ArgumentNullException(nameof(exceptionDetails));
 
             Details["ExceptionDetails"] = exceptionDetails.Select(e => e.Details).ToArray();
         }
@@ -78,7 +78,7 @@ namespace NetFusion.Messaging.Exceptions
         {
             if (eventSource == null) throw new ArgumentNullException(nameof(eventSource));
 
-            ExceptionDetails = exceptionDetails ?? throw new ArgumentNullException(nameof(exceptionDetails));
+            ChildExceptions = exceptionDetails ?? throw new ArgumentNullException(nameof(exceptionDetails));
 
             Details["EventSourceType"] = eventSource.GetType();
             Details["ExceptionDetails"] = exceptionDetails.Select(e => e.Details).ToArray();
@@ -88,12 +88,13 @@ namespace NetFusion.Messaging.Exceptions
         /// Publisher Exception.
         /// </summary>
         /// <param name="taskItem">The task and associated publisher.</param>
-        public PublisherException(TaskListItem<IMessagePublisher> taskItem)
-            : base("Error Invoking Publisher.", GetSourceException(taskItem), false)
+        public PublisherException(string message, IMessagePublisher messagePublisher,
+            AggregateException aggregateException)
+            : base(message, aggregateException)
         {
-            if (taskItem == null) throw new ArgumentNullException(nameof(taskItem));
-
-            Details["Publisher"] = taskItem.Invoker.GetType().FullName;
+            if (messagePublisher == null) throw new ArgumentNullException(nameof(messagePublisher));
+            
+            Details["Publisher"] = messagePublisher.GetType().FullName;
         }
         
         /// <summary>
@@ -106,7 +107,7 @@ namespace NetFusion.Messaging.Exceptions
         public PublisherException(string message, IEnumerable<EnricherException> enricherExceptions) 
             : base(message)
         {
-            ExceptionDetails = enricherExceptions ?? throw new ArgumentNullException(nameof(enricherExceptions));
+            ChildExceptions = enricherExceptions ?? throw new ArgumentNullException(nameof(enricherExceptions));
 
             Details["ExceptionDetails"] = enricherExceptions.Select(e => e.Details).ToArray();
         }
