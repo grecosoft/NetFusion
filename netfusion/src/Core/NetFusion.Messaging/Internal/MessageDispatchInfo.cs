@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Types;
 using NetFusion.Messaging.Types.Contracts;
 

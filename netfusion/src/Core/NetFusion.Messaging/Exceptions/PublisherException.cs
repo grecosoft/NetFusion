@@ -1,8 +1,6 @@
 ﻿using NetFusion.Base.Exceptions;
-using NetFusion.Common.Extensions.Tasks;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Types.Contracts;
 
@@ -14,12 +12,15 @@ namespace NetFusion.Messaging.Exceptions
     /// </summary>
     public class PublisherException : NetFusionException
     {
+        /// <summary>
+        /// Message published resulting in the exception.
+        /// </summary>
         public IMessage PublishedMessage { get; }
         
         /// <summary>
         /// Publisher Exception.
         /// </summary>
-        /// <param name="message">Generic exception message.</param>
+        /// <param name="message">Message describing the exception.</param>
         public PublisherException(string message) : base(message)
         {
 
@@ -28,8 +29,7 @@ namespace NetFusion.Messaging.Exceptions
         /// <summary>
         /// Publisher Exception.
         /// </summary>
-        /// <param name="errorMessage">The error message raised when publishing the message.</param>
-        /// <param name="message">The messaging being published.</param>
+        /// <param name="message">Message describing the exception.</param>
         /// <param name="innerException">The source exception.  If the exception is derived from 
         /// NetFusionException, the detail will be added to this exception's details.</param>
         public PublisherException(string message, Exception innerException) 
@@ -41,7 +41,7 @@ namespace NetFusion.Messaging.Exceptions
         /// <summary>
         /// Publisher Exception.
         /// </summary>
-        /// <param name="message">The error message raised when publishing the message.</param>
+        /// <param name="message">Message describing the exception.</param>
         /// <param name="detailKey">Identifies the exception details.</param>
         /// <param name="details">Details associated with the exception.</param>
         public PublisherException(string message, string detailKey, object details)
@@ -53,24 +53,25 @@ namespace NetFusion.Messaging.Exceptions
         /// <summary>
         /// Publisher Exception.
         /// </summary>
-        /// <param name="message">The error message raised when publishing the message.</param>
+        /// <param name="message">Message describing the exception.</param>
         /// <param name="innerException">The source of the exception.</param>
         /// <param name="publishedMessage">The message being dispatched.</param>
-        /// <param name="publisherExceptionDetails">List of exceptions when publishing message to one 
+        /// <param name="exceptionDetails">List of exceptions when publishing message to one 
         /// or more publishers.</param>
-        public PublisherException(string message, Exception innerException, IMessage publishedMessage,
+        public PublisherException(string message, Exception innerException,
+            IMessage publishedMessage,
             IEnumerable<NetFusionException> exceptionDetails) : base(message, innerException)
         {
             PublishedMessage = publishedMessage ?? throw new ArgumentNullException(nameof(publishedMessage));
             ChildExceptions = exceptionDetails ?? throw new ArgumentNullException(nameof(exceptionDetails));
 
-            Details["ExceptionDetails"] = exceptionDetails.Select(e => e.Details).ToArray();
+            AddExceptionDetails(exceptionDetails);
         }
         
         /// <summary>
         /// Publisher Exception.
         /// </summary>
-        /// <param name="message">The error message raised when publishing the message.</param>
+        /// <param name="message">Message describing the exception.</param>
         /// <param name="eventSource">The entity with associated domain-events.</param>
         /// <param name="exceptionDetails">List exceptions when publishing message to one or more publishers.</param>
         public PublisherException(string message, IEventSource eventSource,
@@ -81,13 +82,15 @@ namespace NetFusion.Messaging.Exceptions
             ChildExceptions = exceptionDetails ?? throw new ArgumentNullException(nameof(exceptionDetails));
 
             Details["EventSourceType"] = eventSource.GetType();
-            Details["ExceptionDetails"] = exceptionDetails.Select(e => e.Details).ToArray();
+            AddExceptionDetails(exceptionDetails);
         }
         
         /// <summary>
         /// Publisher Exception.
         /// </summary>
-        /// <param name="taskItem">The task and associated publisher.</param>
+        /// <param name="message">Message describing the exception.</param>
+        /// <param name="messagePublisher">Reference to message publisher resulting in an exception.</param>
+        /// <param name="aggregateException">The aggregate exception associated with a task.</param>
         public PublisherException(string message, IMessagePublisher messagePublisher,
             AggregateException aggregateException)
             : base(message, aggregateException)
@@ -100,8 +103,7 @@ namespace NetFusion.Messaging.Exceptions
         /// <summary>
         /// Publisher Exception.
         /// </summary>
-        /// <param name="errorMessage">The enricher related error message raised when publishing the message.</param>
-        /// <param name="message">The message being dispatched.</param>
+        /// <param name="message">Message describing the exception.</param>
         /// <param name="enricherExceptions">List of enricher exceptions when publishing message to one
         /// or more publishers.</param>
         public PublisherException(string message, IEnumerable<EnricherException> enricherExceptions) 
@@ -109,14 +111,7 @@ namespace NetFusion.Messaging.Exceptions
         {
             ChildExceptions = enricherExceptions ?? throw new ArgumentNullException(nameof(enricherExceptions));
 
-            Details["ExceptionDetails"] = enricherExceptions.Select(e => e.Details).ToArray();
-        }
-        
-        private static Exception GetSourceException(TaskListItem<IMessagePublisher> taskItem)
-        {
-            // Get the aggregate inner exception.
-            var taskException = taskItem.Task.Exception;
-            return taskException?.InnerException;
+            AddExceptionDetails(enricherExceptions);
         }
     }
 }

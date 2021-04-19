@@ -112,9 +112,9 @@ namespace NetFusion.Messaging.Internal
         {
             try
             {
-                await ApplyMessageEnrichers(message);
                 LogPublishedMessage(message);
                 
+                await ApplyMessageEnrichers(message);
                 await InvokePublishers(message, integrationType, cancellationToken);
             }
             catch (PublisherException ex)
