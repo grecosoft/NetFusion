@@ -76,13 +76,10 @@ namespace NetFusion.Messaging.Internal
         // it between the pre and post filters.
         private async Task InvokeDispatcher(QueryDispatchInfo dispatcher, IQuery query, CancellationToken cancellationToken)
         {
-            var consumer = (IQueryConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
+            LogQueryDispatch(dispatcher, query);
             
             await ApplyFilters<IPreQueryFilter>(query, _queryFilters, (f, q) => f.OnPreExecuteAsync(q));
-            
-            LogQueryDispatch(dispatcher, query);
-            await dispatcher.Dispatch(query, consumer, cancellationToken);
-            
+            await InvokeQueryHandler(dispatcher, query, cancellationToken);
             await ApplyFilters<IPostQueryFilter>(query, _queryFilters, (f, q) => f.OnPostExecuteAsync(q));
             
             LogQueryDispatched(dispatcher, query);
@@ -108,7 +105,7 @@ namespace NetFusion.Messaging.Internal
             {
                 if (taskList != null)
                 {
-                    var filterErrors = taskList.GetExceptions(ti => new QueryFilterException<TFilter>(ti));
+                    var filterErrors = taskList.GetExceptions(GetFilterException);
                     if (filterErrors.Any())
                     {
                         throw new QueryDispatchException("Exception when invoking query filters.", filterErrors);
@@ -116,6 +113,20 @@ namespace NetFusion.Messaging.Internal
                 }
 
                 throw new QueryDispatchException("Exception when invoking query filters.", ex);
+            }
+        }
+
+        private async Task InvokeQueryHandler(QueryDispatchInfo dispatcher, IQuery query,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                var consumer = (IQueryConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
+                await dispatcher.Dispatch(query, consumer, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                throw new QueryDispatchException("Exception Dispatching Query.", dispatcher, ex);
             }
         }
         
@@ -155,6 +166,13 @@ namespace NetFusion.Messaging.Internal
                 });
             
             _logger.Log(log);
+        }
+        
+        // ------------------------------- [Exceptions] --------------------------
+        private static QueryFilterException GetFilterException<T>(TaskListItem<T> taskItem)
+            where T : class, IQueryFilter
+        {
+            return new("Exception Applying Query Filter", taskItem.Invoker, taskItem.Task.Exception);
         }
     }
 }

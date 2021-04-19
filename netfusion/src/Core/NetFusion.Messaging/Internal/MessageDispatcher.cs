@@ -145,7 +145,7 @@ namespace NetFusion.Messaging.Internal
             {
                 if (taskList != null)
                 {
-                    var enricherErrors = taskList.GetExceptions(ti => new EnricherException(ti));
+                    var enricherErrors = taskList.GetExceptions(GetEnricherException);
                     if (enricherErrors.Any())
                     {
                         throw new PublisherException("Exception when invoking message enrichers.",
@@ -190,10 +190,7 @@ namespace NetFusion.Messaging.Internal
             }
         }
 
-        private static PublisherException GetPublisherException(TaskListItem<IMessagePublisher> taskItem)
-        {
-            return new("Error Invoking Publisher", taskItem.Invoker, taskItem.Task.Exception);
-        }
+        // ------------------------- Logging ---------------------------
         
         private void LogPublishedMessage(IMessage message)
         {
@@ -203,6 +200,18 @@ namespace NetFusion.Messaging.Internal
                 );
             
             _logger.Log(log);
+        }
+        
+        // ------------------------- Exceptions --------------------------
+
+        private static EnricherException GetEnricherException(TaskListItem<IMessageEnricher> taskListItem)
+        {
+            return new("Exception Applying Enricher", taskListItem.Invoker, taskListItem.Task.Exception);
+        }
+        
+        private static PublisherException GetPublisherException(TaskListItem<IMessagePublisher> taskItem)
+        {
+            return new("Error Invoking Publisher", taskItem.Invoker, taskItem.Task.Exception);
         }
     }
 }

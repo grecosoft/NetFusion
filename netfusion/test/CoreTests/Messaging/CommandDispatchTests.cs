@@ -56,7 +56,7 @@ namespace CoreTests.Messaging
                     .Container(c => c.WithHostCommandConsumer())
                     .Act.OnServicesAsync(async s =>
                     {
-                        var messagingSrv = s.GetService<IMessagingService>();
+                        var messagingSrv = s.GetRequiredService<IMessagingService>();
                         var cmd = new MockCommandNoResult();
 
                         await messagingSrv.SendAsync(cmd);
@@ -80,7 +80,7 @@ namespace CoreTests.Messaging
                     .Container(c => c.WithHostCommandConsumer().AddMultipleConsumers())
                     .Act.RecordException().OnServicesAsync(s =>
                     {
-                        var messagingSrv = s.GetService<IMessagingService>();
+                        var messagingSrv = s.GetRequiredService<IMessagingService>();
                         var evt = new MockCommand();
                         return messagingSrv.SendAsync(evt);
                     });

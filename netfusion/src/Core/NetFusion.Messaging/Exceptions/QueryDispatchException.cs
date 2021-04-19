@@ -41,7 +41,8 @@ namespace NetFusion.Messaging.Exceptions
         /// <param name="dispatchInfo">Describes how the query is to be dispatched when dispatched.</param>
         /// <param name="innerException">The source exception.  If the exception is derived from 
         /// NetFusionException, the detail will be added to this exception's details.</param>
-        public QueryDispatchException(string message, QueryDispatchInfo dispatchInfo, Exception innerException)
+        public QueryDispatchException(string message, QueryDispatchInfo dispatchInfo,
+            Exception innerException)
             : base(message, innerException)
         {
             if (dispatchInfo == null) throw new ArgumentNullException(nameof(dispatchInfo));
@@ -65,19 +66,6 @@ namespace NetFusion.Messaging.Exceptions
             if (filterExceptions == null) throw new ArgumentNullException(nameof(filterExceptions));
 
             Details["DispatchExceptions"] = filterExceptions.Select(de => de.Details).ToArray();
-        }
-
-        /// <summary>
-        /// Dispatch Exception.
-        /// </summary>
-        /// <param name="message">Dispatch exception message.</param>
-        /// <param name="innerException">The inner received exception.</param>
-        /// <param name="detailKey">Identifies the exception details.</param>
-        /// <param name="details">Details of the query dispatch.</param>
-        public QueryDispatchException(string message, string detailKey, object details, Exception innerException)
-            : base (message, innerException, detailKey, details)
-        {
-
         }
     }
 }

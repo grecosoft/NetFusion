@@ -1,6 +1,5 @@
 ﻿using System;
 using NetFusion.Base.Exceptions;
-using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Enrichers;
 
 namespace NetFusion.Messaging.Exceptions
@@ -16,19 +15,13 @@ namespace NetFusion.Messaging.Exceptions
         /// Constructor.
         /// </summary>
         /// <param name="taskItem">The task item containing the exception.</param>
-        public EnricherException(TaskListItem<IMessageEnricher> taskItem)
-            : base("Enricher Exception", GetSourceException(taskItem))
+        public EnricherException(string message, IMessageEnricher messageEnricher, 
+            AggregateException aggregateException)
+            : base(message, aggregateException)
         {
-            if (taskItem == null) throw new NullReferenceException(nameof(taskItem));
+            if (messageEnricher == null) throw new NullReferenceException(nameof(messageEnricher));
 
-            Details["Enricher"] = taskItem.Invoker.GetType().FullName; 
-        }
-
-        private static Exception GetSourceException(TaskListItem<IMessageEnricher> taskItem)
-        {
-            // Get the aggregate inner exception.
-            var taskException = taskItem.Task.Exception;
-            return taskException?.InnerException;
+            Details["Enricher"] = messageEnricher.GetType().FullName; 
         }
     }
 }

@@ -80,7 +80,7 @@ namespace CoreTests.Queries
                     .Act.RecordException().OnServicesAsync(s =>
                     {
 
-                        var dispatcher = s.GetService<IMessagingService>();
+                        var dispatcher = s.GetRequiredService<IMessagingService>();
                         return dispatcher.DispatchAsync(testQuery);
                     });
 
@@ -112,7 +112,7 @@ namespace CoreTests.Queries
                     .Act.OnServicesAsync(s =>
                         {
                            
-                            var dispatcher = s.GetService<IMessagingService>();
+                            var dispatcher = s.GetRequiredService<IMessagingService>();
                             return dispatcher.DispatchAsync(testQuery);
                         });
 
