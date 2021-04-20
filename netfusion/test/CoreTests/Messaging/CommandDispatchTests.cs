@@ -29,7 +29,7 @@ namespace CoreTests.Messaging
                     .Container(c => c.WithHostCommandConsumer())
                     .Act.OnServicesAsync(async s =>
                     {
-                        var messagingSrv = s.GetService<IMessagingService>();
+                        var messagingSrv = s.GetRequiredService<IMessagingService>();
                         var cmd = new MockCommand();
 
                         cmdResult = await messagingSrv.SendAsync(cmd);

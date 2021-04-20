@@ -10,6 +10,9 @@ namespace NetFusion.Messaging.Plugin
     /// </summary>
     public interface IQueryDispatchModule : IPluginModuleService
     {
+        /// <summary>
+        /// The associated query configuration.
+        /// </summary>
         public QueryDispatchConfig DispatchConfig { get; }
         
         /// <summary>

@@ -91,7 +91,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
 
         private static Task ReplyWithException(ConsumeContext context, Exception ex)
         {
-            if ( !(ex is MessageDispatchException dispatchEx))
+            if ( ex is not MessageDispatchException dispatchEx)
             {
                 dispatchEx = new MessageDispatchException(ex.Message);
             }

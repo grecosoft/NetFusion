@@ -106,7 +106,7 @@ namespace NetFusion.Messaging.Internal
         // ----------------------------- [Publishing] -----------------------------
 
         // Private method to which all other publish methods delegate to asynchronously apply
-        // the enrichers and to invoke all registered message publishers.
+        // the enrichers and invoke all registered message publishers.
         private async Task PublishMessage(IMessage message, IntegrationTypes integrationType, 
             CancellationToken cancellationToken)
         {
@@ -190,7 +190,7 @@ namespace NetFusion.Messaging.Internal
             }
         }
 
-        // ------------------------- Logging ---------------------------
+        // ------------------------- [Logging] -----------------------------
         
         private void LogPublishedMessage(IMessage message)
         {
@@ -202,7 +202,7 @@ namespace NetFusion.Messaging.Internal
             _logger.Log(log);
         }
         
-        // ------------------------- Exceptions --------------------------
+        // ------------------------- [Exceptions] --------------------------
 
         private static EnricherException GetEnricherException(TaskListItem<IMessageEnricher> taskListItem)
         {

@@ -22,14 +22,14 @@ namespace NetFusion.Messaging.Internal
         /// The type of the message.
         /// </summary>
         /// <returns>Runtime type of the message.</returns>
-        public Type MessageType { get; set; }
+        public Type MessageType { get; init; }
 
         /// <summary>
-        /// The component containing the method that can handle the message.  All types
+        /// The component containing a method that can handle the message.  All types
         /// implementing the IMessageConsumer are scanned for message handler methods.
         /// </summary>
         /// <returns>Message consumer runtime type.</returns>
-        public Type ConsumerType { get; set; }
+        public Type ConsumerType { get; init; }
 
         /// <summary>
         /// Indicates if the message handler should be called for derived message types.
@@ -40,49 +40,49 @@ namespace NetFusion.Messaging.Internal
         /// Returns True if method should be called for derived message types.
         /// By default, this is false. 
         /// </returns>
-        public bool IncludeDerivedTypes { get; set; }
+        public bool IncludeDerivedTypes { get; init; }
 
         /// <summary>
         /// The consumer's message handler method to be called at runtime when the
         /// message is published.
         /// </summary>
         /// <returns>Method handler runtime method information.</returns>
-        public MethodInfo MessageHandlerMethod { get; set; }
+        public MethodInfo MessageHandlerMethod { get; init; }
 
         /// <summary>
         /// Indicates that the handler is an asynchronous method.
         /// </summary>
-        public bool IsAsync { get; set; }
+        public bool IsAsync { get; init; }
 
         /// <summary>
         /// Indicates that the handler is an asynchronous method returning a value.
         /// </summary>
-        public bool IsAsyncWithResult { get; set; }
+        public bool IsAsyncWithResult { get; init; }
 
         /// <summary>
         /// Indicates if an asynchronous message handler can be canceled.
         /// </summary>
-        public bool IsCancellable { get; set; }
+        public bool IsCancellable { get; init; }
 
         /// <summary>
         /// Indicates that the handler is marked with the InProcessHandler attribute.
         /// This indicates that the handler will be used by the InProcessMessagePublisher
         /// and will not be published to another process.
         /// </summary>
-        public bool IsInProcessHandler { get; set; }
+        public bool IsInProcessHandler { get; init; }
 
         /// <summary>
         /// Delegate used to invoke the message handler.  This is created from the
         /// reflected information.
         /// </summary>
-        public MulticastDelegate Invoker { get; set; }
+        public MulticastDelegate Invoker { get; init; }
 
         /// <summary>
         /// The type of the dispatch rules associated with the message handler.
         /// These are simple predicates based on the properties of the message
         /// that determines if the message handler should be invoked.
         /// </summary>
-        public Type[] DispatchRuleTypes { get; set; }
+        public Type[] DispatchRuleTypes { get; init; }
 
         /// <summary>
         /// Rule instances associated with the message handler.  The message handler will only be 
@@ -95,7 +95,7 @@ namespace NetFusion.Messaging.Internal
         /// Determines if all or any of the rules must evaluate to true for the
         /// message handler to be called.
         /// </summary>
-        public RuleApplyTypes RuleApplyType { get; set; }
+        public RuleApplyTypes RuleApplyType { get; init; }
 
         /// <summary>
         /// Determines if the message handler applies based on the assigned dispatcher
@@ -124,7 +124,8 @@ namespace NetFusion.Messaging.Internal
         /// <param name="consumer">Instance of the consumer to have message dispatched.</param>
         /// <param name="cancellationToken">The cancellation token passed to the message handler.</param>
         /// <returns>The response as a future task result.</returns>
-        public async Task<object> Dispatch(IMessage message, IMessageConsumer consumer, CancellationToken cancellationToken)
+        public async Task<object> Dispatch(IMessage message, IMessageConsumer consumer, 
+            CancellationToken cancellationToken)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
             if (consumer == null) throw new ArgumentNullException(nameof(consumer));

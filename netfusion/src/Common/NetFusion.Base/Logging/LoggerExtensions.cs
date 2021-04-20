@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Exceptions;
+// ReSharper disable InvalidXmlDocComment
 
 namespace NetFusion.Base.Logging
 {
@@ -24,7 +25,7 @@ namespace NetFusion.Base.Logging
         /// Writes multiple messages containing sets of detailed properties.
         /// </summary>
         /// <param name="logger">Logger instance.</param>
-        /// <param name="messages">Messages to write to the log.</param>
+        /// <param name="message">Messages to write to the log.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
         public static void Log<TContext>(this ILogger<TContext> logger,
             params LogMessage[] message) => 
@@ -85,7 +86,6 @@ namespace NetFusion.Base.Logging
         /// <param name="logger">Logger instance.</param>
         /// <param name="ex">The exception to be logged.</param>
         /// <param name="message">The message template to log.</param>
-        /// <param name="details">Details stored as a log property.</param>
         /// <param name="args">Optional message template argument values.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
         public static void LogError<TContext>(this ILogger<TContext> logger,

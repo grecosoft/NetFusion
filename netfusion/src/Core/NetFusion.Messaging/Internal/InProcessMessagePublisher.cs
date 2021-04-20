@@ -78,8 +78,7 @@ namespace NetFusion.Messaging.Internal
                 .ToArray();
         }
 
-        private async Task InvokeMessageDispatchers(MessageDispatchInfo[] dispatchers, 
-            IMessage message,
+        private async Task InvokeMessageDispatchers(MessageDispatchInfo[] dispatchers, IMessage message,
             CancellationToken cancellationToken)
         {
             LogMessageDispatchers(dispatchers, message);
@@ -125,7 +124,7 @@ namespace NetFusion.Messaging.Internal
                 var dispatcherDetails = GetDispatchLogDetails(dispatchers);
 
                 throw new PublisherException(
-                    $"More than one message consumer handler was found for command message type: {command.GetType()}.  " +
+                    $"More than one message consumer handler was found for command message type: {command.GetType()}. " +
                      "A command message type can have only one in-process message consumer handler.", 
                      "DispatcherDetails", dispatcherDetails);
             }
@@ -150,7 +149,7 @@ namespace NetFusion.Messaging.Internal
             return msgLog;
         }
         
-        private void AddDispatchersToLog(MessageLog msgLog, IEnumerable<MessageDispatchInfo> dispatchers)
+        private void AddDispatchersToLog(MessageLog msgLog, MessageDispatchInfo[] dispatchers)
         {
             if (! _messageLogger.IsLoggingEnabled) return;
             
@@ -192,7 +191,7 @@ namespace NetFusion.Messaging.Internal
         
         private static MessageDispatchException GetDispatchException(TaskListItem<MessageDispatchInfo> taskItem)
         {
-            return new("Error Dispatching Message to In-Process Handler", 
+            return new("Error Dispatching Message to In-Process Handler.", 
                 taskItem.Invoker, 
                 taskItem.Task.Exception);
         }

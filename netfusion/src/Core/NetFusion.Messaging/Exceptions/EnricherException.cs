@@ -14,7 +14,9 @@ namespace NetFusion.Messaging.Exceptions
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="taskItem">The task item containing the exception.</param>
+        /// <param name="message">Message describing the exception.</param>
+        /// <param name="messageEnricher">The associated enricher that raised exception.</param>
+        /// <param name="aggregateException">The aggregate exception associated with task.</param>
         public EnricherException(string message, IMessageEnricher messageEnricher, 
             AggregateException aggregateException)
             : base(message, aggregateException)

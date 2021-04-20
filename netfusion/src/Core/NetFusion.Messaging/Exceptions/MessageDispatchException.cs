@@ -52,13 +52,13 @@ namespace NetFusion.Messaging.Exceptions
         /// </summary>
         /// <param name="message">Dispatch error message.</param>
         /// <param name="innerException">The source exception that was raised.</param>
-        /// <param name="dispatchExceptions">List of associated exceptions.</param>
+        /// <param name="childExceptions">List of associated exceptions.</param>
         public MessageDispatchException(string message, Exception innerException, 
-            IEnumerable<NetFusionException> dispatchExceptions) 
+            IEnumerable<NetFusionException> childExceptions) 
             : base(message, innerException)
         {
-            ChildExceptions = dispatchExceptions ?? throw new ArgumentNullException(nameof(dispatchExceptions));
-            AddExceptionDetails(dispatchExceptions);
+            ChildExceptions = childExceptions ?? throw new ArgumentNullException(nameof(childExceptions));
+            AddExceptionDetails(childExceptions);
         }
     }
 }

@@ -81,8 +81,6 @@ namespace NetFusion.Messaging.Internal
             await ApplyFilters<IPreQueryFilter>(query, _queryFilters, (f, q) => f.OnPreExecuteAsync(q));
             await InvokeQueryHandler(dispatcher, query, cancellationToken);
             await ApplyFilters<IPostQueryFilter>(query, _queryFilters, (f, q) => f.OnPostExecuteAsync(q));
-            
-            LogQueryDispatched(dispatcher, query);
         }
         
         // Executes a list of asynchronous filters and awaits their completion.  Once completed,
@@ -131,16 +129,8 @@ namespace NetFusion.Messaging.Internal
         }
         
         // ----------------------------- [Logging] -----------------------------
-
-        public void LogQueryDispatch(QueryDispatchInfo dispatcher, IQuery query)
-        {
-            _logger.LogDebug("Dispatching Query {QueryType} to Consumer {ConsumerType} Handler {MethodName}", 
-                query.GetType(), 
-                dispatcher.ConsumerType, 
-                dispatcher.HandlerMethod.Name);
-        }
         
-        private void LogQueryDispatched(QueryDispatchInfo dispatchInfo, IQuery query)
+        private void LogQueryDispatch(QueryDispatchInfo dispatchInfo, IQuery query)
         {
             var handlerInfo = new {
                 Consumer = dispatchInfo.ConsumerType,

@@ -140,7 +140,7 @@ namespace CoreTests.Bootstrap
         {
             ContainerFixture.Test(fixture =>
             {
-                fixture.Arrange.Container(r =>
+                fixture.Arrange.Container(_ =>
                     {
 
                     })

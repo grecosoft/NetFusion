@@ -10,16 +10,12 @@ namespace NetFusion.Messaging.Exceptions
     /// </summary>
     public class QueryFilterException : NetFusionException
     {
-        protected QueryFilterException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-            
-        }
-        
         /// <summary>
-        /// Constructor.
+        /// 
         /// </summary>
-        /// <param name="taskItem">Task result containing the exception.</param>
+        /// <param name="message">Message describing the exception.</param>
+        /// <param name="filter">The associated filter that raised exception.</param>
+        /// <param name="aggregateException">The aggregate exception associated with task.</param>
         public QueryFilterException(string message, IQueryFilter filter, AggregateException aggregateException) 
             : base(message, aggregateException)
         {

@@ -143,7 +143,7 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
         /// Determines if the queue has already been created.  If found, the properties
         /// of the existing queue are updated.  Otherwise, the queue is created.
         /// </summary>
-        /// <param name="topicMeta">Metadata describing the queue.</param>
+        /// <param name="queueMeta">Metadata describing the queue.</param>
         /// <returns>Future Result Task</returns>
         public async Task CreateOrUpdateQueue(QueueMeta queueMeta)
         {

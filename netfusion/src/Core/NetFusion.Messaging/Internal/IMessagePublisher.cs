@@ -5,7 +5,7 @@ using NetFusion.Messaging.Types.Contracts;
 namespace NetFusion.Messaging.Internal
 {
     /// <summary>
-    /// Called when a message is published to allow plug-ins to customize the publishing of messages.
+    /// Called when a message is published to allow plugins to customize the publishing of messages.
     /// For example the InProcessMessagePublisher dispatches messages locally while another publisher
     /// could deliver the messages externally to a configured broker such as RabbitMQ.
     /// </summary> 

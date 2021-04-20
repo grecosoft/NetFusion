@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using NetFusion.Base.Exceptions;
 using NetFusion.Messaging.Internal;
 
@@ -59,13 +58,12 @@ namespace NetFusion.Messaging.Exceptions
         /// Dispatch Exception.
         /// </summary>
         /// <param name="message">Dispatch error message.</param>
-        /// <param name="filterExceptions">List of exceptions for failed query filters.</param>
-        public QueryDispatchException(string message, IEnumerable<QueryFilterException> filterExceptions)
+        /// <param name="childExceptions">List of associated exceptions.</param>
+        public QueryDispatchException(string message, IEnumerable<NetFusionException> childExceptions)
             : base(message)
         {
-            if (filterExceptions == null) throw new ArgumentNullException(nameof(filterExceptions));
-
-            Details["DispatchExceptions"] = filterExceptions.Select(de => de.Details).ToArray();
+            ChildExceptions = childExceptions ?? throw new ArgumentNullException(nameof(childExceptions));
+            AddExceptionDetails(childExceptions);
         }
     }
 }

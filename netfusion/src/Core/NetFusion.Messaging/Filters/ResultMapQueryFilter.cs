@@ -45,7 +45,7 @@ namespace NetFusion.Messaging.Filters
             }
 
             // Check if the type of the returned result is compatible with
-            // the return type of the query.
+            // the result type of the query.
             return query.Result.GetType().CanAssignTo(query.DeclaredResultType);
         }
 

@@ -88,7 +88,6 @@ namespace NetFusion.Base.Logging
         /// </summary>
         /// <param name="ex">The exception to be logged.</param>
         /// <param name="message">The message template to log.</param>
-        /// <param name="details">Details stored as a log property.</param>
         /// <param name="args">Optional message template argument values.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
         void LogError<TContext>(NetFusionException ex, string message, 

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Container;
+// ReSharper disable InvalidXmlDocComment
 
 namespace NetFusion.Builder
 {

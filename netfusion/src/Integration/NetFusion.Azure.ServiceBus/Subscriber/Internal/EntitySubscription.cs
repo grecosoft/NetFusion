@@ -28,7 +28,8 @@ namespace NetFusion.Azure.ServiceBus.Subscriber.Internal
         /// <summary>
         /// The namespace as specified within the application settings.
         /// </summary>
-        /// <param name="namespaceName">The namespace as specif ied within the application settings.</param>
+        /// <param name="namespaceName">The namespace as specified ied within the application settings.</param>
+        /// <param name="entityName">The name of the entity to subscribe.</param>
         protected EntitySubscription(string namespaceName, string entityName)
         {
             NamespaceName = namespaceName;

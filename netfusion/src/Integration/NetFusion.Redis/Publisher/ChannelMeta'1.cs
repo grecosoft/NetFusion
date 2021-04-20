@@ -12,7 +12,7 @@ namespace NetFusion.Redis.Publisher
     {
         private Func<TDomainEvent, string> _eventStateData;
     
-        private Func<TDomainEvent, bool> _appliesIf = m => true;
+        private Func<TDomainEvent, bool> _appliesIf = _ => true;
         
         public ChannelMeta(string database, string channel) 
             : base(typeof(TDomainEvent), database, channel)
