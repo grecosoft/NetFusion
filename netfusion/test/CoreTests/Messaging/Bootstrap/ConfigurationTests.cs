@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using CoreTests.Messaging.DomainEvents;
+using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Internal;
@@ -24,7 +25,7 @@ namespace CoreTests.Messaging.Bootstrap
         {
             ContainerFixture.Test(fixture => { fixture
                 .Arrange
-                .Container(c => c.WithHostConsumer())
+                .Container(c => c.AddHost().WithDomainEventHandler())
 
                 .Assert.Configuration((MessageDispatchConfig config) =>
                 {
@@ -41,7 +42,7 @@ namespace CoreTests.Messaging.Bootstrap
         public void RegistersService_ForPublishingEvents()
         {
             ContainerFixture.Test(fixture => { fixture
-                .Arrange.Container(c => c.WithHostConsumer())                
+                .Arrange.Container(c => c.AddHost().WithDomainEventHandler())                
                 .Assert.Services(s =>
                 {
                     var service = s.GetService<IMessagingService>();

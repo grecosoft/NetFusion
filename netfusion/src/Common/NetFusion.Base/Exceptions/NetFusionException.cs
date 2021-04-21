@@ -20,12 +20,12 @@ namespace NetFusion.Base.Exceptions
         /// list of custom specified exceptions or a flattened listed of exceptions
         /// associated with an asynchronous task.
         /// </summary>
-        public IEnumerable<Exception> ChildExceptions { get; protected set; }
+        public IEnumerable<Exception> ChildExceptions { get; protected init; }
         
         /// <summary>
         /// Dictionary of key/value pairs containing details of the exception. 
         /// </summary>
-        public IDictionary<string, object> Details { get; protected set; } = new Dictionary<string, object>();
+        public IDictionary<string, object> Details { get; } = new Dictionary<string, object>();
         
         protected NetFusionException() { }
 

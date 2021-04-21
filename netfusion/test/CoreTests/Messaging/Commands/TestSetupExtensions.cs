@@ -1,13 +1,15 @@
-﻿using NetFusion.Messaging;
+﻿using System.Threading.Tasks;
+using CoreTests.Messaging.Mocks;
+using NetFusion.Bootstrap.Container;
+using NetFusion.Messaging;
+using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Types;
 using NetFusion.Test.Plugins;
-using System.Threading.Tasks;
-using NetFusion.Bootstrap.Container;
-using NetFusion.Messaging.Plugin;
+// ReSharper disable All
 
-namespace CoreTests.Messaging.Mocks
+namespace CoreTests.Messaging.Commands
 {
-    public static class TestCommandSetupExtensions
+    public static class TestSetupExtensions
     {
         public static CompositeContainer WithHostCommandConsumer(this CompositeContainer container)
         {

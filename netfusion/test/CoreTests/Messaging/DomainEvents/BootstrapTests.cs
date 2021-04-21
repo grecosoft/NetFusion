@@ -1,32 +1,31 @@
 ﻿using System.Linq;
-using CoreTests.Messaging.Mocks;
+using CoreTests.Messaging.DomainEvents.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging.Plugin.Modules;
 using NetFusion.Test.Container;
 using Xunit;
 
-namespace CoreTests.Messaging.Bootstrap
+// ReSharper disable All
+
+namespace CoreTests.Messaging.DomainEvents
 {
     /// <summary>
-    /// Unit test asserting that the message types and message consumer were
+    /// Unit test asserting that the message types and message consumers are
     /// correctly found by the messaging module during the bootstrap process.
     /// </summary>
-    public class DiscoveryTests
+    public class BootstrapTests
     {
         /// <summary>
-        /// The MessageDispatchModule will discover all defined message handlers within
-        /// all available plug-ins.  The module's AllMessageTypeDispatchers property
-        /// contains all of the meta-data required to dispatch a message at runtime to
-        /// the correct consumer handlers.
+        /// The MessageDispatchModule will discover all defined message handlers within all available plug-ins.
+        /// The module's AllMessageTypeDispatchers property contains all of the meta-data required to dispatch a
+        /// message at runtime to the correct consumer handlers.
         /// </summary>
-        [Fact(DisplayName = "Messaging Module discovers Domain Event")]
-        public void MessagingModule_DiscoversMessageConsumers()
+        [Fact]
+        public void MessagingModule_Discovers_DomainEventsWithConsumers()
         {
             ContainerFixture.Test(fixture => { fixture
-                .Arrange
-                .Container(c => c.WithHostConsumer())
-
+                .Arrange.Container(c => c.AddHost().WithDomainEventHandler())
                 .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
                     var dispatchInfo = m.AllMessageTypeDispatchers[typeof(MockDomainEvent)].FirstOrDefault();
@@ -41,19 +40,15 @@ namespace CoreTests.Messaging.Bootstrap
         /// bootstrap process by implementing the IMessageConsumer marker interface and marking their messages
         /// handlers with the InProcessHandler attribute.
         /// </summary>
-        [Fact(DisplayName = nameof(Discovers_DomainEventConsumerHandler))]
-        public void Discovers_DomainEventConsumerHandler()
+        [Fact]
+        public void MessagingModule_Discovers_DomainEventConsumers()
         {
             ContainerFixture.Test(fixture => { fixture
-                .Arrange
-                .Container(c => c.WithHostConsumer())
-   
+                .Arrange.Container(c => c.AddHost().WithDomainEventHandler())
                 .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
                     var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)].FirstOrDefault();
                     dispatchInfo.Should().NotBeNull();
-
-                    if (dispatchInfo == null) return;
 
                     dispatchInfo.MessageType.Should().Be(typeof(MockDomainEvent));
                     dispatchInfo.ConsumerType.Should().Be(typeof(MockDomainEventConsumer));
@@ -70,17 +65,21 @@ namespace CoreTests.Messaging.Bootstrap
         /// When an event is published, the domain event service resolves the consumer type and
         /// obtains a reference from the container using the cached dispatch information.
         /// </summary>
-        [Fact(DisplayName = nameof(DomainEventConsumer_Registered))]
+        [Fact]
         public void DomainEventConsumer_Registered()
         {
             ContainerFixture.Test(fixture => { fixture
-                .Arrange
-                .Container(c => c.WithHostConsumer())
-
-                .Assert.Services(s =>
+                .Arrange.Container(c => c.AddHost().WithDomainEventHandler())
+                .Assert.ServiceCollection(sc =>
                 {
-                    var consumer = s.GetService<MockDomainEventConsumer>();
-                    consumer.Should().NotBeNull();
+                    sc.FirstOrDefault(s =>
+                            s.ImplementationType == typeof(MockDomainEventConsumer) &&
+                            s.Lifetime == ServiceLifetime.Scoped)
+                        .Should().NotBeNull();
+                })
+                .Services(s =>
+                {
+                    s.GetService<MockDomainEventConsumer>().Should().NotBeNull();
                 });
             });                
         }

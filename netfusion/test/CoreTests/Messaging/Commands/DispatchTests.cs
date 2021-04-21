@@ -1,19 +1,18 @@
-﻿using CoreTests.Messaging.Mocks;
+﻿using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Messaging;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Test.Container;
-using System.Threading.Tasks;
-using NetFusion.Messaging;
 using Xunit;
 
-namespace CoreTests.Messaging
+namespace CoreTests.Messaging.Commands
 {
     /// <summary>
     /// Unit tests for command message types.  A command can only have one associated message
     /// handler and can optionally return a result.
     /// </summary>
-    public class CommandDispatchTests
+    public class DispatchTests
     {
         /// <summary>
         /// Command domain events can have a return result. 
