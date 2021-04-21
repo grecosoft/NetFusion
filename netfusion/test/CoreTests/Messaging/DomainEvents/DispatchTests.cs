@@ -24,7 +24,7 @@ namespace CoreTests.Messaging.DomainEvents
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Container(c => c.AddHost().WithDomainEventHandler())
+                    .Container(c => c.AddMessagingHost().WithDomainEventHandler())
                     .Act.OnServicesAsync(async s =>
                     {
                         var mockEvt = new MockDomainEvent();
@@ -50,7 +50,7 @@ namespace CoreTests.Messaging.DomainEvents
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Container(c => c.AddHost().WithDerivedDomainEventHandler())
+                    .Container(c => c.AddMessagingHost().WithDerivedDomainEventHandler())
                     .Act.OnServicesAsync(async s =>
                     {
                         var mockEvt = new MockDerivedDomainEvent();
@@ -103,7 +103,7 @@ namespace CoreTests.Messaging.DomainEvents
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Container(c => c.AddHost().WithMessageHandlerException())
+                    .Container(c => c.AddMessagingHost().WithMessageHandlerException())
                     .Act.RecordException().OnServicesAsync(async s =>
                     {
                         var messagingSrv = s.GetRequiredService<IMessagingService>();
@@ -141,7 +141,7 @@ namespace CoreTests.Messaging.DomainEvents
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Container(c => c.AddHost().WithChildMessageHandlerException())
+                    .Container(c => c.AddMessagingHost().WithChildMessageHandlerException())
                     .Act.RecordException().OnServicesAsync(async s =>
                     {
                         var messagingSrv = s.GetRequiredService<IMessagingService>();

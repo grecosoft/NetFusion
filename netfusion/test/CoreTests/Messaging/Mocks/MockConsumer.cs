@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NetFusion.Messaging.Types.Contracts;
 
 namespace CoreTests.Messaging.Mocks
 {
@@ -8,13 +9,23 @@ namespace CoreTests.Messaging.Mocks
     /// </summary>
     public abstract class MockConsumer
     {
-        private readonly IList<string> _executedHandlers = new List<string>();
+        private readonly List<string> _executedHandlers = new ();
+        private readonly List<IMessage> _receivedMessages = new();
 
-        public IEnumerable<string> ExecutedHandlers => _executedHandlers;
+        protected MockConsumer()
+        {
+            ExecutedHandlers = _executedHandlers;
+            ReceivedMessages = _receivedMessages;
+        }
+
+        public IReadOnlyCollection<string> ExecutedHandlers { get; }
+        public IReadOnlyCollection<IMessage> ReceivedMessages { get; }
 
         protected void AddCalledHandler(string handlerName)
         {
             _executedHandlers.Add(handlerName);
         }
+
+        protected void RecordReceivedMessage(IMessage message) => _receivedMessages.Add(message);
     }
 }

@@ -25,7 +25,7 @@ namespace CoreTests.Messaging.DomainEvents
         public void MessagingModule_Discovers_DomainEventsWithConsumers()
         {
             ContainerFixture.Test(fixture => { fixture
-                .Arrange.Container(c => c.AddHost().WithDomainEventHandler())
+                .Arrange.Container(c => c.AddMessagingHost().WithDomainEventHandler())
                 .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
                     var dispatchInfo = m.AllMessageTypeDispatchers[typeof(MockDomainEvent)].FirstOrDefault();
@@ -44,7 +44,7 @@ namespace CoreTests.Messaging.DomainEvents
         public void MessagingModule_Discovers_DomainEventConsumers()
         {
             ContainerFixture.Test(fixture => { fixture
-                .Arrange.Container(c => c.AddHost().WithDomainEventHandler())
+                .Arrange.Container(c => c.AddMessagingHost().WithDomainEventHandler())
                 .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
                     var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)].FirstOrDefault();
@@ -69,7 +69,7 @@ namespace CoreTests.Messaging.DomainEvents
         public void DomainEventConsumer_Registered()
         {
             ContainerFixture.Test(fixture => { fixture
-                .Arrange.Container(c => c.AddHost().WithDomainEventHandler())
+                .Arrange.Container(c => c.AddMessagingHost().WithDomainEventHandler())
                 .Assert.ServiceCollection(sc =>
                 {
                     sc.FirstOrDefault(s =>

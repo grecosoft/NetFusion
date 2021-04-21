@@ -17,6 +17,7 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
 
             AddCalledHandler("OnEventHandlerOne");
+            RecordReceivedMessage(domainEvent);
         }
     }
     
@@ -29,6 +30,7 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
 
             AddCalledHandler("OnBaseEventHandler");
+            RecordReceivedMessage(domainEvent);
         }
 
         [InProcessHandler]
@@ -37,6 +39,7 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
 
             AddCalledHandler("OnIncludeBaseEventHandler");
+            RecordReceivedMessage(domainEvent);
         }
     }
     
