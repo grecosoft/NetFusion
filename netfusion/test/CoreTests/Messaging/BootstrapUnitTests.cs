@@ -1,29 +1,54 @@
 ﻿using System.Linq;
 using CoreTests.Messaging.DomainEvents;
+using CoreTests.Messaging.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Plugin.Configs;
+using NetFusion.Messaging.Plugin.Modules;
 using NetFusion.Test.Container;
+using NetFusion.Test.Plugins;
 using Xunit;
+
 // ReSharper disable All
 
-namespace CoreTests.Messaging.Bootstrap
+namespace CoreTests.Messaging
 {
     /// <summary>
     /// Tests that assert that the messaging plug-in was correctly initialized
     /// by the bootstrap process.
     /// </summary>
-    public class InitializationTests
+    public class BootstrapUnitTests
     {
+        /// <summary>
+        /// When the messaging plugin is added to the composite application, all messaging
+        /// associated modules and configurations are added.
+        /// </summary>
+        [Fact]
+        public void AllMessagingModules_Added_ToContainer()
+        {
+            ContainerFixture.Test(fixture =>
+            {
+                fixture
+                    .Arrange.Container(c => c.AddMessagingHost())
+                    .Assert.Configuration<MessageDispatchConfig>(_ => { })
+                    .Configuration<QueryDispatchConfig>(_ => { })
+                    .PluginModule<MessagingModule>(_ => { })
+                    .PluginModule<MessageDispatchModule>(_ => { })
+                    .PluginModule<MessageEnricherModule>(_ => { })
+                    .PluginModule<QueryDispatchModule>(_ => { })
+                    .PluginModule<QueryFilterModule>(_ => { });
+            });
+        }
+
         /// <summary>
         /// Unless cleared, the InProcessEventDispatcher will be used by default
         /// to dispatch events to local consumer event handlers.  This is also the
         /// default configuration if the host does not provide one.
         /// </summary>
         [Fact]
-        public void InProcessEventDispatcher_Configured_ByDefault()
+        public void InProcessPublisher_Configured_ByDefault()
         {
             ContainerFixture.Test(fixture =>
             {
@@ -40,7 +65,7 @@ namespace CoreTests.Messaging.Bootstrap
                     .ServiceCollection(sc =>
                     {
                         // Publishers are created per request scope:
-                        var service = sc.FirstOrDefault(s => s.ImplementationType == typeof(InProcessMessagePublisher));
+                        var service = sc.SingleOrDefault(s => s.ImplementationType == typeof(InProcessMessagePublisher));
                         service.Should().NotBeNull();
                         service.Lifetime.Should().Be(ServiceLifetime.Scoped);
                     })
@@ -56,7 +81,7 @@ namespace CoreTests.Messaging.Bootstrap
         /// <summary>
         /// The plug-in registers a service that can be used to publish messages.
         /// </summary>
-        [Fact(DisplayName = nameof(RegistersService_ForPublishingEvents))]
+        [Fact]
         public void RegistersService_ForPublishingEvents()
         {
             ContainerFixture.Test(fixture => { 
@@ -65,6 +90,26 @@ namespace CoreTests.Messaging.Bootstrap
                     .Assert.Services(s =>
                     {
                         var service = s.GetService<IMessagingService>();
+                        service.Should().NotBeNull();
+                    });
+            });
+        }
+
+        [Fact]
+        public void MessageConsumers_Registered()
+        {
+            ContainerFixture.Test(fixture => { 
+                fixture
+                    .Arrange.Container(c => c.AddMessagingHost().WithDomainEventHandler())
+                    .Assert.ServiceCollection(sc =>
+                    {
+                        var service = sc.SingleOrDefault(s => s.ImplementationType == typeof(MockDomainEventConsumer));
+                        service.Should().NotBeNull();
+                        service.Lifetime.Should().Be(ServiceLifetime.Scoped);
+                    })
+                    .Services(s =>
+                    {
+                        var service = s.GetService<MockDomainEventConsumer>();
                         service.Should().NotBeNull();
                     });
             });

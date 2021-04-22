@@ -2,9 +2,11 @@ using System;
 using System.Threading.Tasks;
 using CoreTests.Messaging.Mocks;
 using NetFusion.Messaging;
+using NetFusion.Messaging.Types;
+
 // ReSharper disable All
 
-namespace CoreTests.Messaging.DomainEvents.Mocks
+namespace CoreTests.Messaging.Mocks
 {
     // ------------------- [Basic Message Consumers] ------------------
     
@@ -104,6 +106,24 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
         public Task OnDomainEventTwoAsync(MockDomainEventTwo domainEvent)
         {
             return Task.Run(() => throw new InvalidOperationException(nameof(OnDomainEventTwoAsync)));
+        }
+    }
+    
+    public class MockDomainEventRuleBasedConsumer : MockConsumer,
+        IMessageConsumer
+    {
+        [InProcessHandler, ApplyDispatchRule(typeof(MockRoleMin), typeof(MockRoleMax),
+             RuleApplyType = RuleApplyTypes.All)]
+        public void OnEventAllRulesPass(MockRuleDomainEvent evt)
+        {
+            AddCalledHandler(nameof(OnEventAllRulesPass));
+        }
+
+        [InProcessHandler, ApplyDispatchRule(typeof(MockRoleMin), typeof(MockRoleMax),
+             RuleApplyType = RuleApplyTypes.Any)]
+        public void OnEventAnyRulePasses(MockRuleDomainEvent evt)
+        {
+            AddCalledHandler(nameof(OnEventAnyRulePasses));
         }
     }
 }

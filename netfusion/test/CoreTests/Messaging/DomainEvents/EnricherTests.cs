@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
-using CoreTests.Messaging.DomainEvents.Mocks;
+using CoreTests.Messaging.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;

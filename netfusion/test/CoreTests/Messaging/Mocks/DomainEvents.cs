@@ -1,6 +1,6 @@
 ﻿using NetFusion.Messaging.Types;
 
-namespace CoreTests.Messaging.DomainEvents.Mocks
+namespace CoreTests.Messaging.Mocks
 {
     // --------------------- [Domain Events] ---------------------
     
@@ -23,5 +23,10 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
 
     public class MockDerivedDomainEvent : MockBaseDomainEvent
     {
+    }
+    
+    public class MockRuleDomainEvent : DomainEvent
+    {
+        public int RuleTestValue { get; set; } = -1;
     }
 }

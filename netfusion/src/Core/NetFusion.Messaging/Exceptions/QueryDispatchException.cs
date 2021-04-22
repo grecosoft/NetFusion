@@ -62,8 +62,7 @@ namespace NetFusion.Messaging.Exceptions
         public QueryDispatchException(string message, IEnumerable<NetFusionException> childExceptions)
             : base(message)
         {
-            ChildExceptions = childExceptions ?? throw new ArgumentNullException(nameof(childExceptions));
-            AddExceptionDetails(childExceptions);
+            SetChildExceptions(childExceptions);
         }
     }
 }

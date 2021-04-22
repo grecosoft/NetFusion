@@ -1,4 +1,4 @@
-﻿using CoreTests.Messaging.DomainEvents.Mocks;
+﻿using CoreTests.Messaging.Mocks;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Test.Plugins;
@@ -71,6 +71,16 @@ namespace CoreTests.Messaging.DomainEvents
             container.RegisterPlugins(hostPlugin);
             container.RegisterPlugin<MessagingPlugin>();
 
+            return container;
+        }
+        
+        public static CompositeContainer WithDomainEventRuleHandler(this CompositeContainer container)
+        {
+            var appPlugin = new MockAppPlugin();
+            appPlugin.AddPluginType<MockDomainEventRuleBasedConsumer>();
+            appPlugin.AddPluginType<MockRoleMin>();
+            appPlugin.AddPluginType<MockRoleMax>();
+            container.RegisterPlugins(appPlugin);
             return container;
         }
     }

@@ -6,6 +6,10 @@ namespace NetFusion.Base.Exceptions
 {
     /// <summary>
     /// Base exception from which all other NetFusion specific exceptions derive.
+    /// This exception's Details property contains key/value pairs of information
+    /// associated with the exception.  When an inner exception or AggregateException
+    /// is specified, the details of any NetFusionException derived exceptions are
+    /// added to the dictionary.
     /// </summary>
     public class NetFusionException : Exception
     {
@@ -16,11 +20,9 @@ namespace NetFusion.Base.Exceptions
         public string ExceptionId { get; }
         
         /// <summary>
-        /// List of child exceptions associated with parent exception.  This can be a
-        /// list of custom specified exceptions or a flattened listed of exceptions
-        /// associated with an asynchronous task.
+        /// List of child exceptions associated with parent exception. 
         /// </summary>
-        public IEnumerable<Exception> ChildExceptions { get; protected init; }
+        public IEnumerable<Exception> ChildExceptions { get; private set; }
         
         /// <summary>
         /// Dictionary of key/value pairs containing details of the exception. 
@@ -63,12 +65,10 @@ namespace NetFusion.Base.Exceptions
         /// <param name="message">The message describing the exception.</param>
         /// <param name="aggregateException">An aggregate exception associated with a task.</param>
         protected NetFusionException(string message, AggregateException aggregateException)
-            : base(message, aggregateException.InnerException)
+            : this(message, aggregateException.InnerException)
         {
-            ChildExceptions = aggregateException.Flatten().InnerExceptions;
-            
             Details["Message"] = message;
-            AddExceptionDetails(ChildExceptions);
+            SetChildExceptions(aggregateException.Flatten().InnerExceptions);
         }
         
         /// <summary>
@@ -111,7 +111,7 @@ namespace NetFusion.Base.Exceptions
                 "Exception details cannot be null.");
         }
 
-        protected void AddExceptionDetails(Exception innerException)
+        private void AddExceptionDetails(Exception innerException)
         {
             Details["InnerException"] = innerException.ToString();
             
@@ -121,9 +121,11 @@ namespace NetFusion.Base.Exceptions
             }
         }
 
-        protected void AddExceptionDetails(IEnumerable<Exception> exceptions)
+        protected void SetChildExceptions(IEnumerable<Exception> exceptions)
         {
-            var detailedExceptions = exceptions.OfType<NetFusionException>()
+            ChildExceptions = exceptions.ToArray();
+            
+            var detailedExceptions = ChildExceptions.OfType<NetFusionException>()
                 .Select(de => de.Details)
                 .Where(d => d != null)
                 .ToArray();

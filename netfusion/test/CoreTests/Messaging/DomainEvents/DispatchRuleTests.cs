@@ -1,25 +1,22 @@
-﻿using CoreTests.Messaging.Mocks;
+using System.Threading.Tasks;
+using CoreTests.Messaging.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
 using NetFusion.Test.Container;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace CoreTests.Messaging
+namespace CoreTests.Messaging.DomainEvents
 {
-    
-    public class DispatchEvaluationTests
+    public class DispatchRuleTests
     {
-
-        
         [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesAllDispatchRules))]
         public Task HandlerCalled_WhenMessagePassesAllDispatchRules()
         { 
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Container(c => c.WithHostRuleBasedConsumer())
+                    .Container(c => c.AddMessagingHost().WithDomainEventRuleHandler())
                     .Act.OnServicesAsync(s =>
                     {
                         var mockEvt = new MockRuleDomainEvent { RuleTestValue = 1500 };
@@ -41,7 +38,7 @@ namespace CoreTests.Messaging
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Container(c => c.WithHostRuleBasedConsumer())
+                    .Container(c => c.AddMessagingHost().WithDomainEventRuleHandler())
                     .Act.OnServicesAsync(s =>
                     {
                         var mockEvt = new MockRuleDomainEvent { RuleTestValue = 3000 };
@@ -58,4 +55,3 @@ namespace CoreTests.Messaging
         }
     }
 }
-

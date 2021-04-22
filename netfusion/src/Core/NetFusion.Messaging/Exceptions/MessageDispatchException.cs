@@ -57,8 +57,7 @@ namespace NetFusion.Messaging.Exceptions
             IEnumerable<NetFusionException> childExceptions) 
             : base(message, innerException)
         {
-            ChildExceptions = childExceptions ?? throw new ArgumentNullException(nameof(childExceptions));
-            AddExceptionDetails(childExceptions);
+            SetChildExceptions(childExceptions);
         }
     }
 }

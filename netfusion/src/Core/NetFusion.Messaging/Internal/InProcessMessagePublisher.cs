@@ -19,7 +19,7 @@ namespace NetFusion.Messaging.Internal
     /// This is the default message publisher that dispatches messages locally
     /// to message handlers contained within the current application process.
     /// </summary>
-    public class InProcessMessagePublisher : MessagePublisher
+    public class InProcessMessagePublisher : IMessagePublisher
     {
         private readonly ILogger<InProcessMessagePublisher> _logger;
         private readonly IServiceProvider _services;
@@ -41,9 +41,9 @@ namespace NetFusion.Messaging.Internal
         // Not used by the implementation, but other plug-ins can use the integration type to apply
         // a subset of the publishers.  i.e. In a unit-of-work, you might want to deliver domain-events
         // in-process before doing so for external integration based events.
-        public override IntegrationTypes IntegrationType => IntegrationTypes.Internal;
+        public IntegrationTypes IntegrationType => IntegrationTypes.Internal;
 
-        public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
+        public async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
             MessageDispatchInfo[] dispatchers = GetMessageDispatchers(message);
             if (! dispatchers.Any())

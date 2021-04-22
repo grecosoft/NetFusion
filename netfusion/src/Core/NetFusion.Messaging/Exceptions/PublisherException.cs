@@ -63,9 +63,8 @@ namespace NetFusion.Messaging.Exceptions
             IEnumerable<NetFusionException> exceptionDetails) : base(message, innerException)
         {
             PublishedMessage = publishedMessage ?? throw new ArgumentNullException(nameof(publishedMessage));
-            ChildExceptions = exceptionDetails ?? throw new ArgumentNullException(nameof(exceptionDetails));
 
-            AddExceptionDetails(exceptionDetails);
+            SetChildExceptions(exceptionDetails);
         }
         
         /// <summary>
@@ -79,10 +78,8 @@ namespace NetFusion.Messaging.Exceptions
         {
             if (eventSource == null) throw new ArgumentNullException(nameof(eventSource));
 
-            ChildExceptions = exceptionDetails ?? throw new ArgumentNullException(nameof(exceptionDetails));
-
             Details["EventSourceType"] = eventSource.GetType();
-            AddExceptionDetails(exceptionDetails);
+            SetChildExceptions(exceptionDetails);
         }
         
         /// <summary>
@@ -109,9 +106,7 @@ namespace NetFusion.Messaging.Exceptions
         public PublisherException(string message, IEnumerable<EnricherException> enricherExceptions) 
             : base(message)
         {
-            ChildExceptions = enricherExceptions ?? throw new ArgumentNullException(nameof(enricherExceptions));
-
-            AddExceptionDetails(enricherExceptions);
+            SetChildExceptions(enricherExceptions);
         }
     }
 }
