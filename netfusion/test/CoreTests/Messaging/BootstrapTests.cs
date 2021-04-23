@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using CoreTests.Messaging.DomainEvents;
-using CoreTests.Messaging.Mocks;
+using CoreTests.Messaging.DomainEvents.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
@@ -19,7 +19,7 @@ namespace CoreTests.Messaging
     /// Tests that assert that the messaging plug-in was correctly initialized
     /// by the bootstrap process.
     /// </summary>
-    public class BootstrapUnitTests
+    public class BootstrapTests
     {
         /// <summary>
         /// When the messaging plugin is added to the composite application, all messaging

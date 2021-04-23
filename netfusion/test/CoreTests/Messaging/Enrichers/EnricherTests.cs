@@ -1,17 +1,22 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using CoreTests.Messaging.Mocks;
+using CoreTests.Messaging.DomainEvents;
+using CoreTests.Messaging.DomainEvents.Mocks;
+using CoreTests.Messaging.Enrichers.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Enrichers;
+using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.Messaging.Types.Attributes;
 using NetFusion.Test.Container;
 using Xunit;
+
 // ReSharper disable All
 
-namespace CoreTests.Messaging.DomainEvents
+namespace CoreTests.Messaging.Enrichers
 {
     public class EnricherTests
     {
@@ -88,9 +93,38 @@ namespace CoreTests.Messaging.DomainEvents
         }
 
         [Fact]
-        public void IfEnricherException_ErrorsAreCaptured()
+        public Task IfEnricherException_ErrorsAreCaptured()
         {
-            
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange
+                    .Container(c =>
+                    {
+                        c.AddMessagingHost();
+                        c.WithDomainEventHandler();
+                    })
+                    .PluginConfig<MessageDispatchConfig>(dc =>
+                    {
+                        dc.AddEnricher<MockEnricherWithException>();
+                    })
+                    .Act.RecordException().OnServicesAsync(async s =>
+                    {
+                        var messagingSrv = s.GetRequiredService<IMessagingService>();
+                        var domainEvt = new MockDomainEvent();
+
+                        await messagingSrv.PublishAsync(domainEvt);
+                    });
+
+                testResult.Assert.Exception<PublisherException>(ex =>
+                {
+                    ex.ChildExceptions.Should().HaveCount(1);
+                    var enricherEx = ex.ChildExceptions.First();
+
+                    enricherEx.Should().BeOfType<EnricherException>();
+                    enricherEx.InnerException.Should().BeOfType<InvalidOperationException>();
+                    enricherEx.InnerException.Message.Should().Be("TestEnricherException");
+                });
+            });
         }
     }
 }

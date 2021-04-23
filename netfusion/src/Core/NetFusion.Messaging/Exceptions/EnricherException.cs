@@ -9,8 +9,6 @@ namespace NetFusion.Messaging.Exceptions
     /// </summary>
     public class EnricherException : NetFusionException
     {
-        public EnricherException() { }
-        
         /// <summary>
         /// Constructor.
         /// </summary>

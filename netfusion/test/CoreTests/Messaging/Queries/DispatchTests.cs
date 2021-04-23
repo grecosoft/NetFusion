@@ -1,20 +1,21 @@
-﻿using CoreTests.Queries.Mocks;
-using FluentAssertions;
-using NetFusion.Test.Container;
-using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System;
 using System.Threading.Tasks;
-using Xunit;
+using CoreTests.Messaging.Queries.Mocks;
+using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.Plugin.Configs;
+using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;
+using Xunit;
+// ReSharper disable All
 
-namespace CoreTests.Queries
+namespace CoreTests.Messaging.Queries
 {
-    public class QueryDispatchTests
+    public class DispatchTests
     {
         [Fact(DisplayName = "Queries: Configured Filters Unique")]
         public void Configured_PreFilters_Unique()

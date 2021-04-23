@@ -1,4 +1,4 @@
-namespace CoreTests.Messaging.Commands
+namespace CoreTests.Messaging.Queries
 {
     public class FilterTests
     {

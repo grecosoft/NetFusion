@@ -1,16 +1,18 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CoreTests.Messaging.DomainEvents;
-using CoreTests.Messaging.Mocks;
+using CoreTests.Messaging.DomainEvents.Mocks;
+using CoreTests.Messaging.Logging.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Logging;
 using NetFusion.Test.Container;
 using Xunit;
+
 // ReSharper disable All
 
-namespace CoreTests.Messaging
+namespace CoreTests.Messaging.Logging
 {
     /// <summary>
     /// When a message is published, the IMessageLogger is used to log information about
@@ -19,7 +21,7 @@ namespace CoreTests.Messaging
     /// for monitoring messages.  This should only be used during development or researching
     /// a production issue.
     /// </summary>
-    public class LoggingCorrelationTests
+    public class CorrelationTests
     {
         [Fact]
         public void MessageSinks_CanBeRegistered()

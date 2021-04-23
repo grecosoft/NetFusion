@@ -12,7 +12,7 @@ using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;
 using Xunit;
 
-namespace CoreTests.Queries.Bootstrap
+namespace CoreTests.Messaging.Queries
 {
     public class QueryDispatchModuleTests
     {

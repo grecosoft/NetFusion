@@ -123,6 +123,8 @@ namespace NetFusion.Base.Exceptions
 
         protected void SetChildExceptions(IEnumerable<Exception> exceptions)
         {
+            if (exceptions == null) throw new ArgumentNullException(nameof(exceptions));
+            
             ChildExceptions = exceptions.ToArray();
             
             var detailedExceptions = ChildExceptions.OfType<NetFusionException>()

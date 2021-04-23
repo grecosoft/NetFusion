@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using NetFusion.Messaging.Logging;
 
-namespace CoreTests.Messaging.Mocks
+namespace CoreTests.Messaging.Logging.Mocks
 {
     public class MockLoggingSink : IMessageLogSink
     {

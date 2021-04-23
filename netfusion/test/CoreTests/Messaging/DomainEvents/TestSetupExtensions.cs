@@ -1,4 +1,4 @@
-﻿using CoreTests.Messaging.Mocks;
+﻿using CoreTests.Messaging.DomainEvents.Mocks;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Test.Plugins;

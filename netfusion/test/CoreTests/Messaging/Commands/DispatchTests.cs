@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using CoreTests.Messaging.Commands.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;

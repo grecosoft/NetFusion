@@ -1,8 +1,8 @@
-﻿using NetFusion.Messaging.Filters;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using NetFusion.Messaging.Filters;
 using NetFusion.Messaging.Types.Contracts;
 
-namespace CoreTests.Queries.Mocks
+namespace CoreTests.Messaging.Queries.Mocks
 {
     public class QueryFilterOne : IPreQueryFilter, IPostQueryFilter
     {

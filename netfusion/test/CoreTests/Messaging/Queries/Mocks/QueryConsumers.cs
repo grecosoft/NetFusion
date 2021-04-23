@@ -1,6 +1,6 @@
 ﻿using NetFusion.Messaging;
 
-namespace CoreTests.Queries.Mocks
+namespace CoreTests.Messaging.Queries.Mocks
 {
     public class TestConsumer : IQueryConsumer
     {
@@ -17,7 +17,7 @@ namespace CoreTests.Queries.Mocks
         [InProcessHandler]
         public TestQueryResult Execute(TestQuery query)
         {
-            return new TestQueryResult();
+            return new();
         }
     }
 
@@ -26,7 +26,7 @@ namespace CoreTests.Queries.Mocks
         [InProcessHandler]
         public TestQueryResult Execute(TestQuery query)
         {
-            return new TestQueryResult();
+            return new();
         }
     }
 }

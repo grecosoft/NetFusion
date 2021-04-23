@@ -87,10 +87,45 @@ namespace CommonTests.Base
             Assert.Equal(400, details.b);
         }
         
+        /// <summary>
+        /// As with the prior unit-test, if an AggregateException is passed, all NetFusionException
+        /// derived exceptions will have their Details added to the parent exception after calling
+        /// the Flatten method.  This unit-test creates an aggregate exception and asserts that all
+        /// child exception details are added.
+        /// </summary>
         [Fact]
         public void AggregateInnerException_InnerExceptions_AddedToParentDetails()
         {
+            // Arrange:
+            var aggEx = new AggregateException("AggregateException1",
+          
+                new MockException("InnerException1"),
+                new AggregateException("AggregateException2",
+                    
+                    new InvalidOperationException("InnerException2"),
+                    new AggregateException("AggregateException3", 
+                        new Exception[] { new MockException("InnerException3")})
+                )
+            );
+
+            var ex = new MockException("ParentExceptionMessage", aggEx);
+
+            // Assert:
+            // All three child aggregate exceptions specifed above will be 
+            // added to the collection.
+            ex.ChildExceptions.Should().HaveCount(3);
             
+            // Since 2 out of the 3 exceptions are NetFusionException derived, 
+            // they will only appear in the details.
+            var listOfDetails = ex.Details["InnerDetails"] as IEnumerable<object>;
+            listOfDetails.Should().NotBeNull();
+            listOfDetails.Should().HaveCount(2);
+
+            var details1 = (Dictionary<string, object>) listOfDetails.ElementAt(0);
+            var details2 = (Dictionary<string, object>) listOfDetails.ElementAt(1);
+
+            details1["Message"].Should().Be("InnerException1");
+            details2["Message"].Should().Be("InnerException3");
         }
 
         private class MockException : NetFusionException
@@ -117,6 +152,12 @@ namespace CommonTests.Base
                 : base(message, innerException)
             {
                 SetChildExceptions(relatedExceptions);                
+            }
+
+            public MockException(string message, AggregateException aggregateException)
+                : base(message, aggregateException)
+            {
+                
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿using NetFusion.Messaging.Types;
 
-namespace CoreTests.Messaging.Mocks
+namespace CoreTests.Messaging.DomainEvents.Mocks
 {
     // --------------------- [Domain Events] ---------------------
     

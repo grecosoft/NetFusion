@@ -1,12 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using CoreTests.Messaging.Mocks;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Types;
 
-// ReSharper disable All
-
-namespace CoreTests.Messaging.Mocks
+namespace CoreTests.Messaging.DomainEvents.Mocks
 {
     // ------------------- [Basic Message Consumers] ------------------
     

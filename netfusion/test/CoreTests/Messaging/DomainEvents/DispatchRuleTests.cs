@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using CoreTests.Messaging.Mocks;
+using CoreTests.Messaging.DomainEvents.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
