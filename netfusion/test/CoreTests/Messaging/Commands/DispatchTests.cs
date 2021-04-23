@@ -18,7 +18,7 @@ namespace CoreTests.Messaging.Commands
         /// <summary>
         /// Command domain events can have a return result. 
         /// </summary>
-        [Fact(DisplayName = "Can Send Command with Async Handler returning Result")]
+        [Fact]
         public Task CanSendCommand_WithAsyncHandler_ReturningResult()
         {
             MockCommandResult cmdResult = null;
@@ -26,7 +26,7 @@ namespace CoreTests.Messaging.Commands
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Container(c => c.WithHostCommandConsumer())
+                    .Container(c => c.AddMessagingHost().WithCommandConsumer())
                     .Act.OnServicesAsync(async s =>
                     {
                         var messagingSrv = s.GetRequiredService<IMessagingService>();
@@ -47,13 +47,13 @@ namespace CoreTests.Messaging.Commands
             });
         }
 
-        [Fact(DisplayName = nameof(CommandResult_NotRequired))]
+        [Fact]
         public Task CommandResult_NotRequired()
         {          
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Container(c => c.WithHostCommandConsumer())
+                    .Container(c => c.AddMessagingHost().WithCommandConsumer())
                     .Act.OnServicesAsync(async s =>
                     {
                         var messagingSrv = s.GetRequiredService<IMessagingService>();
@@ -71,13 +71,13 @@ namespace CoreTests.Messaging.Commands
             });
         }
 
-        [Fact(DisplayName = nameof(CommandMessagesCanOnly_HaveOneEventHandler))]
+        [Fact]
         public Task CommandMessagesCanOnly_HaveOneEventHandler()
         {
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Container(c => c.WithHostCommandConsumer().AddMultipleConsumers())
+                    .Container(c => c.AddMessagingHost().WithMultipleConsumers())
                     .Act.RecordException().OnServicesAsync(s =>
                     {
                         var messagingSrv = s.GetRequiredService<IMessagingService>();

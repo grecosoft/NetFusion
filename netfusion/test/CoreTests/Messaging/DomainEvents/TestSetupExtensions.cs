@@ -10,17 +10,6 @@ namespace CoreTests.Messaging.DomainEvents
     /// </summary>
     public static class TestSetupExtensions
     {
-        // Adds a host plugin configured with the core messaging plugin.
-        public static CompositeContainer AddMessagingHost(this CompositeContainer container)
-        {
-            var hostPlugin = new MockHostPlugin();
-            
-            container.RegisterPlugins(hostPlugin);
-            container.RegisterPlugin<MessagingPlugin>();
-            
-            return container;
-        }
-
         // Adds a domain-event handler component to an application plugin.
         public static CompositeContainer WithDomainEventHandler(this CompositeContainer container)
         {

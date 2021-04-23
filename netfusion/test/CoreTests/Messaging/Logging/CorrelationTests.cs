@@ -37,7 +37,7 @@ namespace CoreTests.Messaging.Logging
                     })
                     .Services(s =>
                     {
-                        var services = s.GetServices<IMessagingService>();
+                        var services = s.GetServices<IMessageLogSink>();
                         services.Should().ContainSingle();
                     });
             });

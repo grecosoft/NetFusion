@@ -8,9 +8,9 @@ namespace CoreTests.Messaging.Queries.Mocks
     {
         public Task OnPreExecuteAsync(IQuery query)
         {
-            if (query is TestQuery testQuery)
+            if (query is MockQuery testQuery)
             {
-                testQuery.TestLog.Add("QueryFilterOne-Pre");
+                // testQuery.TestLog.Add("QueryFilterOne-Pre");
             }
 
             return Task.CompletedTask;
@@ -18,9 +18,9 @@ namespace CoreTests.Messaging.Queries.Mocks
 
         public Task OnPostExecuteAsync(IQuery query)
         {
-            if (query is TestQuery testQuery)
+            if (query is MockQuery testQuery)
             {
-                testQuery.TestLog.Add("QueryFilterOne-Post");
+               // testQuery.TestLog.Add("QueryFilterOne-Post");
             }
 
             return Task.CompletedTask;
@@ -31,9 +31,9 @@ namespace CoreTests.Messaging.Queries.Mocks
     {
         public Task OnPreExecuteAsync(IQuery query)
         {
-            if(query is TestQuery testQuery)
-            {
-                testQuery.TestLog.Add("QueryFilterTwo-Pre");
+            if(query is MockQuery testQuery)
+            { 
+                //    testQuery.TestLog.Add("QueryFilterTwo-Pre");
             }
 
             return Task.CompletedTask;
@@ -41,9 +41,9 @@ namespace CoreTests.Messaging.Queries.Mocks
 
         public Task OnPostExecuteAsync(IQuery query)
         {
-            if (query is TestQuery testQuery)
+            if (query is MockQuery testQuery)
             {
-                testQuery.TestLog.Add("QueryFilterTwo-Post");
+                //testQuery.TestLog.Add("QueryFilterTwo-Post");
             }
 
             return Task.CompletedTask;

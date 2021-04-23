@@ -1,19 +1,14 @@
-﻿using System.Collections.Generic;
-using NetFusion.Messaging.Types;
+﻿using NetFusion.Messaging.Types;
 
 namespace CoreTests.Messaging.Queries.Mocks
 {
-    public class TestQuery : Query<TestQueryResult>
+    public class MockQuery : Query<MockQueryResult>
     {
-        public readonly List<string> TestLog = new List<string>();
+ 
     }
 
-    public class TestQueryResult
+    public class MockQueryResult
     {
 
-    }
-
-    public class TestQueryNoConsumer : Query<TestQueryResult>
-    {
     }
 }

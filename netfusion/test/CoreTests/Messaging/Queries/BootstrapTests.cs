@@ -11,6 +11,7 @@ using NetFusion.Messaging.Types;
 using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;
 using Xunit;
+// ReSharper disable All
 
 namespace CoreTests.Messaging.Queries
 {

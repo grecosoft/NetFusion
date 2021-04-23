@@ -10,7 +10,7 @@ namespace CoreTests.Messaging.DomainEvents
 {
     public class DispatchRuleTests
     {
-        [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesAllDispatchRules))]
+        [Fact]
         public Task HandlerCalled_WhenMessagePassesAllDispatchRules()
         { 
             return ContainerFixture.TestAsync(async fixture =>
@@ -32,7 +32,7 @@ namespace CoreTests.Messaging.DomainEvents
             });
         }
         
-        [Fact(DisplayName = nameof(HandlerCalled_WhenMessagePassesAnyDispatchRule))]
+        [Fact]
         public Task HandlerCalled_WhenMessagePassesAnyDispatchRule()
         {
             return ContainerFixture.TestAsync(async fixture =>

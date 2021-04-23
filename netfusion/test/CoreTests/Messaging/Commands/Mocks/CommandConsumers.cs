@@ -3,7 +3,8 @@ using NetFusion.Messaging;
 
 namespace CoreTests.Messaging.Commands.Mocks
 {
-    public class MockCommandConsumer : MockConsumer, IMessageConsumer
+    public class MockCommandConsumer : MockConsumer, 
+        IMessageConsumer
     {
         [InProcessHandler]
         public async Task<MockCommandResult> OnCommand(MockCommand evt)

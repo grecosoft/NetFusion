@@ -1,6 +1,5 @@
 ﻿using CoreTests.Messaging.Commands.Mocks;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Messaging.Plugin;
 using NetFusion.Test.Plugins;
 
 // ReSharper disable All
@@ -9,25 +8,26 @@ namespace CoreTests.Messaging.Commands
 {
     public static class TestSetupExtensions
     {
-        public static CompositeContainer WithHostCommandConsumer(this CompositeContainer container)
+        public static CompositeContainer WithCommandConsumer(this CompositeContainer container)
         {
-            var hostPlugin = new MockHostPlugin();
-            hostPlugin.AddPluginType<MockCommandConsumer>();
+            var appPlugin = new MockAppPlugin();
             
-            container.RegisterPlugins(hostPlugin);
-            container.RegisterPlugin<MessagingPlugin>();
-            
+            appPlugin.AddPluginType<MockCommandConsumer>();
+            container.RegisterPlugins(appPlugin);
+
             return container;
         }
 
-        public static CompositeContainer AddMultipleConsumers(this CompositeContainer container)
+        public static CompositeContainer WithMultipleConsumers(this CompositeContainer container)
         {
-            var appPlugin = new MockAppPlugin();
-            appPlugin.AddPluginType<MockInvalidCommandConsumer>();
+            var appPlugin1 = new MockAppPlugin();
+            appPlugin1.AddPluginType<MockCommandConsumer>();
             
-            container.RegisterPlugins(appPlugin);
-            container.RegisterPlugin<MessagingPlugin>();
+            var appPlugin2 = new MockAppPlugin();
+            appPlugin2.AddPluginType<MockInvalidCommandConsumer>();
             
+            container.RegisterPlugins(appPlugin1, appPlugin2);
+
             return container;
         }
     }
