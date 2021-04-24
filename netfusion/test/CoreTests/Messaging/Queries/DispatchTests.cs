@@ -17,18 +17,6 @@ namespace CoreTests.Messaging.Queries
     public class DispatchTests
     {
         [Fact]
-        public void Configured_PreFilters_Unique()
-        {
-            var config = new QueryDispatchConfig();
-            config.AddFilter<QueryFilterOne>();
-            config.AddFilter<QueryFilterTwo>();
-            
-            Assert.Throws<InvalidOperationException>(() => config.AddFilter<QueryFilterOne>())
-                .Message.Should().Contain("has already been added");
-           
-        }
-
-        [Fact]
         public void Query_CannotHave_MultipleConsumers()
         {
             ContainerFixture.Test(fixture => { fixture
@@ -81,6 +69,56 @@ namespace CoreTests.Messaging.Queries
                 {
                     qc.ReceivedQueries.Should().HaveCount(1);
                     qc.ExecutedHandlers.Should().HaveCount(1).And.Contain("Execute");
+                });
+            });
+        }
+        
+        [Fact]
+        public Task Consumer_Can_DispatchQuery_To_AsyncConsumer()
+        {
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange
+                    .Container(c => c.AddMessagingHost().WithAsyncQueryConsumer())
+                    .Act.OnServicesAsync(async s =>
+                    {
+                        var query = new MockQuery();
+                        await s.GetRequiredService<IMessagingService>()
+                            .DispatchAsync(query);
+                    });
+
+                testResult.Assert.Service<MockAsyncQueryConsumer>(qc =>
+                {
+                    qc.ReceivedQueries.Should().HaveCount(1);
+                    qc.ExecutedHandlers.Should().HaveCount(1).And.Contain("Execute");
+                });
+            });
+        }
+        
+        /// <summary>
+        /// Tests that a query handler handler resulting in an exception
+        /// is correctly captured.
+        /// </summary>
+        [Fact]
+        public Task ExceptionsCapture_ForDispatched_Query()
+        {
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange
+                    .Container(c => c.AddMessagingHost().WithAsyncQueryConsumer())
+                    .Act.RecordException().OnServicesAsync(async s =>
+                    {
+                        var messagingSrv = s.GetRequiredService<IMessagingService>();
+                        var query = new MockQuery {ThrowEx = true};
+
+                        await messagingSrv.DispatchAsync(query);
+                    });
+
+                testResult.Assert.Exception<QueryDispatchException>(ex =>
+                {
+                    // Assert that the inner exception is a dispatch exception:
+                    ex.InnerException.Should().NotBeNull();
+                    // ex.InnerException?.InnerException.Should().BeOfType<MessageDispatchException>();
                 });
             });
         }

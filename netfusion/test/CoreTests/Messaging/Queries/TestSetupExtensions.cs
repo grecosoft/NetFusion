@@ -15,6 +15,15 @@ namespace CoreTests.Messaging.Queries
             return container;
         }
         
+        public static CompositeContainer WithAsyncQueryConsumer(this CompositeContainer container)
+        {
+            var appPlugin = new MockAppPlugin();
+            appPlugin.AddPluginType<MockAsyncQueryConsumer>();
+            
+            container.RegisterPlugins(appPlugin);
+            return container;
+        }
+        
         public static CompositeContainer WithMultipleQueryConsumers(this CompositeContainer container)
         {
             var appPlugin = new MockAppPlugin();

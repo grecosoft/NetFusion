@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Types.Contracts;
 
@@ -38,7 +40,28 @@ namespace CoreTests.Messaging.Queries.Mocks
             return new MockQueryResult();
         }
     }
-
+    
+    public class MockAsyncQueryConsumer : MockQueryConsumerBase,
+        IQueryConsumer
+    {
+        [InProcessHandler]
+        public async Task<MockQueryResult> Execute(MockQuery query)
+        {
+            RecordReceivedQuery(query);
+            AddCalledHandler(nameof(Execute));
+            
+            await Task.Run(() =>
+            {
+                if (query.ThrowEx)
+                {
+                    throw new InvalidOperationException("TestQueryConsumerException");
+                }
+            });
+            
+            return new MockQueryResult();
+        }
+    }
+    
     public class DuplicateConsumerOne : IQueryConsumer
     {
         [InProcessHandler]

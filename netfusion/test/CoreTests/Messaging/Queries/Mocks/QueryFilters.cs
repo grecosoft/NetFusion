@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using NetFusion.Messaging.Filters;
 using NetFusion.Messaging.Types.Contracts;
 
@@ -10,7 +11,7 @@ namespace CoreTests.Messaging.Queries.Mocks
         {
             if (query is MockQuery testQuery)
             {
-                // testQuery.TestLog.Add("QueryFilterOne-Pre");
+                testQuery.QueryAsserts.Add("QueryFilterOne-Pre");
             }
 
             return Task.CompletedTask;
@@ -20,7 +21,12 @@ namespace CoreTests.Messaging.Queries.Mocks
         {
             if (query is MockQuery testQuery)
             {
-               // testQuery.TestLog.Add("QueryFilterOne-Post");
+                if (testQuery.ThrowEx)
+                {
+                    return Task.Run(() => throw new InvalidOperationException("TestQueryFilterException"));
+                }
+                
+                testQuery.QueryAsserts.Add("QueryFilterOne-Post");
             }
 
             return Task.CompletedTask;
@@ -33,7 +39,7 @@ namespace CoreTests.Messaging.Queries.Mocks
         {
             if(query is MockQuery testQuery)
             { 
-                //    testQuery.TestLog.Add("QueryFilterTwo-Pre");
+                testQuery.QueryAsserts.Add("QueryFilterTwo-Pre");
             }
 
             return Task.CompletedTask;
@@ -42,8 +48,8 @@ namespace CoreTests.Messaging.Queries.Mocks
         public Task OnPostExecuteAsync(IQuery query)
         {
             if (query is MockQuery testQuery)
-            {
-                //testQuery.TestLog.Add("QueryFilterTwo-Post");
+            { 
+                testQuery.QueryAsserts.Add("QueryFilterTwo-Post");
             }
 
             return Task.CompletedTask;
