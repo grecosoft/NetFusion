@@ -17,8 +17,14 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
         {
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
 
-            AddCalledHandler("Sync-DomainEvent-Handler-1");
-            RecordReceivedMessage(domainEvent);
+            TestLog
+                .AddLogEntry("Sync-DomainEvent-Handler-1")
+                .RecordMessage(domainEvent);
+
+            if (domainEvent.ThrowInHandlers.Contains(nameof(MockSyncDomainEventConsumerOne)))
+            {
+                throw new InvalidOperationException($"{nameof(MockSyncDomainEventConsumerOne)}_Exception");
+            }
         }
     }
     
@@ -28,10 +34,18 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
         public MockAsyncDomainEventConsumerOne(IMockTestLog testLog) : base(testLog) { }
         
         [InProcessHandler]
-        public Task OnEventHandler(MockDomainEvent domainEvent)
+        public async Task OnEventHandler(MockDomainEvent domainEvent)
         {
-            AddCalledHandler("Async-DomainEvent-Handler-1");
-            return Task.Delay(TimeSpan.FromSeconds(1));
+            TestLog
+                .AddLogEntry("Async-DomainEvent-Handler-1")
+                .RecordMessage(domainEvent);
+            
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            
+            if (domainEvent.ThrowInHandlers.Contains(nameof(MockAsyncDomainEventConsumerOne)))
+            {
+                throw new InvalidOperationException($"{nameof(MockAsyncDomainEventConsumerOne)}_Exception");
+            }
         }
     }
     
@@ -45,8 +59,14 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
         {
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
 
-            AddCalledHandler("Sync-DomainEvent-Handler-2");
-            RecordReceivedMessage(domainEvent);
+            TestLog
+                .AddLogEntry("Sync-DomainEvent-Handler-2")
+                .RecordMessage(domainEvent);
+            
+            if (domainEvent.ThrowInHandlers.Contains(nameof(MockSyncDomainEventConsumerTwo)))
+            {
+                throw new InvalidOperationException($"{nameof(MockSyncDomainEventConsumerTwo)}_Exception");
+            }
         }
     }
     
@@ -58,7 +78,15 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
         [InProcessHandler]
         public Task OnEventHandler(MockDomainEvent domainEvent)
         {
-            AddCalledHandler("Async-DomainEvent-Handler-2");
+            TestLog
+                .AddLogEntry("Async-DomainEvent-Handler-2")
+                .RecordMessage(domainEvent);
+            
+            if (domainEvent.ThrowInHandlers.Contains(nameof(MockAsyncDomainEventConsumerTwo)))
+            {
+                throw new InvalidOperationException($"{nameof(MockAsyncDomainEventConsumerTwo)}_Exception");
+            }
+
             return Task.Delay(TimeSpan.FromSeconds(1));
         }
     }
@@ -73,8 +101,9 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
         {
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
 
-            AddCalledHandler("OnBaseEventHandler");
-            RecordReceivedMessage(domainEvent);
+            TestLog
+                .AddLogEntry("OnBaseEventHandler")
+                .RecordMessage(domainEvent);
         }
 
         [InProcessHandler]
@@ -82,8 +111,9 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
         {
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
 
-            AddCalledHandler("OnIncludeBaseEventHandler");
-            RecordReceivedMessage(domainEvent);
+            TestLog
+                .AddLogEntry("OnIncludeBaseEventHandler")
+                .RecordMessage(domainEvent);
         }
     }
     
@@ -97,16 +127,20 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
         
         [InProcessHandler, ApplyDispatchRule(typeof(MockRoleMin), typeof(MockRoleMax),
              RuleApplyType = RuleApplyTypes.All)]
-        public void OnEventAllRulesPass(MockRuleDomainEvent evt)
+        public void OnEventAllRulesPass(MockRuleDomainEvent domainEvent)
         {
-            AddCalledHandler(nameof(OnEventAllRulesPass));
+            TestLog
+                .AddLogEntry("OnEventAllRulesPass")
+                .RecordMessage(domainEvent);
         }
 
         [InProcessHandler, ApplyDispatchRule(typeof(MockRoleMin), typeof(MockRoleMax),
              RuleApplyType = RuleApplyTypes.Any)]
-        public void OnEventAnyRulePasses(MockRuleDomainEvent evt)
+        public void OnEventAnyRulePasses(MockRuleDomainEvent domainEvent)
         {
-            AddCalledHandler(nameof(OnEventAnyRulePasses));
+            TestLog
+                .AddLogEntry("OnEventAnyRulePasses")
+                .RecordMessage(domainEvent);
         }
     }
     

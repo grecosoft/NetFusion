@@ -36,14 +36,13 @@ namespace CoreTests.Messaging.Commands
                         cmdResult = await messagingSrv.SendAsync(cmd);
                     });
 
-                testResult.Assert.Services(s =>
+                testResult.Assert.Service<IMockTestLog>(log =>
                 {
                     cmdResult.Should().NotBeNull();
                     cmdResult.Value.Should().Be("MOCK_VALUE");
-
-                    var consumer = s.GetRequiredService<MockAsyncCommandConsumer>();
-                    consumer.ExecutedHandlers.Should().HaveCount(1);
-                    consumer.ExecutedHandlers.Should().Contain("OnCommand");
+                    
+                    log.Entries.Should().HaveCount(1);
+                    log.Entries.Should().Contain("OnCommand");
                 });
             });
         }
@@ -71,14 +70,13 @@ namespace CoreTests.Messaging.Commands
                         cmdResult = await messagingSrv.SendAsync(cmd);
                     });
 
-                testResult.Assert.Services(s =>
+                testResult.Assert.Service<IMockTestLog>(log =>
                 {
                     cmdResult.Should().NotBeNull();
                     cmdResult.Value.Should().Be("MOCK_SYNC_VALUE");
 
-                    var consumer = s.GetRequiredService<MockSyncCommandConsumer>();
-                    consumer.ExecutedHandlers.Should().HaveCount(1);
-                    consumer.ExecutedHandlers.Should().Contain("OnCommand");
+                    log.Entries.Should().HaveCount(1);
+                    log.Entries.Should().Contain("OnCommand");
                 });
             });
         }
@@ -101,11 +99,10 @@ namespace CoreTests.Messaging.Commands
                         await messagingSrv.SendAsync(cmd);
                     });
 
-                testResult.Assert.Services(s =>
+                testResult.Assert.Service<IMockTestLog>(log =>
                 {
-                    var consumer = s.GetRequiredService<MockAsyncCommandConsumer>();
-                    consumer.ExecutedHandlers.Should().HaveCount(1);
-                    consumer.ExecutedHandlers.Should().Contain("OnCommandNoResult");
+                    log.Entries.Should().HaveCount(1);
+                    log.Entries.Should().Contain("OnCommandNoResult");
                 });
             });
         }

@@ -55,6 +55,14 @@ namespace NetFusion.Test.Container
             arrange(_fixture.GetOrBuildContainer());
             return this;
         }
+
+        public ContainerArrange State(Action arrange)
+        {
+            if (arrange == null) throw new ArgumentNullException(nameof(arrange));
+            
+            arrange();
+            return this;
+        }
         
         /// <summary>
         /// Initializes a plugin configuration required for the container objects under test. 

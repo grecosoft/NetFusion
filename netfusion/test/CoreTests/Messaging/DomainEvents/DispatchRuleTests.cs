@@ -24,10 +24,9 @@ namespace CoreTests.Messaging.DomainEvents
                             .PublishAsync(mockEvt);
                     });
 
-                testResult.Assert.Services(s =>
+                testResult.Assert.Service<IMockTestLog>(log =>
                 {
-                    var consumer = s.GetRequiredService<MockDomainEvenConsumerWithRule>();
-                    consumer.ExecutedHandlers.Should().Contain("OnEventAllRulesPass");
+                    log.Entries.Should().Contain("OnEventAllRulesPass");
                 });
             });
         }
@@ -46,10 +45,9 @@ namespace CoreTests.Messaging.DomainEvents
                             .PublishAsync(mockEvt);
                     });
 
-                testResult.Assert.Services(s =>
+                testResult.Assert.Service<IMockTestLog>(log =>
                 {
-                    var consumer = s.GetRequiredService<MockDomainEvenConsumerWithRule>();
-                    consumer.ExecutedHandlers.Should().Contain("OnEventAnyRulePasses");
+                    log.Entries.Should().Contain("OnEventAnyRulePasses");
                 });
             });
         }

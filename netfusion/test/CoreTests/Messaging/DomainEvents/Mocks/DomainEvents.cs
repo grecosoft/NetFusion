@@ -1,4 +1,5 @@
-﻿using NetFusion.Messaging.Types;
+﻿using System.Collections.Generic;
+using NetFusion.Messaging.Types;
 
 namespace CoreTests.Messaging.DomainEvents.Mocks
 {
@@ -6,7 +7,7 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
     
     public class MockDomainEvent : DomainEvent
     {
-
+        public List<string> ThrowInHandlers { get; } = new();
     }
 
     public class MockDomainEventTwo : DomainEvent

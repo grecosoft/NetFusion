@@ -11,9 +11,6 @@ namespace CoreTests.Messaging
     {
         protected IMockTestLog TestLog { get; }
         
-        private readonly List<string> _executedHandlers = new ();
-        private readonly List<IMessage> _receivedMessages = new();
-
         protected MockConsumer()
         {
         }
@@ -21,37 +18,30 @@ namespace CoreTests.Messaging
         protected MockConsumer(IMockTestLog testLog)
         {
             TestLog = testLog;
-            
-            ExecutedHandlers = _executedHandlers;
-            ReceivedMessages = _receivedMessages;
         }
-
-        public IReadOnlyCollection<string> ExecutedHandlers { get; }
-        public IReadOnlyCollection<IMessage> ReceivedMessages { get; }
-
-        protected void AddCalledHandler(string handlerName)
-        {
-            TestLog.AddLogEntry(handlerName);
-            _executedHandlers.Add(handlerName);
-        }
-
-        protected void RecordReceivedMessage(IMessage message) => _receivedMessages.Add(message);
     }
 
     public interface IMockTestLog
     {
         IReadOnlyCollection<string> Entries { get; }
+        IReadOnlyCollection<IMessage> Messages { get; }
+        
         IMockTestLog AddLogEntry(string logMessage);
+        IMockTestLog RecordMessage(IMessage message);
     }
     
     public class MockTestLog : IMockTestLog
     {
         private readonly List<string> _entries = new();
+        private readonly List<IMessage> _messages = new();
+        
         public IReadOnlyCollection<string> Entries { get; }
+        public IReadOnlyCollection<IMessage> Messages { get; }
         
         public MockTestLog()
         {
             Entries = _entries;
+            Messages = _messages;
         }
         
         public IMockTestLog AddLogEntry(string logMessage)
@@ -59,6 +49,11 @@ namespace CoreTests.Messaging
             _entries.Add(logMessage);
             return this;
         }
-        
+
+        public IMockTestLog RecordMessage(IMessage message)
+        {
+            _messages.Add(message);
+            return this;
+        }
     }
 }

@@ -13,13 +13,19 @@ using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.Messaging.Types.Attributes;
 using NetFusion.Test.Container;
 using Xunit;
-
 // ReSharper disable All
 
 namespace CoreTests.Messaging.Enrichers
 {
+    /// <summary>
+    /// Configured message enrichers are invoked and applied to command and domain-event messages
+    /// before they are dispatched.
+    /// </summary>
     public class EnricherTests
     {
+        /// <summary>
+        /// By default, NetFusion configures a set of common enrichers.
+        /// </summary>
         [Fact]
         public void DefaultEnrichers_Configured()
         {
@@ -37,6 +43,10 @@ namespace CoreTests.Messaging.Enrichers
             });
         }
 
+        /// <summary>
+        /// During the bootstrapping of the composite-application, the host can clear all default
+        /// registered enrichers and replace with existing or custom ones.
+        /// </summary>
         [Fact]
         public void DefaultEnrichers_CanBe_Cleared()
         {
@@ -56,6 +66,10 @@ namespace CoreTests.Messaging.Enrichers
             });
         }
 
+        /// <summary>
+        /// Before a message is sent to all registered IMessagePublisher instances, each enricher is applied
+        /// to the message allowing common message attributed to be set.
+        /// </summary>
         [Fact]
         public Task Enrichers_Applied_ToMessages()
         {
@@ -77,17 +91,16 @@ namespace CoreTests.Messaging.Enrichers
                             .PublishAsync(mockEvt);
                     });
 
-                testResult.Assert.Services(s =>
+                testResult.Assert.Service<IMockTestLog>(log =>
                 {
-                    var consumer = s.GetRequiredService<MockSyncDomainEventConsumerOne>();
-                    var message = consumer.ReceivedMessages.OfType<MockDomainEvent>().FirstOrDefault();
+                    var message = log.Messages.OfType<MockDomainEvent>().FirstOrDefault();
 
                     // Correlation Enricher:
                     message.Should().NotBeNull();
                     message.GetCorrelationId().Should().NotBeNullOrEmpty();
                     message.GetMessageId().Should().NotBeNullOrEmpty();
                     
-                    // Microserivce Enricher:
+                    // Microservice Enricher:
                     message.Attributes.GetStringValue("Microservice").Should().NotBeNullOrEmpty();
                     message.Attributes.GetStringValue("MicroserviceId").Should().NotBeNullOrEmpty();
                     
@@ -97,6 +110,9 @@ namespace CoreTests.Messaging.Enrichers
             });
         }
 
+        /// <summary>
+        /// Validates when an enricher throws and exception, all details are correctly captured.
+        /// </summary>
         [Fact]
         public Task IfEnricherException_ErrorsAreCaptured()
         {
@@ -123,11 +139,12 @@ namespace CoreTests.Messaging.Enrichers
                 testResult.Assert.Exception<PublisherException>(ex =>
                 {
                     ex.ChildExceptions.Should().HaveCount(1);
-                    var enricherEx = ex.ChildExceptions.First();
+                    var childEx = ex.ChildExceptions.First();
 
-                    enricherEx.Should().BeOfType<EnricherException>();
-                    enricherEx.InnerException.Should().BeOfType<InvalidOperationException>();
-                    enricherEx.InnerException.Message.Should().Be("TestEnricherException");
+                    childEx.Should().NotBeNull();
+                    childEx.Should().BeOfType<EnricherException>();
+                    childEx.InnerException.Should().BeOfType<InvalidOperationException>();
+                    childEx.InnerException.Message.Should().Be("TestEnricherException");
                 });
             });
         }
