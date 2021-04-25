@@ -10,21 +10,20 @@ using Xunit;
 namespace CoreTests.Messaging.DomainEvents
 {
     /// <summary>
-    /// Tests for asserting the basic publishing and handling of derived message types.
+    /// Tests for asserting the publishing and handling of domain-event messages.
     /// </summary>
     public class DispatchTests
     {
         /// <summary>
-        /// When a domain event is published using the service, the corresponding discovered
-        /// consumer event handler methods will be invoked.
+        /// A domain-event can be handled by a synchronous message handler. 
         /// </summary>
         [Fact]
-        public Task DomainEventConsumer_HandlerInvoked()
+        public Task DomainEventConsumer_SyncHandlerInvoked()
         {
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Container(c => c.AddMessagingHost().WithDomainEventHandler())
+                    .Container(c => c.AddMessagingHost().WithSyncDomainEventHandler())
                     .Act.OnServicesAsync(async s =>
                     {
                         var mockEvt = new MockDomainEvent();
@@ -32,12 +31,67 @@ namespace CoreTests.Messaging.DomainEvents
                             .PublishAsync(mockEvt);
                     });
 
-                testResult.Assert.Services(s =>
+                testResult.Assert.Service<IMockTestLog>(log =>
                 {
-                    var consumer = s.GetRequiredService<MockDomainEventConsumer>();
-                    consumer.ExecutedHandlers.Should().Contain("OnEventHandlerOne");
+                    log.Entries.Should().HaveCount(1);
+                    log.Entries.Should().Contain("Sync-DomainEvent-Handler-1");
                 });
             });
+        }
+
+        /// <summary>
+        /// A domain-event can be handled by an asynchronous message handler.
+        /// </summary>
+        [Fact]
+        public Task DomainEventConsumer_AsyncHandlerInvoked()
+        {
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange
+                    .Container(c => c.AddMessagingHost().WithAsyncDomainEventHandler())
+                    .Act.OnServicesAsync(async s =>
+                    {
+                        var mockEvt = new MockDomainEvent();
+                        await s.GetRequiredService<IMessagingService>()
+                            .PublishAsync(mockEvt);
+                    });
+                
+                testResult.Assert.Service<IMockTestLog>(log =>
+                {
+                    log.Entries.Should().HaveCount(1);
+                    log.Entries.Should().Contain("Async-DomainEvent-Handler-1");
+                });
+            });
+        }
+        
+        /// <summary>
+        /// Published domain-events can be handled by multiple application component event handlers.
+        /// The invoked handlers can be a combination of synchronous and asynchronous method.
+        /// </summary>
+        [Fact]
+        public Task DomainEvent_CanHaveMultiple_AsyncAndSyncConsumers()
+        {
+            return ContainerFixture.TestAsync(async fixture =>
+            {
+                var testResult = await fixture.Arrange
+                    .Container(c => c.AddMessagingHost().WithMultipleDomainEventHandlers())
+                    .Act.OnServicesAsync(async s =>
+                    {
+                        var evt = new MockDomainEvent();
+                        await s.GetRequiredService<IMessagingService>()
+                            .PublishAsync(evt);
+                    });
+
+                testResult.Assert.Service<IMockTestLog>(log =>
+                {
+                    log.Entries.Should().HaveCount(4);
+                    log.Entries.Should().BeEquivalentTo(
+                        "Sync-DomainEvent-Handler-1", 
+                        "Sync-DomainEvent-Handler-2",
+                        "Async-DomainEvent-Handler-1", 
+                        "Async-DomainEvent-Handler-2");
+                });
+            });     
         }
 
         /// <summary>
@@ -66,39 +120,25 @@ namespace CoreTests.Messaging.DomainEvents
             });
         }
         
-        /// <summary>
-        /// When a domain-event is published, the event handlers can be asynchronous.  This test 
-        /// publishes an event that will be handled by two asynchronous handlers and one synchronous.
-        /// </summary>
-        [Fact]
-        public Task DomainEventAsyncHandlers_CanBeInvoked()
-        {
-            return ContainerFixture.TestAsync(async fixture =>
-            {
-                var testResult = await fixture.Arrange
-                    .Container(c => c.WithHostAsyncConsumer())
-                    .Act.OnServicesAsync(async s =>
-                    {
-                        var messagingSrv = s.GetRequiredService<IMessagingService>();                        
-                        var evt = new MockDomainEvent();
-                        await messagingSrv.PublishAsync(evt);
-                    });
-
-                testResult.Assert.Services(s =>
-                {
-                    var consumer = s.GetRequiredService<MockAsyncMessageConsumer>();
-                    consumer.ExecutedHandlers.Should().HaveCount(3);
-                    consumer.ExecutedHandlers.Should().Contain("OnEvent1Async", "OnEvent2Async", "OnEvent3");                    
-                });
-            });     
-        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         /// <summary>
         /// Tests that a message handler handler resulting in an exception
         /// is correctly captured.
         /// </summary>
         [Fact]
-        public Task ExceptionsCapture_ForPublished_Message()
+        public Task ExceptionsCaptured_ForAsync_Consumer()
         {
             return ContainerFixture.TestAsync(async fixture =>
             {
@@ -121,12 +161,18 @@ namespace CoreTests.Messaging.DomainEvents
             });
         }
 
+        [Fact]
+        public void ExceptionsCaptured_ForSync_Consumer()
+        {
+            
+        }
+
         /// <summary>
         /// Tests that a message with multiple handlers resulting in an exception
         /// is correctly captured.
         /// </summary>
         [Fact]
-        public void ExceptionsCapture_ForMultiple_MessageHandlers()
+        public void ExceptionsCapture_ForMultipleAsyncAndSync_Consumers()
         {
             
         }

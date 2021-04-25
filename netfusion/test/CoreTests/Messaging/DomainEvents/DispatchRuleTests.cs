@@ -11,7 +11,7 @@ namespace CoreTests.Messaging.DomainEvents
     public class DispatchRuleTests
     {
         [Fact]
-        public Task HandlerCalled_WhenMessagePassesAllDispatchRules()
+        public Task HandlerCalled_WhenMessagePasses_AllDispatchRules()
         { 
             return ContainerFixture.TestAsync(async fixture =>
             {
@@ -26,7 +26,7 @@ namespace CoreTests.Messaging.DomainEvents
 
                 testResult.Assert.Services(s =>
                 {
-                    var consumer = s.GetRequiredService<MockDomainEventRuleBasedConsumer>();
+                    var consumer = s.GetRequiredService<MockDomainEvenConsumerWithRule>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventAllRulesPass");
                 });
             });
@@ -48,7 +48,7 @@ namespace CoreTests.Messaging.DomainEvents
 
                 testResult.Assert.Services(s =>
                 {
-                    var consumer = s.GetRequiredService<MockDomainEventRuleBasedConsumer>();
+                    var consumer = s.GetRequiredService<MockDomainEvenConsumerWithRule>();
                     consumer.ExecutedHandlers.Should().Contain("OnEventAnyRulePasses");
                 });
             });

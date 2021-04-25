@@ -50,7 +50,7 @@ namespace CoreTests.Messaging.Logging
             {
                 var testResult = await fixture.Arrange
                     .Services(sc => sc.AddMessageLogSink<MockLoggingSink>())
-                    .Container(c => c.AddMessagingHost().WithDomainEventHandler())
+                    .Container(c => c.AddMessagingHost().WithSyncDomainEventHandler())
                     .Act.OnServicesAsync(async s =>
                     {
                         var messagingSrv = s.GetRequiredService<IMessagingService>();

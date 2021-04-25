@@ -1,12 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CoreTests.Messaging.Queries.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Messaging;
 using NetFusion.Messaging.Exceptions;
-using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.Test.Container;
 using Xunit;
 
@@ -52,7 +50,7 @@ namespace CoreTests.Messaging.Queries
         }
         
         [Fact]
-        public Task Consumer_Can_DispatchQuery_To_Consumer()
+        public Task Consumer_Can_DispatchQuery_To_SyncConsumer()
         {
             return ContainerFixture.TestAsync(async fixture =>
             {
@@ -100,7 +98,7 @@ namespace CoreTests.Messaging.Queries
         /// is correctly captured.
         /// </summary>
         [Fact]
-        public Task ExceptionsCapture_ForDispatched_Query()
+        public Task ExceptionsCapture_ForDispatched_AsyncConsumer()
         {
             return ContainerFixture.TestAsync(async fixture =>
             {
@@ -121,6 +119,12 @@ namespace CoreTests.Messaging.Queries
                     // ex.InnerException?.InnerException.Should().BeOfType<MessageDispatchException>();
                 });
             });
+        }
+
+        [Fact]
+        public void ExceptionsCapture_ForDispatched_SyncConsumer()
+        {
+            
         }
     }
 }

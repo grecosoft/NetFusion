@@ -3,11 +3,13 @@ using NetFusion.Messaging;
 
 namespace CoreTests.Messaging.Commands.Mocks
 {
-    public class MockCommandConsumer : MockConsumer, 
+    public class MockAsyncCommandConsumer : MockConsumer, 
         IMessageConsumer
     {
+        public MockAsyncCommandConsumer(IMockTestLog testLog) : base(testLog) { }
+        
         [InProcessHandler]
-        public async Task<MockCommandResult> OnCommand(MockCommand evt)
+        public async Task<MockCommandResult> OnCommand(MockCommand command)
         {
             AddCalledHandler(nameof(OnCommand));
 
@@ -27,14 +29,30 @@ namespace CoreTests.Messaging.Commands.Mocks
             return Task.Run(() => { });
         }
     }
+    
+    public class MockSyncCommandConsumer : MockConsumer,
+        IMessageConsumer
+    {
+        public MockSyncCommandConsumer(IMockTestLog testLog) : base(testLog) { }
+        
+        [InProcessHandler]
+        public MockCommandResult OnCommand(MockCommand command)
+        {
+            AddCalledHandler(nameof(OnCommand));
+            return new MockCommandResult
+            {
+                Value = "MOCK_SYNC_VALUE"
+            };
+        }
+    }
 
     public class MockInvalidCommandConsumer : MockConsumer,
         IMessageConsumer
     {
         [InProcessHandler]
-        public void InvalidHandler1(MockCommand evt)
+        public MockCommandResult InvalidHandler(MockCommand evt)
         {
-
+            return new();
         }
     }
 }

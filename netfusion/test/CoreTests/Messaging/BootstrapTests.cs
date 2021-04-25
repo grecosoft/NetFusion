@@ -15,14 +15,13 @@ using Xunit;
 namespace CoreTests.Messaging
 {
     /// <summary>
-    /// Tests that assert that the messaging plug-in was correctly initialized
-    /// by the bootstrap process.
+    /// Tests that assert that the messaging plug-in was correctly initialized by the bootstrap process.  
     /// </summary>
     public class BootstrapTests
     {
         /// <summary>
-        /// When the messaging plugin is added to the composite application, all messaging
-        /// associated modules and configurations are added.
+        /// When the messaging plugin is added to the composite application, all messaging associated modules
+        /// and configurations are added. 
         /// </summary>
         [Fact]
         public void AllMessagingModules_Added_ToContainer()
@@ -32,23 +31,17 @@ namespace CoreTests.Messaging
                 fixture
                     .Arrange.Container(c => c.AddMessagingHost())
                     .Assert
-                    
+
                     .Configuration<MessageDispatchConfig>(_ => { })
-                    .Configuration<QueryDispatchConfig>(_ => { })
-                    
                     .PluginModule<MessagingModule>(_ => { })
                     .PluginModule<MessageDispatchModule>(_ => { })
-                    .PluginModule<MessageEnricherModule>(_ => { })
-                    
-                    .PluginModule<QueryDispatchModule>(_ => { })
-                    .PluginModule<QueryFilterModule>(_ => { });
+                    .PluginModule<MessageEnricherModule>(_ => { });
             });
         }
 
         /// <summary>
         /// Unless cleared, the InProcessEventDispatcher will be used by default
-        /// to dispatch events to local consumer event handlers.  This is also the
-        /// default configuration if the host does not provide one.
+        /// to dispatch command and domain-event messages to local consumers.  
         /// </summary>
         [Fact]
         public void InProcessPublisher_Configured_ByDefault()
@@ -61,7 +54,7 @@ namespace CoreTests.Messaging
                     {
                         // The In-Message message publisher is registered by default.
                         // Other messaging plugins such as RabbitMQ and ServiceBus 
-                        // can add corresponding publishers.
+                        // add corresponding publishers.
                         config.PublisherTypes.Should().HaveCount(1);
                         config.PublisherTypes.Should().Contain(typeof(InProcessMessagePublisher));
                     })
@@ -70,81 +63,78 @@ namespace CoreTests.Messaging
                         // Publishers are created per request scope:
                         var service = sc.SingleOrDefault(s => s.ImplementationType == typeof(InProcessMessagePublisher));
                         service.Should().NotBeNull();
+                        service.ServiceType.Should().Be(typeof(IMessagePublisher));
                         service.Lifetime.Should().Be(ServiceLifetime.Scoped);
                     })
                     .Services(s =>
                     {
                         // Publishers are registered using common interface:
                         var publisher = s.GetServices<IMessagePublisher>();
-                        publisher.Should().NotBeNull();
+                        publisher.Should().NotBeNull().And.HaveCount(1);
                     });
                 });
         }
         
         /// <summary>
-        /// The MessageDispatchModule will discover all defined message handlers within all available plug-ins.
-        /// The module's AllMessageTypeDispatchers property contains all of the meta-data required to dispatch a
-        /// message at runtime to the correct consumer handlers.
+        /// The MessageDispatchModule will discover all command and domain-event handlers, invoked at runtime, when a
+        /// command or domain-event is dispatched.  The module's AllMessageTypeDispatchers property contains all of the
+        /// meta-data required to dispatch a message at runtime to the correct consumer handlers. 
         /// </summary>
         [Fact]
         public void MessagingModule_Discovers_MessagesWithConsumers()
         {
             ContainerFixture.Test(fixture => { fixture
-                .Arrange.Container(c => c.AddMessagingHost().WithDomainEventHandler())
+                .Arrange.Container(c => c.AddMessagingHost().WithSyncDomainEventHandler())
                 .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
-                    var dispatchInfo = m.AllMessageTypeDispatchers[typeof(MockDomainEvent)].FirstOrDefault();
-                    dispatchInfo.Should().NotBeNull(); 
+                    var dispatchInfo = m.AllMessageTypeDispatchers[typeof(MockDomainEvent)].SingleOrDefault();
+                    dispatchInfo.Should().NotBeNull();
                 });
             });           
         }
 
         /// <summary>
-        /// The MessageDispatchModule will discover all defined domain event consumer classes with methods that 
-        /// handle a given message.  Application components are scanned for event handler methods during the 
-        /// bootstrap process by implementing the IMessageConsumer marker interface and marking their messages
-        /// handlers with the InProcessHandler attribute.
+        /// Components are scanned during the bootstrap process and identified as being a message handler by
+        /// implementing the IMessageConsumer marker interface and specifying the InProcessHandler attribute
+        /// on the method handler.
         /// </summary>
         [Fact]
         public void MessagingModule_Discovers_MessageConsumers()
         {
             ContainerFixture.Test(fixture => { fixture
-                .Arrange.Container(c => c.AddMessagingHost().WithDomainEventHandler())
+                .Arrange.Container(c => c.AddMessagingHost().WithSyncDomainEventHandler())
                 .Assert.PluginModule<MessageDispatchModule>(m =>
                 {
                     var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)].FirstOrDefault();
                     dispatchInfo.Should().NotBeNull();
 
                     dispatchInfo.MessageType.Should().Be(typeof(MockDomainEvent));
-                    dispatchInfo.ConsumerType.Should().Be(typeof(MockDomainEventConsumer));
-                    
-                    Assert.Equal(
-                        typeof(MockDomainEventConsumer).GetMethod("OnEventHandlerOne"),
-                        dispatchInfo.MessageHandlerMethod);
+                    dispatchInfo.ConsumerType.Should().Be(typeof(MockSyncDomainEventConsumerOne));
+                    dispatchInfo.MessageHandlerMethod.Should().BeSameAs(
+                        typeof(MockSyncDomainEventConsumerOne).GetMethod("OnEventHandler", new[] {typeof(MockDomainEvent) }));
                 });
             });    
         }
 
         /// <summary>
-        /// All discovered messages consumers are registered in the dependency injection container.
-        /// When an event is published, the domain event service resolves the consumer type and
-        /// obtains a reference from the container using the cached dispatch information.
+        /// All discovered command and domain-event consumers are registered in the dependency injection container
+        /// as scoped components.
         /// </summary>
         [Fact]
         public void MessageConsumer_Registered()
         {
             ContainerFixture.Test(fixture => { fixture
-                .Arrange.Container(c => c.AddMessagingHost().WithDomainEventHandler())
+                .Arrange.Container(c => c.AddMessagingHost().WithSyncDomainEventHandler())
                 .Assert.ServiceCollection(sc =>
                 {
                     sc.FirstOrDefault(s =>
-                            s.ImplementationType == typeof(MockDomainEventConsumer) &&
+                            s.ImplementationType == typeof(MockSyncDomainEventConsumerOne) &&
                             s.Lifetime == ServiceLifetime.Scoped)
                         .Should().NotBeNull();
                 })
                 .Services(s =>
                 {
-                    s.GetService<MockDomainEventConsumer>().Should().NotBeNull();
+                    s.GetService<MockSyncDomainEventConsumerOne>().Should().NotBeNull();
                 });
             });                
         }
@@ -157,30 +147,10 @@ namespace CoreTests.Messaging
         {
             ContainerFixture.Test(fixture => { 
                 fixture
-                    .Arrange.Container(c => c.AddMessagingHost().WithDomainEventHandler())                
+                    .Arrange.Container(c => c.AddMessagingHost())                
                     .Assert.Services(s =>
                     {
                         var service = s.GetService<IMessagingService>();
-                        service.Should().NotBeNull();
-                    });
-            });
-        }
-
-        [Fact]
-        public void MessageConsumers_Registered()
-        {
-            ContainerFixture.Test(fixture => { 
-                fixture
-                    .Arrange.Container(c => c.AddMessagingHost().WithDomainEventHandler())
-                    .Assert.ServiceCollection(sc =>
-                    {
-                        var service = sc.SingleOrDefault(s => s.ImplementationType == typeof(MockDomainEventConsumer));
-                        service.Should().NotBeNull();
-                        service.Lifetime.Should().Be(ServiceLifetime.Scoped);
-                    })
-                    .Services(s =>
-                    {
-                        var service = s.GetService<MockDomainEventConsumer>();
                         service.Should().NotBeNull();
                     });
             });

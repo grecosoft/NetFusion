@@ -5,24 +5,69 @@ using NetFusion.Messaging.Types;
 
 namespace CoreTests.Messaging.DomainEvents.Mocks
 {
-    // ------------------- [Basic Message Consumers] ------------------
+    // ------------------- [Message Consumers] ------------------
     
-    public class MockDomainEventConsumer : MockConsumer,
+    public class MockSyncDomainEventConsumerOne : MockConsumer,
         IMessageConsumer
     {
+        public MockSyncDomainEventConsumerOne(IMockTestLog testLog) : base(testLog) { }
+        
         [InProcessHandler]
-        public void OnEventHandlerOne(MockDomainEvent domainEvent)
+        public void OnEventHandler(MockDomainEvent domainEvent)
         {
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
 
-            AddCalledHandler("OnEventHandlerOne");
+            AddCalledHandler("Sync-DomainEvent-Handler-1");
             RecordReceivedMessage(domainEvent);
+        }
+    }
+    
+    public class MockAsyncDomainEventConsumerOne : MockConsumer,
+        IMessageConsumer
+    {
+        public MockAsyncDomainEventConsumerOne(IMockTestLog testLog) : base(testLog) { }
+        
+        [InProcessHandler]
+        public Task OnEventHandler(MockDomainEvent domainEvent)
+        {
+            AddCalledHandler("Async-DomainEvent-Handler-1");
+            return Task.Delay(TimeSpan.FromSeconds(1));
+        }
+    }
+    
+    public class MockSyncDomainEventConsumerTwo : MockConsumer,
+        IMessageConsumer
+    {
+        public MockSyncDomainEventConsumerTwo(IMockTestLog testLog) : base(testLog) { }
+        
+        [InProcessHandler]
+        public void OnEventHandler(MockDomainEvent domainEvent)
+        {
+            if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
+
+            AddCalledHandler("Sync-DomainEvent-Handler-2");
+            RecordReceivedMessage(domainEvent);
+        }
+    }
+    
+    public class MockAsyncDomainEventConsumerTwo : MockConsumer,
+        IMessageConsumer
+    {
+        public MockAsyncDomainEventConsumerTwo(IMockTestLog testLog) : base(testLog) { }
+        
+        [InProcessHandler]
+        public Task OnEventHandler(MockDomainEvent domainEvent)
+        {
+            AddCalledHandler("Async-DomainEvent-Handler-2");
+            return Task.Delay(TimeSpan.FromSeconds(1));
         }
     }
     
     public class MockDerivedMessageConsumer : MockConsumer,
         IMessageConsumer
     {
+        public MockDerivedMessageConsumer(IMockTestLog testLog) : base(testLog) { }
+        
         [InProcessHandler]
         public void OnBaseEventHandler(MockBaseDomainEvent domainEvent)
         {
@@ -42,31 +87,29 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
         }
     }
     
-    // ------------------- [Asynchronous Message Consumers] ------------------
     
-    public class MockAsyncMessageConsumer : MockConsumer,
+    // ------------------- [Message Consumers with Rules] ------------------
+    
+    public class MockDomainEvenConsumerWithRule : MockConsumer,
         IMessageConsumer
     {
-        [InProcessHandler]
-        public Task OnEvent1Async(MockDomainEvent domainEvent)
+        public MockDomainEvenConsumerWithRule(IMockTestLog testLog) : base(testLog) { }
+        
+        [InProcessHandler, ApplyDispatchRule(typeof(MockRoleMin), typeof(MockRoleMax),
+             RuleApplyType = RuleApplyTypes.All)]
+        public void OnEventAllRulesPass(MockRuleDomainEvent evt)
         {
-            AddCalledHandler(nameof(OnEvent1Async));
-            return Task.Delay(TimeSpan.FromSeconds(1));
+            AddCalledHandler(nameof(OnEventAllRulesPass));
         }
 
-        [InProcessHandler]
-        public Task OnEvent2Async(MockDomainEvent domainEvent)
+        [InProcessHandler, ApplyDispatchRule(typeof(MockRoleMin), typeof(MockRoleMax),
+             RuleApplyType = RuleApplyTypes.Any)]
+        public void OnEventAnyRulePasses(MockRuleDomainEvent evt)
         {
-            AddCalledHandler(nameof(OnEvent2Async));
-            return Task.Delay(TimeSpan.FromSeconds(1));
-        }
-
-        [InProcessHandler]
-        public void OnEvent3(MockDomainEvent domainEvent)
-        {
-            AddCalledHandler(nameof(OnEvent3));
+            AddCalledHandler(nameof(OnEventAnyRulePasses));
         }
     }
+    
     
     // ------------------- [Message Consumer Exceptions] ------------------
     
@@ -103,24 +146,6 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
         public Task OnDomainEventTwoAsync(MockDomainEventTwo domainEvent)
         {
             return Task.Run(() => throw new InvalidOperationException(nameof(OnDomainEventTwoAsync)));
-        }
-    }
-    
-    public class MockDomainEventRuleBasedConsumer : MockConsumer,
-        IMessageConsumer
-    {
-        [InProcessHandler, ApplyDispatchRule(typeof(MockRoleMin), typeof(MockRoleMax),
-             RuleApplyType = RuleApplyTypes.All)]
-        public void OnEventAllRulesPass(MockRuleDomainEvent evt)
-        {
-            AddCalledHandler(nameof(OnEventAllRulesPass));
-        }
-
-        [InProcessHandler, ApplyDispatchRule(typeof(MockRoleMin), typeof(MockRoleMax),
-             RuleApplyType = RuleApplyTypes.Any)]
-        public void OnEventAnyRulePasses(MockRuleDomainEvent evt)
-        {
-            AddCalledHandler(nameof(OnEventAnyRulePasses));
         }
     }
 }

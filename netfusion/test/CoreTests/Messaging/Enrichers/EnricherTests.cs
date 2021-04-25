@@ -62,7 +62,7 @@ namespace CoreTests.Messaging.Enrichers
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Container(c => c.AddMessagingHost().WithDomainEventHandler())
+                    .Container(c => c.AddMessagingHost().WithSyncDomainEventHandler())
                     .PluginConfig<MessageDispatchConfig>(c =>
                     {
                         c.ClearEnrichers();
@@ -79,14 +79,19 @@ namespace CoreTests.Messaging.Enrichers
 
                 testResult.Assert.Services(s =>
                 {
-                    var consumer = s.GetRequiredService<MockDomainEventConsumer>();
+                    var consumer = s.GetRequiredService<MockSyncDomainEventConsumerOne>();
                     var message = consumer.ReceivedMessages.OfType<MockDomainEvent>().FirstOrDefault();
 
+                    // Correlation Enricher:
                     message.Should().NotBeNull();
                     message.GetCorrelationId().Should().NotBeNullOrEmpty();
                     message.GetMessageId().Should().NotBeNullOrEmpty();
+                    
+                    // Microserivce Enricher:
                     message.Attributes.GetStringValue("Microservice").Should().NotBeNullOrEmpty();
                     message.Attributes.GetStringValue("MicroserviceId").Should().NotBeNullOrEmpty();
+                    
+                    // Date Occurred Enricher:
                     message.GetUtcDateOccurred();
                 });
             });
@@ -101,7 +106,7 @@ namespace CoreTests.Messaging.Enrichers
                     .Container(c =>
                     {
                         c.AddMessagingHost();
-                        c.WithDomainEventHandler();
+                        c.WithSyncDomainEventHandler();
                     })
                     .PluginConfig<MessageDispatchConfig>(dc =>
                     {
