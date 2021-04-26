@@ -6,7 +6,7 @@ namespace CoreTests.Messaging.Queries.Mocks
     public class MockQuery : Query<MockQueryResult>
     {
         public List<string> QueryAsserts { get; } = new();
-        public bool ThrowEx { get; init; }
+        public List<string> ThrowInHandlers { get; } = new();
     }
 
     public class MockQueryResult

@@ -26,9 +26,14 @@ namespace CoreTests.Messaging.Queries.Mocks
         [InProcessHandler]
         public MockQueryResult Execute(MockQuery query)
         {
-            TestLog.AddLogEntry(nameof(Execute));
-
+            TestLog.AddLogEntry("Sync-Command-Handler");
             TestLog.RecordMessage(query);
+            
+            if (query.ThrowInHandlers.Contains(nameof(MockSyncQueryConsumer)))
+            {
+                throw new InvalidOperationException($"{nameof(MockSyncQueryConsumer)}_Exception");
+            }
+            
             return new MockQueryResult();
         }
     }
@@ -41,13 +46,13 @@ namespace CoreTests.Messaging.Queries.Mocks
         [InProcessHandler]
         public async Task<MockQueryResult> Execute(MockQuery query)
         {
-            TestLog.AddLogEntry(nameof(Execute));
+            TestLog.AddLogEntry("Async-Command-Handler");
 
             await Task.Run(() =>
             {
-                if (query.ThrowEx)
+                if (query.ThrowInHandlers.Contains(nameof(MockAsyncQueryConsumer)))
                 {
-                    throw new InvalidOperationException("TestQueryConsumerException");
+                    throw new InvalidOperationException($"{nameof(MockAsyncQueryConsumer)}_Exception");
                 }
             });
             

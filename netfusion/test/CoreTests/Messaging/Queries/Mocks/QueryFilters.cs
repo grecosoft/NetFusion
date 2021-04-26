@@ -21,11 +21,11 @@ namespace CoreTests.Messaging.Queries.Mocks
         {
             if (query is MockQuery testQuery)
             {
-                if (testQuery.ThrowEx)
+                if (testQuery.ThrowInHandlers.Contains(nameof(QueryFilterOne)))
                 {
                     return Task.Run(() => throw new InvalidOperationException("TestQueryFilterException"));
                 }
-                
+
                 testQuery.QueryAsserts.Add("QueryFilterOne-Post");
             }
 

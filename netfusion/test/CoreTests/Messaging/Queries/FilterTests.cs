@@ -34,7 +34,7 @@ namespace CoreTests.Messaging.Queries
                 var query = new MockQuery();
                 
                 var testResult = await fixture.Arrange
-                    .Container(c => c.AddMessagingHost().WithQueryConsumer())
+                    .Container(c => c.AddMessagingHost().WithSyncQueryConsumer())
                     .PluginConfig<QueryDispatchConfig>(config =>
                     {
                         config.AddFilter<QueryFilterOne>();
@@ -63,18 +63,22 @@ namespace CoreTests.Messaging.Queries
         {
             return ContainerFixture.TestAsync(async fixture =>
             {
+                var query = new MockQuery();
+                
                 var testResult = await fixture.Arrange
-                    .Container(c => c.AddMessagingHost().WithQueryConsumer())
+                    .Container(c => c.AddMessagingHost().WithSyncQueryConsumer())
                     .PluginConfig<QueryDispatchConfig>(config =>
                     {
                         config.AddFilter<QueryFilterOne>();
                     })
+                    .State(() =>
+                    {
+                        query.ThrowInHandlers.Add(nameof(QueryFilterOne));
+                    })
                     .Act.RecordException().OnServicesAsync(async s =>
                     {
-                        var messagingSrv = s.GetRequiredService<IMessagingService>();
-                        var query = new MockQuery {ThrowEx = true};
-
-                        await messagingSrv.DispatchAsync(query);
+                        await s.GetRequiredService<IMessagingService>()
+                            .DispatchAsync(query);
                     });
 
                 testResult.Assert.Exception<QueryDispatchException>(ex =>

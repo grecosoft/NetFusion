@@ -6,7 +6,7 @@ namespace CoreTests.Messaging.Queries
 {
     public static class TestSetupExtensions
     {
-        public static CompositeContainer WithQueryConsumer(this CompositeContainer container)
+        public static CompositeContainer WithSyncQueryConsumer(this CompositeContainer container)
         {
             var appPlugin = new MockAppPlugin();
             appPlugin.AddPluginType<MockSyncQueryConsumer>();

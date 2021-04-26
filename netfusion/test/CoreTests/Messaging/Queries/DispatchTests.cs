@@ -2,60 +2,25 @@
 using CoreTests.Messaging.Queries.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Messaging;
-using NetFusion.Messaging.Exceptions;
 using NetFusion.Test.Container;
 using Xunit;
-
-// ReSharper disable All
 
 namespace CoreTests.Messaging.Queries
 {
     public class DispatchTests
     {
-        [Fact]
-        public void Query_CannotHave_MultipleConsumers()
-        {
-            ContainerFixture.Test(fixture => { fixture
-                .Arrange.Container(c => c.AddMessagingHost().WithMultipleQueryConsumers())
-                .Act.RecordException().ComposeContainer()
-                .Assert.Exception<ContainerException>(ex =>
-                {
-                    ex.InnerException.Should().NotBeNull();
-                    ex.InnerException.Message.Should().Contain("query types have multiple consumers");
-                });
-            });
-        }
-
-        [Fact]
-        public Task Query_MustHave_Consumer()
-        {
-            return ContainerFixture.TestAsync(async fixture =>
-            {
-                var testResult = await fixture.Arrange
-                    .Container(c => c.AddMessagingHost())
-                    .Act.RecordException().OnServicesAsync(async s =>
-                    {
-                        var query = new MockQuery();
-                        await s.GetRequiredService<IMessagingService>()
-                            .DispatchAsync(query);
-                    });
-
-                testResult.Assert.Exception<QueryDispatchException>(ex =>
-                {
-                    ex.Message.Contains("is not registered");
-                });
-            });
-        }
-        
+        /// <summary>
+        /// A query can be dispatched and handled by a synchronous consumer method handler.
+        /// To the calling code, it appears as those it was asynchronous. 
+        /// </summary>
         [Fact]
         public Task Consumer_Can_DispatchQuery_To_SyncConsumer()
         {
             return ContainerFixture.TestAsync(async fixture =>
             {
                 var testResult = await fixture.Arrange
-                    .Container(c => c.AddMessagingHost().WithQueryConsumer())
+                    .Container(c => c.AddMessagingHost().WithSyncQueryConsumer())
                     .Act.OnServicesAsync(async s =>
                     {
                         var query = new MockQuery();
@@ -66,11 +31,14 @@ namespace CoreTests.Messaging.Queries
                 testResult.Assert.Service<IMockTestLog>(log =>
                 {
                     log.Entries.Should().HaveCount(1);
-                    log.Entries.Should().HaveCount(1).And.Contain("Execute");
+                    log.Entries.Should().HaveCount(1).And.Contain("Sync-Command-Handler");
                 });
             });
         }
         
+        /// <summary>
+        /// A query can be dispatched and handled by an asynchronous consumer method handler.
+        /// </summary>
         [Fact]
         public Task Consumer_Can_DispatchQuery_To_AsyncConsumer()
         {
@@ -88,43 +56,9 @@ namespace CoreTests.Messaging.Queries
                 testResult.Assert.Service<IMockTestLog>(log =>
                 {
                     log.Entries.Should().HaveCount(1);
-                    log.Entries.Should().HaveCount(1).And.Contain("Execute");
+                    log.Entries.Should().HaveCount(1).And.Contain("Async-Command-Handler");
                 });
             });
-        }
-        
-        /// <summary>
-        /// Tests that a query handler handler resulting in an exception
-        /// is correctly captured.
-        /// </summary>
-        [Fact]
-        public Task ExceptionsCapture_ForDispatched_AsyncConsumer()
-        {
-            return ContainerFixture.TestAsync(async fixture =>
-            {
-                var testResult = await fixture.Arrange
-                    .Container(c => c.AddMessagingHost().WithAsyncQueryConsumer())
-                    .Act.RecordException().OnServicesAsync(async s =>
-                    {
-                        var messagingSrv = s.GetRequiredService<IMessagingService>();
-                        var query = new MockQuery {ThrowEx = true};
-
-                        await messagingSrv.DispatchAsync(query);
-                    });
-
-                testResult.Assert.Exception<QueryDispatchException>(ex =>
-                {
-                    // Assert that the inner exception is a dispatch exception:
-                    ex.InnerException.Should().NotBeNull();
-                    // ex.InnerException?.InnerException.Should().BeOfType<MessageDispatchException>();
-                });
-            });
-        }
-
-        [Fact]
-        public void ExceptionsCapture_ForDispatched_SyncConsumer()
-        {
-            
         }
     }
 }
