@@ -127,6 +127,7 @@ namespace CoreTests.Messaging.DomainEvents
         
         /// <summary>
         /// Tests the scenario where a parent message handler dispatches a child message resulting in an exception.
+        /// In this case, the ChildExceptions and Details are captured in the order the messages where published.
         /// </summary>
         [Fact]
         public Task ExceptionsCaptured_ForChildPublished_Message()
@@ -137,15 +138,18 @@ namespace CoreTests.Messaging.DomainEvents
                     .Container(c => c.AddMessagingHost().WithChildMessageHandlerException())
                     .Act.RecordException().OnServicesAsync(async s =>
                     {
-                        var messagingSrv = s.GetRequiredService<IMessagingService>();
                         var domainEvt = new MockDomainEvent();
-
-                        await messagingSrv.PublishAsync(domainEvt);
+                        
+                        await s.GetRequiredService<IMessagingService>()
+                            .PublishAsync(domainEvt);
                     });
 
                 testResult.Assert.Exception<PublisherException>(ex =>
                 {
-                    
+                    ex.InnerException.Should().BeOfType<MessageDispatchException>();
+                    ex.InnerException.InnerException.Should().BeOfType<PublisherException>();
+                    ex.InnerException.InnerException.InnerException.Should().BeOfType<MessageDispatchException>();
+                    ex.InnerException.InnerException.InnerException.InnerException.Should().BeOfType<InvalidOperationException>();
                 });
             });
         }

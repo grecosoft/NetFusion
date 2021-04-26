@@ -11,12 +11,12 @@ namespace CoreTests.Messaging.Commands.Mocks
         [InProcessHandler]
         public async Task<MockCommandResult> OnCommand(MockCommand command)
         {
-            TestLog.AddLogEntry("OnCommand");
+            TestLog.AddLogEntry("Async-Command-Handler");
 
             var mockResponse = new MockCommandResult();
 
             await Task.Run(() => {
-                mockResponse.Value = "MOCK_VALUE";
+                mockResponse.Value = "MOCK_ASYNC_VALUE";
             });
 
             return mockResponse;
@@ -25,7 +25,7 @@ namespace CoreTests.Messaging.Commands.Mocks
         [InProcessHandler]
         public Task OnCommandNoResult(MockCommandNoResult command)
         {
-            TestLog.AddLogEntry("OnCommandNoResult");
+            TestLog.AddLogEntry("Async-Command-Handler-No-Result");
             return Task.Run(() => { });
         }
     }
@@ -38,7 +38,7 @@ namespace CoreTests.Messaging.Commands.Mocks
         [InProcessHandler]
         public MockCommandResult OnCommand(MockCommand command)
         {
-            TestLog.AddLogEntry("OnCommand");
+            TestLog.AddLogEntry("Sync-Command-Handler");
             return new MockCommandResult
             {
                 Value = "MOCK_SYNC_VALUE"

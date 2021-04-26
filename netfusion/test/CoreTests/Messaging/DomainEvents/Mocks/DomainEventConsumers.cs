@@ -179,7 +179,8 @@ namespace CoreTests.Messaging.DomainEvents.Mocks
         [InProcessHandler]
         public Task OnDomainEventTwoAsync(MockDomainEventTwo domainEvent)
         {
-            return Task.Run(() => throw new InvalidOperationException(nameof(OnDomainEventTwoAsync)));
+            return Task.Run(
+                () => throw new InvalidOperationException($"{nameof(MockErrorChildMessageConsumer)}_Exception"));
         }
     }
 }

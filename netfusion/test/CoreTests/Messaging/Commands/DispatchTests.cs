@@ -16,8 +16,7 @@ namespace CoreTests.Messaging.Commands
     public class DispatchTests
     {
         /// <summary>
-        /// Dispatched command can be handled by asynchronous consumer method
-        /// returning a result.
+        /// Dispatched command can be handled by asynchronous consumer method returning a result.
         /// </summary>
         [Fact]
         public Task CanSendCommand_WithAsyncHandler_ReturningResult()
@@ -30,19 +29,19 @@ namespace CoreTests.Messaging.Commands
                     .Container(c => c.AddMessagingHost().WithAsyncCommandConsumer())
                     .Act.OnServicesAsync(async s =>
                     {
-                        var messagingSrv = s.GetRequiredService<IMessagingService>();
                         var cmd = new MockCommand();
-
-                        cmdResult = await messagingSrv.SendAsync(cmd);
+                        
+                        cmdResult = await s.GetRequiredService<IMessagingService>()
+                            .SendAsync(cmd);
                     });
 
                 testResult.Assert.Service<IMockTestLog>(log =>
                 {
                     cmdResult.Should().NotBeNull();
-                    cmdResult.Value.Should().Be("MOCK_VALUE");
+                    cmdResult.Value.Should().Be("MOCK_ASYNC_VALUE");
                     
                     log.Entries.Should().HaveCount(1);
-                    log.Entries.Should().Contain("OnCommand");
+                    log.Entries.Should().Contain("Async-Command-Handler");
                 });
             });
         }
@@ -64,10 +63,10 @@ namespace CoreTests.Messaging.Commands
                     .Container(c => c.AddMessagingHost().WithSyncCommandConsumer())
                     .Act.OnServicesAsync(async s =>
                     {
-                        var messagingSrv = s.GetRequiredService<IMessagingService>();
                         var cmd = new MockCommand();
-
-                        cmdResult = await messagingSrv.SendAsync(cmd);
+                        
+                        cmdResult = await s.GetRequiredService<IMessagingService>()
+                            .SendAsync(cmd);
                     });
 
                 testResult.Assert.Service<IMockTestLog>(log =>
@@ -76,13 +75,13 @@ namespace CoreTests.Messaging.Commands
                     cmdResult.Value.Should().Be("MOCK_SYNC_VALUE");
 
                     log.Entries.Should().HaveCount(1);
-                    log.Entries.Should().Contain("OnCommand");
+                    log.Entries.Should().Contain("Sync-Command-Handler");
                 });
             });
         }
 
         /// <summary>
-        /// Commands can be sent for which the handler does not return a response.
+        /// Commands can be handled by a consumer not requiring a response.
         /// </summary>
         [Fact]
         public Task CommandResult_NotRequired()
@@ -93,16 +92,16 @@ namespace CoreTests.Messaging.Commands
                     .Container(c => c.AddMessagingHost().WithAsyncCommandConsumer())
                     .Act.OnServicesAsync(async s =>
                     {
-                        var messagingSrv = s.GetRequiredService<IMessagingService>();
                         var cmd = new MockCommandNoResult();
-
-                        await messagingSrv.SendAsync(cmd);
+                        
+                        await s.GetRequiredService<IMessagingService>()
+                            .SendAsync(cmd);
                     });
 
                 testResult.Assert.Service<IMockTestLog>(log =>
                 {
                     log.Entries.Should().HaveCount(1);
-                    log.Entries.Should().Contain("OnCommandNoResult");
+                    log.Entries.Should().Contain("Async-Command-Handler-No-Result");
                 });
             });
         }
@@ -119,9 +118,10 @@ namespace CoreTests.Messaging.Commands
                     .Container(c => c.AddMessagingHost().WithMultipleConsumers())
                     .Act.RecordException().OnServicesAsync(s =>
                     {
-                        var messagingSrv = s.GetRequiredService<IMessagingService>();
-                        var evt = new MockCommand();
-                        return messagingSrv.SendAsync(evt);
+                        var cmd = new MockCommand();
+                        
+                        return s.GetRequiredService<IMessagingService>()
+                            .SendAsync(cmd);
                     });
 
                 testResult.Assert.Exception((PublisherException ex) =>
@@ -129,6 +129,12 @@ namespace CoreTests.Messaging.Commands
                     Assert.Contains("Exception when invoking message publishers", ex.Message);
                 });
             });
+        }
+
+        [Fact]
+        public void CommandMessages_MustHave_CommandHandler()
+        {
+            
         }
 
         [Fact]
