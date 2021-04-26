@@ -31,11 +31,28 @@ namespace CoreTests.Messaging
                 fixture
                     .Arrange.Container(c => c.AddMessagingHost())
                     .Assert
-
-                    .Configuration<MessageDispatchConfig>(_ => { })
-                    .PluginModule<MessagingModule>(_ => { })
-                    .PluginModule<MessageDispatchModule>(_ => { })
-                    .PluginModule<MessageEnricherModule>(_ => { });
+                        .Configuration<MessageDispatchConfig>(_ => { })
+                        .PluginModule<MessagingModule>(_ => { })
+                        .PluginModule<MessageDispatchModule>(_ => { })
+                        .PluginModule<MessageEnricherModule>(_ => { });
+            });
+        }
+        
+        /// <summary>
+        /// When the messaging plugin is added to the composite application, all query associated modules
+        /// and configurations are added. 
+        /// </summary>
+        [Fact]
+        public void AllQueryModules_Added_ToContainer()
+        {
+            ContainerFixture.Test(fixture =>
+            {
+                fixture
+                    .Arrange.Container(c => c.AddMessagingHost())
+                    .Assert
+                        .Configuration<QueryDispatchConfig>(_ => { })
+                        .PluginModule<QueryDispatchModule>(_ => { })
+                        .PluginModule<QueryFilterModule>(_ => { });
             });
         }
 

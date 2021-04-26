@@ -3,7 +3,6 @@ using CoreTests.Messaging.Commands.Mocks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Messaging;
-using NetFusion.Messaging.Exceptions;
 using NetFusion.Test.Container;
 using Xunit;
 
@@ -104,49 +103,6 @@ namespace CoreTests.Messaging.Commands
                     log.Entries.Should().Contain("Async-Command-Handler-No-Result");
                 });
             });
-        }
-
-        /// <summary>
-        /// Unlike domain-event messages, commands can have one and only one handler.
-        /// </summary>
-        [Fact]
-        public Task CommandMessagesCanOnly_HaveOneEventHandler()
-        {
-            return ContainerFixture.TestAsync(async fixture =>
-            {
-                var testResult = await fixture.Arrange
-                    .Container(c => c.AddMessagingHost().WithMultipleConsumers())
-                    .Act.RecordException().OnServicesAsync(s =>
-                    {
-                        var cmd = new MockCommand();
-                        
-                        return s.GetRequiredService<IMessagingService>()
-                            .SendAsync(cmd);
-                    });
-
-                testResult.Assert.Exception((PublisherException ex) =>
-                {
-                    Assert.Contains("Exception when invoking message publishers", ex.Message);
-                });
-            });
-        }
-
-        [Fact]
-        public void CommandMessages_MustHave_CommandHandler()
-        {
-            
-        }
-
-        [Fact]
-        public void ExceptionsCaptured_ForAsync_Consumer()
-        {
-            
-        }
-        
-        [Fact]
-        public void ExceptionsCaptured_ForSync_Consumer()
-        {
-            
         }
     }
 }

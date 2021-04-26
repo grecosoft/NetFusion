@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Logging;
 using NetFusion.Common.Extensions;
+using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Logging;
@@ -46,7 +47,9 @@ namespace NetFusion.Messaging.Internal
         public async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
             MessageDispatchInfo[] dispatchers = GetMessageDispatchers(message);
-            if (! dispatchers.Any())
+            
+            AssertMessageDispatchers(message, dispatchers);
+            if (dispatchers.Empty())
             {
                 return;
             }
@@ -86,8 +89,6 @@ namespace NetFusion.Messaging.Internal
             TaskListItem<MessageDispatchInfo>[] taskList = null;
             try
             {
-                AssertMessageDispatchers(message, dispatchers);
-
                 // Execute all of matching dispatchers and await the list of associated tasks.
                 taskList = dispatchers.Invoke(message, InvokeDispatcher, cancellationToken);
                 await taskList.WhenAll();
@@ -113,20 +114,13 @@ namespace NetFusion.Messaging.Internal
         
         private static void AssertMessageDispatchers(IMessage message, MessageDispatchInfo[] dispatchers)
         {
-            // There are no constraints on the number of handlers for domain-events.
-            if (message is not ICommand command)
-            {
-                return;
-            }
-
-            if (dispatchers.Length > 1)
+            if (dispatchers.Length != 1 && message is ICommand command)
             {
                 var dispatcherDetails = GetDispatchLogDetails(dispatchers);
-
+                
                 throw new PublisherException(
-                    $"More than one message consumer handler was found for command message type: {command.GetType()}. " +
-                     "A command message type can have only one in-process message consumer handler.", 
-                     "DispatcherDetails", dispatcherDetails);
+                    $"Command of type: {command.GetType()} must have one and only one consumer.", "dispatchers", 
+                    dispatcherDetails);
             }
         }
 

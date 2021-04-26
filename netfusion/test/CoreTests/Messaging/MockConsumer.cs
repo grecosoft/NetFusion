@@ -24,19 +24,19 @@ namespace CoreTests.Messaging
     public interface IMockTestLog
     {
         IReadOnlyCollection<string> Entries { get; }
-        IReadOnlyCollection<IMessage> Messages { get; }
+        IReadOnlyCollection<object> Messages { get; }
         
         IMockTestLog AddLogEntry(string logMessage);
-        IMockTestLog RecordMessage(IMessage message);
+        IMockTestLog RecordMessage(object message);
     }
     
     public class MockTestLog : IMockTestLog
     {
         private readonly List<string> _entries = new();
-        private readonly List<IMessage> _messages = new();
+        private readonly List<object> _messages = new();
         
         public IReadOnlyCollection<string> Entries { get; }
-        public IReadOnlyCollection<IMessage> Messages { get; }
+        public IReadOnlyCollection<object> Messages { get; }
         
         public MockTestLog()
         {
@@ -50,7 +50,7 @@ namespace CoreTests.Messaging
             return this;
         }
 
-        public IMockTestLog RecordMessage(IMessage message)
+        public IMockTestLog RecordMessage(object message)
         {
             _messages.Add(message);
             return this;

@@ -1,55 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using NetFusion.Messaging;
-using NetFusion.Messaging.Types.Contracts;
 
 namespace CoreTests.Messaging.Queries.Mocks
 {
-    public abstract class MockQueryConsumerBase
+    public abstract class MockQueryConsumer
     {
-        private readonly List<string> _executedHandlers = new ();
-        private readonly List<IQuery> _receivedQueries = new();
-
-        protected MockQueryConsumerBase()
+        protected IMockTestLog TestLog { get; }
+        
+        protected MockQueryConsumer()
         {
-            ExecutedHandlers = _executedHandlers;
-            ReceivedQueries = _receivedQueries;
         }
 
-        public IReadOnlyCollection<string> ExecutedHandlers { get; }
-        public IReadOnlyCollection<IQuery> ReceivedQueries { get; }
-
-        protected void AddCalledHandler(string handlerName)
+        protected MockQueryConsumer(IMockTestLog testLog)
         {
-            _executedHandlers.Add(handlerName);
+            TestLog = testLog;
         }
-
-        protected void RecordReceivedQuery(IQuery message) => _receivedQueries.Add(message);
     }
     
-    public class MockQueryConsumer : MockQueryConsumerBase,
+    public class MockSyncQueryConsumer : MockQueryConsumer,
         IQueryConsumer
     {
+        public MockSyncQueryConsumer(IMockTestLog testLog) : base(testLog) { }
+        
         [InProcessHandler]
         public MockQueryResult Execute(MockQuery query)
         {
-            RecordReceivedQuery(query);
-            AddCalledHandler(nameof(Execute));
-            
+            TestLog.AddLogEntry(nameof(Execute));
+
+            TestLog.RecordMessage(query);
             return new MockQueryResult();
         }
     }
     
-    public class MockAsyncQueryConsumer : MockQueryConsumerBase,
+    public class MockAsyncQueryConsumer : MockQueryConsumer,
         IQueryConsumer
     {
+        public MockAsyncQueryConsumer(IMockTestLog testLog) : base(testLog) { }
+        
         [InProcessHandler]
         public async Task<MockQueryResult> Execute(MockQuery query)
         {
-            RecordReceivedQuery(query);
-            AddCalledHandler(nameof(Execute));
-            
+            TestLog.AddLogEntry(nameof(Execute));
+
             await Task.Run(() =>
             {
                 if (query.ThrowEx)

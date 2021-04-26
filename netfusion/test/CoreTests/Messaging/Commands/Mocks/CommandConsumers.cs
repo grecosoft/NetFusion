@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using NetFusion.Messaging;
 
@@ -17,6 +18,11 @@ namespace CoreTests.Messaging.Commands.Mocks
 
             await Task.Run(() => {
                 mockResponse.Value = "MOCK_ASYNC_VALUE";
+                
+                if (command.ThrowInHandlers.Contains(nameof(MockAsyncCommandConsumer)))
+                {
+                    throw new InvalidOperationException($"{nameof(MockAsyncCommandConsumer)}_Exception");
+                }
             });
 
             return mockResponse;
@@ -39,6 +45,12 @@ namespace CoreTests.Messaging.Commands.Mocks
         public MockCommandResult OnCommand(MockCommand command)
         {
             TestLog.AddLogEntry("Sync-Command-Handler");
+
+            if (command.ThrowInHandlers.Contains(nameof(MockSyncCommandConsumer)))
+            {
+                throw new InvalidOperationException($"{nameof(MockSyncCommandConsumer)}_Exception");
+            }
+            
             return new MockCommandResult
             {
                 Value = "MOCK_SYNC_VALUE"

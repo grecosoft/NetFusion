@@ -63,10 +63,10 @@ namespace CoreTests.Messaging.Queries
                             .DispatchAsync(query);
                     });
 
-                testResult.Assert.Service<MockQueryConsumer>(qc =>
+                testResult.Assert.Service<IMockTestLog>(log =>
                 {
-                    qc.ReceivedQueries.Should().HaveCount(1);
-                    qc.ExecutedHandlers.Should().HaveCount(1).And.Contain("Execute");
+                    log.Entries.Should().HaveCount(1);
+                    log.Entries.Should().HaveCount(1).And.Contain("Execute");
                 });
             });
         }
@@ -85,10 +85,10 @@ namespace CoreTests.Messaging.Queries
                             .DispatchAsync(query);
                     });
 
-                testResult.Assert.Service<MockAsyncQueryConsumer>(qc =>
+                testResult.Assert.Service<IMockTestLog>(log =>
                 {
-                    qc.ReceivedQueries.Should().HaveCount(1);
-                    qc.ExecutedHandlers.Should().HaveCount(1).And.Contain("Execute");
+                    log.Entries.Should().HaveCount(1);
+                    log.Entries.Should().HaveCount(1).And.Contain("Execute");
                 });
             });
         }

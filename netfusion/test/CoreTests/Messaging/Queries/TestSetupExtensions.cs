@@ -9,7 +9,7 @@ namespace CoreTests.Messaging.Queries
         public static CompositeContainer WithQueryConsumer(this CompositeContainer container)
         {
             var appPlugin = new MockAppPlugin();
-            appPlugin.AddPluginType<MockQueryConsumer>();
+            appPlugin.AddPluginType<MockSyncQueryConsumer>();
             
             container.RegisterPlugins(appPlugin);
             return container;
