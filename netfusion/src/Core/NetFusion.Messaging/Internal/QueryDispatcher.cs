@@ -133,7 +133,7 @@ namespace NetFusion.Messaging.Internal
         private void LogQueryDispatch(QueryDispatchInfo dispatchInfo, IQuery query)
         {
             var handlerInfo = new {
-                Consumer = dispatchInfo.ConsumerType,
+                Consumer = dispatchInfo.ConsumerType.FullName,
                 Handler = dispatchInfo.HandlerMethod.Name
             };
             

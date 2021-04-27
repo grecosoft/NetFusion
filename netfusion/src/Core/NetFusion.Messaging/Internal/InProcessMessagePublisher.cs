@@ -56,7 +56,7 @@ namespace NetFusion.Messaging.Internal
 
             var msgLog = CreateLogMessage(message, dispatchers);
 
-            // Execute all handlers and return the task for the caller to await.
+            // Execute all dispatchers and return the task for the caller to await.
             try
             {
                 await InvokeMessageDispatchers(dispatchers, message, cancellationToken).ConfigureAwait(false);
@@ -173,7 +173,7 @@ namespace NetFusion.Messaging.Internal
         private static object GetDispatchLogDetails(IEnumerable<MessageDispatchInfo> dispatchers)
         {
             return dispatchers.Select(d => new {
-                    d.MessageType.FullName,
+                    MessageType = d.MessageType.FullName,
                     Consumer = d.ConsumerType.FullName,
                     Method = d.MessageHandlerMethod.Name
                 })

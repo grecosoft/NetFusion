@@ -101,12 +101,11 @@ namespace NetFusion.Messaging.Exceptions
         /// Publisher Exception.
         /// </summary>
         /// <param name="message">Message describing the exception.</param>
-        /// <param name="enricherExceptions">List of enricher exceptions when publishing message to one
-        /// or more publishers.</param>
-        public PublisherException(string message, IEnumerable<EnricherException> enricherExceptions) 
+        /// <param name="childExceptions">List of related child exceptions.</param>
+        public PublisherException(string message, IEnumerable<NetFusionException> childExceptions) 
             : base(message)
         {
-            SetChildExceptions(enricherExceptions);
+            SetChildExceptions(childExceptions);
         }
     }
 }
