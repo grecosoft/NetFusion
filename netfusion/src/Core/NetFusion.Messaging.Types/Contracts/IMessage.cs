@@ -11,7 +11,7 @@ namespace NetFusion.Messaging.Types.Contracts
         /// <summary>
         /// Attributes associated with a message.  These attributes are usually
         /// not used by a business application but by messaging implementations
-        /// to pass setting between the publisher and subscriber.
+        /// to pass settings between the publisher and subscriber.
         /// </summary>
         IDictionary<string, string> Attributes { get; set; }
     }

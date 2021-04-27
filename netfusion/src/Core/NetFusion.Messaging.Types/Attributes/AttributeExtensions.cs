@@ -46,7 +46,6 @@ namespace NetFusion.Messaging.Types.Attributes
         public static void SetRouteKey(this IMessage message, string value) =>
             message.Attributes.SetStringValue(GetPluginScopedName("RouteKey"), value);
         
-
         /// <summary>
         /// Given an array of values, sets the route key to the corresponding string
         /// values concatenated with period character.  Used to specify key used
@@ -112,8 +111,7 @@ namespace NetFusion.Messaging.Types.Attributes
         /// <returns></returns>
         public static DateTime GetUtcDateOccurred(this IMessage message) =>
             message.Attributes.GetUtcDateTimeValue(GetPluginScopedName("DateOccurred"));
-        
-        
+
         /// <summary>
         /// Secondary value to identity the message.
         /// </summary>
@@ -121,8 +119,7 @@ namespace NetFusion.Messaging.Types.Attributes
         /// <param name="value">A value used to identity the message.</param>
         public static void SetMessageId(this IMessage message, string value) =>
             message.Attributes.SetStringValue(GetPluginScopedName("MessageId"), value, false);
-      
-
+        
         /// <summary>
         /// Returns secondary value to identity the message.
         /// </summary>
@@ -131,7 +128,6 @@ namespace NetFusion.Messaging.Types.Attributes
         public static string GetMessageId(this IMessage message) =>
             message.Attributes.GetStringValue(GetPluginScopedName("MessageId"), null);
         
-        
         /// <summary>
         /// Message value that can be used to determine how a message is routed.
         /// </summary>
@@ -139,7 +135,6 @@ namespace NetFusion.Messaging.Types.Attributes
         /// <param name="value">The current subject value.</param>
         public static void SetSubject(this IMessage message, string value) =>
             message.Attributes.SetStringValue(GetPluginScopedName("Subject"), value);
-      
 
         /// <summary>
         /// Returns message value used to determine how a message is routed.
@@ -149,7 +144,6 @@ namespace NetFusion.Messaging.Types.Attributes
         public static string GetSubject(this IMessage message) =>
             message.Attributes.GetStringValue(GetPluginScopedName("Subject"), null);
         
-        
         /// <summary>
         /// Message value indicating where the subscriber can replay to a received message.
         /// </summary>
@@ -157,8 +151,7 @@ namespace NetFusion.Messaging.Types.Attributes
         /// <param name="value"></param>
         public static void SetReplyTo(this IMessage message, string value) =>
             message.Attributes.SetStringValue(GetPluginScopedName("ReplyTo"), value);
-      
-
+        
         /// <summary>
         /// Returns value indicating where the subscriber can replay to a received message.
         /// </summary>
@@ -174,8 +167,7 @@ namespace NetFusion.Messaging.Types.Attributes
         /// <param name="value">The destination value.</param>
         public static void SetTo(this IMessage message, string value) =>
             message.Attributes.SetStringValue(GetPluginScopedName("To"), value);
-      
-
+        
         /// <summary>
         /// Returns message value used to specify a destination for the message.
         /// </summary>
@@ -183,8 +175,7 @@ namespace NetFusion.Messaging.Types.Attributes
         /// <returns>Destination value.</returns>
         public static string GetTo(this IMessage message) =>
             message.Attributes.GetStringValue(GetPluginScopedName("To"), null);
-
-            
+        
         /// <summary>
         /// Sets value used to identity a user associated with the message.
         /// </summary>
@@ -192,8 +183,7 @@ namespace NetFusion.Messaging.Types.Attributes
         /// <param name="value">Value identity an user.</param>
         public static void SetUserId(this IMessage message, string value) =>
             message.Attributes.SetStringValue(GetPluginScopedName("UserId"), value, false);
-      
-
+        
         /// <summary>
         /// Gets value used to identity user associated with the message.
         /// </summary>
@@ -201,7 +191,6 @@ namespace NetFusion.Messaging.Types.Attributes
         /// <returns>Value identifying an user.</returns>
         public static string GetUserId(this IMessage message) =>
             message.Attributes.GetStringValue(GetPluginScopedName("UserId"), null);
-        
         
         /// <summary>
         /// Sets date and time used to indicate after which the message should
@@ -212,8 +201,7 @@ namespace NetFusion.Messaging.Types.Attributes
         /// be converted to UTC is a local date is specified.</param>
         public static void SetUtcAbsoluteExpiryTime(this IMessage message, DateTime value) =>
             message.Attributes.SetUtcDateValue(GetPluginScopedName("AbsoluteExpiryTime"), value);
-
-
+        
         /// <summary>
         /// Get date an time used to indicate after which the message should
         /// no longer be considered current and processed.
@@ -237,7 +225,6 @@ namespace NetFusion.Messaging.Types.Attributes
         /// <param name="value">The security TLS token.</param>
         public static void SetTls(this IMessage message, uint value) =>
             message.Attributes.SetUIntValue(GetPluginScopedName("Tls"), value);
-
 
         /// <summary>
         /// Returns token value for Transport Layer Security.

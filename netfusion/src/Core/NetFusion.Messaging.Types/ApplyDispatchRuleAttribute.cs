@@ -6,8 +6,7 @@ using NetFusion.Messaging.Types.Contracts;
 namespace NetFusion.Messaging.Types
 {
     /// <summary>
-    /// Used to specify rule classes that determine if the handler 
-    /// should be called based on the message's state.
+    /// Used to specify rule classes that determine if the handler should be called based on the message's state.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class ApplyDispatchRuleAttribute : Attribute
