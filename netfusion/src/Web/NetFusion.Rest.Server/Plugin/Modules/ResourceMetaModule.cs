@@ -19,7 +19,7 @@ namespace NetFusion.Rest.Server.Plugin.Modules
         private IEnumerable<IResourceMap> ResourceMappings { get; set; }
 
         // MediaTypeName (i.e. application/hal+json) --> Entry
-        private readonly Dictionary<string, MediaTypeEntry> _mediaResourceTypeMeta = new Dictionary<string, MediaTypeEntry>();
+        private readonly Dictionary<string, MediaTypeEntry> _mediaResourceTypeMeta = new();
 
         // Caches all of the resource-metadata associated with resources for a specific media type.
         public override void Configure()
