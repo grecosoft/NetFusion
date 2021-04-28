@@ -13,7 +13,7 @@ namespace NetFusion.Web.Mvc.Metadata
         public int Status { get; }
         
         /// <summary>
-        /// The optional mode type associated with the HTTP status code.
+        /// The optional model type associated with the HTTP status code.
         /// </summary>
         public Type ModelType { get; set; }
         
