@@ -23,7 +23,7 @@ namespace NetFusion.Base.Entity
 
         public dynamic Values => this;
 
-        //------------------------------------------ DYNAMIC OBJECT OVERRIDES ------------------------------------------//
+        //-------------------------- [Dynamic Object Overrides] -------------------------//
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             return _attributes.TryGetValue(binder.Name, out result);
@@ -35,88 +35,99 @@ namespace NetFusion.Base.Entity
             return true;
         }
 
-        //------------------------------------------ VALUE MAINTENANCE ------------------------------------------------//
+        //----------------------------- [Value Maintenance] ----------------------------//
         public void SetValues(IDictionary<string, object> values)
         {
-            _attributes = values ?? throw new ArgumentNullException(nameof(values), 
-                "Values cannot be null.");
+            _attributes = values ?? throw new ArgumentNullException(nameof(values), "Values cannot be null.");
         }
 
-        public IDictionary<string, object> GetValues()
-        {
-            return _attributes;
-        }
+        public IDictionary<string, object> GetValues() => _attributes;
 
-        public void SetValue(string name, object value, 
-            Type context = null,
-            bool overrideIfPresent = true)
+        public void SetValue(string name, object value, bool overrideIfPresent = true)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
                 "Attribute name cannot be null or empty string.", nameof(name));
-
-            string prefixedNamed = GetPropertyPrefixedName(context, name);
+            
+            if (value == null) throw new ArgumentNullException(nameof(value));
 
             if (_attributes.ContainsKey(name) && !overrideIfPresent)
             {
                 return;
             }
-            _attributes[prefixedNamed] = value;
+            _attributes[name] = value;
         }
 
-        public object GetValue(string name, Type context = null)
+        public object GetValue(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
                 "Attribute name cannot be null or empty string.", nameof(name));
 
-            string prefixedNamed = GetPropertyPrefixedName(context, name);
-
-            AssertValidKey(prefixedNamed);
-            return _attributes[prefixedNamed];
+            AssertValidKey(name);
+            return _attributes[name];
+        }
+        
+        public object GetValueOrDefault(string name, object defaultValue = default)
+        {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
+                "Attribute name cannot be null or empty string.", nameof(name));
+            
+            return _attributes.ContainsKey(name) ? _attributes[name] : defaultValue;
         }
 
-        public T GetValue<T>(string name, Type context = null)
+        public bool TryGetValue(string name, out object value)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
                 "Attribute name cannot be null or empty string.", nameof(name));
 
-            return (T)GetValue(name, context);
+            return _attributes.TryGetValue(name, out value);
         }
 
-        public T GetValueOrDefault<T>(string name, T defaultValue = default(T), Type context = null)
+        public T GetValue<T>(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
                 "Attribute name cannot be null or empty string.", nameof(name));
 
-            string prefixedNamed = GetPropertyPrefixedName(context, name);
-            if (_attributes.ContainsKey(prefixedNamed))
+            AssertValidKey(name);
+            return (T)_attributes[name];
+        }
+
+        public bool TryGetValue<T>(string name, out T value)
+        {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
+                "Attribute name cannot be null or empty string.", nameof(name));
+
+            if (_attributes.TryGetValue(name, out object attribValue))
             {
-                return (T)_attributes[prefixedNamed];
+                value = (T)attribValue;
+                return true;
             }
 
-            return defaultValue;
+            value = default;
+            return false;
         }
 
-        public bool Contains(string name, Type context = null)
+        public T GetValueOrDefault<T>(string name, T defaultValue = default)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
                 "Attribute name cannot be null or empty string.", nameof(name));
 
-            string prefixedNamed = GetPropertyPrefixedName(context, name);
-            return _attributes.ContainsKey(prefixedNamed);
+            return _attributes.ContainsKey(name) ? (T)_attributes[name] : defaultValue;
         }
 
-        public bool Delete(string name, Type context = null)
+        public bool Contains(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
                 "Attribute name cannot be null or empty string.", nameof(name));
 
-            string prefixedNamed = GetPropertyPrefixedName(context, name);
-            return _attributes.Remove(prefixedNamed);
+            return _attributes.ContainsKey(name);
         }
 
-        private static string GetPropertyPrefixedName(Type context, string name)
+        public bool Delete(string name)
         {
-            return context != null ? context.Namespace + "-" + name : name;
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
+                "Attribute name cannot be null or empty string.", nameof(name));
+            
+            return _attributes.Remove(name);
         }
 
         private void AssertValidKey(string name)
@@ -128,9 +139,10 @@ namespace NetFusion.Base.Entity
             }
         }
 
-        //------------------------------------------ CALLER MEMBER STORED VALUES -------------------------------------//
+        //-------------------------- [ Caller Member Stored Values ] -------------------------//
+
         // Returns the corresponding property for a given method name.
-        private string GetBasePropertyName(string methodName)
+        private static string GetBasePropertyName(string methodName)
         {
             if (string.IsNullOrWhiteSpace(methodName)) throw new ArgumentException(
                 "Method name cannot be null or empty string.", nameof(methodName));
@@ -138,18 +150,17 @@ namespace NetFusion.Base.Entity
             return methodName.Replace("Get", "").Replace("Set", "");
         }
 
-        public void SetMemberValue<T>(T value, Type context = null, bool overrideIfPresent = true,
+        public void SetMemberValue<T>(T value, bool overrideIfPresent = true,
             [CallerMemberName] string callerName = null)
         {
             string propName = GetBasePropertyName(callerName);
-            SetValue(propName, value, context, overrideIfPresent);
+            SetValue(propName, value, overrideIfPresent);
         }
 
-        public T GetMemberValueOrDefault<T>(T defaultValue = default(T), Type context = null,
-            [CallerMemberName] string callerName = null)
+        public T GetMemberValueOrDefault<T>(T defaultValue = default, [CallerMemberName] string callerName = null)
         {
             string propName = GetBasePropertyName(callerName);
-            return GetValueOrDefault(propName, defaultValue, context);
+            return GetValueOrDefault(propName, defaultValue);
         }
     }
 }
