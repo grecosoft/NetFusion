@@ -1,7 +1,7 @@
 namespace NetFusion.Base.Logging
 {
     /// <summary>
-    /// Implemented by a type to determine what state it should log.
+    /// Implemented by a type to determine what state should be logged.
     /// </summary>
     public interface ITypeLog
     {
