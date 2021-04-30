@@ -51,14 +51,13 @@ namespace NetFusion.Roslyn.Internal
             Type entityType = entity.GetType();
 
             IEnumerable<ScriptEvaluator> scripts = _scriptEvaluators[entityType].ToArray();
-            if (! scripts.Any())
+            if (scripts.Empty())
             {
                 return;
             }
 
             // Execute the default script if specified.
             var defaultEvalScript = scripts.FirstOrDefault(se => se.IsDefault);
-
             if (defaultEvalScript != null)
             {
                 await ExecuteScript(entity, defaultEvalScript);
@@ -115,7 +114,7 @@ namespace NetFusion.Roslyn.Internal
             return new { };
         }
 
-        private void CompileScript(ScriptEvaluator scriptEval)
+        private static void CompileScript(ScriptEvaluator scriptEval)
         {
             if (scriptEval.Evaluators == null)
             {
@@ -130,7 +129,7 @@ namespace NetFusion.Roslyn.Internal
             }
         }
 
-        private ExpressionEvaluator[] CreateExpressionEvaluators(EntityScript script)
+        private static ExpressionEvaluator[] CreateExpressionEvaluators(EntityScript script)
         {
             return script.Expressions.Select(exp =>
             {
@@ -145,14 +144,14 @@ namespace NetFusion.Roslyn.Internal
         // the attribute from a prior evaluation or manually specified by the caller.
         private static void SetDefaultAttributeValues(EntityScript script, object entity)
         {
-            if (!(entity is IAttributedEntity attributedEntity))
+            if (entity is not IAttributedEntity attributedEntity)
             {
                 return;
             }
 
-            foreach (var attribute in script.InitialAttributes)
+            foreach (var (name, value) in script.InitialAttributes)
             {
-                attributedEntity.Attributes.SetValue(attribute.Key, attribute.Value, overrideIfPresent: false);
+                attributedEntity.Attributes.SetValue(name, value, overrideIfPresent: false);
             }
         }
 
@@ -191,7 +190,7 @@ namespace NetFusion.Roslyn.Internal
             var importedAssemblies = GetImportedAssemblies(script, defaultTypes);
             
             var options = ScriptOptions.Default.AddReferences(importedAssemblies)
-                .AddImports(script.ImportedNamespaces ?? new string[] { });
+                .AddImports(script.ImportedNamespaces ?? Array.Empty<string>());
 
             return options;
         }
@@ -204,7 +203,7 @@ namespace NetFusion.Roslyn.Internal
             var assemblies = new List<Assembly>();
 
             // Add the assemblies containing the list of specified types.
-            var defaultAssemblies = assembliesContainingTypes.Select(t => t.GetTypeInfo().Assembly);
+            var defaultAssemblies = assembliesContainingTypes.Select(t => t.Assembly);
             assemblies.AddRange(defaultAssemblies);
 
             if (script.ImportedAssemblies == null)
@@ -242,7 +241,7 @@ namespace NetFusion.Roslyn.Internal
             if (entity == null) throw new ArgumentNullException(nameof(entity));
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
-            if (!(entity is IAttributedEntity attributedEntity))
+            if (entity is not IAttributedEntity attributedEntity)
             {
                 throw new InvalidOperationException(
                     $"The entity being evaluated must implement: {typeof(IAttributedEntity)}");
