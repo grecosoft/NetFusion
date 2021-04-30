@@ -5,8 +5,9 @@ using Serilog.Events;
 namespace NetFusion.Serilog.Enrichers
 {
     /// <summary>
-    /// Enriches log events with the name and identity 
-    /// of the host microservice.
+    /// Enriches log events with the name and identity of the host microservice.
+    /// The value of the HOSTNAME environment variable is also added to the log
+    /// event if defined.  
     /// </summary>
     public class HostIdentityEnricher : ILogEventEnricher 
     {

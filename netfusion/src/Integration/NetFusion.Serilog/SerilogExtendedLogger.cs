@@ -15,7 +15,7 @@ namespace NetFusion.Serilog
 {
     /// <summary>
     /// Provided extended logging implemented by Serilog without making NetFusion
-    /// directly dependent.
+    /// directly dependent on Serilog.
     /// </summary>
     public class SerilogExtendedLogger : IExtendedLogger
     {

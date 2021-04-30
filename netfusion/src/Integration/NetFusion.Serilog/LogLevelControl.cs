@@ -12,7 +12,7 @@ namespace NetFusion.Serilog
     /// </summary>
     public class LogLevelControl : ILogLevelControl
     {
-        public LoggingLevelSwitch Switch { get; } = new LoggingLevelSwitch();
+        public LoggingLevelSwitch Switch { get; } = new();
         
         public string SetMinimumLevel(LogLevel logLevel)
         {
@@ -21,6 +21,7 @@ namespace NetFusion.Serilog
             {
                 NfExtensions.Logger.Log<LogLevelControl>(LogLevel.Error, 
                     "Specified log level {LogLevel} is invalid", logLevel);
+                
                 return Switch.MinimumLevel.ToString();
             }
             
