@@ -49,7 +49,7 @@ namespace NetFusion.Redis.Publisher
         public async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
             // Only domain events with registered channel are published.
-            if (!(message is IDomainEvent domainEvent) || !_pubModule.HasChannel(message.GetType()))
+            if (message is not IDomainEvent domainEvent || !_pubModule.HasChannel(message.GetType()))
             {
                 return;
             }
@@ -106,7 +106,7 @@ namespace NetFusion.Redis.Publisher
         
         private void LogChannelPublish(IDomainEvent domainEvent, string databaseName, string channelName)
         {
-            _logger.LogInformation(
+            _logger.LogDebug(
                 "Domain event {EventName} Published to Redis Channel {ChannelName} on Database {DatabaseName}",
                 domainEvent.GetType(),
                 channelName, 
