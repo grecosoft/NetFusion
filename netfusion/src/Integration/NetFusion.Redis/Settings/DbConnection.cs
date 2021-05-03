@@ -11,7 +11,7 @@ namespace NetFusion.Redis.Settings
         /// <summary>
         /// The name of the database connection.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; internal set; }
         
         /// <summary>
         /// Used specify a number associated with the connection allowing the
@@ -47,7 +47,6 @@ namespace NetFusion.Redis.Settings
 
         public void Validate(IObjectValidator validator)
         {
-            validator.Verify(! string.IsNullOrWhiteSpace(Name), "Connection Name not specified.");
             validator.Verify(ConnectRetry > 0, "Connection Retry must be greater than zero.");
             validator.Verify(ConnectTimeout > 0, "Connection Timeout must be greater than zero.");
             validator.Verify(KeepAlive > 0, "Connection Keep-Alive must be greater than zero.");

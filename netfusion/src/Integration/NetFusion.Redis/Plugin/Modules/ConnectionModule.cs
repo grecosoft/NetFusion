@@ -42,28 +42,14 @@ namespace NetFusion.Redis.Plugin.Modules
                 NfExtensions.Logger.Log<ConnectionModule>(LogLevel.Error, ex.Message);
                 throw;
             }
-           
-            AssertSettings(_redisSettings);
         }
         
-        private static void AssertSettings(RedisSettings settings)
-        {
-            var duplicateConnNames = settings.Connections
-                .WhereDuplicated(s => s.Name)
-                .ToArray();
-
-            if (duplicateConnNames.Any())
-            {
-                throw new ContainerException("Configured database names must be unique.", 
-                    "duplicate-connection-names", 
-                    duplicateConnNames);
-            }
-        }
-
         protected override async Task OnStartModuleAsync(IServiceProvider services)
         {
-            foreach (DbConnection connSetting in _redisSettings.Connections)
+            foreach (var (name, connSetting) in _redisSettings.Connections)
             {
+                connSetting.Name = name;
+                
                 var connOptions = new ConfigurationOptions
                 {
                     // After connection failure, retry connecting.
@@ -135,7 +121,7 @@ namespace NetFusion.Redis.Plugin.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["RedisConnections"] = _redisSettings.Connections.Select(c => new
+            moduleLog["RedisConnections"] = _redisSettings.Connections.Values.Select(c => new
             {
                 DatabaseName = c.Name,
                 EndPoints = c.EndPoints.Select(ep => new

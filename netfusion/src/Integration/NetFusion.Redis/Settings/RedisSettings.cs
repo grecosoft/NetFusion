@@ -11,11 +11,11 @@ namespace NetFusion.Redis.Settings
     public class RedisSettings : IAppSettings,
         IValidatableType
     {
-        public IList<DbConnection> Connections { get; set; } = new List<DbConnection>();
+        public IDictionary<string, DbConnection> Connections { get; set; } = new Dictionary<string, DbConnection>();
         
         public void Validate(IObjectValidator validator)
         {
-            validator.AddChildren(Connections);
+            validator.AddChildren(Connections.Values);
         }
     }
 }
