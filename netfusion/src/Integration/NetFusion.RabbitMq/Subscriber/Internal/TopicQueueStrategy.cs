@@ -17,23 +17,23 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         public QueueMeta CreateQueueMeta(SubscriberQueueAttribute attribute)
         {
             var exchange = ExchangeMeta.Define(attribute.BusName, attribute.ExchangeName, ExchangeType.Topic,
-                config =>
+                meta =>
                 {
-                    config.IsAutoDelete = false;
-                    config.IsDurable = true;
-                    config.IsPersistent = true;
-                    config.IsNonRoutedSaved = attribute.IsNonRoutedSaved;
+                    meta.IsAutoDelete = false;
+                    meta.IsDurable = true;
+                    meta.IsPersistent = true;
+                    meta.IsNonRoutedSaved = attribute.IsNonRoutedSaved;
                 });
             
             var queue = QueueMeta.Define(attribute.QueueName, exchange,
-                config =>
+                meta =>
                 {
-                    config.IsAutoDelete = false;
-                    config.IsDurable = true;
-                    config.IsExclusive = false;
-                    config.AppendHostId = true;
-                    config.RouteKeys = attribute.RouteKeys;
-                    config.IsUnacknowledgedSaved = attribute.IsUnacknowledgedSaved;
+                    meta.IsAutoDelete = false;
+                    meta.IsDurable = true;
+                    meta.IsExclusive = false;
+                    meta.AppendHostId = true;
+                    meta.RouteKeys = attribute.RouteKeys;
+                    meta.IsUnacknowledgedSaved = attribute.IsUnacknowledgedSaved;
                 });
 
             return queue;

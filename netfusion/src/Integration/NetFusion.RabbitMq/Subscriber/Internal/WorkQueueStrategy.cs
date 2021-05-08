@@ -13,12 +13,12 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         public QueueMeta CreateQueueMeta(SubscriberQueueAttribute attribute)
         {
             var exchange = ExchangeMeta.DefineDefault(attribute.BusName, attribute.QueueName,
-                config =>
+                meta =>
                 {
-                    config.IsAutoDelete = false;
-                    config.IsDurable = true;
-                    config.IsExclusive = false;
-                    config.IsUnacknowledgedSaved = attribute.IsUnacknowledgedSaved;
+                    meta.IsAutoDelete = false;
+                    meta.IsDurable = true;
+                    meta.IsExclusive = false;
+                    meta.IsUnacknowledgedSaved = attribute.IsUnacknowledgedSaved;
                 });
 
             return exchange.QueueMeta;

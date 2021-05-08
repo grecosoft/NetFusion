@@ -13,7 +13,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// <summary>
         /// The name of the queue. 
         /// </summary>
-        public string QueueName { get; private set; }
+        public string QueueName { get; private init; }
         
         /// <summary>
         /// The name of the queue with an unique GUID appended or the
@@ -25,7 +25,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// The metadata of the exchange associated with the queue on which
         /// it should be created.
         /// </summary>
-        public ExchangeMeta ExchangeMeta { get; private set; }
+        public ExchangeMeta ExchangeMeta { get; private init; }
         
         /// <summary>
         /// Indicates that any unacknowledged messages should be sent to the dead letter exchange
@@ -108,7 +108,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// to the queue metadata.  Only values specified are set.
         /// </summary>
         /// <param name="settings">External stored exchange settings.</param>
-        public void ApplyOverrides(QueueSettings settings)
+        internal void ApplyOverrides(QueueSettings settings)
         {
             RouteKeys = settings.RouteKeys ?? RouteKeys;
 
@@ -147,7 +147,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// Adds queue log information to the dictionary of values.
         /// </summary>
         /// <param name="log">Dictionary containing log values.</param>
-        public void LogProperties(IDictionary<string, object> log)
+        internal void LogProperties(IDictionary<string, object> log)
         {
             log["Queue"] = GetLogDetails();
             log["Exchange"] = ExchangeMeta.IsDefaultExchange ? "Default-Exchange" : ExchangeMeta.GetLogDetails();
@@ -157,7 +157,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// Returns an anonymous type containing the queue properties to be logged.
         /// </summary>
         /// <returns>Object with properties to be logged.</returns>
-        public object GetLogDetails()
+        internal object GetLogDetails()
         {
             return new
             {

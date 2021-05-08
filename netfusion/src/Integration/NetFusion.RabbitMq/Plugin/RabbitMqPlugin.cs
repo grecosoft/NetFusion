@@ -37,6 +37,8 @@ namespace NetFusion.RabbitMQ.Plugin
                 .AddSettings()
                 .AddMessaging()
                 .AddPlugin<RabbitMqPlugin>()
+                
+                // Extend the base messaging pipeline by adding the RabbitMqPublisher.
                 .InitPluginConfig<MessageDispatchConfig>(config => 
                     config.AddPublisher<RabbitMqPublisher>());
         }

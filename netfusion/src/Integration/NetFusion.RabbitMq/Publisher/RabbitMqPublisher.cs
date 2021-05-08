@@ -15,9 +15,7 @@ using NetFusion.RabbitMQ.Plugin;
 namespace NetFusion.RabbitMQ.Publisher
 {
     /// <summary>
-    /// Message publisher implementation that dispatches messages to RabbitMQ having an associated
-    /// exchange.  Responsible for creating associated message exchanges and delivering messages
-    /// when published. 
+    /// Message publisher implementation that dispatches messages to RabbitMQ having an associated exchange. 
     /// </summary>
     public class RabbitMqPublisher : IMessagePublisher,
         IPublisherContext
@@ -63,8 +61,7 @@ namespace NetFusion.RabbitMQ.Publisher
             var msgLog = new MessageLog(message, LogContextType.PublishedMessage);
             msgLog.SentHint("publish-rabbitmq");
             
-            // Lookup the exchange associated with the message to which
-            // the message should be published.
+            // Lookup the exchange associated with the message to which the message should be published.
             CreatedExchange exchange = PublisherModule.GetExchange(messageType);
 
             LogMessageExchange(exchange.Meta);

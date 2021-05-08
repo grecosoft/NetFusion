@@ -61,7 +61,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             string correlationId = messageProperties.CorrelationId;
             int cancelRpcRequestAfterMs = createdExchange.Meta.CancelRpcRequestAfterMs;
 
-            var rpcPendingRequest = new RpcPendingRequest(futureResult, cancellationToken, cancelRpcRequestAfterMs);
+            var rpcPendingRequest = new RpcPendingRequest(futureResult, cancelRpcRequestAfterMs, cancellationToken);
             
             _pendingRpcRequests[correlationId] = rpcPendingRequest;
 
@@ -140,6 +140,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                 exclusive: true,
                 autoDelete: true);
             
+            // If called in response to a re-connection to the broker, dispose current consumer.
             _consumer?.Dispose();
 
             // Consumes the reply queue and determines the pending task associated with the

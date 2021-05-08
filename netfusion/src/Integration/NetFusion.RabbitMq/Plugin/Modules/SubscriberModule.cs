@@ -110,7 +110,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 (bytes, msgProps, receiveInfo) => 
                 {
                     // Create context containing the received message information and
-                    // additional serviced required to process the message.
+                    // additional services required to process the message.
                     var consumerContext = new ConsumeContext(subscriber, msgProps, receiveInfo, bytes)
                     {
                         LoggerFactory = Context.LoggerFactory,

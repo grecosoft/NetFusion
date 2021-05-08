@@ -35,7 +35,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             MessageData = data;
         }
         
-        public ILoggerFactory LoggerFactory { get; set; }
+        public ILoggerFactory LoggerFactory { get; internal set; }
         public Func<string, string, MessageDispatchInfo> GetRpcMessageHandler { get; internal set; }
         
         // Services:
@@ -97,7 +97,6 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
                 message.GetType(),
                 queueInfo.Queue,
                 queueInfo.Bus).WithProperties(
-                    new LogProperty { Name = "Message", Value = message },
                     new LogProperty { Name = "QueueInfo", Value = queueInfo });
             
             logger.Log(log);

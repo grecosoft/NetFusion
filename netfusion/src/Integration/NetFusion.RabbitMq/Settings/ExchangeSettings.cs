@@ -34,9 +34,8 @@ namespace NetFusion.RabbitMQ.Settings
         {
             validator.Verify(! string.IsNullOrWhiteSpace(ExchangeName), $"{nameof(ExchangeName)} not specified.");
 
-            validator.Verify(CancelRpcRequestAfterMs == null || 0 < CancelRpcRequestAfterMs, 
+            validator.Verify(CancelRpcRequestAfterMs is null or > 0, 
                 $"{nameof(CancelRpcRequestAfterMs)} must be greater then zero.");
-        
         }
     }
 }
