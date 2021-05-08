@@ -36,6 +36,7 @@ namespace NetFusion.Redis.Plugin.Modules
             try
             {
                 _redisSettings = Context.Configuration.GetSettings(new RedisSettings());
+                _redisSettings.SetNamedConfigurations();
             }
             catch (SettingsValidationException ex)
             {
@@ -46,10 +47,8 @@ namespace NetFusion.Redis.Plugin.Modules
         
         protected override async Task OnStartModuleAsync(IServiceProvider services)
         {
-            foreach (var (name, connSetting) in _redisSettings.Connections)
+            foreach (var connSetting in _redisSettings.Connections.Values)
             {
-                connSetting.Name = name;
-                
                 var connOptions = new ConfigurationOptions
                 {
                     // After connection failure, retry connecting.
