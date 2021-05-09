@@ -114,7 +114,7 @@ namespace NetFusion.Messaging.Internal
         
         private static void AssertMessageDispatchers(IMessage message, MessageDispatchInfo[] dispatchers)
         {
-            if (dispatchers.Length != 1 && message is ICommand command)
+            if (dispatchers.Length > 1 && message is ICommand command)
             {
                 var dispatcherDetails = GetDispatchLogDetails(dispatchers);
                 

@@ -69,6 +69,12 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                 props.Priority = msgPriority.Value;
             }
 
+            var replyTo = definition.QueueMeta?.ReplyToQueueName;
+            if (replyTo != null)
+            {
+                props.ReplyTo =  $"{definition.BusName}:{replyTo}";
+            }
+
             return props;
         }
     }

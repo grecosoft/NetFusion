@@ -7,6 +7,7 @@ using NetFusion.Base.Serialization;
 using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin;
+using NetFusion.Messaging.Types.Attributes;
 using NetFusion.RabbitMQ.Plugin;
 
 namespace NetFusion.RabbitMQ.Subscriber.Internal
@@ -53,6 +54,12 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         {
             Type messageType = Subscriber.DispatchInfo.MessageType;
             object message = Serialization.Deserialize(MessageProps.ContentType, messageType, MessageData);
+
+            if (MessageProps.CorrelationId != null && message is IMessage domainMsg)
+            {
+                domainMsg.SetCorrelationId(MessageProps.CorrelationId);
+            }
+            
             return (IMessage)message;
         }
         

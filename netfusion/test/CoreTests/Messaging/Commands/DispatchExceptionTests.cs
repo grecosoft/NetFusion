@@ -13,28 +13,6 @@ namespace CoreTests.Messaging.Commands
 {
     public class DispatchExceptionTests
     {
-        [Fact]
-        public Task CommandMessages_MustHave_CommandHandler()
-        {
-            return ContainerFixture.TestAsync(async fixture =>
-            {
-                var testResult = await fixture.Arrange
-                    .Container(c => c.AddMessagingHost().WithMultipleConsumers())
-                    .Act.RecordException().OnServicesAsync(s =>
-                    {
-                        var cmd = new MockCommandNoHandler();
-                        
-                        return s.GetRequiredService<IMessagingService>()
-                            .SendAsync(cmd);
-                    });
-
-                testResult.Assert.Exception((PublisherException ex) =>
-                {
-                    ex.InnerException?.Message.Should().Contain("must have one and only one consumer");
-                });
-            });
-        }
-        
         /// <summary>
         /// Unlike domain-event messages, commands can have one and only one handler.
         /// </summary>

@@ -104,6 +104,11 @@ namespace NetFusion.RabbitMQ.Metadata
         public bool AppendUniqueId { get; set; }
         
         /// <summary>
+        /// The optional name of the queue to which a response of a work queue should be sent.
+        /// </summary>
+        internal string ReplyToQueueName { get; set; }
+        
+        /// <summary>
         /// Applies queue settings specified within the application's configuration
         /// to the queue metadata.  Only values specified are set.
         /// </summary>

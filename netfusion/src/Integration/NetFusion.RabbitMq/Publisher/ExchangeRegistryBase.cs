@@ -142,6 +142,43 @@ namespace NetFusion.RabbitMQ.Publisher
             _exchanges.Add(exchange);
             settings?.Invoke(exchange);
         }
+        
+        /// <summary>
+        /// Defines a work queue.  For the other type of exchanges, the publisher does not know
+        /// the consumers subscribing to the queues defined on the exchange.  A work queue is used
+        /// to make a request of another service by sending a command to the queue for processing.
+        /// The processing is asynchronous and the publisher does not wait for a response.  This
+        /// should be used by a publisher to submit a time consuming task to a specific service
+        /// for processing.
+        /// </summary>
+        /// <param name="queueName">The name of the queue on which the consuming service will receive commands.</param>
+        /// <param name="busName">The bus name key used to lookup connection.</param>
+        /// <param name="replyQueueName">The optional name of the queue to which the response should be sent. </param>
+        /// <param name="settings">Optional delegate called allowing caller to set
+        /// additional exchange properties.</param>
+        /// <typeparam name="TMessage">The command type associated with the queue.</typeparam>
+        protected void DefineWorkQueueWithResponse<TMessage>(string queueName, string busName, string replyQueueName,
+            Action<ExchangeMeta<TMessage>> settings = null) 
+            where TMessage : ICommand
+        {
+            if (string.IsNullOrWhiteSpace(replyQueueName))
+                throw new ArgumentException("Reply Query Name must be specified.", nameof(replyQueueName));
+            
+            var exchange = ExchangeMeta.DefineDefault<TMessage>(busName, queueName,
+                meta =>
+                {
+                    meta.IsAutoDelete = false;
+                    meta.IsDurable = true;
+                    meta.IsExclusive = false;
+                    meta.ReplyToQueueName = replyQueueName;
+                });
+
+            exchange.RouteKey = queueName;
+
+            _exchanges.Add(exchange);
+            settings?.Invoke(exchange);
+        }
+
 
         /// <summary>
         /// Implements RPC over an asynchronous message bus.  While the publisher does not block
