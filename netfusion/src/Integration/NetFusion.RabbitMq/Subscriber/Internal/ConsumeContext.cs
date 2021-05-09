@@ -41,6 +41,7 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         
         // Services:
         public IBusModule BusModule { get; internal set; }
+        public IQueueResponseService QueueResponse { get; internal set; }
         public IMessageDispatchModule MessagingModule { get; internal set; }
         public ISerializationManager Serialization { get; internal set; }
         public IMessageLogger MessageLogger { get; internal set; }
@@ -54,13 +55,38 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         {
             Type messageType = Subscriber.DispatchInfo.MessageType;
             object message = Serialization.Deserialize(MessageProps.ContentType, messageType, MessageData);
-
-            if (MessageProps.CorrelationId != null && message is IMessage domainMsg)
-            {
-                domainMsg.SetCorrelationId(MessageProps.CorrelationId);
-            }
+            IMessage domainMsg = (IMessage) message;
             
-            return (IMessage)message;
+            RecordReplyToProperties(domainMsg);
+
+            return domainMsg;
+        }
+
+        // Set the message identity values in case this is a response message sent on the reply queue.
+        // This will allow the consumer to match the reply message to the command originally sent.
+        // Also, these properties can be used to respond if the message is serialized and saved for
+        // later processing.
+        private void RecordReplyToProperties(IMessage message)
+        {
+            if (MessageProps.CorrelationIdPresent)
+            {
+                message.SetCorrelationId(MessageProps.CorrelationId);
+            }
+
+            if (MessageProps.MessageIdPresent)
+            {
+                message.SetMessageId(MessageProps.MessageId);
+            }
+
+            if (MessageProps.ReplyToPresent)
+            {
+                message.SetReplyTo(MessageProps.ReplyTo);
+            }
+
+            if (MessageProps.ContentTypePresent)
+            {
+                message.SetContentType(MessageProps.ContentType);
+            }
         }
         
         /// <summary>

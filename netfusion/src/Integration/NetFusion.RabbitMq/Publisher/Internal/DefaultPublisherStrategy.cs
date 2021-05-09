@@ -62,6 +62,12 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
             {
                 props.CorrelationId = correlationId;
             }
+            
+            string messageId = message.GetMessageId();
+            if (messageId != null)
+            {
+                props.MessageId = messageId;
+            }
 
             byte? msgPriority = message.GetPriority();
             if (msgPriority != null)

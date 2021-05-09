@@ -12,6 +12,7 @@ using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin;
 using NetFusion.RabbitMQ.Metadata;
+using NetFusion.RabbitMQ.Subscriber;
 using NetFusion.RabbitMQ.Subscriber.Internal;
 
 namespace NetFusion.RabbitMQ.Plugin.Modules
@@ -26,18 +27,25 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         // Dependent Modules:
         protected IBusModule BusModule { get; set; }
         protected IMessageDispatchModule MessagingModule { get; set; }
-        
+
+        private IQueueResponseService _queueResponse;
         private ISerializationManager _serializationManager;
         private IMessageLogger _messageLogger;
 
         // Message handlers subscribed to queues:
         private MessageQueueSubscriber[] _subscribers = Array.Empty<MessageQueueSubscriber>();
         
+        public override void RegisterDefaultServices(IServiceCollection services)
+        {
+            services.AddSingleton<IQueueResponseService, QueueResponseService>();
+        }
+        
         // ------------------------- [Plugin Execution] --------------------------
         
         protected override Task OnStartModuleAsync(IServiceProvider services)
         {
             // Dependent Services:
+            _queueResponse = services.GetRequiredService<IQueueResponseService>();
             _serializationManager = services.GetRequiredService<ISerializationManager>();
             _messageLogger = services.GetRequiredService<IMessageLogger>();
 
@@ -111,18 +119,8 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
                 {
                     // Create context containing the received message information and
                     // additional services required to process the message.
-                    var consumerContext = new ConsumeContext(subscriber, msgProps, receiveInfo, bytes)
-                    {
-                        LoggerFactory = Context.LoggerFactory,
-                        GetRpcMessageHandler = GetRpcMessageHandler,
-          
-                        // Dependent Services:
-                        BusModule = BusModule,
-                        MessagingModule = MessagingModule,
-                        Serialization = _serializationManager,
-                        MessageLogger = _messageLogger
-                    };
-
+                    var consumerContext = CreateContext(subscriber, msgProps, receiveInfo, bytes);
+                   
                     // Delegate to the queue strategy, associated with the definition, and 
                     // allow it to determine how the received message should be processed. 
                     return definition.QueueStrategy.OnMessageReceivedAsync(consumerContext);
@@ -141,6 +139,25 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
                     config.WithPriority(definition.Priority);
                 });
+        }
+
+        private ConsumeContext CreateContext(MessageQueueSubscriber subscriber, 
+            MessageProperties messageProps,
+            MessageReceivedInfo messageReceivedInfo,
+            byte[] messageBytes)
+        {
+            return new (subscriber, messageProps, messageReceivedInfo, messageBytes)
+            {
+                LoggerFactory = Context.LoggerFactory,
+                GetRpcMessageHandler = GetRpcMessageHandler,
+          
+                // Dependent Services:
+                BusModule = BusModule,
+                MessagingModule = MessagingModule,
+                QueueResponse = _queueResponse,
+                Serialization = _serializationManager,
+                MessageLogger = _messageLogger
+            };
         }
 
         // Called when a reconnection to the the broker is detected.  The IBus will reestablish

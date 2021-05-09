@@ -129,6 +129,22 @@ namespace NetFusion.Messaging.Types.Attributes
             message.Attributes.GetStringValue(GetPluginScopedName("MessageId"), null);
         
         /// <summary>
+        /// The content type used to serialize the message.
+        /// </summary>
+        /// <param name="message">The message to set attribute value.</param>
+        /// <param name="value"></param>
+        public static void SetContentType(this IMessage message, string value) =>
+            message.Attributes.SetStringValue(GetPluginScopedName("ContentType"), value);
+        
+        /// <summary>
+        /// The content type used do serialize the message.
+        /// </summary>
+        /// <param name="message">The message to retrieve attribute value.</param>
+        /// <returns>The replay to value.</returns>
+        public static string GetContentType(this IMessage message) =>
+            message.Attributes.GetStringValue(GetPluginScopedName("ContentType"), null);
+        
+        /// <summary>
         /// Message value that can be used to determine how a message is routed.
         /// </summary>
         /// <param name="message">The message to set attribute value.</param>

@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO.Compression;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Exceptions;
-using NetFusion.Base.Validation;
 
 namespace NetFusion.Base.Logging
 {
