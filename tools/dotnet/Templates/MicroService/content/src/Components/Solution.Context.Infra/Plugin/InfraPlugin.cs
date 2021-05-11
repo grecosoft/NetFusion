@@ -6,7 +6,7 @@ namespace Solution.Context.Infra.Plugin
     public class InfraPlugin : PluginBase
     {
         public override string PluginId => "nf:infra-id";
-        public override PluginTypes PluginType => PluginTypes.ApplicationPlugin;
+        public override PluginTypes PluginType => PluginTypes.AppPlugin;
         public override string Name => "Infrastructure Application Component";
 
         public InfraPlugin() {

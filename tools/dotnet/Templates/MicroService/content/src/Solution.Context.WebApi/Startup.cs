@@ -2,9 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using NetFusion.Builder;
-using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin;
 using NetFusion.Rest.Server.Plugin;
 using NetFusion.Serilog;
@@ -14,7 +12,6 @@ using Serilog;
 using Solution.Context.App.Plugin;
 using Solution.Context.Domain.Plugin;
 using Solution.Context.Infra.Plugin;
-using Solution.Context.WebApi.Hubs;
 using Solution.Context.WebApi.Plugin;
 
 namespace Solution.Context.WebApi
@@ -49,14 +46,6 @@ namespace Solution.Context.WebApi
             services.AddCors();
             services.AddHttpContextAccessor();
             services.AddControllers();
-
-            // Adds SignalR and a message log sink that delegates
-            // all received messages to a SignalR Hub.
-            if (_hostingEnv.IsDevelopment())
-            {
-                services.AddSignalR();
-                services.AddMessageLogSink<HubMessageLogSink>();
-            }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -80,13 +69,6 @@ namespace Solution.Context.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-
-                // Register the SignalR Hub that a development tool can connect
-                // for receiving logs of published and received messages.
-                if (env.IsDevelopment())
-                {
-                    endpoints.MapHub<MessageLogHub>("/api/message/log");
-                }
             });
         }
     }

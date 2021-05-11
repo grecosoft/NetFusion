@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Container;
-using NetFusion.Builder;
 using NetFusion.Serilog;
 using Serilog;
 using Serilog.Events;
@@ -61,7 +60,7 @@ namespace Solution.Context.WebApi
         private static void SetupConfiguration(HostBuilderContext context, 
             IConfigurationBuilder builder)
         {
-            builder.AddAppSettings(context.HostingEnvironment);
+            
         }
 
         private static void SetupLogging(HostBuilderContext context, 
