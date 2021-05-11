@@ -3,8 +3,7 @@ using Microsoft.Extensions.Logging;
 namespace NetFusion.Base.Logging
 {
     /// <summary>
-    /// Interface implemented by a component responsible
-    /// for changing the log level at runtime.
+    /// Interface implemented by a component responsible for changing the log level at runtime.
     /// </summary>
     public interface ILogLevelControl
     {

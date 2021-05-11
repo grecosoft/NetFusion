@@ -13,17 +13,17 @@ namespace NetFusion.Messaging.Plugin.Modules
     /// </summary>
     public class MessageEnricherModule : PluginModule
     {
-        private MessageDispatchConfig MessagingConfig { get; set; }
+        private MessageDispatchConfig _messagingConfig;
 
         public override void Initialize()
         {
-            MessagingConfig = Context.Plugin.GetConfig<MessageDispatchConfig>();
+            _messagingConfig = Context.Plugin.GetConfig<MessageDispatchConfig>();
         }
 
         public override void RegisterServices(IServiceCollection services)
         {
             // Register all of the message enrichers with the container.
-            foreach (var enricherType in MessagingConfig.EnricherTypes)
+            foreach (var enricherType in _messagingConfig.EnricherTypes)
             {
                 services.AddScoped(typeof(IMessageEnricher), enricherType);
             }
@@ -36,7 +36,7 @@ namespace NetFusion.Messaging.Plugin.Modules
               .Select(et => new
               {
                   EnricherType = et.AssemblyQualifiedName,
-                  IsConfigured = MessagingConfig.EnricherTypes.Contains(et)
+                  IsConfigured = _messagingConfig.EnricherTypes.Contains(et)
               }).ToArray();
         }
     }

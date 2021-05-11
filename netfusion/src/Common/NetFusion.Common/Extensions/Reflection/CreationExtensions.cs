@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace NetFusion.Common.Extensions.Reflection
 {
@@ -19,11 +18,9 @@ namespace NetFusion.Common.Extensions.Reflection
         public static bool IsCreatableClassType(this Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
-
-            var typeInfo = type.GetTypeInfo();
-
-            return typeInfo.IsClass && !typeInfo.IsGenericType
-                && !typeInfo.IsAbstract && type.HasDefaultConstructor();
+            
+            return type.IsClass && !type.IsGenericType
+                && !type.IsAbstract && type.HasDefaultConstructor();
         }
 
         /// <summary>

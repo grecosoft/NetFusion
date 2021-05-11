@@ -7,6 +7,7 @@ using NetFusion.Base.Serialization;
 using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin;
+using NetFusion.Messaging.Types.Attributes;
 using NetFusion.RabbitMQ.Plugin;
 
 namespace NetFusion.RabbitMQ.Subscriber.Internal
@@ -35,11 +36,12 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
             MessageData = data;
         }
         
-        public ILoggerFactory LoggerFactory { get; set; }
+        public ILoggerFactory LoggerFactory { get; internal set; }
         public Func<string, string, MessageDispatchInfo> GetRpcMessageHandler { get; internal set; }
         
         // Services:
         public IBusModule BusModule { get; internal set; }
+        public IQueueResponseService QueueResponse { get; internal set; }
         public IMessageDispatchModule MessagingModule { get; internal set; }
         public ISerializationManager Serialization { get; internal set; }
         public IMessageLogger MessageLogger { get; internal set; }
@@ -53,7 +55,38 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
         {
             Type messageType = Subscriber.DispatchInfo.MessageType;
             object message = Serialization.Deserialize(MessageProps.ContentType, messageType, MessageData);
-            return (IMessage)message;
+            IMessage domainMsg = (IMessage) message;
+            
+            RecordReplyToProperties(domainMsg);
+
+            return domainMsg;
+        }
+
+        // Set the message identity values in case this is a response message sent on the reply queue.
+        // This will allow the consumer to match the reply message to the command originally sent.
+        // Also, these properties can be used to respond if the message is serialized and saved for
+        // later processing.
+        private void RecordReplyToProperties(IMessage message)
+        {
+            if (MessageProps.CorrelationIdPresent)
+            {
+                message.SetCorrelationId(MessageProps.CorrelationId);
+            }
+
+            if (MessageProps.MessageIdPresent)
+            {
+                message.SetMessageId(MessageProps.MessageId);
+            }
+
+            if (MessageProps.ReplyToPresent)
+            {
+                message.SetReplyTo(MessageProps.ReplyTo);
+            }
+
+            if (MessageProps.ContentTypePresent)
+            {
+                message.SetContentType(MessageProps.ContentType);
+            }
         }
         
         /// <summary>
@@ -97,7 +130,6 @@ namespace NetFusion.RabbitMQ.Subscriber.Internal
                 message.GetType(),
                 queueInfo.Queue,
                 queueInfo.Bus).WithProperties(
-                    new LogProperty { Name = "Message", Value = message },
                     new LogProperty { Name = "QueueInfo", Value = queueInfo });
             
             logger.Log(log);

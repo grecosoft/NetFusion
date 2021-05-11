@@ -45,7 +45,7 @@ namespace NetFusion.Rest.Server.Hal.Core
                 {
                     return queryValue[0].Replace(" ", string.Empty).Split(',');
                 }
-                return new string[] { };
+                return Array.Empty<string>();
             }
         }
     }

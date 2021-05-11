@@ -28,7 +28,7 @@ namespace NetFusion.Web.Mvc.Metadata
         bool TryGetActionMeta(MethodInfo methodInfo, out ApiActionMeta actionMeta);
 
         /// <summary>
-        /// Returns to the controller action metadata.
+        /// Returns the metadata for a given controller action method.
         /// </summary>
         /// <param name="methodInfo">The runtime method information for the controller action.</param>
         /// <returns>Reference to the metadata.  If not found, an exception is raised.</returns>

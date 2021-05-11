@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
+// ReSharper disable All
 
 namespace NetFusion.Settings
 {

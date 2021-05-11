@@ -3,7 +3,7 @@ using System;
 namespace NetFusion.Messaging.Types
 {
     /// <summary>
-    /// Attribute used to associate an external namespace with the messaged.
+    /// Attribute used to associate an external namespace with the message.
     /// The namespace value can be used by a message receiver to determine
     /// how the message should be processed.
     /// </summary>

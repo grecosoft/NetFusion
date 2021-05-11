@@ -27,10 +27,10 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
         protected IBusModule BusModule { get; set; }
 
         // Other  plugins (normally application plugins) specify the exchanges 
-        // to be created by defining one or more IExchangeRegister derived types.
+        // to be created by defining one or more IExchangeRegistry derived types.
         public IEnumerable<IExchangeRegistry> Registries { get;  protected set; }  
         
-        // Records for a given message type the exchange metadata and the exchange
+        // Records, for a given message type, the exchange metadata and the exchange
         // created from the metadata to which the message should be published.
         private IDictionary<Type, ExchangeMeta> _messageExchanges;
         private readonly IDictionary<Type, CreatedExchange> _createdExchanges;
@@ -44,8 +44,8 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
         public PublisherModule()
         {
-            _exchangeRpcClients = new Dictionary<string, IRpcClient>();
             _createdExchanges = new Dictionary<Type, CreatedExchange>();
+            _exchangeRpcClients = new Dictionary<string, IRpcClient>();
         }
 
         //----------- [Plugin Initialization]  ---------------

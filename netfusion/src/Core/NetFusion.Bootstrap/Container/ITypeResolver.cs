@@ -7,13 +7,13 @@ namespace NetFusion.Bootstrap.Container
     /// <summary>
     /// Interface for an implementation responsible for resolving types allowing
     /// the composite-application to be independent of runtime information such
-    /// as assemblies.  
+    /// as assemblies.  This greatly simplifies unit-testing.  
     /// </summary>
     public interface ITypeResolver
     {
         /// <summary>
         /// When invoked by the CompositeContainer, the implementation should invoke
-        /// the SetPluginMeta on the passed plugin.
+        /// the SetPluginMeta method on the passed plugin.
         /// </summary>
         /// <param name="plugin">The plugin to have its metadata set.</param>
         void SetPluginMeta(IPlugin plugin);

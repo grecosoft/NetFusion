@@ -85,6 +85,7 @@ namespace NetFusion.Bootstrap.Logging
                 {
                     var moduleLog = new Dictionary<string, object>();
                     pm.Log(moduleLog);
+                    PluginLogger.LogKnownTypeProperties(log, pm);
                     return moduleLog;
                 });
         }

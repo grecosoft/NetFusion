@@ -55,7 +55,7 @@ namespace NetFusion.Common.Extensions.Reflection
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 
-            return source.GetTypeInfo().GetCustomAttributes<T>(true).Any();
+            return source.GetCustomAttributes<T>(true).Any();
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace NetFusion.Common.Extensions.Reflection
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 
-            var matchingAttrs = source.GetTypeInfo().GetCustomAttributes<T>(true).ToArray();
+            var matchingAttrs = source.GetCustomAttributes<T>(true).ToArray();
             if (matchingAttrs.Length > 1)
             {
                 throw new InvalidOperationException($"More than one attribute of the type: {typeof(T)} exists.");

@@ -33,11 +33,15 @@ namespace NetFusion.Redis.Subscriber.Internal
             Action<TDomainEvent> handler)
             where TDomainEvent : IDomainEvent
         {
+            if (string.IsNullOrWhiteSpace(database))
+                throw new ArgumentException("Database name not specified.", nameof(database));
+            
             if (string.IsNullOrWhiteSpace(channel))
                 throw new ArgumentException("Channel not specified.", nameof(channel));
 
             if (handler == null) throw new ArgumentNullException(nameof(handler));
-
+            
+            // Obtain the corresponding database subscriber and subscribe to the channel.
             var subscriber = _connModule.GetSubscriber(database);
             
             subscriber.Subscribe(channel, (onChannel, message) =>
@@ -56,11 +60,15 @@ namespace NetFusion.Redis.Subscriber.Internal
         public async Task SubscribeAsync<TDomainEvent>(string database, string channel,
             Action<TDomainEvent> handler) where TDomainEvent : IDomainEvent
         {
+            if (string.IsNullOrWhiteSpace(database))
+                throw new ArgumentException("Database name not specified.", nameof(database));
+            
             if (string.IsNullOrWhiteSpace(channel))
                 throw new ArgumentException("Channel not specified.", nameof(channel));
 
             if (handler == null) throw new ArgumentNullException(nameof(handler));
 
+            // Obtain the corresponding database subscriber and subscribe to the channel.
             var subscriber = _connModule.GetSubscriber(database);
             
             await subscriber.SubscribeAsync(channel, (onChannel, message) =>
@@ -108,7 +116,7 @@ namespace NetFusion.Redis.Subscriber.Internal
                 Channel = channel
             };
 
-            var log = LogMessage.For(LogLevel.Information, "Subscription delegate being called.")
+            var log = LogMessage.For(LogLevel.Debug, "Subscription delegate being called.")
                 .WithProperties(
                     new LogProperty { Name = "ChannelInfo", Value = channelInfo }, 
                     new LogProperty { Name = "DomainEvent", Value = domainEvent });

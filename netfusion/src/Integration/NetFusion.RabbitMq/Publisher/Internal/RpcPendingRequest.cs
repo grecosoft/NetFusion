@@ -14,10 +14,9 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         private readonly CancellationTokenSource _timeCancelToken;
         private readonly CancellationTokenRegistration _cancelTokenReg;
 
-        public RpcPendingRequest(
-            TaskCompletionSource<byte[]> taskSource,
-            CancellationToken externalCancellationToken,
-            int cancelRequestAfterMs)
+        public RpcPendingRequest(TaskCompletionSource<byte[]> taskSource,
+            int cancelRequestAfterMs,
+            CancellationToken externalCancellationToken)
         {
             if (cancelRequestAfterMs <= 0)
                 throw new ArgumentOutOfRangeException(nameof(cancelRequestAfterMs), 

@@ -26,10 +26,7 @@ namespace NetFusion.Bootstrap.Container
         // .net core Abstractions:
         IConfiguration Configuration { get; }
         IServiceCollection ServiceCollection { get; }
-        
-        void AddContainerConfig(IContainerConfig containerConfig);
-        T GetContainerConfig<T>() where T : IContainerConfig;
-        
+
         // Logging:
         CompositeAppLogger CompositeLog { get; }
     }

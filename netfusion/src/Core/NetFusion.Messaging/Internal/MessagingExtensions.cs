@@ -73,7 +73,8 @@ namespace NetFusion.Messaging.Internal
         /// </summary>
         /// <param name="messageHandlers">List of message handler methods.</param>
         /// <returns>List of objects with information used to dispatch the method at runtime.</returns>
-        public static IEnumerable<MessageDispatchInfo> SelectMessageDispatchInfo(this IEnumerable<MethodInfo> messageHandlers)
+        public static IEnumerable<MessageDispatchInfo> SelectMessageDispatchInfo(
+            this IEnumerable<MethodInfo> messageHandlers)
         {
             if (messageHandlers == null) throw new ArgumentNullException(nameof(messageHandlers));
 
@@ -101,7 +102,7 @@ namespace NetFusion.Messaging.Internal
             var paramTypes = new List<Type>
             {
                 methodInfo.DeclaringType,                           // Consumer Type
-                methodInfo.GetParameters().First().ParameterType,   // Message Type
+                methodInfo.GetParameters().First().ParameterType    // Message Type
             };
 
             // Optional Handler Parameters:
@@ -128,7 +129,7 @@ namespace NetFusion.Messaging.Internal
 
         private static Type[] GetOptionalRuleTypes(MethodInfo methodInfo)
         {
-            return methodInfo.GetCustomAttribute<ApplyDispatchRuleAttribute>()?.RuleTypes ?? new Type[] { };
+            return methodInfo.GetCustomAttribute<ApplyDispatchRuleAttribute>()?.RuleTypes ?? Array.Empty<Type>();
         }
 
         private static RuleApplyTypes GetOptionalRuleApplyType(MethodInfo methodInfo)

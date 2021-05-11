@@ -24,20 +24,20 @@ namespace NetFusion.Bootstrap.Plugins
         public IPlugin AppHost { get; }
 
         /// <summary>
-        /// The plug-in where the module is defined.
+        /// The plugin where the module is defined.
         /// </summary>
         public IPlugin Plugin { get; }
         
         /// <summary>
-        /// The plug-in types that can be accessed by the module limited to the set based on its type of plug-in.  
-        /// This list will contain all types from all plug-ins if the context is associated with a core plug-in.
-        /// However, for application centric plug-ins, the list is limited to types found in application plug-ins.
+        /// The plugin types that can be accessed by the module limited to the set based on its type of plugin.  
+        /// This list will contain all types from all plug-ns if the context is associated with a core plugin.
+        /// However, for application centric plugins, the list is limited to types found in application plugins.
         /// </summary>
         public IEnumerable<Type> AllPluginTypes { get; }
         
         /// <summary>
-        /// The plug-in types limited to just those associated with application centric plug-ins.  
-        /// If the module is within an application centric plug-in, then this list will be the
+        /// The plugin types limited to just those associated with application centric plugins.  
+        /// If the module is within an application centric plugin, then this list will be the
         /// same as AllPluginTypes.
         /// </summary>
         public IEnumerable<Type> AllAppPluginTypes { get; }
@@ -115,7 +115,7 @@ namespace NetFusion.Bootstrap.Plugins
 
         private static IEnumerable<Type> GetAppPluginTypes(ICompositeAppBuilder builder)
         {
-            return builder.GetPluginTypes(PluginTypes.ApplicationPlugin, PluginTypes.HostPlugin);
+            return builder.GetPluginTypes(PluginTypes.AppPlugin, PluginTypes.HostPlugin);
         }
     }
 }

@@ -9,13 +9,12 @@ using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions.Collections;
 
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary>
-    /// Manages a collection of plugins and initializes an instance of ICompositeAppBuilder
-    /// delegated to for creating an instance of ICompositeApp bootstrapped from the set of
+    /// Manages a collection of plugins and initializes an instance of CompositeAppBuilder
+    /// delegated to for creating an instance of CompositeApp bootstrapped from the set of
     /// plugins.
     /// </summary>
     public class CompositeContainer 
@@ -24,15 +23,13 @@ namespace NetFusion.Bootstrap.Container
         private readonly IServiceCollection _serviceCollection;
         
         // Composite Structure:
-        private readonly List<IPlugin> _plugins = new List<IPlugin>();
+        private readonly List<IPlugin> _plugins = new();
         private readonly CompositeAppBuilder _builder;
 
         public bool IsComposed { get; private set; }
 
         // --------------------------- [Container Initialization] -------------------------------
-  
-        public ICompositeAppBuilder AppBuilder => _builder;
-        
+
         // Instantiated by CompositeContainerBuilder.
         public CompositeContainer(IServiceCollection services, IConfiguration configuration)
         {
@@ -40,9 +37,13 @@ namespace NetFusion.Bootstrap.Container
 
             _serviceCollection = services ?? throw new ArgumentNullException(nameof(services));
             _builder = new CompositeAppBuilder(services, configuration);
+            
+            AddContainerConfigurations(_builder);
         }
+        
+        public ICompositeAppBuilder AppBuilder => _builder;
 
-        private string Version => GetType().Assembly.GetName().Version.ToString();
+        private string Version => GetType().Assembly.GetName().Version?.ToString() ?? string.Empty;
         
         /// <summary>
         /// Adds a plugin to the composite-container.  If the plugin type is already registered,
@@ -66,7 +67,7 @@ namespace NetFusion.Bootstrap.Container
         /// <param name="plugins">The list of plugins to be added.</param>
         public void RegisterPlugins(params IPlugin[] plugins)
         {
-            plugins.ForEach(_plugins.Add);
+            _plugins.AddRange(plugins);
         }
         
         private bool IsPluginRegistered<T>() where T : IPlugin
@@ -75,14 +76,7 @@ namespace NetFusion.Bootstrap.Container
         }
         
         // --------------------------- [Configurations] -------------------------------
-        
-        // Returns a container level configuration used to configure the runtime behavior
-        // of the built container.
-        public T GetContainerConfig<T>() where T : IContainerConfig
-        {
-            return _builder.GetContainerConfig<T>();
-        }
-        
+
         // Finds a configuration belonging to one of the registered plugins.
         public T GetPluginConfig<T>() where T : IPluginConfig
         {
@@ -92,10 +86,23 @@ namespace NetFusion.Bootstrap.Container
             if (pluginConfig == null)
             {
                 throw new ContainerException(
-                    $"Plugin configuration of type: {typeof(T)} is not registered.");
+                    $"Plugin configuration of type: {typeof(T)} is not registered.", "missing-plugin-config");
             }
 
             return (T) pluginConfig;
+        }
+
+        // This method is called from the constructor and is a placeholder for future
+        // implementations if global settings pertaining to CompositeContainer can be
+        // overridden by the application host.
+        private static void AddContainerConfigurations(ICompositeAppBuilder builder)
+        {
+            // The code here should create instances of IContainerConfig configuration
+            // instances with default settings specified.  The configuration should then
+            // be registered by calling: builder.AddContainerConfig(config);
+            
+            // Then the host calls GetContainerConfig to obtain the default configuration
+            // to which it can override any default configurations.
         }
         
         // --------------------------- [Container Composition] -------------------------------
@@ -117,8 +124,8 @@ namespace NetFusion.Bootstrap.Container
                     "NetFusion {Version} Bootstrapping", Version);
                 
                 // Delegate to the builder:
-                _builder.ComposeModules(typeResolver, _plugins);
-                _builder.RegisterServices(_serviceCollection);
+                _builder.ComposePlugins(typeResolver, _plugins.ToArray());
+                _builder.RegisterPluginServices(_serviceCollection);
 
                 LogComposedPlugins(_plugins, _serviceCollection);
 

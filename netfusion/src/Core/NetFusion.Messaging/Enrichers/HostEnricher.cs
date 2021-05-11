@@ -7,9 +7,9 @@ namespace NetFusion.Messaging.Enrichers
 {
     /// <summary>
     /// Enricher that tags all messages with the name and identity
-    /// of the Microservice where the message was published.
+    /// of the Microservice from where the message was published.
     /// </summary>
-    public class HostEnricher : MessageEnricher
+    public class HostEnricher : IMessageEnricher
     {
         private readonly ICompositeApp _compositeApp;
         
@@ -18,11 +18,11 @@ namespace NetFusion.Messaging.Enrichers
             _compositeApp = compositeApp;
         }
         
-        public override Task EnrichAsync(IMessage message)
+        public Task EnrichAsync(IMessage message)
         {
             message.Attributes.SetStringValue("Microservice", _compositeApp.HostPlugin.Name);
             message.Attributes.SetStringValue("MicroserviceId", _compositeApp.HostPlugin.PluginId);
-            return base.EnrichAsync(message);
+            return Task.CompletedTask;
         }
     }
 }

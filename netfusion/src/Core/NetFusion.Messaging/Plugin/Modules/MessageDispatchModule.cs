@@ -72,7 +72,7 @@ namespace NetFusion.Messaging.Plugin.Modules
         }
 
         // Registers all the message consumers within the service collection.
-        public override void ScanPlugins(ITypeCatalog catalog)
+        public override void ScanForServices(ITypeCatalog catalog)
         {
             catalog.AsSelf(
                 t => t.IsConcreteTypeDerivedFrom<IMessageConsumer>(),
@@ -127,7 +127,7 @@ namespace NetFusion.Messaging.Plugin.Modules
             if (! message.GetType().CanAssignTo(dispatcher.MessageType))
             {
                 throw new ContainerException(
-                    $"The message event type: {message.GetType()} being dispatched does not match or " +
+                    $"The message type: {message.GetType()} being dispatched does not match or " +
                     $"derive from the dispatch information type of: {dispatcher.MessageType}.");
             }
 

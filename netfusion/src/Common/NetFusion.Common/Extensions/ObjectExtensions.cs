@@ -1,31 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
 using System.Text.Json;
 
 namespace NetFusion.Common.Extensions
 {
     public static class ObjectExtensions
     {
-        /// <summary>
-        /// Given an object returns a dictionary of name/value pairs for each property.
-        /// </summary>
-        /// <param name="obj">The value to be converted to a dictionary.</param>
-        /// <returns>Dictionary.</returns>
-        public static IDictionary<string, object> ToDictionary(this object obj)
-        {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
-
-            var dictionary = new Dictionary<string, object>();
-  
-            foreach (PropertyInfo property in obj.GetType().GetProperties()) 
-            {
-                var value = property.GetValue(obj);
-                dictionary.Add(property.Name, value);
-            }
-            return dictionary;
-        }
-
         /// <summary>
         /// Returns an object serialized as indented JSON.
         /// </summary>

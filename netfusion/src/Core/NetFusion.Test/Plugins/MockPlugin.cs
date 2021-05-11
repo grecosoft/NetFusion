@@ -5,16 +5,15 @@ using System.Collections.Generic;
 namespace NetFusion.Test.Plugins
 {
     /// <summary>
-    /// Base plugin from which the different plugins are derived.
-    /// A MockPlugin allows for testing of plugins since it allows
-    /// the programmer to create a fully configured container that
-    /// can be used to test plugin component interactions.
+    /// Base plugin from which the different plugins are derived.  A MockPlugin allows for testing
+    /// of plugins since it allows the programmer to create a fully configured container that can
+    /// be used to test plugin component interactions.
     /// </summary>
     public abstract class MockPlugin : PluginBase
     {
         private string _pluginId = Guid.NewGuid().ToString();
         private string _name;
-        private readonly List<Type> _pluginTypes = new List<Type>();
+        private readonly List<Type> _pluginTypes = new();
 
         public override string PluginId => _pluginId;
         public override string Name => _name;

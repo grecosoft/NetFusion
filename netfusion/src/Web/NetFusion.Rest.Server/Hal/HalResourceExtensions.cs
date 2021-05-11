@@ -24,7 +24,7 @@ namespace NetFusion.Rest.Server.Hal
 	    public static HalResource<TModel> AsResource<TModel>(this TModel model)
 		    where TModel: class
 	    {
-		    return new HalResource<TModel>(model);
+		    return new(model);
 	    }
 
 	    /// <summary>
@@ -98,7 +98,7 @@ namespace NetFusion.Rest.Server.Hal
 			if (value == null) throw new ArgumentNullException(nameof(value), 
 				"The child value to embed cannot be null.");
 
-			if (named == null)
+			if (string.IsNullOrWhiteSpace(named))
 			{
 				throw new InvalidOperationException(
 					$"The embedded name for type: {typeof(TModel).FullName} was not specified.");

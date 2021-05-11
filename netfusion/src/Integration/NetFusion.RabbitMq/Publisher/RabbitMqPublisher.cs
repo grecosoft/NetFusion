@@ -15,11 +15,9 @@ using NetFusion.RabbitMQ.Plugin;
 namespace NetFusion.RabbitMQ.Publisher
 {
     /// <summary>
-    /// Message publisher implementation that dispatches messages to RabbitMQ having an associated
-    /// exchange.  Responsible for creating associated message exchanges and delivering messages
-    /// when published. 
+    /// Message publisher implementation that dispatches messages to RabbitMQ having an associated exchange. 
     /// </summary>
-    public class RabbitMqPublisher : MessagePublisher,
+    public class RabbitMqPublisher : IMessagePublisher,
         IPublisherContext
     {
         // Dependent Services:
@@ -49,9 +47,9 @@ namespace NetFusion.RabbitMQ.Publisher
         // Indicate that this publisher will deliver messages outside of the running process.
         // This can be used by the caller if they want to publish in-process messages before
         // publishing any external integration messages.
-        public override IntegrationTypes IntegrationType => IntegrationTypes.External;
+        public IntegrationTypes IntegrationType => IntegrationTypes.External;
 
-        public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
+        public async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
             // Only process messages for which there are defined exchanges.
             Type messageType = message.GetType();
@@ -63,8 +61,7 @@ namespace NetFusion.RabbitMQ.Publisher
             var msgLog = new MessageLog(message, LogContextType.PublishedMessage);
             msgLog.SentHint("publish-rabbitmq");
             
-            // Lookup the exchange associated with the message to which
-            // the message should be published.
+            // Lookup the exchange associated with the message to which the message should be published.
             CreatedExchange exchange = PublisherModule.GetExchange(messageType);
 
             LogMessageExchange(exchange.Meta);

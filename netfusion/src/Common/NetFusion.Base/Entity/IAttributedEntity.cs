@@ -14,7 +14,8 @@ namespace NetFusion.Base.Entity
         IEntityAttributes Attributes { get; }
 
         /// <summary>
-        /// A dictionary of the key value pairs associated with the entity.
+        /// A dictionary of the key value pairs associated with the entity
+        /// in which the dynamic properties are stored.
         /// </summary>
         IDictionary<string, object> AttributeValues { get; set; }
     }

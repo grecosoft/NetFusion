@@ -15,7 +15,7 @@ namespace NetFusion.Rest.Resources
         /// Untyped reference to the model.  Only set on the server.
         /// </summary>
         [JsonIgnore]
-        public object ModelValue { get; private set; }
+        public object ModelValue { get; }
 
         /// <summary>
         /// Required for Deserialization on the Client.

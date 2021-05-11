@@ -7,7 +7,7 @@ namespace CommonTests.Extensions.Reflection
 {
     public class AttributeTests
     {
-        [Fact(DisplayName = "Given Type can test for Attribute")]
+        [Fact]
         public void GivenType_CanTestForAttribute()
         {
             typeof(TestClassWithAttribute).HasAttribute<TestAttribute>()
@@ -17,7 +17,7 @@ namespace CommonTests.Extensions.Reflection
                 .Should().BeFalse();
         }
 
-        [Fact(DisplayName = "Given Attribute Provider can test for Attribute")]
+        [Fact]
         public void GivenAttributeProvider_CanTestForAttribute()
         {
             typeof(TestClassWithAttribute).GetProperty("SomeProperty")
@@ -29,7 +29,7 @@ namespace CommonTests.Extensions.Reflection
                 .Should().BeFalse();
         }
 
-        [Fact(DisplayName = "Given Type can reference Attribute")]
+        [Fact]
         public void GivenType_CanReferenceAttribute()
         {
             typeof(TestClassWithAttribute).GetAttribute<TestAttribute>()
@@ -39,7 +39,7 @@ namespace CommonTests.Extensions.Reflection
                 .Should().BeNull();
         }
 
-        [Fact(DisplayName = "Given Attribute Provider can reference Attribute")]
+        [Fact]
         public void GivenAttributeProvider_CanReferenceAttribute()
         {
             typeof(TestClassWithAttribute).GetProperty("SomeProperty")
@@ -51,7 +51,7 @@ namespace CommonTests.Extensions.Reflection
                .Should().BeNull();
         }
 
-        [Fact(DisplayName = "Given Instance can reference Attribute")]
+        [Fact]
         public void GivenInstance_CanReferenceAttribute()
         {
             var instance = new TestClassWithAttribute();
@@ -63,13 +63,47 @@ namespace CommonTests.Extensions.Reflection
                 .Should().BeNull();
         }
 
+        [Fact]
+        public void GivenType_CanHaveOnlyOne_MatchingAttribute()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+            {
+                typeof(TestClassWithAttributes).GetAttribute<Attribute>();
+            });
+
+            ex.Message.Should().Contain("More than one attribute of the type");
+        }
+
+        [Fact]
+        public void GivenAttributeProvider_CanHaveOnlyOne_MatchingAttribute()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+            {
+                typeof(TestClassWithAttributes).GetProperty("SomeProperty")
+                    .GetAttribute<Attribute>();
+            });
+            
+            ex.Message.Should().Contain("More than one attribute of the type");
+        }
+
+        [AttributeUsage(AttributeTargets.All)]
         private class TestAttribute : Attribute { }
+        
+        [AttributeUsage(AttributeTargets.All)]
+        private class Test2Attribute : Attribute { }
 
         [Test]
         private class TestClassWithAttribute
         {
             [Obsolete]
             // ReSharper disable once UnusedMember.Local
+            public string SomeProperty { get; set; }
+        }
+
+        [Test, Test2]
+        private class TestClassWithAttributes
+        {
+            [Test, Test2]
             public string SomeProperty { get; set; }
         }
     }

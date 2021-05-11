@@ -45,7 +45,7 @@ namespace NetFusion.Messaging.Filters
             }
 
             // Check if the type of the returned result is compatible with
-            // the return type of the query.
+            // the result type of the query.
             return query.Result.GetType().CanAssignTo(query.DeclaredResultType);
         }
 
@@ -59,10 +59,11 @@ namespace NetFusion.Messaging.Filters
                 if (! _objectMapper.TryMap(query.Result, query.DeclaredResultType, out object mappedResult))
                 {
                     throw new InvalidOperationException(
-                        $"For query of type: {query.GetType()} the result of type: {query.Result.GetType()} " +
-                         $" could not be mapped to the query declared result type of: {query.DeclaredResultType} or derived type.");
+                        $"For query of type: {query.GetType()} the result of type: {query.Result.GetType()} could not " +
+                        $"be mapped to the query declared result type of: {query.DeclaredResultType} or derived type.");
                 }
 
+                // Update the query results that will be returned.
                 query.SetResult(mappedResult);
                 return;
             }
@@ -77,8 +78,8 @@ namespace NetFusion.Messaging.Filters
                 if (! _objectMapper.TryMap(result, itemTargetType, out object mappedResult))
                 {
                     throw new InvalidOperationException(
-                        $"For query of type: {query.GetType()} the result type: {result.GetType()} " +
-                        $"at element position: {i} could not be mapped to the query declared result type of: {itemTargetType} " +
+                        $"For query of type: {query.GetType()} the result type: {result.GetType()} at element " +
+                        $"position: {i} could not be mapped to the query declared result type of: {itemTargetType} " +
                         "or derived type.");
                 }
                 

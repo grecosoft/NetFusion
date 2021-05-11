@@ -42,13 +42,11 @@ namespace NetFusion.RabbitMQ.Settings
         {
             validator.Verify(! string.IsNullOrWhiteSpace(QueueName), $"{nameof(QueueName)} not specified.");
             
-            validator.Verify(PerQueueMessageTtl == null || 0 <= PerQueueMessageTtl.Value, 
+            validator.Verify(PerQueueMessageTtl is null or >= 0, 
                 $"{nameof(PerQueueMessageTtl)} must be greater or equal to zero.");
             
-            validator.Verify(Priority == null || 0 < Priority, $"{nameof(Priority)} must be greater then zero.");
-
-            validator.Verify(MaxPriority == null || 0 < MaxPriority, 
-                $"{nameof(MaxPriority)} must be greater or equal to zero.");
+            validator.Verify(Priority is null or > 0, $"{nameof(Priority)} must be greater then zero.");
+            validator.Verify(MaxPriority is null or > 0, $"{nameof(MaxPriority)} must be greater or equal to zero.");
         }
     }
 }

@@ -5,10 +5,8 @@ namespace NetFusion.Base.Scripting
 {
     /// <summary>
     /// By default, this NULL implementation is registered by the composite-container.
-    /// Some core NetFusion plugins such as NetFusion.Messaging and others support the
-    /// user of predicates.  However, if the host application wants to utilize dynamic
-    /// evaluated expresses, they must register an implementation.  Such as provided 
-    /// by the NetFusion.Roslyn plugin.
+    /// However, if the host application wants to utilize dynamic evaluated expresses, they
+    /// must register an implementation. Such as provided by the NetFusion.Roslyn plugin.
     /// </summary>
     public class NullEntityScriptingService : IEntityScriptingService
     {

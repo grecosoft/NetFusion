@@ -19,7 +19,7 @@ namespace NetFusion.Azure.ServiceBus.Publisher.Internal
     /// This class implements the IMessagePublisher interface and is registered within the central
     /// messaging dispatch pipeline.
     /// </summary>
-    public class ServiceBusPublisher : MessagePublisher
+    public class ServiceBusPublisher : IMessagePublisher
     {
         private readonly ILogger _logger;
         private readonly IPublisherModule _publisherModule;
@@ -37,9 +37,9 @@ namespace NetFusion.Azure.ServiceBus.Publisher.Internal
         
         // Indicates that this publisher dispatches to external message handlers
         // contained within another running process.
-        public override IntegrationTypes IntegrationType => IntegrationTypes.External;
+        public IntegrationTypes IntegrationType => IntegrationTypes.External;
 
-        public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
+        public async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
             var messageType = message.GetType();
             

@@ -55,7 +55,7 @@ namespace CoreTests.Settings
             var module = new AppSettingsModule();
             
             // Act:
-            module.ScanPlugins(catalog);
+            module.ScanForServices(catalog);
             
             // Assert:
             Assert.Equal(1, catalog.Services.Count);

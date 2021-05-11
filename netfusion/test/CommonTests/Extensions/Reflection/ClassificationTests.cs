@@ -20,5 +20,18 @@ namespace CommonTests.Extensions.Reflection
             typeof(decimal).IsBasicType().Should().BeTrue();
             typeof(decimal?).IsBasicType().Should().BeTrue();
         }
+
+        [Fact]
+        public void CanDetermine_Category_OfPropertyType()
+        {
+            typeof(TestClass).GetProperty("PropOne").IsBasicType().Should().BeFalse();
+            typeof(TestClass).GetProperty("PropTwo").IsBasicType().Should().BeTrue();
+        }
+
+        private class TestClass
+        {
+            public object PropOne { get; set; }
+            public int? PropTwo { get; set; }
+        }
     }
 }

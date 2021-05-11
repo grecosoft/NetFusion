@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using FluentAssertions;
+using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Types;
+using NetFusion.Messaging.Types.Contracts;
 using Xunit;
 
 // ReSharper disable ClassNeverInstantiated.Local
@@ -102,8 +104,33 @@ namespace CoreTests.MessagingTypes
             Assert.True(device.Attributes.Values.State == "Active");
         }
 
+        /// <summary>
+        /// A message can have an associated namespace.  This is used to provide scope
+        /// to message used by consumers. 
+        /// </summary>
+        [Fact]
+        public void Message_CanHave_Namespace()
+        {
+            var nsAttrib = new MockMessage().GetAttribute<MessageNamespaceAttribute>();
+            nsAttrib.MessageNamespace.Should().Be("Biz.Domain.Messages.Mock");
+        }
+
+        [Fact]
+        public void CommandResult_MustBeAssignable_ToCommandResultType()
+        {
+            ICommandResultState cmdState = new MockCommand();
+            cmdState.SetResult(new CommandResultOne());
+            cmdState.Result.Should().NotBeNull();
+
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                cmdState.SetResult(new CommandResultTwo());
+            }).Message.Should().Contain("is not assignable to the command declared result type");
+        }
+
         //--------- TEST CLASSES ----------------
 
+        [MessageNamespace("Biz.Domain.Messages.Mock")]
         private class MockMessage : DomainEvent
         {
             public decimal Amount { get; set; }
@@ -134,6 +161,26 @@ namespace CoreTests.MessagingTypes
             public int DeviceId { get; set; }
             public string Name { get; set; }
             public string Location { get; set; }
+        }
+
+        public class MockCommand : Command<CommandResultBase>
+        {
+            
+        }
+
+        public abstract class CommandResultBase
+        {
+            
+        }
+
+        public class CommandResultOne : CommandResultBase
+        {
+            
+        }
+
+        public class CommandResultTwo 
+        {
+            
         }
     }
 }

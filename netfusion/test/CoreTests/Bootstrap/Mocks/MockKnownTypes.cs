@@ -19,22 +19,26 @@ namespace CoreTests.Bootstrap.Mocks
         /// This allows one plugin, defining a derived IKnownPluginType, to
         /// locate class implementations defined by other plugins.
         /// </summary>
-        public IEnumerable<MockKnownType> ImportedTypes { get; set; }
+        public IEnumerable<IMockKnownType> ImportedTypes { get; set; }
     }
     
-    public abstract class MockKnownType : IKnownPluginType
+    public interface IMockKnownType : IKnownPluginType
     {
     }
 
-    public class MockTypeOneBasedOnKnownType : MockKnownType
+    public class MockTypeOneBasedOnKnownType : IMockKnownType
     {
     }
 
-    public class MockTypeTwoBasedOnKnownType : MockKnownType
+    public class MockTypeTwoBasedOnKnownType : IMockKnownType
     {
     }
 
-    public class MockTypeThreeBasedOnKnownType : MockKnownType
+    public class MockTypeThreeBasedOnKnownType : IMockKnownType
+    {
+    }
+    
+    public class MockTypeFourBasedOnKnownType : IMockKnownType
     {
     }
 }

@@ -79,11 +79,11 @@ namespace NetFusion.RabbitMQ.Metadata
         
         private static void BindQueueToExchange(QueueMeta meta, IAdvancedBus bus, IQueue queue, IExchange exchange)
         {
-            string[] routeKeys = meta.RouteKeys ?? new string[] { };
+            string[] routeKeys = meta.RouteKeys ?? Array.Empty<string>();
             if (routeKeys.Length > 0)
             {
                 // If route-keys specified, bind the queue to the exchange for each route-key.
-                foreach (string routeKey in meta.RouteKeys ?? new string[] {})
+                foreach (string routeKey in routeKeys)
                 {
                     bus.Bind(exchange, queue, routeKey);
                 }

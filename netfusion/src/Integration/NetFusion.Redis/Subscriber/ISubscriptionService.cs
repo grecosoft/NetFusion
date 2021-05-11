@@ -15,10 +15,8 @@ namespace NetFusion.Redis.Subscriber
         /// </summary>
         /// <param name="database">The name of the configured database.</param>
         /// <param name="channel">The channel to subscribe.</param>
-        /// <param name="handler">The handler to invoke when a domain-event
-        /// is received on the channel.</param>
-        /// <typeparam name="TDomainEvent">The type of domain event to
-        /// deserialized received data into.</typeparam>
+        /// <param name="handler">The handler to invoke when a domain-event is received on the channel.</param>
+        /// <typeparam name="TDomainEvent">The type of domain event to deserialized received data into.</typeparam>
         void Subscribe<TDomainEvent>(string database, string channel,
             Action<TDomainEvent> handler)        
             where TDomainEvent : IDomainEvent;
@@ -28,10 +26,8 @@ namespace NetFusion.Redis.Subscriber
         /// </summary>
         /// <param name="database">The name of the configured database.</param>
         /// <param name="channel">The channel to subscribe.</param>
-        /// <param name="handler">The handler to invoke when a domain-event
-        ///     is received on the channel.</param>
-        /// <typeparam name="TDomainEvent">The type of domain event to
-        /// deserialized received data into.</typeparam>
+        /// <param name="handler">The handler to invoke when a domain-event is received on the channel.</param>
+        /// <typeparam name="TDomainEvent">The type of domain event to deserialized received data into.</typeparam>
         Task SubscribeAsync<TDomainEvent>(string database, string channel,
             Action<TDomainEvent> handler)        
             where TDomainEvent : IDomainEvent;

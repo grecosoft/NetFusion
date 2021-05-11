@@ -62,6 +62,17 @@ namespace CommonTests.Extensions.Reflection
             foundInterfaces.Should().BeEmpty();
         }
 
+        [Fact]
+        public void DerivedFromBaseInterface_MustSpecifyInterfaceType()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+            {
+                typeof(ChildClassType).GetInterfacesDerivedFrom<object>();
+            });
+
+            ex.Message.Should().Contain("must be an interface type");
+        }
+
         private class ParentClassType : IVersionedState
         {
             

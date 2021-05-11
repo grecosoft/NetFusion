@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Exceptions;
-using NetFusion.Common.Extensions;
 
 namespace NetFusion.Base.Logging
 {
     /// <summary>
-    /// Default implementation specified as the extended logger that does
-    /// not attempt to log the message.  This is a place holder for the
-    /// real implementation used by the host.  See: NetFusion.Serilog.
+    /// Default implementation of IExtendedLogger writing logs to the console.  This is a
+    /// place holder for the real implementation used by the host.  See: NetFusion.Serilog.
     /// </summary>
     public class NullExtendedLogger : IExtendedLogger
     {

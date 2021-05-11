@@ -45,9 +45,9 @@ namespace NetFusion.Messaging.Internal
                 .ToArray();
         }
 
-        public async Task PublishAsync(IDomainEvent domainEvent, 
-            CancellationToken cancellationToken = default,
-            IntegrationTypes integrationType = IntegrationTypes.All)
+        public async Task PublishAsync(IDomainEvent domainEvent,
+            IntegrationTypes integrationType = IntegrationTypes.All,
+            CancellationToken cancellationToken = default)
         {
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent), 
                 "Domain event cannot be null.");
@@ -55,9 +55,9 @@ namespace NetFusion.Messaging.Internal
             await PublishMessage(domainEvent, integrationType, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task SendAsync(ICommand command, 
-            CancellationToken cancellationToken = default,
-            IntegrationTypes integrationType = IntegrationTypes.All)
+        public async Task SendAsync(ICommand command,
+            IntegrationTypes integrationType = IntegrationTypes.All,
+            CancellationToken cancellationToken = default)
         {
             if (command == null) throw new ArgumentNullException(nameof(command),
                 "Command cannot be null.");
@@ -65,9 +65,9 @@ namespace NetFusion.Messaging.Internal
             await PublishMessage(command, integrationType, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<TResult> SendAsync<TResult>(ICommand<TResult> command, 
-            CancellationToken cancellationToken = default,
-            IntegrationTypes integrationType = IntegrationTypes.All)
+        public async Task<TResult> SendAsync<TResult>(ICommand<TResult> command,
+            IntegrationTypes integrationType = IntegrationTypes.All,
+            CancellationToken cancellationToken = default)
         {
             if (command == null) throw new ArgumentNullException(nameof(command),
                 "Command cannot be null.");
@@ -76,9 +76,9 @@ namespace NetFusion.Messaging.Internal
             return command.Result;
         }
 
-        public async Task PublishAsync(IEventSource eventSource, 
-            CancellationToken cancellationToken = default,
-            IntegrationTypes integrationType = IntegrationTypes.All)
+        public async Task PublishAsync(IEventSource eventSource,
+            IntegrationTypes integrationType = IntegrationTypes.All,
+            CancellationToken cancellationToken = default)
         {
             if (eventSource == null) throw new ArgumentNullException(nameof(eventSource),
                 "Event source cannot be null.");
@@ -106,21 +106,21 @@ namespace NetFusion.Messaging.Internal
         // ----------------------------- [Publishing] -----------------------------
 
         // Private method to which all other publish methods delegate to asynchronously apply
-        // the enrichers and to invoke all registered message publishers.
+        // the enrichers and invoke all registered message publishers.
         private async Task PublishMessage(IMessage message, IntegrationTypes integrationType, 
             CancellationToken cancellationToken)
         {
             try
             {
-                await ApplyMessageEnrichers(message);
                 LogPublishedMessage(message);
                 
-                await InvokePublishers(message, cancellationToken, integrationType);
+                await ApplyMessageEnrichers(message);
+                await InvokePublishers(message, integrationType, cancellationToken);
             }
             catch (PublisherException ex)
             {
-                var log = LogMessage.For(LogLevel.Error, "Exception Publishing Message {MessageType}",
-                    message.GetType()).WithProperties(
+                var log = LogMessage.For(LogLevel.Error, "Exception Publishing Message {MessageType}", message.GetType())
+                    .WithProperties(
                         new LogProperty { Name = "Message", Value = message }
                     );
                 
@@ -145,7 +145,7 @@ namespace NetFusion.Messaging.Internal
             {
                 if (taskList != null)
                 {
-                    var enricherErrors = taskList.GetExceptions(ti => new EnricherException(ti));
+                    var enricherErrors = taskList.GetExceptions(GetEnricherException);
                     if (enricherErrors.Any())
                     {
                         throw new PublisherException("Exception when invoking message enrichers.",
@@ -157,8 +157,8 @@ namespace NetFusion.Messaging.Internal
             }
         }
 
-        private async Task InvokePublishers(IMessage message, CancellationToken cancellationToken, 
-            IntegrationTypes integrationType)
+        private async Task InvokePublishers(IMessage message,
+            IntegrationTypes integrationType, CancellationToken cancellationToken)
         {
             TaskListItem<IMessagePublisher>[] taskList = null;
 
@@ -176,10 +176,11 @@ namespace NetFusion.Messaging.Internal
             {
                 if (taskList != null)
                 {
-                    var publisherErrors = taskList.GetExceptions(ti => new PublisherException(ti));
+                    var publisherErrors = taskList.GetExceptions(GetPublisherException);
                     if (publisherErrors.Any())
                     {
                         throw new PublisherException("Exception when invoking message publishers.",
+                            ex,
                             message,
                             publisherErrors);
                     }
@@ -188,14 +189,29 @@ namespace NetFusion.Messaging.Internal
                 throw new PublisherException("Exception when invoking message publishers.", ex);
             }
         }
+
+        // ------------------------- [Logging] -----------------------------
         
         private void LogPublishedMessage(IMessage message)
         {
-            var log = LogMessage.For(LogLevel.Information, "Message {MessageType} Published", message.GetType())
+            var log = LogMessage.For(LogLevel.Debug, "Message {MessageType} Published", message.GetType())
                 .WithProperties(
-                    new LogProperty { Name = "Message", Value = message });
+                    new LogProperty { Name = "Message", Value = message }
+                );
             
             _logger.Log(log);
+        }
+        
+        // ------------------------- [Exceptions] --------------------------
+
+        private static EnricherException GetEnricherException(TaskListItem<IMessageEnricher> taskListItem)
+        {
+            return new("Exception Applying Enricher", taskListItem.Invoker, taskListItem.Task.Exception);
+        }
+        
+        private static PublisherException GetPublisherException(TaskListItem<IMessagePublisher> taskItem)
+        {
+            return new("Error Invoking Publisher", taskItem.Invoker, taskItem.Task.Exception);
         }
     }
 }

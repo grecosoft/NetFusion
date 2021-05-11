@@ -28,10 +28,10 @@ namespace NetFusion.Messaging.Internal
         // Dependent modules.
         private readonly IQueryDispatchModule _dispatchModule;
 
-        public QueryDispatcher(ILogger<QueryDispatcher> logger,
+        public QueryDispatcher(
+            ILogger<QueryDispatcher> logger,
             IServiceProvider services,
             IQueryDispatchModule dispatchModule,
-            IQueryFilterModule filterModule,
             IEnumerable<IQueryFilter> queryFilters)
         {
             _logger = logger;
@@ -40,7 +40,7 @@ namespace NetFusion.Messaging.Internal
             
             // The order in which the filters are called should not matter.
             // However,they are applied in the order configured.
-            _queryFilters = queryFilters.OrderByMatchingType(filterModule.QueryFilterTypes);
+            _queryFilters = queryFilters.OrderByMatchingType(_dispatchModule.DispatchConfig.QueryFilters);
         }
 
         public async Task<TResult> Dispatch<TResult>(IQuery<TResult> query, 
@@ -64,7 +64,7 @@ namespace NetFusion.Messaging.Internal
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unexpected Exception dispatching query.");
-                throw;
+                throw new QueryDispatchException("Exception dispatching query.", ex);
             }
 
             return query.Result;
@@ -76,16 +76,11 @@ namespace NetFusion.Messaging.Internal
         // it between the pre and post filters.
         private async Task InvokeDispatcher(QueryDispatchInfo dispatcher, IQuery query, CancellationToken cancellationToken)
         {
-            var consumer = (IQueryConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
+            LogQueryDispatch(dispatcher, query);
             
             await ApplyFilters<IPreQueryFilter>(query, _queryFilters, (f, q) => f.OnPreExecuteAsync(q));
-            
-            LogQueryDispatch(dispatcher, query);
-            await dispatcher.Dispatch(query, consumer, cancellationToken);
-            
+            await InvokeQueryHandler(dispatcher, query, cancellationToken);
             await ApplyFilters<IPostQueryFilter>(query, _queryFilters, (f, q) => f.OnPostExecuteAsync(q));
-            
-            LogQueryDispatched(dispatcher, query);
         }
         
         // Executes a list of asynchronous filters and awaits their completion.  Once completed,
@@ -108,7 +103,7 @@ namespace NetFusion.Messaging.Internal
             {
                 if (taskList != null)
                 {
-                    var filterErrors = taskList.GetExceptions(ti => new QueryFilterException<TFilter>(ti));
+                    var filterErrors = taskList.GetExceptions(GetFilterException);
                     if (filterErrors.Any())
                     {
                         throw new QueryDispatchException("Exception when invoking query filters.", filterErrors);
@@ -118,21 +113,27 @@ namespace NetFusion.Messaging.Internal
                 throw new QueryDispatchException("Exception when invoking query filters.", ex);
             }
         }
-        
-        // ----------------------------- [Logging] -----------------------------
 
-        public void LogQueryDispatch(QueryDispatchInfo dispatcher, IQuery query)
+        private async Task InvokeQueryHandler(QueryDispatchInfo dispatcher, IQuery query,
+            CancellationToken cancellationToken)
         {
-            _logger.LogDebug("Dispatching Query {QueryType} to Consumer {ConsumerType} Handler {MethodName}", 
-                query.GetType(), 
-                dispatcher.ConsumerType, 
-                dispatcher.HandlerMethod.Name);
+            try
+            {
+                var consumer = (IQueryConsumer)_services.GetRequiredService(dispatcher.ConsumerType);
+                await dispatcher.Dispatch(query, consumer, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                throw new QueryDispatchException("Exception Dispatching Query.", dispatcher, ex);
+            }
         }
         
-        private void LogQueryDispatched(QueryDispatchInfo dispatchInfo, IQuery query)
+        // ----------------------------- [Logging] -----------------------------
+        
+        private void LogQueryDispatch(QueryDispatchInfo dispatchInfo, IQuery query)
         {
             var handlerInfo = new {
-                Consumer = dispatchInfo.ConsumerType,
+                Consumer = dispatchInfo.ConsumerType.FullName,
                 Handler = dispatchInfo.HandlerMethod.Name
             };
             
@@ -155,6 +156,13 @@ namespace NetFusion.Messaging.Internal
                 });
             
             _logger.Log(log);
+        }
+        
+        // ------------------------------- [Exceptions] --------------------------
+        private static QueryFilterException GetFilterException<T>(TaskListItem<T> taskItem)
+            where T : class, IQueryFilter
+        {
+            return new("Exception Applying Query Filter", taskItem.Invoker, taskItem.Task.Exception);
         }
     }
 }

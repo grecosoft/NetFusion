@@ -8,13 +8,13 @@ namespace NetFusion.Messaging.Enrichers
     /// <summary>
     /// Adds a GUID value as the message's correlation identifier if not present.
     /// </summary>
-    public class CorrelationEnricher : MessageEnricher
+    public class CorrelationEnricher : IMessageEnricher
     {
-        // The MessageEnricherModule registers all enrichers with a scoped lifetime,
-        // So the below guid value is unique per request for all published messages.
+        // The MessageEnricherModule registers all enrichers with a scoped lifetime.
+        // Therefore, the below guid value is unique per request for all published messages.
         private readonly Guid _scopedRequestId = Guid.NewGuid();
         
-        public override Task EnrichAsync(IMessage message)
+        public Task EnrichAsync(IMessage message)
         {
             message.SetCorrelationId(_scopedRequestId.ToString());
             
@@ -23,7 +23,7 @@ namespace NetFusion.Messaging.Enrichers
                 AttributeExtensions.GetPluginScopedName("MessageId"),
                 Guid.NewGuid(), false);
 
-            return base.EnrichAsync(message);
+            return Task.CompletedTask;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using NetFusion.Base.Exceptions;
-using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Filters;
 
 namespace NetFusion.Messaging.Exceptions
@@ -11,37 +10,18 @@ namespace NetFusion.Messaging.Exceptions
     /// </summary>
     public class QueryFilterException : NetFusionException
     {
-        protected QueryFilterException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-            
-        }
-    }
-    
-    /// <summary>
-    /// Contains information about a specific type of query filter that threw
-    /// an exception when applied.
-    /// </summary>
-    public class QueryFilterException<T> : QueryFilterException
-        where T : class, IQueryFilter
-    {
         /// <summary>
-        /// Constructor.
+        /// 
         /// </summary>
-        /// <param name="taskItem">Task result containing the exception.</param>
-        public QueryFilterException(TaskListItem<T> taskItem) 
-            : base("Query Filter Exception", GetSourceException(taskItem))
+        /// <param name="message">Message describing the exception.</param>
+        /// <param name="filter">The associated filter that raised exception.</param>
+        /// <param name="aggregateException">The aggregate exception associated with task.</param>
+        public QueryFilterException(string message, IQueryFilter filter, AggregateException aggregateException) 
+            : base(message, aggregateException)
         {
-            if (taskItem == null) throw new ArgumentNullException(nameof(taskItem));
+            if (filter == null) throw new ArgumentNullException(nameof(filter));
 
-            Details["Filter"] = taskItem.Invoker.GetType().FullName;
-        }
-        
-        private static Exception GetSourceException(TaskListItem<T> taskItem)
-        {
-            // Get the aggregate inner exception.
-            var taskException = taskItem.Task.Exception;
-            return taskException?.InnerException;
+            Details["Filter"] = filter.GetType().FullName;
         }
     }
 }

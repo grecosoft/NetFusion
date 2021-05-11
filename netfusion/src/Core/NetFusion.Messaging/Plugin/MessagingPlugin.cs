@@ -14,12 +14,11 @@ namespace NetFusion.Messaging.Plugin
         public MessagingPlugin()
         {
             AddConfig<MessageDispatchConfig>();
-            AddConfig<QueryDispatchConfig>();
-            
             AddModule<MessagingModule>();
             AddModule<MessageDispatchModule>();
             AddModule<MessageEnricherModule>();
          
+            AddConfig<QueryDispatchConfig>();
             AddModule<QueryDispatchModule>();
             AddModule<QueryFilterModule>();
             

@@ -34,7 +34,6 @@ namespace NetFusion.Redis.Plugin.Modules
         private static void AssertChannels(ChannelMeta[] channels)
         {
             var duplicateChannels = channels.WhereDuplicated(m => m.ChannelName);
-
             if (duplicateChannels.Any())
             {
                 throw new ContainerException(

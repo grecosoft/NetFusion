@@ -4,9 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base;
-using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
-using NetFusion.Common.Extensions.Collections;
 using NetFusion.Redis.Internal;
 using NetFusion.Redis.Settings;
 using NetFusion.Settings;
@@ -36,33 +34,18 @@ namespace NetFusion.Redis.Plugin.Modules
             try
             {
                 _redisSettings = Context.Configuration.GetSettings(new RedisSettings());
+                _redisSettings.SetNamedConfigurations();
             }
             catch (SettingsValidationException ex)
             {
                 NfExtensions.Logger.Log<ConnectionModule>(LogLevel.Error, ex.Message);
                 throw;
             }
-           
-            AssertSettings(_redisSettings);
         }
         
-        private static void AssertSettings(RedisSettings settings)
-        {
-            var duplicateConnNames = settings.Connections
-                .WhereDuplicated(s => s.Name)
-                .ToArray();
-
-            if (duplicateConnNames.Any())
-            {
-                throw new ContainerException("Configured database names must be unique.", 
-                    "duplicate-connection-names", 
-                    duplicateConnNames);
-            }
-        }
-
         protected override async Task OnStartModuleAsync(IServiceProvider services)
         {
-            foreach (DbConnection connSetting in _redisSettings.Connections)
+            foreach (var connSetting in _redisSettings.Connections.Values)
             {
                 var connOptions = new ConfigurationOptions
                 {
@@ -135,7 +118,7 @@ namespace NetFusion.Redis.Plugin.Modules
 
         public override void Log(IDictionary<string, object> moduleLog)
         {
-            moduleLog["RedisConnections"] = _redisSettings.Connections.Select(c => new
+            moduleLog["RedisConnections"] = _redisSettings.Connections.Values.Select(c => new
             {
                 DatabaseName = c.Name,
                 EndPoints = c.EndPoints.Select(ep => new

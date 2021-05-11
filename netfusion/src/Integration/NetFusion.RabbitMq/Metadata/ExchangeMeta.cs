@@ -17,24 +17,24 @@ namespace NetFusion.RabbitMQ.Metadata
         /// This value is used to find the bus connection settings within the application's
         /// configuration file.
         /// </summary>
-        public string BusName { get; private set; }
+        public string BusName { get; private init; }
 
         /// <summary>
         /// The RabbitMQ type of the exchange to be created.  Null value represents 
         /// the default exchange. 
         /// </summary>
-        public string ExchangeType { get; private set; }
+        public string ExchangeType { get; private init; }
+        
+        /// <summary>
+        /// The name of the exchange.  The name will be null if corresponding to the default exchange.
+        /// </summary>
+        public string ExchangeName { get; private init; }
 
         /// <summary>
         /// The type of the message associated with the exchange. 
         /// </summary>
         internal Type MessageType { get; set; }
-
-        /// <summary>
-        /// The name of the exchange.  The name will be null if corresponding to the default exchange.
-        /// </summary>
-        public string ExchangeName { get; private set; }
-
+        
         /// <summary>
         /// If the exchange represents the default exchange, this will reference the queue
         /// metadata that should be created on the default-exchange.
@@ -198,20 +198,21 @@ namespace NetFusion.RabbitMQ.Metadata
         /// Survive server restarts. If this parameter is false, the exchange
         /// will be removed when the server restarts.
         /// </summary>
-        internal bool IsDurable { get; set; }
+        public bool IsDurable { get; set; }
 
         /// <summary>
         /// Delete this exchange when the last queue is unbound.
         /// </summary>
-        internal bool IsAutoDelete { get; set; }
+        public bool IsAutoDelete { get; set; }
 
         /// <summary>
         /// Tells RabbitMQ to save the message to disk or to cache. 
         /// </summary>
-        internal bool IsPersistent { get; set; }
+        public bool IsPersistent { get; set; }
 
         /// <summary>
-        /// The optional route key associated with the exchange definition.
+        /// The optional route key associated with the exchange definition.  If specified,
+        /// the route-key will be set on all messages delivered to the exchanged.
         /// </summary>
         internal string RouteKey { get; set; }
 
@@ -225,7 +226,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// to the exchange metadata.  Only values specified are set.
         /// </summary>
         /// <param name="settings">External stored exchange settings.</param>
-        public void ApplyOverrides(ExchangeSettings settings)
+        internal void ApplyOverrides(ExchangeSettings settings)
         {
             if (settings == null) throw new ArgumentNullException(nameof(settings));
             
@@ -261,7 +262,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// Adds exchange log information to the dictionary of values.
         /// </summary>
         /// <param name="log">Dictionary containing log values.</param>
-        public void LogProperties(IDictionary<string, object> log)
+        internal void LogProperties(IDictionary<string, object> log)
         {
             log["Exchange"] = IsDefaultExchange ? "Default-Exchange" : GetLogDetails();
             if (QueueMeta != null)
@@ -274,7 +275,7 @@ namespace NetFusion.RabbitMQ.Metadata
         /// Returns an anonymous type containing the exchange properties to be logged.
         /// </summary>
         /// <returns>Object with properties to be logged.</returns>
-        public object GetLogDetails()
+        internal object GetLogDetails()
         {
             return new
             {
@@ -293,5 +294,36 @@ namespace NetFusion.RabbitMQ.Metadata
                 CancelRpcRequestAfterMs = IsRpcExchange ? CancelRpcRequestAfterMs.ToString() : "n/a"
             };
         }
+    }
+    
+    /// <summary>
+    /// ExchangeMeta derived class for a specified type of message.
+    /// </summary>
+    /// <typeparam name="TMessage"></typeparam>
+    public class ExchangeMeta<TMessage> : ExchangeMeta
+        where TMessage : IMessage
+    {
+        public ExchangeMeta()
+        {
+            MessageType = typeof(TMessage);
+        }
+
+        /// <summary>
+        /// Overrides the base implementation that invokes a message
+        /// type specific delegate determining if the message applies.
+        /// </summary>
+        /// <param name="message">The message being published to exchange.</param>
+        /// <returns>True if message applies.  Otherwise, false.</returns>
+        internal override bool Applies(IMessage message)
+        {
+            return AppliesIf((TMessage)message);
+        }
+
+        /// <summary>
+        /// Delegate that can be specified within code to determine if the 
+        /// state of the message applied to the exchange and should be published.
+        /// </summary>
+        /// <returns>True if message applies.  Otherwise, false.</returns>
+        public Func<TMessage, bool> AppliesIf { get; set; } = m => true;
     }
 }

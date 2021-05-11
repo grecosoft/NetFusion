@@ -60,7 +60,7 @@ namespace NetFusion.Web.Mvc.Metadata
         public ApiParameterMeta[] BodyParameters { get; }
         
         /// <summary>
-        /// Metadata about the response returned from an action.
+        /// Metadata about the possible responses returned from an action.
         /// </summary>
         public ApiResponseMeta[] ResponseMeta { get; private set; }
 

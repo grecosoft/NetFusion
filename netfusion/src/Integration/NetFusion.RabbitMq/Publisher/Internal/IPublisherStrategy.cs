@@ -14,8 +14,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
         /// call and the associated exchange definition.
         /// </summary>
         /// <param name="context">Reference to common services.</param>
-        /// <param name="createdExchange">Information about the exchange to which
-        /// the message is being published.</param>
+        /// <param name="createdExchange">Information about the exchange to which the message is being published.</param>
         /// <param name="message">The message being published.</param>
         /// <param name="cancellationToken">Task cancellation token.</param>
         /// <returns>Task that will be completed after message is published.</returns>

@@ -10,7 +10,7 @@ namespace CommonTests.Extensions.Reflection
 {
     public class AsyncTests
     {
-        [Fact (DisplayName = "Can determine if method is Asynchronous")]
+        [Fact]
         public void CanDetermineIfMethod_IsAsynchronous()
         {
             typeof(TestMethods).GetMethod(nameof(TestMethods.AsyncMethodToTest))
@@ -26,7 +26,7 @@ namespace CommonTests.Extensions.Reflection
                 .IsAsyncMethod().Should().BeFalse();
         }
 
-        [Fact (DisplayName = "Can determine if method returns Asynchronous result")]
+        [Fact]
         public void CanDetermineIfMethod_ReturnsAsynchronousResult()
         {
             typeof(TestMethods).GetMethod(nameof(TestMethods.AsyncMethodToTest))
@@ -42,7 +42,7 @@ namespace CommonTests.Extensions.Reflection
                 .IsAsyncMethodWithResult().Should().BeFalse();
         }
 
-        [Fact (DisplayName = "Can determine if method is Asynchronous and can be Canceled")]
+        [Fact]
         public void CanDetermineIfMethod_IsAsynchronousAndCanCanceled()
         {
             typeof(TestMethods).GetMethod(nameof(TestMethods.CancelableAsyncMethod))
@@ -89,8 +89,5 @@ namespace CommonTests.Extensions.Reflection
                 throw new NotImplementedException();
             }
         }
-        
-        
     }
-   
 }

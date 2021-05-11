@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Bootstrap.Plugins;
@@ -12,7 +11,7 @@ namespace NetFusion.Messaging.Plugin.Modules
     /// <summary>
     /// Module that manages filters to be invoked when a query is dispatched.
     /// </summary>
-    public class QueryFilterModule : PluginModule, IQueryFilterModule
+    public class QueryFilterModule : PluginModule
     {
         private QueryDispatchConfig _queryDispatchConfig;
 
@@ -23,14 +22,11 @@ namespace NetFusion.Messaging.Plugin.Modules
         
         // ---------------------- [Plugin Initialization] ----------------------
 
-        // The pre and post filters configured for the application host during bootstrap configuration.
-        public IEnumerable<Type> QueryFilterTypes => _queryDispatchConfig.QueryFilters;
-
         // Registers the pre and post filters within the container so they can 
         // inject needed services.
         public override void RegisterServices(IServiceCollection services)
         {
-            foreach (var queryFilterType in QueryFilterTypes)
+            foreach (var queryFilterType in _queryDispatchConfig.QueryFilters)
             {
                 services.AddScoped(typeof(IQueryFilter), queryFilterType);
             }

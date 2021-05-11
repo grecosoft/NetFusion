@@ -15,7 +15,7 @@ namespace NetFusion.AMQP.Publisher
     /// Message publisher that determines if the type of the message being published
     /// has an associated host item (Queue or Topic).
     /// </summary>
-    public class HostMessagePublisher : MessagePublisher
+    public class HostMessagePublisher : IMessagePublisher
     {
         private readonly IConnectionModule _connectionModule;
         private readonly IPublisherModule _publisherModule;
@@ -37,7 +37,7 @@ namespace NetFusion.AMQP.Publisher
         /// higher level implementations, for example, to dispatch all in-process
         /// messages before dispatching those that are external.
         /// </summary>
-        public override IntegrationTypes IntegrationType => IntegrationTypes.External;
+        public IntegrationTypes IntegrationType => IntegrationTypes.External;
 
         /// <summary>
         /// Called when a message is published.  Determines if there is a registration associated with
@@ -47,7 +47,7 @@ namespace NetFusion.AMQP.Publisher
         /// <param name="message">The message being dispatched.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns></returns>
-        public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
+        public async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
             Type messageType = message.GetType();
             
