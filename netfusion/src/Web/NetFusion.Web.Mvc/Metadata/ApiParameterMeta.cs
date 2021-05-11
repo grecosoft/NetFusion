@@ -35,7 +35,7 @@ namespace NetFusion.Web.Mvc.Metadata
         {
             if (apiParameterDescription == null) throw new ArgumentNullException(nameof(apiParameterDescription));
             
-            if (!(apiParameterDescription.ParameterDescriptor is ControllerParameterDescriptor paramDescriptor))
+            if (apiParameterDescription.ParameterDescriptor is not ControllerParameterDescriptor paramDescriptor)
             {
                 throw new InvalidCastException(
                     $"Expected {nameof(ParameterDescriptor)} derived type of: {typeof(ControllerParameterDescriptor)}");

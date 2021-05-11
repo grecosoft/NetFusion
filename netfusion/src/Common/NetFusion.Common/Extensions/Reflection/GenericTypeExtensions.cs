@@ -20,9 +20,8 @@ namespace NetFusion.Common.Extensions.Reflection
         public static bool IsOpenGenericType(this Type sourceType)
         {
             if (sourceType == null) throw new ArgumentNullException(nameof(sourceType));
-
-            var typeInfo = sourceType.GetTypeInfo();
-            return typeInfo.IsGenericType && typeInfo.ContainsGenericParameters;
+            
+            return sourceType.IsGenericType && sourceType.ContainsGenericParameters;
         }
 
         /// <summary>

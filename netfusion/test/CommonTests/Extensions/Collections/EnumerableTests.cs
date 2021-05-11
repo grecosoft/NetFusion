@@ -9,8 +9,8 @@ namespace CommonTests.Extensions.Collections
     public class EnumerableTests
     {
 
-        [Fact(DisplayName = nameof(GivenLookup_ReteriveAllValues))]
-        public void GivenLookup_ReteriveAllValues()
+        [Fact]
+        public void GivenLookup_RetrieveAllValues()
         {
             var data = new[] {
                 new TestData { EventType = "NewCustomer", HandlerName = "CreateContact" },
@@ -25,7 +25,7 @@ namespace CommonTests.Extensions.Collections
             values.Should().HaveCount(3);
         }
 
-        [Fact(DisplayName = nameof(GivenEnumerable_CheckIfEmpty))]
+        [Fact]
         public void GivenEnumerable_CheckIfEmpty()
         {
             var list = new List<int> { 5 };
@@ -34,7 +34,7 @@ namespace CommonTests.Extensions.Collections
             list.Empty().Should().BeTrue();
         }
 
-        [Fact(DisplayName = nameof(GivenEnumerable_FindForDuplicateElementPropertyValues))]
+        [Fact]
         public void GivenEnumerable_FindForDuplicateElementPropertyValues()
         {
             var data = new[] {
@@ -77,8 +77,8 @@ namespace CommonTests.Extensions.Collections
 
         private class TestData
         {
-            public string EventType { get; set; }
-            public string HandlerName { get; set; }
+            public string EventType { get; init; }
+            public string HandlerName { get; init; }
         }
 
     }

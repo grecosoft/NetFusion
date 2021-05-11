@@ -1,6 +1,5 @@
 ﻿using System;
 using NetFusion.Base.Exceptions;
-using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Enrichers;
 
 namespace NetFusion.Messaging.Exceptions
@@ -10,25 +9,19 @@ namespace NetFusion.Messaging.Exceptions
     /// </summary>
     public class EnricherException : NetFusionException
     {
-        public EnricherException() { }
-        
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="taskItem">The task item containing the exception.</param>
-        public EnricherException(TaskListItem<IMessageEnricher> taskItem)
-            : base("Enricher Exception", GetSourceException(taskItem))
+        /// <param name="message">Message describing the exception.</param>
+        /// <param name="messageEnricher">The associated enricher that raised exception.</param>
+        /// <param name="aggregateException">The aggregate exception associated with task.</param>
+        public EnricherException(string message, IMessageEnricher messageEnricher, 
+            AggregateException aggregateException)
+            : base(message, aggregateException)
         {
-            if (taskItem == null) throw new NullReferenceException(nameof(taskItem));
+            if (messageEnricher == null) throw new NullReferenceException(nameof(messageEnricher));
 
-            Details["Enricher"] = taskItem.Invoker.GetType().FullName; 
-        }
-
-        private static Exception GetSourceException(TaskListItem<IMessageEnricher> taskItem)
-        {
-            // Get the aggregate inner exception.
-            var taskException = taskItem.Task.Exception;
-            return taskException?.InnerException;
+            Details["Enricher"] = messageEnricher.GetType().FullName; 
         }
     }
 }

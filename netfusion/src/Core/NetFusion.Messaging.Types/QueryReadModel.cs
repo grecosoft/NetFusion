@@ -5,8 +5,7 @@ using System.Text.Json.Serialization;
 namespace NetFusion.Messaging.Types
 {
     /// <summary>
-    /// An optional model from which a query result can be derived to add a 
-    /// set of dynamic properties. 
+    /// A model from which a query result can be derived to add a set of dynamic properties. 
     /// </summary>
     public abstract class QueryReadModel : IAttributedEntity
     {
@@ -22,8 +21,7 @@ namespace NetFusion.Messaging.Types
         }
 
         /// <summary>
-        /// Used to set and retrieve the properties associated with the module.
-        /// Mostly used during serialization.
+        /// Used during serialization to set and retrieve the properties associated with the module.
         /// </summary>
         public IDictionary<string, object> AttributeValues
         {

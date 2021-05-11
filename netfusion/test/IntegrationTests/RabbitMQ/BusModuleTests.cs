@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using EasyNetQ;
-using NetFusion.Bootstrap.Exceptions;
 using NetFusion.RabbitMQ.Plugin.Modules;
 using NetFusion.Test.Container;
 using Xunit;

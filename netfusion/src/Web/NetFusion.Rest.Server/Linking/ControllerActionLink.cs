@@ -29,7 +29,7 @@ namespace NetFusion.Rest.Server.Linking
             RouteParameters = _routeValues.AsReadOnly();            
         }
 
-        private readonly List<RouteParameter> _routeValues = new List<RouteParameter>();
+        private readonly List<RouteParameter> _routeValues = new();
 
         /// <summary>
         /// Adds a mapping indicating the model's properties corresponding to an action parameters.

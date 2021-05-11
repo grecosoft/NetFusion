@@ -17,7 +17,7 @@ namespace NetFusion.Redis.Publisher
     /// Extends to NetFusion base publishing pipeline to allow publishing
     /// domain-events to Redis channels.
     /// </summary>
-    public class RedisPublisher : MessagePublisher
+    public class RedisPublisher : IMessagePublisher
     {
         /// <summary>
         /// Dependent Modules:
@@ -32,7 +32,7 @@ namespace NetFusion.Redis.Publisher
         /// <summary>
         /// Indicates that the publisher delivers messages out-of-process.
         /// </summary>
-        public override IntegrationTypes IntegrationType => IntegrationTypes.External;
+        public IntegrationTypes IntegrationType => IntegrationTypes.External;
         
         public RedisPublisher(IConnectionModule connModule, IPublisherModule pubModule,
             ILogger<RedisPublisher> logger,
@@ -46,10 +46,10 @@ namespace NetFusion.Redis.Publisher
             _messageLogger = messageLogger ?? throw new ArgumentNullException(nameof(messageLogger));
         }
         
-        public override async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
+        public async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
         {
             // Only domain events with registered channel are published.
-            if (!(message is IDomainEvent domainEvent) || !_pubModule.HasChannel(message.GetType()))
+            if (message is not IDomainEvent domainEvent || !_pubModule.HasChannel(message.GetType()))
             {
                 return;
             }
@@ -106,7 +106,7 @@ namespace NetFusion.Redis.Publisher
         
         private void LogChannelPublish(IDomainEvent domainEvent, string databaseName, string channelName)
         {
-            _logger.LogInformation(
+            _logger.LogDebug(
                 "Domain event {EventName} Published to Redis Channel {ChannelName} on Database {DatabaseName}",
                 domainEvent.GetType(),
                 channelName, 

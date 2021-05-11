@@ -53,7 +53,7 @@ namespace NetFusion.Settings.Plugin.Modules
         // Register each application setting so a factory method is invoked when injected 
         // into a dependent component.  The factory method delegates to Microsoft's base 
         // implementation.
-        public override void ScanPlugins(ITypeCatalog catalog)
+        public override void ScanForServices(ITypeCatalog catalog)
         {
             catalog.AsDescriptor(
                 t => t.IsConcreteTypeDerivedFrom<IAppSettings>(), 

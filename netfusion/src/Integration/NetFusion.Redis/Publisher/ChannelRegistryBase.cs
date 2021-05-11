@@ -9,9 +9,9 @@ namespace NetFusion.Redis.Publisher
     /// </summary>
     public abstract class ChannelRegistryBase : IChannelRegistry
     {
-        private readonly List<ChannelMeta> _channels = new List<ChannelMeta>();
+        private readonly List<ChannelMeta> _channels = new();
 
-        public IEnumerable<ChannelMeta> GetChannels()
+        IEnumerable<ChannelMeta> IChannelRegistry.GetChannels()
         {
             OnRegister();
             return _channels;

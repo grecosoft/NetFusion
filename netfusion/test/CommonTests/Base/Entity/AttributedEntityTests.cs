@@ -79,27 +79,6 @@ namespace CommonTests.Base.Entity
             value.Should().Be(1000);
         }
 
-        [Fact(DisplayName = "Attribute value can be Scoped to Context")]
-        public void AttributeValue_CanBeScopedToContext()
-        {
-            var entity = new DynamicEntity();
-            entity.Attributes.SetValue("TestValue", 7777, typeof(SampleContext));
-            entity.AttributeValues.Keys.Should().HaveCount(1);
-
-            var key = entity.AttributeValues.Keys.First();
-            key.Should().Be(typeof(SampleContext).Namespace + "-TestValue");
-        }
-
-        [Fact(DisplayName = "Can Receive value Scoped to Context")]
-        public void CanReceiveValue_ScopedToContext()
-        {
-            var entity = new DynamicEntity();
-            entity.Attributes.SetValue("TestValue", 7777, typeof(SampleContext));
-
-            var value = entity.Attributes.GetValue<int>("TestValue", typeof(SampleContext));
-            Assert.Equal(7777, value);
-        }
-
         [Fact(DisplayName = "Calling Method Name used when name not specified")]
         public void CallingMethodNameUsed_WhenNameNotSpecified()
         {
@@ -111,15 +90,6 @@ namespace CommonTests.Base.Entity
 
             entity.AttributeValues.Should().HaveCount(1);
             entity.AttributeValues.First().Key.Should().Be("ValueWithNoName");
-        }
-
-        [Fact(DisplayName = "Context Scoped value not present Default Value used")]
-        public void ContextScopedValueNotPresent_DefaultValueUsed()
-        {
-            var entity = new DynamicEntity();
-
-            var value = entity.Attributes.GetValueOrDefault("TestValue", 8000, typeof(SampleContext));
-            value.Should().Be(8000);
         }
     }
 

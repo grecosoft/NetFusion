@@ -18,6 +18,7 @@ using NetFusion.RabbitMQ.Plugin.Configs;
 using NetFusion.RabbitMQ.Subscriber.Internal;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
+
 [assembly: InternalsVisibleTo("IntegrationTests")]
 namespace NetFusion.RabbitMQ.Plugin.Modules
 {
@@ -167,7 +168,16 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
 
             MonitorConnection(conn, bus);
         }
-
+        
+        /// <summary>
+        /// Factory method used to return an IBus implementation.  Default to EasyNetQ but can also
+        /// be used to provided a mock during unit testing.
+        /// </summary>
+        protected Func<ConnectionConfiguration, IBus> BusFactory { get; set; } = c => RabbitHutch.CreateBus(c, rs =>
+        {
+            rs.Register<IConsumerErrorStrategy>(new ConsumerErrorStrategy());
+        });
+        
         private void MonitorConnection(BusConnection conn, IBus bus)
         {
             if (bus.Advanced == null) return;
@@ -192,15 +202,7 @@ namespace NetFusion.RabbitMQ.Plugin.Modules
             };
         }
 
-        /// <summary>
-        /// Factory method used to return an IBus implementation.  Default to EasyNetQ but can also
-        /// be used to provided a mock during unit testing.
-        /// </summary>
-        protected Func<ConnectionConfiguration, IBus> BusFactory = c => RabbitHutch.CreateBus(c, rs =>
-        {
-            rs.Register<IConsumerErrorStrategy>(new ConsumerErrorStrategy());
-        });
-
+        
         // Additional client properties associated with created connections.
         private void SetAdditionalClientProperties(IDictionary<string, object> clientProps)
         {

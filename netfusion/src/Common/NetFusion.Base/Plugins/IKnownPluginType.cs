@@ -1,8 +1,8 @@
 ﻿namespace NetFusion.Base.Plugins
 {
     /// <summary>
-    /// A marker interface used to identify types within a plug-in
-    /// that can be implemented by types within other plug-ins.
+    /// A marker interface used to identify types within a plugin that
+    /// can be implemented by concrete types within other plugins.
     /// </summary>
     public interface IKnownPluginType
     {

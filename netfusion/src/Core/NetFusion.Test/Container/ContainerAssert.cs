@@ -47,7 +47,7 @@ namespace NetFusion.Test.Container
         
         //-- Composite Application Assertions:
         
-        // <summary>
+        /// <summary>
         /// Allows the unit-test to assert the state of the builder that was used
         /// to construct the ICompositeApp.
         /// </summary>
@@ -62,6 +62,17 @@ namespace NetFusion.Test.Container
             _fixture.AssureContainerComposed();
             
             assert(_fixture.GetOrBuildContainer().AppBuilder);
+            return this;
+        }
+        
+        public ContainerAssert CompositeContainer(Action<CompositeContainer> assert)
+        {
+            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+                "Assert method not specified.");
+
+            _fixture.AssureContainerComposed();
+            
+            assert(_fixture.GetOrBuildContainer());
             return this;
         }
 
@@ -251,7 +262,7 @@ namespace NetFusion.Test.Container
         /// <summary>
         /// Creates service instance from the container that can be asserted.
         /// </summary>
-        /// <param name="assert">Method passed the service instance to assert.
+        /// <param name="assert">Method passed the service instance to assert.</param>
         /// <typeparam name="T">The service Type.</typeparam>
         /// <returns>Self referenced within a pending task.</returns>
         public async Task<ContainerAssert> ServiceAsync<T>(Func<T, Task> assert)

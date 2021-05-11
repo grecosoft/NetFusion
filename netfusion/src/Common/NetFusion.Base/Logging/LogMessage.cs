@@ -9,28 +9,33 @@ namespace NetFusion.Base.Logging
     /// </summary>
     public class LogMessage
     {
-        private LogMessage() { }
+        private readonly List<LogProperty> _logProperties = new();
+
+        private LogMessage()
+        {
+            Properties = _logProperties.AsReadOnly();
+        }
         
         /// <summary>
         /// The log level associated with the message.
         /// </summary>
-        public LogLevel LogLevel { get; private set; }
+        public LogLevel LogLevel { get; private init; }
         
         /// <summary>
         /// Log message template containing optional argument values.
         /// </summary>
-        public string Message { get; private set; }
+        public string Message { get; private init; }
         
         /// <summary>
         /// Optional argument values replaced in the message template.
         /// </summary>
-        public object[] Args { get; private set; }
+        public object[] Args { get; private init; }
 
         /// <summary>
         /// Set of properties associated with the message used to write
         /// structured event messages.
         /// </summary>
-        public List<LogProperty> Properties { get; } = new List<LogProperty>();
+        public IReadOnlyCollection<LogProperty> Properties { get; }
 
         /// <summary>
         /// 
@@ -61,7 +66,7 @@ namespace NetFusion.Base.Logging
         {
             if (properties == null) throw new ArgumentNullException(nameof(properties));
             
-            Properties.AddRange(properties);
+            _logProperties.AddRange(properties);
             return this;
         }
     }

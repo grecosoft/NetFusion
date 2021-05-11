@@ -19,8 +19,7 @@ namespace NetFusion.Test.Container
         }
         
         /// <summary>
-        /// Configures the configuration-builder with settings required for
-        /// the container under-test.
+        /// Configures the configuration-builder with settings required for the container under-test.
         /// </summary>
         /// <param name="arrange">Delegate passed the configuration builder to be initialized.</param>
         /// <returns>Self Reference</returns>
@@ -39,8 +38,7 @@ namespace NetFusion.Test.Container
         }
         
         /// <summary>
-        /// Configures the composite-container with a known set of plugins
-        /// pertaining to the unit-test.
+        /// Configures the composite-container with a known set of plugins pertaining to the unit-test.
         /// </summary>
         /// <param name="arrange">Method passed the application container under test.</param>
         /// <returns>Self Reference</returns>
@@ -57,10 +55,17 @@ namespace NetFusion.Test.Container
             arrange(_fixture.GetOrBuildContainer());
             return this;
         }
+
+        public ContainerArrange State(Action arrange)
+        {
+            if (arrange == null) throw new ArgumentNullException(nameof(arrange));
+            
+            arrange();
+            return this;
+        }
         
         /// <summary>
-        /// Initializes a plugin configuration required for the container
-        /// objects under test. 
+        /// Initializes a plugin configuration required for the container objects under test. 
         /// </summary>
         /// <param name="arrange">Delegate passed the plugin configuration.</param>
         /// <typeparam name="TConfig"></typeparam>
@@ -98,12 +103,12 @@ namespace NetFusion.Test.Container
         /// <summary>
         /// Allows the unit-test to act on the test-fixture under test.
         /// </summary>
-        public ContainerAct Act => new ContainerAct(_fixture);
+        public ContainerAct Act => new(_fixture);
     
         /// <summary>
         /// Allows the unit-test to assert on the state of the acted on test-fixture.
         /// </summary>
-        public ContainerAssert Assert => new ContainerAssert(_fixture);
+        public ContainerAssert Assert => new(_fixture);
     }
 }
 

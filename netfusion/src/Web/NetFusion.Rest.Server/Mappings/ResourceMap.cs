@@ -29,10 +29,13 @@ namespace NetFusion.Rest.Server.Mappings
             OnBuildResourceMap();
         }
 
+        /// <summary>
+        /// Overridden by derived class to specify metadata associated returned resources. 
+        /// </summary>
         protected abstract void OnBuildResourceMap();
 
         /// <summary>
-        /// Add an item containing metadata for a specific source type.
+        /// Adds an item containing metadata for a specific source type.
         /// </summary>
         /// <param name="resourceMeta">The resource metadata configured by derived map.</param>
         protected void AddResourceMeta(IResourceMeta resourceMeta)

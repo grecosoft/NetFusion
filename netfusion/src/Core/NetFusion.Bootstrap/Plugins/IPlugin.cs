@@ -22,7 +22,7 @@ namespace NetFusion.Bootstrap.Plugins
         PluginTypes PluginType { get; }    
         
         /// <summary>
-        /// Unique name identifying the plugin.
+        /// Short name identifying the plugin.
         /// </summary>
         string Name { get; }
 

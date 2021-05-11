@@ -25,6 +25,13 @@ namespace NetFusion.Redis.Subscriber.Internal
             var channelAttrib = dispatchInfo.MessageHandlerMethod
                 .GetCustomAttribute<ChannelSubscriptionAttribute>();
 
+            if (channelAttrib == null)
+            {
+                throw new NullReferenceException($"{nameof(ChannelSubscriptionAttribute)} not found on method " + 
+                    "named: {dispatchInfo.MessageHandlerMethod.Name} of " + 
+                    "type {dispatchInfo.MessageHandlerMethod.DeclaringType.FullName}");
+            }
+
             DispatchInfo = dispatchInfo;
             DatabaseName = channelAttrib.DatabaseName;
             Channel = channelAttrib.Channel;

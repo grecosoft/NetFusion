@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using NetFusion.Common.Extensions.Collections;
 using Xunit;
 
@@ -6,7 +7,7 @@ namespace CommonTests.Extensions.Collections
 {
     public class SetTests
     {
-        [Fact(DisplayName = nameof(GivenSingleValue_DetermineInSet))]
+        [Fact]
         public void GivenSingleValue_DetermineInSet()
         {
             const int value = 6;
@@ -15,12 +16,19 @@ namespace CommonTests.Extensions.Collections
             value.InSet(55, 99).Should().BeFalse();
         }
 
-        [Fact (DisplayName = nameof(GivenValues_DetermineAnyInSet))]
+        [Fact]
         public void GivenValues_DetermineAnyInSet()
         {
             var values = new[] { 3, 10, 34, 77 };
             values.ContainsAny(10, 34).Should().BeTrue();
             values.ContainsAny(55).Should().BeFalse();
+        }
+
+        [Fact]
+        public void GivenValues_AndComparer_DetermineAnyInSet()
+        {
+            var values = new[] {"Value1", "VALUE2", "value3"};
+            values.ContainsAny(StringComparer.OrdinalIgnoreCase, "value2").Should().BeTrue();
         }
     }
 }

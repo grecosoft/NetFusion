@@ -36,8 +36,7 @@ namespace NetFusion.RabbitMQ.Plugin
         public CreatedExchange GetExchange(Type messageType);
 
         /// <summary>
-        /// Return the configured RPC client to use when sending RPC style
-        /// commands on a specified queue.
+        /// Return the configured RPC client to use when sending RPC style commands on a specified queue.
         /// </summary>
         /// <param name="busName">The bus name key used to lookup connection.</param>
         /// <param name="queueName">The name of the queue used to submit RPC style messages.</param>

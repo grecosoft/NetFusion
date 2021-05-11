@@ -117,6 +117,36 @@ namespace NetFusion.Test.Container
             return this;
         }
         
+        /// <summary>
+        /// Allows an unit-test to act on composite-container under test.
+        /// </summary>
+        /// <param name="act">Method passed the instance of the composite-container
+        /// under test to be acted on by the unit-test.</param>
+        /// <returns>Self Reference</returns>
+        public ContainerAct OnCompositeContainer(Action<CompositeContainer> act)
+        {
+            if (_actedOn)
+            {
+                throw new InvalidOperationException("The container can only be acted on once.");
+            }
+
+            _actedOn = true;
+            try
+            {
+                act(_container);
+            }
+            catch (Exception ex)
+            {
+                _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
+            }
+
+            return this;
+        }
+        
         
         //-- Service Provider Assertions:
 
@@ -281,8 +311,6 @@ namespace NetFusion.Test.Container
         /// After acting on the container under test, the unit-test can call methods on this
         /// property to assert its state.
         /// </summary>
-        public ContainerAssert Assert => new ContainerAssert(_fixture, _container, 
-            _serviceProvider, 
-            _resultingException);
+        public ContainerAssert Assert => new (_fixture, _container, _serviceProvider, _resultingException);
     }
 }

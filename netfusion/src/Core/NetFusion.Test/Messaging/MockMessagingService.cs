@@ -11,17 +11,17 @@ namespace NetFusion.Test.Messaging
     /// <summary>
     /// Implementation of the IMessagingService that can be passed to a dependent component that is
     /// under test.  This mock implementation allows known expected response to be registered for
-    /// commands.  Also, the received Command, Queries, and Domain events are recorded so they can
+    /// commands.  Also, the received Commands, Queries, and Domain events are recorded so they can
     /// be asserted by the unit-test if needed.
     /// </summary>
     public class MockMessagingService : IMessagingService
     {
         // Records the received requests made to the service:
-        private readonly List<object> _receivedRequests = new List<object>();
+        private readonly List<object> _receivedRequests = new();
         
         // Contains known responses for commands and queries.
-        private readonly Dictionary<Type, object> _commandResponses = new Dictionary<Type, object>();
-        private readonly Dictionary<Type, object> _queryResponses = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object> _commandResponses = new();
+        private readonly Dictionary<Type, object> _queryResponses = new();
         
         /// <summary>
         /// Contains all the received requests (Commands, Domain Events, and Queries).  This collection
@@ -106,9 +106,9 @@ namespace NetFusion.Test.Messaging
         
         //-- Mocked Implementation of IMessagingServices:
         
-        Task IMessagingService.SendAsync(ICommand command, 
-            CancellationToken cancellationToken,
-            IntegrationTypes integrationType)
+        Task IMessagingService.SendAsync(ICommand command,
+            IntegrationTypes integrationType,
+            CancellationToken cancellationToken)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
             
@@ -116,9 +116,9 @@ namespace NetFusion.Test.Messaging
             return Task.CompletedTask;
         }
 
-        Task<TResult> IMessagingService.SendAsync<TResult>(ICommand<TResult> command, 
-            CancellationToken cancellationToken,
-            IntegrationTypes integrationType)
+        Task<TResult> IMessagingService.SendAsync<TResult>(ICommand<TResult> command,
+            IntegrationTypes integrationType,
+            CancellationToken cancellationToken)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
             
@@ -128,9 +128,9 @@ namespace NetFusion.Test.Messaging
             return Task.FromResult((TResult)response);
         }
 
-        Task IMessagingService.PublishAsync(IDomainEvent domainEvent, 
-            CancellationToken cancellationToken,
-            IntegrationTypes integrationType)
+        Task IMessagingService.PublishAsync(IDomainEvent domainEvent,
+            IntegrationTypes integrationType,
+            CancellationToken cancellationToken)
         {
             if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
             
@@ -138,9 +138,9 @@ namespace NetFusion.Test.Messaging
             return Task.CompletedTask;
         }
         
-        Task IMessagingService.PublishAsync(IEventSource eventSource, 
-            CancellationToken cancellationToken,
-            IntegrationTypes integrationType)
+        Task IMessagingService.PublishAsync(IEventSource eventSource,
+            IntegrationTypes integrationType,
+            CancellationToken cancellationToken)
         {
             if (eventSource == null) throw new ArgumentNullException(nameof(eventSource));
             

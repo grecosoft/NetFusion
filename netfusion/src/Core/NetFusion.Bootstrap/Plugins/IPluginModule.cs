@@ -22,14 +22,14 @@ namespace NetFusion.Bootstrap.Plugins
         
         /// <summary>
         /// The properties corresponding to references to other service modules automatically
-        /// set when a plugin module is bootstrapped.
+        /// set when a plugin module is bootstrapped. 
         /// </summary>
         public PropertyInfo[] DependentServiceModules { get; set; }
         
         /// <summary>
         /// These are all the properties defined as an enumeration of IKnownPlugin.  These
         /// properties are automatically set to a collection of class instances implementing
-        /// the derived IKnownPlugin interface.
+        /// the derived IKnownPlugin interface.  This property is used only for logging.
         /// </summary>
         public IDictionary<PropertyInfo, Tuple<Type, Type[]>> KnownTypeProperties { get; set; }
 
@@ -62,10 +62,10 @@ namespace NetFusion.Bootstrap.Plugins
         /// Allows the plug-in to scan for types to be registered with the service collection.
         /// </summary>
         /// <param name="catalog">Reference to a catalog used to filter types to be registered.
-        /// The types contained within the catalog are based on the plugin type.  Core plugins,
+        /// The types contained within the catalog are based on the plugin type.  Core plugins
         /// can scan types contained within all plugins.  Whereas application centric plugins are
         /// limited to scanning types contained within application plugins. </param>
-        void ScanPlugins(ITypeCatalog catalog);
+        void ScanForServices(ITypeCatalog catalog);
 
         /// <summary>
         /// Allows the plug-in to register specific types as services within the service collection.

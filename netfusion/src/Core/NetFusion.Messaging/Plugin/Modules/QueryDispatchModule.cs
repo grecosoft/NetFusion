@@ -8,6 +8,7 @@ using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Internal;
+using NetFusion.Messaging.Plugin.Configs;
 
 namespace NetFusion.Messaging.Plugin.Modules
 {
@@ -20,11 +21,15 @@ namespace NetFusion.Messaging.Plugin.Modules
     {
         private IDictionary<Type, QueryDispatchInfo> _queryDispatchers; // QueryType => DispatchInfo
 
+        public QueryDispatchConfig DispatchConfig { get; private set; }
+        
         // ---------------------- [Plugin Initialization] ----------------------
         
         // Create dictionary used to resolve how a query type is dispatched.  
         public override void Initialize()
         {
+            DispatchConfig = Context.Plugin.GetConfig<QueryDispatchConfig>();
+            
             var queryHandlers = Context.AllPluginTypes
                 .WhereQueryConsumer()
                 .SelectQueryHandlers()
@@ -37,7 +42,7 @@ namespace NetFusion.Messaging.Plugin.Modules
         }       
 
         // Registers all the query consumers within the service collection.
-        public override void ScanPlugins(ITypeCatalog catalog)
+        public override void ScanForServices(ITypeCatalog catalog)
         {
             catalog.AsSelf(
                 t => t.IsConcreteTypeDerivedFrom<IQueryConsumer>(),

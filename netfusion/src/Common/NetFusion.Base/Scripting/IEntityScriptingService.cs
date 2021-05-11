@@ -11,8 +11,7 @@ namespace NetFusion.Base.Scripting
     {
         /// <summary>
         /// Loads the entity scripting service with a list of scripts.
-        /// The implementation should pre-compile the expressions upon 
-        /// first use.
+        /// The implementation should pre-compile the expressions upon first use.
         /// </summary>
         /// <param name="scripts">List of entity associated scripts.</param>
         void Load(IEnumerable<EntityScript> scripts);

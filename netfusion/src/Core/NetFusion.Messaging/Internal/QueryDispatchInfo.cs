@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using NetFusion.Common.Extensions.Reflection;
-using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Internal
@@ -134,16 +133,12 @@ namespace NetFusion.Messaging.Internal
                 var invokeEx = ex as TargetInvocationException;
                 var sourceEx = ex;
 
-                if (invokeEx != null)
+                if (invokeEx?.InnerException != null)
                 {
                     sourceEx = invokeEx.InnerException;
                 }
 
-                var dispatchEx = new QueryDispatchException("Exception Dispatching Query to Consumer.",
-                    this,
-                    sourceEx);
-
-                taskSource.SetException(dispatchEx);
+                taskSource.SetException(sourceEx);
             }
 
             return await taskSource.Task.ConfigureAwait(false);

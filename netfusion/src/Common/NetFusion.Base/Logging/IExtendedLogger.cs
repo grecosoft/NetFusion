@@ -42,14 +42,13 @@ namespace NetFusion.Base.Logging
         void Log<TContext>(NetFusionException ex, LogMessage message);
         
         /// <summary>
-        /// Writes log message containing options set of arguments.
+        /// Writes log message containing optional set of arguments.
         /// </summary>
         /// <param name="logLevel">Associated log level.</param>
         /// <param name="message">The message template to log.</param>
         /// <param name="args">Optional message template argument values.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
-        void Log<TContext>(LogLevel logLevel, string message, 
-            params object[] args);
+        void Log<TContext>(LogLevel logLevel, string message, params object[] args);
         
         /// <summary>
         /// Writes log message containing set of arguments and a detailed child log property.
@@ -59,8 +58,7 @@ namespace NetFusion.Base.Logging
         /// <param name="details">Details stored as a log property.</param>
         /// <param name="args">Optional message template argument values.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
-        void LogDetails<TContext>(LogLevel logLevel, string message, object details, 
-            params object[] args);
+        void LogDetails<TContext>(LogLevel logLevel, string message, object details, params object[] args);
 
         /// <summary>
         /// Writes an error message containing set of arguments for an exception.
@@ -69,29 +67,25 @@ namespace NetFusion.Base.Logging
         /// <param name="message">The message template to log.</param>
         /// <param name="args">Optional message template argument values.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
-        void LogError<TContext>(Exception ex, string message, 
-            params object[] args);
+        void LogError<TContext>(Exception ex, string message, params object[] args);
 
         /// <summary>
-        /// Writes an error message containing set of arguments for an exception.
+        /// Writes an error message containing set of arguments for an exception with details.
         /// </summary>
         /// <param name="ex">The exception to be logged.</param>
         /// <param name="message">The message template to log.</param>
         /// <param name="details">Details stored as a log property.</param>
         /// <param name="args">Optional message template argument values.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
-        void LogErrorDetails<TContext>(Exception ex, string message, object details, 
-            params object[] args);
+        void LogErrorDetails<TContext>(Exception ex, string message, object details, params object[] args);
         
         /// <summary>
         /// Writes an error message containing set of arguments for an exception.
         /// </summary>
         /// <param name="ex">The exception to be logged.</param>
         /// <param name="message">The message template to log.</param>
-        /// <param name="details">Details stored as a log property.</param>
         /// <param name="args">Optional message template argument values.</param>
         /// <typeparam name="TContext">Namespace associated with log message.</typeparam>
-        void LogError<TContext>(NetFusionException ex, string message, 
-            params object[] args);
+        void LogError<TContext>(NetFusionException ex, string message, params object[] args);
     }
 }

@@ -13,7 +13,6 @@ using NetFusion.Serialization;
 // ReSharper disable MethodHasAsyncOverload
 namespace NetFusion.Test.Container
 {
-
     /// <summary>
     /// Test fixture for arranging, acting, and asserting a test instance of the
     /// application container.
@@ -25,10 +24,10 @@ namespace NetFusion.Test.Container
         internal IServiceCollection ServiceOverrides { get; }
         
         // The collection of services populated by the composite application. 
-        internal IServiceCollection ComposedServices { get; private set; }
+        internal IServiceCollection ComposedServices { get; private init; }
         
-        internal IConfigurationBuilder ConfigBuilder { get; private set; }
-        internal ITypeResolver Resolver { get; private set; }
+        internal IConfigurationBuilder ConfigBuilder { get; private init; }
+        internal ITypeResolver Resolver { get; private init; }
         
         // Reference to the composite-container in which plugins are registered
         // and responsible for composing the plugins into a ICompositeApp that
@@ -81,7 +80,7 @@ namespace NetFusion.Test.Container
 
         private static ContainerFixture CreateFixture(ITypeResolver resolver)
         {
-            return new ContainerFixture
+            return new()
             {
                 Resolver = resolver,
                 ConfigBuilder = new ConfigurationBuilder(),
@@ -174,6 +173,6 @@ namespace NetFusion.Test.Container
         /// <summary>
         /// Allows the unit-test to arrange the test fixture under test.  
         /// </summary>
-        public ContainerArrange Arrange => new ContainerArrange(this);
+        public ContainerArrange Arrange => new(this);
     }
 }

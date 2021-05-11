@@ -76,7 +76,7 @@ namespace NetFusion.Rest.Docs.Plugin
             httpMethod = null;
             relativeDocPath = null;
             
-            string path = context.Request.Path.Value;
+            string path = context.Request.Path.Value ?? string.Empty;
             if (! path.Equals(_docModule.RestDocConfig.EndpointUrl, StringComparison.OrdinalIgnoreCase))
             {
                 return false;

@@ -27,7 +27,7 @@ namespace NetFusion.Bootstrap.Plugins
         ///                      - This plugin assembly should only reference the assembly of the domain
         ///                          plugin.
         /// </summary>
-        ApplicationPlugin = 2,
+        AppPlugin = 2,
         
         /// <summary>
         /// Core plugins contain reusable and crosscutting implementations that can optionally

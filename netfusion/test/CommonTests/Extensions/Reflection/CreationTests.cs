@@ -10,14 +10,14 @@ namespace CommonTests.Extensions.Reflection
 {
     public class CreationTests
     {
-        [Fact (DisplayName = "Given type can determine if Instance can be Created")]
+        [Fact]
         public void GivenType_CanDetermineIf_InstanceCanBeCreated()
         {
             typeof(TestTypeOne).IsCreatableClassType().Should().BeTrue();
             typeof(TestTypeTwo).IsCreatableClassType().Should().BeFalse();
         }
 
-        [Fact(DisplayName = "Given type can Create Instance")]
+        [Fact]
         public void GivenType_CanCreateInstance()
         {
             var value = typeof(string).CreateInstance('a', 7);
@@ -25,7 +25,7 @@ namespace CommonTests.Extensions.Reflection
             value.Should().Be(new string('a', 7));
         }
 
-        [Fact(DisplayName = nameof(GivenListOfTypes_CanCreateInstances_DerivingFromType))]
+        [Fact]
         public void GivenListOfTypes_CanCreateInstances_DerivingFromType()
         {
             // Note:  Passing TestTypeOne twice to assure one instance is returned.

@@ -29,10 +29,10 @@ namespace NetFusion.Bootstrap.Container
             if (plugin == null) throw new ArgumentNullException(nameof(plugin));
             
             Assembly assembly = plugin.GetType().Assembly;
-            
+
             plugin.SetPluginMeta(
-                assembly.FullName, 
-                assembly.GetName().Version?.ToString() ?? "",
+                assembly.FullName,
+                assembly.GetName().Version?.ToString() ?? string.Empty,
                 assembly.GetExportedTypes());
         }
 
@@ -82,7 +82,7 @@ namespace NetFusion.Bootstrap.Container
             knownTypeProperty.SetValue(module, array);
         }
 
-        // Record the discovered properties to it can be logged later.
+        // Record the discovered properties for logging.
         private static void RecordKnowProperties(IPluginModule module, PropertyInfo knownTypeProperty, 
             Type knownType, 
             IEnumerable<object> discoveredInstances)

@@ -26,7 +26,7 @@ namespace NetFusion.Rest.Server.Meta
         /// </summary>
         public IReadOnlyCollection<ResourceLink> Links { get; }
 
-        private readonly List<ResourceLink> _links = new List<ResourceLink>();
+        private readonly List<ResourceLink> _links = new();
 
         protected ResourceMeta()
         {
@@ -36,7 +36,7 @@ namespace NetFusion.Rest.Server.Meta
         /// <summary>
         /// Returns link metadata class used to specify controller action methods.
         /// </summary>
-        /// <typeparam name="TController">The controller type so select action method from.</typeparam>
+        /// <typeparam name="TController">The controller type to select action method from.</typeparam>
         /// <param name="meta">Method delegate passed metadata class used to define link metadata.</param>
         /// <returns>Reference to self for method chaining.</returns>
         public TResourceMeta LinkMeta<TController>(Action<ResourceLinkMeta<TController, TSource>> meta)
@@ -97,8 +97,7 @@ namespace NetFusion.Rest.Server.Meta
 
             // This constraint is required since out-bound links will be generated. When generating a link,
             // by delegating to ASP.NET core, the controller name, action name, and route values are specified.
-            // The HTTP method is not taken into account since it is provided when called - but to generate an
-            // out-bound link we need to know the method.
+            // The HTTP method is not taken into account since it is provided when called.
             if (duplicateActionNames.Any())
             {
                 throw new InvalidOperationException(

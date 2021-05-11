@@ -36,7 +36,7 @@ namespace NetFusion.Messaging.Filters
 
         private static bool IsAttributedResult(object resultItem)
         {
-            return resultItem.GetType().IsDerivedFrom<IAttributedEntity>();
+            return resultItem.GetType().CanAssignTo<IAttributedEntity>();
         }
 
         private static IEnumerable<object> GetQueryResults(IQuery query)

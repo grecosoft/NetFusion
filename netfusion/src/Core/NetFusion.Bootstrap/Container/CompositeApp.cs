@@ -26,7 +26,7 @@ namespace NetFusion.Bootstrap.Container
         public static ICompositeApp Instance { get; private set; }
         public bool IsStarted { get; private set; }
         
-        // Reference to the builder details that constructed this composite-application.
+        // Reference to the builder details that constructed the composite-application.
         private readonly ICompositeAppBuilder _builder;
         
         // The service-provider associated with the application created from the
@@ -107,26 +107,33 @@ namespace NetFusion.Bootstrap.Container
             // and ending with the application host modules.
             IsStarted = true;
 
-            // Allow each module context to be initialized with the singleton logging
-            // services only available after the service-provider has been created.
+            // Now that the service-provider has been created, initialize each
+            // module so it can use ILoggerFactory to obtain a logger.
             foreach (IPluginModule module in _builder.AllModules)
             {
                 module.Context.InitLogging(services);
             }
-     
-            var coreStartTask = StartPluginModules(services, _builder.CorePlugins);
-            var appStartTask = StartPluginModules(services, _builder.AppPlugins);
-            var hostStartTask = StartPluginModules(services, _builder.HostPlugin);
 
-            await Task.WhenAll(coreStartTask, appStartTask, hostStartTask);
+            var startTasks = StartPlugins(services);
+            await Task.WhenAll(startTasks);
             
             _logger.LogInformation("All Modules Started");
 
             // Last phase to allow any modules to execute any processing that
             // might be dependent on another module being started.
-            await RunPluginModules(services);
+            var runTasks = RunPlugins(services);
+            await Task.WhenAll(runTasks);
             
             _logger.LogInformation("All Modules Ran");
+        }
+
+        private Task[] StartPlugins(IServiceProvider services)
+        {
+            var coreStartTask = StartPluginModules(services, _builder.CorePlugins);
+            var appStartTask = StartPluginModules(services, _builder.AppPlugins);
+            var hostStartTask = StartPluginModules(services, _builder.HostPlugin);
+
+            return new[] {coreStartTask, appStartTask, hostStartTask};
         }
 
         private async Task StartPluginModules(IServiceProvider services, params IPlugin[] plugins)
@@ -144,15 +151,27 @@ namespace NetFusion.Bootstrap.Container
             }
         }
 
-        private async Task RunPluginModules(IServiceProvider services)
+        private Task[] RunPlugins(IServiceProvider services)
         {
-            foreach (IPluginModule module in _builder.AllModules)
+            var coreRunTask = RunPluginModules(services, _builder.CorePlugins);
+            var appRunTask = RunPluginModules(services, _builder.AppPlugins);
+            var hostRunTask = RunPluginModules(services, _builder.HostPlugin);
+
+            return new[] {coreRunTask, appRunTask, hostRunTask};
+        }
+
+        private async Task RunPluginModules(IServiceProvider services, params IPlugin[] plugins)
+        {
+            foreach (IPlugin plugin in plugins)
             {
-                _logger.LogDebug("Running Module: {moduleType} for Plugin: {pluginName}", 
-                    module.GetType().Name, 
-                    module.Context.Plugin.Name);
+                foreach (IPluginModule module in plugin.Modules)
+                {
+                    _logger.LogDebug("Running Module: {moduleType} for Plugin: {pluginName}", 
+                        module.GetType().Name, 
+                        module.Context.Plugin.Name);
                 
-                await module.RunModuleAsync(services);
+                    await module.RunModuleAsync(services);
+                }
             }
         }
 

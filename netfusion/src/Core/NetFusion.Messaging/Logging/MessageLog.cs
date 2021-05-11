@@ -5,7 +5,7 @@ using NetFusion.Messaging.Types.Contracts;
 namespace NetFusion.Messaging.Logging
 {
     /// <summary>
-    /// Defines the content in which the messages log is being generated.
+    /// Defines the context of the message..
     /// </summary>
     public enum LogContextType
     {
@@ -83,7 +83,7 @@ namespace NetFusion.Messaging.Logging
         /// </summary>
         /// <param name="name">The name of the associated value.</param>
         /// <param name="exception">The exception to be logged.</param>
-        public void AddLogError(string name, Exception exception) => _logErrors[name] = exception?.ToString();
+        public void AddLogError(string name, Exception exception) => _logErrors[name] = exception.ToString();
 
         /// <summary>
         /// Adds exception as a log error message.
@@ -102,7 +102,7 @@ namespace NetFusion.Messaging.Logging
             Hint = value;
         }
         
-        private readonly Dictionary<string, string> _logDetails = new Dictionary<string, string>();
-        private readonly Dictionary<string, string> _logErrors = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _logDetails = new();
+        private readonly Dictionary<string, string> _logErrors = new();
     }
 }

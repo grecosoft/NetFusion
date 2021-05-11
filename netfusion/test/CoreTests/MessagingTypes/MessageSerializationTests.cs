@@ -5,8 +5,7 @@ using NetFusion.Messaging.Types.Attributes;
 using NetFusion.Serialization;
 using Xunit;
 
-// ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
-// ReSharper disable ClassNeverInstantiated.Local
+// ReSharper disable All
 
 namespace CoreTests.MessagingTypes
 {

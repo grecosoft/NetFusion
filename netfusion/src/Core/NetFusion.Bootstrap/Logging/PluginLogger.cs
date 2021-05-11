@@ -16,7 +16,7 @@ namespace NetFusion.Bootstrap.Logging
         /// <summary>
         /// Creates a log message for each plug-in and adds details pertaining to the plug-in as log properties.  
         /// </summary>
-        /// <param name="plugins">List of plugins from which the composite application is composed.</param>
+        /// <param name="plugin">Plugin from which the composite application is composed.</param>
         /// <param name="services">Reference to the dependency-injection service collection.</param>
         public static LogMessage Log(IPlugin plugin, IServiceCollection services)
         {
@@ -59,8 +59,7 @@ namespace NetFusion.Bootstrap.Logging
             }).ToDictionary(i => i.Name);
 
             logMessage.WithProperties(
-                new LogProperty { Name = "Modules", Value = moduleLogs
-            });
+                new LogProperty { Name = "Modules", Value = moduleLogs});
         }
 
         private static void LogDependentModules(IDictionary<string, object> values, IPluginModule module)
@@ -73,7 +72,7 @@ namespace NetFusion.Bootstrap.Logging
             values["DependentModules"] = dependencies.ToArray();
         }
 
-        private static void LogKnownTypeProperties(IDictionary<string, object> values, IPluginModule module)
+        public static void LogKnownTypeProperties(IDictionary<string, object> values, IPluginModule module)
         {
             var discoveredProps = module.KnownTypeProperties.Select(kt => new
             {
@@ -92,7 +91,7 @@ namespace NetFusion.Bootstrap.Logging
             LogPluginRegistrations(plugin, services, serviceLog);
             
             logMessage.WithProperties(new LogProperty {
-                Name = "Service", 
+                Name = "RegisteredServices", 
                 Value = serviceLog
             });
         }

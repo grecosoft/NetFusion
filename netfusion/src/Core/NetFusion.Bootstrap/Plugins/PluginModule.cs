@@ -9,7 +9,7 @@ namespace NetFusion.Bootstrap.Plugins
 {
     /// <summary>
     /// One or more modules are defined by a plugin to organize their implementation. 
-    /// This includes the registering of types within the dependency-injection container, 
+    /// This includes the registering of services  within the dependency-injection container, 
     /// the discovering of known-type implementations, and the execution of any needed
     /// logic upon startup and shutdown.
     /// </summary>
@@ -63,7 +63,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// The types contained within the catalog are based on the plugin's type.  Core plugins,
         /// can scan types contained within all plugins.  Whereas application centric plugins are
         /// limited to scanning types contained within application plugins. </param>
-        public virtual void ScanPlugins(ITypeCatalog catalog)
+        public virtual void ScanForServices(ITypeCatalog catalog)
         {
         }
 
@@ -77,17 +77,32 @@ namespace NetFusion.Bootstrap.Plugins
         {
         }
 
-        public Task StartModuleAsync(IServiceProvider services)
+        /// <summary>
+        /// Method called on the module by the bootstrap process.  Called after all types have been
+        /// registered and the composite application has been created.
+        /// </summary>
+        /// <param name="services">Scoped service provider.</param>
+        Task IPluginModule.StartModuleAsync(IServiceProvider services)
         {
             return OnStartModuleAsync(services);
         }
 
-        public Task RunModuleAsync(IServiceProvider services)
+        /// <summary>
+        /// Called after all modules have been started.  This method can contain logic that requires
+        /// calling other module provided services that must have already been started.
+        /// </summary>
+        /// <param name="services">Scoped service provider.</param>
+        Task IPluginModule.RunModuleAsync(IServiceProvider services)
         {
             return OnRunModuleAsync(services);
         }
 
-        public Task StopModuleAsync(IServiceProvider services)
+        /// <summary>
+        /// Called when the composite application is stopped.  Allows the module to complete any processing
+        /// before the composite application is stopped.
+        /// </summary>
+        /// <param name="services">Scoped service provider.</param>
+        Task IPluginModule.StopModuleAsync(IServiceProvider services)
         {
             return OnStopModuleAsync(services);
         }

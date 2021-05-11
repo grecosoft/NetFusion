@@ -33,10 +33,10 @@ namespace NetFusion.Bootstrap.Catalog
         }
 
         /// <summary>
-        /// Creates a new type catalog for a given set of plugin types.
+        /// Creates a new type catalog for a given set of types.
         /// </summary>
         /// <param name="services">The service collection delegated to by the created catalog.</param>
-        /// <param name="pluginTypes">The plugin-in types added to the catalog to be filtered.</param>
+        /// <param name="pluginTypes">The types added to the catalog to be filtered.</param>
         /// <returns>Type catalog instance.</returns>
         public static ITypeCatalog CreateCatalog(this IServiceCollection services,
             IEnumerable<Type> pluginTypes)
