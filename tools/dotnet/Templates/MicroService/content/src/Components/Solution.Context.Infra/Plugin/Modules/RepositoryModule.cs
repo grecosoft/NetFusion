@@ -6,7 +6,7 @@ namespace Solution.Context.Infra.Plugin.Modules
 {
     public class RepositoryModule : PluginModule
     {
-        public override void ScanPlugins(ITypeCatalog catalog)
+        public override void ScanForServices(ITypeCatalog catalog)
         {
             catalog.AsImplementedInterface("Repository", ServiceLifetime.Scoped);
         }
