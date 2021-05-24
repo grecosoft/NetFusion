@@ -67,7 +67,7 @@ namespace NetFusion.Azure.ServiceBus.Publisher
         
         internal CreateTopicOptions ToCreateOptions()
         {
-            return new CreateTopicOptions(EntityName)
+            return new(EntityName)
             {
                 MaxSizeInMegabytes = MaxSizeInMegabytes ?? 1024,
                 RequiresDuplicateDetection = RequiresDuplicateDetection ?? false,
@@ -124,7 +124,7 @@ namespace NetFusion.Azure.ServiceBus.Publisher
         /// associated created service bus message.</param>
         public void SetBusMessageProps(Action<ServiceBusMessage, TDomainEvent> action)
         {
-            _busMessageUpdateAction = action;
+            _busMessageUpdateAction = action ?? throw new ArgumentNullException(nameof(action));
         }
         
         public void When(Func<TDomainEvent, bool> applies)

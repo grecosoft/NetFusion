@@ -36,6 +36,8 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
             ConfigureNamespaceSubscriptions(_entitySubscriptions);
         }
         
+        // After building the list of entity subscriptions, invoke each subscription strategy
+        // containing subscription logic specific to the type of entity be subscribed.
         protected override async Task OnStartModuleAsync(IServiceProvider services)
         {
             foreach (EntitySubscription subscription in _entitySubscriptions)
@@ -51,7 +53,7 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
         }
         
         private NamespaceContext GetContext(IServiceProvider services, EntitySubscription entity) =>
-            new NamespaceContext(NamespaceModule, DispatchModule)
+            new(NamespaceModule, DispatchModule)
             {
                 Logger = Context.LoggerFactory.CreateLogger(entity.SubscriptionStrategy.GetType().FullName),
                 Serialization = services.GetRequiredService<ISerializationManager>()
@@ -68,8 +70,10 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
             }
             catch (AggregateException ex)
             {
-                Context.Logger.LogError(ex.Flatten(), "Exception Disposing Service Bus Subscription,");
-                throw;
+                var flattenedEx = ex.Flatten();
+                
+                Context.Logger.LogError(flattenedEx, "Exception Disposing Service Bus Subscription.");
+                throw flattenedEx;
             }
            
         }
@@ -114,7 +118,8 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
             }
         }
         
-        // Returns list of all message consumer handler methods that are to be bound to a queue.
+        // Returns a list of EntitySubscription objects for all message consumer handler methods
+        // that are bound to a queue.
         private IEnumerable<QueueSubscription> GetQueueSubscriptions()
         {
             return GetDispatchersForSubscriptionType<QueueSubscriptionAttribute>()
@@ -128,8 +133,8 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
                 });
         }
 
-        // Returns list of all message consumer handler methods for which a subscription should
-        // be created on a topic.  
+        // Returns list of EntitySubscription objects for all message consumer handler methods
+        // that are bound to a subscription on a specific topic
         private IEnumerable<TopicSubscription> GetTopicSubscriptions()
         {
             return GetDispatchersForSubscriptionType<TopicSubscriptionAttribute>()
@@ -145,7 +150,7 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
         }
 
         // To best utilize Service Bus resources, RPC based Command message are delivered over the same queue
-        // for which the publisher waits for a correlated response.  Multiple commands delivered to the same 
+        // for which the publisher awaits for a correlated response.  Multiple commands delivered to the same 
         // queue are identified by a Message Namespace value.  The message handler tagged with the same Message
         // Namespace value is invoked to process the command.  A service can declare multiple RPC based queues
         // to which sets of related commands are delivered.

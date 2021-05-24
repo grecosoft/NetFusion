@@ -5,8 +5,8 @@ using NetFusion.Azure.ServiceBus.Publisher.Internal;
 namespace NetFusion.Azure.ServiceBus.Publisher.Strategies
 {
     /// <summary>
-    /// Default strategy implementation used for entities with no associated
-    /// Service-Bus entities.
+    /// Default strategy implementation used to reference an entity published
+    /// to but created by another Microservice.
     /// </summary>
     public class NoOpStrategy : IEntityStrategy
     {

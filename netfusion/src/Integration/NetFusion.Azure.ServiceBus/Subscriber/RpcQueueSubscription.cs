@@ -41,8 +41,7 @@ namespace NetFusion.Azure.ServiceBus.Subscriber
 
         private static string GetMessageNamespace(MessageDispatchInfo dispatchInfo)
         {
-            return dispatchInfo.MessageHandlerMethod.GetCustomAttribute<RpcQueueSubscriptionAttribute>()
-                       .MessageNamespace
+            return dispatchInfo.MessageHandlerMethod.GetCustomAttribute<RpcQueueSubscriptionAttribute>()?.MessageNamespace
                    ?? dispatchInfo.MessageType.GetCustomAttribute<MessageNamespaceAttribute>()?.MessageNamespace;
         }
 

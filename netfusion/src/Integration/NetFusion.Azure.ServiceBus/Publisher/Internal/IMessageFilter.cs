@@ -3,8 +3,8 @@ using NetFusion.Messaging.Types.Contracts;
 namespace NetFusion.Azure.ServiceBus.Publisher.Internal
 {
     /// <summary>
-    /// Interface implemented by namespace entities to determine
-    /// a published message should be deleted to the entity.
+    /// Interface implemented by namespace entities to determine a published
+    /// message should be delivered to the entity.
     /// </summary>
     public interface IMessageFilter
     {

@@ -59,6 +59,7 @@ namespace NetFusion.Azure.ServiceBus.Namespaces.Internal
 
         // Indicates that the Service Bus entity will not have messages directly delivered.
         // This is the case for queues that are sent messages forwarded from other queues.
+        // This forwarding happens directly on the Azure Service Bus.
         internal bool IsSecondaryQueue { get; set; }
 
         // Strategies specific to the Entity:

@@ -5,7 +5,7 @@ using NetFusion.Base.Plugins;
 namespace NetFusion.Azure.ServiceBus.Namespaces.Internal
 {
     /// <summary>
-    /// Implementations determine the entities that should be created with a specific namespace.
+    /// Implementations determine the entities that should be created within a specific namespace.
     /// </summary>
     public interface INamespaceRegistry : IKnownPluginType
     {

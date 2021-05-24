@@ -16,7 +16,7 @@ namespace NetFusion.Azure.ServiceBus.Subscriber.Internal
         public string NamespaceName { get; }
         
         /// <summary>
-        /// The name of the Service Bus entity.
+        /// The name of the Service Bus entity to subscribe.
         /// </summary>
         public string EntityName { get; }
 

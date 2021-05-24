@@ -7,7 +7,7 @@ namespace NetFusion.Azure.ServiceBus.Publisher.Internal
 {
     /// <summary>
     /// Optional behavior supported by an entity-strategy used to implement
-    /// any associated custom Service-Bus publish logic.
+    /// any associated custom Service-Bus publishing logic.
     /// </summary>
     public interface IPublishStrategy
     {

@@ -40,7 +40,7 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
         /// </summary>
         /// <param name="dispatchInfo">The information associated with the local message handler.</param>
         /// <param name="messageEventArgs">Information about the message received.</param>
-        /// <returns>Returns messaged deserialized into the message type..</returns>
+        /// <returns>Returns messaged deserialized into the message type.</returns>
         public IMessage DeserializeMessage(MessageDispatchInfo dispatchInfo, 
             ProcessMessageEventArgs messageEventArgs)
         {
@@ -85,7 +85,7 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
         }
 
         /// <summary>
-        /// Common method for logging an message processing errors.
+        /// Common method for logging message processing errors.
         /// </summary>
         /// <param name="eventArgs">Error information about the message being processed.</param>
         public void LogProcessError(ProcessErrorEventArgs eventArgs)

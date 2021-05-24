@@ -23,12 +23,13 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
         IPublisherModule
     {
         // Dependent Modules:
-        public INamespaceModule NamespaceModule { get; private set; }
-        public IMessageDispatchModule DispatchModule { get; private set; }
+        private INamespaceModule NamespaceModule { get; set; }
+        private IMessageDispatchModule DispatchModule { get; set; }
 
         private NamespaceEntity[] _entities;
         
-        // Map between message type and service-bus entity:
+        // Map between message type and service-bus entity to which it is published.
+        // Primary entities are those to which the Microservice publishes messages.
         private Dictionary<Type, NamespaceEntity> _primaryEntities;
 
         public override void Initialize()
@@ -43,8 +44,7 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
             ValidateEntityDependencies();
         }
 
-        // Validate that for each entity specifying a Forwarding queue that the
-        // corresponding entity exists.
+        // Validate each entity specifying a Forwarding secondary queue has been defined,
         private void ValidateEntityDependencies()
         {
             var queues = _entities.OfType<QueueMeta>();
@@ -54,8 +54,8 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
                 .Where(fqn => fqn != null)
                 .Distinct();
 
-            var missingQueues = forwardedQueues.Where(forwardQueueName =>
-                _entities.Count(dq => dq.EntityName == forwardQueueName) == 0)
+            var missingQueues = forwardedQueues.Where(fqn =>
+                _entities.Any(dq => dq.EntityName == fqn) == false)
                 .ToArray();
 
             if (missingQueues.Any())
@@ -70,7 +70,19 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
             await CreateSecondaryEntities();
             await CreatePrimaryEntities(services);
         }
+        
+        // Secondary queues are those to which Azure Service Bus automatically delivers messages.
+        // The Microservice does not directly publish messages to these queues.
+        private async Task CreateSecondaryEntities()
+        {
+            foreach (NamespaceEntity entity in _entities.Where(ne => ne.IsSecondaryQueue))
+            {
+                NamespaceConnection conn = NamespaceModule.GetConnection(entity.NamespaceName);
+                await entity.EntityStrategy.CreateEntityAsync(conn);
+            }
+        }
 
+        // Primary entities are those to which the Microservice publishes messages.
         private async Task CreatePrimaryEntities(IServiceProvider services)
         {
             foreach (NamespaceEntity entity in _primaryEntities.Values)
@@ -81,23 +93,16 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
                 }
                 
                 NamespaceConnection conn = NamespaceModule.GetConnection(entity.NamespaceName);
-
                 await entity.EntityStrategy.CreateEntityAsync(conn);
+                
+                // Since this is a primary entity to which messages will be sent,
+                // create a corresponding Service Bus sender.
                 entity.EntitySender = conn.BusClient.CreateSender(entity.EntityName);
-            }
-        }
-
-        private async Task CreateSecondaryEntities()
-        {
-            foreach (NamespaceEntity entity in _entities.Where(ne => ne.IsSecondaryQueue))
-            {
-                NamespaceConnection conn = NamespaceModule.GetConnection(entity.NamespaceName);
-                await entity.EntityStrategy.CreateEntityAsync(conn);
             }
         }
         
         private NamespaceContext GetContext(IServiceProvider services, NamespaceEntity entity) =>
-            new NamespaceContext(NamespaceModule, DispatchModule)
+            new(NamespaceModule, DispatchModule)
             {
                 Logger = Context.LoggerFactory.CreateLogger(entity.EntityStrategy.GetType().FullName),
                 Serialization = services.GetRequiredService<ISerializationManager>()
@@ -106,13 +111,11 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
 
         protected override async Task OnStopModuleAsync(IServiceProvider services)
         {
-            foreach (NamespaceEntity entity in _primaryEntities.Values)
+            foreach (NamespaceEntity entity in _primaryEntities.Values
+                .Where(pe => pe.EntitySender != null))
             {
-                if (entity.EntitySender != null)
-                {
-                    await entity.EntitySender.CloseAsync();
-                }
-                
+                await entity.EntitySender.CloseAsync();
+
                 // Determine if the entity strategy supports custom cleanup logic:
                 if (entity.EntityStrategy is ICleanupStrategy supported)
                 {

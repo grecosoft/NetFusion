@@ -22,7 +22,7 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
     {
         private readonly IExtendedLogger _logger;
         
-        // Dependent Module Services:
+        // Associated connection settings:
         public NamespaceSettings BusNamespace { get; }
         
         // Azure Service Bus clients:

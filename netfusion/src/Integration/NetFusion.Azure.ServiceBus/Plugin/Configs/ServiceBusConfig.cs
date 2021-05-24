@@ -7,6 +7,6 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Configs
     /// </summary>
     public class ServiceBusConfig : IPluginConfig
     {
-        
+        // TODO: Future bootstrap configurations if needed.
     }
 }

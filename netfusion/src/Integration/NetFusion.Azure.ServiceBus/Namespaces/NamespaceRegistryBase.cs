@@ -27,7 +27,7 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
             NamespaceName = namespaceName;
         }
         
-        private readonly List<NamespaceEntity> _namespaceEntities = new List<NamespaceEntity>();
+        private readonly List<NamespaceEntity> _namespaceEntities = new();
         private EntitySubscription[] _subscriptions;
         
         // ---------------------- Explicit Interface --------------------------
@@ -110,6 +110,12 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
             _namespaceEntities.Add(queue);
         }
         
+        /// <summary>
+        /// Creates a queue on the Service Bus to which Azure Service Bus routes messages.
+        /// Microservices do not directly send message to these queues.
+        /// </summary>
+        /// <param name="queueName">The name of the queue within the namespace to be created.</param>
+        /// <param name="queueConfig">Optional delegate used to apply additional configurations.</param>
         protected void CreateSecondaryQueue(string queueName, Action<QueueMeta> queueConfig = null)
         {
             if (string.IsNullOrWhiteSpace(queueName))

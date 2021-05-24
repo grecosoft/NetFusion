@@ -23,8 +23,7 @@ namespace NetFusion.Azure.ServiceBus.Settings
         public string ConnString { get; set; }
         
         /// <summary>
-        /// The type of protocol and transport that will be used for communicating with the Service Bus
-        /// service.
+        /// The type of protocol and transport that will be used for communicating with the Service Bus service.
         /// </summary>
         public ServiceBusTransportType? TransportType { get; set; }
 
@@ -36,7 +35,7 @@ namespace NetFusion.Azure.ServiceBus.Settings
         /// <summary>
         /// Setting overrides for any defined entity subscriptions.
         /// </summary>
-        public Dictionary<string, SubscriptionSettings> Subscriptions { get; set; } = new Dictionary<string, SubscriptionSettings>();
+        public Dictionary<string, SubscriptionSettings> Subscriptions { get; set; } = new();
 
         public void Validate(IObjectValidator validator)
         {

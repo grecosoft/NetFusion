@@ -27,7 +27,9 @@ namespace NetFusion.Azure.ServiceBus.Subscriber.Strategies
 
         public Task Subscribe(NamespaceConnection connection)
         {
-            ServiceBusProcessor processor = connection.BusClient.CreateProcessor(_subscription.EntityName, _subscription.Options);
+            ServiceBusProcessor processor = connection.BusClient.CreateProcessor(
+                _subscription.EntityName, 
+                _subscription.Options);
           
             _subscription.ProcessedBy(processor);
 
@@ -49,7 +51,7 @@ namespace NetFusion.Azure.ServiceBus.Subscriber.Strategies
                 message);
 
             // If the massage handler returned a response, and the originating publisher
-            // expects a response, place the response message on the reply-to queue:
+            // expects a reply, place the response message on the reply-to queue:
             if (response != null && NamespaceContext.TryParseReplyTo(args, 
                 out string namespaceName, 
                 out string queueName))

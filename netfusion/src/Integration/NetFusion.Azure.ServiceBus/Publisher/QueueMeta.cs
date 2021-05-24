@@ -19,13 +19,13 @@ namespace NetFusion.Azure.ServiceBus.Publisher
         }
 
         /// <summary>
-        /// Duration of a peek lock receive. i.e., the amount of time that the message is locked by a given receiver so that
-        /// no other receiver receives the same message.
+        /// Duration of a peek lock receive. i.e., the amount of time that the message is locked by a given
+        /// receiver so that no other receiver receives the same message.
         /// </summary>
         public TimeSpan? LockDuration { get; set; }
         
         /// <summary>
-        /// This indicates whether the queue supports the concept of session. Sessionful-messages follow FIFO ordering.
+        /// This indicates whether the queue supports the concept of session. Session-messages follow FIFO ordering.
         /// </summary>
         public bool? RequiresSession { get; set; }
         
@@ -89,7 +89,7 @@ namespace NetFusion.Azure.ServiceBus.Publisher
 
         internal CreateQueueOptions ToCreateOptions()
         {
-            return new CreateQueueOptions(EntityName)
+            return new(EntityName)
             {
                 LockDuration = LockDuration ?? TimeSpan.FromSeconds(60),
                 RequiresSession = RequiresSession ?? false,
