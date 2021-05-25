@@ -129,7 +129,7 @@ namespace NetFusion.Azure.ServiceBus.Subscriber
         
         internal CreateSubscriptionOptions ToCreateOptions()
         {
-            return new CreateSubscriptionOptions(EntityName, UniqueSubscriptionName)
+            return new(EntityName, UniqueSubscriptionName)
             {
                 LockDuration = LockDuration ?? TimeSpan.FromSeconds(60),
                 RequiresSession = RequiresSession ?? false,

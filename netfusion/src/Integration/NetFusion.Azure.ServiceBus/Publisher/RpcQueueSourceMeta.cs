@@ -12,15 +12,20 @@ namespace NetFusion.Azure.ServiceBus.Publisher
     {
         /// <summary>
         /// Namespace identifying the command message.  Used by the subscriber to
-        /// how the command is to be routed.
+        /// route the command to the correct handler method.
         /// </summary>
         internal string MessageNamespace { get; set; }
         
         /// <summary>
-        /// 
+        /// The name assigned to the reply queue on which the publisher of the command
+        /// awaits for a response.
         /// </summary>
         internal string ReplyQueueName { get; set; }
 
+        /// <summary>
+        /// The number of milliseconds after sending the command the request should be
+        /// canceled if a response is not received.  The default value is 10 seconds.
+        /// </summary>
         public int CancelRpcRequestAfterMs { get; set; } = 10_000;
         
         protected RpcQueueSourceMeta(Type messageType, string namespaceName, string queueName) 
@@ -46,7 +51,7 @@ namespace NetFusion.Azure.ServiceBus.Publisher
             busMessage.ReplyTo = $"{NamespaceName}:{ReplyQueueName}";
             
             busMessage.ApplicationProperties["MessageNamespace"] = message.GetType()
-                .GetCustomAttribute<MessageNamespaceAttribute>().MessageNamespace;
+                .GetCustomAttribute<MessageNamespaceAttribute>()?.MessageNamespace;
         }
     }
 }

@@ -12,6 +12,10 @@ using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Azure.ServiceBus.Publisher.Strategies
 {
+    /// <summary>
+    /// Custom publish strategy containing logic coordinating the publishing
+    /// of commands and processing the corresponding reply response.
+    /// </summary>
     public class RpcQueueStrategy : IEntityStrategy,
         IRequiresContext,
         IPublishStrategy,
@@ -70,7 +74,7 @@ namespace NetFusion.Azure.ServiceBus.Publisher.Strategies
                     pendingRequest.UnRegister();
                 }
                 throw new RpcReplyException(
-                    "The RPC request with the correlation value of: {correlationId} resulted in an exception.", ex);
+                    $"The RPC request with the correlation value of: {busMessage.CorrelationId} resulted in an exception.", ex);
             }
         }
         
@@ -85,7 +89,7 @@ namespace NetFusion.Azure.ServiceBus.Publisher.Strategies
             // Create a task that can be completed in the future when the result
             // is received in the reply queue. 
             var futureResult = new TaskCompletionSource<byte[]>();
-            var rpcPendingRequest = new RpcPendingRequest(futureResult, cancellationToken, cancelRpcRequestAfterMs);
+            var rpcPendingRequest = new RpcPendingRequest(futureResult, cancelRpcRequestAfterMs, cancellationToken);
             
             _pendingRpcRequests[busMessage.CorrelationId] = rpcPendingRequest;
             return futureResult;

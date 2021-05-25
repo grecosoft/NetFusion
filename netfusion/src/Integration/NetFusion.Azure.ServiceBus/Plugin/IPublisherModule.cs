@@ -5,8 +5,7 @@ using NetFusion.Bootstrap.Plugins;
 namespace NetFusion.Azure.ServiceBus.Plugin
 {
     /// <summary>
-    /// Module service containing responsibilities from the perspective
-    /// for publisher of messages.
+    /// Module service containing responsibilities for publishing of messages.
     /// </summary>
     public interface IPublisherModule : IPluginModuleService
     {
@@ -16,8 +15,9 @@ namespace NetFusion.Azure.ServiceBus.Plugin
         /// </summary>
         /// <param name="messageType">The type of the message.</param>
         /// <param name="entity">Reference to the namespace entity.</param>
-        /// <returns>Returns true if the message has an associated namespace
-        /// entity.  Otherwise, false.</returns>
+        /// <returns>Returns true if the message has an associated namespace entity.
+        /// Otherwise, false.
+        /// </returns>
         bool TryGetMessageEntity(Type messageType, out NamespaceEntity entity);
     }
 }
