@@ -35,7 +35,12 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
             
             ConfigureNamespaceSubscriptions(_entitySubscriptions);
         }
-        
+
+        public override void RegisterDefaultServices(IServiceCollection services)
+        {
+            services.AddSingleton<IQueueResponseService, QueueResponseService>();
+        }
+
         // After building the list of entity subscriptions, invoke each subscription strategy
         // containing subscription logic specific to the type of entity be subscribed.
         protected override async Task OnStartModuleAsync(IServiceProvider services)

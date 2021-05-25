@@ -6,6 +6,7 @@ using NetFusion.Azure.ServiceBus.Subscriber.Internal;
 using NetFusion.Base.Serialization;
 using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Plugin;
+using NetFusion.Messaging.Types.Attributes;
 using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Azure.ServiceBus.Namespaces
@@ -53,19 +54,24 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
             return (IMessage)Serialization.Deserialize(contentType, dispatchInfo.MessageType, messageData.ToArray());
         }
         
-        /// <summary>
-        /// Parses the colon separated ReplyTo value into the namespace and queue name.
-        /// </summary>
-        /// <param name="args">The information about the message being processed.</param>
-        /// <param name="namespaceName">If found, the namespace to which the reply message is to be sent.</param>
-        /// <param name="queueName">If found, the queue to which the reply message is to be sent.</param>
-        /// <returns>True if the ReplyTo is correctly formatted.</returns>
         public static bool TryParseReplyTo(ProcessMessageEventArgs args, 
             out string namespaceName, out string queueName)
         {
             if (args == null) throw new ArgumentNullException(nameof(args));
-            
-            var parts = args.Message.ReplyTo?.Split(":");
+            return TryParseReplyTo(args.Message.ReplyTo, out namespaceName, out queueName);
+        }
+
+        public static bool TryParseReplyTo(IMessage message, 
+            out string namespaceName, out string queueName)
+        {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            return TryParseReplyTo(message.GetReplyTo(), out namespaceName, out queueName);
+        }
+        
+        private static bool TryParseReplyTo(string replyTo, 
+            out string namespaceName, out string queueName)
+        {
+            var parts = replyTo?.Split(":");
             if (parts == null || parts.Length != 2)
             {
                 namespaceName = queueName = null;

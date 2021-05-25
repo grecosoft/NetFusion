@@ -76,7 +76,13 @@ namespace NetFusion.Azure.ServiceBus.Subscriber.Strategies
             // This allows the message handler to correlate the replay to the original request.
             message.SetMessageId(args.Message.MessageId);
             message.SetCorrelationId(args.Message.CorrelationId);
+            message.SetContentType(args.Message.ContentType);
 
+            if (! string.IsNullOrWhiteSpace(args.Message.ReplyTo))
+            {
+                message.SetReplyTo(args.Message.ReplyTo);
+            }
+            
             return message;
         }
         
