@@ -15,7 +15,7 @@ using NetFusion.Messaging.Types.Contracts;
 namespace NetFusion.Azure.ServiceBus.Publisher.Internal
 {
     /// <summary>
-    /// Message publisher response for sending messages to associated Azure Service Bus entities.
+    /// Message publisher responsible for sending messages to associated Azure Service Bus entities.
     /// This class implements the IMessagePublisher interface and is registered within the central
     /// messaging dispatch pipeline.
     /// </summary>
@@ -74,7 +74,7 @@ namespace NetFusion.Azure.ServiceBus.Publisher.Internal
                 return;
             }
             
-            // Otherwise, send the message directly to the service-bus{
+            // Otherwise, send the message directly to the service-bus.
             await entity.EntitySender.SendMessageAsync(busMessage, cancellationToken);
         }
         

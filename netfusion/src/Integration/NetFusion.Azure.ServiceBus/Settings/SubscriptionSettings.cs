@@ -12,14 +12,14 @@ namespace NetFusion.Azure.ServiceBus.Settings
         public int? PrefetchCount { get; set; }
         public int? MaxConcurrentCalls { get; set; }
 
-        public Dictionary<string, RuleSettings> Rules { get; set; } = new Dictionary<string, RuleSettings>();
+        public Dictionary<string, RuleSettings> Rules { get; set; } = new();
         
         public void Validate(IObjectValidator validator)
         {
-            validator.Verify(PrefetchCount == null || PrefetchCount >= 0, 
+            validator.Verify(PrefetchCount is null or >= 0, 
                 "PrefetchCount if specified must be greater than or equal zero.");
             
-            validator.Verify(MaxConcurrentCalls == null || MaxConcurrentCalls > 0, 
+            validator.Verify(MaxConcurrentCalls is null or > 0, 
                 "MaxConcurrentCalls if specified must be greater than zero.");
 
             validator.AddChildren(Rules.Values);

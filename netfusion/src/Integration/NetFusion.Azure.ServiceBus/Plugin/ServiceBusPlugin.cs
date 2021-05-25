@@ -39,6 +39,8 @@ namespace NetFusion.Azure.ServiceBus.Plugin
                 .AddSettings()
                 .AddMessaging()
                 .AddPlugin<ServiceBusPlugin>()
+                
+                // Extend the base messaging pipeline by adding the ServiceBusPublisher.
                 .InitPluginConfig<MessageDispatchConfig>(config => 
                     config.AddPublisher<ServiceBusPublisher>());
         }

@@ -10,7 +10,7 @@ namespace NetFusion.Azure.ServiceBus.Subscriber.Internal
     public interface ISubscriptionStrategy
     {
         /// <summary>
-        /// Called when a subscription should be created to namespace entity.
+        /// Called when a subscription should be created on a namespace entity.
         /// </summary>
         /// <param name="connection">Connection to subscription's associated namespace.</param>
         /// <returns>Future Task Result.</returns>

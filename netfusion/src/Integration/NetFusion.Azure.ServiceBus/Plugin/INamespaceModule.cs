@@ -27,8 +27,8 @@ namespace NetFusion.Azure.ServiceBus.Plugin
         IEnumerable<INamespaceRegistry> Registries { get; }
         
         /// <summary>
-        /// Returns a class containing both the messaging and administration
-        /// clients used to issue commands to Azure Service Bus.
+        /// Returns a class containing both the messaging and administration clients used
+        /// to issue commands to Azure Service Bus.
         /// </summary>
         /// <param name="namespaceName">The namespace for the configured connection.</param>
         /// <returns>The configured connection or an exception if no connection exists for
@@ -39,10 +39,10 @@ namespace NetFusion.Azure.ServiceBus.Plugin
         /// Returns settings for a subscription defined within the application's configuration.
         /// </summary>
         /// <param name="namespaceName">The namespace in which the subscription is defined.</param>
-        /// <param name="settingsKey">Value identitying the subscription.  For a subscription to a queue,
+        /// <param name="settingsKey">Value identifying the subscription.  For a subscription to a queue,
         /// the queue's name is used.  If a subscription to a topic, the topic and subscription names are
         /// used separated by a ^ character.</param>
-        /// <returns></returns>
+        /// <returns>The associated subscription settings.</returns>
         SubscriptionSettings GetSubscriptionConfig(string namespaceName, string settingsKey);
     }
 }
