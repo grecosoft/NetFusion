@@ -191,8 +191,8 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
                 SubscriptionType = s.GetType().Name,
                 s.NamespaceName,
                 s.EntityName,
-                s.DispatchInfo?.MessageType,
-                s.DispatchInfo?.ConsumerType,
+                MessageType = s.DispatchInfo?.MessageType.FullName,
+                ConsumerType = s.DispatchInfo?.ConsumerType.FullName,
                 HandlerName = s.DispatchInfo?.MessageHandlerMethod.Name
             });
         }
