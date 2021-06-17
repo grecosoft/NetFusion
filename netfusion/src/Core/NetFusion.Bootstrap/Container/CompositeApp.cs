@@ -2,13 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base;
 using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Exceptions;
+using NetFusion.Bootstrap.Health;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
+using NetFusion.Common.Extensions.Reflection;
 
 namespace NetFusion.Bootstrap.Container
 {
@@ -24,7 +27,10 @@ namespace NetFusion.Bootstrap.Container
 
         // Singleton instance of the composite-application:
         public static ICompositeApp Instance { get; private set; }
+        
+        // Composite Application Statuses:
         public bool IsStarted { get; private set; }
+        public bool IsReady { get; private set; }
         
         // Reference to the builder details that constructed the composite-application.
         private readonly ICompositeAppBuilder _builder;
@@ -94,6 +100,8 @@ namespace NetFusion.Bootstrap.Container
                 NfExtensions.Logger.LogError<CompositeApp>(ex, startExMsg);
                 throw new ContainerException(startExMsg, ex);
             }
+
+            IsReady = true;
         }
 
         public void Start()
@@ -195,6 +203,42 @@ namespace NetFusion.Bootstrap.Container
             return _serviceProvider.CreateScope();
         }
 
+        public string ToggleReadyStatus()
+        {
+            IsReady = !IsReady;
+            return IsReady ? "READY" : "NOT-READY";
+        }
+        
+        public CompositeAppHealthCheck GetHealthCheck()
+        {
+            var healthCheck = new CompositeAppHealthCheck();
+            
+            foreach (IPlugin plugin in _builder.AllPlugins)
+            {
+                var moduleHealthChecks = plugin.Modules.OfType<IModuleHealthCheck>().ToArray();
+                if (! moduleHealthChecks.Any())
+                {
+                    // Plugin does not have any modules supporting health-checks.
+                    continue;
+                }
+
+                // Create a plugin health-check and populate it with health-checks pertaining
+                // to each of its modules.
+                var pluginHealthCheck = new PluginHeathCheck(plugin);
+                foreach (IPluginModule module in moduleHealthChecks)
+                {
+                    var moduleHealthCheck = new ModuleHealthCheck(module);
+                    
+                    ((IModuleHealthCheck) module)?.CheckModuleAspects(moduleHealthCheck);
+                    pluginHealthCheck.AddModuleHealthCheck(moduleHealthCheck);
+                }
+                
+                healthCheck.AddPluginHealthCheck(pluginHealthCheck);
+            }
+            
+            return healthCheck;
+        }
+
         // --------------------------- [Stopping Composite Application] -------------------------------
         
         // Should be called when the application-host is stopped.  Each registered
@@ -202,6 +246,8 @@ namespace NetFusion.Bootstrap.Container
         public async Task StopAsync()
         {
             const string stopExMsg = "Error Stopping Composite Application";
+
+            IsReady = false;
             
             if (! IsStarted)
             {

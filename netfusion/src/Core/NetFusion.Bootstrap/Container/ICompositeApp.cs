@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Bootstrap.Health;
 using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Bootstrap.Container
@@ -20,6 +21,17 @@ namespace NetFusion.Bootstrap.Container
         /// Indicates that the application has been started.
         /// </summary>
         bool IsStarted { get; }
+        
+        /// <summary>
+        /// Indicates that all modules have started and are ready.
+        /// </summary>
+        bool IsReady { get; }
+
+        /// <summary>
+        /// Indicates the overall health of the composite application based on its
+        /// contained plugins and modules.
+        /// </summary>
+        CompositeAppHealthCheck GetHealthCheck();
         
         /// <summary>
         /// Log containing details of how the application was composed from plugins.
@@ -55,5 +67,11 @@ namespace NetFusion.Bootstrap.Container
         /// Stops each plugin module.
         /// </summary>
         void Stop();
+
+        /// <summary>
+        /// Toggles the current ready status.
+        /// </summary>
+        /// <returns>Return string value indicating status after being toggled.</returns>
+        string ToggleReadyStatus();
     }
 }

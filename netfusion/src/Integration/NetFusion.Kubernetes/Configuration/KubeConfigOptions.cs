@@ -1,6 +1,6 @@
 using System;
 
-namespace NetFusion.Kubernetes.Hosting
+namespace NetFusion.Kubernetes.Configuration
 {
     public class KubeConfigOptions
     {
