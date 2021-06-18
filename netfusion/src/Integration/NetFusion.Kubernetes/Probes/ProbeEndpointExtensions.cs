@@ -1,4 +1,3 @@
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -68,30 +67,6 @@ namespace NetFusion.Kubernetes.Probes
             return app;
         }
         
-        /// <summary>
-        /// Adds a route when called will toggle the current readiness status of the service's
-        /// associated Composite Application.
-        /// </summary>
-        /// <param name="app">The application builder being configured by the running host</param>
-        /// <param name="route">The route at which the action can be called.</param>
-        /// <returns>Application Builder</returns>
-        public static IApplicationBuilder AddReadinessToggle(this IApplicationBuilder app,
-            string route = "mgt/ready-toggle")
-        {
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapPost(route, c =>
-                {
-                    string updatedStatus = CompositeApp.Instance.ToggleReadyStatus();
-                    c.Response.StatusCode = StatusCodes.Status200OK;
-                    return c.Response.Body.WriteAsync(Encoding.UTF8.GetBytes(updatedStatus)).AsTask();
-                });
-            });
-
-            return app;
-        }
-
-        
         private static IApplicationBuilder AddProbe(IApplicationBuilder app,
             string route,
             int negativeStatus = StatusCodes.Status503ServiceUnavailable)
@@ -110,7 +85,5 @@ namespace NetFusion.Kubernetes.Probes
 
             return app;
         }
-        
-        
     }
 }
