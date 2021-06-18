@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Bootstrap.Container;
+using NetFusion.Bootstrap.Health;
 
 namespace NetFusion.Kubernetes.Probes
 {
@@ -37,15 +38,35 @@ namespace NetFusion.Kubernetes.Probes
             int notReadyStatus = StatusCodes.Status503ServiceUnavailable) => AddProbe(app, route, notReadyStatus);
 
         /// <summary>
-        /// 
+        /// Adds route called to determine if the Composite Application is in a healthy state.  A reference
+        /// to this URL can be configured as a liveness probe within a Kubernetes pod definition and will be
+        /// called to determine the Microservice's health.  
         /// </summary>
-        /// <param name="app"></param>
-        /// <param name="route"></param>
-        /// <param name="notHealthyStatus"></param>
-        /// <returns></returns>
-        public static IApplicationBuilder AddLivenessProbe(this IApplicationBuilder app,
-            string route = "mgt/liveness-check",
-            int notHealthyStatus = StatusCodes.Status503ServiceUnavailable) => AddProbe(app, route, notHealthyStatus);
+        /// <param name="app">The application builder being configured by the running host</param>
+        /// <param name="route">The route at which the action can be called.</param>
+        /// <param name="notHealthyStatus">The status to return when the service is not healthy.</param>
+        /// <returns>Application Builder</returns>
+        public static IApplicationBuilder AddHealthProbe(this IApplicationBuilder app,
+            string route = "mgt/health-check",
+            int notHealthyStatus = StatusCodes.Status503ServiceUnavailable)
+        {
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet(route, c =>
+                {
+                    var health = CompositeApp.Instance?.GetHealthCheck().OverallHealth ??
+                                 HealthCheckResultType.Unhealthy;
+                    
+                    c.Response.StatusCode = health == HealthCheckResultType.Healthy
+                        ? StatusCodes.Status200OK
+                        : notHealthyStatus;
+
+                    return Task.CompletedTask;
+                });
+            });
+
+            return app;
+        }
         
         /// <summary>
         /// Adds a route when called will toggle the current readiness status of the service's
@@ -79,7 +100,7 @@ namespace NetFusion.Kubernetes.Probes
             {
                 endpoints.MapGet(route, c =>
                 {
-                    c.Response.StatusCode = (CompositeApp.Instance?.IsReady ?? false)
+                    c.Response.StatusCode = CompositeApp.Instance?.IsReady ?? false
                         ? StatusCodes.Status200OK
                         : negativeStatus;
 

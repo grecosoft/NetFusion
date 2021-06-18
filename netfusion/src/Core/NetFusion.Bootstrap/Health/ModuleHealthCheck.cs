@@ -30,7 +30,7 @@ namespace NetFusion.Bootstrap.Health
             _aspectsChecks.Max(ac => ac.CheckResult) : HealthCheckResultType.Healthy;
         
 
-        internal ModuleHealthCheck(IPluginModule pluginModule)
+        public ModuleHealthCheck(IPluginModule pluginModule)
         {
             PluginModule = pluginModule ?? throw new ArgumentNullException(nameof(pluginModule));
         }
