@@ -31,7 +31,7 @@ namespace NetFusion.Bootstrap.Container
         /// Indicates the overall health of the composite application based on its
         /// contained plugins and modules.
         /// </summary>
-        CompositeAppHealthCheck GetHealthCheck();
+        Task<CompositeAppHealthCheck> GetHealthCheckAsync();
         
         /// <summary>
         /// Log containing details of how the application was composed from plugins.

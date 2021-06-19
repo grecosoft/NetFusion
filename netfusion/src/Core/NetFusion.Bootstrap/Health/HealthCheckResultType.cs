@@ -4,7 +4,7 @@ namespace NetFusion.Bootstrap.Health
     /// Indicates the health status for specific items used in determining
     /// the overall status of the composite-application.
     /// </summary>
-    public enum HealthCheckResultType
+    public enum HealthCheckStatusType
     {
         /// <summary>
         /// All provided services are operational.

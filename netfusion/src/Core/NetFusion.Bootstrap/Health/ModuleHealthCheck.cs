@@ -26,8 +26,8 @@ namespace NetFusion.Bootstrap.Health
         /// <summary>
         /// The overall worst health-check reported for a module's associated aspects.
         /// </summary>
-        public HealthCheckResultType OverallHealth => _aspectsChecks.Any() ?
-            _aspectsChecks.Max(ac => ac.CheckResult) : HealthCheckResultType.Healthy;
+        public HealthCheckStatusType OverallHealth => _aspectsChecks.Any() ?
+            _aspectsChecks.Max(ac => ac.CheckResult) : HealthCheckStatusType.Healthy;
         
 
         public ModuleHealthCheck(IPluginModule pluginModule)
@@ -36,8 +36,24 @@ namespace NetFusion.Bootstrap.Health
         }
 
         /// <summary>
-        /// Records information about an aspect of a module, used to determine it overall health,
-        /// having a currently healthy status.
+        /// Records information about an aspect of a module with a given status used to determine
+        /// its overall health.
+        /// </summary>
+        /// <param name="healthCheckStatus">The associated status.</param>
+        /// <param name="name">The name used to identify an aspect of a module.</param>
+        /// <param name="value">The value describing the aspect.</param>
+        public void RecordAspect(HealthCheckStatusType healthCheckStatus, string name, string value)
+        {
+            _aspectsChecks.Add(new HealthAspectCheck
+            {
+                AspectName = name, 
+                AspectValue = value,
+                CheckResult = healthCheckStatus
+            }.ThrowIfInvalid());
+        }
+
+        /// <summary>
+        /// Records information about a healthy aspect of a module used to determine its overall health.
         /// </summary>
         /// <param name="name">The name used to identify an aspect of a module.</param>
         /// <param name="value">The value describing the aspect.</param>
@@ -47,13 +63,12 @@ namespace NetFusion.Bootstrap.Health
             {
                 AspectName = name, 
                 AspectValue = value,
-                CheckResult = HealthCheckResultType.Healthy
+                CheckResult = HealthCheckStatusType.Healthy
             }.ThrowIfInvalid());
         }
 
         /// <summary>
-        /// Records information about an aspect of a module, used to determine it overall health,
-        /// having a currently degraded status.
+        /// Records information about a degraded aspect of a module used to determine its overall health.
         /// </summary>
         /// <param name="name">The name used to identify an aspect of a module.</param>
         /// <param name="value">The value describing the aspect.</param>
@@ -63,13 +78,12 @@ namespace NetFusion.Bootstrap.Health
             {
                 AspectName = name, 
                 AspectValue = value,
-                CheckResult = HealthCheckResultType.Degraded
+                CheckResult = HealthCheckStatusType.Degraded
             }.ThrowIfInvalid());
         }
 
         /// <summary>
-        /// Records information about an aspect of a module, used to determine it overall health,
-        /// having a currently unhealthy status.
+        /// Records information about a unhealthy aspect of a module used to determine its overall health.
         /// </summary>
         /// <param name="name">The name used to identify an aspect of a module.</param>
         /// <param name="value">The value describing the aspect.</param>
@@ -79,7 +93,7 @@ namespace NetFusion.Bootstrap.Health
             {
                 AspectName = name, 
                 AspectValue = value,
-                CheckResult = HealthCheckResultType.Unhealthy
+                CheckResult = HealthCheckStatusType.Unhealthy
             }.ThrowIfInvalid());
         }
     }

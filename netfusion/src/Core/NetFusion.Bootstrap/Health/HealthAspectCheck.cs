@@ -9,7 +9,7 @@ namespace NetFusion.Bootstrap.Health
     {
         public string AspectName { get; init; }
         public string AspectValue { get; init; }
-        public HealthCheckResultType CheckResult { get; init; }
+        public HealthCheckStatusType CheckResult { get; init; }
 
         internal HealthAspectCheck ThrowIfInvalid()
         {

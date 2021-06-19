@@ -23,7 +23,7 @@ namespace CoreTests.Test
                     {
                         c.RegisterPlugin<MockHostPlugin>();
                     }).Act.OnApplication(app => app.Start())
-                    .Assert.Application(app =>
+                    .Assert.CompositeApp(app =>
                     {
                         app.IsStarted.Should().BeTrue();
                     });
@@ -45,7 +45,7 @@ namespace CoreTests.Test
                     })
                     .Act.OnApplicationAsync(app => app.StartAsync());
 
-                testResult.Assert.Application(app =>
+                testResult.Assert.CompositeApp(app =>
                 {
                     app.IsStarted.Should().BeTrue();
                 });

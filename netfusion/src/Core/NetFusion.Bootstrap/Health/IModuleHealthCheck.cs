@@ -1,8 +1,10 @@
+using System.Threading.Tasks;
+
 namespace NetFusion.Bootstrap.Health
 {
     /// <summary>
     /// Implemented by any IPluginModule derive class to participate in
-    /// determining of the overall health of the composite-application. 
+    /// determining the overall health of the composite-application. 
     /// </summary>
     public interface IModuleHealthCheck
     {
@@ -11,6 +13,6 @@ namespace NetFusion.Bootstrap.Health
         /// aspects managed by the module.
         /// </summary>
         /// <param name="healthCheck">Health check to be populated.</param>
-        void CheckModuleAspects(ModuleHealthCheck healthCheck);
+        Task CheckModuleAspectsAsync(ModuleHealthCheck healthCheck);
     }
 }

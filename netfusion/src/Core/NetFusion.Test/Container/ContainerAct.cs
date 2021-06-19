@@ -1,7 +1,9 @@
 ﻿using NetFusion.Bootstrap.Container;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Test.Container
 {
@@ -205,6 +207,42 @@ namespace NetFusion.Test.Container
                 _serviceProvider = testScope.ServiceProvider;
 
                 act(_serviceProvider);
+            }
+            catch (Exception ex)
+            {
+                _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
+            }
+
+            return this;
+        }
+        
+        /// <summary>
+        /// Allows a module form which the composite-application is composted to be acted on
+        /// to adjust its state for a specific behavior being asserted.
+        /// </summary>
+        /// <param name="act">Method called to act on a plugin module.</param>
+        /// <typeparam name="TModule">The type of the module to be acted on.</typeparam>
+        /// <returns>Self Reference.</returns>
+        public ContainerAct OnModule<TModule>(Action<TModule> act)
+            where TModule : IPluginModule
+        {
+            _fixture.AssureContainerComposed();
+            _actedOn = true;
+            
+            var module = _container.AppBuilder.AllModules.OfType<TModule>().FirstOrDefault();
+            if (module == null)
+            {
+                throw new InvalidOperationException(
+                    $"The plugin module of type: {typeof(TModule)} is not registered");
+            }
+            
+            try
+            {
+                act(module);
             }
             catch (Exception ex)
             {

@@ -51,16 +51,18 @@ namespace NetFusion.Kubernetes.Probes
         {
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet(route, c =>
+                endpoints.MapGet(route, async c =>
                 {
-                    var health = CompositeApp.Instance?.GetHealthCheck().OverallHealth ??
-                                 HealthCheckResultType.Unhealthy;
+                    if (CompositeApp.Instance == null)
+                    {
+                        c.Response.StatusCode = notHealthyStatus;
+                        return;
+                    }
                     
-                    c.Response.StatusCode = health == HealthCheckResultType.Healthy
-                        ? StatusCodes.Status200OK
-                        : notHealthyStatus;
-
-                    return Task.CompletedTask;
+                    var healthCheck = await CompositeApp.Instance.GetHealthCheckAsync();
+                    
+                    c.Response.StatusCode = healthCheck.OverallHealth == HealthCheckStatusType.Healthy ?
+                            StatusCodes.Status200OK : notHealthyStatus;
                 });
             });
 

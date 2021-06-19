@@ -30,8 +30,8 @@ namespace NetFusion.Bootstrap.Health
         /// <summary>
         /// The overall worst health-check reported for the plugin.  
         /// </summary>
-        public HealthCheckResultType OverallHealth => _moduleHealthChecks.Any() ? 
-            _moduleHealthChecks.Max(ac => ac.OverallHealth) : HealthCheckResultType.Healthy;
+        public HealthCheckStatusType OverallHealth => _moduleHealthChecks.Any() ? 
+            _moduleHealthChecks.Max(ac => ac.OverallHealth) : HealthCheckStatusType.Healthy;
 
         public void AddModuleHealthCheck(ModuleHealthCheck healthCheck)
         {

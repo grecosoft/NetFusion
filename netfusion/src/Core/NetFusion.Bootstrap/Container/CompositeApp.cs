@@ -206,36 +206,10 @@ namespace NetFusion.Bootstrap.Container
             IsReady = !IsReady;
             return IsReady ? "READY" : "NOT-READY";
         }
-        
-        public CompositeAppHealthCheck GetHealthCheck()
-        {
-            var healthCheck = new CompositeAppHealthCheck();
-            
-            foreach (IPlugin plugin in _builder.AllPlugins)
-            {
-                var moduleHealthChecks = plugin.Modules.OfType<IModuleHealthCheck>().ToArray();
-                if (! moduleHealthChecks.Any())
-                {
-                    // Plugin does not have any modules supporting health-checks.
-                    continue;
-                }
 
-                // Create a plugin health-check and populate it with health-checks pertaining
-                // to each of its modules.
-                var pluginHealthCheck = new PluginHeathCheck(plugin);
-                foreach (IPluginModule module in moduleHealthChecks)
-                {
-                    var moduleHealthCheck = new ModuleHealthCheck(module);
-                    
-                    ((IModuleHealthCheck) module)?.CheckModuleAspects(moduleHealthCheck);
-                    pluginHealthCheck.AddModuleHealthCheck(moduleHealthCheck);
-                }
-                
-                healthCheck.AddPluginHealthCheck(pluginHealthCheck);
-            }
-            
-            return healthCheck;
-        }
+        // Returns the current health of the Composite Application based on the
+        // plugins from which it was built.
+        public Task<CompositeAppHealthCheck> GetHealthCheckAsync() => CompositeAppHealthCheck.CreateAsync(_builder.AllPlugins);
 
         // --------------------------- [Stopping Composite Application] -------------------------------
         
