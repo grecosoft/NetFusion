@@ -47,7 +47,7 @@ namespace CoreTests.Bootstrap
                         corePlugin.AddModule<MockPluginOneModule>();
                         c.RegisterPlugins(corePlugin);
                     })
-                    .Act.OnApplication(a => a.Start())
+                    .Act.OnCompositeApp(a => a.Start())
                     .Assert.CompositeApp(ca =>
                     {
                         var log = ca.Log;

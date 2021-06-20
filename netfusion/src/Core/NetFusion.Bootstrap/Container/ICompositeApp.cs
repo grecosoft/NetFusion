@@ -28,6 +28,12 @@ namespace NetFusion.Bootstrap.Container
         bool IsReady { get; }
 
         /// <summary>
+        /// Properties associated with the composite application used as a shared location that can
+        /// be referenced by multiple components at different points in the application's lifecycle.
+        /// </summary>
+        IDictionary<string, object> Properties { get; }
+
+        /// <summary>
         /// Indicates the overall health of the composite application based on its
         /// contained plugins and modules.
         /// </summary>

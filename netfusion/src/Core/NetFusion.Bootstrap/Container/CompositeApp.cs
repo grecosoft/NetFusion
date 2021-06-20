@@ -38,6 +38,8 @@ namespace NetFusion.Bootstrap.Container
         private readonly IServiceProvider _serviceProvider;
         
         private readonly ILogger _logger;
+
+        public IDictionary<string, object> Properties { get; } = new Dictionary<string, object>();
         
         public CompositeApp(
             ICompositeAppBuilder builder,

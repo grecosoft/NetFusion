@@ -1,5 +1,5 @@
 PACKAGES_DIR=../../../_packages
-VERSION=9.9.83
+VERSION=9.9.89
 
 dotnet clean
 dotnet build NetFusion.sln

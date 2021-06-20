@@ -42,11 +42,12 @@ namespace NetFusion.Bootstrap.Health
                 var pluginHealthCheck = new PluginHeathCheck(plugin);
                 healthCheck._pluginHeathChecks.Add(pluginHealthCheck);
                 
-                foreach (IPluginModule module in moduleHealthChecks)
+                foreach (IPluginModule module in plugin.Modules)
                 {
+                    if (module is not IModuleHealthCheck healthCheckModule) continue;
+                    
                     var moduleHealthCheck = new ModuleHealthCheck(module);
-
-                    await ((IModuleHealthCheck) module).CheckModuleAspectsAsync(moduleHealthCheck);
+                    await healthCheckModule.CheckModuleAspectsAsync(moduleHealthCheck);
                     pluginHealthCheck.AddModuleHealthCheck(moduleHealthCheck);
                 }
             }

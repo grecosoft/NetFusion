@@ -1,6 +1,9 @@
+using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using NetFusion.Base.Properties;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Health;
 
@@ -19,8 +22,28 @@ namespace NetFusion.Kubernetes.Probes
         /// <param name="notStartedStatus">The status to return when the service is not ready.</param>
         /// <returns>Application Builder</returns>
         public static IApplicationBuilder AddStartupProbe(this IApplicationBuilder app,
-            string route = "mgt/startup-check",
-            int notStartedStatus = StatusCodes.Status503ServiceUnavailable) => AddProbe(app, route, notStartedStatus);
+            string route = "/mgt/startup-check",
+            int notStartedStatus = StatusCodes.Status503ServiceUnavailable)
+        {
+            if (app == null) throw new ArgumentNullException(nameof(app));
+            
+            if (string.IsNullOrWhiteSpace(route))
+                throw new ArgumentException("Start Route not Specified", nameof(route));
+            
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet(route, c =>
+                {
+                    c.Response.StatusCode = CompositeApp.Instance?.IsReady ?? false
+                        ? StatusCodes.Status200OK
+                        : notStartedStatus;
+
+                    return Task.CompletedTask;
+                });
+            });
+
+            return app;
+        }
 
         /// <summary>
         /// Adds route called to determine if the Composite Application has finished is ready to receive requests.
@@ -33,8 +56,30 @@ namespace NetFusion.Kubernetes.Probes
         /// <param name="notReadyStatus">The status to return when the service is not ready.</param>
         /// <returns>Application Builder</returns>
         public static IApplicationBuilder AddReadinessProbe(this IApplicationBuilder app,
-            string route = "mgt/ready-check",
-            int notReadyStatus = StatusCodes.Status503ServiceUnavailable) => AddProbe(app, route, notReadyStatus);
+            string route = "/mgt/ready-check",
+            int notReadyStatus = StatusCodes.Status503ServiceUnavailable)
+        {
+            if (app == null) throw new ArgumentNullException(nameof(app));
+            
+            if (string.IsNullOrWhiteSpace(route))
+                throw new ArgumentException("Readiness Check Route not Specified", nameof(route));
+            
+            CompositeApp.Instance.Properties.AddLogUrlFilter(route, HttpStatusCode.OK);
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet(route, c =>
+                {
+                    c.Response.StatusCode = CompositeApp.Instance?.IsReady ?? false
+                        ? StatusCodes.Status200OK
+                        : notReadyStatus;
+
+                    return Task.CompletedTask;
+                });
+            });
+
+            return app;
+        }
 
         /// <summary>
         /// Adds route called to determine if the Composite Application is in a healthy state.  A reference
@@ -46,9 +91,16 @@ namespace NetFusion.Kubernetes.Probes
         /// <param name="notHealthyStatus">The status to return when the service is not healthy.</param>
         /// <returns>Application Builder</returns>
         public static IApplicationBuilder AddHealthProbe(this IApplicationBuilder app,
-            string route = "mgt/health-check",
+            string route = "/mgt/health-check",
             int notHealthyStatus = StatusCodes.Status503ServiceUnavailable)
         {
+            if (app == null) throw new ArgumentNullException(nameof(app));
+            
+            if (string.IsNullOrWhiteSpace(route))
+                throw new ArgumentException("Health Check Route not Specified", nameof(route));
+
+            CompositeApp.Instance.Properties.AddLogUrlFilter(route, HttpStatusCode.OK);
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet(route, async c =>
@@ -63,25 +115,6 @@ namespace NetFusion.Kubernetes.Probes
                     
                     c.Response.StatusCode = healthCheck.OverallHealth == HealthCheckStatusType.Healthy ?
                             StatusCodes.Status200OK : notHealthyStatus;
-                });
-            });
-
-            return app;
-        }
-        
-        private static IApplicationBuilder AddProbe(IApplicationBuilder app,
-            string route,
-            int negativeStatus = StatusCodes.Status503ServiceUnavailable)
-        {
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet(route, c =>
-                {
-                    c.Response.StatusCode = CompositeApp.Instance?.IsReady ?? false
-                        ? StatusCodes.Status200OK
-                        : negativeStatus;
-
-                    return Task.CompletedTask;
                 });
             });
 

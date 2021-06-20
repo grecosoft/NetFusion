@@ -65,7 +65,7 @@ namespace NetFusion.Test.Container
         /// <param name="act">Method passed the instance of the application under test to be
         /// acted on by the unit-test.  The method can invoke an asynchronous method.</param>
         /// <returns>Self Reference.</returns>
-        public async Task<ContainerAct> OnApplicationAsync(Func<ICompositeApp, Task> act)
+        public async Task<ContainerAct> OnCompositeAppAsync(Func<ICompositeApp, Task> act)
         {
             if (_actedOn)
             {
@@ -95,7 +95,7 @@ namespace NetFusion.Test.Container
         /// <param name="act">Method passed the instance of the application under test to be
         /// acted on by the unit-test.</param>
         /// <returns>Self Reference.</returns>
-        public ContainerAct OnApplication(Action<ICompositeApp> act)
+        public ContainerAct OnCompositeApp(Action<ICompositeApp> act)
         {
             if (_actedOn)
             {

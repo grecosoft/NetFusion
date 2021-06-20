@@ -114,7 +114,7 @@ namespace WebTests.Rest.CodeGeneration
             ContainerFixture.Test(fixture =>
             {
                 fixture.Arrange.Container(TestSetup.WithDefaults)
-                    .Act.OnApplication(ca => ca.Start())
+                    .Act.OnCompositeApp(ca => ca.Start())
                     .Assert.Service<IApiCodeGenService>(s =>
                     {
                         s.Should().NotBeNull();
@@ -134,7 +134,7 @@ namespace WebTests.Rest.CodeGeneration
                 fixture.Arrange.Container(TestSetup.WithDefaults)
                     .PluginConfig<RestCodeGenConfig>(c => 
                         c.SetCodeGenerationDirectory(Path.Combine(AppContext.BaseDirectory, "unit-test-gen-code")))
-                    .Act.OnApplication(ca => ca.Start())
+                    .Act.OnCompositeApp(ca => ca.Start())
                     .Assert.Service<IApiCodeGenService>(s =>
                     {
                         s.TryGetResourceCodeFile("ResourceOne", out Stream stream).Should().BeTrue();
