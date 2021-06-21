@@ -72,7 +72,7 @@ namespace NetFusion.Rest.Server.Hal
 		/// <param name="embeddedResources">The collection of resources to embed.</param>
 		/// <param name="named">Name used to identity the embedded resource collection..</param>
 		public static void EmbedResources<TModel>(this HalResource resource, 
-			IEnumerable<HalResource<TModel>> embeddedResources, string named)
+			HalResource<TModel>[] embeddedResources, string named)
 			where TModel : class
 		{
 			EmbedValue<TModel>(resource, embeddedResources, named);

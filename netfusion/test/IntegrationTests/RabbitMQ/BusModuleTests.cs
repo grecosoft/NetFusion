@@ -31,7 +31,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.WithRabbitMqHost();
                     })
-                    .Act.OnApplication(ca =>
+                    .Act.OnCompositeApp(ca =>
                     {
                         ca.Start();
                     })
@@ -80,7 +80,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.WithRabbitMqHost();
                     })
-                    .Act.OnApplication(ca =>
+                    .Act.OnCompositeApp(ca =>
                     {
                         ca.Start();
                     })
@@ -170,7 +170,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.WithRabbitMqHost();
                     })
-                    .Act.OnApplication(ca =>
+                    .Act.OnCompositeApp(ca =>
                     {
                         ca.Start();
                     })

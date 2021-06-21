@@ -43,6 +43,7 @@ namespace NetFusion.Base.Logging
         /// Writes log message containing a set of detailed properties associated with
         /// an exception.
         /// </summary>
+        /// <param name="logger">Logger instance.</param>
         /// <param name="ex">The exception to log.</param>
         /// <param name="message">The message to log.</param>
         /// <typeparam name="TContext">Namespace associated with the log message.</typeparam>

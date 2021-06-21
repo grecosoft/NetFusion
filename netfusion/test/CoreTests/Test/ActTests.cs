@@ -22,8 +22,8 @@ namespace CoreTests.Test
                 fixture.Arrange.Container(c =>
                     {
                         c.RegisterPlugin<MockHostPlugin>();
-                    }).Act.OnApplication(app => app.Start())
-                    .Assert.Application(app =>
+                    }).Act.OnCompositeApp(app => app.Start())
+                    .Assert.CompositeApp(app =>
                     {
                         app.IsStarted.Should().BeTrue();
                     });
@@ -43,9 +43,9 @@ namespace CoreTests.Test
                     {
                         c.RegisterPlugin<MockHostPlugin>();
                     })
-                    .Act.OnApplicationAsync(app => app.StartAsync());
+                    .Act.OnCompositeAppAsync(app => app.StartAsync());
 
-                testResult.Assert.Application(app =>
+                testResult.Assert.CompositeApp(app =>
                 {
                     app.IsStarted.Should().BeTrue();
                 });

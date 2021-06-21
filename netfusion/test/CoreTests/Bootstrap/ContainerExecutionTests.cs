@@ -41,7 +41,7 @@ namespace CoreTests.Bootstrap
                     {
                         c.RegisterPlugin<MockHostPlugin>();
                     })
-                    .Act.RecordException().OnApplication(c =>
+                    .Act.RecordException().OnCompositeApp(c =>
                     {
                         c.Start();
                         c.Start();
@@ -75,7 +75,7 @@ namespace CoreTests.Bootstrap
                         
                         c.RegisterPlugins(hostPlugin, corePlugin);
                     })
-                    .Act.OnApplication(ca =>
+                    .Act.OnCompositeApp(ca =>
                     {
                         ca.Start();
                     })
@@ -103,7 +103,7 @@ namespace CoreTests.Bootstrap
                         
                         c.RegisterPlugins(hostPlugin);
                     })
-                    .Act.OnApplication(ca =>
+                    .Act.OnCompositeApp(ca =>
                     {
                         ca.Start();
                         ca.Stop();
@@ -129,7 +129,7 @@ namespace CoreTests.Bootstrap
                     {
                         c.RegisterPlugin<MockHostPlugin>();
                     })
-                    .Act.RecordException().OnApplication(ca =>
+                    .Act.RecordException().OnCompositeApp(ca =>
                     {
                         ca.Start();
                         ca.Stop();

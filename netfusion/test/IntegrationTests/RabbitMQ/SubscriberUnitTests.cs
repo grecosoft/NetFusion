@@ -33,7 +33,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.OnApplication(ca =>
+                    .Act.OnCompositeApp(ca =>
                     {
                         ca.Start();
                     })
@@ -60,7 +60,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.OnApplication(ca =>
+                    .Act.OnCompositeApp(ca =>
                     {
                         ca.Start();
                     })
@@ -115,7 +115,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.OnApplication(ca =>
+                    .Act.OnCompositeApp(ca =>
                     {
                         ca.Start();
                     })
@@ -170,7 +170,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.OnApplication(ca =>
+                    .Act.OnCompositeApp(ca =>
                     {
                         ca.Start();
                     })
@@ -225,7 +225,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.OnApplication(ca =>
+                    .Act.OnCompositeApp(ca =>
                     {
                         ca.Start();
                     })
@@ -266,7 +266,7 @@ namespace IntegrationTests.RabbitMQ
                     {
                         c.AddPublisher<RabbitMqPublisher>();
                     })
-                    .Act.OnApplication(ca =>
+                    .Act.OnCompositeApp(ca =>
                     {
                         ca.Start();
                     })
