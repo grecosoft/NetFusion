@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace NetFusion.Kubernetes.Hosting
+namespace NetFusion.Kubernetes.Configuration
 {
     public static class ConfigurationBuilderExtensions
     {

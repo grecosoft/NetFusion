@@ -22,7 +22,7 @@ namespace CoreTests.Bootstrap
                 {
                     c.RegisterPlugins(hostPlugin);
                 })
-                .Assert.Application(ca =>
+                .Assert.CompositeApp(ca =>
                 {
                     ca.HostPlugin.Should().NotBeNull();
                     ca.HostPlugin.PluginId.Should().Be(hostPlugin.PluginId);
@@ -47,8 +47,8 @@ namespace CoreTests.Bootstrap
                         corePlugin.AddModule<MockPluginOneModule>();
                         c.RegisterPlugins(corePlugin);
                     })
-                    .Act.OnApplication(a => a.Start())
-                    .Assert.Application(ca =>
+                    .Act.OnCompositeApp(a => a.Start())
+                    .Assert.CompositeApp(ca =>
                     {
                         var log = ca.Log;
 

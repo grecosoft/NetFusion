@@ -77,7 +77,7 @@ namespace NetFusion.Bootstrap.Logging
             var discoveredProps = module.KnownTypeProperties.Select(kt => new
             {
                 PropertyName = kt.Key.Name,
-                KnownType = kt.Value.Item1,
+                KnownType = kt.Value.Item1.FullName,
                 DiscoveredInstances = kt.Value.Item2.Select(t => t.FullName)
             });
 

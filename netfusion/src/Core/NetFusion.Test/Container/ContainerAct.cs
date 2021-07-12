@@ -1,7 +1,9 @@
 ﻿using NetFusion.Bootstrap.Container;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using NetFusion.Bootstrap.Plugins;
 
 namespace NetFusion.Test.Container
 {
@@ -63,7 +65,7 @@ namespace NetFusion.Test.Container
         /// <param name="act">Method passed the instance of the application under test to be
         /// acted on by the unit-test.  The method can invoke an asynchronous method.</param>
         /// <returns>Self Reference.</returns>
-        public async Task<ContainerAct> OnApplicationAsync(Func<ICompositeApp, Task> act)
+        public async Task<ContainerAct> OnCompositeAppAsync(Func<ICompositeApp, Task> act)
         {
             if (_actedOn)
             {
@@ -93,7 +95,7 @@ namespace NetFusion.Test.Container
         /// <param name="act">Method passed the instance of the application under test to be
         /// acted on by the unit-test.</param>
         /// <returns>Self Reference.</returns>
-        public ContainerAct OnApplication(Action<ICompositeApp> act)
+        public ContainerAct OnCompositeApp(Action<ICompositeApp> act)
         {
             if (_actedOn)
             {
@@ -205,6 +207,42 @@ namespace NetFusion.Test.Container
                 _serviceProvider = testScope.ServiceProvider;
 
                 act(_serviceProvider);
+            }
+            catch (Exception ex)
+            {
+                _resultingException = ex;
+                if (!_recordException)
+                {
+                    throw;
+                }
+            }
+
+            return this;
+        }
+        
+        /// <summary>
+        /// Allows a module form which the composite-application is composted to be acted on
+        /// to adjust its state for a specific behavior being asserted.
+        /// </summary>
+        /// <param name="act">Method called to act on a plugin module.</param>
+        /// <typeparam name="TModule">The type of the module to be acted on.</typeparam>
+        /// <returns>Self Reference.</returns>
+        public ContainerAct OnModule<TModule>(Action<TModule> act)
+            where TModule : IPluginModule
+        {
+            _fixture.AssureContainerComposed();
+            _actedOn = true;
+            
+            var module = _container.AppBuilder.AllModules.OfType<TModule>().FirstOrDefault();
+            if (module == null)
+            {
+                throw new InvalidOperationException(
+                    $"The plugin module of type: {typeof(TModule)} is not registered");
+            }
+            
+            try
+            {
+                act(module);
             }
             catch (Exception ex)
             {

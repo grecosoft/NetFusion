@@ -102,5 +102,7 @@ namespace NetFusion.Bootstrap.Plugins
         /// </summary>
         /// <param name="moduleLog">Log dictionary to populate.</param>
         void Log(IDictionary<string, object> moduleLog);
+        
+    
     }
 }

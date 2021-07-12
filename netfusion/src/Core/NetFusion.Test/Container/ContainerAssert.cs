@@ -82,12 +82,27 @@ namespace NetFusion.Test.Container
         /// <param name="assert">The method is passed an instance of the composite-application
         /// to be asserted.</param>
         /// <returns>Self Reference.</returns>
-        public ContainerAssert Application(Action<ICompositeApp> assert)
+        public ContainerAssert CompositeApp(Action<ICompositeApp> assert)
         {
             if (assert == null) throw new ArgumentNullException(nameof(assert), 
                 "Assert method not specified.");
 
             assert(_fixture.AppUnderTest);
+            return this;
+        }
+        
+        /// <summary>
+        /// Allows the unit-test to assert the state of the created composite-application.
+        /// </summary>
+        /// <param name="assert">The method is passed an instance of the composite-application
+        /// to be asserted.</param>
+        /// <returns>Self Reference.</returns>
+        public async Task<ContainerAssert> CompositeAppAsync(Func<ICompositeApp, Task> assert)
+        {
+            if (assert == null) throw new ArgumentNullException(nameof(assert), 
+                "Assert method not specified.");
+
+            await assert(_fixture.AppUnderTest);
             return this;
         }
 

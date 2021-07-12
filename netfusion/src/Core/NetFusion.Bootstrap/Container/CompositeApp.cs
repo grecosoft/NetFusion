@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using NetFusion.Base;
 using NetFusion.Base.Logging;
 using NetFusion.Bootstrap.Exceptions;
+using NetFusion.Bootstrap.Health;
 using NetFusion.Bootstrap.Logging;
 using NetFusion.Bootstrap.Plugins;
 
@@ -24,7 +25,10 @@ namespace NetFusion.Bootstrap.Container
 
         // Singleton instance of the composite-application:
         public static ICompositeApp Instance { get; private set; }
+        
+        // Composite Application Statuses:
         public bool IsStarted { get; private set; }
+        public bool IsReady { get; private set; }
         
         // Reference to the builder details that constructed the composite-application.
         private readonly ICompositeAppBuilder _builder;
@@ -34,6 +38,8 @@ namespace NetFusion.Bootstrap.Container
         private readonly IServiceProvider _serviceProvider;
         
         private readonly ILogger _logger;
+
+        public IDictionary<string, object> Properties { get; } = new Dictionary<string, object>();
         
         public CompositeApp(
             ICompositeAppBuilder builder,
@@ -94,6 +100,8 @@ namespace NetFusion.Bootstrap.Container
                 NfExtensions.Logger.LogError<CompositeApp>(ex, startExMsg);
                 throw new ContainerException(startExMsg, ex);
             }
+
+            IsReady = true;
         }
 
         public void Start()
@@ -195,6 +203,16 @@ namespace NetFusion.Bootstrap.Container
             return _serviceProvider.CreateScope();
         }
 
+        public string ToggleReadyStatus()
+        {
+            IsReady = !IsReady;
+            return IsReady ? "READY" : "NOT-READY";
+        }
+
+        // Returns the current health of the Composite Application based on the
+        // plugins from which it was built.
+        public Task<CompositeAppHealthCheck> GetHealthCheckAsync() => CompositeAppHealthCheck.CreateAsync(_builder.AllPlugins);
+
         // --------------------------- [Stopping Composite Application] -------------------------------
         
         // Should be called when the application-host is stopped.  Each registered
@@ -202,6 +220,8 @@ namespace NetFusion.Bootstrap.Container
         public async Task StopAsync()
         {
             const string stopExMsg = "Error Stopping Composite Application";
+
+            IsReady = false;
             
             if (! IsStarted)
             {
