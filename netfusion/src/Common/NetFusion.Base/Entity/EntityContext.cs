@@ -9,11 +9,17 @@ namespace NetFusion.Base.Entity
     /// </summary>
     public class EntityContext
     {
+        private string _clientToken;
+        
         /// <summary>
         /// The concurrency token submitted by the client when updating an entity.
         /// This property is populated with the value of the If-Match Http Header.
         /// </summary>
-        public string ClientToken { get; private set; }
+        public string ClientToken
+        {
+            get => _clientToken ?? throw new InvalidOperationException("Client Token has not been set.");
+            set => _clientToken = value;
+        }
         
         /// <summary>
         /// The current token associated with an entity.  When successfully updating an entity,
