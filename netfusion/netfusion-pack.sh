@@ -1,6 +1,7 @@
 PACKAGES_DIR=../../../_packages
-VERSION=9.9.91
+VERSION=7.0.0
 
+rm $PACKAGES_DIR/*.nupkg
 dotnet clean
 dotnet build NetFusion.sln
 
