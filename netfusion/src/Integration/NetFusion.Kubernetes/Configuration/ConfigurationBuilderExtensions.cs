@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
@@ -7,44 +8,87 @@ namespace NetFusion.Kubernetes.Configuration
 {
     public static class ConfigurationBuilderExtensions
     {
-        public static IConfigurationBuilder AddJsonFiles(this IConfigurationBuilder builder, 
-            IHostEnvironment hostEnvironment,
-            KubeConfigOptions options)
+        /// <summary>
+        /// Extension method invoked during the building of the Host to initialize
+        /// configuration sources most appropriate for running a Microservice within
+        /// Kubernetes. 
+        /// </summary>
+        /// <param name="builder">Reference to class used to construct the host.</param>
+        /// <param name="configBuilder">Delegate passed a reference to IConfiguration Builder
+        /// called just before the Environment and CommandLine sources are added to override
+        /// any prior determined configuration values.</param>
+        /// <param name="args">Reference to the command line arguments passed to the host.</param>
+        /// <returns>Reference to Host Builder.</returns>
+        public static IHostBuilder AddKubernetesConfigConventions(this IHostBuilder builder,
+            Action<IConfigurationBuilder> configBuilder,
+            string[] args = null)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
-            if (hostEnvironment == null) throw new ArgumentNullException(nameof(hostEnvironment));
-            if (options == null) throw new ArgumentNullException(nameof(options));
-            
-            options.Validate();
+            if (configBuilder == null) throw new ArgumentNullException(nameof(configBuilder));
 
-            // If the host is running locally load the configuration for the specified 
-            // local configuration directory.  Most often these are the configurations
-            // used when running local and not within Kubernetes.
-            if (hostEnvironment.IsDevelopment())
+            builder.ConfigureAppConfiguration((hostingContext, config) =>
             {
-                string localConfigPath = Path.Join(Directory.GetCurrentDirectory(), options.LocalConfigPath);
-                AddJsonFiles(builder, localConfigPath, options.ReloadOnChange);
-
-                return builder;
-            }
+                config.Properties.Clear();
+                
+                AddDevConfigSources(hostingContext, config);
+                configBuilder(config);
+                AddOverrideConfigSources(config, args);
+            });
             
-            // All other environments load from container directories mapped to Kubernetes volumes.  
-            // This directory is the same for all environments above Development.  The build,
-            // determines which environment files are used to create the associated Kubernetes
-            // ConfigMap and Secret resources.
-            AddJsonFiles(builder, options.ContainerConfigPath, options.ReloadOnChange);
             return builder;
         }
 
-        private static void AddJsonFiles(IConfigurationBuilder builder, string configDirectory, bool reloadOnChange)
+        private static void AddDevConfigSources(HostBuilderContext hostContext, 
+            IConfigurationBuilder config)
         {
-            if (! Directory.Exists(configDirectory))
+            bool reloadOnChange = hostContext.Configuration.GetValue(
+                "hostBuilder:reloadConfigOnChange", 
+                defaultValue: true);
+
+            // When running within Development the service's settings are read
+            // from the application settings file:
+            IHostEnvironment env = hostContext.HostingEnvironment;
+            if (env.IsDevelopment())
             {
-                Console.Error.WriteLine($"The specified configuration directory: {configDirectory} does not exist.");
+                config.AddJsonFile("appsettings.json", optional: true, reloadOnChange);
+                if (!string.IsNullOrEmpty(env.ApplicationName))
+                {
+                    var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
+                    config.AddUserSecrets(appAssembly, optional: true);
+                }
+            }
+        }
+
+        private static void  AddOverrideConfigSources(IConfigurationBuilder config, string[] args)
+        {
+            config.AddEnvironmentVariables();
+            if (args != null)
+            {
+                config.AddCommandLine(args);
+            }
+        }
+
+        /// <summary>
+        /// Builder extension method used to add all json configuration files within
+        /// a directory as file configuration sources.
+        /// </summary>
+        /// <param name="builder">Reference to configuration builder.</param>
+        /// <param name="mountedDirectory">Container directory path mounted to a Kubernetes ConfigMap volume.</param>
+        /// <param name="reloadOnChange">Determines if the file should be reloaded if changed.</param>
+        public static void AddMountedVolumeJsonFiles(this IConfigurationBuilder builder, 
+            string mountedDirectory, 
+            bool reloadOnChange = false)
+        {
+            if (string.IsNullOrWhiteSpace(mountedDirectory))
+                throw new ArgumentException("Mounted directory path not specified.", nameof(mountedDirectory));
+            
+            if (! Directory.Exists(mountedDirectory))
+            {
+                Console.Error.WriteLine($"The specified mounted directory: {mountedDirectory} does not exist.");
                 return;
             }
             
-            foreach (string file in Directory.GetFiles(configDirectory, "*.json"))
+            foreach (string file in Directory.GetFiles(mountedDirectory, "*.json"))
             {
                 Console.WriteLine($"Loading Configuration: {file}");
                 builder.AddJsonFile(file, true, reloadOnChange);
