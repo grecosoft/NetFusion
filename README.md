@@ -7,7 +7,7 @@
 
 ![IMAGE](./img/lightbulb-icon.png)[**Microservice Solution Template**](./microservice.solution.template)
 
-![IMAGE](./img/lightbulb-icon.png)[**References**](./references)
+![IMAGE](./img/lightbulb-icon.png)[**References**](./references) 
 
 ## Problem
 
