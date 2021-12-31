@@ -3,8 +3,7 @@
 namespace CoreTests.Messaging
 {
     /// <summary>
-    /// Message consumer that records the called message
-    /// handler methods.
+    /// Message consumer that records the called message handler methods.
     /// </summary>
     public abstract class MockConsumer
     {
