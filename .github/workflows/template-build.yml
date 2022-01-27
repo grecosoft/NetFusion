@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      buildVersion: '4.5.${{github.run_number}}'
+      buildVersion: '6.0.${{github.run_number}}'
       nugetAuthToken: ${{ secrets.NuGetAPIKey }}
 
     steps:
