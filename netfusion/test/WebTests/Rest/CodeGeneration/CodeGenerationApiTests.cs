@@ -1,3 +1,4 @@
+using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -47,7 +48,7 @@ namespace WebTests.Rest.CodeGeneration
 
                 webResponse.Assert.HttpResponse(response =>
                 {
-                    response.StatusCode.Should().Be(StatusCodes.Status404NotFound);
+                    response.StatusCode.Should().Be(HttpStatusCode.NotFound);
                 });
             });
         }

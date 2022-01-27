@@ -102,7 +102,8 @@ namespace WebTests.Rest.ClientRequests
             var request = new HttpRequestMessage();
             settings.Apply(request);
 
-            request.Headers.ToString().Should().Be("a: v1, v2\nb: v3\n");
+            string headers = request.Headers.ToString().Replace("\r", string.Empty);
+            headers.Should().Be("a: v1, v2\nb: v3\n");
         }
 
         /// <summary>

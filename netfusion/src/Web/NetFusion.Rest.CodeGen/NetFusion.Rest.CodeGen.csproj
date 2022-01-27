@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\..\build\common.props" />
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -19,7 +19,7 @@
     <ProjectReference Include="..\NetFusion.Rest.Resources\NetFusion.Rest.Resources.csproj" />
   </ItemGroup>
   <ItemGroup>
-     <PackageReference Include="TypeGen" Version="2.4.9" />
+     <PackageReference Include="TypeGen" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugin\" />

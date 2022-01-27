@@ -15,7 +15,7 @@ env:
 jobs:
   build:
     env:
-      buildVersion: '3.3.${{github.run_number}}'
+      buildVersion: '6.0.${{github.run_number}}'
       nugetAuthToken: ${{ secrets.NuGetAPIKey }}
     
     runs-on: ubuntu-latest
@@ -25,7 +25,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.102
+        dotnet-version: 6.0.101
     - name: Print Variables
       run: echo $buildVersion
     - name: Restore Dependencies

@@ -71,8 +71,12 @@ namespace NetFusion.Base.Properties
             if (string.IsNullOrWhiteSpace(url))
                 throw new ArgumentException("Url not specified.", nameof(url));
 
+            if (! values.TryGetValue(UrlLogFilter.Key, out var filters))
+            {
+                return false;
+            }
 
-            return values[UrlLogFilter.Key] is List<UrlLogFilter> urlLogFilters 
+            return filters is List<UrlLogFilter> urlLogFilters 
                    && urlLogFilters.Any(f => f.Url == url && f.StatusCode == statusCode);
         }
     }

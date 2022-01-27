@@ -63,11 +63,18 @@ namespace NetFusion.Settings.Plugin.Modules
                     // injected will equal the value if IOption<T> is injected.
                     var optionType = typeof(IOptions<>).MakeGenericType(st);
                     
-                    dynamic option = sp.GetRequiredService(optionType);
-                    IAppSettings settings = option.Value;
+                    var option = sp.GetRequiredService(optionType);
+
+                    var valueProp = option.GetType().GetProperty("Value");
+                    if (valueProp == null)
+                    {
+                        throw new InvalidOperationException(
+                            $"The type: {option.GetType()} does not have property Value.");
+                    }
+
+                    IAppSettings settings = (IAppSettings)valueProp.GetValue(option);
                     
                     SettingsExtensions.ValidateSettings(settings);
-
                     return settings;
                 }));
         }
