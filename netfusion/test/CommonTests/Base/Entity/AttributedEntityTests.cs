@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using NetFusion.Base.Entity;
 using System.Linq;
-using Xunit;
+using Xunit; 
 
 namespace CommonTests.Base.Entity
 {
