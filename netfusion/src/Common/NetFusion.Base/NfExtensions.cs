@@ -6,7 +6,7 @@ namespace NetFusion.Base
     /// Static class containing references to global class instances
     /// initialized at the beginning of the bootstrap process.
     /// </summary>
-    public static class NfExtensions
+    public static class NfExtensions 
     {
         /// <summary>
         /// Reference to a logger implementation providing extended logging.
