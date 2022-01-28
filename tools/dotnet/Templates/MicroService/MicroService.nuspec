@@ -9,5 +9,9 @@
 		<packageTypes>
 			<packageType name="Template" />
 		</packageTypes>
+		<icon>images\template.png</icon>
 	</metadata>
+	<files>
+    	<file src="..\template.png" target="images\" />
+  	</files>
 </package>
