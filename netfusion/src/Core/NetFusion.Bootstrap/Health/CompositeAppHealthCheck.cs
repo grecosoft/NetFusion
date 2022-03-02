@@ -11,7 +11,7 @@ namespace NetFusion.Bootstrap.Health
     /// </summary>
     public class CompositeAppHealthCheck
     {
-        private List<PluginHeathCheck> _pluginHeathChecks = new();
+        private readonly List<PluginHeathCheck> _pluginHeathChecks = new();
 
         private CompositeAppHealthCheck() { }
 
@@ -20,9 +20,9 @@ namespace NetFusion.Bootstrap.Health
         /// from which it was built.  Each plugin module implementing IModuleHealthCheck is
         /// called and allowed to report the status of any services it manages.
         /// </summary>
-        /// <param name="plugins">List of all plugins from which the composite application as built.</param>
-        /// <returns>Created instance.</returns>
-        public static async Task<CompositeAppHealthCheck> CreateAsync(IEnumerable<IPlugin> plugins)
+        /// <param name="plugins">List of all plugins from which the composite application was built.</param>
+        /// <returns>Current health of the composite-application.</returns>
+        public static async Task<CompositeAppHealthCheck> QueryHealthAsync(IEnumerable<IPlugin> plugins)
         {
             if (plugins == null) throw new ArgumentNullException(nameof(plugins));
             
@@ -42,12 +42,10 @@ namespace NetFusion.Bootstrap.Health
                 var pluginHealthCheck = new PluginHeathCheck(plugin);
                 healthCheck._pluginHeathChecks.Add(pluginHealthCheck);
                 
-                foreach (IPluginModule module in plugin.Modules)
+                foreach (IModuleHealthCheck module in moduleHealthChecks)
                 {
-                    if (module is not IModuleHealthCheck healthCheckModule) continue;
-                    
                     var moduleHealthCheck = new ModuleHealthCheck(module);
-                    await healthCheckModule.CheckModuleAspectsAsync(moduleHealthCheck);
+                    await module.CheckModuleAspectsAsync(moduleHealthCheck);
                     pluginHealthCheck.AddModuleHealthCheck(moduleHealthCheck);
                 }
             }
@@ -63,7 +61,7 @@ namespace NetFusion.Bootstrap.Health
         /// <summary>
         /// The overall worst health-check reported for the composite-application.  
         /// </summary>
-        public HealthCheckStatusType OverallHealth => _pluginHeathChecks.Any() ?
-            _pluginHeathChecks.Max(hc => hc.OverallHealth) : HealthCheckStatusType.Healthy;
+        public HealthCheckStatusType CompositeAppHealth => _pluginHeathChecks.Any() ?
+            _pluginHeathChecks.Max(hc => hc.PluginHealth) : HealthCheckStatusType.Healthy;
     }
 }

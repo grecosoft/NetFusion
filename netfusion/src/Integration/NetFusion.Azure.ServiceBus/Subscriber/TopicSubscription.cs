@@ -34,9 +34,6 @@ namespace NetFusion.Azure.ServiceBus.Subscriber
         public TopicSubscription(string namespaceName, string topicName, string subscriptionName, bool isFanout)
             : base(namespaceName, topicName)
         {
-            if (string.IsNullOrWhiteSpace(topicName))
-                throw new ArgumentException("Topic Name not specified.", nameof(topicName));
-
             if (string.IsNullOrWhiteSpace(subscriptionName))
                 throw new ArgumentException("Subscription Name not specified.", nameof(subscriptionName));
 
@@ -45,6 +42,7 @@ namespace NetFusion.Azure.ServiceBus.Subscriber
             IsFanout = isFanout;
             SubscriptionStrategy = new TopicSubscriptionStrategy(this);
             
+            // TODO: Should HostId be appended?
             UniqueSubscriptionName = IsFanout ? $"{SubscriptionName}_{Guid.NewGuid()}" : SubscriptionName;
         }
 

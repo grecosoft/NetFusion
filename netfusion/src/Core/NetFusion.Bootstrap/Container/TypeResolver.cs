@@ -11,7 +11,7 @@ using NetFusion.Base.Logging;
 namespace NetFusion.Bootstrap.Container
 {
     /// <summary> 
-    /// Having this component load the plug-in types decouples the CompositeContainer 
+    /// Having this component load the plug-in types decouples the CompositeAppBuilder 
     /// from .NET assemblies and makes the design easier to unit-test and extend.
     /// </summary>
     public class TypeResolver : ITypeResolver
@@ -38,7 +38,7 @@ namespace NetFusion.Bootstrap.Container
 
         // For each plugin module, finds all properties that are an IEnumerable of IKnownPluginType
         // and populates it from all concrete implementations contained within the list of provided
-        // plugin-types.  Think of this as very simple version of MEF without all the fat.
+        // plugin-types.  Think of this as very simple version of MEF without all the complexity.
         public void ComposePlugin(IPlugin plugin, IEnumerable<Type> fromPluginTypes)
         {
             if (plugin == null) throw new ArgumentNullException(nameof(plugin));

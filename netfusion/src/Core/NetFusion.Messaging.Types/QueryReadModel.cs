@@ -1,6 +1,7 @@
 ﻿using NetFusion.Base.Entity;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Destructurama.Attributed;
 
 namespace NetFusion.Messaging.Types
 {
@@ -12,7 +13,7 @@ namespace NetFusion.Messaging.Types
         /// <summary>
         /// Set of dynamic properties associated with the model.
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, NotLogged]
         public IEntityAttributes Attributes { get; }
 
         protected QueryReadModel()

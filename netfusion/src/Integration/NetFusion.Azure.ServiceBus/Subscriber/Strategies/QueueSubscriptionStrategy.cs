@@ -50,7 +50,7 @@ namespace NetFusion.Azure.ServiceBus.Subscriber.Strategies
                 _subscription.DispatchInfo, 
                 message);
 
-            // If the massage handler returned a response, and the originating publisher
+            // If the massage handler returned a response, and the originating sender
             // expects a reply, place the response message on the reply-to queue:
             if (response != null && NamespaceContext.TryParseReplyTo(args, 
                 out string namespaceName, 
@@ -88,12 +88,12 @@ namespace NetFusion.Azure.ServiceBus.Subscriber.Strategies
         
         private ServiceBusMessage SerializeResponse(ProcessMessageEventArgs args, object response)
         {
+            // The response will be serialized in the same format as the received message request
+            // and the correlation Id of the request message will be set on the response message.
             byte[] messageData = Context.Serialization.Serialize(response, args.Message.ContentType);
             
             return new ServiceBusMessage(new BinaryData(messageData))
             {
-                // The response will be serialized in the same format as the received message request
-                // and the correlation Id of the request message will be set on the response message.
                 ContentType = args.Message.ContentType, 
                 MessageId = args.Message.MessageId,
                 CorrelationId = args.Message.CorrelationId

@@ -4,3 +4,5 @@ services:
     build: .
     ports:
       - "nf:host-port:80"
+    environment:
+      -  ASPNETCORE_ENVIRONMENT=Development

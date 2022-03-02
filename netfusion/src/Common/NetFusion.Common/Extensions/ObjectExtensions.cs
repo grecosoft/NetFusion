@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace NetFusion.Common.Extensions
 {
@@ -17,7 +18,7 @@ namespace NetFusion.Common.Extensions
             return JsonSerializer.Serialize(value, new JsonSerializerOptions
             {
                 WriteIndented = true,
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
         }
@@ -33,7 +34,7 @@ namespace NetFusion.Common.Extensions
             
             return JsonSerializer.Serialize(value, new JsonSerializerOptions
             {
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
         }

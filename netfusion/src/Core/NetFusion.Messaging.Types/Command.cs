@@ -30,7 +30,7 @@ namespace NetFusion.Messaging.Types
         
         //-- Explicit implementation of ICommandState used to access the command result state.
         object ICommandResultState.Result { get; set; }
-        Type ICommandResultState.ResultType { get; set; }
+        Type ICommandResultState.DeclaredResultType { get; set; }
         
         
         void ICommandResultState.SetResult(object result)
@@ -38,11 +38,11 @@ namespace NetFusion.Messaging.Types
             // The command result can be null.
             if (result == null) return;
             
-            if (! result.GetType().CanAssignTo(ResultState.ResultType))
+            if (ResultState.DeclaredResultType != null && !result.GetType().CanAssignTo(ResultState.DeclaredResultType))
             {
                 throw new InvalidOperationException(
                     $"The handler for the command of type: {GetType()} returned a result of type: {result.GetType()} " + 
-                    $"and is not assignable to the command declared result type of: {ResultState.ResultType}.");
+                    $"and is not assignable to the command declared result type of: {ResultState.DeclaredResultType}.");
             }
             
             ResultState.Result = result;
@@ -58,7 +58,7 @@ namespace NetFusion.Messaging.Types
     {
         protected Command()
         {
-            ResultState.ResultType = typeof(TResult);
+            ResultState.DeclaredResultType = typeof(TResult);
             ResultState.Result = default(TResult);
         }
 

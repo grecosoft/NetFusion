@@ -1,4 +1,4 @@
-using System;
+ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,33 +23,16 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
         private readonly IExtendedLogger _logger;
         
         // Associated connection settings:
-        public NamespaceSettings BusNamespace { get; }
+        public NamespaceSettings NamespaceSettings { get; }
         
         // Azure Service Bus clients:
         public ServiceBusClient BusClient { get; private set; }
         public ServiceBusAdministrationClient AdminClient { get; private set; }
 
-        internal NamespaceConnection(IExtendedLogger logger, NamespaceSettings busNamespace)
+        internal NamespaceConnection(IExtendedLogger logger, NamespaceSettings namespaceSettings)
         {
-            _logger = logger;
-            BusNamespace = busNamespace ?? throw new ArgumentNullException(nameof(busNamespace));
-        }
-        
-        // -------------------------------- Logging ---------------------------------
-
-        private void LogEntity(string action, string entityType, NamespaceEntity entity)
-        {
-            _logger.Log<NamespaceConnection>(LogLevel.Debug, $"{action} {entityType}: {entity}");
-        }
-        
-        private void LogSubscription(string action, string entityType, EntitySubscription subscription)
-        {
-            _logger.Log<NamespaceConnection>(LogLevel.Debug, $"{action} {entityType}: {subscription}");
-        }
-        
-        private void LogRule(string action, TopicSubscription subscription, string ruleName)
-        {
-            _logger.Log<NamespaceConnection>(LogLevel.Debug, $"{action} Rule: {ruleName} on {subscription}");
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            NamespaceSettings = namespaceSettings ?? throw new ArgumentNullException(nameof(namespaceSettings));
         }
         
         // --------------------------------------------------------------------------
@@ -60,16 +43,16 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
         /// </summary>
         public void CreateClients()
         {
-            BusClient = new ServiceBusClient(BusNamespace.ConnString, BuildOptions());
-            AdminClient = new ServiceBusAdministrationClient(BusNamespace.ConnString);
+            BusClient = new ServiceBusClient(NamespaceSettings.ConnString, BuildOptions());
+            AdminClient = new ServiceBusAdministrationClient(NamespaceSettings.ConnString);
         }
 
         private ServiceBusClientOptions BuildOptions()
         {
             var defaultOptions = new ServiceBusClientOptions();
-            defaultOptions.TransportType = BusNamespace.TransportType ?? defaultOptions.TransportType;
+            defaultOptions.TransportType = NamespaceSettings.TransportType ?? defaultOptions.TransportType;
 
-            var retrySettings = BusNamespace.RetrySettings;
+            var retrySettings = NamespaceSettings.RetrySettings;
             if (retrySettings != null)
             {
                 var defaultRetryOptions = defaultOptions.RetryOptions;
@@ -235,10 +218,10 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
         {
             var existingRules = await ListRules(subscription).ToArrayAsync();
 
-            var rolesToDelete = existingRules.Where(r => subscription.RuleOptions.Count(ro => ro.Name == r.Name) == 0);
+            var rolesToDelete = existingRules.Where(r => !subscription.RuleOptions.Any(ro => ro.Name == r.Name));
             foreach (var rule in rolesToDelete) await DeleteRule(subscription, rule.Name);
             
-            var rolesToAdd = subscription.RuleOptions.Where(ro => existingRules.Count(r => r.Name == ro.Name) == 0);
+            var rolesToAdd = subscription.RuleOptions.Where(ro => !existingRules.Any(r => r.Name == ro.Name));
             foreach (var rule in rolesToAdd) await CreateRule(subscription, rule);
             
             var rolesToUpdate = subscription.RuleOptions.Where(ro => existingRules.Count(r => r.Name == ro.Name) == 1);
@@ -314,6 +297,32 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
                     
                 }
             } while (token != null);
+        }
+
+        // -------------------------------- Logging ---------------------------------
+
+        private void LogEntity(string action, string entityType, NamespaceEntity entity)
+        {
+            _logger.Log<NamespaceConnection>(LogLevel.Debug, "{action} {entityType}: {entity}",
+                action,
+                entityType,
+                entity);
+        }
+
+        private void LogSubscription(string action, string entityType, EntitySubscription subscription)
+        {
+            _logger.Log<NamespaceConnection>(LogLevel.Debug, "{action} {entityType}: {subscription}",
+                action,
+                entityType,
+                subscription);
+        }
+
+        private void LogRule(string action, TopicSubscription subscription, string ruleName)
+        {
+            _logger.Log<NamespaceConnection>(LogLevel.Debug, "{action} Rule: {ruleName} on {subscription}",
+                action,
+                ruleName,
+                subscription);
         }
     }
 }

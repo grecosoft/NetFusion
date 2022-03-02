@@ -13,4 +13,7 @@
     <PackageReference Include="NetFusion.Settings" Version="6.0.17" />
     <PackageReference Include="NetFusion.Messaging.Types" Version="6.0.17" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Destructurama.Attributed" Version="3.0.0" />
+  </ItemGroup>
 </Project>

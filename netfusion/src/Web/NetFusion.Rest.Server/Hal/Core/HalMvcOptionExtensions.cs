@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace NetFusion.Rest.Server.Hal.Core
@@ -25,7 +26,7 @@ namespace NetFusion.Rest.Server.Hal.Core
             // Use default settings if not specified by caller.
             options ??= new JsonSerializerOptions
             {
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
 

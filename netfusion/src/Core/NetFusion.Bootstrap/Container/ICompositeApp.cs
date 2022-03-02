@@ -29,7 +29,7 @@ namespace NetFusion.Bootstrap.Container
 
         /// <summary>
         /// Properties associated with the composite application used as a shared location that can
-        /// be referenced by multiple components at different points in the application's lifecycle.
+        /// be referenced by multiple components at different points in the application's life-cycle.
         /// </summary>
         IDictionary<string, object> Properties { get; }
 
@@ -57,10 +57,8 @@ namespace NetFusion.Bootstrap.Container
 
         /// <summary>
         /// Allows for service-location from a component that is not registered in the container.
-        /// This provides service location.
         /// </summary>
-        /// <returns>Service scope from which services can be resolved.  The scope must be
-        /// disposed after use.</returns>
+        /// <returns>Service scope from which services can be resolved.  The scope must be disposed after use.</returns>
         IServiceScope CreateServiceScope();
 
         /// <summary>
@@ -75,7 +73,8 @@ namespace NetFusion.Bootstrap.Container
         void Stop();
 
         /// <summary>
-        /// Toggles the current ready status.
+        /// Toggles the current ready status.  This can be used when running within a component coordinator such
+        /// as Kubernetes that monitors that current status of running microservices. 
         /// </summary>
         /// <returns>Return string value indicating status after being toggled.</returns>
         string ToggleReadyStatus();

@@ -55,7 +55,7 @@
           "format": "D"
         }
       },
-      "api-infra": {
+      "infra-id": {
         "type": "generated",
         "generator": "guid",
         "replaces": "nf:infra-id",
@@ -76,14 +76,12 @@
     },
     "sources":[
       { "include": ".vscode/**/*" },
-      { "include": "scripts/**/*" },
-      { "include": "Dockerfile.debug" },
+      { "include": ".dockerignore"},
       { "include": "Dockerfile"},
       { "include": "docker-compose.yml"},
       { "include": "src/Solution.Context.sln" },
-      { "include": "src/Components/Solution.Context.Api/**/*" },
-      { "include": "src/Components/Solution.Context.App/**/*" },
       { "include": "src/Components/Solution.Context.Domain/**/*" },
+      { "include": "src/Components/Solution.Context.App/**/*" },
       { "include": "src/Components/Solution.Context.Infra/**/*" },
       { "include": "src/Solution.Context.WebApi/**/*" },
       { "include": "src/Solution.Context.Tests/**/*" }

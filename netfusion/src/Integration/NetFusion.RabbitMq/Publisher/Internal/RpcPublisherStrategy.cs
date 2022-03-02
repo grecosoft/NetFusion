@@ -45,7 +45,7 @@ namespace NetFusion.RabbitMQ.Publisher.Internal
                 // If a successful reply, deserialize the response message into the
                 // result type associated with the command.
                 var commandResult = (ICommandResultState) command;
-                var responseObj = context.Serialization.Deserialize(contentType, commandResult.ResultType, resultBytes);
+                var responseObj = context.Serialization.Deserialize(contentType, commandResult.DeclaredResultType, resultBytes);
                 commandResult.SetResult(responseObj);
 
                 LogReceivedRpcResponse(logger, createdExchange, responseObj);

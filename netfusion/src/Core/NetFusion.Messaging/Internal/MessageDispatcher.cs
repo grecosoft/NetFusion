@@ -112,9 +112,10 @@ namespace NetFusion.Messaging.Internal
         {
             try
             {
-                LogPublishedMessage(message);
-                
                 await ApplyMessageEnrichers(message);
+
+                LogPublishedMessage(message);
+
                 await InvokePublishers(message, integrationType, cancellationToken);
             }
             catch (PublisherException ex)
@@ -124,7 +125,7 @@ namespace NetFusion.Messaging.Internal
                         new LogProperty { Name = "Message", Value = message }
                     );
                 
-                // Log the details of the publish exception and rethrow.
+                // Log the details of the publish exception and re-throw.
                 _logger.Log(ex, log);
                 throw;
             }

@@ -28,7 +28,7 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
         }
         
         private readonly List<NamespaceEntity> _namespaceEntities = new();
-        private EntitySubscription[] _subscriptions;
+        private EntitySubscription[] _subscriptions = Array.Empty<EntitySubscription>();
         
         // ---------------------- Explicit Interface --------------------------
         
@@ -63,7 +63,7 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
         /// <summary>
         /// Used to define a topic to be created within the namespace to which Domain Events
         /// are published.  Other Microservices interesting in the domain-event, create and
-        /// subscribe to subscriptions defined for the topic.
+        /// subscribe to subscriptions defined on the topic.
         /// </summary>
         /// <param name="topicName">The name of the topic to be declared.</param>
         /// <param name="topicConfig">Optional delegate used to apply additional configurations.</param>
@@ -123,7 +123,7 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
             
             AssertUniqueQueue(queueName);
 
-            var queue = new QueueMeta(typeof(IMessage), NamespaceName, queueName)
+            var queue = new QueueMeta(NamespaceName, queueName, typeof(IMessage))
             {
                 IsSecondaryQueue = true
             };
@@ -146,7 +146,7 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
             
             AssertUniqueQueue(queueName);
 
-            var queue = new QueueMeta(typeof(IMessage), NamespaceName, queueName);
+            var queue = new QueueMeta(NamespaceName, queueName, typeof(IMessage));
             queueConfig?.Invoke(queue);
             
             _namespaceEntities.Add(queue);
@@ -166,7 +166,7 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
         }
         
         /// <summary>
-        /// Used to define an existing queue defined and consumed by another Microservice to which the
+        /// Used to define an existing queue, defined and consumed by another Microservice, to which the
         /// current publishing service sends commands. If the command expects an asynchronous response
         /// in the future, the publisher can specify a reply queue using the ReplyToQueueName property
         /// of QueueSourceMeta.     
@@ -223,8 +223,9 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
             if (string.IsNullOrWhiteSpace(queueName))
                 throw new ArgumentException("Queue name not specified.", nameof(queueName));
             
-            string assignedMessageNamespace = GetMessageNamespace(typeof(TCommand), messageNamespace);
-            
+            string assignedMessageNamespace = GetMessageNamespace(typeof(TCommand), messageNamespace); 
+            var replayQueue = AssureReplyQueue(queueName);
+
             var existingQueueSource = _namespaceEntities.OfType<RpcQueueSourceMeta>()
                 .FirstOrDefault(q => q.EntityName == queueName && q.MessageNamespace == assignedMessageNamespace);
 
@@ -236,8 +237,23 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
                     $"for namespace {NamespaceName}.");
             }
             
-            var queue = new RpcQueueSourceMeta<TCommand>(NamespaceName, queueName, messageNamespace);
+            var queue = new RpcQueueSourceMeta<TCommand>(assignedMessageNamespace, replayQueue);
+
             _namespaceEntities.Add(queue);
+        }
+
+        private RpcReplyQueryMeta AssureReplyQueue(string queueName)
+        {
+            var replyQueue = _namespaceEntities.OfType<RpcReplyQueryMeta>()
+                .FirstOrDefault(q => q.EntityName == queueName);
+
+            if (replyQueue == null)
+            {
+                replyQueue = new RpcReplyQueryMeta(NamespaceName, queueName);
+                _namespaceEntities.Add(replyQueue);
+            }
+
+            return replyQueue;
         }
 
         private static string GetMessageNamespace(Type messageType, string messageNamespace)
@@ -247,7 +263,7 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
             
             if (assignedNamespace == null)
             {
-                throw new ArgumentException(
+                throw new InvalidOperationException(
                     $"Message namespace not specified and could not be determined for RPC command {messageType}");
             }
 
@@ -282,7 +298,7 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
         /// <param name="topicName">The name of the topic.</param>
         /// <param name="subscriptionName">The name of the subscription.</param>
         /// <param name="config">Delegate called to apply additional configurations.</param>
-        protected void Subscription(string topicName, string subscriptionName,
+        protected void ConfigTopicSubscription(string topicName, string subscriptionName,
             Action<TopicSubscription> config)
         {
             if (string.IsNullOrWhiteSpace(topicName))
@@ -308,7 +324,39 @@ namespace NetFusion.Azure.ServiceBus.Namespaces
             {
                 throw new InvalidOperationException(
                     $"Subscription {subscriptionName} for topic {topicName} within namespace {NamespaceName} " +
-                    $"is not configured. Validate a message handler method is decorated with {nameof(TopicSubscriptionAttribute)}");
+                    $"is not configured. Validate a message handler method is decorated with {nameof(TopicSubscriptionAttribute)}.");
+            }
+
+            return subscription;
+        }
+
+        /// <summary>
+        /// Allows configuring a subscription defined for a specified queue.  This method can be used
+        /// to reference the created subscription to configure additional properties.
+        /// </summary>
+        /// <param name="queueName">The name of the queue.</param>
+        /// <param name="config">Delegate called to apply additional configurations.</param>
+        protected void ConfigQueueSubscription(string queueName, Action<QueueSubscription> config)
+        {
+            if (string.IsNullOrWhiteSpace(queueName))
+                throw new ArgumentException($"Queue Name not specified.", nameof(queueName));
+            
+            if (config is null) throw new ArgumentNullException(nameof(config));
+
+            QueueSubscription subscription = GetQueueSubscription(queueName);
+            config(subscription);
+        }
+
+        private QueueSubscription GetQueueSubscription(string queueName)
+        {
+            var subscription = _subscriptions.OfType<QueueSubscription>()
+                .FirstOrDefault(qs => qs.EntityName == queueName);
+
+            if (subscription == null)
+            {
+                throw new InvalidCastException(
+                    $"Subscription for queue {queueName} within namespace {NamespaceName} is not configured." +
+                    $"Validate a message handler method is decorated with {nameof(QueueSubscriptionAttribute)}.");
             }
 
             return subscription;

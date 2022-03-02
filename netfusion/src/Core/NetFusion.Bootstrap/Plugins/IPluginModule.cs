@@ -39,6 +39,9 @@ namespace NetFusion.Bootstrap.Plugins
         /// <returns>Contains context information related to the module.</returns>
         ModuleContext Context { get; set; }
 
+
+        // ------------------- Initialization / Configuration ------------------------
+
         /// <summary>
         /// The first method called on the module.  This method is called on all modules 
         /// before the Configure method is called.
@@ -49,6 +52,9 @@ namespace NetFusion.Bootstrap.Plugins
         /// Called after all plug-in modules have been initialized.
         /// </summary>
         void Configure();
+
+
+        // ------------------- Service Registration ------------------------
 
         /// <summary>
         /// Called first for all plug-in modules to allow default service implementations
@@ -75,6 +81,9 @@ namespace NetFusion.Bootstrap.Plugins
         /// </param>
         void RegisterServices(IServiceCollection services);
 
+
+        // ------------------- Execution ------------------------
+
         /// <summary>
         /// Method called on the module by the bootstrap process.  Called after all types have been
         /// registered and the composite application has been created.
@@ -96,13 +105,14 @@ namespace NetFusion.Bootstrap.Plugins
         /// <param name="services">Scoped service provider.</param>
         Task StopModuleAsync(IServiceProvider services);
 
+        // ------------------- Logging ------------------------
+
         /// <summary>
         /// Called after the module is initialized and configured so that it can add module
         /// specific logs to the application composite log.
         /// </summary>
         /// <param name="moduleLog">Log dictionary to populate.</param>
         void Log(IDictionary<string, object> moduleLog);
-        
-    
+       
     }
 }

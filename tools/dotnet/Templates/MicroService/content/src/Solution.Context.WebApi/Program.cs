@@ -1,93 +1,137 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+﻿using Destructurama;
 using NetFusion.Bootstrap.Container;
+using NetFusion.Builder;
+using NetFusion.Messaging.Plugin;
+using NetFusion.Rest.Server.Plugin;
 using NetFusion.Serilog;
+using NetFusion.Settings.Plugin;
+using NetFusion.Web.Mvc.Extensions;
+using NetFusion.Web.Mvc.Plugin;
 using Serilog;
 using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
+using Solution.Context.App.Plugin;
+using Solution.Context.Domain.Plugin;
+using Solution.Context.Infra.Plugin;
 using Solution.Context.WebApi.Plugin;
+using System.Diagnostics;
 
-namespace Solution.Context.WebApi
+
+// Allows changing the minimum log level of the service at runtime.
+LogLevelControl logLevelControl = new();
+logLevelControl.SetMinimumLevel(LogLevel.Debug);
+
+var builder = WebApplication.CreateBuilder(args);
+
+InitializeLogger(builder.Configuration);
+
+builder.Host.ConfigureAppConfiguration(SetupConfiguration);
+builder.Host.ConfigureLogging(SetupLogging);
+builder.Host.UseSerilog();
+
+builder.Services.AddCors();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddControllers();
+
+// Register Log Level Control so it can be injected into
+// a service at runtime to change the level.
+builder.Services.AddLogLevelControl(logLevelControl);
+
+try
 {
-    // Initializes the application's configuration and logging then delegates 
-    // to the Startup class to initialize HTTP pipeline related settings.
-    public class Program
+    // Add Plugins to the Composite-Container:
+    builder.Services.CompositeContainer(builder.Configuration, new SerilogExtendedLogger())
+        .AddSettings()
+        .AddMessaging()
+        .AddWebMvc()
+        .AddRest()
+
+        .AddPlugin<InfraPlugin>()
+        .AddPlugin<AppPlugin>()
+        .AddPlugin<DomainPlugin>()
+        .AddPlugin<WebApiPlugin>()
+        .Compose();
+}
+catch
+{
+    Log.CloseAndFlush();
+}
+
+var app = builder.Build();
+
+string viewerUrl = app.Configuration.GetValue<string>("Netfusion:ViewerUrl");
+if (!string.IsNullOrWhiteSpace(viewerUrl))
+{
+    app.UseCors(cors => cors.WithOrigins(viewerUrl)
+        .AllowAnyMethod()
+        .AllowCredentials()
+        .WithExposedHeaders("WWW-Authenticate", "resource-404")
+        .AllowAnyHeader());
+}
+
+app.UseSerilogRequestLogging();
+
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthorization();
+app.MapControllers();
+
+app.UseEndpoints(endpoints =>
+{
+    if (app.Environment.IsDevelopment())
     {
-        // Allows changing the minimum log level of the service at runtime.
-        private static readonly LogLevelControl LogLevelControl = new LogLevelControl();
-        
-        public static async Task Main(string[] args)
-        {
-            IHost webHost = BuildWebHost(args);
-            
-            var compositeApp = webHost.Services.GetRequiredService<ICompositeApp>();
-            var lifetime = webHost.Services.GetRequiredService<IHostApplicationLifetime>();
-
-            lifetime.ApplicationStopping.Register(() =>
-            {
-                compositeApp.Stop();
-                Log.CloseAndFlush();
-            });
-                  
-            await compositeApp.StartAsync();
-            await webHost.RunAsync();    
-        }
-
-        private static IHost BuildWebHost(string[] args) 
-        {
-            return Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration(SetupConfiguration)
-                .ConfigureLogging(SetupLogging)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                    webBuilder.ConfigureServices(sc =>
-                    {
-                        // Register Log Level Control so it can be injected into
-                        // a service at runtime to change the level.
-                        sc.AddLogLevelControl(LogLevelControl);
-                    });
-                })
-                .UseSerilog()
-                .Build();
-        }
-
-        private static void SetupConfiguration(HostBuilderContext context, 
-            IConfigurationBuilder builder)
-        {
-            
-        }
-
-        private static void SetupLogging(HostBuilderContext context, 
-            ILoggingBuilder builder)
-        {
-            var seqUrl = context.Configuration.GetValue<string>("logging:seqUrl");
-
-            // Send any Serilog configuration issue logs to console.
-            Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
-            Serilog.Debugging.SelfLog.Enable(Console.Error);
-            
-            var logConfig = new LoggerConfiguration()
-                .MinimumLevel.ControlledBy(LogLevelControl.Switch)
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-
-                .Enrich.FromLogContext()
-                .Enrich.WithCorrelationId()
-                .Enrich.WithHostIdentity(WebApiPlugin.HostId, WebApiPlugin.HostName)
-                
-                .WriteTo.Console();
-
-            if (! string.IsNullOrEmpty(seqUrl))
-            {
-                logConfig.WriteTo.Seq(seqUrl);
-            }
-            
-            Log.Logger = logConfig.CreateLogger();
-        }
+        endpoints.MapCompositeLog();
     }
+});
+
+
+// Reference the Composite-Application to start the plugins then
+// start the web application.
+var compositeApp = app.Services.GetRequiredService<ICompositeApp>();
+var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
+
+lifetime.ApplicationStopping.Register(() =>
+{
+    compositeApp.Stop();
+    Log.CloseAndFlush();
+});
+
+await compositeApp.StartAsync();
+await app.RunAsync();
+
+void InitializeLogger(IConfiguration configuration)
+{
+    // Send any Serilog configuration issues logs to console.
+    Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
+    Serilog.Debugging.SelfLog.Enable(Console.Error);
+
+    var logConfig = new LoggerConfiguration()
+        .MinimumLevel.ControlledBy(logLevelControl.Switch)
+        .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+        .Destructure.UsingAttributes()
+
+        .Enrich.FromLogContext()
+        .Enrich.WithCorrelationId()
+        .Enrich.WithHostIdentity(WebApiPlugin.HostId, WebApiPlugin.HostName);
+
+    logConfig.WriteTo.Console(theme: AnsiConsoleTheme.Literate);
+
+    var seqUrl = configuration.GetValue<string>("logging:seqUrl");
+    if (!string.IsNullOrEmpty(seqUrl))
+    {
+        logConfig.WriteTo.Seq(seqUrl);
+    }
+
+    Log.Logger = logConfig.CreateLogger();
+}
+
+void SetupConfiguration(HostBuilderContext context, IConfigurationBuilder configBuilder)
+{
+
+}
+
+void SetupLogging(HostBuilderContext context, ILoggingBuilder logBuilder)
+{
+    logBuilder.ClearProviders();
+    logBuilder.AddSerilog(Log.Logger);
 }

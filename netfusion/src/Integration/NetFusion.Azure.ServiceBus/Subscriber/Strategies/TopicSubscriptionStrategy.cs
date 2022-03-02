@@ -33,7 +33,7 @@ namespace NetFusion.Azure.ServiceBus.Subscriber.Strategies
 
         // In the case of a Fanout subscription used for notification type message delivery,
         // received domain-events when the Microservice instance is not running should be
-        // ignored so the subscription will auto-delete after being un-active for 5 minutes
+        // ignored so the subscription will auto-delete after being inactive for 5 minutes
         // if not deleted when the Microservice is stopped.
         private void SetSubscriptionTypeProperties()
         {

@@ -10,30 +10,35 @@ namespace NetFusion.Bootstrap.Health
     /// </summary>
     public class PluginHeathCheck
     {
-        private List<ModuleHealthCheck> _moduleHealthChecks = new();
+        private readonly List<ModuleHealthCheck> _moduleHealthChecks = new();
         
         /// <summary>
-        /// Plugin associated with the health-check.
+        /// Plugin type associated with the health-check.
         /// </summary>
-        public IPlugin Plugin { get; }
+        public Type PluginType { get; }
         
         /// <summary>
         /// Health-checks of the plugin's modules.
         /// </summary>
-        public IEnumerable<ModuleHealthCheck> ModuleHealthChecks => _moduleHealthChecks;
+        public IReadOnlyCollection<ModuleHealthCheck> ModuleHealthChecks { get; }
 
-        public PluginHeathCheck(IPlugin plugin)
+        internal PluginHeathCheck(IPlugin plugin)
         {
-            Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
+            PluginType = plugin?.GetType() ?? throw new ArgumentNullException(nameof(plugin));
+            ModuleHealthChecks = _moduleHealthChecks;
         }
         
         /// <summary>
         /// The overall worst health-check reported for the plugin.  
         /// </summary>
-        public HealthCheckStatusType OverallHealth => _moduleHealthChecks.Any() ? 
-            _moduleHealthChecks.Max(ac => ac.OverallHealth) : HealthCheckStatusType.Healthy;
+        public HealthCheckStatusType PluginHealth => _moduleHealthChecks.Any() ? 
+            _moduleHealthChecks.Max(ac => ac.ModuleHealth) : HealthCheckStatusType.Healthy;
 
-        public void AddModuleHealthCheck(ModuleHealthCheck healthCheck)
+        /// <summary>
+        /// Records the health for a module associated with the plugin.
+        /// </summary>
+        /// <param name="healthCheck">The module health check.</param>
+        internal void AddModuleHealthCheck(ModuleHealthCheck healthCheck)
         {
             if (healthCheck == null) throw new ArgumentNullException(nameof(healthCheck));
             

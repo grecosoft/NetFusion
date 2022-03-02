@@ -26,6 +26,9 @@ namespace NetFusion.Bootstrap.Container
         private readonly List<IPlugin> _plugins = new();
         private readonly CompositeAppBuilder _builder;
 
+        /// <summary>
+        /// Indicates if the container has been composed from a set of registered plugins.
+        /// </summary>
         public bool IsComposed { get; private set; }
 
         // --------------------------- [Container Initialization] -------------------------------
@@ -37,13 +40,13 @@ namespace NetFusion.Bootstrap.Container
 
             _serviceCollection = services ?? throw new ArgumentNullException(nameof(services));
             _builder = new CompositeAppBuilder(services, configuration);
-            
-            AddContainerConfigurations(_builder);
         }
         
+        /// <summary>
+        /// Reference to ICompositeAppBuilder responsible for building an instance of CompositeApp
+        /// from a list of registered plugins.
+        /// </summary>
         public ICompositeAppBuilder AppBuilder => _builder;
-
-        private string Version => GetType().Assembly.GetName().Version?.ToString() ?? string.Empty;
         
         /// <summary>
         /// Adds a plugin to the composite-container.  If the plugin type is already registered,
@@ -74,10 +77,14 @@ namespace NetFusion.Bootstrap.Container
         {
             return _plugins.Any(p => p.GetType() == typeof(T));
         }
-        
+
         // --------------------------- [Configurations] -------------------------------
 
-        // Finds a configuration belonging to one of the registered plugins.
+        /// <summary>
+        /// Finds a configuration belonging to one of the registered plugins.
+        /// </summary>
+        /// <typeparam name="T">The type of the IPluginConfig derived configuration.</typeparam>
+        /// <returns>Reference to the configuration or an exception if not found.</returns>
         public T GetPluginConfig<T>() where T : IPluginConfig
         {
             var pluginConfig = _plugins.SelectMany(p => p.Configs)
@@ -92,26 +99,19 @@ namespace NetFusion.Bootstrap.Container
             return (T) pluginConfig;
         }
 
-        // This method is called from the constructor and is a placeholder for future
-        // implementations if global settings pertaining to CompositeContainer can be
-        // overridden by the application host.
-        private static void AddContainerConfigurations(ICompositeAppBuilder builder)
-        {
-            // The code here should create instances of IContainerConfig configuration
-            // instances with default settings specified.  The configuration should then
-            // be registered by calling: builder.AddContainerConfig(config);
-            
-            // Then the host calls GetContainerConfig to obtain the default configuration
-            // to which it can override any default configurations.
-        }
-        
         // --------------------------- [Container Composition] -------------------------------
-        
-        // Called by CompositeContainerBuilder to build an instance of CompositeApp
-        // from the list of registered plugins.  
+
+        /// <summary>
+        /// Called by CompositeContainerBuilder to build an instance of CompositeApp from the 
+        /// list of registered plugins.
+        /// </summary>
+        /// <param name="typeResolver">Reference to an implementation responsible for resolving
+        /// a plugin's types.</param>
         public void Compose(ITypeResolver typeResolver)
         {
             if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
+
+            string version = GetType().Assembly.GetName().Version?.ToString() ?? string.Empty;
             
             try
             {
@@ -121,7 +121,7 @@ namespace NetFusion.Bootstrap.Container
                 }
 
                 NfExtensions.Logger.Log<CompositeContainer>(LogLevel.Information, 
-                    "NetFusion {Version} Bootstrapping", Version);
+                    "NetFusion {Version} Bootstrapping", version);
                 
                 // Delegate to the builder:
                 _builder.ComposePlugins(typeResolver, _plugins.ToArray());

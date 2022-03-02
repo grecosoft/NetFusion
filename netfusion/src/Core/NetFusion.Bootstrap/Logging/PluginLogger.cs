@@ -64,9 +64,9 @@ namespace NetFusion.Bootstrap.Logging
 
         private static void LogDependentModules(IDictionary<string, object> values, IPluginModule module)
         {
-            var dependencies = module.DependentServiceModules.Select(dms => new {
-                ModuleProperty = dms.Name,
-                ReferencedModule = dms.PropertyType.FullName
+            var dependencies = module.DependentServiceModules.Select(dsm => new {
+                ModuleProperty = dsm.Name,
+                ReferencedModule = dsm.PropertyType.FullName
             });
 
             values["DependentModules"] = dependencies.ToArray();

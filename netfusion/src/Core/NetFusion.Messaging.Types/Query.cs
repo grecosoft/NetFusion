@@ -1,5 +1,4 @@
 ﻿using System;
-using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Messaging.Types
@@ -30,15 +29,6 @@ namespace NetFusion.Messaging.Types
         public virtual void SetResult(object result)
         {
             // The query result can be null.
-            if (result == null) return;
-            
-            if (! result.GetType().CanAssignTo(DeclaredResultType))
-            {
-                throw new InvalidOperationException(
-                    $"The handler for the query of type: {GetType()} returned a result of type: {result.GetType()} " + 
-                    $"and is not assignable to the query's declared result type of: {DeclaredResultType}.");
-            }
-
             Result = result;
         }
     }

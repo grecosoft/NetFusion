@@ -6,27 +6,39 @@ using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Azure.ServiceBus.Publisher
 {
+    /// <summary>
+    /// Specifies an existing queue to which a command messaged should
+    /// be delivered when published.
+    /// </summary>
     public abstract class QueueSourceMeta : NamespaceEntity
     {
-        protected QueueSourceMeta(Type messageType, string namespaceName, string queueName) 
-            : base(messageType, namespaceName, queueName)
+        protected QueueSourceMeta(string namespaceName, string queueName, Type messageType)
+            : base(namespaceName, queueName, messageType)
         {
-            EntityStrategy = new NoOpStrategy();
+            EntityStrategy = new NoOpEntityStrategy();
         }
         
+        /// <summary>
+        /// The optional queue name, defined by the publisher, on which it receives 
+        /// asynchronous replies to the original published commands.
+        /// </summary>
         public string ReplyToQueueName { get; set; }
     }
-    
+
+    /// <summary>
+    /// Specifies an existing queue to which a command messaged  should
+    /// be delivered when published.
+    /// </summary>
     public class QueueSourceMeta<TCommand> : QueueSourceMeta
         where TCommand : ICommand
     {
         public QueueSourceMeta(string namespaceName, string queueName) 
-            : base(typeof(TCommand), namespaceName, queueName)
+            : base(namespaceName, queueName, typeof(TCommand))
         {
             
         }
         
-        internal override void SetBusMessageProps(ServiceBusMessage busMessage, IMessage message)
+        internal override void SetBusMessageProps(ServiceBusMessage busMessage, IMessage _)
         {
             if (!string.IsNullOrWhiteSpace(ReplyToQueueName))
             {

@@ -37,7 +37,7 @@ namespace CoreTests.Health
                 await testResult.Assert.CompositeAppAsync(async a =>
                 {
                     var healthCheck = await a.GetHealthCheckAsync();
-                    healthCheck.OverallHealth.Should().Be(HealthCheckStatusType.Healthy);
+                    healthCheck.CompositeAppHealth.Should().Be(HealthCheckStatusType.Healthy);
                 });
             });
         }
@@ -66,7 +66,7 @@ namespace CoreTests.Health
                 await testResult.Assert.CompositeAppAsync(async a =>
                 {
                     var healthCheck = await a.GetHealthCheckAsync();
-                    healthCheck.OverallHealth.Should().Be(HealthCheckStatusType.Degraded);
+                    healthCheck.CompositeAppHealth.Should().Be(HealthCheckStatusType.Degraded);
                 });
             });
         }
@@ -95,7 +95,7 @@ namespace CoreTests.Health
                 await testResult.Assert.CompositeAppAsync(async a =>
                 {
                     var healthCheck = await a.GetHealthCheckAsync();
-                    healthCheck.OverallHealth.Should().Be(HealthCheckStatusType.Unhealthy);
+                    healthCheck.CompositeAppHealth.Should().Be(HealthCheckStatusType.Unhealthy);
                 });
             });
         }
@@ -124,7 +124,7 @@ namespace CoreTests.Health
                 await testResult.Assert.CompositeAppAsync(async a =>
                 {
                     var healthCheck = await a.GetHealthCheckAsync();
-                    healthCheck.OverallHealth.Should().Be(HealthCheckStatusType.Unhealthy);
+                    healthCheck.CompositeAppHealth.Should().Be(HealthCheckStatusType.Unhealthy);
                 });
             });
         }

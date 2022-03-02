@@ -1,5 +1,7 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NetFusion.Bootstrap.Plugins
 {
@@ -29,16 +31,16 @@ namespace NetFusion.Bootstrap.Plugins
         /// <summary>
         /// The name of the .NET assembly containing the plugin.
         /// </summary>
-        string AssemblyName { get; set; }
+        string AssemblyName { get; }
         
         /// <summary>
         /// The version of the .NET assembly containing the plugin.
         /// </summary>
-        string AssemblyVersion { get; set; }
+        string AssemblyVersion { get; }
         
         /// <summary>
         /// The modules for which the plugin is composed.  Modules are used to
-        /// organize the code for plugin implementation and are invoked when
+        /// organize the code for plugin's implementation and are invoked when
         /// the CompositeContainer is built.
         /// </summary>
         IEnumerable<IPluginModule> Modules { get; }
@@ -94,5 +96,30 @@ namespace NetFusion.Bootstrap.Plugins
         /// <typeparam name="T">The type of the configuration.</typeparam>
         /// <returns>Reference to the configuration.  If not found, an exception is thrown.</returns>
         T GetConfig<T>() where T : IPluginConfig;
+
+        /// <summary>
+        /// Starts all plugin modules in the order they where added to the plugin.
+        /// </summary>
+        /// <param name="logger">Reference to the logger.</param>
+        /// <param name="serivces">Reference to the service provider.</param>
+        /// <returns>Task that can be awaited.</returns>
+        Task StartAsync(ILogger logger, IServiceProvider serivces);
+
+        /// <summary>
+        /// Runs all plugin modules in the order they where added to the plugin after they where started.
+        /// This allows any plugins dependent on the functionally of another to be executed.
+        /// </summary>
+        /// <param name="logger">Reference to the logger.</param>
+        /// <param name="serivces">Reference to the service provider.</param>
+        /// <returns>Task that can be awaited.</returns>
+        Task RunAsync(ILogger logger, IServiceProvider serivces);
+
+        /// <summary>
+        /// Stops all plugin modules in the reverse order from which they where started
+        /// </summary>
+        /// <param name="logger">Reference to the logger.</param>
+        /// <param name="serivces">Reference to the service provider.</param>
+        /// <returns>Task that can be awaited.</returns>
+        Task StopAsync(ILogger logger, IServiceProvider serivces);
     }
 }

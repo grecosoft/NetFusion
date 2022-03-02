@@ -11,7 +11,7 @@ namespace CoreTests.Health.Mocks
         
         public Task CheckModuleAspectsAsync(ModuleHealthCheck healthCheck)
         {
-           healthCheck.RecordAspect(HealthCheckStatus, "ModuleOneAspect", "ModuleOneValue");
+           healthCheck.RecordAspect(HealthAspectCheck.For("ModuleOneAspect", "ModuleOneValue", HealthCheckStatus));
            return Task.CompletedTask;
         }
     }

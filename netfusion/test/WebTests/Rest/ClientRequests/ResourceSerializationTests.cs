@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using FluentAssertions;
 using NetFusion.Rest.Client;
 using NetFusion.Rest.Resources;
@@ -21,7 +22,7 @@ namespace WebTests.Rest.ClientRequests
     {
         private static JsonSerializerOptions SerializerOptions => new JsonSerializerOptions
         {
-            IgnoreNullValues = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
         

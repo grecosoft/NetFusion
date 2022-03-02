@@ -66,8 +66,8 @@ namespace NetFusion.Bootstrap.Logging
 
         private void LogPlugin(IPlugin plugin, IDictionary<string, object> log)
         {
-            log["PluginName"] = plugin.Name;
             log["PluginId"] = plugin.PluginId;
+            log["PluginName"] = plugin.Name;
             log["PluginAssembly"] = plugin.AssemblyName;
             log["PluginDescription"] = plugin.Description;
             log["PluginSourceUrl"] = plugin.SourceUrl;

@@ -30,7 +30,7 @@ namespace NetFusion.Bootstrap.Plugins
         
         /// <summary>
         /// The plugin types that can be accessed by the module limited to the set based on its type of plugin.  
-        /// This list will contain all types from all plug-ns if the context is associated with a core plugin.
+        /// This list will contain all types from all plug-ins if the context is associated with a core plugin.
         /// However, for application centric plugins, the list is limited to types found in application plugins.
         /// </summary>
         public IEnumerable<Type> AllPluginTypes { get; }

@@ -37,7 +37,7 @@ namespace NetFusion.Bootstrap.Container
         // service-collection populated by the bootstrapped plugin modules.
         private readonly IServiceProvider _serviceProvider;
         
-        private readonly ILogger _logger;
+        private readonly ILogger<CompositeApp> _logger;
 
         public IDictionary<string, object> Properties { get; } = new Dictionary<string, object>();
         
@@ -47,6 +47,8 @@ namespace NetFusion.Bootstrap.Container
             ILogger<CompositeApp> logger)
         {
             Instance = this;
+
+            IsReady = false;
             IsStarted = false;
             
             _builder = builder ?? throw new ArgumentNullException(nameof(builder));
@@ -75,7 +77,7 @@ namespace NetFusion.Bootstrap.Container
             try
             {
                 // Create a service scope in which each plugin can be started:
-                using (_logger.LogInformationDuration("Starting Modules"))
+                using (_logger.LogInformationDuration("Starting Composite-Application"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {                    
                     NfExtensions.Logger.Log<CompositeApp>(CoreServicesLogger.Log(scope.ServiceProvider));
@@ -101,6 +103,7 @@ namespace NetFusion.Bootstrap.Container
                 throw new ContainerException(startExMsg, ex);
             }
 
+            IsStarted = true;
             IsReady = true;
         }
 
@@ -111,10 +114,6 @@ namespace NetFusion.Bootstrap.Container
         
         private async Task StartModules(IServiceProvider services)
         {
-            // Start the plug-in modules in dependent order starting with core modules 
-            // and ending with the application host modules.
-            IsStarted = true;
-
             // Now that the service-provider has been created, initialize each
             // module so it can use ILoggerFactory to obtain a logger.
             foreach (IPluginModule module in _builder.AllModules)
@@ -122,65 +121,31 @@ namespace NetFusion.Bootstrap.Container
                 module.Context.InitLogging(services);
             }
 
-            var startTasks = StartPlugins(services);
-            await Task.WhenAll(startTasks);
+            // Start the plug-in modules in dependent order starting with core modules 
+            // and ending with the application host module.
+            await StartPlugins(services);
             
             _logger.LogInformation("All Modules Started");
 
             // Last phase to allow any modules to execute any processing that
             // might be dependent on another module being started.
-            var runTasks = RunPlugins(services);
-            await Task.WhenAll(runTasks);
+            await RunPlugins(services);
             
             _logger.LogInformation("All Modules Ran");
         }
 
-        private Task[] StartPlugins(IServiceProvider services)
+        private async Task StartPlugins(IServiceProvider services)
         {
-            var coreStartTask = StartPluginModules(services, _builder.CorePlugins);
-            var appStartTask = StartPluginModules(services, _builder.AppPlugins);
-            var hostStartTask = StartPluginModules(services, _builder.HostPlugin);
-
-            return new[] {coreStartTask, appStartTask, hostStartTask};
+            await Task.WhenAll(_builder.CorePlugins.Select(p => p.StartAsync(_logger, services)));
+            await Task.WhenAll(_builder.AppPlugins.Select(p => p.StartAsync(_logger, services)));
+            await _builder.HostPlugin.StartAsync(_logger, services);
         }
 
-        private async Task StartPluginModules(IServiceProvider services, params IPlugin[] plugins)
+        private async Task RunPlugins(IServiceProvider services)
         {
-            foreach (IPlugin plugin in plugins)
-            {
-                foreach (IPluginModule module in plugin.Modules)
-                {
-                    _logger.LogDebug("Starting Module: {moduleType} for Plugin: {pluginName}", 
-                        module.GetType().Name, 
-                        module.Context.Plugin.Name);
-                
-                    await module.StartModuleAsync(services);
-                }
-            }
-        }
-
-        private Task[] RunPlugins(IServiceProvider services)
-        {
-            var coreRunTask = RunPluginModules(services, _builder.CorePlugins);
-            var appRunTask = RunPluginModules(services, _builder.AppPlugins);
-            var hostRunTask = RunPluginModules(services, _builder.HostPlugin);
-
-            return new[] {coreRunTask, appRunTask, hostRunTask};
-        }
-
-        private async Task RunPluginModules(IServiceProvider services, params IPlugin[] plugins)
-        {
-            foreach (IPlugin plugin in plugins)
-            {
-                foreach (IPluginModule module in plugin.Modules)
-                {
-                    _logger.LogDebug("Running Module: {moduleType} for Plugin: {pluginName}", 
-                        module.GetType().Name, 
-                        module.Context.Plugin.Name);
-                
-                    await module.RunModuleAsync(services);
-                }
-            }
+            await Task.WhenAll(_builder.CorePlugins.Select(p => p.RunAsync(_logger, services)));
+            await Task.WhenAll(_builder.AppPlugins.Select(p => p.RunAsync(_logger, services)));
+            await _builder.HostPlugin.RunAsync(_logger, services);
         }
 
         // --------------------------- [Runtime Services] -------------------------------
@@ -211,7 +176,22 @@ namespace NetFusion.Bootstrap.Container
 
         // Returns the current health of the Composite Application based on the
         // plugins from which it was built.
-        public Task<CompositeAppHealthCheck> GetHealthCheckAsync() => CompositeAppHealthCheck.CreateAsync(_builder.AllPlugins);
+        public async Task<CompositeAppHealthCheck> GetHealthCheckAsync()
+        {
+            var healthCheck = await CompositeAppHealthCheck.QueryHealthAsync(_builder.AllPlugins);
+            if (healthCheck.CompositeAppHealth == HealthCheckStatusType.Healthy)
+            {
+                return healthCheck;
+            }
+
+            var log = LogMessage.For(LogLevel.Debug,
+                    "Current Composite Application Health: {Status}",
+                    healthCheck.CompositeAppHealth)
+                .WithProperties(new LogProperty {Name = "HealthCheck", Value = healthCheck});
+
+            _logger.Log(log);
+            return healthCheck;
+        }
 
         // --------------------------- [Stopping Composite Application] -------------------------------
         
@@ -228,6 +208,8 @@ namespace NetFusion.Bootstrap.Container
                 return;
             }
             
+            IsStarted = false;
+            
             try
             {
                 _logger.LogInformation("Composite Application Stopping.");
@@ -236,6 +218,7 @@ namespace NetFusion.Bootstrap.Container
                 using (_logger.LogInformationDuration("Stopping Composite-Application"))
                 using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
+                    // Stops the plugins in the reverse order from which they where started.
                     await StopPluginModulesAsync(scope.ServiceProvider);
                 }
             }
@@ -265,36 +248,16 @@ namespace NetFusion.Bootstrap.Container
         
         private async Task StopPluginModulesAsync(IServiceProvider services)
         {
-            IsStarted = false;
-            
-            var hostStopTask = StopPluginModules(services, _builder.HostPlugin);
-            var appStopTask = StopPluginModules(services, _builder.AppPlugins);
-            var coreStopTask = StopPluginModules(services, _builder.CorePlugins);
-
-            await Task.WhenAll(hostStopTask, appStopTask, coreStopTask);
-        }
-
-        private async Task StopPluginModules(IServiceProvider services, params IPlugin[] plugins)
-        {
-            foreach (IPlugin plugin in plugins)
-            {
-                var pluginModules = plugin.Modules.Reverse().ToArray();
-                foreach (IPluginModule module in pluginModules)
-                {
-                    _logger.LogDebug("Stopping Module: {moduleType} for Plugin: {pluginName}", 
-                        module.GetType().Name, 
-                        module.Context.Plugin.Name);
-                
-                    await module.StopModuleAsync(services);
-                }
-            }
+            await _builder.HostPlugin.StopAsync(_logger, services);
+            await Task.WhenAll(_builder.AppPlugins.Select(p => p.StopAsync(_logger, services)));
+            await Task.WhenAll(_builder.CorePlugins.Select(p => p.StopAsync(_logger, services)));
         }
 
         private void ThrowIfStopped()
         {
             if (! IsStarted)
             {
-                throw new ContainerException("Stopped Composite Application can no longer be accessed");
+                throw new ContainerException("Stopped Composite Application can not be accessed");
             }
         }
     }

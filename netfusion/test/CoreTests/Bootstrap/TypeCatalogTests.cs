@@ -158,7 +158,7 @@ namespace CoreTests.Bootstrap
 
         /// <summary>
         /// If one and only one service interface named as the implementation type
-        /// prefixed with "I" can't be determined, an exception is raised.
+        /// prefixed with "I" can't be determined the component is not registered.
         /// </summary>
         [Fact]
         public void ServiceInterface_MatchingConvention_MustBeFound()
@@ -166,13 +166,11 @@ namespace CoreTests.Bootstrap
             // Arrange:
             var catalog = new TypeCatalog(new ServiceCollection(), typeof(ComponentNotMatchingConvention));
             
-            // Act/Assert:
-            var ex = Assert.Throws<InvalidOperationException>(() =>
-            {
-                catalog.AsImplementedInterface(_ => true, ServiceLifetime.Transient);
-            });
-
-            ex.Message.Should().Contain("does not implement one and only one interface");
+            // Act:
+            catalog.AsImplementedInterface(_ => true, ServiceLifetime.Transient);
+            
+            // Assert:
+            catalog.Services.Should().BeEmpty();
         }
 
         /// <summary>
@@ -185,13 +183,11 @@ namespace CoreTests.Bootstrap
             // Arrange:
             var catalog = new TypeCatalog(new ServiceCollection(), typeof(ComponentOne));
             
-            // Act/Assert:
-            var ex = Assert.Throws<InvalidCastException>(() =>
-            {
-                catalog.AsService<ISpecial>(_ => true, ServiceLifetime.Transient);
-            });
-
-            ex.Message.Should().Contain("not assignable to").And.Contain("Implementation Type");
+            // Act:
+            catalog.AsService<ISpecial>(_ => true, ServiceLifetime.Transient);
+            
+            // Assert:
+            catalog.Services.Should().BeEmpty();
         }
         
         /// <summary>

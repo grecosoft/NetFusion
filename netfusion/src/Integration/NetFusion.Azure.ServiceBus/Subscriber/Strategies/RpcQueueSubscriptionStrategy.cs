@@ -46,9 +46,9 @@ namespace NetFusion.Azure.ServiceBus.Subscriber.Strategies
             
             try
             {
+                // Deserialize received message and dispatch to command handler:
                 IMessage message = Context.DeserializeMessage(dispatchInfo, args);
                 
-                // Deserialize received message and dispatch to command handler:
                 object response = await Context.DispatchModule.InvokeDispatcherInNewLifetimeScopeAsync(
                     dispatchInfo,
                     message);
@@ -99,14 +99,15 @@ namespace NetFusion.Azure.ServiceBus.Subscriber.Strategies
         
         private ServiceBusMessage SerializeResponse(ProcessMessageEventArgs args, object response)
         {
+            // The response will be serialized in the same format as the received message request
+            // and the correlation Id of the request message will be set on the response message.
             byte[] messageData = Context.Serialization.Serialize(response, args.Message.ContentType);
             
             return new ServiceBusMessage(new BinaryData(messageData))
             {
-                // The response will be serialized in the same format as the received message request
-                // and the correlation Id of the request message will be set on the response message.
                 ContentType = args.Message.ContentType,
-                CorrelationId = args.Message.CorrelationId
+                CorrelationId = args.Message.CorrelationId,
+                MessageId = args.Message.MessageId
             };
         }
 
@@ -123,7 +124,8 @@ namespace NetFusion.Azure.ServiceBus.Subscriber.Strategies
             // The publisher can then use the error method to throw an exception.
             var errorMsg = new ServiceBusMessage
             {
-                CorrelationId = args.Message.CorrelationId
+                CorrelationId = args.Message.CorrelationId,
+                MessageId = args.Message.MessageId
             };
             
             errorMsg.ApplicationProperties["RpcError"] = errorMessage;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Logging;
 using NetFusion.Common.Extensions.Collections;
+using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Common.Extensions.Tasks;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Filters;
@@ -57,7 +58,7 @@ namespace NetFusion.Messaging.Internal
             }
             catch (QueryDispatchException ex)
             {
-                // Log the details of the dispatch exception and rethrow.
+                // Log the details of the dispatch exception and re-throw.
                 _logger.LogError(ex, "Exception dispatching query.");
                 throw;
             }
@@ -76,11 +77,14 @@ namespace NetFusion.Messaging.Internal
         // it between the pre and post filters.
         private async Task InvokeDispatcher(QueryDispatchInfo dispatcher, IQuery query, CancellationToken cancellationToken)
         {
+            await ApplyFilters<IPreQueryFilter>(query, _queryFilters, (f, q) => f.OnPreExecuteAsync(q));
             LogQueryDispatch(dispatcher, query);
             
-            await ApplyFilters<IPreQueryFilter>(query, _queryFilters, (f, q) => f.OnPreExecuteAsync(q));
             await InvokeQueryHandler(dispatcher, query, cancellationToken);
             await ApplyFilters<IPostQueryFilter>(query, _queryFilters, (f, q) => f.OnPostExecuteAsync(q));
+
+            ValidateQueryResult(query);
+            LogQueryResult(query);
         }
         
         // Executes a list of asynchronous filters and awaits their completion.  Once completed,
@@ -127,9 +131,24 @@ namespace NetFusion.Messaging.Internal
                 throw new QueryDispatchException("Exception Dispatching Query.", dispatcher, ex);
             }
         }
-        
+
+        private static void ValidateQueryResult(IQuery query)
+        {
+            if (query.Result == null)
+            {
+                return;
+            }
+
+            if (!query.Result.GetType().CanAssignTo(query.DeclaredResultType))
+            {
+                throw new InvalidOperationException(
+                    $"The handler for the query of type: {query.GetType()} returned a result of type: {query.Result.GetType()} " +
+                    $"and is not assignable to the query's declared result type of: {query.DeclaredResultType}.");
+            }
+        }
+
         // ----------------------------- [Logging] -----------------------------
-        
+
         private void LogQueryDispatch(QueryDispatchInfo dispatchInfo, IQuery query)
         {
             var handlerInfo = new {
@@ -155,6 +174,16 @@ namespace NetFusion.Messaging.Internal
                     Value = filters.Select(f => f.GetType().FullName).ToArray()
                 });
             
+            _logger.Log(log);
+        }
+        
+        private void LogQueryResult(IQuery query)
+        {
+            var log = LogMessage.For(LogLevel.Debug, "Query {MessageType} Result", query.GetType())
+                .WithProperties(
+                    new LogProperty { Name = "Result", Value = query.Result ?? "No-Result" }
+                );
+
             _logger.Log(log);
         }
         

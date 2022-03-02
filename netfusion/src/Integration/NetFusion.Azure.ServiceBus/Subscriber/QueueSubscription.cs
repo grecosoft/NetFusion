@@ -1,4 +1,3 @@
-using System;
 using NetFusion.Azure.ServiceBus.Subscriber.Internal;
 using NetFusion.Azure.ServiceBus.Subscriber.Strategies;
 
@@ -12,9 +11,6 @@ namespace NetFusion.Azure.ServiceBus.Subscriber
         public QueueSubscription(string namespaceName, string queueName)
             : base(namespaceName, queueName)
         {
-            if (string.IsNullOrWhiteSpace(queueName))
-                throw new ArgumentException("Queue name not specified.", nameof(queueName));
-            
             SubscriptionStrategy = new QueueSubscriptionStrategy(this);
         }
 

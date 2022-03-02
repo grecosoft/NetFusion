@@ -49,6 +49,7 @@ namespace NetFusion.Serilog
         
         public void Log<TContext>(NetFusionException ex, LogMessage message)
         {
+            if (ex is null) throw new ArgumentNullException(nameof(ex));
             if (message == null) throw new ArgumentNullException(nameof(message));
 
             var eventLevel = ToSerilogLevel(message.LogLevel) ?? LogEventLevel.Error;

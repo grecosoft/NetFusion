@@ -16,7 +16,7 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
 {
     /// <summary>
     /// Module responsible for managing Namespace related connections and metadata
-    /// pertaining to the entities to be created within the namespaces.
+    /// pertaining to the entities created within the namespaces.
     /// </summary>
     public class NamespaceModule : PluginModule,
         INamespaceModule

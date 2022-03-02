@@ -20,7 +20,7 @@ namespace NetFusion.Messaging.Enrichers
             
             // This adds an unique value to identity each message.
             message.Attributes.SetGuidValue(
-                AttributeExtensions.GetPluginScopedName("MessageId"),
+                AttributeExtensions.GetMessagingScopedName("MessageId"),
                 Guid.NewGuid(), false);
 
             return Task.CompletedTask;

@@ -8,7 +8,7 @@ using NetFusion.Bootstrap.Container;
 
 namespace NetFusion.Web.Mvc.Extensions
 {
-    public static class ApplicationBuilderExtensions
+    public static class LogEndpointExtensions
     {
         /// <summary>
         /// Adds route when called will return a JSON document containing a detailed log of

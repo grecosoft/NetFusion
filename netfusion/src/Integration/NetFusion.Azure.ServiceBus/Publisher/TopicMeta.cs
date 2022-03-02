@@ -10,15 +10,15 @@ using NetFusion.Messaging.Types.Contracts;
 namespace NetFusion.Azure.ServiceBus.Publisher
 {
     /// <summary>
-    /// Contains properties used to specify characteristics of a topic to be created.
-    /// Also provides reference to the corresponding IEntityCreationStrategy.
+    /// Defines a topic to which a microservice publishes domain-events to which 
+    /// other microservices can subscribe by creating subscriptions.
     /// </summary>
     public abstract class TopicMeta : NamespaceEntity
     {
-        protected TopicMeta(Type messageType, string namespaceName, string topicName)
-            : base(messageType, namespaceName, topicName)
+        protected TopicMeta(string namespaceName, string topicName, Type messageType)
+            : base(namespaceName, topicName, messageType)
         {
-            EntityStrategy = new TopicStrategy(this);
+            EntityStrategy = new TopicEntityStrategy(this);
         }
         
         /// <summary>
@@ -95,9 +95,10 @@ namespace NetFusion.Azure.ServiceBus.Publisher
     }
 
     /// <summary>
-    /// Contains properties defining how a Azure Service Bus topic should be created.
+    /// Defines a topic to which a microservice publishes domain-events to which other microservices
+    /// can subscribe by creating subscriptions.
     /// </summary>
-    /// <typeparam name="TDomainEvent">The Domain Event associated with the topic.</typeparam>
+    /// <typeparam name="TDomainEvent">The Domain Event published to the topic.</typeparam>
     public class TopicMeta<TDomainEvent> : TopicMeta,
         IMessageFilter
         where TDomainEvent : IDomainEvent
@@ -105,8 +106,8 @@ namespace NetFusion.Azure.ServiceBus.Publisher
         private Action<ServiceBusMessage, TDomainEvent> _busMessageUpdateAction;
         private Func<TDomainEvent, bool> _applies;
         
-        public TopicMeta(string namespaceName, string name) 
-            : base(typeof(TDomainEvent), namespaceName, name)
+        public TopicMeta(string namespaceName, string topicName) 
+            : base(namespaceName, topicName, typeof(TDomainEvent))
         {
             
         }
@@ -117,7 +118,7 @@ namespace NetFusion.Azure.ServiceBus.Publisher
         }
 
         /// <summary>
-        /// Specifies a delegate called when a message is being published used 
+        /// Specifies a delegate, called when a message is being published, used 
         /// to set corresponding properties on the created service bus message.
         /// </summary>
         /// <param name="action">Passed the message being published and the
@@ -127,6 +128,11 @@ namespace NetFusion.Azure.ServiceBus.Publisher
             _busMessageUpdateAction = action ?? throw new ArgumentNullException(nameof(action));
         }
         
+        /// <summary>
+        /// Specifies a predicate to determine if a message meets the criteria to
+        /// be published to the topic.
+        /// </summary>
+        /// <param name="applies">Predicate passed the domain event being published.</param>
         public void When(Func<TDomainEvent, bool> applies)
         {
             _applies = applies ?? throw new ArgumentNullException(nameof(applies));

@@ -5,7 +5,8 @@ using NetFusion.Base.Plugins;
 namespace NetFusion.Azure.ServiceBus.Namespaces.Internal
 {
     /// <summary>
-    /// Implementations determine the entities that should be created within a specific namespace.
+    /// Implementations determine the entities created within a specific namespace and the 
+    /// message types that should be delivered. Service Bus entities refer to Queues and Topics.
     /// </summary>
     public interface INamespaceRegistry : IKnownPluginType
     {
@@ -15,16 +16,16 @@ namespace NetFusion.Azure.ServiceBus.Namespaces.Internal
         public string NamespaceName { get; }
         
         /// <summary>
-        /// The namespace entities to be created within the namespace.
+        /// The entities to be created within the namespace.
         /// </summary>
         /// <returns>List of metadata for the entities to be created.</returns>
         public IEnumerable<NamespaceEntity> GetNamespaceEntities();
         
         /// <summary>
-        /// Called to allow the registry to apply any additional settings
-        /// to the created subscriptions.
+        /// Called to allow the registry to apply any additional subscription
+        /// settings.
         /// </summary>
-        /// <param name="subscriptions">List of subscriptions created.</param>
+        /// <param name="subscriptions">List of created subscriptions.</param>
         void ConfigureSubscriptions(IEnumerable<EntitySubscription> subscriptions);
     }
 }

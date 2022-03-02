@@ -8,14 +8,16 @@ using NetFusion.Messaging.Types.Contracts;
 namespace NetFusion.Azure.ServiceBus.Publisher
 {
     /// <summary>
-    /// Non-generic version of the class used by the base code implementation.
+    /// Defines a queue provided by a microservice to which it subscribes and receives commands
+    /// sent by other microservices.  See:  QueueSourceMeta and RpcQueueSourceMeta used by the
+    /// publisher to route command messages to the queue.
     /// </summary>
     public class QueueMeta : NamespaceEntity
     {
-        public QueueMeta(Type messageType, string namespaceName, string queueName)
-            : base(messageType, namespaceName, queueName)
+        public QueueMeta(string namespaceName, string queueName, Type messageType)
+            : base(namespaceName, queueName, messageType)
         {
-            EntityStrategy = new QueueStrategy(this);
+            EntityStrategy = new QueueEntityStrategy(this);
         }
 
         /// <summary>
@@ -101,7 +103,7 @@ namespace NetFusion.Azure.ServiceBus.Publisher
                 RequiresDuplicateDetection = RequiresDuplicateDetection ?? false,
                 DefaultMessageTimeToLive = DefaultMessageTimeToLive ?? TimeSpan.MaxValue,
                 AutoDeleteOnIdle = AutoDeleteOnIdle ?? TimeSpan.MaxValue,
-                DuplicateDetectionHistoryTimeWindow = DuplicateDetectionHistoryTimeWindow ?? TimeSpan.FromMinutes(1),
+                DuplicateDetectionHistoryTimeWindow = DuplicateDetectionHistoryTimeWindow ?? TimeSpan.FromMinutes(10),
                 EnableBatchedOperations = EnableBatchedOperations ?? true,
                 EnablePartitioning = EnablePartitioning ?? false,
             };
@@ -117,20 +119,22 @@ namespace NetFusion.Azure.ServiceBus.Publisher
             properties.MaxSizeInMegabytes = MaxSizeInMegabytes ?? 1024;
             properties.DefaultMessageTimeToLive = DefaultMessageTimeToLive ?? TimeSpan.MaxValue;
             properties.AutoDeleteOnIdle = AutoDeleteOnIdle ?? TimeSpan.MaxValue;
-            properties.DuplicateDetectionHistoryTimeWindow = DuplicateDetectionHistoryTimeWindow ?? TimeSpan.FromMinutes(1);
+            properties.DuplicateDetectionHistoryTimeWindow = DuplicateDetectionHistoryTimeWindow ?? TimeSpan.FromMinutes(10);
             properties.EnableBatchedOperations = EnableBatchedOperations ?? true;
         }
     }
 
     /// <summary>
-    /// Specifies a queue associated with a message.
+    /// Defines a queue provided by a microservice to which it subscribes and receives commands
+    /// sent by other microservices.  See:  QueueSourceMeta and RpcQueueSourceMeta used by the
+    /// publisher to route command messages to the queue.
     /// </summary>
-    /// <typeparam name="TMessage"></typeparam>
+    /// <typeparam name="TMessage">The type of the command associated with the queue.</typeparam>
     public class QueueMeta<TMessage> : QueueMeta
         where TMessage : IMessage
     {
         public QueueMeta(string namespaceName, string queueName) 
-            : base(typeof(TMessage), namespaceName, queueName)
+            : base(namespaceName, queueName, typeof(TMessage))
         {
             
         }

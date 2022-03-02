@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using NetFusion.Base.Exceptions;
+using NetFusion.Common.Extensions;
 
 namespace NetFusion.Base.Logging
 {
@@ -11,24 +13,30 @@ namespace NetFusion.Base.Logging
     /// </summary>
     public class NullExtendedLogger : IExtendedLogger
     {
-        public void Log<TContext>(LogMessage message) => Console.WriteLine(message);
-        public void Log<TContext>(params LogMessage[] messages) => Console.WriteLine(messages);
-        public void Log<TContext>(IEnumerable<LogMessage> messages) => Console.WriteLine(messages);
-        public void Log<TContext>(NetFusionException ex, LogMessage message) { Console.WriteLine(ex.Message); }
+        public void Log<TContext>(LogMessage message) => Console.WriteLine(message.Message);
+        
+        public void Log<TContext>(params LogMessage[] messages) 
+            => Console.WriteLine(messages.Select(m => m.Message).ToIndentedJson());
+        
+        public void Log<TContext>(IEnumerable<LogMessage> messages) 
+            => Console.WriteLine(messages.Select(m => m.Message).ToIndentedJson());
+
+        public void Log<TContext>(NetFusionException ex, LogMessage message) 
+            => Console.WriteLine(new { ExceptionMsg = ex.Message, message.Message }.ToIndentedJson());
 
         public void Log<TContext>(LogLevel logLevel, string message, params object[] args)
-            => Console.WriteLine(message);
+            => Console.WriteLine(new { logLevel, message }.ToIndentedJson());
 
         public void LogDetails<TContext>(LogLevel logLevel, string message, object details, params object[] args)
-            => Console.WriteLine(message);
-
+            => Console.WriteLine(new { logLevel, message }.ToIndentedJson());
+            
         public void LogError<TContext>(Exception ex, string message, params object[] args)
-            => Console.WriteLine(ex.Message);
+            => Console.WriteLine(new { ExceptionMsg = ex.Message, message }.ToIndentedJson());
 
         public void LogErrorDetails<TContext>(Exception ex, string message, object details, params object[] args)
-            => Console.WriteLine(ex.Message);
+            => Console.WriteLine(new { ExceptionMsg = ex.Message, message }.ToIndentedJson());
 
         public void LogError<TContext>(NetFusionException ex, string message, params object[] args)
-            => Console.WriteLine(ex.Message);
+            => Console.WriteLine(new { ExceptionMsg = ex.Message, message }.ToIndentedJson());
     }
 }

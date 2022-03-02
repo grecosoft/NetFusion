@@ -44,9 +44,10 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
             ValidateEntityDependencies();
         }
 
-        // Validate each entity specifying a Forwarding secondary queue has been defined,
+        // Validate for each entity specifying a Forwarding queue a secondary queue has been defined.
         private void ValidateEntityDependencies()
         {
+            // TODO:  Take into account reply queues:
             var queues = _entities.OfType<QueueMeta>();
 
             var forwardedQueues = queues.Select(q => new[] { q.ForwardDeadLetteredMessagesTo, q.ForwardTo })
@@ -89,7 +90,7 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
             {
                 if (entity.EntityStrategy is IRequiresContext required)
                 {
-                    required.Context = GetContext(services, entity);
+                    required.Context = CreateContext(services, entity);
                 }
                 
                 NamespaceConnection conn = NamespaceModule.GetConnection(entity.NamespaceName);
@@ -101,7 +102,7 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
             }
         }
         
-        private NamespaceContext GetContext(IServiceProvider services, NamespaceEntity entity) =>
+        private NamespaceContext CreateContext(IServiceProvider services, NamespaceEntity entity) =>
             new(NamespaceModule, DispatchModule)
             {
                 Logger = Context.LoggerFactory.CreateLogger(entity.EntityStrategy.GetType().FullName),

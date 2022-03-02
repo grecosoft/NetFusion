@@ -19,7 +19,7 @@ namespace NetFusion.Base.Logging
             Action<string, object[]> logMessage)
         {
             Log = logger ?? throw new ArgumentNullException(nameof(logger));
-            _logMessage = logMessage ?? throw new ArgumentNullException(nameof(logger));
+            _logMessage = logMessage ?? throw new ArgumentNullException(nameof(logMessage));
 
             _stopWatch = new Stopwatch();
             _stopWatch.Start();

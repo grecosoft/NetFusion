@@ -2,6 +2,7 @@ using FluentAssertions;
 using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Test.Container;
 using NetFusion.Test.Plugins;
+using System;
 using Xunit;
 
 namespace CoreTests.Bootstrap
@@ -98,7 +99,8 @@ namespace CoreTests.Bootstrap
             {
                 fixture.Arrange.Container(c =>
                     {
-                        var testPlugin = new MockHostPlugin {AssemblyName = null};
+                        var testPlugin = new MockHostPlugin();
+                        testPlugin.SetPluginMeta(null, "1.0.0", Array.Empty<Type>());
                         c.RegisterPlugins(testPlugin);
                     })
                     .Act.RecordException().ComposeContainer()

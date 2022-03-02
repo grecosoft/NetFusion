@@ -39,11 +39,12 @@ namespace NetFusion.Bootstrap.Catalog
 
         private static Type[] GetNonAbstractTypes(IEnumerable<Type> types) => types.Where(t => !t.IsAbstract).ToArray();
        
+
         public ITypeCatalog AsService<TService>(Func<Type, bool> filter, ServiceLifetime lifetime)
         {
             if (filter == null) throw new ArgumentNullException(nameof(filter));
 
-            foreach (Type matchingType in _types.Where(filter))
+            foreach (Type matchingType in _types.Where(t => filter(t) && t.CanAssignTo<TService>()))
             {
                 AddDescriptor(new ServiceDescriptor(typeof(TService), matchingType, lifetime));
             }
@@ -81,7 +82,10 @@ namespace NetFusion.Bootstrap.Catalog
             foreach (Type matchingType in _types.Where(filter))
             {
                 Type serviceType = GetServiceInterface(matchingType);
-                AddDescriptor(new ServiceDescriptor(serviceType, matchingType, lifetime));
+                if (serviceType != null)
+                {
+                    AddDescriptor(new ServiceDescriptor(serviceType, matchingType, lifetime));
+                }
             }
 
             return this;
@@ -126,14 +130,7 @@ namespace NetFusion.Bootstrap.Catalog
                 .Where(t => t.Name.Equals(serviceName, StringComparison.Ordinal))
                 .ToArray();
             
-            if (serviceInterfaces.Length != 1)
-            {
-                throw new InvalidOperationException(
-                    $"The implementation type: {implementationType} does not implement one and " + 
-                    $"only one interface named: {serviceName}");
-            }
-
-            return serviceInterfaces.First();
+            return serviceInterfaces.Length == 1 ? serviceInterfaces.First() : null;
         }
     }
 }

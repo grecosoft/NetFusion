@@ -5,6 +5,7 @@ using System.Reflection;
 using Azure.Messaging.ServiceBus;
 using NetFusion.Azure.ServiceBus.Subscriber.Internal;
 using NetFusion.Azure.ServiceBus.Subscriber.Strategies;
+using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Types;
 
@@ -28,25 +29,41 @@ namespace NetFusion.Azure.ServiceBus.Subscriber
             Options.ReceiveMode = ServiceBusReceiveMode.ReceiveAndDelete;
         }
 
+        // Returns a dictionary used to determine the MessageDispatchInfo to use
+        // for routing a RPC received command based on its assigned Message Namespace.
         private static IDictionary<string, MessageDispatchInfo> GetDispatchersByNamespace(
             IEnumerable<MessageDispatchInfo> dispatchers)
         {
-            return dispatchers.Select(md => new
-                {
-                    Namespace = GetMessageNamespace(md),
-                    DispatchInfo = md
-                }).Where(map => map.Namespace != null)
-                .ToDictionary(map => map.Namespace, map => map.DispatchInfo);
+            var rpcMessageDispatchers = dispatchers.Select(md => new
+            {
+                MessageNamespace = GetMessageNamespace(md),
+                DispatchInfo = md
+            }).ToArray();
+
+            var invalidDispatchers = rpcMessageDispatchers.Where(d => d.MessageNamespace == null)
+                .Select(d => d.DispatchInfo.ToString());
+            
+            if (invalidDispatchers.Any())
+            {
+                throw new ContainerException(
+                    "One or more MessageNamespaces could not be determined for RPC message handler subscriptions.", 
+                    "InvalidDispatchers", invalidDispatchers);
+            }
+            
+            return rpcMessageDispatchers.ToDictionary(map => map.MessageNamespace, map => map.DispatchInfo);
         }
 
         private static string GetMessageNamespace(MessageDispatchInfo dispatchInfo)
-        {
+        { 
             return dispatchInfo.MessageHandlerMethod.GetCustomAttribute<RpcQueueSubscriptionAttribute>()?.MessageNamespace
                    ?? dispatchInfo.MessageType.GetCustomAttribute<MessageNamespaceAttribute>()?.MessageNamespace;
         }
 
         internal MessageDispatchInfo GetMessageNamespaceDispatch(string messageNamespace)
         {
+            if (string.IsNullOrWhiteSpace(messageNamespace))
+                throw new ArgumentException($"Message Namespace not specified.", nameof(messageNamespace));
+
             return _messageNamespaceDispatchers.TryGetValue(messageNamespace, out var dispatchInfo) ? dispatchInfo : null;
         }
 

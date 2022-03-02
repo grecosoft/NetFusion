@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Routing;
 using NetFusion.Base.Properties;
 using NetFusion.Bootstrap.Container;
 using NetFusion.Bootstrap.Health;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace NetFusion.Kubernetes.Probes
+namespace NetFusion.Web.Mvc.Extensions
 {
-    public static class ProbeEndpointExtensions
+    public static class HealthEndpointExtensions
     {
         /// <summary>
         /// Adds route called to determine if the Composite Application has finished bootstrapping and is
@@ -18,11 +19,11 @@ namespace NetFusion.Kubernetes.Probes
         /// a Kubernetes pod definition.  If the Microservice does not start in the allotted time, the
         /// container running the service is re-created.
         /// </summary>
-        /// <param name="app">The application builder being configured by the running host</param>
+        /// <param name="endpoints">The builder used to configure HTTP endpoints.</param>
         /// <param name="route">The route at which the action can be called.</param>
         /// <param name="notStartedStatus">The status to return when the service is not ready.</param>
         /// <returns>Endpoint Route Builder</returns>
-        public static IEndpointRouteBuilder MapStartupProbe(this IEndpointRouteBuilder endpoints,
+        public static IEndpointRouteBuilder MapStartupCheck(this IEndpointRouteBuilder endpoints,
             string route = "/mgt/startup-check",
             int notStartedStatus = StatusCodes.Status503ServiceUnavailable)
         {
@@ -30,10 +31,12 @@ namespace NetFusion.Kubernetes.Probes
             
             if (string.IsNullOrWhiteSpace(route))
                 throw new ArgumentException("Start Route not Specified", nameof(route));
+
+            var compositeApp = GetCompositeApp(endpoints);
             
             endpoints.MapGet(route, c =>
             {
-                c.Response.StatusCode = CompositeApp.Instance?.IsReady ?? false
+                c.Response.StatusCode = compositeApp.IsStarted 
                     ? StatusCodes.Status200OK
                     : notStartedStatus;
 
@@ -49,11 +52,11 @@ namespace NetFusion.Kubernetes.Probes
         /// will be called after the Startup Probe succeeds or immediately if a startup probe is not specified in
         /// Kubernetes pod definition.  
         /// </summary>
-        /// <param name="app">The application builder being configured by the running host</param>
+        /// <param name="endpoints">The builder used to configure HTTP endpoints.</param>
         /// <param name="route">The route at which the action can be called.</param>
         /// <param name="notReadyStatus">The status to return when the service is not ready.</param>
         /// <returns>Endpoint Route Builder</returns>
-        public static IEndpointRouteBuilder MapReadinessProbe(this IEndpointRouteBuilder endpoints,
+        public static IEndpointRouteBuilder MapReadinessCheck(this IEndpointRouteBuilder endpoints,
             string route = "/mgt/ready-check",
             int notReadyStatus = StatusCodes.Status503ServiceUnavailable)
         {
@@ -61,12 +64,13 @@ namespace NetFusion.Kubernetes.Probes
             
             if (string.IsNullOrWhiteSpace(route))
                 throw new ArgumentException("Readiness Check Route not Specified", nameof(route));
-            
-            CompositeApp.Instance.Properties.AddLogUrlFilter(route, HttpStatusCode.OK);
+
+            var compositeApp = GetCompositeApp(endpoints);
+            compositeApp.Properties.AddLogUrlFilter(route, HttpStatusCode.OK);
 
             endpoints.MapGet(route, c =>
             {
-                c.Response.StatusCode = CompositeApp.Instance?.IsReady ?? false
+                c.Response.StatusCode = compositeApp.IsReady 
                     ? StatusCodes.Status200OK
                     : notReadyStatus;
 
@@ -81,11 +85,11 @@ namespace NetFusion.Kubernetes.Probes
         /// to this URL can be configured as a liveness probe within a Kubernetes pod definition and will be
         /// called to determine the Microservice's health.  
         /// </summary>
-        /// <param name="app">The application builder being configured by the running host</param>
+        /// <param name="endpoints">The builder used to configure HTTP endpoints.</param>
         /// <param name="route">The route at which the action can be called.</param>
         /// <param name="notHealthyStatus">The status to return when the service is not healthy.</param>
         /// <returns>Endpoint Route Builder</returns>
-        public static IEndpointRouteBuilder MapHealthProbe(this IEndpointRouteBuilder endpoints,
+        public static IEndpointRouteBuilder MapHealthCheck(this IEndpointRouteBuilder endpoints,
             string route = "/mgt/health-check",
             int notHealthyStatus = StatusCodes.Status503ServiceUnavailable)
         {
@@ -94,23 +98,31 @@ namespace NetFusion.Kubernetes.Probes
             if (string.IsNullOrWhiteSpace(route))
                 throw new ArgumentException("Health Check Route not Specified", nameof(route));
 
-            CompositeApp.Instance.Properties.AddLogUrlFilter(route, HttpStatusCode.OK);
+            var compositeApp = GetCompositeApp(endpoints);
+           
+            compositeApp.Properties.AddLogUrlFilter(route, HttpStatusCode.OK);
             
             endpoints.MapGet(route, async c =>
             {
-                if (CompositeApp.Instance == null)
-                {
-                    c.Response.StatusCode = notHealthyStatus;
-                    return;
-                }
+                var healthCheck = await compositeApp.GetHealthCheckAsync();
                     
-                var healthCheck = await CompositeApp.Instance.GetHealthCheckAsync();
-                    
-                c.Response.StatusCode = healthCheck.OverallHealth == HealthCheckStatusType.Healthy ?
+                c.Response.StatusCode = healthCheck.CompositeAppHealth == HealthCheckStatusType.Healthy ?
                     StatusCodes.Status200OK : notHealthyStatus;
             });
 
             return endpoints;
+        }
+
+        private static ICompositeApp GetCompositeApp(IEndpointRouteBuilder endpoints)
+        {
+            var compositeApp =  endpoints.ServiceProvider.GetService<ICompositeApp>();
+            if (compositeApp == null)
+            {
+                throw new InvalidOperationException(
+                    $"Composite-Application not composed - Call Compose on {typeof(ICompositeAppBuilder)}");
+            }
+
+            return compositeApp;
         }
     }
 }

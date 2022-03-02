@@ -105,18 +105,19 @@ namespace NetFusion.Bootstrap.Container
         
         private void SetServiceDependencies()
         {
+            SetServiceDependencies(CorePlugins, PluginTypes.CorePlugin);
+
+            SetServiceDependencies(AppPlugins, PluginTypes.AppPlugin, PluginTypes.CorePlugin);
+
             SetServiceDependencies(new []{ HostPlugin }, 
                 PluginTypes.HostPlugin, 
                 PluginTypes.AppPlugin, 
                 PluginTypes.CorePlugin);
-            
-            SetServiceDependencies(AppPlugins, PluginTypes.AppPlugin, PluginTypes.CorePlugin);
-            SetServiceDependencies(CorePlugins, PluginTypes.CorePlugin);
         }
         
         // A plugin module can reference another module by having a property deriving from IPluginModuleService
         // Finds all IPluginModuleService derived properties of the referencing module and sets them to the
-        // corresponding referenced module instance.
+        // corresponding referenced module instance. 
         private void SetServiceDependencies(IPlugin[] plugins, params PluginTypes[] pluginTypes)
         {
             foreach (IPlugin plugin in plugins)
@@ -126,7 +127,7 @@ namespace NetFusion.Bootstrap.Container
                     module.DependentServiceModules = GetDependentServiceProperties(module);
                     foreach (PropertyInfo serviceProp in module.DependentServiceModules)
                     {
-                        IPluginModuleService dependentService = GetModuleSupportingService(serviceProp.PropertyType, pluginTypes);
+                        IPluginModuleService dependentService = GetModuleSupportingService(module, serviceProp.PropertyType, pluginTypes);
                         serviceProp.SetValue(module, dependentService);
                     }
                 }
@@ -143,8 +144,23 @@ namespace NetFusion.Bootstrap.Container
                     && p.CanWrite)
                 .ToArray();
         }
-        
-        private IPluginModuleService GetModuleSupportingService(Type serviceType, PluginTypes[] pluginTypes)
+
+        /// <summary>
+        /// Given a IPluginModuleService type referenced by a module's property, searches for the module 
+        /// providing the implementation within all plugin types specified.  
+        /// 
+        /// For example, a core plugin should only be dependent on other core plugin modules.  It would
+        /// not make sense for a lower level core plugin to be dependent on a higher-level application
+        /// specific plugin module.
+        /// 
+        /// On the other hand, an application specific plugin module can be dependent on both core and
+        /// other application plugin modules.  This can be the case since application plugin modules
+        /// can build on top of services provided by core plugins.
+        /// </summary>
+        /// <param name="serviceType">The dependent service module type referenced by a module</param>
+        /// <param name="pluginTypes">The types of plugins (Core, App, Host) to search for the dependent module.</param>
+        /// <returns>Reference to the dependent module.</returns>
+        private IPluginModuleService GetModuleSupportingService(IPluginModule module, Type serviceType, PluginTypes[] pluginTypes)
         {
             var foundModules = AllPlugins.Where(p=> pluginTypes.Contains(p.PluginType))
                 .SelectMany(p => p.Modules)
@@ -152,12 +168,14 @@ namespace NetFusion.Bootstrap.Container
             
             if (! foundModules.Any())
             {
-                throw new ContainerException($"Plugin module implementing service type: {serviceType} not found.");
+                throw new ContainerException(
+                    $"Plugin module implementing service type: {serviceType} not found for module: {module.GetType()}.");
             }
             
             if (foundModules.Length > 1)
             {
-                throw new ContainerException($"Multiple plugin modules implementing service type: {serviceType} found.");
+                throw new ContainerException(
+                    $"Multiple plugin modules implementing service type: {serviceType} found for module: {module.GetType()}.");
             }
 
             return (IPluginModuleService)foundModules.First();
@@ -165,9 +183,9 @@ namespace NetFusion.Bootstrap.Container
         
         // --------------------------- Plugin Composition -------------------------------
 
-        // Allow each plug-in module to compose itself from concrete types, defined by
-        // other plugins, based on abstract types defined by the plugin being composed.
-        // Think of this as a simplified implementation of Microsoft's MEF.
+        // Allow each plug-in module to compose itself from concrete types, defined by other plugins,
+        // based on abstract types defined by the plugin being composed.  Think of this as a simplified
+        // implementation of Microsoft's MEF.
         private void ComposePlugins(ITypeResolver typeResolver)
         {
             ComposeCorePlugins(typeResolver);
@@ -211,26 +229,32 @@ namespace NetFusion.Bootstrap.Container
         
         // Before services are registered by modules, a two phase initialization is completed.
         // First all modules have the Initialize() method called.  The Initialize() method is
-        // where plugins should cache information that can be accessed my other modules.
+        // where plugins should cache information that can be accessed by other modules.
         // After all modules are initialized, each module has the Configure() method called.
         // Code contained within a module's Configure() method can reference information
         // initialized by a dependent module.
         private void ConfigurePlugins()
         {
+            CorePlugins.ForEach(InitializeModules);
+            AppPlugins.ForEach(InitializeModules);
+            InitializeModules(HostPlugin);
+
             CorePlugins.ForEach(ConfigureModules);
             AppPlugins.ForEach(ConfigureModules);
-            
             ConfigureModules(HostPlugin);
         }
 
-        private void ConfigureModules(IPlugin plugin)
+        private void InitializeModules(IPlugin plugin)
         {
             foreach (IPluginModule module in plugin.Modules)
             {
                 module.Context = new ModuleContext(this, plugin);
                 module.Initialize();
             }
-            
+        }
+
+        private void ConfigureModules(IPlugin plugin)
+        {
             foreach (IPluginModule module in plugin.Modules)
             {
                 module.Configure();
@@ -246,10 +270,12 @@ namespace NetFusion.Bootstrap.Container
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
             
+            // Plugin Service Registrations:
             RegisterCorePluginServices(services);
             RegisterAppPluginServices(services);
             RegisterHostPluginServices(services);
 
+            // Additional Registrations:
             RegisterPluginModulesAsService(services);
             RegisterCompositeApplication(services);
             

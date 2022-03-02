@@ -10,7 +10,7 @@ namespace NetFusion.Azure.ServiceBus.Subscriber
     {
         /// <summary>
         /// Sends a response to the originating request.  An exception is thrown if the message
-        /// properties are missing any values required for the original sender to correlate the
+        /// properties are missing any values required from the original sender to correlate the
         /// response.
         /// </summary>
         /// <param name="command">The command originally received.</param>

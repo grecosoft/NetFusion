@@ -8,10 +8,25 @@ namespace NetFusion.Azure.ServiceBus.Settings
     /// the default settings specified within code will be used.
     /// </summary>
     public class SubscriptionSettings : IValidatableType
-    {        
+    {
+        /// <summary>
+        /// Gets or sets the number of messages that will be eagerly requested from Queues
+        ///  or Subscriptions and queued locally, intended to help maximize throughput by
+        ///  allowing the processor to receive from a local cache rather than waiting on a
+        ///  service request.  The default value is 0.
+        /// </summary>
         public int? PrefetchCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum number of concurrent calls to the message handler the
+        /// processor should initiate.  The default value is 1.
+        /// </summary>
         public int? MaxConcurrentCalls { get; set; }
 
+        /// <summary>
+        /// List of filters determining if a topic subscription should be delivered
+        /// to a subscription.
+        /// </summary>
         public Dictionary<string, RuleSettings> Rules { get; set; } = new();
         
         public void Validate(IObjectValidator validator)

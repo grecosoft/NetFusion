@@ -41,7 +41,7 @@ namespace NetFusion.Azure.ServiceBus.Plugin
         /// <param name="namespaceName">The namespace in which the subscription is defined.</param>
         /// <param name="settingsKey">Value identifying the subscription.  For a subscription to a queue,
         /// the queue's name is used.  If a subscription to a topic, the topic and subscription names are
-        /// used separated by a ^ character.</param>
+        /// used separated by a | character.</param>
         /// <returns>The associated subscription settings.</returns>
         SubscriptionSettings GetSubscriptionConfig(string namespaceName, string settingsKey);
     }

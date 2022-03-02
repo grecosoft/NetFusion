@@ -5,7 +5,7 @@ using System.Linq;
 namespace NetFusion.Messaging.Types.Attributes
 {
     /// <summary>
-    /// Provides extension methods for reading basic types and array of basic types
+    /// Provides extension methods for reading basic types and arrays of basic types
     /// stored within a dictionary where the key is the name and the value is the
     /// string representation.  This is being used so deserialization will not be
     /// dependent on the specific serializer being used.  (JSON serializers and

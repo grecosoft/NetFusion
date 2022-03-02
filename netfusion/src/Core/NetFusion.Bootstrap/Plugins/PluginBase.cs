@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using NetFusion.Bootstrap.Exceptions;
 
 namespace NetFusion.Bootstrap.Plugins
@@ -25,11 +27,11 @@ namespace NetFusion.Bootstrap.Plugins
         // Plugin Parts:
         public IEnumerable<IPluginConfig> Configs => _configs;
         public IEnumerable<IPluginModule> Modules => _modules;
-        public IEnumerable<Type> Types { get; protected set; } = new List<Type>();
         
         // Assembly Metadata set by ITypeResolver:
-        public string AssemblyName { get; set; }
-        public string AssemblyVersion { get; set; }
+        public string AssemblyName { get; protected set; }
+        public string AssemblyVersion { get; protected set; }
+        public IEnumerable<Type> Types { get; protected set; } = new List<Type>();
 
         private readonly List<IPluginConfig> _configs = new();
         private readonly List<IPluginModule> _modules = new();
@@ -42,7 +44,7 @@ namespace NetFusion.Bootstrap.Plugins
         {
             if (_modules.Any(m => m.GetType() == typeof(TModule)))
             {
-                throw new ContainerException($"Plugin Module of type: {typeof(TModule)} already added.", 
+                throw new ContainerException($"Plugin Module of type: {typeof(TModule)} already added to plugin type: {GetType()}.", 
                     "bootstrap-duplicate-module");
             }
             
@@ -57,7 +59,7 @@ namespace NetFusion.Bootstrap.Plugins
         {
             if (_configs.Any(c => c.GetType() == typeof(TConfig)))
             {
-                throw new ContainerException($"Plugin Configuration of type: {typeof(TConfig)} already added.", 
+                throw new ContainerException($"Plugin Configuration of type: {typeof(TConfig)} already added to plugin type: {GetType()}.", 
                     "bootstrap-duplicate-config");
             }
             
@@ -86,10 +88,48 @@ namespace NetFusion.Bootstrap.Plugins
             if (config == null)
             {
                 throw new ContainerException(
-                    $"Plugin configuration of type: {typeof(T)} is not registered.", "missing-plugin-config");
+                    $"Plugin configuration of type: {typeof(T)} is not registered for plugin type: {GetType()}",
+                    "missing-plugin-config");
             }
 
             return (T)config;
+        }
+
+        public async Task StartAsync(ILogger logger, IServiceProvider serivces)
+        {
+            foreach (var module in Modules)
+            {
+                logger.LogDebug("Starting Module: {moduleType} for Plugin: {pluginName}",
+                       module.GetType().Name,
+                       module.Context.Plugin.Name);
+
+                await module.StartModuleAsync(serivces);
+            }
+        }
+
+        public async Task RunAsync(ILogger logger, IServiceProvider serivces)
+        {
+            foreach (var module in Modules)
+            {
+                logger.LogDebug("Running Module: {moduleType} for Plugin: {pluginName}",
+                       module.GetType().Name,
+                       module.Context.Plugin.Name);
+
+                await module.RunModuleAsync(serivces);
+            }
+        }
+
+        public async Task StopAsync(ILogger logger, IServiceProvider services)
+        {
+            foreach (var module in Modules.Reverse())
+            {
+                logger.LogDebug("Stopping Module: {moduleType} for Plugin: {pluginName}",
+                       module.GetType().Name,
+                       module.Context.Plugin.Name);
+
+                await module.StopModuleAsync(services);
+            }
+
         }
     }
 }

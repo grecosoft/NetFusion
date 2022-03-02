@@ -45,7 +45,7 @@ namespace NetFusion.Azure.ServiceBus.Subscriber.Internal
             }
             
             // Validate the command is marked with the Content-Type and values identifying the message to 
-            // the original sender can process and correlate the message back the the original send command.
+            // the original sender can process and correlate the message back the original sent command.
 
             if (! ValidateOriginalCommand(command))
             {
@@ -64,7 +64,7 @@ namespace NetFusion.Azure.ServiceBus.Subscriber.Internal
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error replying to command with {CorrelationId}.", command.GetCorrelationId());
+                _logger.LogError(ex, "Error replying to command with {MessageId}.", command.GetMessageId());
             }
         }
 

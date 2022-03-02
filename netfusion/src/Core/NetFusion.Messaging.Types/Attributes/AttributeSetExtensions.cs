@@ -135,7 +135,10 @@ namespace NetFusion.Messaging.Types.Attributes
             bool overrideIfPresent)
         {
             if (attributes == null) throw new ArgumentNullException(nameof(attributes));
-            
+
+            if (string.IsNullOrWhiteSpace(name)) 
+                throw new ArgumentException("Attribute Name not specified.", nameof(name));
+
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Value must be specified.", nameof(value));
 

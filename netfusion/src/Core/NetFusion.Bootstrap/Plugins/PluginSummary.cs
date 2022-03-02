@@ -1,7 +1,7 @@
 ﻿namespace NetFusion.Bootstrap.Plugins
 {
     /// <summary>
-    /// Readonly class providing a summary information for a plugin.
+    /// Read-only class providing a summary information for a plugin.
     /// </summary>
     public class PluginSummary
     {

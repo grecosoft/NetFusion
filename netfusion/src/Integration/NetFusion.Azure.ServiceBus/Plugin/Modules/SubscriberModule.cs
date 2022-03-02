@@ -49,7 +49,7 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
             {
                 if (subscription.SubscriptionStrategy is IRequiresContext required)
                 {
-                    required.Context = GetContext(services, subscription);
+                    required.Context = CreateContext(services, subscription);
                 }
                 
                 NamespaceConnection conn = NamespaceModule.GetConnection(subscription.NamespaceName);
@@ -57,7 +57,7 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
             }
         }
         
-        private NamespaceContext GetContext(IServiceProvider services, EntitySubscription entity) =>
+        private NamespaceContext CreateContext(IServiceProvider services, EntitySubscription entity) =>
             new(NamespaceModule, DispatchModule)
             {
                 Logger = Context.LoggerFactory.CreateLogger(entity.SubscriptionStrategy.GetType().FullName),
@@ -80,7 +80,6 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
                 Context.Logger.LogError(flattenedEx, "Exception Disposing Service Bus Subscription.");
                 throw flattenedEx;
             }
-           
         }
 
         // ---------------------- Entity Subscriptions -----------------------
@@ -110,7 +109,7 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
             }
         }
 
-        // Overrides any settings specified within the service's configuration:
+        // Overrides with settings specified within the service's configuration:
         private void ApplySubscriptionSettings(EntitySubscription[] subscriptions)
         {
             foreach (var subscription in subscriptions)
@@ -139,7 +138,7 @@ namespace NetFusion.Azure.ServiceBus.Plugin.Modules
         }
 
         // Returns list of EntitySubscription objects for all message consumer handler methods
-        // that are bound to a subscription on a specific topic
+        // that are bound to a subscription on a specific topic.
         private IEnumerable<TopicSubscription> GetTopicSubscriptions()
         {
             return GetDispatchersForSubscriptionType<TopicSubscriptionAttribute>()

@@ -12,7 +12,7 @@ namespace NetFusion.Bootstrap.Logging
     /// <summary>
     /// Class delegated to by the CompositeApp that logs the implementations registered for
     /// overall core services used by NetFusion.  The CompositeContainerBuilder registers
-    /// service defaults or null-implementations that can be overriden by the host application
+    /// service defaults or null-implementations that can be overridden by the host application
     /// by a plugin-module or during bootstrapping the composite-application when calling
     /// the Compose method on ICompositeContainerBuilder.
     /// </summary>
@@ -35,7 +35,7 @@ namespace NetFusion.Bootstrap.Logging
             var logMessage = LogMessage.For(LogLevel.Information, "Serialization Manager Registered");
             logMessage.WithProperties(new LogProperty {
                 Name = "ManagerType", 
-                Value = services.GetType().AssemblyQualifiedName
+                Value = serializerMgr.GetType().AssemblyQualifiedName
             });
             
             var contentTypes = new {

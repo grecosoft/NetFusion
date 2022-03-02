@@ -92,6 +92,8 @@ namespace NetFusion.Messaging.Internal
                 // Execute all of matching dispatchers and await the list of associated tasks.
                 taskList = dispatchers.Invoke(message, InvokeDispatcher, cancellationToken);
                 await taskList.WhenAll();
+
+                LogMessageResult(message);
             }
             catch (Exception ex)
             {
@@ -161,13 +163,26 @@ namespace NetFusion.Messaging.Internal
                 dispatchers.Select(d => new
                 {
                     MessageType = d.MessageType.FullName,
-                    ConsumerTpe = d.ConsumerType.FullName,
+                    ConsumerType = d.ConsumerType.FullName,
                     HandlerMethod = d.MessageHandlerMethod.Name,
                     d.IsAsync,
                     HasRules = d.DispatchRules.Any(),
                     d.IncludeDerivedTypes
                 }), 
                 message.GetType());
+        }
+
+        private void LogMessageResult(IMessage message)
+        {
+            if (message is ICommandResultState commandResult)
+            {
+                var log = LogMessage.For(LogLevel.Debug, "Message {MessageType} Result", message.GetType())
+                .WithProperties(
+                    new LogProperty { Name = "Result", Value = commandResult.Result }
+                );
+
+                _logger.Log(log);
+            }
         }
 
         private static object GetDispatchLogDetails(IEnumerable<MessageDispatchInfo> dispatchers)

@@ -102,12 +102,10 @@ namespace NetFusion.Azure.ServiceBus.Publisher.Internal
         }
 
         private static void SetIdentityPropsFromMessage(ServiceBusMessage busMessage, IMessage message)
-        {
-            string messageId = message.GetMessageId();
-            if (messageId != null)
-            {
-                busMessage.MessageId = messageId;
-            }
+        {   
+            // Since a MessageId is required for RPC style messages, one is automatically generated
+            // if not yet specified by the time the message is published.
+            busMessage.MessageId = message.GetMessageId() ?? Guid.NewGuid().ToString();
 
             string correlationId = message.GetCorrelationId();
             if (correlationId != null)

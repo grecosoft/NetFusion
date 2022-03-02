@@ -11,90 +11,40 @@ namespace NetFusion.Bootstrap.Health
     /// </summary>
     public class ModuleHealthCheck
     {
-        private List<HealthAspectCheck> _aspectsChecks = new();
+        private readonly List<HealthAspectCheck> _aspectsChecks = new();
         
         /// <summary>
-        /// The module associated with the health check.
+        /// The module type  associated with the health check.
         /// </summary>
-        public IPluginModule PluginModule { get; }
+        public Type PluginModuleType { get; }
 
         /// <summary>
         /// List of associated module aspects and their associated health status.
         /// </summary>
-        public IEnumerable<HealthAspectCheck> AspectChecks => _aspectsChecks;
+        public IReadOnlyCollection<HealthAspectCheck> AspectChecks { get; }
 
         /// <summary>
         /// The overall worst health-check reported for a module's associated aspects.
         /// </summary>
-        public HealthCheckStatusType OverallHealth => _aspectsChecks.Any() ?
-            _aspectsChecks.Max(ac => ac.CheckResult) : HealthCheckStatusType.Healthy;
+        public HealthCheckStatusType ModuleHealth => _aspectsChecks.Any() ?
+            _aspectsChecks.Max(ac => ac.HealthCheckStatus) : HealthCheckStatusType.Healthy;
         
 
-        public ModuleHealthCheck(IPluginModule pluginModule)
+        internal ModuleHealthCheck(IModuleHealthCheck pluginModule)
         {
-            PluginModule = pluginModule ?? throw new ArgumentNullException(nameof(pluginModule));
+            PluginModuleType = pluginModule?.GetType() ?? throw new ArgumentNullException(nameof(pluginModule));
+            AspectChecks = _aspectsChecks;
         }
 
         /// <summary>
         /// Records information about an aspect of a module with a given status used to determine
         /// its overall health.
         /// </summary>
-        /// <param name="healthCheckStatus">The associated status.</param>
-        /// <param name="name">The name used to identify an aspect of a module.</param>
-        /// <param name="value">The value describing the aspect.</param>
-        public void RecordAspect(HealthCheckStatusType healthCheckStatus, string name, string value)
+        /// <param name="aspectCheck">The status associated with a specific aspect of the module.</param>
+        public void RecordAspect(HealthAspectCheck aspectCheck)
         {
-            _aspectsChecks.Add(new HealthAspectCheck
-            {
-                AspectName = name, 
-                AspectValue = value,
-                CheckResult = healthCheckStatus
-            }.ThrowIfInvalid());
-        }
-
-        /// <summary>
-        /// Records information about a healthy aspect of a module used to determine its overall health.
-        /// </summary>
-        /// <param name="name">The name used to identify an aspect of a module.</param>
-        /// <param name="value">The value describing the aspect.</param>
-        public void RecordHealthyAspect(string name, string value)
-        {
-            _aspectsChecks.Add(new HealthAspectCheck
-            {
-                AspectName = name, 
-                AspectValue = value,
-                CheckResult = HealthCheckStatusType.Healthy
-            }.ThrowIfInvalid());
-        }
-
-        /// <summary>
-        /// Records information about a degraded aspect of a module used to determine its overall health.
-        /// </summary>
-        /// <param name="name">The name used to identify an aspect of a module.</param>
-        /// <param name="value">The value describing the aspect.</param>
-        public void RecordedDegradedAspect(string name, string value)
-        {
-            _aspectsChecks.Add(new HealthAspectCheck
-            {
-                AspectName = name, 
-                AspectValue = value,
-                CheckResult = HealthCheckStatusType.Degraded
-            }.ThrowIfInvalid());
-        }
-
-        /// <summary>
-        /// Records information about a unhealthy aspect of a module used to determine its overall health.
-        /// </summary>
-        /// <param name="name">The name used to identify an aspect of a module.</param>
-        /// <param name="value">The value describing the aspect.</param>
-        public void RecordedUnhealthyAspect(string name, string value)
-        {
-            _aspectsChecks.Add(new HealthAspectCheck
-            {
-                AspectName = name, 
-                AspectValue = value,
-                CheckResult = HealthCheckStatusType.Unhealthy
-            }.ThrowIfInvalid());
+            if (aspectCheck == null) throw new ArgumentNullException(nameof(aspectCheck));
+            _aspectsChecks.Add(aspectCheck);
         }
     }
 }
