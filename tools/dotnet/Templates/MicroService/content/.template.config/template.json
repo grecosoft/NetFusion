@@ -14,28 +14,49 @@
     "sourceName": "Solution.Context", 
     "preferNameDirectory": true,
     "symbols":{
+      "namespace": {
+        "type": "parameter",
+        "datatype": "text",
+        "replaces": "nf:namespace",
+        "isRequired": true,
+        "description": "The Kubernetes namespace to which the microservice is to be deployed."
+      },
       "port": {
         "type": "parameter",
-        "replaces": "nf:host-port",
         "datatype":"int",
+        "replaces": "nf:container-port",
         "isRequired": true,
-        "description": "The port used when running local or from within Docker."
+        "description": "The port used when running within a container or locally."
       },
-      "service-name": {
+      "registry": {
         "type": "parameter",
-        "datatype":"string",
+        "datatype": "text",
+        "replaces": "nf:registry",
         "isRequired": true,
-        "description": "The name of the service.",
-        "replaces": "nf:service-name"
+        "description": "The container registry where image should be pushed and installed from into the Kubernetes cluster."
       },
-      "docker-image-name":{
+      "sourceName": {
         "type": "generated",
         "generator": "casing",
         "parameters": {
-          "source":"service-name",
+          "source": "name",
           "toLower": true
-        },
-        "replaces":"nf:docker-image-name"
+        }
+      },
+      "microservice-name": {
+        "type": "generated",
+        "generator": "regex",
+        "dataType": "string",
+        "replaces": "nf:microservice-name", 
+        "parameters": {
+          "source": "sourceName",
+          "steps": [
+            {
+              "regex": "\\.",            
+              "replacement": "-"   
+            }
+          ]
+        }
       },
       "app-id": {
         "type": "generated",
@@ -79,6 +100,7 @@
       { "include": ".dockerignore"},
       { "include": "Dockerfile"},
       { "include": "docker-compose.yml"},
+      { "include": "deployment.yaml"},
       { "include": "src/Solution.Context.sln" },
       { "include": "src/Components/Solution.Context.Domain/**/*" },
       { "include": "src/Components/Solution.Context.App/**/*" },

@@ -1,8 +1,8 @@
 version: '3'
 services:
-  nf:docker-image-name:
+  nf:microservice-name:
     build: .
     ports:
-      - "nf:host-port:80"
+      - "nf:container-port:80"
     environment:
       -  ASPNETCORE_ENVIRONMENT=Development

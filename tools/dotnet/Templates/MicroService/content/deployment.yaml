@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nf:microservice-name
+  namespace: nf:namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      microservice: nf:microservice-name
+  template:
+    metadata:
+      labels:
+        microservice: nf:microservice-name
+    spec:
+      containers:
+      - image: nf:registry/nf:microservice-name:latest
+        name: nf:microservice-name
+        env:
+        - name: ASPNETCORE_URLS
+          value: http://*:nf:container-port
+        - name: ASPNETCORE_ENVIRONMENT
+          value: DEVELOPMENT
+        ports:
+        - containerPort: nf:container-port
+          protocol: TCP
+
+        startupProbe:
+          host:
+          httpGet:
+            path: /mgt/startup-check
+            port: nf:container-port
+          initialDelaySeconds: 2
+          periodSeconds: 5
+          successThreshold: 1
+          failureThreshold: 10
+        
+        readinessProbe:
+          host:
+          httpGet:
+            path: /mgt/ready-check
+            port: nf:container-port
+          initialDelaySeconds: 2
+          periodSeconds: 20
+          successThreshold: 1
+          failureThreshold: 1
+        
+        livenessProbe:
+          host:
+          httpGet:
+            path: /mgt/health-check
+            port: nf:container-port
+          initialDelaySeconds: 2
+          periodSeconds: 10
+
+      #   volumeMounts:
+      #   - name: config
+      #     mountPath: /etc/microservice/configs
+      #   - name: config-secrets
+      #     mountPath: /etc/microservice/secrets
+      # volumes:
+      # - name: config
+      #   configMap:
+      #     name: inspections.settings
+      # - name: config-secrets
+      #   secret:
+      #     secretName: inspections.secrets
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: nf:microservice-name
+spec:
+  ports:
+  - port: 80
+    targetPort: nf:container-port
+  selector:
+    microservice: nf:microservice-name

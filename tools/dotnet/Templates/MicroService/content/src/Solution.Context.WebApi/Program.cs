@@ -74,6 +74,11 @@ app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();
+
+app.MapHealthCheck();
+app.MapStartupCheck();
+app.MapReadinessCheck();
+
 app.MapControllers();
 
 app.UseEndpoints(endpoints =>
