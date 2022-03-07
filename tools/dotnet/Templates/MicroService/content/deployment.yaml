@@ -70,9 +70,30 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nf:microservice-name
+  namespace: nf:namespace
 spec:
   ports:
   - port: 80
     targetPort: nf:container-port
   selector:
     microservice: nf:microservice-name
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nf:microservice-name
+  namespace: nf:namespace
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - host: netfusion.nf:microservice-name.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nf:microservice-name
+            port:
+              number: 80
