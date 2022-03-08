@@ -1,35 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nf:microservice-name
-  namespace: nf:namespace
+  name: [nf:microservice-name]
+  namespace: [nf:kube-namespace]
 spec:
   replicas: 1
   selector:
     matchLabels:
-      microservice: nf:microservice-name
+      microservice: [nf:microservice-name]
   template:
     metadata:
       labels:
-        microservice: nf:microservice-name
+        microservice: [nf:microservice-name]
     spec:
       containers:
-      - image: nf:registry/nf:microservice-name:latest
-        name: nf:microservice-name
+      - image: k3d-[nf:local-cluster-name]-registry:[nf:local-registry-port]/[nf:microservice-name]:latest
+        name: [nf:microservice-name]
         env:
         - name: ASPNETCORE_URLS
-          value: http://*:nf:container-port
+          value: http://*:[nf:container-port]
         - name: ASPNETCORE_ENVIRONMENT
           value: DEVELOPMENT
         ports:
-        - containerPort: nf:container-port
+        - containerPort: [nf:container-port]
           protocol: TCP
 
         startupProbe:
           host:
           httpGet:
             path: /mgt/startup-check
-            port: nf:container-port
+            port: [nf:container-port]
           initialDelaySeconds: 2
           periodSeconds: 5
           successThreshold: 1
@@ -39,7 +39,7 @@ spec:
           host:
           httpGet:
             path: /mgt/ready-check
-            port: nf:container-port
+            port: [nf:container-port]
           initialDelaySeconds: 2
           periodSeconds: 20
           successThreshold: 1
@@ -49,7 +49,7 @@ spec:
           host:
           httpGet:
             path: /mgt/health-check
-            port: nf:container-port
+            port: [nf:container-port]
           initialDelaySeconds: 2
           periodSeconds: 10
 
@@ -69,31 +69,31 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nf:microservice-name
-  namespace: nf:namespace
+  name: [nf:microservice-name]
+  namespace: [nf:kube-namespace]
 spec:
   ports:
   - port: 80
-    targetPort: nf:container-port
+    targetPort: [nf:container-port]
   selector:
-    microservice: nf:microservice-name
+    microservice: [nf:microservice-name]
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nf:microservice-name
-  namespace: nf:namespace
+  name: [nf:microservice-name]
+  namespace: [nf:kube-namespace]
   annotations:
     ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-  - host: netfusion.nf:microservice-name.com
+  - host: netfusion.[nf:microservice-name].com
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: nf:microservice-name
+            name: [nf:microservice-name]
             port:
               number: 80

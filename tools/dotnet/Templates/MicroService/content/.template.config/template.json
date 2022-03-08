@@ -14,26 +14,33 @@
     "sourceName": "Solution.Context", 
     "preferNameDirectory": true,
     "symbols":{
-      "namespace": {
+      "local-cluster-name": {
         "type": "parameter",
         "datatype": "text",
-        "replaces": "nf:namespace",
+        "replaces": "[nf:local-cluster-name]",
+        "isRequired": true,
+        "description": "The name of locally created k3d cluster."
+      },
+      "local-registry-port": {
+        "type": "parameter",
+        "datatype": "int",
+        "replaces": "[nf:local-registry-port]",
+        "isRequired": true,
+        "description": "The port of the local image registry to which the image is pushed."
+      },
+      "kube-namespace": {
+        "type": "parameter",
+        "datatype": "text",
+        "replaces": "[nf:kube-namespace]",
         "isRequired": true,
         "description": "The Kubernetes namespace to which the microservice is to be deployed."
       },
-      "port": {
+      "container-port": {
         "type": "parameter",
         "datatype":"int",
-        "replaces": "nf:container-port",
+        "replaces": "[nf:container-port]",
         "isRequired": true,
-        "description": "The port used when running within a container or locally."
-      },
-      "registry": {
-        "type": "parameter",
-        "datatype": "text",
-        "replaces": "nf:registry",
-        "isRequired": true,
-        "description": "The container registry where image should be pushed and installed from into the Kubernetes cluster."
+        "description": "The port used when running within a container or locally within IDE."
       },
       "sourceName": {
         "type": "generated",
@@ -47,7 +54,7 @@
         "type": "generated",
         "generator": "regex",
         "dataType": "string",
-        "replaces": "nf:microservice-name", 
+        "replaces": "[nf:microservice-name]", 
         "parameters": {
           "source": "sourceName",
           "steps": [
@@ -61,7 +68,7 @@
       "app-id": {
         "type": "generated",
         "generator": "guid",
-        "replaces": "nf:app-id",
+        "replaces": "[nf:app-id]",
         "description": "The generated GUID used to identify the Application Service Plugin Component.",
         "parameters": {
           "format": "D"
@@ -70,7 +77,7 @@
       "domain-id": {
         "type": "generated",
         "generator": "guid",
-        "replaces": "nf:domain-id",
+        "replaces": "[nf:domain-id]",
         "description": "The generated GUID used to identify the Domain Plugin Component.",
         "parameters": {
           "format": "D"
@@ -79,7 +86,7 @@
       "infra-id": {
         "type": "generated",
         "generator": "guid",
-        "replaces": "nf:infra-id",
+        "replaces": "[nf:infra-id]",
         "description": "The generated GUID used to identify the Infrastructure Plugin Component.",
         "parameters": {
           "format": "D"
@@ -88,7 +95,7 @@
       "host-id": {
         "type": "generated",
         "generator": "guid",
-        "replaces": "nf:host-id",
+        "replaces": "[nf:host-id]",
         "description": "The generated GUID used to identify the Host Plugin Component.",
         "parameters": {
           "format": "D"
@@ -101,6 +108,7 @@
       { "include": "Dockerfile"},
       { "include": "docker-compose.yml"},
       { "include": "deployment.yaml"},
+      { "include": "k3d/**/*"},
       { "include": "src/Solution.Context.sln" },
       { "include": "src/Components/Solution.Context.Domain/**/*" },
       { "include": "src/Components/Solution.Context.App/**/*" },

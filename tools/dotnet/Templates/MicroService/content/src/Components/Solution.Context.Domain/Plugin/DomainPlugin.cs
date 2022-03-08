@@ -4,7 +4,7 @@ namespace Solution.Context.Domain.Plugin
 {
     public class DomainPlugin : PluginBase
     {
-        public override string PluginId => "nf:domain-id";
+        public override string PluginId => "[nf:domain-id]";
         public override PluginTypes PluginType => PluginTypes.AppPlugin;
         public override string Name => "Domain Model Component";
         
