@@ -1,4 +1,5 @@
 #!/bin/bash
 
-kubectl create namespace netfusion
+./build-docker-image.sh
+kubectl apply -f ../deploy/deployment.yaml
 

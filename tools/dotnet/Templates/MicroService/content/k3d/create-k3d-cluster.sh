@@ -4,8 +4,8 @@
 # The local build creates a Docker image for the Microserivce and pushes it to the local image registery
 # and pulled by the cluster when deployed.  
 
-k3d registry create [nf:local-cluster-name]-registery --port 0.0.0.0:[nf:local-registry-port]
-k3d cluster create [nf:local-cluster-name] -p "8081:80@loadbalancer" -a 3 --registry-use [nf:local-custer-name]-registry:[nf:local-registry-port]
+k3d registry create [nf:local-cluster-name]-registry --port 0.0.0.0:[nf:local-registry-port]
+k3d cluster create [nf:local-cluster-name] -p "8081:80@loadbalancer" -a 3 --registry-use [nf:local-cluster-name]-registry:[nf:local-registry-port]
 
 
 # Deploy NgInx Ingress Controller used to expose services external to the cluster:

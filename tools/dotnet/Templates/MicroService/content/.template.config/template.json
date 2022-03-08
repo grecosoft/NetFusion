@@ -104,10 +104,7 @@
     },
     "sources":[
       { "include": ".vscode/**/*" },
-      { "include": ".dockerignore"},
-      { "include": "Dockerfile"},
-      { "include": "docker-compose.yml"},
-      { "include": "deployment.yaml"},
+      { "include": "deploy/**/*"},
       { "include": "k3d/**/*"},
       { "include": "src/Solution.Context.sln" },
       { "include": "src/Components/Solution.Context.Domain/**/*" },
