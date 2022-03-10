@@ -53,18 +53,18 @@ spec:
           initialDelaySeconds: 2
           periodSeconds: 10
 
-      #   volumeMounts:
-      #   - name: config
-      #     mountPath: /etc/microservice/configs
-      #   - name: config-secrets
-      #     mountPath: /etc/microservice/secrets
-      # volumes:
-      # - name: config
-      #   configMap:
-      #     name: inspections.settings
-      # - name: config-secrets
-      #   secret:
-      #     secretName: inspections.secrets
+        volumeMounts:
+        - name: config
+          mountPath: /etc/microservice/configs
+        - name: config-secrets
+          mountPath: /etc/microservice/secrets
+      volumes:
+      - name: config
+        configMap:
+          name: [nf:microservice-name].settings
+      - name: config-secrets
+        secret:
+          secretName: [nf:microservice-name].secrets
 --- 
 apiVersion: v1
 kind: Service

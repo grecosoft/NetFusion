@@ -15,6 +15,7 @@ using Solution.Context.Domain.Plugin;
 using Solution.Context.Infra.Plugin;
 using Solution.Context.WebApi.Plugin;
 using System.Diagnostics;
+using NetFusion.Common.Extensions;
 
 
 // Allows changing the minimum log level of the service at runtime.
@@ -23,10 +24,22 @@ logLevelControl.SetMinimumLevel(LogLevel.Debug);
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Initialize Configuration:
+var configFiles = new DirectoryInfo("/etc/microservice/configs");
+if (configFiles.Exists)
+{
+    foreach (var configFile in configFiles.GetFiles("*.json"))
+    {
+        builder.Configuration.AddJsonFile(configFile.FullName);
+        builder.Configuration.AddEnvironmentVariables();
+    }
+}
+
+// Configure Logging:
 InitializeLogger(builder.Configuration);
 
-builder.Host.ConfigureAppConfiguration(SetupConfiguration);
-builder.Host.ConfigureLogging(SetupLogging);
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(Log.Logger);
 builder.Host.UseSerilog();
 
 builder.Services.AddCors();
@@ -81,13 +94,10 @@ app.MapReadinessCheck();
 
 app.MapControllers();
 
-app.UseEndpoints(endpoints =>
+if (app.Environment.IsDevelopment())
 {
-    if (app.Environment.IsDevelopment())
-    {
-        endpoints.MapCompositeLog();
-    }
-});
+    app.MapCompositeLog();
+}
 
 
 // Reference the Composite-Application to start the plugins then
@@ -128,15 +138,4 @@ void InitializeLogger(IConfiguration configuration)
     }
 
     Log.Logger = logConfig.CreateLogger();
-}
-
-void SetupConfiguration(HostBuilderContext context, IConfigurationBuilder configBuilder)
-{
-
-}
-
-void SetupLogging(HostBuilderContext context, ILoggingBuilder logBuilder)
-{
-    logBuilder.ClearProviders();
-    logBuilder.AddSerilog(Log.Logger);
 }
