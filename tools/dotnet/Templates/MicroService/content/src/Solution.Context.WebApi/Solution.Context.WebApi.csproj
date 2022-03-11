@@ -10,17 +10,17 @@
     <ProjectReference Include="..\Components\Solution.Context.Infra\Solution.Context.Infra.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="6.0.18" />
-    <PackageReference Include="NetFusion.Base" Version="6.0.18" />
-    <PackageReference Include="NetFusion.Bootstrap" Version="6.0.18" />
-    <PackageReference Include="NetFusion.Builder" Version="6.0.18" />
+    <PackageReference Include="NetFusion.Common" Version="6.0.19" />
+    <PackageReference Include="NetFusion.Base" Version="6.0.19" />
+    <PackageReference Include="NetFusion.Bootstrap" Version="6.0.19" />
+    <PackageReference Include="NetFusion.Builder" Version="6.0.19" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Web.Mvc" Version="6.0.18" />
-    <PackageReference Include="NetFusion.Rest.Common" Version="6.0.18" />
-    <PackageReference Include="NetFusion.Rest.Resources" Version="6.0.18" />
-    <PackageReference Include="NetFusion.Rest.Server" Version="6.0.18" />
-    <PackageReference Include="NetFusion.Serilog" Version="6.0.18" />
+    <PackageReference Include="NetFusion.Web.Mvc" Version="6.0.19" />
+    <PackageReference Include="NetFusion.Rest.Common" Version="6.0.19" />
+    <PackageReference Include="NetFusion.Rest.Resources" Version="6.0.19" />
+    <PackageReference Include="NetFusion.Rest.Server" Version="6.0.19" />
+    <PackageReference Include="NetFusion.Serilog" Version="6.0.19" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />

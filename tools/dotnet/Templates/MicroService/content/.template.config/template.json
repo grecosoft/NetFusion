@@ -104,6 +104,8 @@
     },
     "sources":[
       { "include": ".vscode/**/*" },
+      { "include": "Dockerfile" },
+      { "include": ".dockerignore" },
       { "include": "deploy/**/*"},
       { "include": "k3d/**/*"},
       { "include": "src/Solution.Context.sln" },

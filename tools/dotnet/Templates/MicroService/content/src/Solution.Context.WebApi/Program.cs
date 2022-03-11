@@ -15,8 +15,7 @@ using Solution.Context.Domain.Plugin;
 using Solution.Context.Infra.Plugin;
 using Solution.Context.WebApi.Plugin;
 using System.Diagnostics;
-using NetFusion.Common.Extensions;
-
+using NetFusion.Builder.Kubernetes;
 
 // Allows changing the minimum log level of the service at runtime.
 LogLevelControl logLevelControl = new();
@@ -25,15 +24,9 @@ logLevelControl.SetMinimumLevel(LogLevel.Debug);
 var builder = WebApplication.CreateBuilder(args);
 
 // Initialize Configuration:
-var configFiles = new DirectoryInfo("/etc/microservice/configs");
-if (configFiles.Exists)
-{
-    foreach (var configFile in configFiles.GetFiles("*.json"))
-    {
-        builder.Configuration.AddJsonFile(configFile.FullName);
-        builder.Configuration.AddEnvironmentVariables();
-    }
-}
+builder.Configuration.AddVolumeMounts(
+    "/etc/microservice/configs", 
+    "/etc/microservice/secrets");
 
 // Configure Logging:
 InitializeLogger(builder.Configuration);
@@ -88,6 +81,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();
 
+// Expose URLs used to check the current status of the microservice:
 app.MapHealthCheck();
 app.MapStartupCheck();
 app.MapReadinessCheck();
@@ -127,7 +121,8 @@ void InitializeLogger(IConfiguration configuration)
 
         .Enrich.FromLogContext()
         .Enrich.WithCorrelationId()
-        .Enrich.WithHostIdentity(WebApiPlugin.HostId, WebApiPlugin.HostName);
+        .Enrich.WithHostIdentity(WebApiPlugin.HostId, WebApiPlugin.HostName)
+        .Filter.SuppressReoccurringRequestEvents();
 
     logConfig.WriteTo.Console(theme: AnsiConsoleTheme.Literate);
 
