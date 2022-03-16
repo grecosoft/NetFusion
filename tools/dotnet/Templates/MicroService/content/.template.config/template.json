@@ -107,7 +107,7 @@
       { "include": "Dockerfile" },
       { "include": ".dockerignore" },
       { "include": "deploy/**/*"},
-      { "include": "k3d/**/*"},
+      { "include": "dev-cluster/**/*"},
       { "include": "src/Solution.Context.sln" },
       { "include": "src/Components/Solution.Context.Domain/**/*" },
       { "include": "src/Components/Solution.Context.App/**/*" },

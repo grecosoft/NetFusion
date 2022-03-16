@@ -14,7 +14,7 @@ spec:
         microservice: [nf:microservice-name]
     spec:
       containers:
-      - image: k3d-[nf:local-cluster-name]-registry:[nf:local-registry-port]/[nf:microservice-name]:latest
+      - image: localhost:[nf:local-registry-port]/[nf:microservice-name]:latest
         name: [nf:microservice-name]
         env:
         - name: ASPNETCORE_URLS
