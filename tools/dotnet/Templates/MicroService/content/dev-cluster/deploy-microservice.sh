@@ -5,7 +5,9 @@
 # that is deployed into the cluster by applying the Kubernetes deployment. 
 #==========================================================================
 
-./build-docker-image.sh
+docker build -t [nf:microservice-name]:latest -f ../Dockerfile ../
+docker tag [nf:microservice-name]:latest localhost:[nf:local-registry-port]/[nf:microservice-name]:latest
+docker push localhost:[nf:local-registry-port]/[nf:microservice-name]:latest
 
 kubectl create configmap [nf:microservice-name].settings -n [nf:kube-namespace] \
 --from-file=../src/Solution.Context.WebApi/appsettings.json
