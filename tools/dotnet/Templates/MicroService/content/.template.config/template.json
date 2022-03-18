@@ -19,7 +19,7 @@
         "datatype": "text",
         "replaces": "[nf:local-cluster-name]",
         "isRequired": true,
-        "description": "The name of locally created k3d cluster."
+        "description": "The name of locally created cluster."
       },
       "local-registry-port": {
         "type": "parameter",
@@ -40,7 +40,7 @@
         "datatype":"int",
         "replaces": "[nf:container-port]",
         "isRequired": true,
-        "description": "The port used when running within a container or locally within IDE."
+        "description": "The port used when running within a container or locally within a process or IDE."
       },
       "sourceName": {
         "type": "generated",
