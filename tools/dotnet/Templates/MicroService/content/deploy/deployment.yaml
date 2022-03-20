@@ -4,7 +4,7 @@ metadata:
   name: [nf:microservice-name]
   namespace: [nf:kube-namespace]
 spec:
-  replicas: 1
+  replicas: [nf:kube-replicas]
   selector:
     matchLabels:
       microservice: [nf:microservice-name]
@@ -14,7 +14,7 @@ spec:
         microservice: [nf:microservice-name]
     spec:
       containers:
-      - image: localhost:[nf:local-registry-port]/[nf:microservice-name]:latest
+      - image: [nf:kube-registry]/[nf:microservice-name]:latest
         name: [nf:microservice-name]
         env:
         - name: ASPNETCORE_URLS
@@ -87,7 +87,7 @@ metadata:
     ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-  - host: netfusion.[nf:microservice-name].com
+  - host: [nf:microservice-name].io
     http:
       paths:
       - path: /

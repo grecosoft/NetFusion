@@ -35,6 +35,20 @@
         "isRequired": true,
         "description": "The Kubernetes namespace to which the microservice is to be deployed."
       },
+      "kube-registry": {
+        "type": "parameter",
+        "datatype": "text",
+        "replaces": "[nf:kube-registry]",
+        "isRequired": true,
+        "description": "The Kubernetes registry from which images are pulled."
+      },
+      "kube-replicas": {
+        "type": "parameter",
+        "datatype": "int",
+        "replaces": "[nf:kube-replicas]",
+        "isRequired": true,
+        "description": "The number of replicas of the Microservice to be deployed."
+      },
       "container-port": {
         "type": "parameter",
         "datatype":"int",
