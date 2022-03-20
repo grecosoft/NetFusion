@@ -103,11 +103,11 @@
       }
     },
     "sources":[
-      { "include": ".vscode/**/*" },
       { "include": ".dockerignore" },
       { "include": "Dockerfile" },
       { "include": "deploy/**/*"},
       { "include": "dev-cluster/**/*"},
+      { "include": "src/.vscode/**/*" },
       { "include": "src/Solution.Context.sln" },
       { "include": "src/Components/Solution.Context.Domain/**/*" },
       { "include": "src/Components/Solution.Context.App/**/*" },
