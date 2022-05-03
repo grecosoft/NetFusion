@@ -19,7 +19,7 @@ public static class ConfigurationBuilderExtensions
     /// <param name="configMountPath">The mounted path containing configurations.</param>
     /// <param name="secretMountPath">The optional mounted path containing secrets.</param>
     /// <returns>Returns to configuration builder.</returns>
-    public static IConfigurationBuilder AddVolumeMounts2(
+    public static IConfigurationBuilder AddVolumeMounts(
         this IConfigurationBuilder configurationBuilder,
         string configMountPath,
         string secretMountPath = null)
