@@ -17,7 +17,7 @@
   <PropertyGroup>
     <PackageId>NetFusion.MongoDB</PackageId>
     <Title>NetFusion MongoDB Plug-In</Title>
-    <Description>Plug-In allowing the bootstrapping and configuration of MongoDB.</Description>
+    <Description>Plug-In allowing the bootstrapping and configuration of MongoDb.</Description>
     <PackageTags>netfusion;plugin;mongodb</PackageTags>
   </PropertyGroup>
 </Project>
