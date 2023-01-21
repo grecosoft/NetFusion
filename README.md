@@ -25,7 +25,7 @@ As more developers move towards implementing Microservice based solutions, it is
 * Introduces new technologies and open-source libraries by extending the core with plug-ins.
 * Very loosely coupled. Only those plug-ins that a given host application utilizes are referenced.
 * Provides a consistent methodology for unit-testing.
-* Allows a complete Microservice to be build in seconds by providing a custom .NET Core CLI project template.
+* Allows a complete Microservice to be build in seconds by providing a custom .NET Core CLI project template. 
 
 ## Outcome
 
