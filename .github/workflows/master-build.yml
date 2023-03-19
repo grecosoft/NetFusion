@@ -36,4 +36,4 @@ jobs:
     - name: Package Assemblies
       run: dotnet pack --no-build $solution -p:PackageVersion=$buildVersion -p:PackageOutputPath=$packageDir
     - name: Push Packages to Repository
-      run: dotnet nuget push -s https://api.nuget.org/v3/index.json -k $nugetAuthToken --skip-duplicate $packageDir/**/*.nupkg
+      run: dotnet nuget push -s https://api.nuget.org/v3/index.json -k $nugetAuthToken --skip-duplicate ./**/NetFusion.*.nupkg
