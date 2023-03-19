@@ -8,10 +8,10 @@
     <ProjectReference Include="..\Solution.Context.Domain\Solution.Context.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="7.0.30" />
-    <PackageReference Include="NetFusion.Common.Base" Version="7.0.30" />
-    <PackageReference Include="NetFusion.Core.Bootstrap" Version="7.0.30" />
-    <PackageReference Include="NetFusion.Core.Settings" Version="7.0.30" />
-    <PackageReference Include="NetFusion.Messaging.Types" Version="7.0.30" />
+    <PackageReference Include="NetFusion.Common" Version="7.0.94" />
+    <PackageReference Include="NetFusion.Common.Base" Version="7.0.94" />
+    <PackageReference Include="NetFusion.Core.Bootstrap" Version="7.0.94" />
+    <PackageReference Include="NetFusion.Core.Settings" Version="7.0.94" />
+    <PackageReference Include="NetFusion.Messaging.Types" Version="7.0.94" />
   </ItemGroup>
 </Project>
