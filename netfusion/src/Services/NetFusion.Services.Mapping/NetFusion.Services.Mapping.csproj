@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <RootNamespace>NetFusion.Services.Mapping</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Bootstrap\NetFusion.Core.Bootstrap.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PackageId>NetFusion.Services.Mapping</PackageId>
+    <Title>NetFusion Mapping Plug-In</Title>
+    <Description>Plug-In providing process and structure for mapping objects.  Provides extension point for specifying an open-source mapping library of choice.</Description>
+    <PackageTags>netfusion;plugin;mapping</PackageTags>
+  </PropertyGroup>
+</Project>

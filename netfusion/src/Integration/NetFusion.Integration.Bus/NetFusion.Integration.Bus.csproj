@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <PackageId>NetFusion.Integration.Bus</PackageId>
+    <Title>NetFusion Messaging Integration</Title>
+    <Description>Assembly containing common message integration classes.</Description>
+    <PackageTags>netfusion;plugin;messaging</PackageTags>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\Messaging\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
+    <ProjectReference Include="..\..\Messaging\NetFusion.Messaging\NetFusion.Messaging.csproj" />
+  </ItemGroup>
+
+</Project>

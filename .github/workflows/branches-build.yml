@@ -5,6 +5,7 @@ on:
     branches:
     - develop
     - current-feature 
+    - netfusion-core-current
     
     paths:
     - 'netfusion/**'
@@ -15,7 +16,7 @@ env:
 jobs:
   build:
     env:
-      buildVersion: '6.0.${{github.run_number}}'
+      buildVersion: '7.0.${{github.run_number}}'
       nugetAuthToken: ${{ secrets.NuGetAPIKey }}
     
     runs-on: ubuntu-latest
@@ -25,7 +26,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.101
+        dotnet-version: 7.0.200
     - name: Print Variables
       run: echo $buildVersion
     - name: Restore Dependencies

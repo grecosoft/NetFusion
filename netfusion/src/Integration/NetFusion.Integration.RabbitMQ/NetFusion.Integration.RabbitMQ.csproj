@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Common.Base\NetFusion.Common.Base.csproj" />
+    <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Bootstrap\NetFusion.Core.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Settings\NetFusion.Core.Settings.csproj" />
+    <ProjectReference Include="..\..\Messaging\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
+    <ProjectReference Include="..\..\Messaging\NetFusion.Messaging\NetFusion.Messaging.csproj" />
+    <ProjectReference Include="..\NetFusion.Integration.Bus\NetFusion.Integration.Bus.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EasyNetQ.Logging.Microsoft" Version="7.4.3" />
+    <PackageReference Include="EasyNetQ.Serialization.SystemTextJson" Version="7.4.3" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="EasyNetQ" Version="7.4.3" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>NetFusion.Integration.RabbitMQ</PackageId>
+    <Title>NetFusion RabbitMQ Plug-In</Title>
+    <Description>
+      Plug-in providing message-publisher allowing commands and domain-events to be published to RabbitMQ.
+      Also provides attributes used to binds in-process message handlers to RabbitMq queues to be invoked
+      when messages arrives on queue.
+    </Description>
+    <PackageTags>netfusion;plugin;messaging;inprocess;ddd</PackageTags>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Common.Base\NetFusion.Common.Base.csproj" />
+    <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Bootstrap\NetFusion.Core.Bootstrap.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="2.12.0" />
+    <PackageReference Include="Serilog.Enrichers.CorrelationId" Version="3.0.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PackageId>NetFusion.Services.Serilog</PackageId>
+    <Title>Serilog based implementations.</Title>
+    <Description>Library containing Serilog based implementations.</Description>
+    <PackageTags>netfusion;plugin;serilog</PackageTags>
+  </PropertyGroup>  
+
+</Project>

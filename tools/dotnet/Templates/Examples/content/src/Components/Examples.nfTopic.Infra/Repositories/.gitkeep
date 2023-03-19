@@ -1,0 +1,2 @@
+Contains components that load domain-entities from persistence storage
+or handle the execution of queries.

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using NetFusion.Bootstrap.Container;
+using NetFusion.Core.Bootstrap.Container;
 
 namespace Solution.Context.WebApi.Controllers;
 

@@ -237,3 +237,8 @@ _Pvt_Extensions
 .idea/
 
 **/.DS_Store
+netfusion/src/NetFusion.Azure.ServiceBus.Tests/UnitTest1.cs
+
+netfusion/src/NetFusion.Azure.ServiceBus.Tests/DevTests.cs
+netfusion/src/NetFusion.Azure.ServiceBus.Tests/DevTest.cs
+netfusion/src/NetFusion.Azure.ServiceBus.Tests/DevTest.cs

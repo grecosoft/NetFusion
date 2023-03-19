@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Common.Base\NetFusion.Common.Base.csproj" />
+  </ItemGroup>
+  <PropertyGroup>
+  	<PackageId>NetFusion.Messaging.Types</PackageId>
+	<Title>NetFusion Domain Messaging</Title>
+    <Description>Assembly containing base types used for defining message type within the business domain.</Description>
+	<PackageTags>netfusion;messaging;ddd</PackageTags>
+  </PropertyGroup>
+
+</Project>

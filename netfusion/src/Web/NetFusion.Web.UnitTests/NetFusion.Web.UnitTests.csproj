@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FluentAssertions" Version="6.8.0" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="7.0.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Builder\NetFusion.Core.Builder.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Settings\NetFusion.Core.Settings.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.TestFixtures\NetFusion.Core.TestFixtures.csproj" />
+    <ProjectReference Include="..\NetFusion.Web.Common\NetFusion.Web.Common.csproj" />
+    <ProjectReference Include="..\NetFusion.Web.Rest.Client\NetFusion.Web.Rest.Client.csproj" />
+    <ProjectReference Include="..\NetFusion.Web.Rest.CodeGen\NetFusion.Web.Rest.CodeGen.csproj" />
+    <ProjectReference Include="..\NetFusion.Web.Rest.Docs\NetFusion.Web.Rest.Docs.csproj" />
+    <ProjectReference Include="..\NetFusion.Web.Rest.Resources\NetFusion.Web.Rest.Resources.csproj" />
+    <ProjectReference Include="..\NetFusion.Web.Rest.Server\NetFusion.Web.Rest.Server.csproj" />
+    <ProjectReference Include="..\NetFusion.Web\NetFusion.Web.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Rest\DocGeneration\" />
+    <Folder Include="Rest\DocGeneration\Server\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HalComments.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="WebTests.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>  

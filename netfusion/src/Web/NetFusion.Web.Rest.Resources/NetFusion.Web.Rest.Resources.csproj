@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="7.0.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PackageId>NetFusion.Web.Rest.Resources</PackageId>
+    <Title>NetFusion REST Resource Models</Title>
+    <Description>Contains Resource Models exposed by a Service's Public API.</Description>
+    <PackageTags>netfusion;plugin;rest;hal;http;client;</PackageTags>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>NetFusion.Azure.ServiceBus.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Common.Base\NetFusion.Common.Base.csproj" />
+    <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Bootstrap\NetFusion.Core.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Settings\NetFusion.Core.Settings.csproj" />
+    <ProjectReference Include="..\..\Messaging\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
+    <ProjectReference Include="..\..\Messaging\NetFusion.Messaging\NetFusion.Messaging.csproj" />
+    <ProjectReference Include="..\NetFusion.Integration.Bus\NetFusion.Integration.Bus.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.11.1" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>NetFusion.Integration.ServiceBus</PackageId>
+    <Title>NetFusion ServiceBus Plug-In</Title>
+    <Description>Contains plugin allowing microservice to publish/subscribe messages to Azure ServiceBus</Description>
+    <PackageTags>netfusion;plugin;azure;servicebus</PackageTags>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Common.Base\NetFusion.Common.Base.csproj" />
+    <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Bootstrap\NetFusion.Core.Bootstrap.csproj" />
+    <ProjectReference Include="..\NetFusion.Web.Common\NetFusion.Web.Common.csproj" />
+    <ProjectReference Include="..\NetFusion.Web.Rest.Resources\NetFusion.Web.Rest.Resources.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+     <PackageReference Include="TypeGen" Version="4.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Plugin\" />
+    <Folder Include="Plugin\Configs\" />
+    <Folder Include="Plugin\Modules\" />
+    <Folder Include="Core\" />
+  </ItemGroup>
+</Project>

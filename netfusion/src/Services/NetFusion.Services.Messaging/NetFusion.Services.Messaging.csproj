@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Messaging\NetFusion.Messaging\NetFusion.Messaging.csproj" />
+    <ProjectReference Include="..\NetFusion.Services.Mapping\NetFusion.Services.Mapping.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>NetFusion.Services.Messaging</PackageId>
+    <Title>NetFusion Messaging Services</Title>
+    <Description>Additional messaging features</Description>
+    <PackageTags>netfusion;plugin;messaging</PackageTags>
+  </PropertyGroup>
+
+</Project>

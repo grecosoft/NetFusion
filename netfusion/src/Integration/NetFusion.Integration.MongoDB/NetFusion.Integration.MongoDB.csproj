@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Common.Base\NetFusion.Common.Base.csproj" />
+    <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Bootstrap\NetFusion.Core.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Settings\NetFusion.Core.Settings.csproj" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PackageId>NetFusion.Integration.MongoDB</PackageId>
+    <Title>NetFusion MongoDB Plug-In</Title>
+    <Description>Plug-In allowing the bootstrapping and configuration of MongoDb.</Description>
+    <PackageTags>netfusion;plugin;mongodb</PackageTags>
+  </PropertyGroup>
+</Project>

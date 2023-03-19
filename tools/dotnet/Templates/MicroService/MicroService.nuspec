@@ -3,7 +3,7 @@
 	<metadata>
 		<id>NetFusion.Templates.MicroService</id>
 		<version>$version$</version>
-		<authors>NetFusion</authors>
+		<authors>NetFusion-Contrib</authors>
 		<description>Creates a .net core project containing a shell for a Microservice.</description>		
 		<tags>.net core microservice</tags>
 		<packageTypes>

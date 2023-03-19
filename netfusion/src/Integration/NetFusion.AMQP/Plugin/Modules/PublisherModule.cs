@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NetFusion.AMQP.Exceptions;
 using NetFusion.AMQP.Publisher;
 using NetFusion.AMQP.Publisher.Internal;
-using NetFusion.Bootstrap.Exceptions;
 using NetFusion.Bootstrap.Plugins;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
@@ -45,7 +45,7 @@ namespace NetFusion.AMQP.Plugin.Modules
 
             if (invalidMessageTypes.Any())
             {
-                throw new ContainerException(
+                throw new AmqpPluginException(
                     "Message types can only be associated with one type of host item (i.e. Queue/Topic).  " + 
                     $"The following message types are invalid: {string.Join(",", invalidMessageTypes)}");    
             }

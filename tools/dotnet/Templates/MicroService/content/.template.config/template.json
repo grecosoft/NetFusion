@@ -1,12 +1,10 @@
-
 {
     "$schema": "http://json.schemastore.org/template",
     "author": "NetFusion-Contrib",
     "classifications": [ "WebApi", "Microservice" ], 
-    "name": "Microservice bootstrapped with NetFusion",
-    "identity": "netfusion-microservice-template",         
-    "groupIdentity":"netfusion.microservice.templates",
-    "shortName": "nf.micro-srv",
+    "identity": "NetFusion.Templates.Microservice",  
+    "name": "NetFusion Microservice",
+    "shortName": "netfusion-microservice",
     "tags": {
       "language": "C#",
       "type":"project"
@@ -18,42 +16,36 @@
         "type": "parameter",
         "datatype": "text",
         "replaces": "[nf:local-cluster-name]",
-        "isRequired": true,
         "description": "The name of locally created cluster."
       },
       "local-registry-port": {
         "type": "parameter",
         "datatype": "int",
         "replaces": "[nf:local-registry-port]",
-        "isRequired": true,
         "description": "The port of the local image registry to which the image is pushed."
       },
       "kube-namespace": {
         "type": "parameter",
         "datatype": "text",
         "replaces": "[nf:kube-namespace]",
-        "isRequired": true,
         "description": "The Kubernetes namespace to which the microservice is to be deployed."
       },
       "kube-registry": {
         "type": "parameter",
         "datatype": "text",
         "replaces": "[nf:kube-registry]",
-        "isRequired": true,
         "description": "The Kubernetes registry from which images are pulled."
       },
       "kube-replicas": {
         "type": "parameter",
         "datatype": "int",
         "replaces": "[nf:kube-replicas]",
-        "isRequired": true,
         "description": "The number of replicas of the Microservice to be deployed."
       },
       "container-port": {
         "type": "parameter",
         "datatype":"int",
         "replaces": "[nf:container-port]",
-        "isRequired": true,
         "description": "The port used when running within a container or locally within a process or IDE."
       },
       "sourceName": {
@@ -85,7 +77,7 @@
         "replaces": "[nf:app-id]",
         "description": "The generated GUID used to identify the Application Service Plugin Component.",
         "parameters": {
-          "format": "D"
+          "defaultFormat": "D"
         }
       },
       "domain-id": {
@@ -94,7 +86,7 @@
         "replaces": "[nf:domain-id]",
         "description": "The generated GUID used to identify the Domain Plugin Component.",
         "parameters": {
-          "format": "D"
+          "defaultFormat": "D"
         }
       },
       "infra-id": {
@@ -103,7 +95,7 @@
         "replaces": "[nf:infra-id]",
         "description": "The generated GUID used to identify the Infrastructure Plugin Component.",
         "parameters": {
-          "format": "D"
+          "defaultFormat": "D"
         }
       },
       "host-id": {
@@ -112,13 +104,14 @@
         "replaces": "[nf:host-id]",
         "description": "The generated GUID used to identify the Host Plugin Component.",
         "parameters": {
-          "format": "D"
+          "defaultFormat": "D"
         }
       }
     },
     "sources":[
       { "include": ".dockerignore" },
       { "include": "Dockerfile" },
+      { "include": "docker-compose.yml" },
       { "include": "deploy/**/*"},
       { "include": "dev-cluster/**/*"},
       { "include": "src/.vscode/**/*" },

@@ -1,12 +1,5 @@
 ﻿using Destructurama;
-using NetFusion.Bootstrap.Container;
-using NetFusion.Builder;
 using NetFusion.Messaging.Plugin;
-using NetFusion.Rest.Server.Plugin;
-using NetFusion.Serilog;
-using NetFusion.Settings.Plugin;
-using NetFusion.Web.Mvc.Extensions;
-using NetFusion.Web.Mvc.Plugin;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -15,7 +8,14 @@ using Solution.Context.Domain.Plugin;
 using Solution.Context.Infra.Plugin;
 using Solution.Context.WebApi.Plugin;
 using System.Diagnostics;
-using NetFusion.Builder.Kubernetes;
+using NetFusion.Core.Bootstrap.Container;
+using NetFusion.Core.Builder;
+using NetFusion.Core.Builder.Kubernetes;
+using NetFusion.Core.Settings.Plugin;
+using NetFusion.Services.Serilog;
+using NetFusion.Web.Extensions;
+using NetFusion.Web.Plugin;
+using NetFusion.Web.Rest.Server.Plugin;
 
 // Allows changing the minimum log level of the service at runtime.
 LogLevelControl logLevelControl = new();
@@ -65,7 +65,7 @@ catch
 
 var app = builder.Build();
 
-string viewerUrl = app.Configuration.GetValue<string>("Netfusion:ViewerUrl");
+string? viewerUrl = app.Configuration.GetValue<string>("Netfusion:ViewerUrl");
 if (!string.IsNullOrWhiteSpace(viewerUrl))
 {
     app.UseCors(cors => cors.WithOrigins(viewerUrl)

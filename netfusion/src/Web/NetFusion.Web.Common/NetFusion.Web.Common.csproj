@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PackageId>NetFusion.Web.Common</PackageId>
+    <Title>NetFusion REST Shared Implementations</Title>
+    <Description>Contains implementations shared between the client and server.</Description>
+    <PackageTags>netfusion;plugin;rest;hal;http;client;</PackageTags>
+  </PropertyGroup>
+</Project>

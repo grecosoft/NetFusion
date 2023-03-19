@@ -1,19 +1,18 @@
-using NetFusion.Bootstrap.Plugins;
+using NetFusion.Core.Bootstrap.Plugins;
 using Solution.Context.App.Plugin.Modules;
 
-namespace Solution.Context.App.Plugin
+namespace Solution.Context.App.Plugin;
+
+public class AppPlugin : PluginBase
 {
-    public class AppPlugin : PluginBase
+    public override string PluginId => "[nf:app-id]";
+    public override PluginTypes PluginType => PluginTypes.AppPlugin;
+    public override string Name => "Application Services Component";
+
+    public AppPlugin()
     {
-        public override string PluginId => "[nf:app-id]";
-        public override PluginTypes PluginType => PluginTypes.AppPlugin;
-        public override string Name => "Application Services Component";
+        AddModule<ServiceModule>();
 
-        public AppPlugin()
-        {
-            AddModule<ServiceModule>();
-
-            Description = "Plugin component containing the Microservice's application services.";
-        }   
-    }
+        Description = "Plugin component containing the Microservice's application services.";
+    }   
 }

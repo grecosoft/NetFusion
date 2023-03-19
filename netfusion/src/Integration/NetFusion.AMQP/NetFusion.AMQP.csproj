@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\..\build\common.props" />
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -10,7 +10,7 @@
     <ProjectReference Include="..\..\Core\NetFusion.Messaging\NetFusion.Messaging.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AMQPNetLite" Version="2.4.4" />
+    <PackageReference Include="AMQPNetLite" Version="2.4.5" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
   </ItemGroup>

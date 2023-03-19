@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Common.Base\NetFusion.Common.Base.csproj" />
+    <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Bootstrap\NetFusion.Core.Bootstrap.csproj" />
+    <ProjectReference Include="..\NetFusion.Messaging.Types\NetFusion.Messaging.Types.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PackageId>NetFusion.Messaging</PackageId>
+    <Title>NetFusion Messaging Plug-In</Title>
+    <Description>Plug-in providing in-process messaging with extension points other plug-ins can extend to provided additional messaging patterns.</Description>
+    <PackageTags>netfusion;plugin;messaging;inprocess;ddd</PackageTags>
+  </PropertyGroup>
+</Project>

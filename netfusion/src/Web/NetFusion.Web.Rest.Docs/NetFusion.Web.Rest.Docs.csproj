@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\build\common.props" />
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
+    <PackageReference Include="System.Text.Json" Version="7.0.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NetFusion.Common.Base\NetFusion.Common.Base.csproj" />
+    <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Bootstrap\NetFusion.Core.Bootstrap.csproj" />
+    <ProjectReference Include="..\NetFusion.Web.Common\NetFusion.Web.Common.csproj" />
+    <ProjectReference Include="..\NetFusion.Web.Rest.Resources\NetFusion.Web.Rest.Resources.csproj" />
+    <ProjectReference Include="..\NetFusion.Web\NetFusion.Web.csproj" />
+    <ProjectReference Include="..\NetFusion.Web.Rest.Server\NetFusion.Web.Rest.Server.csproj" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PackageId>NetFusion.Web.Rest.Docs</PackageId>
+    <Title>NetFusion REST/HAL Documentation.</Title>
+    <Description>Plug-In allowing for the specification of documention for REST/HAL APIs.</Description>
+    <PackageTags>netfusion;plugin;rest;hal;docs;http;server;</PackageTags>
+  </PropertyGroup>
+</Project>

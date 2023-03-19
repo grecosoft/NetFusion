@@ -1,4 +1,4 @@
-FROM  mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+FROM  mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /build/src
 
 # --------------------------------------------------------------------------------------
@@ -37,10 +37,8 @@ RUN dotnet publish ./Solution.Context.WebApi/Solution.Context.WebApi.csproj -c r
 # - This stage takes the published output and copies it to a layer
 #   belonging to a new Docker image based on the runtime .net image. 
 # --------------------------------------------------------------------------------------
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /microservice
-
-LABEL "net-fusion.project.url"="https://github.com/grecosoft/NetFusion"
 
 COPY --from=build-env /build/out ./
 ENTRYPOINT ["dotnet", "Solution.Context.WebApi.dll"]
