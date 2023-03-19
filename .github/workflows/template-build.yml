@@ -8,7 +8,6 @@ on:
 env:
   solutionRoot: ./tools/dotnet/Templates/MicroService/content/src
   nugetSpec: ./tools/dotnet/Templates/MicroService/MicroService.nuspec  
-  packageDir: ./assets/pkgs
 
 jobs:
   build:
@@ -23,7 +22,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.101
+        dotnet-version: 7.0.200
     - name: Setup NuGet.exe 
       uses: NuGet/setup-nuget@v1.0.5
       with:
@@ -33,7 +32,8 @@ jobs:
     - name: Build Template
       run: dotnet build --no-restore -c Release --version-suffix $buildVersion $solutionRoot/Solution.Context.sln
     - name: Package Template
-      run: nuget pack $nugetSpec -Version $buildVersion -OutputDirectory $packageDir 
+      run: nuget pack $nugetSpec -Version $buildVersion 
     - name: Push Template to Repository
-      run: dotnet nuget push -s https://api.nuget.org/v3/index.json -k $nugetAuthToken --skip-duplicate $packageDir/**/*.nupkg
+      run: dotnet nuget push -s https://api.nuget.org/v3/index.json -k $nugetAuthToken --skip-duplicate ./**/NetFusion.*.nupkg
+
 
