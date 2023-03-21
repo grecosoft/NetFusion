@@ -1,5 +1,5 @@
 PACKAGES_DIR=../../../_packages
-VERSION=7.0.97
+VERSION=7.0.1-dev
 
 rm $PACKAGES_DIR/*.nupkg
 dotnet clean
