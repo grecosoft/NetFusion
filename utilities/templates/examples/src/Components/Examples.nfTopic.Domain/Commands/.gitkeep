@@ -1,0 +1,4 @@
+Commands are sent to alter the state of resources managed by the application and can have an optional return type.
+Messages sent to a handler for execution.  The command can only be associated with a single handler.  The sent command
+can be routed to an in-process handler or to a remote handler contained within another process by using the RabbitMQ,
+ Azure Service Bus or Redis plugins.

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NetFusion.Common" Version="7.0.31" />
+    <PackageReference Include="NetFusion.Common.Base" Version="7.0.31" />
+    <PackageReference Include="NetFusion.Core.Bootstrap" Version="7.0.31" />
+    <PackageReference Include="NetFusion.Messaging.Types" Version="7.0.31" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Destructurama.Attributed" Version="3.0.0" />
+  </ItemGroup>
+</Project>
