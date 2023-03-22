@@ -12,10 +12,8 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="7.0.31" />
-    <PackageReference Include="NetFusion.common.Base" Version="7.0.31" />
-    <PackageReference Include="NetFusion.Core.Bootstrap" Version="7.0.31" />
-    <PackageReference Include="NetFusion.Core.Settings" Version="7.0.31" />
-    <PackageReference Include="NetFusion.Messaging" Version="7.0.31" />
+    <PackageReference Include="NetFusion.Common" Version="7.0.32" />
+    <PackageReference Include="NetFusion.common.Base" Version="7.0.32" />
+    <PackageReference Include="NetFusion.Core.Bootstrap" Version="7.0.32" />
   </ItemGroup>
 </Project>
