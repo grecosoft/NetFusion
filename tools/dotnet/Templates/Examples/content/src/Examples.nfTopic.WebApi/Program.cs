@@ -65,8 +65,10 @@ lifetime.ApplicationStopping.Register(() =>
     Log.CloseAndFlush();
 });
 
+var runTask = app.RunAsync();
 await compositeApp.StartAsync();
-await app.RunAsync();
+await runTask;
+
 
 void InitializeLogger(IConfiguration configuration)
 {
