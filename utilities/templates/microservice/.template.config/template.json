@@ -1,7 +1,7 @@
 {
   "$schema": "http://json.schemastore.org/template",
   "author": "NetFusion-Contrib",
-  "classifications": [ "WebApi", "Microservice" ], 
+  "classifications": [ "WebApi", "Microservice", "NetFusion" ], 
   "identity": "NetFusion.Microservice",  
   "name": "NetFusion Microservice",
   "shortName": "netfusion-microservice",
@@ -12,41 +12,11 @@
   "sourceName": "Solution.Context", 
   "preferNameDirectory": true,
   "symbols":{
-    "local-cluster-name": {
-      "type": "parameter",
-      "datatype": "text",
-      "replaces": "[nf:local-cluster-name]",
-      "description": "The name of locally created cluster."
-    },
-    "local-registry-port": {
-      "type": "parameter",
-      "datatype": "int",
-      "replaces": "[nf:local-registry-port]",
-      "description": "The port of the local image registry to which the image is pushed."
-    },
-    "kube-namespace": {
-      "type": "parameter",
-      "datatype": "text",
-      "replaces": "[nf:kube-namespace]",
-      "description": "The Kubernetes namespace to which the microservice is to be deployed."
-    },
-    "kube-registry": {
-      "type": "parameter",
-      "datatype": "text",
-      "replaces": "[nf:kube-registry]",
-      "description": "The Kubernetes registry from which images are pulled."
-    },
-    "kube-replicas": {
-      "type": "parameter",
-      "datatype": "int",
-      "replaces": "[nf:kube-replicas]",
-      "description": "The number of replicas of the Microservice to be deployed."
-    },
-    "container-port": {
+    "port": {
       "type": "parameter",
       "datatype":"int",
-      "replaces": "[nf:container-port]",
-      "description": "The port used when running within a container or locally within a process or IDE."
+      "replaces": "[nf:port]",
+      "description": "The port used when running the service locally."
     },
     "sourceName": {
       "type": "generated",
@@ -109,11 +79,12 @@
     }
   },
   "sources":[
-    { "include": "src/Solution.Context.sln" },
-    { "include": "src/Components/Solution.Context.Domain/**/*" },
-    { "include": "src/Components/Solution.Context.App/**/*" },
-    { "include": "src/Components/Solution.Context.Infra/**/*" },
-    { "include": "src/Solution.Context.WebApi/**/*" },
-    { "include": "src/Solution.Context.Tests/**/*" }
-  ]
+      { "include": "src/Solution.Context.sln" },
+      { "include": "src/Components/Solution.Context.Domain/**/*" },
+      { "include": "src/Components/Solution.Context.App/**/*" },
+      { "include": "src/Components/Solution.Context.Infra/**/*" },
+      { "include": "src/Solution.Context.WebApi/**/*" },
+      { "include": "src/Solution.Context.Tests/**/*" },
+      { "include": "docker-compose.yml"}
+    ]
 }
