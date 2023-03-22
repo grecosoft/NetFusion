@@ -6,7 +6,7 @@
     <PackageId>NetFusion.Templates</PackageId>
     <Title>NetFusion Templates</Title>
     <Authors>NetFusion-Contrib</Authors>
-    <description>Creates a .net core project containing a shell for a Microservice.</description>	
+    <description>Creates a .net microservice based solution.</description>	
     <PackageTags>dotnet-new;templates;microservice</PackageTags>
     <TargetFramework>net7.0</TargetFramework>
     <PackageIcon>utilities.png</PackageIcon>
