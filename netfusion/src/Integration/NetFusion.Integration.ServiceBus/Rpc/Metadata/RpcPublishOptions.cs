@@ -7,6 +7,6 @@ namespace NetFusion.Integration.ServiceBus.Rpc.Metadata;
 /// </summary>
 public class RpcPublishOptions
 {
-    public int CancelRpcRequestAfterMs { get; set; } = 10_000;
+    public int CancelRpcRequestAfterMs { get; set; } = 5_000;
     public string ContentType { get; set; } = ContentTypes.Json;
 }

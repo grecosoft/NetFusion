@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
 using NetFusion.Common.Base.Properties;
 using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.Bootstrap.Health;
@@ -111,6 +112,8 @@ public static class HealthEndpointExtensions
                     
             c.Response.StatusCode = healthCheck.CompositeAppHealth == HealthCheckStatusType.Healthy ?
                 StatusCodes.Status200OK : notHealthyStatus;
+
+            c.Response.Headers.Add("Health-Status", new StringValues(healthCheck.CompositeAppHealth.ToString()));
         });
 
         return endpoints;

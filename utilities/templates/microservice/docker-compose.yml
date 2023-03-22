@@ -1,0 +1,23 @@
+version: '3.4'
+services:
+    seq:
+        container_name: seq-dev
+        hostname: seq-dev-host
+        image: datalust/seq:latest
+        volumes:
+            - seq_data:/data
+        environment:
+            - ACCEPT_EULA=Y
+        ports:
+            - 5351:5341
+            - 8051:80
+
+volumes:
+    seq_data:
+        name: dev-seq_data
+
+networks:
+  default:
+
+
+

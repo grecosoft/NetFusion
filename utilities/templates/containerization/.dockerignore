@@ -1,0 +1,5 @@
+**/bin
+**/obj
+**/.idea
+**/appsettings*.json
+**/web.config
