@@ -85,6 +85,6 @@
       { "include": "src/Components/Solution.Context.Infra/**/*" },
       { "include": "src/Solution.Context.WebApi/**/*" },
       { "include": "src/Solution.Context.Tests/**/*" },
-      { "include": "docker-compose.yml"}
+      { "include": "seq/docker-compose.yml"}
     ]
 }
