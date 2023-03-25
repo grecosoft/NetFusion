@@ -22,7 +22,7 @@ internal class RpcConsumerStrategy : BusEntityStrategyBase<NamespaceEntityContex
     private readonly RpcEntity _rpcEntity;
     private ServiceBusProcessor? _queueProcessor;
 
-    public RpcConsumerStrategy(RpcEntity rpcEntity)
+    public RpcConsumerStrategy(RpcEntity rpcEntity) : base(rpcEntity)
     {
         _rpcEntity = rpcEntity;
     }

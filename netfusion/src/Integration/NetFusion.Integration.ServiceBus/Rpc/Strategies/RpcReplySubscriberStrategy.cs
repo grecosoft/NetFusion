@@ -19,7 +19,7 @@ internal class RpcReplySubscriberStrategy : BusEntityStrategyBase<NamespaceEntit
     private readonly RpcReferenceEntity _rpcEntity;
     private ServiceBusProcessor? _replyProcessor;
 
-    public RpcReplySubscriberStrategy(RpcReferenceEntity rpcEntity)
+    public RpcReplySubscriberStrategy(RpcReferenceEntity rpcEntity) : base(rpcEntity)
     {
         _rpcEntity = rpcEntity;
     }

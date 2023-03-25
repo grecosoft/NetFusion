@@ -116,7 +116,7 @@ public class BusModule : PluginModule,
 
             if (args.Type == PersistentConnectionType.Consumer)
             {
-                Reconnection?.Invoke(this, new ReconnectionEventArgs { Connection = conn });  
+                Reconnection?.Invoke(this, new ReconnectionEventArgs(conn));  
             }
         };
     }

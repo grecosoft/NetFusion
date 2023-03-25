@@ -15,7 +15,7 @@ internal class QueueCreationStrategy : BusEntityStrategyBase<NamespaceEntityCont
 {
     private readonly QueueEntity _queueEntity;
 
-    public QueueCreationStrategy(QueueEntity queueEntity)
+    public QueueCreationStrategy(QueueEntity queueEntity) : base(queueEntity)
     {
         _queueEntity = queueEntity;
     }

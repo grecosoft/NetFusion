@@ -23,7 +23,7 @@ public class RpcConsumerStrategy : BusEntityStrategyBase<EntityContext>,
     private Queue _queue;
     private IDisposable? _consumer;
     
-    public RpcConsumerStrategy(RpcEntity rpcEntity)
+    public RpcConsumerStrategy(RpcEntity rpcEntity) : base(rpcEntity)
     {
         _rpcEntity = rpcEntity;
     }

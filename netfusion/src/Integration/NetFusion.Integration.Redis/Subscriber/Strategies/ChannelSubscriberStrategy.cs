@@ -17,7 +17,7 @@ public class ChannelSubscriberStrategy : BusEntityStrategyBase<ChannelEntityCont
     private readonly ChannelSubscriberEntity _subscriberEntity;
     private ISubscriber? _subscriber;
 
-    public ChannelSubscriberStrategy(ChannelSubscriberEntity subscriberEntity)
+    public ChannelSubscriberStrategy(ChannelSubscriberEntity subscriberEntity) : base(subscriberEntity)
     {
         _subscriberEntity = subscriberEntity;
     }

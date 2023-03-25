@@ -11,9 +11,6 @@ namespace NetFusion.Integration.ServiceBus.Plugin.Modules;
 internal class NamespaceEntityModule : BusEntityModuleBase,
     INamespaceEntityModule
 {
-    // Set by bootstrapper:
-    private INamespaceModule NamespaceModule { get; set; } = null!;
-    
     public override void RegisterServices(IServiceCollection services)
     {
         services.AddScoped<IQueueResponseService, QueueResponseService>();

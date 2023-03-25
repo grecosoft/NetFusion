@@ -18,7 +18,7 @@ internal class QueuePublishStrategy : BusEntityStrategyBase<NamespaceEntityConte
     private readonly QueueReferenceEntity _queueEntity;
     private ServiceBusSender? _serviceBusSender;
 
-    public QueuePublishStrategy(QueueReferenceEntity queueEntity)
+    public QueuePublishStrategy(QueueReferenceEntity queueEntity) : base(queueEntity)
     {
         _queueEntity = queueEntity;
     }

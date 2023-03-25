@@ -24,7 +24,7 @@ public class QueueCreationStrategy : BusEntityStrategyBase<EntityContext>,
     private ILogger<QueueCreationStrategy> Logger => 
         Context.LoggerFactory.CreateLogger<QueueCreationStrategy>();
 
-    public QueueCreationStrategy(QueueEntity queueEntity)
+    public QueueCreationStrategy(QueueEntity queueEntity) : base(queueEntity)
     {
         _queueEntity = queueEntity;
     }
