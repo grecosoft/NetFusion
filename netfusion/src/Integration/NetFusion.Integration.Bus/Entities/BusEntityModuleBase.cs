@@ -105,10 +105,11 @@ public abstract class BusEntityModuleBase : PluginModule
     /// and strategy needs.</returns>
     protected abstract BusEntityContext CreateContext(IServiceProvider services);
 
-    protected async Task ApplyStrategyToEntities<TStrategy>(Func<TStrategy, Task> strategy)
+    protected async Task ApplyStrategyToEntities<TStrategy>(Func<TStrategy, Task> strategy, 
+        string? busName = null)
         where TStrategy : IBusEntityStrategy
     {
-        foreach (BusEntity entity in BusEntities)
+        foreach (BusEntity entity in BusEntities.Where(e => e.BusName == busName || busName == null))
         {
             var strategies = entity.GetStrategies<TStrategy>();
             foreach(TStrategy entityStrategy in strategies)

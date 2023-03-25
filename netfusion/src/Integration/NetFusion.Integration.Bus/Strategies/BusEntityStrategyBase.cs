@@ -10,8 +10,14 @@ namespace NetFusion.Integration.Bus.Strategies;
 public class BusEntityStrategyBase<TContext> : IBusEntityStrategy
     where TContext : BusEntityContext
 {
+    public BusEntity BusEntity { get; }
     private TContext? _context;
-    
+
+    public BusEntityStrategyBase(BusEntity busEntity)
+    {
+        BusEntity = busEntity ?? throw new ArgumentNullException(nameof(busEntity));
+    }
+
     public void SetContext(BusEntityContext context)
     {
         _context = (TContext)context ?? throw new ArgumentNullException(nameof(context));

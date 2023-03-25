@@ -16,7 +16,7 @@ public class RpcPublishStrategy : BusEntityStrategyBase<EntityContext>,
 {
     private readonly RpcReferenceEntity _rpcEntity;
     
-    public RpcPublishStrategy(RpcReferenceEntity rpcEntity)
+    public RpcPublishStrategy(RpcReferenceEntity rpcEntity) : base(rpcEntity)
     {
         _rpcEntity = rpcEntity;
     }

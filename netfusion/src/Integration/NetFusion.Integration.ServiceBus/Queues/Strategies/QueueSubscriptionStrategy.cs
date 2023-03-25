@@ -21,7 +21,8 @@ internal class QueueSubscriptionStrategy : BusEntityStrategyBase<NamespaceEntity
 
     private ServiceBusProcessor? _queueProcessor;
 
-    public QueueSubscriptionStrategy(QueueEntity queueEntity, MessageDispatcher dispatcher)
+    public QueueSubscriptionStrategy(QueueEntity queueEntity, MessageDispatcher dispatcher) :
+        base(queueEntity)
     {
         _queueEntity = queueEntity;
         _dispatcher = dispatcher;

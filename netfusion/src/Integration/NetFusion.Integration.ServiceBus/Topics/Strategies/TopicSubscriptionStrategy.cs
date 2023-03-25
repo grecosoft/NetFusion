@@ -23,7 +23,8 @@ internal class TopicSubscriptionStrategy : BusEntityStrategyBase<NamespaceEntity
 
     private ServiceBusProcessor? _subscriptionProcessor;
 
-    public TopicSubscriptionStrategy(SubscriptionEntity subscription, MessageDispatcher dispatcher)
+    public TopicSubscriptionStrategy(SubscriptionEntity subscription, MessageDispatcher dispatcher) :
+        base(subscription)
     {
         _subscription = subscription;
         _dispatcher = dispatcher;

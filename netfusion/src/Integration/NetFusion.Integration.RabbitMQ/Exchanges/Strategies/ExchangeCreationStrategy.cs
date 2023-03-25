@@ -19,7 +19,7 @@ public class ExchangeCreationStrategy : BusEntityStrategyBase<EntityContext>,
     private readonly ExchangeEntity _exchangeEntity;
     private readonly ExchangeMeta _exchangeMeta;
 
-    public ExchangeCreationStrategy(ExchangeEntity exchangeEntity)
+    public ExchangeCreationStrategy(ExchangeEntity exchangeEntity) : base(exchangeEntity)
     {
         _exchangeEntity = exchangeEntity;
         _exchangeMeta = _exchangeEntity.ExchangeMeta;

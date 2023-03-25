@@ -8,6 +8,11 @@ namespace NetFusion.Integration.Bus.Strategies;
 public interface IBusEntityStrategy
 {
     /// <summary>
+    /// Reference to the entity associated with the strategy.
+    /// </summary>
+    public BusEntity BusEntity { get; }
+    
+    /// <summary>
     /// Called during bootstrapping to associate a context with the strategy.
     /// </summary>
     /// <param name="context">The context containing cross-cutting services.</param>

@@ -10,6 +10,11 @@ namespace NetFusion.Integration.RabbitMQ.Internal
         /// <summary>
         /// Information about the connection.
         /// </summary>
-        public ConnectionSettings? Connection { get; set; }
+        public ConnectionSettings Connection { get; }
+
+        public ReconnectionEventArgs(ConnectionSettings connection)
+        {
+            Connection = connection;
+        }
     }
 }

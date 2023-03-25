@@ -21,7 +21,7 @@ internal class RpcPublishStrategy : BusEntityStrategyBase<NamespaceEntityContext
     private readonly RpcReferenceEntity _rpcEntity;
     private ServiceBusSender? _rpcQueueSender;
 
-    public RpcPublishStrategy(RpcReferenceEntity rpcEntity)
+    public RpcPublishStrategy(RpcReferenceEntity rpcEntity) : base(rpcEntity)
     {
         _rpcEntity = rpcEntity;
     }

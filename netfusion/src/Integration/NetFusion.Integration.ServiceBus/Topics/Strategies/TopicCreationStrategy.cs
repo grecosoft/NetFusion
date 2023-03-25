@@ -20,7 +20,7 @@ internal class TopicCreationStrategy : BusEntityStrategyBase<NamespaceEntityCont
     private readonly TopicEntity _topicEntity;
     private ServiceBusSender? _serviceBusSender;
 
-    public TopicCreationStrategy(TopicEntity topicEntity)
+    public TopicCreationStrategy(TopicEntity topicEntity) : base(topicEntity)
     {
         _topicEntity = topicEntity;
     }

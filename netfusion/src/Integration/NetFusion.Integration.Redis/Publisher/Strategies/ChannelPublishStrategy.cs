@@ -14,7 +14,7 @@ public class ChannelPublishStrategy : BusEntityStrategyBase<ChannelEntityContext
 {
     private readonly ChannelPublisherEntity _entity;
 
-    public ChannelPublishStrategy(ChannelPublisherEntity entity)
+    public ChannelPublishStrategy(ChannelPublisherEntity entity) : base(entity)
     {
         _entity = entity;
     }

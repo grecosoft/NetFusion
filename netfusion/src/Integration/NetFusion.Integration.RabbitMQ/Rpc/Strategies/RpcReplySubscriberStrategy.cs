@@ -25,7 +25,7 @@ public class RpcReplySubscriberStrategy : BusEntityStrategyBase<EntityContext>,
     private ILogger<RpcReplySubscriberStrategy> Logger => 
         Context.LoggerFactory.CreateLogger<RpcReplySubscriberStrategy>();
 
-    public RpcReplySubscriberStrategy(RpcReferenceEntity rpcEntity)
+    public RpcReplySubscriberStrategy(RpcReferenceEntity rpcEntity) : base(rpcEntity)
     {
         _rpcEntity = rpcEntity;
     }

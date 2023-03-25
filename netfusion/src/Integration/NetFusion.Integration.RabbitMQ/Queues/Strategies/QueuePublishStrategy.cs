@@ -16,7 +16,7 @@ public class QueuePublishStrategy : BusEntityStrategyBase<EntityContext>,
 {
     private readonly QueueReferenceEntity _queueEntity;
 
-    public QueuePublishStrategy(QueueReferenceEntity queueEntity)
+    public QueuePublishStrategy(QueueReferenceEntity queueEntity) : base(queueEntity)
     {
         _queueEntity = queueEntity;
     }

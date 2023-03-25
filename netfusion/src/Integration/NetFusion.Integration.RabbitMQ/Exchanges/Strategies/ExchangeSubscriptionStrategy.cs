@@ -21,7 +21,7 @@ public class ExchangeSubscriptionStrategy : BusEntityStrategyBase<EntityContext>
     
     private IDisposable? _consumer;
 
-    public ExchangeSubscriptionStrategy(SubscriptionEntity subscriptionEntity)
+    public ExchangeSubscriptionStrategy(SubscriptionEntity subscriptionEntity) : base(subscriptionEntity)
     {
         _subscriptionEntity = subscriptionEntity;
     }

@@ -23,15 +23,16 @@ public class BusEntityModule : BusEntityModuleBase,
     protected override async Task OnStartModuleAsync(IServiceProvider services)
     {
         await base.OnStartModuleAsync(services);
-        BusModule.Reconnection += (_, _) =>
+        
+        BusModule.Reconnection += (_, evtArgs) =>
         {
-            ApplyStrategyToEntities<IBusEntityCreationStrategy>(s => s.CreateEntity())
-                .GetAwaiter()
-                .GetResult();
+            ApplyStrategyToEntities<IBusEntityCreationStrategy>(
+                s => s.CreateEntity(), 
+                evtArgs.Connection.BusName).GetAwaiter().GetResult();
             
-            ApplyStrategyToEntities<IBusEntitySubscriptionStrategy>(s => s.SubscribeEntity())
-                .GetAwaiter()
-                .GetResult();
+            ApplyStrategyToEntities<IBusEntitySubscriptionStrategy>(
+                s => s.SubscribeEntity(), 
+                evtArgs.Connection.BusName).GetAwaiter().GetResult();
         };
     }
 }
