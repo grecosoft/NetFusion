@@ -3,7 +3,7 @@ using NetFusion.Integration.Redis.Internal;
 
 namespace NetFusion.Integration.Redis.Plugin.Modules;
 
-public class ChannelEntityModule : BusEntityModuleBase,
+public class ChannelEntityModule : BusEntityModuleBase<RedisRouter>,
     IBusEntityModule
 {
     protected override BusEntityContext CreateContext(IServiceProvider services) =>

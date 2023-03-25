@@ -8,7 +8,7 @@ namespace NetFusion.Integration.ServiceBus.Plugin.Modules;
 /// Module managing the initialization of namespace entities determining how
 /// messages are published and received from Azure Service Bus.
 /// </summary>
-internal class NamespaceEntityModule : BusEntityModuleBase,
+internal class NamespaceEntityModule : BusEntityModuleBase<NamespaceRouter>,
     INamespaceEntityModule
 {
     public override void RegisterServices(IServiceCollection services)
