@@ -185,12 +185,18 @@ public class CompositeApp : ICompositeApp
     // plugins from which it was built.
     public async Task<CompositeAppHealthCheck> GetHealthCheckAsync()
     {
+        if (!IsStarted)
+        {
+            _logger.LogWarning("Composite Application reports Unhealthy until started.");
+            return new CompositeAppHealthCheck(HealthCheckStatusType.Unhealthy);
+        }
+        
         var healthCheck = await _healthCheckBuilder.QueryHealthAsync();
         if (healthCheck.CompositeAppHealth == HealthCheckStatusType.Healthy)
         {
             return healthCheck;
         }
-
+        
         var log = LogMessage.For(LogLevel.Debug,
                 "Current Composite Application Health: {Status}",
                 healthCheck.CompositeAppHealth)

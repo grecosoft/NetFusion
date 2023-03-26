@@ -294,7 +294,10 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
         
     private void RegisterCorePluginServices()
     {
-        var allPluginTypes = GetPluginTypes().ToArray();
+        var allPluginTypes = GetPluginTypes(
+            PluginTypes.CorePlugin,
+            PluginTypes.AppPlugin, 
+            PluginTypes.HostPlugin).ToArray();
             
         RegisterDefaultPluginServices(CorePlugins);
         ScanForServices(CorePlugins, allPluginTypes);
