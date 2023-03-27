@@ -10,7 +10,7 @@ namespace NetFusion.Integration.Redis.Plugin.Modules
     /// </summary>
     public class RedisModule : PluginModule
     {
-        public override void RegisterDefaultServices(IServiceCollection services)
+        public override void RegisterServices(IServiceCollection services)
         {
             services.AddSingleton<IRedisService, RedisService>();
             services.AddSingleton<ISubscriptionService, SubscriptionService>();

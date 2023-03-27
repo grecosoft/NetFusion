@@ -45,7 +45,7 @@ public class CodeGenModule : PluginModule,
 
     public IReadOnlyCollection<Type> ResourceTypes => _resourceTypes;
 
-    public override void RegisterDefaultServices(IServiceCollection services)
+    public override void RegisterServices(IServiceCollection services)
     {
         services.AddScoped<IApiCodeGenService, ApiCodeGenService>();
     }

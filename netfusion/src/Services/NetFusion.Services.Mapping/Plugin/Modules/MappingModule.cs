@@ -41,15 +41,12 @@ public class MappingModule : PluginModule,
         SourceTypeMappings = targetMaps.Concat(factoryTargetMaps)
             .ToLookup(m => m.SourceType);
     }
-
-    public override void RegisterDefaultServices(IServiceCollection services)
-    {
-        // Service used as the central entry point for mapping objects.
-        services.AddScoped<IObjectMapper, ObjectMapper>();           
-    }
-
+    
     public override void RegisterServices(IServiceCollection services)
     {
+        // Service used as the central entry point for mapping objects.
+        services.AddScoped<IObjectMapper, ObjectMapper>();  
+        
         // Register all non-factory provided mappings with the container.  This will
         // allow mappings to inject any services needed to complete the mapping.
         var strategyTypesToRegister = SourceTypeMappings.Values()

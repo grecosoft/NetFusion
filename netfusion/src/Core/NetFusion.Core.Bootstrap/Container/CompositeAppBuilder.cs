@@ -299,9 +299,8 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
             PluginTypes.AppPlugin, 
             PluginTypes.HostPlugin).ToArray();
             
-        RegisterDefaultPluginServices(CorePlugins);
-        ScanForServices(CorePlugins, allPluginTypes);
         RegisterPluginServices(CorePlugins);
+        ScanForServices(CorePlugins, allPluginTypes);
     }
         
     private void RegisterAppPluginServices()
@@ -310,26 +309,16 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
             PluginTypes.AppPlugin, 
             PluginTypes.HostPlugin).ToArray();
             
-        RegisterDefaultPluginServices(AppPlugins);
-        ScanForServices(AppPlugins, allAppPluginTypes);
         RegisterPluginServices(AppPlugins);
+        ScanForServices(AppPlugins, allAppPluginTypes);
     }
 
     private void RegisterHostPluginServices()
     {
         var hostPluginTypes = GetPluginTypes(PluginTypes.HostPlugin).ToArray();
             
-        RegisterDefaultPluginServices(new []{ HostPlugin });
-        ScanForServices(new []{ HostPlugin }, hostPluginTypes);
         RegisterPluginServices(new []{ HostPlugin });
-    }
-        
-    private void RegisterDefaultPluginServices(IPlugin[] plugins)
-    {
-        foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
-        {
-            module.RegisterDefaultServices(ServiceCollection);
-        }
+        ScanForServices(new []{ HostPlugin }, hostPluginTypes);
     }
 
     private void ScanForServices(IPlugin[] plugins, Type[] pluginTypes)

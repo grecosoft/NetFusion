@@ -54,15 +54,13 @@ public abstract class PluginModule : IPluginModule
     }
 
     /// <summary>
-    /// Called first for all plug-in modules to allow default service implementations
-    /// to be registered for use if not overridden by another plug-in module (usually
-    /// at the application level by an application plugin).
+    /// Allows the plug-in to register specific types as services within the service collection.
     /// </summary>
-    /// <param name="services">Service collection used to register services.
+    /// <param name="services">Service collection used to register types 
+    /// that can be dependency injected as services.
     /// </param>
-    public virtual void RegisterDefaultServices(IServiceCollection services)
+    public virtual void RegisterServices(IServiceCollection services)
     {
-
     }
 
     /// <summary>
@@ -73,16 +71,6 @@ public abstract class PluginModule : IPluginModule
     /// can scan types contained within all plugins.  Whereas application centric plugins are
     /// limited to scanning types contained within application plugins. </param>
     public virtual void ScanForServices(ITypeCatalog catalog)
-    {
-    }
-
-    /// <summary>
-    /// Allows the plug-in to register specific types as services within the service collection.
-    /// </summary>
-    /// <param name="services">Service collection used to register types 
-    /// that can be dependency injected as services.
-    /// </param>
-    public virtual void RegisterServices(IServiceCollection services)
     {
     }
 
