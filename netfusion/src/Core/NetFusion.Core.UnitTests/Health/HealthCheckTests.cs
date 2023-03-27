@@ -28,6 +28,7 @@ public class HealthCheckTests
                     c.RegisterPlugin<MockHostPlugin>();
                     c.RegisterPlugins(corePlugin);
                 }).Act
+                .OnCompositeApp(ca => ca.Start())
                 .OnModule<HealthCheckModuleOne>(m => m.HealthCheckStatus = HealthCheckStatusType.Healthy)
                 .OnModule<HealthCheckModuleTwo>(m => m.HealthCheckStatus = HealthCheckStatusType.Healthy);
 
@@ -57,6 +58,7 @@ public class HealthCheckTests
                     c.RegisterPlugin<MockHostPlugin>();
                     c.RegisterPlugins(corePlugin);
                 }).Act
+                .OnCompositeApp(ca => ca.Start())
                 .OnModule<HealthCheckModuleOne>(m => m.HealthCheckStatus = HealthCheckStatusType.Healthy)
                 .OnModule<HealthCheckModuleTwo>(m => m.HealthCheckStatus = HealthCheckStatusType.Degraded);
 
