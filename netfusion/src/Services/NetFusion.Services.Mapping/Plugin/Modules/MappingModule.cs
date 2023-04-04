@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Common.Extensions.Collections;
+using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Core.Bootstrap.Plugins;
 using NetFusion.Services.Mapping.Core;
 
@@ -17,7 +18,6 @@ public class MappingModule : PluginModule,
 {
     // Discovered Properties:
     private IEnumerable<IMappingStrategyFactory> StrategyFactories { get; set; }
-    private IEnumerable<IMappingStrategy> MappingStrategies { get; set; }
 
     // SourceType ==> TargetMap(s)
     public ILookup<Type, TargetMap> SourceTypeMappings { get; private set; }
@@ -25,21 +25,34 @@ public class MappingModule : PluginModule,
     public MappingModule()
     {
         StrategyFactories = Array.Empty<IMappingStrategyFactory>();
-        MappingStrategies = Array.Empty<IMappingStrategy>();
-        
         SourceTypeMappings = Enumerable.Empty<TargetMap>().ToLookup(m => m.SourceType);
     }
-        
+
     // Finds all mapping strategies and caches the information for used at runtime by ObjectMapper.
     public override void Configure()
     {
-        var factoryTargetMaps = StrategyFactories.SelectMany(f => f.GetStrategies())
-            .Select(s => new TargetMap(s.SourceType, s.TargetType, s));
+        var targetMappings = GetFactoryProvidedMappingStrategies()
+            .Concat(GetCustomMappingStrategies());
 
-        var targetMaps = MappingStrategies.Select(s => new TargetMap(s.SourceType, s.TargetType, s.GetType()));
+        SourceTypeMappings = targetMappings.ToLookup(tm => tm.SourceType);  
+    }
+    
+    // All mappings provided by instances implementing IMappingStrategyFactory.
+    private IEnumerable<TargetMap> GetFactoryProvidedMappingStrategies() => StrategyFactories
+        .SelectMany(f => f.GetStrategies())
+        .Select(s => new TargetMap(s.SourceType, s.TargetType, s));
 
-        SourceTypeMappings = targetMaps.Concat(factoryTargetMaps)
-            .ToLookup(m => m.SourceType);
+    // Find all types that are a closed type of IMappingStrategy<,> such as IMappingStrategy<Car, CarModel>.
+    // These are mapping strategies containing custom mapping logic.  These mapping strategies are registered
+    // in the DI container and therefore can have dependencies injected. 
+    private IEnumerable<TargetMap> GetCustomMappingStrategies()
+    {
+        Type openGenericMapType = typeof(IMappingStrategy<,>);
+
+        return Context.AllPluginTypes
+            .WhereHavingClosedInterfaceTypeOf(openGenericMapType)
+            .Where(pt => !pt.Type.IsAbstract && !pt.Type.IsGenericType)
+            .Select(ti => new TargetMap(ti.GenericArguments[0], ti.GenericArguments[1], ti.Type));
     }
     
     public override void RegisterServices(IServiceCollection services)
@@ -57,5 +70,15 @@ public class MappingModule : PluginModule,
         {
             services.AddScoped(strategyType!);
         }
+    }
+
+    public override void Log(IDictionary<string, object> moduleLog)
+    {
+        moduleLog["mappings"] = SourceTypeMappings.Values().Select(m => new
+        {
+            m.SourceType,
+            m.TargetType,
+            StrategyType = m.StrategyType ?? m.StrategyInstance?.GetType()
+        });
     }
 }
