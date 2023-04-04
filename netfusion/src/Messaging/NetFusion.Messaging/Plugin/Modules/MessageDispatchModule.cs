@@ -130,12 +130,10 @@ public class MessageDispatchModule : PluginModule,
 
     private void LogMessagePublishers(IDictionary<string, object> moduleLog)
     {
-        moduleLog["MessagePublishers"] = Context.AllPluginTypes
-            .Where(pt => pt.IsConcreteTypeDerivedFrom<IMessagePublisher>())
+        moduleLog["MessagePublishers"] = DispatchConfig.MessagePublishers
             .Select(t => new
             {
-                PublisherType = t.AssemblyQualifiedName,
-                IsConfigured = DispatchConfig.MessagePublishers.Contains(t)
+                PublisherType = t.AssemblyQualifiedName
             }).ToArray();
     }
 }

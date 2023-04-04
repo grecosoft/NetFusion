@@ -37,12 +37,10 @@ public class MessageFilterModule : PluginModule
 
     public override void Log(IDictionary<string, object> moduleLog)
     {
-        moduleLog["QueryFilters"] = Context.AllPluginTypes
-            .Where(pt => pt.IsConcreteTypeDerivedFrom<IMessageFilter>())
+        moduleLog["QueryFilters"] = MessagingConfig.MessageFilters
             .Select(ft => new
             {
                 FilterType = ft.AssemblyQualifiedName,
-                IsConfigured = MessagingConfig.MessageFilters.Contains(ft),
                 IsPreFilter = ft.IsConcreteTypeDerivedFrom<IPreMessageFilter>(),
                 IsPostFilter = ft.IsConcreteTypeDerivedFrom<IPostMessageFilter>()
             }).ToArray();      
