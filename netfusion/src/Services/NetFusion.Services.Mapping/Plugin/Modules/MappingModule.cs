@@ -51,7 +51,7 @@ public class MappingModule : PluginModule,
 
         return Context.AllPluginTypes
             .WhereHavingClosedInterfaceTypeOf(openGenericMapType)
-            .Where(pt => !pt.Type.IsAbstract && !pt.Type.IsGenericType)
+            .Where(pt => !pt.Type.IsAbstract)
             .Select(ti => new TargetMap(ti.GenericArguments[0], ti.GenericArguments[1], ti.Type));
     }
     

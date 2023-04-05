@@ -38,19 +38,20 @@ public static class GenericTypeExtensions
     {
         if (closedGenericType == null) throw new ArgumentNullException(nameof(closedGenericType));
         if (openGenericType == null) throw new ArgumentNullException(nameof(openGenericType));
-
-        var closedGenericTypeInfo = closedGenericType.GetTypeInfo();
-
+        
         if (! openGenericType.IsOpenGenericType())
         {
             throw new InvalidOperationException(
                 $"The type of: {openGenericType} is not an open generic type.");
         }
-
-        if (! closedGenericTypeInfo.IsGenericType) return false;
+        
+        if (!closedGenericType.IsGenericType || closedGenericType.ContainsGenericParameters)
+        {
+            return false;
+        }
 
         // Test if the closed type is based on the same open type.
-        var closedGenericTypeDef = closedGenericTypeInfo.GetGenericTypeDefinition();
+        var closedGenericTypeDef = closedGenericType.GetGenericTypeDefinition();
         if (closedGenericTypeDef != openGenericType)
         {
             return false;
@@ -72,7 +73,7 @@ public static class GenericTypeExtensions
                 "number of specified closed-parameter types.");
         }
 
-        var closedTypeArgTypes = closedGenericTypeInfo.GetGenericArguments();
+        var closedTypeArgTypes = closedGenericType.GetGenericArguments();
         for (int i = 0; i < specificClosedArgTypes.Length; i++)
         {
             var typeInfo = specificClosedArgTypes[i].GetTypeInfo();
