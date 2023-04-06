@@ -58,5 +58,9 @@ public abstract class Query<TResult> : Query, IQuery<TResult>
     /// <summary>
     /// The result of the query provided by the consumer.
     /// </summary>
-    public TResult Result => (TResult)ResultState.MessageResult!;
+    public TResult Result
+    {
+        get => (TResult)ResultState.MessageResult!;
+        set => ResultState.MessageResult = value;
+    }
 }

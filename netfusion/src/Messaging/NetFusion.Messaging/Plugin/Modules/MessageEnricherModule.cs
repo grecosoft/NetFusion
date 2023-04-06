@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Core.Bootstrap.Plugins;
 using NetFusion.Messaging.Enrichers;
 using NetFusion.Messaging.Plugin.Configs;

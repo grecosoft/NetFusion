@@ -160,7 +160,7 @@ public class MappingModuleTests
 
     public class TestMapTypeOne
     {
-        public int[] Values { get; set; }
+        public int[] Values { get; set; } = Array.Empty<int>();
     }
 
     public class TestMapTypeTwo
@@ -173,7 +173,7 @@ public class MappingModuleTests
     public class TestMapTypeThree
     {
         public int MaxAllowedValue { get; set; }
-        public int[] Values { get; set; }
+        public int[] Values { get; set; } = Array.Empty<int>();
     }
 
     public class TestMappingStrategyOne : MappingStrategy<TestMapTypeThree, TestMapTypeOne>

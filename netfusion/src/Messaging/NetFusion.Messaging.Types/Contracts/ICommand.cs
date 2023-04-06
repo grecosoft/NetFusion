@@ -16,7 +16,7 @@ public interface ICommand : IMessage
 /// consumer to take an action.
 /// </summary>
 /// <typeparam name="TResult">The response set by the consumer that processed the message.</typeparam>
-public interface ICommand<out TResult> : ICommand
+public interface ICommand<TResult> : ICommand
 {
-    TResult Result { get; }
+    TResult Result { get; set; }
 }

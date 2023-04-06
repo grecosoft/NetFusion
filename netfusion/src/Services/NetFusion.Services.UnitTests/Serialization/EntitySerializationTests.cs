@@ -8,9 +8,11 @@ public class EntitySerializationTests
     [Fact]
     public void CanSerializeAndDeserializeAttributedEntity_JSON()
     {
-        var entity = new DynamicEntity();
+        var entity = new DynamicEntity
+        {
+            MaxValue = 1000 // static property.
+        };
 
-        entity.MaxValue = 1000; // static property.
         entity.Attributes.Values.Value1 = "ABC";  // dynamic attribute values
         entity.Attributes.Values.Value2 = 123;
 
@@ -18,7 +20,7 @@ public class EntitySerializationTests
         var deserializedEntity = JsonConvert.DeserializeObject<DynamicEntity>(jsonVal);
 
         deserializedEntity.Should().NotBeNull();
-        deserializedEntity.MaxValue.Should().Be(entity.MaxValue);
+        deserializedEntity!.MaxValue.Should().Be(entity.MaxValue);
 
         var value1 = (string)deserializedEntity.Attributes.Values.Value1;
         var value2 = (int)deserializedEntity.Attributes.Values.Value2;

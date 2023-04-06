@@ -31,7 +31,7 @@ public class ObjectMappingTests
                 })
                 .Act.RecordException().OnServices(s =>
                 {
-                    var mapper = s.GetService<IObjectMapper>();
+                    var mapper = s.GetRequiredService<IObjectMapper>();
                     mapper.Map<TestInvalidMapType>(testSrcObj);
                 });
 
@@ -55,7 +55,7 @@ public class ObjectMappingTests
         {
             Values = new[] { 30, 5, 88, 33, 83 }
         };
-        TestMapTypeTwo testTgtObj = null;
+        TestMapTypeTwo? testTgtObj = null;
 
         ContainerFixture.Test(fixture =>
         {
@@ -67,7 +67,7 @@ public class ObjectMappingTests
                 })
                 .Act.OnServices(s =>
                 {
-                    var mapper = s.GetService<IObjectMapper>();
+                    var mapper = s.GetRequiredService<IObjectMapper>();
                     testTgtObj = mapper.Map<TestMapTypeTwo>(testSrcObj);
                 });
 
@@ -98,7 +98,7 @@ public class ObjectMappingTests
             Sum = 65
         };
             
-        TestMapTypeOne testTgtObj = null;
+        TestMapTypeOne? testTgtObj = null;
 
         ContainerFixture.Test(fixture =>
         {
@@ -110,7 +110,7 @@ public class ObjectMappingTests
                 })
                 .Act.OnServices(s =>
                 {
-                    var mapper = s.GetService<IObjectMapper>();
+                    var mapper = s.GetRequiredService<IObjectMapper>();
                     testTgtObj = mapper.Map<TestMapTypeOne>(testSrcObj);
                 });
 
@@ -137,11 +137,11 @@ public class ObjectMappingTests
 
         var testSrcObjs = new object[]
         {
-            new Customer { FirstName = "Tom", LastName = "Green", Age = 7 },
-            new Car { Make = "VW", Model = "Passat", Color = "Silver", Year = 2014 }
+            new Customer("Tom", "Green", 7),
+            new Car("VW", "Passat", "Silver", 2004)
         };
             
-        Summary[] testTgtObjs = null;
+        Summary[] testTgtObjs = Array.Empty<Summary>();
 
         ContainerFixture.Test(fixture =>
         {
@@ -153,7 +153,7 @@ public class ObjectMappingTests
                 })
                 .Act.OnServices(s =>
                 {
-                    var mapper = s.GetService<IObjectMapper>();
+                    var mapper = s.GetRequiredService<IObjectMapper>();
                     testTgtObjs = testSrcObjs.Select(src => mapper.Map<Summary>(src)).ToArray();
                 });
 
@@ -183,7 +183,7 @@ public class ObjectMappingTests
             Values = new[] { 30, 5, 88, 60, 65, 33, 83 }
         };
             
-        TestMapTypeTwo testTgtObj = null;
+        TestMapTypeTwo? testTgtObj = null;
 
         ContainerFixture.Test(fixture =>
         {
@@ -195,7 +195,7 @@ public class ObjectMappingTests
                 })
                 .Act.OnServices(s =>
                 {
-                    var mapper = s.GetService<IObjectMapper>();
+                    var mapper = s.GetRequiredService<IObjectMapper>();
                     testTgtObj = mapper.Map<TestMapTypeTwo>(testSrcObj);
                 });
 
@@ -211,7 +211,7 @@ public class ObjectMappingTests
         
     public class TestMapTypeOne
     {
-        public int[] Values { get; set; }
+        public int[] Values { get; set; } = Array.Empty<int>();
     }
 
     public class TestMapTypeTwo
@@ -229,39 +229,54 @@ public class ObjectMappingTests
     public class TestMapTypeThree
     {
         public int MaxAllowedValue { get; set; }
-        public int[] Values { get; set; }
+        public int[] Values { get; set; } = Array.Empty<int>();
     }
 
     public class Car
     {
-        public string Make { get; set; }
-        public string Model { get; set; }
-        public string Color { get; set; }
+        public string Make { get; } 
+        public string Model { get; }
+        public string Color { get; }
         public int Year { get; set; }
+        
+        public Car(string make, string model, string color, int year)
+        {
+            Make = make;
+            Model = model;
+            Color = color;
+            Year = year;
+        }
     }
 
     public class Customer
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public int Age { get; set; }
+        public string FirstName { get; }
+        public string LastName { get; }
+        public int Age { get; }
+        
+        public Customer(string firstName, string lastName, int age)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Age = age;
+        }
     }
 
     public abstract class Summary
     {
-        public string Description { get; set; }
+        public string? Description { get; set; }
     }
 
     public class CarSummary : Summary
     {
-        public string Make { get; set; }
-        public string Model { get; set; }
+        public string? Make { get; set; }
+        public string? Model { get; set; }
     }
 
     public class CustomerSummary : Summary
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
     }
     
     public class TestMapStrategyTwoToOne : MappingStrategy<TestMapTypeTwo, TestMapTypeOne>

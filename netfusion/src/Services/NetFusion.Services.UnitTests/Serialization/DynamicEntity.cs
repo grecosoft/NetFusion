@@ -15,7 +15,7 @@ public class DynamicEntity : IAttributedEntity
     public int MaxValue { get; set; }
     public int MinValue { get; set; }
 
-    public IDictionary<string, object> AttributeValues
+    public IDictionary<string, object?> AttributeValues
     {
         get => Attributes.GetValues();
         set => Attributes.SetValues(value);

@@ -60,5 +60,9 @@ public abstract class Command<TResult> : Command, ICommand<TResult>
     /// <summary>
     /// The result of executing the command.
     /// </summary>
-    public TResult Result => (TResult)ResultState.MessageResult!;
+    public TResult Result
+    {
+        get => (TResult)ResultState.MessageResult!;
+        set => ResultState.MessageResult = value;
+    }
 }
