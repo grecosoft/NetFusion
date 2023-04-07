@@ -6,7 +6,6 @@ using NetFusion.Messaging.UnitTests;
 using NetFusion.Messaging.UnitTests.DomainEvents;
 using NetFusion.Messaging.UnitTests.DomainEvents.Mocks;
 using NetFusion.Messaging.UnitTests.Logging.Mocks;
-using Xunit;
 
 // ReSharper disable All
 

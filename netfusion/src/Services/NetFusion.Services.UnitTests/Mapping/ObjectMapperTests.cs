@@ -3,14 +3,12 @@ using NetFusion.Core.TestFixtures.Container;
 using NetFusion.Core.TestFixtures.Plugins;
 using NetFusion.Services.Mapping;
 using NetFusion.Services.Mapping.Plugin;
+using NetFusion.Services.UnitTests.Mapping.Entities;
 
 namespace NetFusion.Services.UnitTests.Mapping;
 
 public class ObjectMappingTests
 {
-    // The ObjectMapper implementation will search the lookup registry for the mapping strategy that best
-    // matches the target type that the source type is to be mapped.  If no matching strategy is found,
-    // an exception is raised.
     [Fact]
     public void NoMappingStrategyFound_ExceptionIsRaised()
     {
@@ -35,7 +33,7 @@ public class ObjectMappingTests
                     mapper.Map<TestInvalidMapType>(testSrcObj);
                 });
 
-            testResult.Assert.Exception<InvalidOperationException>(ex =>
+            testResult.Assert.Exception<MappingException>(ex =>
             {
                 Assert.Contains("Mapping strategy not found.", ex.Message);
             });
@@ -208,76 +206,6 @@ public class ObjectMappingTests
             });
         });
     }
-        
-    public class TestMapTypeOne
-    {
-        public int[] Values { get; set; } = Array.Empty<int>();
-    }
-
-    public class TestMapTypeTwo
-    {
-        public int Sum { get; set; }
-        public int Max { get; set; }
-        public int Min { get; set; }
-    }
-
-    public class TestInvalidMapType
-    {
-            
-    }
-        
-    public class TestMapTypeThree
-    {
-        public int MaxAllowedValue { get; set; }
-        public int[] Values { get; set; } = Array.Empty<int>();
-    }
-
-    public class Car
-    {
-        public string Make { get; } 
-        public string Model { get; }
-        public string Color { get; }
-        public int Year { get; set; }
-        
-        public Car(string make, string model, string color, int year)
-        {
-            Make = make;
-            Model = model;
-            Color = color;
-            Year = year;
-        }
-    }
-
-    public class Customer
-    {
-        public string FirstName { get; }
-        public string LastName { get; }
-        public int Age { get; }
-        
-        public Customer(string firstName, string lastName, int age)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            Age = age;
-        }
-    }
-
-    public abstract class Summary
-    {
-        public string? Description { get; set; }
-    }
-
-    public class CarSummary : Summary
-    {
-        public string? Make { get; set; }
-        public string? Model { get; set; }
-    }
-
-    public class CustomerSummary : Summary
-    {
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-    }
     
     public class TestMapStrategyTwoToOne : MappingStrategy<TestMapTypeTwo, TestMapTypeOne>
     {
@@ -334,5 +262,4 @@ public class ObjectMappingTests
             });
         }
     }
-
 }

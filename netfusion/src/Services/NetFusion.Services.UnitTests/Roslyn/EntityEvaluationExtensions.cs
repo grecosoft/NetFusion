@@ -30,10 +30,11 @@ public static class EntityEvaluationTestExtensions
             Guid.NewGuid().ToString(),
             "default", 
             typeof(T).AssemblyQualifiedName!,
-            new ReadOnlyCollection<EntityExpression>(expressions));
-
-        es.ImportedAssemblies = new[] { typeof(Common.Extensions.ObjectExtensions).Assembly.FullName! };
-        es.ImportedNamespaces = new[] { typeof(Common.Extensions.ObjectExtensions).Namespace! };
+            new ReadOnlyCollection<EntityExpression>(expressions))
+        {
+            ImportedAssemblies = new[] { typeof(Common.Extensions.ObjectExtensions).Assembly.FullName! },
+            ImportedNamespaces = new[] { typeof(Common.Extensions.ObjectExtensions).Namespace! }
+        };
 
         var loggerFactory = new LoggerFactory();
                 

@@ -4,7 +4,6 @@ using NetFusion.Core.Bootstrap.Plugins;
 using NetFusion.Core.TestFixtures.Container;
 using NetFusion.Messaging.Test;
 using NetFusion.Messaging.Types;
-using Xunit;
 
 // ReSharper disable PossibleMultipleEnumeration
 

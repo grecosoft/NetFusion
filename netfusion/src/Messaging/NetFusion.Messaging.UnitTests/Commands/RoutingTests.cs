@@ -1,7 +1,6 @@
 using FluentAssertions;
 using NetFusion.Core.Bootstrap.Exceptions;
 using NetFusion.Messaging.UnitTests.Commands.Mocks;
-using Xunit;
 
 namespace NetFusion.Messaging.UnitTests.Commands;
 

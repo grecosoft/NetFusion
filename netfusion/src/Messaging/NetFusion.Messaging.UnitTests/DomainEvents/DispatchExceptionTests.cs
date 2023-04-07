@@ -5,7 +5,7 @@ using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.UnitTests;
 using NetFusion.Messaging.UnitTests.DomainEvents;
 using NetFusion.Messaging.UnitTests.DomainEvents.Mocks;
-using Xunit;
+
 // ReSharper disable All
 
 namespace NetFusion.Messaging.Tests.DomainEvents;

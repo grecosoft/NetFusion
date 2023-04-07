@@ -21,6 +21,7 @@ public class ContainerAct
     private IServiceProvider? _serviceProvider;
     private bool _recordException;
     private Exception? _resultingException;
+    private object? _serviceResult;
 
     public ContainerAct(ContainerFixture fixture)
     {
@@ -346,10 +347,43 @@ public class ContainerAct
 
         return this;
     }
+    
+    public ContainerAct OnService<T, TResult>(Func<T, TResult> act)
+        where T : notnull
+    {
+        if (_actedOn)
+        {
+            throw new InvalidOperationException("The container can only be acted on once.");
+        }
+            
+        _fixture.AssureCompositeAppStarted();
+            
+        _actedOn = true;
+        try
+        {
+            var testScope = _fixture.AppUnderTest.CreateServiceScope();
+            _serviceProvider = testScope.ServiceProvider;
+
+            _serviceResult = act(_serviceProvider.GetRequiredService<T>());
+        }
+        catch (Exception ex)
+        {
+            _resultingException = ex;
+            if (!_recordException)
+            {
+                throw;
+            }
+        }
+
+        return this;
+    }
         
     /// <summary>
     /// After acting on the container under test, the unit-test can call methods on this
     /// property to assert its state.
     /// </summary>
-    public ContainerAssert Assert => new (_fixture, _container, _serviceProvider, _resultingException);
+    public ContainerAssert Assert => new (_fixture, _container, 
+        _serviceProvider, 
+        _serviceResult, 
+        _resultingException);
 }

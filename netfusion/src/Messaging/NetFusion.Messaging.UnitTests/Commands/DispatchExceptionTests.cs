@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Core.TestFixtures.Container;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.UnitTests.Commands.Mocks;
-using Xunit;
 
 namespace NetFusion.Messaging.UnitTests.Commands;
 

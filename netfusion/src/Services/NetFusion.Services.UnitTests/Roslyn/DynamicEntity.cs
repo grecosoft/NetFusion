@@ -1,6 +1,6 @@
 ﻿using NetFusion.Common.Base.Entity;
 
-namespace NetFusion.Services.UnitTests.Serialization;
+namespace NetFusion.Services.UnitTests.Roslyn;
 
 public class DynamicEntity : IAttributedEntity
 {
