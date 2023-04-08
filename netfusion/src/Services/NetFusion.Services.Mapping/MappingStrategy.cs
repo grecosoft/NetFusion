@@ -5,7 +5,7 @@ namespace NetFusion.Services.Mapping;
 /// <summary>
 /// Base generic class used to define mapping strategies between source and target types.
 /// </summary>
-public abstract class MappingStrategy<TSource, TTarget> : IMappingStrategy
+public abstract class MappingStrategy<TSource, TTarget> : IMappingStrategy<TSource, TTarget>
     where TSource : class
     where TTarget : class
 {

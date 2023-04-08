@@ -68,16 +68,16 @@ namespace NetFusion.Common.UnitTests.Exceptions
 
             // Since the ChildExceptions is a list of exceptions, the details for each NetFusion derived
             // exception is set to "InnerDetails" - which is a list.
-            var listOfDetails = ex.Details["InnerDetails"] as IEnumerable<object>;
-            listOfDetails.Should().NotBeNull();
+            var listOfDetails = (ex.Details["InnerDetails"] as IEnumerable<object>)?.ToArray();
+            listOfDetails!.Should().NotBeNull();
             listOfDetails.Should().HaveCount(1);
 
             // Since only one child exception derived from NetFusionException, the list of details
             // will only have one item.
-            var innerDetails = listOfDetails.ElementAt(0) as Dictionary<string, object>;
+            var innerDetails = listOfDetails!.ElementAt(0) as Dictionary<string, object>;
             innerDetails.Should().NotBeNull();
 
-            dynamic details = innerDetails["AdditionalValues"];
+            dynamic details = innerDetails!["AdditionalValues"];
             Assert.Equal("value", details.a);
             Assert.Equal(400, details.b);
         }
@@ -112,11 +112,11 @@ namespace NetFusion.Common.UnitTests.Exceptions
             
             // Since 2 out of the 3 exceptions are NetFusionException derived, 
             // they will only appear in the details.
-            var listOfDetails = ex.Details["InnerDetails"] as IEnumerable<object>;
+            var listOfDetails = (ex.Details["InnerDetails"] as IEnumerable<object>)?.ToArray();
             listOfDetails.Should().NotBeNull();
-            listOfDetails.Should().HaveCount(2);
+            listOfDetails!.Should().HaveCount(2);
 
-            var details1 = (Dictionary<string, object>) listOfDetails.ElementAt(0);
+            var details1 = (Dictionary<string, object>) listOfDetails!.ElementAt(0);
             var details2 = (Dictionary<string, object>) listOfDetails.ElementAt(1);
 
             details1["Message"].Should().Be("InnerException1");

@@ -2,14 +2,14 @@ using FluentAssertions;
 using NetFusion.Messaging.Types;
 using NetFusion.Messaging.Types.Attributes;
 
-namespace NetFusion.Services.UnitTests.Messaging;
+namespace NetFusion.Messaging.UnitTests;
 
 /// <summary>
 /// Provides extension method tests for reading basic types and array of basic types stored within a dictionary
 /// where the key is the name and the value is the string representation.  This is being used so deserialization
 /// will not be dependent on the specific serializer being used.  (JSON serializers and MessagePack serializers
 /// will not know the exact type if object was used for the dictionary's type.  These serializers will deserialize
-/// the value into an object representing the value).  
+/// the value into an object representing the value as defined by the libraries).  
 /// </summary>
 public class MessageAttributeTests
 {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Common.Extensions.Collections;
-using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Core.Bootstrap.Exceptions;
 using NetFusion.Core.Bootstrap.Plugins;
 using NetFusion.Messaging.InProcess;
@@ -130,12 +129,10 @@ public class MessageDispatchModule : PluginModule,
 
     private void LogMessagePublishers(IDictionary<string, object> moduleLog)
     {
-        moduleLog["MessagePublishers"] = Context.AllPluginTypes
-            .Where(pt => pt.IsConcreteTypeDerivedFrom<IMessagePublisher>())
+        moduleLog["MessagePublishers"] = DispatchConfig.MessagePublishers
             .Select(t => new
             {
-                PublisherType = t.AssemblyQualifiedName,
-                IsConfigured = DispatchConfig.MessagePublishers.Contains(t)
+                PublisherType = t.AssemblyQualifiedName
             }).ToArray();
     }
 }

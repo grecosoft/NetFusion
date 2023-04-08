@@ -91,7 +91,9 @@ public class SerializationManager : ISerializationManager
         var matchingSerializers = _serializers.Where(s => s.ContentType == typeProps.contentType).ToArray();
         if (!matchingSerializers.Any())
         {
-            throw new InvalidCastException($"No serializers found for Content-Type: {typeProps.contentType}.");
+            throw new SerializationException(
+                $"No serializers found for Content-Type: {typeProps.contentType}.",
+                "CONTENT_TYPE_NOT_FOUND");
         }
 
         // Find an exact match:
@@ -100,8 +102,9 @@ public class SerializationManager : ISerializationManager
             var serializer = matchingSerializers.FirstOrDefault(s => s.EncodingType == typeProps.encodingType);
             if (serializer == null)
             {
-                throw new InvalidOperationException(
-                    $"Serializer for Content-Type: {contentType} Encoding-Type: {typeProps.encodingType} not registered.");
+                throw new SerializationException(
+                    $"Serializer for Content-Type: {contentType} Encoding-Type: {typeProps.encodingType} not registered.",
+                    "ENCODING_NOT_FOUND");
             }
             
             return serializer;
@@ -109,8 +112,9 @@ public class SerializationManager : ISerializationManager
         
         if (matchingSerializers.Length > 1)
         {
-            throw new InvalidOperationException(
-                $"Multiple serializers found for Content-Type: {typeProps.contentType}. Encoding type must be specified.");
+            throw new SerializationException(
+                $"Multiple serializers found for Content-Type: {typeProps.contentType}. Encoding type must be specified.",
+                "MULTIPLE_SERIALIZERS_FOUND");
         }
         
         return matchingSerializers.First();

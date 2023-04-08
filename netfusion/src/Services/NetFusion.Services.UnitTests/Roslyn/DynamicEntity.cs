@@ -1,6 +1,6 @@
 ﻿using NetFusion.Common.Base.Entity;
 
-namespace NetFusion.Services.UnitTests.Serialization;
+namespace NetFusion.Services.UnitTests.Roslyn;
 
 public class DynamicEntity : IAttributedEntity
 {
@@ -15,7 +15,7 @@ public class DynamicEntity : IAttributedEntity
     public int MaxValue { get; set; }
     public int MinValue { get; set; }
 
-    public IDictionary<string, object> AttributeValues
+    public IDictionary<string, object?> AttributeValues
     {
         get => Attributes.GetValues();
         set => Attributes.SetValues(value);

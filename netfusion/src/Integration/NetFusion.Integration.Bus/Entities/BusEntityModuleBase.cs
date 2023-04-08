@@ -18,10 +18,11 @@ namespace NetFusion.Integration.Bus.Entities;
 /// service-bus defined entities are created and subscribed to by invoking the strategies
 /// associated with the entity.
 /// </summary>
-public abstract class BusEntityModuleBase : PluginModule
+public abstract class BusEntityModuleBase<TRouter> : PluginModule
+    where TRouter : IBusRouter
 {
     // Set by bootstrapper:
-    protected IEnumerable<IBusRouter> BusMessageRouters { get; set; } = Enumerable.Empty<IBusRouter>();
+    protected IEnumerable<TRouter> BusMessageRouters { get; set; } = Enumerable.Empty<TRouter>();
     
     protected IEnumerable<BusEntity> BusEntities { get; set; } = Array.Empty<BusEntity>();
     
@@ -37,7 +38,7 @@ public abstract class BusEntityModuleBase : PluginModule
         if (duplicateNamespaces.Any())
         {
             throw new BusException(
-                $"More than one derived {typeof(BusRouterBase)} class defined for bus names " + 
+                $"More than one derived {typeof(TRouter)} class defined for bus names " + 
                 $"{string.Join(", ", duplicateNamespaces)}", "DUPLICATE_BUS_ROUTERS");
         }
     }
@@ -132,7 +133,7 @@ public abstract class BusEntityModuleBase : PluginModule
             entity.EntityName,
             entity.BusName).WithProperties(LogProperty.ForName("Properties", entityProperties));
                 
-        NfExtensions.Logger.Log<BusEntityModuleBase>(logMsg);
+        NfExtensions.Logger.Log<BusEntityModuleBase<TRouter>>(logMsg);
     }
 
     private string GetStrategyDescription(Type strategyType, IBusEntityStrategy strategy)

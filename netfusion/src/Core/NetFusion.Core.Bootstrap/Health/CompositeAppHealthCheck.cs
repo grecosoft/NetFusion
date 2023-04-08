@@ -9,6 +9,7 @@ namespace NetFusion.Core.Bootstrap.Health;
 /// </summary>
 public class CompositeAppHealthCheck
 {
+    private readonly HealthCheckStatusType? _healthCheckStatus;
     private readonly List<PluginHeathCheck> _pluginHeathChecks = new();
 
     /// <summary>
@@ -16,8 +17,9 @@ public class CompositeAppHealthCheck
     /// </summary>
     public IReadOnlyCollection<PluginHeathCheck> PluginHeath { get; }
 
-    public CompositeAppHealthCheck()
+    public CompositeAppHealthCheck(HealthCheckStatusType? healthCheckStatus = null)
     {
+        _healthCheckStatus = healthCheckStatus;
         PluginHeath = _pluginHeathChecks;
     }
 
@@ -31,5 +33,5 @@ public class CompositeAppHealthCheck
     /// The overall worst health-check reported for the composite-application.  
     /// </summary>
     public HealthCheckStatusType CompositeAppHealth => _pluginHeathChecks.Any() ?
-        _pluginHeathChecks.Max(hc => hc.PluginHealth) : HealthCheckStatusType.Healthy;
+        _pluginHeathChecks.Max(hc => hc.PluginHealth) : _healthCheckStatus ?? HealthCheckStatusType.Healthy;
 }

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Core.TestFixtures.Container;
 using NetFusion.Messaging.UnitTests.Queries.Mocks;
-using Xunit;
 
 namespace NetFusion.Messaging.UnitTests.Queries;
 

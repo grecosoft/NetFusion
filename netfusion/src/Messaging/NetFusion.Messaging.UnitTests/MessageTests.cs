@@ -5,7 +5,7 @@ using NetFusion.Messaging.Types;
 using NetFusion.Messaging.Types.Contracts;
 
 // ReSharper disable ClassNeverInstantiated.Local
-namespace NetFusion.Services.UnitTests.Messaging;
+namespace NetFusion.Messaging.UnitTests;
 
 public class MessageTests
 {
@@ -50,7 +50,7 @@ public class MessageTests
 
         var result = JsonSerializer.Deserialize<DeviceModel>(json);
         result.Should().NotBeNull();
-        result.AttributeValues["Sequence"].Should().BeOfType<JsonElement>();
+        result!.AttributeValues["Sequence"].Should().BeOfType<JsonElement>();
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public class MessageTests
     [Fact]
     public void QueryReadModel_CanBePopulated()
     {
-        var state = new Dictionary<string, object>
+        var state = new Dictionary<string, object?>
         {
             { "Port", 4000 },
             { "State", "Active" }
@@ -83,7 +83,8 @@ public class MessageTests
     public void Message_CanHave_Namespace()
     {
         var nsAttrib = new MockMessage().GetAttribute<MessageNamespaceAttribute>();
-        nsAttrib.MessageNamespace.Should().Be("Biz.Domain.Messages.Mock");
+        nsAttrib.Should().NotBeNull();
+        nsAttrib!.MessageNamespace.Should().Be("Biz.Domain.Messages.Mock");
     }
 
     [Fact]
@@ -120,8 +121,8 @@ public class MessageTests
     public class DeviceModel : QueryReadModel
     {
         public int DeviceId { get; set; }
-        public string Name { get; set; }
-        public string Location { get; set; }
+        public string? Name { get; set; }
+        public string? Location { get; set; }
     }
 
     public class MockCommand : Command<CommandResultBase>

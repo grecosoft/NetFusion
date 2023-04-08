@@ -10,13 +10,9 @@ namespace NetFusion.Web.Plugin.Modules;
 /// </summary>
 public class ApiMetadataModule : PluginModule
 {
-    public override void RegisterDefaultServices(IServiceCollection services)
-    {
-        services.AddMvc();
-    }
-
     public override void RegisterServices(IServiceCollection services)
     {
+        services.AddMvc();
         services.AddSingleton<IApiMetadataService, ApiMetadataService>();
     }
 }

@@ -8,7 +8,6 @@ using NetFusion.Messaging.Plugin.Modules;
 using NetFusion.Messaging.UnitTests;
 using NetFusion.Messaging.UnitTests.DomainEvents;
 using NetFusion.Messaging.UnitTests.DomainEvents.Mocks;
-using Xunit;
 
 // ReSharper disable All
 

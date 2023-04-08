@@ -7,7 +7,7 @@ namespace NetFusion.Web.Rest.Server.Plugin.Modules;
 
 public class ConcurrencyModule : PluginModule
 {
-    public override void RegisterDefaultServices(IServiceCollection services)
+    public override void RegisterServices(IServiceCollection services)
     {
         services.AddScoped<EntityContext>();
             

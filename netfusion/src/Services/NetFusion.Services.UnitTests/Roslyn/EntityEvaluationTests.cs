@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using NetFusion.Common.Base.Scripting;
+﻿using NetFusion.Common.Base.Scripting;
 using NetFusion.Services.UnitTests.Serialization;
 
 namespace NetFusion.Services.UnitTests.Roslyn;

@@ -19,7 +19,8 @@ public class ContainerAssert
     private readonly ContainerFixture _fixture;
     private readonly CompositeContainer _container;
     private IServiceProvider? _serviceProvider;
-        
+
+    private readonly object? _serviceResult;
     private readonly Exception? _resultingException;
         
     // Constructor called to assert a container that has not been acted on,
@@ -34,6 +35,7 @@ public class ContainerAssert
         ContainerFixture fixture,
         CompositeContainer container, 
         IServiceProvider? serviceProvider, 
+        object? actedOnResult,
         Exception? resultingException)
     {
         _fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
@@ -41,6 +43,7 @@ public class ContainerAssert
             
         _serviceProvider = serviceProvider;
         _resultingException = resultingException;
+        _serviceResult = actedOnResult;
     }
         
         
@@ -365,6 +368,23 @@ public class ContainerAssert
             "Assert method not specified.");
 
         assert();
+        return this;
+    }
+
+    public ContainerAssert ServiceResult<T>(Action<T> assert)
+    {
+        if (_serviceResult == null)
+        {
+            throw new InvalidOperationException("No action result returned");
+        }
+
+        if (_serviceResult is not T result)
+        {
+            throw new InvalidOperationException(
+                $"Service action result of type: {_serviceResult.GetType()} not assignable to {typeof(T)}");
+        }
+
+        assert(result);
         return this;
     }
 }

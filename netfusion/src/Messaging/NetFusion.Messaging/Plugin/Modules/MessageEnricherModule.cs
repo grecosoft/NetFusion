@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Core.Bootstrap.Plugins;
 using NetFusion.Messaging.Enrichers;
 using NetFusion.Messaging.Plugin.Configs;
@@ -17,7 +16,7 @@ public class MessageEnricherModule : PluginModule
     {
         _messagingConfig = Context.Plugin.GetConfig<MessageDispatchConfig>();
     }
-        
+            
     private MessageDispatchConfig MessagingConfig =>
         _messagingConfig ?? throw new NullReferenceException($"{nameof(MessagingConfig)} not initialized.");
 
@@ -32,12 +31,10 @@ public class MessageEnricherModule : PluginModule
 
     public override void Log(IDictionary<string, object> moduleLog)
     {
-        moduleLog["MessageEnrichers"] = Context.AllPluginTypes
-            .Where(pt => pt.IsConcreteTypeDerivedFrom<IMessageEnricher>())
+        moduleLog["MessageEnrichers"] = MessagingConfig.MessageEnrichers
             .Select(et => new
             {
-                EnricherType = et.AssemblyQualifiedName,
-                IsConfigured = MessagingConfig.MessageEnrichers.Contains(et)
+                EnricherType = et.AssemblyQualifiedName
             }).ToArray();
     }
 }

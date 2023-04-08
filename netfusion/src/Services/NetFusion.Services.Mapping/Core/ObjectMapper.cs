@@ -37,8 +37,9 @@ public class ObjectMapper : IObjectMapper
     {
         if (! TryMap(source, out TTarget? mappedResult))
         {
-            throw new InvalidOperationException(
-                $"Mapping strategy not found.  Source: { source.GetType().FullName} Target: {typeof(TTarget).FullName}");
+            throw new MappingException(
+                $"Mapping strategy not found.  Source: { source.GetType().FullName} Target: {typeof(TTarget).FullName}",
+                "MAPPING_NOT_FOUND");
         }
 
         return mappedResult;
@@ -61,8 +62,9 @@ public class ObjectMapper : IObjectMapper
     {
         if (! TryMap(source, targetType, out object? mappedResult))
         {
-            throw new InvalidOperationException(
-                $"Mapping strategy not found.  Source: { source.GetType().FullName} Target: {targetType.FullName}");
+            throw new MappingException(
+                $"Mapping strategy not found. Source: { source.GetType().FullName} Target: {targetType.FullName}", 
+                "MAPPING_NOT_FOUND");
         }
 
         return mappedResult;
@@ -129,8 +131,9 @@ public class ObjectMapper : IObjectMapper
         var mappings = targetMaps as TargetMap[] ?? targetMaps.ToArray();
         if (mappings.Length > 1)
         {
-            throw new InvalidOperationException(
-                $"The source type of: {sourceType} has more than one mapping for the target type of: {targetType}");
+            throw new MappingException(
+                $"The source type of: {sourceType} has more than one mapping for the target type of: {targetType}",
+                "MULTIPLE_MAPPINGS_FOUND");
         }
         return mappings.FirstOrDefault();
     }

@@ -9,7 +9,7 @@ using NetFusion.Messaging.UnitTests.DomainEvents;
 using NetFusion.Messaging.UnitTests.DomainEvents.Mocks;
 using NetFusion.Messaging.UnitTests.Enrichers.Mocks;
 using NetFusion.Services.Messaging.Enrichers;
-using Xunit;
+
 // ReSharper disable All
 
 namespace NetFusion.Messaging.Tests.Enrichers;
