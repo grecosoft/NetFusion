@@ -29,7 +29,8 @@ public class MappingModuleTests
                 })
                 .Assert.ServiceCollection(c =>
                 {
-                    c.AssertHasRegistration<IObjectMapper, ObjectMapper>(ServiceLifetime.Singleton);
+                    c.HasRegistration<IObjectMapper, ObjectMapper>(ServiceLifetime.Singleton)
+                        .Should().BeTrue("Object mapper not registered as service");
                 });
         });    
     }
@@ -152,7 +153,8 @@ public class MappingModuleTests
                 })
                 .Assert.ServiceCollection(c =>
                 {
-                    c.AssertHasRegistration<TestMapStrategyOneToTwo>(ServiceLifetime.Scoped);
+                    c.HasRegistration<TestMapStrategyOneToTwo>(ServiceLifetime.Scoped)
+                        .Should().BeTrue("Strategy not registered as a service");
                 });
         });
     }

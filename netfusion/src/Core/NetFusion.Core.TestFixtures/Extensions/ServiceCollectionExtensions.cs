@@ -1,29 +1,25 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
-using Xunit;
 
 namespace NetFusion.Core.TestFixtures.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AssertHasRegistration<TService, TImplementation>(this IServiceCollection services,
+    public static bool HasRegistration<TService, TImplementation>(this IServiceCollection services,
         ServiceLifetime lifetime)
     {
-        Assert.True(
-            services.Count(s =>
+        return services.Count(s =>
                 s.ServiceType == typeof(TService) &&
                 s.ImplementationType == typeof(TImplementation) &&
-                s.Lifetime == lifetime) == 1,
-            $"Service type {typeof(TService)} with implementation {typeof(TImplementation)} not found");
+                s.Lifetime == lifetime) == 1;
     }
     
-    public static void AssertHasRegistration<TImplementation>(this IServiceCollection services,
+    public static bool HasRegistration<TImplementation>(this IServiceCollection services,
         ServiceLifetime lifetime)
     {
-        Assert.True(
-            services.Count(s =>
-                s.ImplementationType == typeof(TImplementation) &&
-                s.Lifetime == lifetime) == 1,
-            $"Service implementation {typeof(TImplementation)} not found");
+        return services.Count(s =>
+            s.ImplementationType == typeof(TImplementation) &&
+            s.Lifetime == lifetime) == 1;
+
     }
 }
