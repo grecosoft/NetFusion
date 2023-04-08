@@ -1,4 +1,3 @@
-using FluentAssertions;
 using NetFusion.Messaging.Types.Attributes;
 using NetFusion.Services.Serialization;
 

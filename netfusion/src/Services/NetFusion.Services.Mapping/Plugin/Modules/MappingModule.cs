@@ -58,7 +58,7 @@ public class MappingModule : PluginModule,
     public override void RegisterServices(IServiceCollection services)
     {
         // Service used as the central entry point for mapping objects.
-        services.AddScoped<IObjectMapper, ObjectMapper>();  
+        services.AddSingleton<IObjectMapper, ObjectMapper>();  
         
         // Register all non-factory provided mappings with the container.  This will
         // allow mappings to inject any services needed to complete the mapping.

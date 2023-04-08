@@ -1,5 +1,4 @@
 using System.Text;
-using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NetFusion.Common.Base;
