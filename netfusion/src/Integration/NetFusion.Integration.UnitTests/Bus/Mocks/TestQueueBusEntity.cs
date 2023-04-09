@@ -6,6 +6,9 @@ namespace NetFusion.Integration.UnitTests.Bus.Mocks;
 
 public class TestQueueBusEntity : BusEntity
 {
+    public List<string> InvokedStrategies { get; } = new();
+
+
     public TestQueueBusEntity(string busName, string entityName) 
         : base(busName, entityName)
     {
@@ -18,25 +21,28 @@ public class TestQueueStrategy : BusEntityStrategyBase<TestBusEntityContext>,
     IBusEntityCreationStrategy,
     IBusEntityPublishStrategy
 {
-    public TestQueueStrategy(BusEntity busEntity) : base(busEntity)
+    private readonly TestQueueBusEntity _entity;
+    
+    public TestQueueStrategy(TestQueueBusEntity busEntity) : base(busEntity)
     {
+        _entity = busEntity;
     }
 
     public TestBusEntityContext StrategyContext => Context;
-    public bool CreationStrategyExecuted { get; private set; } 
-    public bool PublishStrategyExecuted { get; private set; } 
+    public bool CreationStrategyExecuted => _entity.InvokedStrategies.Contains(nameof(CreateEntity));
+    public bool PublishStrategyExecuted  => _entity.InvokedStrategies.Contains(nameof(SendToEntityAsync));
     
     public Task CreateEntity()
     {
-        CreationStrategyExecuted = true;
+        _entity.InvokedStrategies.Add(nameof(CreateEntity));
         return Task.CompletedTask;
     }
 
-    public bool CanPublishMessageType(Type messageType) => true;
+    public bool CanPublishMessageType(Type messageType) => messageType == typeof(TestCommand);
 
     public Task SendToEntityAsync(IMessage message, CancellationToken cancellationToken)
     {
-        PublishStrategyExecuted = true;
+        _entity.InvokedStrategies.Add(nameof(SendToEntityAsync));
         return Task.CompletedTask;
     }
 }

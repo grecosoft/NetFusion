@@ -7,7 +7,7 @@ using NetFusion.Integration.Bus.Strategies;
 using NetFusion.Integration.UnitTests.Bus.Mocks;
 using NetFusion.Messaging.Plugin;
 
-namespace NetFusion.Integration.UnitTests;
+namespace NetFusion.Integration.UnitTests.Bus;
 
 public static class BootstrapExtensions
 {

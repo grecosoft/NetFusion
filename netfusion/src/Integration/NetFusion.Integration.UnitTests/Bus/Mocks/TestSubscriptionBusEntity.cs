@@ -8,6 +8,7 @@ namespace NetFusion.Integration.UnitTests.Bus.Mocks;
 
 public class TestSubscriptionBusEntity : BusEntity
 {
+    public List<string> InvokedStrategies { get; } = new();
     private readonly MessageDispatcher _dispatcher;
     
     public TestSubscriptionBusEntity(string busName, string entityName) 
@@ -41,30 +42,33 @@ public class TestSubscriptionStrategy : BusEntityStrategyBase<TestBusEntityConte
     IBusEntitySubscriptionStrategy,
     IBusEntityDisposeStrategy
 {
-    public TestSubscriptionStrategy(BusEntity busEntity) : base(busEntity)
+    private readonly TestSubscriptionBusEntity _entity;
+    
+    public TestSubscriptionStrategy(TestSubscriptionBusEntity busEntity) : base(busEntity)
     {
+        _entity = busEntity;
     }
     
     public TestBusEntityContext StrategyContext => Context;
-    public bool CreationStrategyExecuted { get; private set; } 
-    public bool SubscriptionStrategyExecuted { get; private set; } 
-    public bool DisposalStrategyExecuted { get; private set; } 
+    public bool CreationStrategyExecuted => _entity.InvokedStrategies.Contains(nameof(CreateEntity));
+    public bool SubscriptionStrategyExecuted => _entity.InvokedStrategies.Contains(nameof(SubscribeEntity));
+    public bool DisposalStrategyExecuted => _entity.InvokedStrategies.Contains(nameof(OnDispose));
     
     public Task CreateEntity()
     {
-        CreationStrategyExecuted = true;
+        _entity.InvokedStrategies.Add(nameof(CreateEntity));
         return Task.CompletedTask;
     }
 
     public Task SubscribeEntity()
     {
-        SubscriptionStrategyExecuted = true;
+        _entity.InvokedStrategies.Add(nameof(SubscribeEntity));
         return Task.CompletedTask;
     }
 
     public Task OnDispose()
     {
-        DisposalStrategyExecuted = true;
+        _entity.InvokedStrategies.Add(nameof(OnDispose));
         return Task.CompletedTask;
     }
 }
