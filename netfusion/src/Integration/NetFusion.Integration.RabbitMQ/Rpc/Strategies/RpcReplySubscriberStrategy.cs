@@ -32,7 +32,7 @@ public class RpcReplySubscriberStrategy : BusEntityStrategyBase<EntityContext>,
     
     public async Task CreateEntity()
     {
-        BusConnection busConn = Context.BusModule.GetConnection(_rpcEntity.BusName);
+        IBusConnection busConn = Context.BusModule.GetConnection(_rpcEntity.BusName);
   
         _queue = await busConn.CreateQueueAsync(new QueueMeta
         {
@@ -48,16 +48,9 @@ public class RpcReplySubscriberStrategy : BusEntityStrategyBase<EntityContext>,
         // Dispose current consumer in case of reconnection:
         _consumer?.Dispose();
         
-        BusConnection busConn = Context.BusModule.GetConnection(_rpcEntity.BusName);
+        IBusConnection busConn = Context.BusModule.GetConnection(_rpcEntity.BusName);
 
-        _consumer = busConn.AdvancedBus.Consume(_queue, (msgData, msgProps, _) =>
-            OnMessageReceived(msgData.ToArray(), msgProps),
-            config =>
-            { 
-                config.WithPrefetchCount(_rpcEntity.PublishOptions.ResponseQueuePrefetchCount);
-                config.WithExclusive();
-            });
-
+        _consumer = busConn.ConsumeRpcReplyQueue(_rpcEntity, OnMessageReceived);
         return Task.CompletedTask;
     }
 

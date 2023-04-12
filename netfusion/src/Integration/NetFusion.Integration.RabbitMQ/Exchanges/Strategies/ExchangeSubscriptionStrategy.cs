@@ -34,7 +34,7 @@ public class ExchangeSubscriptionStrategy : BusEntityStrategyBase<EntityContext>
     {
         if (! Context.IsAutoCreateEnabled) return;
         
-        BusConnection busConn = Context.BusModule.GetConnection(_subscriptionEntity.BusName);
+        IBusConnection busConn = Context.BusModule.GetConnection(_subscriptionEntity.BusName);
         busConn.ExternalSettings.ApplyQueueSettings(_subscriptionEntity.EntityName, _subscriptionEntity.QueueMeta);
         
         if (_subscriptionEntity.IsPerServiceInstance)
@@ -49,6 +49,11 @@ public class ExchangeSubscriptionStrategy : BusEntityStrategyBase<EntityContext>
         await busConn.BindQueueToExchange(_subscriptionEntity.QueueMeta.QueueName!, 
             _subscriptionEntity.ExchangeName,
             _subscriptionEntity.RouteKeys);
+        
+        if (! string.IsNullOrEmpty(_subscriptionEntity.QueueMeta.DeadLetterExchangeName))
+        {
+            await busConn.CreateDeadLetterExchange(_subscriptionEntity.QueueMeta.DeadLetterExchangeName);
+        }
     }
 
     [Description("Subscribing to Queue bound Exchange for despatching received Domain-Events.")]
@@ -57,19 +62,9 @@ public class ExchangeSubscriptionStrategy : BusEntityStrategyBase<EntityContext>
         // Dispose current consumer in case of reconnection:
         _consumer?.Dispose();
 
-        BusConnection busConn = Context.BusModule.GetConnection(_subscriptionEntity.BusName);
-        var queue = new Queue(_subscriptionEntity.QueueMeta.QueueName);
+        IBusConnection busConn = Context.BusModule.GetConnection(_subscriptionEntity.BusName);
 
-        _consumer = busConn.AdvancedBus.Consume(queue,
-            (msgData, msgProps, _, cancellationToken) => 
-                OnMessageReceived(msgData.ToArray(), msgProps, cancellationToken), 
-            config =>
-            {
-                config.WithPrefetchCount(_subscriptionEntity.QueueMeta.PrefetchCount);
-                config.WithExclusive(_subscriptionEntity.QueueMeta.IsExclusive);
-                config.WithPriority(_subscriptionEntity.QueueMeta.Priority);
-            });
-
+        _consumer = busConn.ConsumeQueue(_subscriptionEntity.QueueMeta, OnMessageReceived);
         return Task.CompletedTask;
     }
 

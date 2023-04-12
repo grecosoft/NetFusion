@@ -34,10 +34,15 @@ public class QueueCreationStrategy : BusEntityStrategyBase<EntityContext>,
     {
         if (! Context.IsAutoCreateEnabled) return;
 
-        BusConnection busConn = Context.BusModule.GetConnection(_queueEntity.BusName);
+        IBusConnection busConn = Context.BusModule.GetConnection(_queueEntity.BusName);
         busConn.ExternalSettings.ApplyQueueSettings(_queueEntity.EntityName, _queueEntity.QueueMeta);
         
         await busConn.CreateQueueAsync(_queueEntity.QueueMeta);
+        
+        if (! string.IsNullOrEmpty(_queueEntity.QueueMeta.DeadLetterExchangeName))
+        {
+            await busConn.CreateDeadLetterExchange(_queueEntity.QueueMeta.DeadLetterExchangeName);
+        }
     }
 
     [Description("Subscribing to Queue for dispatching recevied Commands.")]
@@ -46,23 +51,13 @@ public class QueueCreationStrategy : BusEntityStrategyBase<EntityContext>,
         // Dispose current consumer in case of reconnection:
         _consumer?.Dispose();
         
-        BusConnection busConn = Context.BusModule.GetConnection(_queueEntity.BusName);
-        var queue = new Queue(_queueEntity.QueueMeta.QueueName);
+        IBusConnection busConn = Context.BusModule.GetConnection(_queueEntity.BusName);
 
-        _consumer = busConn.AdvancedBus.Consume(queue, (msgData, msgProps, _, cancellationToken) => 
-            OnMessageReceived(msgData.ToArray(), msgProps, cancellationToken), 
-            config =>
-            {
-                config.WithPrefetchCount(_queueEntity.QueueMeta.PrefetchCount);
-                config.WithExclusive(_queueEntity.QueueMeta.IsExclusive);
-                config.WithPriority(_queueEntity.QueueMeta.Priority);
-            });
-
-         return Task.CompletedTask;
+        _consumer = busConn.ConsumeQueue(_queueEntity.QueueMeta, OnMessageReceived);
+        return Task.CompletedTask;
     }
 
-    private async Task OnMessageReceived(byte[] msgData, MessageProperties msgProps, 
-        CancellationToken cancellationToken)
+    private async Task OnMessageReceived(byte[] msgData, MessageProperties msgProps, CancellationToken cancellationToken)
     {
         IMessage? message = CreateMessage(msgData, msgProps);
         if (message == null)
@@ -141,13 +136,13 @@ public class QueueCreationStrategy : BusEntityStrategyBase<EntityContext>,
             MessageId = msgProps.MessageId
         };
         
-        BusConnection busConn = Context.BusModule.GetConnection(busName);
+        IBusConnection busConn = Context.BusModule.GetConnection(busName);
         try
         {
             byte[] messageBody = Context.Serialization.Serialize(response, responseMessageProps.ContentType);
-            await busConn.AdvancedBus.PublishAsync(Exchange.Default, queueName, false,
+            await busConn.PublishToQueue(queueName, false,
                 responseMessageProps,
-                messageBody);
+                messageBody).ConfigureAwait(false);
         }
         catch (Exception ex)
         {

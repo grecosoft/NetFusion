@@ -42,7 +42,7 @@ public class BusModule : PluginModule,
         }
     }
 
-    public BusConnection GetConnection(string busName)
+    public IBusConnection GetConnection(string busName)
     {
         if (string.IsNullOrWhiteSpace(busName))
             throw new ArgumentException("Namespace must be specified.", nameof(busName));

@@ -8,7 +8,7 @@ public interface IBusModule : IPluginModuleService
 {
     RabbitMqConfig RabbitMqConfig { get; }
     
-    BusConnection GetConnection(string busName);
+    IBusConnection GetConnection(string busName);
 
     public event EventHandler<ReconnectionEventArgs>? Reconnection;
 }

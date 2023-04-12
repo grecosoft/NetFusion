@@ -11,9 +11,9 @@ using NetFusion.Messaging.Types;
 
 namespace NetFusion.Integration.RabbitMQ;
 
-public abstract class RabbitMqRouter : BusRouterBase
+public abstract class RabbitMqRouterBase : BusRouterBase
 {
-    protected RabbitMqRouter(string busName) : base(busName)
+    protected RabbitMqRouterBase(string busName) : base(busName)
     {
     }
     

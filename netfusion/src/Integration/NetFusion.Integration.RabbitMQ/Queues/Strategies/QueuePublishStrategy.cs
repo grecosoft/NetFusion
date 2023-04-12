@@ -46,7 +46,7 @@ public class QueuePublishStrategy : BusEntityStrategyBase<EntityContext>,
 
         try
         {
-            await busConn.AdvancedBus.PublishAsync(Exchange.Default,
+            await busConn.PublishToQueue(
                 _queueEntity.EntityName,
                 _queueEntity.PublishOptions.IsMandatory,
                 messageProperties,

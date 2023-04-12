@@ -32,7 +32,7 @@ public class RpcConsumerStrategy : BusEntityStrategyBase<EntityContext>,
 
     public async Task CreateEntity()
     {
-        BusConnection busConn = Context.BusModule.GetConnection(_rpcEntity.BusName);
+        IBusConnection busConn = Context.BusModule.GetConnection(_rpcEntity.BusName);
         var queueMeta = new QueueMeta
         {
             QueueName = _rpcEntity.EntityName,
@@ -49,16 +49,9 @@ public class RpcConsumerStrategy : BusEntityStrategyBase<EntityContext>,
         // Dispose current consumer in case of reconnection:
         _consumer?.Dispose();
         
-        BusConnection busConn = Context.BusModule.GetConnection(_rpcEntity.BusName);
+        IBusConnection busConn = Context.BusModule.GetConnection(_rpcEntity.BusName);
 
-        _consumer = busConn.AdvancedBus.Consume(_queue, (msgData, msgProps, _, cancellationToken) =>
-                OnMessageReceived(msgData.ToArray(), msgProps, cancellationToken),
-            config =>
-            {
-                config.WithPrefetchCount(_rpcEntity.RpcQueueMeta.PrefetchCount);
-                config.WithExclusive(false);
-            });
-
+        _consumer = busConn.ConsumeRpcQueue(_rpcEntity.RpcQueueMeta, OnMessageReceived);
         return Task.CompletedTask;
     }
 
@@ -192,13 +185,13 @@ public class RpcConsumerStrategy : BusEntityStrategyBase<EntityContext>,
             LogResponseMessage(response, msgProps.ReplyTo);
         }
         
-        BusConnection busCon = Context.BusModule.GetConnection(busName);
+        IBusConnection busCon = Context.BusModule.GetConnection(busName);
         try
         {
-            await busCon.AdvancedBus.PublishAsync(Exchange.Default, queueName, 
+            await busCon.PublishToQueue(queueName, 
                 false,
                 replyMsgProps,
-                messageBody);
+                messageBody).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
