@@ -16,7 +16,7 @@ public class BusModule : PluginModule,
     private BusSettings? _busSettings;
     
     // The bus instances keyed by name created from BusSettings.
-    private readonly Dictionary<string, BusConnection> _buses = new Dictionary<string, BusConnection>();
+    private readonly Dictionary<string, BusConnection> _buses = new();
 
     private BusSettings BusSettings => _busSettings ??
         throw new NullReferenceException("Bus settings not initialized.");

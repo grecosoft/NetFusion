@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using EasyNetQ.Topology;
 using NetFusion.Integration.Bus.Strategies;
 using NetFusion.Integration.RabbitMQ.Bus;
 using NetFusion.Integration.RabbitMQ.Exchanges.Metadata;
