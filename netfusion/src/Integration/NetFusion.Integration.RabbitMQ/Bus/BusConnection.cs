@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using EasyNetQ;
 using EasyNetQ.Consumer;
 using EasyNetQ.Logging.Microsoft;
@@ -18,6 +19,7 @@ namespace NetFusion.Integration.RabbitMQ.Bus;
 /// to EasyNetQ.  This allows unit-testing the strategies easier since all
 /// implementation details are container within this class and mocked.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public class BusConnection : IBusConnection
 {
     private readonly IAdvancedBus _advancedBus;

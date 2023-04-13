@@ -272,4 +272,48 @@ public class QueueUnitTests
             It.Is<IMessage>(msg => msg == command),
             It.IsAny<CancellationToken>()), Times.Once);
     }
+
+    /// <summary>
+    /// Validates that that when a subscriber's queue consumer returns a response
+    /// and the publisher of the command specified a reply queue, that the response
+    /// message is published to the specified reply queue.
+    /// </summary>
+    [Fact]
+    public async Task Subscriber_SendsResponse_OnReplyQueue()
+    {
+        // Arrange:
+        var fixture = new EntityContextFixture();
+        var router = new TestRabbitRouter();
+        var queueEntity = router.DefinedEntities.GetBusEntity<QueueEntity>("TestQueue");
+        var creationStrategies = queueEntity.GetStrategies<QueueCreationStrategy>().ToArray();
+        
+        var command = new TestCommandWithResponse();
+        var response = new TestCommandResponse();
+        var messageData = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(command);
+
+        fixture.MockSerializationMgr
+            .Setup(m => m.Deserialize(ContentTypes.Json, typeof(TestCommand), messageData, null))
+            .Returns(command);
+
+        fixture.MockDispatcher.Setup(m => m.InvokeDispatcherInNewLifetimeScopeAsync(
+            It.Is<MessageDispatcher>(d => d == queueEntity.MessageDispatcher),
+            It.Is<IMessage>(msg => msg == command),
+            It.IsAny<CancellationToken>())).ReturnsAsync(response);
+
+        // Act:
+        var strategy = creationStrategies.First();
+        strategy.SetContext(fixture.CreateContext());
+        
+        await strategy.OnMessageReceived(messageData,
+            new MessageProperties { ContentType = ContentTypes.Json, ReplyTo = "testBus:TestReplyQueue"},
+            default);
+        
+        // Assert:
+        fixture.MockConnection.Verify(m => m.PublishToQueue(
+            It.Is<string>(v => v == "TestReplyQueue"),
+            It.Is<bool>(v => v == false), 
+            It.IsAny<MessageProperties>(), 
+            It.IsAny<byte[]>(), 
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
 }
