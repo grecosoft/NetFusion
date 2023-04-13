@@ -68,7 +68,7 @@ public class ExchangeSubscriptionStrategy : BusEntityStrategyBase<EntityContext>
         return Task.CompletedTask;
     }
 
-    private async Task OnMessageReceived(byte[] msgData, MessageProperties msgProps, CancellationToken cancellationToken)
+    internal async Task OnMessageReceived(byte[] msgData, MessageProperties msgProps, CancellationToken cancellationToken)
     {
         IMessage? message = CreateMessage(msgData, msgProps);
         if (message == null)

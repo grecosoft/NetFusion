@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using NetFusion.Integration.RabbitMQ.Bus;
 using EasyNetQ;
-using EasyNetQ.Topology;
 using NetFusion.Integration.Bus.Strategies;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Logging;
@@ -57,7 +56,7 @@ public class QueueCreationStrategy : BusEntityStrategyBase<EntityContext>,
         return Task.CompletedTask;
     }
 
-    private async Task OnMessageReceived(byte[] msgData, MessageProperties msgProps, CancellationToken cancellationToken)
+    internal async Task OnMessageReceived(byte[] msgData, MessageProperties msgProps, CancellationToken cancellationToken)
     {
         IMessage? message = CreateMessage(msgData, msgProps);
         if (message == null)

@@ -1,6 +1,7 @@
 using EasyNetQ;
 using FluentAssertions;
 using Moq;
+using NetFusion.Common.Base;
 using NetFusion.Core.TestFixtures.Container;
 using NetFusion.Integration.Bus.Strategies;
 using NetFusion.Integration.RabbitMQ.Exchanges;
@@ -8,6 +9,9 @@ using NetFusion.Integration.RabbitMQ.Exchanges.Metadata;
 using NetFusion.Integration.RabbitMQ.Exchanges.Strategies;
 using NetFusion.Integration.RabbitMQ.Queues.Metadata;
 using NetFusion.Integration.UnitTests.RabbitMQ.Mocks;
+using NetFusion.Messaging.Internal;
+using JsonSerializer = System.Text.Json.JsonSerializer;
+using IMessage = NetFusion.Messaging.Types.Contracts.IMessage;
 
 namespace NetFusion.Integration.UnitTests.RabbitMQ;
 
@@ -188,9 +192,35 @@ public class ExchangeUnitTests
             Times.Once);
     }
 
+    /// <summary>
+    /// Validates when a domain-event message is received that it is dispatched
+    /// to the correct consumer.
+    /// </summary>
     [Fact]
-    public void Subscriber_Dispatches_DomainEvent()
+    public async Task Subscriber_Dispatches_DomainEvent()
     {
+        // Arrange:
+        var fixture = new EntityContextFixture();
+        var router = new TestRabbitRouter();
+        var exchangeEntity = router.DefinedEntities.GetBusEntity<SubscriptionEntity>("ReceivedTestExchangeEvents");
+        var creationStrategies = exchangeEntity.GetStrategies<ExchangeSubscriptionStrategy>().ToArray();
         
+        var domainEvent = new TestDomainEvent(100, 200);
+        var messageData = JsonSerializer.SerializeToUtf8Bytes(domainEvent);
+
+        fixture.MockSerializationMgr
+            .Setup(m => m.Deserialize(ContentTypes.Json, typeof(TestDomainEvent), messageData, null))
+            .Returns(domainEvent);
+        
+        // Act:
+        var strategy = creationStrategies.First();
+        strategy.SetContext(fixture.CreateContext());
+        await strategy.OnMessageReceived(messageData, new MessageProperties { ContentType = ContentTypes.Json}, default);
+        
+        // Assert:
+        fixture.MockDispatcher.Verify(m => m.InvokeDispatcherInNewLifetimeScopeAsync(
+            It.Is<MessageDispatcher>(d => d == exchangeEntity.MessageDispatcher),
+            It.Is<IMessage>(msg => msg == domainEvent),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 }

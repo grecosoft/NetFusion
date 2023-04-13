@@ -1,8 +1,15 @@
+using EasyNetQ;
 using FluentAssertions;
+using Moq;
+using NetFusion.Common.Base;
 using NetFusion.Core.TestFixtures.Container;
+using NetFusion.Integration.Bus.Strategies;
 using NetFusion.Integration.RabbitMQ.Queues;
+using NetFusion.Integration.RabbitMQ.Queues.Metadata;
 using NetFusion.Integration.RabbitMQ.Queues.Strategies;
 using NetFusion.Integration.UnitTests.RabbitMQ.Mocks;
+using NetFusion.Messaging.Internal;
+using IMessage = NetFusion.Messaging.Types.Contracts.IMessage;
 
 namespace NetFusion.Integration.UnitTests.RabbitMQ;
 
@@ -102,5 +109,167 @@ public class QueueUnitTests
                     replyQueueEntity.MessageDispatcher.MessageHandlerMethod.Name.Should().Be("OnReply");
                 });
         });
+    }
+
+    /// <summary>
+    /// Microservice defines queue to which other microservices publish commands for processing.
+    /// </summary>
+    [Fact]
+    public void Subscriber_Creates_Queue()
+    {
+        // Arrange:
+        var fixture = new EntityContextFixture();
+        var router = new TestRabbitRouter();
+        var queueEntity = router.DefinedEntities.GetBusEntity<QueueEntity>("TestQueue");
+        var creationStrategies = queueEntity.GetStrategies<IBusEntityCreationStrategy>().ToArray();
+        
+        // Act:
+        var strategy = creationStrategies.First();
+        strategy.SetContext(fixture.CreateContext());
+        strategy.CreateEntity();
+
+        // Assert:
+        fixture.MockConnection.Verify(m => m.CreateQueueAsync(
+                It.Is<QueueMeta>(v => v == queueEntity.QueueMeta)),
+            Times.Once);
+        
+        fixture.MockConnection.Verify(m => m.CreateDeadLetterExchange(
+                It.Is<string>(v => v == "DeadExchangeName")), 
+            Times.Once);
+    }
+
+    /// <summary>
+    /// Microservice subscribes to queue for processing messages published
+    /// by other microservices.
+    /// </summary>
+    [Fact]
+    public void Subscriber_Subscribes_ToQueue()
+    {
+        // Arrange:
+        var fixture = new EntityContextFixture();
+        var router = new TestRabbitRouter();
+        var queueEntity = router.DefinedEntities.GetBusEntity<QueueEntity>("TestQueue");
+        var creationStrategies = queueEntity.GetStrategies<IBusEntitySubscriptionStrategy>().ToArray();
+        
+        // Act:
+        var strategy = creationStrategies.First();
+        strategy.SetContext(fixture.CreateContext());
+        strategy.SubscribeEntity();
+        
+        // Assert:
+        fixture.MockConnection.Verify(m => m.ConsumeQueue(
+                It.Is<QueueMeta>(v => v == queueEntity.QueueMeta),
+                It.IsAny<Func<byte[], MessageProperties, CancellationToken, Task>>()), 
+            Times.Once);
+    }
+
+    /// <summary>
+    /// When a command is sent by a microservice, the command is serialized and sent
+    /// to the bus connection for delivery.  
+    /// </summary>
+    [Fact]
+    public void Publisher_Publishes_ToQueue()
+    {
+        // Arrange:
+        var fixture = new EntityContextFixture();
+        var router = new TestRabbitRouter();
+        var queueEntity = router.DefinedEntities.GetBusEntity<QueueReferenceEntity>("TestQueue");
+        var creationStrategies = queueEntity.GetStrategies<IBusEntityPublishStrategy>().ToArray();
+        
+        fixture.MockSerializationMgr.Setup(m => m.Serialize(
+            It.IsAny<object>(),
+            It.IsAny<string>(),
+            It.IsAny<string>())).Returns(new byte[] { 1, 2 });
+        
+        // Act:
+        var strategy = creationStrategies.First();
+        strategy.SetContext(fixture.CreateContext());
+        strategy.SendToEntityAsync(new TestCommand(), default);
+        
+        // Assert:
+        fixture.MockConnection.Verify(m => m.PublishToQueue(
+            It.Is<string>(v => v == queueEntity.EntityName),
+            It.Is<bool>(v => v == true), 
+            It.IsAny<MessageProperties>(), 
+            It.Is<byte[]>(v => v.Length == 2), 
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    /// <summary>
+    /// When a microservice sends a command to another microservice, it can specify
+    /// that a response should be delivered to a reply queue that it creates.
+    /// </summary>
+    [Fact]
+    public void Publisher_CanReceiveResponse_OnCreatedReplyQueue()
+    {
+        // Arrange:
+        var fixture = new EntityContextFixture();
+        var router = new TestRabbitRouter();
+        var queueEntity = router.DefinedEntities.GetBusEntity<QueueEntity>("TestCommandReplyQueue");
+        var creationStrategies = queueEntity.GetStrategies<IBusEntityCreationStrategy>().ToArray();
+        
+        // Act:
+        var strategy = creationStrategies.First();
+        strategy.SetContext(fixture.CreateContext());
+        strategy.CreateEntity();
+        
+        // Assert:
+        fixture.MockConnection.Verify(m => m.CreateQueueAsync(
+                It.Is<QueueMeta>(v => v == queueEntity.QueueMeta)),
+            Times.Once);
+
+    }
+
+    /// <summary>
+    /// when a microservice sends a command to another microservice, it can specify
+    /// that a response should be delivered to a reply queue to which it consumes.
+    /// </summary>
+    [Fact]
+    public void Publisher_ConsumesReplyQueue_ToReceiveResponse()
+    {
+        // Arrange:
+        var fixture = new EntityContextFixture();
+        var router = new TestRabbitRouter();
+        var queueEntity = router.DefinedEntities.GetBusEntity<QueueEntity>("TestCommandReplyQueue");
+        var creationStrategies = queueEntity.GetStrategies<IBusEntitySubscriptionStrategy>().ToArray();
+        
+        // Act:
+        var strategy = creationStrategies.First();
+        strategy.SetContext(fixture.CreateContext());
+        strategy.SubscribeEntity();
+        
+        // Assert:
+        fixture.MockConnection.Verify(m => m.ConsumeQueue(
+                It.Is<QueueMeta>(v => v == queueEntity.QueueMeta),
+                It.IsAny<Func<byte[], MessageProperties, CancellationToken, Task>>()), 
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task Subscriber_Dispatches_Command()
+    {
+        // Arrange:
+        var fixture = new EntityContextFixture();
+        var router = new TestRabbitRouter();
+        var queueEntity = router.DefinedEntities.GetBusEntity<QueueEntity>("TestQueue");
+        var creationStrategies = queueEntity.GetStrategies<QueueCreationStrategy>().ToArray();
+        
+        var command = new TestCommand();
+        var messageData = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(command);
+
+        fixture.MockSerializationMgr
+            .Setup(m => m.Deserialize(ContentTypes.Json, typeof(TestCommand), messageData, null))
+            .Returns(command);
+        
+        // Act:
+        var strategy = creationStrategies.First();
+        strategy.SetContext(fixture.CreateContext());
+        await strategy.OnMessageReceived(messageData, new MessageProperties { ContentType = ContentTypes.Json}, default);
+        
+        // Assert:
+        fixture.MockDispatcher.Verify(m => m.InvokeDispatcherInNewLifetimeScopeAsync(
+            It.Is<MessageDispatcher>(d => d == queueEntity.MessageDispatcher),
+            It.Is<IMessage>(msg => msg == command),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 }
