@@ -34,10 +34,10 @@ public class ExchangeUnitTests
                 
                     exchangeEntity.BusName.Should().Be("testRabbitBus");
                     exchangeEntity.EntityName.Should().Be("TestExchange");
-                    exchangeEntity.ExchangeMeta.Should().NotBeNull("Exchange metadata not set");
-                    exchangeEntity.ExchangeMeta.PublishOptions.Should().NotBeNull();
+                    exchangeEntity.ExchangeMeta.Should().NotBeNull("Metadata defines the exchange to be created");
+                    exchangeEntity.ExchangeMeta.PublishOptions.Should().NotBeNull("Publish options used when publishing");
                     
-                    exchangeEntity.DomainEventType.Should().Be(typeof(TestDomainEvent), "Domain-Event type not set.");
+                    exchangeEntity.DomainEventType.Should().Be(typeof(TestDomainEvent), "Domain-Events published to exchange");
                     exchangeEntity.Dispatchers.Should().BeEmpty("Dispatchers only set by subscribing microservice");
                     exchangeEntity.Strategies.AssertStrategies(typeof(ExchangeCreationStrategy));
                 });
@@ -45,11 +45,11 @@ public class ExchangeUnitTests
     }
 
     /// <summary>
-    /// When the microservice subscribing to the domain-event is bootstrapped, it specifies a routing
-    /// indicating the topic and route-key to which a consumer should be subscribed.
+    /// When the microservice subscribing to an exchange is bootstrapped, it specifies a routing indicating 
+    /// the topic and route-key used to bind to a consumer defined queue to which is subscribes.
     /// </summary>
     [Fact]
-    public void Subscriber_Defines_QueueAndConsumer()
+    public void Subscriber_DefinesTopicBound_QueueAndConsumer()
     {
         ContainerFixture.Test(fixture =>
         {
@@ -62,10 +62,10 @@ public class ExchangeUnitTests
                     subscriptionEntity.EntityName.Should().Be("ReceivedTestExchangeEvents");
                     subscriptionEntity.ExchangeName.Should().Be("TestExchange");
                     subscriptionEntity.Strategies.AssertStrategies(typeof(ExchangeSubscriptionStrategy));
-                    subscriptionEntity.QueueMeta.Should().NotBeNull("Metadata for queue to bind to exchange not set");
+                    subscriptionEntity.QueueMeta.Should().NotBeNull("Metadata defines the queue to be created");
                     subscriptionEntity.RouteKeys.Should().BeEquivalentTo("10.20", "50.100");
                     
-                    subscriptionEntity.MessageDispatcher.Should().NotBeNull("Dispatcher not set");
+                    subscriptionEntity.MessageDispatcher.Should().NotBeNull("Dispatcher specifies consumer of queue");
                     subscriptionEntity.MessageDispatcher.MessageType.Should().Be(typeof(TestDomainEvent));
                     subscriptionEntity.MessageDispatcher.ConsumerType.Should().Be(typeof(TestDomainEventHandler));
                     subscriptionEntity.MessageDispatcher.MessageHandlerMethod.Name.Should().Be("OnDomainEvent");
@@ -134,7 +134,8 @@ public class ExchangeUnitTests
             It.Is<bool>(v => v == false), 
             It.IsAny<MessageProperties>(), 
             It.Is<byte[]>(v => v.Length == 2), 
-            It.IsAny<CancellationToken>()), Times.Once);
+            It.IsAny<CancellationToken>()), Times.Once, 
+            "Published domain-event not published to expected exchange");
     }
 
     /// <summary>
@@ -158,13 +159,14 @@ public class ExchangeUnitTests
         // Assert:
         fixture.MockConnection.Verify(m => m.CreateQueueAsync(
             It.Is<QueueMeta>(v => v == exchangeEntity.QueueMeta)), 
-            Times.Once);
+            Times.Once,
+            "Queue was not created for exchange");
 
         fixture.MockConnection.Verify(m => m.BindQueueToExchange(
             It.Is<string>(v => v == exchangeEntity.EntityName),
             It.Is<string>(v => v == exchangeEntity.ExchangeName),
             It.Is<string[]>(v => v[0] == "10.20" && v[1] == "50.100")), 
-            Times.Once);
+            Times.Once, "Queue was not bound to exchange");
     }
 
     /// <summary>
@@ -189,7 +191,7 @@ public class ExchangeUnitTests
         fixture.MockConnection.Verify(m => m.ConsumeQueue(
             It.Is<QueueMeta>(v => v == exchangeEntity.QueueMeta),
             It.IsAny<Func<byte[], MessageProperties, CancellationToken, Task>>()), 
-            Times.Once);
+            Times.Once, "Queue bound to exchange was not consumed");
     }
 
     /// <summary>
