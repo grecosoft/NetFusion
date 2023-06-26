@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using EasyNetQ;
 using EasyNetQ.Consumer;
 using EasyNetQ.Logging.Microsoft;
@@ -7,27 +8,33 @@ using NetFusion.Integration.RabbitMQ.Exchanges.Metadata;
 using NetFusion.Integration.RabbitMQ.Internal;
 using NetFusion.Integration.RabbitMQ.Plugin.Settings;
 using NetFusion.Integration.RabbitMQ.Queues.Metadata;
+using NetFusion.Integration.RabbitMQ.Rpc;
+using NetFusion.Integration.RabbitMQ.Rpc.Metadata;
 using ISerializer = EasyNetQ.ISerializer;
 
 namespace NetFusion.Integration.RabbitMQ.Bus;
 
-public class BusConnection
+/// <summary>
+/// Implements a connection to the RabbitMQ broker by encapsulating all calls
+/// to EasyNetQ.  This allows unit-testing the strategies easier since all
+/// implementation details are container within this class and mocked.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public class BusConnection : IBusConnection
 {
-    public ConnectionSettings ConnectionSettings { get; }
+    private readonly IAdvancedBus _advancedBus;
 
-    public IBus Bus { get; }
-    public IAdvancedBus AdvancedBus { get; }
+    internal IBus Bus { get; }
     public ExternalEntitySettings ExternalSettings { get; }
-
+    
     public BusConnection(
         ModuleContext moduleContext,  
         ConnectionSettings connectionSettings)
     {
-        ConnectionSettings = connectionSettings;
-        Bus = CreateBus(moduleContext, ConnectionSettings);
-        AdvancedBus = Bus.Advanced;
-
+        Bus = CreateBus(moduleContext, connectionSettings);
         ExternalSettings = new ExternalEntitySettings(connectionSettings);
+        
+        _advancedBus = Bus.Advanced;
     }
     
     private IBus CreateBus(ModuleContext moduleContext, ConnectionSettings conn)
@@ -55,7 +62,12 @@ public class BusConnection
             Port = h.Port
         }).ToArray();
 
-        return BusFactory(connConfig);
+        return RabbitHutch.CreateBus(connConfig, rs =>
+        {
+            rs.Register(typeof(IConsumerErrorStrategy), new ConsumerErrorStrategy());
+            rs.Register(typeof(ISerializer), typeof(SystemTextJsonSerializer));
+            rs.Register(typeof(EasyNetQ.Logging.ILogger<BusConnection>), typeof(MicrosoftLoggerAdapter<BusConnection>));
+        });
     }
     
     private static void SetAdditionalClientProperties(ModuleContext moduleContext, 
@@ -72,29 +84,12 @@ public class BusConnection
         clientProps["AppHost Description"] = appHostPlugin.Description;
         clientProps["Machine Name"] = Environment.MachineName;          
     }
-    
-    /// <summary>
-    /// Factory method used to return an IBus implementation.  Default to EasyNetQ but can also
-    /// be used to provided a mock during unit testing.
-    /// </summary>
-    protected Func<ConnectionConfiguration, IBus> BusFactory { get; set; } = c => RabbitHutch.CreateBus(c, rs =>
-    {
-        rs.Register(typeof(IConsumerErrorStrategy), new ConsumerErrorStrategy());
-        rs.Register(typeof(ISerializer), typeof(SystemTextJsonSerializer));
-        rs.Register(typeof(EasyNetQ.Logging.ILogger<BusConnection>), typeof(MicrosoftLoggerAdapter<BusConnection>));
-    });
-
 
     // --- Exchange Creation ---
     
     public async Task<Exchange> CreateExchangeAsync(ExchangeMeta exchangeMeta)
     {
-        if (! string.IsNullOrEmpty(exchangeMeta.AlternateExchangeName))
-        {
-            await CreateAlternateExchange(exchangeMeta.AlternateExchangeName);
-        }
-        
-        return await AdvancedBus.ExchangeDeclareAsync(exchangeMeta.ExchangeName, config =>
+        return await _advancedBus.ExchangeDeclareAsync(exchangeMeta.ExchangeName, config =>
         {
             config.WithType(exchangeMeta.ExchangeType);
             config.AsDurable(exchangeMeta.IsDurable);
@@ -114,12 +109,12 @@ public class BusConnection
         
         foreach (string routeKey in routeKeys)
         {
-            await AdvancedBus.BindAsync(exchange, queue, routeKey);
+            await _advancedBus.BindAsync(exchange, queue, routeKey);
         }
         
         if (! routeKeys.Any())
         {
-            await AdvancedBus.BindAsync(exchange, queue, string.Empty);
+            await _advancedBus.BindAsync(exchange, queue, string.Empty);
         }
     }
     
@@ -127,12 +122,7 @@ public class BusConnection
 
     public async Task<Queue> CreateQueueAsync(QueueMeta queueMeta)
     {
-        if (! string.IsNullOrEmpty(queueMeta.DeadLetterExchangeName))
-        {
-            await CreateDeadLetterExchange(queueMeta.DeadLetterExchangeName);
-        }
-        
-        return await AdvancedBus.QueueDeclareAsync(queueMeta.QueueName, config =>
+        return await _advancedBus.QueueDeclareAsync(queueMeta.QueueName, config =>
         {
             config.AsExclusive(queueMeta.IsExclusive);
             config.AsDurable(queueMeta.IsDurable);
@@ -157,25 +147,95 @@ public class BusConnection
     
     // --- NetFusion Specific Exchanges ---
     
-    private async Task CreateAlternateExchange(string exchangeName)
+    public async Task CreateAlternateExchange(string exchangeName)
     {
         // Declare an exchange that will be sent all un-routed messages.
-        var altExchange = await AdvancedBus.ExchangeDeclareAsync(exchangeName, 
+        var altExchange = await _advancedBus.ExchangeDeclareAsync(exchangeName, 
             config => config.WithType(ExchangeType.Fanout).AsDurable(true)
         );
 
-        var undeliveredQueue = await AdvancedBus.QueueDeclareAsync(exchangeName, config => config.AsDurable(true));
-        await AdvancedBus.BindAsync(altExchange, undeliveredQueue, string.Empty);
+        var undeliveredQueue = await _advancedBus.QueueDeclareAsync(exchangeName, config => config.AsDurable(true));
+        await _advancedBus.BindAsync(altExchange, undeliveredQueue, string.Empty);
     }
     
-    private async Task CreateDeadLetterExchange(string exchangeName)
+    public async Task CreateDeadLetterExchange(string exchangeName)
     {
         // Declare an exchange that will be sent all un-routed messages.
-        var altExchange = await AdvancedBus.ExchangeDeclareAsync(exchangeName, 
+        var altExchange = await _advancedBus.ExchangeDeclareAsync(exchangeName, 
             config => config.WithType(ExchangeType.Fanout).AsDurable(true)
         );
 
-        var undeliveredQueue = await AdvancedBus.QueueDeclareAsync(exchangeName, config => config.AsDurable(true));
-        await AdvancedBus.BindAsync(altExchange, undeliveredQueue, string.Empty);
+        var undeliveredQueue = await _advancedBus.QueueDeclareAsync(exchangeName, config => config.AsDurable(true));
+        await _advancedBus.BindAsync(altExchange, undeliveredQueue, string.Empty);
+    }
+    
+    // --- Message Publishing/Consuming
+    public Task PublishToExchange(string exchangeName, string routeKey, bool isMandatory,
+        MessageProperties messageProperties,
+        byte[] messageBody,
+        CancellationToken cancellationToken)
+    { 
+        return _advancedBus.PublishAsync(new Exchange(exchangeName),
+            routeKey,
+            isMandatory,
+            messageProperties,
+            messageBody, cancellationToken);
+    }
+
+    public Task PublishToQueue(string queueName, bool isMandatory,
+        MessageProperties messageProperties,
+        byte[] messageBody,
+        CancellationToken cancellationToken = default)
+    {
+        return _advancedBus.PublishAsync(Exchange.Default,
+            queueName,
+            isMandatory,
+            messageProperties,
+            messageBody, cancellationToken);
+    }
+
+    public IDisposable ConsumeQueue(QueueMeta queueMeta,
+        Func<byte[], MessageProperties, CancellationToken, Task> handler)
+    {
+        var queue = new Queue(queueMeta.QueueName);
+        
+        return _advancedBus.Consume(queue,
+            (msgData, msgProps, _, cancellationToken) => 
+                handler(msgData.ToArray(), msgProps, cancellationToken), 
+            config =>
+            {
+                config.WithPrefetchCount(queueMeta.PrefetchCount);
+                config.WithExclusive(queueMeta.IsExclusive);
+                config.WithPriority(queueMeta.Priority);
+            });
+    }
+    
+    public IDisposable ConsumeRpcQueue(RpcQueueMeta queueMeta, 
+        Func<byte[], MessageProperties, CancellationToken, Task> handler)
+    {
+        var queue = new Queue(queueMeta.QueueName);
+        
+        return _advancedBus.Consume(queue,
+            (msgData, msgProps, _, cancellationToken) => 
+                handler(msgData.ToArray(), msgProps, cancellationToken), 
+            config =>
+            {
+                config.WithPrefetchCount(queueMeta.PrefetchCount);
+                config.WithExclusive(false);
+            });
+    }
+
+    public IDisposable ConsumeRpcReplyQueue(RpcReferenceEntity rpcEntity,
+        Action<byte[], MessageProperties> handler)
+    {
+        var queue = new Queue(rpcEntity.ReplyQueueName);
+        
+        return _advancedBus.Consume(queue, (msgData, msgProps, _) =>
+                handler(msgData.ToArray(), msgProps),
+            config =>
+            { 
+                config.WithPrefetchCount(rpcEntity.PublishOptions.ResponseQueuePrefetchCount);
+                config.WithExclusive();
+            });
     }
 }

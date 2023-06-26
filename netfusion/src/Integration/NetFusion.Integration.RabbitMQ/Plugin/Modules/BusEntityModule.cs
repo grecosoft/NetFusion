@@ -5,7 +5,7 @@ using NetFusion.Integration.RabbitMQ.Queues;
 
 namespace NetFusion.Integration.RabbitMQ.Plugin.Modules;
 
-public class BusEntityModule : BusEntityModuleBase<RabbitMqRouter>, 
+public class BusEntityModule : BusEntityModuleBase<RabbitMqRouterBase>, 
     IBusEntityModule
 {
     // Set by bootstrapper:

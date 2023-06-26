@@ -48,7 +48,7 @@ public class RpcPublishStrategy : BusEntityStrategyBase<EntityContext>,
             var futureResult = RecordSentMessage(messageProperties.MessageId, cancelRpcRequestAfterMs,
                 cancellationToken);
 
-            await busConn.AdvancedBus.PublishAsync(Exchange.Default,
+            await busConn.PublishToQueue(
                 _rpcEntity.EntityName,
                 false,
                 messageProperties,

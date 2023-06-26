@@ -6,7 +6,7 @@ namespace NetFusion.Integration.Bus.Strategies;
 /// Base entity strategy implementation associated with a context
 /// containing cross-cutting services by the strategy.
 /// </summary>
-/// <typeparam name="TContext"></typeparam>
+/// <typeparam name="TContext">The type of context associated with strategy.</typeparam>
 public class BusEntityStrategyBase<TContext> : IBusEntityStrategy
     where TContext : BusEntityContext
 {

@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using EasyNetQ.Topology;
 using NetFusion.Integration.Bus.Strategies;
 using NetFusion.Integration.RabbitMQ.Bus;
 using NetFusion.Integration.RabbitMQ.Exchanges.Metadata;
@@ -33,10 +32,15 @@ public class ExchangeCreationStrategy : BusEntityStrategyBase<EntityContext>,
     {
         if (! Context.IsAutoCreateEnabled) return;
         
-        BusConnection busConn = Context.BusModule.GetConnection(_exchangeEntity.BusName);
+        IBusConnection busConn = Context.BusModule.GetConnection(_exchangeEntity.BusName);
         busConn.ExternalSettings.ApplyExchangeSettings(_exchangeEntity.EntityName, _exchangeMeta);
         
         await busConn.CreateExchangeAsync(_exchangeMeta);
+        
+        if (! string.IsNullOrEmpty(_exchangeMeta.AlternateExchangeName))
+        {
+            await busConn.CreateAlternateExchange(_exchangeMeta.AlternateExchangeName);
+        }
     }
 
     public bool CanPublishMessageType(Type messageType) => messageType == _exchangeEntity.DomainEventType;
@@ -66,7 +70,7 @@ public class ExchangeCreationStrategy : BusEntityStrategyBase<EntityContext>,
             
         try
         {
-            await busConn.AdvancedBus.PublishAsync(new Exchange(_exchangeMeta.ExchangeName),
+            await busConn.PublishToExchange(_exchangeMeta.ExchangeName,
                 routeKey,
                 _exchangeMeta.PublishOptions.IsMandatory,
                 messageProperties,

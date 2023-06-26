@@ -58,9 +58,9 @@ public class QueueResponseService : IQueueResponseService
         
         byte[] messageBody = _serialization.Serialize(response, messageProps.ContentType);
         
-        BusConnection busConn = _busModule.GetConnection(busName);
+        IBusConnection busConn = _busModule.GetConnection(busName);
         
-        return busConn.AdvancedBus.PublishAsync(Exchange.Default, replyToQueue, false, 
+        return busConn.PublishToQueue(replyToQueue, false, 
             messageProps, 
             messageBody);
     }

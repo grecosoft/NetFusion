@@ -16,7 +16,7 @@ public class BusModule : PluginModule,
     private BusSettings? _busSettings;
     
     // The bus instances keyed by name created from BusSettings.
-    private readonly Dictionary<string, BusConnection> _buses = new Dictionary<string, BusConnection>();
+    private readonly Dictionary<string, BusConnection> _buses = new();
 
     private BusSettings BusSettings => _busSettings ??
         throw new NullReferenceException("Bus settings not initialized.");
@@ -42,7 +42,7 @@ public class BusModule : PluginModule,
         }
     }
 
-    public BusConnection GetConnection(string busName)
+    public IBusConnection GetConnection(string busName)
     {
         if (string.IsNullOrWhiteSpace(busName))
             throw new ArgumentException("Namespace must be specified.", nameof(busName));
