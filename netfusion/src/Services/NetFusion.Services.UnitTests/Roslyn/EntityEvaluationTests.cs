@@ -1,5 +1,4 @@
 ﻿using NetFusion.Common.Base.Scripting;
-using NetFusion.Services.UnitTests.Serialization;
 
 namespace NetFusion.Services.UnitTests.Roslyn;
 
@@ -17,13 +16,13 @@ public class EntityEvaluationTests
     /// to the set of entity attribute values.
     /// </summary>
     [Fact]
-    public void CanAddCalculatedDynamicAttribute()
+    public async Task CanAddCalculatedDynamicAttribute()
     {
         var entity = CreateDefaultEntity();
 
         entity.Attributes.Delete("Value2");
         entity.Attributes.Values.Value1 = 10;
-        _evalSrv.ExecuteAsync(entity).Wait();
+        await _evalSrv.ExecuteAsync(entity);
 
         entity.Attributes.Contains("Value2").Should().BeTrue();
         var result = (int)entity.Attributes.Values.Value2;
@@ -35,13 +34,13 @@ public class EntityEvaluationTests
     /// proceeding expression.
     /// </summary>
     [Fact]
-    public void CanUpdateCalculatedDynamicAttribute()
+    public async Task CanUpdateCalculatedDynamicAttribute()
     {
         var entity = CreateDefaultEntity();
 
         entity.Attributes.Values.Value1 = 0;
         entity.Attributes.Values.Value3 = 105;
-        _evalSrv.ExecuteAsync(entity).Wait();
+        await _evalSrv.ExecuteAsync(entity);
 
         entity.Attributes.Contains("Value4").Should().BeTrue();
         var result = (int)entity.Attributes.Values.Value4;
@@ -53,12 +52,12 @@ public class EntityEvaluationTests
     /// an entity static property.
     /// </summary>
     [Fact]
-    public void ExpressionCanContainEntityStaticProperty()
+    public async Task ExpressionCanContainEntityStaticProperty()
     {
         var entity = CreateDefaultEntity();
 
         entity.IsActive = true;
-        _evalSrv.ExecuteAsync(entity).Wait();
+        await _evalSrv.ExecuteAsync(entity);
 
         entity.Attributes.Contains("Value5").Should().BeTrue();
         var result = (int)entity.Attributes.Values.Value5;
@@ -66,13 +65,13 @@ public class EntityEvaluationTests
     }
 
     [Fact]
-    public void ExpressionCanCombineEntityPropertyAndDynamicAttribute()
+    public async Task ExpressionCanCombineEntityPropertyAndDynamicAttribute()
     {
         var entity = CreateDefaultEntity();
 
         entity.MaxValue = 1000;
         entity.Attributes.Values.Value6 = 200;
-        _evalSrv.ExecuteAsync(entity).Wait();
+        await _evalSrv.ExecuteAsync(entity);
 
         entity.Attributes.Contains("Value7").Should().BeTrue();
         var result = (int)entity.Attributes.Values.Value7;
@@ -80,13 +79,13 @@ public class EntityEvaluationTests
     }
 
     [Fact]
-    public void ExpressionCanDependOnPriorCalculatedValues()
+    public async Task ExpressionCanDependOnPriorCalculatedValues()
     {
         var entity = CreateDefaultEntity();
 
         entity.MaxValue = 1000;
         entity.Attributes.Values.Value1 = 200;
-        _evalSrv.ExecuteAsync(entity).Wait();
+        await _evalSrv.ExecuteAsync(entity);
 
         entity.MinValue.Should().Be(300);
     }
@@ -131,6 +130,5 @@ public class EntityEvaluationTests
         expressions.AddExpression("_Value8", "ObjectExtensions.ToIndentedJson(Entity.MaxValue)");
 
         return expressions.CreateService<DynamicEntity>();
-           
     }
 }

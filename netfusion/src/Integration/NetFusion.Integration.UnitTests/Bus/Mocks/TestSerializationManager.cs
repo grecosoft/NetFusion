@@ -16,11 +16,13 @@ public class TestSerializationManager : ISerializationManager
         throw new NotImplementedException();
     }
 
+    // ReSharper disable once ReturnTypeCanBeNotNullable
     public object? Deserialize(string contentType, Type valueType, byte[] value, string? encodingType = null)
     {
         throw new NotImplementedException();
     }
 
+    // ReSharper disable once ReturnTypeCanBeNotNullable
     public T? Deserialize<T>(string contentType, byte[] value, string? encodingType = null)
     {
         throw new NotImplementedException();

@@ -3,7 +3,7 @@ using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.TestFixtures.Plugins;
 using NetFusion.Messaging.Plugin;
 
-namespace NetFusion.Messaging.UnitTests;
+namespace NetFusion.Messaging.UnitTests.Messaging;
 
 public static class TestSetupExtensions
 {

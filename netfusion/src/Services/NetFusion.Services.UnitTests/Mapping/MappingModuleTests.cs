@@ -214,8 +214,8 @@ public class MappingModuleTests
                     var targetMappings = m.SourceTypeMappings[typeof(TestMapTypeOne)].ToArray();
                     targetMappings.Should().HaveCount(2, "Source type has two possible target types");
                     
-                    targetMappings.Where(m => m.TargetType == typeof(TestMapTypeTwo)).Should().HaveCount(1);
-                    targetMappings.Where(m => m.TargetType == typeof(TestMapTypeThree)).Should().HaveCount(1);
+                    targetMappings.Where(tm => tm.TargetType == typeof(TestMapTypeTwo)).Should().HaveCount(1);
+                    targetMappings.Where(tm => tm.TargetType == typeof(TestMapTypeThree)).Should().HaveCount(1);
                 });
         });
     }

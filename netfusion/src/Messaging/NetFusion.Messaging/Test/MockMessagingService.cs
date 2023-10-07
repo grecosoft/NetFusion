@@ -136,7 +136,7 @@ public class MockMessagingService : IMessagingService
         return Task.CompletedTask;
     }
 
-    public Task<TResult> DispatchAsync<TResult>(IQuery<TResult> query, 
+    public Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, 
         CancellationToken cancellationToken)
     {
         if (query == null) throw new ArgumentNullException(nameof(query));

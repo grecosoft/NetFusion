@@ -1,6 +1,6 @@
 ﻿using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.TestFixtures.Plugins;
-using NetFusion.Messaging.InProcess;
+using NetFusion.Messaging.Plugin;
 using NetFusion.Messaging.UnitTests.DomainEvents.Mocks;
 
 namespace NetFusion.Messaging.UnitTests.DomainEvents;
@@ -10,148 +10,50 @@ namespace NetFusion.Messaging.UnitTests.DomainEvents;
 /// </summary>
 public static class TestSetupExtensions
 {
-    // ---------------- Domain-Event with Synchronous Handler ----------------
-        
     public static CompositeContainer WithSyncDomainEventHandler(this CompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
-        appPlugin.AddPluginType<SingleSyncDomainEventRoute>();
+        appPlugin.AddPluginType<MockSyncDomainEventConsumerOne>();
         container.RegisterPlugins(appPlugin);
         return container;
     }
-        
-    public class SingleSyncDomainEventRoute : MessageRouter
-    {
-        protected override void OnConfigureRoutes()
-        {
-            OnDomainEvent<MockDomainEvent>(
-                route => route.ToConsumer<MockSyncDomainEventConsumerOne>(
-                    c => c.OnEventHandler));
-        }
-    }
-        
-        
-    // ---------------- Domain-Event with Asynchronous Handler ----------------
-        
+
     public static CompositeContainer WithAsyncDomainEventHandler(this CompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
-        appPlugin.AddPluginType<SingleAsyncDomainEventRoute>();
+        appPlugin.AddPluginType<MockAsyncDomainEventConsumerOne>();
         container.RegisterPlugins(appPlugin);
         return container;
     }
-        
-    public class SingleAsyncDomainEventRoute : MessageRouter
+
+    public static CompositeContainer WithMultipleDomainEventHandlers(this CompositeContainer container)
     {
-        protected override void OnConfigureRoutes()
-        {
-            OnDomainEvent<MockDomainEvent>(
-                route => route.ToConsumer<MockAsyncDomainEventConsumerOne>(
-                    c => c.OnEventHandler));
-        }
+        var appPlugin = new MockAppPlugin();
+        appPlugin.AddPluginType<MockSyncDomainEventConsumerOne>();
+        appPlugin.AddPluginType<MockAsyncDomainEventConsumerOne>();
+        appPlugin.AddPluginType<MockSyncDomainEventConsumerTwo>();
+        appPlugin.AddPluginType<MockAsyncDomainEventConsumerTwo>();
+        container.RegisterPlugins(appPlugin);
+        return container;
     }
-        
-        
-    // ---------------- Domain-Event with Derived Event Handler ----------------
         
     public static CompositeContainer WithDerivedDomainEventHandler(this CompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
-        appPlugin.AddPluginType<DerivedDomainEventsRoute>();
+        appPlugin.AddPluginType<MockDerivedMessageConsumer>();
             
         container.RegisterPlugins(appPlugin);
         return container;
     }
-        
-    public class DerivedDomainEventsRoute : MessageRouter
-    {
-        protected override void OnConfigureRoutes()
-        {
-            OnDomainEvent<MockBaseDomainEvent>(
-                route => route.ToConsumer<MockDerivedMessageConsumer>(
-                    c => c.OnBaseEventHandler, 
-                    meta => meta.IncludedDerivedMessages = true));
-        }
-    }
-        
-    // ---------------- Domain-Event with Multiple Synchronous/Asynchronous Handlers  ----------------
-        
-    public static CompositeContainer WithMultipleDomainEventHandlers(this CompositeContainer container)
-    {
-        var appPlugin = new MockAppPlugin();
-        appPlugin.AddPluginType<MultipleDomainEventHandler>();
-        container.RegisterPlugins(appPlugin);
-        return container;
-    }
-        
-    public class MultipleDomainEventHandler : MessageRouter
-    {
-        protected override void OnConfigureRoutes()
-        {
-            OnDomainEvent<MockDomainEvent>(
-                route => route.ToConsumer<MockSyncDomainEventConsumerOne>(
-                    c => c.OnEventHandler));
-                
-            OnDomainEvent<MockDomainEvent>(
-                route => route.ToConsumer<MockAsyncDomainEventConsumerOne>(
-                    c => c.OnEventHandler));
-                
-            OnDomainEvent<MockDomainEvent>(
-                route => route.ToConsumer<MockSyncDomainEventConsumerTwo>(
-                    c => c.OnEventHandler));
-                
-            OnDomainEvent<MockDomainEvent>(
-                route => route.ToConsumer<MockAsyncDomainEventConsumerTwo>(
-                    c => c.OnEventHandler));
-        }
-    }
-        
-        
-    // ---------------- Domain-Event with Handler with Predicate  ----------------
-        
-    public static CompositeContainer WithDomainEventPredicateHandler(this CompositeContainer container)
-    {
-        var appPlugin = new MockAppPlugin();
-        appPlugin.AddPluginType<PredicateDomainEventRoute>();
-        container.RegisterPlugins(appPlugin);
-        return container;
-    }
-        
-    public class PredicateDomainEventRoute : MessageRouter
-    {
-        protected override void OnConfigureRoutes()
-        {
-            OnDomainEvent<MockRuleDomainEvent>(
-                route => route.ToConsumer<MockDomainEvenConsumerWithRule>(
-                    c => c.OnEventAllRulesPass, 
-                    meta => meta.When(e => 1000 <= e.RuleTestValue && e.RuleTestValue <= 2000)));
-                
-            OnDomainEvent<MockRuleDomainEvent>(route => route.ToConsumer<MockDomainEvenConsumerWithRule>(
-                c => c.OnEventAnyRulePasses, 
-                meta => meta.When(e => e.RuleTestValue is >= 1000 and <= 2000)));
-        }
-    }
-
-    // ---------------- Domain-Event with Handler with Exceptions  ----------------
         
     // Adds application plugin containing a message handler throwing an exception.
     public static CompositeContainer WithMessageHandlerException(this CompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
-        appPlugin.AddPluginType<HandlerExceptionEventRoute>();
+        appPlugin.AddPluginType<MockErrorMessageConsumer>();
             
         container.RegisterPlugins(appPlugin);
         return container;
-    }
-        
-    public class HandlerExceptionEventRoute : MessageRouter
-    {
-        protected override void OnConfigureRoutes()
-        {
-            OnDomainEvent<MockDomainEvent>(
-                route => route.ToConsumer<MockErrorMessageConsumer>(
-                    c => c.OnEventAsync));
-        }
     }
         
     // Adds application plugin containing two message handlers.  The first domain-event handler
@@ -159,23 +61,23 @@ public static class TestSetupExtensions
     public static CompositeContainer WithChildMessageHandlerException(this CompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
-        appPlugin.AddPluginType<ChildHandlerExceptionEventRoute>();
-
+        appPlugin.AddPluginType<MockErrorParentMessageConsumer>();
+        appPlugin.AddPluginType<MockErrorChildMessageConsumer>();
+            
         container.RegisterPlugins(appPlugin);
         return container;
     }
         
-    public class ChildHandlerExceptionEventRoute : MessageRouter
+    public static CompositeContainer WithHostAsyncConsumer(this CompositeContainer container)
     {
-        protected override void OnConfigureRoutes()
-        {
-            OnDomainEvent<MockDomainEvent>(
-                route => route.ToConsumer<MockErrorParentMessageConsumer>(
-                    c => c.OnDomainEventAsync));
-                
-            OnDomainEvent<MockDomainEventTwo>(
-                route => route.ToConsumer<MockErrorChildMessageConsumer>(
-                    c => c.OnDomainEventTwoAsync));
-        }
+        var hostPlugin = new MockHostPlugin();
+        hostPlugin.AddPluginType<MockSyncDomainEventConsumerOne>();
+            
+        container.RegisterPlugins(hostPlugin);
+        container.RegisterPlugin<MessagingPlugin>();
+
+        return container;
     }
+        
+        
 }

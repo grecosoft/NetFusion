@@ -1,9 +1,13 @@
+using NetFusion.Messaging.UnitTests.Messaging;
+
 namespace NetFusion.Messaging.UnitTests.Commands.Mocks;
 
-public class MockAsyncCommandConsumer : MockConsumer
+public class MockAsyncCommandConsumer : MockConsumer, 
+    IMessageConsumer
 {
     public MockAsyncCommandConsumer(IMockTestLog testLog) : base(testLog) { }
         
+    [InProcessHandler]
     public async Task<MockCommandResult> OnCommand(MockCommand command)
     {
         TestLog.AddLogEntry("Async-Command-Handler");
@@ -21,7 +25,8 @@ public class MockAsyncCommandConsumer : MockConsumer
 
         return mockResponse;
     }
-        
+
+    [InProcessHandler]
     public Task OnCommandNoResult(MockCommandNoResult command)
     {
         TestLog.AddLogEntry("Async-Command-Handler-No-Result");
@@ -29,10 +34,12 @@ public class MockAsyncCommandConsumer : MockConsumer
     }
 }
     
-public class MockSyncCommandConsumer : MockConsumer
+public class MockSyncCommandConsumer : MockConsumer,
+    IMessageConsumer
 {
     public MockSyncCommandConsumer(IMockTestLog testLog) : base(testLog) { }
         
+    [InProcessHandler]
     public MockCommandResult OnCommand(MockCommand command)
     {
         TestLog.AddLogEntry("Sync-Command-Handler");
@@ -49,10 +56,12 @@ public class MockSyncCommandConsumer : MockConsumer
     }
 }
 
-public class MockInvalidCommandConsumer : MockConsumer
+public class MockInvalidCommandConsumer : MockConsumer,
+    IMessageConsumer
 {
+    [InProcessHandler]
     public MockCommandResult InvalidHandler(MockCommand evt)
     {
-        return new MockCommandResult();
+        return new();
     }
 }

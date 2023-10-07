@@ -56,6 +56,6 @@ public interface IMessagingService
     /// <param name="query">The query to be dispatched to its corresponding consumer.</param>
     /// <param name="cancellationToken">Optional cancellation token used to cancel the asynchronous task.</param>
     /// <returns>Task containing the result of the consumer.</returns>
-    Task<TResult> DispatchAsync<TResult>(IQuery<TResult> query,
+    Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query,
         CancellationToken cancellationToken = default);
 }

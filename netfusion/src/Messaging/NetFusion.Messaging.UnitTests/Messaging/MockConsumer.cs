@@ -1,4 +1,4 @@
-﻿namespace NetFusion.Messaging.UnitTests;
+﻿namespace NetFusion.Messaging.UnitTests.Messaging;
 
 /// <summary>
 /// Message consumer that records the called message handler methods.

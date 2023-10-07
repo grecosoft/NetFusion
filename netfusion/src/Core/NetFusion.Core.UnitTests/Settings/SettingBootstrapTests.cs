@@ -54,7 +54,7 @@ public class SettingBootstrapTests
         module.ScanForServices(catalog);
             
         // Assert:
-        Assert.Equal(1, catalog.Services.Count);
+        Assert.Single(catalog.Services);
         Assert.NotNull(catalog.Services.First().ImplementationFactory);
         Assert.Equal(ServiceLifetime.Singleton, catalog.Services.First().Lifetime);
     }

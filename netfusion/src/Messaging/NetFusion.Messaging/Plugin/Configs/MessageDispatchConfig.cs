@@ -2,7 +2,6 @@
 using NetFusion.Core.Bootstrap.Plugins;
 using NetFusion.Messaging.Enrichers;
 using NetFusion.Messaging.Filters;
-using NetFusion.Messaging.InProcess;
 
 namespace NetFusion.Messaging.Plugin.Configs;
 
@@ -11,7 +10,7 @@ namespace NetFusion.Messaging.Plugin.Configs;
 /// </summary>
 public class MessageDispatchConfig : IPluginConfig
 {
-    private readonly List<Type> _messagePublisherTypes = new() { typeof(MessagePublisher) };
+    private readonly List<Type> _messagePublisherTypes = new() { typeof(InProcessPublisher) };
     private readonly List<Type> _messageEnrichersTypes = new();
     private readonly List<Type> _messageFilterTypes = new();
 

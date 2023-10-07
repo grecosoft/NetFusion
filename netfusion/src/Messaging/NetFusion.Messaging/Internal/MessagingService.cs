@@ -101,7 +101,7 @@ public class MessagingService : IMessagingService
         return command.Result;
     }
 
-    public async Task<TResult> DispatchAsync<TResult>(IQuery<TResult> query,
+    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query,
         CancellationToken cancellationToken = default)
     {
         if (query == null) throw new ArgumentNullException(nameof(query),
@@ -266,5 +266,4 @@ public class MessagingService : IMessagingService
     private static FilterException GetFilterException<T>(TaskListItem<T> taskItem)
         where T : class, IMessageFilter => 
         new("Exception Applying Query Filter", taskItem.Invoker, taskItem.Task.Exception);
-        
 }

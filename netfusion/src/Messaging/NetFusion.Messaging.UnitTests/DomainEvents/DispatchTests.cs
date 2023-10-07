@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Core.TestFixtures.Container;
 using NetFusion.Messaging.UnitTests.DomainEvents.Mocks;
+using NetFusion.Messaging.UnitTests.Messaging;
 
 namespace NetFusion.Messaging.UnitTests.DomainEvents;
 

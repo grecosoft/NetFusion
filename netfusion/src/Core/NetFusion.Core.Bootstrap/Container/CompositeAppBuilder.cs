@@ -16,6 +16,8 @@ namespace NetFusion.Core.Bootstrap.Container;
 /// <summary>
 /// Responsible for registering the ICompositeApp instance built from
 /// a set of plugins specified by the application host.
+///
+/// https://github.com/grecosoft/NetFusion/wiki/core-bootstrap-overview
 /// </summary>
 internal class CompositeAppBuilder : ICompositeAppBuilder
 {
@@ -60,8 +62,8 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
         ConfigurePlugins();
     }
 
-    public IPlugin HostPlugin => _hostPlugin ?? 
-                                 throw new BootstrapException("Host Plugin can't be accessed until builder is composed.");
+    public IPlugin HostPlugin => _hostPlugin ?? throw new BootstrapException(
+        "Host Plugin can't be accessed until builder is composed.");
       
 
     /// <summary>
@@ -114,6 +116,7 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
         
     // --------------------------- Service Dependencies -------------------------------
         
+    // https://github.com/grecosoft/NetFusion/wiki/core-modules-services
     private void SetPluginServiceDependencies()
     {
         SetPluginServiceDependencies(CorePlugins, PluginTypes.CorePlugin);
@@ -199,6 +202,8 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     // Allow each plug-in module to compose itself from concrete types, defined by other plugins,
     // based on abstract types defined by the plugin being composed.  Think of this as a simplified
     // implementation of Microsoft's MEF.
+    //
+    // https://github.com/grecosoft/NetFusion/wiki/core-modules-knowntypes
     private void ComposePlugins(ITypeResolver typeResolver)
     {
         ComposeCorePlugins(typeResolver);
@@ -219,7 +224,7 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     }
 
     // Application plugins contain a specific application's implementations
-    // and are composed only from other application specific plugins.
+    // and are composed only from other application specific plugin types.
     private void ComposeAppPlugins(ITypeResolver typeResolver)
     {
         var allAppPluginTypes = GetPluginTypes(
@@ -246,6 +251,8 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     // After all modules are initialized, each module has the Configure() method called.
     // Code contained within a module's Configure() method can reference information
     // initialized by a dependent module.
+    //
+    // https://github.com/grecosoft/NetFusion/wiki/core-bootstrap-modules#initialization-and-configuration
     private void ConfigurePlugins()
     {
         CorePlugins.ForEach(InitializeModules);
@@ -280,6 +287,8 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     // Allows each module to register services that can be injected into
     // other components.  These services expose functionality implemented
     // by a plugin that can be injected into other components.
+    //
+    // https://github.com/grecosoft/NetFusion/wiki/core-modules-service-registration
     internal void RegisterPluginServices()
     {
         // Plugin Service Registrations:

@@ -1,10 +1,14 @@
+using NetFusion.Messaging.UnitTests.Messaging;
+
 namespace NetFusion.Messaging.UnitTests.DomainEvents.Mocks;
 // ------------------- [Message Consumers] ------------------
 
-public class MockSyncDomainEventConsumerOne : MockConsumer
+public class MockSyncDomainEventConsumerOne : MockConsumer,
+    IMessageConsumer
 {
     public MockSyncDomainEventConsumerOne(IMockTestLog testLog) : base(testLog) { }
         
+    [InProcessHandler]
     public void OnEventHandler(MockDomainEvent domainEvent)
     {
         if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
@@ -20,11 +24,13 @@ public class MockSyncDomainEventConsumerOne : MockConsumer
     }
 }
     
-public class MockAsyncDomainEventConsumerOne : MockConsumer
+public class MockAsyncDomainEventConsumerOne : MockConsumer,
+    IMessageConsumer
 {
     public MockAsyncDomainEventConsumerOne(IMockTestLog testLog) : base(testLog) { }
         
-    public async Task OnEventHandler(MockDomainEvent domainEvent, CancellationToken cancellationToken)
+    [InProcessHandler]
+    public async Task OnEventHandler(MockDomainEvent domainEvent)
     {
         TestLog
             .AddLogEntry("Async-DomainEvent-Handler-1")
@@ -39,10 +45,12 @@ public class MockAsyncDomainEventConsumerOne : MockConsumer
     }
 }
     
-public class MockSyncDomainEventConsumerTwo : MockConsumer
+public class MockSyncDomainEventConsumerTwo : MockConsumer,
+    IMessageConsumer
 {
     public MockSyncDomainEventConsumerTwo(IMockTestLog testLog) : base(testLog) { }
         
+    [InProcessHandler]
     public void OnEventHandler(MockDomainEvent domainEvent)
     {
         if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
@@ -58,10 +66,12 @@ public class MockSyncDomainEventConsumerTwo : MockConsumer
     }
 }
     
-public class MockAsyncDomainEventConsumerTwo : MockConsumer
+public class MockAsyncDomainEventConsumerTwo : MockConsumer,
+    IMessageConsumer
 {
     public MockAsyncDomainEventConsumerTwo(IMockTestLog testLog) : base(testLog) { }
         
+    [InProcessHandler]
     public Task OnEventHandler(MockDomainEvent domainEvent)
     {
         TestLog
@@ -77,10 +87,12 @@ public class MockAsyncDomainEventConsumerTwo : MockConsumer
     }
 }
     
-public class MockDerivedMessageConsumer : MockConsumer
+public class MockDerivedMessageConsumer : MockConsumer,
+    IMessageConsumer
 {
     public MockDerivedMessageConsumer(IMockTestLog testLog) : base(testLog) { }
         
+    [InProcessHandler]
     public void OnBaseEventHandler(MockBaseDomainEvent domainEvent)
     {
         if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
@@ -90,7 +102,8 @@ public class MockDerivedMessageConsumer : MockConsumer
             .RecordMessage(domainEvent);
     }
 
-    public void OnIncludeBaseEventHandler(MockBaseDomainEvent domainEvent)
+    [InProcessHandler]
+    public void OnIncludeBaseEventHandler([IncludeDerivedMessages]MockBaseDomainEvent domainEvent)
     {
         if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
 
@@ -100,40 +113,19 @@ public class MockDerivedMessageConsumer : MockConsumer
     }
 }
     
-    
-// ------------------- [Message Consumers with Rules] ------------------
-    
-public class MockDomainEvenConsumerWithRule : MockConsumer
-{
-    public MockDomainEvenConsumerWithRule(IMockTestLog testLog) : base(testLog) { }
-        
-    public void OnEventAllRulesPass(MockRuleDomainEvent domainEvent)
-    {
-        TestLog
-            .AddLogEntry("OnEventAllRulesPass")
-            .RecordMessage(domainEvent);
-    }
-        
-    public void OnEventAnyRulePasses(MockRuleDomainEvent domainEvent)
-    {
-        TestLog
-            .AddLogEntry("OnEventAnyRulePasses")
-            .RecordMessage(domainEvent);
-    }
-}
-    
-    
 // ------------------- [Message Consumer Exceptions] ------------------
     
-public class MockErrorMessageConsumer
+public class MockErrorMessageConsumer : IMessageConsumer
 {
+    [InProcessHandler]
     public Task OnEventAsync(MockDomainEvent domainEvent)
     {
         return Task.Run(() => throw new InvalidOperationException(nameof(OnEventAsync)));
     }
 }
     
-public class MockErrorParentMessageConsumer : MockConsumer
+public class MockErrorParentMessageConsumer : MockConsumer,
+    IMessageConsumer
 {
     private readonly IMessagingService _messaging;
         
@@ -142,14 +134,17 @@ public class MockErrorParentMessageConsumer : MockConsumer
         _messaging = messaging;
     }
         
+    [InProcessHandler]
     public async Task OnDomainEventAsync(MockDomainEvent domainEvent)
     {
         await _messaging.PublishAsync(new MockDomainEventTwo());
     }
 }
 
-public class MockErrorChildMessageConsumer : MockConsumer
+public class MockErrorChildMessageConsumer : MockConsumer,
+    IMessageConsumer
 {
+    [InProcessHandler]
     public Task OnDomainEventTwoAsync(MockDomainEventTwo domainEvent)
     {
         return Task.Run(

@@ -16,6 +16,8 @@ namespace NetFusion.Core.Bootstrap.Container;
 /// Manages a collection of plugins and initializes an instance of CompositeAppBuilder
 /// delegated to for creating an instance of CompositeApp bootstrapped from the set of
 /// plugins.
+///
+/// https://github.com/grecosoft/NetFusion/wiki/core-bootstrap-overview
 /// </summary>
 public class CompositeContainer 
 {

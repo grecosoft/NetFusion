@@ -2,10 +2,10 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Core.TestFixtures.Container;
 using NetFusion.Messaging.Logging;
-using NetFusion.Messaging.UnitTests;
 using NetFusion.Messaging.UnitTests.DomainEvents;
 using NetFusion.Messaging.UnitTests.DomainEvents.Mocks;
 using NetFusion.Messaging.UnitTests.Logging.Mocks;
+using NetFusion.Messaging.UnitTests.Messaging;
 
 // ReSharper disable All
 
@@ -30,6 +30,7 @@ public class CorrelationTests
                 .Assert.ServiceCollection(sc =>
                 {
                     var registration = sc.FirstOrDefault(s => s.ServiceType == typeof(IMessageLogSink));
+                    Assert.NotNull(registration);
                     registration.Lifetime.Should().Be(ServiceLifetime.Singleton);
                 })
                 .Services(s =>

@@ -2,7 +2,7 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Core.TestFixtures.Container;
 using NetFusion.Messaging.Exceptions;
-using NetFusion.Messaging.UnitTests;
+using NetFusion.Messaging.UnitTests.Messaging;
 using NetFusion.Messaging.UnitTests.Queries;
 using NetFusion.Messaging.UnitTests.Queries.Mocks;
 
@@ -31,14 +31,14 @@ public class DispatchExceptionTests
                 .Act.RecordException().OnServicesAsync(async s =>
                 { 
                     await s.GetRequiredService<IMessagingService>()
-                        .DispatchAsync(query);
+                        .ExecuteAsync(query);
                 });
 
             testResult.Assert.Exception<PublisherException>(ex =>
             {
                 ex.InnerException.Should().BeOfType<MessageDispatchException>();
-                ex.InnerException.InnerException.Should().BeOfType<InvalidOperationException>();
-                ex.InnerException.InnerException.Message.Should().Be($"{nameof(MockAsyncQueryConsumer)}_Exception");
+                ex.InnerException?.InnerException.Should().BeOfType<InvalidOperationException>();
+                ex.InnerException?.InnerException?.Message.Should().Be($"{nameof(MockAsyncQueryConsumer)}_Exception");
             });
         });
     }
@@ -62,14 +62,14 @@ public class DispatchExceptionTests
                 .Act.RecordException().OnServicesAsync(async s =>
                 { 
                     await s.GetRequiredService<IMessagingService>()
-                        .DispatchAsync(query);
+                        .ExecuteAsync(query);
                 });
 
             testResult.Assert.Exception<PublisherException>(ex =>
             {
                 ex.InnerException.Should().BeOfType<MessageDispatchException>();
-                ex.InnerException.InnerException.Should().BeOfType<InvalidOperationException>();
-                ex.InnerException.InnerException.Message.Should().Be($"{nameof(MockSyncQueryConsumer)}_Exception");
+                ex.InnerException?.InnerException.Should().BeOfType<InvalidOperationException>();
+                ex.InnerException?.InnerException?.Message.Should().Be($"{nameof(MockSyncQueryConsumer)}_Exception");
             });
         });
     }

@@ -21,20 +21,7 @@ public class MessageDispatcher
     /// </summary>
     /// <returns>Message consumer runtime type.</returns>
     public Type ConsumerType { get; }
-
-    /// <summary>
-    /// Indicates if the message handler should be called for derived message types.
-    /// </summary>
-    /// <returns>
-    /// Returns True if method should be called for derived message types.
-    /// </returns>
-    public bool IncludeDerivedTypes { get; internal set; }
     
-    /// <summary>
-    /// Predicate determining if the message applies to the route.
-    /// </summary>
-    public Predicate<IMessage>? MessagePredicate { get; internal set; }
-
     /// <summary>
     /// The consumer's message handler method to be called at runtime when the
     /// message is published.
@@ -82,6 +69,19 @@ public class MessageDispatcher
         IsCancellable = router.HandlerMethodInfo.IsCancellableMethod();
     }
     
+    /// <summary>
+    /// Indicates if the message handler should be called for derived message types.
+    /// </summary>
+    /// <returns>
+    /// Returns True if method should be called for derived message types.
+    /// </returns>
+    public bool IncludeDerivedTypes { get; internal set; }
+    
+    /// <summary>
+    /// Predicate determining if the message applies to the route.
+    /// </summary>
+    public Predicate<IMessage>? MessagePredicate { get; internal set; }
+    
     public override string ToString() => $"{ConsumerType.Name}.{MessageHandlerMethod.Name}({MessageType})";
         
         
@@ -108,44 +108,49 @@ public class MessageDispatcher
         {
             if (IsAsync)
             {
-                var invokeParams = new List<object>{ message };
-                if (IsCancellable)
-                {
-                    invokeParams.Add(cancellationToken);
-                }
-
-                var asyncResult = (Task?)Invoker(consumer, invokeParams.ToArray());
-                if (asyncResult == null)
-                {
-                    throw new NullReferenceException("Result of Async Message Dispatch can't be null.");
-                }
-                    
-                await asyncResult.ConfigureAwait(false);
-
-                object? result = ProcessResult(message, asyncResult);
-                taskSource.SetResult(result);
+                await InvokeAsyncHandler(message, consumer, taskSource, cancellationToken);
             }
             else
             {
-                object? syncResult = Invoker(consumer, new object[] {message});
-                object? result = ProcessResult(message, syncResult);
-                taskSource.SetResult(result);
+                InvokeSyncHandler(message, consumer, taskSource);
             }
         }
         catch (Exception ex)
         {
-            var invokeEx = ex as TargetInvocationException;
-            var sourceEx = ex;
-
-            if (invokeEx?.InnerException != null)
-            {
-                sourceEx = invokeEx.InnerException;
-            }
-
-            taskSource.SetException(sourceEx);
+            HandleDispatchException(ex, taskSource);
         }
 
         return await taskSource.Task.ConfigureAwait(false);
+    }
+
+    private async Task InvokeAsyncHandler(IMessage message, object consumer, 
+        TaskCompletionSource<object?> taskSource,
+        CancellationToken cancellationToken)
+    {
+        var invokeParams = new List<object>{ message };
+        if (IsCancellable)
+        {
+            invokeParams.Add(cancellationToken);
+        }
+
+        var asyncResult = (Task?)Invoker(consumer, invokeParams.ToArray());
+        if (asyncResult == null)
+        {
+            throw new NullReferenceException("Result of Async Message Dispatch can't be null.");
+        }
+                    
+        await asyncResult.ConfigureAwait(false);
+
+        object? result = ProcessResult(message, asyncResult);
+        taskSource.SetResult(result);
+    }
+
+    private void InvokeSyncHandler(IMessage message, object consumer,
+        TaskCompletionSource<object?> taskSource)
+    {
+        object? syncResult = Invoker(consumer, new object[] {message});
+        object? result = ProcessResult(message, syncResult);
+        taskSource.SetResult(result);
     }
 
     private object? ProcessResult(IMessage message, object? result)
@@ -158,7 +163,7 @@ public class MessageDispatcher
         }
 
         // A Task containing a result is being returned so get the result
-        // from the returned task and set it as the command result:
+        // from the returned task and set it as the message result:
         if (result != null && IsAsyncWithResult)
         {
             dynamic resultTask = result;
@@ -176,5 +181,18 @@ public class MessageDispatcher
         }
 
         return null; 
+    }
+
+    private void HandleDispatchException(Exception ex, TaskCompletionSource<object?> taskSource)
+    {
+        var invokeEx = ex as TargetInvocationException;
+        var sourceEx = ex;
+
+        if (invokeEx?.InnerException != null)
+        {
+            sourceEx = invokeEx.InnerException;
+        }
+
+        taskSource.SetException(sourceEx);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Core.TestFixtures.Container;
+using NetFusion.Messaging.UnitTests.Messaging;
 using NetFusion.Messaging.UnitTests.Queries.Mocks;
 
 namespace NetFusion.Messaging.UnitTests.Queries;
@@ -22,7 +23,7 @@ public class DispatchTests
                 {
                     var query = new MockQuery();
                     await s.GetRequiredService<IMessagingService>()
-                        .DispatchAsync(query);
+                        .ExecuteAsync(query);
                 });
 
             testResult.Assert.Service<IMockTestLog>(log =>
@@ -47,7 +48,7 @@ public class DispatchTests
                 {
                     var query = new MockQuery();
                     await s.GetRequiredService<IMessagingService>()
-                        .DispatchAsync(query);
+                        .ExecuteAsync(query);
                 });
 
             testResult.Assert.Service<IMockTestLog>(log =>

@@ -13,7 +13,9 @@ namespace NetFusion.Core.Builder;
 
 /// <summary>
 /// Provides an implementation used by the host application to build a composite application
-/// from a set of registered plugins.  
+/// from a set of registered plugins.
+///
+/// https://github.com/grecosoft/NetFusion/wiki/core-bootstrap-overview
 /// </summary>
 public class CompositeContainerBuilder : ICompositeContainerBuilder
 {

@@ -125,7 +125,7 @@ public static class HealthEndpointExtensions
         if (compositeApp == null)
         {
             throw new InvalidOperationException(
-                $"Composite-Application not composed - Call Compose on {typeof(ICompositeAppBuilder)}");
+                $"Composite-Application not composed - Call Compose on {typeof(ICompositeContainerBuilder)}");
         }
 
         return compositeApp;

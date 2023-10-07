@@ -69,7 +69,7 @@ public class EntityAttributes : DynamicObject,
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
             "Attribute name cannot be null or empty string.", nameof(name));
             
-        return _attributes.ContainsKey(name) ? _attributes[name] : defaultValue;
+        return _attributes.TryGetValue(name, out var attribute) ? attribute : defaultValue;
     }
 
     public bool TryGetValue(string name, out object? value)
@@ -109,7 +109,7 @@ public class EntityAttributes : DynamicObject,
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException(
             "Attribute name cannot be null or empty string.", nameof(name));
 
-        return _attributes.ContainsKey(name) ? (T?)_attributes[name] : defaultValue;
+        return _attributes.TryGetValue(name, out var attribute) ? (T?)attribute : defaultValue;
     }
 
     public bool Contains(string name)

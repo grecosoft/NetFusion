@@ -5,7 +5,6 @@ using NetFusion.Core.TestFixtures.Container;
 using NetFusion.Core.TestFixtures.Plugins;
 using NetFusion.Integration.Bus.Entities;
 using NetFusion.Integration.Bus.Strategies;
-using NetFusion.Integration.RabbitMQ.Plugin.Modules;
 using NetFusion.Integration.UnitTests.Bus.Mocks;
 using NetFusion.Integration.UnitTests.RabbitMQ.Mocks;
 using NetFusion.Messaging.Plugin;

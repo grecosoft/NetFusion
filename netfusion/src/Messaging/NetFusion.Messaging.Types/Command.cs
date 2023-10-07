@@ -8,18 +8,9 @@ namespace NetFusion.Messaging.Types;
 /// The handling consumer can associate a result after processing the message.  A command
 /// expresses an action that is to take place resulting in a change to an application's state.
 /// </summary>
-public abstract class Command : ICommand, IMessageWithResult
+public abstract class Command : Message, ICommand, 
+    IMessageWithResult
 {
-    /// <summary>
-    /// List of arbitrary key value pairs associated with the message. 
-    /// </summary>
-    public IDictionary<string, string> Attributes { get; set; }
-        
-    protected Command()
-    {
-        Attributes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-    }
-    
     protected virtual Type GetResultType() => typeof(void);
     
     protected IMessageWithResult ResultState => this;

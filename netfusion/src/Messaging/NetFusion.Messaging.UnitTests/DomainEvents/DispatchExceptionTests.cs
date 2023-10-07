@@ -1,14 +1,15 @@
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Core.TestFixtures.Container;
+using NetFusion.Messaging;
 using NetFusion.Messaging.Exceptions;
-using NetFusion.Messaging.UnitTests;
 using NetFusion.Messaging.UnitTests.DomainEvents;
 using NetFusion.Messaging.UnitTests.DomainEvents.Mocks;
+using NetFusion.Messaging.UnitTests.Messaging;
 
 // ReSharper disable All
 
-namespace NetFusion.Messaging.Tests.DomainEvents;
+namespace CoreTests.Messaging.DomainEvents;
 
 /// <summary>
 /// Tests validating exceptions, thrown from domain-event consumers, are correctly recorded.  Each invoked
@@ -19,7 +20,7 @@ namespace NetFusion.Messaging.Tests.DomainEvents;
 ///
 /// The root PublisherException contains a Details property containing key/value pairs of information recorded by
 /// the contained exceptions.  The Details property contains additional information for each recorded exception.
-/// The NetFusion.Services.Serilog plugin writes the Details property as a structured error message.
+/// The NetFusion.Serilog plugin writes the Details property as a structured error message.
 /// </summary>
 public class DispatchExceptionTests
 {
@@ -47,6 +48,7 @@ public class DispatchExceptionTests
 
             testResult.Assert.Exception<PublisherException>(ex =>
             {
+                Assert.NotNull(ex.InnerException);
                 AssertCapturedException(ex.InnerException, typeof(MockSyncDomainEventConsumerOne));
             });
         });
@@ -76,6 +78,7 @@ public class DispatchExceptionTests
 
             testResult.Assert.Exception<PublisherException>(ex =>
             {
+                Assert.NotNull(ex.InnerException);
                 AssertCapturedException(ex.InnerException, typeof(MockAsyncDomainEventConsumerOne));
             });
         });
@@ -109,7 +112,7 @@ public class DispatchExceptionTests
             {
                 var parentDispatchEx = ex.InnerException as MessageDispatchException;
                 parentDispatchEx.Should().NotBeNull();
-                parentDispatchEx.ChildExceptions.Should().HaveCount(2);
+                parentDispatchEx!.ChildExceptions.Should().HaveCount(2);
                     
                 var syncDispatchEx =  parentDispatchEx.ChildExceptions.ElementAt(0) as MessageDispatchException;
                 syncDispatchEx.Should().NotBeNull();
@@ -117,8 +120,8 @@ public class DispatchExceptionTests
                 var asyncDispatchEx =  parentDispatchEx.ChildExceptions.ElementAt(1) as MessageDispatchException;
                 asyncDispatchEx.Should().NotBeNull();
                     
-                AssertCapturedException(syncDispatchEx, typeof(MockSyncDomainEventConsumerOne));
-                AssertCapturedException(asyncDispatchEx, typeof(MockAsyncDomainEventConsumerOne));
+                AssertCapturedException(syncDispatchEx!, typeof(MockSyncDomainEventConsumerOne));
+                AssertCapturedException(asyncDispatchEx!, typeof(MockAsyncDomainEventConsumerOne));
             });
         });
     }
@@ -145,9 +148,9 @@ public class DispatchExceptionTests
             testResult.Assert.Exception<PublisherException>(ex =>
             {
                 ex.InnerException.Should().BeOfType<MessageDispatchException>();
-                ex.InnerException.InnerException.Should().BeOfType<PublisherException>();
-                ex.InnerException.InnerException.InnerException.Should().BeOfType<MessageDispatchException>();
-                ex.InnerException.InnerException.InnerException.InnerException.Should().BeOfType<InvalidOperationException>();
+                ex.InnerException?.InnerException.Should().BeOfType<PublisherException>();
+                ex.InnerException?.InnerException?.InnerException.Should().BeOfType<MessageDispatchException>();
+                ex.InnerException?.InnerException?.InnerException?.InnerException.Should().BeOfType<InvalidOperationException>();
             });
         });
     }
@@ -159,8 +162,8 @@ public class DispatchExceptionTests
         var dispatchEx = ex as MessageDispatchException;
         dispatchEx.Should().NotBeNull();
             
-        var sourceEx = dispatchEx.InnerException as InvalidOperationException;
+        var sourceEx = dispatchEx?.InnerException as InvalidOperationException;
         sourceEx.Should().NotBeNull();
-        sourceEx.Message.Should().Be($"{expectedConsumerType.Name}_Exception");
+        sourceEx!.Message.Should().Be($"{expectedConsumerType.Name}_Exception");
     }
 }

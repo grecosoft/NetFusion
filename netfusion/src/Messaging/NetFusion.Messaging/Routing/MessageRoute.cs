@@ -19,22 +19,47 @@ public abstract class MessageRoute
     internal Func<object, object[], object?>? Invoker { get; private set; } 
     internal IRouteMeta? RouteMeta { get; private set; }
 
+    /// <summary>
+    /// Creates a route for a message type not having a result.
+    /// </summary>
+    /// <param name="messageType">The type of the message.</param>
     protected MessageRoute(Type messageType)
     {
         MessageType = messageType;
     }
-    
+
+    /// <summary>
+    /// Creates a route for a message type having a result.
+    /// </summary>
+    /// <param name="messageType">The type of message.</param>
+    /// <param name="resultType">The associated message result.</param>
     protected MessageRoute(Type messageType, Type resultType)
     {
         MessageType = messageType;
         ResultType = resultType;
     }
 
+    /// <summary>
+    /// Sets the message handler, based on a typed lambda expression, to be
+    /// invoked when a message is received.
+    /// </summary>
+    /// <param name="consumer">Lambda expression for the consumer's message handler.</param>
+    /// <typeparam name="TConsumer">The type of the consumer.</typeparam>
     protected void SetConsumer<TConsumer>(LambdaExpression consumer)
     {
         ConsumerType = typeof(TConsumer);
         HandlerMethodInfo = GetHandlerMethodInfo(consumer);
-        
+        Invoker = CreateInvoker(ConsumerType, HandlerMethodInfo);
+    }
+
+    /// <summary>
+    /// Sets the message handler to be invoked when a message is received.
+    /// </summary>
+    /// <param name="handlerMethodInfo">Method info for the consumer's message handler.</param>
+    protected void SetConsumer(MethodInfo handlerMethodInfo)
+    {
+        ConsumerType = handlerMethodInfo.DeclaringType!;
+        HandlerMethodInfo = handlerMethodInfo;
         Invoker = CreateInvoker(ConsumerType, HandlerMethodInfo);
     }
 
@@ -54,9 +79,10 @@ public abstract class MessageRoute
     }
 
     /// <summary>
-    /// Creates and populates a new route-meta instance.
+    /// Creates and populates a new route-meta instance associated with the route.
     /// </summary>
-    /// <param name="routeMeta">Action called to initialize the metadata. </param>
+    /// <param name="routeMeta">Route metadata associated with route.</param>
+    /// <param name="configure">Action called to initialize the metadata.</param>
     /// <typeparam name="TRouteMeta">The type of the route-meta associated with route.</typeparam>
     protected void ConfigureRouteMeta<TRouteMeta>(TRouteMeta routeMeta, Action<TRouteMeta> configure)
         where TRouteMeta : IRouteMeta, new()
@@ -95,18 +121,19 @@ public abstract class MessageRoute
         return (Func<object, object[], object>)lambda;
     }
 
-    private static void CreateParamsExpressions(MethodBase method, out ParameterExpression argsExp, out Expression[] paramsExps)
+    private static void CreateParamsExpressions(MethodBase method, out ParameterExpression argsExp, 
+        out Expression[] paramsExps)
     {
-        var parameters = method.GetParameters().Select(p => p.ParameterType).ToArray();
+        var parameterTypes = method.GetParameters().Select(p => p.ParameterType).ToArray();
 
         argsExp = Expression.Parameter(typeof(object[]), "args");
-        paramsExps = new Expression[parameters.Length];
+        paramsExps = new Expression[parameterTypes.Length];
 
-        for (var i = 0; i < parameters.Length; i++)
+        for (var i = 0; i < parameterTypes.Length; i++)
         {
             var constExp = Expression.Constant(i, typeof(int));
             var argExp = Expression.ArrayIndex(argsExp, constExp);
-            paramsExps[i] = Expression.Convert(argExp, parameters[i]);
+            paramsExps[i] = Expression.Convert(argExp, parameterTypes[i]);
         }
     }
 }
