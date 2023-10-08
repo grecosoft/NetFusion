@@ -29,4 +29,9 @@
     <Description>Contains bootstrap process for loading NetFusion based plug-in components.</Description>
     <PackageTags>netfusion;bootstrap;composite;plugin;component</PackageTags>
   </PropertyGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>NetFusion.Core.TestFixtures</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>

@@ -2,9 +2,8 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Common.Base.Logging;
-using NetFusion.Core.Bootstrap.Container;
 
-namespace NetFusion.Core.Builder;
+namespace NetFusion.Core.Bootstrap.Container;
 
 /// <summary>
 /// Contains extension method for IServiceCollection invoked by the host application.

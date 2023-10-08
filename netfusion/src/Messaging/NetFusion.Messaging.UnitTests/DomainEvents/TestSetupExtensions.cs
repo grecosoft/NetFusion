@@ -10,7 +10,7 @@ namespace NetFusion.Messaging.UnitTests.DomainEvents;
 /// </summary>
 public static class TestSetupExtensions
 {
-    public static CompositeContainer WithSyncDomainEventHandler(this CompositeContainer container)
+    public static ICompositeContainer WithSyncDomainEventHandler(this ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
         appPlugin.AddPluginType<MockSyncDomainEventConsumerOne>();
@@ -18,7 +18,7 @@ public static class TestSetupExtensions
         return container;
     }
 
-    public static CompositeContainer WithAsyncDomainEventHandler(this CompositeContainer container)
+    public static ICompositeContainer WithAsyncDomainEventHandler(this ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
         appPlugin.AddPluginType<MockAsyncDomainEventConsumerOne>();
@@ -26,7 +26,7 @@ public static class TestSetupExtensions
         return container;
     }
 
-    public static CompositeContainer WithMultipleDomainEventHandlers(this CompositeContainer container)
+    public static ICompositeContainer WithMultipleDomainEventHandlers(this ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
         appPlugin.AddPluginType<MockSyncDomainEventConsumerOne>();
@@ -37,7 +37,7 @@ public static class TestSetupExtensions
         return container;
     }
         
-    public static CompositeContainer WithDerivedDomainEventHandler(this CompositeContainer container)
+    public static ICompositeContainer WithDerivedDomainEventHandler(this ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
         appPlugin.AddPluginType<MockDerivedMessageConsumer>();
@@ -47,7 +47,7 @@ public static class TestSetupExtensions
     }
         
     // Adds application plugin containing a message handler throwing an exception.
-    public static CompositeContainer WithMessageHandlerException(this CompositeContainer container)
+    public static ICompositeContainer WithMessageHandlerException(this ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
         appPlugin.AddPluginType<MockErrorMessageConsumer>();
@@ -58,7 +58,7 @@ public static class TestSetupExtensions
         
     // Adds application plugin containing two message handlers.  The first domain-event handler
     // component injects IMessagingService and publishes a child domain-event resulting in an exception.
-    public static CompositeContainer WithChildMessageHandlerException(this CompositeContainer container)
+    public static ICompositeContainer WithChildMessageHandlerException(this ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
         appPlugin.AddPluginType<MockErrorParentMessageConsumer>();
@@ -68,7 +68,7 @@ public static class TestSetupExtensions
         return container;
     }
         
-    public static CompositeContainer WithHostAsyncConsumer(this CompositeContainer container)
+    public static ICompositeContainer WithHostAsyncConsumer(this ICompositeContainer container)
     {
         var hostPlugin = new MockHostPlugin();
         hostPlugin.AddPluginType<MockSyncDomainEventConsumerOne>();

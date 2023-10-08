@@ -19,7 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\NetFusion.Common\NetFusion.Common.csproj" />
-    <ProjectReference Include="..\..\Core\NetFusion.Core.Builder\NetFusion.Core.Builder.csproj" />
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Bootstrap\NetFusion.Core.Bootstrap.csproj" />
     <ProjectReference Include="..\..\Core\NetFusion.Core.Settings\NetFusion.Core.Settings.csproj" />
     <ProjectReference Include="..\..\Core\NetFusion.Core.TestFixtures\NetFusion.Core.TestFixtures.csproj" />
     <ProjectReference Include="..\NetFusion.Web.Common\NetFusion.Web.Common.csproj" />

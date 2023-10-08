@@ -6,10 +6,9 @@ using NetFusion.Common.Base;
 using NetFusion.Common.Base.Logging;
 using NetFusion.Common.Base.Scripting;
 using NetFusion.Common.Base.Validation;
-using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.Bootstrap.Plugins;
 
-namespace NetFusion.Core.Builder;
+namespace NetFusion.Core.Bootstrap.Container;
 
 /// <summary>
 /// Provides an implementation used by the host application to build a composite application
@@ -17,7 +16,7 @@ namespace NetFusion.Core.Builder;
 ///
 /// https://github.com/grecosoft/NetFusion/wiki/core-bootstrap-overview
 /// </summary>
-public class CompositeContainerBuilder : ICompositeContainerBuilder
+internal class CompositeContainerBuilder : ICompositeContainerBuilder
 {
     private readonly IServiceCollection _serviceCollection;
     private readonly ITypeResolver _typeResolver;

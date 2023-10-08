@@ -42,7 +42,7 @@ public class ContainerArrange
     /// </summary>
     /// <param name="arrange">Method passed the application container under test.</param>
     /// <returns>Self Reference</returns>
-    public ContainerArrange Container(Action<CompositeContainer> arrange)
+    public ContainerArrange Container(Action<ICompositeContainer> arrange)
     {
         if (arrange == null) throw new ArgumentNullException(nameof(arrange));
             

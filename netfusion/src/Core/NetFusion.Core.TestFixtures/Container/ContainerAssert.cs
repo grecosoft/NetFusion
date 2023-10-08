@@ -17,7 +17,7 @@ namespace NetFusion.Core.TestFixtures.Container;
 public class ContainerAssert 
 {
     private readonly ContainerFixture _fixture;
-    private readonly CompositeContainer _container;
+    private readonly ICompositeContainer _container;
     private IServiceProvider? _serviceProvider;
 
     private readonly object? _serviceResult;
@@ -33,7 +33,7 @@ public class ContainerAssert
     // Constructor called to assert an acted on container.
     public ContainerAssert(
         ContainerFixture fixture,
-        CompositeContainer container, 
+        ICompositeContainer container, 
         IServiceProvider? serviceProvider, 
         object? actedOnResult,
         Exception? resultingException)
@@ -67,7 +67,7 @@ public class ContainerAssert
         return this;
     }
         
-    public ContainerAssert CompositeContainer(Action<CompositeContainer> assert)
+    public ContainerAssert CompositeContainer(Action<ICompositeContainer> assert)
     {
         if (assert == null) throw new ArgumentNullException(nameof(assert), 
             "Assert method not specified.");

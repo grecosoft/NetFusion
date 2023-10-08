@@ -21,7 +21,7 @@ public static class TestSetup
         builder.AddInMemoryCollection(dict);
     }
 
-    public static void AddSettingsPlugin(CompositeContainer container, params Type[] settingTypes)
+    public static void AddSettingsPlugin(ICompositeContainer container, params Type[] settingTypes)
     {
         var hostPlugin = new MockHostPlugin();
         hostPlugin.AddPluginType(settingTypes);

@@ -15,7 +15,7 @@ namespace NetFusion.Core.TestFixtures.Container;
 public class ContainerAct
 {
     private readonly ContainerFixture _fixture;
-    private readonly CompositeContainer _container;
+    private readonly ICompositeContainer _container;
 
     private bool _actedOn;
     private IServiceProvider? _serviceProvider;
@@ -126,7 +126,7 @@ public class ContainerAct
     /// <param name="act">Method passed the instance of the composite-container
     /// under test to be acted on by the unit-test.</param>
     /// <returns>Self Reference</returns>
-    public ContainerAct OnCompositeContainer(Action<CompositeContainer> act)
+    public ContainerAct OnCompositeContainer(Action<ICompositeContainer> act)
     {
         if (_actedOn)
         {

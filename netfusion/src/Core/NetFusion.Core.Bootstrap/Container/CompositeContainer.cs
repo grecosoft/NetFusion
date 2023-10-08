@@ -19,7 +19,7 @@ namespace NetFusion.Core.Bootstrap.Container;
 ///
 /// https://github.com/grecosoft/NetFusion/wiki/core-bootstrap-overview
 /// </summary>
-public class CompositeContainer 
+internal class CompositeContainer : ICompositeContainer 
 {
     // Microsoft Service-Collection populated by Plugin Modules:
     private readonly IServiceCollection _serviceCollection;

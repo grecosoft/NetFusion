@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Common.Base.Logging;
 using NetFusion.Core.Bootstrap.Container;
-using NetFusion.Core.Builder;
+using NetFusion.Core.TestFixtures.Extensions;
 using NetFusion.Core.TestFixtures.Plugins;
 
 namespace NetFusion.Web.UnitTests.Hosting;
@@ -98,9 +98,8 @@ public class WebHostFixture
             .ConfigureServices((context, services) =>
             {
                 // Create instance used to add plugins to the underlying service-collection.
-                var compositeBuilder = new CompositeContainerBuilder(services, 
-                    context.Configuration, 
-                    new TestTypeResolver(), new NullExtendedLogger());
+                var compositeBuilder = services.CompositeContainer(context.Configuration, new TestTypeResolver(), 
+                    new NullExtendedLogger());
                     
                 // Allow the unit-test to add the need plugins and call the compose method
                 // to populate the service-collection.

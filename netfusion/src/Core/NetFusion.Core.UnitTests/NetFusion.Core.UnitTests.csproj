@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NetFusion.Core.Bootstrap\NetFusion.Core.Bootstrap.csproj" />
-    <ProjectReference Include="..\NetFusion.Core.Builder\NetFusion.Core.Builder.csproj" />
     <ProjectReference Include="..\NetFusion.Core.Settings\NetFusion.Core.Settings.csproj" />
     <ProjectReference Include="..\NetFusion.Core.TestFixtures\NetFusion.Core.TestFixtures.csproj" />
   </ItemGroup>

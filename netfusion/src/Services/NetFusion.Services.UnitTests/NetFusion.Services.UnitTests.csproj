@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\NetFusion.Core.Bootstrap\NetFusion.Core.Bootstrap.csproj" />
     <ProjectReference Include="..\..\Core\NetFusion.Core.TestFixtures\NetFusion.Core.TestFixtures.csproj" />
     <ProjectReference Include="..\NetFusion.Services.Mapping\NetFusion.Services.Mapping.csproj" />
     <ProjectReference Include="..\NetFusion.Services.Messaging\NetFusion.Services.Messaging.csproj" />

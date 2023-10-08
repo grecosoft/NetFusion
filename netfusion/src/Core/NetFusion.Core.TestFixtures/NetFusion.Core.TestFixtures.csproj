@@ -7,11 +7,11 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetFusion.Core.Bootstrap\NetFusion.Core.Bootstrap.csproj" />
-    <ProjectReference Include="..\NetFusion.Core.Builder\NetFusion.Core.Builder.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>NetFusion.Core.TestFixtures</PackageId>

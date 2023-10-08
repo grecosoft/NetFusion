@@ -8,7 +8,7 @@ namespace CoreTests.Messaging.Commands;
 
 public static class TestSetupExtensions
 {
-    public static CompositeContainer WithAsyncCommandConsumer(this CompositeContainer container)
+    public static ICompositeContainer WithAsyncCommandConsumer(this ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
             
@@ -18,7 +18,7 @@ public static class TestSetupExtensions
         return container;
     }
 
-    public static CompositeContainer WithSyncCommandConsumer(this CompositeContainer container)
+    public static ICompositeContainer WithSyncCommandConsumer(this ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
             
@@ -28,7 +28,7 @@ public static class TestSetupExtensions
         return container;
     }
 
-    public static CompositeContainer WithMultipleConsumers(this CompositeContainer container)
+    public static ICompositeContainer WithMultipleConsumers(this ICompositeContainer container)
     {
         var appPlugin1 = new MockAppPlugin();
         appPlugin1.AddPluginType<MockAsyncCommandConsumer>();

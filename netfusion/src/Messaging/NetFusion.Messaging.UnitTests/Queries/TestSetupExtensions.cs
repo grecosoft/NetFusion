@@ -6,7 +6,7 @@ namespace NetFusion.Messaging.UnitTests.Queries;
 
 public static class TestSetupExtensions
 {
-    public static CompositeContainer WithSyncQueryConsumer(this CompositeContainer container)
+    public static ICompositeContainer WithSyncQueryConsumer(this ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
         appPlugin.AddPluginType<MockSyncQueryConsumer>();
@@ -15,7 +15,7 @@ public static class TestSetupExtensions
         return container;
     }
         
-    public static CompositeContainer WithAsyncQueryConsumer(this CompositeContainer container)
+    public static ICompositeContainer WithAsyncQueryConsumer(this ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
         appPlugin.AddPluginType<MockAsyncQueryConsumer>();
@@ -24,7 +24,7 @@ public static class TestSetupExtensions
         return container;
     }
         
-    public static CompositeContainer WithMultipleQueryConsumers(this CompositeContainer container)
+    public static ICompositeContainer WithMultipleQueryConsumers(this ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
         appPlugin.AddPluginType<DuplicateConsumerOne>();
