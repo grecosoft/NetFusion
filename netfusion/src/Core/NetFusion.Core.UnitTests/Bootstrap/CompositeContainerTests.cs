@@ -132,6 +132,5 @@ public class CompositeContainerTests
         var provider = services.BuildServiceProvider();
 
         provider.GetRequiredService<IValidationService>();
-        provider.GetRequiredService<IEntityScriptingService>();
     }
 }

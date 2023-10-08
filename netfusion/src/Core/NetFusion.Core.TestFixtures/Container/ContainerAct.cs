@@ -15,7 +15,7 @@ namespace NetFusion.Core.TestFixtures.Container;
 public class ContainerAct
 {
     private readonly ContainerFixture _fixture;
-    private readonly ICompositeContainer _container;
+    private readonly CompositeContainer _container;
 
     private bool _actedOn;
     private IServiceProvider? _serviceProvider;

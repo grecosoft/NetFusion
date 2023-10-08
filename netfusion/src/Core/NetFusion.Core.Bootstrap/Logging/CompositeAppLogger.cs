@@ -12,18 +12,17 @@ namespace NetFusion.Core.Bootstrap.Logging;
 /// and produces a nested dictionary structure representing the application that can
 /// be logged during host application initialization as JSON.
 /// </summary>
-public class CompositeAppLogger
+internal class CompositeAppLogger
 {
     private readonly ICompositeAppBuilder _appBuilder;
     private readonly IServiceCollection _services;
 
-    public CompositeAppLogger(ICompositeAppBuilder appBuilder, IServiceCollection services)
+    public CompositeAppLogger(ICompositeAppBuilder appBuilder)
     {
         _appBuilder = appBuilder ?? throw new ArgumentNullException(nameof(appBuilder),
             "Composite application builder cannot be null.");
 
-        _services = services ?? throw new ArgumentNullException(nameof(services),
-            "Service collection cannot be null.");
+        _services = appBuilder.ServiceCollection;
     }
 
     public IDictionary<string, object> GetLog()

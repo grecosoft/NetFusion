@@ -10,7 +10,7 @@ public static class TestSetupExtensions
     // Adds a host plugin configured with the core messaging plugin.
     public static ICompositeContainer AddMessagingHost(this ICompositeContainer container)
     {
-        container.AppBuilder.ServiceCollection.AddSingleton<IMockTestLog, MockTestLog>();
+        container.ServiceCollection.AddSingleton<IMockTestLog, MockTestLog>();
             
         var hostPlugin = new MockHostPlugin();
             

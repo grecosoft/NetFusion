@@ -16,7 +16,7 @@ namespace NetFusion.Core.Bootstrap.Logging;
 /// by a plugin-module or during bootstrapping the composite-application when calling
 /// the Compose method on ICompositeContainerBuilder.
 /// </summary>
-public static class CoreServicesLogger
+internal static class CoreServicesLogger
 {
     public static IEnumerable<LogMessage> Log(IServiceProvider services)
     {

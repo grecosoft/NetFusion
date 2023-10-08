@@ -39,6 +39,7 @@ public class CompositeApp : ICompositeApp
         
     private readonly ILogger<CompositeApp> _logger;
     private readonly HealthCheckBuilder _healthCheckBuilder;
+    private readonly CompositeAppLogger _compositeAppLogger;
 
     public IDictionary<string, object> Properties { get; } = new Dictionary<string, object>();
         
@@ -55,6 +56,7 @@ public class CompositeApp : ICompositeApp
         _builder = builder ?? throw new ArgumentNullException(nameof(builder));
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _compositeAppLogger = new CompositeAppLogger(builder);
             
         HostPlugin = new PluginSummary(builder.HostPlugin);
 
@@ -62,15 +64,14 @@ public class CompositeApp : ICompositeApp
     }
 
     public static ICompositeApp Instance => _instance ?? 
-                                            throw new BootstrapException("Composite Application has not been created.");
+        throw new BootstrapException("Composite Application has not been created.");
 
 
     // --------------------------- [Starting Composite Application] -----------------------------------
         
     // At this point, the composite-application has been created from all the registered plugins and
     // all modules have been initialized and services registered.  This is the last call allowing each
-    // plugin module to execute code within the created dependency-injection container before the host
-    // application is started.
+    // plugin module to execute code before the host application is started.
     public async Task StartAsync()
     {
         const string startExMsg = "Error Starting Composite Application";
@@ -162,7 +163,7 @@ public class CompositeApp : ICompositeApp
         get
         {
             ThrowIfStopped();
-            return _builder.CompositeLog.GetLog();
+            return _compositeAppLogger.GetLog();
         }
     }
         

@@ -32,9 +32,6 @@ public class EntityContextFixture
 
     public EntityContext CreateContext(ConnectionSettings? settings = null)
     {
-        var builder = new Mock<ICompositeAppBuilder>();
-        builder.Setup(m => m.HostPlugin).Returns(new MockHostPlugin());
-        
         var externalSettings = new ExternalEntitySettings(settings ?? new ConnectionSettings());
 
         MockConnection.Setup(m => m.ExternalSettings).Returns(externalSettings);

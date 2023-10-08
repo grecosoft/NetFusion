@@ -4,15 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Common.Base;
 using NetFusion.Common.Base.Logging;
-using NetFusion.Common.Base.Scripting;
 using NetFusion.Common.Base.Validation;
 using NetFusion.Core.Bootstrap.Plugins;
 
 namespace NetFusion.Core.Bootstrap.Container;
-
 /// <summary>
-/// Provides an implementation used by the host application to build a composite application
-/// from a set of registered plugins.
+/// Provides an implementation used by the host application to build a
+/// composite application from a set of registered plugins.
 ///
 /// https://github.com/grecosoft/NetFusion/wiki/core-bootstrap-overview
 /// </summary>
@@ -64,7 +62,7 @@ internal class CompositeContainerBuilder : ICompositeContainerBuilder
 
     // Populates the IServiceCollection with services registered by all plugin-modules.
     // The end result is a populated service-collection with a registered ICompositeApp
-    // instance that can be started and used for the lifetime of the host.  
+    // instance that can be started/stopped and used for the lifetime of the host.  
     public void Compose(Action<IServiceCollection>? services = null)
     {
         try
@@ -86,9 +84,6 @@ internal class CompositeContainerBuilder : ICompositeContainerBuilder
     private void RegisterRequiredDefaultServices()
     {
         _serviceCollection.AddSingleton<ILoggerFactory, LoggerFactory>();
-            
-        // These services can be overridden by the host:
         _serviceCollection.AddSingleton<IValidationService, ValidationService>();
-        _serviceCollection.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();
     }
 }

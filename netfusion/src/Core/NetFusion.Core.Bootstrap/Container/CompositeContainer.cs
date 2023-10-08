@@ -21,16 +21,10 @@ namespace NetFusion.Core.Bootstrap.Container;
 /// </summary>
 internal class CompositeContainer : ICompositeContainer 
 {
-    // Microsoft Service-Collection populated by Plugin Modules:
-    private readonly IServiceCollection _serviceCollection;
-        
-    // Composite Structure:
     private readonly List<IPlugin> _plugins = new();
     private readonly CompositeAppBuilder _builder;
-
-    /// <summary>
-    /// Indicates if the container has been composed from a set of registered plugins.
-    /// </summary>
+    
+    public IServiceCollection ServiceCollection { get; }
     public bool IsComposed { get; private set; }
 
     // --------------------------- [Container Initialization] -------------------------------
@@ -40,7 +34,7 @@ internal class CompositeContainer : ICompositeContainer
     {
         if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-        _serviceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
+        ServiceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
         _builder = new CompositeAppBuilder(serviceCollection, configuration);
     }
         
@@ -49,12 +43,7 @@ internal class CompositeContainer : ICompositeContainer
     /// from a list of registered plugins.
     /// </summary>
     public ICompositeAppBuilder AppBuilder => _builder;
-        
-    /// <summary>
-    /// Adds a plugin to the composite-container.  If the plugin type is already registered,
-    /// the request is ignored.  This allows a plugin to register it's dependent plugins.
-    /// </summary>
-    /// <typeparam name="T">The type of the plugin to be added.</typeparam>
+    
     public void RegisterPlugin<T>() where T : IPlugin, new()  
     {
         if (IsPluginRegistered<T>())
@@ -65,11 +54,7 @@ internal class CompositeContainer : ICompositeContainer
         IPlugin plugin = new T();
         _plugins.Add(plugin);
     }
-        
-    /// <summary>
-    /// Called by unit-tests to add a collection of configured mock plugins.
-    /// </summary>
-    /// <param name="plugins">The list of plugins to be added.</param>
+    
     public void RegisterPlugins(params IPlugin[] plugins) => 
         _plugins.AddRange(plugins);
     
@@ -77,12 +62,7 @@ internal class CompositeContainer : ICompositeContainer
         _plugins.Any(p => p.GetType() == typeof(T));
 
     // --------------------------- [Configurations] -------------------------------
-
-    /// <summary>
-    /// Finds a configuration belonging to one of the registered plugins.
-    /// </summary>
-    /// <typeparam name="T">The type of the IPluginConfig derived configuration.</typeparam>
-    /// <returns>Reference to the configuration or an exception if not found.</returns>
+    
     public T GetPluginConfig<T>() where T : IPluginConfig
     {
         var pluginConfig = _plugins.SelectMany(p => p.Configs)
@@ -108,15 +88,15 @@ internal class CompositeContainer : ICompositeContainer
     public void Compose(ITypeResolver typeResolver)
     {
         if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
-
-        string version = GetType().Assembly.GetName().Version?.ToString() ?? string.Empty;
-            
+        
         try
         {
             if (IsComposed)
             {
                 throw new BootstrapException("Container already composed", "already-composed");
             }
+            
+            string version = GetType().Assembly.GetName().Version?.ToString() ?? string.Empty;
 
             NfExtensions.Logger.Log<CompositeContainer>(LogLevel.Information, 
                 "NetFusion {Version} Bootstrapping", version);
@@ -125,7 +105,7 @@ internal class CompositeContainer : ICompositeContainer
             _builder.AssemblePlugins(_plugins.ToArray(), typeResolver);
             _builder.RegisterPluginServices();
 
-            LogComposedPlugins(_plugins, _serviceCollection);
+            LogComposedPlugins(_plugins, ServiceCollection);
 
             IsComposed = true;
         }

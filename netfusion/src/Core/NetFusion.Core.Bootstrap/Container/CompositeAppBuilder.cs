@@ -8,7 +8,6 @@ using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Core.Bootstrap.Catalog;
 using NetFusion.Core.Bootstrap.Exceptions;
-using NetFusion.Core.Bootstrap.Logging;
 using NetFusion.Core.Bootstrap.Plugins;
 
 namespace NetFusion.Core.Bootstrap.Container;
@@ -33,14 +32,10 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     public IPlugin[] AppPlugins { get; private set; } = Array.Empty<IPlugin>();
     public IPlugin[] CorePlugins { get; private set; } = Array.Empty<IPlugin>();
         
-    // Logging Properties:
-    public CompositeAppLogger CompositeLog { get; private set; }
-        
     public CompositeAppBuilder(IServiceCollection serviceCollection, IConfiguration configuration)
     {
         ServiceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
         Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        CompositeLog = new CompositeAppLogger(this, ServiceCollection);
     }
         
     // =========================== [Plug Composition] ==========================
@@ -51,7 +46,7 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     /// </summary>
     /// <param name="plugins">List of all plugins used to build the composite application.</param>
     /// <param name="typeResolver">The type resolver.</param>
-    internal void AssemblePlugins(IPlugin[] plugins, ITypeResolver typeResolver)
+    public void AssemblePlugins(IPlugin[] plugins, ITypeResolver typeResolver)
     {
         if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
         if (plugins == null) throw new ArgumentNullException(nameof(plugins));
@@ -289,7 +284,7 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     // by a plugin that can be injected into other components.
     //
     // https://github.com/grecosoft/NetFusion/wiki/core-modules-service-registration
-    internal void RegisterPluginServices()
+    public void RegisterPluginServices()
     {
         // Plugin Service Registrations:
         RegisterCorePluginServices();
@@ -330,6 +325,14 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
         ScanForServices(new []{ HostPlugin }, hostPluginTypes);
     }
 
+    private void RegisterPluginServices(IPlugin[] plugins)
+    {
+        foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
+        {
+            module.RegisterServices(ServiceCollection);
+        }
+    }
+    
     private void ScanForServices(IPlugin[] plugins, Type[] pluginTypes)
     {
         var catalog = ServiceCollection.CreateCatalog(pluginTypes);
@@ -337,14 +340,6 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
         foreach (var module in plugins.SelectMany(p => p.Modules))
         {
             module.ScanForServices(catalog);
-        }
-    } 
-        
-    private void RegisterPluginServices(IPlugin[] plugins)
-    {
-        foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
-        {
-            module.RegisterServices(ServiceCollection);
         }
     }
         

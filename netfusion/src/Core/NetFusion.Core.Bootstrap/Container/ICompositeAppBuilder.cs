@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Core.Bootstrap.Logging;
 using NetFusion.Core.Bootstrap.Plugins;
 
 namespace NetFusion.Core.Bootstrap.Container;
@@ -53,9 +52,4 @@ public interface ICompositeAppBuilder
     /// The .net service collection populated by plugin modules.
     /// </summary>
     IServiceCollection ServiceCollection { get; }
-
-    /// <summary>
-    /// Reference to a log showing how the application was composed from plugins.
-    /// </summary>
-    CompositeAppLogger CompositeLog { get; }
 }

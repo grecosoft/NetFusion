@@ -224,7 +224,7 @@ public class ContainerAssert
             
         _fixture.AssureContainerComposed();
 
-        assert(_fixture.GetOrBuildContainer().AppBuilder.ServiceCollection);
+        assert(_fixture.GetOrBuildContainer().ServiceCollection);
         return this;
     }
         
