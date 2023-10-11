@@ -15,7 +15,7 @@ namespace NetFusion.Integration.ServiceBus.Plugin.Modules;
     {
         private ServiceBusConfig? _busPluginConfig;
         private BusSettings? _busSettings;
-        private readonly IDictionary<string, NamespaceConnection> _connections;
+        private readonly IDictionary<string, NamespaceConnection> _connections = new Dictionary<string, NamespaceConnection>();
         
         public ServiceBusConfig BusPluginConfiguration => _busPluginConfig ??
             throw new NullReferenceException("Bus Configuration not Initialized");
@@ -23,10 +23,7 @@ namespace NetFusion.Integration.ServiceBus.Plugin.Modules;
         private BusSettings BusSettings => _busSettings ?? 
             throw new NullReferenceException("Bus Settings not Initialized");
         
-        public NamespaceModule()
-        {
-            _connections = new Dictionary<string, NamespaceConnection>();
-        }
+        private ILogger<NamespaceModule> Logger => Context.LoggerFactory.CreateLogger<NamespaceModule>();
 
         public override void Initialize()
         {
@@ -39,7 +36,7 @@ namespace NetFusion.Integration.ServiceBus.Plugin.Modules;
             }
             catch (SettingsValidationException ex)
             {
-                NfExtensions.Logger.Log<NamespaceModule>(LogLevel.Error, ex.Message);
+                Logger.LogError(ex, "Validation Exception");
                 throw;
             }
         }

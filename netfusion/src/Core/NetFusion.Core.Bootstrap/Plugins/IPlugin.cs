@@ -16,10 +16,7 @@ public interface IPlugin
     string PluginId { get; }
         
     /// <summary>
-    /// The type of the plugin used to determine the types from which it can
-    /// be composed.  Core plugins are composed from all other registered plugin
-    /// types.  Whereas Application centric plugins are only composed from types
-    /// contained in other application plugins. 
+    /// The type of the plugin used to determine the types from which it can be composed. 
     /// </summary>
     PluginTypes PluginType { get; }    
         
@@ -39,23 +36,20 @@ public interface IPlugin
     string AssemblyVersion { get; }
         
     /// <summary>
-    /// The modules for which the plugin is composed.  Modules are used to
-    /// organize the code for a plugin's implementation and are invoked when
-    /// the CompositeContainer is built.
+    /// The modules for which the plugin is composed.  Modules are used to organize the code
+    /// for a plugin's implementation and are invoked when the CompositeContainer is built.
     /// </summary>
     IEnumerable<IPluginModule> Modules { get; }
         
     /// <summary>
-    /// The configurations defined by the plugin. A plugin configuration
-    /// can be set by the host application or by another plugin to extend
-    /// the behaviors of the plugin defining the configuration.
+    /// The configurations defined by the plugin. A plugin configuration can be set by the host
+    /// application or by another plugin to extend the behaviors of the plugin defining the configuration.
     /// </summary>
     IEnumerable<IPluginConfig> Configs { get; }
         
     /// <summary>
-    /// The types defined by the plugin.  These are all types contained within
-    /// the assembly of the plugin that are public and can be accessed by other
-    /// plugins. 
+    /// The types defined by the plugin.  These are all types contained within the assembly of the plugin
+    /// that are public and can be accessed by other plugins. 
     /// </summary>
     IEnumerable<Type> Types { get; }
         
@@ -80,8 +74,7 @@ public interface IPlugin
     /// <param name="assemblyName">The name of the assembly containing the plugin.</param>
     /// <param name="assemblyVersion">The version of the assembly containing the plugin.</param>
     /// <param name="pluginTypes">The public types contained within the assembly of the plugin.</param>
-    void SetPluginMeta(string assemblyName, string assemblyVersion,
-        IEnumerable<Type> pluginTypes);
+    void SetPluginMeta(string assemblyName, string assemblyVersion, IEnumerable<Type> pluginTypes);
 
     /// <summary>
     /// Determines if a given type is defined with a plugin.

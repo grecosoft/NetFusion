@@ -15,14 +15,6 @@ namespace NetFusion.Core.Bootstrap.Container;
 /// </summary>
 public class TypeResolver : ITypeResolver
 {
-    // ReSharper disable once NotAccessedField.Local
-    private readonly IExtendedLogger _logger;
-        
-    public TypeResolver(IExtendedLogger logger)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
-        
     public void SetPluginMeta(IPlugin plugin)
     {
         if (plugin == null) throw new ArgumentNullException(nameof(plugin));

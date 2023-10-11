@@ -66,5 +66,4 @@ public class HealthAspectCheck
     /// <returns>Status a associated with an aspect of a module.</returns>
     public static HealthAspectCheck ForUnhealthy(string name, string value) =>
         For(name, value, HealthCheckStatusType.Unhealthy);
-
 }

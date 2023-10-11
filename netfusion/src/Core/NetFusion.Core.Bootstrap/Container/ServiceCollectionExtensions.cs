@@ -1,6 +1,8 @@
 using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NetFusion.Common.Base;
 using NetFusion.Common.Base.Logging;
 
 namespace NetFusion.Core.Bootstrap.Container;
@@ -32,13 +34,17 @@ public static class ServiceCollectionExtensions
     /// Microsoft's ILogger is available via dependency injection.</param>
     /// <returns>Builder used to create composite-container instance.</returns>
     public static ICompositeContainerBuilder CompositeContainer(this IServiceCollection services,
-        IConfiguration configuration, IExtendedLogger extendedLogger)
+        IConfiguration configuration, 
+        ILoggerFactory bootstrapLoggerFactory,
+        IExtendedLogger extendedLogger)
     {
         if (services == null) throw new ArgumentNullException(nameof(services));
         if (configuration == null) throw new ArgumentNullException(nameof(configuration));
         if (extendedLogger == null) throw new ArgumentNullException(nameof(extendedLogger));
             
-        var resolver = new TypeResolver(extendedLogger);
-        return new CompositeContainerBuilder(services, configuration, resolver, extendedLogger);
+        NfExtensions.Logger = extendedLogger ?? throw new ArgumentNullException(nameof(extendedLogger));
+        
+        var resolver = new TypeResolver();
+        return new CompositeContainerBuilder(services, bootstrapLoggerFactory, configuration, resolver);
     }
 }

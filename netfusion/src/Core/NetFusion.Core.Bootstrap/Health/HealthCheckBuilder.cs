@@ -18,6 +18,7 @@ internal class HealthCheckBuilder
     {
         if (modules == null) throw new ArgumentNullException(nameof(modules));
         
+        // For each plugin, determine which modules provide health-checks:
         _pluginHealthProviders = modules.Select(m => new
         {
             m.Context.Plugin,

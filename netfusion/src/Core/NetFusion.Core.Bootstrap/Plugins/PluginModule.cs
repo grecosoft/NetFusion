@@ -10,7 +10,7 @@ namespace NetFusion.Core.Bootstrap.Plugins;
 
 /// <summary>
 /// One or more modules are defined by a plugin to organize their implementation. 
-/// This includes the registering of services  within the dependency-injection container, 
+/// This includes the registering of services within the dependency-injection container, 
 /// the discovering of known-type implementations, and the execution of any needed
 /// logic upon startup and shutdown.
 /// </summary>
@@ -34,7 +34,7 @@ public abstract class PluginModule : IPluginModule
     /// </summary>
     /// <returns>Provides context information associated with plugin.</returns>
     public ModuleContext Context => _context ?? 
-                                    throw new BootstrapException("Module Context not set.");
+        throw new BootstrapException("Module Context not set.");
 
     /// <summary>
     /// The first method called on the module.  This method is called on all modules

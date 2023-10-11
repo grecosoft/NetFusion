@@ -18,13 +18,13 @@ public interface IMessage
     /// used by different message publishers to associate context based on
     /// its messaging implementation.
     /// </summary>
-    /// <param name="context"></param>
+    /// <param name="context">The context associated with message.</param>
     void SetContext(object context);
     
     /// <summary>
     /// Returns a context associated with the message.
     /// </summary>
-    /// <typeparam name="TContext">The type of the context to return</typeparam>
+    /// <typeparam name="TContext">The type of the context to return.</typeparam>
     /// <returns>Reference to the context or an exception if not found.</returns>
     TContext GetContext<TContext>();
 }

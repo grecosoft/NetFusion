@@ -21,7 +21,6 @@ internal static class CoreServicesLogger
     public static IEnumerable<LogMessage> Log(IServiceProvider services)
     {
         yield return LogSerializationManager(services);
-        yield return LogScriptingService(services);
     }
 
     private static LogMessage LogSerializationManager(IServiceProvider services)
@@ -45,22 +44,9 @@ internal static class CoreServicesLogger
         };
 
         logMessage.WithProperties(
-            LogProperty.ForName("ManagerType", contentTypes)
+            LogProperty.ForName("ManagerTypes", contentTypes)
         );
 
         return logMessage;
-    }
-        
-    private static LogMessage LogScriptingService(IServiceProvider services)
-    {
-        var scriptingSrv = services.GetService<IEntityScriptingService>();
-        if (scriptingSrv == null)
-        {
-            return LogMessage.For(LogLevel.Warning, "Scripting Service not Registered");
-        }
-
-        return LogMessage.For(LogLevel.Information, "Scripting Service Registered")
-            .WithProperties(LogProperty.ForName("Service", scriptingSrv.GetType().AssemblyQualifiedName!)
-            ); 
     }
 }

@@ -17,16 +17,13 @@ namespace NetFusion.Integration.Redis.Plugin.Modules
     {
         // Maps connection name specified within the host's application settings
         // to the corresponding created connection. 
-        private readonly Dictionary<string, CachedConnection> _connections;
+        private readonly Dictionary<string, CachedConnection> _connections = new();
         private RedisSettings? _redisSettings;
-
-        public ConnectionModule()
-        {
-            _connections = new Dictionary<string, CachedConnection>();            
-        }
 
         private RedisSettings RedisSettings => _redisSettings ?? 
             throw new NullReferenceException("Settings have not been initialize.");
+        
+        private ILogger<ConnectionModule> Logger => Context.LoggerFactory.CreateLogger<ConnectionModule>();
 
         public override void Configure()
         {
@@ -37,7 +34,7 @@ namespace NetFusion.Integration.Redis.Plugin.Modules
             }
             catch (SettingsValidationException ex)
             {
-                NfExtensions.Logger.Log<ConnectionModule>(LogLevel.Error, ex.Message);
+                Logger.Log(LogLevel.Error, ex.Message);
                 throw;
             }
         }
@@ -64,7 +61,7 @@ namespace NetFusion.Integration.Redis.Plugin.Modules
                 }
 
                 // Create and cache the connection.
-                var logger = new RedisLogTextWriter(Context.Logger);
+                var logger = new RedisLogTextWriter(Logger);
                 var connection = await ConnectionMultiplexer.ConnectAsync(connOptions, logger);
                 
                 _connections[connSetting.Name] = new CachedConnection(connOptions, connection);
@@ -108,7 +105,7 @@ namespace NetFusion.Integration.Redis.Plugin.Modules
             
             if (! cachedConn.Connection.IsConnected)
             {
-                Context.Logger.LogError("Requested database connection {dbConfigName} is currently in a disconnected state.",
+                Logger.LogError("Requested database connection {dbConfigName} is currently in a disconnected state.",
                     connectionName);
             }
 

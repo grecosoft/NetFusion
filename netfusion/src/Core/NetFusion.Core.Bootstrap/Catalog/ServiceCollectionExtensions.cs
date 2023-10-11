@@ -10,6 +10,21 @@ namespace NetFusion.Core.Bootstrap.Catalog;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
+    /// Creates a new type catalog for a given set of types.
+    /// </summary>
+    /// <param name="services">The service collection delegated to by the created catalog.</param>
+    /// <param name="pluginTypes">The types added to the catalog to be filtered.</param>
+    /// <returns>Type catalog instance.</returns>
+    public static ITypeCatalog CreateCatalog(this IServiceCollection services,
+        IEnumerable<Type> pluginTypes)
+    {
+        if (services == null) throw new ArgumentNullException(nameof(services));
+        if (pluginTypes == null) throw new ArgumentNullException(nameof(pluginTypes));
+
+        return new TypeCatalog(services, pluginTypes);
+    }
+    
+    /// <summary>
     /// Registers a service instance for a list of supported contract types.
     /// </summary>
     /// <param name="services">Reference to service collection.</param>
@@ -30,20 +45,5 @@ public static class ServiceCollectionExtensions
         }
 
         return services;
-    }
-
-    /// <summary>
-    /// Creates a new type catalog for a given set of types.
-    /// </summary>
-    /// <param name="services">The service collection delegated to by the created catalog.</param>
-    /// <param name="pluginTypes">The types added to the catalog to be filtered.</param>
-    /// <returns>Type catalog instance.</returns>
-    public static ITypeCatalog CreateCatalog(this IServiceCollection services,
-        IEnumerable<Type> pluginTypes)
-    {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-        if (pluginTypes == null) throw new ArgumentNullException(nameof(pluginTypes));
-
-        return new TypeCatalog(services, pluginTypes);
     }
 }

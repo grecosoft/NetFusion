@@ -2,12 +2,11 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Common.Base;
-using NetFusion.Common.Base.Logging;
 using NetFusion.Common.Base.Validation;
 using NetFusion.Core.Bootstrap.Plugins;
 
 namespace NetFusion.Core.Bootstrap.Container;
+
 /// <summary>
 /// Provides an implementation used by the host application to build a
 /// composite application from a set of registered plugins.
@@ -16,25 +15,23 @@ namespace NetFusion.Core.Bootstrap.Container;
 /// </summary>
 internal class CompositeContainerBuilder : ICompositeContainerBuilder
 {
+    private readonly ILogger<CompositeContainerBuilder> _bootstrapLogger;
     private readonly IServiceCollection _serviceCollection;
     private readonly ITypeResolver _typeResolver;
 
     private readonly CompositeContainer _container;
         
     public CompositeContainerBuilder(IServiceCollection serviceCollection,
+        ILoggerFactory bootstrapLoggerFactory,
         IConfiguration configuration,
-        ITypeResolver typeResolver,
-        IExtendedLogger extendedLogger)
+        ITypeResolver typeResolver)
     {
         if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            
+
+        _bootstrapLogger = bootstrapLoggerFactory.CreateLogger<CompositeContainerBuilder>();
         _serviceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
         _typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
-
-        // Set property on static class referenced to write logs before .NET's ILogger can be referenced.
-        NfExtensions.Logger = extendedLogger ?? throw new ArgumentNullException(nameof(extendedLogger));
-
-        _container = new CompositeContainer(serviceCollection, configuration);
+        _container = new CompositeContainer(serviceCollection, bootstrapLoggerFactory, configuration);
     }
         
     public ICompositeContainerBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new()
@@ -76,7 +73,7 @@ internal class CompositeContainerBuilder : ICompositeContainerBuilder
         }
         catch(Exception ex)
         {
-            NfExtensions.Logger.LogError<CompositeContainerBuilder>(ex, "Error building Composite Container");
+            _bootstrapLogger.LogError(ex, "Error building Composite Container");
             throw;
         }
     }

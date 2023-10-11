@@ -1,6 +1,5 @@
 using EasyNetQ;
 using EasyNetQ.Persistent;
-using NetFusion.Common.Base;
 using NetFusion.Core.Settings;
 using NetFusion.Integration.RabbitMQ.Bus;
 using NetFusion.Integration.RabbitMQ.Internal;
@@ -25,6 +24,8 @@ public class BusModule : PluginModule,
 
     public RabbitMqConfig RabbitMqConfig => _rabbitMqConfig ?? 
         throw new NullReferenceException("Plugin configuration not initialized");
+
+    private ILogger<BusModule> Logger => Context.LoggerFactory.CreateLogger<BusModule>();
     
     public override void Initialize()
     {
@@ -37,7 +38,7 @@ public class BusModule : PluginModule,
         }
         catch (SettingsValidationException ex)
         {
-            NfExtensions.Logger.Log<BusModule>(LogLevel.Error, ex.Message);
+            Logger.LogError(ex, "Validation Exception");
             throw;
         }
     }
@@ -108,7 +109,7 @@ public class BusModule : PluginModule,
                 return;
             }
                 
-            Context.Logger.LogInformation("Connection reestablished to broker {BusName} ", conn.BusName);
+            Logger.LogInformation("Connection reestablished to broker {BusName} ", conn.BusName);
 
             // If this is not the first time connecting, then the connection 
             // event is for a reconnection from a dropped connection.

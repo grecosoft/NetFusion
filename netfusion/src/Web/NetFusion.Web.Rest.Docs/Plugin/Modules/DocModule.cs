@@ -25,6 +25,8 @@ public class DocModule : PluginModule,
         
     public RestDocConfig RestDocConfig { get; private set; }
     public HalComments HalComments { get; private set; }
+    
+    private ILogger<DocModule> Logger => Context.LoggerFactory.CreateLogger<DocModule>();
         
     public override void Initialize()
     {
@@ -63,7 +65,7 @@ public class DocModule : PluginModule,
         }
         catch (Exception ex)
         {
-            Context.Logger.LogError(ex, "Error reading HAL Comments from path: {PathName}", halCommentFilePath);
+            Logger.LogError(ex, "Error reading HAL Comments from path: {PathName}", halCommentFilePath);
         }
     }
 }

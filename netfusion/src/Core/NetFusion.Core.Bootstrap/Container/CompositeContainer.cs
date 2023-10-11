@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Common.Base;
 using NetFusion.Common.Base.Logging;
 using NetFusion.Core.Bootstrap.Exceptions;
 using NetFusion.Core.Bootstrap.Logging;
@@ -21,21 +20,27 @@ namespace NetFusion.Core.Bootstrap.Container;
 /// </summary>
 internal class CompositeContainer : ICompositeContainer 
 {
+    private readonly ILogger<CompositeContainer> _bootstrapLogger;
+    
     private readonly List<IPlugin> _plugins = new();
     private readonly CompositeAppBuilder _builder;
     
     public IServiceCollection ServiceCollection { get; }
     public bool IsComposed { get; private set; }
-
+    
     // --------------------------- [Container Initialization] -------------------------------
 
     // Instantiated by CompositeContainerBuilder.
-    public CompositeContainer(IServiceCollection serviceCollection, IConfiguration configuration)
+    public CompositeContainer(IServiceCollection serviceCollection, 
+        ILoggerFactory bootstrapLoggerFactory, 
+        IConfiguration configuration)
     {
         if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
         ServiceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
-        _builder = new CompositeAppBuilder(serviceCollection, configuration);
+        
+        _bootstrapLogger = bootstrapLoggerFactory.CreateLogger<CompositeContainer>();
+        _builder = new CompositeAppBuilder(serviceCollection, bootstrapLoggerFactory, configuration);
     }
         
     /// <summary>
@@ -98,8 +103,7 @@ internal class CompositeContainer : ICompositeContainer
             
             string version = GetType().Assembly.GetName().Version?.ToString() ?? string.Empty;
 
-            NfExtensions.Logger.Log<CompositeContainer>(LogLevel.Information, 
-                "NetFusion {Version} Bootstrapping", version);
+            _bootstrapLogger.LogInformation("NetFusion {Version} Bootstrapping", version);
                 
             // Delegate to the builder:
             _builder.AssemblePlugins(_plugins.ToArray(), typeResolver);
@@ -111,22 +115,22 @@ internal class CompositeContainer : ICompositeContainer
         }
         catch (BootstrapException ex)
         {
-            NfExtensions.Logger.LogError<CompositeContainer>(ex, "Bootstrap Exception");
+            _bootstrapLogger.LogError(ex, "Bootstrap Exception");
             throw;
         }
         catch (Exception ex)
         {
-            NfExtensions.Logger.LogError<CompositeContainer>(ex, "Bootstrap Exception");
+            _bootstrapLogger.LogError(ex, "Bootstrap Exception");
             throw new BootstrapException("Unexpected container error.  See Inner Exception.", ex);
         }
     }
 
-    private static void LogComposedPlugins(IEnumerable<IPlugin> plugins, IServiceCollection services)
+    private void LogComposedPlugins(IEnumerable<IPlugin> plugins, IServiceCollection services)
     {
         foreach (var plugin in plugins)
         {
             LogMessage pluginLog = PluginLogger.Log(plugin, services);
-            NfExtensions.Logger.Log<CompositeContainer>(pluginLog);
+            _bootstrapLogger.Log(pluginLog);
         }
     }
 }

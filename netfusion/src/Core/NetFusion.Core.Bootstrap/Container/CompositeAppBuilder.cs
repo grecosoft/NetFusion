@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Core.Bootstrap.Catalog;
@@ -23,6 +24,7 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     // .NET Core Service Abstractions:
     public IServiceCollection ServiceCollection { get; }
     public IConfiguration Configuration { get; }
+    public ILoggerFactory BootstrapLoggerFactory { get; }
         
     public IPlugin[] AllPlugins { get; private set; } = Array.Empty<IPlugin>();
     public IPluginModule[] AllModules { get; private set; } = Array.Empty<IPluginModule>();
@@ -32,10 +34,13 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     public IPlugin[] AppPlugins { get; private set; } = Array.Empty<IPlugin>();
     public IPlugin[] CorePlugins { get; private set; } = Array.Empty<IPlugin>();
         
-    public CompositeAppBuilder(IServiceCollection serviceCollection, IConfiguration configuration)
+    public CompositeAppBuilder(IServiceCollection serviceCollection, 
+        ILoggerFactory bootstrapLoggerFactory, 
+        IConfiguration configuration)
     {
         ServiceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
         Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        BootstrapLoggerFactory = bootstrapLoggerFactory;
     }
         
     // =========================== [Plug Composition] ==========================
@@ -281,7 +286,7 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
    
     // Allows each module to register services that can be injected into
     // other components.  These services expose functionality implemented
-    // by a plugin that can be injected into other components.
+    // by a plugin that can be injected into other components at runtime.
     //
     // https://github.com/grecosoft/NetFusion/wiki/core-modules-service-registration
     public void RegisterPluginServices()

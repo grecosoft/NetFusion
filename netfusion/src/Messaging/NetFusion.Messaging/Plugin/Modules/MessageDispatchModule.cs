@@ -26,6 +26,8 @@ public class MessageDispatchModule : PluginModule,
     {
         _inProcessDispatchers = Enumerable.Empty<MessageDispatcher>().ToLookup(e => e.MessageType);
     }
+    
+    private ILogger<MessageDispatchModule> Logger => Context.LoggerFactory.CreateLogger<MessageDispatchModule>();
         
     // ---------------------- [Plugin Initialization] ----------------------
         
@@ -113,8 +115,7 @@ public class MessageDispatchModule : PluginModule,
 
         if (noHandlerMessages.Any())
         {
-            NfExtensions.Logger.Log<MessageDispatchModule>(LogLevel.Warning, 
-                "Handlers not found for the following messages: {MessageTypes}", 
+            Logger.LogWarning("Handlers not found for the following messages: {MessageTypes}", 
                 string.Join(",", noHandlerMessages));
         }
 
@@ -125,8 +126,7 @@ public class MessageDispatchModule : PluginModule,
 
         if (multipleHandlerMessages.Any())
         {
-            NfExtensions.Logger.Log<MessageDispatchModule>(LogLevel.Warning,
-                "Handlers not found for the following messages: {MessageTypes}", 
+            Logger.LogWarning("Handlers not found for the following messages: {MessageTypes}", 
                 string.Join(",", multipleHandlerMessages));
         }
     }

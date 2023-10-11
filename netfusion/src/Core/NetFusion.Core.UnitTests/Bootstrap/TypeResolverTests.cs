@@ -14,7 +14,7 @@ public class TypeResolverTests
     public void SetPluginMetadata_FromAssembly()
     {
         // Arrange:
-        var typeResolver = new TypeResolver(new NullExtendedLogger());
+        var typeResolver = new TypeResolver();
         var plugin = new MockResolvedPlugin();
             
         // Test:
@@ -36,7 +36,7 @@ public class TypeResolverTests
     public void PopulatesModuleProperties_ReferencingKnownTypes()
     {
         // Arrange:
-        var typeResolver = new TypeResolver(new NullExtendedLogger());
+        var typeResolver = new TypeResolver();
         var plugin = new MockResolvedPlugin();
             
         // Act:
@@ -61,7 +61,7 @@ public class TypeResolverTests
     public void PopulatesModuleProperties_RecordedForLogging()
     {
         // Arrange:
-        var typeResolver = new TypeResolver(new NullExtendedLogger());
+        var typeResolver = new TypeResolver();
         var plugin = new MockResolvedPlugin();
             
         // Act:

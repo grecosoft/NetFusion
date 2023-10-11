@@ -2,6 +2,8 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using NetFusion.Common.Base;
 using NetFusion.Common.Base.Logging;
 using NetFusion.Core.Bootstrap.Container;
 
@@ -34,7 +36,12 @@ public static class ServiceCollectionExtensions
         if (configuration == null) throw new ArgumentNullException(nameof(configuration));
         if (resolver == null) throw new ArgumentNullException(nameof(resolver));
         if (extendedLogger == null) throw new ArgumentNullException(nameof(extendedLogger));
+
+        NfExtensions.Logger = extendedLogger;
         
-        return new CompositeContainerBuilder(services, configuration, resolver, extendedLogger);
+        return new CompositeContainerBuilder(services,
+            LoggerFactory.Create(_ => { }), 
+            configuration, 
+            resolver);
     }
 }

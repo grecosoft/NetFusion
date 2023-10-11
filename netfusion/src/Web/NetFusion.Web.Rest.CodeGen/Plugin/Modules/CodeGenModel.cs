@@ -26,7 +26,9 @@ public class CodeGenModule : PluginModule,
     private Type[] _resourceTypes = Array.Empty<Type>();
 
     public RestCodeGenConfig CodeGenConfig => _codeGenConfig ?? 
-                                              throw new InvalidOperationException("Code Generation Configuration not Initialized");
+        throw new InvalidOperationException("Code Generation Configuration not Initialized");
+    
+    private ILogger<CodeGenModule> Logger => Context.LoggerFactory.CreateLogger<CodeGenModule>();
         
     public override void Initialize()
     {
@@ -57,11 +59,11 @@ public class CodeGenModule : PluginModule,
     {
         if (CodeGenConfig.IsGenerationDisabled)
         {
-            Context.Logger.LogWarning("TypeScript code generation is disabled.");
+            Logger.LogWarning("TypeScript code generation is disabled.");
             return base.OnRunModuleAsync(services);
         }
             
-        Context.Logger.LogInformation("Generating TypeScript for Microservice REST API.");
+        Logger.LogInformation("Generating TypeScript for Microservice REST API.");
             
         try
         {
@@ -73,13 +75,13 @@ public class CodeGenModule : PluginModule,
             var codeSpec = new ResourceGenerationSpec(_resourceTypes);
             var files = codeGenerator.Generate(new[] { codeSpec });
 
-            Context.Logger.LogInformation(
+            Logger.LogInformation(
                 "TypeScript Code Generation Completed for {NumberFiles} files.  See Composite Log for Details.",
                 files.Count());
         }
         catch (Exception ex)
         {
-            Context.Logger.LogError(ex, "There was an issue generating TypeScript.");
+            Logger.LogError(ex, "There was an issue generating TypeScript.");
         }
 
         return base.OnStartModuleAsync(services);
