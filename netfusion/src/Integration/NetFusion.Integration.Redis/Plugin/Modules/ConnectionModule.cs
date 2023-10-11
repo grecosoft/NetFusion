@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using NetFusion.Common.Base;
 using NetFusion.Core.Bootstrap.Plugins;
 using NetFusion.Core.Settings;
 using NetFusion.Integration.Redis.Internal;

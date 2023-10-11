@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Common.Base.Logging;
-using NetFusion.Common.Base.Scripting;
 using NetFusion.Common.Base.Serialization;
 
 namespace NetFusion.Core.Bootstrap.Logging;

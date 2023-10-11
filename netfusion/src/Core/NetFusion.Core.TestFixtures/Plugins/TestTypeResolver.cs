@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NetFusion.Common.Base.Logging;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.Bootstrap.Plugins;

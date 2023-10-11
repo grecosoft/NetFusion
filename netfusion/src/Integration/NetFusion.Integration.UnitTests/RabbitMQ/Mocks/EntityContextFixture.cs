@@ -2,7 +2,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NetFusion.Common.Base.Serialization;
-using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.TestFixtures.Plugins;
 using NetFusion.Integration.RabbitMQ.Bus;
 using NetFusion.Integration.RabbitMQ.Plugin;

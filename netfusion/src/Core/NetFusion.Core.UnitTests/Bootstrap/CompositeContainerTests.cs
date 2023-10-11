@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Common.Base.Logging;
-using NetFusion.Common.Base.Scripting;
 using NetFusion.Common.Base.Validation;
 using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.TestFixtures.Container;

@@ -1,4 +1,3 @@
-using NetFusion.Common.Base.Logging;
 using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.Bootstrap.Plugins;
 

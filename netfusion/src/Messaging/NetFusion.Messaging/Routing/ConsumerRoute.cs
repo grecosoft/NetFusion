@@ -3,7 +3,7 @@ using System.Reflection;
 namespace NetFusion.Messaging.Routing;
 
 /// <summary>
-/// Represents a message and its associated consumer.
+/// Represents a message type and its associated consumer.
 /// </summary>
 internal class ConsumerRoute : MessageRoute
 {

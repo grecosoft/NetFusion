@@ -1,4 +1,3 @@
-using NetFusion.Common.Base;
 using NetFusion.Core.Settings;
 using NetFusion.Integration.ServiceBus.Internal;
 using NetFusion.Integration.ServiceBus.Namespaces;

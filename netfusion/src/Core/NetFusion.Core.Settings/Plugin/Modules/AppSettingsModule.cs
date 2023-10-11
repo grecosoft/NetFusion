@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NetFusion.Common.Base;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Core.Bootstrap.Catalog;
 using NetFusion.Core.Bootstrap.Plugins;
