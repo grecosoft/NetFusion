@@ -40,13 +40,13 @@ public class InProcessPublisher : IMessagePublisher
     public async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
     {
         MessageDispatcher[] dispatchers = _messagingModule.GetMessageDispatchers(message).ToArray();
-
         AssertMessageDispatchers(message, dispatchers);
+        
         if (dispatchers.Empty())
         {
             return;
         }
-
+        
         var msgLog = CreateLogMessage(message, dispatchers);
 
         // Execute all dispatchers and return the task for the caller to await.
@@ -113,7 +113,7 @@ public class InProcessPublisher : IMessagePublisher
     private Task InvokeDispatcher(MessageDispatcher dispatcher, IMessage message, 
         CancellationToken cancellationToken)
     {
-        // Since this root component use service-locator obtain reference to message consumer.
+        // Since this s root component, use service-locator to obtain reference to message consumer.
         var consumer = _services.GetService(dispatcher.ConsumerType);
         if (consumer == null)
         {
@@ -155,7 +155,7 @@ public class InProcessPublisher : IMessagePublisher
                 MessageType = d.MessageType.FullName,
                 ConsumerType = d.ConsumerType.FullName,
                 HandlerMethod = d.MessageHandlerMethod.Name,
-                d.IsAsync,
+                IsAsync = d.IsTask,
                 d.IncludeDerivedTypes
             }), 
             message.GetType());

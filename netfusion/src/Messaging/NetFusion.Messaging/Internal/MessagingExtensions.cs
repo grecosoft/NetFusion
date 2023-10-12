@@ -53,7 +53,7 @@ namespace NetFusion.Messaging.Internal
             }
 
             if (paramTypes.Length == 2 && paramTypes[0].CanAssignTo<IMessage>()
-                && paramTypes[1].CanAssignTo<CancellationToken>() && methodInfo.IsAsyncMethod())
+                && paramTypes[1].CanAssignTo<CancellationToken>() && methodInfo.IsTaskMethod())
             {
                 return true;
             }
@@ -81,14 +81,10 @@ namespace NetFusion.Messaging.Internal
             });
         }
 
-        private static bool IsInProcessHandler(MethodInfo methodInfo)
-        {
-            return methodInfo.HasAttribute<InProcessHandlerAttribute>();
-        }
-
-        private static bool IncludeDerivedTypes(ParameterInfo parameterInfo)
-        {
-            return parameterInfo.HasAttribute<IncludeDerivedMessagesAttribute>();
-        }
+        private static bool IsInProcessHandler(MethodInfo methodInfo) =>
+            methodInfo.HasAttribute<InProcessHandlerAttribute>();
+        
+        private static bool IncludeDerivedTypes(ParameterInfo parameterInfo) =>
+            parameterInfo.HasAttribute<IncludeDerivedMessagesAttribute>();
     }
 }

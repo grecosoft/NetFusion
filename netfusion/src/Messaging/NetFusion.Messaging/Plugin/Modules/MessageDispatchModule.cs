@@ -155,7 +155,7 @@ public class MessageDispatchModule : PluginModule,
                 {
                     Consumer = d.ConsumerType.FullName,
                     Method = d.MessageHandlerMethod.Name,
-                    d.IsAsync,
+                    IsAsync = d.IsTask,
                     IncludedDerivedTypes = d.IncludeDerivedTypes
                 }).ToArray();
         }

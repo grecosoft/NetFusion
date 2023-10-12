@@ -12,7 +12,7 @@ using NetFusion.Messaging.Internal;
 namespace NetFusion.Integration.Bus.Entities;
 
 /// <summary>
-/// Based module derived by service-bus specific implementations.  Discovers all IBusRouter
+/// Base module derived by service-bus specific implementations.  Discovers all IBusRouter
 /// implementations defining how service-bus entities are created and messages routed.  All
 /// service-bus defined entities are created and subscribed to by invoking the strategies
 /// associated with the entity.

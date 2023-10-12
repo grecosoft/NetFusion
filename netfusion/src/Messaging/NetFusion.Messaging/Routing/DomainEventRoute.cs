@@ -6,10 +6,10 @@ namespace NetFusion.Messaging.Routing;
 /// Message pattern used to route a domain-event to a consumer.
 /// </summary>
 /// <typeparam name="TDomainEvent">Type of domain-event being routed.</typeparam>
-public class DomainRoute<TDomainEvent> : MessageRoute
+public class DomainEventRoute<TDomainEvent> : MessageRoute
     where TDomainEvent: IDomainEvent
 {
-    public DomainRoute(): base(typeof(TDomainEvent)) { }
+    public DomainEventRoute(): base(typeof(TDomainEvent)) { }
     
     /// <summary>
     /// Routes domain-event to a consumer's handler.

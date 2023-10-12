@@ -23,15 +23,15 @@ public abstract class RedisRouter : BusRouterBase
     /// <summary>
     /// Defines a channel to which a domain-event should be published.
     /// </summary>
-    /// <param name="meta">The metadata specifying the channel name.</param>
+    /// <param name="configure">The metadata specifying the channel name.</param>
     /// <typeparam name="TDomainEvent">The type of the domain-event.</typeparam>
-    protected void DefineChannel<TDomainEvent>(Action<PublishMeta<TDomainEvent>> meta)
+    protected void DefineChannel<TDomainEvent>(Action<PublishMeta<TDomainEvent>> configure)
         where TDomainEvent : IDomainEvent
     {
-        if (meta == null) throw new ArgumentNullException(nameof(meta));
+        if (configure == null) throw new ArgumentNullException(nameof(configure));
         
         var channelMeta = new PublishMeta<TDomainEvent>();
-        meta(channelMeta);
+        configure(channelMeta);
 
         if (string.IsNullOrWhiteSpace(channelMeta.ChannelName))
         {
@@ -78,7 +78,7 @@ public abstract class RedisRouter : BusRouterBase
     /// routed when published to the channel.</param>
     /// <typeparam name="TDomainEntity">The type of domain-event received on the channel.</typeparam>
     protected void SubscribeToChannel<TDomainEntity>(string channelName, 
-        Action<DomainRoute<TDomainEntity>> route)
+        Action<DomainEventRoute<TDomainEntity>> route)
         where TDomainEntity : IDomainEvent
     {
         if (string.IsNullOrWhiteSpace(channelName))
@@ -86,7 +86,7 @@ public abstract class RedisRouter : BusRouterBase
 
         if (route == null) throw new ArgumentNullException(nameof(route));
         
-        var domainEvent = new DomainRoute<TDomainEntity>();
+        var domainEvent = new DomainEventRoute<TDomainEntity>();
         route(domainEvent);
 
         var dispatcher = new MessageDispatcher(domainEvent);

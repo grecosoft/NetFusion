@@ -7,7 +7,7 @@ namespace NetFusion.Integration.Bus;
 /// routing patterns.  For each supported messaging pattern, one or more BusEntity
 /// instances are added.  Common messaging patterns are:
 ///     - Sending a command to a queue for processing.
-///     - Sending a command to a queue for process with an asynchronous response on a reply queue.
+///     - Sending a command to a queue for processing with an asynchronous response on a reply queue.
 ///     - Publishing a domain-event to notify one or more interested microservices.
 ///     - RPC message pattern.
 /// </summary>

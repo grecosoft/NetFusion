@@ -17,6 +17,6 @@ public interface IBusRouter : IPluginKnownType
     /// <summary>
     /// Returns the entities associated with the service-bus.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>List of bus entities.</returns>
     IEnumerable<BusEntity> GetBusEntities();
 }

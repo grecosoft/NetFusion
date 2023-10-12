@@ -45,7 +45,7 @@ public class ChannelSubscriberStrategy : BusEntityStrategyBase<ChannelEntityCont
             byte[]? valueData = value;
             if (valueData is null or { Length: 0})
             {
-                Logger.LogError("Message received on channel: {ChannelName} was null or had zero data.", 
+                Logger.LogError("Message received on channel: {ChannelName} was null or had zero bytes.", 
                     _subscriberEntity.EntityName);
                 return;
             }

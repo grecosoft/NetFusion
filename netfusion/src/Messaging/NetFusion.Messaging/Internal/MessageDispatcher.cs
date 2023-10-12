@@ -6,7 +6,7 @@ namespace NetFusion.Messaging.Internal;
 
 /// <summary>
 /// Contains information used to dispatch a message to a consumer's handler at runtime.
-/// This information is gathered by the plugin module during the bootstrap process.
+/// This information is gathered by the plugin modules during the bootstrap process.
 /// </summary>
 public class MessageDispatcher
 {
@@ -30,14 +30,14 @@ public class MessageDispatcher
     public MethodInfo MessageHandlerMethod { get; }
 
     /// <summary>
-    /// Indicates that the handler is an asynchronous method.
+    /// Indicates that the handler method returns a task.
     /// </summary>
-    public bool IsAsync { get; }
+    public bool IsTask { get; }
 
     /// <summary>
     /// Indicates that the handler is an asynchronous method returning a value.
     /// </summary>
-    public bool IsAsyncWithResult { get; }
+    public bool IsTaskWithResult { get; }
 
     /// <summary>
     /// Indicates if an asynchronous message handler can be canceled.
@@ -51,22 +51,22 @@ public class MessageDispatcher
 
     private Func<object, object[], object?> Invoker { get; }
 
-    public MessageDispatcher(MessageRoute router)
+    public MessageDispatcher(MessageRoute route)
     {
-        ConsumerType = router.ConsumerType ?? 
+        ConsumerType = route.ConsumerType ?? 
             throw new NullReferenceException("Dispatcher cannot be created for a route with a null consumer");
         
-        MessageHandlerMethod = router.HandlerMethodInfo ??
+        MessageHandlerMethod = route.HandlerMethodInfo ??
             throw new NullReferenceException("Dispatcher cannot be created for a route with a null handler-method");
         
-        Invoker = router.Invoker ?? 
+        Invoker = route.Invoker ?? 
             throw new NullReferenceException("Dispatcher cannot be created for a route with a null invoker");
         
-        MessageType = router.MessageType;
-        RouteMeta = router.RouteMeta;
-        IsAsync = router.HandlerMethodInfo.IsAsyncMethod();
-        IsAsyncWithResult = router.HandlerMethodInfo.IsAsyncMethodWithResult();
-        IsCancellable = router.HandlerMethodInfo.IsCancellableMethod();
+        MessageType = route.MessageType;
+        RouteMeta = route.RouteMeta;
+        IsTask = route.HandlerMethodInfo.IsTaskMethod();
+        IsTaskWithResult = route.HandlerMethodInfo.IsTaskMethodWithResult();
+        IsCancellable = route.HandlerMethodInfo.IsCancellableMethod();
     }
     
     /// <summary>
@@ -106,9 +106,9 @@ public class MessageDispatcher
 
         try
         {
-            if (IsAsync)
+            if (IsTask)
             {
-                await InvokeAsyncHandler(message, consumer, taskSource, cancellationToken);
+                await InvokeTaskHandler(message, consumer, taskSource, cancellationToken);
             }
             else
             {
@@ -123,7 +123,7 @@ public class MessageDispatcher
         return await taskSource.Task.ConfigureAwait(false);
     }
 
-    private async Task InvokeAsyncHandler(IMessage message, object consumer, 
+    private async Task InvokeTaskHandler(IMessage message, object consumer, 
         TaskCompletionSource<object?> taskSource,
         CancellationToken cancellationToken)
     {
@@ -136,7 +136,7 @@ public class MessageDispatcher
         var asyncResult = (Task?)Invoker(consumer, invokeParams.ToArray());
         if (asyncResult == null)
         {
-            throw new NullReferenceException("Result of Async Message Dispatch can't be null.");
+            throw new NullReferenceException("Result of Task Message Handler can't be null.");
         }
                     
         await asyncResult.ConfigureAwait(false);
@@ -155,8 +155,7 @@ public class MessageDispatcher
 
     private object? ProcessResult(IMessage message, object? result)
     {
-        // If we are processing a result for a command, the result
-        // needs to be set.  
+        // Check if the message type has an associated return value.  
         if (message is not IMessageWithResult messageResult)
         {
             return null;
@@ -164,7 +163,7 @@ public class MessageDispatcher
 
         // A Task containing a result is being returned so get the result
         // from the returned task and set it as the message result:
-        if (result != null && IsAsyncWithResult)
+        if (result != null && IsTaskWithResult)
         {
             dynamic resultTask = result;
             var resultValue = (object)resultTask.Result;
@@ -173,8 +172,8 @@ public class MessageDispatcher
             return resultValue;
         }
 
-        // The handler was not asynchronous set the result of the command:
-        if (!IsAsync)
+        // The handler didn't return a task, set the result of the message:
+        if (!IsTask)
         {
             messageResult.SetResult(result);
             return result;
