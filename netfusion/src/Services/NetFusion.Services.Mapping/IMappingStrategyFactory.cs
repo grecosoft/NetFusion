@@ -10,7 +10,7 @@ namespace NetFusion.Services.Mapping;
 /// 
 /// Note:  often the consuming application will provide one or more such factories returning instances of the 
 /// DelegateMap strategy type.  The DelegateMap strategy type is a simple strategy providing a function 
-/// delegate specifying how to map one type to another.  The provided function is often from an open-source 
+/// delegate specifying how to map one type to another.  The provided function can be from an open-source 
 /// mapping library of choice.
 /// </summary>
 public interface IMappingStrategyFactory : IPluginKnownType

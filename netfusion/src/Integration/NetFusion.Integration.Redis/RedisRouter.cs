@@ -12,7 +12,7 @@ namespace NetFusion.Integration.Redis;
 /// <summary>
 /// Provides a fluent Api for specifying the supported messaging patterns.
 /// Derived from by a microservice and called during bootstrap to define
-/// the message types associated with Azure Service Bus namespace entities. 
+/// the message types associated with Redis Pub/Sub entities. 
 /// </summary>
 public abstract class RedisRouter : BusRouterBase
 {

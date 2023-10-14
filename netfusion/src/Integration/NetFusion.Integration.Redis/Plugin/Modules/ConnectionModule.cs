@@ -33,7 +33,7 @@ namespace NetFusion.Integration.Redis.Plugin.Modules
             }
             catch (SettingsValidationException ex)
             {
-                Logger.Log(LogLevel.Error, ex.Message);
+                Logger.LogError(ex, "Validation Exception");
                 throw;
             }
         }
