@@ -7,6 +7,7 @@ using NetFusion.Core.Bootstrap.Plugins;
 using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.Messaging.Routing;
+using Polly;
 
 namespace NetFusion.Messaging.Plugin.Modules;
 
@@ -99,6 +100,23 @@ public class MessageDispatchModule : PluginModule,
         return _inProcessDispatchers.Where(di => di.Key.IsAssignableFrom(messageType))
             .SelectMany(di => di)
             .Where(di => di.IncludeDerivedTypes || di.MessageType == messageType);
+    }
+
+    public ResiliencePipeline? GetPublisherResiliencePipeline(Type publisherType)
+    {
+        if (DispatchConfig.ResiliencePipelines.TryGetValue(publisherType, out var pipeline))
+        {
+            return pipeline;
+        }
+        
+        // No publisher specific resilience pipeline.  Check if a default publisher
+        // pipeline is registered;
+        if (DispatchConfig.ResiliencePipelines.TryGetValue(typeof(IMessagePublisher), out var defaultPipeline))
+        {
+            return defaultPipeline;
+        }
+
+        return null;
     }
 
     // ---------------------- [Logging] ----------------------

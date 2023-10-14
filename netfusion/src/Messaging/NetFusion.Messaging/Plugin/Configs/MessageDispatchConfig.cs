@@ -2,6 +2,8 @@
 using NetFusion.Core.Bootstrap.Plugins;
 using NetFusion.Messaging.Enrichers;
 using NetFusion.Messaging.Filters;
+using Polly;
+using Polly.CircuitBreaker;
 
 namespace NetFusion.Messaging.Plugin.Configs;
 
@@ -13,12 +15,16 @@ public class MessageDispatchConfig : IPluginConfig
     private readonly List<Type> _messagePublisherTypes = new() { typeof(InProcessPublisher) };
     private readonly List<Type> _messageEnrichersTypes = new();
     private readonly List<Type> _messageFilterTypes = new();
+    private readonly Dictionary<Type, ResiliencePipeline> _resiliencePipelines = new ();
 
     public MessageDispatchConfig()
     {
         MessagePublishers = _messagePublisherTypes.AsReadOnly();
         MessageEnrichers = _messageEnrichersTypes.AsReadOnly();
         MessageFilters = _messageFilterTypes.AsReadOnly();
+        ResiliencePipelines = _resiliencePipelines.AsReadOnly();
+
+        AddDefaultResiliencePipeline();
     }
 
     /// <summary>
@@ -35,6 +41,8 @@ public class MessageDispatchConfig : IPluginConfig
     /// Filters called before and/or after the message is published.
     /// </summary>
     public IReadOnlyCollection<Type> MessageFilters { get; }
+    
+    public IReadOnlyDictionary<Type, ResiliencePipeline> ResiliencePipelines { get; }
 
     /// <summary>
     /// Clears any registered default message publishers.
@@ -102,5 +110,44 @@ public class MessageDispatchConfig : IPluginConfig
                 "filter-already-registered");
         }
         _messageFilterTypes.Add(typeof(TFilter));
+    }
+    
+    /// <summary>
+    /// Sets the default Polly resilience pipeline to be used by all IMessagePublisher
+    /// if a publisher specific pipeline is not configured.
+    /// </summary>
+    /// <param name="pipeline">The Polly resilience pipeline.</param>
+    public void SetDefaultResiliencePipeline(ResiliencePipeline pipeline)
+    {
+        _resiliencePipelines[typeof(IMessagePublisher)] = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
+    }
+
+    /// <summary>
+    /// Adds a Polly resilience pipeline to be used by a specific publisher.
+    /// </summary>
+    /// <param name="pipeline">The Polly resilience pipeline.</param>
+    /// <typeparam name="TPublisher">The publisher type associated with the pipeline.</typeparam>
+    public void AddResiliencePipeline<TPublisher>(ResiliencePipeline pipeline) 
+        where TPublisher : IMessagePublisher
+    {
+        if (_resiliencePipelines.ContainsKey(typeof(TPublisher)))
+        {
+            throw new BootstrapException(
+                $"A relilience pipeline for publisher: {typeof(TPublisher)} is already registered");
+        }
+        _resiliencePipelines[typeof(TPublisher)] = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
+    }
+    
+    /// <summary>
+    /// Clears all registered resilience pipelines.
+    /// </summary>
+    public void ClearResiliencePipelines() => _resiliencePipelines.Clear();
+    
+    private void AddDefaultResiliencePipeline()
+    {
+        SetDefaultResiliencePipeline(
+            new ResiliencePipelineBuilder()
+                .AddCircuitBreaker(new CircuitBreakerStrategyOptions())
+                .Build());
     }
 }

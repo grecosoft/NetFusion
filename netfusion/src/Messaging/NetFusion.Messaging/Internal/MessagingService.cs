@@ -15,6 +15,8 @@ namespace NetFusion.Messaging.Internal;
 public class MessagingService : IMessagingService
 {
     private readonly ILogger<MessagingService> _logger;
+    private readonly IMessageDispatchModule _messagingModule;
+    
     private readonly IEnumerable<IMessageEnricher> _messageEnrichers;
     private readonly IEnumerable<IMessageFilter> _messageFilters;
     private readonly IEnumerable<IMessagePublisher> _messagePublishers;
@@ -27,6 +29,7 @@ public class MessagingService : IMessagingService
         IEnumerable<IMessagePublisher> messagePublishers)
     {
         _logger = logger;
+        _messagingModule = messagingModule;
 
         // Order the enrichers, filters, publishers publishers based on the order 
         // registration specified during configuration. 
@@ -210,7 +213,7 @@ public class MessagingService : IMessagingService
         try
         {
             taskList = publishers.Invoke(message,
-                (pub, msg) => pub.PublishMessageAsync(msg, cancellationToken));
+                (pub, msg) => PublishMessageWithRecovery(pub, msg, cancellationToken));
 
             await taskList.WhenAll();
         }
@@ -231,7 +234,24 @@ public class MessagingService : IMessagingService
             throw new PublisherException("Exception when invoking message publishers.", ex);
         }
     }
-
+    
+    private async Task PublishMessageWithRecovery(IMessagePublisher publisher, IMessage message,
+        CancellationToken cancellationToken)
+    {
+        var pipeline = _messagingModule.GetPublisherResiliencePipeline(publisher.GetType());
+        if (pipeline == null)
+        {
+            await publisher.PublishMessageAsync(message, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+        
+        await pipeline.ExecuteAsync(async token =>
+        {
+            await publisher.PublishMessageAsync(message, token).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
+    }
+    
+    
     // ------------------------- [Logging] -----------------------------
         
     private void LogPublishedMessage(IMessage message)
