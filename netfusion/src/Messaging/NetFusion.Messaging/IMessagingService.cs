@@ -38,6 +38,19 @@ public interface IMessagingService
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Publishes a list of domain-events in batch if the underlying message publisher
+    /// supports batch publishing.  If not supported, each domain-event is published
+    /// individually.
+    /// </summary>
+    /// <param name="domainEvents">List of domain-event to publish.</param>
+    /// <param name="integrationType">Specifies the scope to which publishers send messages to subscribers.</param>
+    /// <param name="cancellationToken">Optional cancellation token passed to message handler.</param>
+    /// <returns>Task result.</returns>
+    Task PublishBatchAsync(IEnumerable<IDomainEvent> domainEvents,
+        IntegrationTypes integrationType = IntegrationTypes.All,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Publishes domain-events associated with an event source.  
     /// </summary>
     /// <param name="eventSource">The event source having associated events.</param>

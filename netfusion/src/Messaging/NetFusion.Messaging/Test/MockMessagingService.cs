@@ -126,7 +126,13 @@ public class MockMessagingService : IMessagingService
         _receivedRequests.Add(domainEvent);
         return Task.CompletedTask;
     }
-        
+
+    public Task PublishBatchAsync(IEnumerable<IDomainEvent> domainEvents, IntegrationTypes integrationType = IntegrationTypes.All,
+        CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task PublishAsync(IEventSource eventSource, IntegrationTypes integrationType,
         CancellationToken cancellationToken)
     {

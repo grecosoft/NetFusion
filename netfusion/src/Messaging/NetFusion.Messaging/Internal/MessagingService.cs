@@ -56,6 +56,19 @@ public class MessagingService : IMessagingService
         return PublishMessage(domainEvent, integrationType, cancellationToken);
     }
 
+    public async Task PublishBatchAsync(IEnumerable<IDomainEvent> domainEvents, 
+        IntegrationTypes integrationType = IntegrationTypes.All,
+        CancellationToken cancellationToken = default)
+    {
+        var messages = domainEvents as IDomainEvent[] ?? domainEvents.ToArray();
+        foreach (var domainEvent in messages)
+        {
+            await ApplyMessageEnrichers(domainEvent);
+        }
+        
+        await InvokeBatchPublishers(messages, integrationType, cancellationToken);
+    }
+
     public async Task PublishAsync(IEventSource eventSource,
         IntegrationTypes integrationType = IntegrationTypes.All,
         CancellationToken cancellationToken = default)
@@ -202,6 +215,40 @@ public class MessagingService : IMessagingService
         }
     }
 
+    private async Task InvokeBatchPublishers(IEnumerable<IDomainEvent> domainEvents,
+        IntegrationTypes integrationType, CancellationToken cancellationToken)
+    {
+        TaskListItem<IBatchMessagePublisher>[]? taskList = null;
+
+        var publishers = integrationType == IntegrationTypes.All ? _messagePublishers.ToArray() 
+            : _messagePublishers.Where(p => p.IntegrationType == integrationType).ToArray();
+
+        var batchPublishers = publishers.OfType<IBatchMessagePublisher>();
+        
+        try
+        {
+            taskList = batchPublishers.Invoke(domainEvents,
+                (pub, msg) => PublishBatchMessageWithRecovery(pub, msg, cancellationToken));
+
+            await taskList.WhenAll();
+        }
+        catch (Exception ex)
+        {
+            if (taskList != null)
+            {
+                var publisherErrors = taskList.GetExceptions(GetPublisherException);
+                if (publisherErrors.Any())
+                {
+                    throw new PublisherException("Exception when invoking batch message publishers.",
+                        ex,
+                        publisherErrors);
+                }
+            }
+
+            throw new PublisherException("Exception when invoking message publishers.", ex);
+        }
+    }
+
     private async Task InvokePublishers(IMessage message,
         IntegrationTypes integrationType, CancellationToken cancellationToken)
     {
@@ -251,6 +298,23 @@ public class MessagingService : IMessagingService
         }, cancellationToken).ConfigureAwait(false);
     }
     
+    private async Task PublishBatchMessageWithRecovery(IBatchMessagePublisher publisher, 
+        IEnumerable<IDomainEvent> domainEvents,
+        CancellationToken cancellationToken)
+    {
+        var pipeline = _messagingModule.GetPublisherResiliencePipeline(publisher.GetType());
+        if (pipeline == null)
+        {
+            await publisher.PublicDomainEventsAsync(domainEvents, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+        
+        await pipeline.ExecuteAsync(async token =>
+        {
+            await publisher.PublicDomainEventsAsync(domainEvents, token).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
+    }
+    
     
     // ------------------------- [Logging] -----------------------------
         
@@ -278,6 +342,9 @@ public class MessagingService : IMessagingService
     // ------------------------- [Exceptions] --------------------------
 
     private static PublisherException GetPublisherException(TaskListItem<IMessagePublisher> taskItem) =>
+        new("Error Invoking Publisher", taskItem.Invoker, taskItem.Task.Exception);
+    
+    private static PublisherException GetPublisherException(TaskListItem<IBatchMessagePublisher> taskItem) =>
         new("Error Invoking Publisher", taskItem.Invoker, taskItem.Task.Exception);
         
     private static EnricherException GetEnricherException(TaskListItem<IMessageEnricher> taskListItem) => 

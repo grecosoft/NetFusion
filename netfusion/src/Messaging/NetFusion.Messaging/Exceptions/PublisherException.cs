@@ -62,6 +62,12 @@ public class PublisherException : NetFusionException
 
         SetChildExceptions(exceptionDetails);
     }
+    
+    public PublisherException(string message, Exception innerException,
+        IEnumerable<NetFusionException> exceptionDetails) : base(message, innerException)
+    {
+        SetChildExceptions(exceptionDetails);
+    }
         
     /// <summary>
     /// Publisher Exception.
@@ -85,6 +91,15 @@ public class PublisherException : NetFusionException
     /// <param name="messagePublisher">Reference to message publisher resulting in an exception.</param>
     /// <param name="aggregateException">The aggregate exception associated with a task.</param>
     public PublisherException(string message, IMessagePublisher messagePublisher,
+        AggregateException? aggregateException)
+        : base(message, aggregateException)
+    {
+        if (messagePublisher == null) throw new ArgumentNullException(nameof(messagePublisher));
+            
+        Details["Publisher"] = messagePublisher.GetType().FullName!;
+    }
+    
+    public PublisherException(string message, IBatchMessagePublisher messagePublisher,
         AggregateException? aggregateException)
         : base(message, aggregateException)
     {
