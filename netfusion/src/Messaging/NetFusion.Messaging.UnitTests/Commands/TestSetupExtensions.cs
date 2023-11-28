@@ -1,55 +1,43 @@
 ﻿using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.TestFixtures.Plugins;
-using NetFusion.Messaging.InProcess;
 using NetFusion.Messaging.UnitTests.Commands.Mocks;
 
-namespace NetFusion.Messaging.UnitTests.Commands;
+// ReSharper disable All
+
+namespace CoreTests.Messaging.Commands;
 
 public static class TestSetupExtensions
 {
-    // ---------------- Command with Asynchronous Handlers ----------------
-        
-    public static CompositeContainer WithAsyncCommandConsumer(this CompositeContainer container)
+    public static ICompositeContainer WithAsyncCommandConsumer(this ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
             
-        appPlugin.AddPluginType<AsyncCommandRoute>();
+        appPlugin.AddPluginType<MockAsyncCommandConsumer>();
         container.RegisterPlugins(appPlugin);
 
         return container;
     }
 
-    public class AsyncCommandRoute : MessageRouter
-    {
-        protected override void OnConfigureRoutes()
-        {
-            OnCommand<MockCommand, MockCommandResult>(
-                route => route.ToConsumer<MockAsyncCommandConsumer>(c => c.OnCommand));
-                
-            OnCommand<MockCommandNoResult>(
-                route => route.ToConsumer<MockAsyncCommandConsumer>(c => c.OnCommandNoResult));
-        }
-    }
-        
-        
-    // ---------------- Command with Synchronous Handler ----------------
-
-    public static CompositeContainer WithSyncCommandConsumer(this CompositeContainer container)
+    public static ICompositeContainer WithSyncCommandConsumer(this ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
             
-        appPlugin.AddPluginType<SyncCommandRoute>();
+        appPlugin.AddPluginType<MockSyncCommandConsumer>();
         container.RegisterPlugins(appPlugin);
 
         return container;
     }
-        
-    public class SyncCommandRoute : MessageRouter
+
+    public static ICompositeContainer WithMultipleConsumers(this ICompositeContainer container)
     {
-        protected override void OnConfigureRoutes()
-        {
-            OnCommand<MockCommand, MockCommandResult>(
-                route => route.ToConsumer<MockSyncCommandConsumer>(c => c.OnCommand));
-        }
+        var appPlugin1 = new MockAppPlugin();
+        appPlugin1.AddPluginType<MockAsyncCommandConsumer>();
+            
+        var appPlugin2 = new MockAppPlugin();
+        appPlugin2.AddPluginType<MockInvalidCommandConsumer>();
+            
+        container.RegisterPlugins(appPlugin1, appPlugin2);
+
+        return container;
     }
 }

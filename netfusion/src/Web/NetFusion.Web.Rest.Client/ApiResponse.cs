@@ -89,12 +89,12 @@ public class ApiResponse
 
         HttpContent httpContent = responseMsg.Content;
 
-        ContentLength = httpContent?.Headers.ContentLength;
-        MediaType = httpContent?.Headers.ContentType?.MediaType;
-        CharSet = httpContent?.Headers.ContentType?.CharSet;
+        ContentLength = httpContent.Headers.ContentLength;
+        MediaType = httpContent.Headers.ContentType?.MediaType;
+        CharSet = httpContent.Headers.ContentType?.CharSet;
 
         ETag = responseMsg.Headers.ETag?.Tag;
-        Server = responseMsg.Headers.Server?.ToString();
+        Server = responseMsg.Headers.Server.ToString();
     }
 
     public ApiResponse(HttpResponseMessage responseMsg, object state)

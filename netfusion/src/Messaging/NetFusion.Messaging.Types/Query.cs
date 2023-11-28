@@ -6,18 +6,9 @@ namespace NetFusion.Messaging.Types;
 /// <summary>
 /// An object representing a query dispatched and handled by a consumer.
 /// </summary>
-public abstract class Query : IQuery, IMessageWithResult
+public abstract class Query : Message, IQuery, 
+    IMessageWithResult
 {
-    /// <summary>
-    /// List of arbitrary key value pairs associated with the message. 
-    /// </summary>
-    public IDictionary<string, string> Attributes { get; set; }
-
-    protected Query()
-    {
-        Attributes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-    }
-    
     protected abstract Type GetResultType();
 
     protected IMessageWithResult ResultState => this;

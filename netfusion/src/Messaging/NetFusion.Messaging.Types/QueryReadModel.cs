@@ -13,12 +13,7 @@ public abstract class QueryReadModel : IAttributedEntity
     /// Set of dynamic properties associated with the model.
     /// </summary>
     [JsonIgnore, NotLogged]
-    public IEntityAttributes Attributes { get; }
-
-    protected QueryReadModel()
-    {
-        Attributes = new EntityAttributes();
-    }
+    public IEntityAttributes Attributes { get; } = new EntityAttributes();
 
     /// <summary>
     /// Used during serialization to set and retrieve the properties associated with the module.

@@ -2,40 +2,36 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Common.Base;
-using NetFusion.Common.Base.Logging;
-using NetFusion.Common.Base.Scripting;
 using NetFusion.Common.Base.Validation;
-using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.Bootstrap.Plugins;
 
-namespace NetFusion.Core.Builder;
+namespace NetFusion.Core.Bootstrap.Container;
 
 /// <summary>
-/// Provides an implementation used by the host application to build a composite application
-/// from a set of registered plugins.  
+/// Provides an implementation used by the host application to build a
+/// composite application from a set of registered plugins.
+///
+/// https://github.com/grecosoft/NetFusion/wiki/core-bootstrap-overview
 /// </summary>
-public class CompositeContainerBuilder : ICompositeContainerBuilder
+internal class CompositeContainerBuilder : ICompositeContainerBuilder
 {
+    private readonly ILogger<CompositeContainerBuilder> _bootstrapLogger;
     private readonly IServiceCollection _serviceCollection;
     private readonly ITypeResolver _typeResolver;
 
     private readonly CompositeContainer _container;
         
     public CompositeContainerBuilder(IServiceCollection serviceCollection,
+        ILoggerFactory bootstrapLoggerFactory,
         IConfiguration configuration,
-        ITypeResolver typeResolver,
-        IExtendedLogger extendedLogger)
+        ITypeResolver typeResolver)
     {
         if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            
+
+        _bootstrapLogger = bootstrapLoggerFactory.CreateLogger<CompositeContainerBuilder>();
         _serviceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
         _typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
-
-        // Set property on static class referenced to write logs before .NET's ILogger can be referenced.
-        NfExtensions.Logger = extendedLogger ?? throw new ArgumentNullException(nameof(extendedLogger));
-
-        _container = new CompositeContainer(serviceCollection, configuration);
+        _container = new CompositeContainer(serviceCollection, bootstrapLoggerFactory, configuration);
     }
         
     public ICompositeContainerBuilder AddPlugin<TPlugin>() where TPlugin : IPlugin, new()
@@ -63,7 +59,7 @@ public class CompositeContainerBuilder : ICompositeContainerBuilder
 
     // Populates the IServiceCollection with services registered by all plugin-modules.
     // The end result is a populated service-collection with a registered ICompositeApp
-    // instance that can be started and used for the lifetime of the host.  
+    // instance that can be started/stopped and used for the lifetime of the host.  
     public void Compose(Action<IServiceCollection>? services = null)
     {
         try
@@ -77,7 +73,7 @@ public class CompositeContainerBuilder : ICompositeContainerBuilder
         }
         catch(Exception ex)
         {
-            NfExtensions.Logger.LogError<CompositeContainerBuilder>(ex, "Error building Composite Container");
+            _bootstrapLogger.LogError(ex, "Error building Composite Container");
             throw;
         }
     }
@@ -85,9 +81,6 @@ public class CompositeContainerBuilder : ICompositeContainerBuilder
     private void RegisterRequiredDefaultServices()
     {
         _serviceCollection.AddSingleton<ILoggerFactory, LoggerFactory>();
-            
-        // These services can be overridden by the host:
         _serviceCollection.AddSingleton<IValidationService, ValidationService>();
-        _serviceCollection.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();
     }
 }

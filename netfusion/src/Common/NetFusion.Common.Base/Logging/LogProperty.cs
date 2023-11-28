@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace NetFusion.Common.Base.Logging;
 
 /// <summary>
@@ -28,6 +30,7 @@ public class LogProperty
     /// to a structure; otherwise, unknown types will be converted to scalars, which are generally
     /// stored as strings.
     /// </summary>
+    [JsonIgnore]
     public bool DestructureObjects { get; init; } = true;
 
     public static LogProperty ForName(string name, object value) => new(name, value);

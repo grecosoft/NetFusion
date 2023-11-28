@@ -2,7 +2,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NetFusion.Common.Base.Serialization;
-using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.TestFixtures.Plugins;
 using NetFusion.Integration.RabbitMQ.Bus;
 using NetFusion.Integration.RabbitMQ.Plugin;
@@ -32,9 +31,6 @@ public class EntityContextFixture
 
     public EntityContext CreateContext(ConnectionSettings? settings = null)
     {
-        var builder = new Mock<ICompositeAppBuilder>();
-        builder.Setup(m => m.HostPlugin).Returns(new MockHostPlugin());
-        
         var externalSettings = new ExternalEntitySettings(settings ?? new ConnectionSettings());
 
         MockConnection.Setup(m => m.ExternalSettings).Returns(externalSettings);

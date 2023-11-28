@@ -3,14 +3,14 @@ using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.TestFixtures.Plugins;
 using NetFusion.Messaging.Plugin;
 
-namespace NetFusion.Messaging.UnitTests;
+namespace NetFusion.Messaging.UnitTests.Messaging;
 
 public static class TestSetupExtensions
 {
     // Adds a host plugin configured with the core messaging plugin.
-    public static CompositeContainer AddMessagingHost(this CompositeContainer container)
+    public static ICompositeContainer AddMessagingHost(this ICompositeContainer container)
     {
-        container.AppBuilder.ServiceCollection.AddSingleton<IMockTestLog, MockTestLog>();
+        container.ServiceCollection.AddSingleton<IMockTestLog, MockTestLog>();
             
         var hostPlugin = new MockHostPlugin();
             

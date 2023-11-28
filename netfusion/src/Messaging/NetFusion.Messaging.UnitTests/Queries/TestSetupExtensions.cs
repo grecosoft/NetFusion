@@ -1,45 +1,36 @@
 using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.TestFixtures.Plugins;
-using NetFusion.Messaging.InProcess;
 using NetFusion.Messaging.UnitTests.Queries.Mocks;
 
 namespace NetFusion.Messaging.UnitTests.Queries;
 
 public static class TestSetupExtensions
 {
-    public static CompositeContainer WithSyncQueryConsumer(this CompositeContainer container)
+    public static ICompositeContainer WithSyncQueryConsumer(this ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
-        appPlugin.AddPluginType<SyncQueryConsumerRoute>();
-            
-        container.RegisterPlugins(appPlugin);
-        return container;
-    }
-
-    private class SyncQueryConsumerRoute : MessageRouter
-    {
-        protected override void OnConfigureRoutes()
-        {
-            OnQuery<MockQuery, MockQueryResult>(
-                route => route.ToConsumer<MockSyncQueryConsumer>(c => c.Execute));
-        }
-    }
-        
-    public static CompositeContainer WithAsyncQueryConsumer(this CompositeContainer container)
-    {
-        var appPlugin = new MockAppPlugin();
-        appPlugin.AddPluginType<AsyncSyncQueryConsumerRoute>();
+        appPlugin.AddPluginType<MockSyncQueryConsumer>();
             
         container.RegisterPlugins(appPlugin);
         return container;
     }
         
-    private class AsyncSyncQueryConsumerRoute : MessageRouter
+    public static ICompositeContainer WithAsyncQueryConsumer(this ICompositeContainer container)
     {
-        protected override void OnConfigureRoutes()
-        {
-            OnQuery<MockQuery, MockQueryResult>(
-                route => route.ToConsumer<MockAsyncQueryConsumer>(c => c.Execute));
-        }
+        var appPlugin = new MockAppPlugin();
+        appPlugin.AddPluginType<MockAsyncQueryConsumer>();
+            
+        container.RegisterPlugins(appPlugin);
+        return container;
+    }
+        
+    public static ICompositeContainer WithMultipleQueryConsumers(this ICompositeContainer container)
+    {
+        var appPlugin = new MockAppPlugin();
+        appPlugin.AddPluginType<DuplicateConsumerOne>();
+        appPlugin.AddPluginType<DuplicateConsumerTwo>();
+            
+        container.RegisterPlugins(appPlugin);
+        return container;
     }
 }

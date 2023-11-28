@@ -1,7 +1,9 @@
-﻿using FluentAssertions;
+﻿using CoreTests.Messaging.Commands;
+using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Core.TestFixtures.Container;
 using NetFusion.Messaging.UnitTests.Commands.Mocks;
+using NetFusion.Messaging.UnitTests.Messaging;
 
 namespace NetFusion.Messaging.UnitTests.Commands;
 
@@ -51,7 +53,7 @@ public class DispatchTests
     [Fact]
     public Task CanSendCommand_WithSyncHandler_ReturningResult()
     {
-        MockCommandResult cmdResult = null;
+        MockCommandResult? cmdResult = null;
 
         return ContainerFixture.TestAsync(async fixture =>
         {

@@ -27,7 +27,7 @@ public class ContainerArrange
     {
         if (arrange == null) throw new ArgumentNullException(nameof(arrange));
 
-        if (_fixture.IsCompositeContainerBuild)
+        if (_fixture.IsCompositeContainerBuilt)
         {
             throw new InvalidOperationException(
                 "Configuration cannot be arranged once Composite Container is Built.");
@@ -42,20 +42,25 @@ public class ContainerArrange
     /// </summary>
     /// <param name="arrange">Method passed the application container under test.</param>
     /// <returns>Self Reference</returns>
-    public ContainerArrange Container(Action<CompositeContainer> arrange)
+    public ContainerArrange Container(Action<ICompositeContainer> arrange)
     {
         if (arrange == null) throw new ArgumentNullException(nameof(arrange));
             
-        if (_fixture.IsCompositeContainerBuild)
+        if (_fixture.IsCompositeContainerBuilt)
         {
             throw new InvalidOperationException(
-                "Services cannot be arranged once Composite Container built.");
+                "Composite Container cannot be arranged once built.");
         }
 
         arrange(_fixture.GetOrBuildContainer());
         return this;
     }
 
+    /// <summary>
+    /// Allows arranging state contained within the unit-test.
+    /// </summary>
+    /// <param name="arrange">Method invoked to arrange state.</param>
+    /// <returns>Self Reference.</returns>
     public ContainerArrange State(Action arrange)
     {
         if (arrange == null) throw new ArgumentNullException(nameof(arrange));
@@ -74,7 +79,7 @@ public class ContainerArrange
         where  TConfig : IPluginConfig
     {
         if (arrange == null) throw new ArgumentNullException(nameof(arrange));
-            
+        
         var config =  _fixture.GetOrBuildContainer().GetPluginConfig<TConfig>();
         arrange(config);
         return this;
@@ -90,7 +95,7 @@ public class ContainerArrange
     {
         if (arrange == null) throw new ArgumentNullException(nameof(arrange));
 
-        if (_fixture.IsCompositeContainerBuild)
+        if (_fixture.IsCompositeContainerBuilt)
         {
             throw new InvalidOperationException(
                 "Services cannot be arranged once Composite Container built.");

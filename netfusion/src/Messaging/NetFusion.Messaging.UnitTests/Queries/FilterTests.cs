@@ -4,7 +4,7 @@ using NetFusion.Core.Bootstrap.Exceptions;
 using NetFusion.Core.TestFixtures.Container;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Plugin.Configs;
-using NetFusion.Messaging.UnitTests;
+using NetFusion.Messaging.UnitTests.Messaging;
 using NetFusion.Messaging.UnitTests.Queries;
 using NetFusion.Messaging.UnitTests.Queries.Mocks;
 
@@ -42,7 +42,7 @@ public class FilterTests
                 .Act.OnServicesAsync(async s =>
                 {
                     await s.GetRequiredService<IMessagingService>()
-                        .DispatchAsync(query);
+                        .ExecuteAsync(query);
                 });
 
             testResult.Assert.State(() =>
@@ -77,7 +77,7 @@ public class FilterTests
                 .Act.RecordException().OnServicesAsync(async s =>
                 {
                     await s.GetRequiredService<IMessagingService>()
-                        .DispatchAsync(query);
+                        .ExecuteAsync(query);
                 });
 
             testResult.Assert.Exception<PublisherException>(ex =>
@@ -87,7 +87,7 @@ public class FilterTests
 
                 enricherEx.Should().BeOfType<FilterException>();
                 enricherEx.InnerException.Should().BeOfType<InvalidOperationException>();
-                enricherEx.InnerException.Message.Should().Be("TestQueryFilterException");
+                enricherEx.InnerException?.Message.Should().Be("TestQueryFilterException");
             });
         });
     }

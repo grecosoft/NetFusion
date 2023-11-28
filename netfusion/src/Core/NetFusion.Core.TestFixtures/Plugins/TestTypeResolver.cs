@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NetFusion.Common.Base.Logging;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.Bootstrap.Plugins;
@@ -15,7 +14,7 @@ namespace NetFusion.Core.TestFixtures.Plugins;
 /// </summary>
 public class TestTypeResolver : ITypeResolver
 {
-    private readonly ITypeResolver _baseResolver = new TypeResolver(new NullExtendedLogger());
+    private readonly ITypeResolver _baseResolver = new TypeResolver();
 
     public void SetPluginMeta(IPlugin plugin)
     {

@@ -192,7 +192,7 @@ public class DocBuilder : IDocBuilder
 
     private void AddRelationDocs(ApiActionDoc actionDoc)
     {
-        if (!_resourceMediaModule.TryGetMediaTypeEntry(InternetMediaTypes.HalJson, out MediaTypeEntry? entry))
+        if (!_resourceMediaModule.TryGetMediaTypeEntry(InternetMediaTypes.HalJson, out MediaTypeEntry entry))
         {
             return;
         }
@@ -207,7 +207,7 @@ public class DocBuilder : IDocBuilder
         
     private void AddRelationDoc(ApiResourceDoc resourceDoc, MediaTypeEntry mediaTypeEntry)
     {
-        if (!mediaTypeEntry.TryGetResourceTypeMeta(resourceDoc.ResourceType, out IResourceMeta? meta))
+        if (!mediaTypeEntry.TryGetResourceTypeMeta(resourceDoc.ResourceType, out IResourceMeta meta))
         {
             return;
         }

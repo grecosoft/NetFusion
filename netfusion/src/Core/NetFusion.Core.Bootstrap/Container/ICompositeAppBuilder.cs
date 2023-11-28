@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NetFusion.Core.Bootstrap.Logging;
+using Microsoft.Extensions.Logging;
 using NetFusion.Core.Bootstrap.Plugins;
 
 namespace NetFusion.Core.Bootstrap.Container;
@@ -33,7 +33,7 @@ public interface ICompositeAppBuilder
     IPlugin[] AllPlugins { get; }
 
     /// <summary>
-    /// List of modules associated with all the plugins.
+    /// List of modules associated with all plugins.
     /// </summary>
     IPluginModule[] AllModules { get; }
 
@@ -45,17 +45,18 @@ public interface ICompositeAppBuilder
     IEnumerable<Type> GetPluginTypes(params PluginTypes[] pluginTypes);
 
     /// <summary>
-    /// The .net configuration service for reading application configurations.
+    /// The configuration for reading application configurations.
     /// </summary>
     IConfiguration Configuration { get; }
 
     /// <summary>
-    /// The .net service collection populated by plugin modules.
+    /// The service collection populated by plugin modules.
     /// </summary>
     IServiceCollection ServiceCollection { get; }
-
+    
     /// <summary>
-    /// Reference to a log showing how the application was composed from plugins.
+    /// The logger-factory used to create loggers used during the bootstrap
+    /// process before the dependency-injection containers has been created.
     /// </summary>
-    CompositeAppLogger CompositeLog { get; }
+    ILoggerFactory BootstrapLoggerFactory { get; }
 }

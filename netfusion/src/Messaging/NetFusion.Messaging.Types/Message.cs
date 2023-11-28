@@ -8,6 +8,8 @@ namespace NetFusion.Messaging.Types;
 /// </summary>
 public class Message : IMessage
 {
+    private readonly Dictionary<Type, object> _contexts = new();
+    
     protected Message()
     {
         Attributes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -17,4 +19,21 @@ public class Message : IMessage
     /// List of arbitrary key value pairs associated with the message. 
     /// </summary>
     public IDictionary<string, string> Attributes { get; set; }
+
+    public void SetContext(object context)
+    {
+        if (context == null) throw new ArgumentNullException(nameof(context));
+        _contexts[context.GetType()] = context;
+    }
+
+    public TContext GetContext<TContext>()
+    {
+        if (!_contexts.TryGetValue(typeof(TContext), out object? context))
+        {
+            throw new InvalidOperationException(
+                $"Message context of type: {typeof(TContext)} not found.");
+        }
+        
+        return (TContext)context;
+    }
 }

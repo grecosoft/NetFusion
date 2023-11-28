@@ -2,7 +2,6 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Common.Base;
 using NetFusion.Common.Base.Logging;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
@@ -13,7 +12,7 @@ using NetFusion.Messaging.Internal;
 namespace NetFusion.Integration.Bus.Entities;
 
 /// <summary>
-/// Based module derived by service-bus specific implementations.  Discovers all IBusRouter
+/// Base module derived by service-bus specific implementations.  Discovers all IBusRouter
 /// implementations defining how service-bus entities are created and messages routed.  All
 /// service-bus defined entities are created and subscribed to by invoking the strategies
 /// associated with the entity.
@@ -26,11 +25,15 @@ public abstract class BusEntityModuleBase<TRouter> : PluginModule
     
     protected IEnumerable<BusEntity> BusEntities { get; set; } = Array.Empty<BusEntity>();
     
+    private ILogger<BusEntityModuleBase<TRouter>> Logger => Context.LoggerFactory.CreateLogger<BusEntityModuleBase<TRouter>>();
+    
     public override void Initialize()
     {
         AssertNamespaceRoutes();
         BusEntities = BusMessageRouters.SelectMany(r => r.GetBusEntities()).ToArray();
     }
+    
+    
     
     private void AssertNamespaceRoutes()
     {
@@ -133,7 +136,7 @@ public abstract class BusEntityModuleBase<TRouter> : PluginModule
             entity.EntityName,
             entity.BusName).WithProperties(LogProperty.ForName("Properties", entityProperties));
                 
-        NfExtensions.Logger.Log<BusEntityModuleBase<TRouter>>(logMsg);
+        Logger.Log(logMsg);
     }
 
     private string GetStrategyDescription(Type strategyType, IBusEntityStrategy strategy)

@@ -15,6 +15,8 @@ namespace NetFusion.Messaging.Internal;
 public class MessagingService : IMessagingService
 {
     private readonly ILogger<MessagingService> _logger;
+    private readonly IMessageDispatchModule _messagingModule;
+    
     private readonly IEnumerable<IMessageEnricher> _messageEnrichers;
     private readonly IEnumerable<IMessageFilter> _messageFilters;
     private readonly IEnumerable<IMessagePublisher> _messagePublishers;
@@ -27,6 +29,7 @@ public class MessagingService : IMessagingService
         IEnumerable<IMessagePublisher> messagePublishers)
     {
         _logger = logger;
+        _messagingModule = messagingModule;
 
         // Order the enrichers, filters, publishers publishers based on the order 
         // registration specified during configuration. 
@@ -51,6 +54,19 @@ public class MessagingService : IMessagingService
             "Domain event cannot be null.");
 
         return PublishMessage(domainEvent, integrationType, cancellationToken);
+    }
+
+    public async Task PublishBatchAsync(IEnumerable<IDomainEvent> domainEvents, 
+        IntegrationTypes integrationType = IntegrationTypes.All,
+        CancellationToken cancellationToken = default)
+    {
+        var messages = domainEvents as IDomainEvent[] ?? domainEvents.ToArray();
+        foreach (var domainEvent in messages)
+        {
+            await ApplyMessageEnrichers(domainEvent);
+        }
+        
+        await InvokeBatchPublishers(messages, integrationType, cancellationToken);
     }
 
     public async Task PublishAsync(IEventSource eventSource,
@@ -101,7 +117,7 @@ public class MessagingService : IMessagingService
         return command.Result;
     }
 
-    public async Task<TResult> DispatchAsync<TResult>(IQuery<TResult> query,
+    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query,
         CancellationToken cancellationToken = default)
     {
         if (query == null) throw new ArgumentNullException(nameof(query),
@@ -199,6 +215,40 @@ public class MessagingService : IMessagingService
         }
     }
 
+    private async Task InvokeBatchPublishers(IEnumerable<IDomainEvent> domainEvents,
+        IntegrationTypes integrationType, CancellationToken cancellationToken)
+    {
+        TaskListItem<IBatchMessagePublisher>[]? taskList = null;
+
+        var publishers = integrationType == IntegrationTypes.All ? _messagePublishers.ToArray() 
+            : _messagePublishers.Where(p => p.IntegrationType == integrationType).ToArray();
+
+        var batchPublishers = publishers.OfType<IBatchMessagePublisher>();
+        
+        try
+        {
+            taskList = batchPublishers.Invoke(domainEvents,
+                (pub, msg) => PublishBatchMessageWithRecovery(pub, msg, cancellationToken));
+
+            await taskList.WhenAll();
+        }
+        catch (Exception ex)
+        {
+            if (taskList != null)
+            {
+                var publisherErrors = taskList.GetExceptions(GetPublisherException);
+                if (publisherErrors.Any())
+                {
+                    throw new PublisherException("Exception when invoking batch message publishers.",
+                        ex,
+                        publisherErrors);
+                }
+            }
+
+            throw new PublisherException("Exception when invoking message publishers.", ex);
+        }
+    }
+
     private async Task InvokePublishers(IMessage message,
         IntegrationTypes integrationType, CancellationToken cancellationToken)
     {
@@ -210,7 +260,7 @@ public class MessagingService : IMessagingService
         try
         {
             taskList = publishers.Invoke(message,
-                (pub, msg) => pub.PublishMessageAsync(msg, cancellationToken));
+                (pub, msg) => PublishMessageWithRecovery(pub, msg, cancellationToken));
 
             await taskList.WhenAll();
         }
@@ -231,7 +281,41 @@ public class MessagingService : IMessagingService
             throw new PublisherException("Exception when invoking message publishers.", ex);
         }
     }
-
+    
+    private async Task PublishMessageWithRecovery(IMessagePublisher publisher, IMessage message,
+        CancellationToken cancellationToken)
+    {
+        var pipeline = _messagingModule.GetPublisherResiliencePipeline(publisher.GetType());
+        if (pipeline == null)
+        {
+            await publisher.PublishMessageAsync(message, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+        
+        await pipeline.ExecuteAsync(async token =>
+        {
+            await publisher.PublishMessageAsync(message, token).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
+    }
+    
+    private async Task PublishBatchMessageWithRecovery(IBatchMessagePublisher publisher, 
+        IEnumerable<IDomainEvent> domainEvents,
+        CancellationToken cancellationToken)
+    {
+        var pipeline = _messagingModule.GetPublisherResiliencePipeline(publisher.GetType());
+        if (pipeline == null)
+        {
+            await publisher.PublicDomainEventsAsync(domainEvents, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+        
+        await pipeline.ExecuteAsync(async token =>
+        {
+            await publisher.PublicDomainEventsAsync(domainEvents, token).ConfigureAwait(false);
+        }, cancellationToken).ConfigureAwait(false);
+    }
+    
+    
     // ------------------------- [Logging] -----------------------------
         
     private void LogPublishedMessage(IMessage message)
@@ -259,6 +343,9 @@ public class MessagingService : IMessagingService
 
     private static PublisherException GetPublisherException(TaskListItem<IMessagePublisher> taskItem) =>
         new("Error Invoking Publisher", taskItem.Invoker, taskItem.Task.Exception);
+    
+    private static PublisherException GetPublisherException(TaskListItem<IBatchMessagePublisher> taskItem) =>
+        new("Error Invoking Publisher", taskItem.Invoker, taskItem.Task.Exception);
         
     private static EnricherException GetEnricherException(TaskListItem<IMessageEnricher> taskListItem) => 
         new("Exception Applying Enricher", taskListItem.Invoker, taskListItem.Task.Exception);
@@ -266,5 +353,4 @@ public class MessagingService : IMessagingService
     private static FilterException GetFilterException<T>(TaskListItem<T> taskItem)
         where T : class, IMessageFilter => 
         new("Exception Applying Query Filter", taskItem.Invoker, taskItem.Task.Exception);
-        
 }

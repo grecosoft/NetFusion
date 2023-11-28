@@ -1,5 +1,4 @@
 using EasyNetQ;
-using EasyNetQ.Topology;
 using NetFusion.Integration.Bus.Strategies;
 using NetFusion.Integration.RabbitMQ.Bus;
 using NetFusion.Messaging.Logging;

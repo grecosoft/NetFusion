@@ -20,6 +20,6 @@ public interface IBusEntityPublishStrategy : IBusEntityStrategy
     /// </summary>
     /// <param name="message">The message to be sent.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns></returns>
+    /// <returns>Future Result.</returns>
     Task SendToEntityAsync(IMessage message, CancellationToken cancellationToken);
 }

@@ -76,9 +76,9 @@ public class MappingModule : PluginModule,
     {
         moduleLog["mappings"] = SourceTypeMappings.Values().Select(m => new
         {
-            m.SourceType,
-            m.TargetType,
-            StrategyType = m.StrategyType ?? m.StrategyInstance?.GetType()
+            SourceType = m.SourceType.FullName,
+            TargetType = m.TargetType.FullName,
+            StrategyType = m.StrategyType?.FullName ?? m.StrategyInstance?.GetType().FullName
         });
     }
 }

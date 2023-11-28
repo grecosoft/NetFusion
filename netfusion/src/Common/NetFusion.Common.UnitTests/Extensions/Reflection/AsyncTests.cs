@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using FluentAssertions;
 using NetFusion.Common.Extensions.Reflection;
 
@@ -9,51 +10,57 @@ public class AsyncTests
     [Fact]
     public void CanDetermineIfMethod_IsAsynchronous()
     {
-        typeof(TestMethods).GetMethod(nameof(TestMethods.AsyncMethodToTest))
-            .IsAsyncMethod().Should().BeTrue();
+        GetTestMethod(nameof(TestMethods.AsyncMethodToTest))
+            .IsTaskMethod().Should().BeTrue();
 
-        typeof(TestMethods).GetMethod(nameof(TestMethods.AsyncMethodWithResultToTest))
-            .IsAsyncMethod().Should().BeTrue();
+        GetTestMethod(nameof(TestMethods.AsyncMethodWithResultToTest))
+            .IsTaskMethod().Should().BeTrue();
 
-        typeof(TestMethods).GetMethod(nameof(TestMethods.NonAsyncVoidMethod))
-            .IsAsyncMethod().Should().BeFalse();
+        GetTestMethod(nameof(TestMethods.NonAsyncVoidMethod))
+            .IsTaskMethod().Should().BeFalse();
 
-        typeof(TestMethods).GetMethod(nameof(TestMethods.NonAsyncIntMethod))
-            .IsAsyncMethod().Should().BeFalse();
+        GetTestMethod(nameof(TestMethods.NonAsyncIntMethod))
+            .IsTaskMethod().Should().BeFalse();
+    }
+
+    private MethodInfo GetTestMethod(string methodName)
+    {
+        return typeof(TestMethods).GetMethod(methodName) ?? 
+               throw new NullReferenceException();
     }
 
     [Fact]
     public void CanDetermineIfMethod_ReturnsAsynchronousResult()
     {
-        typeof(TestMethods).GetMethod(nameof(TestMethods.AsyncMethodToTest))
-            .IsAsyncMethodWithResult().Should().BeFalse();
+        GetTestMethod(nameof(TestMethods.AsyncMethodToTest))
+            .IsTaskMethodWithResult().Should().BeFalse();
 
-        typeof(TestMethods).GetMethod(nameof(TestMethods.AsyncMethodWithResultToTest))
-            .IsAsyncMethodWithResult().Should().BeTrue();
+        GetTestMethod(nameof(TestMethods.AsyncMethodWithResultToTest))
+            .IsTaskMethodWithResult().Should().BeTrue();
 
-        typeof(TestMethods).GetMethod(nameof(TestMethods.NonAsyncVoidMethod))
-            .IsAsyncMethodWithResult().Should().BeFalse();
+        GetTestMethod(nameof(TestMethods.NonAsyncVoidMethod))
+            .IsTaskMethodWithResult().Should().BeFalse();
 
-        typeof(TestMethods).GetMethod(nameof(TestMethods.NonAsyncIntMethod))
-            .IsAsyncMethodWithResult().Should().BeFalse();
+        GetTestMethod(nameof(TestMethods.NonAsyncIntMethod))
+            .IsTaskMethodWithResult().Should().BeFalse();
     }
 
     [Fact]
     public void CanDetermineIfMethod_IsAsynchronousAndCanCanceled()
     {
-        typeof(TestMethods).GetMethod(nameof(TestMethods.CancelableAsyncMethod))
+        GetTestMethod(nameof(TestMethods.CancelableAsyncMethod))
             .IsCancellableMethod().Should().BeTrue();
 
-        typeof(TestMethods).GetMethod(nameof(TestMethods.AsyncMethodToTest))
+        GetTestMethod(nameof(TestMethods.AsyncMethodToTest))
             .IsCancellableMethod().Should().BeFalse();
 
-        typeof(TestMethods).GetMethod(nameof(TestMethods.AsyncMethodWithResultToTest))
+        GetTestMethod(nameof(TestMethods.AsyncMethodWithResultToTest))
             .IsCancellableMethod().Should().BeFalse();
 
-        typeof(TestMethods).GetMethod(nameof(TestMethods.NonAsyncVoidMethod))
+        GetTestMethod(nameof(TestMethods.NonAsyncVoidMethod))
             .IsCancellableMethod().Should().BeFalse();
 
-        typeof(TestMethods).GetMethod(nameof(TestMethods.NonAsyncIntMethod))
+        GetTestMethod(nameof(TestMethods.NonAsyncIntMethod))
             .IsCancellableMethod().Should().BeFalse();
     }
 

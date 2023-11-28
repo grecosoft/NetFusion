@@ -6,7 +6,7 @@ namespace NetFusion.Web.UnitTests.Rest.DocGeneration.Setup;
 
 public class PluginSetup
 {
-    public static void WithDefaults(CompositeContainer container)
+    public static void WithDefaults(ICompositeContainer container)
     {
         var hostPlugin = new MockHostPlugin();
 

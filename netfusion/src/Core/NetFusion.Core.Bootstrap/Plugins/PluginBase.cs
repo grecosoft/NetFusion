@@ -129,6 +129,5 @@ public abstract class PluginBase : IPlugin
 
             await module.StopModuleAsync(services);
         }
-
     }
 }

@@ -16,9 +16,9 @@ namespace NetFusion.Core.Bootstrap.Catalog;
 /// plugins are provided for filtering.  However, if the module is contained within an Application plugin, only
 /// types form other Application plugins are provided for filtering.
 ///
-/// DESIGN DECISION: This is by design since a Core plugins implement non-application cross-cutting functionality
-/// used to implement other Core and Application specific plugins.  Core plugins provide interfaces and abstract
-/// class for which consuming plugins provide concrete implementations.
+/// DESIGN DECISION: This is by design since a Core plugins implement cross-cutting functionality extended by
+/// other Core and Application specific plugins.  Core plugins provide interfaces and abstract class for which
+/// consuming plugins provide concrete implementations.
 /// </summary>
 public class TypeCatalog : ITypeCatalog
 {
@@ -38,8 +38,8 @@ public class TypeCatalog : ITypeCatalog
     }
 
     private static Type[] GetNonAbstractTypes(IEnumerable<Type> types) => types.Where(t => !t.IsAbstract).ToArray();
-       
-
+    
+    
     public ITypeCatalog AsService<TService>(Func<Type, bool> filter, ServiceLifetime lifetime)
     {
         if (filter == null) throw new ArgumentNullException(nameof(filter));

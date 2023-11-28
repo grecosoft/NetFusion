@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Common.Base;
 using NetFusion.Common.Base.Logging;
 using NetFusion.Core.Bootstrap.Exceptions;
 using NetFusion.Core.Bootstrap.Health;
@@ -39,6 +38,7 @@ public class CompositeApp : ICompositeApp
         
     private readonly ILogger<CompositeApp> _logger;
     private readonly HealthCheckBuilder _healthCheckBuilder;
+    private readonly CompositeAppLogger _compositeAppLogger;
 
     public IDictionary<string, object> Properties { get; } = new Dictionary<string, object>();
         
@@ -55,6 +55,7 @@ public class CompositeApp : ICompositeApp
         _builder = builder ?? throw new ArgumentNullException(nameof(builder));
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _compositeAppLogger = new CompositeAppLogger(builder);
             
         HostPlugin = new PluginSummary(builder.HostPlugin);
 
@@ -62,22 +63,21 @@ public class CompositeApp : ICompositeApp
     }
 
     public static ICompositeApp Instance => _instance ?? 
-                                            throw new BootstrapException("Composite Application has not been created.");
+        throw new BootstrapException("Composite Application has not been created.");
 
 
     // --------------------------- [Starting Composite Application] -----------------------------------
         
     // At this point, the composite-application has been created from all the registered plugins and
     // all modules have been initialized and services registered.  This is the last call allowing each
-    // plugin module to execute code within the created dependency-injection container before the host
-    // application is started.
+    // plugin module to execute code before the host application is started.
     public async Task StartAsync()
     {
         const string startExMsg = "Error Starting Composite Application";
             
         if (IsStarted)
         {
-            NfExtensions.Logger.Log<CompositeApp>(LogLevel.Error, "Composite Application already started");
+            _logger.LogError("Composite Application already started");
             throw new BootstrapException("Composite Application already started");
         }
 
@@ -87,26 +87,26 @@ public class CompositeApp : ICompositeApp
             using (_logger.LogInformationDuration("Starting Composite-Application"))
             using (IServiceScope scope = _serviceProvider.CreateScope())
             {                    
-                NfExtensions.Logger.Log<CompositeApp>(CoreServicesLogger.Log(scope.ServiceProvider));
+                _logger.Log(CoreServicesLogger.Log(scope.ServiceProvider));
                 await StartCompositeApp(scope.ServiceProvider);
             }
         }
         catch (BootstrapException ex)
         {
-            NfExtensions.Logger.LogError<CompositeApp>(ex, startExMsg);
+            _logger.LogError(ex, startExMsg);
             throw;
         }
         catch (AggregateException ex)
         {
             var flattenedEx = ex.Flatten();
                 
-            NfExtensions.Logger.LogError<CompositeApp>(flattenedEx, startExMsg);
+            _logger.LogError(flattenedEx, startExMsg);
             throw new BootstrapException(startExMsg, flattenedEx);
                 
         }
         catch (Exception ex)
         {
-            NfExtensions.Logger.LogError<CompositeApp>(ex, startExMsg);
+            _logger.LogError(ex, startExMsg);
             throw new BootstrapException(startExMsg, ex);
         }
 
@@ -162,7 +162,7 @@ public class CompositeApp : ICompositeApp
         get
         {
             ThrowIfStopped();
-            return _builder.CompositeLog.GetLog();
+            return _compositeAppLogger.GetLog();
         }
     }
         
@@ -213,14 +213,13 @@ public class CompositeApp : ICompositeApp
     public async Task StopAsync()
     {
         const string stopExMsg = "Error Stopping Composite Application";
-
-        IsReady = false;
-            
+        
         if (! IsStarted)
         {
             return;
         }
-            
+          
+        IsReady = false;
         IsStarted = false;
             
         try
@@ -237,19 +236,19 @@ public class CompositeApp : ICompositeApp
         }
         catch (BootstrapException ex)
         {
-            NfExtensions.Logger.LogError<CompositeApp>(ex, stopExMsg);
+            _logger.LogError(ex, stopExMsg);
             throw;
         }
         catch (AggregateException ex)
         {
             var flattenedEx = ex.Flatten();
-                
-            NfExtensions.Logger.LogError<CompositeApp>(flattenedEx, stopExMsg);
+            
+            _logger.LogError(flattenedEx, stopExMsg);
             throw new BootstrapException(stopExMsg, flattenedEx);
         }
         catch (Exception ex)
         {
-            NfExtensions.Logger.LogError<CompositeApp>(ex, stopExMsg);
+            _logger.LogError(ex, stopExMsg);
             throw new BootstrapException(stopExMsg, ex);
         }
     }

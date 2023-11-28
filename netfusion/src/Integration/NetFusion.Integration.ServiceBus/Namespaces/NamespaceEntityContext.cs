@@ -1,4 +1,5 @@
 using Azure.Messaging.ServiceBus;
+using NetFusion.Common.Base;
 using NetFusion.Integration.Bus.Entities;
 using NetFusion.Integration.ServiceBus.Internal;
 using NetFusion.Integration.ServiceBus.Plugin;
@@ -39,7 +40,7 @@ public class NamespaceEntityContext : BusEntityContext
         if (messageEventArgs == null) throw new ArgumentNullException(nameof(messageEventArgs));
 
         BinaryData messageData = messageEventArgs.Message.Body;
-        string contentType = messageEventArgs.Message.ContentType;
+        string contentType = messageEventArgs.Message.ContentType ?? ContentTypes.Json;
             
         var message = (IMessage?)Serialization.Deserialize(contentType, dispatcher.MessageType, messageData.ToArray());
         if (message == null)

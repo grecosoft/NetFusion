@@ -1,4 +1,6 @@
-﻿namespace NetFusion.Messaging.UnitTests.Queries.Mocks;
+﻿using NetFusion.Messaging.UnitTests.Messaging;
+
+namespace NetFusion.Messaging.UnitTests.Queries.Mocks;
 
 public abstract class MockQueryConsumer
 {
@@ -10,10 +12,12 @@ public abstract class MockQueryConsumer
     }
 }
     
-public class MockSyncQueryConsumer : MockQueryConsumer
+public class MockSyncQueryConsumer : MockQueryConsumer,
+    IMessageConsumer
 {
     public MockSyncQueryConsumer(IMockTestLog testLog) : base(testLog) { }
         
+    [InProcessHandler]
     public MockQueryResult Execute(MockQuery query)
     {
         TestLog.AddLogEntry("Sync-Command-Handler");
@@ -28,10 +32,12 @@ public class MockSyncQueryConsumer : MockQueryConsumer
     }
 }
     
-public class MockAsyncQueryConsumer : MockQueryConsumer
+public class MockAsyncQueryConsumer : MockQueryConsumer,
+    IMessageConsumer
 {
     public MockAsyncQueryConsumer(IMockTestLog testLog) : base(testLog) { }
         
+    [InProcessHandler]
     public async Task<MockQueryResult> Execute(MockQuery query)
     {
         TestLog.AddLogEntry("Async-Command-Handler");
@@ -48,16 +54,18 @@ public class MockAsyncQueryConsumer : MockQueryConsumer
     }
 }
     
-public class DuplicateConsumerOne 
+public class DuplicateConsumerOne : IMessageConsumer
 {
+    [InProcessHandler]
     public MockQueryResult Execute(MockQuery query)
     {
         return new();
     }
 }
 
-public class DuplicateConsumerTwo 
+public class DuplicateConsumerTwo : IMessageConsumer
 {
+    [InProcessHandler]
     public MockQueryResult Execute(MockQuery query)
     {
         return new();

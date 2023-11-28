@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetFusion.Common.Base.Logging;
-using NetFusion.Common.Base.Scripting;
 using NetFusion.Common.Base.Serialization;
 
 namespace NetFusion.Core.Bootstrap.Logging;
@@ -16,12 +15,11 @@ namespace NetFusion.Core.Bootstrap.Logging;
 /// by a plugin-module or during bootstrapping the composite-application when calling
 /// the Compose method on ICompositeContainerBuilder.
 /// </summary>
-public static class CoreServicesLogger
+internal static class CoreServicesLogger
 {
     public static IEnumerable<LogMessage> Log(IServiceProvider services)
     {
         yield return LogSerializationManager(services);
-        yield return LogScriptingService(services);
     }
 
     private static LogMessage LogSerializationManager(IServiceProvider services)
@@ -45,22 +43,9 @@ public static class CoreServicesLogger
         };
 
         logMessage.WithProperties(
-            LogProperty.ForName("ManagerType", contentTypes)
+            LogProperty.ForName("ManagerTypes", contentTypes)
         );
 
         return logMessage;
-    }
-        
-    private static LogMessage LogScriptingService(IServiceProvider services)
-    {
-        var scriptingSrv = services.GetService<IEntityScriptingService>();
-        if (scriptingSrv == null)
-        {
-            return LogMessage.For(LogLevel.Warning, "Scripting Service not Registered");
-        }
-
-        return LogMessage.For(LogLevel.Information, "Scripting Service Registered")
-            .WithProperties(LogProperty.ForName("Service", scriptingSrv.GetType().AssemblyQualifiedName!)
-            ); 
     }
 }

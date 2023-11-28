@@ -6,7 +6,7 @@ namespace NetFusion.Messaging.UnitTests;
 
 public static class TestSetup
 {
-    public static void WithEventHandler(CompositeContainer container)
+    public static void WithEventHandler(ICompositeContainer container)
     {
         var appPlugin = new MockAppPlugin();
         appPlugin.AddModule<InterceptionTests.ExampleModule>();

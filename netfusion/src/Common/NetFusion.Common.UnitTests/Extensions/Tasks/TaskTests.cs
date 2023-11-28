@@ -71,7 +71,7 @@ public class TaskExtensions
 
         try {
             await taskList.WhenAll();
-            Assert.False(true, "Expected Exception Not Raised");
+            Assert.Fail("Expected Exception Not Raised");
         }
         catch 
         {

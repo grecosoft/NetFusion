@@ -126,7 +126,13 @@ public class MockMessagingService : IMessagingService
         _receivedRequests.Add(domainEvent);
         return Task.CompletedTask;
     }
-        
+
+    public Task PublishBatchAsync(IEnumerable<IDomainEvent> domainEvents, IntegrationTypes integrationType = IntegrationTypes.All,
+        CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task PublishAsync(IEventSource eventSource, IntegrationTypes integrationType,
         CancellationToken cancellationToken)
     {
@@ -136,7 +142,7 @@ public class MockMessagingService : IMessagingService
         return Task.CompletedTask;
     }
 
-    public Task<TResult> DispatchAsync<TResult>(IQuery<TResult> query, 
+    public Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, 
         CancellationToken cancellationToken)
     {
         if (query == null) throw new ArgumentNullException(nameof(query));

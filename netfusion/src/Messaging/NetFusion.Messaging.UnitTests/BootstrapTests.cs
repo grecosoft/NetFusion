@@ -1,13 +1,12 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NetFusion.Core.TestFixtures.Container;
-using NetFusion.Messaging.InProcess;
 using NetFusion.Messaging.Internal;
 using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.Messaging.Plugin.Modules;
-using NetFusion.Messaging.UnitTests;
 using NetFusion.Messaging.UnitTests.DomainEvents;
 using NetFusion.Messaging.UnitTests.DomainEvents.Mocks;
+using NetFusion.Messaging.UnitTests.Messaging;
 
 // ReSharper disable All
 
@@ -54,14 +53,14 @@ public class BootstrapTests
                     // Other messaging plugins such as RabbitMQ and ServiceBus 
                     // add corresponding publishers.
                     config.MessagePublishers.Should().HaveCount(1);
-                    config.MessagePublishers.Should().Contain(typeof(MessagePublisher));
+                    config.MessagePublishers.Should().Contain(typeof(InProcessPublisher));
                 })
                 .ServiceCollection(sc =>
                 {
                     // Publishers are created per request scope:
-                    var service = sc.SingleOrDefault(s => s.ImplementationType == typeof(MessagePublisher));
+                    var service = sc.SingleOrDefault(s => s.ImplementationType == typeof(InProcessPublisher));
                     service.Should().NotBeNull();
-                    service.ServiceType.Should().Be(typeof(IMessagePublisher));
+                    service!.ServiceType.Should().Be(typeof(IMessagePublisher));
                     service.Lifetime.Should().Be(ServiceLifetime.Scoped);
                 })
                 .Services(s =>
@@ -72,47 +71,31 @@ public class BootstrapTests
                 });
         });
     }
-        
-    // /// <summary>
-    // /// The MessageDispatchModule will discover all command and domain-event handlers, invoked at runtime, when a
-    // /// command or domain-event is dispatched.  The module's AllMessageTypeDispatchers property contains all of the
-    // /// meta-data required to dispatch a message at runtime to the correct consumer handlers. 
-    // /// </summary>
-    // [Fact]
-    // public void MessagingModule_Discovers_MessagesWithConsumers()
-    // {
-    //     ContainerFixture.Test(fixture => { fixture
-    //         .Arrange.Container(c => c.AddMessagingHost().WithSyncDomainEventHandler())
-    //         .Assert.PluginModule<MessageDispatchModule>(m =>
-    //         {
-    //             var dispatchInfo = m.AllMessageTypeDispatchers[typeof(MockDomainEvent)].SingleOrDefault();
-    //             dispatchInfo.Should().NotBeNull();
-    //         });
-    //     });           
-    // }
 
-    // /// <summary>
-    // /// Components are scanned during the bootstrap process and identified as being a message handler by
-    // /// implementing the IMessageConsumer marker interface and specifying the InProcessHandler attribute
-    // /// on the method handler.
-    // /// </summary>
-    // [Fact]
-    // public void MessagingModule_Discovers_MessageConsumers()
-    // {
-    //     ContainerFixture.Test(fixture => { fixture
-    //         .Arrange.Container(c => c.AddMessagingHost().WithSyncDomainEventHandler())
-    //         .Assert.PluginModule<MessageDispatchModule>(m =>
-    //         {
-    //             var dispatchInfo = m.InProcessDispatchers[typeof(MockDomainEvent)].FirstOrDefault();
-    //             dispatchInfo.Should().NotBeNull();
-    //
-    //             dispatchInfo.MessageType.Should().Be(typeof(MockDomainEvent));
-    //             dispatchInfo.ConsumerType.Should().Be(typeof(MockSyncDomainEventConsumerOne));
-    //             dispatchInfo.MessageHandlerMethod.Should().BeSameAs(
-    //                 typeof(MockSyncDomainEventConsumerOne).GetMethod("OnEventHandler", new[] {typeof(MockDomainEvent) }));
-    //         });
-    //     });    
-    // }
+    /// <summary>
+    /// Components are scanned during the bootstrap process and identified as being a message handler by
+    /// implementing the IMessageConsumer marker interface and specifying the InProcessHandler attribute
+    /// on the method handler.
+    /// </summary>
+    [Fact]
+    public void MessagingModule_Discovers_MessageConsumers()
+    {
+        ContainerFixture.Test(fixture => { fixture
+            .Arrange.Container(c => c.AddMessagingHost().WithSyncDomainEventHandler())
+            .Assert.PluginModule<MessageDispatchModule>(m =>
+            {
+                var domainEvt = new MockDomainEvent();
+                var dispatchInfo = m.GetMessageDispatchers(domainEvt).FirstOrDefault();
+
+                Assert.NotNull(dispatchInfo);
+    
+                dispatchInfo.MessageType.Should().Be(typeof(MockDomainEvent));
+                dispatchInfo.ConsumerType.Should().Be(typeof(MockSyncDomainEventConsumerOne));
+                dispatchInfo.MessageHandlerMethod.Should().BeSameAs(
+                    typeof(MockSyncDomainEventConsumerOne).GetMethod("OnEventHandler", new[] {typeof(MockDomainEvent) }));
+            });
+        });    
+    }
 
     /// <summary>
     /// All discovered command and domain-event consumers are registered in the dependency injection container

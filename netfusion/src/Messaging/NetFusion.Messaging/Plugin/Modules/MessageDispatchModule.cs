@@ -1,10 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NetFusion.Common.Extensions.Collections;
+using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Core.Bootstrap.Exceptions;
 using NetFusion.Core.Bootstrap.Plugins;
-using NetFusion.Messaging.InProcess;
 using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin.Configs;
+using NetFusion.Messaging.Routing;
+using Polly;
 
 namespace NetFusion.Messaging.Plugin.Modules;
 
@@ -18,15 +21,13 @@ public class MessageDispatchModule : PluginModule,
 {
     private MessageDispatchConfig? _dispatchConfig;
     private ILookup<Type, MessageDispatcher> _inProcessDispatchers; 
-        
-    // Discovered Properties:
-    private IEnumerable<IMessageRouter> MessageRouters { get; set; }
 
     public MessageDispatchModule()
     {
         _inProcessDispatchers = Enumerable.Empty<MessageDispatcher>().ToLookup(e => e.MessageType);
-        MessageRouters = Array.Empty<IMessageRouter>();
     }
+    
+    private ILogger<MessageDispatchModule> Logger => Context.LoggerFactory.CreateLogger<MessageDispatchModule>();
         
     // ---------------------- [Plugin Initialization] ----------------------
         
@@ -39,19 +40,20 @@ public class MessageDispatchModule : PluginModule,
     {
         _dispatchConfig = Context.Plugin.GetConfig<MessageDispatchConfig>();
 
-        if (MessageRouters.Count() > 1)
-        {
-            throw new BootstrapException(
-                $"More than one class implementing: {typeof(IMessageRouter)} was found. " + 
-                "there can be only on router per microservice.");
-        }
+        MessageRoute[] messageRoutes = Context.AllPluginTypes
+            .WhereMessageConsumer()
+            .SelectMessageHandlers()
+            .SelectMessageRoutes()
+            .ToArray();
 
-        IMessageRouter? router = MessageRouters.FirstOrDefault();
-        if (router != null)
-        {
-            _inProcessDispatchers = router.BuildMessageDispatchers()
-                .ToLookup(h => h.MessageType);
-        }
+        _inProcessDispatchers = messageRoutes.Select(r => new MessageDispatcher(r)
+            {
+                IncludeDerivedTypes = r.HandlerMethodInfo?.GetParameters().
+                    First().HasAttribute<IncludeDerivedMessagesAttribute>() ?? false
+            })
+            .ToLookup(r => r.MessageType);
+
+        LogInvalidMessageDispatchers(_inProcessDispatchers);
     }
         
     public override void RegisterServices(IServiceCollection services)
@@ -74,8 +76,6 @@ public class MessageDispatchModule : PluginModule,
     }
 
     // Automatically register any ConsumerTypes that are not abstract.  
-    // If the route was configured using an interface of the consumer,
-    // the implementing service is responsible for registering consumer.
     private void RegisterMessageConsumers(IServiceCollection services)
     {
         foreach (MessageDispatcher dispatchInfo in _inProcessDispatchers.Values()
@@ -85,17 +85,69 @@ public class MessageDispatchModule : PluginModule,
         }
     }
         
-    public IEnumerable<MessageDispatcher> GetMessageDispatchers(IMessage message) => 
-        HandlersForMessage(message.GetType())
+    public IEnumerable<MessageDispatcher> GetMessageDispatchers(IMessage message)
+    {
+        if (message == null) throw new ArgumentNullException(nameof(message));
+        
+        return HandlersForMessage(message.GetType())
             .Where(di => di.MessagePredicate?.Invoke(message) ?? true);
-            
-    private IEnumerable<MessageDispatcher> HandlersForMessage(Type messageType) =>
-        _inProcessDispatchers.Where(di => di.Key.IsAssignableFrom(messageType))
+    }
+
+    private IEnumerable<MessageDispatcher> HandlersForMessage(Type messageType)
+    {
+        if (messageType == null) throw new ArgumentNullException(nameof(messageType));
+        
+        return _inProcessDispatchers.Where(di => di.Key.IsAssignableFrom(messageType))
             .SelectMany(di => di)
             .Where(di => di.IncludeDerivedTypes || di.MessageType == messageType);
+    }
+
+    public ResiliencePipeline? GetPublisherResiliencePipeline(Type publisherType)
+    {
+        if (DispatchConfig.ResiliencePipelines.TryGetValue(publisherType, out var pipeline))
+        {
+            return pipeline;
+        }
+        
+        // No publisher specific resilience pipeline.  Check if a default publisher
+        // pipeline is registered;
+        if (DispatchConfig.ResiliencePipelines.TryGetValue(typeof(IMessagePublisher), out var defaultPipeline))
+        {
+            return defaultPipeline;
+        }
+
+        return null;
+    }
 
     // ---------------------- [Logging] ----------------------
 
+    private void LogInvalidMessageDispatchers(ILookup<Type, MessageDispatcher> dispatchers)
+    {
+        bool IsSingleHandlerMessageType(Type mt) => mt.IsDerivedFrom<ICommand>() || mt.IsDerivedFrom<IQuery>();
+
+        var noHandlerMessages = dispatchers.Where(d => IsSingleHandlerMessageType(d.Key))
+            .Where(mt => !mt.Any())
+            .Select(d => d.Key.FullName)
+            .ToArray();
+
+        if (noHandlerMessages.Any())
+        {
+            Logger.LogWarning("Handlers not found for the following messages: {MessageTypes}", 
+                string.Join(",", noHandlerMessages));
+        }
+
+        var multipleHandlerMessages = dispatchers.Where(d => IsSingleHandlerMessageType(d.Key))
+            .Where(mt => mt.Count() > 1)
+            .Select(d => d.Key.FullName)
+            .ToArray();
+
+        if (multipleHandlerMessages.Any())
+        {
+            Logger.LogWarning("Handlers not found for the following messages: {MessageTypes}", 
+                string.Join(",", multipleHandlerMessages));
+        }
+    }
+    
     // For each discovered message event type, execute the same code that is used at runtime to determine
     // the consumer methods that handle the message.  Then log the information.
     public override void Log(IDictionary<string, object> moduleLog)
@@ -121,7 +173,7 @@ public class MessageDispatchModule : PluginModule,
                 {
                     Consumer = d.ConsumerType.FullName,
                     Method = d.MessageHandlerMethod.Name,
-                    d.IsAsync,
+                    IsAsync = d.IsTask,
                     IncludedDerivedTypes = d.IncludeDerivedTypes
                 }).ToArray();
         }

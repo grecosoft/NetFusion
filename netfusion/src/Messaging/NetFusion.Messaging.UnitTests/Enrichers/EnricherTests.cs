@@ -4,10 +4,10 @@ using NetFusion.Core.TestFixtures.Container;
 using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Plugin.Configs;
 using NetFusion.Messaging.Types.Attributes;
-using NetFusion.Messaging.UnitTests;
 using NetFusion.Messaging.UnitTests.DomainEvents;
 using NetFusion.Messaging.UnitTests.DomainEvents.Mocks;
 using NetFusion.Messaging.UnitTests.Enrichers.Mocks;
+using NetFusion.Messaging.UnitTests.Messaging;
 using NetFusion.Services.Messaging.Enrichers;
 
 // ReSharper disable All
@@ -74,7 +74,7 @@ public class EnricherTests
                 var message = log.Messages.OfType<MockDomainEvent>().FirstOrDefault();
 
                 // Correlation Enricher:
-                message.Should().NotBeNull();
+                Assert.NotNull(message);
                 message.GetCorrelationId().Should().NotBeNullOrEmpty();
                 message.GetMessageId().Should().NotBeNullOrEmpty();
                     
@@ -122,7 +122,7 @@ public class EnricherTests
                 childEx.Should().NotBeNull();
                 childEx.Should().BeOfType<EnricherException>();
                 childEx.InnerException.Should().BeOfType<InvalidOperationException>();
-                childEx.InnerException.Message.Should().Be("TestEnricherException");
+                childEx.InnerException?.Message.Should().Be("TestEnricherException");
             });
         });
     }

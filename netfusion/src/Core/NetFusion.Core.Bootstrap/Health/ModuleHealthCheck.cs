@@ -13,7 +13,7 @@ public class ModuleHealthCheck
     private readonly List<HealthAspectCheck> _aspectsChecks = new();
         
     /// <summary>
-    /// The module type  associated with the health check.
+    /// The module type associated with the health check.
     /// </summary>
     public Type PluginModuleType { get; }
 

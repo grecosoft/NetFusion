@@ -48,7 +48,7 @@ public class SubscriptionService : ISubscriptionService
             
             var (contentType, messageData) = ChannelMessageEncoder.UnPack(valueData);
 
-            TDomainEvent? domainEvent =_serialization.Deserialize<TDomainEvent>(
+            TDomainEvent? domainEvent = _serialization.Deserialize<TDomainEvent>(
                 contentType, 
                 messageData);
 

@@ -11,7 +11,7 @@ namespace NetFusion.Core.Bootstrap.Logging;
 /// <summary>
 /// Contains methods specific to logging plugin details.
 /// </summary>
-public static class PluginLogger
+internal static class PluginLogger
 {
     /// <summary>
     /// Creates a log message for each plug-in and adds details pertaining to the plug-in as log properties.  

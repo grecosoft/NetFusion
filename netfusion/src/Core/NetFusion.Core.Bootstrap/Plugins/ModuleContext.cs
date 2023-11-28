@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NetFusion.Common.Base;
 using NetFusion.Core.Bootstrap.Container;
-using NetFusion.Core.Bootstrap.Exceptions;
 
 namespace NetFusion.Core.Bootstrap.Plugins;
 
@@ -15,10 +13,6 @@ namespace NetFusion.Core.Bootstrap.Plugins;
 /// </summary>
 public class ModuleContext
 {
-    private readonly ICompositeAppBuilder _builder;
-    private ILoggerFactory? _loggerFactory;
-    private ILogger? _logger;
-
     /// <summary>
     /// The plug-in representing the application host.
     /// </summary>
@@ -42,10 +36,18 @@ public class ModuleContext
     /// same as AllPluginTypes.
     /// </summary>
     public IEnumerable<Type> AllAppPluginTypes { get; }
+
+    /// <summary>
+    /// The application configuration configured for the application container.
+    /// </summary>
+    public IConfiguration Configuration { get; }
          
     public ModuleContext(ICompositeAppBuilder builder, IPlugin plugin)
     {
-        _builder = builder ?? throw new ArgumentNullException(nameof(builder));
+        if (builder == null) throw new ArgumentNullException(nameof(builder));
+
+        LoggerFactory = builder.BootstrapLoggerFactory;
+        Configuration = builder.Configuration;
 
         Plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
         AppHost = builder.HostPlugin;
@@ -53,30 +55,18 @@ public class ModuleContext
         AllPluginTypes = FilteredTypesByPluginType(builder, plugin);
         AllAppPluginTypes = GetAppPluginTypes(builder);
     }
-
+    
     /// <summary>
-    /// The application configuration configured for the application container.
+    /// Logger factory used to create loggers.  Depending on the stage of
+    /// the bootstrap process, the logger factory will reference the
+    /// bootstrap logger-factory or the host configured logger-factory.
     /// </summary>
-    public IConfiguration Configuration => _builder.Configuration;
-
-    /// <summary>
-    /// Logging factory.  Only available after the service-provider has been created.
-    /// Use the ExtendedLogger in code executing before the container is created.
-    /// </summary>
-    public ILoggerFactory LoggerFactory => _loggerFactory ?? throw new BootstrapException(
-        $"LoggerFactory not available until service-provider created. Use {nameof(NfExtensions.Logger)}");
-
-    /// <summary>
-    /// Logger with the name of the plug-in used to identify the log messages.
-    /// Can only be used after the service-provider has been created.
-    /// </summary>
-    public ILogger Logger => _logger ?? throw new BootstrapException(
-        $"Logger can't be accessed until service-provider created. Use {nameof(NfExtensions.Logger)}");
+    public ILoggerFactory LoggerFactory { get; private set; }
 
     internal void InitLogging(IServiceProvider services)
     {
-        _loggerFactory = services.GetRequiredService<ILoggerFactory>();
-        _logger = _loggerFactory.CreateLogger(Plugin.GetType());
+        // Override bootstrap logger-factory with host built logger-factory.
+        LoggerFactory = services.GetRequiredService<ILoggerFactory>();
     }
 
     private static IEnumerable<Type> FilteredTypesByPluginType(ICompositeAppBuilder builder, IPlugin plugin) => 

@@ -17,7 +17,7 @@ public interface ITypeCatalog
     /// </summary>
     /// <typeparam name="TService">The service registration type.  All concrete classes
     /// matching the supplied filter will be registered as TService.</typeparam>
-    /// <param name="filter">The predicate used find matching types.</param>
+    /// <param name="filter">The predicate used to find matching types.</param>
     /// <param name="lifetime">The lifetime of the registered service.</param>
     /// <returns>Reference to type catalog.</returns>
     ITypeCatalog AsService<TService>(Func<Type, bool> filter, ServiceLifetime lifetime);

@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NetFusion.Common.Base;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Core.Bootstrap.Catalog;
 using NetFusion.Core.Bootstrap.Plugins;
@@ -24,6 +23,8 @@ public class AppSettingsModule : PluginModule
 {
     // ------------------------ [Plugin Initialization] --------------------------
         
+    private ILogger<AppSettingsModule> Logger => Context.LoggerFactory.CreateLogger<AppSettingsModule>();
+    
     public override void RegisterServices(IServiceCollection services)
     {
         IEnumerable<Type> appSettingTypes = Context.AllPluginTypes
@@ -34,7 +35,7 @@ public class AppSettingsModule : PluginModule
             string? sectionPath = SettingsExtensions.GetSectionPath(appSettingType);
             if (string.IsNullOrWhiteSpace(sectionPath))
             {
-                NfExtensions.Logger.Log<AppSettingsModule>(LogLevel.Warning, 
+                Logger.Log(LogLevel.Warning, 
                     "The section path for settings {SettingsType} could not be determined.  Make sure the " +
                     "attribute {AttributeType} is specified.",
                     appSettingType.AssemblyQualifiedName!, 

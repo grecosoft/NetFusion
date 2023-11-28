@@ -4,11 +4,11 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Core.Bootstrap.Catalog;
 using NetFusion.Core.Bootstrap.Exceptions;
-using NetFusion.Core.Bootstrap.Logging;
 using NetFusion.Core.Bootstrap.Plugins;
 
 namespace NetFusion.Core.Bootstrap.Container;
@@ -16,12 +16,15 @@ namespace NetFusion.Core.Bootstrap.Container;
 /// <summary>
 /// Responsible for registering the ICompositeApp instance built from
 /// a set of plugins specified by the application host.
+///
+/// https://github.com/grecosoft/NetFusion/wiki/core-bootstrap-overview
 /// </summary>
 internal class CompositeAppBuilder : ICompositeAppBuilder
 {
     // .NET Core Service Abstractions:
     public IServiceCollection ServiceCollection { get; }
     public IConfiguration Configuration { get; }
+    public ILoggerFactory BootstrapLoggerFactory { get; }
         
     public IPlugin[] AllPlugins { get; private set; } = Array.Empty<IPlugin>();
     public IPluginModule[] AllModules { get; private set; } = Array.Empty<IPluginModule>();
@@ -31,14 +34,13 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     public IPlugin[] AppPlugins { get; private set; } = Array.Empty<IPlugin>();
     public IPlugin[] CorePlugins { get; private set; } = Array.Empty<IPlugin>();
         
-    // Logging Properties:
-    public CompositeAppLogger CompositeLog { get; private set; }
-        
-    public CompositeAppBuilder(IServiceCollection serviceCollection, IConfiguration configuration)
+    public CompositeAppBuilder(IServiceCollection serviceCollection, 
+        ILoggerFactory bootstrapLoggerFactory, 
+        IConfiguration configuration)
     {
         ServiceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
         Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        CompositeLog = new CompositeAppLogger(this, ServiceCollection);
+        BootstrapLoggerFactory = bootstrapLoggerFactory;
     }
         
     // =========================== [Plug Composition] ==========================
@@ -49,7 +51,7 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     /// </summary>
     /// <param name="plugins">List of all plugins used to build the composite application.</param>
     /// <param name="typeResolver">The type resolver.</param>
-    internal void AssemblePlugins(IPlugin[] plugins, ITypeResolver typeResolver)
+    public void AssemblePlugins(IPlugin[] plugins, ITypeResolver typeResolver)
     {
         if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
         if (plugins == null) throw new ArgumentNullException(nameof(plugins));
@@ -60,8 +62,8 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
         ConfigurePlugins();
     }
 
-    public IPlugin HostPlugin => _hostPlugin ?? 
-                                 throw new BootstrapException("Host Plugin can't be accessed until builder is composed.");
+    public IPlugin HostPlugin => _hostPlugin ?? throw new BootstrapException(
+        "Host Plugin can't be accessed until builder is composed.");
       
 
     /// <summary>
@@ -114,6 +116,7 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
         
     // --------------------------- Service Dependencies -------------------------------
         
+    // https://github.com/grecosoft/NetFusion/wiki/core-modules-services
     private void SetPluginServiceDependencies()
     {
         SetPluginServiceDependencies(CorePlugins, PluginTypes.CorePlugin);
@@ -199,6 +202,8 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     // Allow each plug-in module to compose itself from concrete types, defined by other plugins,
     // based on abstract types defined by the plugin being composed.  Think of this as a simplified
     // implementation of Microsoft's MEF.
+    //
+    // https://github.com/grecosoft/NetFusion/wiki/core-modules-knowntypes
     private void ComposePlugins(ITypeResolver typeResolver)
     {
         ComposeCorePlugins(typeResolver);
@@ -219,7 +224,7 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     }
 
     // Application plugins contain a specific application's implementations
-    // and are composed only from other application specific plugins.
+    // and are composed only from other application specific plugin types.
     private void ComposeAppPlugins(ITypeResolver typeResolver)
     {
         var allAppPluginTypes = GetPluginTypes(
@@ -246,6 +251,8 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     // After all modules are initialized, each module has the Configure() method called.
     // Code contained within a module's Configure() method can reference information
     // initialized by a dependent module.
+    //
+    // https://github.com/grecosoft/NetFusion/wiki/core-bootstrap-modules#initialization-and-configuration
     private void ConfigurePlugins()
     {
         CorePlugins.ForEach(InitializeModules);
@@ -279,8 +286,10 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
    
     // Allows each module to register services that can be injected into
     // other components.  These services expose functionality implemented
-    // by a plugin that can be injected into other components.
-    internal void RegisterPluginServices()
+    // by a plugin that can be injected into other components at runtime.
+    //
+    // https://github.com/grecosoft/NetFusion/wiki/core-modules-service-registration
+    public void RegisterPluginServices()
     {
         // Plugin Service Registrations:
         RegisterCorePluginServices();
@@ -321,6 +330,14 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
         ScanForServices(new []{ HostPlugin }, hostPluginTypes);
     }
 
+    private void RegisterPluginServices(IPlugin[] plugins)
+    {
+        foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
+        {
+            module.RegisterServices(ServiceCollection);
+        }
+    }
+    
     private void ScanForServices(IPlugin[] plugins, Type[] pluginTypes)
     {
         var catalog = ServiceCollection.CreateCatalog(pluginTypes);
@@ -328,14 +345,6 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
         foreach (var module in plugins.SelectMany(p => p.Modules))
         {
             module.ScanForServices(catalog);
-        }
-    } 
-        
-    private void RegisterPluginServices(IPlugin[] plugins)
-    {
-        foreach (IPluginModule module in plugins.SelectMany(p => p.Modules))
-        {
-            module.RegisterServices(ServiceCollection);
         }
     }
         

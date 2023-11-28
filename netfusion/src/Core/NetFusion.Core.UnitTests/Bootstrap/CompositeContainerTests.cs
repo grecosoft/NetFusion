@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NetFusion.Common.Base.Logging;
-using NetFusion.Common.Base.Scripting;
 using NetFusion.Common.Base.Validation;
 using NetFusion.Core.Bootstrap.Container;
-using NetFusion.Core.Builder;
 using NetFusion.Core.TestFixtures.Container;
 using NetFusion.Core.TestFixtures.Plugins;
 using NetFusion.Core.UnitTests.Bootstrap.Mocks;
@@ -75,7 +74,10 @@ public class CompositeContainerTests
             
         services.AddLogging();
             
-        var builder = services.CompositeContainer(configuration, new NullExtendedLogger());
+        var builder = services.CompositeContainer(configuration,
+            LoggerFactory.Create(_ => { }),
+            new NullExtendedLogger());
+        
         var hostPlugin = new MockHostPlugin();
         var corePlugin = new MockCorePlugin();
 
@@ -101,7 +103,10 @@ public class CompositeContainerTests
             
         services.AddLogging();
             
-        var builder = services.CompositeContainer(configuration, new NullExtendedLogger());
+        var builder = services.CompositeContainer(configuration, 
+            LoggerFactory.Create(_ => { }),
+            new NullExtendedLogger());
+        
         var hostPlugin = new MockHostPlugin();
         var corePlugin = new MockCorePlugin();
             
@@ -124,7 +129,10 @@ public class CompositeContainerTests
         IServiceCollection services = new ServiceCollection();
         IConfiguration configuration = new ConfigurationBuilder().Build();
 
-        var builder = services.CompositeContainer(configuration, new NullExtendedLogger());
+        var builder = services.CompositeContainer(configuration, 
+            LoggerFactory.Create(_ => { }), 
+            new NullExtendedLogger());
+        
         var hostPlugin = new MockHostPlugin();
 
         builder.AddPlugin(hostPlugin);
@@ -133,6 +141,5 @@ public class CompositeContainerTests
         var provider = services.BuildServiceProvider();
 
         provider.GetRequiredService<IValidationService>();
-        provider.GetRequiredService<IEntityScriptingService>();
     }
 }

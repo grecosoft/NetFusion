@@ -7,21 +7,21 @@ using NetFusion.Messaging.Exceptions;
 using NetFusion.Messaging.Logging;
 using NetFusion.Messaging.Plugin;
 
-namespace NetFusion.Messaging.InProcess;
+namespace NetFusion.Messaging.Internal;
 
 /// <summary>
 /// This is the default message publisher that dispatches messages locally
 /// to message handlers contained within the current microservice process.
 /// </summary>
-public class MessagePublisher : IMessagePublisher
+public class InProcessPublisher : IMessagePublisher
 {
-    private readonly ILogger<MessagePublisher> _logger;
+    private readonly ILogger<InProcessPublisher> _logger;
     private readonly IServiceProvider _services;
     private readonly IMessageDispatchModule _messagingModule;
     private readonly IMessageLogger _messageLogger;
 
-    public MessagePublisher(
-        ILogger<MessagePublisher> logger,
+    public InProcessPublisher(
+        ILogger<InProcessPublisher> logger,
         IServiceProvider services,
         IMessageDispatchModule messagingModule,
         IMessageLogger messageLogger)
@@ -40,11 +40,13 @@ public class MessagePublisher : IMessagePublisher
     public async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
     {
         MessageDispatcher[] dispatchers = _messagingModule.GetMessageDispatchers(message).ToArray();
+        AssertMessageDispatchers(message, dispatchers);
+        
         if (dispatchers.Empty())
         {
             return;
         }
-
+        
         var msgLog = CreateLogMessage(message, dispatchers);
 
         // Execute all dispatchers and return the task for the caller to await.
@@ -60,6 +62,18 @@ public class MessagePublisher : IMessagePublisher
         finally
         {
             await _messageLogger.LogAsync(msgLog);
+        }
+    }
+    
+    private static void AssertMessageDispatchers(IMessage message, MessageDispatcher[] dispatchers)
+    {
+        if (dispatchers.Length != 1 && message is not IDomainEvent)
+        {
+            var dispatcherDetails = GetDispatchLogDetails(dispatchers);
+                
+            throw new PublisherException(
+                $"Message of type: {message.GetType()} must have one and only one consumer.", "dispatchers", 
+                dispatcherDetails);
         }
     }
 
@@ -99,7 +113,7 @@ public class MessagePublisher : IMessagePublisher
     private Task InvokeDispatcher(MessageDispatcher dispatcher, IMessage message, 
         CancellationToken cancellationToken)
     {
-        // Since this root component use service-locator obtain reference to message consumer.
+        // Since this s root component, use service-locator to obtain reference to message consumer.
         var consumer = _services.GetService(dispatcher.ConsumerType);
         if (consumer == null)
         {
@@ -141,7 +155,7 @@ public class MessagePublisher : IMessagePublisher
                 MessageType = d.MessageType.FullName,
                 ConsumerType = d.ConsumerType.FullName,
                 HandlerMethod = d.MessageHandlerMethod.Name,
-                d.IsAsync,
+                IsAsync = d.IsTask,
                 d.IncludeDerivedTypes
             }), 
             message.GetType());

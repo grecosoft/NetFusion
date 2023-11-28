@@ -3,14 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using NetFusion.Common.Base.Scripting;
+using Microsoft.Extensions.Logging;
 using NetFusion.Common.Base.Validation;
 using NetFusion.Core.Bootstrap.Container;
 using NetFusion.Core.TestFixtures.Plugins;
 
-//using NetFusion.Services.Serialization;
-
-// ReSharper disable MethodHasAsyncOverload
 namespace NetFusion.Core.TestFixtures.Container;
 
 /// <summary>
@@ -79,7 +76,10 @@ public class ContainerFixture
         var fixture = CreateFixture(new TestTypeResolver());
         await test(fixture).ConfigureAwait(false);
 
-        fixture._compositeApp?.Stop();
+        if (fixture._compositeApp != null)
+        {
+            await fixture._compositeApp.StopAsync();
+        }
     }
 
     private static ContainerFixture CreateFixture(ITypeResolver resolver) =>
@@ -87,7 +87,7 @@ public class ContainerFixture
         
     //-- Properties and methods used ty the Arrange, Act, and Assert classes.
 
-    internal bool IsCompositeContainerBuild => _container != null;
+    internal bool IsCompositeContainerBuilt => _container != null;
 
     /// <summary>
     /// Builds a Composite-Container using the Service-Collection associated
@@ -108,11 +108,10 @@ public class ContainerFixture
                 
         // Common services used by the majority of composite-applications or
         // default null-services for optional common services.
-        ComposedServices.AddSingleton<IEntityScriptingService, NullEntityScriptingService>();
         ComposedServices.AddSingleton<IValidationService, ValidationService>();
         ComposedServices.AddLogging().AddOptions();
             
-        _container = new CompositeContainer(ComposedServices, configuration);
+        _container = new CompositeContainer(ComposedServices, LoggerFactory.Create(_ => { }), configuration);
         return _container;
     }
         

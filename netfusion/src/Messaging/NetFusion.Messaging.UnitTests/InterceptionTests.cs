@@ -62,7 +62,7 @@ public class InterceptionTests
     {
         return ContainerFixture.TestAsync(async fixture =>
         {
-            CommandResult cmdResult = null;
+            CommandResult? cmdResult = null;
                 
             var mockMsgSrv = new MockMessagingService();
             mockMsgSrv.AddCommandResponse<ExampleCommand>(new CommandResult { Sum = 100, Avg = 88 });
@@ -78,6 +78,7 @@ public class InterceptionTests
 
             testResult.Assert.State(() =>
             {
+                Assert.NotNull(cmdResult);
                 cmdResult.Sum.Should().Be(200);
                 cmdResult.Avg.Should().Be(138);
             });
@@ -123,7 +124,7 @@ public class InterceptionTests
     {
         return ContainerFixture.TestAsync(async fixture =>
         {
-            QueryResult queryResult = null;
+            QueryResult? queryResult = null;
                 
             var mockMsgSrv = new MockMessagingService();
             mockMsgSrv.AddQueryResponse<ExampleQuery>(new QueryResult { Data = new [] { 100, 200 }});
@@ -139,6 +140,7 @@ public class InterceptionTests
 
             testResult.Assert.State(() =>
             {
+                Assert.NotNull(queryResult);
                 queryResult.Data.Should().NotBeNull();
                 queryResult.Data.Should().BeEquivalentTo(new[] {100, 200, 99});
             });
@@ -279,7 +281,7 @@ public class InterceptionTests
         public async Task<QueryResult> BizLogicWithQuery(int minValue)
         {
             var query = new ExampleQuery(minValue);
-            var result = await _messaging.DispatchAsync(query);
+            var result = await _messaging.ExecuteAsync(query);
 
             var baseResult = result.Data.ToList();
             baseResult.Add(99);
@@ -331,7 +333,7 @@ public class InterceptionTests
 
     public class QueryResult
     {
-        public int[] Data { get; set; }
+        public int[] Data { get; set; } = Array.Empty<int>();
     }
 
     public class ExampleQuery : Query<QueryResult>

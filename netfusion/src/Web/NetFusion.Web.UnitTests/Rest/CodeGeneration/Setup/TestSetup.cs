@@ -15,7 +15,7 @@ public static class TestSetup
     /// Host Plugin containing two models for which code will be generated.
     /// </summary>
     /// <param name="container"></param>
-    public static void WithDefaults(CompositeContainer container)
+    public static void WithDefaults(ICompositeContainer container)
     {
         var hostPlugin = new MockHostPlugin();
         hostPlugin.AddPluginType<ApiModelOne>();

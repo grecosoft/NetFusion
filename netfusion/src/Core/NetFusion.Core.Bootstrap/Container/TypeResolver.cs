@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NetFusion.Common.Base.Logging;
 using NetFusion.Common.Extensions.Collections;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Core.Bootstrap.Plugins;
@@ -15,14 +14,6 @@ namespace NetFusion.Core.Bootstrap.Container;
 /// </summary>
 public class TypeResolver : ITypeResolver
 {
-    // ReSharper disable once NotAccessedField.Local
-    private readonly IExtendedLogger _logger;
-        
-    public TypeResolver(IExtendedLogger logger)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
-        
     public void SetPluginMeta(IPlugin plugin)
     {
         if (plugin == null) throw new ArgumentNullException(nameof(plugin));

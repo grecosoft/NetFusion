@@ -2,7 +2,7 @@
 
 /// <summary>
 /// Called when a message is published to allow plugins to customize the publishing of messages.
-/// For example the InProcess MessagePublisher dispatches messages locally while another publisher
+/// For example the InProcessMessagePublisher dispatches messages locally while another publisher
 /// could deliver the messages externally to a central message broker.
 /// </summary> 
 public interface IMessagePublisher
