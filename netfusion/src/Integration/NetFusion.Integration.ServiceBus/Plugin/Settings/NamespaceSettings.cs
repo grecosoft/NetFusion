@@ -18,7 +18,7 @@ public class NamespaceSettings : IValidatableType
     /// The connection string used to connect to the namespace.
     /// </summary>
     [Required(AllowEmptyStrings = false, ErrorMessage = "Azure Service Bus Connection required.")]
-    public string ConnString { get; set; } = null!;
+    public string FullyQualifiedNamespace { get; set; } = null!;
 
     /// <summary>
     /// The type of protocol and transport that will be used for communicating with the Service Bus service.
