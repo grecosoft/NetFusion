@@ -1,3 +1,4 @@
+using Azure.Identity;
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
 using NetFusion.Integration.ServiceBus.Plugin.Settings;
@@ -36,8 +37,8 @@ public class NamespaceConnection
 
         NamespaceSettings = namespaceSettings ?? throw new ArgumentNullException(nameof(namespaceSettings));
         
-        BusClient = new ServiceBusClient(NamespaceSettings.ConnString, BuildOptions());
-        AdminClient = new ServiceBusAdministrationClient(NamespaceSettings.ConnString);
+        BusClient = new ServiceBusClient(NamespaceSettings.EndPoint, new DefaultAzureCredential(), BuildOptions());
+        AdminClient = new ServiceBusAdministrationClient(NamespaceSettings.EndPoint, new DefaultAzureCredential());
         
         _externalSettings = new ExternalEntitySettings(namespaceSettings);
     }

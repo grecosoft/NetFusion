@@ -149,6 +149,15 @@ internal class QueueSubscriptionStrategy : BusEntityStrategyBase<NamespaceEntity
         {
             message.SetReplyTo(args.Message.ReplyTo);
         }
+
+        foreach (var appProp in args.Message.ApplicationProperties)
+        {
+            var appPropValue = appProp.Value.ToString();
+            if (appPropValue is not null)
+            {
+                message.Attributes.SetStringValue(appProp.Key, appPropValue);
+            }
+        }
             
         return message;
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetFusion.Common.Base.Serialization;
 
@@ -69,6 +70,8 @@ public class SerializationManager : ISerializationManager
         if (valueType == null) throw new ArgumentNullException(nameof(valueType));
         if (value == null) throw new ArgumentNullException(nameof(value));
 
+        if (TryCustomDeserialization(valueType, value, out object? instance)) return instance;
+
         ISerializer serializer = GetSerializer(contentType, encodingType);
         return serializer.Deserialize(value, valueType);
     }
@@ -79,9 +82,26 @@ public class SerializationManager : ISerializationManager
             throw new ArgumentException("Content-Type must be specified.", nameof(contentType));
 
         if (value == null) throw new ArgumentNullException(nameof(value));
+        
+        if (TryCustomDeserialization(typeof(T), value, out object? instance)) return (T)instance;
 
         ISerializer serializer = GetSerializer(contentType, encodingType);
         return (T?)serializer.Deserialize(value, typeof(T));
+    }
+
+    private bool TryCustomDeserialization(Type valueType, byte[] value, [NotNullWhen(true)]out object? instance)
+    {
+        if (valueType.IsAssignableTo(typeof(ICustomDeserialize)))
+        {
+            instance = Activator.CreateInstance(valueType) ?? 
+                       throw new InvalidOperationException("");
+            
+            ((ICustomDeserialize)instance).Deserialize(value);
+            return true;
+        }
+
+        instance = null;
+        return false;
     }
 
     public ISerializer GetSerializer(string contentType, string? encodingType = null)
