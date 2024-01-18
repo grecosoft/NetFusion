@@ -6,7 +6,7 @@ namespace NetFusion.Integration.ServiceBus.Plugin.Settings;
 /// <summary>
 /// Settings specifying Azure Service Bus namespace configurations.
 /// </summary>
-[ConfigurationSection("netfusion:azure:serviceBus")]
+[ConfigurationSection("azure:serviceBus")]
 public class BusSettings : IAppSettings,
     IValidatableType
 {

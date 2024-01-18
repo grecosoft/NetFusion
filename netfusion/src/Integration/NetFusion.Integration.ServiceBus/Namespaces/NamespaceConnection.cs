@@ -37,8 +37,8 @@ public class NamespaceConnection
 
         NamespaceSettings = namespaceSettings ?? throw new ArgumentNullException(nameof(namespaceSettings));
         
-        BusClient = new ServiceBusClient(NamespaceSettings.FullyQualifiedNamespace, new DefaultAzureCredential(), BuildOptions());
-        AdminClient = new ServiceBusAdministrationClient(NamespaceSettings.FullyQualifiedNamespace, new DefaultAzureCredential());
+        BusClient = new ServiceBusClient(NamespaceSettings.EndPoint, new DefaultAzureCredential(), BuildOptions());
+        AdminClient = new ServiceBusAdministrationClient(NamespaceSettings.EndPoint, new DefaultAzureCredential());
         
         _externalSettings = new ExternalEntitySettings(namespaceSettings);
     }
