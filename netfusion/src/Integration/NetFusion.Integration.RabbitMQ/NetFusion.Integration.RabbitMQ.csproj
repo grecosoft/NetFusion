@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\..\build\common.props" />
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -23,10 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyNetQ.Logging.Microsoft" Version="7.5.5" />
-    <PackageReference Include="EasyNetQ.Serialization.SystemTextJson" Version="7.5.5" />
+    <PackageReference Include="EasyNetQ.Logging.Microsoft" Version="7.8.0" />
+    <PackageReference Include="EasyNetQ.Serialization.SystemTextJson" Version="7.8.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-    <PackageReference Include="EasyNetQ" Version="7.5.5" />
+    <PackageReference Include="EasyNetQ" Version="7.8.0" />
   </ItemGroup>
 
   <PropertyGroup>
