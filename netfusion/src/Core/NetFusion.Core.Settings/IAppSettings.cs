@@ -5,7 +5,4 @@
 /// the implementing class is created and initialized when injected into a dependent 
 /// component.
 /// </summary>
-public interface IAppSettings 
-{
-
-}
+public interface IAppSettings;

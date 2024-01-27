@@ -2,37 +2,20 @@
 
 namespace NetFusion.Web.UnitTests.Rest.DocGeneration.Server;
 
-public class TestResponseModel
-{
-}
+public class TestResponseModel;
 
-public class TestCreatedResponseModel
-{
-
-}
+public class TestCreatedResponseModel;
 
 [Resource("api.sample.model")]
-public class ModelWithExposedName
-{
+public class ModelWithExposedName;
 
-}
-
-public class ModelWithoutExposedName
-{
-
-}
+public class ModelWithoutExposedName;
 
 [Resource("api.root.model")]
-public class RootResponseModel
-{
-
-}
+public class RootResponseModel;
 
 [Resource("api.embedded.model")]
-public class EmbeddedChildModel
-{
-
-}
+public class EmbeddedChildModel;
 
 public class ModelWithResourceLinks
 {

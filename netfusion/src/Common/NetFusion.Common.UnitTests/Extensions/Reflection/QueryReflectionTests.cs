@@ -47,11 +47,13 @@ public class QueryReflectionTests
         typeof(TestClass5).HasDefaultConstructor().Should().BeTrue();
     }
 
-    interface ITest { }
-    abstract class TestBase { }
-    class TestClass1 : TestBase, ITest { }
-    class TestClass2 : TestBase { }
-    abstract class TestClass3 : ITest { }
+    interface ITest;
+
+    abstract class TestBase;
+
+    class TestClass1 : TestBase, ITest;
+    class TestClass2 : TestBase;
+    abstract class TestClass3 : ITest;
 
     class TestClass4
     {
@@ -65,10 +67,12 @@ public class QueryReflectionTests
         public TestClass5(object data) { }
     }
 
-    interface IService { }
-    class TestClass6 : IService { }
-    interface IModuleService : IService { }
-    class TestClass7 : IModuleService { };
-    interface IRunnable : IService { }
-    class TestClass8 : IModuleService, IRunnable { }
+    interface IService;
+    class TestClass6 : IService;
+
+    interface IModuleService : IService;
+    class TestClass7 : IModuleService;
+
+    interface IRunnable : IService;
+    class TestClass8 : IModuleService, IRunnable;
 }

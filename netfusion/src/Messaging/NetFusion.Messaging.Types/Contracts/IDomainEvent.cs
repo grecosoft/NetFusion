@@ -6,7 +6,4 @@
 /// Often, command handlers will publish domain-events used to notify interested subscribers
 /// of state changes made by the handling of the command.
 /// </summary>
-public interface IDomainEvent : IMessage
-{
-
-}
+public interface IDomainEvent : IMessage;

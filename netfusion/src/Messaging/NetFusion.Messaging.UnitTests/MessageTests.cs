@@ -125,23 +125,11 @@ public class MessageTests
         public string? Location { get; set; }
     }
 
-    public class MockCommand : Command<CommandResultBase>
-    {
-            
-    }
+    public class MockCommand : Command<CommandResultBase>;
 
-    public abstract class CommandResultBase
-    {
-            
-    }
+    public abstract class CommandResultBase;
 
-    public class CommandResultOne : CommandResultBase
-    {
-            
-    }
+    public class CommandResultOne : CommandResultBase;
 
-    public class CommandResultTwo 
-    {
-            
-    }
+    public class CommandResultTwo;
 }

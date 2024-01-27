@@ -113,7 +113,7 @@ public static class HealthEndpointExtensions
             c.Response.StatusCode = healthCheck.CompositeAppHealth == HealthCheckStatusType.Healthy ?
                 StatusCodes.Status200OK : notHealthyStatus;
 
-            c.Response.Headers.Add("Health-Status", new StringValues(healthCheck.CompositeAppHealth.ToString()));
+            c.Response.Headers["Health-Status"] = new StringValues(healthCheck.CompositeAppHealth.ToString());
         });
 
         return endpoints;

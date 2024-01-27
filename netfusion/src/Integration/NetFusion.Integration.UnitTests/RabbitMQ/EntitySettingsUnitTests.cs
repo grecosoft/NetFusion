@@ -1,6 +1,3 @@
 namespace NetFusion.Integration.UnitTests.RabbitMQ;
 
-public class EntitySettingsUnitTests
-{
-    
-}
+public class EntitySettingsUnitTests;

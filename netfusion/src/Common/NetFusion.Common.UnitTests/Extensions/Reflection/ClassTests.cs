@@ -71,10 +71,7 @@ public class ClassTests
         ex.Message.Should().Contain("must be an interface type");
     }
 
-    private class ParentClassType : IVersionedState
-    {
-            
-    }
+    private class ParentClassType : IVersionedState;
 
     private class ChildClassType : ParentClassType
     {
@@ -84,10 +81,7 @@ public class ClassTests
         }
     }
 
-    private abstract class AbstractChildType : ParentClassType
-    {
-            
-    }
+    private abstract class AbstractChildType : ParentClassType;
 
     private class NoDefaultConstructorClassType
     {
@@ -97,13 +91,7 @@ public class ClassTests
         }
     }
 
-    private interface IState
-    {
-            
-    }
+    private interface IState;
 
-    private interface IVersionedState : IState
-    {
-            
-    }
+    private interface IVersionedState : IState;
 }

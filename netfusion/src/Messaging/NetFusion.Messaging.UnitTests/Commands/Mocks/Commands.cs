@@ -7,15 +7,9 @@ public class MockCommand : Command<MockCommandResult>
     public List<string> ThrowInHandlers { get; } = new();
 }
 
-public class MockCommandNoResult : Command
-{
+public class MockCommandNoResult : Command;
 
-}
-
-public class MockCommandNoHandler : Command
-{
-        
-}
+public class MockCommandNoHandler : Command;
 
 public class MockCommandResult
 {

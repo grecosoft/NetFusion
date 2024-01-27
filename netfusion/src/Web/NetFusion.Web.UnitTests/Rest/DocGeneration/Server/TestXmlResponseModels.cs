@@ -76,7 +76,4 @@ public class ArrayTestResource
     public ArrayItemType[] SecondValue { get; set; }
 }
 
-public class ArrayItemType
-{
-
-}
+public class ArrayItemType;

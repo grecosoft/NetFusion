@@ -21,7 +21,4 @@ public class QueueRouteMeta
 
 public class QueueRouteMeta<TCommand> : QueueRouteMeta,
     IRouteMeta<TCommand>
-    where TCommand : ICommand
-{
-    
-}
+    where TCommand : ICommand;

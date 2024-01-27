@@ -8,7 +8,4 @@ public class MockQuery : Query<MockQueryResult>
     public List<string> ThrowInHandlers { get; } = new();
 }
 
-public class MockQueryResult
-{
-
-}
+public class MockQueryResult;

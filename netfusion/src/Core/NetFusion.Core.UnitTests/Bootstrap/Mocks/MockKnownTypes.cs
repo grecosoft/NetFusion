@@ -20,22 +20,12 @@ public class MockComposedModule : PluginModule
     public IEnumerable<IMockKnownType> ImportedTypes { get; set; }
 }
     
-public interface IMockKnownType : IPluginKnownType
-{
-}
+public interface IMockKnownType : IPluginKnownType;
 
-public class MockTypeOneBasedOnKnownType : IMockKnownType
-{
-}
+public class MockTypeOneBasedOnKnownType : IMockKnownType;
 
-public class MockTypeTwoBasedOnKnownType : IMockKnownType
-{
-}
+public class MockTypeTwoBasedOnKnownType : IMockKnownType;
 
-public class MockTypeThreeBasedOnKnownType : IMockKnownType
-{
-}
+public class MockTypeThreeBasedOnKnownType : IMockKnownType;
     
-public class MockTypeFourBasedOnKnownType : IMockKnownType
-{
-}
+public class MockTypeFourBasedOnKnownType : IMockKnownType;

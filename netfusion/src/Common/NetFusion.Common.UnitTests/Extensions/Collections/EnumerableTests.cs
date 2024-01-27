@@ -63,14 +63,11 @@ public class EnumerableTests
         orderedInstances[2].Should().Be(instances[1]);
     }
 
-    private interface IItem
-    {
+    private interface IItem;
 
-    }
-
-    public class ItemOne : IItem { }
-    public class ItemTwo : IItem { }
-    public class ItemThree : IItem { }
+    public class ItemOne : IItem;
+    public class ItemTwo : IItem;
+    public class ItemThree : IItem;
 
     private class TestData
     {

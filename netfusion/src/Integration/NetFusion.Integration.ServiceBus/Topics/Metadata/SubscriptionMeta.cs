@@ -119,18 +119,4 @@ public abstract class SubscriptionMeta
 /// </summary>
 /// <typeparam name="TDomainEvent">The domain-event type associated with subscription.</typeparam>
 public class SubscriptionMeta<TDomainEvent> : SubscriptionMeta, IRouteMeta<TDomainEvent>
-    where TDomainEvent : IDomainEvent
-    
-{
-    
-    
-    
-    
-    
-
-
-
-
-    
-    
-}
+    where TDomainEvent : IDomainEvent;

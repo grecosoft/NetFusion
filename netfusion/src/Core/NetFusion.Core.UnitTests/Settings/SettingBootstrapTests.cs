@@ -163,10 +163,7 @@ public class SettingBootstrapTests
     }
 
     [ConfigurationSection("X:Y")]
-    public class TestSettingsTwo : IAppSettings
-    {
-            
-    }
+    public class TestSettingsTwo : IAppSettings;
 
     public class DependentComponent
     {

@@ -2,10 +2,7 @@ using NetFusion.Messaging.Types;
 
 namespace NetFusion.Integration.UnitTests.Bus.Mocks;
 
-public class TestCommand : Command
-{
-    
-}
+public class TestCommand : Command;
 
 public class TestCommandConsumer
 {

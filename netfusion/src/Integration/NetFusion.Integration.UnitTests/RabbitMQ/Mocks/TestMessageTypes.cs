@@ -22,10 +22,7 @@ public class TestDomainEventHandler
     }
 }
 
-public class TestCommand : Command
-{
-    
-}
+public class TestCommand : Command;
 
 public class TestCommandHandler
 {
@@ -35,15 +32,9 @@ public class TestCommandHandler
     }
 }
 
-public class TestCommandResponse : Command
-{
-    
-}
+public class TestCommandResponse : Command;
 
-public class TestCommandWithResponse : Command<TestCommandResponse>
-{
-    
-}
+public class TestCommandWithResponse : Command<TestCommandResponse>;
 
 public class TestCommandHandlerWithResponse
 {

@@ -228,55 +228,21 @@ public class TypeCatalogTests
         behaviorA.Should().Be(behaviorB);
     }
 
-    public interface ICommonComponent
-    {
-            
-    }
+    public interface ICommonComponent;
+    public interface IComponentOne;
+    public interface IComponentTwo;
 
-    public interface IComponentOne
-    {
+    public class ComponentOne : ICommonComponent, IComponentOne;
 
-    }
+    public class ComponentTwo : ICommonComponent, ISpecial, IComponentTwo;
 
-    public interface IComponentTwo
-    {
+    public interface ISpecial;
 
-    }
+    public class ComponentNotMatchingConvention : ISpecial;
 
-    public class ComponentOne : ICommonComponent,
-        IComponentOne
-    {
-            
-    }
-
-    public class ComponentTwo : ICommonComponent, ISpecial,
-        IComponentTwo
-    {
-            
-    }
-
-    public interface ISpecial
-    {
-            
-    }
-
-    public class ComponentNotMatchingConvention : ISpecial
-    {
-            
-    }
-
-    public interface IProvideBehaviorA : IPluginModuleService
-    {
-            
-    }
+    public interface IProvideBehaviorA : IPluginModuleService;
         
-    public interface IProvideBehaviorB : IPluginModuleService
-    {
-            
-    }
+    public interface IProvideBehaviorB : IPluginModuleService;
         
-    public class PluginModule : IProvideBehaviorA, IProvideBehaviorB
-    {
-            
-    }
+    public class PluginModule : IProvideBehaviorA, IProvideBehaviorB;
 }

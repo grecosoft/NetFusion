@@ -32,10 +32,7 @@ public class TestQueueMeta
 }
 
 public class TestQueueMeta<TMessage> : TestQueueMeta, IRouteMeta<TMessage>
-    where TMessage : IMessage
-{
-
-}
+    where TMessage : IMessage;
 
 public class TestSubscriptionStrategy : BusEntityStrategyBase<TestBusEntityContext>,
     IBusEntityCreationStrategy,

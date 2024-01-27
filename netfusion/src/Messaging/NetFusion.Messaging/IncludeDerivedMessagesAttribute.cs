@@ -6,7 +6,5 @@
     /// handler to be invoked for a several derived message types.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class IncludeDerivedMessagesAttribute : Attribute
-    {
-    }
+    public class IncludeDerivedMessagesAttribute : Attribute;
 }
