@@ -40,8 +40,8 @@ public abstract class BusEntityContext
 
     protected BusEntityContext(IPlugin hostPlugin, IServiceProvider serviceProvider)
     {
-        if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
-        
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+
         HostPlugin = hostPlugin ?? throw new ArgumentNullException(nameof(hostPlugin));
         LoggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
         Serialization = serviceProvider.GetRequiredService<ISerializationManager>();

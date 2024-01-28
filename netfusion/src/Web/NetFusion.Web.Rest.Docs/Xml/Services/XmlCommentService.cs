@@ -28,8 +28,8 @@ public class XmlCommentService : IXmlCommentService
 
     public XPathNavigator GetXmlCommentsForTypesAssembly(Type containedType)
     {
-        if (containedType == null) throw new ArgumentNullException(nameof(containedType));
-            
+        ArgumentNullException.ThrowIfNull(containedType);
+
         Assembly typesAssembly = containedType.Assembly;
 
         return _xmlAssemblyComments.GetOrAdd(typesAssembly, _ =>
@@ -45,8 +45,8 @@ public class XmlCommentService : IXmlCommentService
 
     public XPathNavigator GetTypeNode(Type classType)
     {
-        if (classType == null) throw new ArgumentNullException(nameof(classType));
-            
+        ArgumentNullException.ThrowIfNull(classType);
+
         XPathNavigator xmlCommentsDoc = GetXmlCommentsForTypesAssembly(classType);
 
         string typeMemberName = UtilsXmlComment.GetMemberNameForType(classType);
@@ -55,8 +55,8 @@ public class XmlCommentService : IXmlCommentService
 
     public string GetTypeComments(Type classType)
     {
-        if (classType == null) throw new ArgumentNullException(nameof(classType));
-            
+        ArgumentNullException.ThrowIfNull(classType);
+
         XPathNavigator memberNode = GetTypeNode(classType);
 
         var summaryNode = memberNode?.SelectSingleNode("summary");
@@ -65,7 +65,7 @@ public class XmlCommentService : IXmlCommentService
 
     public XPathNavigator GetMethodNode(MethodInfo methodInfo)
     {
-        if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
+        ArgumentNullException.ThrowIfNull(methodInfo);
 
         XPathNavigator xmlCommentsDoc = GetXmlCommentsForTypesAssembly(methodInfo.DeclaringType);
 
@@ -75,8 +75,8 @@ public class XmlCommentService : IXmlCommentService
 
     public string GetMethodComments(MethodInfo methodInfo)
     {
-        if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
-            
+        ArgumentNullException.ThrowIfNull(methodInfo);
+
         XPathNavigator memberNode = GetMethodNode(methodInfo);
         if (memberNode == null)
         {
@@ -103,8 +103,8 @@ public class XmlCommentService : IXmlCommentService
 
     public string GetMethodParamComment(XPathNavigator methodNode, string paramName)
     {
-        if (methodNode == null) throw new ArgumentNullException(nameof(methodNode));
-            
+        ArgumentNullException.ThrowIfNull(methodNode);
+
         if (string.IsNullOrWhiteSpace(paramName))
             throw new ArgumentException("Parameter name must be specified.", nameof(paramName));
             

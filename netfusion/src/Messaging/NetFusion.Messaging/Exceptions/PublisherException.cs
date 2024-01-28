@@ -94,8 +94,8 @@ public class PublisherException : NetFusionException
         AggregateException? aggregateException)
         : base(message, aggregateException)
     {
-        if (messagePublisher == null) throw new ArgumentNullException(nameof(messagePublisher));
-            
+        ArgumentNullException.ThrowIfNull(messagePublisher);
+
         Details["Publisher"] = messagePublisher.GetType().FullName!;
     }
     
@@ -103,8 +103,8 @@ public class PublisherException : NetFusionException
         AggregateException? aggregateException)
         : base(message, aggregateException)
     {
-        if (messagePublisher == null) throw new ArgumentNullException(nameof(messagePublisher));
-            
+        ArgumentNullException.ThrowIfNull(messagePublisher);
+
         Details["Publisher"] = messagePublisher.GetType().FullName!;
     }
         

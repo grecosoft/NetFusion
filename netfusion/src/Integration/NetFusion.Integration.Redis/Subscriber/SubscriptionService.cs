@@ -32,8 +32,8 @@ public class SubscriptionService : ISubscriptionService
         if (string.IsNullOrWhiteSpace(channelName))
             throw new ArgumentException("Channel not specified.", nameof(channelName));
 
-        if (handler == null) throw new ArgumentNullException(nameof(handler));
-            
+        ArgumentNullException.ThrowIfNull(handler);
+
         // Obtain the corresponding database subscriber and subscribe to the channel.
         var subscriber = _connModule.GetSubscriber(database);
             
@@ -72,7 +72,7 @@ public class SubscriptionService : ISubscriptionService
         if (string.IsNullOrWhiteSpace(channelName))
             throw new ArgumentException("Channel not specified.", nameof(channelName));
 
-        if (handler == null) throw new ArgumentNullException(nameof(handler));
+        ArgumentNullException.ThrowIfNull(handler);
 
         // Obtain the corresponding database subscriber and subscribe to the channel.
         var subscriber = _connModule.GetSubscriber(database);

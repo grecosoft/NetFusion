@@ -53,9 +53,9 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     /// <param name="typeResolver">The type resolver.</param>
     public void AssemblePlugins(IPlugin[] plugins, ITypeResolver typeResolver)
     {
-        if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
-        if (plugins == null) throw new ArgumentNullException(nameof(plugins));
-            
+        ArgumentNullException.ThrowIfNull(typeResolver);
+        ArgumentNullException.ThrowIfNull(plugins);
+
         InitializePlugins(plugins, typeResolver);
         SetPluginServiceDependencies();
         ComposePlugins(typeResolver);

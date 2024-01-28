@@ -14,10 +14,7 @@ public static class RestDocExtensions
     /// <returns>Reference to the builder.</returns>
     public static IApplicationBuilder UseRestDocs(this IApplicationBuilder builder)
     {
-        if (builder == null)
-        {
-            throw new System.ArgumentNullException(nameof(builder));
-        }
+        System.ArgumentNullException.ThrowIfNull(builder);
 
         builder.UseMiddleware<ApiDocMiddleware>();
         return builder;

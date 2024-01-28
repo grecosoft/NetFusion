@@ -99,9 +99,9 @@ public abstract class SubscriptionMeta
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Rule name not specified.", nameof(name));
-            
-        if (filter == null) throw new ArgumentNullException(nameof(filter));
-            
+
+        ArgumentNullException.ThrowIfNull(filter);
+
         if (_rules.ContainsKey(name))
         {
             throw new ServiceBusPluginException(

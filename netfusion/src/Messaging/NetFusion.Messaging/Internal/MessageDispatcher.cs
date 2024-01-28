@@ -99,9 +99,9 @@ public class MessageDispatcher
     public async Task<object?> Dispatch(IMessage message, object consumer, 
         CancellationToken cancellationToken)
     {
-        if (message == null) throw new ArgumentNullException(nameof(message));
-        if (consumer == null) throw new ArgumentNullException(nameof(consumer));
-        
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(consumer);
+
         var taskSource = new TaskCompletionSource<object?>();
 
         try

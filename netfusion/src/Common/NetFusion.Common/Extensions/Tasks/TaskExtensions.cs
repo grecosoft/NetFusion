@@ -30,9 +30,9 @@ public static class TaskExtensions
         Func<TInvoker, TInput, Task> invoke)
         where TInvoker : class
     {
-        if (invokers == null) throw new ArgumentNullException(nameof(invokers));
-        if (input == null) throw new ArgumentNullException(nameof(input));
-        if (invoke == null) throw new ArgumentNullException(nameof(invoke));    
+        ArgumentNullException.ThrowIfNull(invokers);
+        ArgumentNullException.ThrowIfNull(input);
+        ArgumentNullException.ThrowIfNull(invoke);
 
         var taskList = new List<TaskListItem<TInvoker>>();
         foreach(TInvoker invoker in invokers)
@@ -60,9 +60,9 @@ public static class TaskExtensions
         CancellationToken cancellationToken)
         where TInvoker : class
     {
-        if (invokers == null) throw new ArgumentNullException(nameof(invokers));
-        if (input == null) throw new ArgumentNullException(nameof(input));
-        if (invoke == null) throw new ArgumentNullException(nameof(invoke));
+        ArgumentNullException.ThrowIfNull(invokers);
+        ArgumentNullException.ThrowIfNull(input);
+        ArgumentNullException.ThrowIfNull(invoke);
 
         var taskList = new List<TaskListItem<TInvoker>>();
         foreach (TInvoker invoker in invokers)
@@ -82,7 +82,7 @@ public static class TaskExtensions
     public static Task WhenAll<TInvoker>(this TaskListItem<TInvoker>[] taskList)
         where TInvoker : class
     {
-        if (taskList == null) throw new ArgumentNullException(nameof(taskList));
+        ArgumentNullException.ThrowIfNull(taskList);
         return Task.WhenAll(taskList.Select(i => i.Task));
     }
 
@@ -101,9 +101,9 @@ public static class TaskExtensions
         where TInvoker : class
         where TEx : Exception
     {
-        if (taskList == null) throw new ArgumentNullException(nameof(taskList));
-        if (exFactory == null) throw new ArgumentNullException(nameof(exFactory));
-            
+        ArgumentNullException.ThrowIfNull(taskList);
+        ArgumentNullException.ThrowIfNull(exFactory);
+
         var exceptions = new List<TEx>(taskList.Length);
 
         foreach (var task in taskList.Where(pt => pt.Task.Exception != null))

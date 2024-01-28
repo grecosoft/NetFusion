@@ -151,22 +151,16 @@ public class EntityAttributes : DynamicObject,
     public void SetMemberValue<T>(T? value, bool overrideIfPresent = true,
         [CallerMemberName] string? callerName = null)
     {
-        if (callerName == null)
-        {
-            throw new ArgumentNullException(nameof(callerName));
-        }
-            
+        ArgumentNullException.ThrowIfNull(callerName);
+
         string propName = GetBasePropertyName(callerName);
         SetValue(propName, value, overrideIfPresent);
     }
 
     public T? GetMemberValueOrDefault<T>(T? defaultValue = default, [CallerMemberName] string? callerName = null)
     {
-        if (callerName == null)
-        {
-            throw new ArgumentNullException(nameof(callerName));
-        }
-            
+        ArgumentNullException.ThrowIfNull(callerName);
+
         string propName = GetBasePropertyName(callerName);
         return GetValueOrDefault(propName, defaultValue);
     }

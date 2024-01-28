@@ -34,7 +34,7 @@ public class MessageDispatchException : NetFusionException
     public MessageDispatchException(string message, MessageDispatcher dispatchInfo,
         AggregateException? aggregateException) : base(message, aggregateException)
     {
-        if (dispatchInfo == null) throw new ArgumentNullException(nameof(dispatchInfo));
+        ArgumentNullException.ThrowIfNull(dispatchInfo);
 
         Details["DispatchInfo"] = new
         {

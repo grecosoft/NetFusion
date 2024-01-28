@@ -84,8 +84,8 @@ public class NamespaceConnection
 
     public async Task CreateOrUpdateQueue(string queueName, CreateQueueOptions queue)
     {
-        if (queue == null) throw new ArgumentNullException(nameof(queue));
-        
+        ArgumentNullException.ThrowIfNull(queue);
+
         _externalSettings.ApplyQueueSettings(queueName, queue);
         
         if (! await UpdateExistingQueue(queueName, queue))
@@ -246,7 +246,7 @@ public class NamespaceConnection
     private async Task UpdateRules(string subscriptionName, CreateSubscriptionOptions subscription,
         CreateRuleOptions[] roles)
     {
-        if (!roles.Any()) return;
+        if (roles.Length == 0) return;
         
         LogUpdatingEntity($"{subscriptionName}-roles", roles);
         

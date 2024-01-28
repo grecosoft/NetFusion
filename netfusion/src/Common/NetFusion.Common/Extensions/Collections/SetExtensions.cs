@@ -18,8 +18,7 @@ public static class SetExtensions
     /// <returns>True values contains source.  Otherwise, False.</returns>
     public static bool InSet<T>(this T source, params T[] values)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
-            
+        ArgumentNullException.ThrowIfNull(source);
         return values.Contains(source);
     }
 
@@ -33,8 +32,7 @@ public static class SetExtensions
     /// <returns>True if any value is a member of source.  Otherwise, False.</returns>
     public static bool ContainsAny<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer, params T[] values)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
-            
+        ArgumentNullException.ThrowIfNull(source);
         return values.Any( v => source.Contains(v, comparer));
     }
 
@@ -47,7 +45,7 @@ public static class SetExtensions
     /// <returns>True if any value is a member of source.  Otherwise, False.</returns>
     public static bool ContainsAny<T>(this IEnumerable<T> source, params T[] values)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
         return values.Any(source.Contains);
     }
 }

@@ -43,7 +43,7 @@ public class ApiMetadataService : IApiMetadataService
             .Select(g => $"Controller: {g.Key.DeclaringType?.FullName ?? ""}  Action: {g.Key.Name}")
             .ToArray();
             
-        if (invalidMetadata.Any())
+        if (invalidMetadata.Length != 0)
         {
             throw new InvalidOperationException(
                 $"The following action methods are not unique by Http Method: {string.Join(',', invalidMetadata)}");
@@ -53,8 +53,8 @@ public class ApiMetadataService : IApiMetadataService
     public bool TryGetActionMeta(MethodInfo methodInfo, [MaybeNullWhen(false)]
         out ApiActionMeta actionMeta)
     {
-        if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
-            
+        ArgumentNullException.ThrowIfNull(methodInfo);
+
         actionMeta = _apiActionMeta.FirstOrDefault(ad => ad.ActionMethodInfo == methodInfo);
         return actionMeta != null;
     }

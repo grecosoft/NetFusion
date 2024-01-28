@@ -32,10 +32,10 @@ public static class ServiceCollectionExtensions
     public static ICompositeContainerBuilder CompositeContainer(this IServiceCollection services,
         IConfiguration configuration, ITypeResolver resolver,  IExtendedLogger extendedLogger)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-        if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-        if (resolver == null) throw new ArgumentNullException(nameof(resolver));
-        if (extendedLogger == null) throw new ArgumentNullException(nameof(extendedLogger));
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentNullException.ThrowIfNull(resolver);
+        ArgumentNullException.ThrowIfNull(extendedLogger);
 
         NfExtensions.Logger = extendedLogger;
         

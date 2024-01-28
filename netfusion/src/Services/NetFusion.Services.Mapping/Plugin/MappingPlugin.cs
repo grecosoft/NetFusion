@@ -28,8 +28,8 @@ public static class CompositeBuilderExtensions
 {
     public static ICompositeContainerBuilder AddMapping(this ICompositeContainerBuilder composite)
     {
-        if (composite == null) throw new ArgumentNullException(nameof(composite));
-            
+        ArgumentNullException.ThrowIfNull(composite);
+
         // Add mapping plugin:
         return composite.AddPlugin<MappingPlugin>();
     }

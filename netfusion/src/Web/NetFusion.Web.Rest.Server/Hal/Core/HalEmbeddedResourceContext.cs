@@ -18,7 +18,7 @@ public class HalEmbeddedResourceContext : IHalEmbeddedResourceContext
 
     public HalEmbeddedResourceContext(IActionContextAccessor contextAccessor)
     {
-        if (contextAccessor == null) throw new ArgumentNullException(nameof(contextAccessor));
+        ArgumentNullException.ThrowIfNull(contextAccessor);
 
         ActionContext = contextAccessor.ActionContext ?? 
                         throw new NullReferenceException("Action Context not Initialized.");

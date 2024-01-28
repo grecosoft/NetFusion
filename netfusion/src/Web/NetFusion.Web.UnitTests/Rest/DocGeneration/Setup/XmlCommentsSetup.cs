@@ -29,6 +29,6 @@ public class XmlCommentsSetup
 
 public class MockDocModule : IDocModule
 {
-    public RestDocConfig RestDocConfig => new RestDocConfig();
-    public HalComments HalComments => new HalComments();
+    public RestDocConfig RestDocConfig => new();
+    public HalComments HalComments => new();
 }

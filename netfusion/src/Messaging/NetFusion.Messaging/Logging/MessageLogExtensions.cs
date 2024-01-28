@@ -16,8 +16,8 @@ public static class MessageLogExtensions
     public static IServiceCollection AddMessageLogSink<TSink>(this IServiceCollection services)
         where TSink: class, IMessageLogSink
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-            
+        ArgumentNullException.ThrowIfNull(services);
+
         services.AddSingleton<IMessageLogSink, TSink>();
         return services;
     }
@@ -31,8 +31,8 @@ public static class MessageLogExtensions
     public static IServiceCollection AddMessageLogSink(this IServiceCollection services,
         IMessageLogSink messageLogSink)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-        if (messageLogSink == null) throw new ArgumentNullException(nameof(messageLogSink));
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(messageLogSink);
 
         services.AddSingleton(messageLogSink);
         return services;

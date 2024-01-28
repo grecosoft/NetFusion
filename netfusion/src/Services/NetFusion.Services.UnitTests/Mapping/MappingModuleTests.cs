@@ -306,7 +306,7 @@ public class MappingModuleTests
                 {
                     var entity = new TestMapTypeOne
                     {
-                        Values = new []{ 100, 20, 300, 400 }
+                        Values = [100, 20, 300, 400]
                     };
 
                     // Since there are multiple target types and all types are assignable 

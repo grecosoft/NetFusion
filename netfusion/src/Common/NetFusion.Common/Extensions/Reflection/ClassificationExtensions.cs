@@ -16,14 +16,14 @@ public static class ClassificationExtensions
         
     public static bool IsBasicType(this PropertyInfo propertyInfo)
     {
-        if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
+        ArgumentNullException.ThrowIfNull(propertyInfo);
         return propertyInfo.PropertyType.IsBasicType();
     }
 
     public static bool IsBasicType(this Type type)
     {
-        if (type == null) throw new ArgumentNullException(nameof(type));
-            
+        ArgumentNullException.ThrowIfNull(type);
+
         type = Nullable.GetUnderlyingType(type) ?? type;
         return type.IsPrimitive || PrimitiveTypes.Contains(type);
     }

@@ -9,7 +9,7 @@ public static class MethodCallExtensions
 {
     public static MethodInfo? GetCallMethodInfo(this LambdaExpression expression)
     {
-        if (expression == null) throw new ArgumentNullException(nameof(expression));
+        ArgumentNullException.ThrowIfNull(expression);
 
         UnaryExpression? unaryExpression = expression.Body as UnaryExpression;
 

@@ -28,8 +28,8 @@ public static class HealthEndpointExtensions
         string route = "/mgt/startup-check",
         int notStartedStatus = StatusCodes.Status503ServiceUnavailable)
     {
-        if (endpoints == null) throw new ArgumentNullException(nameof(endpoints));
-            
+        ArgumentNullException.ThrowIfNull(endpoints);
+
         if (string.IsNullOrWhiteSpace(route))
             throw new ArgumentException("Start Route not Specified", nameof(route));
 
@@ -61,8 +61,8 @@ public static class HealthEndpointExtensions
         string route = "/mgt/ready-check",
         int notReadyStatus = StatusCodes.Status503ServiceUnavailable)
     {
-        if (endpoints == null) throw new ArgumentNullException(nameof(endpoints));
-            
+        ArgumentNullException.ThrowIfNull(endpoints);
+
         if (string.IsNullOrWhiteSpace(route))
             throw new ArgumentException("Readiness Check Route not Specified", nameof(route));
 
@@ -96,8 +96,8 @@ public static class HealthEndpointExtensions
         string route = "/mgt/health-check",
         int notHealthyStatus = StatusCodes.Status503ServiceUnavailable)
     {
-        if (endpoints == null) throw new ArgumentNullException(nameof(endpoints));
-            
+        ArgumentNullException.ThrowIfNull(endpoints);
+
         if (string.IsNullOrWhiteSpace(route))
             throw new ArgumentException("Health Check Route not Specified", nameof(route));
 

@@ -62,7 +62,7 @@ public class ValidationResultSet
     {
         RootObject = rootObject ?? throw new ArgumentNullException(nameof(rootObject));
 
-        if (validator == null) throw new ArgumentNullException(nameof(validator));
+        ArgumentNullException.ThrowIfNull(validator);
 
         var validations = new List<ObjectValidation>();
         BuildValidationList(validations, validator);

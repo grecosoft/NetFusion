@@ -8,6 +8,6 @@ public class TestMapStrategyTwoToOne : MappingStrategy<TestMapTypeTwo, TestMapTy
     protected override TestMapTypeOne SourceToTarget(TestMapTypeTwo target) =>
         new()
         {
-            Values = new[] { target.Min, target.Max, target.Sum }
+            Values = [target.Min, target.Max, target.Sum]
         };
 }

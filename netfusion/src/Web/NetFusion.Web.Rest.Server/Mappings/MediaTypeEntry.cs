@@ -54,13 +54,11 @@ public class MediaTypeEntry
         if (resourceMeta == null) throw new ArgumentNullException(nameof(resourceMeta),
             "Resource metadata cannot be null.");
 
-        if (_resourceTypeMeta.ContainsKey(resourceMeta.SourceType)) 
+        if (!_resourceTypeMeta.TryAdd(resourceMeta.SourceType, resourceMeta)) 
         {
             throw new InvalidOperationException(
                 $"Resource metadata already specified for source type: {resourceMeta.SourceType.FullName} " + 
                 $"For media-type: {MediaType}");
         }
-
-        _resourceTypeMeta[resourceMeta.SourceType] = resourceMeta;
     }
 }

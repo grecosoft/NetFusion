@@ -25,8 +25,8 @@ public class ObjectMapper : IObjectMapper
         IMappingModule mappingModule,
         IServiceProvider services)
     {
-        if (mappingModule == null) throw new ArgumentNullException(nameof(mappingModule));
-            
+        ArgumentNullException.ThrowIfNull(mappingModule);
+
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _services = services ?? throw new ArgumentNullException(nameof(services));
             
@@ -106,7 +106,7 @@ public class ObjectMapper : IObjectMapper
     private TargetMap? FindTargetMap(Type sourceType, Type targetType)
     {
         var sourceMappings = _sourceTypeMappings[sourceType].ToArray();
-        if (! sourceMappings.Any())
+        if (sourceMappings.Length == 0)
         {
             // No source type registered mappings.
             return null;

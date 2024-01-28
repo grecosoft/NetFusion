@@ -24,9 +24,9 @@ public class RestClientFactory : IRestClientFactory
     {
         _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
         _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
-            
-        if (mediaTypeSerializers == null) throw new ArgumentNullException(nameof(mediaTypeSerializers));
-            
+
+        ArgumentNullException.ThrowIfNull(mediaTypeSerializers);
+
         _mediaTypeSerializers = CreateSerializerLookup(mediaTypeSerializers.ToArray());
     }
 

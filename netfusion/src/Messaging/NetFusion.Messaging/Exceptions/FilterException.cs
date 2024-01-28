@@ -18,7 +18,7 @@ public class FilterException : NetFusionException
     public FilterException(string message, IMessageFilter filter, AggregateException? aggregateException) 
         : base(message, aggregateException)
     {
-        if (filter == null) throw new ArgumentNullException(nameof(filter));
+        ArgumentNullException.ThrowIfNull(filter);
 
         Details["Filter"] = filter.GetType().FullName!;
     }

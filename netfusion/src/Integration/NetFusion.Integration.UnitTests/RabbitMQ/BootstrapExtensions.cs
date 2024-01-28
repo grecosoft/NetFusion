@@ -56,7 +56,7 @@ public static class BootstrapExtensions
             throw new InvalidOperationException($"More than one bus entity of type {typeof(T)}");
         }
 
-        if (!entities.Any())
+        if (entities.Length == 0)
         {
             throw new InvalidOperationException($"Bus entity of type {typeof(T)} not found");
         }

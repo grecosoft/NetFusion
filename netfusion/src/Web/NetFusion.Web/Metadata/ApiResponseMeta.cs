@@ -19,8 +19,8 @@ public class ApiResponseMeta
         
     public ApiResponseMeta(int status, Type modelType)
     {
-        if (modelType == null) throw new ArgumentNullException(nameof(modelType));
-            
+        ArgumentNullException.ThrowIfNull(modelType);
+
         Status = status;
         ModelType = modelType == typeof(void) ? null : modelType;
     }

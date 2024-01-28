@@ -25,8 +25,8 @@ public class WebServerConfig
     /// <returns>Self Reference.</returns>
     public WebServerConfig ConfigServer(Action<TestServer> config)
     {
-        if (config == null) throw new ArgumentNullException(nameof(config));
-            
+        ArgumentNullException.ThrowIfNull(config);
+
         config(_testServer);
         return this;
     }

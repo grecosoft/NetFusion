@@ -20,8 +20,8 @@ public static class LogEndpointExtensions
     public static IEndpointRouteBuilder MapCompositeLog(this IEndpointRouteBuilder endpoints,
         string route = "/mgt/composite/log")
     {
-        if (endpoints == null) throw new ArgumentNullException(nameof(endpoints));
-            
+        ArgumentNullException.ThrowIfNull(endpoints);
+
         if (string.IsNullOrWhiteSpace(route))
             throw new ArgumentException("Composite Log Query URL not specified.", nameof(route));
 

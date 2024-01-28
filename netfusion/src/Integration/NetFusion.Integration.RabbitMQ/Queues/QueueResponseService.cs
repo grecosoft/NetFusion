@@ -25,8 +25,8 @@ public class QueueResponseService : IQueueResponseService
     
     public Task RespondToSenderAsync(IMessage request, object response)
     {
-        if (request == null) throw new ArgumentNullException(nameof(request));
-        if (response == null) throw new ArgumentNullException(nameof(response));
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(response);
 
         MessageProperties props = GetReplyMessageProps(request);
         
@@ -40,9 +40,9 @@ public class QueueResponseService : IQueueResponseService
 
     public Task RespondToSenderAsync(object response, string replyToQueue, MessageProperties messageProps)
     {
-        if (response == null) throw new ArgumentNullException(nameof(response));
-        if (messageProps == null) throw new ArgumentNullException(nameof(messageProps));
-        
+        ArgumentNullException.ThrowIfNull(response);
+        ArgumentNullException.ThrowIfNull(messageProps);
+
         if (! MessageExtensions.TryParseReplyTo(replyToQueue, out string? busName, out string? queueName))
         {
             throw new InvalidOperationException("The ReplyTo message property not specified.");

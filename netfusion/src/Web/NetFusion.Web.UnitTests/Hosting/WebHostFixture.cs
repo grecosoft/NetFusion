@@ -42,8 +42,8 @@ public class WebHostFixture
     /// <returns></returns>
     public static Task TestAsync<T>(Func<WebHostFixture, Task> webHostTest)
     {
-        if (webHostTest == null) throw new ArgumentNullException(nameof(webHostTest));
-            
+        ArgumentNullException.ThrowIfNull(webHostTest);
+
         var instance = new WebHostFixture
         {
             _unitTestType = typeof(T)

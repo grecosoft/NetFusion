@@ -18,8 +18,8 @@ public class MessageDispatcherService : IMessageDispatcherService
     public async Task<object?> InvokeDispatcherInNewLifetimeScopeAsync(MessageDispatcher dispatcher, IMessage message,
         CancellationToken cancellationToken = default)
     {
-        if (dispatcher == null) throw new ArgumentNullException(nameof(dispatcher));
-        if (message == null) throw new ArgumentNullException(nameof(message));
+        ArgumentNullException.ThrowIfNull(dispatcher);
+        ArgumentNullException.ThrowIfNull(message);
 
         if (! message.GetType().CanAssignTo(dispatcher.MessageType))
         {

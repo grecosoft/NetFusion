@@ -33,8 +33,8 @@ public abstract class NamespaceRouter :  BusRouterBase
         Action<CommandRouteWithMeta<TCommand, QueueRouteMeta<TCommand>>> route)
         where TCommand : ICommand
     {
-        if (route == null) throw new ArgumentNullException(nameof(route));
-        
+        ArgumentNullException.ThrowIfNull(route);
+
         var command = new CommandRouteWithMeta<TCommand, QueueRouteMeta<TCommand>>();
         route(command);
 
@@ -60,8 +60,8 @@ public abstract class NamespaceRouter :  BusRouterBase
         Action<CommandRouteWithMeta<TCommand, TResult, QueueRouteMeta<TCommand>>> route)
         where TCommand : ICommand<TResult>
     {
-        if (route == null) throw new ArgumentNullException(nameof(route));
-        
+        ArgumentNullException.ThrowIfNull(route);
+
         var command = new CommandRouteWithMeta<TCommand, TResult, QueueRouteMeta<TCommand>>();
         route(command);
 
@@ -108,8 +108,8 @@ public abstract class NamespaceRouter :  BusRouterBase
         where TCommand : ICommand<TResponse>
         where TResponse : ICommand
     {
-        if (route == null) throw new ArgumentNullException(nameof(route));
-        
+        ArgumentNullException.ThrowIfNull(route);
+
         if (string.IsNullOrWhiteSpace(queueName))
             throw new ArgumentException("Value cannot be null or whitespace.", nameof(queueName));
         
@@ -147,8 +147,8 @@ public abstract class NamespaceRouter :  BusRouterBase
     protected void DefineTopic<TDomainEvent>(Action<TopicMeta<TDomainEvent>> meta)
         where TDomainEvent : IDomainEvent
     {
-        if (meta == null) throw new ArgumentNullException(nameof(meta));
-        
+        ArgumentNullException.ThrowIfNull(meta);
+
         var topicMeta = new TopicMeta<TDomainEvent>();
         meta(topicMeta);
 
@@ -175,8 +175,8 @@ public abstract class NamespaceRouter :  BusRouterBase
        if (string.IsNullOrWhiteSpace(topicName))
             throw new ArgumentException("Value cannot be null or whitespace.", nameof(topicName));
 
-       if (route == null) throw new ArgumentNullException(nameof(route));
-        
+       ArgumentNullException.ThrowIfNull(route);
+
         var domainEvent = new DomainRouteWithMeta<TDomainEntity, SubscriptionMeta<TDomainEntity>>();
         route(domainEvent);
         
@@ -231,9 +231,9 @@ public abstract class NamespaceRouter :  BusRouterBase
     {
         if (string.IsNullOrWhiteSpace(queueName))
             throw new ArgumentException("Value cannot be null or whitespace.", nameof(queueName));
-        
-        if (route == null) throw new ArgumentNullException(nameof(route));
-        
+
+        ArgumentNullException.ThrowIfNull(route);
+
         // Multiple commands identified by namespace are sent on same queue:
         RpcEntity rpcEntity = ResolveRpcQueue(queueName);
         string rpcMessageNamespace = ResolveMessageNamespace(typeof(TCommand), messageNamespace);

@@ -29,7 +29,7 @@ public abstract class EntityClassMap<TClass> : BsonClassMap<TClass>,
     /// <returns>Reference to the created member map.</returns>
     protected BsonMemberMap MapStringPropertyToObjectId(Expression<Func<TClass, string>> propertyLambda)
     {
-        if (propertyLambda == null) throw new ArgumentNullException(nameof(propertyLambda));
+        ArgumentNullException.ThrowIfNull(propertyLambda);
 
         return MapIdProperty(propertyLambda)
             .SetIdGenerator(StringObjectIdGenerator.Instance)

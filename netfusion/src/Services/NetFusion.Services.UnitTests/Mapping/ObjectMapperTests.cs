@@ -31,7 +31,7 @@ public class ObjectMappingTests
                 {
                     var testSrcObj = new TestMapTypeOne
                     {
-                        Values = new[] { 30, 5, 88, 33, 83 }
+                        Values = [30, 5, 88, 33, 83]
                     };
                     
                     return mapper.Map<TestMapTypeTwo>(testSrcObj);
@@ -113,7 +113,7 @@ public class ObjectMappingTests
                 {
                     var testSrcObj = new TestMapTypeOne
                     {
-                        Values = new[] { 30, 5, 88, 60, 65, 33, 83 }
+                        Values = [30, 5, 88, 60, 65, 33, 83]
                     };
                     
                     return mapper.Map<TestMapTypeTwo>(testSrcObj);

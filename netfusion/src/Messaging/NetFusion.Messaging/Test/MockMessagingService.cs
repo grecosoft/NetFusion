@@ -36,16 +36,15 @@ public class MockMessagingService : IMessagingService
     public MockMessagingService AddCommandResponse<T>(object response)
         where T : ICommand
     {
-        if (response == null) throw new ArgumentNullException(nameof(response));
-            
+        ArgumentNullException.ThrowIfNull(response);
+
         Type commandType = typeof(T);
-        if (_commandResponses.ContainsKey(commandType))
+        if (!_commandResponses.TryAdd(commandType, response))
         {
             throw new InvalidOperationException(
                 $"The command of type: {commandType} already has a response registered.");
         }
 
-        _commandResponses[commandType] = response;
         return this;
     }
 
@@ -58,16 +57,15 @@ public class MockMessagingService : IMessagingService
     public MockMessagingService AddQueryResponse<T>(object response)
         where T : IQuery
     {
-        if (response == null) throw new ArgumentNullException(nameof(response));
-            
+        ArgumentNullException.ThrowIfNull(response);
+
         Type queryType = typeof(T);
-        if (_queryResponses.ContainsKey(queryType))
+        if (!_queryResponses.TryAdd(queryType, response))
         {
             throw new InvalidOperationException(
                 $"The query of type: {queryType} already has a response registered.");
         }
 
-        _queryResponses[queryType] = response;
         return this;
     }
         

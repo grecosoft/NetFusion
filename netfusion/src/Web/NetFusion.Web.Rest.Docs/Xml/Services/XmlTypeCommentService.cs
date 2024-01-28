@@ -26,8 +26,8 @@ public class XmlTypeCommentService : ITypeCommentService
 
     public ApiResourceDoc GetResourceDoc(Type resourceType)
     {
-        if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
-            
+        ArgumentNullException.ThrowIfNull(resourceType);
+
         XPathNavigator xmlCommentDoc = _xmlComments.GetXmlCommentsForTypesAssembly(resourceType);
         return xmlCommentDoc == null ? null : BuildResourceDoc(resourceType);
     }

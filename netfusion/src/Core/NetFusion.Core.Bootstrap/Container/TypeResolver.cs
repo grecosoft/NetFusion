@@ -16,8 +16,8 @@ public class TypeResolver : ITypeResolver
 {
     public void SetPluginMeta(IPlugin plugin)
     {
-        if (plugin == null) throw new ArgumentNullException(nameof(plugin));
-            
+        ArgumentNullException.ThrowIfNull(plugin);
+
         Assembly assembly = plugin.GetType().Assembly;
 
         plugin.SetPluginMeta(
@@ -31,8 +31,8 @@ public class TypeResolver : ITypeResolver
     // plugin-types.  Think of this as very simple version of MEF without all the complexity.
     public void ComposePlugin(IPlugin plugin, IEnumerable<Type> fromPluginTypes)
     {
-        if (plugin == null) throw new ArgumentNullException(nameof(plugin));
-        if (fromPluginTypes == null) throw new ArgumentNullException(nameof(fromPluginTypes));
+        ArgumentNullException.ThrowIfNull(plugin);
+        ArgumentNullException.ThrowIfNull(fromPluginTypes);
 
         foreach (IPluginModule module in plugin.Modules)
         {

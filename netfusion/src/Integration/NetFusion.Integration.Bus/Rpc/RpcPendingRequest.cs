@@ -35,7 +35,7 @@ public class RpcPendingRequest
     // Satisfies the future result of the awaiting consumer with the received response.
     public void SetResult(byte[] result)
     {
-        if (result == null) throw new ArgumentNullException(nameof(result));
+        ArgumentNullException.ThrowIfNull(result);
 
         UnRegister();
         _taskSource.SetResult(result);
@@ -45,7 +45,7 @@ public class RpcPendingRequest
     // the serialized exception from the server.
     public void SetException(RpcReplyException exception)
     {
-        if (exception == null) throw new ArgumentNullException(nameof(exception));
+        ArgumentNullException.ThrowIfNull(exception);
 
         UnRegister();
         _taskSource.SetException(exception);

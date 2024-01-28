@@ -34,8 +34,8 @@ public static class CompositeBuilderExtensions
     /// <returns>Reference to the composite container builder.</returns>
     public static ICompositeContainerBuilder AddRestCodeGen(this ICompositeContainerBuilder composite)
     {
-        if (composite == null) throw new ArgumentNullException(nameof(composite));
-            
+        ArgumentNullException.ThrowIfNull(composite);
+
         // Add plugin for Rest API code generation support:
         composite.AddPlugin<CodeGenPlugin>();
             

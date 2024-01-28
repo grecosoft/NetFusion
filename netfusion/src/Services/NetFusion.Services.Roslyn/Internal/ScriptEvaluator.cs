@@ -35,7 +35,7 @@ public class ScriptEvaluator
 
     public async Task ExecuteAsync(object entity)
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         // The scope that will be used to resolve references made within
         // expressions.  This includes the entity and its set of optional

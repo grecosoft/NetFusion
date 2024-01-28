@@ -19,7 +19,7 @@ public static class EnricherExtensions
         string microserviceId,
         string microserviceName)
     {
-        if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+        ArgumentNullException.ThrowIfNull(configuration);
         return configuration.With(new HostIdentityEnricher(microserviceName, microserviceId));
     }
 }

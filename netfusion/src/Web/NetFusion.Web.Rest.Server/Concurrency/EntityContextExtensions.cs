@@ -24,8 +24,8 @@ public static class EntityContextExtensions
     public static ActionResult? ToResult(this EntityContext context, 
         Func<object, HalResource>? map = null)
     {
-        if (context == null) throw new ArgumentNullException(nameof(context));
-            
+        ArgumentNullException.ThrowIfNull(context);
+
         if (! context.PreConditionSatisfied)
         {
             return new StatusCodeResult(StatusCodes.Status428PreconditionRequired);

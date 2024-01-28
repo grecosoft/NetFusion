@@ -27,8 +27,8 @@ public static class RestClientExtensions
     /// <returns>Service collection.</returns>
     public static IServiceCollection AddRestClientFactory(this IServiceCollection services)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-            
+        ArgumentNullException.ThrowIfNull(services);
+
         // This service is registered as singleton since Microsoft's underlying IHttpClientFactory
         // to which it delegates is also registered a singleton.
         services.AddSingleton<IRestClientFactory, RestClientFactory>();
@@ -47,8 +47,8 @@ public static class RestClientExtensions
     public static IServiceCollection AddDefaultMediaSerializers(this IServiceCollection services,
         JsonSerializerOptions options = null)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-            
+        ArgumentNullException.ThrowIfNull(services);
+
         options ??= DefaultOptions;
             
         services.AddSingleton<IMediaTypeSerializer>(_ => new JsonMediaTypeSerializer(options));
@@ -66,8 +66,8 @@ public static class RestClientExtensions
     public static IServiceCollection AddMediaSerializer<TSerializer>(this IServiceCollection services)
         where TSerializer : class, IMediaTypeSerializer
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-            
+        ArgumentNullException.ThrowIfNull(services);
+
         services.AddSingleton<IMediaTypeSerializer, TSerializer>();
         return services;
     }
@@ -81,8 +81,8 @@ public static class RestClientExtensions
     public static IServiceCollection AddMediaSerializer(this IServiceCollection services,
         IMediaTypeSerializer serializer)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-        if (serializer == null) throw new ArgumentNullException(nameof(serializer));
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(serializer);
 
         services.AddSingleton(serializer);
         return services;

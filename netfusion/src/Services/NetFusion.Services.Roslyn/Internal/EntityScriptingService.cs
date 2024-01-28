@@ -46,8 +46,8 @@ public class EntityScriptingService : IEntityScriptingService
 
     public async Task ExecuteAsync(object entity, string scriptName = "default")
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
-        if (scriptName == null) throw new ArgumentNullException(nameof(scriptName));
+        ArgumentNullException.ThrowIfNull(entity);
+        ArgumentNullException.ThrowIfNull(scriptName);
 
         Type entityType = entity.GetType();
 
@@ -244,8 +244,8 @@ public class EntityScriptingService : IEntityScriptingService
 
     public async Task<bool> SatisfiesPredicateAsync(object entity, ScriptPredicate predicate)
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
-        if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+        ArgumentNullException.ThrowIfNull(entity);
+        ArgumentNullException.ThrowIfNull(predicate);
 
         if (entity is not IAttributedEntity attributedEntity)
         {

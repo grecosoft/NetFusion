@@ -38,10 +38,10 @@ public static class ServiceCollectionExtensions
         ILoggerFactory bootstrapLoggerFactory,
         IExtendedLogger extendedLogger)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-        if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-        if (extendedLogger == null) throw new ArgumentNullException(nameof(extendedLogger));
-            
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentNullException.ThrowIfNull(extendedLogger);
+
         NfExtensions.Logger = extendedLogger ?? throw new ArgumentNullException(nameof(extendedLogger));
         
         var resolver = new TypeResolver();

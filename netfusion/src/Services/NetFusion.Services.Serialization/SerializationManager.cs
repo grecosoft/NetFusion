@@ -37,8 +37,8 @@ public class SerializationManager : ISerializationManager
 
     public void AddSerializer(ISerializer serializer)
     {
-        if (serializer == null) throw new ArgumentNullException(nameof(serializer));
-        
+        ArgumentNullException.ThrowIfNull(serializer);
+
         var existing = _serializers.FirstOrDefault(s =>
             s.ContentType == serializer.ContentType && 
             s.EncodingType == serializer.EncodingType);
@@ -53,7 +53,7 @@ public class SerializationManager : ISerializationManager
 
     public byte[] Serialize(object value, string contentType, string? encodingType = null)
     {
-        if (value == null) throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
 
         if (string.IsNullOrWhiteSpace(contentType))
             throw new ArgumentException("Content type name must be specified.", nameof(contentType));
@@ -67,8 +67,8 @@ public class SerializationManager : ISerializationManager
         if (string.IsNullOrWhiteSpace(contentType))
             throw new ArgumentException("Content-Type must be specified.", nameof(contentType));
 
-        if (valueType == null) throw new ArgumentNullException(nameof(valueType));
-        if (value == null) throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(valueType);
+        ArgumentNullException.ThrowIfNull(value);
 
         if (TryCustomDeserialization(valueType, value, out object? instance)) return instance;
 
@@ -81,8 +81,8 @@ public class SerializationManager : ISerializationManager
         if (string.IsNullOrWhiteSpace(contentType))
             throw new ArgumentException("Content-Type must be specified.", nameof(contentType));
 
-        if (value == null) throw new ArgumentNullException(nameof(value));
-        
+        ArgumentNullException.ThrowIfNull(value);
+
         if (TryCustomDeserialization(typeof(T), value, out object? instance)) return (T)instance;
 
         ISerializer serializer = GetSerializer(contentType, encodingType);

@@ -34,8 +34,8 @@ public class WebServerAct
     /// <returns>The WebServer response to be asserted.</returns>
     public async Task<WebServerResponse> OnClient(Func<HttpClient, Task<HttpResponseMessage>> clientAct)
     {
-        if (clientAct == null) throw new ArgumentNullException(nameof(clientAct));
-            
+        ArgumentNullException.ThrowIfNull(clientAct);
+
         var client = _testServer.CreateClient();
         var httpResponseMsg = await clientAct(client);
 
@@ -50,8 +50,8 @@ public class WebServerAct
     public async Task<WebServerResponse> OnRestClient( 
         Func<IRestClient, Task<ApiResponse>> clientAct)
     {
-        if (clientAct == null) throw new ArgumentNullException(nameof(clientAct));
-            
+        ArgumentNullException.ThrowIfNull(clientAct);
+
         var client = _testServer.CreateClient();
         var logger = _services.GetService<ILogger<WebServerAct>>();
             

@@ -36,22 +36,22 @@ public class JsonMediaTypeSerializer : IMediaTypeSerializer
         
     public byte[] Serialize(object value)
     {
-        if (value == null) throw new ArgumentNullException(nameof(value));
-            
+        ArgumentNullException.ThrowIfNull(value);
+
         return JsonSerializer.SerializeToUtf8Bytes(value, _serializerOptions);
     }
 
     public Task<T> Deserialize<T>(Stream responseStream)
     {
-        if (responseStream == null) throw new ArgumentNullException(nameof(responseStream));
-            
+        ArgumentNullException.ThrowIfNull(responseStream);
+
         return JsonSerializer.DeserializeAsync<T>(responseStream, _serializerOptions).AsTask();
     }
 
     public Task<object> Deserialize(Stream responseStream, Type type)
     {
-        if (responseStream == null) throw new ArgumentNullException(nameof(responseStream));
-        if (type == null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(responseStream);
+        ArgumentNullException.ThrowIfNull(type);
 
         return JsonSerializer.DeserializeAsync(responseStream, type, _serializerOptions).AsTask();
     }

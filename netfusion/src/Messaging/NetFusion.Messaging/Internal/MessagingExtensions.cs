@@ -18,7 +18,7 @@ namespace NetFusion.Messaging.Internal
         /// <returns>Filtered list of types that are message consumers.</returns>
         public static IEnumerable<Type> WhereMessageConsumer(this IEnumerable<Type> types)
         {
-            if (types == null) throw new ArgumentNullException(nameof(types));
+            ArgumentNullException.ThrowIfNull(types);
 
             return types.Where(t => t.IsConcreteTypeDerivedFrom<IMessageConsumer>());
         }
@@ -30,7 +30,7 @@ namespace NetFusion.Messaging.Internal
         /// <returns>List of methods that can handle messages.</returns>
         public static IEnumerable<MethodInfo> SelectMessageHandlers(this IEnumerable<Type> types)
         {
-            if (types == null) throw new ArgumentNullException(nameof(types));
+            ArgumentNullException.ThrowIfNull(types);
 
             return types.SelectMany(ec => ec.GetMethods()
                 .Where(IsMessageHandlerMethod));
@@ -70,7 +70,7 @@ namespace NetFusion.Messaging.Internal
         public static IEnumerable<MessageRoute> SelectMessageRoutes(
             this IEnumerable<MethodInfo> messageHandlers)
         {
-            if (messageHandlers == null) throw new ArgumentNullException(nameof(messageHandlers));
+            ArgumentNullException.ThrowIfNull(messageHandlers);
 
             return messageHandlers.Select(mi =>
             {

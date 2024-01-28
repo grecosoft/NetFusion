@@ -15,8 +15,8 @@ public class UtilsXmlComment
 {
     public static string GetMemberNameForMethod(MethodInfo method)
     {
-        if (method == null) throw new ArgumentNullException(nameof(method));
-            
+        ArgumentNullException.ThrowIfNull(method);
+
         var builder = new StringBuilder("M:");
         builder.Append(QualifiedNameFor(method.DeclaringType));
         builder.Append($".{method.Name}");
@@ -35,8 +35,8 @@ public class UtilsXmlComment
 
     public static string GetMemberNameForType(Type type)
     {
-        if (type == null) throw new ArgumentNullException(nameof(type));
-            
+        ArgumentNullException.ThrowIfNull(type);
+
         var builder = new StringBuilder("T:");
         builder.Append(QualifiedNameFor(type));
 
@@ -45,8 +45,8 @@ public class UtilsXmlComment
 
     public static string GetMemberNameForFieldOrProperty(MemberInfo fieldOrPropertyInfo)
     {
-        if (fieldOrPropertyInfo == null) throw new ArgumentNullException(nameof(fieldOrPropertyInfo));
-            
+        ArgumentNullException.ThrowIfNull(fieldOrPropertyInfo);
+
         var builder = new StringBuilder(((fieldOrPropertyInfo.MemberType & MemberTypes.Field) != 0) ? "F:" : "P:");
         builder.Append(QualifiedNameFor(fieldOrPropertyInfo.DeclaringType));
         builder.Append($".{fieldOrPropertyInfo.Name}");

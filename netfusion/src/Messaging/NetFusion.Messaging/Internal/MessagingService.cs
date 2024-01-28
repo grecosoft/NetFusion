@@ -90,7 +90,7 @@ public class MessagingService : IMessagingService
             }
         }
 
-        if (publisherErrors.Any())
+        if (publisherErrors.Count != 0)
         {
             throw new PublisherException("Exception dispatching event source.", eventSource, publisherErrors);
         }

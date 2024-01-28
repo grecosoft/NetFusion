@@ -26,7 +26,7 @@ public class EntityScriptScope<TEntity>
 
     public EntityScriptScope(object entity)
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         Entity = (TEntity)entity;
 

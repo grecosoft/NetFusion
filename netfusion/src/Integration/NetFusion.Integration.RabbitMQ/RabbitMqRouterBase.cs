@@ -30,8 +30,8 @@ public abstract class RabbitMqRouterBase : BusRouterBase
         Action<CommandRouteWithMeta<TCommand, QueueMeta<TCommand>>> route)
         where TCommand : ICommand
     {
-        if (route == null) throw new ArgumentNullException(nameof(route));
-        
+        ArgumentNullException.ThrowIfNull(route);
+
         var command = new CommandRouteWithMeta<TCommand, QueueMeta<TCommand>>();
         ApplyDefaultQueueProperties(command.RouteMeta);
         
@@ -61,8 +61,8 @@ public abstract class RabbitMqRouterBase : BusRouterBase
         where TCommand : ICommand<TResponse>
         where TResponse : IMessage
     {
-        if (route == null) throw new ArgumentNullException(nameof(route));
-        
+        ArgumentNullException.ThrowIfNull(route);
+
         var command = new CommandRouteWithMeta<TCommand, TResponse, QueueMeta<TCommand>>();
         ApplyDefaultQueueProperties(command.RouteMeta);
         
@@ -111,8 +111,8 @@ public abstract class RabbitMqRouterBase : BusRouterBase
         where TCommand : ICommand<TResponse>
         where TResponse : ICommand
     {
-        if (route == null) throw new ArgumentNullException(nameof(route));
-        
+        ArgumentNullException.ThrowIfNull(route);
+
         if (string.IsNullOrWhiteSpace(queueName))
             throw new ArgumentException("Value cannot be null or whitespace.", nameof(queueName));
         
@@ -151,8 +151,8 @@ public abstract class RabbitMqRouterBase : BusRouterBase
     protected void DefineExchange<TDomainEvent>(Action<ExchangeMeta<TDomainEvent>> meta)
         where TDomainEvent : IDomainEvent
     {
-        if (meta == null) throw new ArgumentNullException(nameof(meta));
-        
+        ArgumentNullException.ThrowIfNull(meta);
+
         var exchangeMeta = new ExchangeMeta<TDomainEvent>
         {
             IsAutoDelete = false,
@@ -194,8 +194,8 @@ public abstract class RabbitMqRouterBase : BusRouterBase
         if (string.IsNullOrWhiteSpace(exchangeName))
             throw new ArgumentException("Value cannot be null or whitespace.", nameof(exchangeName));
 
-        if (route == null) throw new ArgumentNullException(nameof(route));
-        
+        ArgumentNullException.ThrowIfNull(route);
+
         var domainEvent = new DomainRouteWithMeta<TDomainEntity, QueueMeta<TDomainEntity>>();
         ApplyDefaultQueueProperties(domainEvent.RouteMeta);
 
@@ -235,8 +235,8 @@ public abstract class RabbitMqRouterBase : BusRouterBase
         if (string.IsNullOrWhiteSpace(exchangeName))
             throw new ArgumentException("Value cannot be null or whitespace.", nameof(exchangeName));
 
-        if (route == null) throw new ArgumentNullException(nameof(route));
-        
+        ArgumentNullException.ThrowIfNull(route);
+
         var domainEvent = new DomainRouteWithMeta<TDomainEntity, QueueMeta<TDomainEntity>>();
         ApplyDefaultQueueProperties(domainEvent.RouteMeta);
         
@@ -303,9 +303,9 @@ public abstract class RabbitMqRouterBase : BusRouterBase
     {
         if (string.IsNullOrWhiteSpace(queueName))
             throw new ArgumentException("Value cannot be null or whitespace.", nameof(queueName));
-        
-        if (route == null) throw new ArgumentNullException(nameof(route));
-        
+
+        ArgumentNullException.ThrowIfNull(route);
+
         // Multiple commands identified by namespace are sent on same queue:
         RpcEntity rpcEntity = ResolveRpcQueue(queueName);
         string rpcMessageNamespace = ResolveMessageNamespace(typeof(TCommand), messageNamespace);

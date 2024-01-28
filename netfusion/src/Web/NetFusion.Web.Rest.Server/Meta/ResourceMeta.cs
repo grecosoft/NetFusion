@@ -98,7 +98,7 @@ public class ResourceMeta<TSource, TResourceMeta> : IResourceMeta
         // This constraint is required since out-bound links will be generated. When generating a link,
         // by delegating to ASP.NET core, the controller name, action name, and route values are specified.
         // The HTTP method is not taken into account since it is provided when called.
-        if (duplicateActionNames.Any())
+        if (duplicateActionNames.Length != 0)
         {
             throw new InvalidOperationException(
                 $"Resource linking requires all controller method names to be unique.  Controller: {controllerType.Name} " + 

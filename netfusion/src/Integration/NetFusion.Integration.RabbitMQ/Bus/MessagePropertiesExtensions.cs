@@ -16,7 +16,7 @@ public static class MessagePropertiesExtensions
     public static bool TryParseReplyTo(this MessageProperties messageProperties,
         [MaybeNullWhen(false)]out string busName, [MaybeNullWhen(false)] out string queueName)
     {
-        if (messageProperties == null) throw new ArgumentNullException(nameof(messageProperties));
+        ArgumentNullException.ThrowIfNull(messageProperties);
         return MessageExtensions.TryParseReplyTo(messageProperties.ReplyTo, out busName, out queueName);
     }
 

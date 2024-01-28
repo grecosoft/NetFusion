@@ -24,8 +24,8 @@ public class ResourceLinkMeta<TSource>
 
     protected void AddResourceLink(ResourceLink resourceLink)
     {
-        if (resourceLink == null) throw new ArgumentNullException(nameof(resourceLink));
-            
+        ArgumentNullException.ThrowIfNull(resourceLink);
+
         _resourceLinks.Add(resourceLink);
     }
         

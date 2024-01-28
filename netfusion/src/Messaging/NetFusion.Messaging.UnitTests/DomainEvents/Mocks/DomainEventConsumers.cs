@@ -11,7 +11,7 @@ public class MockSyncDomainEventConsumerOne : MockConsumer,
     [InProcessHandler]
     public void OnEventHandler(MockDomainEvent domainEvent)
     {
-        if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
+        ArgumentNullException.ThrowIfNull(domainEvent);
 
         TestLog
             .AddLogEntry("Sync-DomainEvent-Handler-1")
@@ -53,7 +53,7 @@ public class MockSyncDomainEventConsumerTwo : MockConsumer,
     [InProcessHandler]
     public void OnEventHandler(MockDomainEvent domainEvent)
     {
-        if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
+        ArgumentNullException.ThrowIfNull(domainEvent);
 
         TestLog
             .AddLogEntry("Sync-DomainEvent-Handler-2")
@@ -95,7 +95,7 @@ public class MockDerivedMessageConsumer : MockConsumer,
     [InProcessHandler]
     public void OnBaseEventHandler(MockBaseDomainEvent domainEvent)
     {
-        if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
+        ArgumentNullException.ThrowIfNull(domainEvent);
 
         TestLog
             .AddLogEntry("OnBaseEventHandler")
@@ -105,7 +105,7 @@ public class MockDerivedMessageConsumer : MockConsumer,
     [InProcessHandler]
     public void OnIncludeBaseEventHandler([IncludeDerivedMessages]MockBaseDomainEvent domainEvent)
     {
-        if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
+        ArgumentNullException.ThrowIfNull(domainEvent);
 
         TestLog
             .AddLogEntry("OnIncludeBaseEventHandler")

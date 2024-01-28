@@ -35,7 +35,7 @@ internal class CompositeContainer : ICompositeContainer
         ILoggerFactory bootstrapLoggerFactory, 
         IConfiguration configuration)
     {
-        if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+        ArgumentNullException.ThrowIfNull(configuration);
 
         ServiceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
         
@@ -92,8 +92,8 @@ internal class CompositeContainer : ICompositeContainer
     /// a plugin's types.</param>
     public void Compose(ITypeResolver typeResolver)
     {
-        if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
-        
+        ArgumentNullException.ThrowIfNull(typeResolver);
+
         try
         {
             if (IsComposed)

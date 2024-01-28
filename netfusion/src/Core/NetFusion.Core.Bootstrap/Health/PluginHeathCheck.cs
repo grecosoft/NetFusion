@@ -24,7 +24,7 @@ public class PluginHeathCheck
 
     internal PluginHeathCheck(IPlugin plugin)
     {
-        if (plugin == null) throw new ArgumentNullException(nameof(plugin));
+        ArgumentNullException.ThrowIfNull(plugin);
         PluginType = plugin.GetType();
         ModuleHealthChecks = _moduleHealthChecks;
     }
@@ -41,8 +41,8 @@ public class PluginHeathCheck
     /// <param name="healthCheck">The module health check.</param>
     internal void AddModuleHealthCheck(ModuleHealthCheck healthCheck)
     {
-        if (healthCheck == null) throw new ArgumentNullException(nameof(healthCheck));
-            
+        ArgumentNullException.ThrowIfNull(healthCheck);
+
         _moduleHealthChecks.Add(healthCheck);
     }
 }

@@ -25,7 +25,7 @@ public class ContainerArrange
     /// <returns>Self Reference</returns>
     public ContainerArrange Configuration(Action<IConfigurationBuilder> arrange)
     {
-        if (arrange == null) throw new ArgumentNullException(nameof(arrange));
+        ArgumentNullException.ThrowIfNull(arrange);
 
         if (_fixture.IsCompositeContainerBuilt)
         {
@@ -44,8 +44,8 @@ public class ContainerArrange
     /// <returns>Self Reference</returns>
     public ContainerArrange Container(Action<ICompositeContainer> arrange)
     {
-        if (arrange == null) throw new ArgumentNullException(nameof(arrange));
-            
+        ArgumentNullException.ThrowIfNull(arrange);
+
         if (_fixture.IsCompositeContainerBuilt)
         {
             throw new InvalidOperationException(
@@ -63,8 +63,8 @@ public class ContainerArrange
     /// <returns>Self Reference.</returns>
     public ContainerArrange State(Action arrange)
     {
-        if (arrange == null) throw new ArgumentNullException(nameof(arrange));
-            
+        ArgumentNullException.ThrowIfNull(arrange);
+
         arrange();
         return this;
     }
@@ -78,8 +78,8 @@ public class ContainerArrange
     public ContainerArrange PluginConfig<TConfig>(Action<TConfig> arrange)
         where  TConfig : IPluginConfig
     {
-        if (arrange == null) throw new ArgumentNullException(nameof(arrange));
-        
+        ArgumentNullException.ThrowIfNull(arrange);
+
         var config =  _fixture.GetOrBuildContainer().GetPluginConfig<TConfig>();
         arrange(config);
         return this;
@@ -93,7 +93,7 @@ public class ContainerArrange
     /// <returns>Self Reference</returns>
     public ContainerArrange Services(Action<IServiceCollection> arrange)
     {
-        if (arrange == null) throw new ArgumentNullException(nameof(arrange));
+        ArgumentNullException.ThrowIfNull(arrange);
 
         if (_fixture.IsCompositeContainerBuilt)
         {

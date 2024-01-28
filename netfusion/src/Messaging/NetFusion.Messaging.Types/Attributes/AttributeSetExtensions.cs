@@ -131,7 +131,7 @@ public static class AttributeSetExtensions
         string name, string value, 
         bool overrideIfPresent)
     {
-        if (attributes == null) throw new ArgumentNullException(nameof(attributes));
+        ArgumentNullException.ThrowIfNull(attributes);
 
         if (string.IsNullOrWhiteSpace(name)) 
             throw new ArgumentException("Attribute Name not specified.", nameof(name));

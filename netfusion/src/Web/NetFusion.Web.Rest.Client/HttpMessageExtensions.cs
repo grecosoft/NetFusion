@@ -15,8 +15,8 @@ public static class HttpMessageExtensions
     /// <returns>True if an authentication challenge.  Otherwise, False.</returns>
     public static bool IsAuthChallenge(this ApiResponse response)
     {
-        if (response == null) throw new ArgumentNullException(nameof(response));
-            
+        ArgumentNullException.ThrowIfNull(response);
+
         return response.StatusCode == HttpStatusCode.Unauthorized && response.Headers
             .GetValues("WWW-Authenticate").Any(v => v.Contains("realm"));
     }
@@ -29,8 +29,8 @@ public static class HttpMessageExtensions
     /// <returns>The URL to call to authenticate.</returns>
     public static string GetAuthRealmUrl(this ApiResponse response)
     {
-        if (response == null) throw new ArgumentNullException(nameof(response));
-            
+        ArgumentNullException.ThrowIfNull(response);
+
         if (! response.IsAuthChallenge())
         {
             throw new InvalidOperationException("WWW-Authenticate header not found.");
@@ -50,8 +50,8 @@ public static class HttpMessageExtensions
     /// <returns>The token value if present.  Otherwise, null is returned.</returns>
     public static string GetAuthToken(this ApiResponse response)
     {
-        if (response == null) throw new ArgumentNullException(nameof(response));
-            
+        ArgumentNullException.ThrowIfNull(response);
+
         if (response.IsSuccessStatusCode && response.Headers.TryGetValues(
                 "X-Custom-Token", out IEnumerable<string> values))
         {

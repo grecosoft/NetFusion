@@ -24,7 +24,7 @@ public class ResourceController : ControllerBase
     public HalResource GetResource()
     {
         var models = _mockedService.GetResources<StateModel>().ToArray();          
-        if (!models.Any())
+        if (models.Length == 0)
         {
             throw new InvalidOperationException("Unit test didn't provided mocked server resource.");
         }

@@ -31,7 +31,7 @@ public class WebServerAssert
     /// <returns>Self Reference</returns>
     public WebServerAssert HttpResponse(Action<HttpResponseMessage> assert)
     {
-        if (assert == null) throw new ArgumentNullException(nameof(assert));
+        ArgumentNullException.ThrowIfNull(assert);
 
         if (_httpResponse == null)
         {
@@ -44,7 +44,7 @@ public class WebServerAssert
 
     public async Task<WebServerAssert> HttpResponseAsync(Func<HttpResponseMessage, Task> assert)
     {
-        if (assert == null) throw new ArgumentNullException(nameof(assert));
+        ArgumentNullException.ThrowIfNull(assert);
 
         if (_httpResponse == null)
         {
@@ -62,7 +62,7 @@ public class WebServerAssert
     /// <returns>Self Reference</returns>
     public WebServerAssert ApiResponse(Action<ApiResponse> assert)
     {
-        if (assert == null) throw new ArgumentNullException(nameof(assert));
+        ArgumentNullException.ThrowIfNull(assert);
 
         if (_apiResponse == null)
         {
@@ -81,7 +81,7 @@ public class WebServerAssert
     /// <returns>Self Reference</returns>
     public WebServerAssert Service<TService>(Action<TService> assert)
     {
-        if (assert == null) throw new ArgumentNullException(nameof(assert));
+        ArgumentNullException.ThrowIfNull(assert);
 
         var instance = _services.GetRequiredService<TService>();
         assert(instance);

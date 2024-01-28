@@ -28,9 +28,9 @@ namespace NetFusion.Settings
             Type optionType, string name, 
             IConfiguration config)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-            if (config == null) throw new ArgumentNullException(nameof(config));
-  
+            ArgumentNullException.ThrowIfNull(services);
+            ArgumentNullException.ThrowIfNull(config);
+
             Type serviceType = typeof(IOptionsChangeTokenSource<>).MakeGenericType(optionType);
             Type implementationType = typeof(ConfigurationChangeTokenSource<>).MakeGenericType(optionType);
 

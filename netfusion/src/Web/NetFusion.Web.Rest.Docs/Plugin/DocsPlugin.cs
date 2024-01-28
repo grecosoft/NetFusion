@@ -35,7 +35,7 @@ public static class CompositeBuilderExtensions
     /// <returns>Reference to the composite container builder.</returns>
     public static ICompositeContainerBuilder AddRestDocs(this ICompositeContainerBuilder composite)
     {
-        if (composite == null) throw new ArgumentNullException(nameof(composite));
+        ArgumentNullException.ThrowIfNull(composite);
 
         // Add dependent plugins:
         composite.AddWebMvc();

@@ -23,7 +23,7 @@ public class ApiDocService : IApiDocService
 
     public bool TryGetActionDoc(MethodInfo actionMethodInfo, out ApiActionDoc actionDoc)
     {
-        if (actionMethodInfo == null) throw new ArgumentNullException(nameof(actionMethodInfo));
+        ArgumentNullException.ThrowIfNull(actionMethodInfo);
 
         actionDoc = null;      
 

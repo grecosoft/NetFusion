@@ -13,7 +13,7 @@ public static class ObjectExtensions
     /// <returns>JSON encoded object.</returns>
     public static string ToIndentedJson(this object value)
     {
-        if (value == null) throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
 
         return JsonSerializer.Serialize(value, new JsonSerializerOptions
         {
@@ -30,8 +30,8 @@ public static class ObjectExtensions
     /// <returns>JSON encoded object.</returns>
     public static string ToJson(this object value)
     {
-        if (value == null) throw new ArgumentNullException(nameof(value));
-            
+        ArgumentNullException.ThrowIfNull(value);
+
         return JsonSerializer.Serialize(value, new JsonSerializerOptions
         {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,

@@ -17,7 +17,7 @@ public class ExternalEntitySettings
     
     public void ApplyQueueSettings(string queueName, CreateQueueOptions queueOptions)
     {
-        if (queueOptions == null) throw new ArgumentNullException(nameof(queueOptions));
+        ArgumentNullException.ThrowIfNull(queueOptions);
         if (! _namespaceSettings.Queues.TryGetValue(queueName, out QueueSettings? queueSettings)) return;
         
         if (queueSettings.LockDurationInSeconds != null)
@@ -48,7 +48,7 @@ public class ExternalEntitySettings
     
     public void ApplyTopicSettings(string topicName, CreateTopicOptions topicOptions)
     {
-        if (topicOptions == null) throw new ArgumentNullException(nameof(topicOptions));
+        ArgumentNullException.ThrowIfNull(topicOptions);
         if (!_namespaceSettings.Topics.TryGetValue(topicName, out TopicSettings? topicSettings)) return;
 
         if (topicSettings.MaxSizeInMegabytes != null)
@@ -69,7 +69,7 @@ public class ExternalEntitySettings
     
     public void ApplySubscriptionSettings(string subscriptionName, CreateSubscriptionOptions subscriptionOptions)
     {
-        if (subscriptionOptions == null) throw new ArgumentNullException(nameof(subscriptionOptions));
+        ArgumentNullException.ThrowIfNull(subscriptionOptions);
         if (!_namespaceSettings.Subscriptions.TryGetValue(subscriptionName, out var settings)) return;
 
         if (settings.LockDurationInSeconds != null)

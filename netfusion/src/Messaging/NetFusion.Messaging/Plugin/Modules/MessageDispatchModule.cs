@@ -130,7 +130,7 @@ public class MessageDispatchModule : PluginModule,
             .Select(d => d.Key.FullName)
             .ToArray();
 
-        if (noHandlerMessages.Any())
+        if (noHandlerMessages.Length != 0)
         {
             Logger.LogWarning("Handlers not found for the following messages: {MessageTypes}", 
                 string.Join(",", noHandlerMessages));
@@ -141,7 +141,7 @@ public class MessageDispatchModule : PluginModule,
             .Select(d => d.Key.FullName)
             .ToArray();
 
-        if (multipleHandlerMessages.Any())
+        if (multipleHandlerMessages.Length != 0)
         {
             Logger.LogWarning("Handlers not found for the following messages: {MessageTypes}", 
                 string.Join(",", multipleHandlerMessages));

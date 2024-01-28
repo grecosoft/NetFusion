@@ -11,8 +11,8 @@ public class MessageLogger : IMessageLogger
         
     public MessageLogger(IEnumerable<IMessageLogSink> messageLogSinks)
     {
-        if (messageLogSinks == null) throw new ArgumentNullException(nameof(messageLogSinks));
-            
+        ArgumentNullException.ThrowIfNull(messageLogSinks);
+
         _messageLogSinks = messageLogSinks.ToArray();
     }
 
@@ -20,8 +20,8 @@ public class MessageLogger : IMessageLogger
 
     public async Task LogAsync(MessageLog messageLog)
     {
-        if (messageLog == null) throw new ArgumentNullException(nameof(messageLog));
-            
+        ArgumentNullException.ThrowIfNull(messageLog);
+
         if (! IsLoggingEnabled)
         {
             return;

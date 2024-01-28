@@ -17,10 +17,7 @@ public static class RestCodeGenExtensions
     /// <returns>Application Builder</returns>
     public static IApplicationBuilder UseRestCodeGen(this IApplicationBuilder builder)
     {
-        if (builder == null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
+        ArgumentNullException.ThrowIfNull(builder);
 
         builder.UseMiddleware<ApiCodeGenMiddleware>();
         return builder;

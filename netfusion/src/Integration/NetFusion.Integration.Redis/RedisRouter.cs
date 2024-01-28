@@ -28,8 +28,8 @@ public abstract class RedisRouter : BusRouterBase
     protected void DefineChannel<TDomainEvent>(Action<PublishMeta<TDomainEvent>> configure)
         where TDomainEvent : IDomainEvent
     {
-        if (configure == null) throw new ArgumentNullException(nameof(configure));
-        
+        ArgumentNullException.ThrowIfNull(configure);
+
         var channelMeta = new PublishMeta<TDomainEvent>();
         configure(channelMeta);
 
@@ -84,8 +84,8 @@ public abstract class RedisRouter : BusRouterBase
         if (string.IsNullOrWhiteSpace(channelName))
             throw new ArgumentException("Value cannot be null or whitespace.", nameof(channelName));
 
-        if (route == null) throw new ArgumentNullException(nameof(route));
-        
+        ArgumentNullException.ThrowIfNull(route);
+
         var domainEvent = new DomainEventRoute<TDomainEntity>();
         route(domainEvent);
 

@@ -7,8 +7,8 @@ public class HalComments
 {
     public HalComments()
     {
-        EmbeddedComments = new EmbeddedComment[] { };
-        RelationComments = new RelationComment[] { };
+        EmbeddedComments = [];
+        RelationComments = [];
     }
        
     /// <summary>
