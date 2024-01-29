@@ -108,14 +108,9 @@ public class MessageTests
         public decimal Amount { get; set; }
     }
         
-    public class QueryDevice : Query<DeviceModel>
+    public class QueryDevice(int deviceId) : Query<DeviceModel>
     {
-        public int DeviceId { get; }
-            
-        public QueryDevice(int deviceId)
-        {
-            DeviceId = deviceId;
-        }
+        public int DeviceId { get; } = deviceId;
     }
 
     public class DeviceModel : QueryReadModel

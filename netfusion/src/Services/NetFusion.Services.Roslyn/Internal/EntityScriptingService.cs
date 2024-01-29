@@ -38,7 +38,7 @@ public class EntityScriptingService : IEntityScriptingService
     // given entity.  The expressions will be compiled upon first use.
     public void Load(IEnumerable<EntityScript> scripts)
     {
-        if (scripts == null) throw new ArgumentNullException(nameof(scripts));
+        ArgumentNullException.ThrowIfNull(scripts);
 
         _scriptEvaluators = scripts.Select(s => new ScriptEvaluator(s))
             .ToLookup(se => se.Script.EntityType);

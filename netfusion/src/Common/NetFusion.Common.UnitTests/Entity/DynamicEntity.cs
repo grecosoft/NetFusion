@@ -4,12 +4,7 @@ namespace NetFusion.Common.UnitTests.Entity;
 
 public class DynamicEntity : IAttributedEntity
 {
-    public IEntityAttributes Attributes { get; }
-        
-    public DynamicEntity()
-    {
-        Attributes = new EntityAttributes();
-    }
+    public IEntityAttributes Attributes { get; } = new EntityAttributes();
 
     public bool IsActive { get; set; }
     public int MaxValue { get; set; }

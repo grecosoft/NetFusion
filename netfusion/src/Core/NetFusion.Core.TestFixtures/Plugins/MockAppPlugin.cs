@@ -9,10 +9,4 @@ namespace NetFusion.Core.TestFixtures.Plugins;
 /// to the domain of the application.  Domain Entities, Aggregates, 
 /// and Services such examples.
 /// </summary>
-public class MockAppPlugin : MockPlugin
-{
-    public MockAppPlugin() : base(PluginTypes.AppPlugin)
-    {
-            
-    }
-}
+public class MockAppPlugin() : MockPlugin(PluginTypes.AppPlugin);

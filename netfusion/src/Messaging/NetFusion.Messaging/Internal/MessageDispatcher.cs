@@ -53,6 +53,8 @@ public class MessageDispatcher
 
     public MessageDispatcher(MessageRoute route)
     {
+        ArgumentNullException.ThrowIfNull(route);
+        
         ConsumerType = route.ConsumerType ?? 
             throw new NullReferenceException("Dispatcher cannot be created for a route with a null consumer");
         

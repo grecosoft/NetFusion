@@ -15,12 +15,8 @@ namespace NetFusion.Integration.ServiceBus;
 /// Derived from by a microservice and called during bootstrap to define
 /// the message types associated with Azure Service Bus namespace entities. 
 /// </summary>
-public abstract class NamespaceRouter :  BusRouterBase
+public abstract class NamespaceRouter(string busName) : BusRouterBase(busName)
 {
-    protected NamespaceRouter(string busName) : base(busName)
-    {
-    }
-    
     // ----- Queue Message Patterns -----
     
     /// <summary>

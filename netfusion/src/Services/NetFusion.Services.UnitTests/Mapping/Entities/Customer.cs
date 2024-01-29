@@ -1,15 +1,8 @@
 namespace NetFusion.Services.UnitTests.Mapping.Entities;
 
-public class Customer
+public class Customer(string firstName, string lastName, int age)
 {
-    public string FirstName { get; }
-    public string LastName { get; }
-    public int Age { get; }
-        
-    public Customer(string firstName, string lastName, int age)
-    {
-        FirstName = firstName;
-        LastName = lastName;
-        Age = age;
-    }
+    public string FirstName { get; } = firstName;
+    public string LastName { get; } = lastName;
+    public int Age { get; } = age;
 }

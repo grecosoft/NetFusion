@@ -30,9 +30,5 @@
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Testing\Setup" />
-  </ItemGroup>
 
 </Project>

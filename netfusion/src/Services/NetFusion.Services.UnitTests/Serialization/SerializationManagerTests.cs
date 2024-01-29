@@ -161,16 +161,10 @@ public class SerializationManagerTests
         }
     }
 
-    public class ExampleEntity
+    public class ExampleEntity(string valueOne, string valueTwo)
     {
-        public string ValueOne { get; }
-        public string ValueTwo { get; }
-        
-        public ExampleEntity(string valueOne, string valueTwo)
-        {
-            ValueOne = valueOne;
-            ValueTwo = valueTwo;
-        }
+        public string ValueOne { get; } = valueOne;
+        public string ValueTwo { get; } = valueTwo;
     }
   
 }

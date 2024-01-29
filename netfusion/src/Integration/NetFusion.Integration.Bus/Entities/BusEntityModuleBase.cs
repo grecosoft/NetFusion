@@ -33,8 +33,6 @@ public abstract class BusEntityModuleBase<TRouter> : PluginModule
         BusEntities = BusMessageRouters.SelectMany(r => r.GetBusEntities()).ToArray();
     }
     
-    
-    
     private void AssertNamespaceRoutes()
     {
         var duplicateNamespaces = BusMessageRouters.WhereDuplicated(r => r.BusName).ToArray();

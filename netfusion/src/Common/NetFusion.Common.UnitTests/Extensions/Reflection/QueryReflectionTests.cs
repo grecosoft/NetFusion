@@ -34,10 +34,10 @@ public class QueryReflectionTests
         foundInterface.Should().NotBeNull();
         foundInterface.Should().NotBeOfType(typeof(IModuleService));
 
-        var foundInftefaces = typeof(TestClass8).GetInterfacesDerivedFrom<IService>().ToArray();
-        foundInftefaces.Should().HaveCount(2);
-        foundInftefaces.Should().Contain(typeof(IModuleService));
-        foundInftefaces.Should().Contain(typeof(IRunnable));
+        var foundInterfaces = typeof(TestClass8).GetInterfacesDerivedFrom<IService>().ToArray();
+        foundInterfaces.Should().HaveCount(2);
+        foundInterfaces.Should().Contain(typeof(IModuleService));
+        foundInterfaces.Should().Contain(typeof(IRunnable));
     }
 
     [Fact(DisplayName = "Given Type check declared Default Constructor")]

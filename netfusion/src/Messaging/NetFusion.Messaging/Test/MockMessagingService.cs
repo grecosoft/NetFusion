@@ -9,7 +9,7 @@
 public class MockMessagingService : IMessagingService
 {
     // Records the received requests made to the service:
-    private readonly List<object> _receivedRequests = new();
+    private readonly List<object> _receivedRequests = [];
         
     // Contains known responses for commands and queries.
     private readonly Dictionary<Type, object> _commandResponses = new();

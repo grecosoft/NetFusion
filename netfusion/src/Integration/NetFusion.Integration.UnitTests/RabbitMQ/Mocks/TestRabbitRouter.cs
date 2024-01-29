@@ -5,13 +5,8 @@ using NetFusion.Integration.RabbitMQ;
 
 namespace NetFusion.Integration.UnitTests.RabbitMQ.Mocks;
 
-public class TestRabbitRouter : RabbitMqRouterBase
+public class TestRabbitRouter() : RabbitMqRouterBase("testRabbitBus")
 {
-    public TestRabbitRouter() : base("testRabbitBus")
-    {
-        
-    }
-
     public IEnumerable<BusEntity> DefinedEntities
     {
         get

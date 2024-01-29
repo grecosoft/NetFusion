@@ -122,14 +122,4 @@ public static class GenericTypeExtensions
     }
 }
 
-public class GenericTypeInfo
-{
-    public Type Type { get; }
-    public Type[] GenericArguments { get; }
-
-    public GenericTypeInfo(Type type, Type[] genericArguments)
-    {
-        Type = type;
-        GenericArguments = genericArguments;
-    }
-}
+public record GenericTypeInfo(Type Type, Type[] GenericArguments);

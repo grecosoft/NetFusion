@@ -16,12 +16,8 @@ public abstract class TestBusRouterBase : BusRouterBase
     }
 }
 
-public class TestBusRouter : TestBusRouterBase
+public class TestBusRouter() : TestBusRouterBase("testBusName")
 {
-    public TestBusRouter() : base("testBusName")
-    {
-    }
-
     protected override void OnDefineEntities()
     {
         // In a non-test route, a fluent-api is provided used 
@@ -34,12 +30,8 @@ public class TestBusRouter : TestBusRouterBase
     }
 }
 
-public class DuplicateBusRouter : TestBusRouterBase
+public class DuplicateBusRouter() : TestBusRouterBase("testBusName")
 {
-    public DuplicateBusRouter() : base("testBusName")
-    {
-    }
-
     protected override void OnDefineEntities()
     {
        

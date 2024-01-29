@@ -14,12 +14,8 @@ namespace NetFusion.Integration.Redis;
 /// Derived from by a microservice and called during bootstrap to define
 /// the message types associated with Redis Pub/Sub entities. 
 /// </summary>
-public abstract class RedisRouter : BusRouterBase
+public abstract class RedisRouter(string busName) : BusRouterBase(busName)
 {
-    protected RedisRouter(string busName) : base(busName)
-    {
-    }
-
     /// <summary>
     /// Defines a channel to which a domain-event should be published.
     /// </summary>

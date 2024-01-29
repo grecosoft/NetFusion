@@ -33,11 +33,12 @@ namespace NetFusion.Integration.Redis.Internal
 
             byte[] contentTypeData = Encoding.UTF8.GetBytes(contentType);
             
-            byte[][] data = {
+            byte[][] data =
+            [
                 BitConverter.GetBytes(contentTypeData.Length),
                 contentTypeData,
                 messageData
-            };
+            ];
 
             return data.SelectMany(i => i).ToArray();
         }

@@ -95,8 +95,8 @@ public class MessageDispatchModule : PluginModule,
 
     private IEnumerable<MessageDispatcher> HandlersForMessage(Type messageType)
     {
-        if (messageType == null) throw new ArgumentNullException(nameof(messageType));
-        
+        ArgumentNullException.ThrowIfNull(messageType);
+
         return _inProcessDispatchers.Where(di => di.Key.IsAssignableFrom(messageType))
             .SelectMany(di => di)
             .Where(di => di.IncludeDerivedTypes || di.MessageType == messageType);

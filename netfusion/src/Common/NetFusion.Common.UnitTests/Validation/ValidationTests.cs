@@ -7,7 +7,7 @@ namespace NetFusion.Common.UnitTests.Validation;
 
 public class ValidationTests
 {
-    [Fact(DisplayName = nameof(DomainEntityValidated_UsingMsValidationAttributes_ByDefault))]
+    [Fact]
     public void DomainEntityValidated_UsingMsValidationAttributes_ByDefault()
     {
         var domainEntity = new MockValidatableDomainEntity
@@ -38,7 +38,7 @@ public class ValidationTests
         valResult.RootObject.Should().BeSameAs(domainEntity);
     }
 
-    [Fact(DisplayName = nameof(DomainEntityCalled_DuringValidation))]
+    [Fact]
     public void DomainEntityCalled_DuringValidation()
     {
         var domainEntity = new MockValidatableDomainEntity
@@ -54,7 +54,7 @@ public class ValidationTests
             .Message.Should().Be("ValueThreeValidationMessage");
     }
 
-    [Fact(DisplayName = nameof(IfValidatorDetermines_EntityNotValid_EntityValidationMethodNotInvoked))]
+    [Fact]
     public void IfValidatorDetermines_EntityNotValid_EntityValidationMethodNotInvoked()
     {
         var domainEntity = new MockValidatableDomainEntity
@@ -68,7 +68,7 @@ public class ValidationTests
         domainEntity.EntityValidateInvoked.Should().BeFalse();
     }
 
-    [Fact(DisplayName = nameof(DomainEntityCan_ValidateChildDomainEntity))]
+    [Fact]
     public void DomainEntityCan_ValidateChildDomainEntity()
     {
         var domainEntity = new MockValidatableDomainEntity();
@@ -96,7 +96,7 @@ public class ValidationTests
         valItem.Message.Should().Be("ValueFourValidationMessage");
     }
 
-    [Fact(DisplayName = nameof(DomainEntityCan_ValidateChildDomainEntities))]
+    [Fact]
     public void DomainEntityCan_ValidateChildDomainEntities()
     {
         var domainEntity = new MockValidatableDomainEntity();
@@ -118,7 +118,7 @@ public class ValidationTests
         valResults.ObjectValidations.Should().HaveCount(2);
     }
 
-    [Fact(DisplayName = nameof(ResultValidationLevel_IsMaxValidationLevel_ForAllInvalidations))]
+    [Fact]
     public void ResultValidationLevel_IsMaxValidationLevel_ForAllInvalidations()
     {
         var domainEntity = new MockValidatableDomainEntity();
@@ -132,8 +132,8 @@ public class ValidationTests
         valResult.ValidationType.Should().Be(ValidationTypes.Warning);
     }
 
-    [Fact(DisplayName = nameof(ResultIsFlatenedList_OfAllValidatedEntities))]
-    public void ResultIsFlatenedList_OfAllValidatedEntities()
+    [Fact]
+    public void ResultIsFlattenedList_OfAllValidatedEntities()
     {
         var domainEntity = new MockValidatableDomainEntity();
         var child = new MockChildDomainEntity();
@@ -149,7 +149,7 @@ public class ValidationTests
             .And.Contain(v => v.ValidationType == ValidationTypes.Warning);
     }
 
-    [Fact(DisplayName = nameof(CanThrowExceptionFor_InvalidResult))]
+    [Fact]
     public void CanThrowExceptionFor_InvalidResult()
     {
         var domainEntity = new MockValidatableDomainEntity

@@ -14,12 +14,7 @@ public class EntityAttributes : DynamicObject,
     IEntityAttributes
 {
     // Backing variable to store name/value pairs.
-    private IDictionary<string, object?> _attributes;
-
-    public EntityAttributes()
-    {
-        _attributes = new Dictionary<string, object?>();
-    }
+    private IDictionary<string, object?> _attributes = new Dictionary<string, object?>();
 
     public dynamic Values => this;
 
