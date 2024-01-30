@@ -15,9 +15,9 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddSerializationManager(this IServiceCollection services,
         ISerializationManager manager)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-        if (manager == null) throw new ArgumentNullException(nameof(manager));
-        
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(manager);
+
         return services.AddSingleton(manager);
     }
 
@@ -32,7 +32,7 @@ public static class ServiceCollectionExtensions
         Action<TManager>? manager = null)
         where TManager : class, ISerializationManager, new()
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
+        ArgumentNullException.ThrowIfNull(services);
 
         var serializationMgr = new TManager();
         manager?.Invoke(serializationMgr);
@@ -49,7 +49,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddDefaultSerializationManager(this IServiceCollection services,
         Action<SerializationManager>? manager = null)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
+        ArgumentNullException.ThrowIfNull(services);
         return services.AddSerializationManager(manager);
     }
 }

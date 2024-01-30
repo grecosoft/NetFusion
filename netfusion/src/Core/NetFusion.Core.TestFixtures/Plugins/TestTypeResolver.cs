@@ -14,7 +14,7 @@ namespace NetFusion.Core.TestFixtures.Plugins;
 /// </summary>
 public class TestTypeResolver : ITypeResolver
 {
-    private readonly ITypeResolver _baseResolver = new TypeResolver();
+    private readonly TypeResolver _baseResolver = new();
 
     public void SetPluginMeta(IPlugin plugin)
     {

@@ -8,16 +8,10 @@ namespace NetFusion.Web.Rest.Server.Meta;
 /// Instance of class used to specify required and optional link metadata properties.
 /// </summary>
 /// <typeparam name="TSource">The source type associated with the metadata.</typeparam>
-public class LinkDescriptor<TSource>
+public class LinkDescriptor<TSource>(ResourceLink resourceLink)
     where TSource : class
 {
-    private readonly ResourceLink _resourceLink;
-
-    public LinkDescriptor(ResourceLink resourceLink)
-    {
-        _resourceLink = resourceLink ?? throw new ArgumentNullException(nameof(resourceLink),
-            "Resource Link cannot be null.");
-    }
+    private readonly ResourceLink _resourceLink = resourceLink ?? throw new ArgumentNullException(nameof(resourceLink));
 
     //---------------- REQUIRED LINK PROPERTIES SET BY LINK METADATA METHODS ----------------------
         

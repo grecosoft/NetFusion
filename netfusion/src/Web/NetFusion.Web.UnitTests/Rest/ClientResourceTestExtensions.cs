@@ -13,7 +13,7 @@ public static class ClientResourceTestExtensions
         string expectedValue)
     {
         Assert.True(
-            resource.Links != null && resource.Links.Count > 0,
+            resource.Links is { Count: > 0 },
             "Resource does not have associated links.");
 
         Assert.True(resource.Links.ContainsKey(relName), $"Resource does not have link with relation name: {relName}");

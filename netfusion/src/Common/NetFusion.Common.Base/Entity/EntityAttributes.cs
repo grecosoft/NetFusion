@@ -14,12 +14,7 @@ public class EntityAttributes : DynamicObject,
     IEntityAttributes
 {
     // Backing variable to store name/value pairs.
-    private IDictionary<string, object?> _attributes;
-
-    public EntityAttributes()
-    {
-        _attributes = new Dictionary<string, object?>();
-    }
+    private IDictionary<string, object?> _attributes = new Dictionary<string, object?>();
 
     public dynamic Values => this;
 
@@ -151,22 +146,16 @@ public class EntityAttributes : DynamicObject,
     public void SetMemberValue<T>(T? value, bool overrideIfPresent = true,
         [CallerMemberName] string? callerName = null)
     {
-        if (callerName == null)
-        {
-            throw new ArgumentNullException(nameof(callerName));
-        }
-            
+        ArgumentNullException.ThrowIfNull(callerName);
+
         string propName = GetBasePropertyName(callerName);
         SetValue(propName, value, overrideIfPresent);
     }
 
     public T? GetMemberValueOrDefault<T>(T? defaultValue = default, [CallerMemberName] string? callerName = null)
     {
-        if (callerName == null)
-        {
-            throw new ArgumentNullException(nameof(callerName));
-        }
-            
+        ArgumentNullException.ThrowIfNull(callerName);
+
         string propName = GetBasePropertyName(callerName);
         return GetValueOrDefault(propName, defaultValue);
     }

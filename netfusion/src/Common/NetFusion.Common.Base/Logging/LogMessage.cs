@@ -62,8 +62,8 @@ public class LogMessage
     /// <returns>Reference to log message.</returns>
     public LogMessage WithProperties(params LogProperty[] properties)
     {
-        if (properties == null) throw new ArgumentNullException(nameof(properties));
-            
+        ArgumentNullException.ThrowIfNull(properties);
+
         _logProperties.AddRange(properties);
         return this;
     }

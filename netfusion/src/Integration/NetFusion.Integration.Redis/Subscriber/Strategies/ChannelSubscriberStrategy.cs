@@ -9,19 +9,15 @@ using StackExchange.Redis;
 
 namespace NetFusion.Integration.Redis.Subscriber.Strategies;
 
-public class ChannelSubscriberStrategy : BusEntityStrategyBase<ChannelEntityContext>,
-    IBusEntityCreationStrategy,
-    IBusEntitySubscriptionStrategy,
-    IBusEntityDisposeStrategy
+public class ChannelSubscriberStrategy(ChannelSubscriberEntity subscriberEntity)
+    : BusEntityStrategyBase<ChannelEntityContext>(subscriberEntity),
+        IBusEntityCreationStrategy,
+        IBusEntitySubscriptionStrategy,
+        IBusEntityDisposeStrategy
 {
-    private readonly ChannelSubscriberEntity _subscriberEntity;
+    private readonly ChannelSubscriberEntity _subscriberEntity = subscriberEntity;
     private ISubscriber? _subscriber;
 
-    public ChannelSubscriberStrategy(ChannelSubscriberEntity subscriberEntity) : base(subscriberEntity)
-    {
-        _subscriberEntity = subscriberEntity;
-    }
-    
     private ILogger<ChannelSubscriberStrategy> Logger =>
         Context.LoggerFactory.CreateLogger<ChannelSubscriberStrategy>();
     

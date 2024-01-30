@@ -32,8 +32,8 @@ public static class CompositeBuilderExtensions
     /// <returns>Reference to the composite container builder.</returns>
     public static ICompositeContainerBuilder AddSettings(this ICompositeContainerBuilder composite)
     {
-        if (composite == null) throw new ArgumentNullException(nameof(composite));
-            
+        ArgumentNullException.ThrowIfNull(composite);
+
         composite.AddPlugin<SettingsPlugin>();
         return composite;
     }

@@ -1,3 +1,0 @@
-Classes defining how Commands, Domain Events, and queries are routed to in-process 
-message handler or to out of process handlers using RabbitMQ, Azure Service Bus or
-Redis Pub/Sub.

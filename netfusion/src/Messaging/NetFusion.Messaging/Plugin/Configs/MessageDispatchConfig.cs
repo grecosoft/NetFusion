@@ -12,9 +12,9 @@ namespace NetFusion.Messaging.Plugin.Configs;
 /// </summary>
 public class MessageDispatchConfig : IPluginConfig
 {
-    private readonly List<Type> _messagePublisherTypes = new() { typeof(InProcessPublisher) };
-    private readonly List<Type> _messageEnrichersTypes = new();
-    private readonly List<Type> _messageFilterTypes = new();
+    private readonly List<Type> _messagePublisherTypes = [typeof(InProcessPublisher)];
+    private readonly List<Type> _messageEnrichersTypes = [];
+    private readonly List<Type> _messageFilterTypes = [];
     private readonly Dictionary<Type, ResiliencePipeline> _resiliencePipelines = new ();
 
     public MessageDispatchConfig()
@@ -133,7 +133,7 @@ public class MessageDispatchConfig : IPluginConfig
         if (_resiliencePipelines.ContainsKey(typeof(TPublisher)))
         {
             throw new BootstrapException(
-                $"A relilience pipeline for publisher: {typeof(TPublisher)} is already registered");
+                $"A resilience pipeline for publisher: {typeof(TPublisher)} is already registered");
         }
         _resiliencePipelines[typeof(TPublisher)] = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
     }

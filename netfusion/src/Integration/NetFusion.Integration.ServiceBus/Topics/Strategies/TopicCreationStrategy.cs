@@ -12,18 +12,14 @@ namespace NetFusion.Integration.ServiceBus.Topics.Strategies;
 /// Strategy invoked to create a topic to which the defining microservice
 /// publishes domain-events to notify other subscribing microservices.
 /// </summary>
-internal class TopicCreationStrategy : BusEntityStrategyBase<NamespaceEntityContext>,
-    IBusEntityCreationStrategy,
-    IBusEntityPublishStrategy,
-    IBusEntityDisposeStrategy
+internal class TopicCreationStrategy(TopicEntity topicEntity)
+    : BusEntityStrategyBase<NamespaceEntityContext>(topicEntity),
+        IBusEntityCreationStrategy,
+        IBusEntityPublishStrategy,
+        IBusEntityDisposeStrategy
 {
-    private readonly TopicEntity _topicEntity;
+    private readonly TopicEntity _topicEntity = topicEntity;
     private ServiceBusSender? _serviceBusSender;
-
-    public TopicCreationStrategy(TopicEntity topicEntity) : base(topicEntity)
-    {
-        _topicEntity = topicEntity;
-    }
 
     public bool CanPublishMessageType(Type messageType) => messageType == _topicEntity.DomainEventType;
     

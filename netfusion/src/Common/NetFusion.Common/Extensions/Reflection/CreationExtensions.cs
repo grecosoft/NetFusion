@@ -17,10 +17,9 @@ public static class CreationExtensions
     /// <returns>True if the type is a class with a default constructor.  Otherwise False.</returns>
     public static bool IsCreatableClassType(this Type type)
     {
-        if (type == null) throw new ArgumentNullException(nameof(type));
-            
-        return type.IsClass && !type.IsGenericType
-                            && !type.IsAbstract && type.HasDefaultConstructor();
+        ArgumentNullException.ThrowIfNull(type);
+
+        return type is { IsClass: true, IsGenericType: false, IsAbstract: false } && type.HasDefaultConstructor();
     }
 
     /// <summary>
@@ -31,7 +30,7 @@ public static class CreationExtensions
     /// <returns>The created instance.</returns>
     public static object CreateInstance(this Type type, params object[] args)
     {
-        if (type == null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         var instance = Activator.CreateInstance(type, args);
         if (instance == null)
@@ -52,7 +51,7 @@ public static class CreationExtensions
     /// <returns>Distinct list of object instances of all types deriving from the specified base type.</returns>
     public static IEnumerable<T> CreateInstancesDerivingFrom<T>(this IEnumerable<Type> types)
     {
-        if (types == null) throw new ArgumentNullException(nameof(types));
+        ArgumentNullException.ThrowIfNull(types);
 
         foreach (Type type in types.Where(t => t.IsCreatableClassType() && t.IsDerivedFrom<T>()).Distinct())
         {
@@ -69,8 +68,8 @@ public static class CreationExtensions
     /// <returns>Distinct list of object instances of all types deriving from the specified base type.</returns>
     public static IEnumerable<object> CreateInstancesDerivingFrom(this IEnumerable<Type> types, Type baseType)
     {
-        if (types == null) throw new ArgumentNullException(nameof(types));
-        if (baseType == null) throw new ArgumentNullException(nameof(baseType));
+        ArgumentNullException.ThrowIfNull(types);
+        ArgumentNullException.ThrowIfNull(baseType);
 
         foreach (Type type in types.Where(t => t.IsCreatableClassType() && t.IsDerivedFrom(baseType)).Distinct())
         {

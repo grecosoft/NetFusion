@@ -6,17 +6,11 @@ namespace NetFusion.Integration.Redis.Internal
     /// Contains a reference to a Redis connection and the configuration
     /// options from which it was created.
     /// </summary>
-    public class CachedConnection
+    public class CachedConnection(
+        ConfigurationOptions configuration,
+        ConnectionMultiplexer connection)
     {
-        public ConfigurationOptions Configuration { get; }
-        public ConnectionMultiplexer Connection { get; }
-
-        public CachedConnection(
-            ConfigurationOptions configuration, 
-            ConnectionMultiplexer connection)
-        {
-            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            Connection = connection ?? throw new ArgumentNullException(nameof(connection));
-        }
+        public ConfigurationOptions Configuration { get; } = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        public ConnectionMultiplexer Connection { get; } = connection ?? throw new ArgumentNullException(nameof(connection));
     }
 }

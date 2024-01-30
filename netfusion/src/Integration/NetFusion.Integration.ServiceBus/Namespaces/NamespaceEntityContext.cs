@@ -36,8 +36,8 @@ public class NamespaceEntityContext : BusEntityContext
     /// <returns></returns>
     public IMessage DeserializeMessage(MessageDispatcher dispatcher, ProcessMessageEventArgs messageEventArgs)
     {
-        if (dispatcher == null) throw new ArgumentNullException(nameof(dispatcher));
-        if (messageEventArgs == null) throw new ArgumentNullException(nameof(messageEventArgs));
+        ArgumentNullException.ThrowIfNull(dispatcher);
+        ArgumentNullException.ThrowIfNull(messageEventArgs);
 
         BinaryData messageData = messageEventArgs.Message.Body;
         string contentType = messageEventArgs.Message.ContentType ?? ContentTypes.Json;

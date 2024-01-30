@@ -64,7 +64,7 @@ public class MappingModule : PluginModule, IMongoMappingModule
 
     public IEntityClassMap? GetEntityMap(Type entityType)
     {
-        if (entityType == null) throw new ArgumentNullException(nameof(entityType));
+        ArgumentNullException.ThrowIfNull(entityType);
 
         return BsonClassMap.LookupClassMap(entityType) as IEntityClassMap;
     }

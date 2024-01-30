@@ -33,12 +33,10 @@ public abstract class BusEntityModuleBase<TRouter> : PluginModule
         BusEntities = BusMessageRouters.SelectMany(r => r.GetBusEntities()).ToArray();
     }
     
-    
-    
     private void AssertNamespaceRoutes()
     {
         var duplicateNamespaces = BusMessageRouters.WhereDuplicated(r => r.BusName).ToArray();
-        if (duplicateNamespaces.Any())
+        if (duplicateNamespaces.Length != 0)
         {
             throw new BusException(
                 $"More than one derived {typeof(TRouter)} class defined for bus names " + 

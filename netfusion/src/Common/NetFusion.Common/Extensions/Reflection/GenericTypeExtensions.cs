@@ -19,9 +19,8 @@ public static class GenericTypeExtensions
     /// <example>List<> would return true.  List<string> would return false.</example>
     public static bool IsOpenGenericType(this Type sourceType)
     {
-        if (sourceType == null) throw new ArgumentNullException(nameof(sourceType));
-            
-        return sourceType.IsGenericType && sourceType.ContainsGenericParameters;
+        ArgumentNullException.ThrowIfNull(sourceType);
+        return sourceType is { IsGenericType: true, ContainsGenericParameters: true };
     }
 
     /// <summary>
@@ -36,9 +35,9 @@ public static class GenericTypeExtensions
         Type openGenericType,
         params Type[] specificClosedArgTypes)
     {
-        if (closedGenericType == null) throw new ArgumentNullException(nameof(closedGenericType));
-        if (openGenericType == null) throw new ArgumentNullException(nameof(openGenericType));
-        
+        ArgumentNullException.ThrowIfNull(closedGenericType);
+        ArgumentNullException.ThrowIfNull(openGenericType);
+
         if (! openGenericType.IsOpenGenericType())
         {
             throw new InvalidOperationException(
@@ -98,8 +97,8 @@ public static class GenericTypeExtensions
         Type openGenericType,
         params Type[] genericArgTypes)
     {
-        if (closedGenericTypes == null) throw new ArgumentNullException(nameof(closedGenericTypes));
-        if (openGenericType == null) throw new ArgumentNullException(nameof(openGenericType));
+        ArgumentNullException.ThrowIfNull(closedGenericTypes);
+        ArgumentNullException.ThrowIfNull(openGenericType);
 
         var openGenericTypeInfo = openGenericType.GetTypeInfo();
 
@@ -123,14 +122,4 @@ public static class GenericTypeExtensions
     }
 }
 
-public class GenericTypeInfo
-{
-    public Type Type { get; }
-    public Type[] GenericArguments { get; }
-
-    public GenericTypeInfo(Type type, Type[] genericArguments)
-    {
-        Type = type;
-        GenericArguments = genericArguments;
-    }
-}
+public record GenericTypeInfo(Type Type, Type[] GenericArguments);

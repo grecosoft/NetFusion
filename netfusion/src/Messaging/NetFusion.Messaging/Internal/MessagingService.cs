@@ -12,39 +12,29 @@ namespace NetFusion.Messaging.Internal;
 /// <summary>
 ///  Central service for executing Commands, Domain-Events, and Queries.
 /// </summary>
-public class MessagingService : IMessagingService
+public class MessagingService(
+    ILogger<MessagingService> logger,
+    IMessageDispatchModule messagingModule,
+    IEnumerable<IMessageEnricher> messageEnrichers,
+    IEnumerable<IMessageFilter> messageFilters,
+    IEnumerable<IMessagePublisher> messagePublishers)
+    : IMessagingService
 {
-    private readonly ILogger<MessagingService> _logger;
-    private readonly IMessageDispatchModule _messagingModule;
+    private readonly ILogger<MessagingService> _logger = logger;
+    private readonly IMessageDispatchModule _messagingModule = messagingModule;
     
-    private readonly IEnumerable<IMessageEnricher> _messageEnrichers;
-    private readonly IEnumerable<IMessageFilter> _messageFilters;
-    private readonly IEnumerable<IMessagePublisher> _messagePublishers;
+    private readonly IEnumerable<IMessageEnricher> _messageEnrichers = messageEnrichers
+        .OrderByMatchingType(messagingModule.DispatchConfig.MessageEnrichers)
+        .ToArray();
+    private readonly IEnumerable<IMessageFilter> _messageFilters = messageFilters
+        .OrderByMatchingType(messagingModule.DispatchConfig.MessageFilters)
+        .ToArray();
+    private readonly IEnumerable<IMessagePublisher> _messagePublishers = messagePublishers
+        .OrderByMatchingType(messagingModule.DispatchConfig.MessagePublishers)
+        .ToArray();
 
-    public MessagingService(
-        ILogger<MessagingService> logger,
-        IMessageDispatchModule messagingModule,
-        IEnumerable<IMessageEnricher> messageEnrichers,
-        IEnumerable<IMessageFilter> messageFilters,
-        IEnumerable<IMessagePublisher> messagePublishers)
-    {
-        _logger = logger;
-        _messagingModule = messagingModule;
-
-        // Order the enrichers, filters, publishers publishers based on the order 
-        // registration specified during configuration. 
-        _messageEnrichers = messageEnrichers
-            .OrderByMatchingType(messagingModule.DispatchConfig.MessageEnrichers)
-            .ToArray();
-            
-        _messageFilters = messageFilters
-            .OrderByMatchingType(messagingModule.DispatchConfig.MessageFilters)
-            .ToArray();
-
-        _messagePublishers = messagePublishers
-            .OrderByMatchingType(messagingModule.DispatchConfig.MessagePublishers)
-            .ToArray();
-    }
+    // Order the enrichers, filters, publishers publishers based on the order 
+    // registration specified during configuration. 
 
     public Task PublishAsync(IDomainEvent domainEvent,
         IntegrationTypes integrationType = IntegrationTypes.All,
@@ -90,7 +80,7 @@ public class MessagingService : IMessagingService
             }
         }
 
-        if (publisherErrors.Any())
+        if (publisherErrors.Count != 0)
         {
             throw new PublisherException("Exception dispatching event source.", eventSource, publisherErrors);
         }
@@ -173,7 +163,7 @@ public class MessagingService : IMessagingService
             if (taskList != null)
             {
                 var enricherErrors = taskList.GetExceptions(GetEnricherException);
-                if (enricherErrors.Any())
+                if (enricherErrors.Length != 0)
                 {
                     throw new PublisherException("Exception when invoking message enrichers.",
                         enricherErrors);
@@ -205,7 +195,7 @@ public class MessagingService : IMessagingService
             if (taskList != null)
             {
                 var filterErrors = taskList.GetExceptions(GetFilterException);
-                if (filterErrors.Any())
+                if (filterErrors.Length != 0)
                 {
                     throw new PublisherException("Exception when invoking query filters.", filterErrors);
                 }
@@ -237,7 +227,7 @@ public class MessagingService : IMessagingService
             if (taskList != null)
             {
                 var publisherErrors = taskList.GetExceptions(GetPublisherException);
-                if (publisherErrors.Any())
+                if (publisherErrors.Length != 0)
                 {
                     throw new PublisherException("Exception when invoking batch message publishers.",
                         ex,
@@ -269,7 +259,7 @@ public class MessagingService : IMessagingService
             if (taskList != null)
             {
                 var publisherErrors = taskList.GetExceptions(GetPublisherException);
-                if (publisherErrors.Any())
+                if (publisherErrors.Length != 0)
                 {
                     throw new PublisherException("Exception when invoking message publishers.",
                         ex,

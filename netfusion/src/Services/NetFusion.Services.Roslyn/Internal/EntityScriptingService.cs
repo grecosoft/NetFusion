@@ -38,7 +38,7 @@ public class EntityScriptingService : IEntityScriptingService
     // given entity.  The expressions will be compiled upon first use.
     public void Load(IEnumerable<EntityScript> scripts)
     {
-        if (scripts == null) throw new ArgumentNullException(nameof(scripts));
+        ArgumentNullException.ThrowIfNull(scripts);
 
         _scriptEvaluators = scripts.Select(s => new ScriptEvaluator(s))
             .ToLookup(se => se.Script.EntityType);
@@ -46,8 +46,8 @@ public class EntityScriptingService : IEntityScriptingService
 
     public async Task ExecuteAsync(object entity, string scriptName = "default")
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
-        if (scriptName == null) throw new ArgumentNullException(nameof(scriptName));
+        ArgumentNullException.ThrowIfNull(entity);
+        ArgumentNullException.ThrowIfNull(scriptName);
 
         Type entityType = entity.GetType();
 
@@ -244,8 +244,8 @@ public class EntityScriptingService : IEntityScriptingService
 
     public async Task<bool> SatisfiesPredicateAsync(object entity, ScriptPredicate predicate)
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
-        if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+        ArgumentNullException.ThrowIfNull(entity);
+        ArgumentNullException.ThrowIfNull(predicate);
 
         if (entity is not IAttributedEntity attributedEntity)
         {
@@ -259,8 +259,7 @@ public class EntityScriptingService : IEntityScriptingService
         {
             throw new InvalidOperationException(
                 $"After the predicate script named: {predicate.ScriptName} was executed, " + 
-                $"the expected predicate attribute named: {predicate.AttributeName} was not" +
-                "calculated.");
+                $"the expected predicate attribute named: {predicate.AttributeName} was calculated.");
         }
 
         object? value = attributedEntity.Attributes.GetValue(predicate.AttributeName);

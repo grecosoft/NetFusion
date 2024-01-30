@@ -268,13 +268,7 @@ public class MessageAttributeTests
         domainEvent.GetTls().Should().Be(expectedValue);
     }
 
-    private class TestDomainEvent : DomainEvent
-    {
-            
-    }
+    private class TestDomainEvent : DomainEvent;
 
-    private class TestCommand : Command
-    {
-            
-    }
+    private class TestCommand : Command;
 }

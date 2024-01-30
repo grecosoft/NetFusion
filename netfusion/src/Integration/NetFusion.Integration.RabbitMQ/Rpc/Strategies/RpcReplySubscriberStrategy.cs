@@ -12,29 +12,22 @@ namespace NetFusion.Integration.RabbitMQ.Rpc.Strategies;
 /// reply queue for a response that is correlated back to the original sent
 /// command.
 /// </summary>
-public class RpcReplySubscriberStrategy : BusEntityStrategyBase<EntityContext>,
+public class RpcReplySubscriberStrategy(RpcReferenceEntity rpcEntity) : BusEntityStrategyBase<EntityContext>(rpcEntity),
     IBusEntityCreationStrategy,
     IBusEntitySubscriptionStrategy,
     IBusEntityDisposeStrategy
 {
-    private readonly RpcReferenceEntity _rpcEntity;
-    
-    private Queue _queue;
+    private readonly RpcReferenceEntity _rpcEntity = rpcEntity;
     private IDisposable? _consumer;
     
     private ILogger<RpcReplySubscriberStrategy> Logger => 
         Context.LoggerFactory.CreateLogger<RpcReplySubscriberStrategy>();
-
-    public RpcReplySubscriberStrategy(RpcReferenceEntity rpcEntity) : base(rpcEntity)
-    {
-        _rpcEntity = rpcEntity;
-    }
     
     public async Task CreateEntity()
     {
         IBusConnection busConn = Context.BusModule.GetConnection(_rpcEntity.BusName);
   
-        _queue = await busConn.CreateQueueAsync(new QueueMeta
+        await busConn.CreateQueueAsync(new QueueMeta
         {
             QueueName = _rpcEntity.ReplyQueueName,
             IsDurable = false,

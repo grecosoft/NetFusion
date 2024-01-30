@@ -17,7 +17,7 @@ public class MessagePackSerializer : ISerializer
         
     public byte[] Serialize(object value)
     {
-        if (value == null) throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
 
         var serializer = MsgPackCliSerializer.Get(value.GetType());
         var memoryStream = new MemoryStream();
@@ -28,9 +28,9 @@ public class MessagePackSerializer : ISerializer
     
     public object? Deserialize(byte[] value, Type valueType)
     {
-        if (value == null) throw new ArgumentNullException(nameof(value));
-        if (valueType == null) throw new ArgumentNullException(nameof(valueType));
-            
+        ArgumentNullException.ThrowIfNull(value);
+        ArgumentNullException.ThrowIfNull(valueType);
+
         var serializer = MsgPackCliSerializer.Get(valueType);
         var memoryStream = new MemoryStream(value);
         

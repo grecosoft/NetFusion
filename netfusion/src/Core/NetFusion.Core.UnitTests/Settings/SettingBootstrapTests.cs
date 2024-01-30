@@ -163,28 +163,15 @@ public class SettingBootstrapTests
     }
 
     [ConfigurationSection("X:Y")]
-    public class TestSettingsTwo : IAppSettings
-    {
-            
-    }
+    public class TestSettingsTwo : IAppSettings;
 
-    public class DependentComponent
+    public class DependentComponent(TestSettingsOne settings)
     {
-        public TestSettingsOne InjectedSettings { get; }
-            
-        public DependentComponent(TestSettingsOne settings)
-        {
-            InjectedSettings = settings;
-        }
+        public TestSettingsOne InjectedSettings { get; } = settings;
     }
         
-    public class DependentComponentInvalid
+    public class DependentComponentInvalid(TestSettingsInvalid settings)
     {
-        public TestSettingsInvalid InjectedSettings { get; }
-            
-        public DependentComponentInvalid(TestSettingsInvalid settings)
-        {
-            InjectedSettings = settings;
-        }
+        public TestSettingsInvalid InjectedSettings { get; } = settings;
     }
 }

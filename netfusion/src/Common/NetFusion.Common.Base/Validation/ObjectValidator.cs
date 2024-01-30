@@ -9,21 +9,13 @@ namespace NetFusion.Common.Base.Validation;
 /// Validation based on Microsoft DataAnnotations.  This is the IObjectValidator implementation
 /// used by default if not overridden when bootstrapping the application container.
 /// </summary>
-public class ObjectValidator : IObjectValidator
+public class ObjectValidator(object obj) : IObjectValidator
 {
-    private readonly List<ValidationItem> _items;
-    private readonly List<IObjectValidator> _children;
-
-    public object Object { get; }
-
-    public ObjectValidator(object obj)
-    {            
-        Object = obj ?? throw new ArgumentNullException(nameof(obj));
-
-        _items = new List<ValidationItem>();
-        _children = new List<IObjectValidator>();
-    }
-
+    public object Object { get; } = obj ?? throw new ArgumentNullException(nameof(obj));
+    
+    private readonly List<ValidationItem> _items = [];
+    private readonly List<IObjectValidator> _children = [];
+    
     public IEnumerable<ValidationItem> Validations => _items;
     public IEnumerable<IObjectValidator> Children => _children;
 

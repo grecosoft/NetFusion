@@ -28,8 +28,8 @@ public interface IMockTestLog
     
 public class MockTestLog : IMockTestLog
 {
-    private readonly List<string> _entries = new();
-    private readonly List<object> _messages = new();
+    private readonly List<string> _entries = [];
+    private readonly List<object> _messages = [];
         
     public IReadOnlyCollection<string> Entries { get; }
     public IReadOnlyCollection<object> Messages { get; }

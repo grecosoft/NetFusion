@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Web.Rest.Resources;
 using NetFusion.Web.UnitTests.Mocks;
@@ -8,7 +9,7 @@ namespace NetFusion.Web.UnitTests.Rest.Setup;
 
 public class NullUnitTestService : IMockedService
 {
-    public IEnumerable<CustomerModel> Customers { get; set; } = new CustomerModel[] { };
+    public IEnumerable<CustomerModel> Customers { get; set; } = Array.Empty<CustomerModel>();
 
     public HalResource ServerReceivedResource { get; set; }
 

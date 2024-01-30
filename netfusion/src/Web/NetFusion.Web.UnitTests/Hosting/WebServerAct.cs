@@ -16,17 +16,11 @@ namespace NetFusion.Web.UnitTests.Hosting;
 /// <summary>
 /// Provides method used to act on the create TestServer by executing web-requests.
 /// </summary>
-public class WebServerAct
+public class WebServerAct(TestServer testServer, IServiceProvider services)
 {
-    private readonly TestServer _testServer;
-    private readonly IServiceProvider _services;
-  
-    public WebServerAct(TestServer testServer, IServiceProvider services)
-    {
-        _testServer = testServer ?? throw new ArgumentNullException(nameof(testServer));
-        _services = services ?? throw new ArgumentNullException(nameof(services));
-    }
-        
+    private readonly TestServer _testServer = testServer ?? throw new ArgumentNullException(nameof(testServer));
+    private readonly IServiceProvider _services = services ?? throw new ArgumentNullException(nameof(services));
+
     /// <summary>
     /// Creates an HttpClient instance used to act on the TestService by sending requests.
     /// </summary>
@@ -34,8 +28,8 @@ public class WebServerAct
     /// <returns>The WebServer response to be asserted.</returns>
     public async Task<WebServerResponse> OnClient(Func<HttpClient, Task<HttpResponseMessage>> clientAct)
     {
-        if (clientAct == null) throw new ArgumentNullException(nameof(clientAct));
-            
+        ArgumentNullException.ThrowIfNull(clientAct);
+
         var client = _testServer.CreateClient();
         var httpResponseMsg = await clientAct(client);
 
@@ -50,8 +44,8 @@ public class WebServerAct
     public async Task<WebServerResponse> OnRestClient( 
         Func<IRestClient, Task<ApiResponse>> clientAct)
     {
-        if (clientAct == null) throw new ArgumentNullException(nameof(clientAct));
-            
+        ArgumentNullException.ThrowIfNull(clientAct);
+
         var client = _testServer.CreateClient();
         var logger = _services.GetService<ILogger<WebServerAct>>();
             

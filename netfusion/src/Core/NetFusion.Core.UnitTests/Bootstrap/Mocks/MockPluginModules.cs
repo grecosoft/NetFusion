@@ -22,26 +22,14 @@ public abstract class MockPluginModule : PluginModule
     }
 }
 
-public interface IMockPluginOneModule : IPluginModuleService
-{
-
-}
+public interface IMockPluginOneModule : IPluginModuleService;
 
 public class MockPluginOneModule : MockPluginModule,
-    IMockPluginOneModule
-{
+    IMockPluginOneModule;
 
-}
+public class MockPluginTwoModule : MockPluginModule;
 
-public class MockPluginTwoModule : MockPluginModule
-{
-
-}
-
-public class MockPluginThreeModule : MockPluginModule
-{
-
-}
+public class MockPluginThreeModule : MockPluginModule;
 
 public class MockLoggingModule : MockPluginModule
 {

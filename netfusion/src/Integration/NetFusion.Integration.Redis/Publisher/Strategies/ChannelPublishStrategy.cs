@@ -9,15 +9,11 @@ using StackExchange.Redis;
 
 namespace NetFusion.Integration.Redis.Publisher.Strategies;
 
-public class ChannelPublishStrategy : BusEntityStrategyBase<ChannelEntityContext>,
-    IBusEntityPublishStrategy
+public class ChannelPublishStrategy(ChannelPublisherEntity entity)
+    : BusEntityStrategyBase<ChannelEntityContext>(entity),
+        IBusEntityPublishStrategy
 {
-    private readonly ChannelPublisherEntity _entity;
-
-    public ChannelPublishStrategy(ChannelPublisherEntity entity) : base(entity)
-    {
-        _entity = entity;
-    }
+    private readonly ChannelPublisherEntity _entity = entity;
 
     public bool CanPublishMessageType(Type messageType) => messageType == _entity.DomainEventType;
     

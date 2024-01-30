@@ -3,10 +3,7 @@ namespace NetFusion.Messaging.Routing;
 /// <summary>
 /// Allows additional metadata to be associated with a given route.
 /// </summary>
-public interface IRouteMeta
-{
-    
-}
+public interface IRouteMeta;
 
 /// <summary>
 /// Allows additional metadata to be associated with a given route.

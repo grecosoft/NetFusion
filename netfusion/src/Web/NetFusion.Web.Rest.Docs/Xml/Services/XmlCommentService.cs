@@ -12,24 +12,18 @@ namespace NetFusion.Web.Rest.Docs.Xml.Services;
 /// Service used to read documentation for types and members from XML
 /// generated code files.
 /// </summary>
-public class XmlCommentService : IXmlCommentService
+public class XmlCommentService(IDocModule docModule) : IXmlCommentService
 {
     private const string MemberXPath = "/doc/members/member[@name='{0}']";
     private const string ParamXPath = "param[@name='{0}']";
 
-    private readonly IDocModule _docModule;
-    private readonly ConcurrentDictionary<Assembly, XPathNavigator> _xmlAssemblyComments;
-
-    public XmlCommentService(IDocModule docModule)
-    {
-        _docModule = docModule ?? throw new ArgumentNullException(nameof(docModule));
-        _xmlAssemblyComments = new ConcurrentDictionary<Assembly, XPathNavigator>();
-    }
+    private readonly IDocModule _docModule = docModule ?? throw new ArgumentNullException(nameof(docModule));
+    private readonly ConcurrentDictionary<Assembly, XPathNavigator> _xmlAssemblyComments = new();
 
     public XPathNavigator GetXmlCommentsForTypesAssembly(Type containedType)
     {
-        if (containedType == null) throw new ArgumentNullException(nameof(containedType));
-            
+        ArgumentNullException.ThrowIfNull(containedType);
+
         Assembly typesAssembly = containedType.Assembly;
 
         return _xmlAssemblyComments.GetOrAdd(typesAssembly, _ =>
@@ -45,8 +39,8 @@ public class XmlCommentService : IXmlCommentService
 
     public XPathNavigator GetTypeNode(Type classType)
     {
-        if (classType == null) throw new ArgumentNullException(nameof(classType));
-            
+        ArgumentNullException.ThrowIfNull(classType);
+
         XPathNavigator xmlCommentsDoc = GetXmlCommentsForTypesAssembly(classType);
 
         string typeMemberName = UtilsXmlComment.GetMemberNameForType(classType);
@@ -55,8 +49,8 @@ public class XmlCommentService : IXmlCommentService
 
     public string GetTypeComments(Type classType)
     {
-        if (classType == null) throw new ArgumentNullException(nameof(classType));
-            
+        ArgumentNullException.ThrowIfNull(classType);
+
         XPathNavigator memberNode = GetTypeNode(classType);
 
         var summaryNode = memberNode?.SelectSingleNode("summary");
@@ -65,7 +59,7 @@ public class XmlCommentService : IXmlCommentService
 
     public XPathNavigator GetMethodNode(MethodInfo methodInfo)
     {
-        if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
+        ArgumentNullException.ThrowIfNull(methodInfo);
 
         XPathNavigator xmlCommentsDoc = GetXmlCommentsForTypesAssembly(methodInfo.DeclaringType);
 
@@ -75,8 +69,8 @@ public class XmlCommentService : IXmlCommentService
 
     public string GetMethodComments(MethodInfo methodInfo)
     {
-        if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
-            
+        ArgumentNullException.ThrowIfNull(methodInfo);
+
         XPathNavigator memberNode = GetMethodNode(methodInfo);
         if (memberNode == null)
         {
@@ -103,8 +97,8 @@ public class XmlCommentService : IXmlCommentService
 
     public string GetMethodParamComment(XPathNavigator methodNode, string paramName)
     {
-        if (methodNode == null) throw new ArgumentNullException(nameof(methodNode));
-            
+        ArgumentNullException.ThrowIfNull(methodNode);
+
         if (string.IsNullOrWhiteSpace(paramName))
             throw new ArgumentException("Parameter name must be specified.", nameof(paramName));
             

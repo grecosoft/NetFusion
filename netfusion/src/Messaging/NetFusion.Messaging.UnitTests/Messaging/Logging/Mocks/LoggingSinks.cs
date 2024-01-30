@@ -4,7 +4,7 @@ namespace NetFusion.Messaging.UnitTests.Messaging.Logging.Mocks;
 
 public class MockLoggingSink : IMessageLogSink
 {
-    private readonly List<MessageLog> _receivedLogs = new();
+    private readonly List<MessageLog> _receivedLogs = [];
 
     public MockLoggingSink()
     {

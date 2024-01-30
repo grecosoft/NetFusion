@@ -40,15 +40,15 @@ public class CreationTests
         nonTypedInstances.Where(i => i.GetType() == typeof(TestTypeThree)).Should().HaveCount(1);
     }
 
-    interface IRunnable { }
+    interface IRunnable;
 
-    class TestTypeOne: IRunnable { }
+    class TestTypeOne: IRunnable;
 
     class TestTypeTwo
     {
         public TestTypeTwo(int value){ }
     }
 
-    class TestTypeThree : IRunnable { }
+    class TestTypeThree : IRunnable;
 
 }

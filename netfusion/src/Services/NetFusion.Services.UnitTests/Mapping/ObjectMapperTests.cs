@@ -31,7 +31,7 @@ public class ObjectMappingTests
                 {
                     var testSrcObj = new TestMapTypeOne
                     {
-                        Values = new[] { 30, 5, 88, 33, 83 }
+                        Values = [30, 5, 88, 33, 83]
                     };
                     
                     return mapper.Map<TestMapTypeTwo>(testSrcObj);
@@ -47,10 +47,10 @@ public class ObjectMappingTests
     }
     
     /// <summary>
-    // The ObjectMapper also supports mapping a source type to a derived target type.
-    // This allows for the case where the target type is specified for a given source
-    // type but the calling code does not need to know the exact derived type and can
-    // be generically written using the base type regardless of source type.
+    /// The ObjectMapper also supports mapping a source type to a derived target type.
+    /// This allows for the case where the target type is specified for a given source
+    /// type but the calling code does not need to know the exact derived type and can
+    /// be generically written using the base type regardless of source type.
     /// </summary>
     [Fact]
     public void CanMapSourceTo_DerivedTarget()
@@ -113,7 +113,7 @@ public class ObjectMappingTests
                 {
                     var testSrcObj = new TestMapTypeOne
                     {
-                        Values = new[] { 30, 5, 88, 60, 65, 33, 83 }
+                        Values = [30, 5, 88, 60, 65, 33, 83]
                     };
                     
                     return mapper.Map<TestMapTypeTwo>(testSrcObj);

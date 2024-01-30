@@ -22,7 +22,6 @@ public class RoslynPlugin : PluginBase
                       "the runtime execution of expressions against domain entities and it set of optional " +
                       "dynamic attributes.";
     }
-
 }
     
 public static class CompositeBuilderExtensions

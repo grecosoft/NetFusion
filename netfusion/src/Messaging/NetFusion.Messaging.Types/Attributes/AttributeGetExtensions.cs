@@ -14,7 +14,7 @@ public static class AttributeGetExtensions
 
     public static bool HasValue(this IDictionary<string, string> attributes, string name)
     {
-        if (attributes == null) throw new ArgumentNullException(nameof(attributes));
+        ArgumentNullException.ThrowIfNull(attributes);
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name not specified.", nameof(name));
 
         return attributes.ContainsKey(name);
@@ -374,7 +374,7 @@ public static class AttributeGetExtensions
 
     private static string? GetValue(IDictionary<string, string> attributes, string name)
     {
-        if (attributes == null) throw new ArgumentNullException(nameof(attributes));
+        ArgumentNullException.ThrowIfNull(attributes);
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Attribute Name not specified.", nameof(name));
 
         attributes.TryGetValue(name, out string? value);

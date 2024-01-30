@@ -75,7 +75,7 @@ public class BasicValidationTests
     }
 
     [Fact]
-    public void CanEnlistChildOjects_InResultSet_ToBeValidated()
+    public void CanEnlistChildObjects_InResultSet_ToBeValidated()
     {
         var testObj = new ParentValidateType
         {
@@ -105,7 +105,7 @@ public class BasicValidationTests
     }
 
     [Fact]
-    public void RootObjectSet_ForValidationResutSet()
+    public void RootObjectSet_ForValidationResultSet()
     {
         var testObj = new ParentValidateType
         {

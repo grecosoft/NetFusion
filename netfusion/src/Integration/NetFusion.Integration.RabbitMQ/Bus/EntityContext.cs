@@ -15,6 +15,7 @@ public class EntityContext : BusEntityContext
     public EntityContext(IPlugin hostPlugin, IServiceProvider serviceProvider) : 
         base(hostPlugin, serviceProvider)
     {
+        ArgumentNullException.ThrowIfNull(serviceProvider);
         BusModule = serviceProvider.GetRequiredService<IBusModule>();
     }
 

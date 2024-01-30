@@ -9,22 +9,17 @@ using NetFusion.Web.UnitTests.Mocks;
 namespace NetFusion.Web.UnitTests.Rest.LinkGeneration.Server;
 
 [ApiController, Route("api/linked/resource")]
-public class ResourceController : ControllerBase
+public class ResourceController(IMockedService mockedService, IHalEmbeddedResourceContext embeddedContext)
+    : ControllerBase
 {
-    private readonly IMockedService _mockedService;
-    private readonly IHalEmbeddedResourceContext _embeddedContext;
-
-    public ResourceController(IMockedService mockedService, IHalEmbeddedResourceContext embeddedContext)
-    {
-        _mockedService = mockedService;
-        _embeddedContext = embeddedContext;
-    }
+    private readonly IMockedService _mockedService = mockedService;
+    private readonly IHalEmbeddedResourceContext _embeddedContext = embeddedContext;
 
     [HttpGet]
     public HalResource GetResource()
     {
         var models = _mockedService.GetResources<StateModel>().ToArray();          
-        if (!models.Any())
+        if (models.Length == 0)
         {
             throw new InvalidOperationException("Unit test didn't provided mocked server resource.");
         }

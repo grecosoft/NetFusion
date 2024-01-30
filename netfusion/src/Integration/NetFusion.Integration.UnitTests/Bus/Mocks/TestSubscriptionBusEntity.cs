@@ -8,7 +8,7 @@ namespace NetFusion.Integration.UnitTests.Bus.Mocks;
 
 public class TestSubscriptionBusEntity : BusEntity
 {
-    public List<string> InvokedStrategies { get; } = new();
+    public List<string> InvokedStrategies { get; } = [];
     private readonly MessageDispatcher _dispatcher;
     
     public TestSubscriptionBusEntity(string busName, string entityName) 
@@ -32,23 +32,16 @@ public class TestQueueMeta
 }
 
 public class TestQueueMeta<TMessage> : TestQueueMeta, IRouteMeta<TMessage>
-    where TMessage : IMessage
-{
+    where TMessage : IMessage;
 
-}
-
-public class TestSubscriptionStrategy : BusEntityStrategyBase<TestBusEntityContext>,
-    IBusEntityCreationStrategy,
-    IBusEntitySubscriptionStrategy,
-    IBusEntityDisposeStrategy
+public class TestSubscriptionStrategy(TestSubscriptionBusEntity busEntity)
+    : BusEntityStrategyBase<TestBusEntityContext>(busEntity),
+        IBusEntityCreationStrategy,
+        IBusEntitySubscriptionStrategy,
+        IBusEntityDisposeStrategy
 {
-    private readonly TestSubscriptionBusEntity _entity;
-    
-    public TestSubscriptionStrategy(TestSubscriptionBusEntity busEntity) : base(busEntity)
-    {
-        _entity = busEntity;
-    }
-    
+    private readonly TestSubscriptionBusEntity _entity = busEntity;
+
     public TestBusEntityContext StrategyContext => Context;
     public bool CreationStrategyExecuted => _entity.InvokedStrategies.Contains(nameof(CreateEntity));
     public bool SubscriptionStrategyExecuted => _entity.InvokedStrategies.Contains(nameof(SubscribeEntity));

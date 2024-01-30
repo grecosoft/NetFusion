@@ -5,13 +5,8 @@ using NetFusion.Integration.RabbitMQ;
 
 namespace NetFusion.Integration.UnitTests.RabbitMQ.Mocks;
 
-public class TestRabbitRouter : RabbitMqRouterBase
+public class TestRabbitRouter() : RabbitMqRouterBase("testRabbitBus")
 {
-    public TestRabbitRouter() : base("testRabbitBus")
-    {
-        
-    }
-
     public IEnumerable<BusEntity> DefinedEntities
     {
         get
@@ -40,7 +35,7 @@ public class TestRabbitRouter : RabbitMqRouterBase
         
         // Example routing specifying the consumer a domain-event is
         // dispatched to when received on exchange.
-        SubscribeToExchange<TestDomainEvent>("TestExchange", new[] {"10.20", "50.100"}, route =>
+        SubscribeToExchange<TestDomainEvent>("TestExchange", ["10.20", "50.100"], route =>
         {
             route.ToConsumer<TestDomainEventHandler>(c => c.OnDomainEvent, meta =>
             {

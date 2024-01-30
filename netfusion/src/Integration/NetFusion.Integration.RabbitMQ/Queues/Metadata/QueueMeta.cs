@@ -53,7 +53,4 @@ public class QueueMeta
 }
 
 public class QueueMeta<TMessage> : QueueMeta, IRouteMeta<TMessage>
-    where TMessage : IMessage
-{
-
-}
+    where TMessage : IMessage;

@@ -130,8 +130,8 @@ public class NetFusionException : Exception
 
     protected void SetChildExceptions(IEnumerable<Exception> exceptions)
     {
-        if (exceptions == null) throw new ArgumentNullException(nameof(exceptions));
-            
+        ArgumentNullException.ThrowIfNull(exceptions);
+
         ChildExceptions = exceptions.ToArray();
             
         var detailedExceptions = ChildExceptions.OfType<NetFusionException>()

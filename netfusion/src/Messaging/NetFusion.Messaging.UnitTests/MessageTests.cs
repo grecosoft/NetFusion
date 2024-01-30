@@ -108,14 +108,9 @@ public class MessageTests
         public decimal Amount { get; set; }
     }
         
-    public class QueryDevice : Query<DeviceModel>
+    public class QueryDevice(int deviceId) : Query<DeviceModel>
     {
-        public int DeviceId { get; }
-            
-        public QueryDevice(int deviceId)
-        {
-            DeviceId = deviceId;
-        }
+        public int DeviceId { get; } = deviceId;
     }
 
     public class DeviceModel : QueryReadModel
@@ -125,23 +120,11 @@ public class MessageTests
         public string? Location { get; set; }
     }
 
-    public class MockCommand : Command<CommandResultBase>
-    {
-            
-    }
+    public class MockCommand : Command<CommandResultBase>;
 
-    public abstract class CommandResultBase
-    {
-            
-    }
+    public abstract class CommandResultBase;
 
-    public class CommandResultOne : CommandResultBase
-    {
-            
-    }
+    public class CommandResultOne : CommandResultBase;
 
-    public class CommandResultTwo 
-    {
-            
-    }
+    public class CommandResultTwo;
 }

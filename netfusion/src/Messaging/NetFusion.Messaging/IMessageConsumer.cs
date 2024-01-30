@@ -5,7 +5,5 @@
     /// This search happens during the bootstrapping of the plug-in and all found components are registered
     /// with the service-collection as scoped components.
     /// </summary>
-    public interface IMessageConsumer 
-    { 
-    }
+    public interface IMessageConsumer;
 }

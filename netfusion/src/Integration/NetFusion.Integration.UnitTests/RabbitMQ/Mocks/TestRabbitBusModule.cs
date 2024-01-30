@@ -9,13 +9,8 @@ namespace NetFusion.Integration.UnitTests.RabbitMQ.Mocks;
 public class TestRabbitBusModule : PluginModule,
     IBusModule
 {
-    public RabbitMqConfig RabbitMqConfig { get; }
+    public RabbitMqConfig RabbitMqConfig { get; } = new();
 
-    public TestRabbitBusModule()
-    {
-        RabbitMqConfig = new RabbitMqConfig();
-    }
-    
     public IBusConnection GetConnection(string busName)
     {
         throw new NotImplementedException();

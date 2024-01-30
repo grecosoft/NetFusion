@@ -12,16 +12,12 @@ namespace NetFusion.Services.Messaging.Filters;
 /// to execute a script containing calculated properties that can be dynamically added to the
 /// query result.  This applies to any result implementing the IAttributedEntity interface.
 /// </summary>
-public class QueryExpressionFilter : IPostMessageFilter
+public class QueryExpressionFilter(IEntityScriptingService scriptingService) : IPostMessageFilter
 {
     private const string PropertyScriptName = "DynamicQueryReadModel";
 
-    private readonly IEntityScriptingService _scriptingService;
-
-    public QueryExpressionFilter(IEntityScriptingService scriptingService)
-    {
-        _scriptingService = scriptingService ?? throw new ArgumentNullException(nameof(scriptingService));
-    }
+    private readonly IEntityScriptingService _scriptingService = scriptingService ??
+        throw new ArgumentNullException(nameof(scriptingService));
 
     public async Task OnPostFilterAsync(IMessage message)
     {

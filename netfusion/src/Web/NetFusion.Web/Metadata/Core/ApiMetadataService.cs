@@ -11,16 +11,11 @@ namespace NetFusion.Web.Metadata.Core;
 /// <summary>
 /// Service returning metadata for an MVC applications defined controllers and routes.
 /// </summary>
-public class ApiMetadataService : IApiMetadataService
+public class ApiMetadataService(IApiDescriptionGroupCollectionProvider apiDescriptionProvider)
+    : IApiMetadataService
 {
-    private readonly ApiActionMeta[] _apiActionMeta;
+    private readonly ApiActionMeta[] _apiActionMeta = QueryApiActionMeta(apiDescriptionProvider);
 
-    public ApiMetadataService(
-        IApiDescriptionGroupCollectionProvider apiDescriptionProvider)
-    {
-        _apiActionMeta = QueryApiActionMeta(apiDescriptionProvider);
-    }
-        
     private static ApiActionMeta[] QueryApiActionMeta(IApiDescriptionGroupCollectionProvider descriptionProvider)
     {
         var metadata = descriptionProvider.ApiDescriptionGroups.Items.SelectMany(gi => gi.Items)
@@ -43,7 +38,7 @@ public class ApiMetadataService : IApiMetadataService
             .Select(g => $"Controller: {g.Key.DeclaringType?.FullName ?? ""}  Action: {g.Key.Name}")
             .ToArray();
             
-        if (invalidMetadata.Any())
+        if (invalidMetadata.Length != 0)
         {
             throw new InvalidOperationException(
                 $"The following action methods are not unique by Http Method: {string.Join(',', invalidMetadata)}");
@@ -53,8 +48,8 @@ public class ApiMetadataService : IApiMetadataService
     public bool TryGetActionMeta(MethodInfo methodInfo, [MaybeNullWhen(false)]
         out ApiActionMeta actionMeta)
     {
-        if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
-            
+        ArgumentNullException.ThrowIfNull(methodInfo);
+
         actionMeta = _apiActionMeta.FirstOrDefault(ad => ad.ActionMethodInfo == methodInfo);
         return actionMeta != null;
     }
@@ -69,7 +64,7 @@ public class ApiMetadataService : IApiMetadataService
             throw new ArgumentException("Relative Path not specified.", nameof(relativePath));
 
         actionMeta = _apiActionMeta.FirstOrDefault(ad => 
-            ad.HttpMethod == httpMethod.ToUpper() && 
+            ad.HttpMethod.Equals(httpMethod, StringComparison.CurrentCultureIgnoreCase) && 
             ad.RelativePath == relativePath);
 
         return actionMeta != null;

@@ -71,8 +71,8 @@ public class EntityContext
     /// <returns>Reference to the updated entity state.</returns>
     public bool SetEntity(object entity)
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
-            
+        ArgumentNullException.ThrowIfNull(entity);
+
         // If the Api indicates that the entity requires concurrency checking when
         // updating but the client has not submitted an associated client-token,
         // the preconditions have not been satisfied and the Api should not proceed

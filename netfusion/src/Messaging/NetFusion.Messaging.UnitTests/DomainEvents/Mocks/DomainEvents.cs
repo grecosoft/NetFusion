@@ -9,21 +9,13 @@ public class MockDomainEvent : DomainEvent
     public List<string> ThrowInHandlers { get; } = new();
 }
 
-public class MockDomainEventTwo : DomainEvent
-{
-        
-}
+public class MockDomainEventTwo : DomainEvent;
     
 // ------------------- [Derived Domain Events] ------------------
     
-public class MockBaseDomainEvent : DomainEvent
-{
+public class MockBaseDomainEvent : DomainEvent;
 
-}
-
-public class MockDerivedDomainEvent : MockBaseDomainEvent
-{
-}
+public class MockDerivedDomainEvent : MockBaseDomainEvent;
     
 public class MockRuleDomainEvent : DomainEvent
 {

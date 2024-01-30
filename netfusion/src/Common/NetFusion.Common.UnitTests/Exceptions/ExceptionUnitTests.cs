@@ -106,7 +106,7 @@ namespace NetFusion.Common.UnitTests.Exceptions
             var ex = new MockException("ParentExceptionMessage", aggEx);
 
             // Assert:
-            // All three child aggregate exceptions specifed above will be 
+            // All three child aggregate exceptions specified above will be 
             // added to the collection.
             ex.ChildExceptions.Should().HaveCount(3);
             

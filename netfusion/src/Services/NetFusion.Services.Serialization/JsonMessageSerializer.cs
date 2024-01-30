@@ -16,15 +16,15 @@ public class JsonMessageSerializer : ISerializer
 
     public byte[] Serialize(object value)
     {
-        if (value == null) throw new ArgumentNullException(nameof(value));
-            
+        ArgumentNullException.ThrowIfNull(value);
+
         return JsonSerializer.SerializeToUtf8Bytes(value);
     }
 
     public object? Deserialize(byte[] value, Type valueType)
     {
-        if (value == null) throw new ArgumentNullException(nameof(value));
-        if (valueType == null) throw new ArgumentNullException(nameof(valueType));
+        ArgumentNullException.ThrowIfNull(value);
+        ArgumentNullException.ThrowIfNull(valueType);
 
         return JsonSerializer.Deserialize(value, valueType);
     }

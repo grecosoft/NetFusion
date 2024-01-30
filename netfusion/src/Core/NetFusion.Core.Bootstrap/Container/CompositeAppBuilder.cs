@@ -19,12 +19,20 @@ namespace NetFusion.Core.Bootstrap.Container;
 ///
 /// https://github.com/grecosoft/NetFusion/wiki/core-bootstrap-overview
 /// </summary>
-internal class CompositeAppBuilder : ICompositeAppBuilder
+internal class CompositeAppBuilder(
+    IServiceCollection serviceCollection, 
+    ILoggerFactory loggerFactory, 
+    IConfiguration configuration) : ICompositeAppBuilder
 {
     // .NET Core Service Abstractions:
-    public IServiceCollection ServiceCollection { get; }
-    public IConfiguration Configuration { get; }
-    public ILoggerFactory BootstrapLoggerFactory { get; }
+    public IServiceCollection ServiceCollection { get; } = serviceCollection ??
+        throw new ArgumentNullException(nameof(serviceCollection));
+    
+    public IConfiguration Configuration { get; } = configuration ?? 
+        throw new ArgumentNullException(nameof(configuration));
+    
+    public ILoggerFactory BootstrapLoggerFactory { get; } = loggerFactory ??
+        throw new ArgumentNullException(nameof(loggerFactory));
         
     public IPlugin[] AllPlugins { get; private set; } = Array.Empty<IPlugin>();
     public IPluginModule[] AllModules { get; private set; } = Array.Empty<IPluginModule>();
@@ -33,16 +41,7 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     private IPlugin? _hostPlugin;
     public IPlugin[] AppPlugins { get; private set; } = Array.Empty<IPlugin>();
     public IPlugin[] CorePlugins { get; private set; } = Array.Empty<IPlugin>();
-        
-    public CompositeAppBuilder(IServiceCollection serviceCollection, 
-        ILoggerFactory bootstrapLoggerFactory, 
-        IConfiguration configuration)
-    {
-        ServiceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
-        Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        BootstrapLoggerFactory = bootstrapLoggerFactory;
-    }
-        
+    
     // =========================== [Plug Composition] ==========================
 
     /// <summary>
@@ -53,9 +52,9 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
     /// <param name="typeResolver">The type resolver.</param>
     public void AssemblePlugins(IPlugin[] plugins, ITypeResolver typeResolver)
     {
-        if (typeResolver == null) throw new ArgumentNullException(nameof(typeResolver));
-        if (plugins == null) throw new ArgumentNullException(nameof(plugins));
-            
+        ArgumentNullException.ThrowIfNull(typeResolver);
+        ArgumentNullException.ThrowIfNull(plugins);
+
         InitializePlugins(plugins, typeResolver);
         SetPluginServiceDependencies();
         ComposePlugins(typeResolver);
@@ -182,7 +181,7 @@ internal class CompositeAppBuilder : ICompositeAppBuilder
             .SelectMany(p => p.Modules)
             .Where(m => m.GetType().IsDerivedFrom(serviceType)).ToArray();
             
-        if (! foundModules.Any())
+        if (foundModules.Length == 0)
         {
             throw new BootstrapException(
                 $"Plugin module implementing service type: {serviceType} not found for module: {module.GetType()}.");

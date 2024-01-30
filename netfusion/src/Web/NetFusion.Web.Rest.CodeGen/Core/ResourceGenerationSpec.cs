@@ -10,14 +10,10 @@ namespace NetFusion.Web.Rest.CodeGen.Core;
 /// Spec file for TypeGen Nuget used to determine the C# classes
 /// for which TypeScript files should be generated.
 /// </summary>
-public class ResourceGenerationSpec : GenerationSpec
+public class ResourceGenerationSpec(IEnumerable<Type> resourceTypes) : GenerationSpec
 {
-    private readonly IEnumerable<Type> _resourceTypes;
-
-    public ResourceGenerationSpec(IEnumerable<Type> resourceTypes)
-    {
-        _resourceTypes = resourceTypes ?? throw new ArgumentNullException(nameof(resourceTypes));
-    }
+    private readonly IEnumerable<Type> _resourceTypes = resourceTypes ??
+        throw new ArgumentNullException(nameof(resourceTypes));
 
     public override void OnBeforeGeneration(OnBeforeGenerationArgs args)
     {

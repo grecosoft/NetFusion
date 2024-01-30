@@ -5,7 +5,5 @@
     /// invoked by the InProcessMessagePublisher.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class InProcessHandlerAttribute : Attribute
-    {
-    }
+    public class InProcessHandlerAttribute : Attribute;
 }

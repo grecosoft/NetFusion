@@ -2,11 +2,9 @@ using NetFusion.Messaging.UnitTests.Messaging;
 
 namespace NetFusion.Messaging.UnitTests.Commands.Mocks;
 
-public class MockAsyncCommandConsumer : MockConsumer, 
+public class MockAsyncCommandConsumer(IMockTestLog testLog) : MockConsumer(testLog),
     IMessageConsumer
 {
-    public MockAsyncCommandConsumer(IMockTestLog testLog) : base(testLog) { }
-        
     [InProcessHandler]
     public async Task<MockCommandResult> OnCommand(MockCommand command)
     {
@@ -34,11 +32,9 @@ public class MockAsyncCommandConsumer : MockConsumer,
     }
 }
     
-public class MockSyncCommandConsumer : MockConsumer,
+public class MockSyncCommandConsumer(IMockTestLog testLog) : MockConsumer(testLog),
     IMessageConsumer
 {
-    public MockSyncCommandConsumer(IMockTestLog testLog) : base(testLog) { }
-        
     [InProcessHandler]
     public MockCommandResult OnCommand(MockCommand command)
     {

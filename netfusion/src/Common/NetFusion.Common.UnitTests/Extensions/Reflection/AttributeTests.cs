@@ -85,10 +85,10 @@ public class AttributeTests
     }
 
     [AttributeUsage(AttributeTargets.All)]
-    private class TestAttribute : Attribute { }
+    private class TestAttribute : Attribute;
         
     [AttributeUsage(AttributeTargets.All)]
-    private class Test2Attribute : Attribute { }
+    private class Test2Attribute : Attribute;
 
     [Test]
     private class TestClassWithAttribute

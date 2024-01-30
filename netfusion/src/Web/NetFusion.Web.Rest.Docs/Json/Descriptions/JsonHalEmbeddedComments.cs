@@ -10,15 +10,10 @@ namespace NetFusion.Web.Rest.Docs.Json.Descriptions;
 /// <summary>
 /// Called to associate additional documentation with an embedded resource document.
 /// </summary>
-public class JsonHalEmbeddedComments : IEmbeddedDescription
+public class JsonHalEmbeddedComments(IDocModule docModule) : IEmbeddedDescription
 {
-    private readonly IDocModule _docModule;
-        
-    public JsonHalEmbeddedComments(IDocModule docModule)
-    {
-        _docModule = docModule ?? throw new ArgumentNullException(nameof(docModule));
-    }
-        
+    private readonly IDocModule _docModule = docModule ?? throw new ArgumentNullException(nameof(docModule));
+
     public void Describe(ApiEmbeddedDoc embeddedDoc, EmbeddedResourceAttribute attribute)
     {
         // Check for a specific comment defined for the parent and child resources.

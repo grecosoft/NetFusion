@@ -11,14 +11,9 @@ namespace NetFusion.Integration.Redis.Internal
     /// be added to this service.  Also, extension methods can be added to
     /// the returned IDatabase and ISubscriber interfaces.
     /// </summary>
-    public class RedisService : IRedisService
+    public class RedisService(IConnectionModule connModule) : IRedisService
     {
-        private readonly IConnectionModule _connModule;
-        
-        public RedisService(IConnectionModule connModule)
-        {
-            _connModule = connModule ?? throw new ArgumentNullException(nameof(connModule));
-        }
+        private readonly IConnectionModule _connModule = connModule ?? throw new ArgumentNullException(nameof(connModule));
 
         // Returns a named instance to a Redis database.
         public IDatabase GetDatabase(string name, int? database = null) => _connModule.GetDatabase(name, database);

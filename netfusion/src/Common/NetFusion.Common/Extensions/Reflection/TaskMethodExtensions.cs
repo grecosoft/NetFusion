@@ -16,11 +16,9 @@ public static class TaskMethodExtensions
     /// </summary>
     /// <param name="methodInfo">The method information to test.</param>
     /// <returns>True if the method returns a Task assignable type.</returns>
-    public static bool IsTaskMethod(this MethodInfo methodInfo) 
+    public static bool IsTaskMethod(this MethodInfo methodInfo)
     {
-        if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo), 
-            "Method information cannot be null.");
-
+        ArgumentNullException.ThrowIfNull(methodInfo);
         return methodInfo.ReturnType.CanAssignTo<Task>();
     }
 
@@ -29,11 +27,9 @@ public static class TaskMethodExtensions
     /// </summary>
     /// <param name="methodInfo">The method information to test.</param>
     /// <returns>True if the method returns a Task assignable type with generic result.</returns>
-    public static bool IsTaskMethodWithResult(this MethodInfo methodInfo) 
+    public static bool IsTaskMethodWithResult(this MethodInfo methodInfo)
     {
-        if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo),
-            "Method information cannot be null.");
-        
+        ArgumentNullException.ThrowIfNull(methodInfo);
         return IsTaskMethod(methodInfo) && methodInfo.ReturnType.GetTypeInfo().IsGenericType;
     }
 
@@ -45,8 +41,7 @@ public static class TaskMethodExtensions
     /// to CancellationToken.</returns>
     public static bool IsCancellableMethod(this MethodInfo methodInfo) 
     {
-        if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo),
-            "Method information cannot be null.");
+        ArgumentNullException.ThrowIfNull(methodInfo);
 
         bool isAsync = IsTaskMethod(methodInfo);
         if (! isAsync)

@@ -26,11 +26,12 @@ public class EntityScriptScope<TEntity>
 
     public EntityScriptScope(object entity)
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         Entity = (TEntity)entity;
 
         var attributedEntity = entity as IAttributedEntity;
+        // ReSharper disable once AssignmentInsteadOfDiscard
         _ = attributedEntity?.Attributes.Values ?? new ExpandoObject();
     }
 }

@@ -18,8 +18,7 @@ public static class AttributeExtensions
     public static bool HasAttribute<T>(this ICustomAttributeProvider source)
         where T : Attribute
     {
-        if (source == null)throw new ArgumentNullException(nameof(source));
-
+        ArgumentNullException.ThrowIfNull(source);
         return source.GetCustomAttributes(typeof(T), true).Length > 0;
     }
 
@@ -33,7 +32,7 @@ public static class AttributeExtensions
     public static T? GetAttribute<T>(this ICustomAttributeProvider source)
         where T : Attribute
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         var matchingAttrs = source.GetCustomAttributes(typeof(T), true);
         if (matchingAttrs.Length > 1)
@@ -53,8 +52,7 @@ public static class AttributeExtensions
     public static bool HasAttribute<T>(this Type source)
         where T : Attribute
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
-
+        ArgumentNullException.ThrowIfNull(source);
         return source.GetCustomAttributes<T>(true).Any();
     }
 
@@ -68,8 +66,7 @@ public static class AttributeExtensions
     public static T? GetAttribute<T>(this object source)
         where T : Attribute
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
-
+        ArgumentNullException.ThrowIfNull(source);
         return GetAttribute<T>(source.GetType());
     }
 
@@ -83,7 +80,7 @@ public static class AttributeExtensions
     public static T? GetAttribute<T>(this Type source)
         where T : Attribute
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         var matchingAttrs = source.GetCustomAttributes<T>(true).ToArray();
         if (matchingAttrs.Length > 1)

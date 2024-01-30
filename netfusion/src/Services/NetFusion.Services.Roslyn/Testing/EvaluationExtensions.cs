@@ -29,8 +29,8 @@ public static class EvaluationExtensions
         string propertyName,
         string expression) 
     {
-        if (expressions == null) throw new ArgumentNullException(nameof(expressions));
-            
+        ArgumentNullException.ThrowIfNull(expressions);
+
         expressions.Add(new EntityExpression(expression, expressions.Count, propertyName));
         return expressions;
     }
@@ -44,8 +44,8 @@ public static class EvaluationExtensions
     public static IList<EntityExpression> AddExpression(this IList<EntityExpression> expressions,
         string expression) 
     {
-        if (expressions == null) throw new ArgumentNullException(nameof(expressions));
-            
+        ArgumentNullException.ThrowIfNull(expressions);
+
         expressions.Add(new EntityExpression(expression, expressions.Count));
         return expressions;
     }
@@ -62,8 +62,8 @@ public static class EvaluationExtensions
         IDictionary<string, object>? initialAttributes = null)
         where TEntity : IAttributedEntity
     {
-        if (expressions == null) throw new ArgumentNullException(nameof(expressions));
-            
+        ArgumentNullException.ThrowIfNull(expressions);
+
         var es = new EntityScript(
             Guid.NewGuid().ToString(),
             "default",

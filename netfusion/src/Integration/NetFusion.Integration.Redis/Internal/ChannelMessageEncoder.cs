@@ -28,16 +28,17 @@ namespace NetFusion.Integration.Redis.Internal
         {
             if (string.IsNullOrWhiteSpace(contentType))
                 throw new ArgumentException("Content-Type not specified.", nameof(contentType));
-            
-            if (messageData == null) throw new ArgumentNullException(nameof(messageData));
-            
+
+            ArgumentNullException.ThrowIfNull(messageData);
+
             byte[] contentTypeData = Encoding.UTF8.GetBytes(contentType);
             
-            byte[][] data = {
+            byte[][] data =
+            [
                 BitConverter.GetBytes(contentTypeData.Length),
                 contentTypeData,
                 messageData
-            };
+            ];
 
             return data.SelectMany(i => i).ToArray();
         }
@@ -49,8 +50,8 @@ namespace NetFusion.Integration.Redis.Internal
         /// <returns>The content-type and the message data.</returns>
         public static (string contentType, byte[] messageData) UnPack(byte[] value)
         {
-            if (value == null) throw new ArgumentNullException(nameof(value));
-            
+            ArgumentNullException.ThrowIfNull(value);
+
             int contentTypeLen = BitConverter.ToInt32(value, 0);
             byte[] contentTypeData = value.Skip(sizeof(int)).Take(contentTypeLen).ToArray();
 

@@ -42,8 +42,8 @@ public class WebHostFixture
     /// <returns></returns>
     public static Task TestAsync<T>(Func<WebHostFixture, Task> webHostTest)
     {
-        if (webHostTest == null) throw new ArgumentNullException(nameof(webHostTest));
-            
+        ArgumentNullException.ThrowIfNull(webHostTest);
+
         var instance = new WebHostFixture
         {
             _unitTestType = typeof(T)
@@ -75,7 +75,7 @@ public class WebHostFixture
         return this;
     }
 
-    public WebHostFixture UsingAppSerivces(Action<IApplicationBuilder> appServices)
+    public WebHostFixture UsingAppServices(Action<IApplicationBuilder> appServices)
     {
         _appServicesConfig = appServices ?? throw new ArgumentNullException(nameof(appServices));
         return this;

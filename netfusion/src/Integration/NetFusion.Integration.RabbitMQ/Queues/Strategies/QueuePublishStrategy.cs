@@ -10,15 +10,10 @@ namespace NetFusion.Integration.RabbitMQ.Queues.Strategies;
 /// Strategy used by a microservice to send commands to a queue provided
 /// by another microservice.
 /// </summary>
-public class QueuePublishStrategy : BusEntityStrategyBase<EntityContext>,
+public class QueuePublishStrategy(QueueReferenceEntity queueEntity) : BusEntityStrategyBase<EntityContext>(queueEntity),
     IBusEntityPublishStrategy
 {
-    private readonly QueueReferenceEntity _queueEntity;
-
-    public QueuePublishStrategy(QueueReferenceEntity queueEntity) : base(queueEntity)
-    {
-        _queueEntity = queueEntity;
-    }
+    private readonly QueueReferenceEntity _queueEntity = queueEntity;
 
     private ILogger<QueuePublishStrategy> Logger =>
         Context.LoggerFactory.CreateLogger<QueuePublishStrategy>();

@@ -44,7 +44,7 @@ public static class SettingsExtensions
     public static T GetSettings<T>(this IConfiguration configuration, T? defaultValue = null)
         where T : class, IAppSettings
     {
-        if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+        ArgumentNullException.ThrowIfNull(configuration);
 
         string? sectionPath = GetSectionPath<T>();
         if (sectionPath == null)
@@ -67,7 +67,7 @@ public static class SettingsExtensions
 
     public static void ValidateSettings(IAppSettings settings)
     {
-        IObjectValidator validator = new ObjectValidator(settings);
+        ObjectValidator validator = new ObjectValidator(settings);
         ValidationResultSet result = validator.Validate();
 
         if (result.IsInvalid)

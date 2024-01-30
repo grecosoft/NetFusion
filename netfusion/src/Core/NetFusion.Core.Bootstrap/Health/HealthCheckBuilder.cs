@@ -16,8 +16,8 @@ internal class HealthCheckBuilder
     
     public HealthCheckBuilder(IEnumerable<IPluginModule> modules)
     {
-        if (modules == null) throw new ArgumentNullException(nameof(modules));
-        
+        ArgumentNullException.ThrowIfNull(modules);
+
         // For each plugin, determine which modules provide health-checks:
         _pluginHealthProviders = modules.Select(m => new
         {
@@ -36,7 +36,7 @@ internal class HealthCheckBuilder
     {
         var appHealthCheck = new CompositeAppHealthCheck();
 
-        if (! _pluginHealthProviders.Any())
+        if (_pluginHealthProviders.Count == 0)
         {
             return appHealthCheck;
         }
@@ -53,7 +53,7 @@ internal class HealthCheckBuilder
         return appHealthCheck;
     }
 
-    private async Task AddModuleHeathChecks(PluginHeathCheck pluginHealthCheck,
+    private static async Task AddModuleHeathChecks(PluginHeathCheck pluginHealthCheck,
         IEnumerable<IModuleHealthCheckProvider> modules)
     {
         foreach (IModuleHealthCheckProvider module in modules)

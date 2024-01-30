@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using System;
-// ReSharper disable All
 
-namespace NetFusion.Settings
+namespace NetFusion.Core.Settings
 {
     /// <summary>
     /// Additional configuration service collection extensions.  These extension methods provide non-generic typed
@@ -28,9 +27,9 @@ namespace NetFusion.Settings
             Type optionType, string name, 
             IConfiguration config)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-            if (config == null) throw new ArgumentNullException(nameof(config));
-  
+            ArgumentNullException.ThrowIfNull(services);
+            ArgumentNullException.ThrowIfNull(config);
+
             Type serviceType = typeof(IOptionsChangeTokenSource<>).MakeGenericType(optionType);
             Type implementationType = typeof(ConfigurationChangeTokenSource<>).MakeGenericType(optionType);
 

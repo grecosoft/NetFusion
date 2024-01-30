@@ -18,8 +18,8 @@ public static class ClassExtensions
     /// <returns>True if the child type is not abstract and is derived from the parent type.</returns>
     public static bool IsConcreteTypeDerivedFrom(this Type childType, Type parentType)
     {
-        if (childType == null) throw new ArgumentNullException(nameof(childType));
-        if (parentType == null) throw new ArgumentNullException(nameof(parentType));
+        ArgumentNullException.ThrowIfNull(childType);
+        ArgumentNullException.ThrowIfNull(parentType);
 
         return !childType.IsAbstract && childType.IsDerivedFrom(parentType);
     }
@@ -32,7 +32,7 @@ public static class ClassExtensions
     /// <returns>True if the child type is not abstract and is derived from the parent type.</returns>
     public static bool IsConcreteTypeDerivedFrom<TParent>(this Type childType)
     {
-        if (childType == null) throw new ArgumentNullException(nameof(childType));
+        ArgumentNullException.ThrowIfNull(childType);
         return IsConcreteTypeDerivedFrom(childType, typeof(TParent));
     }
 
@@ -44,7 +44,7 @@ public static class ClassExtensions
     /// <returns>True if the type derives from the specified base type otherwise false.</returns>
     public static bool IsDerivedFrom<TParent>(this Type childType)
     {
-        if (childType == null) throw new ArgumentNullException(nameof(childType));
+        ArgumentNullException.ThrowIfNull(childType);
         return typeof(TParent).IsAssignableFrom(childType) && childType != typeof(TParent);
     }
 
@@ -56,8 +56,8 @@ public static class ClassExtensions
     /// <returns>True if the type derives from the specified base type otherwise false.</returns>
     public static bool IsDerivedFrom(this Type childType, Type parentType)
     {
-        if (childType == null) throw new ArgumentNullException(nameof(childType));
-        if (parentType == null) throw new ArgumentNullException(nameof(parentType));
+        ArgumentNullException.ThrowIfNull(childType);
+        ArgumentNullException.ThrowIfNull(parentType);
 
         return parentType.IsAssignableFrom(childType) && childType != parentType;
     }
@@ -70,8 +70,8 @@ public static class ClassExtensions
     /// <returns>True if the child type is assignable to the parent type.  Otherwise, False.</returns>
     public static bool CanAssignTo(this Type childType, Type parentType)
     {
-        if (childType == null) throw new ArgumentNullException(nameof(childType));
-        if (parentType == null) throw new ArgumentNullException(nameof(parentType));
+        ArgumentNullException.ThrowIfNull(childType);
+        ArgumentNullException.ThrowIfNull(parentType);
 
         return parentType.IsAssignableFrom(childType);
     }
@@ -84,7 +84,7 @@ public static class ClassExtensions
     /// <returns>True if the child type is assignable to the parent type.  Otherwise, False.</returns>
     public static bool CanAssignTo<TParent>(this Type childType)
     {
-        if (childType == null) throw new ArgumentNullException(nameof(childType));
+        ArgumentNullException.ThrowIfNull(childType);
         return typeof(TParent).IsAssignableFrom(childType);
     }
 
@@ -96,7 +96,7 @@ public static class ClassExtensions
     /// <returns>Returns the list of matching interfaces.</returns>
     public static IEnumerable<Type> GetInterfacesDerivedFrom<T>(this Type type)
     {
-        if (type == null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         if (! typeof(T).IsInterface)
         {
@@ -115,8 +115,7 @@ public static class ClassExtensions
     /// <returns>True if the type has an empty constructor.  Otherwise, false.</returns>
     public static bool HasDefaultConstructor(this Type type)
     {
-        if (type == null) throw new ArgumentNullException(nameof(type));
-            
+        ArgumentNullException.ThrowIfNull(type);
         return type.IsValueType || type.GetConstructor(Type.EmptyTypes) != null;
     }
 
@@ -127,7 +126,7 @@ public static class ClassExtensions
     /// <returns>List of types.</returns>
     public static Type[] GetParameterTypes(this MethodInfo methodInfo)
     {
-        if (methodInfo == null) throw new ArgumentNullException(nameof(methodInfo));
+        ArgumentNullException.ThrowIfNull(methodInfo);
 
         return methodInfo.GetParameters()
             .Select(p => p.ParameterType)

@@ -22,10 +22,5 @@ public class TestEntityPluginModule : BusEntityModuleBase<TestBusRouterBase>
 /// for creating bus specific entities (queues, topics, subscriptions) based
 /// on the broker being used (RabbitMQ, Azure Service Bus, Redis..).
 /// </summary>
-public class TestBusEntityContext : BusEntityContext
-{
-    public TestBusEntityContext(IPlugin hostPlugin, IServiceProvider serviceProvider) 
-        : base(hostPlugin, serviceProvider)
-    {
-    }
-}
+public class TestBusEntityContext(IPlugin hostPlugin, IServiceProvider serviceProvider)
+    : BusEntityContext(hostPlugin, serviceProvider);

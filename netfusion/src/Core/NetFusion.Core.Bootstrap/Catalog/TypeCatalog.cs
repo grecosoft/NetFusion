@@ -42,7 +42,7 @@ public class TypeCatalog : ITypeCatalog
     
     public ITypeCatalog AsService<TService>(Func<Type, bool> filter, ServiceLifetime lifetime)
     {
-        if (filter == null) throw new ArgumentNullException(nameof(filter));
+        ArgumentNullException.ThrowIfNull(filter);
 
         foreach (Type matchingType in _types.Where(t => t.CanAssignTo<TService>() && filter(t)))
         {
@@ -53,7 +53,7 @@ public class TypeCatalog : ITypeCatalog
 
     public ITypeCatalog AsSelf(Func<Type, bool> filter, ServiceLifetime lifetime)
     {
-        if (filter == null) throw new ArgumentNullException(nameof(filter));
+        ArgumentNullException.ThrowIfNull(filter);
 
         foreach (Type matchingType in _types.Where(filter))
         {
@@ -65,9 +65,9 @@ public class TypeCatalog : ITypeCatalog
     public ITypeCatalog AsDescriptor(Func<Type, bool> filter,
         Func<Type, ServiceDescriptor> describedBy)
     {
-        if (filter == null) throw new ArgumentNullException(nameof(filter));
-        if (describedBy == null) throw new ArgumentNullException(nameof(describedBy));
-       
+        ArgumentNullException.ThrowIfNull(filter);
+        ArgumentNullException.ThrowIfNull(describedBy);
+
         foreach (Type matchingType in _types.Where(filter))
         {
             AddDescriptor(describedBy(matchingType));
@@ -77,7 +77,7 @@ public class TypeCatalog : ITypeCatalog
 
     public ITypeCatalog AsImplementedInterface(Func<Type, bool> filter, ServiceLifetime lifetime)
     {
-        if (filter == null) throw new ArgumentNullException(nameof(filter));
+        ArgumentNullException.ThrowIfNull(filter);
 
         foreach (Type matchingType in _types.Where(filter))
         {

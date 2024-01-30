@@ -14,16 +14,11 @@ namespace NetFusion.Web.Rest.Server.Linking;
 /// route values.  The resulting URL will be a complete URL with all route parameters replaced
 /// with the corresponding model property values.
 /// </summary>
-public class ControllerActionRouteSelector<TController, TSource>
+public class ControllerActionRouteSelector<TController, TSource>(LambdaExpression action)
     where TController : ControllerBase
     where TSource : class
 {
-    private readonly LambdaExpression _action;
-
-    public ControllerActionRouteSelector(LambdaExpression action)
-    {
-        _action = action ?? throw new ArgumentNullException(nameof(action));
-    }
+    private readonly LambdaExpression _action = action ?? throw new ArgumentNullException(nameof(action));
 
     public ControllerActionLink CreateLink(string relationName)
     {

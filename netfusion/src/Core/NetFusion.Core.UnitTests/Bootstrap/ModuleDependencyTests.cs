@@ -104,13 +104,13 @@ public class ModuleDependencyTests
         });
     }
         
-    private interface IHostDependentService : IPluginModuleService { }
-    private interface IAppDependentService : IPluginModuleService { }
-    private interface ICoreDependentService : IPluginModuleService { }
+    private interface IHostDependentService : IPluginModuleService;
+    private interface IAppDependentService : IPluginModuleService;
+    private interface ICoreDependentService : IPluginModuleService;
 
-    private class HostDependentModule : PluginModule, IHostDependentService { }
-    private class AppDependentModule : PluginModule, IAppDependentService { }
-    private class CoreDependentModule : PluginModule, ICoreDependentService { }
+    private class HostDependentModule : PluginModule, IHostDependentService;
+    private class AppDependentModule : PluginModule, IAppDependentService;
+    private class CoreDependentModule : PluginModule, ICoreDependentService;
         
     private class CoreModuleWithDependency : PluginModule
     {

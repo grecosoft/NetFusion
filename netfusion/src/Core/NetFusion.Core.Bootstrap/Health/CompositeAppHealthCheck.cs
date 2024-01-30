@@ -25,7 +25,7 @@ public class CompositeAppHealthCheck
 
     public void AddPluginHealthCheck(PluginHeathCheck pluginHeathCheck)
     {
-        if (pluginHeathCheck == null) throw new ArgumentNullException(nameof(pluginHeathCheck));
+        ArgumentNullException.ThrowIfNull(pluginHeathCheck);
         _pluginHeathChecks.Add(pluginHeathCheck);
     }
 

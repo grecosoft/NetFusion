@@ -5,13 +5,8 @@ using NetFusion.Integration.Redis.Plugin;
 
 namespace NetFusion.Integration.Redis.Internal;
 
-public class ChannelEntityContext : BusEntityContext
+public class ChannelEntityContext(IPlugin hostPlugin, IServiceProvider serviceProvider)
+    : BusEntityContext(hostPlugin, serviceProvider)
 {
-    public IConnectionModule ConnectionModule { get; }
-    
-    public ChannelEntityContext(IPlugin hostPlugin, IServiceProvider serviceProvider) :
-        base(hostPlugin, serviceProvider)
-    {
-        ConnectionModule = serviceProvider.GetRequiredService<IConnectionModule>();
-    }
+    public IConnectionModule ConnectionModule { get; } = serviceProvider.GetRequiredService<IConnectionModule>();
 }

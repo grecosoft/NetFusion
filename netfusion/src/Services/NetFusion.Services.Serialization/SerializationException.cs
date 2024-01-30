@@ -2,11 +2,5 @@ using NetFusion.Common.Base.Exceptions;
 
 namespace NetFusion.Services.Serialization;
 
-public class SerializationException : NetFusionException
-{
-    public SerializationException(string message, string? exceptionId = null)
-        : base(message, exceptionId)
-    {
-      
-    }
-}
+public class SerializationException(string message, string? exceptionId = null)
+    : NetFusionException(message, exceptionId);

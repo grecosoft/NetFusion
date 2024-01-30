@@ -15,15 +15,10 @@ namespace NetFusion.Web.Rest.Server.Linking;
 /// <typeparam name="TController">The controller to select action methods from
 /// corresponding to template URLs.</typeparam>
 [SuppressMessage("ReSharper", "UnusedTypeParameter")]
-public class ControllerActionTemplateSelector<TController>
+public class ControllerActionTemplateSelector<TController>(LambdaExpression action)
     where TController : ControllerBase
 {
-    private readonly LambdaExpression _action;
-
-    public ControllerActionTemplateSelector(LambdaExpression action)
-    {
-        _action = action ?? throw new ArgumentNullException(nameof(action));
-    }
+    private readonly LambdaExpression _action = action ?? throw new ArgumentNullException(nameof(action));
 
     public TemplateUrlLink CreateLink(string relationName)
     {

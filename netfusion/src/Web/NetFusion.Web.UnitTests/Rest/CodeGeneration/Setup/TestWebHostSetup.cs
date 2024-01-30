@@ -21,7 +21,7 @@ public static class TestWebHostSetup
     public static WebServerConfig ArrangeForRestCodeGen(this WebHostFixture fixture)
     {
         return fixture
-            .UsingAppSerivces(appBuilder => appBuilder.UseRestCodeGen())
+            .UsingAppServices(appBuilder => appBuilder.UseRestCodeGen())
             .ComposedFrom(compose =>
             {
                 compose.AddRestCodeGen();

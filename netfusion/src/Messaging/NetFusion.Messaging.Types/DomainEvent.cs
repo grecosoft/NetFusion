@@ -8,7 +8,4 @@ namespace NetFusion.Messaging.Types;
 /// Often, a command handler will publish domain-events used to notify interested subscribers
 /// of state changes made by the handling of the command.
 /// </summary>
-public abstract class DomainEvent : Message, IDomainEvent
-{
-
-}
+public abstract class DomainEvent : Message, IDomainEvent;

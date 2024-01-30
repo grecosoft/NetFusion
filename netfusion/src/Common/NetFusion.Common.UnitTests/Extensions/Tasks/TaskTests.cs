@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using NetFusion.Common.Extensions.Tasks;
+// ReSharper disable MemberCanBePrivate.Local
 
 namespace NetFusion.Common.UnitTests.Extensions.Tasks;
 
@@ -91,26 +92,17 @@ public class TaskExtensions
         }
     }
         
-    private class TestInvoker
+    private class TestInvoker(string errorMessage = null)
     {
-        public string ErrorMessage { get; }
-
-        public TestInvoker(string errorMessage = null)
-        {
-            ErrorMessage = errorMessage;
-        }
+        public string ErrorMessage { get; } = errorMessage;
 
         [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
         public Task Invoke(TestState state)
         {
-            if (state == null) throw new ArgumentNullException(nameof(state));
+            ArgumentNullException.ThrowIfNull(state);
 
-            if (ErrorMessage == null)
-            {
-                return Task.CompletedTask;
-            }
-
-            return Task.FromException(new InvalidOperationException(ErrorMessage));
+            return ErrorMessage == null ? Task.CompletedTask : 
+                Task.FromException(new InvalidOperationException(ErrorMessage));
         }
     }
 
@@ -120,15 +112,10 @@ public class TaskExtensions
         public int Value2 { get; init; }
     }
 
-    private class TestException : Exception
+    private class TestException(string message, Exception taskException, TestInvoker invoker)
+        : Exception(message, taskException.InnerException ?? taskException)
     {
-        public TestInvoker Invoker { get; }
-
-        public TestException(string message, Exception taskException, TestInvoker invoker) :
-            base(message, taskException.InnerException ?? taskException)
-        {
-            Invoker = invoker;
-        }
+        public TestInvoker Invoker { get; } = invoker;
     }
 
     private class DelayedTestInvoker

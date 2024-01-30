@@ -236,8 +236,8 @@ public class ContainerAssert
     /// <returns>Self Reference.</returns>
     public ContainerAssert Services(Action<IServiceProvider> assert)
     {
-        if (assert == null) throw new ArgumentNullException(nameof(assert));
-            
+        ArgumentNullException.ThrowIfNull(assert);
+
         _fixture.AssureCompositeAppStarted();
         _serviceProvider ??= _fixture.AppUnderTest.CreateServiceScope().ServiceProvider;
 
@@ -247,8 +247,8 @@ public class ContainerAssert
         
     public async Task<ContainerAssert> ServicesAsync(Func<IServiceProvider, Task> assert)
     {
-        if (assert == null) throw new ArgumentNullException(nameof(assert));
-            
+        ArgumentNullException.ThrowIfNull(assert);
+
         _fixture.AssureCompositeAppStarted();
         _serviceProvider ??= _fixture.AppUnderTest.CreateServiceScope().ServiceProvider;
 
@@ -266,8 +266,8 @@ public class ContainerAssert
     public ContainerAssert Service<T>(Action<T> assert)
         where T : notnull
     {
-        if (assert == null) throw new ArgumentNullException(nameof(assert));
-            
+        ArgumentNullException.ThrowIfNull(assert);
+
         _fixture.AssureCompositeAppStarted();
         _serviceProvider ??= _fixture.AppUnderTest.CreateServiceScope().ServiceProvider;
 
@@ -286,8 +286,8 @@ public class ContainerAssert
     public async Task<ContainerAssert> ServiceAsync<T>(Func<T, Task> assert)
         where T : notnull
     {
-        if (assert == null) throw new ArgumentNullException(nameof(assert));
-            
+        ArgumentNullException.ThrowIfNull(assert);
+
         _fixture.AssureCompositeAppStarted();
         _serviceProvider ??= _fixture.AppUnderTest.CreateServiceScope().ServiceProvider;
 

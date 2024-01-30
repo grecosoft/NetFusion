@@ -12,7 +12,7 @@ public class PluginSummary
 
     public PluginSummary(IPlugin plugin)
     {
-        if (plugin == null) throw new System.ArgumentNullException(nameof(plugin));
+        System.ArgumentNullException.ThrowIfNull(plugin);
 
         PluginId = plugin.PluginId;
         Name = plugin.Name;

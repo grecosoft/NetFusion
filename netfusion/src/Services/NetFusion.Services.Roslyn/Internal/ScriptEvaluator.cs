@@ -15,16 +15,11 @@ namespace NetFusion.Services.Roslyn.Internal;
 /// an entity script is tagged with the name 'default', it is applied first followed by
 /// the script with a specified name.
 /// </summary>
-public class ScriptEvaluator
+public class ScriptEvaluator(EntityScript script)
 {
     public const string DefaultScriptName = "default";
-    public EntityScript Script { get; }
+    public EntityScript Script { get; } = script ?? throw new ArgumentNullException(nameof(script));
     public IEnumerable<ExpressionEvaluator>? Evaluators { get; private set; }
-
-    public ScriptEvaluator(EntityScript script)
-    {
-        Script = script ?? throw new ArgumentNullException(nameof(script));
-    }
 
     public void SetExpressionEvaluators(IEnumerable<ExpressionEvaluator> evaluators)
     {
@@ -35,7 +30,7 @@ public class ScriptEvaluator
 
     public async Task ExecuteAsync(object entity)
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         // The scope that will be used to resolve references made within
         // expressions.  This includes the entity and its set of optional

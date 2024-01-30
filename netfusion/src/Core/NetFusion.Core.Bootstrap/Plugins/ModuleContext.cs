@@ -44,7 +44,7 @@ public class ModuleContext
          
     public ModuleContext(ICompositeAppBuilder builder, IPlugin plugin)
     {
-        if (builder == null) throw new ArgumentNullException(nameof(builder));
+        ArgumentNullException.ThrowIfNull(builder);
 
         LoggerFactory = builder.BootstrapLoggerFactory;
         Configuration = builder.Configuration;

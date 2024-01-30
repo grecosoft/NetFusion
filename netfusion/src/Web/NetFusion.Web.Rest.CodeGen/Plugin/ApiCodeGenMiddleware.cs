@@ -12,16 +12,12 @@ namespace NetFusion.Web.Rest.CodeGen.Plugin;
 /// Middleware component added to the ASP.NET Pipeline exposing an endpoint
 /// used to obtain a TypeScript for a correspond named resource.
 /// </summary>
-public class ApiCodeGenMiddleware
+public class ApiCodeGenMiddleware(RequestDelegate next, ICodeGenModule codeGenModule)
 {
-    private readonly RequestDelegate _next;
-    private readonly ICodeGenModule _codeGenModule;
-
-    public ApiCodeGenMiddleware(RequestDelegate next, ICodeGenModule codeGenModule)
-    {
-        _next = next ?? throw new ArgumentNullException(nameof(next));
-        _codeGenModule = codeGenModule ?? throw new ArgumentNullException(nameof(codeGenModule));
-    }
+    private readonly RequestDelegate _next = next ?? throw new ArgumentNullException(nameof(next));
+    
+    private readonly ICodeGenModule _codeGenModule = codeGenModule ??
+        throw new ArgumentNullException(nameof(codeGenModule));
 
     public async Task Invoke(HttpContext httpContext, IApiCodeGenService apiCodeGenService)
     {

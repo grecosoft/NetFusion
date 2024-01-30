@@ -9,19 +9,10 @@ namespace NetFusion.Integration.UnitTests.Bus.Mocks;
 /// by the subscribing microservice to route received messages to the corresponding
 /// message handler.
 /// </summary>
-public abstract class TestBusRouterBase : BusRouterBase
-{
-    protected TestBusRouterBase(string busName) : base(busName)
-    {
-    }
-}
+public abstract class TestBusRouterBase(string busName) : BusRouterBase(busName);
 
-public class TestBusRouter : TestBusRouterBase
+public class TestBusRouter() : TestBusRouterBase("testBusName")
 {
-    public TestBusRouter() : base("testBusName")
-    {
-    }
-
     protected override void OnDefineEntities()
     {
         // In a non-test route, a fluent-api is provided used 
@@ -34,12 +25,8 @@ public class TestBusRouter : TestBusRouterBase
     }
 }
 
-public class DuplicateBusRouter : TestBusRouterBase
+public class DuplicateBusRouter() : TestBusRouterBase("testBusName")
 {
-    public DuplicateBusRouter() : base("testBusName")
-    {
-    }
-
     protected override void OnDefineEntities()
     {
        

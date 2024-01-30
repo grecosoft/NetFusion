@@ -18,7 +18,7 @@ public static class HttpContextExtensions
     /// <returns>The registered service.</returns>
     public static T GetService<T>(this HttpContext httpContext)
     {
-        if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
+        ArgumentNullException.ThrowIfNull(httpContext);
 
         return (T)httpContext.RequestServices.GetRequiredService(typeof(T));
     }

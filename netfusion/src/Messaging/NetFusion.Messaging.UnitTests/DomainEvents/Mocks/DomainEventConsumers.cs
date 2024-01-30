@@ -3,15 +3,13 @@ using NetFusion.Messaging.UnitTests.Messaging;
 namespace NetFusion.Messaging.UnitTests.DomainEvents.Mocks;
 // ------------------- [Message Consumers] ------------------
 
-public class MockSyncDomainEventConsumerOne : MockConsumer,
+public class MockSyncDomainEventConsumerOne(IMockTestLog testLog) : MockConsumer(testLog),
     IMessageConsumer
 {
-    public MockSyncDomainEventConsumerOne(IMockTestLog testLog) : base(testLog) { }
-        
     [InProcessHandler]
     public void OnEventHandler(MockDomainEvent domainEvent)
     {
-        if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
+        ArgumentNullException.ThrowIfNull(domainEvent);
 
         TestLog
             .AddLogEntry("Sync-DomainEvent-Handler-1")
@@ -24,11 +22,9 @@ public class MockSyncDomainEventConsumerOne : MockConsumer,
     }
 }
     
-public class MockAsyncDomainEventConsumerOne : MockConsumer,
+public class MockAsyncDomainEventConsumerOne(IMockTestLog testLog) : MockConsumer(testLog),
     IMessageConsumer
 {
-    public MockAsyncDomainEventConsumerOne(IMockTestLog testLog) : base(testLog) { }
-        
     [InProcessHandler]
     public async Task OnEventHandler(MockDomainEvent domainEvent)
     {
@@ -45,15 +41,13 @@ public class MockAsyncDomainEventConsumerOne : MockConsumer,
     }
 }
     
-public class MockSyncDomainEventConsumerTwo : MockConsumer,
+public class MockSyncDomainEventConsumerTwo(IMockTestLog testLog) : MockConsumer(testLog),
     IMessageConsumer
 {
-    public MockSyncDomainEventConsumerTwo(IMockTestLog testLog) : base(testLog) { }
-        
     [InProcessHandler]
     public void OnEventHandler(MockDomainEvent domainEvent)
     {
-        if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
+        ArgumentNullException.ThrowIfNull(domainEvent);
 
         TestLog
             .AddLogEntry("Sync-DomainEvent-Handler-2")
@@ -66,11 +60,9 @@ public class MockSyncDomainEventConsumerTwo : MockConsumer,
     }
 }
     
-public class MockAsyncDomainEventConsumerTwo : MockConsumer,
+public class MockAsyncDomainEventConsumerTwo(IMockTestLog testLog) : MockConsumer(testLog),
     IMessageConsumer
 {
-    public MockAsyncDomainEventConsumerTwo(IMockTestLog testLog) : base(testLog) { }
-        
     [InProcessHandler]
     public Task OnEventHandler(MockDomainEvent domainEvent)
     {
@@ -87,15 +79,13 @@ public class MockAsyncDomainEventConsumerTwo : MockConsumer,
     }
 }
     
-public class MockDerivedMessageConsumer : MockConsumer,
+public class MockDerivedMessageConsumer(IMockTestLog testLog) : MockConsumer(testLog),
     IMessageConsumer
 {
-    public MockDerivedMessageConsumer(IMockTestLog testLog) : base(testLog) { }
-        
     [InProcessHandler]
     public void OnBaseEventHandler(MockBaseDomainEvent domainEvent)
     {
-        if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
+        ArgumentNullException.ThrowIfNull(domainEvent);
 
         TestLog
             .AddLogEntry("OnBaseEventHandler")
@@ -105,7 +95,7 @@ public class MockDerivedMessageConsumer : MockConsumer,
     [InProcessHandler]
     public void OnIncludeBaseEventHandler([IncludeDerivedMessages]MockBaseDomainEvent domainEvent)
     {
-        if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
+        ArgumentNullException.ThrowIfNull(domainEvent);
 
         TestLog
             .AddLogEntry("OnIncludeBaseEventHandler")
@@ -124,16 +114,11 @@ public class MockErrorMessageConsumer : IMessageConsumer
     }
 }
     
-public class MockErrorParentMessageConsumer : MockConsumer,
+public class MockErrorParentMessageConsumer(IMessagingService messaging) : MockConsumer,
     IMessageConsumer
 {
-    private readonly IMessagingService _messaging;
-        
-    public MockErrorParentMessageConsumer(IMessagingService messaging)
-    {
-        _messaging = messaging;
-    }
-        
+    private readonly IMessagingService _messaging = messaging;
+
     [InProcessHandler]
     public async Task OnDomainEventAsync(MockDomainEvent domainEvent)
     {

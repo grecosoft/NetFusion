@@ -5,16 +5,11 @@ namespace NetFusion.Integration.RabbitMQ.Internal
     /// <summary>
     /// Event raised when a connection to a broker is reestablished.
     /// </summary>
-    public class ReconnectionEventArgs : EventArgs
+    public class ReconnectionEventArgs(ConnectionSettings connection) : EventArgs
     {
         /// <summary>
         /// Information about the connection.
         /// </summary>
-        public ConnectionSettings Connection { get; }
-
-        public ReconnectionEventArgs(ConnectionSettings connection)
-        {
-            Connection = connection;
-        }
+        public ConnectionSettings Connection { get; } = connection;
     }
 }

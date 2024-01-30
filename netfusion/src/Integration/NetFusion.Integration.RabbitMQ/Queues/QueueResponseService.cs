@@ -10,23 +10,19 @@ namespace NetFusion.Integration.RabbitMQ.Queues;
 /// Service implementation allowing replies, to prior sent messages, to be
 /// sent back to the sender with the response.
 /// </summary>
-public class QueueResponseService : IQueueResponseService
+/// <param name="busModule">Reference to the module maintaining connections to the bus.</param>
+/// <param name="serialization">Service used to serialize response message.</param>
+public class QueueResponseService(IBusModule busModule, ISerializationManager serialization) : IQueueResponseService
 {
     private const string MissingReplyPropMsg = "Replying to a command requires message to have property named: {0} specified.";
     
-    private readonly IBusModule _busModule;
-    private readonly ISerializationManager _serialization;
-
-    public QueueResponseService(IBusModule busModule, ISerializationManager serialization)
-    {
-        _busModule = busModule ?? throw new ArgumentNullException(nameof(busModule));
-        _serialization = serialization ?? throw new ArgumentNullException(nameof(serialization));
-    }
+    private readonly IBusModule _busModule = busModule ?? throw new ArgumentNullException(nameof(busModule));
+    private readonly ISerializationManager _serialization = serialization ?? throw new ArgumentNullException(nameof(serialization));
     
     public Task RespondToSenderAsync(IMessage request, object response)
     {
-        if (request == null) throw new ArgumentNullException(nameof(request));
-        if (response == null) throw new ArgumentNullException(nameof(response));
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(response);
 
         MessageProperties props = GetReplyMessageProps(request);
         
@@ -40,9 +36,9 @@ public class QueueResponseService : IQueueResponseService
 
     public Task RespondToSenderAsync(object response, string replyToQueue, MessageProperties messageProps)
     {
-        if (response == null) throw new ArgumentNullException(nameof(response));
-        if (messageProps == null) throw new ArgumentNullException(nameof(messageProps));
-        
+        ArgumentNullException.ThrowIfNull(response);
+        ArgumentNullException.ThrowIfNull(messageProps);
+
         if (! MessageExtensions.TryParseReplyTo(replyToQueue, out string? busName, out string? queueName))
         {
             throw new InvalidOperationException("The ReplyTo message property not specified.");

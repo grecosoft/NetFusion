@@ -9,16 +9,11 @@ namespace NetFusion.Web.Rest.Docs.Xml.Descriptions;
 /// Adds additional documentation of a link relation existing between two resources
 /// from a .NET Code Comment XML file.
 /// </summary>
-public class XmlHalRelationComments : IRelationDescription
+public class XmlHalRelationComments(IXmlCommentService xmlComments) : IRelationDescription
 {
-    private readonly IXmlCommentService _xmlComments;
+    private readonly IXmlCommentService _xmlComments = xmlComments ?? 
+        throw new ArgumentNullException(nameof(xmlComments));
 
-    public XmlHalRelationComments(
-        IXmlCommentService xmlComments)
-    {
-        _xmlComments = xmlComments ?? throw new ArgumentNullException(nameof(xmlComments));
-    }
-        
     public void Describe(ApiResourceDoc resourceDoc, ApiRelationDoc relationDoc, ResourceLink resourceLink)
     {
         SetRelationInfo(relationDoc, (dynamic)resourceLink);

@@ -35,7 +35,4 @@ public interface IMappingStrategy
 /// <typeparam name="TTarget">The target type to which the source type will be mapped.</typeparam>
 public interface IMappingStrategy<TSource, TTarget> : IMappingStrategy
     where TSource : class
-    where TTarget : class
-{
-
-}
+    where TTarget : class;

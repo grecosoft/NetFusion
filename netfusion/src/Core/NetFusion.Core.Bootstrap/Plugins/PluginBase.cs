@@ -76,7 +76,7 @@ public abstract class PluginBase : IPlugin
 
     public bool HasType(Type pluginType)
     {
-        if (pluginType == null) throw new ArgumentNullException(nameof(pluginType));
+        ArgumentNullException.ThrowIfNull(pluginType);
         return Types.Any(pt => pt == pluginType);
     }
         

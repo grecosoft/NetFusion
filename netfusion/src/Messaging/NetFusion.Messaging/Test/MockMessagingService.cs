@@ -9,7 +9,7 @@
 public class MockMessagingService : IMessagingService
 {
     // Records the received requests made to the service:
-    private readonly List<object> _receivedRequests = new();
+    private readonly List<object> _receivedRequests = [];
         
     // Contains known responses for commands and queries.
     private readonly Dictionary<Type, object> _commandResponses = new();
@@ -36,16 +36,15 @@ public class MockMessagingService : IMessagingService
     public MockMessagingService AddCommandResponse<T>(object response)
         where T : ICommand
     {
-        if (response == null) throw new ArgumentNullException(nameof(response));
-            
+        ArgumentNullException.ThrowIfNull(response);
+
         Type commandType = typeof(T);
-        if (_commandResponses.ContainsKey(commandType))
+        if (!_commandResponses.TryAdd(commandType, response))
         {
             throw new InvalidOperationException(
                 $"The command of type: {commandType} already has a response registered.");
         }
 
-        _commandResponses[commandType] = response;
         return this;
     }
 
@@ -58,16 +57,15 @@ public class MockMessagingService : IMessagingService
     public MockMessagingService AddQueryResponse<T>(object response)
         where T : IQuery
     {
-        if (response == null) throw new ArgumentNullException(nameof(response));
-            
+        ArgumentNullException.ThrowIfNull(response);
+
         Type queryType = typeof(T);
-        if (_queryResponses.ContainsKey(queryType))
+        if (!_queryResponses.TryAdd(queryType, response))
         {
             throw new InvalidOperationException(
                 $"The query of type: {queryType} already has a response registered.");
         }
 
-        _queryResponses[queryType] = response;
         return this;
     }
         
@@ -101,8 +99,8 @@ public class MockMessagingService : IMessagingService
     public Task SendAsync(ICommand command, IntegrationTypes integrationType,
         CancellationToken cancellationToken)
     {
-        if (command == null) throw new ArgumentNullException(nameof(command));
-            
+        ArgumentNullException.ThrowIfNull(command);
+
         _receivedRequests.Add(command);
         return Task.CompletedTask;
     }
@@ -110,8 +108,8 @@ public class MockMessagingService : IMessagingService
     public Task<TResult> SendAsync<TResult>(ICommand<TResult> command, IntegrationTypes integrationType,
         CancellationToken cancellationToken)
     {
-        if (command == null) throw new ArgumentNullException(nameof(command));
-            
+        ArgumentNullException.ThrowIfNull(command);
+
         _receivedRequests.Add(command);
             
         object response = GetCommandResponse(command);
@@ -121,8 +119,8 @@ public class MockMessagingService : IMessagingService
     public Task PublishAsync(IDomainEvent domainEvent, IntegrationTypes integrationType,
         CancellationToken cancellationToken)
     {
-        if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
-            
+        ArgumentNullException.ThrowIfNull(domainEvent);
+
         _receivedRequests.Add(domainEvent);
         return Task.CompletedTask;
     }
@@ -136,8 +134,8 @@ public class MockMessagingService : IMessagingService
     public Task PublishAsync(IEventSource eventSource, IntegrationTypes integrationType,
         CancellationToken cancellationToken)
     {
-        if (eventSource == null) throw new ArgumentNullException(nameof(eventSource));
-            
+        ArgumentNullException.ThrowIfNull(eventSource);
+
         _receivedRequests.Add(eventSource.DomainEvents);
         return Task.CompletedTask;
     }
@@ -145,8 +143,8 @@ public class MockMessagingService : IMessagingService
     public Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, 
         CancellationToken cancellationToken)
     {
-        if (query == null) throw new ArgumentNullException(nameof(query));
-            
+        ArgumentNullException.ThrowIfNull(query);
+
         _receivedRequests.Add(query);
             
         object response = GetQueryResponse(query);

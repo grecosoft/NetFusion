@@ -12,21 +12,16 @@ namespace NetFusion.Integration.RabbitMQ.Queues.Strategies;
 /// Creates a queue subscribed by a microservice to which other microservices
 /// can send commands for processing.
 /// </summary>
-public class QueueCreationStrategy : BusEntityStrategyBase<EntityContext>,
+public class QueueCreationStrategy(QueueEntity queueEntity) : BusEntityStrategyBase<EntityContext>(queueEntity),
     IBusEntityCreationStrategy,
     IBusEntitySubscriptionStrategy,
     IBusEntityDisposeStrategy
 {
-    private readonly QueueEntity _queueEntity;
+    private readonly QueueEntity _queueEntity = queueEntity;
     private IDisposable? _consumer;
     
     private ILogger<QueueCreationStrategy> Logger => 
         Context.LoggerFactory.CreateLogger<QueueCreationStrategy>();
-
-    public QueueCreationStrategy(QueueEntity queueEntity) : base(queueEntity)
-    {
-        _queueEntity = queueEntity;
-    }
     
     [Description("Creating Queue to which Commands can be published.")]
     public async Task CreateEntity()

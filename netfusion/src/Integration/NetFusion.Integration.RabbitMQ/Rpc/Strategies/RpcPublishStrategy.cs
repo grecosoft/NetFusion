@@ -10,20 +10,15 @@ namespace NetFusion.Integration.RabbitMQ.Rpc.Strategies;
 /// <summary>
 /// Used by a microservice to publish a RPC command to another microservice.
 /// </summary>
-public class RpcPublishStrategy : BusEntityStrategyBase<EntityContext>,
+public class RpcPublishStrategy(RpcReferenceEntity rpcEntity) : BusEntityStrategyBase<EntityContext>(rpcEntity),
     IBusEntityPublishStrategy
 {
-    private readonly RpcReferenceEntity _rpcEntity;
-    
-    public RpcPublishStrategy(RpcReferenceEntity rpcEntity) : base(rpcEntity)
-    {
-        _rpcEntity = rpcEntity;
-    }
+    private readonly RpcReferenceEntity _rpcEntity = rpcEntity;
     
     private ILogger<RpcPublishStrategy> Logger =>
         Context.LoggerFactory.CreateLogger<RpcPublishStrategy>();
     
-    public string ContentType => _rpcEntity.PublishOptions.ContentType;
+    private string ContentType => _rpcEntity.PublishOptions.ContentType;
     public bool CanPublishMessageType(Type messageType) => _rpcEntity.CommandMessageNamespaces.ContainsKey(messageType);
     
 

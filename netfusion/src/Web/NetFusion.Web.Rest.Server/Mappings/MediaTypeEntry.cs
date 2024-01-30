@@ -8,29 +8,21 @@ namespace NetFusion.Web.Rest.Server.Mappings;
 /// <summary>
 /// Used to store metadata associated with resources for a specific media-type.
 /// </summary>
-public class MediaTypeEntry 
+public class MediaTypeEntry(string mediaType, IResourceProvider provider)
 {
     /// <summary>
     /// The media-type specified with the metadata.
     /// </summary>
-    public string MediaType { get; }
+    public string MediaType { get; } = mediaType ?? throw new ArgumentNullException(nameof(mediaType));
 
     /// <summary>
     /// The provider responsible for applying the metadata to the resource.
     /// </summary>
-    public IResourceProvider Provider { get; }
+    public IResourceProvider Provider { get; } = provider ?? throw new ArgumentNullException(nameof(provider));
 
     // Metadata for each resource type configured for this media-type.
-    private readonly Dictionary<Type, IResourceMeta> _resourceTypeMeta;
+    private readonly Dictionary<Type, IResourceMeta> _resourceTypeMeta = new();
 
-    public MediaTypeEntry(string mediaType, IResourceProvider provider)
-    {
-        _resourceTypeMeta = new Dictionary<Type, IResourceMeta>();
-
-        MediaType = mediaType ?? throw new ArgumentNullException(nameof(mediaType));
-        Provider = provider ?? throw new ArgumentNullException(nameof(provider));
-    }
-    
     /// <summary>
     /// Returns the metadata associated with a source type.
     /// </summary>
@@ -54,13 +46,11 @@ public class MediaTypeEntry
         if (resourceMeta == null) throw new ArgumentNullException(nameof(resourceMeta),
             "Resource metadata cannot be null.");
 
-        if (_resourceTypeMeta.ContainsKey(resourceMeta.SourceType)) 
+        if (!_resourceTypeMeta.TryAdd(resourceMeta.SourceType, resourceMeta)) 
         {
             throw new InvalidOperationException(
                 $"Resource metadata already specified for source type: {resourceMeta.SourceType.FullName} " + 
                 $"For media-type: {MediaType}");
         }
-
-        _resourceTypeMeta[resourceMeta.SourceType] = resourceMeta;
     }
 }

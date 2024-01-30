@@ -17,16 +17,11 @@ public class TestQueueBusEntity : BusEntity
     }
 }
 
-public class TestQueueStrategy : BusEntityStrategyBase<TestBusEntityContext>,
+public class TestQueueStrategy(TestQueueBusEntity busEntity) : BusEntityStrategyBase<TestBusEntityContext>(busEntity),
     IBusEntityCreationStrategy,
     IBusEntityPublishStrategy
 {
-    private readonly TestQueueBusEntity _entity;
-    
-    public TestQueueStrategy(TestQueueBusEntity busEntity) : base(busEntity)
-    {
-        _entity = busEntity;
-    }
+    private readonly TestQueueBusEntity _entity = busEntity;
 
     public TestBusEntityContext StrategyContext => Context;
     public bool CreationStrategyExecuted => _entity.InvokedStrategies.Contains(nameof(CreateEntity));

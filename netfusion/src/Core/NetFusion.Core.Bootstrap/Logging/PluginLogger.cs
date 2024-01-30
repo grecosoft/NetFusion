@@ -20,9 +20,9 @@ internal static class PluginLogger
     /// <param name="services">Reference to the dependency-injection service collection.</param>
     public static LogMessage Log(IPlugin plugin, IServiceCollection services)
     {
-        if (plugin == null) throw new ArgumentNullException(nameof(plugin));
-        if (services == null) throw new ArgumentNullException(nameof(services));
-            
+        ArgumentNullException.ThrowIfNull(plugin);
+        ArgumentNullException.ThrowIfNull(services);
+
         var logMessage = LogMessage.For(LogLevel.Information, "{PluginType} {Name} Composed", 
             plugin.PluginType, plugin.Name);
                 

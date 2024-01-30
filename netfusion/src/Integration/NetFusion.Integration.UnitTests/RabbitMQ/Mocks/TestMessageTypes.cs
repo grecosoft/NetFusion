@@ -2,16 +2,10 @@ using NetFusion.Messaging.Types;
 
 namespace NetFusion.Integration.UnitTests.RabbitMQ.Mocks;
 
-public class TestDomainEvent : DomainEvent
+public class TestDomainEvent(int valueOne, int valueTwo) : DomainEvent
 {
-    public int ValueOne { get; }
-    public int ValueTwo { get; }
-
-    public TestDomainEvent(int valueOne, int valueTwo)
-    {
-        ValueOne = valueOne;
-        ValueTwo = valueTwo;
-    }
+    public int ValueOne { get; } = valueOne;
+    public int ValueTwo { get; } = valueTwo;
 }
 
 public class TestDomainEventHandler
@@ -22,10 +16,7 @@ public class TestDomainEventHandler
     }
 }
 
-public class TestCommand : Command
-{
-    
-}
+public class TestCommand : Command;
 
 public class TestCommandHandler
 {
@@ -35,15 +26,9 @@ public class TestCommandHandler
     }
 }
 
-public class TestCommandResponse : Command
-{
-    
-}
+public class TestCommandResponse : Command;
 
-public class TestCommandWithResponse : Command<TestCommandResponse>
-{
-    
-}
+public class TestCommandWithResponse : Command<TestCommandResponse>;
 
 public class TestCommandHandlerWithResponse
 {

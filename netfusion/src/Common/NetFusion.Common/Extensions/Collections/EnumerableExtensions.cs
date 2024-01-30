@@ -18,8 +18,8 @@ public static class EnumerableExtensions
     [DebuggerStepThrough]
     public static IList<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
-        if (action == null) throw new ArgumentNullException(nameof(action));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(action);
 
         var list = source as IList<T> ?? source.ToList();
         foreach (var value in list)
@@ -40,7 +40,7 @@ public static class EnumerableExtensions
     [DebuggerStepThrough]
     public static IEnumerable<TElement> Values<TKey, TElement>(this ILookup<TKey, TElement> source)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
         return source.SelectMany(v => v);
     }
 
@@ -53,7 +53,7 @@ public static class EnumerableExtensions
     [DebuggerStepThrough]
     public static bool Empty<T>(this IEnumerable<T> source)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
         return !source.Any();
     }
         
@@ -68,8 +68,8 @@ public static class EnumerableExtensions
     public static IEnumerable<TKey> WhereDuplicated<TSource, TKey>(this IEnumerable<TSource> source, 
         Func<TSource, TKey> propertySelector)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
-        if (propertySelector == null) throw new ArgumentNullException(nameof(propertySelector));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(propertySelector);
 
         return source.GroupBy(propertySelector)
             .Where(g => g.Count() > 1)
@@ -86,8 +86,8 @@ public static class EnumerableExtensions
     public static IEnumerable<T> OrderByMatchingType<T>(this IEnumerable<T> source, IEnumerable<Type> types)
         where T : class
     {
-        if (types == null) throw new ArgumentNullException(nameof(types));
-            
+        ArgumentNullException.ThrowIfNull(types);
+
         source = source as T[] ?? source.ToArray();
 
         foreach (var itemType in types)

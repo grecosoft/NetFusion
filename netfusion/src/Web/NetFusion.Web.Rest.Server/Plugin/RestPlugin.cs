@@ -30,8 +30,8 @@ public static class CompositeBuilderExtensions
 {
     public static ICompositeContainerBuilder AddRest(this ICompositeContainerBuilder composite)
     {
-        if (composite == null) throw new ArgumentNullException(nameof(composite));
-            
+        ArgumentNullException.ThrowIfNull(composite);
+
         // Add dependent plugins:
         composite.AddWebMvc();
             

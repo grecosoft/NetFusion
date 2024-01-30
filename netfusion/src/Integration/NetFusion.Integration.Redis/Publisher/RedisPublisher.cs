@@ -10,21 +10,16 @@ namespace NetFusion.Integration.Redis.Publisher;
 /// <summary>
 /// Extends to NetFusion base publishing pipeline to allow publishing domain-events to Redis channels.
 /// </summary>
-public class RedisPublisher : IMessagePublisher
+public class RedisPublisher(
+    ILogger<RedisPublisher> logger,
+    IBusEntityModule busEntityModule)
+    : IMessagePublisher
 {
-    private readonly ILogger<RedisPublisher> _logger;
-    private readonly IBusEntityModule _busEntityModule;
+    private readonly ILogger<RedisPublisher> _logger = logger;
+    private readonly IBusEntityModule _busEntityModule = busEntityModule;
     
     public IntegrationTypes IntegrationType => IntegrationTypes.External;
 
-    public RedisPublisher(
-        ILogger<RedisPublisher> logger,
-        IBusEntityModule busEntityModule)
-    {
-        _logger = logger;
-        _busEntityModule = busEntityModule;
-    }
-        
     public async Task PublishMessageAsync(IMessage message, CancellationToken cancellationToken)
     {
         var messageType = message.GetType();

@@ -5,24 +5,18 @@ namespace NetFusion.Web.Rest.Resources;
 /// <summary>
 /// Defines a link that can be associated with a resource.
 /// </summary>
-public class Link
+public class Link(string method, string href)
 {
     /// <summary>
     /// The hypertext reference to the associated resource.
     /// </summary>
-    public string Href { get; set; }
-        
+    public string Href { get; set; } = href;
+
     /// <summary>
     /// Indicates the method that can be used to call the HREF.
     /// </summary>
-    public string Method { get; set; }
-    
-    public Link(string method, string href)
-    {
-        Href = href;
-        Method = method;
-    }
-    
+    public string Method { get; set; } = method;
+
     public Link() : this(string.Empty, HttpMethod.Get.Method)
     {
        

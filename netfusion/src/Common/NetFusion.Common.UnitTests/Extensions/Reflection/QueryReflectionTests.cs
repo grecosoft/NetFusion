@@ -34,10 +34,10 @@ public class QueryReflectionTests
         foundInterface.Should().NotBeNull();
         foundInterface.Should().NotBeOfType(typeof(IModuleService));
 
-        var foundInftefaces = typeof(TestClass8).GetInterfacesDerivedFrom<IService>().ToArray();
-        foundInftefaces.Should().HaveCount(2);
-        foundInftefaces.Should().Contain(typeof(IModuleService));
-        foundInftefaces.Should().Contain(typeof(IRunnable));
+        var foundInterfaces = typeof(TestClass8).GetInterfacesDerivedFrom<IService>().ToArray();
+        foundInterfaces.Should().HaveCount(2);
+        foundInterfaces.Should().Contain(typeof(IModuleService));
+        foundInterfaces.Should().Contain(typeof(IRunnable));
     }
 
     [Fact(DisplayName = "Given Type check declared Default Constructor")]
@@ -47,11 +47,13 @@ public class QueryReflectionTests
         typeof(TestClass5).HasDefaultConstructor().Should().BeTrue();
     }
 
-    interface ITest { }
-    abstract class TestBase { }
-    class TestClass1 : TestBase, ITest { }
-    class TestClass2 : TestBase { }
-    abstract class TestClass3 : ITest { }
+    interface ITest;
+
+    abstract class TestBase;
+
+    class TestClass1 : TestBase, ITest;
+    class TestClass2 : TestBase;
+    abstract class TestClass3 : ITest;
 
     class TestClass4
     {
@@ -65,10 +67,12 @@ public class QueryReflectionTests
         public TestClass5(object data) { }
     }
 
-    interface IService { }
-    class TestClass6 : IService { }
-    interface IModuleService : IService { }
-    class TestClass7 : IModuleService { };
-    interface IRunnable : IService { }
-    class TestClass8 : IModuleService, IRunnable { }
+    interface IService;
+    class TestClass6 : IService;
+
+    interface IModuleService : IService;
+    class TestClass7 : IModuleService;
+
+    interface IRunnable : IService;
+    class TestClass8 : IModuleService, IRunnable;
 }

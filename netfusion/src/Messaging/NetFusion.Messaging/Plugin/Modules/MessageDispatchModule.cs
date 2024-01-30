@@ -87,16 +87,16 @@ public class MessageDispatchModule : PluginModule,
         
     public IEnumerable<MessageDispatcher> GetMessageDispatchers(IMessage message)
     {
-        if (message == null) throw new ArgumentNullException(nameof(message));
-        
+        ArgumentNullException.ThrowIfNull(message);
+
         return HandlersForMessage(message.GetType())
             .Where(di => di.MessagePredicate?.Invoke(message) ?? true);
     }
 
     private IEnumerable<MessageDispatcher> HandlersForMessage(Type messageType)
     {
-        if (messageType == null) throw new ArgumentNullException(nameof(messageType));
-        
+        ArgumentNullException.ThrowIfNull(messageType);
+
         return _inProcessDispatchers.Where(di => di.Key.IsAssignableFrom(messageType))
             .SelectMany(di => di)
             .Where(di => di.IncludeDerivedTypes || di.MessageType == messageType);
@@ -108,15 +108,11 @@ public class MessageDispatchModule : PluginModule,
         {
             return pipeline;
         }
-        
+
         // No publisher specific resilience pipeline.  Check if a default publisher
         // pipeline is registered;
-        if (DispatchConfig.ResiliencePipelines.TryGetValue(typeof(IMessagePublisher), out var defaultPipeline))
-        {
-            return defaultPipeline;
-        }
-
-        return null;
+        return DispatchConfig.ResiliencePipelines.TryGetValue(typeof(IMessagePublisher), out var defaultPipeline) 
+            ? defaultPipeline : null;
     }
 
     // ---------------------- [Logging] ----------------------
@@ -130,7 +126,7 @@ public class MessageDispatchModule : PluginModule,
             .Select(d => d.Key.FullName)
             .ToArray();
 
-        if (noHandlerMessages.Any())
+        if (noHandlerMessages.Length != 0)
         {
             Logger.LogWarning("Handlers not found for the following messages: {MessageTypes}", 
                 string.Join(",", noHandlerMessages));
@@ -141,7 +137,7 @@ public class MessageDispatchModule : PluginModule,
             .Select(d => d.Key.FullName)
             .ToArray();
 
-        if (multipleHandlerMessages.Any())
+        if (multipleHandlerMessages.Length != 0)
         {
             Logger.LogWarning("Handlers not found for the following messages: {MessageTypes}", 
                 string.Join(",", multipleHandlerMessages));

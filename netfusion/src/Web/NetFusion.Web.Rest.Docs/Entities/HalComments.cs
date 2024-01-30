@@ -5,19 +5,13 @@ namespace NetFusion.Web.Rest.Docs.Entities;
 /// </summary>
 public class HalComments
 {
-    public HalComments()
-    {
-        EmbeddedComments = new EmbeddedComment[] { };
-        RelationComments = new RelationComment[] { };
-    }
-       
     /// <summary>
     /// Comments associated with a resource's embedded items.
     /// </summary>
-    public EmbeddedComment[] EmbeddedComments { get; set; }
-        
+    public EmbeddedComment[] EmbeddedComments { get; set; } = [];
+
     /// <summary>
     /// Comments associated with a resource's link relations.
     /// </summary>
-    public RelationComment[] RelationComments { get; set; }
+    public RelationComment[] RelationComments { get; set; } = [];
 }

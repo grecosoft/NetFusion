@@ -101,10 +101,7 @@ public class TypeResolverTests
         }
     }
 
-    public class MockPluginType
-    {
-            
-    }
+    public class MockPluginType;
 
     public class MockPluginModule : PluginModule
     {

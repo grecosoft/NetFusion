@@ -7,10 +7,4 @@ namespace NetFusion.Core.TestFixtures.Plugins;
 /// a WebApi or Console host.  A container can only have one associated
 /// host plug-in.
 /// </summary>
-public class MockHostPlugin : MockPlugin
-{
-    public MockHostPlugin() : base(PluginTypes.HostPlugin)
-    {
-            
-    }
-}
+public class MockHostPlugin() : MockPlugin(PluginTypes.HostPlugin);

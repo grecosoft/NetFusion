@@ -18,8 +18,8 @@ public static class ServiceCollectionExtensions
     public static ITypeCatalog CreateCatalog(this IServiceCollection services,
         IEnumerable<Type> pluginTypes)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-        if (pluginTypes == null) throw new ArgumentNullException(nameof(pluginTypes));
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(pluginTypes);
 
         return new TypeCatalog(services, pluginTypes);
     }
@@ -35,9 +35,9 @@ public static class ServiceCollectionExtensions
         IEnumerable<Type> contractTypes, 
         object implementation)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-        if (contractTypes == null) throw new ArgumentNullException(nameof(contractTypes));
-        if (implementation == null) throw new ArgumentNullException(nameof(implementation));
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(contractTypes);
+        ArgumentNullException.ThrowIfNull(implementation);
 
         foreach (Type interfaceType in contractTypes)
         {

@@ -20,7 +20,7 @@ public class AttributedEntityTests
     }
 
     [Fact(DisplayName = "Entity associated Attribute can be Deleted")]
-    public void EntityAssocatedAttribute_CanBeDeleted()
+    public void EntityAssociatedAttribute_CanBeDeleted()
     {
         var entity = new DynamicEntity();
         entity.Attributes.SetValue("Value1", 1000);

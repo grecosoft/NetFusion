@@ -28,7 +28,7 @@ public class RequestHeaders
 	/// </summary>
 	public IReadOnlyDictionary<string, HeaderValue> Values { get; }
 
-	private readonly IDictionary<string, HeaderValue> _headers;
+	private readonly Dictionary<string, HeaderValue> _headers;
 
 	/// <summary>
 	/// Constructor.
@@ -123,10 +123,10 @@ public class RequestHeaders
 	/// <returns>Self reference for method chaining.</returns>
 	public RequestHeaders SetBasicAuthHeader(string username, string password)
 	{
-		if (username == null) throw new ArgumentNullException(nameof(username));
-		if (password == null) throw new ArgumentNullException(nameof(password));
-		    
-		var value = Base64Encode($"{username}:{password}");
+        ArgumentNullException.ThrowIfNull(username);
+        ArgumentNullException.ThrowIfNull(password);
+
+        var value = Base64Encode($"{username}:{password}");
 		return Add("Authorization", $"Basic {value}");
 	}
 
@@ -137,9 +137,9 @@ public class RequestHeaders
 	/// <returns>Self reference for method changing.</returns>
 	public RequestHeaders SetAuthBearerToken(string token)
 	{
-		if (token == null) throw new ArgumentNullException(nameof(token));
-		    
-		return Add("Authorization", $"Bearer {token}");
+        ArgumentNullException.ThrowIfNull(token);
+
+        return Add("Authorization", $"Bearer {token}");
 	}
 
 	private static string Base64Encode(string plainText) 

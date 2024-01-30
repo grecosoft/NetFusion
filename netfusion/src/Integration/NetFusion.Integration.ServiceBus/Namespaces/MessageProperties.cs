@@ -12,7 +12,7 @@ internal static class MessageProperties
     public static bool TryParseReplyTo(ProcessMessageEventArgs args, 
         [MaybeNullWhen(false)]out string busName, [MaybeNullWhen(false)]out string queueName)
     {
-        if (args == null) throw new ArgumentNullException(nameof(args));
+        ArgumentNullException.ThrowIfNull(args);
         return MessageExtensions.TryParseReplyTo(args.Message.ReplyTo, out busName, out queueName);
     }
 }

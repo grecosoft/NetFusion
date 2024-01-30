@@ -6,27 +6,21 @@ namespace NetFusion.Integration.ServiceBus.Topics.Metadata;
 
 public abstract class SubscriptionMeta
 {
-    private readonly IDictionary<string, CreateRuleOptions> _rules = new Dictionary<string, CreateRuleOptions>();
-    
-    protected SubscriptionMeta()
-    {
-        ProcessingOptions = new ServiceBusProcessorOptions();
-        IsPerServiceInstance = false;
-    }
-    
+    private readonly Dictionary<string, CreateRuleOptions> _rules = new();
+
     /// <summary>
     /// Indicates that each instance of the same running microservice will receive the
     /// message when sent to a topic.  If no instances of a given microservice are running,
     /// and delivered messages are ignored.  This can be used to notify all microservice
     /// instances of the same type running within a cluster.
     /// </summary>
-    public bool IsPerServiceInstance { get; set; }
-    
+    public bool IsPerServiceInstance { get; set; } = false;
+
     /// <summary>
     /// Options to use when processing sent messages from the service-bus.
     /// </summary>
-    public ServiceBusProcessorOptions ProcessingOptions { get; }
-    
+    public ServiceBusProcessorOptions ProcessingOptions { get; } = new();
+
     /// <summary>
     /// The roles used to determine if a message sent to the topic matches
     /// the criteria to be delivered to the subscription.
@@ -99,9 +93,9 @@ public abstract class SubscriptionMeta
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Rule name not specified.", nameof(name));
-            
-        if (filter == null) throw new ArgumentNullException(nameof(filter));
-            
+
+        ArgumentNullException.ThrowIfNull(filter);
+
         if (_rules.ContainsKey(name))
         {
             throw new ServiceBusPluginException(
@@ -119,18 +113,4 @@ public abstract class SubscriptionMeta
 /// </summary>
 /// <typeparam name="TDomainEvent">The domain-event type associated with subscription.</typeparam>
 public class SubscriptionMeta<TDomainEvent> : SubscriptionMeta, IRouteMeta<TDomainEvent>
-    where TDomainEvent : IDomainEvent
-    
-{
-    
-    
-    
-    
-    
-
-
-
-
-    
-    
-}
+    where TDomainEvent : IDomainEvent;

@@ -10,15 +10,10 @@ namespace NetFusion.Web.Rest.Docs.Json.Descriptions;
 /// <summary>
 /// Called to associate additional documentation with a resource relation document.
 /// </summary>
-public class JsonHalRelationComments : IRelationDescription
+public class JsonHalRelationComments(IDocModule docModule) : IRelationDescription
 {
-    private readonly IDocModule _docModule;
-        
-    public JsonHalRelationComments(IDocModule docModule)
-    {
-        _docModule = docModule ?? throw new ArgumentNullException(nameof(docModule));
-    }
-        
+    private readonly IDocModule _docModule = docModule ?? throw new ArgumentNullException(nameof(docModule));
+
     public void Describe(ApiResourceDoc resourceDoc, ApiRelationDoc relationDoc, ResourceLink resourceLink)
     {
         // Check if comments exist for the specific resource and relation name.

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\..\..\build\common.props" />
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.10.4" />
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.16.1" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.2" />
   </ItemGroup>
 
   <PropertyGroup>

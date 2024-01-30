@@ -35,7 +35,7 @@ public abstract class BusRouterBase : IBusRouter
     
     IEnumerable<BusEntity> IBusRouter.GetBusEntities()
     {
-        if (BusEntities.Any())
+        if (BusEntities.Count != 0)
         {
             return BusEntities;
         }
@@ -50,7 +50,7 @@ public abstract class BusRouterBase : IBusRouter
     /// <param name="busEntity">Entity to be added.</param>
     protected void AddBusEntity(BusEntity busEntity)
     {
-        if (busEntity == null) throw new ArgumentNullException(nameof(busEntity));
+        ArgumentNullException.ThrowIfNull(busEntity);
         BusEntities.Add(busEntity);
     }
 

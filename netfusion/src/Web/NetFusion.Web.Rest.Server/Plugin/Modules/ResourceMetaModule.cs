@@ -41,14 +41,16 @@ public class ResourceMetaModule : PluginModule, IResourceMediaModule
     private void AddMediaResourceTypeMeta(IResourceMap resourceMap)
     {
         // Create an entry for the media-type name.  Each media-type will have a single entry.
-        if (! _mediaResourceTypeMeta.ContainsKey(resourceMap.MediaType))
+        if (! _mediaResourceTypeMeta.TryGetValue(resourceMap.MediaType, out MediaTypeEntry? value))
         {
-            _mediaResourceTypeMeta[resourceMap.MediaType] = new MediaTypeEntry(
+            value = new MediaTypeEntry(
                 resourceMap.MediaType, 
                 CreateProvider(resourceMap));
+            
+            _mediaResourceTypeMeta[resourceMap.MediaType] = value;
         }
 
-        MediaTypeEntry mediaTypeEntry = _mediaResourceTypeMeta[resourceMap.MediaType];
+        MediaTypeEntry mediaTypeEntry = value;
         resourceMap.BuildMap();
             
         foreach (IResourceMeta resourceMeta in resourceMap.ResourceMeta)

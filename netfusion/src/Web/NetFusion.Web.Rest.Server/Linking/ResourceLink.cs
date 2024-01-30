@@ -8,15 +8,10 @@
 ///     - mailing-address:  The URL used to load the customer's mailing address.
 ///     - pending-orders:  The URL used to load the customer's pending orders.
 /// </summary>
-public class ResourceLink
+public class ResourceLink(string relationName)
 {
-    public string RelationName { get; }
+    public string RelationName { get; } = relationName;
 
-    public ResourceLink(string relationName)
-    {
-        RelationName = relationName;
-    }
-        
     public string? Href { get; set; }
     public string Method { get; set; } = string.Empty;
         

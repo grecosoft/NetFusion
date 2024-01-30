@@ -63,7 +63,7 @@ public abstract class MessageRoute
         Invoker = CreateInvoker(ConsumerType, HandlerMethodInfo);
     }
 
-    private MethodInfo GetHandlerMethodInfo(LambdaExpression consumer)
+    private static MethodInfo GetHandlerMethodInfo(LambdaExpression consumer)
     {
         var unaryExpression = (UnaryExpression)consumer.Body;
         var callExpression = (MethodCallExpression)unaryExpression.Operand;

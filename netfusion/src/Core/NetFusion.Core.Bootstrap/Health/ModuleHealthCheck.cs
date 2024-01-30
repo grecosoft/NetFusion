@@ -30,7 +30,7 @@ public class ModuleHealthCheck
         
     internal ModuleHealthCheck(IModuleHealthCheckProvider pluginModule)
     {
-        if (pluginModule == null) throw new ArgumentNullException(nameof(pluginModule));
+        ArgumentNullException.ThrowIfNull(pluginModule);
         PluginModuleType = pluginModule.GetType();
         AspectChecks = _aspectsChecks;
     }
@@ -42,7 +42,7 @@ public class ModuleHealthCheck
     /// <param name="aspectCheck">The status associated with a specific aspect of the module.</param>
     public void RecordAspect(HealthAspectCheck aspectCheck)
     {
-        if (aspectCheck == null) throw new ArgumentNullException(nameof(aspectCheck));
+        ArgumentNullException.ThrowIfNull(aspectCheck);
         _aspectsChecks.Add(aspectCheck);
     }
 }

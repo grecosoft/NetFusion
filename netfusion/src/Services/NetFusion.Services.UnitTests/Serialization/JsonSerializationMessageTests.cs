@@ -109,60 +109,34 @@ public class JsonSerializationMessageTests
     
     // Test message types compatible with JSON Serialization:
     
-    public class RegistrationStatus
+    public class RegistrationStatus(string registrationId, string status, string address)
     {
-        public string RegistrationId { get; }
-        public string Status { get; }
-        public string Address { get; }
-    
-        public RegistrationStatus(string registrationId, string status, string address)
-        {
-            RegistrationId = registrationId;
-            Status = status;
-            Address = address;
-        }
+        public string RegistrationId { get; } = registrationId;
+        public string Status { get; } = status;
+        public string Address { get; } = address;
     }
     
-    public class RegisterDevice : Command<RegistrationStatus>
+    public class RegisterDevice(string deviceId, string version, string name) : Command<RegistrationStatus>
     {
-        public string DeviceId { get; private set; }
-        public string Version { get; private set; }
-        public string Name { get; private set; }
-        
-        public RegisterDevice(string deviceId, string version, string name)
-        {
-            DeviceId = deviceId;
-            Version = version;
-            Name = name;
-        }
+        public string DeviceId { get; private set; } = deviceId;
+        public string Version { get; private set; } = version;
+        public string Name { get; private set; } = name;
     }
     
-    public class RegisterDeviceNullableResult : Command<RegistrationStatus?>
+    public class RegisterDeviceNullableResult(string deviceId, string version, string name)
+        : Command<RegistrationStatus?>
     {
-        public string DeviceId { get; }
-        public string Version { get; }
-        public string Name { get; }
-    
-        public RegisterDeviceNullableResult(string deviceId, string version, string name)
-        {
-            DeviceId = deviceId;
-            Version = version;
-            Name = name;
-        }
+        public string DeviceId { get; } = deviceId;
+        public string Version { get; } = version;
+        public string Name { get; } = name;
     }
     
-    public class DeviceUpdated : DomainEvent
+    public class DeviceUpdated(string deviceId, string priorVersion, string currentVersion)
+        : DomainEvent
     {
-        public string DeviceId { get; }
-        public string PriorVersion { get; }
-        public string CurrentVersion { get; }
-        
-        public DeviceUpdated(string deviceId, string priorVersion, string currentVersion)
-        {
-            DeviceId = deviceId;
-            PriorVersion = priorVersion;
-            CurrentVersion = currentVersion;
-        }
+        public string DeviceId { get; } = deviceId;
+        public string PriorVersion { get; } = priorVersion;
+        public string CurrentVersion { get; } = currentVersion;
     }
 }
 

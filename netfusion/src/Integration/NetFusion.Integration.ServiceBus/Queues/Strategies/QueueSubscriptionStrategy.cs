@@ -12,22 +12,16 @@ namespace NetFusion.Integration.ServiceBus.Queues.Strategies;
 /// to its associated message consumer and optionally sends a response
 /// back to the originating microservice.
 /// </summary>
-internal class QueueSubscriptionStrategy : BusEntityStrategyBase<NamespaceEntityContext>,
-    IBusEntitySubscriptionStrategy,
-    IBusEntityDisposeStrategy
+internal class QueueSubscriptionStrategy(QueueEntity queueEntity, MessageDispatcher dispatcher)
+    : BusEntityStrategyBase<NamespaceEntityContext>(queueEntity),
+        IBusEntitySubscriptionStrategy,
+        IBusEntityDisposeStrategy
 {
-    private readonly QueueEntity _queueEntity;
-    private readonly MessageDispatcher _dispatcher;
+    private readonly QueueEntity _queueEntity = queueEntity;
+    private readonly MessageDispatcher _dispatcher = dispatcher;
 
     private ServiceBusProcessor? _queueProcessor;
 
-    public QueueSubscriptionStrategy(QueueEntity queueEntity, MessageDispatcher dispatcher) :
-        base(queueEntity)
-    {
-        _queueEntity = queueEntity;
-        _dispatcher = dispatcher;
-    }
-    
     private ILogger<QueueSubscriptionStrategy> Logger => 
         Context.LoggerFactory.CreateLogger<QueueSubscriptionStrategy>();
     

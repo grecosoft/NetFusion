@@ -33,8 +33,8 @@ public class ApiParameterMeta
 
     public ApiParameterMeta(ApiParameterDescription apiParameterDescription)
     {
-        if (apiParameterDescription == null) throw new ArgumentNullException(nameof(apiParameterDescription));
-            
+        ArgumentNullException.ThrowIfNull(apiParameterDescription);
+
         if (apiParameterDescription.ParameterDescriptor is not ControllerParameterDescriptor paramDescriptor)
         {
             throw new InvalidCastException(

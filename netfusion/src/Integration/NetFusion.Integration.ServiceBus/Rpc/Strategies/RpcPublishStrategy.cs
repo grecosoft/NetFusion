@@ -13,19 +13,15 @@ namespace NetFusion.Integration.ServiceBus.Rpc.Strategies;
 /// awaits a response on it corresponding reply queue.  If a reply is not received
 /// within a specified amount of time, the request is canceled.
 /// </summary>
-internal class RpcPublishStrategy : BusEntityStrategyBase<NamespaceEntityContext>,
-    IBusEntityCreationStrategy,
-    IBusEntityPublishStrategy,
-    IBusEntityDisposeStrategy
+internal class RpcPublishStrategy(RpcReferenceEntity rpcEntity)
+    : BusEntityStrategyBase<NamespaceEntityContext>(rpcEntity),
+        IBusEntityCreationStrategy,
+        IBusEntityPublishStrategy,
+        IBusEntityDisposeStrategy
 {
-    private readonly RpcReferenceEntity _rpcEntity;
+    private readonly RpcReferenceEntity _rpcEntity = rpcEntity;
     private ServiceBusSender? _rpcQueueSender;
 
-    public RpcPublishStrategy(RpcReferenceEntity rpcEntity) : base(rpcEntity)
-    {
-        _rpcEntity = rpcEntity;
-    }
-    
     private ILogger<RpcPublishStrategy> Logger =>
         Context.LoggerFactory.CreateLogger<RpcPublishStrategy>();
     

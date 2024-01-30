@@ -22,7 +22,7 @@ public class Message : IMessage
 
     public void SetContext(object context)
     {
-        if (context == null) throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
         _contexts[context.GetType()] = context;
     }
 

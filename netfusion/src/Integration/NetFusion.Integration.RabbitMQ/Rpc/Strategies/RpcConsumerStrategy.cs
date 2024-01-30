@@ -13,20 +13,13 @@ namespace NetFusion.Integration.RabbitMQ.Rpc.Strategies;
 /// To allow efficient use of queues, multiple messages can be sent
 /// on the same queue identified by a message-namespace.
 /// </summary>
-public class RpcConsumerStrategy : BusEntityStrategyBase<EntityContext>,
+public class RpcConsumerStrategy(RpcEntity rpcEntity) : BusEntityStrategyBase<EntityContext>(rpcEntity),
     IBusEntityCreationStrategy,
     IBusEntitySubscriptionStrategy,
     IBusEntityDisposeStrategy
 {
-    private readonly RpcEntity _rpcEntity;
-
-    private Queue _queue;
+    private readonly RpcEntity _rpcEntity = rpcEntity;
     private IDisposable? _consumer;
-    
-    public RpcConsumerStrategy(RpcEntity rpcEntity) : base(rpcEntity)
-    {
-        _rpcEntity = rpcEntity;
-    }
     
     private ILogger<RpcConsumerStrategy> Logger => Context.LoggerFactory.CreateLogger<RpcConsumerStrategy>();
 
@@ -41,7 +34,7 @@ public class RpcConsumerStrategy : BusEntityStrategyBase<EntityContext>,
             IsExclusive = false
         };
         
-        _queue = await busConn.CreateQueueAsync(queueMeta);
+        await busConn.CreateQueueAsync(queueMeta);
     }
 
     public Task SubscribeEntity()

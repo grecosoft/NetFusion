@@ -7,11 +7,9 @@ namespace NetFusion.Messaging.Routing;
 /// </summary>
 /// <typeparam name="TCommand">Type of command being routed.</typeparam>
 /// <typeparam name="TResult">Result type of the command.</typeparam>
-public class CommandRoute<TCommand, TResult> : MessageRoute
-    where TCommand: ICommand<TResult>
+public class CommandRoute<TCommand, TResult>() : MessageRoute(typeof(TCommand), typeof(TResult))
+    where TCommand : ICommand<TResult>
 {
-    public CommandRoute(): base(typeof(TCommand), typeof(TResult)) { }
-
     /// <summary>
     /// Routes command to a consumer's handler returning a result.
     /// </summary>
@@ -50,11 +48,9 @@ public class CommandRoute<TCommand, TResult> : MessageRoute
 /// Message pattern used to route a command not having a result to a consumer.
 /// </summary>
 /// <typeparam name="TCommand">Type of command being routed.</typeparam>
-public class CommandRoute<TCommand> : MessageRoute
-    where TCommand: ICommand
+public class CommandRoute<TCommand>() : MessageRoute(typeof(TCommand))
+    where TCommand : ICommand
 {
-    public CommandRoute(): base(typeof(TCommand)) { }
-    
     /// <summary>
     /// Routes command to a consumer's handler.
     /// </summary>
@@ -95,17 +91,12 @@ public class CommandRoute<TCommand> : MessageRoute
 /// <typeparam name="TCommand">Type of command being routed.</typeparam>
 /// <typeparam name="TResult">Result type of the command.</typeparam>
 /// <typeparam name="TRouteMeta">The type of metadata associated with the route.</typeparam>
-public class CommandRouteWithMeta<TCommand, TResult, TRouteMeta> : MessageRoute
-    where TCommand: ICommand<TResult>
+public class CommandRouteWithMeta<TCommand, TResult, TRouteMeta>() : MessageRoute(typeof(TCommand), typeof(TResult))
+    where TCommand : ICommand<TResult>
     where TRouteMeta : IRouteMeta<TCommand>, new()
 {
-    public new TRouteMeta RouteMeta { get; }
-    
-    public CommandRouteWithMeta() : base(typeof(TCommand), typeof(TResult))
-    {
-        RouteMeta = new TRouteMeta();
-    }
-    
+    public new TRouteMeta RouteMeta { get; } = new();
+
     /// <summary>
     /// Routes command to a consumer's handler with additional route metadata.
     /// </summary>
@@ -154,17 +145,12 @@ public class CommandRouteWithMeta<TCommand, TResult, TRouteMeta> : MessageRoute
 /// </summary>
 /// <typeparam name="TCommand">Type of command being routed.</typeparam>
 /// <typeparam name="TRouteMeta">The type of metadata associated with the route.</typeparam>
-public class CommandRouteWithMeta<TCommand, TRouteMeta> : MessageRoute
-    where TCommand: ICommand
-    where TRouteMeta: IRouteMeta<TCommand>, new()
+public class CommandRouteWithMeta<TCommand, TRouteMeta>() : MessageRoute(typeof(TCommand))
+    where TCommand : ICommand
+    where TRouteMeta : IRouteMeta<TCommand>, new()
 {
-    public new TRouteMeta RouteMeta { get; }
+    public new TRouteMeta RouteMeta { get; } = new();
 
-    public CommandRouteWithMeta() : base(typeof(TCommand))
-    {
-        RouteMeta = new TRouteMeta();
-    }
-    
     /// <summary>
     /// Routes command to a consumer's handler with additional route metadata.
     /// </summary>

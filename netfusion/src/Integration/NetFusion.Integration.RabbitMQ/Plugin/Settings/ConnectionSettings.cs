@@ -16,12 +16,7 @@ namespace NetFusion.Integration.RabbitMQ.Plugin.Settings
         /// <summary>
         /// One or more hosts associated with the connection.
         /// </summary>
-        public IList<HostSettings> Hosts { get; set;}
-
-        public ConnectionSettings()
-        {
-            Hosts = new List<HostSettings>();
-        }
+        public IList<HostSettings> Hosts { get; set; } = new List<HostSettings>();
 
         /// <summary>
         /// The connections heartbeat.  Defaults to 10.

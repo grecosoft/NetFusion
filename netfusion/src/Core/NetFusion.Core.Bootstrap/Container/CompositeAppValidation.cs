@@ -11,14 +11,9 @@ namespace NetFusion.Core.Bootstrap.Container;
 /// Validates the state of the  registered plugins before being
 /// used to build the composite-application.
 /// </summary>
-internal class CompositeAppValidation
+internal class CompositeAppValidation(IPlugin[] plugins)
 {
-    private readonly IPlugin[] _plugins;
-
-    public CompositeAppValidation(IPlugin[] plugins)
-    {
-        _plugins = plugins ?? throw new ArgumentNullException(nameof(plugins));
-    }
+    private readonly IPlugin[] _plugins = plugins ?? throw new ArgumentNullException(nameof(plugins));
 
     public void Validate()
     {

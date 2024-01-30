@@ -22,7 +22,7 @@ public class HalResourceProvider : IResourceProvider
     /// <param name="context">The context for the current response.</param>
     public void ApplyResourceMeta(ResourceContext context)
     {
-        if (context == null) throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
         if (context.Meta == null) throw new NullReferenceException("Context Metadata not set");
             
         if (context.Resource is not HalResource halResource || context.Meta.Links.Count == 0)

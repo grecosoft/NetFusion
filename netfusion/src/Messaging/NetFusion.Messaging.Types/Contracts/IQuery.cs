@@ -3,10 +3,7 @@
 /// <summary>
 /// Represents a query request that can be dispatched to a consumer.
 /// </summary>
-public interface IQuery : IMessage
-{
-    
-}
+public interface IQuery : IMessage;
 
 /// <summary>
 /// Represents a query request that can be dispatched to a consumer.

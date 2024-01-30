@@ -9,13 +9,8 @@ namespace NetFusion.Web.Rest.Server.Linking;
 /// 
 /// Example = $"http://services.customer/{model.CustomerId}"
 /// </summary>
-public abstract class InterpolatedLink : ResourceLink
+public abstract class InterpolatedLink(string relationName) : ResourceLink(relationName)
 {
-    protected InterpolatedLink(string relationName) : base(relationName)
-    {
-            
-    }
-        
     /// <summary>
     /// Returns the populated format string using the resource's model.
     /// </summary>

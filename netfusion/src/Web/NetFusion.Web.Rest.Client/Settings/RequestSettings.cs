@@ -40,7 +40,7 @@ public class RequestSettings : IRequestSettings
 
     public IRequestSettings GetMerged(IRequestSettings requestSettings)
     {
-        if (requestSettings == null) throw new ArgumentNullException(nameof(requestSettings));
+        ArgumentNullException.ThrowIfNull(requestSettings);
 
         return new RequestSettings
         {

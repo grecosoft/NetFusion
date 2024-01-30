@@ -194,8 +194,8 @@ public class ApiRequest
     /// <returns>Reference to the request.</returns>
     public ApiRequest Merge(IRequestSettings settings)
     {
-        if (settings == null) throw new ArgumentNullException(nameof(settings));
-            
+        ArgumentNullException.ThrowIfNull(settings);
+
         Settings = Settings.GetMerged(settings);
         return this;
     }
@@ -347,6 +347,6 @@ public class ApiRequest
 
     private static string RemoveOptionalRouteTokens(string populatedUrl)
     {
-        return populatedUrl?.Split(new[] { "/{?" }, StringSplitOptions.RemoveEmptyEntries)[0];
+        return populatedUrl?.Split(["/{?"], StringSplitOptions.RemoveEmptyEntries)[0];
     }
 }

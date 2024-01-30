@@ -5,6 +5,4 @@
 /// are deserialized.  When testing links, we only care about the links
 /// on the associated resource containing the model.  
 /// </summary>
-public class ClientModelStub
-{
-}
+public class ClientModelStub;

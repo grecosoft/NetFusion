@@ -26,7 +26,7 @@ internal class CompositeContainerBuilder : ICompositeContainerBuilder
         IConfiguration configuration,
         ITypeResolver typeResolver)
     {
-        if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+        ArgumentNullException.ThrowIfNull(configuration);
 
         _bootstrapLogger = bootstrapLoggerFactory.CreateLogger<CompositeContainerBuilder>();
         _serviceCollection = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
@@ -49,7 +49,7 @@ internal class CompositeContainerBuilder : ICompositeContainerBuilder
 
     public ICompositeContainerBuilder InitPluginConfig<T>(Action<T> configure) where T : IPluginConfig
     {
-        if (configure == null) throw new ArgumentNullException(nameof(configure));
+        ArgumentNullException.ThrowIfNull(configure);
 
         T config = _container.GetPluginConfig<T>();
         configure(config);

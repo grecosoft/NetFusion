@@ -5,7 +5,4 @@ namespace NetFusion.Web.Rest.Docs.Core.Descriptions;
 /// documentation to a REST Api action method document.  For example, comments
 /// stored within .NET code XML files can be queried and added to the model.
 /// </summary>
-public interface IDocDescription
-{
-
-}
+public interface IDocDescription;

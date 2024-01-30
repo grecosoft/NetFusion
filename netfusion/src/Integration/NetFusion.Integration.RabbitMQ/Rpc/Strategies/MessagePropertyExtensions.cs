@@ -9,8 +9,8 @@ namespace NetFusion.Integration.RabbitMQ.Rpc.Strategies;
 internal static class MessagePropertyExtensions
 {
     public const string RpcReplyBusName = "Rpc-reply-bus-name";
-    public const string RpcActionNamespace = "Rpc-action-namespace";
-    public const string RpcHeaderExceptionIndicator = "Rpc-exception-response";
+    private const string RpcActionNamespace = "Rpc-action-namespace";
+    private const string RpcHeaderExceptionIndicator = "Rpc-exception-response";
 
     /// <summary>
     /// When sending a RPC style message, a string value indicating the action is used
@@ -20,7 +20,7 @@ internal static class MessagePropertyExtensions
     /// <returns>The namespace associated with message.</returns>
     public static string? GetRpcActionNamespace(this MessageProperties messageProps)
     {
-        if (messageProps == null) throw new ArgumentNullException(nameof(messageProps));
+        ArgumentNullException.ThrowIfNull(messageProps);
 
         var headers = messageProps.Headers ?? new Dictionary<string, object>();
         if (! headers.TryGetValue(RpcActionNamespace, out object? value))
@@ -40,7 +40,7 @@ internal static class MessagePropertyExtensions
     /// <param name="actionNamespace">The namespace associated with message.</param>
     public static void SetRpcActionNamespace(this MessageProperties messageProps, string actionNamespace)
     {
-        if (messageProps == null) throw new ArgumentNullException(nameof(messageProps));
+        ArgumentNullException.ThrowIfNull(messageProps);
 
         if (string.IsNullOrWhiteSpace(actionNamespace))
             throw new ArgumentException("Action name not specified.", nameof(actionNamespace));
@@ -56,7 +56,7 @@ internal static class MessagePropertyExtensions
     /// <returns>True if RPC exception, otherwise False.</returns>
     public static string? GetRpcReplyException(this MessageProperties messageProps)
     {
-        if (messageProps == null) throw new ArgumentNullException(nameof(messageProps));
+        ArgumentNullException.ThrowIfNull(messageProps);
 
         var headers = messageProps.Headers ?? new Dictionary<string, object>();
         if (headers.TryGetValue(RpcHeaderExceptionIndicator, out object? value))
@@ -73,7 +73,7 @@ internal static class MessagePropertyExtensions
     /// <param name="value">True if the message body is an serialized exception.</param>
     public static void SetRpcReplyException(this MessageProperties messageProps, string value)
     {
-        if (messageProps == null) throw new ArgumentNullException(nameof(messageProps));
+        ArgumentNullException.ThrowIfNull(messageProps);
 
         messageProps.Headers ??= new Dictionary<string, object>();
         messageProps.Headers[RpcHeaderExceptionIndicator] = value;

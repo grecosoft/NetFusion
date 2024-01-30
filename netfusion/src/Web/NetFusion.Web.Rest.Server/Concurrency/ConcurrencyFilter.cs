@@ -16,15 +16,11 @@ namespace NetFusion.Web.Rest.Server.Concurrency;
 /// After the Api method is called, checks if the CurrentToken was recorded and sets as the ETag
 /// header on the response.  
 /// </summary>
-public class ConcurrencyFilter : IAsyncActionFilter
+public class ConcurrencyFilter(EntityContext concurrencyContext) : IAsyncActionFilter
 {
-    private readonly EntityContext _concurrencyContext;
-        
-    public ConcurrencyFilter(EntityContext concurrencyContext)
-    {
-        _concurrencyContext = concurrencyContext ?? throw new ArgumentNullException(nameof(concurrencyContext));
-    }
-    
+    private readonly EntityContext _concurrencyContext = concurrencyContext ??
+        throw new ArgumentNullException(nameof(concurrencyContext));
+
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         SetClientToken(context);

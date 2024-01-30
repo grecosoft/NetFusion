@@ -5,21 +5,15 @@ using NetFusion.Core.Bootstrap.Exceptions;
 
 namespace NetFusion.Messaging.Internal;
 
-public class MessageDispatcherService : IMessageDispatcherService
+public class MessageDispatcherService(ILogger<MessageDispatcherService> logger) : IMessageDispatcherService
 {
-    private readonly ILogger<MessageDispatcherService> _logger;
+    private readonly ILogger<MessageDispatcherService> _logger = logger;
 
-    public MessageDispatcherService(
-        ILogger<MessageDispatcherService> logger)
-    {
-        _logger = logger;
-    }
-    
     public async Task<object?> InvokeDispatcherInNewLifetimeScopeAsync(MessageDispatcher dispatcher, IMessage message,
         CancellationToken cancellationToken = default)
     {
-        if (dispatcher == null) throw new ArgumentNullException(nameof(dispatcher));
-        if (message == null) throw new ArgumentNullException(nameof(message));
+        ArgumentNullException.ThrowIfNull(dispatcher);
+        ArgumentNullException.ThrowIfNull(message);
 
         if (! message.GetType().CanAssignTo(dispatcher.MessageType))
         {

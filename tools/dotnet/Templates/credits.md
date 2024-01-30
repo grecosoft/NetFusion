@@ -1,1 +1,0 @@
-<a href="https://www.flaticon.com/free-icons/addon" title="addon icons">Addon icons created by Freepik - Flaticon</a>

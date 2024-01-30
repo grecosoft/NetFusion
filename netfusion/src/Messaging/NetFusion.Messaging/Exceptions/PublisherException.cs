@@ -78,7 +78,7 @@ public class PublisherException : NetFusionException
     public PublisherException(string message, IEventSource eventSource,
         IEnumerable<NetFusionException> exceptionDetails) : base(message)
     {
-        if (eventSource == null) throw new ArgumentNullException(nameof(eventSource));
+        ArgumentNullException.ThrowIfNull(eventSource);
 
         Details["EventSourceType"] = eventSource.GetType();
         SetChildExceptions(exceptionDetails);
@@ -94,8 +94,8 @@ public class PublisherException : NetFusionException
         AggregateException? aggregateException)
         : base(message, aggregateException)
     {
-        if (messagePublisher == null) throw new ArgumentNullException(nameof(messagePublisher));
-            
+        ArgumentNullException.ThrowIfNull(messagePublisher);
+
         Details["Publisher"] = messagePublisher.GetType().FullName!;
     }
     
@@ -103,8 +103,8 @@ public class PublisherException : NetFusionException
         AggregateException? aggregateException)
         : base(message, aggregateException)
     {
-        if (messagePublisher == null) throw new ArgumentNullException(nameof(messagePublisher));
-            
+        ArgumentNullException.ThrowIfNull(messagePublisher);
+
         Details["Publisher"] = messagePublisher.GetType().FullName!;
     }
         

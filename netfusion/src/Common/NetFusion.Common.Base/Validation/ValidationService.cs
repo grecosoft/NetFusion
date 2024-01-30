@@ -13,7 +13,7 @@ public class ValidationService : IValidationService
         if (obj == null) throw new ArgumentNullException(nameof(obj), 
             "Object to validate cannot be null.");
             
-        IObjectValidator validator = new ObjectValidator(obj);
+        ObjectValidator validator = new ObjectValidator(obj);
         return validator.Validate();
     }
 }

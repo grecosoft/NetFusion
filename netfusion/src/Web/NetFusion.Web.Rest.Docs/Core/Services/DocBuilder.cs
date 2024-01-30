@@ -35,9 +35,9 @@ public class DocBuilder : IDocBuilder
         IEnumerable<IDocDescription> docDescriptions,
         ITypeCommentService typeComments)
     {
-        if (docModule == null) throw new ArgumentNullException(nameof(docModule));
-        if (docDescriptions == null) throw new ArgumentNullException(nameof(docDescriptions));
-            
+        ArgumentNullException.ThrowIfNull(docModule);
+        ArgumentNullException.ThrowIfNull(docDescriptions);
+
         _resourceMediaModule = resourceMediaModule ?? throw new ArgumentNullException(nameof(resourceMediaModule));
         _apiMetadata = apiMetadata ?? throw new ArgumentNullException(nameof(apiMetadata));
         _typeComments = typeComments ?? throw new ArgumentNullException(nameof(typeComments));
@@ -52,8 +52,8 @@ public class DocBuilder : IDocBuilder
 
     public ApiActionDoc BuildActionDoc(ApiActionMeta actionMeta)
     {
-        if (actionMeta == null) throw new ArgumentNullException(nameof(actionMeta));
-            
+        ArgumentNullException.ThrowIfNull(actionMeta);
+
         // Create the root document associated with the action metadata.
         var actionDoc = CreateActionDoc(actionMeta);
             
