@@ -1,8 +1,0 @@
-version: '3'
-services:
-  nf:microservice-name:
-    build: .
-    ports:
-      - "[nf:container-port]:80"
-    environment:
-      -  ASPNETCORE_ENVIRONMENT=Development

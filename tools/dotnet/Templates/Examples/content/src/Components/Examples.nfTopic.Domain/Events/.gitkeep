@@ -1,4 +1,0 @@
-Domain Events are published to notify other application components of an updated resource.
-Messages published to one or more handlers to notify components of changes. The published
-domain event can be routed to an in-process handler or to a remote  handler contained within 
-another process by using the RabbitMQ, Azure Service Bus or Redis plugins.

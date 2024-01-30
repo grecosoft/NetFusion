@@ -1,2 +1,0 @@
-Entities are simple C# classes modeling the business logic contained within the solution
-being implemented.  Domain-entities should not have dependencies on application services.
