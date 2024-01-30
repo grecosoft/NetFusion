@@ -4,14 +4,10 @@ using Solution.Context.Infra.Plugin;
 using Solution.Context.WebApi.Plugin;
 using NetFusion.Core.Settings.Plugin;
 
-// Allows changing the minimum log level of the service at runtime.
-LogLevelControl logLevelControl = new();
-logLevelControl.SetMinimumLevel(LogLevel.Debug);
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure Logging:
-InitializeLogger(builder.Configuration);
+InitializeLogger();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(Log.Logger);
@@ -21,14 +17,17 @@ builder.Services.AddCors();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 
-// Register Log Level Control so it can be injected into
-// a service at runtime to change the level.
-builder.Services.AddLogLevelControl(logLevelControl);
+var bootstrapLoggerFactory = LoggerFactory.Create(config =>
+{ 
+    config.ClearProviders();
+    config.AddSerilog(Log.Logger);
+    config.SetMinimumLevel(LogLevel.Trace);
+});
 
 try
 {
     // Add Plugins to the Composite-Container:
-    builder.Services.CompositeContainer(builder.Configuration, new SerilogExtendedLogger())
+    builder.Services.CompositeContainer(builder.Configuration, bootstrapLoggerFactory, new SerilogExtendedLogger())
         .AddSettings()
 
         .AddPlugin<InfraPlugin>()
@@ -44,7 +43,7 @@ catch
 
 var app = builder.Build();
 
-string? viewerUrl = app.Configuration.GetValue<string>("Netfusion:ViewerUrl");
+var viewerUrl = app.Configuration.GetValue<string>("Netfusion:ViewerUrl");
 if (!string.IsNullOrWhiteSpace(viewerUrl))
 {
     app.UseCors(cors => cors.WithOrigins(viewerUrl)
@@ -59,7 +58,6 @@ app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();
-
 app.MapControllers();
 
 if (app.Environment.IsDevelopment())
@@ -82,9 +80,14 @@ lifetime.ApplicationStopping.Register(() =>
 var runTask = app.RunAsync();
 await compositeApp.StartAsync();
 await runTask;
+return;
 
-void InitializeLogger(IConfiguration configuration)
+void InitializeLogger()
 {
+    // Allows changing the minimum log level of the service at runtime.
+    LogLevelControl logLevelControl = new();
+    logLevelControl.SetMinimumLevel(LogLevel.Debug);
+    
     // Send any Serilog configuration issues logs to console.
     Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
     Serilog.Debugging.SelfLog.Enable(Console.Error);
@@ -101,11 +104,15 @@ void InitializeLogger(IConfiguration configuration)
 
     logConfig.WriteTo.Console(theme: AnsiConsoleTheme.Literate);
 
-    var seqUrl = configuration.GetValue<string>("logging:seqUrl");
+    var seqUrl = builder.Configuration.GetValue<string>("logging:seqUrl");
     if (!string.IsNullOrEmpty(seqUrl))
     {
         logConfig.WriteTo.Seq(seqUrl);
     }
 
     Log.Logger = logConfig.CreateLogger();
+    
+    // Register Log Level Control so it can be injected into
+    // a service at runtime to change the level.
+    builder.Services.AddLogLevelControl(logLevelControl);
 }
