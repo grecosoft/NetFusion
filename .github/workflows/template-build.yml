@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      buildVersion: '7.0.${{github.run_number}}'
+      buildVersion: '8.0.${{github.run_number}}'
       nugetAuthToken: ${{ secrets.NuGetAPIKey }}
 
     steps:
@@ -21,7 +21,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 7.0.200
+        dotnet-version: 8.0.101
 
     - name: Restore Microservice Template Dependencies
       run: dotnet restore $solutionRoot/microservice/src/Solution.Context.sln

@@ -3,7 +3,6 @@
 global using System.Diagnostics;
 global using Destructurama;
 global using NetFusion.Core.Bootstrap.Container;
-global using NetFusion.Core.Builder;
 global using NetFusion.Services.Serilog;
 global using NetFusion.Web.Extensions;
 global using Serilog;
