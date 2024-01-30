@@ -22,7 +22,7 @@ internal class CompositeContainer : ICompositeContainer
 {
     private readonly ILogger<CompositeContainer> _bootstrapLogger;
     
-    private readonly List<IPlugin> _plugins = new();
+    private readonly List<IPlugin> _plugins = [];
     private readonly CompositeAppBuilder _builder;
     
     public IServiceCollection ServiceCollection { get; }

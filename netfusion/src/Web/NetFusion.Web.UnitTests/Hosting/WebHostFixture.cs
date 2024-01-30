@@ -75,7 +75,7 @@ public class WebHostFixture
         return this;
     }
 
-    public WebHostFixture UsingAppSerivces(Action<IApplicationBuilder> appServices)
+    public WebHostFixture UsingAppServices(Action<IApplicationBuilder> appServices)
     {
         _appServicesConfig = appServices ?? throw new ArgumentNullException(nameof(appServices));
         return this;

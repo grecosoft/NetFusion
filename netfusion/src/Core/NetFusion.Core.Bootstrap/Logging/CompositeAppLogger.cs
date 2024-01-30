@@ -19,9 +19,9 @@ internal class CompositeAppLogger
 
     public CompositeAppLogger(ICompositeAppBuilder appBuilder)
     {
-        _appBuilder = appBuilder ?? throw new ArgumentNullException(nameof(appBuilder),
-            "Composite application builder cannot be null.");
-
+        ArgumentNullException.ThrowIfNull(appBuilder);
+        
+        _appBuilder = appBuilder;
         _services = appBuilder.ServiceCollection;
     }
 

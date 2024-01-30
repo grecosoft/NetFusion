@@ -39,17 +39,11 @@ namespace NetFusion.Web.Rest.Docs.Plugin;
 ///         "methods": ["POST"]
 ///     }
 /// </summary>
-public class ApiDocMiddleware
+public class ApiDocMiddleware(RequestDelegate next, IDocModule docModule)
 {
-    private readonly RequestDelegate _next;
-    private readonly IDocModule _docModule;
-        
-    public ApiDocMiddleware(RequestDelegate next, IDocModule docModule)
-    {
-        _next = next ?? throw new ArgumentNullException(nameof(next));
-        _docModule = docModule ?? throw new ArgumentNullException(nameof(docModule));
-    }
-        
+    private readonly RequestDelegate _next = next ?? throw new ArgumentNullException(nameof(next));
+    private readonly IDocModule _docModule = docModule ?? throw new ArgumentNullException(nameof(docModule));
+
     public async Task Invoke(HttpContext httpContext, IApiDocService apiDocService)
     {
         // Determine if the request matches the requirements for a query

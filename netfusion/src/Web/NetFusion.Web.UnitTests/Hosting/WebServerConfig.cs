@@ -6,16 +6,10 @@ namespace NetFusion.Web.UnitTests.Hosting;
 /// <summary>
 /// Allows the configuration of the built TestServer that can be acted on.
 /// </summary>
-public class WebServerConfig
+public class WebServerConfig(TestServer testServer, Func<IServiceProvider> providerFactory)
 {
-    private readonly TestServer _testServer;
-    private readonly Func<IServiceProvider> _providerFactory;
-        
-    public WebServerConfig(TestServer testServer, Func<IServiceProvider> providerFactory)
-    {
-        _testServer = testServer ?? throw new ArgumentNullException(nameof(testServer));
-        _providerFactory = providerFactory ?? throw new ArgumentNullException(nameof(providerFactory));
-    }
+    private readonly TestServer _testServer = testServer;
+    private readonly Func<IServiceProvider> _providerFactory = providerFactory;
 
     /// <summary>
     /// Allows any configurations to be made the the TestServer that will be used

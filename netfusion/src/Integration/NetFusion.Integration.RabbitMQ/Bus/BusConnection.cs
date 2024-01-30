@@ -37,7 +37,7 @@ public class BusConnection : IBusConnection
         _advancedBus = Bus.Advanced;
     }
     
-    private IBus CreateBus(ModuleContext moduleContext, ConnectionSettings conn)
+    private static IBus CreateBus(ModuleContext moduleContext, ConnectionSettings conn)
     {
         // Create an EasyNetQ connection configuration from application settings:
         ConnectionConfiguration connConfig = new ConnectionConfiguration {
@@ -112,7 +112,7 @@ public class BusConnection : IBusConnection
             await _advancedBus.BindAsync(exchange, queue, routeKey);
         }
         
-        if (! routeKeys.Any())
+        if (routeKeys.Length == 0)
         {
             await _advancedBus.BindAsync(exchange, queue, string.Empty);
         }

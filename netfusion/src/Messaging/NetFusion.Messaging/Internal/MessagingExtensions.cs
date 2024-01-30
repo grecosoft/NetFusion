@@ -38,9 +38,8 @@ namespace NetFusion.Messaging.Internal
 
         private static bool IsMessageHandlerMethod(MethodInfo methodInfo)
         {
-            return !methodInfo.IsStatic
-                && methodInfo.IsPublic
-                && HasValidParameterTypes(methodInfo);
+            return methodInfo is { IsStatic: false, IsPublic: true }
+                   && HasValidParameterTypes(methodInfo);
         }
 
         private static bool HasValidParameterTypes(MethodInfo methodInfo)
@@ -52,13 +51,9 @@ namespace NetFusion.Messaging.Internal
                 return true;
             }
 
-            if (paramTypes.Length == 2 && paramTypes[0].CanAssignTo<IMessage>()
-                && paramTypes[1].CanAssignTo<CancellationToken>() && methodInfo.IsTaskMethod())
-            {
-                return true;
-            }
-
-            return false;
+            return paramTypes.Length == 2 && paramTypes[0].CanAssignTo<IMessage>()
+                                          && paramTypes[1].CanAssignTo<CancellationToken>() 
+                                          && methodInfo.IsTaskMethod();
         }
 
         /// <summary>
@@ -80,11 +75,5 @@ namespace NetFusion.Messaging.Internal
                     : new ConsumerRoute(messageType, mi.ReturnType, mi);
             });
         }
-
-        private static bool IsInProcessHandler(MethodInfo methodInfo) =>
-            methodInfo.HasAttribute<InProcessHandlerAttribute>();
-        
-        private static bool IncludeDerivedTypes(ParameterInfo parameterInfo) =>
-            parameterInfo.HasAttribute<IncludeDerivedMessagesAttribute>();
     }
 }

@@ -9,15 +9,10 @@ namespace NetFusion.Core.TestFixtures.Container;
 /// <summary>
 /// Contains methods for arranging the container under test.
 /// </summary>
-public class ContainerArrange
+public class ContainerArrange(ContainerFixture fixture)
 {
-    private readonly ContainerFixture _fixture;
+    private readonly ContainerFixture _fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
 
-    public ContainerArrange(ContainerFixture fixture)
-    {
-        _fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
-    }
-        
     /// <summary>
     /// Configures the configuration-builder with settings required for the container under-test.
     /// </summary>

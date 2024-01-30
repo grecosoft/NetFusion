@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using NetFusion.Web.Rest.Resources;
@@ -21,10 +22,5 @@ public class MockUnitTestService : IMockedService
     public int ReturnsStatusCode { get; set; } = StatusCodes.Status200OK;
 
 
-    public MockUnitTestService()
-    {
-        Customers = new CustomerModel[] { };
-    }
-
-    public IEnumerable<CustomerModel> Customers { get; set; }
+    public IEnumerable<CustomerModel> Customers { get; set; } = Array.Empty<CustomerModel>();
 }

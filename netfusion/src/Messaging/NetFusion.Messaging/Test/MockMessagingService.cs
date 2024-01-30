@@ -99,8 +99,8 @@ public class MockMessagingService : IMessagingService
     public Task SendAsync(ICommand command, IntegrationTypes integrationType,
         CancellationToken cancellationToken)
     {
-        if (command == null) throw new ArgumentNullException(nameof(command));
-            
+        ArgumentNullException.ThrowIfNull(command);
+
         _receivedRequests.Add(command);
         return Task.CompletedTask;
     }
@@ -108,8 +108,8 @@ public class MockMessagingService : IMessagingService
     public Task<TResult> SendAsync<TResult>(ICommand<TResult> command, IntegrationTypes integrationType,
         CancellationToken cancellationToken)
     {
-        if (command == null) throw new ArgumentNullException(nameof(command));
-            
+        ArgumentNullException.ThrowIfNull(command);
+
         _receivedRequests.Add(command);
             
         object response = GetCommandResponse(command);
@@ -119,8 +119,8 @@ public class MockMessagingService : IMessagingService
     public Task PublishAsync(IDomainEvent domainEvent, IntegrationTypes integrationType,
         CancellationToken cancellationToken)
     {
-        if (domainEvent == null) throw new ArgumentNullException(nameof(domainEvent));
-            
+        ArgumentNullException.ThrowIfNull(domainEvent);
+
         _receivedRequests.Add(domainEvent);
         return Task.CompletedTask;
     }
@@ -134,8 +134,8 @@ public class MockMessagingService : IMessagingService
     public Task PublishAsync(IEventSource eventSource, IntegrationTypes integrationType,
         CancellationToken cancellationToken)
     {
-        if (eventSource == null) throw new ArgumentNullException(nameof(eventSource));
-            
+        ArgumentNullException.ThrowIfNull(eventSource);
+
         _receivedRequests.Add(eventSource.DomainEvents);
         return Task.CompletedTask;
     }
@@ -143,8 +143,8 @@ public class MockMessagingService : IMessagingService
     public Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, 
         CancellationToken cancellationToken)
     {
-        if (query == null) throw new ArgumentNullException(nameof(query));
-            
+        ArgumentNullException.ThrowIfNull(query);
+
         _receivedRequests.Add(query);
             
         object response = GetQueryResponse(query);

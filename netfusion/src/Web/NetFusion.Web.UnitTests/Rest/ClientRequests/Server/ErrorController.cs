@@ -6,14 +6,9 @@ using NetFusion.Web.UnitTests.Mocks;
 namespace NetFusion.Web.UnitTests.Rest.ClientRequests.Server;
 
 [ApiController, Route("api/error")]
-public class ErrorController : ControllerBase
+public class ErrorController(IMockedService mockedService) : ControllerBase
 {
-    private readonly IMockedService _mockedService;
-
-    public ErrorController(IMockedService mockedService)
-    {
-        _mockedService = mockedService;
-    }
+    private readonly IMockedService _mockedService = mockedService;
 
     [HttpGet("server/side")]
     public void ServerSideError()

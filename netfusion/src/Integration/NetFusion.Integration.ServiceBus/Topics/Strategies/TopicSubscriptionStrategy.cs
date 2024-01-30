@@ -13,23 +13,17 @@ namespace NetFusion.Integration.ServiceBus.Topics.Strategies;
 /// published by another microservice.  The created subscription can have a set of roles used to determine
 /// if domain-events published to the topic should be delivered to the subscription. 
 /// </summary>
-internal class TopicSubscriptionStrategy : BusEntityStrategyBase<NamespaceEntityContext>,
-    IBusEntityCreationStrategy,
-    IBusEntitySubscriptionStrategy,
-    IBusEntityDisposeStrategy
+internal class TopicSubscriptionStrategy(SubscriptionEntity subscription, MessageDispatcher dispatcher)
+    : BusEntityStrategyBase<NamespaceEntityContext>(subscription),
+        IBusEntityCreationStrategy,
+        IBusEntitySubscriptionStrategy,
+        IBusEntityDisposeStrategy
 {
-    private readonly SubscriptionEntity _subscription;
-    private readonly MessageDispatcher _dispatcher;
+    private readonly SubscriptionEntity _subscription = subscription;
+    private readonly MessageDispatcher _dispatcher = dispatcher;
 
     private ServiceBusProcessor? _subscriptionProcessor;
 
-    public TopicSubscriptionStrategy(SubscriptionEntity subscription, MessageDispatcher dispatcher) :
-        base(subscription)
-    {
-        _subscription = subscription;
-        _dispatcher = dispatcher;
-    }
-    
     private ILogger<TopicSubscriptionStrategy> Logger => 
         Context.LoggerFactory.CreateLogger<TopicSubscriptionStrategy>();
 

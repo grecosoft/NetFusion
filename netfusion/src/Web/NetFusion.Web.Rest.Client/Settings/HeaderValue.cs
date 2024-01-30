@@ -24,7 +24,7 @@ public class HeaderValue
 			throw new ArgumentException("At least one header value required.", nameof(value));
 		}
 
-		if (quality != null && quality < 0)
+		if (quality is < 0)
 		{
 			throw new ArgumentException("Quality value must be greater than zero.", nameof(quality));
 		}

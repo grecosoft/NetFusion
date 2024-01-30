@@ -6,16 +6,12 @@ namespace NetFusion.Web.Rest.Client.Core;
 /// <summary>
 /// Provides caching an other high-level services.
 /// </summary>
-public class RestClientService : IRestClientService
+public class RestClientService(IRestClientFactory clientFactory) : IRestClientService
 {
-    private readonly ConcurrentDictionary<string, IRestClient> _restClients;
-    private readonly IRestClientFactory _clientFactory;
-
-    public RestClientService(IRestClientFactory clientFactory)
-    {
-        _restClients = new ConcurrentDictionary<string, IRestClient>();
-        _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
-    }
+    private readonly ConcurrentDictionary<string, IRestClient> _restClients = new();
+    
+    private readonly IRestClientFactory _clientFactory = clientFactory ?? 
+        throw new ArgumentNullException(nameof(clientFactory));
 
     public IRestClient GetClient(string name)
     {

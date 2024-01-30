@@ -259,8 +259,7 @@ public class EntityScriptingService : IEntityScriptingService
         {
             throw new InvalidOperationException(
                 $"After the predicate script named: {predicate.ScriptName} was executed, " + 
-                $"the expected predicate attribute named: {predicate.AttributeName} was not" +
-                "calculated.");
+                $"the expected predicate attribute named: {predicate.AttributeName} was calculated.");
         }
 
         object? value = attributedEntity.Attributes.GetValue(predicate.AttributeName);

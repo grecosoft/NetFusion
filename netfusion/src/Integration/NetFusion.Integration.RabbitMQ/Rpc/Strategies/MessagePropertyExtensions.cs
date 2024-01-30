@@ -9,8 +9,8 @@ namespace NetFusion.Integration.RabbitMQ.Rpc.Strategies;
 internal static class MessagePropertyExtensions
 {
     public const string RpcReplyBusName = "Rpc-reply-bus-name";
-    public const string RpcActionNamespace = "Rpc-action-namespace";
-    public const string RpcHeaderExceptionIndicator = "Rpc-exception-response";
+    private const string RpcActionNamespace = "Rpc-action-namespace";
+    private const string RpcHeaderExceptionIndicator = "Rpc-exception-response";
 
     /// <summary>
     /// When sending a RPC style message, a string value indicating the action is used

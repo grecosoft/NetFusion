@@ -6,11 +6,9 @@ namespace NetFusion.Messaging.Routing;
 /// Message pattern used to route a domain-event to a consumer.
 /// </summary>
 /// <typeparam name="TDomainEvent">Type of domain-event being routed.</typeparam>
-public class DomainEventRoute<TDomainEvent> : MessageRoute
-    where TDomainEvent: IDomainEvent
+public class DomainEventRoute<TDomainEvent>() : MessageRoute(typeof(TDomainEvent))
+    where TDomainEvent : IDomainEvent
 {
-    public DomainEventRoute(): base(typeof(TDomainEvent)) { }
-    
     /// <summary>
     /// Routes domain-event to a consumer's handler.
     /// </summary>
@@ -50,17 +48,12 @@ public class DomainEventRoute<TDomainEvent> : MessageRoute
 /// </summary>
 /// <typeparam name="TDomainEvent">Type of domain-event being routed.</typeparam>
 /// <typeparam name="TRouteMeta">The type of metadata associated with the route.</typeparam>
-public class DomainRouteWithMeta<TDomainEvent, TRouteMeta> : MessageRoute
-    where TDomainEvent: IDomainEvent
-    where TRouteMeta: IRouteMeta<TDomainEvent>, new()
+public class DomainRouteWithMeta<TDomainEvent, TRouteMeta>() : MessageRoute(typeof(TDomainEvent))
+    where TDomainEvent : IDomainEvent
+    where TRouteMeta : IRouteMeta<TDomainEvent>, new()
 {
-    public new TRouteMeta RouteMeta { get; }
+    public new TRouteMeta RouteMeta { get; } = new();
 
-    public DomainRouteWithMeta() : base(typeof(TDomainEvent))
-    {
-        RouteMeta = new TRouteMeta();
-    }
-    
     /// <summary>
     /// Routes domain-event to a consumer's handler with additional route metadata.
     /// </summary>

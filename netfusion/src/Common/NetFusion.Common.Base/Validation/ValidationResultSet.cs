@@ -110,7 +110,7 @@ public class ValidationResultSet
             validator.Object,
             validator.Validations.ToArray());
 
-        if (result.Validations.Any())
+        if (result.Validations.Length != 0)
         {
             validations.Add(result);
         }

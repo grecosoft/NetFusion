@@ -29,8 +29,8 @@ public static class HalResourceExtensions
     /// <returns>True if found.  Otherwise, False.</returns>
     public static bool HasLink(this HalResource resource, string named)
     {
-        if (resource == null) throw new ArgumentNullException(nameof(resource));
-            
+        ArgumentNullException.ThrowIfNull(resource);
+
         if (string.IsNullOrWhiteSpace(named))
             throw new ArgumentException("Name of link not specified.", nameof(named));
 
@@ -62,8 +62,8 @@ public static class HalResourceExtensions
     /// <returns>True if the link is found.  Otherwise False.</returns>
     public static bool TryGetLink(this HalResource resource, string named, out Link link)
     {
-        if (resource == null) throw new ArgumentNullException(nameof(resource));
-            
+        ArgumentNullException.ThrowIfNull(resource);
+
         if (string.IsNullOrWhiteSpace(named)) 
             throw new ArgumentException("Link name not specified.", nameof(named));
 
@@ -79,8 +79,8 @@ public static class HalResourceExtensions
     /// <returns>True if found.  Otherwise, False.</returns>
     public static bool HasEmbedded(this HalResource resource, string named)
     {
-        if (resource == null) throw new ArgumentNullException(nameof(resource));
-            
+        ArgumentNullException.ThrowIfNull(resource);
+
         if (string.IsNullOrWhiteSpace(named))
             throw new ArgumentException("Name of embedded resource not provided.", nameof(named));
             
@@ -118,8 +118,8 @@ public static class HalResourceExtensions
         out TChildModel model)
         where TChildModel: class
     {
-        if (resource == null) throw new ArgumentNullException(nameof(resource));
-            
+        ArgumentNullException.ThrowIfNull(resource);
+
         if (string.IsNullOrWhiteSpace(named))
             throw new ArgumentException("Name of embedded model not specified.", nameof(named));
 
@@ -128,7 +128,7 @@ public static class HalResourceExtensions
         {
             return false;
         }
-            
+                
         // Check if the embedded resource has been deserialized from the base JsonElement
         // representation and return it.
         if (resource.Embedded[named] is TChildModel embeddedItem)
@@ -257,8 +257,8 @@ public static class HalResourceExtensions
         out IEnumerable<HalResource<TChildModel>> embeddedResources)
         where TChildModel: class
     {
-        if (resource == null) throw new ArgumentNullException(nameof(resource));
-            
+        ArgumentNullException.ThrowIfNull(resource);
+
         if (string.IsNullOrWhiteSpace(named))
             throw new ArgumentException("Name of embedded resource collection not provided.", nameof(named));
 
@@ -325,8 +325,8 @@ public static class HalResourceExtensions
         string named, out IEnumerable<TChildModel> embeddedModels)
         where TChildModel: class
     {
-        if (resource == null) throw new ArgumentNullException(nameof(resource));
-            
+        ArgumentNullException.ThrowIfNull(resource);
+
         if (string.IsNullOrWhiteSpace(named))
             throw new ArgumentException("Name of embedded model collection not provided.", nameof(named));
 

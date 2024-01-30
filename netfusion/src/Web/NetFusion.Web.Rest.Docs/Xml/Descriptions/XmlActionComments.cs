@@ -9,14 +9,10 @@ namespace NetFusion.Web.Rest.Docs.Xml.Descriptions;
 /// Sets the comments associated with a given Web Controller's action method
 /// from a .NET Code Comment XML file.
 /// </summary>
-public class XmlActionComments : IActionDescription
+public class XmlActionComments(IXmlCommentService xmlComments) : IActionDescription
 {
-    private readonly IXmlCommentService _xmlComments;
-
-    public XmlActionComments(IXmlCommentService xmlComments)
-    {
-        _xmlComments = xmlComments ?? throw new ArgumentNullException(nameof(xmlComments));
-    }
+    private readonly IXmlCommentService _xmlComments = xmlComments ?? 
+        throw new ArgumentNullException(nameof(xmlComments));
 
     public void Describe(ApiActionDoc actionDoc, ApiActionMeta actionMeta)
     {

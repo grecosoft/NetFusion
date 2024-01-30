@@ -6,15 +6,11 @@ namespace NetFusion.Integration.ServiceBus.Plugin.Settings;
 /// Responsible for applying namespace entity settings stored externally to the corresponding
 /// namespace entity defined within code.
 /// </summary>
-public class ExternalEntitySettings
+public class ExternalEntitySettings(NamespaceSettings namespaceSettings)
 {
-    private readonly NamespaceSettings _namespaceSettings;
+    private readonly NamespaceSettings _namespaceSettings = namespaceSettings ?? 
+        throw new ArgumentNullException(nameof(namespaceSettings));
 
-    public ExternalEntitySettings(NamespaceSettings namespaceSettings)
-    {
-        _namespaceSettings = namespaceSettings ?? throw new ArgumentNullException(nameof(namespaceSettings));
-    }
-    
     public void ApplyQueueSettings(string queueName, CreateQueueOptions queueOptions)
     {
         ArgumentNullException.ThrowIfNull(queueOptions);

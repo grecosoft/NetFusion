@@ -13,24 +13,17 @@ namespace NetFusion.Messaging.Internal;
 /// This is the default message publisher that dispatches messages locally
 /// to message handlers contained within the current microservice process.
 /// </summary>
-public class InProcessPublisher : IMessagePublisher
+public class InProcessPublisher(
+    ILogger<InProcessPublisher> logger,
+    IServiceProvider services,
+    IMessageDispatchModule messagingModule,
+    IMessageLogger messageLogger)
+    : IMessagePublisher
 {
-    private readonly ILogger<InProcessPublisher> _logger;
-    private readonly IServiceProvider _services;
-    private readonly IMessageDispatchModule _messagingModule;
-    private readonly IMessageLogger _messageLogger;
-
-    public InProcessPublisher(
-        ILogger<InProcessPublisher> logger,
-        IServiceProvider services,
-        IMessageDispatchModule messagingModule,
-        IMessageLogger messageLogger)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _services = services ?? throw new ArgumentNullException(nameof(services));
-        _messagingModule = messagingModule ?? throw new ArgumentNullException(nameof(messagingModule));
-        _messageLogger = messageLogger ?? throw new ArgumentNullException(nameof(messageLogger));
-    }
+    private readonly ILogger<InProcessPublisher> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly IServiceProvider _services = services ?? throw new ArgumentNullException(nameof(services));
+    private readonly IMessageDispatchModule _messagingModule = messagingModule ?? throw new ArgumentNullException(nameof(messagingModule));
+    private readonly IMessageLogger _messageLogger = messageLogger ?? throw new ArgumentNullException(nameof(messageLogger));
 
     // Not used by the implementation, but other plug-ins can use the integration type to apply
     // a subset of the publishers.  i.e. In a unit-of-work, you might want to deliver domain-events

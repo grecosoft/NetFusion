@@ -10,15 +10,11 @@ namespace NetFusion.Integration.ServiceBus.Queues.Strategies;
 /// Strategy that creates a queue to with commands can be sent from other
 /// microservices for processing.
 /// </summary>
-internal class QueueCreationStrategy : BusEntityStrategyBase<NamespaceEntityContext>,
-    IBusEntityCreationStrategy
+internal class QueueCreationStrategy(QueueEntity queueEntity)
+    : BusEntityStrategyBase<NamespaceEntityContext>(queueEntity),
+        IBusEntityCreationStrategy
 {
-    private readonly QueueEntity _queueEntity;
-
-    public QueueCreationStrategy(QueueEntity queueEntity) : base(queueEntity)
-    {
-        _queueEntity = queueEntity;
-    }
+    private readonly QueueEntity _queueEntity = queueEntity;
 
     [Description("Creating Queue to which Commands can be sent for processing.")]
     public Task CreateEntity()

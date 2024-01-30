@@ -7,7 +7,6 @@ using Microsoft.Extensions.Options;
 using NetFusion.Common.Extensions.Reflection;
 using NetFusion.Core.Bootstrap.Catalog;
 using NetFusion.Core.Bootstrap.Plugins;
-using NetFusion.Settings;
 
 namespace NetFusion.Core.Settings.Plugin.Modules;
 

@@ -11,16 +11,11 @@ namespace NetFusion.Web.Metadata.Core;
 /// <summary>
 /// Service returning metadata for an MVC applications defined controllers and routes.
 /// </summary>
-public class ApiMetadataService : IApiMetadataService
+public class ApiMetadataService(IApiDescriptionGroupCollectionProvider apiDescriptionProvider)
+    : IApiMetadataService
 {
-    private readonly ApiActionMeta[] _apiActionMeta;
+    private readonly ApiActionMeta[] _apiActionMeta = QueryApiActionMeta(apiDescriptionProvider);
 
-    public ApiMetadataService(
-        IApiDescriptionGroupCollectionProvider apiDescriptionProvider)
-    {
-        _apiActionMeta = QueryApiActionMeta(apiDescriptionProvider);
-    }
-        
     private static ApiActionMeta[] QueryApiActionMeta(IApiDescriptionGroupCollectionProvider descriptionProvider)
     {
         var metadata = descriptionProvider.ApiDescriptionGroups.Items.SelectMany(gi => gi.Items)
@@ -69,7 +64,7 @@ public class ApiMetadataService : IApiMetadataService
             throw new ArgumentException("Relative Path not specified.", nameof(relativePath));
 
         actionMeta = _apiActionMeta.FirstOrDefault(ad => 
-            ad.HttpMethod == httpMethod.ToUpper() && 
+            ad.HttpMethod.Equals(httpMethod, StringComparison.CurrentCultureIgnoreCase) && 
             ad.RelativePath == relativePath);
 
         return actionMeta != null;

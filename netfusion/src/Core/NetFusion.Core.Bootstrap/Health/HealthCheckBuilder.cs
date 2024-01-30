@@ -53,7 +53,7 @@ internal class HealthCheckBuilder
         return appHealthCheck;
     }
 
-    private async Task AddModuleHeathChecks(PluginHeathCheck pluginHealthCheck,
+    private static async Task AddModuleHeathChecks(PluginHeathCheck pluginHealthCheck,
         IEnumerable<IModuleHealthCheckProvider> modules)
     {
         foreach (IModuleHealthCheckProvider module in modules)

@@ -8,14 +8,6 @@ namespace NetFusion.Integration.Bus;
 public class BusException : NetFusionException
 {
     /// <summary>
-    /// Default Constructor.
-    /// </summary>
-    public BusException()
-    {
-
-    }
-
-    /// <summary>
     /// Constructor.
     /// </summary>
     /// <param name="message">Message describing the exception.</param>

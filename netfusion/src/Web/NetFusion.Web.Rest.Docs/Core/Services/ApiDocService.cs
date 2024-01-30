@@ -8,18 +8,16 @@ namespace NetFusion.Web.Rest.Docs.Core.Services;
 /// <summary>
 /// Main entry service responsible for returning documentation for controller's action methods.
 /// </summary>
-public class ApiDocService : IApiDocService
+public class ApiDocService(
+    IApiMetadataService apiMetadata,
+    IDocBuilder docBuilder)
+    : IApiDocService
 {
-    private readonly IApiMetadataService _apiMetadata;
-    private readonly IDocBuilder _docBuilder;
-
-    public ApiDocService(
-        IApiMetadataService apiMetadata,
-        IDocBuilder docBuilder)
-    {
-        _apiMetadata = apiMetadata ?? throw new ArgumentNullException(nameof(apiMetadata));
-        _docBuilder = docBuilder ?? throw new ArgumentNullException(nameof(docBuilder));
-    }
+    private readonly IApiMetadataService _apiMetadata = apiMetadata ??
+        throw new ArgumentNullException(nameof(apiMetadata));
+    
+    private readonly IDocBuilder _docBuilder = docBuilder ?? 
+        throw new ArgumentNullException(nameof(docBuilder));
 
     public bool TryGetActionDoc(MethodInfo actionMethodInfo, out ApiActionDoc actionDoc)
     {

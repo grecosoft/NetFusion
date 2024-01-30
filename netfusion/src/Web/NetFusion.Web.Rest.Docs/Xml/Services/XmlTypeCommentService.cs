@@ -15,14 +15,10 @@ namespace NetFusion.Web.Rest.Docs.Xml.Services;
 /// Provides an implementation of the ITypeCommentService used to document types
 /// based on XML comment files.
 /// </summary>
-public class XmlTypeCommentService : ITypeCommentService
+public class XmlTypeCommentService(IXmlCommentService xmlComments) : ITypeCommentService
 {
-    private readonly IXmlCommentService _xmlComments;
-
-    public XmlTypeCommentService(IXmlCommentService xmlComments)
-    {
-        _xmlComments = xmlComments ?? throw new ArgumentNullException(nameof(xmlComments));
-    }
+    private readonly IXmlCommentService _xmlComments = xmlComments ?? 
+        throw new ArgumentNullException(nameof(xmlComments));
 
     public ApiResourceDoc GetResourceDoc(Type resourceType)
     {

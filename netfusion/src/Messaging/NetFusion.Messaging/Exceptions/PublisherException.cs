@@ -78,7 +78,7 @@ public class PublisherException : NetFusionException
     public PublisherException(string message, IEventSource eventSource,
         IEnumerable<NetFusionException> exceptionDetails) : base(message)
     {
-        if (eventSource == null) throw new ArgumentNullException(nameof(eventSource));
+        ArgumentNullException.ThrowIfNull(eventSource);
 
         Details["EventSourceType"] = eventSource.GetType();
         SetChildExceptions(exceptionDetails);

@@ -138,29 +138,19 @@ public class ApiResponse
 /// Derived ApiResponse with the body deserialized into typed content.
 /// </summary>
 /// <typeparam name="TContent">The type of the response content.</typeparam>
-public class ApiResponse<TContent> : ApiResponse
+public class ApiResponse<TContent>(HttpResponseMessage responseMsg, TContent content)
+    : ApiResponse(responseMsg, content)
     where TContent : class
 {
-    public TContent Content { get; }    
-
-    public ApiResponse(HttpResponseMessage responseMsg, TContent content) 
-        : base(responseMsg, content)
-    {
-        Content = content;
-    }
+    public TContent Content { get; } = content;
 }
 
 /// <summary>
 /// Derived ApiResponse that supporting HAL based resource responses.
 /// </summary>
-public class ApiHalResponse<TModel> : ApiResponse
+public class ApiHalResponse<TModel>(HttpResponseMessage responseMsg, HalResource<TModel> resource)
+    : ApiResponse(responseMsg, resource)
     where TModel : class
 {
-    public HalResource<TModel> Resource { get; }
-
-    public ApiHalResponse(HttpResponseMessage responseMsg, HalResource<TModel> resource)
-        : base(responseMsg, resource)
-    {
-        Resource = resource;
-    }        
+    public HalResource<TModel> Resource { get; } = resource;
 }

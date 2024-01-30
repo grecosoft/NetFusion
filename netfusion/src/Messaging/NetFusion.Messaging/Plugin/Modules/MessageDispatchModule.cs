@@ -87,8 +87,8 @@ public class MessageDispatchModule : PluginModule,
         
     public IEnumerable<MessageDispatcher> GetMessageDispatchers(IMessage message)
     {
-        if (message == null) throw new ArgumentNullException(nameof(message));
-        
+        ArgumentNullException.ThrowIfNull(message);
+
         return HandlersForMessage(message.GetType())
             .Where(di => di.MessagePredicate?.Invoke(message) ?? true);
     }
@@ -108,15 +108,11 @@ public class MessageDispatchModule : PluginModule,
         {
             return pipeline;
         }
-        
+
         // No publisher specific resilience pipeline.  Check if a default publisher
         // pipeline is registered;
-        if (DispatchConfig.ResiliencePipelines.TryGetValue(typeof(IMessagePublisher), out var defaultPipeline))
-        {
-            return defaultPipeline;
-        }
-
-        return null;
+        return DispatchConfig.ResiliencePipelines.TryGetValue(typeof(IMessagePublisher), out var defaultPipeline) 
+            ? defaultPipeline : null;
     }
 
     // ---------------------- [Logging] ----------------------

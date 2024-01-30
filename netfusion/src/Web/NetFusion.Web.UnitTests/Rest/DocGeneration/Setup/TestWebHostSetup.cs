@@ -17,7 +17,7 @@ public static class TestWebHostSetup
     public static WebServerConfig ArrangeForRestDocs(this WebHostFixture fixture)
     {
         return fixture
-            .UsingAppSerivces(appBuilder => appBuilder.UseRestDocs())
+            .UsingAppServices(appBuilder => appBuilder.UseRestDocs())
             .ComposedFrom(compose =>
             {
                 compose.AddRest();

@@ -7,18 +7,10 @@ namespace NetFusion.Integration.RabbitMQ.Internal;
 /// Extends the base messaging pipeline and publishes command and domain-events
 /// for which there are defined queues and exchanges.
 /// </summary>
-public class RabbitMqPublisher : IMessagePublisher
+public class RabbitMqPublisher(ILogger<RabbitMqPublisher> logger, IBusEntityModule busEntityModule) : IMessagePublisher
 {
-    private readonly ILogger<RabbitMqPublisher> _logger;
-    private readonly IBusEntityModule _busEntityModule;
-
-    public RabbitMqPublisher(
-        ILogger<RabbitMqPublisher> logger,
-        IBusEntityModule busEntityModule)
-    {
-        _logger = logger;
-        _busEntityModule = busEntityModule;
-    }
+    private readonly ILogger<RabbitMqPublisher> _logger = logger;
+    private readonly IBusEntityModule _busEntityModule = busEntityModule;
     
     public IntegrationTypes IntegrationType => IntegrationTypes.External;
     

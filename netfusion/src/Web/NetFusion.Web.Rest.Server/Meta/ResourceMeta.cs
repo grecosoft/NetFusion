@@ -26,7 +26,7 @@ public class ResourceMeta<TSource, TResourceMeta> : IResourceMeta
     /// </summary>
     public IReadOnlyCollection<ResourceLink> Links { get; }
 
-    private readonly List<ResourceLink> _links = new();
+    private readonly List<ResourceLink> _links = [];
 
     protected ResourceMeta()
     {

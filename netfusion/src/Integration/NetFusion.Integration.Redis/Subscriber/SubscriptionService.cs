@@ -7,22 +7,16 @@ using NetFusion.Messaging.Types.Contracts;
 
 namespace NetFusion.Integration.Redis.Subscriber;
 
-public class SubscriptionService : ISubscriptionService
+public class SubscriptionService(
+    ILogger<SubscriptionService> logger,
+    IConnectionModule connModule,
+    ISerializationManager serialization)
+    : ISubscriptionService
 {
-    private readonly ILogger<SubscriptionService> _logger;
-    private readonly IConnectionModule _connModule;
-    private readonly ISerializationManager _serialization;
+    private readonly ILogger<SubscriptionService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly IConnectionModule _connModule = connModule ?? throw new ArgumentNullException(nameof(connModule));
+    private readonly ISerializationManager _serialization = serialization ?? throw new ArgumentNullException(nameof(serialization));
 
-    public SubscriptionService(
-        ILogger<SubscriptionService> logger,
-        IConnectionModule connModule,
-        ISerializationManager serialization)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _connModule = connModule ?? throw new ArgumentNullException(nameof(connModule));
-        _serialization = serialization ?? throw new ArgumentNullException(nameof(serialization));
-    }
-    
     public void Subscribe<TDomainEvent>(string database, string channelName, Action<TDomainEvent> handler) 
         where TDomainEvent : IDomainEvent
     {

@@ -11,12 +11,8 @@ using NetFusion.Messaging.Types;
 
 namespace NetFusion.Integration.RabbitMQ;
 
-public abstract class RabbitMqRouterBase : BusRouterBase
+public abstract class RabbitMqRouterBase(string busName) : BusRouterBase(busName)
 {
-    protected RabbitMqRouterBase(string busName) : base(busName)
-    {
-    }
-    
     // -- Work Queue Message Patterns (Defining Microservice) ---
 
     /// <summary>

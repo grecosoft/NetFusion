@@ -11,21 +11,16 @@ namespace NetFusion.Integration.ServiceBus.Queues;
 /// the command saves it for later processing and needs to send a response to the
 /// originating microservice.
 /// </summary>
-internal class QueueResponseService: IQueueResponseService
+internal class QueueResponseService(
+    ILogger<QueueResponseService> logger,
+    INamespaceModule namespaceModule,
+    ISerializationManager serialization)
+    : IQueueResponseService
 {
-    private readonly ILogger<QueueResponseService> _logger;
-    private readonly INamespaceModule _namespaceModule;
-    private readonly ISerializationManager _serialization;
-    
-    public QueueResponseService(ILogger<QueueResponseService> logger,
-        INamespaceModule namespaceModule, 
-        ISerializationManager serialization)
-    {
-        _logger = logger;
-        _namespaceModule = namespaceModule;
-        _serialization = serialization;
-    }
-    
+    private readonly ILogger<QueueResponseService> _logger = logger;
+    private readonly INamespaceModule _namespaceModule = namespaceModule;
+    private readonly ISerializationManager _serialization = serialization;
+
     public async Task RespondToSenderAsync(ICommand command, ICommand response)
     {
         if (command == null) throw new ArgumentNullException(nameof(command));

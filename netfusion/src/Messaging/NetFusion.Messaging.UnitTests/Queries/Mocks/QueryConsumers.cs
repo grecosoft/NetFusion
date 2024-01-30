@@ -2,21 +2,14 @@
 
 namespace NetFusion.Messaging.UnitTests.Queries.Mocks;
 
-public abstract class MockQueryConsumer
+public abstract class MockQueryConsumer(IMockTestLog testLog)
 {
-    protected IMockTestLog TestLog { get; }
-
-    protected MockQueryConsumer(IMockTestLog testLog)
-    {
-        TestLog = testLog;
-    }
+    protected IMockTestLog TestLog { get; } = testLog;
 }
     
-public class MockSyncQueryConsumer : MockQueryConsumer,
+public class MockSyncQueryConsumer(IMockTestLog testLog) : MockQueryConsumer(testLog),
     IMessageConsumer
 {
-    public MockSyncQueryConsumer(IMockTestLog testLog) : base(testLog) { }
-        
     [InProcessHandler]
     public MockQueryResult Execute(MockQuery query)
     {
@@ -32,11 +25,9 @@ public class MockSyncQueryConsumer : MockQueryConsumer,
     }
 }
     
-public class MockAsyncQueryConsumer : MockQueryConsumer,
+public class MockAsyncQueryConsumer(IMockTestLog testLog) : MockQueryConsumer(testLog),
     IMessageConsumer
 {
-    public MockAsyncQueryConsumer(IMockTestLog testLog) : base(testLog) { }
-        
     [InProcessHandler]
     public async Task<MockQueryResult> Execute(MockQuery query)
     {

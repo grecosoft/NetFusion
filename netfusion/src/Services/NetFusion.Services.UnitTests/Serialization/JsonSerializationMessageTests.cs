@@ -109,18 +109,11 @@ public class JsonSerializationMessageTests
     
     // Test message types compatible with JSON Serialization:
     
-    public class RegistrationStatus
+    public class RegistrationStatus(string registrationId, string status, string address)
     {
-        public string RegistrationId { get; }
-        public string Status { get; }
-        public string Address { get; }
-    
-        public RegistrationStatus(string registrationId, string status, string address)
-        {
-            RegistrationId = registrationId;
-            Status = status;
-            Address = address;
-        }
+        public string RegistrationId { get; } = registrationId;
+        public string Status { get; } = status;
+        public string Address { get; } = address;
     }
     
     public class RegisterDevice(string deviceId, string version, string name) : Command<RegistrationStatus>

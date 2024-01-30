@@ -11,19 +11,15 @@ namespace NetFusion.Integration.RabbitMQ.Exchanges.Strategies;
 /// Creates a queue, subscribed to an exchange, on which microservices
 /// receive domain events published by other microservices.
 /// </summary>
-public class ExchangeSubscriptionStrategy : BusEntityStrategyBase<EntityContext>,
+public class ExchangeSubscriptionStrategy(SubscriptionEntity subscriptionEntity) : 
+    BusEntityStrategyBase<EntityContext>(subscriptionEntity),
     IBusEntityCreationStrategy,
     IBusEntitySubscriptionStrategy,
     IBusEntityDisposeStrategy
 {
-    private readonly SubscriptionEntity _subscriptionEntity;
+    private readonly SubscriptionEntity _subscriptionEntity = subscriptionEntity;
     
     private IDisposable? _consumer;
-
-    public ExchangeSubscriptionStrategy(SubscriptionEntity subscriptionEntity) : base(subscriptionEntity)
-    {
-        _subscriptionEntity = subscriptionEntity;
-    }
 
     private ILogger<ExchangeSubscriptionStrategy> Logger => 
         Context.LoggerFactory.CreateLogger<ExchangeSubscriptionStrategy>();
@@ -35,7 +31,7 @@ public class ExchangeSubscriptionStrategy : BusEntityStrategyBase<EntityContext>
         
         IBusConnection busConn = Context.BusModule.GetConnection(_subscriptionEntity.BusName);
         busConn.ExternalSettings.ApplyQueueSettings(_subscriptionEntity.EntityName, _subscriptionEntity.QueueMeta);
-        
+          
         if (_subscriptionEntity.IsPerServiceInstance)
         {
             // Each microservice instance will have its own queue.  The default is having a single queue

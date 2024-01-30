@@ -10,19 +10,15 @@ namespace NetFusion.Integration.ServiceBus.Queues.Strategies;
 /// Strategy that publishes commands to a queue for processing
 /// by another microservice defining the queue.
 /// </summary>
-internal class QueuePublishStrategy : BusEntityStrategyBase<NamespaceEntityContext>,
-    IBusEntityCreationStrategy,
-    IBusEntityPublishStrategy,
-    IBusEntityDisposeStrategy
+internal class QueuePublishStrategy(QueueReferenceEntity queueEntity)
+    : BusEntityStrategyBase<NamespaceEntityContext>(queueEntity),
+        IBusEntityCreationStrategy,
+        IBusEntityPublishStrategy,
+        IBusEntityDisposeStrategy
 {
-    private readonly QueueReferenceEntity _queueEntity;
+    private readonly QueueReferenceEntity _queueEntity = queueEntity;
     private ServiceBusSender? _serviceBusSender;
 
-    public QueuePublishStrategy(QueueReferenceEntity queueEntity) : base(queueEntity)
-    {
-        _queueEntity = queueEntity;
-    }
-    
     private ILogger<QueuePublishStrategy> Logger =>
         Context.LoggerFactory.CreateLogger<QueuePublishStrategy>();
 

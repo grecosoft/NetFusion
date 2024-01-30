@@ -34,7 +34,7 @@ public class SerializationManager : ISerializationManager
     public IEnumerable<ISerializer> Serializers => _serializers;
 
     public void ClearSerializers() => _serializers.Clear();
-
+    
     public void AddSerializer(ISerializer serializer)
     {
         ArgumentNullException.ThrowIfNull(serializer);

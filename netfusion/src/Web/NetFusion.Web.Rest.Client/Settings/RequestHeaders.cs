@@ -28,7 +28,7 @@ public class RequestHeaders
 	/// </summary>
 	public IReadOnlyDictionary<string, HeaderValue> Values { get; }
 
-	private readonly IDictionary<string, HeaderValue> _headers;
+	private readonly Dictionary<string, HeaderValue> _headers;
 
 	/// <summary>
 	/// Constructor.

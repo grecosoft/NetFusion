@@ -9,20 +9,14 @@ namespace NetFusion.Web.UnitTests.Hosting;
 /// <summary>
 /// Provides methods for asserting the request made to the TestServer.
 /// </summary>
-public class WebServerAssert
+public class WebServerAssert(
+    IServiceProvider services,
+    HttpResponseMessage httpResponse,
+    ApiResponse apiResponse)
 {
-    private readonly IServiceProvider _services;
-    private readonly HttpResponseMessage _httpResponse;
-    private readonly ApiResponse _apiResponse;
-        
-    public WebServerAssert(IServiceProvider services,
-        HttpResponseMessage httpResponse,
-        ApiResponse apiResponse)
-    {
-        _services = services ?? throw new ArgumentNullException(nameof(services));
-        _httpResponse = httpResponse;
-        _apiResponse = apiResponse;
-    }
+    private readonly IServiceProvider _services = services;
+    private readonly HttpResponseMessage _httpResponse = httpResponse;
+    private readonly ApiResponse _apiResponse = apiResponse;
 
     /// <summary>
     /// Allows the response issued with the HTTPClient to be asserted.

@@ -12,19 +12,13 @@ namespace NetFusion.Web.Rest.Docs.Xml.Services;
 /// Service used to read documentation for types and members from XML
 /// generated code files.
 /// </summary>
-public class XmlCommentService : IXmlCommentService
+public class XmlCommentService(IDocModule docModule) : IXmlCommentService
 {
     private const string MemberXPath = "/doc/members/member[@name='{0}']";
     private const string ParamXPath = "param[@name='{0}']";
 
-    private readonly IDocModule _docModule;
-    private readonly ConcurrentDictionary<Assembly, XPathNavigator> _xmlAssemblyComments;
-
-    public XmlCommentService(IDocModule docModule)
-    {
-        _docModule = docModule ?? throw new ArgumentNullException(nameof(docModule));
-        _xmlAssemblyComments = new ConcurrentDictionary<Assembly, XPathNavigator>();
-    }
+    private readonly IDocModule _docModule = docModule ?? throw new ArgumentNullException(nameof(docModule));
+    private readonly ConcurrentDictionary<Assembly, XPathNavigator> _xmlAssemblyComments = new();
 
     public XPathNavigator GetXmlCommentsForTypesAssembly(Type containedType)
     {

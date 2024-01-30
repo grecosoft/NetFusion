@@ -31,6 +31,7 @@ public class EntityScriptScope<TEntity>
         Entity = (TEntity)entity;
 
         var attributedEntity = entity as IAttributedEntity;
+        // ReSharper disable once AssignmentInsteadOfDiscard
         _ = attributedEntity?.Attributes.Values ?? new ExpandoObject();
     }
 }

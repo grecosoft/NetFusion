@@ -133,7 +133,7 @@ public class MessageDispatchConfig : IPluginConfig
         if (_resiliencePipelines.ContainsKey(typeof(TPublisher)))
         {
             throw new BootstrapException(
-                $"A relilience pipeline for publisher: {typeof(TPublisher)} is already registered");
+                $"A resilience pipeline for publisher: {typeof(TPublisher)} is already registered");
         }
         _resiliencePipelines[typeof(TPublisher)] = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
     }

@@ -5,18 +5,18 @@ namespace NetFusion.Services.Mapping.Core;
 /// <summary>
 /// Stores for a given source and target type the corresponding mapping strategy.
 /// </summary>
-public class TargetMap
+public class TargetMap(Type sourceType, Type targetType)
 {
     /// <summary>
     /// The source type the strategy maps from.
     /// </summary>
-    public Type SourceType { get; }
-    
+    public Type SourceType { get; } = sourceType;
+
     /// <summary>
     /// The target type the strategy maps to.
     /// </summary>
-    public Type TargetType { get; }
-    
+    public Type TargetType { get; } = targetType;
+
     /// <summary>
     /// The type of the strategy providing the mapping from source to target types.
     /// If specified, the type of the strategy is registered within the dependency
@@ -28,12 +28,6 @@ public class TargetMap
     /// Single instance of the strategy providing the mapping from source to target types.
     /// </summary>
     public IMappingStrategy? StrategyInstance { get; }
-
-    public TargetMap(Type sourceType, Type targetType)
-    {
-        SourceType = sourceType;
-        TargetType = targetType;
-    }
 
     public TargetMap(Type sourceType, Type targetType, Type strategyType) :
         this(sourceType, targetType)

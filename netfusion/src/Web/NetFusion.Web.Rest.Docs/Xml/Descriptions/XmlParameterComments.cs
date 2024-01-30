@@ -10,15 +10,11 @@ namespace NetFusion.Web.Rest.Docs.Xml.Descriptions;
 /// Adds additional documentation to an action's parameter from a .NET Code Comment XML file.
 /// An action's parameter can be for for a Route, Header, Query, or Body parameter.
 /// </summary>
-public class XmlParameterComments : IParameterDescription
+public class XmlParameterComments(IXmlCommentService xmlComments) : IParameterDescription
 {
-    private readonly IXmlCommentService _xmlComments;
-        
-    public XmlParameterComments(IXmlCommentService xmlComments)
-    {
-        _xmlComments = xmlComments ?? throw new ArgumentNullException(nameof(xmlComments));
-    }
-        
+    private readonly IXmlCommentService _xmlComments = xmlComments ?? 
+        throw new ArgumentNullException(nameof(xmlComments));
+
     public void Describe(ApiParameterDoc parameterDoc, ApiActionMeta actionMeta, ApiParameterMeta parameterMeta)
     {
         XPathNavigator methodNode = _xmlComments.GetMethodNode(actionMeta.ActionMethodInfo);

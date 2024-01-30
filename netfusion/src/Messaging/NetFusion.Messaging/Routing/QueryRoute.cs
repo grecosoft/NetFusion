@@ -7,11 +7,9 @@ namespace NetFusion.Messaging.Routing;
 /// </summary>
 /// <typeparam name="TQuery">Type of query being routed.</typeparam>
 /// <typeparam name="TResult">Result type of the query.</typeparam>
-public class QueryRoute<TQuery, TResult> : MessageRoute
-    where TQuery: IQuery<TResult>
+public class QueryRoute<TQuery, TResult>() : MessageRoute(typeof(TQuery), typeof(TResult))
+    where TQuery : IQuery<TResult>
 {
-    public QueryRoute(): base(typeof(TQuery), typeof(TResult)) { }
-    
     /// <summary>
     /// Routes query to a consumer's handler.
     /// </summary>
@@ -52,17 +50,12 @@ public class QueryRoute<TQuery, TResult> : MessageRoute
 /// <typeparam name="TQuery">Type of query being routed.</typeparam>
 /// <typeparam name="TResult">Result type of the query.</typeparam>
 /// <typeparam name="TRouteMeta">The type of metadata associated with the route.</typeparam>
-public class QueryRouteWithMeta<TQuery, TResult, TRouteMeta> : MessageRoute
-    where TQuery: IQuery<TResult>
+public class QueryRouteWithMeta<TQuery, TResult, TRouteMeta>() : MessageRoute(typeof(TQuery), typeof(TResult))
+    where TQuery : IQuery<TResult>
     where TRouteMeta : IRouteMeta<TQuery>, new()
 {
-    private new TRouteMeta RouteMeta { get; }
-    
-    public QueryRouteWithMeta() : base(typeof(TQuery), typeof(TResult))
-    {
-        RouteMeta = new TRouteMeta();
-    }
-    
+    private new TRouteMeta RouteMeta { get; } = new();
+
     /// <summary>
     /// Routes query to a consumer's handler containing additional metadata.
     /// </summary>

@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using System;
-// ReSharper disable All
 
-namespace NetFusion.Settings
+namespace NetFusion.Core.Settings
 {
     /// <summary>
     /// Additional configuration service collection extensions.  These extension methods provide non-generic typed

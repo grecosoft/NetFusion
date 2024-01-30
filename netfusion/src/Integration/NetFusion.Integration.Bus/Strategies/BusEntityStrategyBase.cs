@@ -6,17 +6,13 @@ namespace NetFusion.Integration.Bus.Strategies;
 /// Base entity strategy implementation associated with a context
 /// containing cross-cutting services by the strategy.
 /// </summary>
+/// <param name="busEntity">The entity associated with the strategy.</param>
 /// <typeparam name="TContext">The type of context associated with strategy.</typeparam>
-public abstract class BusEntityStrategyBase<TContext> : IBusEntityStrategy
+public abstract class BusEntityStrategyBase<TContext>(BusEntity busEntity) : IBusEntityStrategy
     where TContext : BusEntityContext
 {
-    public BusEntity BusEntity { get; }
+    public BusEntity BusEntity { get; } = busEntity ?? throw new ArgumentNullException(nameof(busEntity));
     private TContext? _context;
-
-    protected BusEntityStrategyBase(BusEntity busEntity)
-    {
-        BusEntity = busEntity ?? throw new ArgumentNullException(nameof(busEntity));
-    }
 
     public void SetContext(BusEntityContext context)
     {

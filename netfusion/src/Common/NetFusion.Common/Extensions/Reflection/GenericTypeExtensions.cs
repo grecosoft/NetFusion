@@ -20,7 +20,7 @@ public static class GenericTypeExtensions
     public static bool IsOpenGenericType(this Type sourceType)
     {
         ArgumentNullException.ThrowIfNull(sourceType);
-        return sourceType.IsGenericType && sourceType.ContainsGenericParameters;
+        return sourceType is { IsGenericType: true, ContainsGenericParameters: true };
     }
 
     /// <summary>

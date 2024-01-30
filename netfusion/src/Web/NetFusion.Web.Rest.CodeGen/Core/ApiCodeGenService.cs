@@ -11,18 +11,15 @@ namespace NetFusion.Web.Rest.CodeGen.Core;
 /// resource exposed by the API.  These generated file are created
 /// by the CodeGenModule when the Microservice starts. 
 /// </summary>
-public class ApiCodeGenService : IApiCodeGenService
+public class ApiCodeGenService(
+    ILogger<ApiCodeGenService> logger,
+    ICodeGenModule codeGenModule)
+    : IApiCodeGenService
 {
-    private readonly ILogger _logger;
-    private readonly ICodeGenModule _codeGenModule;
-
-    public ApiCodeGenService(
-        ILogger<ApiCodeGenService> logger,
-        ICodeGenModule codeGenModule)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _codeGenModule = codeGenModule ?? throw new ArgumentNullException(nameof(codeGenModule));
-    }
+    private readonly ILogger _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    
+    private readonly ICodeGenModule _codeGenModule = codeGenModule ?? 
+        throw new ArgumentNullException(nameof(codeGenModule));
 
     public bool TryGetResourceCodeFile(string resourceName, [MaybeNullWhen(false)]out Stream stream)
     {

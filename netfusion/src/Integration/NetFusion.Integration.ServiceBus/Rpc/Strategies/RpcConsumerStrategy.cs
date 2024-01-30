@@ -14,19 +14,14 @@ namespace NetFusion.Integration.ServiceBus.Rpc.Strategies;
 /// is used to route the message to the correct consumer message handler.  The result returned
 /// from the message handler is then returned on the result queue specified on the message.
 /// </summary>
-internal class RpcConsumerStrategy : BusEntityStrategyBase<NamespaceEntityContext>, 
+internal class RpcConsumerStrategy(RpcEntity rpcEntity) : BusEntityStrategyBase<NamespaceEntityContext>(rpcEntity),
     IBusEntityCreationStrategy,
     IBusEntitySubscriptionStrategy,
     IBusEntityDisposeStrategy
 {
-    private readonly RpcEntity _rpcEntity;
+    private readonly RpcEntity _rpcEntity = rpcEntity;
     private ServiceBusProcessor? _queueProcessor;
 
-    public RpcConsumerStrategy(RpcEntity rpcEntity) : base(rpcEntity)
-    {
-        _rpcEntity = rpcEntity;
-    }
-    
     private ILogger<RpcConsumerStrategy> Logger => 
         Context.LoggerFactory.CreateLogger<RpcConsumerStrategy>();
     

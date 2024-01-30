@@ -9,7 +9,7 @@ public static class MessageExtensions
     public static bool TryParseReplyTo(this IMessage message, 
         [MaybeNullWhen(false)]out string busName, [MaybeNullWhen(false)]out string queueName)
     {
-        if (message == null) throw new ArgumentNullException(nameof(message));
+        ArgumentNullException.ThrowIfNull(message);
         return TryParseReplyTo(message.GetReplyTo(), out busName, out queueName);
     }
     

@@ -9,12 +9,7 @@ namespace NetFusion.Integration.UnitTests.Bus.Mocks;
 /// by the subscribing microservice to route received messages to the corresponding
 /// message handler.
 /// </summary>
-public abstract class TestBusRouterBase : BusRouterBase
-{
-    protected TestBusRouterBase(string busName) : base(busName)
-    {
-    }
-}
+public abstract class TestBusRouterBase(string busName) : BusRouterBase(busName);
 
 public class TestBusRouter() : TestBusRouterBase("testBusName")
 {

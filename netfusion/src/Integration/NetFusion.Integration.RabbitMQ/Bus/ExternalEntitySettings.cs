@@ -9,14 +9,9 @@ namespace NetFusion.Integration.RabbitMQ.Bus;
 /// specifying details about how they are created.  Any default
 /// settings specified within code are overriden.
 /// </summary>
-public class ExternalEntitySettings
+public class ExternalEntitySettings(ConnectionSettings connectionSettings)
 {
-    private readonly ConnectionSettings _connectionSettings;
-
-    public ExternalEntitySettings(ConnectionSettings connectionSettings)
-    {
-        _connectionSettings = connectionSettings;
-    }
+    private readonly ConnectionSettings _connectionSettings = connectionSettings;
 
     public void ApplyExchangeSettings(string entityName, ExchangeMeta exchange)
     {

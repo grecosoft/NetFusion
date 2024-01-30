@@ -19,8 +19,7 @@ public static class CreationExtensions
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        return type.IsClass && !type.IsGenericType
-                            && !type.IsAbstract && type.HasDefaultConstructor();
+        return type is { IsClass: true, IsGenericType: false, IsAbstract: false } && type.HasDefaultConstructor();
     }
 
     /// <summary>

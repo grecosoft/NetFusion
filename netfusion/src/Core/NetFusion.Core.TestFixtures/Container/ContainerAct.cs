@@ -25,7 +25,9 @@ public class ContainerAct
 
     public ContainerAct(ContainerFixture fixture)
     {
-        _fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
+        ArgumentNullException.ThrowIfNull(fixture);
+
+        _fixture = fixture;
         _container = fixture.GetOrBuildContainer();
     }
         

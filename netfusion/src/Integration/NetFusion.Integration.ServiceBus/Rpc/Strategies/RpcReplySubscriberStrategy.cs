@@ -11,19 +11,15 @@ namespace NetFusion.Integration.ServiceBus.Rpc.Strategies;
 /// Once a reply is received, the MessageId is used to correlate the message back to the
 /// original published message's TaskCompletionSource on which the microservice is awaiting.
 /// </summary>
-internal class RpcReplySubscriberStrategy : BusEntityStrategyBase<NamespaceEntityContext>,
-    IBusEntityCreationStrategy,
-    IBusEntitySubscriptionStrategy,
-    IBusEntityDisposeStrategy
+internal class RpcReplySubscriberStrategy(RpcReferenceEntity rpcEntity)
+    : BusEntityStrategyBase<NamespaceEntityContext>(rpcEntity),
+        IBusEntityCreationStrategy,
+        IBusEntitySubscriptionStrategy,
+        IBusEntityDisposeStrategy
 {
-    private readonly RpcReferenceEntity _rpcEntity;
+    private readonly RpcReferenceEntity _rpcEntity = rpcEntity;
     private ServiceBusProcessor? _replyProcessor;
 
-    public RpcReplySubscriberStrategy(RpcReferenceEntity rpcEntity) : base(rpcEntity)
-    {
-        _rpcEntity = rpcEntity;
-    }
-    
     private ILogger<RpcReplySubscriberStrategy> Logger => 
         Context.LoggerFactory.CreateLogger<RpcReplySubscriberStrategy>();
 

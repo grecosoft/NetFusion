@@ -19,36 +19,6 @@ namespace NetFusion.Messaging.UnitTests;
 public class InterceptionTests
 {
     /// <summary>
-    /// Regardless of being code defined in the unit test, this test simulates the
-    /// case where a real handler is being called.  Assume the class ExampleAppService
-    /// defined below is a handler defined within your application.  The goal is test
-    /// this class that has a dependency on IMessagingService with known responses that
-    /// can be specified by the unit test.  The service named ExampleAppService below
-    /// represents the class we want to unit-test.  The corresponding application
-    /// message handler class AppMessageHandler is the class we want to mock.
-    /// </summary>
-    // [Fact]
-    // public Task Simulated_NonMocked_Example()
-    // {
-    //     return ContainerFixture.TestAsync(async fixture =>
-    //     {
-    //         CommandResult cmdResult = null;
-    //             
-    //         var testResult = await fixture
-    //             .Arrange.Container(TestSetup.WithEventHandler)
-    //             .Act.OnServiceAsync<IExampleAppService>(async service =>
-    //             {
-    //                 cmdResult = await service.BizLogicWithCommand(30, 50, 77);
-    //             });
-    //
-    //         testResult.Assert.State(() =>
-    //         {
-    //             cmdResult.Sum.Should().Be(257);
-    //         });
-    //     });
-    // }
-        
-    /// <summary>
     /// In order to test AppMessageHandler with known responses, the unit-test class named
     /// ExampleAppService will be register for IMessagingService.  This class allows us to
     /// specified known responses to commands and queries issued by the ServiceUnderTest.
@@ -258,14 +228,9 @@ public class InterceptionTests
         Task BizLogicWithDomainEvent(string state);
     }
 
-    private class ExampleAppService : IExampleAppService
+    private class ExampleAppService(IMessagingService messaging) : IExampleAppService
     {
-        private readonly IMessagingService _messaging;
-            
-        public ExampleAppService(IMessagingService messaging)
-        {
-            _messaging = messaging;
-        }
+        private readonly IMessagingService _messaging = messaging;
 
         public async Task<CommandResult> BizLogicWithCommand(params int[] values)
         {
@@ -305,14 +270,9 @@ public class InterceptionTests
         }
     }
 
-    public class ExampleDomainEvent : DomainEvent
+    public class ExampleDomainEvent(string state) : DomainEvent
     {
-        public string State { get; }
-            
-        public ExampleDomainEvent(string state)
-        {
-            State = state;
-        }
+        public string State { get; } = state;
     }
 
     public class CommandResult
@@ -321,14 +281,9 @@ public class InterceptionTests
         public double Avg { get; set; }
     }
 
-    public class ExampleCommand : Command<CommandResult>
+    public class ExampleCommand(int[] values) : Command<CommandResult>
     {
-        public int[] Values { get; }
-            
-        public ExampleCommand(int[] values)
-        {
-            Values = values;
-        }
+        public int[] Values { get; } = values;
     }
 
     public class QueryResult
@@ -336,14 +291,9 @@ public class InterceptionTests
         public int[] Data { get; set; } = Array.Empty<int>();
     }
 
-    public class ExampleQuery : Query<QueryResult>
+    public class ExampleQuery(int minValue) : Query<QueryResult>
     {
-        public int MinValue { get; }
-
-        public ExampleQuery(int minValue)
-        {
-            MinValue = minValue;
-        }
+        public int MinValue { get; } = minValue;
     }
         
     public class AppMessageHandler
