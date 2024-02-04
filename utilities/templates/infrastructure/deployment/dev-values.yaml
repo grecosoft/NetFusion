@@ -1,0 +1,34 @@
+environment: DEVELOPMENT
+
+replicas: 1
+
+tenantId: ""
+managedIdentityClientId: ""
+appConfigEndpoint: ""
+keyVaultName: ""
+
+gateway: 
+  name: [nf:gateway]
+  hosts:
+    - [nf:host]
+
+image:
+  tag: latest
+
+extraEnv: {}
+
+resources: 
+  requests:
+    cpu: 100m
+    memory: 500Mi
+  limits:
+    cpu: 250m
+    memory: 750Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+
