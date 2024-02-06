@@ -34,14 +34,37 @@
         ]
       }
     },
+    "aks-group": {
+      "type": "parameter",
+      "isRequired": true,
+      "datatype": "string",
+      "replaces": "[nf:aks-group]",
+      "description": "The Azure resource group containing the AKS."
+    },
+    "aks-name": {
+      "type": "parameter",
+      "isRequired": true,
+      "datatype": "string",
+      "replaces": "[nf:aks-name]",
+      "description": "The name of the AKS cluster to deploy microservice."
+    },
+    "aks-namespace": {
+      "type": "parameter",
+      "isRequired": true,
+      "datatype": "string",
+      "replaces": "[nf:aks-namespace]",
+      "description": "The namespace within the AKS cluster to deploy microservice."
+    },
     "service-account": {
       "type": "parameter",
+      "isRequired": true,
       "datatype": "string",
       "replaces": "[nf:service-account]",
       "description": "The service account under which the microservice runs."
     },
     "port": {
       "type": "parameter",
+      "isRequired": true,
       "datatype":"int",
       "replaces": "[nf:port]",
       "description": "The port used when running the service."
@@ -54,12 +77,14 @@
     },
     "gateway": {
       "type": "parameter",
+      "isRequired": true,
       "datatype": "string",
       "replaces": "[nf:gateway]",
       "description": "The name of the gateway exposing the microservice's endpoint."
     },
     "host": {
       "type": "parameter",
+      "isRequired": true,
       "datatype": "string",
       "replaces": "[nf:host]",
       "description": "The host form which the microservice can be accessed."
@@ -67,6 +92,7 @@
   },
   "sources":[
       { "include": "deployment/*" },
-      { "include": "infrastructure/**/*" }
+      { "include": "infrastructure/**/*" },
+      { "include": "Solution.Context-build.yml" }
     ]
 }
