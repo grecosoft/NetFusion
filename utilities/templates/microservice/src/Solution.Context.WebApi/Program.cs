@@ -6,6 +6,20 @@ using NetFusion.Core.Settings.Plugin;
 
 var builder = WebApplication.CreateBuilder(args);
 
+#if (useKubernetes)
+var containerSettingPath = "/mnt/microservices/[nf:microservice-name]/settings/appsettings.json";
+
+if (File.Exists(containerSettingPath)) {
+    builder.Configuration.Sources.Clear();
+    builder.Configuration.AddJsonFile(containerSettingPath);
+    builder.Configuration.AddEnvironmentVariables();
+}
+else 
+{
+    Console.WriteLine($"Container Settings file: {containerSettingPath} not found.");
+}
+#endif
+
 // Configure Logging:
 InitializeLogger();
 
@@ -59,6 +73,13 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
+
+#if (useKubernetes)
+app.MapHealthCheck();
+app.MapStartupCheck();
+app.MapReadinessCheck();
+#endif
+
 
 if (app.Environment.IsDevelopment())
 {
