@@ -1,20 +1,24 @@
 name: Solution.Context Workflow
 
-on: workflow_dispatch
-  # push:
-  #   branches: [ master ]
+on: 
+  workflow_dispatch:
+  push:
+    branches: 
+      - main
+    paths:
+      - microservices/Solution.Context/**
 
 permissions:
   id-token: write
   contents: read
 
 env:
-  environment: dev
+  envDeployName: dev
 
   microserviceRoot: ./microservices
   microserviceDir: Solution.Context
   microserviceName: [nf:microservice-name]
-  microserviceVer: "1.0"
+  microserviceVer: "1.0.${{github.run_number}}"
 
   aksResourceGroup: [nf:aks-group]
   aksName: [nf:aks-name]
@@ -23,7 +27,7 @@ env:
   imageRegistry: [nf:registry]
 
   helmChart: netfusion-microservice
-  helmChartVer: "1.0.5"
+  helmChartVer: "1.0.52"
 
   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -40,7 +44,7 @@ jobs:
 
     - name: Set Image Tag Variable
       run: |
-          echo "TAGGED_IMAGE=${imageRegistry}/${microserviceName}:${microserviceVer}.${{github.run_number}}" >> $GITHUB_ENV
+          echo "TAGGED_IMAGE=${imageRegistry}/${microserviceName}:${microserviceVer}" >> $GITHUB_ENV
 
     - name: Build Microservice Image
       run: |
@@ -74,8 +78,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment: development
-    env:
-      helmChartVer: "1.0.5"
     steps:
     - name: Login to Azure
       uses: azure/login@v1
@@ -100,8 +102,11 @@ jobs:
 
     - name: Deploy Microservice Chart
       run: | 
-        helm upgrade ${microserviceName} \
-          --install oci://${imageRegistry}/helm/${helmChart} \
+        helm upgrade ${microserviceName} oci://${imageRegistry}/helm/${helmChart} \
+          --install \
+          --wait \
           --version ${helmChartVer} \
           -n ${aksNamespace} \
-          --values ${environment}-values.yaml
+          --values common-values.yaml \
+          --values ${envDeployName}-values.yaml \
+          --set image.tag=${microserviceVer}

@@ -7,7 +7,7 @@ extraLabels: {}
 podAnnotations: {}
 podLabels: {}
 
-secrets: {}
+secrets: []
 
 image:
   registry: [nf:registry]
