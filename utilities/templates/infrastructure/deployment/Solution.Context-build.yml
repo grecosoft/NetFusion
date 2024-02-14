@@ -27,7 +27,7 @@ env:
   imageRegistry: [nf:registry]
 
   helmChart: netfusion-microservice
-  helmChartVer: "1.0.52"
+  helmChartVer: [nf:chartVersion]
 
   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -44,7 +44,7 @@ jobs:
 
     - name: Set Image Tag Variable
       run: |
-          echo "TAGGED_IMAGE=${imageRegistry}/${microserviceName}:${microserviceVer}" >> $GITHUB_ENV
+        echo "TAGGED_IMAGE=${imageRegistry}/${microserviceName}:${microserviceVer}" >> $GITHUB_ENV
 
     - name: Build Microservice Image
       run: |
@@ -100,6 +100,17 @@ jobs:
     - name: Log Into AKS
       run: az aks get-credentials --resource-group ${aksResourceGroup} --name ${aksName}
 
+    # Read configuration not stored directly within the helm value files from Azure
+    # App Configuration service associated with the Microservice solution.
+    - name: Read Deploy Configurations
+      uses: flcdrg/get-azure-app-configuration-action@v2
+      id: app-configs
+      with:
+        resourceGroup: ${{ secrets.APP_CONFIG_GROUP }}
+        appConfigurationName: ${{ secrets.APP_CONFIG_NAME }}
+        keyFilter: 'SolutionTenantId,SolutionClientId,SolutionKeyVaultName,SolutionAppConfigEndpoint'
+
+    # Deploy Microservice and wait for all resources to be created.
     - name: Deploy Microservice Chart
       run: | 
         helm upgrade ${microserviceName} oci://${imageRegistry}/helm/${helmChart} \
@@ -109,4 +120,8 @@ jobs:
           -n ${aksNamespace} \
           --values common-values.yaml \
           --values ${envDeployName}-values.yaml \
-          --set image.tag=${microserviceVer}
+          --set image.tag=${microserviceVer} \
+          --set tenantId=${{ steps.app-configs.outputs.SolutionTenantId }} \
+          --set managedIdentityClientId=${{ steps.app-configs.outputs.SolutionClientId }} \
+          --set appConfigEndpoint=${{ steps.app-configs.outputs.SolutionAppConfigEndpoint }} \
+          --set keyVaultName=${{ steps.app-configs.outputs.SolutionKeyVaultName }} 

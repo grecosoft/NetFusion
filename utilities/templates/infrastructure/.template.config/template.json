@@ -88,6 +88,13 @@
       "datatype": "string",
       "replaces": "[nf:host]",
       "description": "The host form which the microservice can be accessed."
+    },
+    "chart-version": {
+      "type": "parameter",
+      "isRequired": true,
+      "datatype": "string",
+      "replaces": "[nf:chartVersion]",
+      "description": "The version of the Microservice Helm Chart used to deploy."
     }
   },
   "sources":[
