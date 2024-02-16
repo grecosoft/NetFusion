@@ -28,16 +28,6 @@ RUN dotnet restore
 COPY ./src ./
 
 # --------------------------------------------------------------------------------------
-# BUILD / TEST
-# --------------------------------------------------------------------------------------
-FROM restore AS test
-RUN dotnet build --no-restore
-RUN dotnet test  --no-build --logger trx 
-
-FROM scratch as export-test-results
-COPY --from=test build/src/Solution.Context.Tests/TestResults/*.trx .
-
-# --------------------------------------------------------------------------------------
 # PUBLISH
 # --------------------------------------------------------------------------------------
 FROM restore AS publish

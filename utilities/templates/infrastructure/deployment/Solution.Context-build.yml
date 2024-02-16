@@ -46,10 +46,22 @@ jobs:
       run: |
         echo "TAGGED_IMAGE=${imageRegistry}/${microserviceName}:${microserviceVer}" >> $GITHUB_ENV
 
+    - name: Run Unit Tests
+      run: |
+        dotnet test ./${microserviceRoot}/${microserviceDir}/src \
+        --logger trx \
+        --results-directory ./TestResults
+
+    - name: Archive Test Results  
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: microservice-test-results
+        path: ./TestResults
+
     - name: Build Microservice Image
       run: |
         docker build ${microserviceRoot}/${microserviceDir} \
-        --file ${microserviceRoot}/${microserviceDir}/Dockerfile \
         --tag ${{ env.TAGGED_IMAGE }}
 
     - name: List Images
