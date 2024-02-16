@@ -1,4 +1,4 @@
-FROM  mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+FROM  mcr.microsoft.com/dotnet/sdk:8.0 AS restore
 WORKDIR /build/src
 
 # --------------------------------------------------------------------------------------
@@ -24,22 +24,37 @@ COPY ./src/Solution.Context.WebApi/*.csproj ./Solution.Context.WebApi/
 COPY ./src/Solution.Context.sln ./
 RUN dotnet restore 
 
-# # --------------------------------------------------------------------------------------
-# # PUBLISH
-# # --------------------------------------------------------------------------------------
-
 # Copy all the source and build the microservice.
 COPY ./src ./
-RUN dotnet publish ./Solution.Context.WebApi/Solution.Context.WebApi.csproj -c release --output ../out --no-restore  /p:DebugType=None
+
+# --------------------------------------------------------------------------------------
+# BUILD / TEST
+# --------------------------------------------------------------------------------------
+FROM restore AS test
+RUN dotnet build --no-restore
+RUN dotnet test  --no-build --logger trx 
+
+FROM scratch as export-test-results
+COPY --from=test build/src/Solution.Context.Tests/TestResults/*.trx .
+
+# --------------------------------------------------------------------------------------
+# PUBLISH
+# --------------------------------------------------------------------------------------
+FROM restore AS publish
+RUN dotnet publish ./Solution.Context.WebApi/Solution.Context.WebApi.csproj \
+      -c release \
+      --output ../out \
+      --no-restore \
+      /p:DebugType=None
 
 # --------------------------------------------------------------------------------------
 # CREATE IMAGE FOR CONTAINER CREATION
 # - This stage takes the published output and copies it to a layer
 #   belonging to a new Docker image based on the runtime .net image. 
 # --------------------------------------------------------------------------------------
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine
 WORKDIR /microservice
 
-COPY --from=build-env /build/out ./
+COPY --from=publish /build/out ./
 ENTRYPOINT ["dotnet", "Solution.Context.WebApi.dll"]
 EXPOSE 80
