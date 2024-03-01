@@ -7,8 +7,6 @@ extraLabels: {}
 podAnnotations: {}
 podLabels: {}
 
-secrets: []
-
 image:
   registry: [nf:registry]
   pullPolicy: IfNotPresent

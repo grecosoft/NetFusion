@@ -86,6 +86,13 @@ jobs:
         name: microservice-helm-settings
         path: ${{ env.microserviceRoot }}/${{ env.microserviceDir}}/deployment/*-values.yaml
 
+    - name: Set Latest Build Version 
+      run: |
+        az appconfig kv set -n ${{ secrets.APP_CONFIG_NAME }} \
+           --key ${microserviceName}/latest_build \
+           --value ${microserviceVer} \
+           --yes
+
   deployment:
     needs: build
     runs-on: ubuntu-latest
