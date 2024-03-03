@@ -12,12 +12,6 @@
   "sourceName": "Solution.Context", 
   "preferNameDirectory": true,
   "symbols":{
-    "port": {
-      "type": "parameter",
-      "datatype":"int",
-      "replaces": "[nf:port]",
-      "description": "The port used when running the service locally."
-    },
     "sourceName": {
       "type": "generated",
       "generator": "casing",
@@ -40,6 +34,22 @@
           }
         ]
       }
+    },
+    "port": {
+      "type": "parameter",
+      "datatype":"int",
+      "replaces": "[nf:port]",
+      "description": "The port used when running the service locally."
+    },
+    "enable-kubernetes": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "false",
+      "description": ""
+    },
+    "useKubernetes": {
+      "type": "computed",
+      "value": "enable-kubernetes"
     },
     "app-id": {
       "type": "generated",
@@ -85,6 +95,8 @@
       { "include": "src/Components/Solution.Context.Infra/**/*" },
       { "include": "src/Solution.Context.WebApi/**/*" },
       { "include": "src/Solution.Context.Tests/**/*" },
+      { "include": ".dockerignore" },
+      { "include": "Dockerfile" },
       { "include": "seq/docker-compose.yml"}
     ]
 }

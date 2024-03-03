@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "NetFusion-Contrib",
+  "classifications": [ "WebApi", "Microservice", "NetFusion" ], 
+  "identity": "NetFusion.Infrastructure",  
+  "name": "NetFusion Microservice Infrastructure",
+  "shortName": "netfusion-infrastructure",
+  "tags": {
+    "type":"project"
+  },
+  "sourceName": "Solution.Context", 
+  "preferNameDirectory": true,
+  "symbols":{
+    "sourceName": {
+      "type": "generated",
+      "generator": "casing",
+      "parameters": {
+        "source": "name",
+        "toLower": true
+      }
+    },
+    "microservice-name": {
+      "type": "generated",
+      "generator": "regex",
+      "dataType": "string",
+      "replaces": "[nf:microservice-name]", 
+      "parameters": {
+        "source": "sourceName",
+        "steps": [
+          {
+            "regex": "\\.",            
+            "replacement": "-"   
+          }
+        ]
+      }
+    },
+    "aks-group": {
+      "type": "parameter",
+      "isRequired": true,
+      "datatype": "string",
+      "replaces": "[nf:aks-group]",
+      "description": "The Azure resource group containing the AKS."
+    },
+    "aks-name": {
+      "type": "parameter",
+      "isRequired": true,
+      "datatype": "string",
+      "replaces": "[nf:aks-name]",
+      "description": "The name of the AKS cluster to deploy microservice."
+    },
+    "aks-namespace": {
+      "type": "parameter",
+      "isRequired": true,
+      "datatype": "string",
+      "replaces": "[nf:aks-namespace]",
+      "description": "The namespace within the AKS cluster to deploy microservice."
+    },
+    "service-account": {
+      "type": "parameter",
+      "isRequired": true,
+      "datatype": "string",
+      "replaces": "[nf:service-account]",
+      "description": "The service account under which the microservice runs."
+    },
+    "port": {
+      "type": "parameter",
+      "isRequired": true,
+      "datatype":"int",
+      "replaces": "[nf:port]",
+      "description": "The port used when running the service."
+    },
+    "registry": {
+      "type": "parameter",
+      "datatype": "string",
+      "replaces": "[nf:registry]",
+      "description": "The registry where the microservice image is stored."
+    },
+    "gateway": {
+      "type": "parameter",
+      "isRequired": true,
+      "datatype": "string",
+      "replaces": "[nf:gateway]",
+      "description": "The name of the gateway exposing the microservice's endpoint."
+    },
+    "host": {
+      "type": "parameter",
+      "isRequired": true,
+      "datatype": "string",
+      "replaces": "[nf:host]",
+      "description": "The host form which the microservice can be accessed."
+    },
+    "chart-version": {
+      "type": "parameter",
+      "isRequired": true,
+      "datatype": "string",
+      "replaces": "[nf:chartVersion]",
+      "description": "The version of the Microservice Helm Chart used to deploy."
+    }
+  },
+  "sources":[
+      { "include": "deployment/*" },
+      { "include": "infrastructure/**/*" }
+    ]
+}

@@ -1,0 +1,146 @@
+name: Solution.Context Workflow
+
+on: 
+  workflow_dispatch:
+  push:
+    branches: 
+      - main
+    paths:
+      - microservices/Solution.Context/**
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  envDeployName: dev
+
+  microserviceRoot: ./microservices
+  microserviceDir: Solution.Context
+  microserviceName: [nf:microservice-name]
+  microserviceVer: "1.0.${{github.run_number}}"
+
+  aksResourceGroup: [nf:aks-group]
+  aksName: [nf:aks-name]
+  aksNamespace: [nf:aks-namespace]
+
+  imageRegistry: [nf:registry]
+
+  helmChart: netfusion-microservice
+  helmChartVer: [nf:chartVersion]
+
+  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: List Sources
+      run: ls -R .
+
+    - name: Set Image Tag Variable
+      run: |
+        echo "TAGGED_IMAGE=${imageRegistry}/${microserviceName}:${microserviceVer}" >> $GITHUB_ENV
+
+    - name: Run Unit Tests
+      run: |
+        dotnet test ./${microserviceRoot}/${microserviceDir}/src \
+        --logger trx \
+        --results-directory ./TestResults
+
+    - name: Archive Test Results  
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: microservice-test-results
+        path: ./TestResults
+
+    - name: Build Microservice Image
+      run: |
+        docker build ${microserviceRoot}/${microserviceDir} \
+        --tag ${{ env.TAGGED_IMAGE }}
+
+    - name: List Images
+      run: docker images
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Log Into ACR
+      run: az acr login --name ${imageRegistry}
+
+    - name: Push Image to Repository
+      run: docker image push ${{ env.TAGGED_IMAGE }}
+
+    - name: Archive Microservice Helm Settings  
+      uses: actions/upload-artifact@v4
+      with:
+        name: microservice-helm-settings
+        path: ${{ env.microserviceRoot }}/${{ env.microserviceDir}}/deployment/*-values.yaml
+
+    - name: Set Latest Build Version 
+      run: |
+        az appconfig kv set -n ${{ secrets.APP_CONFIG_NAME }} \
+           --key ${microserviceName}/latest_build \
+           --value ${microserviceVer} \
+           --yes
+
+  deployment:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Download Microservice Helm Settings
+      uses: actions/download-artifact@v4
+      with:
+        name: microservice-helm-settings
+
+    - name: List Downloaded Artifacts
+      run: ls -R .
+
+    - name: Log Into ACR
+      run: az acr login --name ${imageRegistry}
+
+    - name: Log Into AKS
+      run: az aks get-credentials --resource-group ${aksResourceGroup} --name ${aksName}
+
+    # Read configuration not stored directly within the helm value files from Azure
+    # App Configuration service associated with the Microservice solution.
+    - name: Read Deploy Configurations
+      uses: flcdrg/get-azure-app-configuration-action@v2
+      id: app-configs
+      with:
+        resourceGroup: ${{ secrets.APP_CONFIG_GROUP }}
+        appConfigurationName: ${{ secrets.APP_CONFIG_NAME }}
+        keyFilter: 'SolutionTenantId,SolutionClientId,SolutionKeyVaultName,SolutionAppConfigEndpoint'
+
+    # Deploy Microservice and wait for all resources to be created.
+    - name: Deploy Microservice Chart
+      run: | 
+        helm upgrade ${microserviceName} oci://${imageRegistry}/helm/${helmChart} \
+          --install \
+          --wait \
+          --version ${helmChartVer} \
+          -n ${aksNamespace} \
+          --values common-values.yaml \
+          --values ${envDeployName}-values.yaml \
+          --set image.tag=${microserviceVer} \
+          --set tenantId=${{ steps.app-configs.outputs.SolutionTenantId }} \
+          --set managedIdentityClientId=${{ steps.app-configs.outputs.SolutionClientId }} \
+          --set appConfigEndpoint=${{ steps.app-configs.outputs.SolutionAppConfigEndpoint }} \
+          --set keyVaultName=${{ steps.app-configs.outputs.SolutionKeyVaultName }} 
