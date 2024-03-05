@@ -47,4 +47,4 @@ WORKDIR /microservice
 
 COPY --from=publish /build/out ./
 ENTRYPOINT ["dotnet", "Solution.Context.WebApi.dll"]
-EXPOSE 80
+EXPOSE [nf:port]

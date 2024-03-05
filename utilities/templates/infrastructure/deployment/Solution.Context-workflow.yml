@@ -129,6 +129,10 @@ jobs:
         appConfigurationName: ${{ secrets.APP_CONFIG_NAME }}
         keyFilter: 'SolutionTenantId,SolutionClientId,SolutionKeyVaultName,SolutionAppConfigEndpoint'
 
+    - name: Set Deployment Date
+      run: |
+        echo "DEPLOYMENT_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> ${GITHUB_ENV}
+
     # Deploy Microservice and wait for all resources to be created.
     - name: Deploy Microservice Chart
       run: | 
@@ -144,3 +148,10 @@ jobs:
           --set managedIdentityClientId=${{ steps.app-configs.outputs.SolutionClientId }} \
           --set appConfigEndpoint=${{ steps.app-configs.outputs.SolutionAppConfigEndpoint }} \
           --set keyVaultName=${{ steps.app-configs.outputs.SolutionKeyVaultName }} 
+
+    - name: Update Configuration Sentinel 
+      run: |
+        az appconfig kv set -n ${{ secrets.APP_CONFIG_NAME }} \
+           --key ${microserviceName}/update_sentinel \
+           --value ${{ env.DEPLOYMENT_DATE }} \
+           --yes
