@@ -55,6 +55,19 @@
       "replaces": "[nf:aks-namespace]",
       "description": "The namespace within the AKS cluster to deploy microservice."
     },
+    "registry": {
+      "type": "parameter",
+      "datatype": "string",
+      "replaces": "[nf:registry]",
+      "description": "The registry where the microservice image is stored."
+    },
+    "chart-version": {
+      "type": "parameter",
+      "isRequired": true,
+      "datatype": "string",
+      "replaces": "[nf:chartVersion]",
+      "description": "The version of the Microservice Helm Chart used to deploy."
+    },
     "service-account": {
       "type": "parameter",
       "isRequired": true,
@@ -69,12 +82,6 @@
       "replaces": "[nf:port]",
       "description": "The port used when running the service."
     },
-    "registry": {
-      "type": "parameter",
-      "datatype": "string",
-      "replaces": "[nf:registry]",
-      "description": "The registry where the microservice image is stored."
-    },
     "gateway": {
       "type": "parameter",
       "isRequired": true,
@@ -88,17 +95,9 @@
       "datatype": "string",
       "replaces": "[nf:host]",
       "description": "The host form which the microservice can be accessed."
-    },
-    "chart-version": {
-      "type": "parameter",
-      "isRequired": true,
-      "datatype": "string",
-      "replaces": "[nf:chartVersion]",
-      "description": "The version of the Microservice Helm Chart used to deploy."
     }
   },
   "sources":[
-      { "include": "deployment/*" },
-      { "include": "infrastructure/**/*" }
+      { "include": "deployment/*" }
     ]
 }
