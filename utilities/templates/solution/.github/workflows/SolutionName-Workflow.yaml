@@ -1,0 +1,71 @@
+name: SolutionName Workflow
+
+on: 
+  workflow_dispatch:
+  push:
+    branches: 
+      - main
+    paths:
+      - shared/src
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: development
+    
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: 'shared/src'
+        
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore Packages
+      run: dotnet restore ./shared/src
+    - name: Build Solution
+      run: dotnet build ./shared/src --no-restore
+
+    - name: Package Solution
+      run: dotnet pack ./shared/src/SolutionName.sln -p:Version='1.0.0' -c Release -o ./nuget-packages
+
+    - name: Create Package Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: nuget-packages
+        path: ./nuget-packages/* 
+    
+  deployment:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: development
+
+    steps:
+    - name: Download Package Artifact
+      uses: actions/download-artifact@v1.0.0
+      with:
+        name: nuget-packages 
+
+    - name: Add Package Repository Source 
+      run: |
+        dotnet nuget add source \
+        --username [nf:github-account] \
+        --password ${{ secrets.NUGET_PACKAGE_TOKEN }} \
+        --store-password-in-clear-text \
+        --name github "https://nuget.pkg.github.com/[nf:github-account]/index.json"
+        
+    - name: Push Packages to Repository  
+      run: |
+        dotnet nuget push nuget-packages/*.nupkg \
+        --api-key ${{ secrets.NUGET_PACKAGE_TOKEN }} \
+        --source "github"

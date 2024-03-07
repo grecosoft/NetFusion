@@ -1,0 +1,193 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "NetFusion Microservice Template",
+    "required": [
+        "environment",
+        "name",
+        "serviceAccount",
+        "port",
+        "replicas",
+        "image",
+        "resources",
+        "tenantId",
+        "managedIdentityClientId",
+        "appConfigEndpoint",
+        "keyVaultName"
+    ],
+    "properties": {
+        "environment": {
+            "description": "The value set to ASPNETCORE_ENVIRONMENT specifying the environment.",
+            "type": "string",
+            "minLength": 1
+        },
+        "name": {
+            "description": "The name of the microservice specified as a valid Kubernetes identifier.",
+            "type": "string",
+            "minLength": 1
+        },
+        "serviceAccount": {
+            "description": "The name of the Kubernetes service account corresponding to an AKS Workload Identity.",
+            "type": "string",
+            "minLength": 1
+        },
+        "port": {
+            "description": "The port on which the microservice listens for requests.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 65353
+        },
+        "replicas": {
+            "description": "The number of microservice replicas used if autoscaling is disabled.",
+            "type": "integer",
+            "minimum": 0
+        },
+        "extraLabels": {
+            "description": "Extra label key/value pairs added to the deployment resource.",
+            "type": "object"
+        },
+        "podAnnotations": {
+            "description": "Extra metadata annotation key/value pairs added to the pod.",
+            "type": "object"
+        },
+        "podLabels": {
+            "description": "Extra metadata label key/value pairs added to the pod.",
+            "type": "object"
+        },
+        "extraEnv": {
+            "description": "Additional environment variables added to the container.",
+            "type": "object"
+        },
+        "image": {
+            "description": "Details of image containing the microservice to be deployed.",
+            "type": "object",
+            "required": [
+                "registry",
+                "tag"
+            ],
+            "properties": {
+                "registry": {
+                    "description": "The name of the registry where image is stored.",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "tag": {
+                    "description": "The tag identifying the image version.",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "pullPolicy": {
+                    "description": "Guides the Kubelet service on how to pull the specified image during an update.",
+                    "enum": ["Always", "IfNotPresent", "Never"]
+                }
+            },
+            "probes": {
+                "description": "The URL paths called by Kubelet to determine the current state of the pod.",
+                "type": "object",
+                "properties": {
+                    "startupPath": {
+                        "description": "Used to know when the container application has started.",
+                        "type": "string"
+                    },
+                    "readinessPath": {
+                        "description": "Used to determine container is ready to start accepting traffic.",
+                        "type": "string"
+                    },
+                    "livenessPath": {
+                        "description": "Used to determine when a container should be restarted.",
+                        "type": "string"
+                    }
+                }
+            },
+            "resources": {
+                "description": "Specifies the resource limits and requests for a container.",
+                "type": "object",
+                "required": [
+                    "requests",
+                    "limits"
+                ],
+                "properties": {
+                    "requests": {
+                        "type": "object",
+                        "required": [
+                            "cpu",
+                            "memory"
+                        ],
+                        "properties": {
+                            "cpu": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "memory": {
+                                "type": "string",
+                                "minLength": 1
+                            }
+                        }
+                    },
+                    "limits": {
+                        "type": "object",
+                        "required": [
+                            "cpu",
+                            "memory"
+                        ],
+                        "properties": {
+                            "cpu": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "memory": {
+                                "type": "string",
+                                "minLength": 1
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "autoscaling": {
+            "description": "Settings specifying how to automatically scale the container.",
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "description": "Determines if autoscaling is enabled.  Disabled by default.",
+                    "type": "boolean"
+                },
+                "minReplicas": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "maxReplicas": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "targetCPUUtilizationPercentage": {
+                    "type": "integer",
+                    "minimum": 1
+                }
+            }
+        },
+        "tenantId": {
+            "description": "The Azure Tenant containing the Key Vault and App Configuration services.",
+            "type": "string",
+            "minLength": 1
+        },
+        "managedIdentityClientId": {
+            "description": "",
+            "type": "string",
+            "minLength": 1
+        },
+        "appConfigEndpoint": {
+            "description": "The endpoint to the App Configuration used by the microservice,",
+            "type": "string",
+            "minLength": 1
+        },
+        "appConfigRefreshEnabled":{
+            "description": "Determines if App Configuration values should be monitored for change.",
+            "type": "boolean"
+        }, 
+        "keyVaultName": {
+            "description": "The name of the Key Vault used by the microservice",
+            "type": "string",
+            "minLength": 1
+        }
+    }
+}

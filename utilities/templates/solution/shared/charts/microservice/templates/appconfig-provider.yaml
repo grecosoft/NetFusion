@@ -1,0 +1,32 @@
+apiVersion: azconfig.io/v1
+kind: AzureAppConfigurationProvider
+metadata:
+  name: {{ include "microservice.name" . }}-app-config-provider
+spec:
+  endpoint: {{ .Values.appConfigEndpoint }}
+  target:
+    configMapName: {{ include "microservice.name" . }}-configs
+    configMapData: 
+      type: json
+      key: app-configurations
+  configuration:
+    trimKeyPrefixes: ["{{ include "microservice.name" . }}/"]
+    selectors:
+      - keyFilter: "{{ include "microservice.name" . }}/*"
+    {{- if .Values.appConfigRefreshEnabled }}    
+    refresh:
+      enabled: true
+      interval: 1m
+      monitoring:
+        keyValues:
+          - key: "{{ include "microservice.name" . }}/update_sentinel" 
+    {{ end }}
+  auth:
+    workloadIdentity:
+      managedIdentityClientId: {{ .Values.managedIdentityClientId }}
+  secret:
+    target:
+      secretName: {{ include "microservice.name" . }}-config-secrets
+    auth:
+      workloadIdentity:
+        managedIdentityClientId: {{ .Values.managedIdentityClientId }}

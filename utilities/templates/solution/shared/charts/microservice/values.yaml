@@ -1,0 +1,43 @@
+environment: ""
+name: ""
+
+serviceAccount: ""
+port: 0
+replicas: 1
+
+extraLabels: {}
+podAnnotations: {}
+podLabels: {}
+
+extraEnv: {}
+
+image:
+  registry: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+probes:
+  startupPath: /mgt/startup-check
+  readinessPath: /mgt/ready-check
+  livenessPath: /mgt/health-check
+
+resources: 
+  requests:
+    cpu: 100m
+    memory: 500Mi
+  limits:
+    cpu: 250m
+    memory: 750Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
+tenantId: ""
+managedIdentityClientId: ""
+appConfigEndpoint: ""
+appConfigRefreshEnabled: false
+keyVaultName: ""
+

@@ -1,0 +1,8 @@
+apiVersion: v2
+name: microservice
+type: application
+version: 0.1.2
+appVersion: "7.0.38"  # Version of NetFusion on which chart is based
+description: Helm Chart used to create resources used to deploy NetFusion based microservices
+             consistently to Kubernetes.
+

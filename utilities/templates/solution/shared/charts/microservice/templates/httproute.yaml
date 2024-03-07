@@ -1,0 +1,25 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: {{ include "microservice.name" . }}-route
+spec:
+  parentRefs:
+  - name: {{ .Values.gateway.name }}
+  hostnames:
+  {{- range .Values.gateway.hosts}}
+    - {{ . | quote }}
+  {{- end}}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /{{ (include "microservice.name" .) | replace "-" "/" }}/
+      filters: 
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              replacePrefixMatch: /api/
+              type: ReplacePrefixMatch
+      backendRefs:
+        - name: {{ include "microservice.name" . }}
+          port: 80

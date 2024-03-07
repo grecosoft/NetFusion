@@ -1,0 +1,55 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "NetFusion-Contrib",
+    "classifications": [ "NetFusion", "Microservice", "Solution", "Helm" ], 
+    "identity": "NetFusion.Solution",  
+    "name": "NetFusion Solution",
+    "shortName": "netfusion-solution",
+    "tags": {
+      "language": "C#",
+      "type":"project"
+    },
+    "sourceName": "SolutionName", 
+    "preferNameDirectory": true,
+    "symbols":{
+      "sourceName": {
+        "type": "generated",
+        "generator": "casing",
+        "parameters": {
+          "source": "name",
+          "toLower": true
+        }
+      },
+      "acr-name": {
+        "type": "parameter",
+        "description": "The name of the ACR.",
+        "isRequired": "true",
+        "datatype": "string",
+        "replaces": "[nf:arc-name]"
+      },
+      "github-account": {
+        "type": "parameter",
+        "description": "The name of the GitHub account to containing the repository to publish the shared solution NuGets.",
+        "isRequired": "true",
+        "datatype": "string",
+        "replaces": "[nf:github-account]"
+      },
+      "infra-id": {
+        "type": "generated",
+        "generator": "guid",
+        "replaces": "[nf:infra-id]",
+        "description": "The generated GUID used to identify the Infrastructure Plugin Component.",
+        "parameters": {
+          "defaultFormat": "D"
+        }
+      }
+    },
+    "sources":[
+        { "include": ".gitignore" },
+        { "include": "helm-charts/**/*" },
+        { "include": ".github/**/*" },
+        { "include": "shared/**/*" },
+        { "include": "microservices/*" }
+      ]
+  }
+  

@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "microservice.name" . }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicas }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "microservice.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        azure.workload.identity/use: "true"
+        {{- include "microservice.labels" . | nindent 8 }}
+	      {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount }}
+      containers:
+        - name: {{ include "microservice.name" . }}
+          image: "{{ include "microservice.image" . }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://*:{{ .Values.port }}
+            - name: ASPNETCORE_ENVIRONMENT
+              value: {{ .Values.environment }}
+              {{- if .Values.extraEnv }}
+              {{- toYaml .Values.extraEnv  | nindent 12 }}
+              {{- end }}
+          envFrom:
+          - secretRef:
+              name: {{ include "microservice.name" . }}-config-secrets
+          ports:
+            - containerPort: {{ .Values.port }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts: 
+            - name: configs-volume
+              mountPath: /microservice/configs
+          
+          {{- if .Values.probes.startupPath  }}
+          startupProbe:
+            httpGet:
+              path: {{ .Values.probes.startupPath }}
+              port: {{ .Values.port }}
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 10
+          {{- end }}
+        
+          {{- if .Values.probes.readinessPath }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.probes.readinessPath }}
+              port: {{ .Values.port }}
+            initialDelaySeconds: 2
+            periodSeconds: 20
+            successThreshold: 1
+            failureThreshold: 1
+          {{- end }}
+          
+          {{- if .Values.probes.livenessPath }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.probes.livenessPath }}
+              port: {{ .Values.port }}
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          {{- end }}
+      volumes:
+        - name: configs-volume 
+          configMap: 
+            name: {{ include "microservice.name" . }}-configs
+            items:
+            - key: app-configurations
+              path: appsettings.json
+
+
