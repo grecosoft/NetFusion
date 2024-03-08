@@ -26,7 +26,7 @@ env:
 
   imageRegistry: [nf:registry]
 
-  helmChart: netfusion-microservice
+  helmChart: microservice
   helmChartVer: [nf:chartVersion]
 
   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
