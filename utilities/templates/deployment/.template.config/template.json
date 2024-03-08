@@ -2,9 +2,9 @@
   "$schema": "http://json.schemastore.org/template",
   "author": "NetFusion-Contrib",
   "classifications": [ "WebApi", "Microservice", "NetFusion" ], 
-  "identity": "NetFusion.Infrastructure",  
+  "identity": "NetFusion.Deployment",  
   "name": "NetFusion Microservice Infrastructure",
-  "shortName": "netfusion-infrastructure",
+  "shortName": "netfusion-deployment",
   "tags": {
     "type":"project"
   },
@@ -98,6 +98,6 @@
     }
   },
   "sources":[
-      { "include": "deployment/*" }
+      { "include": "deploy/*" }
     ]
 }

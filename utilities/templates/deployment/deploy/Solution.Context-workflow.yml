@@ -84,7 +84,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: microservice-helm-settings
-        path: ${{ env.microserviceRoot }}/${{ env.microserviceDir}}/deployment/*-values.yaml
+        path: ${{ env.microserviceRoot }}/${{ env.microserviceDir}}/deploy/*-values.yaml
 
     - name: Set Latest Build Version 
       run: |
