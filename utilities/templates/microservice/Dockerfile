@@ -1,6 +1,9 @@
 FROM  mcr.microsoft.com/dotnet/sdk:8.0 AS restore
 WORKDIR /build/src
 
+ARG NUGET_USERNAME
+ARG NUGET_PASSWORD
+
 # --------------------------------------------------------------------------------------
 # RESTORE 
 # --------------------------------------------------------------------------------------
@@ -22,6 +25,14 @@ COPY ./src/Solution.Context.WebApi/*.csproj ./Solution.Context.WebApi/
 
 # Copy the solution file to restore all projects:
 COPY ./src/Solution.Context.sln ./
+
+RUN dotnet nuget add source https://nuget.pkg.github.com/grecosoft/index.json \
+      --name="GitHub Package Repository" \
+      --username ${NUGET_USERNAME} \
+      --valid-authentication-types basic \
+      --store-password-in-clear-text \
+      --password ${NUGET_PASSWORD}
+
 RUN dotnet restore 
 
 # Copy all the source and build the microservice.

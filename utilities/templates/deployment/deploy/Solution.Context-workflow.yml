@@ -46,6 +46,15 @@ jobs:
       run: |
         echo "TAGGED_IMAGE=${imageRegistry}/${microserviceName}:${microserviceVer}" >> $GITHUB_ENV
 
+    - name:  Add GitHub Package Source
+      run: |
+        dotnet nuget add source https://nuget.pkg.github.com/grecosoft/index.json \
+        --name="GitHub Package Repository" \
+        --username ${{ secrets.GITHUB_TOKEN }} \
+        --valid-authentication-types basic \
+        --store-password-in-clear-text \
+        --password ${{ secrets.NUGET_PACKAGE_TOKEN }}
+
     - name: Run Unit Tests
       run: |
         dotnet test ./${microserviceRoot}/${microserviceDir}/src \
@@ -62,7 +71,9 @@ jobs:
     - name: Build Microservice Image
       run: |
         docker build ${microserviceRoot}/${microserviceDir} \
-        --tag ${{ env.TAGGED_IMAGE }}
+        --tag ${{ env.TAGGED_IMAGE }} \
+        --build-arg="NUGET_USERNAME=${{ secrets.GITHUB_TOKEN }}" \
+        --build-arg="NUGET_PASSWORD=${{ secrets.NUGET_PACKAGE_TOKEN }}"
 
     - name: List Images
       run: docker images
