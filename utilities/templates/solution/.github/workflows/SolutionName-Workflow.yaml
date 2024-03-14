@@ -14,6 +14,7 @@ permissions:
 
 env:
   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  buildVer: "1.0.${{ github.run_number }}"
 
 jobs:
   build:
@@ -37,7 +38,7 @@ jobs:
       run: dotnet build ./shared/src --no-restore
 
     - name: Package Solution
-      run: dotnet pack ./shared/src/SolutionName.sln -p:Version='1.0.0' -c Release -o ./nuget-packages
+      run: dotnet pack ./shared/src/SolutionName.sln -p:Version=${buildVer} -c Release -o ./nuget-packages
 
     - name: Create Package Artifact
       uses: actions/upload-artifact@v2
