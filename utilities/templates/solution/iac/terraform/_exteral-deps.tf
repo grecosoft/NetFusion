@@ -2,8 +2,8 @@ data "terraform_remote_state" "infrastructure" {
   backend = "azurerm"
 
   config = {
-    resource_group_name  = "terraform"
-    storage_account_name = "state1560806410"
+    resource_group_name  = "[nf:terraform-resource-group]"
+    storage_account_name = "[nf:terraform-storage-account]"
     container_name       = "infrastructure"
     key                  = "cluster.tfstate"
   }

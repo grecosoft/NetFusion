@@ -1,7 +1,7 @@
 {
     "$schema": "http://json.schemastore.org/template",
     "author": "NetFusion-Contrib",
-    "classifications": [ "NetFusion", "Microservice", "Solution", "Helm" ], 
+    "classifications": [ "NetFusion", "Microservice", "Solution", "Helm", "Terraform" ], 
     "identity": "NetFusion.Solution",  
     "name": "NetFusion Solution",
     "shortName": "netfusion-solution",
@@ -19,6 +19,20 @@
           "source": "name",
           "toLower": true
         }
+      },
+      "terraform-resource-group": {
+        "type": "parameter",
+        "description": "The name of the Azure resource group containing the Terraform state.",
+        "isRequired": true,
+        "datatype": "string",
+        "replaces": "[nf:terraform-resource-group]"
+      },
+      "terraform-storage-account": {
+        "type": "parameter",
+        "description": "The name of the Azure storage account containing the Terraform state.",
+        "isRequired": true,
+        "datatype": "string",
+        "replaces": "[nf:terraform-storage-account]"
       },
       "acr-name": {
         "type": "parameter",
@@ -45,11 +59,11 @@
       }
     },
     "sources":[
-        { "include": ".gitignore" },
-        { "include": "helm-charts/**/*" },
         { "include": ".github/**/*" },
+        { "include": "iac/**/*" },
+        { "include": "microservices/*" },
         { "include": "shared/**/*" },
-        { "include": "microservices/*" }
+        { "include": ".gitignore" }
       ]
   }
   

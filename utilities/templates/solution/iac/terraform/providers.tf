@@ -2,10 +2,10 @@ terraform {
   required_version = ">=1.0"
 
   backend "azurerm" {
-    resource_group_name  = "terraform"
-    storage_account_name = "state1560806410"
-    container_name       = "solutions"
-    key                  = "iot-home.tfstate"
+    resource_group_name  = "[nf:terraform-resource-group]"
+    storage_account_name = "[nf:terraform-storage-account]"
+    container_name       = "solution"
+    key                  = "solution.tfstate"
   }
   required_providers {
 
