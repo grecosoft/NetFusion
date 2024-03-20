@@ -43,7 +43,7 @@
       },
       "github-account": {
         "type": "parameter",
-        "description": "The name of the GitHub account to containing the repository to publish the shared solution NuGets.",
+        "description": "The name of the GitHub account containing the repository to publish the shared solution NuGets.",
         "isRequired": "true",
         "datatype": "string",
         "replaces": "[nf:github-account]"

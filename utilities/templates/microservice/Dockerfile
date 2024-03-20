@@ -26,7 +26,7 @@ COPY ./src/Solution.Context.WebApi/*.csproj ./Solution.Context.WebApi/
 # Copy the solution file to restore all projects:
 COPY ./src/Solution.Context.sln ./
 
-RUN dotnet nuget add source https://nuget.pkg.github.com/grecosoft/index.json \
+RUN dotnet nuget add source https://nuget.pkg.github.com/[nf:github-account]/index.json \
       --name="GitHub Package Repository" \
       --username ${NUGET_USERNAME} \
       --valid-authentication-types basic \

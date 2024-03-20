@@ -1,5 +1,6 @@
 variable "solution" {
   type = object({
+    github_account = string
     name     = string
     location = string
     keyvault = object({

@@ -26,7 +26,7 @@ resource "azuread_application_federated_identity_credential" "github_federated_i
   description    = "Allows GitHub Workflow actions to have access to Azure Resources required for deployment."
   audiences      = ["api://AzureADTokenExchange"]
   issuer         = "https://token.actions.githubusercontent.com"
-  subject        = "repo:grecosoft/${var.solution.name}:environment:development"
+  subject        = "repo:${var.solution.github_account}/${var.solution.name}:environment:development"
 }
 
 // Roles required by executing workflows:

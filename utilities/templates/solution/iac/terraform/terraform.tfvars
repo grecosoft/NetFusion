@@ -1,5 +1,6 @@
 solution = {
-  name     = "HomeLink"
+  github_account = "[nf:github-account]"
+  name     = "SolutionName"
   location = "eastus"
   keyvault = {
     sku                        = "standard"

@@ -48,7 +48,7 @@ jobs:
 
     - name:  Add GitHub Package Source
       run: |
-        dotnet nuget add source https://nuget.pkg.github.com/grecosoft/index.json \
+        dotnet nuget add source https://nuget.pkg.github.com/[nf:github-account]/index.json \
         --name="GitHub Package Repository" \
         --username ${{ secrets.GITHUB_TOKEN }} \
         --valid-authentication-types basic \

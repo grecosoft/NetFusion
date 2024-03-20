@@ -41,6 +41,13 @@
       "replaces": "[nf:port]",
       "description": "The port used when running the service locally."
     },
+    "github-account": {
+      "type": "parameter",
+      "description": "The name of the GitHub account containing the repository to restore the shared solution NuGets.",
+      "isRequired": "true",
+      "datatype": "string",
+      "replaces": "[nf:github-account]"
+    },
     "enable-kubernetes": {
       "type": "parameter",
       "datatype": "bool",
