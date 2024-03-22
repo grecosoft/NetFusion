@@ -4,7 +4,7 @@ terraform {
   backend "azurerm" {
     resource_group_name  = "[nf:terraform-resource-group]"
     storage_account_name = "[nf:terraform-storage-account]"
-    container_name       = "solution"
+    container_name       = "[nf:solution-name-lowercase]"
     key                  = "solution.tfstate"
   }
   required_providers {

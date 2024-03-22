@@ -41,15 +41,6 @@ resource "azurerm_app_configuration" "appconfig" {
   ]
 }
 
-# Install Azure App Configuration Kubernetes Provider:
-resource "helm_release" "app-config-controller" {
-  namespace        = var.namespace
-  create_namespace = true
-  name             = "app-config-controller"
-  repository       = "oci://mcr.microsoft.com/azure-app-configuration/helmchart"
-  chart            = "kubernetes-provider"
-}
-
 # Create the federated identity credential between the managed identity, OIDC issuer, and subject:
 resource "azurerm_federated_identity_credential" "federatedconfig" {
   name                = "${var.identity.name}-federatedconfig"
