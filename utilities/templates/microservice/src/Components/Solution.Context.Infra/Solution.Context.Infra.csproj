@@ -12,8 +12,8 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetFusion.Common" Version="8.0.41" />
-    <PackageReference Include="NetFusion.common.Base" Version="8.0.41" />
-    <PackageReference Include="NetFusion.Core.Bootstrap" Version="8.0.41" />
+    <PackageReference Include="NetFusion.Common" Version="8.0.43" />
+    <PackageReference Include="NetFusion.common.Base" Version="8.0.43" />
+    <PackageReference Include="NetFusion.Core.Bootstrap" Version="8.0.43" />
   </ItemGroup>
 </Project>

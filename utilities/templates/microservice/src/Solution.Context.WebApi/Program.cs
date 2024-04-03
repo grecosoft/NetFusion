@@ -3,6 +3,9 @@ using Solution.Context.Domain.Plugin;
 using Solution.Context.Infra.Plugin;
 using Solution.Context.WebApi.Plugin;
 using NetFusion.Core.Settings.Plugin;
+#if (useKubernetes)
+using NetFusion.Web.FileProviders;
+#endif
 
 var builder = WebApplication.CreateBuilder(args);
 
