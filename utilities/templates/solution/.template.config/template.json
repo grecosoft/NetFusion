@@ -3,7 +3,7 @@
     "author": "NetFusion-Contrib",
     "classifications": [ "NetFusion", "Microservice", "Solution", "Helm", "Terraform" ], 
     "identity": "NetFusion.Solution",  
-    "name": "NetFusion Solution",
+    "name": "NetFusion Microservice Solution",
     "shortName": "netfusion-solution",
     "tags": {
       "language": "C#",

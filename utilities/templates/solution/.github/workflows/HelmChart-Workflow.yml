@@ -13,6 +13,7 @@ permissions:
   contents: read
 
 env:
+  solutionName: "[nf:solution-name-lowercase]"
   chartVersion: "1.0.${{github.run_number}}"
   netfusionVer: "8.0.42"
   registryName: "[nf:arc-name]"
@@ -66,6 +67,6 @@ jobs:
       run: az acr login --name ${registryName}
 
     - name: Push Helm Chart to Repo
-      run: helm push microservice-${chartVersion}.tgz oci://${registryName}.azurecr.io/helm
+      run: helm push microservice-${chartVersion}.tgz oci://${registryName}.azurecr.io/${solutionName}/charts
   
       

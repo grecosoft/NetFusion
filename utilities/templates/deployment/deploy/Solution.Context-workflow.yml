@@ -15,10 +15,10 @@ permissions:
 env:
   envDeployName: dev
 
-  microserviceRoot: ./microservices
-  microserviceDir: Solution.Context
-  microserviceName: [nf:microservice-name]
-  microserviceVer: "1.0.${{github.run_number}}"
+  solutionName: [nf:solution-name]
+  serviceRoot: ./microservices/Solution.Context
+  serviceName: [nf:service-name]
+  serviceVer: "1.0.${{github.run_number}}"
 
   aksResourceGroup: [nf:aks-group]
   aksName: [nf:aks-name]
@@ -44,7 +44,7 @@ jobs:
 
     - name: Set Image Tag Variable
       run: |
-        echo "TAGGED_IMAGE=${imageRegistry}/${microserviceName}:${microserviceVer}" >> $GITHUB_ENV
+        echo "TAGGED_IMAGE=${imageRegistry}/${solutionName}/${serviceName}:${serviceVer}" >> $GITHUB_ENV
 
     - name:  Add GitHub Package Source
       run: |
@@ -57,7 +57,7 @@ jobs:
 
     - name: Run Unit Tests
       run: |
-        dotnet test ./${microserviceRoot}/${microserviceDir}/src \
+        dotnet test ./${serviceRoot}/src \
         --logger trx \
         --results-directory ./TestResults
 
@@ -70,7 +70,7 @@ jobs:
 
     - name: Build Microservice Image
       run: |
-        docker build ${microserviceRoot}/${microserviceDir} \
+        docker build ${serviceRoot} \
         --tag ${{ env.TAGGED_IMAGE }} \
         --build-arg="NUGET_USERNAME=${{ secrets.GITHUB_TOKEN }}" \
         --build-arg="NUGET_PASSWORD=${{ secrets.NUGET_PACKAGE_TOKEN }}"
@@ -95,13 +95,13 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: microservice-helm-settings
-        path: ${{ env.microserviceRoot }}/${{ env.microserviceDir}}/deploy/*-values.yaml
+        path: ${{ env.serviceRoot }}/deploy/*-values.yaml
 
     - name: Set Latest Build Version 
       run: |
         az appconfig kv set -n ${{ secrets.APP_CONFIG_NAME }} \
-           --key ${microserviceName}/latest_build \
-           --value ${microserviceVer} \
+           --key  ${serviceName}/latest_build \
+           --value ${serviceVer} \
            --yes
 
   deployment:
@@ -147,14 +147,14 @@ jobs:
     # Deploy Microservice and wait for all resources to be created.
     - name: Deploy Microservice Chart
       run: | 
-        helm upgrade ${microserviceName} oci://${imageRegistry}/helm/${helmChart} \
+        helm upgrade ${serviceName} oci://${imageRegistry}/${solutionName}/charts/${helmChart} \
           --install \
           --wait \
           --version ${helmChartVer} \
           -n ${aksNamespace} \
           --values common-values.yaml \
           --values ${envDeployName}-values.yaml \
-          --set image.tag=${microserviceVer} \
+          --set image.tag=${serviceVer} \
           --set tenantId=${{ steps.app-configs.outputs.SolutionTenantId }} \
           --set managedIdentityClientId=${{ steps.app-configs.outputs.SolutionClientId }} \
           --set appConfigEndpoint=${{ steps.app-configs.outputs.SolutionAppConfigEndpoint }} \
@@ -163,6 +163,6 @@ jobs:
     - name: Update Configuration Sentinel 
       run: |
         az appconfig kv set -n ${{ secrets.APP_CONFIG_NAME }} \
-           --key ${microserviceName}/update_sentinel \
+           --key ${serviceName}/update_sentinel \
            --value ${{ env.DEPLOYMENT_DATE }} \
            --yes

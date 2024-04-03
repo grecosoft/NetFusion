@@ -39,7 +39,7 @@
       "type": "parameter",
       "datatype":"int",
       "replaces": "[nf:port]",
-      "description": "The port used when running the service locally."
+      "description": "The port on which the service is exposed. "
     },
     "github-account": {
       "type": "parameter",
@@ -52,7 +52,7 @@
       "type": "parameter",
       "datatype": "bool",
       "defaultValue": "false",
-      "description": ""
+      "description": "Determines if Kubernetes related code is added."
     },
     "useKubernetes": {
       "type": "computed",

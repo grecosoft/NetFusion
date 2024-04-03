@@ -1,4 +1,5 @@
-name: [nf:microservice-name]
+solution: [nf:solution-name]
+name: [nf:service-name]
 
 serviceAccount: [nf:service-account]
 port: [nf:port]

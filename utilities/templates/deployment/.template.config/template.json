@@ -3,7 +3,7 @@
   "author": "NetFusion-Contrib",
   "classifications": [ "WebApi", "Microservice", "NetFusion" ], 
   "identity": "NetFusion.Deployment",  
-  "name": "NetFusion Microservice Infrastructure",
+  "name": "NetFusion Microservice Deployment",
   "shortName": "netfusion-deployment",
   "tags": {
     "type":"project"
@@ -11,28 +11,17 @@
   "sourceName": "Solution.Context", 
   "preferNameDirectory": true,
   "symbols":{
-    "sourceName": {
-      "type": "generated",
-      "generator": "casing",
-      "parameters": {
-        "source": "name",
-        "toLower": true
-      }
+    "solution-name": {
+      "type": "parameter",
+      "description": "",
+      "isRequired": true,
+      "replaces": "[nf:solution-name]"
     },
-    "microservice-name": {
-      "type": "generated",
-      "generator": "regex",
-      "dataType": "string",
-      "replaces": "[nf:microservice-name]", 
-      "parameters": {
-        "source": "sourceName",
-        "steps": [
-          {
-            "regex": "\\.",            
-            "replacement": "-"   
-          }
-        ]
-      }
+    "service-name": {
+      "type": "parameter",
+      "description": "",
+      "isRequired": true,
+      "replaces": "[nf:service-name]"
     },
     "github-account": {
       "type": "parameter",

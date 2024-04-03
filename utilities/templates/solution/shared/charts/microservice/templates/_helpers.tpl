@@ -1,5 +1,9 @@
 {{/* Naming Conventions */}}
 
+{{- define "solution.name"  }}
+{{- .Values.solution | lower }}
+{{- end }}
+
 {{- define "microservice.name"  }}
 {{- .Values.name | lower }}
 {{- end }}
@@ -9,7 +13,7 @@
 {{- end }}
 
 {{- define "microservice.image" }}
-{{- printf "%s/%s:%s" .Values.image.registry (default (include "microservice.name" .) .Values.image.repository) .Values.image.tag }}
+{{- printf "%s/%s/%s:%s" .Values.image.registry (include "solution.name" .) (include "microservice.name" .) .Values.image.tag }}
 {{- end }}
 
 {{/* Common labels */}}
