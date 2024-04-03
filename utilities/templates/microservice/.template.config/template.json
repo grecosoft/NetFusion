@@ -20,20 +20,17 @@
         "toLower": true
       }
     },
-    "microservice-name": {
-      "type": "generated",
-      "generator": "regex",
-      "dataType": "string",
-      "replaces": "[nf:microservice-name]", 
-      "parameters": {
-        "source": "sourceName",
-        "steps": [
-          {
-            "regex": "\\.",            
-            "replacement": "-"   
-          }
-        ]
-      }
+    "solution-name": {
+      "type": "parameter",
+      "description": "",
+      "isRequired": true,
+      "replaces": "[nf:solution-name]"
+    },
+    "service-name": {
+      "type": "parameter",
+      "description": "",
+      "isRequired": true,
+      "replaces": "[nf:service-name]"
     },
     "port": {
       "type": "parameter",

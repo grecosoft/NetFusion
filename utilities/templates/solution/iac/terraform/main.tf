@@ -64,6 +64,11 @@ module "app_config" {
   depends_on              = [module.key_vault]
 }
 
+module "helm_installs" {
+  source             = "./modules/helm_installs"
+  solution_namespace = lower(var.solution.name)
+}
+
 locals {
   tenant_id           = module.workload_identity.identity.tenant_id
   workload_client_id  = module.workload_identity.identity.client_id
