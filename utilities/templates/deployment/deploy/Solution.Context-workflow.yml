@@ -11,158 +11,55 @@ on:
 permissions:
   id-token: write
   contents: read
-
-env:
-  envDeployName: dev
-
-  solutionName: [nf:solution-name]
-  serviceRoot: ./microservices/Solution.Context
-  serviceName: [nf:service-name]
-  serviceVer: "1.0.${{github.run_number}}"
-
-  aksResourceGroup: [nf:aks-group]
-  aksName: [nf:aks-name]
-  aksNamespace: [nf:aks-namespace]
-
-  imageRegistry: [nf:registry]
-
-  helmChart: microservice
-  helmChartVer: [nf:chartVersion]
-
-  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
+  
 jobs:
+  setup:
+    runs-on: ubuntu-22.04
+    outputs:
+      environment: dev
+      solutionName: [nf:solution-name]
+      serviceName: [nf:service-name]
+      serviceRoot: ./microservices/Solution.Context
+      serviceVer: "1.0.${{github.run_number}}"
+      aksResourceGroup: kube-cluster
+      aksName: [nf:aks-name]
+      imageRegistry: [nf:registry]
+      chartName: microservice
+      chartVersion: 1.0.9
+    steps:
+      - run: echo "Common Workfow Variables"
+      
+  test:
+    needs: [ setup ]
+    uses: ./.github/workflows/shared-test-workflow.yml
+    with:
+      test-root-path: ${{ needs.setup.outputs.serviceRoot }}/src
+    secrets:
+      package-access-token: ${{ secrets.NUGET_PACKAGE_TOKEN }}
+
   build:
-    runs-on: ubuntu-latest
-    environment: development
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+    needs: [setup, test]
+    uses: ./.github/workflows/shared-build-workflow.yml
+    with:
+      solution-name:     ${{ needs.setup.outputs.solutionName }}
+      service-name:      ${{ needs.setup.outputs.serviceName }}
+      docker-file-path:  ${{ needs.setup.outputs.serviceRoot }}
+      image-version:     ${{ needs.setup.outputs.serviceVer }}
+      image-registry:    ${{ needs.setup.outputs.imageRegistry }}
+    secrets: inherit
 
-    - name: List Sources
-      run: ls -R .
-
-    - name: Set Image Tag Variable
-      run: |
-        echo "TAGGED_IMAGE=${imageRegistry}/${solutionName}/${serviceName}:${serviceVer}" >> $GITHUB_ENV
-
-    - name:  Add GitHub Package Source
-      run: |
-        dotnet nuget add source https://nuget.pkg.github.com/[nf:github-account]/index.json \
-        --name="GitHub Package Repository" \
-        --username ${{ secrets.GITHUB_TOKEN }} \
-        --valid-authentication-types basic \
-        --store-password-in-clear-text \
-        --password ${{ secrets.NUGET_PACKAGE_TOKEN }}
-
-    - name: Run Unit Tests
-      run: |
-        dotnet test ./${serviceRoot}/src \
-        --logger trx \
-        --results-directory ./TestResults
-
-    - name: Archive Test Results  
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: microservice-test-results
-        path: ./TestResults
-
-    - name: Build Microservice Image
-      run: |
-        docker build ${serviceRoot} \
-        --tag ${{ env.TAGGED_IMAGE }} \
-        --build-arg="NUGET_USERNAME=${{ secrets.GITHUB_TOKEN }}" \
-        --build-arg="NUGET_PASSWORD=${{ secrets.NUGET_PACKAGE_TOKEN }}"
-
-    - name: List Images
-      run: docker images
-
-    - name: Login to Azure
-      uses: azure/login@v1
-      with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-    - name: Log Into ACR
-      run: az acr login --name ${imageRegistry}
-
-    - name: Push Image to Repository
-      run: docker image push ${{ env.TAGGED_IMAGE }}
-
-    - name: Archive Microservice Helm Settings  
-      uses: actions/upload-artifact@v4
-      with:
-        name: microservice-helm-settings
-        path: ${{ env.serviceRoot }}/deploy/*-values.yaml
-
-    - name: Set Latest Build Version 
-      run: |
-        az appconfig kv set -n ${{ secrets.APP_CONFIG_NAME }} \
-           --key  ${serviceName}/latest_build \
-           --value ${serviceVer} \
-           --yes
-
-  deployment:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: development
-    steps:
-    - name: Login to Azure
-      uses: azure/login@v1
-      with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-    - name: Download Microservice Helm Settings
-      uses: actions/download-artifact@v4
-      with:
-        name: microservice-helm-settings
-
-    - name: List Downloaded Artifacts
-      run: ls -R .
-
-    - name: Log Into ACR
-      run: az acr login --name ${imageRegistry}
-
-    - name: Log Into AKS
-      run: az aks get-credentials --resource-group ${aksResourceGroup} --name ${aksName}
-
-    # Read configuration not stored directly within the helm value files from Azure
-    # App Configuration service associated with the Microservice solution.
-    - name: Read Deploy Configurations
-      uses: flcdrg/get-azure-app-configuration-action@v2
-      id: app-configs
-      with:
-        resourceGroup: ${{ secrets.APP_CONFIG_GROUP }}
-        appConfigurationName: ${{ secrets.APP_CONFIG_NAME }}
-        keyFilter: 'SolutionTenantId,SolutionClientId,SolutionKeyVaultName,SolutionAppConfigEndpoint'
-
-    - name: Set Deployment Date
-      run: |
-        echo "DEPLOYMENT_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> ${GITHUB_ENV}
-
-    # Deploy Microservice and wait for all resources to be created.
-    - name: Deploy Microservice Chart
-      run: | 
-        helm upgrade ${serviceName} oci://${imageRegistry}/${solutionName}/charts/${helmChart} \
-          --install \
-          --wait \
-          --version ${helmChartVer} \
-          -n ${aksNamespace} \
-          --values common-values.yaml \
-          --values ${envDeployName}-values.yaml \
-          --set image.tag=${serviceVer} \
-          --set tenantId=${{ steps.app-configs.outputs.SolutionTenantId }} \
-          --set managedIdentityClientId=${{ steps.app-configs.outputs.SolutionClientId }} \
-          --set appConfigEndpoint=${{ steps.app-configs.outputs.SolutionAppConfigEndpoint }} \
-          --set keyVaultName=${{ steps.app-configs.outputs.SolutionKeyVaultName }} 
-
-    - name: Update Configuration Sentinel 
-      run: |
-        az appconfig kv set -n ${{ secrets.APP_CONFIG_NAME }} \
-           --key ${serviceName}/update_sentinel \
-           --value ${{ env.DEPLOYMENT_DATE }} \
-           --yes
+  deploy:
+    needs: [setup, build]
+    uses: ./.github/workflows/shared-deploy-workflow.yml
+    with:
+      environment-name:   ${{ needs.setup.outputs.environment }}
+      solution-name:      ${{ needs.setup.outputs.solutionName }}
+      service-name:       ${{ needs.setup.outputs.serviceName }}
+      image-version:      ${{ needs.setup.outputs.serviceVer }}
+      aks-resource-group: ${{ needs.setup.outputs.aksResourceGroup }}
+      aks-name:           ${{ needs.setup.outputs.aksName }}
+      aks-namespace:      ${{ needs.setup.outputs.solutionName }}
+      chart-registry:     ${{ needs.setup.outputs.imageRegistry }}
+      chart-name:         ${{ needs.setup.outputs.chartName }}
+      chart-version:      ${{ needs.setup.outputs.chartVersion }}
+    secrets: inherit
