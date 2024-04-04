@@ -64,7 +64,8 @@
         { "include": "iac/**/*" },
         { "include": "microservices/*" },
         { "include": "shared/**/*" },
-        { "include": ".gitignore" }
+        { "include": ".gitignore" },
+        { "include": "gateway.yaml" }
       ]
   }
   

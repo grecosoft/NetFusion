@@ -1,7 +1,7 @@
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
-  name: {{ include "solution.name" . }}-gateway
+  name: [nf:solution-name-lowercase]-gateway
   annotations:
     alb.networking.azure.io/alb-namespace: azure-alb-system
     alb.networking.azure.io/alb-name: gateway-alb
@@ -14,3 +14,5 @@ spec:
     allowedRoutes:
       namespaces:
         from: Same
+
+
