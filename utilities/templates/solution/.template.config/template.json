@@ -14,7 +14,7 @@
     "symbols":{
       "sourceName": {
         "type": "generated",
-        "replaces": "[nf:solution-name-lowercase]",
+        "replaces": "[nf:solution-name]",
         "generator": "casing",
         "parameters": {
           "source": "name",

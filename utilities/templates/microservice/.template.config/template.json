@@ -22,13 +22,13 @@
     },
     "solution-name": {
       "type": "parameter",
-      "description": "",
+      "description": "The name of the solution to which the microservice belongs. (example: homelink)",
       "isRequired": true,
       "replaces": "[nf:solution-name]"
     },
     "service-name": {
       "type": "parameter",
-      "description": "",
+      "description": "The name of the microservice. (example: monitoring)",
       "isRequired": true,
       "replaces": "[nf:service-name]"
     },
@@ -36,7 +36,7 @@
       "type": "parameter",
       "datatype":"int",
       "replaces": "[nf:port]",
-      "description": "The port on which the service is exposed. "
+      "description": "The port used when running the service. (example: 7200)"
     },
     "github-account": {
       "type": "parameter",

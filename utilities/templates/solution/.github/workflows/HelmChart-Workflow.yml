@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 env:
-  solutionName: "[nf:solution-name-lowercase]"
+  solutionName: "[nf:solution-name]"
   chartVersion: "1.0.${{github.run_number}}"
   netfusionVer: "8.0.42"
   registryName: "[nf:arc-name]"
