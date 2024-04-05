@@ -7,11 +7,6 @@ managedIdentityClientId: ""
 appConfigEndpoint: ""
 keyVaultName: ""
 
-gateway: 
-  name: [nf:gateway]
-  hosts:
-    - [nf:host]
-
 image:
   tag: latest
 

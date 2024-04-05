@@ -6,7 +6,7 @@ on:
     branches: 
       - main
     paths:
-      - shared/src/*
+      - shared/src/**
 
 permissions:
   id-token: write

@@ -1,4 +1,5 @@
 environment: ""
+solution: ""
 name: ""
 
 serviceAccount: ""
@@ -17,9 +18,9 @@ image:
   pullPolicy: IfNotPresent
 
 probes:
-  startupPath: /mgt/startup-check
-  readinessPath: /mgt/ready-check
-  livenessPath: /mgt/health-check
+  startupPath: ""
+  readinessPath: ""
+  livenessPath: ""
 
 resources: 
   requests:
@@ -41,3 +42,6 @@ appConfigEndpoint: ""
 appConfigRefreshEnabled: false
 keyVaultName: ""
 
+gateway: 
+  name: ""
+  hosts: []

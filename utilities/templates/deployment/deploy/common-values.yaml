@@ -1,7 +1,7 @@
 solution: [nf:solution-name]
 name: [nf:service-name]
 
-serviceAccount: [nf:service-account]
+serviceAccount: [nf:solution-name]-identity
 port: [nf:port]
 
 extraLabels: {}
@@ -16,3 +16,8 @@ probes:
   startupPath: /mgt/startup-check
   readinessPath: /mgt/ready-check
   livenessPath: /mgt/health-check
+
+gateway: 
+  name: [nf:solution-name]-gateway
+  hosts:
+    - [nf:host]

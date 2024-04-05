@@ -13,13 +13,13 @@
   "symbols":{
     "solution-name": {
       "type": "parameter",
-      "description": "",
+      "description": "The name of the solution to which the microservice belongs. (example: homelink)",
       "isRequired": true,
       "replaces": "[nf:solution-name]"
     },
     "service-name": {
       "type": "parameter",
-      "description": "",
+      "description": "The name of the microservice. (example: monitoring)",
       "isRequired": true,
       "replaces": "[nf:service-name]"
     },
@@ -35,62 +35,41 @@
       "isRequired": true,
       "datatype": "string",
       "replaces": "[nf:aks-group]",
-      "description": "The Azure resource group containing the AKS."
+      "description": "The Azure resource group containing the AKS. (example: kube-cluster)"
     },
     "aks-name": {
       "type": "parameter",
       "isRequired": true,
       "datatype": "string",
       "replaces": "[nf:aks-name]",
-      "description": "The name of the AKS cluster to deploy microservice."
-    },
-    "aks-namespace": {
-      "type": "parameter",
-      "isRequired": true,
-      "datatype": "string",
-      "replaces": "[nf:aks-namespace]",
-      "description": "The namespace within the AKS cluster to deploy microservice."
+      "description": "The name of the AKS cluster to deploy microservice. (example: aksmscluster)"
     },
     "registry": {
       "type": "parameter",
       "datatype": "string",
       "replaces": "[nf:registry]",
-      "description": "The registry where the microservice image is stored."
+      "description": "The registry where the microservice image is stored. (example: aksmsclusteracr.azurecr.io)"
     },
     "chart-version": {
       "type": "parameter",
       "isRequired": true,
       "datatype": "string",
       "replaces": "[nf:chartVersion]",
-      "description": "The version of the Microservice Helm Chart used to deploy."
-    },
-    "service-account": {
-      "type": "parameter",
-      "isRequired": true,
-      "datatype": "string",
-      "replaces": "[nf:service-account]",
-      "description": "The service account under which the microservice runs."
+      "description": "The version of the Microservice Helm Chart used to deploy. (example: 1.0.0)"
     },
     "port": {
       "type": "parameter",
       "isRequired": true,
       "datatype":"int",
       "replaces": "[nf:port]",
-      "description": "The port used when running the service."
-    },
-    "gateway": {
-      "type": "parameter",
-      "isRequired": true,
-      "datatype": "string",
-      "replaces": "[nf:gateway]",
-      "description": "The name of the gateway exposing the microservice's endpoint."
+      "description": "The port used when running the service. (example: 7200)"
     },
     "host": {
       "type": "parameter",
       "isRequired": true,
       "datatype": "string",
       "replaces": "[nf:host]",
-      "description": "The host form which the microservice can be accessed."
+      "description": "The host from which the microservice can be accessed. (example:  homelink.com)"
     }
   },
   "sources":[

@@ -84,65 +84,65 @@
                     "description": "Guides the Kubelet service on how to pull the specified image during an update.",
                     "enum": ["Always", "IfNotPresent", "Never"]
                 }
-            },
-            "probes": {
-                "description": "The URL paths called by Kubelet to determine the current state of the pod.",
-                "type": "object",
-                "properties": {
-                    "startupPath": {
-                        "description": "Used to know when the container application has started.",
-                        "type": "string"
-                    },
-                    "readinessPath": {
-                        "description": "Used to determine container is ready to start accepting traffic.",
-                        "type": "string"
-                    },
-                    "livenessPath": {
-                        "description": "Used to determine when a container should be restarted.",
-                        "type": "string"
-                    }
+            }
+        },
+        "probes": {
+            "description": "The URL paths called by Kubelet to determine the current state of the pod.",
+            "type": "object",
+            "properties": {
+                "startupPath": {
+                    "description": "Used to know when the container application has started.",
+                    "type": "string"
+                },
+                "readinessPath": {
+                    "description": "Used to determine container is ready to start accepting traffic.",
+                    "type": "string"
+                },
+                "livenessPath": {
+                    "description": "Used to determine when a container should be restarted.",
+                    "type": "string"
                 }
-            },
-            "resources": {
-                "description": "Specifies the resource limits and requests for a container.",
-                "type": "object",
-                "required": [
-                    "requests",
-                    "limits"
-                ],
-                "properties": {
-                    "requests": {
-                        "type": "object",
-                        "required": [
-                            "cpu",
-                            "memory"
-                        ],
-                        "properties": {
-                            "cpu": {
-                                "type": "string",
-                                "minLength": 1
-                            },
-                            "memory": {
-                                "type": "string",
-                                "minLength": 1
-                            }
+            }
+        },
+        "resources": {
+            "description": "Specifies the resource limits and requests for a container.",
+            "type": "object",
+            "required": [
+                "requests",
+                "limits"
+            ],
+            "properties": {
+                "requests": {
+                    "type": "object",
+                    "required": [
+                        "cpu",
+                        "memory"
+                    ],
+                    "properties": {
+                        "cpu": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "memory": {
+                            "type": "string",
+                            "minLength": 1
                         }
-                    },
-                    "limits": {
-                        "type": "object",
-                        "required": [
-                            "cpu",
-                            "memory"
-                        ],
-                        "properties": {
-                            "cpu": {
-                                "type": "string",
-                                "minLength": 1
-                            },
-                            "memory": {
-                                "type": "string",
-                                "minLength": 1
-                            }
+                    }
+                },
+                "limits": {
+                    "type": "object",
+                    "required": [
+                        "cpu",
+                        "memory"
+                    ],
+                    "properties": {
+                        "cpu": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "memory": {
+                            "type": "string",
+                            "minLength": 1
                         }
                     }
                 }
@@ -193,6 +193,28 @@
             "description": "The name of the Key Vault used by the microservice",
             "type": "string",
             "minLength": 1
+        },
+        "gateway": {
+            "description": "Specifies the gateway on which the microservice is exposed.",
+            "type": "object",
+            "required": [
+                "name",
+                "hosts"
+            ],
+            "properties": {
+                "name": {
+                    "description": "The name of the gateway deployed to the solution's namespace.",
+                    "type": "string",
+                    "minLength": 1
+                },
+                "hosts": {
+                    "description": "The host on which the microservice will be deployed.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
         }
     }
 }
