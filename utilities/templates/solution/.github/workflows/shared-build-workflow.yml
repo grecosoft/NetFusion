@@ -50,6 +50,16 @@ jobs:
     - name: List Images
       run: docker images
 
+    - name: Scan image for vulnerabilities
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.TAGGED_IMAGE }}
+        format: table
+        exit-code: 1
+        ignore-unfixed: true
+        vuln-type: "os,library"
+        severity: "CRITICAL,HIGH"
+
     - name: Login to Azure
       uses: azure/login@v1
       with:
