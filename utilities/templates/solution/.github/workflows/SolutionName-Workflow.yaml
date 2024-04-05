@@ -6,7 +6,7 @@ on:
     branches: 
       - main
     paths:
-      - shared/src
+      - shared/src/*
 
 permissions:
   id-token: write
@@ -34,11 +34,33 @@ jobs:
 
     - name: Restore Packages
       run: dotnet restore ./shared/src
+
+    - name: Run Unit Tests
+      run: |
+        dotnet test ./shared/src \
+          --no-restore \
+          --logger trx \
+          --results-directory ./TestResults
+
+    - name: Archive Test Results  
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: ./TestResults
+
     - name: Build Solution
-      run: dotnet build ./shared/src --no-restore
+      run: | 
+        dotnet build ./shared/src \
+          --no-restore \
+          -c Release 
 
     - name: Package Solution
-      run: dotnet pack ./shared/src/SolutionName.sln -p:Version=${buildVer} -c Release -o ./nuget-packages
+      run: |
+        dotnet pack ./shared/src/HomeLink.sln \
+          --no-build \
+          -p:Version=${buildVer} \
+          -o ./nuget-packages
 
     - name: Create Package Artifact
       uses: actions/upload-artifact@v2
