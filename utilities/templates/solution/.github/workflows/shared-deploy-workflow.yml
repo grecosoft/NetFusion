@@ -19,9 +19,6 @@ on:
       aks-name:
         type: string
         required: true
-      aks-namespace:
-        type: string
-        required: true
       chart-registry:
         type: string
         required: true
@@ -88,7 +85,7 @@ jobs:
           --install \
           --wait \
           --version ${{ inputs.chart-version }} \
-          -n ${{ inputs.aks-namespace }} \
+          -n ${{ inputs.solution-name }}-${{ inputs.environment }} \
           --values common-values.yaml \
           --values ${{ inputs.environment }}-values.yaml \
           --set image.tag=${{ inputs.image-version }} \
