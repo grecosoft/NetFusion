@@ -35,9 +35,23 @@
         "datatype": "string",
         "replaces": "[nf:terraform-storage-account]"
       },
+      "aks-group": {
+        "type": "parameter",
+        "description": "The name of the AKS resource group.",
+        "datatype": "string",
+        "replaces": "[nf:aks-group]"
+
+      },
+      "aks-name": {
+        "type": "parameter",
+        "description": "The name of the AKS defined within the resource group.",
+        "datatype": "string",
+        "replaces": "[nf:aks-name]"
+
+      },
       "acr-name": {
         "type": "parameter",
-        "description": "The name of the ACR.",
+        "description": "The name of the ACR defined within the resource group.",
         "isRequired": "true",
         "datatype": "string",
         "replaces": "[nf:arc-name]"

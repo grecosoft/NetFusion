@@ -10,14 +10,14 @@ resource "random_string" "unique_postfix" {
 
 // Create an Azure resource group to contain the solution's related resources:
 resource "azurerm_resource_group" "solution_rg" {
-  name     = var.solution.name
+  name     = "${var.solution.name}-${var.solution.environment}"
   location = var.solution.location
 }
 
 // Create a Kubernetes namespace to contain the solution's related resources:
 resource "kubernetes_namespace" "solution_ns" {
   metadata {
-    name = lower(var.solution.name)
+    name = "${lower(var.solution.name)}-${var.solution.environment}"
   }
 }
 
@@ -66,7 +66,7 @@ module "app_config" {
 
 module "helm_installs" {
   source             = "./modules/helm_installs"
-  solution_namespace = lower(var.solution.name)
+  solution_namespace = kubernetes_namespace.solution_ns.metadata[0].name
 }
 
 locals {

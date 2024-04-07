@@ -1,6 +1,9 @@
 on:
   workflow_call:
     inputs:
+      environment:
+        required: true
+        type: string
       solution-name:
         type: string
         required: true
@@ -31,7 +34,7 @@ on:
 jobs:
   service-image:
     runs-on: ubuntu-latest
-    environment: development
+    environment: ${{ inputs.environment }}
     steps: 
     - name: Checkout
       uses: actions/checkout@v3

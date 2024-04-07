@@ -6,7 +6,7 @@ data "azurerm_subscription" "current" {
 }
 
 resource "azuread_application" "github_workflow" {
-  display_name = "github-workflow-${lower(var.solution.name)}"
+    display_name = "github-workflow-${lower(var.solution.name)}-${var.solution.environment}"
 }
 
 resource "azuread_service_principal" "github_workflow_sp" {
@@ -26,7 +26,7 @@ resource "azuread_application_federated_identity_credential" "github_federated_i
   description    = "Allows GitHub Workflow actions to have access to Azure Resources required for deployment."
   audiences      = ["api://AzureADTokenExchange"]
   issuer         = "https://token.actions.githubusercontent.com"
-  subject        = "repo:${var.solution.github_account}/${var.solution.name}:environment:development"
+  subject        = "repo:${var.solution.github_account}/${var.solution.name}:environment:${var.solution.environment}"
 }
 
 // Roles required by executing workflows:

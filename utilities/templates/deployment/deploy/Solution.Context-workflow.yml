@@ -33,6 +33,7 @@ jobs:
     needs: [ setup ]
     uses: ./.github/workflows/shared-test-workflow.yml
     with:
+      environment: ${{ needs.setup.outputs.environment }}
       test-root-path: ${{ needs.setup.outputs.serviceRoot }}/src
     secrets:
       package-access-token: ${{ secrets.NUGET_PACKAGE_TOKEN }}
@@ -41,6 +42,7 @@ jobs:
     needs: [setup, test]
     uses: ./.github/workflows/shared-build-workflow.yml
     with:
+      environment:       ${{ needs.setup.outputs.environment }}
       solution-name:     ${{ needs.setup.outputs.solutionName }}
       service-name:      ${{ needs.setup.outputs.serviceName }}
       docker-file-path:  ${{ needs.setup.outputs.serviceRoot }}
@@ -58,7 +60,7 @@ jobs:
       image-version:      ${{ needs.setup.outputs.serviceVer }}
       aks-resource-group: ${{ needs.setup.outputs.aksResourceGroup }}
       aks-name:           ${{ needs.setup.outputs.aksName }}
-      aks-namespace:      ${{ needs.setup.outputs.solutionName }}
+      aks-namespace:      ${{ needs.setup.outputs.solutionName }}-${{ needs.setup.outputs.environment }}
       chart-registry:     ${{ needs.setup.outputs.imageRegistry }}
       chart-name:         ${{ needs.setup.outputs.chartName }}
       chart-version:      ${{ needs.setup.outputs.chartVersion }}

@@ -1,7 +1,7 @@
 on:
   workflow_call:
     inputs:
-      environment-name:
+      environment:
         type: string
         required: true
       solution-name:
@@ -45,7 +45,7 @@ on:
 jobs:
   microservice:
     runs-on: ubuntu-latest
-    environment: development
+    environment: ${{ inputs.environment }}
     steps:
     - name: Login to Azure
       uses: azure/login@v1
@@ -90,7 +90,7 @@ jobs:
           --version ${{ inputs.chart-version }} \
           -n ${{ inputs.aks-namespace }} \
           --values common-values.yaml \
-          --values ${{ inputs.environment-name }}-values.yaml \
+          --values ${{ inputs.environment }}-values.yaml \
           --set image.tag=${{ inputs.image-version }} \
           --set tenantId=${{ steps.app-configs.outputs.SolutionTenantId }} \
           --set managedIdentityClientId=${{ steps.app-configs.outputs.SolutionClientId }} \

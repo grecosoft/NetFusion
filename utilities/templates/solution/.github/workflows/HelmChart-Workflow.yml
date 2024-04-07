@@ -46,7 +46,7 @@ jobs:
   deployment:
     needs: build
     runs-on: ubuntu-latest
-    environment: development
+    environment: dev
     steps:
     - name: "Az CLI login"
       uses: azure/login@v1
