@@ -1,1 +1,0 @@
-# SolutionName.Common.Infra Overview
