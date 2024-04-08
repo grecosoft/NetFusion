@@ -22,7 +22,6 @@ dotnet pack ./src/Services/NetFusion.Services.Roslyn/NetFusion.Services.Roslyn.c
 dotnet pack ./src/Services/NetFusion.Services.Serialization/NetFusion.Services.Serialization.csproj --configuration Debug --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Services/NetFusion.Services.Serilog/NetFusion.Services.Serilog.csproj --configuration Debug --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 
-
 dotnet pack ./src/Web/NetFusion.Web/NetFusion.Web.csproj --configuration Debug --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Web/NetFusion.Web.Common/NetFusion.Web.Common.csproj --configuration Debug --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
 dotnet pack ./src/Web/NetFusion.Web.Rest.Client/NetFusion.Web.Rest.Client.csproj --configuration Debug --no-build --output $PACKAGES_DIR -p:PackageVersion=$VERSION
